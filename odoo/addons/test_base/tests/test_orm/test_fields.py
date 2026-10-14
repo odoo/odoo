@@ -5612,7 +5612,7 @@ class TestNormalize(TransactionCase):
         self.assertEqual(record.count, 0)
         self.assertStored(record, 'count', 0)
 
-        # empty values are not normalized
+        # this normalize function keeps empty values empty
         record.name = False
         self.assertFalse(record.name)
 
@@ -5712,3 +5712,38 @@ class TestNormalize(TransactionCase):
         record = Model.create({'name': 'foo'})
         self.assertFalse(Model.search([('name', '=', 'foo')]))
         self.assertEqual(Model.search([('name', '=', 'FOO')]), record)
+
+        # neither in inequalities: abs(-1.5) and 'Untitled' would exclude records
+        records = Model.create([{'amount': 0, 'title': False}, {'amount': 1, 'title': 'Hello'}])
+        self.assertEqual(Model.search([('id', 'in', records.ids), ('amount', '>', -1.5)]), records)
+        self.assertEqual(Model.search([('id', 'in', records.ids), ('title', '>', '')]), records)
+
+    def test_monetary(self):
+        record = self.env['test_orm.normalized'].create({'price': -5, 'currency_id': self.env.ref('base.EUR').id})
+        self.assertEqual(record.price, 5)
+        self.assertStored(record, 'price', 5)
+
+        record.price = -7
+        self.assertEqual(record.price, 7)
+        self.assertStored(record, 'price', 7)
+
+    def test_company_dependent(self):
+        Model = self.env['test_orm.normalized']
+        record = Model.create({'ref': ' foo '})
+        self.assertEqual(record.ref, 'FOO')
+
+        # the fallback is normalized when read, like in queries
+        self.env['ir.default'].set('test_orm.normalized', 'ref', ' bar ')
+        record = Model.create({})
+        self.assertEqual(record.ref, 'BAR')
+        self.assertEqual(Model.search([('id', '=', record.id), ('ref', '=', 'BAR')]), record)
+
+    def test_related(self):
+        Model = self.env['test_orm.normalized']
+        self.assertIs(Model._fields['parent_name'].normalize, Model._fields['name'].normalize)
+
+        parent = Model.create({'name': 'foo'})
+        record = Model.create({'parent_id': parent.id})
+        record.parent_name = ' bar '
+        self.assertEqual(record.parent_name, 'BAR')
+        self.assertEqual(parent.name, 'BAR')

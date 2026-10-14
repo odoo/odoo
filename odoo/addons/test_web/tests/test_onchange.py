@@ -604,6 +604,22 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
         self.assertEqual(result['value'], expected)
 
+    def test_onchange_normalize(self):
+        """ The normalized value of a modified field is returned. """
+        Model = self.env['test_orm.normalized']
+        fields_spec = {'name': {}, 'count': {}, 'code': {}, 'parent_id': {'fields': {}}, 'parent_name': {}}
+
+        result = Model.onchange({'name': ' foo ', 'count': -2}, ['name'], fields_spec)
+        self.assertEqual(result['value'], {'name': 'FOO', 'code': 'FOO'})
+
+        result = Model.onchange({'name': 'FOO', 'count': -2}, ['count'], fields_spec)
+        self.assertEqual(result['value'], {'count': 0})
+
+        # the related field normalizes like its target field
+        parent = Model.create({'name': 'foo'})
+        result = Model.onchange({'parent_id': parent.id, 'parent_name': ' bar '}, ['parent_name'], fields_spec)
+        self.assertEqual(result['value'], {'parent_name': 'BAR'})
+
     def test_onchange_many2one_one2many(self):
         """ Setting a many2one field should not read the inverse one2many. """
         discussion = self.env.ref('test_base.discussion_0')

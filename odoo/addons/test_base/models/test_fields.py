@@ -81,6 +81,12 @@ class TestOrmNormalized(models.Model):
     # empty values are normalized, too
     title = fields.Char(translate=True, normalize=lambda title: title or 'Untitled')
     data = fields.Json(normalize=lambda data: data and {key: val for key, val in data.items() if val is not None})
+    currency_id = fields.Many2one('res.currency')
+    price = fields.Monetary(normalize=abs)
+    ref = fields.Char(company_dependent=True, normalize=lambda ref: ref and ref.strip().upper())
+    parent_id = fields.Many2one('test_orm.normalized')
+    # normalize is inherited from the related field
+    parent_name = fields.Char('Parent Name', related='parent_id.name', readonly=False)
 
     @api.depends('name')
     def _compute_code(self):

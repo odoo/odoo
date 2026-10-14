@@ -566,6 +566,7 @@ class Field[T]:
 
         if self.normalize is not None and not self._normalizable:
             self._setup_warning(f"normalize is not supported on {self.type} fields")
+            self.normalize = None
 
     ############################################################################
     #
@@ -903,6 +904,7 @@ class Field[T]:
     _related_help = property(attrgetter('help'))
     _related_groups = property(attrgetter('groups'))
     _related_aggregator = property(attrgetter('aggregator'))
+    _related_normalize = property(attrgetter('normalize'))
 
     @functools.cached_property
     def column_type(self) -> tuple[str, str] | None:
@@ -937,6 +939,9 @@ class Field[T]:
             .with_company(records.env.company) \
             ._get_model_defaults(records._name).get(self.name)
         fallback = self.convert_to_cache(fallback, records, validate=False)
+        if self.normalize is not None:
+            # ir.default stores the value as given; normalize it as in SQL queries
+            fallback = self._normalize_cache_value(fallback, records)
         return self.convert_to_record(fallback, records)
 
     #
@@ -1555,7 +1560,7 @@ class Field[T]:
         if operator in ('>', '<', '>=', '<='):
             accept_null_value = False
             if (null_value := self.falsy_value) is not None:
-                value = self.convert_to_cache(value, model) or null_value
+                value = self.convert_to_cache(value, model, validate=False) or null_value
                 accept_null_value = can_be_null and (
                     null_value < value if operator == '<' else
                     null_value > value if operator == '>' else

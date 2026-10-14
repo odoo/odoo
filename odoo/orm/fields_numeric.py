@@ -249,6 +249,8 @@ class Monetary(Field[float]):
             raise Exception(f"{self}: unknown currency_field {cur_field!r}")
 
     def convert_to_column_insert(self, value, record, values=None, validate=True):
+        if validate and self.normalize is not None:
+            value = self.convert_to_cache(value, record)
         # retrieve currency from values or record
         currency_field_name = self.get_currency_field(record)
         currency_field = record._fields[currency_field_name]
