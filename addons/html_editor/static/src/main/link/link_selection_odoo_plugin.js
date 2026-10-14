@@ -6,12 +6,10 @@ export class OdooLinkSelectionPlugin extends Plugin {
     static id = "odooLinkSelection";
     /** @type {import("plugins").EditorResources} */
     resources = {
-        is_link_eligible_for_zwnbsp_predicates: [
-            (link) => {
-                if (selectElements(link, "*").some((el) => el.nodeName === "IMG" || isBlock(el))) {
-                    return false;
-                }
-            },
-        ],
+        region_properties: {
+            is: (link) =>
+                selectElements(link, "*").some((el) => el.nodeName === "IMG" || isBlock(el)),
+            zwnbsp: false,
+        },
     };
 }
