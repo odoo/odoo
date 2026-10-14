@@ -42,8 +42,8 @@ export class SelectionPlaceholderPlugin extends Plugin {
         region_properties: {
             within: PLACEHOLDER_SELECTOR,
             powerButtons: false,
+            movable: false,
         },
-        move_node_blacklist_selectors: PLACEHOLDER_SELECTOR,
         system_node_selectors: PLACEHOLDER_SELECTOR,
         system_classes: BLINKER_CLASS,
     };

@@ -135,15 +135,14 @@ export class BannerPlugin extends Plugin {
                 categoryId: "banner",
             },
         ],
-        region_properties: {
-            within: ".o_editor_banner",
-            powerButtons: false,
-        },
+        region_properties: [
+            { within: ".o_editor_banner", powerButtons: false },
+            { is: ".o_editor_banner *", movable: false },
+        ],
         normalize_processors: withSequence(
             5, // before tabs are aligned
             this.handle_monospace_tab_to_spaces.bind(this)
         ),
-        move_node_blacklist_selectors: ".o_editor_banner *",
         move_node_whitelist_selectors: ".o_editor_banner",
 
         /** Overrides */

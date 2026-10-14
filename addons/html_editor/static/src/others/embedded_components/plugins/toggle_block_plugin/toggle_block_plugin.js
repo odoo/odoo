@@ -41,7 +41,6 @@ export class ToggleBlockPlugin extends Plugin {
                 `${toggleSelector} ${contentSelector} > ${baseContainerGlobalSelector}:only-child`
             ),
         ],
-        move_node_blacklist_selectors: `${toggleSelector} ${titleSelector} *`,
         powerbox_items: [
             {
                 commandId: "insertToggleBlock",
@@ -78,6 +77,7 @@ export class ToggleBlockPlugin extends Plugin {
 
         region_properties: [
             { within: `${toggleSelector} ${titleSelector}`, powerButtons: false },
+            { is: `${toggleSelector} ${titleSelector} *`, movable: false },
             withSequence(20, {
                 is: `${toggleSelector} ${titleSelector} > *`,
                 hintText: _t("Toggle title"),

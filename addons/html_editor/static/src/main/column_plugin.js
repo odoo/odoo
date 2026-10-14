@@ -85,6 +85,7 @@ export class ColumnPlugin extends Plugin {
         }),
         region_properties: [
             { within: ".o_text_columns", powerButtons: false },
+            { is: ".o_text_columns *", movable: false },
             {
                 is: `.odoo-editor-editable .o_text_columns div[class*='col-'],
                             .odoo-editor-editable .o_text_columns div[class*='col-']>${baseContainerGlobalSelector}:first-child`,
@@ -99,7 +100,6 @@ export class ColumnPlugin extends Plugin {
             },
         ],
         move_node_whitelist_selectors: ".o_text_columns",
-        move_node_blacklist_selectors: ".o_text_columns *",
         hint_targets_providers: (selectionData) => {
             if (!selectionData.documentSelection) {
                 return [];
