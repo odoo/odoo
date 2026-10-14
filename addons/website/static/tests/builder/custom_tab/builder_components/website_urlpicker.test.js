@@ -59,6 +59,7 @@ beforeEach(() => {
 });
 
 test("link button opens in new window if url not empty", async () => {
+    mockGetSuggestedLinks();
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
