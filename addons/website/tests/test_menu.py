@@ -356,10 +356,11 @@ class TestMenu(common.TransactionCase):
         }])
 
         all_websites = self.env['website'].search([])
-        template_menus = Menu.search([('website_id', '=', False)])
+        template_menus = Menu.search([('website_id', '=', False), ('id', 'child_of', default_menu.id)])
         external_ids = template_menus.get_external_id()
         for template_menu in template_menus:
             # website_helpdesk creates website specific menus manually, throwing off counts
+            # website_event creates menus (demo data) without a website too
             # check all template menus by external id instead
             for website in all_websites:
                 self.assertTrue(
@@ -369,7 +370,7 @@ class TestMenu(common.TransactionCase):
 
         # Ensure new website gets the complete default menu structure
         new_website = Website.create({'name': 'new website'})
-        self.assertEqual(Menu.search_count([('website_id', '=', False)]), Menu.search_count([('website_id', '=', new_website.id)]), "New website's bootstrapping should have a duplicate default menu tree")
+        self.assertEqual(len(template_menus), Menu.search_count([('website_id', '=', new_website.id)]), "New website's bootstrapping should have a duplicate default menu tree")
 
         # Integrity checks
         new_website.invalidate_recordset(['menu_id'])
