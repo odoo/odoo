@@ -25,8 +25,6 @@ export const freezeTime = _hootDom.freezeTime;
 export const microTick = _hootDom.microTick;
 /** @deprecated use `import { runAllTimers } from "@odoo/hoot";` */
 export const runAllTimers = _hootDom.runAllTimers;
-/** @deprecated use `import { setFrameRate } from "@odoo/hoot";` */
-export const setFrameRate = _hootDom.setFrameRate;
 /** @deprecated use `import { tick } from "@odoo/hoot";` */
 export const tick = _hootDom.tick;
 /** @deprecated use `import { unfreezeTime } from "@odoo/hoot";` */
