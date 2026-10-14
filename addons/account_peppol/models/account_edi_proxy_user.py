@@ -64,11 +64,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if self.proxy_type not in peppol_proxy_types:
             proxy_type_map = dict(self._fields['proxy_type']._description_selection(self.env))
             proxy_types = [proxy_type_map[proxy_type] for proxy_type in peppol_proxy_types]
-            raise UserError(self.env._('EDI user should be of one of the following types: %s', format_list(self.env, proxy_types, 'or')))
-
+            raise UserError(self.env._('EDI user %(edi_id)s should be of one of the following types: %(proxy_types)s',
+                edi_id=self.id,
+                proxy_types=format_list(self.env, proxy_types, 'or'),
+            ))
         token_out_of_sync_error_message = self.env._(
-            "Failed to connect to Peppol Access Point. This might happen if you restored a database from a backup or copied it without neutralization. "
-            "To fix this, please go to Settings > Accounting > Peppol Settings and click on 'Reconnect this database'."
+            "Failed to connect to Peppol Access Point with proxy user %s. This might happen if you restored a database from a backup or copied it without neutralization. "
+            "To fix this, please go to Settings > Accounting > Peppol Settings and click on 'Reconnect this database'.",
+            self.id,
         )
 
         if self.is_token_out_of_sync:
@@ -93,7 +96,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 # commit the above changes before raising below
                 if not modules.module.current_test:
                     self.env.cr.commit()
-                raise UserError(_('We could not find a user with this information on our server. Please check your information.'))
+                raise UserError(_('We could not find a user with this information on our server. Please check your information (proxy user %s).', self.id))
 
             elif e.code == 'invalid_signature':
                 self._mark_connection_out_of_sync()
