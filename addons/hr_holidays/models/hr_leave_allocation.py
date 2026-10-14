@@ -1032,7 +1032,9 @@ class HrLeaveAllocation(models.Model):
     def _get_initialize_accrual_plan_values(self, date_from):
         return {
             'lastcall': date_from,
+            'actual_lastcall': False,
             'nextcall': False,
+            'last_executed_carryover_date': False,
             'number_of_days': 0.0,
             'number_of_days_display': 0.0,
             'number_of_hours_display': 0.0,
