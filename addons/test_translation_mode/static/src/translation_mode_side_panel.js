@@ -1,10 +1,28 @@
-import { Component, onWillDestroy, proxy, signal, t, useProps } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    onWillDestroy,
+    Plugin,
+    signal,
+    useListener,
+    usePlugin,
+} from "@odoo/owl";
+import { LocalizationPlugin } from "@web/core/l10n/localization_plugin";
 import { normalizedMatch } from "@web/core/l10n/utils";
-import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
+import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { isVisible } from "@web/core/utils/ui";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
+import { isTranslationModeEnabled } from "./translation.patch";
+import {
+    TRANSLATABLE_ATTRIBUTE_LABELS,
+    TRANSLATABLE_PROPERTY_LABELS,
+    TranslationModePlugin,
+} from "./translation_mode_plugin";
 
 /**
- * @typedef {import("./translation_mode_service").TargetedTranslation} TargetedTranslation
+ * @typedef {import("./translation_mode_plugin").TargetedTranslation} TargetedTranslation
  */
 
 /**
@@ -47,115 +65,43 @@ const DEFAULT_LANG_FLAG_URL = "/base/static/img/country_flags/us.png";
 const RE_MISSING_SOURCE = /^MISSING_SOURCE_\d{8}$/;
 
 export class TranslationModeSidePanel extends Component {
-    props = useProps({
-        translations: t.array(
-            t.object({
-                context: t.string(),
-                link: t.string(),
-                source: t.string(),
-                targets: t.array(
-                    t.array(
-                        t.customValidator(
-                            t.any(),
-                            (el) => typeof el === "string" || el?.nodeType === Node.ELEMENT_NODE
-                        )
-                    )
-                ),
-                isTranslated: t.boolean(),
-                translation: t.string(),
-            })
-        ),
-    });
     static template = "test_translation_mode.TranslationModeSidePanel";
 
-    isMissingSource = isMissingSource;
-    isMissingTranslation = isMissingTranslation;
+    action = usePlugin(ActionPlugin);
+    localization = usePlugin(LocalizationPlugin);
+    orm = usePlugin(ORM);
+    translationMode = usePlugin(TranslationModePlugin);
 
-    defaultLangDisplayName = DEFAULT_LANG_DISPLAY_NAME;
-    defaultLangFlagUrl = DEFAULT_LANG_FLAG_URL;
-    /**
-     * Internal set recomputed on each render keeping track of which translations
-     * are only bound to hidden targets.
-     * @type {Set<TargetedTranslation>}
-     */
-    hiddenTranslations = new Set();
-
+    collapsedCategories = signal.Set(new Set());
+    currentLangDisplayName = signal(this.localization.localization.code);
+    currentLangFlagUrl = signal("");
+    filter = signal("");
     rootRef = signal.ref();
+    /** @type {import("@odoo/owl").Signal<string | null>} */
+    translationUrl = signal(null);
 
-    setup() {
-        this.actionService = useService("action");
-        this.localization = useService("localization");
-        this.orm = useService("orm");
-        this.translationMode = useService("translation_mode");
-
-        this.translationMode.useBodyClass("o-body-with-translate-side-panel");
-
-        this.collapsedCategories = proxy(new Set());
-        this.state = proxy({
-            filter: "",
-            currentLangDisplayName: this.localization.code,
-            currentLangFlagUrl: "",
-            translationUrl: null,
-        });
-
-        this.onPointerDown = this.onPointerDown.bind(this);
-        window.addEventListener("pointerdown", this.onPointerDown, { capture: true });
-        onWillDestroy(() =>
-            window.removeEventListener("pointerdown", this.onPointerDown, { capture: true })
-        );
-
-        this.orm
-            .call("ir.config_parameter", "get_str", ["test_translation_mode.translation_url"])
-            .then((translationUrl) => {
-                this.state.translationUrl = translationUrl || "";
-                if (!this.state.translationUrl.endsWith("/")) {
-                    this.state.translationUrl += "/";
-                }
-            });
-        this.orm
-            .webSearchRead("res.lang", [["code", "=", this.localization.code]], {
-                specification: {
-                    display_name: {},
-                    flag_image_url: {},
-                },
-            })
-            .then(({ records }) => {
-                this.state.currentLangDisplayName = records[0].display_name;
-                this.state.currentLangFlagUrl = records[0].flag_image_url;
-            });
-    }
-
-    /**
-     * @param {[target: HTMLElement, position: string]} targets
-     */
-    formatTarget(targets) {
-        const resultSet = new Set();
-        for (const [, position] of targets) {
-            if (TRANSLATABLE_ATTRIBUTE_LABELS[position]) {
-                resultSet.add(TRANSLATABLE_ATTRIBUTE_LABELS[position]);
-            } else if (TRANSLATABLE_PROPERTY_LABELS[position]) {
-                resultSet.add(TRANSLATABLE_PROPERTY_LABELS[position]);
-            } else {
-                resultSet.add(position);
+    filteredTranslations = computed(() => {
+        const filter = this.filter().toLowerCase().trim();
+        return this.translationMode
+            .currentTranslations()
+            .filter((translation) => matchFilter(filter, translation));
+    });
+    hiddenTranslations = computed(() => {
+        /** @type {Set<TargetedTranslation>} */
+        const hiddenTranslations = new Set();
+        for (const translation of this.filteredTranslations()) {
+            if (!translation.targets.some(([el]) => isVisible(el, { css: true, viewPort: true }))) {
+                hiddenTranslations.add(translation);
             }
         }
-        return [...resultSet].join(" / ");
-    }
-
-    getTranslationCategories() {
+        return hiddenTranslations;
+    });
+    translationCategories = computed(() => {
         /** @type {TargetedTranslation[]} */
         const translated = [];
         /** @type {TargetedTranslation[]} */
         const untranslated = [];
-        this.hiddenTranslations.clear();
-        const filter = this.state.filter.toLowerCase().trim();
-        for (const translation of this.props.translations) {
-            if (!matchFilter(filter, translation)) {
-                continue;
-            }
-            if (!translation.targets.some(([el]) => isVisible(el, { css: true, viewPort: true }))) {
-                this.hiddenTranslations.add(translation);
-            }
+        for (const translation of this.filteredTranslations()) {
             if (translation.isTranslated) {
                 translated.push(translation);
             } else {
@@ -178,6 +124,55 @@ export class TranslationModeSidePanel extends Component {
             });
         }
         return categories;
+    });
+
+    defaultLangDisplayName = DEFAULT_LANG_DISPLAY_NAME;
+    defaultLangFlagUrl = DEFAULT_LANG_FLAG_URL;
+    isMissingSource = isMissingSource;
+    isMissingTranslation = isMissingTranslation;
+
+    setup() {
+        this.translationMode.useBodyClass("o-body-with-translate-side-panel");
+
+        useListener(window, "pointerdown", this.onPointerDown.bind(this), { capture: true });
+
+        this.orm
+            .call("ir.config_parameter", "get_str", ["test_translation_mode.translation_url"])
+            .then((translationUrl) => {
+                translationUrl ||= "";
+                if (!translationUrl.endsWith("/")) {
+                    translationUrl += "/";
+                }
+                this.translationUrl.set(translationUrl);
+            });
+        this.orm
+            .webSearchRead("res.lang", [["code", "=", this.localization.localization.code]], {
+                specification: {
+                    display_name: {},
+                    flag_image_url: {},
+                },
+            })
+            .then(({ records }) => {
+                this.currentLangDisplayName.set(records[0].display_name);
+                this.currentLangFlagUrl.set(records[0].flag_image_url);
+            });
+    }
+
+    /**
+     * @param {[target: HTMLElement, position: string][]} targets
+     */
+    formatTarget(targets) {
+        const resultSet = new Set();
+        for (const [, position] of targets) {
+            if (TRANSLATABLE_ATTRIBUTE_LABELS[position]) {
+                resultSet.add(TRANSLATABLE_ATTRIBUTE_LABELS[position]);
+            } else if (TRANSLATABLE_PROPERTY_LABELS[position]) {
+                resultSet.add(TRANSLATABLE_PROPERTY_LABELS[position]);
+            } else {
+                resultSet.add(position);
+            }
+        }
+        return [...resultSet].join(" / ");
     }
 
     /**
@@ -201,34 +196,41 @@ export class TranslationModeSidePanel extends Component {
     }
 
     openSettings() {
-        this.actionService.doAction("test_translation_mode.translation_mode_settings_action");
+        this.action.doAction("test_translation_mode.translation_mode_settings_action");
     }
 
+    /**
+     * @param {{ id: string }} category
+     */
     toggleCategory(category) {
-        if (this.collapsedCategories.has(category.id)) {
-            this.collapsedCategories.delete(category.id);
+        const collapsedCategories = this.collapsedCategories();
+        if (collapsedCategories.has(category.id)) {
+            collapsedCategories.delete(category.id);
         } else {
-            this.collapsedCategories.add(category.id);
+            collapsedCategories.add(category.id);
         }
     }
 }
 
-export const TRANSLATABLE_ATTRIBUTE_LABELS = {
-    "aria-label": `Aria label`,
-    "aria-placeholder": `Aria placeholder`,
-    "aria-roledescription": `Aria role description`,
-    "aria-valuetext": `Aria value text`,
-    "data-tooltip-info": `Tooltip info data`,
-    "data-tooltip": `Tooltip data`,
-    "o-we-hint-text": `Web editor text hint`,
-    alt: `Alternate text`,
-    label: `Label`,
-    name: `Name`,
-    placeholder: `Placeholder`,
-    searchabletext: `Searchable text`,
-    title: `Title`,
-};
-export const TRANSLATABLE_PROPERTY_LABELS = {
-    textContent: `Text`,
-    value: `Value`,
-};
+/**
+ * Displays the side panel listing the translations of the current page when the
+ * interactive translation mode is enabled.
+ */
+export class TranslationModeSidePanelPlugin extends Plugin {
+    setup() {
+        if (!isTranslationModeEnabled()) {
+            return;
+        }
+        const mainComponents = registry.category("main_components");
+        mainComponents.add("translation-mode-side-panel", {
+            Component: TranslationModeSidePanel,
+        });
+        onWillDestroy(() => mainComponents.remove("translation-mode-side-panel"));
+    }
+}
+
+// Same restriction as the translation mode plugin, which looks for translations
+// in iframes.
+if (window === window.top) {
+    services.add(TranslationModeSidePanelPlugin);
+}

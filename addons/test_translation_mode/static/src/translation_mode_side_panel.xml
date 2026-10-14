@@ -3,7 +3,7 @@
 
     <t t-name="test_translation_mode.TranslationModeSidePanel">
         <t t-set="highlightsEnabled" t-value="this.translationMode.highlightsEnabled" />
-        <t t-set="categories" t-value="this.getTranslationCategories()" />
+        <t t-set="categories" t-value="this.translationCategories()" />
         <aside
             class="o-translate-side-panel d-flex flex-column position-fixed top-0 end-0 bg-view shadow"
             data-translation-highlight="off"
@@ -21,7 +21,7 @@
                                 class="o_searchview_input flex-grow-1 border-0 p-0 bg-transparent"
                                 placeholder="Search…"
                                 t-att-disabled="!highlightsEnabled"
-                                t-model.proxy="this.state.filter"
+                                t-model="this.filter"
                             />
                         </div>
                     </search>
@@ -42,7 +42,7 @@
             </t>
             <div class="d-flex flex-column overflow-auto h-100">
                 <t t-foreach="categories" t-as="category" t-key="category.id">
-                    <t t-set="isOpen" t-value="!this.collapsedCategories.has(category.id)" />
+                    <t t-set="isOpen" t-value="!this.collapsedCategories().has(category.id)" />
                     <details t-att-open="isOpen">
                         <summary
                             class="d-flex justify-content-between p-2 user-select-none"
@@ -70,14 +70,14 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h5 class="d-flex gap-2 align-items-center m-0">
                                                 <span t-out="this.formatTarget(translation.targets)" />
-                                                <t t-if="this.hiddenTranslations.has(translation)">
+                                                <t t-if="this.hiddenTranslations().has(translation)">
                                                     <i
                                                         class="oi text-muted" data-icon="visibility_off"
                                                         title="These elements are hidden in the current user interface"
                                                     />
                                                 </t>
                                             </h5>
-                                            <t t-if="this.state.translationUrl === null">
+                                            <t t-if="this.translationUrl() === null">
                                                 <a class="small fst-italic">
                                                     Loading…
                                                 </a>
@@ -86,7 +86,7 @@
                                                 <a
                                                     class="d-flex gap-1 align-items-center user-select-none"
                                                     target="_blank"
-                                                    t-att-href="this.state.translationUrl + translation.link"
+                                                    t-att-href="this.translationUrl() + translation.link"
                                                     title="Edit translation on Weblate"
                                                     aria-label="Edit translation on Weblate"
                                                 >
@@ -113,8 +113,8 @@
                                         <div class="d-flex gap-2">
                                             <img
                                                 class="o-translation-flag user-select-none"
-                                                t-att-src="this.state.currentLangFlagUrl"
-                                                t-att-alt="this.state.currentLangDisplayName"
+                                                t-att-src="this.currentLangFlagUrl()"
+                                                t-att-alt="this.currentLangDisplayName()"
                                             />
                                             <t t-if="this.isMissingTranslation(translation)">
                                                 <span class="text-muted">
