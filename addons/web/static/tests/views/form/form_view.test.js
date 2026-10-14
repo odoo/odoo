@@ -368,6 +368,111 @@ test(`[Offline] save a form view offline (click save icon)`, async () => {
     expect(".o_data_cell:first").toHaveText("new foo");
 });
 
+test(`[Offline] reopen a new record saved offline with all field types`, async () => {
+    expect.errors(1); // 1x ConnectionLostError (onchange of the reopened new record)
+    let offline = false;
+    onRpc("/*", (request) => {
+        const route = new URL(request.url).pathname;
+        if (offline && route !== "/web/dataset/call_kw/partner/web_read") {
+            return new Response("", { status: 502 });
+        }
+    });
+
+    Partner._fields.txt = fields.Text();
+    Partner._fields.html_f = fields.Html();
+    Partner._fields.bin = fields.Binary();
+    Partner._fields.res_model = fields.Char();
+    Partner._fields.m2o_ref = fields.Many2oneReference({
+        model_field: "res_model",
+        relation: "partner",
+    });
+    Partner._onChanges = {
+        foo(record) {
+            if (record.foo !== "new foo") {
+                return;
+            }
+            record.txt = "some text";
+            record.html_f = "<p>some html</p>";
+            record.res_model = "partner";
+            record.float_field = 3.5;
+            record.int_field = 7;
+            record.bar = true;
+            record.state = "cd";
+            record.date = "2017-02-03";
+            record.datetime = "2017-02-03 10:00:00";
+            record.parent_id = 2;
+            record.reference = "partner,2";
+            record.type_ids = [[4, 12]];
+            record.child_ids = [[0, 0, { name: "kid" }]];
+        },
+    };
+    Partner._views = {
+        form: `
+            <form>
+                <field name="foo"/>
+                <field name="txt"/>
+                <field name="html_f"/>
+                <field name="bin"/>
+                <field name="res_model"/>
+                <field name="float_field"/>
+                <field name="int_field"/>
+                <field name="bar"/>
+                <field name="state"/>
+                <field name="date"/>
+                <field name="datetime"/>
+                <field name="parent_id"/>
+                <field name="reference"/>
+                <field name="type_ids" widget="many2many_tags"/>
+                <field name="child_ids"><list><field name="name"/></list></field>
+            </form>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await contains(".o_control_panel .o_list_button_add").click();
+    await contains(".o_field_widget[name=foo] input").edit("new foo");
+    await runAllTimers(); // execute first _syncORM triggered after a delay in the service startup
+
+    offline = true;
+    await contains(".o_form_button_save").click();
+    expect(getService("offline").offline).toBe(true);
+
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(".o_offline_systray_content .dropdown-item").click();
+    await waitFor(".o_field_widget[name=txt]");
+    expect(".o_field_widget[name=foo] input").toHaveValue("new foo");
+    expect(".o_field_widget[name=txt] textarea").toHaveValue("some text");
+    expect(".o_field_widget[name=res_model] input").toHaveValue("partner");
+    expect(".o_field_widget[name=float_field] input").toHaveValue("3.50");
+    expect(".o_field_widget[name=int_field] input").toHaveValue("7");
+    expect(".o_field_widget[name=bar] input").toBeChecked();
+    expect(".o_field_widget[name=state] input").toHaveValue("CD");
+    expect(".o_field_widget[name=date] button").toHaveText("Feb 3, 2017");
+    expect(".o_field_widget[name=datetime] button").toHaveText("Feb 3, 2017, 11:00 AM");
+    expect(".o_field_widget[name=parent_id] input").toHaveValue("second record");
+    expect(".o_field_widget[name=reference]").toHaveText("second record");
+    expect(".o_field_widget[name=type_ids] .o_tag").toHaveCount(1);
+    expect(".o_field_widget[name=child_ids] .o_data_row").toHaveCount(1);
+    expect(".o_field_widget[name=child_ids] .o_data_cell").toHaveText("kid");
+    await expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/onchange" couldn't be established or was interrupted`,
+    ]);
+});
+
 test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     expect.errors(1); // 1x ConnectionLostError
     // this test is the same as above, but in this one we don't manually save
