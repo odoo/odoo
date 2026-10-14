@@ -117,6 +117,9 @@
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="leave_manager_id" string="Time Off" widget="many2one_avatar_user"/>
             </xpath>
+            <field name="parent_id" position="after">
+                <field name="seniority" groups="hr.group_hr_user"/>
+            </field>
             <xpath expr="//field[@name='hr_icon_display']" position="attributes">
                 <attribute name="widget">hr_presence_status_private</attribute>
             </xpath>

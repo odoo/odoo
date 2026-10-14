@@ -11,6 +11,7 @@
                 <field name="department_id"/>
                 <field name="work_entry_type_id"/>
                 <field name="accrual_plan_id"/>
+                <field name="accrual_rule_id" groups="hr_holidays.group_hr_holidays_user"/>
                 <field name="activity_user_id" string="Activities of"/>
                 <field name="activity_type_id" string="Activity type"/>
                 <filter domain="[
@@ -114,7 +115,11 @@
                     You are not assigned to any employee in the current company. Therefore, you can't request time off allocations for yourself.
                 </div>
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_accrual_rule" type="object" class="oe_stat_button"
+                            icon="rule" string="Accrual Rule" invisible="not accrual_rule_id"
+                            groups="hr_holidays.group_hr_holidays_user"/>
+                    </div>
                     <div id="title" class="oe_title">
                         <h2><field name="name" class="w-100"
                             placeholder="e.g. Time type (From validity start to validity end / no limit)"
@@ -127,20 +132,20 @@
                             <field name="type_request_unit" invisible="1"/>
                             <div class="o_td_label" name="validity_label" invisible="not is_officer">
                                 <label for="date_from" string="Validity Period"
-                                    invisible="accrual_plan_id or state != 'confirm'"/>
-                                <label for="date_from" string="Start Date" invisible="not accrual_plan_id"/>
+                                    invisible="accrual_plan_id or accrual_rule_id or state != 'confirm'"/>
+                                <label for="date_from" string="Start Date" invisible="not accrual_plan_id and not accrual_rule_id"/>
                             </div>
                             <div class="o_row" name="validity" invisible="not is_officer">
                                 <field name="date_from" nolabel="1"
                                     readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
-                                    invisible="not accrual_plan_id and state != 'confirm'"/>
+                                    invisible="not accrual_plan_id and not accrual_rule_id and state != 'confirm'"/>
                                 <i class="oi mx-2" data-icon="east" aria-label="Arrow icon" title="Arrow"
-                                    invisible="accrual_plan_id or state != 'confirm'"/>
+                                    invisible="accrual_plan_id or accrual_rule_id or state != 'confirm'"/>
                                 <label class="mx-2" for="date_to" string="Run until"
-                                    invisible="not accrual_plan_id"/>
+                                    invisible="not accrual_plan_id and not accrual_rule_id"/>
                                 <field name="date_to" nolabel="1"
                                     placeholder="No Limit"
-                                    invisible="not accrual_plan_id and state != 'confirm'"/>
+                                    invisible="not accrual_plan_id and not accrual_rule_id and state != 'confirm'"/>
                                 <div id="no_limit_label" class="oe_read_only"
                                     invisible="not id or date_to or state != 'confirm'">No limit</div>
                             </div>
@@ -158,7 +163,8 @@
                                 placeholder="Regular allocation"
                                 readonly="not is_officer or state in ['refuse', 'validate']"
                                 domain="[('work_entry_type_id', '=', work_entry_type_id)] if work_entry_type_id else []"
-                                invisible="hide_accrual_plan_id"/>
+                                invisible="1"/>
+                            <field name="accrual_rule_id" invisible="1"/>
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
                                 <label for="number_of_days_display" string="Allocation"

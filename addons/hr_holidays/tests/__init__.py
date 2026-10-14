@@ -9,6 +9,7 @@ from . import test_hr_holidays_cancel_leave
 from . import test_hr_holidays_tour
 from . import test_hr_work_entry_type
 from . import test_accrual_allocations
+from . import test_accrual_rule
 from . import test_change_department
 from . import test_calendar_reschedule
 from . import test_calendar_resize_tour

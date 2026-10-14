@@ -51,6 +51,21 @@ class HrEmployee(models.Model):
     member_of_department = fields.Boolean('Member of Department', compute='_compute_member_of_department', search='_search_part_of_department')
     hr_responsible_id = fields.Many2one(domain=lambda self: self.env['hr.version']._get_hr_responsible_domain())
     leave_ids = fields.One2many('hr.leave', 'employee_id', groups="hr.group_hr_user")
+    seniority = fields.Char(compute='_compute_seniority', groups='hr.group_hr_user')
+
+    @api.depends('first_contract_date')
+    @api.depends_context('lang')
+    def _compute_seniority(self):
+        today = fields.Date.today()
+        for employee in self:
+            if not employee.first_contract_date or employee.first_contract_date > today:
+                employee.seniority = False
+                continue
+            duration = relativedelta(today, employee.first_contract_date)
+            employee.seniority = self.env._(
+                '%(years)s years, %(months)s months, %(days)s days',
+                years=duration.years, months=duration.months, days=duration.days,
+            )
 
     def _compute_current_work_entry_type_id(self):
         self.current_work_entry_type_id = False

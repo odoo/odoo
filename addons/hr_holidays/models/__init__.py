@@ -15,6 +15,7 @@ from . import hr_leave_allocation
 from . import hr_work_entry_type
 from . import hr_leave_accrual_plan_level
 from . import hr_leave_accrual_plan
+from . import hr_leave_accrual_rule
 from . import hr_leave_mandatory_day
 from . import hr_version
 from . import mail_activity_type
