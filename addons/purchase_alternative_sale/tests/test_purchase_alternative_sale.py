@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo import Command
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPurchaseAlternativeSale(TransactionCase):
 
     @classmethod

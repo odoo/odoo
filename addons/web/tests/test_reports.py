@@ -5,7 +5,7 @@ from unittest.mock import Mock, patch
 import odoo.tests
 from odoo.exceptions import UserError
 from odoo.http.session import session_store
-from odoo.tests import no_retry, tagged
+from odoo.tests import no_retry
 from odoo.tools import mute_logger
 from odoo.tools.pdf import PdfReader
 
@@ -13,7 +13,6 @@ from odoo.addons.base.tests.files import PNG_RAW
 from odoo.addons.http_routing.tests.common import MockRequest
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReports(odoo.tests.HttpCase):
     def test_report_session_cookie(self):
         """ Asserts wkhtmltopdf forwards the user session when requesting resources to Odoo, such as images,

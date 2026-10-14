@@ -232,7 +232,6 @@ for rec in records:
         self.assertEqual(cl.code.get('odoo/studio', 0), 1, 'Should count field with no xml_id at all')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestClocParser(TransactionCase):
 
     def test_parser(self):

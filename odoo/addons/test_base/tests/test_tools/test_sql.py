@@ -2,11 +2,10 @@
 
 from psycopg2.errors import CheckViolation
 
-from odoo.tests.common import BaseCase, TransactionCase, tagged
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import SQL, mute_logger, sql
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSQL(BaseCase):
 
     def test_sql_empty(self):
@@ -193,7 +192,6 @@ class TestSQL(BaseCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSqlTools(TransactionCase):
 
     def test_add_constraint(self):

@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tests import tagged, common
+from odoo.tests import common
 from odoo.tools.misc import file_open, mute_logger
 from odoo.tools.translate import code_translations
 
@@ -83,7 +83,6 @@ class ImporterCase(common.TransactionCase):
         return '__test__.' + name
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_ids_stuff(ImporterCase):
     model_name = 'export.integer'
 
@@ -129,7 +128,6 @@ class test_ids_stuff(ImporterCase):
         self.assertEqual([1234567], values(self.read()))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_boolean_field(ImporterCase):
     model_name = 'export.boolean'
 
@@ -210,7 +208,6 @@ class test_boolean_field(ImporterCase):
         self.assertEqual([True] * 3, values(self.read()))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_integer_field(ImporterCase):
     model_name = 'export.integer'
 
@@ -329,7 +326,6 @@ class test_integer_field(ImporterCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_float_field(ImporterCase):
     model_name = 'export.float'
 
@@ -414,7 +410,6 @@ class test_float_field(ImporterCase):
         self.assertEqual(result['messages'], [message("'foobar' does not seem to be a number for field 'Value'", field_name='Value')])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_string_field(ImporterCase):
     model_name = 'export.string.bounded'
 
@@ -460,7 +455,6 @@ class test_string_field(ImporterCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_unbound_string_field(ImporterCase):
     model_name = 'export.string'
 
@@ -484,7 +478,6 @@ class test_unbound_string_field(ImporterCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_required_string_field(ImporterCase):
     model_name = 'export.string.required'
 
@@ -524,7 +517,6 @@ class test_required_string_field(ImporterCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_text(ImporterCase):
     model_name = 'export.text'
 
@@ -549,7 +541,6 @@ class test_text(ImporterCase):
         self.assertEqual([s], values(self.read()))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_selection(ImporterCase):
     model_name = 'export.selection'
     translations_fr = {
@@ -607,7 +598,6 @@ class test_selection(ImporterCase):
         self.assertEqual(result['messages'], [message("Value '42' not found in selection field 'Value'", moreinfo="Foo Bar Qux 4".split(), field_name='Value', field_path=['value'])])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_selection_with_default(ImporterCase):
     model_name = 'export.selection.withdefault'
 
@@ -628,7 +618,6 @@ class test_selection_with_default(ImporterCase):
         self.assertEqual(values(self.read()), ['2'])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_selection_function(ImporterCase):
     model_name = 'export.selection.function'
     translations_fr = {
@@ -679,7 +668,6 @@ class test_selection_function(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_m2o(ImporterCase):
     model_name = 'export.many2one'
 
@@ -912,7 +900,6 @@ class test_m2o(ImporterCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestInvalidStrings(ImporterCase):
     model_name = 'export.m2o.str'
 
@@ -929,7 +916,6 @@ class TestInvalidStrings(ImporterCase):
         self.assertIn('NUL', result['messages'][0]['message'])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_m2m(ImporterCase):
     model_name = 'export.many2many'
 
@@ -1081,7 +1067,6 @@ class test_m2m(ImporterCase):
         self.assertEqual(values(b[0].value), [84, 9])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_o2m(ImporterCase):
     model_name = 'export.one2many'
 
@@ -1322,7 +1307,6 @@ class test_o2m(ImporterCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_o2m_multiple(ImporterCase):
     model_name = 'export.one2many.multiple'
 
@@ -1384,7 +1368,6 @@ class test_o2m_multiple(ImporterCase):
         self.assertEqual(set(values(b.child2)), {21, 22, 23})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_realworld(SavepointCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
@@ -1468,7 +1451,6 @@ class test_realworld(SavepointCaseWithUserDemo):
         self.assertIs(result['ids'], False)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_date(ImporterCase):
     model_name = 'export.date'
 
@@ -1488,7 +1470,6 @@ class test_date(ImporterCase):
         self.assertIs(result['ids'], False)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_datetime(ImporterCase):
     model_name = 'export.datetime'
 
@@ -1548,7 +1529,6 @@ class test_datetime(ImporterCase):
         self.assertEqual([fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])], ['2012-02-03 11:11:11'])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_unique(ImporterCase):
     model_name = 'export.unique'
 
@@ -1617,7 +1597,6 @@ class test_unique(ImporterCase):
         self.assertIn("The value for 'value' (Value) already exists.", message['message'])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_inherits(ImporterCase):
     """The import process should only assign a new xid (derived from the
     childs') if the child is being created and triggers the creation of the
@@ -1810,7 +1789,6 @@ class test_inherits(ImporterCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class CheckSavepoint(ImporterCase):
     model_name = 'export.unique'
 

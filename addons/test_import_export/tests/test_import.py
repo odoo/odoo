@@ -94,7 +94,6 @@ class BaseImportCase(TransactionCase):
         ))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBasicFields(BaseImportCase):
 
     def get_fields(self, field):
@@ -149,7 +148,6 @@ class TestBasicFields(BaseImportCase):
         ]))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestO2M(BaseImportCase):
 
     def test_shallow(self):
@@ -223,7 +221,6 @@ class TestO2M(BaseImportCase):
             )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMatchHeadersSingle(TransactionCase):
 
     def test_match_by_name(self):
@@ -277,7 +274,6 @@ class TestMatchHeadersSingle(TransactionCase):
         self.assertEqual(match, {})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMatchHeadersMultiple(TransactionCase):
 
     def test_noheaders(self):
@@ -330,7 +326,6 @@ class TestMatchHeadersMultiple(TransactionCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestColumnMapping(TransactionCase):
 
     def test_column_mapping(self):
@@ -382,7 +377,6 @@ class TestColumnMapping(TransactionCase):
             )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPreview(TransactionCase):
 
     def make_import(self):
@@ -537,7 +531,6 @@ class TestPreview(TransactionCase):
         self.assertEqual(result['preview'], [['foo', 'bar', 'aux'], ['1', '3', '5'], ['2', '4', '6']])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_convert_import_data(TransactionCase):
     """ Tests conversion of base_import.import input into data which
     can be fed to Model.load
@@ -1371,7 +1364,6 @@ Product 2,P2 sr@latin"""),
         self.assertItemsEqual(results['messages'], [])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBatching(TransactionCase):
     def _makefile(self, rows):
         f = io.StringIO()

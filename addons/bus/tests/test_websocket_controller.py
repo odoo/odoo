@@ -3,12 +3,11 @@
 from freezegun import freeze_time
 
 from odoo.http.session import SESSION_ROTATION_INTERVAL
-from odoo.tests import HttpCase, JsonRpcException, new_test_user, tagged
+from odoo.tests import HttpCase, JsonRpcException, new_test_user
 
 from .common import BusCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsocketController(HttpCase, BusCase):
     def test_websocket_peek(self):
         self._reset_bus()

@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrDefault(TransactionCase):
 
     def test_defaults(self):

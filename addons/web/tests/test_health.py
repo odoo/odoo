@@ -5,7 +5,6 @@ from unittest.mock import patch
 from odoo.tests import tagged, HttpCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebController(HttpCase):
     def test_health(self):
         response = self.url_open('/web/health')

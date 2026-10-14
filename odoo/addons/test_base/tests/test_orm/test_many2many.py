@@ -1,8 +1,7 @@
 from odoo.fields import Command
-from odoo.tests.common import TransactionCase, new_test_user, tagged
+from odoo.tests.common import TransactionCase, new_test_user
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class Many2manyCase(TransactionCase):
     def setUp(self):
         super().setUp()

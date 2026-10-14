@@ -4,12 +4,11 @@
 from datetime import datetime, timedelta
 
 from odoo import Command
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.test_report import TestReportsCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPurchaseStockReports(TestReportsCommon):
     def test_report_forecast_1_purchase_order_multi_receipt(self):
         """ Create a PO for 5 product, receive them then increase the quantity to 10.

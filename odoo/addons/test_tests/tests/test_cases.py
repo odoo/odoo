@@ -213,7 +213,6 @@ class TestRequestRemainingCommon(HttpCase):
         self.env.cr.fetchall()
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRequestRemainingNoCookie(TestRequestRemainingCommon):
     def test_requests_a(self):
         self._test_requests_a()
@@ -228,7 +227,6 @@ class TestRequestRemainingNoCookie(TestRequestRemainingCommon):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRequestRemainingNotEnabled(TestRequestRemainingCommon):
     def test_requests_a(self):
         self._test_requests_a(cookie=True)
@@ -243,7 +241,6 @@ class TestRequestRemainingNotEnabled(TestRequestRemainingCommon):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRequestRemainingStartDuringNext(TestRequestRemainingCommon):
     def test_requests_a(self):
         self._test_requests_a(cookie=True)
@@ -258,7 +255,6 @@ class TestRequestRemainingStartDuringNext(TestRequestRemainingCommon):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRequestRemainingAfterFirstCheck(TestRequestRemainingCommon):
     """
     This test is more specific to the current implem and check what happens if the lock is aquired after the next thread

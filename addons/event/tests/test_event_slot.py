@@ -65,7 +65,6 @@ class TestEventSlotsCommon(EventCase):
 
 
 @tagged('event_slot', 'event_registration')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventSlotRegistration(TestEventSlotsCommon):
 
     @classmethod
@@ -120,7 +119,6 @@ class TestEventSlotRegistration(TestEventSlotsCommon):
 
 
 @tagged('event_slot', 'event_seats')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventSlotSeats(TestEventSlotsCommon):
 
     @classmethod

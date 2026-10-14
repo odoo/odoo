@@ -7,7 +7,6 @@ from odoo.tests import tagged, common, new_test_user
 from odoo import Command, fields
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFormattedReadGroup(common.TransactionCase):
     ''' Test formatted_read_group, similar tests are done in test_private_read_group
     for _read_group.'''

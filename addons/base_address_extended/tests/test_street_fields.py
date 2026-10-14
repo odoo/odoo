@@ -3,10 +3,9 @@
 
 from odoo import models
 from odoo.tests import Form
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStreetFields(TransactionCase):
 
     def test_partner_create(self):

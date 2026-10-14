@@ -8,10 +8,9 @@ from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_tok
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 
-from odoo.tests import tagged, users
+from odoo.tests import users
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 @patch.object(ResUsers, '_get_microsoft_calendar_token', mock_get_token)
 class TestMultiCalendar(TestCommon, MailCase):
 

@@ -6,13 +6,11 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 
 from odoo import tests
-from odoo.tests import tagged
 
 from odoo.addons.mail.tests.common import MailCommon
 
 
 @tests.tagged('mail_activity_mixin')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailActivityMixin(MailCommon):
 
     @classmethod

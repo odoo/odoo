@@ -6,7 +6,6 @@ from odoo.tests import tagged, users
 
 
 @tagged("event_crm")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventCrm(TestEventFullCommon):
 
     @classmethod

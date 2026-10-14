@@ -13,7 +13,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.x509.oid import NameOID
 
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase
 from odoo.tools import pdf
 from odoo.tools.misc import file_open
 from odoo.tools.pdf import reshape_text
@@ -78,7 +78,6 @@ def verify_pdf_signatures(pdf_data, public_key, signer_certificate_der=None, exp
     return verified
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPdf(TransactionCase):
     """ Tests on pdf. """
 
@@ -198,7 +197,6 @@ class TestPdf(TransactionCase):
             self.assertEqual(processed_text[i], expected_shape)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSignature(TransactionCase):
     """Tests on signature tool"""
 

@@ -37,7 +37,6 @@ class _FakeSMTP:
 
 
 @tagged('mail_server')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class EmailConfigCase(TransactionCase):
 
     @patch.dict(config.options, {"email_from": "settings@example.com"})

@@ -6,7 +6,6 @@ from odoo.tests import tagged, users
 
 
 @tagged('lead_internals')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCrmLeadRainbowmanMessages(TestCrmCommon):
     @classmethod
     def setUpClass(cls):

@@ -5,12 +5,11 @@ from datetime import datetime
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Date
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo.tools import float_compare
 from odoo.addons.product.tests.common import ProductCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProductPricelist(ProductCommon):
 
     _test_user_groups = (

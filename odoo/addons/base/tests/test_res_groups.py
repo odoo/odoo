@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import tagged, TransactionCase, Form
+from odoo.tests import TransactionCase, Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGroups(TransactionCase):
 
     def test_res_groups_fullname_search(self):

@@ -34,7 +34,6 @@ def strip_prefix(prefix, names):
     return [name[size:] for name in names if name.startswith(prefix)]
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestOnchange(SavepointCaseWithUserDemo):
 
     def setUp(self):
@@ -1006,7 +1005,6 @@ class TestOnchange(SavepointCaseWithUserDemo):
             self.assertEqual(form.total, 10)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComputeOnchange2(TransactionCase):
 
     def test_create(self):

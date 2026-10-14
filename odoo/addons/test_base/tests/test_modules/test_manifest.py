@@ -7,12 +7,11 @@ from unittest.mock import patch
 
 from odoo.modules.module import Manifest
 from odoo.release import major_version
-from odoo.tests.common import BaseCase, tagged
+from odoo.tests.common import BaseCase
 
 import odoo.addons
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestModuleManifest(BaseCase):
     @classmethod
     def setUpClass(cls):

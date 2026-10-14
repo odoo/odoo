@@ -319,7 +319,6 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(tracking_3.gain, 100)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComputeRankCommon(common.TransactionCase):
 
     @classmethod

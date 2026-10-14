@@ -726,7 +726,6 @@ class TestPerformance(BaseCase):
 
 
 @tagged('-standard', 'profiling_memory')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMemoryProfiler(HttpCase):
     def test_memory_profiler(self):
         """Memory measurements are now embedded in each traces_async entry."""

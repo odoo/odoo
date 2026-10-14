@@ -5,12 +5,11 @@ from zoneinfo import ZoneInfo
 
 from freezegun import freeze_time
 
-from odoo.tests import common, tagged
+from odoo.tests import common
 
 from odoo.addons.lunch.tests.common import TestsCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSupplier(TestsCommon):
     def setUp(self):
         super(TestSupplier, self).setUp()

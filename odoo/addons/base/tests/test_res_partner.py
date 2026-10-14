@@ -24,7 +24,6 @@ SAMPLES = [
 
 
 @tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPartner(TransactionCaseWithUserDemo):
 
     @contextmanager
@@ -1282,7 +1281,6 @@ class TestPartnerForm(TransactionCase):
 
 
 @tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPartnerCategory(TransactionCase):
 
     def test_name_search(self):

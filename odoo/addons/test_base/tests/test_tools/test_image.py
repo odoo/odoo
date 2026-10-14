@@ -5,7 +5,7 @@ import base64
 from PIL import Image, ImageDraw
 
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase
 from odoo.tools import image as tools
 
 from odoo.addons.base.tests.files import PNG_RAW
@@ -13,7 +13,6 @@ from odoo.addons.base.tests.files import PNG_RAW
 img_open = tools.binary_to_image
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestImage(TransactionCase):
     """Tests for the different image tools helpers."""
     def setUp(self):

@@ -87,7 +87,6 @@ class TestSudo(Feedback):
         self.assertFalse(record2.env.su)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestACLFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.access errors """
     @classmethod
@@ -158,7 +157,6 @@ Contact your administrator to request access if necessary."""
         self.assertEqual(ctx.exception.args[0], expected)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIRRuleFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.rule errors
     """
@@ -455,7 +453,6 @@ If you really, really need access, perhaps you can win over your friendly admini
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFieldGroupFeedback(Feedback):
 
     @classmethod

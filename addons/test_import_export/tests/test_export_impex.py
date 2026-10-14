@@ -5,7 +5,7 @@ from cProfile import Profile
 from odoo import fields, Command
 from odoo.exceptions import UserError
 from odoo.tools.misc import mute_logger
-from odoo.tests import tagged, common
+from odoo.tests import common
 from odoo.tools.translate import StoredTranslations
 
 
@@ -29,7 +29,6 @@ class CreatorCase(common.TransactionCase):
         return record._export_rows([f.split('/') for f in fields])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_xids(CreatorCase):
     model_name = 'export.boolean'
 
@@ -48,7 +47,6 @@ class test_xids(CreatorCase):
         self.assertEqual(record._export_rows([['id'], ['value']]), [['x', True]])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_translated_field(CreatorCase):
     model_name = 'import.char.translate'
 
@@ -93,7 +91,6 @@ class test_translated_field(CreatorCase):
             record._export_rows([['value@nl_NL']])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_boolean_field(CreatorCase):
     model_name = 'export.boolean'
 
@@ -107,7 +104,6 @@ class test_boolean_field(CreatorCase):
         self.assertEqual(self.export(False), [[False]])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_integer_field(CreatorCase):
     model_name = 'export.integer'
 
@@ -127,7 +123,6 @@ class test_integer_field(CreatorCase):
         self.assertEqual(self.export(2**31 - 1), [[2147483647]])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_float_field(CreatorCase):
     model_name = 'export.float'
 
@@ -147,7 +142,6 @@ class test_float_field(CreatorCase):
         self.assertEqual(self.export(87654321.4678), [[87654321.4678]])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_decimal_field(CreatorCase):
     model_name = 'export.decimal'
 
@@ -168,7 +162,6 @@ class test_decimal_field(CreatorCase):
         self.assertEqual(self.export(87654321.4678), [[87654321.468]])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_string_field(CreatorCase):
     model_name = 'export.string.bounded'
 
@@ -184,7 +177,6 @@ class test_string_field(CreatorCase):
             self.export("C for Sinking, Java for Drinking, Smalltalk for Thinking. ...and Power to the Penguin!")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_unbound_string_field(CreatorCase):
     model_name = 'export.string'
 
@@ -213,7 +205,6 @@ class test_unbound_string_field(CreatorCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_text(CreatorCase):
     model_name = 'export.text'
 
@@ -233,7 +224,6 @@ class test_text(CreatorCase):
         self.assertEqual(self.export(42), [["42"]])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_date(CreatorCase):
     model_name = 'export.date'
 
@@ -244,7 +234,6 @@ class test_date(CreatorCase):
         self.assertEqual(self.export('2011-11-07'), [[fields.Date.from_string('2011-11-07')]])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_datetime(CreatorCase):
     model_name = 'export.datetime'
 
@@ -264,7 +253,6 @@ class test_datetime(CreatorCase):
         self.assertEqual(self.export('2011-11-07 21:05:48', context={'tz': 'Pacific/Norfolk'}), [[fields.Datetime.from_string('2011-11-08 08:35:48')]])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_selection(CreatorCase):
     model_name = 'export.selection'
     translations_fr = [
@@ -290,7 +278,6 @@ class test_selection(CreatorCase):
         self.assertEqual(self.export('2', context={'lang': 'fr_FR'}), [['titi']])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_selection_function(CreatorCase):
     model_name = 'export.selection.function'
 
@@ -303,7 +290,6 @@ class test_selection_function(CreatorCase):
         self.assertEqual(self.export('0'), [['Corge']])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_m2o(CreatorCase):
     model_name = 'export.many2one'
 
@@ -336,7 +322,6 @@ class test_m2o(CreatorCase):
         self.assertEqual(set(xp), {xp[0]})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_reference(CreatorCase):
     model_name = 'export.reference'
 
@@ -356,7 +341,6 @@ class test_reference(CreatorCase):
         self.assertEqual(self.export(self.ref_value, context={'import_compat': False}), [[self.ref_record.display_name]])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_o2m(CreatorCase):
     model_name = 'export.one2many'
     commands = [
@@ -471,7 +455,6 @@ class test_o2m(CreatorCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_o2m_multiple(CreatorCase):
     model_name = 'export.one2many.multiple'
 
@@ -548,7 +531,6 @@ class test_o2m_multiple(CreatorCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_m2m(CreatorCase):
     model_name = 'export.many2many'
     commands = [
@@ -650,7 +632,6 @@ class test_m2m(CreatorCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_function(CreatorCase):
     model_name = 'export.function'
 
@@ -660,7 +641,6 @@ class test_function(CreatorCase):
 
 
 @common.tagged('-standard', 'bench')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_xid_perfs(common.TransactionCase):
     def setUp(self):
         super().setUp()

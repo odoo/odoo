@@ -5,7 +5,6 @@ from odoo.tests.common import TransactionCase
 
 
 @tagged("phone_blacklist")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPhonenumbersBlacklist(TransactionCase):
 
     def test_sanitize_search(self):

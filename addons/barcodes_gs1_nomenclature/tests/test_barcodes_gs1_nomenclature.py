@@ -1,9 +1,8 @@
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBarcodeGS1Nomenclature(TransactionCase):
     def test_gs1_date_to_date(self):
         barcode_nomenclature = self.env['barcode.nomenclature']

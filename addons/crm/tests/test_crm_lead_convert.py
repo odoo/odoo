@@ -7,7 +7,6 @@ from odoo.tests import tagged, users
 
 
 @tagged('lead_manage')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadConvert(crm_common.TestLeadConvertCommon):
     """
     TODO: created partner (handle assignment) has team of lead
@@ -484,7 +483,6 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(self.lead_1.partner_id, customer)
 
 @tagged('lead_manage')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadConvertBatch(crm_common.TestLeadConvertMassCommon):
 
     def test_initial_data(self):

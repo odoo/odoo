@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests.common import tagged, new_test_user, users
+from odoo.tests.common import new_test_user, users
 from odoo.exceptions import ValidationError
 from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
@@ -15,7 +15,6 @@ from odoo import Command, tools
 
 
 @patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSyncGoogle2Odoo(TestSyncGoogle):
     @classmethod
     def setUpClass(cls):

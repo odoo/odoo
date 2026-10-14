@@ -6,10 +6,9 @@ from datetime import datetime, timedelta
 from odoo import Command
 from odoo.addons.event_booth_sale.tests.common import TestEventBoothSaleCommon
 from odoo.fields import Datetime as FieldsDatetime
-from odoo.tests import tagged, Form, users
+from odoo.tests import Form, users
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventData(TestEventBoothSaleCommon):
 
     @users('user_eventmanager')

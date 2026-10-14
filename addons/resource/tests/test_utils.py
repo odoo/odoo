@@ -3,10 +3,9 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.fields import Datetime
 from odoo.tests.common import TransactionCase
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestExpression(TransactionCase):
 
     def test_resource_calendar_leave_compute_date_to(self):

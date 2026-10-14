@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, common
+from odoo.tests import common
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestInheritDepends(common.TransactionCase):
     def test_inherited_field_external_id(self):
         # Module A defines model M, module B defines a mixin (abstract model) X,

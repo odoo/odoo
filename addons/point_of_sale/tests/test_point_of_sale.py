@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPointOfSale(TransactionCase):
     @classmethod
     def setUpClass(cls):

@@ -5,10 +5,9 @@ from ast import literal_eval
 
 from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
 from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged, users
+from odoo.tests.common import users
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailValues(MassSMSCommon):
 
     @classmethod

@@ -415,7 +415,6 @@ class TestMailRender(TestMailRenderCommon):
 
 
 @tagged('mail_render', 'regex_render')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRegexRendering(common.MailCommon):
 
     def test_qweb_regex_rendering(self):
@@ -515,7 +514,6 @@ class TestRegexRendering(common.MailCommon):
 
 
 @tagged('mail_render')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailRenderSecurity(TestMailRenderCommon):
     """ Test security of rendering, based on qweb finding + restricted rendering
     group usage. """

@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
-from odoo.tests import tagged, Form, users
+from odoo.tests import Form, users
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingListSms(MassSMSCommon):
 
     @classmethod

@@ -1,8 +1,7 @@
 from odoo import Command
-from odoo.tests import common, tagged
+from odoo.tests import common
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPrivateReadGroupingSets(common.TransactionCase):
 
     def test_simple_read_grouping_sets(self):

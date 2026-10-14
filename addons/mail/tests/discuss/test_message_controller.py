@@ -343,7 +343,6 @@ class TestMessageController(HttpCase, MailCommon):
 
 
 @tagged("mail_message")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMessageLinks(MailCommon, HttpCase):
 
     @classmethod

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged, TransactionCase, Form
+from odoo.tests import TransactionCase, Form
 from odoo.exceptions import UserError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_res_lang(TransactionCase):
 
     def test_00_intersperse(self):

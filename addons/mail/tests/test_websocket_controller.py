@@ -3,13 +3,12 @@
 from freezegun import freeze_time
 
 from odoo.http.session import SESSION_ROTATION_INTERVAL
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase
 
 from odoo.addons.bus.tests.common import BusCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsocketController(HttpCase, BusCase):
     def test_im_status_offline_on_websocket_closed(self):
         self._reset_bus()
