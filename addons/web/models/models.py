@@ -2337,6 +2337,12 @@ class Base(models.AbstractModel):
         # update snapshot0 with changed values
         for field_name in field_names:
             snapshot0.fetch(field_name)
+            field = self._fields[field_name]
+            if field.normalize is not None:
+                # put the value as given by the client in snapshot0, so that
+                # its normalized value is returned if it differs
+                value = field.convert_to_cache(changed_values[field_name], record, validate=False)
+                snapshot0[field_name] = field.convert_to_record(value, record)
 
         # Determine which field(s) should be triggered an onchange. On the first
         # call, 'names' only contains fields with a default. If 'self' is a new

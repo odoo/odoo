@@ -12,7 +12,7 @@ from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import TransactionCase, tagged, users
-from odoo.tools import BinaryBytes, float_repr, mute_logger, sql
+from odoo.tools import SQL, BinaryBytes, float_repr, mute_logger, sql
 from odoo.tools.image import binary_to_image, image_data_uri
 
 from .test_domain_expression import TransactionExpressionCase
@@ -5587,3 +5587,128 @@ class TestCompanyDependent(TransactionCase):
                              f'Please override the unlink method of {comodel_field.comodel_name} and do the ORM on '
                              f'delete cascade logic and remove/override the ondelete="cascade" of {comodel_field}'),
                         )
+
+
+class TestNormalize(TransactionCase):
+
+    def assertStored(self, record, fname, expected):
+        record.flush_recordset([fname])
+        self.env.cr.execute(SQL("SELECT %s FROM %s WHERE id = %s", SQL.identifier(fname), SQL.identifier(record._table), record.id))
+        self.assertEqual(self.env.cr.fetchone()[0], expected)
+
+    def test_create_write(self):
+        record = self.env['test_orm.normalized'].create({'name': ' foo ', 'count': -3})
+        self.assertEqual(record.name, 'FOO')
+        self.assertEqual(record.count, 0)
+        self.assertStored(record, 'name', 'FOO')
+        self.assertStored(record, 'count', 0)
+
+        record.write({'name': ' bar', 'count': 4})
+        self.assertEqual(record.name, 'BAR')
+        self.assertEqual(record.count, 4)
+        self.assertStored(record, 'name', 'BAR')
+
+        record.count = -1
+        self.assertEqual(record.count, 0)
+        self.assertStored(record, 'count', 0)
+
+        # empty values are not normalized
+        record.name = False
+        self.assertFalse(record.name)
+
+    def test_compute(self):
+        record = self.env['test_orm.normalized'].create({'name': 'foo'})
+        self.assertEqual(record.code, 'FOO')
+        self.assertStored(record, 'code', 'FOO')
+
+        record.code = 'a-b'
+        self.assertEqual(record.code, 'ab')
+        self.assertStored(record, 'code', 'ab')
+
+    def test_translate(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        record = self.env['test_orm.normalized'].create({'label': ' hello '})
+        self.assertEqual(record.label, 'hello')
+
+        record.with_context(lang='fr_FR').label = ' bonjour '
+        self.assertEqual(record.with_context(lang='fr_FR').label, 'bonjour')
+        self.assertStored(record, 'label', {'en_US': 'hello', 'fr_FR': 'bonjour'})
+
+        record.label = {'en_US': ' hi ', 'fr_FR': ' salut '}
+        self.assertEqual(record.label, 'hi')
+        self.assertEqual(record.with_context(lang='fr_FR').label, 'salut')
+        self.assertStored(record, 'label', {'en_US': 'hi', 'fr_FR': 'salut'})
+
+        # translation dialog
+        record.update_field_translations('label', {'fr_FR': ' coucou '})
+        self.assertStored(record, 'label', {'en_US': 'hi', 'fr_FR': 'coucou'})
+
+    def test_html(self):
+        record = self.env['test_orm.normalized'].create({'body': '<b>fish &amp; chips</b>'})
+        self.assertEqual(record.body, '<p>fish &amp; chips</p>')
+        self.assertStored(record, 'body', '<p>fish &amp; chips</p>')
+
+    def test_other_types(self):
+        record = self.env['test_orm.normalized'].create({
+            'amount': -1.234,
+            'state': 'A',
+            'day': '2026-10-14',
+            'moment': '2026-10-14 13:14:15',
+            'data': {'foo': 1, 'bar': None},
+        })
+        self.assertEqual(record.amount, 1.23)
+        self.assertEqual(record.state, 'a')
+        self.assertEqual(record.day, date(2026, 10, 1))
+        self.assertEqual(record.moment, datetime(2026, 10, 14, 13, 14))
+        self.assertEqual(record.data, {'foo': 1})
+        self.assertStored(record, 'amount', 1.23)
+        self.assertStored(record, 'state', 'a')
+        self.assertStored(record, 'day', date(2026, 10, 1))
+        self.assertStored(record, 'moment', datetime(2026, 10, 14, 13, 14))
+        self.assertStored(record, 'data', {'foo': 1})
+
+        record.write({'amount': -5, 'state': 'B', 'day': date(2026, 12, 25)})
+        self.assertEqual(record.amount, 5)
+        self.assertEqual(record.state, 'b')
+        self.assertEqual(record.day, date(2026, 12, 1))
+
+    def test_empty(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        record = self.env['test_orm.normalized'].create({'title': False, 'name': False, 'day': False})
+        self.assertEqual(record.title, 'Untitled')
+        self.assertStored(record, 'title', {'en_US': 'Untitled'})
+        self.assertFalse(record.name)
+        self.assertStored(record, 'name', None)
+        self.assertFalse(record.day)
+
+        record.with_context(lang='fr_FR').title = 'Sans titre'
+        self.assertStored(record, 'title', {'en_US': 'Untitled', 'fr_FR': 'Sans titre'})
+        record.title = False
+        self.assertEqual(record.title, 'Untitled')
+        self.assertEqual(record.with_context(lang='fr_FR').title, 'Sans titre')
+
+        # the normalized empty value is written as a translation: fallback
+        # values in cache must not be stored as translations
+        self.env['res.lang']._activate_lang('nl_NL')
+        record = record.create({'title': 'Hello'})
+        self.env.invalidate_all()
+        self.assertEqual(record.with_context(lang='nl_NL').title, 'Hello')
+        record.with_context(lang='fr_FR').title = False
+        self.assertStored(record, 'title', {'en_US': 'Hello', 'fr_FR': 'Untitled'})
+
+        record.count = 3
+        record.count = False
+        self.assertEqual(record.count, 0)
+
+    def test_new_and_search(self):
+        Model = self.env['test_orm.normalized']
+        # values given to new() are not validated, hence not normalized
+        record = Model.new({'name': ' foo '})
+        self.assertEqual(record.name, ' foo ')
+        record.name = ' foo '
+        self.assertEqual(record.name, 'FOO')
+
+        # search values are not normalized
+        record = Model.create({'name': 'foo'})
+        self.assertFalse(Model.search([('name', '=', 'foo')]))
+        self.assertEqual(Model.search([('name', '=', 'FOO')]), record)

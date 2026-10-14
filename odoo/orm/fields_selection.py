@@ -60,6 +60,7 @@ class Selection(Field[str | typing.Literal[False]]):
     """
     type = 'selection'
     _column_type = ('varchar', 'varchar')
+    _normalizable = True
 
     selection: list[SelectValue] | str | Callable[[BaseModel], list[SelectValue]] | None = None  # [(value, string), ...], function or method name
     validate: bool = True       # whether validating upon write
@@ -227,11 +228,13 @@ class Selection(Field[str | typing.Literal[False]]):
         return self.convert_to_cache(value, record, validate=validate)
 
     def convert_to_cache(self, value, records, validate=True):
-        if value is False or value is None:
-            return None
-        if self.validate and validate and self._selection is not None and str(value) not in self._selection:
-            raise ValueError("Wrong value for %s: %r" % (self, value))
-        return str(value)
+        value = None if value is False or value is None else str(value)
+        if validate:
+            if self.normalize is not None:
+                value = self._normalize_cache_value(value, records)
+            if value is not None and self.validate and self._selection is not None and value not in self._selection:
+                raise ValueError("Wrong value for %s: %r" % (self, value))
+        return value
 
     def convert_to_export(self, value, record):
         for item in self._description_selection(record.env):

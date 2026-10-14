@@ -150,6 +150,22 @@ class Field[T]:
     :param bool default_export_compatible: whether the field must be exported
         by default in an import-compatible export
 
+    :param callable normalize: a function ``value -> value`` that returns the
+        canonical form of a value; it is applied on every value assigned to the
+        field (create, write, compute, onchange), including empty ones, so that
+        only canonical values are put in cache and stored in database. It
+        receives and returns a value in the record format (``False`` or ``0``
+        for an empty value), and must only depend on the given value, and be
+        idempotent. It is applied before the validation of the value (e.g.
+        sanitization of html fields). It is supported on char, text, html,
+        integer, float, monetary, selection, date, datetime and json fields.
+
+        .. code-block:: python
+
+            vat = fields.Char(normalize=lambda vat: vat.replace(' ', '').upper())
+
+        For translated fields, each translation is normalized separately.
+
     :param str search: name of a method that implements search on the field.
         The method takes an operator and value. Basic domain optimizations are
         ran before calling this function.
@@ -263,6 +279,7 @@ class Field[T]:
     relational: bool = False            # whether the field is a relational one
     translate: bool = False             # whether the field is translated
     is_text: bool = False               # whether the field is a text type in the database
+    _normalizable: bool = False         # whether convert_to_cache() applies parameter normalize
     falsy_value: T | None = None        # falsy value for comparisons (optional)
 
     # Used in _fields_update_order__ to order field updates and inverses.
@@ -299,6 +316,7 @@ class Field[T]:
     compute_sql: str | Callable[[BaseModel, TableSQL], SQL] | None = None      # compute_sql(model, alias, query) that gets the SQL for the field
     inverse: str | Callable[[BaseModel], None] | None = None  # inverse(recs) inverses field on recs
     search: str | Callable[[BaseModel, str, typing.Any], DomainType] | None = None  # search(recs, operator, value) searches on self
+    normalize: Callable[[T], T] | None = None  # normalize(value) returns the canonical form of value
     related: str | None = None          # sequence of field names, for related fields
     company_dependent: bool = False     # whether ``self`` is company-dependent (property field)
     default: Callable[[BaseModel], T] | T | None = None  # default(recs) returns the default value
@@ -545,6 +563,9 @@ class Field[T]:
         if self.default is not None and not callable(self.default):
             value = self.default
             self.default = lambda model: value
+
+        if self.normalize is not None and not self._normalizable:
+            self._setup_warning(f"normalize is not supported on {self.type} fields")
 
     ############################################################################
     #
@@ -1134,6 +1155,10 @@ class Field[T]:
         format for INSERT queries. This method handles the case of fields that
         store multiple values (translated or company-dependent).
         """
+        if validate and self.normalize is not None:
+            # convert_to_column() does not necessarily normalize the value
+            value = self.convert_to_cache(value, record)
+            validate = False
         value = self.convert_to_column(value, record, values, validate)
         if not self.company_dependent:
             return value
@@ -1188,6 +1213,13 @@ class Field[T]:
         ``record``.
         """
         return False if value is None else value
+
+    def _normalize_cache_value(self, value, records):
+        """ Return the normalized value of ``value`` in cache format.  This
+        method is called by :meth:`convert_to_cache` on validated values when
+        the field has ``normalize``.
+        """
+        return self.convert_to_cache(self.normalize(self.convert_to_record(value, records)), records, validate=False)
 
     def convert_to_read(self, value, record, use_display_name=True):
         """ Convert ``value`` from the record format to the format returned by

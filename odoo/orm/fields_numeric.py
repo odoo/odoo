@@ -19,6 +19,7 @@ class Integer(Field[int]):
     type = 'integer'
     _column_type = ('int4', 'int4')
     falsy_value = 0
+    _normalizable = True
 
     aggregator = 'sum'
 
@@ -36,7 +37,10 @@ class Integer(Field[int]):
         if isinstance(value, dict):
             # special case, when an integer field is used as inverse for a one2many
             return value.get('id', None)
-        return int(value or 0)
+        value = int(value or 0)
+        if validate and self.normalize is not None:
+            value = self._normalize_cache_value(value, records)
+        return value
 
     def convert_to_record(self, value, record):
         return value or 0
@@ -113,6 +117,7 @@ class Float(Field[float]):
     _min_display_digits: str | int | None = None
     falsy_value = 0.0
     aggregator = 'sum'
+    _normalizable = True
 
     def __init__(
         self,
@@ -169,6 +174,8 @@ class Float(Field[float]):
     def convert_to_cache(self, value, records, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
         value = float(value or 0.0)
+        if validate and self.normalize is not None:
+            value = self._normalize_cache_value(value, records)
         digits = self.get_digits(records.env)
         return float_round(value, precision_digits=digits[1]) if digits else value
 
@@ -200,6 +207,7 @@ class Monetary(Field[float]):
     write_sequence = 10
     _column_type = ('numeric', 'numeric')
     falsy_value = 0.0
+    _normalizable = True
 
     currency_field: Field | None = None
     aggregator = 'sum'
@@ -267,6 +275,8 @@ class Monetary(Field[float]):
     def convert_to_cache(self, value, records, validate=True):
         # cache format: float
         value = float(value or 0.0)
+        if validate and self.normalize is not None:
+            value = self._normalize_cache_value(value, records)
         if value and validate:
             # FIXME @rco-odoo: currency may not be already initialized if it is
             # a function or related field!
