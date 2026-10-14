@@ -124,6 +124,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
         sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
         self.assertEqual(sending_methods['peppol'], "by the Approved Platform")
 
+<<<<<<< 7b4275bd9ab5a387c3f2598938ad15c44f3e3420
     def test_einvoicing_terminology_without_company(self):
         # Mail tracking can request fields_get without a current company.
         with mock.patch.object(api.Environment, 'company', property(lambda env: env['res.company'])):
@@ -133,6 +134,15 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
         sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
         self.assertEqual(sending_methods['peppol'], "by Peppol")
 
+||||||| f1724fcca60f0935a522d28c179c643483991d03
+=======
+    def test_einvoicing_terminology_without_user(self):
+        # auth='none' routes (e.g. /auth_oauth/signin) run without user, so with an empty env.company
+        env_no_user = api.Environment(self.env.cr, None, {})
+        partner_fields = env_no_user['res.partner'].fields_get(['invoice_sending_method'], attributes=())
+        self.assertIn('invoice_sending_method', partner_fields)
+
+>>>>>>> a1e90460104c11e99956beacd4dbd022075eadf6
     def test_validate_partner_be_invalid_format(self):
         partner = self.belgian_partner
         with mock_pdp_peppol_lookup_not_found(['0208:0239843188']):  # not on Peppol
