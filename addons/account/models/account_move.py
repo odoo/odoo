@@ -721,6 +721,7 @@ class AccountMove(models.Model):
     )
     import_source_attachment_id = fields.Many2one(
         comodel_name='ir.attachment',
+        index='btree_not_null',
         copy=False,
     )
     # Technical field used to fit the generic behavior in mail templates.
