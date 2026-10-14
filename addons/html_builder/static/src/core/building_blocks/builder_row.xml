@@ -16,14 +16,14 @@
                 t-ref="this.collapseRef"
                 t-if="this.props.slots.collapse"
                 class="o_hb_collapse_toggler btn border-0 bg-transparent"
-                t-att-class="{ 'active oi-rotate-90': this.state.expanded }"
+                t-att-class="{ 'active': this.state.expanded }"
                 title="Toggle more options"
                 t-on-click="this.toggleCollapseContent"
                 t-att-aria-expanded="this.state.expanded ? 'true' : 'false'"
                 t-att-aria-controls="this.collapseContentId">
                 <i
-                    class="oi" data-icon="arrow_right"
-                    role="img"
+                    class="oi" t-att-data-icon="this.state.expanded ? 'arrow_drop_down' : 'arrow_right'"
+                    aria-hidden="true"
                 />
             </button>
 

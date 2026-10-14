@@ -3,7 +3,6 @@
 
 <t t-name="mail.ChatWindow">
     <t t-if="this.props.chatWindow.exists() and this.channel.exists()">
-    <t t-set="partitionedActions" t-value="this.threadActions.partition"/>
     <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column shadow-sm bg-100"
         t-att-style="this.style"
         t-att-class="this.attClass"

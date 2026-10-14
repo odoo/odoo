@@ -21,12 +21,13 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-10-02 10:28+0000\n"
+"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"PO-Revision-Date: 2026-10-09 11:23+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/calendar/"
 "fi/>\n"
@@ -116,7 +117,7 @@ msgstr "%s on kieltäytynyt kutsusta"
 #: code:addons/calendar/models/mail_activity.py:0
 #: code:addons/calendar/static/src/core/web/activity_patch.js:0
 msgid "%s others"
-msgstr ""
+msgstr "%s muuta"
 
 #. module: calendar
 #. odoo-javascript
@@ -1173,10 +1174,10 @@ msgstr ""
 "<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
 "    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object and "
 "object.appointment_type_id\"/>\n"
-"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get"
-"('calendar_template_ignore_recurrence')\"/>\n"
-"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get"
-"('mail_tz')\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not "
+"ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
+"ctx.get('mail_tz')\"/>\n"
 "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
 "bottom: 28px;\">\n"
 "        Muutos tapahtumaan\n"
@@ -1190,8 +1191,8 @@ msgstr ""
 "    </p>\n"
 "    <div style=\"margin: 32px 0 0;\">\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
-"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
-";\">Lisätiedot</h2>\n"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Lisätiedot</h2>\n"
 "        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
 "size: 13px; color: #374151;\">\n"
 "            <tr>\n"
@@ -1202,15 +1203,15 @@ msgstr ""
 "if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)"
 "\">Tiistaina</t>\n"
 "                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
-"if not object.allday else None, dt_format='d', lang_code=object.env.lang)\">"
-"4.</t>\n"
+"if not object.allday else None, dt_format='d', lang_code=object.env.lang)"
+"\">4.</t>\n"
 "                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
 "if not object.allday else None, dt_format='MMMM y', "
 "lang_code=object.env.lang)\">toukokuuta 2021</t>\n"
 "                    <t t-if=\"not object.allday\">\n"
 "                        <t t-out=\"format_time(time=object.start, "
-"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">kello 11:00</t>"
-"\n"
+"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">kello 11:00</"
+"t>\n"
 "                        <t t-if=\"mail_tz\">\n"
 "                            <span style=\"font-size: 11px; font-weight: "
 "normal;\">\n"
@@ -1222,21 +1223,21 @@ msgstr ""
 "                </td>\n"
 "            </tr>\n"
 "            <tr t-if=\"recurrent\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: "
-"#676F7B;\">Milloin</td>\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Milloin</td>\n"
 "                <td style=\"padding-top: 6px;\"><t t-"
 "out=\"object.recurrence_id.get_recurrence_name() or ''\">Kolme tapahtumaa "
 "viikoittain</t></td>\n"
 "            </tr>\n"
 "            <tr t-if=\"not object.allday and object.duration\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: "
-"#676F7B;\">Kesto</td>\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Kesto</td>\n"
 "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
 "(object.duration,round(object.duration*60)%60))\">0h 30min</t></td>\n"
 "            </tr>\n"
 "            <tr t-if=\"object.location\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: "
-"#676F7B;\">Sijainti</td>\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">Sijainti</td>\n"
 "                <td style=\"padding-top: 6px;\">\n"
 "                    <t t-out=\"object.location or ''\">Bryssel</t>\n"
 "                    <a target=\"_blank\" t-if=\"not is_online or is_online "
@@ -1247,8 +1248,8 @@ msgstr ""
 "                </td>\n"
 "            </tr>\n"
 "            <tr t-if=\"object.videocall_location\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: "
-"#676F7B;\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
+"\">\n"
 "                    <t t-if=\"object.videocall_source == 'discuss'\">Liity "
 "mukaan</t>\n"
 "                    <t t-else=\"\">Liity</t>\n"
@@ -1256,8 +1257,8 @@ msgstr ""
 "                <td style=\"padding-top: 6px;\">\n"
 "                    <a t-att-href=\"object.videocall_location\" "
 "target=\"_blank\" style=\"color: #008f8c;\">\n"
-"                        <t t-if=\"object.videocall_source == 'discuss'\">"
-"Odoo Viestintä</t>\n"
+"                        <t t-if=\"object.videocall_source == "
+"'discuss'\">Odoo Viestintä</t>\n"
 "                        <t t-else=\"\">Videopuhelu</t>\n"
 "                    </a>\n"
 "                </td>\n"
@@ -1267,8 +1268,8 @@ msgstr ""
 "    <div style=\"margin: 32px 0 0;\">\n"
 "        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
-"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
-";\">Osallistujat</h2>\n"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Osallistujat</h2>\n"
 "        <div t-foreach=\"object.attendee_ids[:max_shown_attendees]\" t-"
 "as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
 "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
@@ -1291,8 +1292,8 @@ msgstr ""
 "    <div t-if=\"not is_html_empty(object.description)\" style=\"margin: 32px "
 "0 0;\">\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
-"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
-";\">Tapahtuman kuvaus</h2>\n"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
+"\">Tapahtuman kuvaus</h2>\n"
 "        <t t-out=\"object.description\">Sisäinen palaveri tuotteiden ja "
 "palveluiden uudesta hinnastosta keskustelemiseksi.</t>\n"
 "    </div>\n"
@@ -1301,33 +1302,33 @@ msgstr ""
 "    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
 "        <tr>\n"
 "            <td>\n"
-"                <a t-attf-href=\"/calendar/ics/{{ object.id }}/{{ "
-"object._calendar_event_ensure_token() }}\" style=\"padding-top: 10px; "
+"                <a t-attf-href=\"/calendar/ics/{{ object.id }}/"
+"{{ object._calendar_event_ensure_token() }}\" style=\"padding-top: 10px; "
 "padding-right: 8px; padding-bottom: 2px; padding-left: 8px; border-radius: "
 "3px; background-color: #E7E9ED;\">\n"
-"                    <img src=\"/calendar/static/src/img/apple-calendar-"
-"128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: "
-"baseline;\"/>\n"
+"                    <img src=\"/calendar/static/src/img/apple-"
+"calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
 "                </a>\n"
 "            </td>\n"
 "            <td>\n"
-"                <a t-attf-href=\"/calendar/ics/{{ object.id }}/{{ "
-"object._calendar_event_ensure_token() }}\" style=\"padding-top: 10px; "
+"                <a t-attf-href=\"/calendar/ics/{{ object.id }}/"
+"{{ object._calendar_event_ensure_token() }}\" style=\"padding-top: 10px; "
 "padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: "
 "8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                    <img src=\"/calendar/static/src/img/outlook-calendar-"
-"128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-"
-"align: baseline;\"/>\n"
+"                    <img src=\"/calendar/static/src/img/outlook-"
+"calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
 "                </a>\n"
 "            </td>\n"
 "            <td>\n"
 "                <a t-att-href=\"object.google_calendar_url\" target=\"new\" "
 "style=\"padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-"
-"left: 8px; margin-left: 8px; border-radius: 3px; background-color: "
-"#E7E9ED;\">\n"
-"                    <img src=\"/calendar/static/src/img/google-calendar-"
-"128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-"
-"align: baseline;\"/>\n"
+"left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;"
+"\">\n"
+"                    <img src=\"/calendar/static/src/img/google-"
+"calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
 "                </a>\n"
 "            </td>\n"
 "        </tr>\n"
@@ -2059,8 +2060,9 @@ msgstr "Toimenpide"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_exception_decoration
+#, fuzzy
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Toimenpiteen poikkeuksen tyyli"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
@@ -2070,12 +2072,13 @@ msgstr "Activity Mixin"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Toimenpidesuunnitelmat"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_state
+#, fuzzy
 msgid "Activity State"
-msgstr ""
+msgstr "Toimenpiteen tila"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
@@ -2085,7 +2088,7 @@ msgstr "Toimenpidetyyppi"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Toimenpidetyypin kuvake"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_schedule
@@ -2149,8 +2152,9 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#, fuzzy
 msgid "All day"
-msgstr ""
+msgstr "Koko päivä"
 
 #. module: calendar
 #. odoo-javascript
@@ -3042,8 +3046,9 @@ msgstr "Perjantai"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Future Activities"
-msgstr ""
+msgstr "Tulevat toimenpiteet"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3112,13 +3117,14 @@ msgstr "Tunnus"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_exception_icon
+#, fuzzy
 msgid "Icon"
-msgstr ""
+msgstr "Kuvake"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Poikkeustoimenpiteeseen viittaava kuvake."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
@@ -3306,8 +3312,9 @@ msgstr "Peruskalenterin viimeinen ilmoitus on merkitty luetuksi"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Late Activities"
-msgstr ""
+msgstr "Myöhässä olevat toimenpiteet"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
@@ -3349,7 +3356,7 @@ msgstr "Sähköpostin aikavyöhyke"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols -kuvake, esim. muistilista"
 
 #. module: calendar
 #. odoo-javascript
@@ -3477,13 +3484,15 @@ msgstr "Lisää valintoja"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Toimenpiteeni"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__my_activity_date_deadline
+#, fuzzy
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Toimenpiteeni määräaika"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -3528,18 +3537,20 @@ msgstr "Seuraavan toimenpiteen kalenterimerkintä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_date_deadline
+#, fuzzy
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Seuraavan toimenpiteen eräpäivä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Seuraavan toimenpiteen yhteenveto"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_type_id
+#, fuzzy
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Seuraavan toimenpiteen tyyppi"
 
 #. module: calendar
 #. odoo-python
@@ -3552,8 +3563,9 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Next Week"
-msgstr ""
+msgstr "Ensi viikolla"
 
 #. module: calendar
 #. odoo-javascript
@@ -3686,8 +3698,9 @@ msgstr "OK"
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
+#, fuzzy
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3964,8 +3977,9 @@ msgstr "Vastuuhenkilö"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_user_id
+#, fuzzy
 msgid "Responsible User"
-msgstr ""
+msgstr "Vastuuhenkilö"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -4120,8 +4134,11 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
+"Näytä kaikki kirjaukset, joiden seuraavan toimenpiteen määräaika on "
+"menneisyydessä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -4157,12 +4174,17 @@ msgstr "Tila"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_state
+#, fuzzy
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tila aktiviteetin perusteella\n"
+"Myöhässä: Eräpäivä on menneisyydessä\n"
+"Tänään: Eräpäivä on tänään\n"
+"Suunniteltu: Tulevaisuudessa."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -4219,8 +4241,8 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-msgid "Synchronize with"
-msgstr "Synkronoi"
+msgid "Sync with"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -4395,19 +4417,22 @@ msgstr "Aikavyöhyke, jota käytetään ajan näyttämiseen sähköpostimallissa
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "Tänään"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Today Activities"
-msgstr ""
+msgstr "Tämän päivän toimenpiteet"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
+#, fuzzy
 msgid "Tomorrow"
-msgstr ""
+msgstr "Huomenna"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
@@ -4441,7 +4466,7 @@ msgstr "Tyyppi"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Kirjatun poikkeustoimenpiteen tyyppi."
 
 #. module: calendar
 #. odoo-python
@@ -4539,8 +4564,9 @@ msgstr "Videopuhelun lähde"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
+#, fuzzy
 msgid "View"
-msgstr ""
+msgstr "Näytä"
 
 #. module: calendar
 #. odoo-javascript
@@ -4781,14 +4807,16 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#, fuzzy
 msgid "guests"
-msgstr ""
+msgstr "vieraat"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
+#, fuzzy
 msgid "more"
-msgstr ""
+msgstr "lisää"
 
 #. module: calendar
 #. odoo-javascript
@@ -4816,6 +4844,9 @@ msgstr "{{ object.event_id.name }}: Päivitetty päivämäärä"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: Tapahtuman päivitys"
+
+#~ msgid "Synchronize with"
+#~ msgstr "Synkronoi"
 
 #~ msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
 #~ msgstr "<span class=\"me-1 o_form_label\">Google-kalenteri</span>"

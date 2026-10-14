@@ -33,6 +33,8 @@ class PurchaseOrderLine(models.Model):
         return self.sale_line_id.product_id
 
     def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
+        # Match candidates on the vendor-language description.
+        values = self._vendor_lang_procurement_values(values, self.order_id.partner_id[:1])
         # if this is defined, this is a dropshipping line, so no
         # this is to correctly map delivered quantities to the so lines
         if not values.get('move_dest_ids') and values.get('sale_line_id'):
@@ -42,6 +44,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.model
     def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, po):
+        values = self._vendor_lang_procurement_values(values, po.partner_id)
         res = super()._prepare_purchase_order_line_from_procurement(product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, po)
         # only set the sale line id in case of a dropshipping
         if not values.get('move_dest_ids'):
@@ -49,3 +52,20 @@ class PurchaseOrderLine(models.Model):
         if values.get('analytic_distribution'):
             res['analytic_distribution'] = values['analytic_distribution']
         return res
+
+    @api.model
+    def _vendor_lang_procurement_values(self, values, vendor):
+        """Re-render ``product_description_variants`` in the vendor's language.
+
+        It is pre-rendered in the customer's language by ``sale_stock``;
+        regenerate it from the sale order line so the whole PO line name uses
+        the vendor's language, preserving custom free-text values. Returns
+        ``values`` unchanged when there is no sale line.
+        """
+        sale_line = self.env['sale.order.line'].browse(values.get('sale_line_id'))
+        if sale_line.exists() and values.get('product_description_variants') and vendor.lang:
+            values = dict(values)
+            values['product_description_variants'] = sale_line.with_context(
+                lang=vendor.lang,
+            )._get_sale_order_line_multiline_description_variants().strip()
+        return values

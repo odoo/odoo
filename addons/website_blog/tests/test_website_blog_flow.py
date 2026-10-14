@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
+from werkzeug.exceptions import NotFound
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import users, HttpCase, tagged, TransactionCase
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -75,9 +76,38 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             self.user_employee.partner_id, self.test_blog_post.message_partner_ids,
             'website_blog: people commenting a post should follow it afterwards')
 
+    @users('cedric', 'portal_user')
+    def test_blog_post_comment_permissions(self):
+        """ Test that public and portal users are prevented from posting comments via RPC
+        when comments are disabled in the website editor options. """
+        def post_comment(body):
+            ThreadController().mail_message_post(
+                "blog.post",
+                self.test_blog_post.id,
+                {
+                    "body": f"<p>{body}</p>",
+                    "message_type": "comment",
+                    "subtype_xmlid": "mail.mt_comment",
+                },
+            )
+            return self.env['mail.message'].search([
+                ('model', '=', 'blog.post'),
+                ('res_id', '=', self.test_blog_post.id),
+                ('body', "=", f'<p>{body}</p>'),
+            ])
+
+        opt_blog_post_comment_view = self.env.ref('website_blog.opt_blog_post_comment').sudo()
+        opt_blog_post_comment_view.active = False
+        with MockRequest(self.env):
+            with self.assertRaises(NotFound):
+                post_comment("UNAUTHENTICATED_BOT_SPAM_TEST")
+            opt_blog_post_comment_view.active = True
+            self.assertTrue(post_comment("ALLOWED_PUBLIC_COMMENT"))
+
     @users('portal_user')
     def test_blog_comment(self):
         """Test comment on blog post with attachment."""
+        self.env.ref('website_blog.opt_blog_post_comment').sudo().active = True
         attachment = self.env['ir.attachment'].sudo().create({
             'name': 'some_attachment.pdf',
             'res_model': 'mail.compose.message',
@@ -152,6 +182,13 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         self.test_blog_post.content = "<h2>Test Content</h2>"
 
         self.assertEqual(self.test_blog_post.teaser, "Test Content...")
+
+    def test_blog_post_jsonld_image_from_content(self):
+        """ Without a cover, the JSON-LD image is the first image of the
+            content, even when it is hosted on another website. """
+        external_image = 'https://download.odoocdn.com/icons/website/static/description/icon.svg'
+        self.test_blog_post.content = f'<p><img src="{external_image}"></p>'
+        self.assertEqual(self.test_blog_post._prepare_jsonld_vals()['image'], external_image)
 
 
 @tagged('-at_install', 'post_install')

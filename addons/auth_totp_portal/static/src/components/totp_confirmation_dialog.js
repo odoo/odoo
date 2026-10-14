@@ -24,7 +24,12 @@ export class TotpConfirmationDialog extends InputConfirmationDialog {
             });
         };
         useListener(
-            () => this.modalRef()?.querySelector("#collapseTotpSecret .o_clipboard_button"),
+            () => this.modalRef()?.querySelector(".d-none.d-md-block .o_clipboard_button"),
+            "click",
+            onClickClipboardButton
+        );
+        useListener(
+            () => this.modalRef()?.querySelector(".d-block.d-md-none .o_clipboard_button"),
             "click",
             onClickClipboardButton
         );

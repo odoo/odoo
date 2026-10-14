@@ -35,7 +35,7 @@ import {
 
 import { location } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
-import { rpc } from "@web/core/network/rpc";
+import { rpc, rpcBus } from "@web/core/network/rpc";
 import { RPCCache } from "@web/core/network/rpc_cache";
 import { pick } from "@web/core/utils/objects";
 import { redirect } from "@web/core/utils/urls";
@@ -1491,6 +1491,37 @@ test("clicking a button with dirty settings -- discard", async () => {
     expect(".o_tag_color_1").toHaveCount(1);
     expect(".o_tag_color_3").toHaveCount(1);
     await click(".o_field_boolean[name='foo'] input[type='checkbox']");
+});
+
+test("saving settings clears the caches, discarding them does not", async () => {
+    const clearCacheListener = () => expect.step("CLEAR-CACHES");
+    rpcBus.addEventListener("CLEAR-CACHES", clearCacheListener);
+    after(() => rpcBus.removeEventListener("CLEAR-CACHES", clearCacheListener));
+    mockService("action", {
+        doActionButton(params) {
+            expect.step(`action executed ${params.name}`);
+        },
+    });
+    await mountView({
+        type: "form",
+        arch: /* xml */ `
+            <form js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <field name="foo" />
+                    <button type="object" name="mymethod" class="myBtn"/>
+                </app>
+            </form>
+        `,
+        resModel: "res.config.settings",
+    });
+    await contains(".o_field_boolean input[type='checkbox']").click();
+    await contains(".myBtn").click();
+    await contains(".modal .btn-secondary:eq(1)").click();
+    expect.verifySteps(["action executed mymethod"]);
+
+    await contains(".o_field_boolean input[type='checkbox']").click();
+    await contains(".o_form_button_save").click();
+    expect.verifySteps(["CLEAR-CACHES", "action executed execute"]);
 });
 
 test("clicking on a button with noSaveDialog will not show discard warning", async () => {

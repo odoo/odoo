@@ -8,9 +8,9 @@ import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { sortBy } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
+import { getAggregateCurrencyId } from "@web/model/currency_aggregates";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { getIntervalOptions } from "@web/search/utils/dates";
@@ -107,15 +107,14 @@ export class PivotRenderer extends Component {
             Object.assign(formatOptions, formatter.extractOptions(fieldInfo));
         }
         if (formatType === "monetary") {
-            if (cell.currencyIds.length > 1) {
-                formatOptions.currencyId = user.activeCompany.currency_id;
+            formatOptions.currencyId = getAggregateCurrencyId(field, cell.currencyIds);
+            if (formatOptions.currencyId && cell.currencyIds.length > 1) {
                 return {
                     rawValue: cell.value,
                     value: formatter(cell.value, formatOptions),
                     currencies: cell.currencyIds,
                 };
             }
-            formatOptions.currencyId = cell.currencyIds[0];
         }
         return { value: formatter(cell.value, formatOptions) };
     }

@@ -3975,6 +3975,54 @@ test("pivot view with monetary with multiple currencies", async () => {
     expect(".o_pivot table tbody tr:last").toHaveText("EUR \n400.00 €");
 });
 
+test("pivot view with a monetary measure aggregated in the company currency", async () => {
+    Partner._fields.amount = fields.Monetary({
+        currency_field: "currency_id",
+        aggregator: "sum_currency",
+    });
+    Partner._fields.currency_id = fields.Many2one({ relation: "res.currency", default: 2 });
+    Partner._records[0].amount = 500;
+    Partner._records[1].amount = 300;
+    Partner._records[2].amount = 200;
+    Partner._records[3].amount = 400;
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot>
+				<field name="amount" type="measure"/>
+			</pivot>`,
+        groupBy: ["currency_id"],
+    });
+    expect(".o_pivot table tbody tr:first").toHaveText("Total \n$ 1,400.00");
+    expect(".o_pivot table tbody tr:last").toHaveText("EUR \n$ 1,400.00");
+});
+
+test("pivot view with a monetary measure that is not a sum", async () => {
+    Partner._fields.amount = fields.Monetary({
+        currency_field: "currency_id",
+        aggregator: "max",
+    });
+    Partner._fields.currency_id = fields.Many2one({ relation: "res.currency", default: 1 });
+    Partner._records[0].amount = 500;
+    Partner._records[1].amount = 300;
+    Partner._records[2].amount = 200;
+    Partner._records[3].amount = 400;
+    Partner._records[3].currency_id = 2;
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot>
+				<field name="amount" type="measure"/>
+			</pivot>`,
+        groupBy: ["currency_id"],
+    });
+    expect(".o_pivot table tbody tr:first").toHaveText("Total \n500.00");
+    expect(".o_pivot table tbody tr:eq(1)").toHaveText("USD \n$ 500.00");
+    expect(".o_pivot table tbody tr:last").toHaveText("EUR \n400.00 €");
+});
+
 test.tags("desktop");
 test("scroll position is restored when coming back to pivot view", async () => {
     Partner._views = {

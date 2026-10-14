@@ -3,6 +3,7 @@
 from collections import defaultdict
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.tools import html_escape
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
@@ -300,6 +301,15 @@ class BlogPost(models.Model):
         res['default_opengraph']['og:title'] = self.name
         res['default_meta_description'] = self.subtitle
         return res
+
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        if (
+            message_operation == 'create'
+            and not self.env.user._is_internal()
+            and not self.env['website'].is_view_active('website_blog.opt_blog_post_comment')
+        ):
+            return [(Domain.TRUE, 'write')]
+        return super()._mail_get_operation_for_mail_message_operation(message_operation)
 
     @api.model
     def _search_get_detail(self, website, order, options):

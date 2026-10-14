@@ -44,14 +44,12 @@ class TestMrpValuationOperationStandard(TestBomPriceOperationCommon):
         moves = self.env['stock.move'].search([
             ('product_id', '=', self.scrap_wood.id),
         ])
-        # price_unit = total_cost * cost_share% / qty_in_product_uom
-        # line 1 (8 units, 1%):    (P+N) * 0.01 / 8  = (P+N) / 800
-        # line 2 (1 dozen, 12%):   (P+N) * 0.12 / 12 = (P+N) / 100
+        # value = total_cost * cost_share%
         self.assertRecordValues(moves, [
-            {'value': self.company.currency_id.round((PRICE + 10) * 0.01), 'price_unit': (PRICE + 10) / 800},
-            {'value': self.company.currency_id.round((PRICE + 10) * 0.12), 'price_unit': (PRICE + 10) / 100},
-            {'value': self.company.currency_id.round((PRICE + 20) * 0.01), 'price_unit': (PRICE + 20) / 800},
-            {'value': self.company.currency_id.round((PRICE + 20) * 0.12), 'price_unit': (PRICE + 20) / 100},
+            {'value': self.company.currency_id.round((PRICE + 10) * 0.01)},
+            {'value': self.company.currency_id.round((PRICE + 10) * 0.12)},
+            {'value': self.company.currency_id.round((PRICE + 20) * 0.01)},
+            {'value': self.company.currency_id.round((PRICE + 20) * 0.12)},
         ])
 
     # def test_average_cost_unbuild_with_byproducts(self):
@@ -88,7 +86,7 @@ class TestMrpValuationOperationStandard(TestBomPriceOperationCommon):
     #         {'product_id': self.glass.id, 'value': 10},
     #     ])
 
-    def test_standard_finished_byproduct_price_unit(self):
+    def test_standard_finished_byproduct_value(self):
         """Standard-cost byproducts use their own standard_price when the
         finished product is standard cost — the MO has no influence."""
         (self.dining_table | self.scrap_wood).sudo().categ_id = self.category_standard
@@ -96,9 +94,9 @@ class TestMrpValuationOperationStandard(TestBomPriceOperationCommon):
         mo = self._create_mo(self.bom_1, 1)
         self._produce(mo)
         mo.button_mark_done()
-        self.assertEqual(mo.move_byproduct_ids.mapped('price_unit'), [30.0, 30.0])
+        self.assertEqual([move._get_price_unit() for move in mo.move_byproduct_ids], [30.0, 30.0])
 
-    def test_fifo_finished_standard_byproduct_price_unit(self):
+    def test_fifo_finished_standard_byproduct_value(self):
         """Standard-cost byproducts use their own standard_price even when the
         finished product is FIFO. Their cost_share is still deducted from the
         finished product so no value disappears from inventory."""
@@ -107,7 +105,7 @@ class TestMrpValuationOperationStandard(TestBomPriceOperationCommon):
         mo = self._create_mo(self.bom_1, 1)
         self._produce(mo)
         mo.button_mark_done()
-        self.assertEqual(mo.move_byproduct_ids.mapped('price_unit'), [30.0, 30.0])
+        self.assertEqual([move._get_price_unit() for move in mo.move_byproduct_ids], [30.0, 30.0])
         total_cost = PRICE + 10
         byproduct_cost_share = sum(self.bom_1.byproduct_ids.mapped('cost_share')) / 100
         self.assertEqual(

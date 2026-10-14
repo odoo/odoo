@@ -213,8 +213,12 @@ class ResCompany(models.Model):
         self.ensure_one()
         if not self.env.user.has_group('base.group_multi_company'):
             return
+        # Need to update all other company's partner + their warehouses partner for this company.
         other_companies = self.env['res.company'].search([('id', '!=', self.id)])
-        other_companies.partner_id.with_company(self).write({
+        other_warehouses_partners = self.env['stock.warehouse'].search([('company_id', '!=', self.id)]).partner_id
+        other_partners = other_companies.partner_id | other_warehouses_partners
+
+        other_partners.with_company(self).write({
             'property_stock_customer': inter_company_location.id,
             'property_stock_supplier': inter_company_location.id,
         })

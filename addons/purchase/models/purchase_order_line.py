@@ -240,10 +240,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('price_subtotal', 'product_qty', 'qty_to_invoice')
     def _compute_price_subtotal_to_invoice(self):
         for line in self:
-            if line.product_qty:
-                line.price_subtotal_to_invoice = line.price_subtotal / line.product_qty * line.qty_to_invoice
-            else:
-                line.price_subtotal_to_invoice = 0.0
+            line.price_subtotal_to_invoice = line.price_subtotal / line.product_qty * line.qty_to_invoice if line.product_qty else 0
 
     @api.depends('product_qty', 'qty_invoiced')
     def _compute_qty_to_invoice_raw(self):
@@ -420,7 +417,10 @@ class PurchaseOrderLine(models.Model):
                 values.update(product_id=False, price_unit=0, product_uom_qty=0, uom_id=False, date_planned=False)
             else:
                 values.update(self._prepare_add_missing_fields(values))
-            if values.get('price_unit') and not values.get('technical_price_unit'):
+            # keeping technical_price_unit apart flags an imported price as
+            # manually set, so a later recompute does not replace it
+            if values.get('price_unit') and not values.get('technical_price_unit') \
+                    and not self.env.context.get('import_file'):
                 values['technical_price_unit'] = values['price_unit']
 
         lines = super().create(vals_list)

@@ -61,6 +61,7 @@ import { PosTicketPrinterPlugin } from "../plugins/pos_ticket_printer_plugin";
 import { PosAlertPlugin } from "../plugins/pos_alert_plugin";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { clearLocalStorage } from "../utils/devices_identifier_sequence";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -179,8 +180,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         window.addEventListener("pos-network-online", () => {
-            // Sync should be done before websocket connection when going online
-            this.syncAllOrdersDebounced();
+            this.posBackOnline();
         });
 
         this.handleQRPaymentLines();
@@ -295,6 +295,11 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
 
+    async posBackOnline() {
+        // Sync should be done before websocket connection when going online
+        this.syncAllOrdersDebounced();
+    }
+
     async searchProductsFromDB() {
         const { searchProductWord } = this;
         if (!searchProductWord?.length) {
@@ -398,7 +403,7 @@ export class PosStore extends WithLazyGetterTrap {
                 this.setCashier(this.user);
             }
         } else {
-            this.accessRight.resetCashier();
+            this.resetCashier();
         }
 
         return !this.accessRight.cashier ? { page: "LoginScreen", params: {} } : this.defaultPage;
@@ -452,7 +457,7 @@ export class PosStore extends WithLazyGetterTrap {
             this.device.saveUnusedNumber(orders);
             await this.data.resetIndexedDB();
             sessionStorage.clear();
-            localStorage.clear();
+            clearLocalStorage();
             window.location.reload();
         };
         if (showWarning) {
@@ -476,7 +481,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async showLoginScreen() {
-        this.accessRight.resetCashier();
+        this.resetCashier();
         this.navigate("LoginScreen");
         this.dialog.closeAll();
     }
@@ -559,6 +564,14 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.accessRight.cashier = user;
         sessionStorage.setItem(`connected_cashier_${this.config.id}`, user.id);
+    }
+
+    resetCashier() {
+        this.accessRight.resetCashier();
+    }
+
+    canLoginCashier(user) {
+        return Boolean(user);
     }
 
     get session() {
@@ -665,6 +678,10 @@ export class PosStore extends WithLazyGetterTrap {
                 await this.logEmployeeMessage(action, "CASH_DRAWER_ACTION");
             }
         }
+    }
+    // Overrided inside "l10n_be_pos_blackbox"
+    async openCashboxManually() {
+        return this.openCashbox();
     }
     async closeSession() {
         const info = await this.getClosePosInfo();
@@ -932,8 +949,21 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     async onProductInfoClick(productTemplate, productProduct = false) {
-        const info = await this.getProductInfo(productTemplate, 1, 0, productProduct);
-        this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
+        if (this.productInfoOpened) {
+            return;
+        }
+        this.productInfoOpened = true;
+        try {
+            const info = await this.getProductInfo(productTemplate, 1, 0, productProduct);
+            this.dialog.add(
+                ProductInfoPopup,
+                { info: info, productTemplate: productTemplate },
+                { onClose: () => (this.productInfoOpened = false) }
+            );
+        } catch (error) {
+            this.productInfoOpened = false;
+            throw error;
+        }
     }
     async openConfigurator(pTemplate, opts = {}) {
         const attrById = this.models["product.attribute"].getAllBy("id");
@@ -1693,6 +1723,7 @@ export class PosStore extends WithLazyGetterTrap {
         for (const order of orders) {
             order.setOrderPrices();
         }
+        return orders;
     }
 
     async postSyncAllOrders(orders) {}
@@ -1732,7 +1763,10 @@ export class PosStore extends WithLazyGetterTrap {
 
         for (const order of orders) {
             const context = this.getSyncAllOrdersContext([order], options);
-            await this.preSyncAllOrders([order]);
+            const preSyncOrder = await this.preSyncAllOrders([order]);
+            if (!preSyncOrder) {
+                continue;
+            }
             this.syncingOrders.add(order.uuid);
 
             try {
@@ -2221,7 +2255,7 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
     async closePos() {
-        this.accessRight.resetCashier();
+        this.resetCashier();
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
         if (!this) {

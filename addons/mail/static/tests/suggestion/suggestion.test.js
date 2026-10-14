@@ -104,6 +104,32 @@ test("suggestion list closed by Escape stays closed when a member starts typing"
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
+test("suggestion list closed by Escape stays closed when the mention search answers", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({ email: "testpartner@odoo.com", name: "TestPartner" });
+    const { promise: fetchHeld, resolve: releaseFetch } = Promise.withResolvers();
+    onRpc("res.partner", "get_mention_suggestions", async () => {
+        expect.step("get_mention_suggestions");
+        await fetchHeld;
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button:text('Send message')");
+    await insertText(".o-mail-Composer-input", "@");
+    await expect.waitForSteps(["get_mention_suggestions"]);
+    await contains(
+        ".o-mail-Composer-suggestionList .o-open .o-mail-Composer-suggestion:has(:text('Mitchell Admin'))"
+    );
+    triggerHotkey("Escape");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    releaseFetch();
+    await animationFrame(); // a re-open would show up on the next render
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await insertText(".o-mail-Composer-input", "T");
+    await expect.waitForSteps(["get_mention_suggestions"]);
+    await contains(".o-mail-Composer-suggestion:has(:text('TestPartner'))");
+});
+
 test.tags("html composer");
 test("display partner mention suggestions on typing '@'", async () => {
     const pyEnv = await startServer();

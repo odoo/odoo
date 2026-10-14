@@ -147,7 +147,7 @@
                             class="o-mail-Attachment-duplicateCounter btn btn-primary btn-sm rounded-pill position-absolute bottom-0 end-0 m-1 py-0 px-2 pe-none"
                             t-out="group.duplicates.length" />
                         <Dropdown t-elif="group.duplicates.length > 1"
-                            menuClass="'o-mail-Attachment-duplicateList d-flex flex-column py-0'"
+                            menuClass="'o-mail-Attachment-duplicateList d-flex flex-column'"
                             position="'bottom-end'">
                             <button
                                 class="o-mail-Attachment-duplicateCounter btn btn-primary btn-sm rounded-pill position-absolute bottom-0 end-0 m-1 py-0 px-2"
@@ -190,12 +190,12 @@
             <button t-if="this.props.actions.length === 1" class="btn btn-sm btn-light rounded px-1 py-0" tabindex="0" t-att-aria-label="this.props.actions[0].label" t-att-title="this.props.actions[0].label" role="menuitem" t-on-click.stop="this.props.actions[0].onSelect">
                 <i class="oi oi-fw" t-att-data-icon="this.props.actions[0].icon"/>
             </button>
-            <Dropdown t-else="" menuClass="'d-flex flex-column py-0'" state="this.actionsMenuState" position="'right-start'">
+            <Dropdown t-else="" menuClass="'d-flex flex-column'" state="this.actionsMenuState" position="'right-start'">
                 <button class="btn btn-sm btn-light rounded px-1 py-0" tabindex="0" aria-label="Actions" title="Actions" role="menuitem">
                     <i class="oi" data-icon="keyboard_arrow_down"/>
                 </button>
                 <t t-set-slot="content">
-                    <DropdownItem t-foreach="this.props.actions" t-as="action" t-key="action_index" class="'px-2 py-1 d-flex align-items-center rounded-0'" onSelected="action.onSelect">
+                    <DropdownItem t-foreach="this.props.actions" t-as="action" t-key="action_index" class="'px-2 py-1 d-flex align-items-center'" onSelected="action.onSelect">
                         <i class="oi oi-fw" t-att-data-icon="action.icon" t-att-class="action.iconClass"/>
                         <span class="mx-2" t-out="action.label"/>
                     </DropdownItem>

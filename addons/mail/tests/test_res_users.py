@@ -304,6 +304,31 @@ class TestUserSettings(MailCommon):
             "channel_notifications state should be updated correctly"
         )
 
+    @users("employee")
+    def test_set_volume_setting_of_guest(self):
+        settings = self.user_employee.res_users_settings_id
+        partner = self.env["res.partner"].sudo().create({"name": "Partner"})
+        with self.assertBus(
+            lambda: BusResult(
+                self.user_employee,
+                "mail.record/insert",
+                {
+                    "res.users.settings.volumes": [
+                        {
+                            "guest_id": partner.id,
+                            "id": settings.volume_settings_ids.id,
+                            "partner_id": False,
+                            "user_setting_id": settings.id,
+                            "volume": 0.7,
+                        },
+                    ],
+                },
+            ),
+        ):
+            # Simulate a guest with the id of no partner, then a guest with the id of a partner.
+            settings.set_volume_setting(False, 0.5, guest_id=partner.id + 1)
+            settings.set_volume_setting(False, 0.7, guest_id=partner.id)
+
 
 @tagged('mail_tools', 'res_users')
 class TestUserGroupChangeLog(MailCommon):

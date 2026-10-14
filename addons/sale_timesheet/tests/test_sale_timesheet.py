@@ -2,8 +2,7 @@
 from datetime import timedelta
 
 from odoo import Command
-from odoo.fields import Date
-from odoo.fields import Domain
+from odoo.fields import Date, Domain
 from odoo.tools import float_is_zero
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
@@ -1090,18 +1089,23 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(len(invoices), 2, "The number of invoices created should be equal to the number of sales orders.")
 
     def test_timesheet_with_negative_time_spent(self):
-        """ Check the billable type of a timesheet with negative time spent """
+        """
+        Check the billable type of a timesheet with negative time spent
+        and ensure that invoices can properly be created with negative timesheet
+        """
         sale_order = self.env['sale.order'].create([{
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({
                 'product_id': self.product_delivery_timesheet2.id,
             })],
         }])
+        so_line = sale_order.order_line
         sale_order.action_confirm()
         task1 = sale_order.tasks_ids
         timesheet = self.env['account.analytic.line'].create([
             {
                 'name': 'Timesheet',
+                'date': '2026-09-15',
                 'task_id': task1.id,
                 'project_id': task1.project_id.id,
                 'unit_amount': -1,
@@ -1109,6 +1113,14 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             },
         ])
         self.assertEqual(timesheet.billable_type, '04_billable_time')
+        invoice = self._create_invoice_timesheet_over_period(sale_order, '2026-09-01', '2026-09-30')
+        self.assertEqual(invoice.move_type, 'out_refund', 'Invoicing negative timesheets should create credit notes')
+        self.assertEqual(self._get_valid_invoiced_lines(invoice).quantity, 1.0)
+        invoice.action_post()
+        self.assertRecordValues(so_line, [{
+            'qty_delivered': -1.0,
+            'qty_invoiced': -1.0,
+        }])
 
     def test_linked_timesheet_after_invoice_reversal(self):
         """Test that timesheet entries end up linked to the correct invoice (or unlinked)
@@ -1981,3 +1993,56 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
         ])._compute_so_line()
         self.assertEqual(first_sol.qty_delivered, 3.0)
         self.assertEqual(second_sol.qty_delivered, 5.0)
+
+    def test_archive_employee_with_invoiced_timesheet(self):
+        """ Test that registering departure ignores future timesheets linked to posted invoices,
+            allowing the departure to succeed while preserving the invoiced timesheet. """
+        today = Date.context_today(self.env.user)
+        yesterday = today - timedelta(days=1)
+        tomorrow = today + timedelta(days=1)
+
+        self.employee_manager.version_ids.sudo().write({
+            'date_version': today - timedelta(days=10),
+            'contract_date_start': today - timedelta(days=10),
+        })
+
+        invoiced_timesheet = self.env['account.analytic.line'].create({
+            'project_id': self.project_global.id,
+            'name': 'Future Invoiced Timesheet',
+            'unit_amount': 2,
+            'employee_id': self.employee_manager.id,
+            'date': tomorrow,
+        })
+
+        standard_timesheet = self.env['account.analytic.line'].create({
+            'project_id': self.project_global.id,
+            'name': 'Future Standard Timesheet',
+            'unit_amount': 2,
+            'employee_id': self.employee_manager.id,
+            'date': tomorrow,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': today,
+            'invoice_line_ids': [Command.create({
+                'name': 'Consulting Services',
+                'price_unit': 100.0,
+                'quantity': 2.0,
+            })],
+        })
+        invoice.action_post()
+
+        invoiced_timesheet.sudo().write({
+            'reinvoice_move_id': invoice.id,
+        })
+
+        self.env['hr.employee.departure'].sudo().with_context(employee_termination=True).create({
+            'employee_id': self.employee_manager.id,
+            'departure_date': yesterday,
+        }).action_register()
+
+        self.assertFalse(self.employee_manager.active, "The employee should be successfully archived.")
+        self.assertFalse(standard_timesheet.exists(), "The standard future timesheet should be deleted.")
+        self.assertTrue(invoiced_timesheet.exists(), "The invoiced future timesheet should be ignored and kept in the database.")

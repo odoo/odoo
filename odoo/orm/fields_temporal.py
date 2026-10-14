@@ -53,7 +53,7 @@ class BaseDate[T](Field[T | typing.Literal[False]]):
             case 'year_number':
                 return lambda value: value.year
             case 'quarter_number':
-                return lambda value: value.month // 4 + 1
+                return lambda value: (value.month - 1) // 3 + 1
             case 'month_number':
                 return lambda value: value.month
             case 'iso_week_number':
@@ -63,7 +63,7 @@ class BaseDate[T](Field[T | typing.Literal[False]]):
             case 'day_of_month':
                 return lambda value: value.day
             case 'day_of_week':
-                return lambda value: value.timetuple().tm_wday
+                return lambda value: value.isoweekday() % 7
             case 'hour_number' if self.type == 'datetime':
                 return lambda value: value.hour
             case 'minute_number' if self.type == 'datetime':

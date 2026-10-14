@@ -29,10 +29,9 @@ class ResourceCalendarAttendance(models.Model):
             attendance.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     def _compute_display_name(self):
+        attendances_without_type = self.env['resource.calendar.attendance']
         for attendance in self:
-            if not attendance.work_entry_type_id:
-                super()._compute_display_name()
-            else:
+            if attendance.work_entry_type_id:
                 duration = format_duration(attendance.duration_hours)
                 work_entry = attendance.work_entry_type_id.display_code or attendance.work_entry_type_id.display_name
                 if attendance.duration_based:
@@ -45,6 +44,10 @@ class ResourceCalendarAttendance(models.Model):
                                                         hour_to=format_time(self.env, float_to_time(attendance.hour_to), time_format="short"),
                                                         duration=duration,
                                                         work_entry_type=work_entry)
+            else:
+                attendances_without_type |= attendance
+        if attendances_without_type:
+            super(ResourceCalendarAttendance, attendances_without_type)._compute_display_name()
 
     @classmethod
     def _to_dict_fields(cls):

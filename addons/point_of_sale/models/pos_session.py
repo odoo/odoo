@@ -589,15 +589,15 @@ class PosSession(models.Model):
             'opening_notes': self.opening_notes or "",
             'default_cash_details': {
                 'name': cash_pm.name,
-                'amount': ending_cash_balance + cash_payments_summary,
+                'amount': self.currency_id.round(ending_cash_balance + cash_payments_summary),
                 'opening': opening_amount,
-                'payment_amount': cash_payments_summary,
+                'payment_amount': self.currency_id.round(cash_payments_summary),
                 'moves': cash_in_out_list,
                 'id': cash_pm.id,
             } if cash_pm else {},
             'non_cash_payment_methods': [{
                 'name': pm.name,
-                'amount': sum(non_cash_payments_grouped_by_method_id[pm].mapped('amount')),
+                'amount': self.currency_id.round(sum(non_cash_payments_grouped_by_method_id[pm].mapped('amount'))),
                 'number': len(non_cash_payments_grouped_by_method_id[pm]),
                 'id': pm.id,
                 'type': pm.type,
@@ -789,6 +789,7 @@ class PosSession(models.Model):
         invoice_list = []
         for order in self.order_ids.filtered(lambda o: o.is_singly_invoiced):
             invoice = {
+                'id': order.account_move.id,
                 'total': order.account_move.amount_total_signed,
                 'name': order.account_move.name,
                 'order_ref': order.pos_reference,

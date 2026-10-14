@@ -648,7 +648,7 @@ class HrEmployee(models.Model):
         first_version_index = len(versions) - 1
 
         while first_version_index > 0:
-            if has_work_hours_between_versions(versions[first_version_index - 1], versions[first_version_index]):
+            if versions[first_version_index - 1]._has_work_hours_between_versions(versions[first_version_index]):
                 break  # version_before is not consecutive with first_version
             first_version_index -= 1
         return versions[first_version_index:]
@@ -1620,6 +1620,20 @@ class HrEmployee(models.Model):
         if not self.name:
             self.name = self.user_id.name
 
+    @api.onchange('work_email')
+    def _onchange_work_email_link_user(self):
+        # link the internal (light or regular) user of that email, unless it is already an employee of the company
+        emails = tools.mail.email_normalize_all(self.work_email)
+        if self.user_id or not emails:
+            return
+        user = self.env['res.users'].search([
+            ('share', '=', False),
+            ('company_ids', 'in', self.company_id.ids),
+            '|', ('login', '=', emails[0]), ('email_normalized', '=', emails[0]),
+        ], limit=1)
+        if user and not user.employee_ids.filtered(lambda employee: employee.company_id == self.company_id):
+            self.update(self._sync_user(user, bool(self.image_1920)))
+
     @api.onchange('company_id')
     def _onchange_timezone(self):
         if self.company_id and not self.tz:
@@ -2003,27 +2017,28 @@ class HrEmployee(models.Model):
         # Returns a dict {employee_id: tz}
         return {emp.id: emp._get_tz(date=date) for emp in self}
 
+    def _get_first_contract_version_at(self, date):
+        """Return {employee_id: version} with the lowest-id version in contract at ``date``."""
+        versions = self.sudo().version_ids.filtered_domain([
+            ('contract_date_start', '!=', False),
+            ('contract_date_start', '<=', date),
+            '|',
+                ('contract_date_end', '=', False),
+                ('contract_date_end', '>=', date),
+        ])
+        res = {}
+        for version in versions.sorted('id'):
+            res.setdefault(version.employee_id.id, version)
+        return res
+
     def _get_calendars(self, date_from=None):
         res = super()._get_calendars(date_from=date_from)
         if not date_from:
             return res
 
         date_from = fields.Date.to_date(date_from)
-        versions_by_employee = self.env['hr.version'].sudo()._read_group(
-            domain=[
-                ('employee_id', 'in', self.ids),
-                ('contract_date_start', '!=', False),
-                ('contract_date_start', '<=', date_from),
-                '|',
-                    ('contract_date_end', '=', False),
-                    ('contract_date_end', '>=', date_from),
-            ],
-            groupby=['employee_id'],
-            aggregates=['id:recordset'],
-        )
-        for employee, versions in versions_by_employee:
-            if versions:
-                res[employee.id] = versions[0].resource_calendar_id.sudo(self.env.su)
+        for employee_id, version in self._get_first_contract_version_at(date_from).items():
+            res[employee_id] = version.resource_calendar_id.sudo(self.env.su)
         return res
 
     def _get_hours_per_week_batch(self, date_from=None):
@@ -2032,21 +2047,8 @@ class HrEmployee(models.Model):
             return res
 
         date_from = fields.Date.to_date(date_from)
-        versions_by_employee = self.env['hr.version'].sudo()._read_group(
-            domain=[
-                ('employee_id', 'in', self.ids),
-                ('contract_date_start', '!=', False),
-                ('contract_date_start', '<=', date_from),
-                '|',
-                    ('contract_date_end', '=', False),
-                    ('contract_date_end', '>=', date_from),
-            ],
-            groupby=['employee_id'],
-            aggregates=['id:recordset'],
-        )
-        for employee, versions in versions_by_employee:
-            if versions:
-                res[employee.id] = versions[0].resource_calendar_id.hours_per_week
+        for employee_id, version in self._get_first_contract_version_at(date_from).items():
+            res[employee_id] = version.resource_calendar_id.hours_per_week
         return res
 
     def _get_hours_per_day_batch(self, date_from=None):
@@ -2055,21 +2057,8 @@ class HrEmployee(models.Model):
             return res
 
         date_from = fields.Date.to_date(date_from)
-        versions_by_employee = self.env['hr.version'].sudo()._read_group(
-            domain=[
-                ('employee_id', 'in', self.ids),
-                ('contract_date_start', '!=', False),
-                ('contract_date_start', '<=', date_from),
-                '|',
-                    ('contract_date_end', '=', False),
-                    ('contract_date_end', '>=', date_from),
-            ],
-            groupby=['employee_id'],
-            aggregates=['id:recordset'],
-        )
-        for employee, versions in versions_by_employee:
-            if versions:
-                res[employee.id] = versions[0].resource_calendar_id.hours_per_day
+        for employee_id, version in self._get_first_contract_version_at(date_from).items():
+            res[employee_id] = version.resource_calendar_id.hours_per_day
         return res
 
     def _get_version_periods(self, start, stop, field=None, check_contract=False):

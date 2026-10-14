@@ -1346,6 +1346,51 @@ class TestTrackingInternals(TestTrackingCommon):
                 ],
             })
 
+    @users('employee')
+    def test_track_prepare_lang_fallback(self):
+        """ _track_prepare must read tracked field values under the same
+        fallback language _track_finalize will use. Otherwise a translated
+        tracked field's initial value (read under whatever lang happened to
+        be in the write's context, defaulting to en_US if absent) and its end
+        value (read after _fallback_lang() forces the acting user's own lang)
+        can be compared across two different languages, generating a
+        tracking entry for a field whose stored content never changed in any
+        language. """
+        self.env['res.lang'].sudo()._activate_lang('fr_FR')
+        self.user_employee.lang = 'fr_FR'
+
+        mail_test_ticket_id = self.env['ir.model']._get_id('mail.test.ticket')
+        lang_field = self.env['ir.model.fields'].sudo().create({
+            'model_id': mail_test_ticket_id,
+            'name': 'x_lang_track',
+            'ttype': 'char',
+            'tracking': True,
+            'translate': 'standard',
+        })
+        self.addCleanup(lambda: lang_field.exists() and lang_field.unlink())
+        record = self.record.with_env(self.env)
+
+        # set translations
+        record.with_context(lang='en_US').x_lang_track = 'Hello'
+        record.with_context(lang='fr_FR').x_lang_track = 'Bonjour'
+        self.flush_tracking()
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            # Simple write with same value (shouldn't result in a tracking)
+            record.with_context(lang=False).write({'x_lang_track': 'Hello'})
+            self.flush_tracking()
+
+        tracking_details = ', '.join(
+            f"{tv.field_id.name}: {tv.old_value_char!r}"
+            f"-> {tv.new_value_char!r}"
+            for msg in self._new_msgs for tv in msg.tracking_value_ids
+        )
+        self.assertFalse(
+            self._new_msgs,
+             f"different languages, wrongly read as a change. Got: {tracking_details}",
+        )
+        lang_field.unlink()
+
     def test_track_groups(self):
         """ Test field groups and filtering when using standard helpers """
         self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
@@ -1624,3 +1669,40 @@ class TestTrackingInternals(TestTrackingCommon):
                 }),
             ],
         })
+
+    @users('employee')
+    def test_mail_track_float_falsy_separator(self):
+        """ Make sure Falsy float are formatted properly with the correct separators """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
+        lang = self.env['res.lang'].sudo().search([('code', '=', 'en_US')])
+        # Random decimal separator for testing
+        lang.write({'decimal_point': '|'})
+        test_record = self.env['mail.test.track.all'].with_context(lang='en_US').create({
+            'float_field': 1.0,
+        })
+        self.flush_tracking()
+        test_record.float_field = 0.0
+        self.flush_tracking()
+        self.assertMessageFields(
+            test_record.message_ids[0], {'tracking_values': [
+                ('float_field', 'float', 1.0, False),
+            ]}
+        )
+
+    @users('employee')
+    def test_mail_track_monetary_no_currency(self):
+        """ Make sure monetary fields are tracked properly even without a currency set """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
+        test_record = self.env['mail.test.track.all'].create({
+            'monetary_field': 1.0,
+            'company_id': False,
+        })
+        self.flush_tracking()
+        test_record.monetary_field = 2.0
+        self.flush_tracking()
+        with mute_logger('odoo.addons.mail.tests.common'):
+            self.assertMessageFields(
+                test_record.message_ids[0], {'tracking_values': [
+                    ('monetary_field', 'monetary', 1.0, 2.0, {'currency': self.env['res.currency']}),
+                ]}
+            )

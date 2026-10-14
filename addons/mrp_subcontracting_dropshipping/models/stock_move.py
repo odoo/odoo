@@ -46,5 +46,17 @@ class StockMove(models.Model):
         if not self.env.context.get('valuation_without_extra') and self.is_subcontract and self._is_dropshipped() and self.purchase_line_id:
             last_subcontract_production_move = self.move_orig_ids.production_id.move_finished_ids[:1]
             if last_subcontract_production_move:
-                return last_subcontract_production_move._get_value_from_account_move(quantity)
+                valuation_data = last_subcontract_production_move._get_value_data()
+                valued_quantity = valuation_data['quantity']
+                if valued_quantity:
+                    valuation_data['value'] *= quantity / valued_quantity
+                    valuation_data['quantity'] = quantity
+                    return valuation_data
         return super()._get_value_from_account_move(quantity)
+
+    def _get_partner_id(self):
+        if self.raw_material_production_id.subcontractor_id:
+            route = self.env.ref('stock_dropshipping.route_drop_shipping', raise_if_not_found=False)
+            if route and self.rule_id.route_id == route:
+                return self.raw_material_production_id.subcontractor_id.id
+        return super()._get_partner_id()

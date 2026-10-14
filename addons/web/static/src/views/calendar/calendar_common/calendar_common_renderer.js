@@ -395,11 +395,13 @@ export class CalendarCommonRenderer extends Component {
         return event.end.getDate() === event.start.getDate() || event.allDay;
     }
     onEventDragStop(info) {
+        // the calendar may already be unmounted and jsEvent undefined when fullcalendar
+        // interrupts the drag (e.g. swiping to another date while dragging on touch devices)
         this.ref()?.classList.remove("o_interacting", "o_grabbing");
         if (!this.uiService.isSmall) {
-            const point = info.jsEvent.changedTouches?.[0] ?? info.jsEvent;
-            const x = point.clientX;
-            const y = point.clientY;
+            const point = info.jsEvent?.changedTouches?.[0] ?? info.jsEvent;
+            const x = point?.clientX;
+            const y = point?.clientY;
             if (Number.isFinite(x) && Number.isFinite(y)) {
                 const dropTarget = document.elementFromPoint(x, y);
                 if (dropTarget && dropTarget.closest(".o_calendar_unschedule_zone")) {

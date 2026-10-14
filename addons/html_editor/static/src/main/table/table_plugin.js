@@ -1,9 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import { removeClass, removeStyle } from "@html_editor/utils/dom";
+import { removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
+    isContentEditable,
     isProtected,
     isProtecting,
     isEmptyBlock,
@@ -25,10 +26,15 @@ import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/posi
 import { withSequence } from "@html_editor/utils/resource";
 import { findInSelection } from "@html_editor/utils/selection";
 import {
+    TABLE_WRAPPER_SELECTOR,
     getColumnIndex,
     getRowIndex,
     getTableCells,
     getSelectedCellsMergeInfo,
+    getTableRoot,
+    getTableWrapper,
+    isTableWrapper,
+    wrapTableInScrollContainer,
 } from "@html_editor/utils/table";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
@@ -90,6 +96,10 @@ export class TablePlugin extends Plugin {
         "split",
         "color",
     ];
+    static defaultConfig = {
+        allowScrollableTables: true,
+        saveScrollableTables: false,
+    };
     static shared = [
         "insertTable",
         "addColumn",
@@ -198,13 +208,25 @@ export class TablePlugin extends Plugin {
         on_will_split_block_handlers: this.resetTableSelection.bind(this),
 
         /** Processors */
-        before_insert_processors: this.normalizeTableStructure.bind(this),
-        clean_for_save_processors: (root) => {
+        clean_for_save_processors: (root, { preserveSelection = false } = {}) => {
+            if (!this.config.saveScrollableTables) {
+                // Wrappers are only needed while editing.
+                this.unwrapTables(root, { preserveSelection });
+            }
             this.deselectTable(root);
             return root;
         },
-        normalize_processors: this.normalizeTable.bind(this),
+        html_compatibility_processors: this.adaptTables.bind(this),
+        // Inserted content is adapted before it is in the editable, where its
+        // tables cannot be wrapped yet: wrap them once they get there.
+        normalize_processors: this.wrapTables.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
+        paste_odoo_editor_html_processors: (fragment) => {
+            if (!this.config.allowScrollableTables) {
+                this.unwrapTables(fragment);
+            }
+            return fragment;
+        },
         resize_target_processors: this.processTableResizeTargets.bind(this),
         resize_width_reset_processors: this.processTableWidthReset.bind(this),
         targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
@@ -240,20 +262,25 @@ export class TablePlugin extends Plugin {
             }
         },
         is_selection_blocker_predicates: (node) => {
-            if (node.nodeName === "TABLE") {
+            if (node.nodeName === "TABLE" || isTableWrapper(node)) {
                 return true;
             }
         },
         can_contain_selection_placeholder_predicates: (container) => {
-            if (container.nodeName === "TABLE") {
+            if (container.nodeName === "TABLE" || isTableWrapper(container)) {
                 return false;
             } else if (["TD", "TH"].includes(container.nodeName) && container.closest(".o_table")) {
                 return true;
             }
         },
+        is_no_inline_root_predicates: (node) => {
+            if (isTableWrapper(node)) {
+                return true;
+            }
+        },
 
         /** Selectors */
-        move_node_whitelist_selectors: "table",
+        move_node_whitelist_selectors: `${TABLE_WRAPPER_SELECTOR}, :not(${TABLE_WRAPPER_SELECTOR}) > table`,
     };
 
     setup() {
@@ -287,7 +314,76 @@ export class TablePlugin extends Plugin {
         });
         this.onMousemove = this.onMousemove.bind(this);
 
-        this.normalizeTableStructure(this.editable);
+        // A previous version set the width and margin on tbody, move them back.
+        this.editable.querySelectorAll("table").forEach((table) => {
+            // A previous version removed both properties from the table when it moved
+            // them, so a table that still has one of them was never migrated.
+            if (table.style.width || table.style.marginLeft) {
+                return;
+            }
+            const tBody = table.tBodies[0];
+            if (!tBody) {
+                return;
+            }
+            for (const property of ["width", "margin-left"]) {
+                if (tBody.style[property]) {
+                    table.style[property] = tBody.style[property];
+                    removeStyle(tBody, property);
+                }
+            }
+        });
+    }
+
+    /**
+     * Wraps the table in a scroll container so a wide table scrolls on its own.
+     * Nested, non-editable and protected tables are skipped.
+     *
+     * @param {HTMLTableElement} table
+     */
+    wrapTable(table) {
+        if (
+            !this.config.allowScrollableTables ||
+            getTableWrapper(table) ||
+            closestElement(table, isTableCell) ||
+            !isContentEditable(table) ||
+            isProtected(table) ||
+            isProtecting(table)
+        ) {
+            return;
+        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        wrapTableInScrollContainer(table);
+        cursors.restore();
+    }
+
+    /**
+     * Wraps the tables of the given root, see `wrapTable`.
+     *
+     * @param {HTMLElement | DocumentFragment} root
+     * @returns {HTMLElement | DocumentFragment}
+     */
+    wrapTables(root) {
+        for (const table of root.querySelectorAll("table")) {
+            this.wrapTable(table);
+        }
+        return root;
+    }
+
+    /**
+     * Removes the scroll containers of the tables in the given root.
+     *
+     * @param {HTMLElement | DocumentFragment} root
+     * @param {Object} [options]
+     * @param {boolean} [options.preserveSelection=false]
+     */
+    unwrapTables(root, { preserveSelection = false } = {}) {
+        const cursors = preserveSelection && this.dependencies.selection.preserveSelection();
+        for (const wrapper of root.querySelectorAll(TABLE_WRAPPER_SELECTOR)) {
+            unwrapContents(wrapper);
+        }
+        if (cursors) {
+            cursors.restore();
+        }
     }
 
     processTableResizeTargets(item, neighbor, position, defaultMinSize) {
@@ -384,6 +480,7 @@ export class TablePlugin extends Plugin {
         if (clipboardRoot.childNodes.length !== 1 || sourceTable?.nodeName !== "TABLE") {
             return false;
         }
+        this.fillMissingCells(sourceTable);
 
         // Source table size.
         const sourceRows = sourceTable.rows;
@@ -505,14 +602,50 @@ export class TablePlugin extends Plugin {
     }
 
     /**
-     * Inherits table-level colors to all child tds to make it
-     * easier to add/remove style on tables.
+     * Adapts the tables contained in `root` to the structure the table
+     * operations rely on:
+     * - the cells missing from ragged rows are filled in, so that every
+     *   table forms a complete grid.
+     * - every table has a `<tbody>`, `<thead>` elements being merged or
+     *   converted into it.
+     * - every table is put in a scroll container, see `wrapTable`.
+     * - the inline widths of the first row's cells are moved to the `<col>`
+     *   elements of a `<colgroup>`.
+     * - table-level colors are inherited by all child tds, to make it easier
+     *   to add/remove style on tables.
      *
-     * @param {Element} root
+     * @param {HTMLElement | DocumentFragment} root
+     * @returns {HTMLElement | DocumentFragment}
      */
-    normalizeTable(root) {
-        const tables = root.querySelectorAll("table");
-        for (const table of tables) {
+    adaptTables(root) {
+        for (const table of root.querySelectorAll("table")) {
+            this.fillMissingCells(table);
+            let tbody = table.tBodies[0];
+            const thead = table.tHead;
+
+            if (thead) {
+                const thChildren = thead.querySelectorAll("th");
+                thChildren.forEach((th) => th.classList.add("o_table_header"));
+
+                if (tbody) {
+                    // If a <tbody> already exists, move all rows from
+                    // <thead> into the start of <tbody>.
+                    tbody.prepend(...thead.rows);
+                    thead.remove();
+                } else {
+                    // Otherwise, replace the <thead> with <tbody>
+                    tbody = this.dependencies.dom.setTagName(thead, "TBODY");
+                }
+            }
+
+            if (!tbody) {
+                tbody = table.ownerDocument.createElement("tbody");
+                const row = tbody.insertRow();
+                row.insertCell().append(this.dependencies.baseContainer.createBaseContainer());
+                table.append(tbody);
+            }
+
+            this.wrapTable(table);
             const firstRow = table.rows[0];
             let colgroup;
             for (const cell of firstRow?.children || []) {
@@ -534,7 +667,6 @@ export class TablePlugin extends Plugin {
                 table.prepend(colgroup);
             }
 
-            // --- Normalize table colors ---
             const tableColor = table.style.color;
             const tableBgColor = table.style.backgroundColor;
 
@@ -943,8 +1075,10 @@ export class TablePlugin extends Plugin {
             return;
         }
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-        table.before(baseContainer);
-        table.remove();
+        // Remove the wrapper along with the table, if it has one.
+        const tableRoot = getTableRoot(table);
+        tableRoot.before(baseContainer);
+        tableRoot.remove();
         this.dependencies.selection.setCursorStart(baseContainer);
     }
 
@@ -1187,11 +1321,11 @@ export class TablePlugin extends Plugin {
         // Expand range to fully include tables.
         const firstTable = fullySelectedTables[0];
         if (firstTable.contains(startContainer)) {
-            [startContainer, startOffset] = leftPos(firstTable);
+            [startContainer, startOffset] = leftPos(getTableRoot(firstTable));
         }
         const lastTable = fullySelectedTables.at(-1);
         if (lastTable.contains(endContainer)) {
-            [endContainer, endOffset] = rightPos(lastTable);
+            [endContainer, endOffset] = rightPos(getTableRoot(lastTable));
         }
         range = { startContainer, startOffset, endContainer, endOffset };
 
@@ -1352,9 +1486,9 @@ export class TablePlugin extends Plugin {
                     ["ArrowRight", "ArrowDown"].includes(ev.key) && direction === DIRECTIONS.LEFT;
                 let targetNode;
                 if (deselectingBackward) {
-                    targetNode = endTable.previousElementSibling;
+                    targetNode = getTableRoot(endTable).previousElementSibling;
                 } else if (deselectingForward) {
-                    targetNode = endTable.nextElementSibling;
+                    targetNode = getTableRoot(endTable).nextElementSibling;
                 }
                 if (targetNode) {
                     ev.preventDefault();
@@ -1812,8 +1946,8 @@ export class TablePlugin extends Plugin {
         const rowOffset = currentRowIndex + (isArrowUp ? -1 : currentCell.rowSpan);
         let targetNode = tableGrid[rowOffset]?.[currentColIndex];
         const siblingElement = isArrowUp
-            ? currentTable.previousElementSibling
-            : currentTable.nextElementSibling;
+            ? getTableRoot(currentTable).previousElementSibling
+            : getTableRoot(currentTable).nextElementSibling;
         if (!targetNode && siblingElement) {
             // If no target cell is available, navigate to sibling element
             targetNode = siblingElement;
@@ -1981,45 +2115,6 @@ export class TablePlugin extends Plugin {
     }
 
     /**
-     * Normalize the structure of all tables contained in `container`.
-     *
-     * Ensures every table has a `<tbody>` and merges or converts `<thead>`
-     * elements when necessary. Table operations rely on the presence of a
-     * `<tbody>`, so every table must contain one.
-     *
-     * @param {HTMLElement | DocumentFragment} container
-     * @returns {HTMLElement | DocumentFragment}
-     */
-    normalizeTableStructure(container) {
-        container.querySelectorAll("table").forEach((table) => {
-            let tbody = table.tBodies[0];
-            const thead = table.tHead;
-
-            if (thead) {
-                const thChildren = thead.querySelectorAll("th");
-                thChildren.forEach((th) => th.classList.add("o_table_header"));
-
-                if (tbody) {
-                    // If a <tbody> already exists, move all rows from
-                    // <thead> into the start of <tbody>.
-                    tbody.prepend(...thead.rows);
-                    thead.remove();
-                } else {
-                    // Otherwise, replace the <thead> with <tbody>
-                    tbody = this.dependencies.dom.setTagName(thead, "TBODY");
-                }
-            }
-
-            if (!tbody) {
-                tbody = table.ownerDocument.createElement("tbody");
-                tbody.innerHTML = `<tr><td><div class="o-paragraph"><br></div></td></tr>`;
-                table.append(tbody);
-            }
-        });
-        return container;
-    }
-
-    /**
      * @param {DocumentFragment} clonedContents
      * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
      */
@@ -2055,16 +2150,18 @@ export class TablePlugin extends Plugin {
             // just its rows.
             clonedContents = tableClone;
         }
-        const startTable = closestElement(selection.startContainer, "table");
-        if (clonedContents.firstChild.nodeName === "TABLE" && startTable) {
+        const isTableRoot = (node) => node?.nodeName === "TABLE" || isTableWrapper(node);
+
+        const startTableRoot = getTableRoot(selection.startContainer);
+        if (isTableRoot(clonedContents.firstChild) && startTableRoot) {
             // Make sure the full leading table is copied.
-            clonedContents.firstChild.after(startTable.cloneNode(true));
+            clonedContents.firstChild.after(startTableRoot.cloneNode(true));
             clonedContents.firstChild.remove();
         }
-        const endTable = closestElement(selection.endContainer, "table");
-        if (clonedContents.lastChild.nodeName === "TABLE" && endTable) {
+        const endTableRoot = getTableRoot(selection.endContainer);
+        if (isTableRoot(clonedContents.lastChild) && endTableRoot) {
             // Make sure the full trailing table is copied.
-            clonedContents.lastChild.before(endTable.cloneNode(true));
+            clonedContents.lastChild.before(endTableRoot.cloneNode(true));
             clonedContents.lastChild.remove();
         }
         this.deselectTable(clonedContents);
@@ -2118,5 +2215,42 @@ export class TablePlugin extends Plugin {
         }
         this.tableGridMap.set(table, grid);
         return grid;
+    }
+
+    /**
+     * Adds the cells missing from the rows of a ragged table.
+     *
+     * @param {HTMLTableElement} table
+     */
+    fillMissingCells(table) {
+        const rows = [...table.rows];
+        if (!rows.length) {
+            return;
+        }
+        const grid = this.buildTableGrid(table);
+        const width = Math.max(...grid.map((gridRow) => gridRow.length));
+        let hasMissingCells = false;
+        for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            const row = rows[rowIndex];
+            const isHeaderRow =
+                row.cells.length > 0 && [...row.cells].every((cell) => cell.nodeName === "TH");
+            for (let colIndex = 0; colIndex < width; colIndex++) {
+                if (grid[rowIndex][colIndex]) {
+                    continue;
+                }
+                const newCell = this.document.createElement(isHeaderRow ? "th" : "td");
+                if (isHeaderRow) {
+                    newCell.classList.add("o_table_header");
+                }
+                newCell.append(this.dependencies.baseContainer.createBaseContainer());
+                // The cells lost by a partial copy are the leading ones of
+                // the first row, and the trailing ones of any other.
+                row.insertBefore(newCell, rowIndex === 0 ? row.firstChild : null);
+                hasMissingCells = true;
+            }
+        }
+        if (hasMissingCells) {
+            this.tableGridMap.delete(table);
+        }
     }
 }

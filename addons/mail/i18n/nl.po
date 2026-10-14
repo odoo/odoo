@@ -12,13 +12,14 @@
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-09-29 12:11+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"PO-Revision-Date: 2026-10-08 08:42+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/mail/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -92,6 +93,62 @@ msgid ""
 "For more specific needs, you may also assign custom-defined actions\n"
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 msgstr ""
+"\n"
+"\n"
+"Chat, e-mailgateway en privékanaal.\n"
+"=======================================\n"
+"\n"
+"Communiceer met je collega's/klanten/gasten binnen Odoo.\n"
+"\n"
+"Chatten\n"
+"------------\n"
+"Gebruiksvriendelijke chat-functies voor één-op-één communicatie of "
+"groepscommunicatie (tekstchat/spraakoproep/videogesprek). Nodig gasten uit "
+"en deel documenten, allemaal realtime.\n"
+"\n"
+"E-mailgateway\n"
+"------------\n"
+"Het versturen van informatie en documenten is vereenvoudigd. Je kunt e-mails "
+"verzenden vanuit Odoo, en er zijn veel geweldige mogelijkheden. Ontwerp "
+"bijvoorbeeld een mooi e-mailsjabloon voor facturen en gebruik die voor al je "
+"klanten, zodat je niet elke keer dezelfde stappen moet doorlopen.\n"
+"\n"
+"Chatter\n"
+"-------\n"
+"Verzamel alle contextuele conversaties op één plaats. Bijvoorbeeld bij een "
+"sollicitant: verstuur updates rechtstreeks naar de sollicitant, plan het "
+"volgende sollicitatiegesprek, voeg het contract toe, voeg een HR-"
+"verantwoordelijke toe aan de lijst met volgers om hen op de hoogte te "
+"stellen van belangrijke gebeurtenissen (met hulp van subtypen),...\n"
+"\n"
+"\n"
+"Inkomende e-mail ophalen op POP/IMAP-servers.\n"
+"============================================\n"
+"Voer de parameters van je POP/IMAP-account(s) en eventuele inkomende e-mails "
+"in deze accounts worden automatisch gedownload naar je Odoo-systeem. Alle "
+"POP3/IMAP-compatibele servers worden ondersteund, inclusief servers die een "
+"versleutelde SSL/TLS-verbinding nodig hebben. Dit kan worden gebruikt om "
+"eenvoudig e-mail-gebaseerde workflows te maken voor veel Odoo-documenten met "
+"e-mail, zoals:\n"
+"\n"
+"-------------------------------------------------- "
+"-------------------------------------------------- ------\n"
+"    * CRM-leads/verkoopkansen\n"
+"    * CRM-claims\n"
+"    * Projectproblemen\n"
+"    * Projecttaken\n"
+"    * Personeelswerving (sollicitanten)\n"
+"\n"
+"Installeer gewoon de relevante applicatie en je kunt elk van deze "
+"documententypes (leads, projectproblemen) toewijzen aan je inkomende e-"
+"mailaccounts. Nieuwe e-mails zullen automatisch nieuwe documenten van het "
+"gekozen type aanmaken, dus het is een fluitje van een cent om een mailbox-"
+"naar-Odoo integratie te maken. Nog beter: deze documenten fungeren als mini-"
+"gesprekken gesynchroniseerd per e-mail. Je kunt antwoorden vanuit Odoo, en "
+"de antwoorden worden automatisch verzameld en toegevoegd aan de hetzelfde "
+"gespreksdocument. Voor meer specifieke behoeften kun je ook op maat "
+"gedefinieerde acties toewijzen (technisch: Serveracties) die moeten worden "
+"geactiveerd bij elke inkomende e-mail.\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -187,13 +244,13 @@ msgstr "%(author)s is een gesprek gestart."
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "%(author)s started a poll: \"%(question)s\"."
-msgstr ""
+msgstr "%(author)s heeft een poll gestart: '%(question)s'."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "%(author)s's poll \"%(question)s\" has closed."
-msgstr ""
+msgstr "De poll '%(question)s' van %(author)s is gesloten."
 
 #. module: mail
 #. odoo-python
@@ -202,6 +259,8 @@ msgid ""
 "%(author)s's poll \"%(question)s\" has closed. Winning answer: \"%"
 "(answer)s\"."
 msgstr ""
+"De poll '%(question)s' van %(author)s is gesloten. Winnend antwoord: '%"
+"(answer)s'."
 
 #. module: mail
 #. odoo-javascript
@@ -250,6 +309,8 @@ msgid ""
 "%(count)s activities on \"%(res_name)s\" (%(model_description)s) assigned to "
 "you"
 msgstr ""
+"%(count)s activiteiten op '%(res_name)s' (%(model_description)s) aan jou "
+"toegewezen"
 
 #. module: mail
 #. odoo-python
@@ -458,7 +519,7 @@ msgstr "%(user)s heeft de naam van de thread veranderd naar %(name)s"
 #. odoo-python
 #: code:addons/mail/controllers/discuss/channel.py:0
 msgid "%(user)s converted this meeting into a group chat"
-msgstr ""
+msgstr "%(user)s heeft deze vergadering omgezet in een groepschat"
 
 #. module: mail
 #. odoo-javascript
@@ -485,13 +546,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_rtc_session.py:0
 msgid "%(user)s started a call"
-msgstr ""
+msgstr "%(user)s heeft een oproep gestart"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s started a thread: "
-msgstr ""
+msgstr "%(user)s heeft een thread gestart: "
 
 #. module: mail
 #. odoo-javascript
@@ -531,7 +592,7 @@ msgstr "%s (e-mailsjabloon)"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "%s are not valid email addresses"
-msgstr ""
+msgstr "%s zijn geen geldige e-mailadressen"
 
 #. module: mail
 #. odoo-python
@@ -549,7 +610,7 @@ msgstr "%s dagen te laat"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "%s is not a valid email address"
-msgstr ""
+msgstr "%s is geen geldig e-mailadres"
 
 #. module: mail
 #. odoo-javascript
@@ -821,6 +882,8 @@ msgid ""
 "<i class=\"oi oi-filled mb-2\" data-icon=\"group\" role=\"img\" "
 "title=\"Role\" aria-label=\"Role\"/>"
 msgstr ""
+"<i class=\"oi oi-filled mb-2\" data-icon=\"group\" role=\"img\" "
+"title=\"Rol\" aria-label=\"Rol\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -828,6 +891,8 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-filled mb-2\" data-icon=\"person\" title=\"Assigned to\"/>"
 msgstr ""
+"<i class=\"oi oi-filled mb-2\" data-icon=\"person\" title=\"Toegewezen aan\"/"
+">"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -835,6 +900,8 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-filled pt-1\" data-icon=\"sticky_note_2\" title=\"Note\"/>"
 msgstr ""
+"<i class=\"oi oi-filled pt-1\" data-icon=\"sticky_note_2\" title=\"Notitie\"/"
+">"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -842,6 +909,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Due date\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Deadline\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -849,6 +917,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"group\" role=\"img\" title=\"Role\" "
 "aria-label=\"Role\" style=\"font-size: 12px;\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"group\" role=\"img\" title=\"Rol\" "
+"aria-label=\"Rol\" style=\"font-size: 12px;\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -876,12 +946,14 @@ msgid ""
 "<i class=\"oi\" data-icon=\"hourglass_disabled\" role=\"img\" title=\"To "
 "Assign\" aria-label=\"To Assign\" style=\"font-size: 12px;\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"hourglass_disabled\" role=\"img\" title=\"Toe te "
+"wijzen\" aria-label=\"Toe te wijzen\" style=\"font-size: 12px;\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<i class=\"oi\" data-icon=\"label\" title=\"Summary\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"label\" title=\"Samenvatting\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
@@ -898,7 +970,7 @@ msgstr "<i class=\"oi\" data-icon=\"logout\" role=\"img\"/> Verlaten"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "<i class=\"oi\" data-icon=\"oi_odoo\" title=\"Link to\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"oi_odoo\" title=\"Koppelen aan\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -935,12 +1007,14 @@ msgid ""
 "<p>Channels make it easy to organize information across different topics and "
 "groups.</p>"
 msgstr ""
+"<p>Met kanalen kun je makkelijk informatie over verschillende onderwerpen en "
+"groepen ordenen.</p>"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "<p>Click a channel to open the discussion.</p>"
-msgstr ""
+msgstr "<p>Klik op een kanaal om de chat te openen.</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1141,7 +1215,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_indices_unique
 msgid "A chat should have unique member combination."
-msgstr ""
+msgstr "Een chat moet een unieke combinatie van deelnemers hebben."
 
 #. module: mail
 #. odoo-python
@@ -1664,6 +1738,8 @@ msgid ""
 "Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
 "getting-started"
 msgstr ""
+"Voeg een Klipy GIF API-sleutel toe om ondersteuning voor GIF’s in te "
+"schakelen. https://docs.klipy.com/getting-started"
 
 #. module: mail
 #. odoo-javascript
@@ -2157,6 +2233,8 @@ msgid ""
 "Are you sure you want to delete \"%(name)s\"?\n"
 "This action cannot be undone."
 msgstr ""
+"Weet je zeker dat je '%(name)s' wilt verwijderen?\n"
+"Deze actie kan niet ongedaan worden gemaakt."
 
 #. module: mail
 #. odoo-javascript
@@ -2165,6 +2243,8 @@ msgid ""
 "Are you sure you want to delete the %(count)s copies of \"%(name)s\"?\n"
 "This action cannot be undone."
 msgstr ""
+"Weet je zeker dat je de %(count)s kopieën van '%(name)s' wilt verwijderen?\n"
+"Deze actie kan niet ongedaan worden gemaakt."
 
 #. module: mail
 #. odoo-javascript
@@ -2174,6 +2254,9 @@ msgid ""
 "copies?\n"
 "This action cannot be undone."
 msgstr ""
+"Weet je zeker dat je de %(count)s geselecteerde bestanden en hun kopieën "
+"wilt verwijderen?\n"
+"Deze actie kan niet ongedaan worden gemaakt."
 
 #. module: mail
 #. odoo-javascript
@@ -2194,6 +2277,8 @@ msgid ""
 "Are you sure you want to mass-update notifications preferences of all "
 "existing records of the %(parent_model_name)s \"%(parent_record_name)s\"?"
 msgstr ""
+"Weet je zeker dat je de meldingsvoorkeuren van alle bestaande records van de "
+"%(parent_model_name)s \"%(parent_record_name)s\" in één keer wilt bijwerken?"
 
 #. module: mail
 #. odoo-javascript
@@ -3142,7 +3227,7 @@ msgstr "Kan het kanaaltype niet wijzigen van: %(channel_names)s"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change the member combination of: %(channel_names)s"
-msgstr ""
+msgstr "De ledencombinatie kan niet worden gewijzigd voor: %(channel_names)s"
 
 #. module: mail
 #. odoo-python
@@ -3502,7 +3587,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 msgid "Chat with your coworkers on desktop or on mobile."
-msgstr ""
+msgstr "Chat met je collega's op desktop of mobiel."
 
 #. module: mail
 #: model:ir.module.module,summary:base.module_mail
@@ -3592,7 +3677,7 @@ msgstr "Klik om te activeren"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Click to see delivery errors"
-msgstr ""
+msgstr "Klik hier om afleverfouten te bekijken"
 
 #. module: mail
 #. odoo-javascript
@@ -3604,13 +3689,14 @@ msgstr "Klik om de bijlagen te zien"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Click to view more actions on the message"
-msgstr ""
+msgstr "Klik om meer acties voor het bericht te bekijken"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.js:0
 #: code:addons/mail/static/src/core/common/poll_votes_panel.xml:0
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
+#: code:addons/mail/static/src/core/web/mention_list.xml:0
 #: code:addons/mail/static/src/discuss/call/common/meeting_ready_banner.xml:0
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -4429,6 +4515,9 @@ msgid ""
 "Date and time at which the invitation was last sent to this member. Cleared "
 "when the member joins, so a value means the invitation is still pending."
 msgstr ""
+"Datum en tijdstip waarop de uitnodiging voor het laatst naar dit lid is "
+"verzonden. Wordt gewist wanneer het lid toetreedt. Een waarde betekent dus "
+"dat de uitnodiging nog openstaat."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__error_date
@@ -4680,7 +4769,7 @@ msgstr "Bijlage verwijderen"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_delete_dialog.js:0
 msgid "Delete Attachment & Duplicates"
-msgstr ""
+msgstr "Bijlage en duplicaten verwijderen"
 
 #. module: mail
 #. odoo-javascript
@@ -5213,7 +5302,7 @@ msgstr "Vervalt over %s dagen"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.js:0
 msgid "Due in 1 week"
-msgstr ""
+msgstr "Vervalt over 1 week"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -5323,7 +5412,7 @@ msgstr "Geplande notitie bewerken"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Edit in Full Composer"
-msgstr ""
+msgstr "Bewerken in Volledige editor"
 
 #. module: mail
 #. odoo-javascript
@@ -5556,7 +5645,7 @@ msgstr "Emoji"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_poll_option__option_emoji
 msgid "Emoji of the poll option"
-msgstr ""
+msgstr "Emoji van de polloptie"
 
 #. module: mail
 #. odoo-javascript
@@ -5757,6 +5846,12 @@ msgstr ""
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
 msgid "Error, a partner cannot follow twice the same object."
 msgstr "Fout, een partner kan niet twee keer hetzelfde object volgen."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/mention_list.xml:0
+msgid "Esc"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
@@ -6019,7 +6114,7 @@ msgstr "Berichten filteren"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 msgid "Find channels to follow below"
-msgstr ""
+msgstr "Hieronder vind je kanalen om te volgen"
 
 #. module: mail
 #. odoo-javascript
@@ -6031,7 +6126,7 @@ msgstr "Meer kanalen zoeken"
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "First Activity: %s"
-msgstr ""
+msgstr "Eerste activiteit: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -6695,7 +6790,7 @@ msgstr "Hostnaam of IP van de mailserver"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Hover over your message to reveal its actions"
-msgstr ""
+msgstr "Hover over je bericht om de beschikbare acties weer te geven"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__notification_type
@@ -7489,7 +7584,7 @@ msgstr "Uitnodigingslink gekopieerd"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 msgid "Invitation sent again to %(member_name)s."
-msgstr ""
+msgstr "Uitnodiging opnieuw verzonden naar %(member_name)s."
 
 #. module: mail
 #. odoo-javascript
@@ -7519,13 +7614,13 @@ msgstr "Mensen uitnodigen"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite people to \"%(name)s\""
-msgstr ""
+msgstr "Mensen uitnodigen voor '%(name)s'"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite people to the channel \"%(name)s\""
-msgstr ""
+msgstr "mensen uitnodigen voor het kanaal '%(name)s'"
 
 #. module: mail
 #. odoo-javascript
@@ -7879,7 +7974,7 @@ msgstr "Label"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_poll_option__option_label
 msgid "Label of the poll option"
-msgstr ""
+msgstr "Label van de polloptie"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__lang
@@ -8096,7 +8191,7 @@ msgstr "Verlaat gesprek"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/mail_composer_form.js:0
 msgid "Leaving will stop editing this message."
-msgstr ""
+msgstr "Als je weggaat, wordt het bewerken van dit bericht gestopt."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_description
@@ -8153,7 +8248,7 @@ msgstr "Lijst Activiteit"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_commands.js:0
 msgid "List the members of this conversation"
-msgstr ""
+msgstr "Geef een overzicht van de deelnemers van dit gesprek"
 
 #. module: mail
 #. odoo-javascript
@@ -8631,7 +8726,7 @@ msgstr ""
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 #: model:mail.activity.type,summary:mail.mail_activity_data_meeting
 msgid "Meeting"
-msgstr "Afspraak"
+msgstr "Vergadering"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__meeting_stop_dt
@@ -8698,7 +8793,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Members of this conversation: %(members)s."
-msgstr ""
+msgstr "Leden van dit gesprek: %(members)s."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__group_ids
@@ -9232,6 +9327,12 @@ msgid "Names of the recipients"
 msgstr "Namen van de ontvangers"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/mention_list.xml:0
+msgid "Navigate"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Near %(city)s, %(region)s, %(country)s"
@@ -9433,7 +9534,7 @@ msgstr "Geen gesprek gevonden"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu.js:0
 msgid "No conversation matches this filter."
-msgstr ""
+msgstr "Er zijn geen gesprekken die aan deze filter voldoen."
 
 #. module: mail
 #. odoo-javascript
@@ -9531,7 +9632,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu.js:0
 msgid "No results for \"%s\"."
-msgstr ""
+msgstr "Geen resultaten voor \"%s\"."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
@@ -9572,7 +9673,7 @@ msgstr "Geen gebruikers gevonden."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 msgid "No video conference planned!"
-msgstr ""
+msgstr "Er is geen videovergadering gepland!"
 
 #. module: mail
 #. odoo-javascript
@@ -9794,7 +9895,7 @@ msgstr "Notificaties geblokkeerd"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/messaging_menu/messaging_menu_model.js:0
 msgid "Notifications of the documents you follow will appear here."
-msgstr ""
+msgstr "Meldingen over de documenten die je volgt, verschijnen hier."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify_author
@@ -10110,7 +10211,7 @@ msgstr "Enkel interne gebruikers kunnen persoonlijke mailservers configureren."
 #. odoo-python
 #: code:addons/mail/controllers/discuss/channel.py:0
 msgid "Only members can send the invitation link again."
-msgstr ""
+msgstr "Alleen leden kunnen de uitnodigingslink opnieuw versturen."
 
 #. module: mail
 #. odoo-python
@@ -10158,6 +10259,8 @@ msgstr ""
 msgid ""
 "Only the channel owner or database admins can convert a meeting to a chat."
 msgstr ""
+"Alleen de kanaaleigenaar of databasebeheerders kunnen een vergadering "
+"omzetten naar een chat."
 
 #. module: mail
 #. odoo-javascript
@@ -11026,6 +11129,12 @@ msgstr "De poll eindigt binnenkort"
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Pop out Attachments"
 msgstr "Pop-out Bijlagen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.js:0
+msgid "Pop out is not supported on mobile."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -12446,6 +12555,12 @@ msgstr "Gezien door:"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/mention_list.xml:0
+msgid "Select"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_menu.xml:0
 msgid "Select Actions"
 msgstr "Acties selecteren"
@@ -12856,7 +12971,7 @@ msgstr "Sfu-server-URL"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Share GIFs in your conversations using the Klipy API."
-msgstr ""
+msgstr "Deel GIF’s in je gesprekken met behulp van de Klipy API."
 
 #. module: mail
 #. odoo-javascript
@@ -12918,7 +13033,7 @@ msgstr "Mijn scherm toch weergeven"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_commands.js:0
 msgid "Show a help message"
-msgstr ""
+msgstr "Een helpbericht weergeven"
 
 #. module: mail
 #. odoo-javascript
@@ -13148,7 +13263,7 @@ msgstr "Start een conversatie"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "Start a new Meeting?"
-msgstr ""
+msgstr "Een nieuwe vergadering starten?"
 
 #. module: mail
 #. odoo-javascript
@@ -13231,7 +13346,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
 msgid "Stay updated on your favourite topics"
-msgstr ""
+msgstr "Blijf op de hoogte van je favoriete onderwerpen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__steps_count
@@ -13428,7 +13543,7 @@ msgstr "Camera wisselen"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Switch to the other call?"
-msgstr ""
+msgstr "Wil je overschakelen naar de andere oproep?"
 
 #. module: mail
 #. odoo-python
@@ -13834,7 +13949,7 @@ msgstr ""
 #: code:addons/mail/models/ir_actions_server.py:0
 msgid ""
 "The model of the mail template is different from the one on the action server"
-msgstr ""
+msgstr "Het model van de mailsjabloon verschilt van dat op de actieserver"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -14194,6 +14309,8 @@ msgid ""
 "This sets default notifications for all future records under this %"
 "(model_name)s."
 msgstr ""
+"Hiermee worden de standaardmeldingen ingesteld voor alle toekomstige records "
+"onder dit model: %(model_name)s."
 
 #. module: mail
 #. odoo-javascript
@@ -14235,7 +14352,7 @@ msgstr "Deze week"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "This will disconnect you from your ongoing call."
-msgstr ""
+msgstr "Hierdoor wordt de verbinding met je lopende oproep verbroken."
 
 #. module: mail
 #. odoo-python
@@ -15882,7 +15999,7 @@ msgstr "Schrijf feedback"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Write note to post in the chatter of the record..."
-msgstr ""
+msgstr "Schrijf een notitie om in de chatter van het record te plaatsen..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -16225,6 +16342,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid ""
+"You do not have the rights to change the name, description or avatar as a "
+"regular member of these read-only channels: %(channels)s."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid ""
 "You do not have the rights to change the read-only state of: %(channels)s."
 msgstr ""
 "Je hebt niet voldoende rechten om de alleen-lezen-status te wijzigen van: %"
@@ -16264,6 +16389,8 @@ msgstr "Je mag geen sjabloon bepalen op een abstract model: %s"
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "You will leave the ongoing call and automatically join the new meeting."
 msgstr ""
+"Je verlaat de lopende oproep en neemt automatisch deel aan de nieuwe "
+"vergadering."
 
 #. module: mail
 #. odoo-javascript
@@ -16307,7 +16434,7 @@ msgstr "Je bent uitgenodigd voor een gesprek!"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "You've been invited to a meeting!"
-msgstr "Je bent uitgenodigd voor een afspraak!"
+msgstr "Je bent uitgenodigd voor een vergadering!"
 
 #. module: mail
 #. odoo-javascript
@@ -16697,7 +16824,7 @@ msgstr "bijv. Onboarding"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "e.g. Schedule a meeting"
-msgstr "bijv. Een afspraak plannen"
+msgstr "bijv. Een vergadering plannen"
 
 #. module: mail
 #. odoo-python
@@ -16777,11 +16904,12 @@ msgstr "is gewijzigd vanuit:"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "has just assigned you the following activities on document"
 msgstr ""
+"heeft zojuist de volgende activiteiten aan je toegewezen in het document"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "has just assigned you the following activity on document"
-msgstr ""
+msgstr "heeft zojuist de volgende activiteit aan je toegewezen in het document"
 
 #. module: mail
 #. odoo-python
@@ -17141,6 +17269,8 @@ msgid ""
 "💡 You can set default notifications for all future records in the "
 "notification preferences of the %(parent_model_name)s %(parent_record_name)s."
 msgstr ""
+"💡 Je kunt standaardmeldingen instellen voor alle toekomstige records in de "
+"meldingsvoorkeuren van de %(parent_model_name)s %(parent_record_name)s."
 
 #. module: mail
 #. odoo-python

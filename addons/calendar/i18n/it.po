@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-10-02 15:33+0000\n"
+"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"PO-Revision-Date: 2026-10-09 14:33+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-20/calendar/"
 "it/>\n"
@@ -2319,7 +2319,7 @@ msgstr "In archivio"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Are you sure you want to unsubscribe from this calendar?"
-msgstr ""
+msgstr "Sei sicuro di voler annullare l’iscrizione a questo calendario?"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
@@ -2476,7 +2476,7 @@ msgstr "Riunione in calendario"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__members_only
 msgid "Calendar Members Only"
-msgstr ""
+msgstr "Solo membri calendario"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -3280,6 +3280,10 @@ msgid ""
 "\n"
 "This action cannot be reversed."
 msgstr ""
+"Se sei l'unico utente di questo calendario, tutti i suoi eventi verranno "
+"eliminati. Sei sicuro di voler procedere?\n"
+"\n"
+"Questa azione non può essere annullata."
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__confidential
@@ -3693,7 +3697,7 @@ msgstr "Nessuna riunione"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "No calendar"
-msgstr ""
+msgstr "Nessun calendario"
 
 #. module: calendar
 #. odoo-javascript
@@ -4339,8 +4343,8 @@ msgstr "Sincronizzazione non riuscita"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-msgid "Synchronize with"
-msgstr "Sincronizza con"
+msgid "Sync with"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -4596,7 +4600,7 @@ msgstr "Unità"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Unsubscribe from calendar"
-msgstr ""
+msgstr "Annulla l’iscrizione al calendario"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
@@ -4674,7 +4678,7 @@ msgstr "Visualizza riunione"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
 msgid "Visibility"
-msgstr ""
+msgstr "Visibilità"
 
 #. module: calendar
 #. odoo-javascript
@@ -4762,7 +4766,7 @@ msgstr "Calendario modificabile"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__writer
 msgid "Writer"
-msgstr ""
+msgstr "Autore"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
@@ -4798,7 +4802,7 @@ msgstr "Sì, elimina questo calendario"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Yes, unsubscribe"
-msgstr ""
+msgstr "Sì, annulla l'iscrizione"
 
 #. module: calendar
 #. odoo-python
@@ -4950,6 +4954,9 @@ msgstr "{{ object.event_id.name }}: data aggiornata"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: aggiornamento evento"
+
+#~ msgid "Synchronize with"
+#~ msgstr "Sincronizza con"
 
 #~ msgid ""
 #~ "If you are the only person using this calendar, all of it's events will "

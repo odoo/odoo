@@ -197,6 +197,9 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             self.comparator(pm_data1, pm_data2)
             self.comparator(payments[0], payments[1], 'pos.payment')
 
+    def start_receipt_data_tour(self):
+        self.start_pos_tour("test_receipt_data")
+
     def test_receipt_data(self):
         image = """<?xml version='1.0' encoding='UTF-8' ?>
         <svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
@@ -207,8 +210,8 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             'receipt_header': 'This is a test header for receipt',
             'receipt_footer': 'This is a test footer for receipt',
             'logo': BinaryBytes(image.encode()),
+            'iface_tax_included': "total",
         })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
         data = {
             'frontend_data': None,
             'backend_data': None,
@@ -219,12 +222,22 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             data['frontend_data'] = frontend_data
             data['backend_data'] = backend_data
 
-        with patch.object(self.env.registry['pos.order'], 'get_order_frontend_receipt_data', get_order_frontend_receipt_data, create=True):
-            self.start_pos_tour("test_receipt_data")
-            self.compare_receipt_data(data['frontend_data'], data['backend_data'])
+        def run_tour_and_compare():
+            with patch.object(self.env.registry['pos.order'], 'get_order_frontend_receipt_data', get_order_frontend_receipt_data, create=True):
+                self.start_receipt_data_tour()
+                self.compare_receipt_data(data['frontend_data'], data['backend_data'])
 
-            logo_image = data['backend_data']['image']['logo']
-            self.assertTrue(logo_image.startswith('data:image/svg+xml;base64,'))
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        session = self.main_pos_config.current_session_id
+        run_tour_and_compare()
+        session.close_session_from_ui()
+
+        self.main_pos_config.iface_tax_included = "subtotal"
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        run_tour_and_compare()
+
+        logo_image = data['backend_data']['image']['logo']
+        self.assertTrue(logo_image.startswith('data:image/svg+xml;base64,'))
 
     def compare_change_receipt_data(self, frontend, backend):
         for key, value in frontend.items():

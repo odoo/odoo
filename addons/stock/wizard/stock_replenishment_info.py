@@ -71,7 +71,8 @@ class StockReplenishmentInfo(models.TransientModel):
         self.ensure_one()
         orderpoint = self.orderpoint_id
         orderpoints_values = orderpoint._get_lead_days_values()
-        return orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **orderpoints_values)
+        # sudo() required for inter-company resupply, as half the rules are in the other company
+        return orderpoint.sudo().rule_ids._get_lead_days(orderpoint.product_id, **orderpoints_values)
 
     @api.depends('orderpoint_id')
     def _compute_json_lead_days(self):

@@ -353,20 +353,23 @@ class HrLeave(models.Model):
         }
 
     @api.depends(
-        'virtual_remaining_leaves', 'number_of_days', 'number_of_hours',
+        'number_of_days', 'number_of_hours',
         'work_entry_type_id', 'employee_id', 'request_date_from', 'request_date_to',
         'work_entry_type_id.unit_of_measure'
     )
     @api.depends_context('default_is_multi_employee')
     def _compute_allocation_warning(self):
         self.allocation_display_warning = False
+        today = fields.Date.context_today(self)
         for leave in self:
             is_multi_employee = self.env.context.get('default_is_multi_employee', False)
 
             if not leave.employee_id or is_multi_employee or not leave.work_entry_type_requires_allocation or not leave.work_entry_type_id.time_off_selectable:
                 continue
 
-            remaining = leave.virtual_remaining_leaves
+            # A saved request is already deducted from the balance, don't count it twice
+            remaining, _allocated = leave.with_context(ignored_leave_ids=leave._origin.ids)._get_allocation_balance(
+                leave.request_date_from or today)[leave]
             is_hour = leave.work_entry_type_id.unit_of_measure == 'hour'
             request_amount = leave.number_of_hours if is_hour else leave.number_of_days
             max_excess = leave.work_entry_type_id.max_allowed_negative if leave.work_entry_type_id.allows_negative else 0
@@ -1056,6 +1059,8 @@ class HrLeave(models.Model):
                         days = ceil(days)
                 elif leave.work_entry_type_request_unit == 'half_day':
                     days = float_round(days, precision_rounding=0.5)
+            if leave._plans_hours_on_the_clock(hours):
+                hours = ceil((leave.date_to - leave.date_from).total_seconds()) / 3600
             result[leave.id] = (days, hours)
         return result
 
@@ -1099,9 +1104,9 @@ class HrLeave(models.Model):
     @api.depends('number_of_hours', 'number_of_days')
     def _compute_duration_display(self):
         for leave in self:
-            duration = leave.number_of_days
-            unit = _('days')
-            display = "%g %s" % (float_round(duration, precision_digits=2), unit)
+            duration = float_round(leave.number_of_days, precision_digits=2)
+            unit = _('day') if duration == 1 else _('days')
+            display = "%g %s" % (duration, unit)
             if leave.work_entry_type_request_unit == "hour" \
                     or (leave.work_entry_type_request_unit in ('day', 'half_day')
                         and (leave.is_time_rule_trimmed or leave.source_leave_id)
@@ -1206,10 +1211,11 @@ class HrLeave(models.Model):
         self._inverse_number_of_hours()
 
     def _plans_hours_on_the_clock(self, worked_hours):
-        """ Hours with no working time to sit in run on from their start. """
+        """ Hours with no working time to sit in, or asked on a single day, run on from their start. """
         self.ensure_one()
         return (self.work_entry_type_id.count_as != 'absence' and self.work_entry_type_id.request_unit == 'hour'
-                and float_is_zero(worked_hours, precision_digits=2))
+                and (self.request_date_from and self.request_date_from == self.request_date_to
+                     or float_is_zero(worked_hours, precision_digits=2)))
 
     def _inverse_number_of_hours(self):
         # a duration is counted in worked hours, so the end is planned in them too
@@ -1244,6 +1250,9 @@ class HrLeave(models.Model):
                         "A duration of %s per day does not fit in the working time of the selected dates.",
                         format_duration(leave.number_of_hours)))
                 date_hour_to_user_tz = request_date_hour_to.astimezone(leave_tz).replace(tzinfo=None)
+                if date_hour_to_user_tz.time() == time.min and date_hour_to_user_tz.date() > leave.request_date_from:
+                    # an end at midnight ends the day before, not the next one
+                    date_hour_to_user_tz -= timedelta(microseconds=1)
                 new_request_date_to = date_hour_to_user_tz.date()
                 new_request_hour_to = time_to_float(date_hour_to_user_tz.time())
                 changes = {}
@@ -1325,17 +1334,30 @@ class HrLeave(models.Model):
     @api.depends('employee_id', 'work_entry_type_id')
     def _compute_leaves(self):
         date_from = fields.Date.from_string(self.env.context['default_request_date_from']) if 'default_request_date_from' in self.env.context else fields.Date.context_today(self)
-        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
+        balance_per_leave = self._get_allocation_balance(date_from)
+        for leave in self:
+            leave.virtual_remaining_leaves, leave.max_leaves = balance_per_leave[leave]
+
+    def _get_allocation_balance(self, target_date):
+        """
+        Compute the allocated balance of each leave at target_date.
+
+        Returns:
+            dict mapping each leave to a tuple (virtual_remaining_leaves, max_leaves),
+                expressed in the unit of its work entry type
+        """
+        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, target_date)[0]
+        balance_per_leave = {}
         for leave in self:
             virtual_remaining_leaves = 0
             max_leaves = 0
             primary_unit = 'hours' if leave.work_entry_type_id.unit_of_measure == 'hour' else 'days'
             for allocation, allocation_dict in employee_days_per_allocation[leave.employee_id][leave.work_entry_type_id].items():
-                if allocation and (not allocation.date_to or allocation.date_to >= date_from):
+                if allocation and (not allocation.date_to or allocation.date_to >= target_date):
                     max_leaves += allocation_dict[f'{primary_unit}_max_leaves']
                     virtual_remaining_leaves += allocation_dict[f'{primary_unit}_virtual_remaining_leaves']
-            leave.virtual_remaining_leaves = virtual_remaining_leaves
-            leave.max_leaves = max_leaves
+            balance_per_leave[leave] = (virtual_remaining_leaves, max_leaves)
+        return balance_per_leave
 
     def _inverse_supported_attachment_ids(self):
         for holiday in self:
@@ -1592,7 +1614,7 @@ class HrLeave(models.Model):
         holiday_sudo.add_follower(self.employee_id.id)
         if self.validation_type == 'manager':
             holiday_sudo.message_subscribe(partner_ids=self.employee_id.leave_manager_id.partner_id.ids)
-        if self.validation_type == 'no_validation' or self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if self.validation_type == 'no_validation' or (self.env.user.has_group('hr_holidays.group_hr_holidays_user') and self.employee_id != self.env.user.employee_id):
             # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
             # skip_time_rules: bulk trigger below, once resource.calendar.leaves exist for all auto-approved leaves
             holiday_sudo.with_context(skip_time_rules=True).action_approve()
@@ -2508,17 +2530,23 @@ class HrLeave(models.Model):
         If there are no attendances on the exact days of the request, return
         the earliest hour_from and latest hour_to that exist in the schedule.
         """
-        if self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time" \
-                and self.request_hour_to > self.request_hour_from:
+        working_time_in_hours = self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time"
+        if working_time_in_hours and self.request_hour_to > self.request_hour_from:
             # explicit hours given
             hour_from, hour_to = self.request_hour_from, self.request_hour_to
         else:
             hour_from, _ = self.employee_id.sudo()._get_hours_for_date(request_date_from, day_period, count_non_working_days)
             _, hour_to = self.employee_id.sudo()._get_hours_for_date(request_date_to, day_period, count_non_working_days)
-            if self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time" \
-                    and hour_to - hour_from >= 24:
+            if working_time_in_hours and hour_to - hour_from >= 24:
                 half_day = HOURS_PER_DAY / 2
                 hour_from, hour_to = 12.0 - half_day, 12.0 + half_day
+            elif working_time_in_hours and self.employee_id and request_date_from == request_date_to and not day_period:
+                # a day of work is counted on the clock, so by default it lasts its planned hours from its start
+                calendar = self.employee_id.sudo()._get_version(request_date_from).resource_calendar_id
+                day_start = self._to_utc(request_date_from, 0, self.employee_id).replace(tzinfo=UTC)
+                day_end = self._to_utc(request_date_from + timedelta(days=1), 0, self.employee_id).replace(tzinfo=UTC)
+                planned_hours = calendar.get_work_hours_count(day_start, day_end, compute_leaves=False)
+                hour_to = min(hour_from + (planned_hours or calendar.hours_per_day or HOURS_PER_DAY), 24)
 
         return (hour_from, hour_to)
 

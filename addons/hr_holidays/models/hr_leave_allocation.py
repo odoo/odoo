@@ -43,18 +43,22 @@ class HrLeaveAllocation(models.Model):
     @api.model
     def default_get(self, fields):
         defaults = super().default_get(fields)
+        if self.env.context.get('default_work_entry_type_id'):
+            return defaults
         employee = defaults.get('employee_id')
         country = self.env['hr.employee'].browse(employee).company_id.country_id or self.env.company.country_id
         domain = [
                 ('country_id', '=', country.id),
-                ('has_valid_allocation', '=', True),
                 ('requires_allocation', '=', True)
             ]
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            domain = Domain.AND(
-                [domain, [('employee_requests', '=', True)]]
-            )
-        work_entry_type = self.env['hr.work.entry.type'].search(domain, limit=1)
+        WorkEntryType = self.env['hr.work.entry.type']
+        if self.env.context.get('is_employee_allocation') or not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            # requested by the employee: a time type allowing it, preferably one already allocated
+            domain = Domain.AND([domain, [('employee_requests', '=', True), ('time_off_selectable', '=', True)]])
+            work_entry_type = WorkEntryType.search(Domain.AND([domain, [('has_valid_allocation', '=', True)]]), limit=1) \
+                or WorkEntryType.search(domain, limit=1)
+        else:
+            work_entry_type = WorkEntryType.search(Domain.AND([domain, [('has_valid_allocation', '=', True)]]), limit=1)
         if work_entry_type:
             defaults['work_entry_type_id'] = work_entry_type.id
         return defaults
@@ -403,7 +407,7 @@ class HrLeaveAllocation(models.Model):
         if carryover_time == 'year_start':
             carryover_date = date(date_from.year, 1, 1)
         elif carryover_time == 'allocation':
-            carryover_date = date(date_from.year, self.date_from.month, self.date_from.day)
+            carryover_date = self.date_from + relativedelta(year=date_from.year)
         else:
             month = int(accrual_plan.carryover_month)
             # 2020/2/31 will be changed to 2020/2/29
@@ -1080,6 +1084,7 @@ class HrLeaveAllocation(models.Model):
             'lastcall': False,
             'nextcall': False,
             'number_of_days': 0.0,
+            'yearly_accrued_days': 0,
             'carried_over_days_expiration_date': False,
             'previous_carryover_number_of_days': 0,
         }

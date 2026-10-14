@@ -925,7 +925,7 @@ class TestUnbuild(TestMrpCommon):
         - 2 x (storable)
         - 4 x (consumable)
         - Create a MO with 4 final products to produce.
-        - Confirm and validate, then unlock the mo and update the qty produced to 10
+        - Confirm and validate, then update the qty produced to 10 through the ORM
         - open the wizard to unbuild > the quantity proposed should be 10
         - unbuild 4 units
         - the move lines should be created with the correct quantity
@@ -941,10 +941,9 @@ class TestUnbuild(TestMrpCommon):
         mo = mo_form.save()
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
-        # unlock and update the qty produced
+        # Update through the ORM; completed MO quantities are readonly in the UI.
         mo.action_toggle_is_locked()
-        with Form(mo) as mo_form:
-            mo_form.qty_producing = 10
+        mo.qty_producing = 10
         self.assertEqual(mo.qty_producing, 10)
         #unbuild order
         unbuild_form = Form(self.env['mrp.unbuild'])

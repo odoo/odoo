@@ -2,7 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MentionList">
-        <SearchInput classNames="'o-mail-MentionList'" search="this.search" placeholder="this.placeholder" autofocus="{ mobile: true }" inputRef="this.anchorRef" onKeydown.bind="this.onKeydown"/>
-        <NavigableList class="'o-mail-MentionList-suggestionList'" t-props="this.navigableListProps"/>
+        <t t-set="navigableListProps" t-value="this.navigableListProps"/>
+        <SearchInput classNames="`o-mail-MentionList ${navigableListProps.options.length ? 'border-bottom' : ''}`" inputClassNames="'border-transparent bg-transparent shadow-none'" search="this.search" placeholder="this.placeholder" autofocus="{ mobile: true }"/>
+        <NavigableList class="'o-mail-MentionList-suggestionList shadow-none'" t-props="navigableListProps"/>
+        <div t-if="!this.isMobileOS and navigableListProps.options.length" class="d-flex align-items-center gap-3 px-3 py-2 border-top smaller text-muted">
+            <span><kbd class="px-1 border bg-transparent text-reset shadow-none">↑↓</kbd> Navigate</span>
+            <span><kbd class="px-1 border bg-transparent text-reset shadow-none">↵</kbd> Select</span>
+            <span><kbd class="px-1 border bg-transparent text-reset shadow-none smaller">Esc</kbd> Close</span>
+        </div>
     </t>
 </templates>

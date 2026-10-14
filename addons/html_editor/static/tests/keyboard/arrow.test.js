@@ -537,7 +537,7 @@ describe("Around icons", () => {
     });
 });
 
-describe("Selection correction when it lands at the editable root", () => {
+describe("Selection correction when it lands on a no-inline root", () => {
     test("should place cursor between two tables (1)", async () => {
         await testEditor({
             contentBefore:
@@ -546,10 +546,10 @@ describe("Selection correction when it lands at the editable root", () => {
             stepFunction: keyPress("ArrowRight"),
             contentAfterEdit:
                 '<p data-selection-placeholder=""><br></p>' +
-                "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
-                `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
-                "<table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table>" +
-                '<p data-selection-placeholder=""><br></p>',
+                '<div class="o_table_wrapper"><table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table></div>' +
+                `<p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
+                '<div class="o_table_wrapper"><table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table></div>' +
+                '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             contentAfter:
                 "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
                 "[]" +
@@ -566,10 +566,10 @@ describe("Selection correction when it lands at the editable root", () => {
             stepFunction: keyPress("ArrowLeft"),
             contentAfterEdit:
                 '<p data-selection-placeholder=""><br></p>' +
-                "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
-                `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
-                "<table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table>" +
-                '<p data-selection-placeholder=""><br></p>',
+                '<div class="o_table_wrapper"><table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table></div>' +
+                `<p data-selection-placeholder="" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
+                '<div class="o_table_wrapper"><table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table></div>' +
+                '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
             contentAfter:
                 "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
                 "[]" +
@@ -601,13 +601,40 @@ describe("Selection correction when it lands at the editable root", () => {
         });
     });
 
+    test("should place cursor in the paragraph above a table in a scroll container", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <table><tbody>
+                    <tr><td><p>[]a</p><p>b</p></td></tr>
+                </tbody></table>
+            `),
+            contentBeforeEdit: unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div class="o_table_wrapper">
+                    <table><tbody>
+                        <tr><td><p>[]a</p><p>b</p></td></tr>
+                    </tbody></table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `),
+            stepFunction: keyPress("ArrowLeft"),
+            contentAfterEdit: unformat(`
+                <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                <div class="o_table_wrapper">
+                    <table><tbody>
+                        <tr><td><p>a</p><p>b</p></td></tr>
+                    </tbody></table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `),
+        });
+    });
+
     test("should move cursor to safe space (avoid reaching the editable root) (1)", async () => {
         await testEditor({
             contentBefore: "<table><tbody><tr><td><p>a</p><p>b[]</p></td></tr></tbody></table>",
             stepFunction: keyPress("ArrowRight"),
             contentAfterEdit:
                 '<p data-selection-placeholder=""><br></p>' +
-                "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
+                '<div class="o_table_wrapper"><table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table></div>' +
                 `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
         });
     });
@@ -617,8 +644,8 @@ describe("Selection correction when it lands at the editable root", () => {
             stepFunction: keyPress("ArrowLeft"),
             contentAfterEdit:
                 `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
-                "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
-                '<p data-selection-placeholder=""><br></p>',
+                '<div class="o_table_wrapper"><table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table></div>' +
+                '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         });
     });
 

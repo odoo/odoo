@@ -864,6 +864,19 @@ test("toggle a custom option in a date filter with a domain", async () => {
     ]);
 });
 
+test("reload with a different global groupBy", async () => {
+    const model = await createSearchModel({ groupBy: ["foo"] });
+    expect(model.groupBy).toEqual(["foo"]);
+
+    await model.reload({
+        context: {},
+        domain: [],
+        groupBy: ["bar"],
+        orderBy: [],
+    });
+    expect(model.groupBy).toEqual(["bar"]);
+});
+
 test("toggle a groupBy", async () => {
     const model = await createSearchModel({
         searchViewArch: `
@@ -1118,4 +1131,34 @@ test("Inner filter: are correctly parsed", async () => {
             type: "parentFilter",
         },
     ]);
+});
+
+test("Inner filter: can be activated by a search default", async () => {
+    const model = await createSearchModel({
+        searchViewArch: `
+            <search>
+                <filter name="brol" string="Brol">
+                    <filter name="prout" string="Prout" domain="[('foo', '=', 'prout')]"/>
+                </filter>
+            </search>
+        `,
+        context: { search_default_prout: 1 },
+    });
+
+    expect(model.domain).toEqual([["foo", "=", "prout"]]);
+});
+
+test("Inner filter: parent search default does not do anything", async () => {
+    const model = await createSearchModel({
+        searchViewArch: `
+            <search>
+                <filter name="parent_filter" string="Parent Filter">
+                    <filter name="priority" string="Priority" domain="[('foo', '=', 'priority')]"/>
+                </filter>
+            </search>
+        `,
+        context: { search_default_parent_filter: 1 },
+    });
+
+    expect(model.domain).toEqual([]);
 });

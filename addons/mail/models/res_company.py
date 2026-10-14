@@ -48,7 +48,7 @@ class ResCompany(models.Model):
         self.catchall_formatted = ''
 
         for company in self.filtered('alias_domain_id'):
-            catchall_email = company.alias_domain_id.catchall_email
+            catchall_email = company.alias_domain_id.sudo().catchall_email
             company.catchall_email = catchall_email
             company.catchall_formatted = tools.formataddr((company.name, catchall_email))
 

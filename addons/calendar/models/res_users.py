@@ -86,7 +86,7 @@ class ResUsers(models.Model):
     def unlink(self):
         # Normal ondelete=cascade does not go through unlink() overrides, which we need to remove
         # the calendar if this was its last user. Otherwise, we would end up with orphaned calendars.
-        self.calendar_user_ids.unlink()
+        self.calendar_user_ids.sudo().unlink()
         return super().unlink()
 
     def _systray_get_calendar_event_domain(self):

@@ -2,6 +2,7 @@ import { proxy } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { getAggregateCurrencyId } from "@web/model/currency_aggregates";
 import {
     extractInfoFromGroupData,
     getAggregateSpecifications,
@@ -160,18 +161,19 @@ export class ProgressBarState {
         value ||= 0;
         if (aggregateField.type === "monetary" && aggregateField.currency_field) {
             const aggValues = _findGroup(this._aggregateValues, groupByField, serverValue);
-            const currencies = aggValues?.[aggregateField.currency_field];
-            if (currencies?.length > 1) {
+            const currencies = aggValues?.[aggregateField.currency_field] ?? [];
+            const currencyId = getAggregateCurrencyId(aggregateField, currencies);
+            if (currencyId && currencies.length > 1) {
                 return {
                     value,
                     currencies,
                 };
             }
-            if (currencies?.[0]) {
+            if (currencyId) {
                 return {
                     title,
                     value,
-                    currencies: [currencies[0]],
+                    currencies: [currencyId],
                 };
             }
         }

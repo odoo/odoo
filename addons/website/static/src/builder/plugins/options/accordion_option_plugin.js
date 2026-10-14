@@ -22,21 +22,21 @@ export class DefineCustomIconAction extends BuilderAction {
     static id = "defineCustomIcon";
     static dependencies = ["media"];
     async load() {
-        let selectedIconClass;
+        let selectedIcon;
         await new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
                 visibleTabs: ["ICONS"],
                 save: (icon) => {
-                    selectedIconClass = icon.className;
+                    selectedIcon = { className: icon.className, name: icon.dataset.icon };
                     resolve();
                 },
             });
             onClose.then(resolve);
         });
-        return selectedIconClass;
+        return selectedIcon;
     }
-    apply({ editingElement, params, loadResult: customClass }) {
-        if (!customClass) {
+    apply({ editingElement, params, loadResult: selectedIcon }) {
+        if (!selectedIcon) {
             return;
         }
         const isActiveIcon = params.isActiveIcon;
@@ -49,12 +49,13 @@ export class DefineCustomIconAction extends BuilderAction {
         const iconsEls = isActiveIcon ? activeIconsEls : inactiveIconsEls;
         iconsEls.forEach((iconEl) => {
             iconEl.removeAttribute("class");
-            iconEl.classList.add(...customClass.split(" "));
+            iconEl.classList.add(...selectedIcon.className.split(" "));
+            iconEl.dataset.icon = selectedIcon.name;
         });
         if (iconsEls === activeIconsEls) {
-            editingElement.dataset.activeCustomIcon = customClass;
+            editingElement.dataset.activeCustomIcon = selectedIcon.name;
         } else {
-            editingElement.dataset.inactiveCustomIcon = customClass;
+            editingElement.dataset.inactiveCustomIcon = selectedIcon.name;
         }
     }
 }

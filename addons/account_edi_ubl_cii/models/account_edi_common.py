@@ -12,7 +12,7 @@ from odoo import _, api, fields, models, Command
 from odoo.addons.account.tools import dict_to_xml
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import float_compare, float_is_zero, float_repr, html2plaintext, pdf, str2bool
+from odoo.tools import float_compare, float_is_zero, float_repr, html2plaintext, pdf
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import formatLang, html_escape
 from odoo.tools.translate import _lt
@@ -265,6 +265,15 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _get_document_type_code_vals(self, invoice, invoice_data):
         return {'attrs': {}, 'value': None}
+
+    @api.model
+    def _vat_is_equal(self, partner_vat, other_vat, country=False):
+        partner_vat = partner_vat.replace(' ', '').upper()
+        vat_to_compare = other_vat.replace(' ', '').replace('.', '').upper()
+        if country and country.code == 'CH':
+            partner_vat = re.sub(r"(TVA|IVA|MWST)?$", "", partner_vat.replace('.', '').replace('-', ''))
+            vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
+        return partner_vat == vat_to_compare
 
     # -------------------------------------------------------------------------
     # TAXES
@@ -694,6 +703,15 @@ class AccountEdiCommon(models.AbstractModel):
         if routing_identifier:
             scheme, _sep, endpoint = routing_identifier.partition(':')
             domain = [('routing_scheme', '=', scheme), ('routing_endpoint', '=', endpoint)]
+        if account_numbers := kwargs.get('bank_details'):
+            bank_domain = [
+                ('bank_ids', 'any', [
+                    '&',
+                    ('account_number', 'in', account_numbers),
+                    ('allow_out_payment', '=', True),
+                ]),
+            ]
+            domain = Domain.OR([domain, bank_domain])
         partner = self.env['res.partner'] \
             .with_company(company_id) \
             ._retrieve_partner(name=name, phone=phone, email=email, vat=vat, additional_identifiers=additional_identifiers, domain=domain)
@@ -704,6 +722,12 @@ class AccountEdiCommon(models.AbstractModel):
             [('country_id', '=', country.id), ('code', '=', state_code)],
             limit=1,
         ) if state_code and country else self.env['res.country.state']
+
+        vat_mismatch = False
+        if vat and partner.vat and not self._vat_is_equal(partner.vat, vat, country):
+            vat_mismatch = True
+            partner = self.env['res.partner']
+
         if not partner and name and vat:
             partner_vals = {'name': name, 'email': email, 'phone': phone, 'is_company': True}
             if routing_identifier:
@@ -711,12 +735,15 @@ class AccountEdiCommon(models.AbstractModel):
             if additional_identifiers:
                 partner_vals['additional_identifiers'] = additional_identifiers
             partner = self.env['res.partner'].create(partner_vals)
-            if vat:
-                partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
-            logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
+            if vat_mismatch:
+                logs.append(_("Could not retrieve a partner corresponding to '%s' with the same VAT. A new partner was created.", name))
+            else:
+                logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
         elif not partner and not logs:
             logs.append(_("Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, Phone: %(phone)s, Email: %(email)s",
                   name=name, vat=vat, phone=phone, email=email))
+        if vat and not partner.vat:
+            partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
         if not partner.country_id and not partner.street and not partner.street2 and not partner.city and not partner.zip and not partner.state_id:
             partner.write({
                 'country_id': country.id,
@@ -1390,12 +1417,7 @@ class AccountEdiCommon(models.AbstractModel):
         Should stay consistent with `_get_country_specific_vat_variants`.
         """
         country = self._import_retrieve_country(collected_values)
-        customer_vat = customer.vat.replace(' ', '').upper()
-        vat_to_compare = vat.replace(' ', '').replace('.', '').upper()
-        if country and country.code == 'CH':
-            customer_vat = re.sub(r"(TVA|IVA|MWST)?$", "", customer_vat.replace('.', '').replace('-', ''))
-            vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
-        return customer_vat == vat_to_compare
+        return self._vat_is_equal(customer.vat, vat, country)
 
     def _import_create_missing_customer(self, collected_values):
         customer_values = collected_values['customer_values']
@@ -1637,6 +1659,7 @@ class AccountEdiCommon(models.AbstractModel):
             AccountTax._import_retrieve_tax_from_account_default_tax,
             AccountTax._import_retrieve_tax_from_predicted_tax,
             AccountTax._import_retrieve_tax_from_price_include_exclude,
+            AccountTax._import_retrieve_tax_from_fixed_allowance_charge,
         ]
 
     def _import_invoice_retrieve_taxes(self, collected_values):
@@ -2023,7 +2046,7 @@ class AccountEdiCommon(models.AbstractModel):
     def _generate_pdf_attachment(self, invoice, tree):
         """ ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
         IrConfigParam = self.env['ir.config_parameter'].sudo()
-        disable_pdf_in_xml = str2bool(IrConfigParam.get_param("account_edi_ubl_cii.disable_pdf_in_xml", 'False'))
+        disable_pdf_in_xml = IrConfigParam.get_bool("account_edi_ubl_cii.disable_pdf_in_xml")
         additional_docs = self._import_attachments(invoice, tree)
         if (
             additional_docs or

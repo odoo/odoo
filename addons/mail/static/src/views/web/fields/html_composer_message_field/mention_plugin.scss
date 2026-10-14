@@ -1,4 +1,6 @@
 .o-mail-MentionPlugin-overlay {
     // override the default max-width of popover to let it grow as much as needed.
     max-width: none;
+    // Search input and suggestions share this frame: it takes the focus border of the input.
+    border-color: rgba($o-component-active-border, .65);
 }

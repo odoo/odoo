@@ -113,3 +113,58 @@ export function getSelectedCellsMergeInfo(editableDocument, tableGrid, targetCel
 
     return { canMerge: false, canUnmerge: containsMergedCell, cells: selectedTds, spanType: "" };
 }
+
+// Class of the scroll container wrapping tables too wide for their parent.
+export const TABLE_WRAPPER_CLASS = "o_table_wrapper";
+export const TABLE_WRAPPER_SELECTOR = `.${TABLE_WRAPPER_CLASS}`;
+
+/**
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isTableWrapper(node) {
+    return !!node?.classList?.contains(TABLE_WRAPPER_CLASS);
+}
+
+/**
+ * Get the wrapper of the table the given node belongs to, if it has one.
+ *
+ * @param {Node} node A wrapper, a table, or any node inside a table.
+ * @returns {HTMLDivElement|null}
+ */
+export function getTableWrapper(node) {
+    if (isTableWrapper(node)) {
+        return node;
+    }
+    // A wrapper only ever wraps its direct child, looking further up would
+    // return the wrapper of an ancestor table for a nested one.
+    const table = closestElement(node, "table");
+    return isTableWrapper(table?.parentElement) ? table.parentElement : null;
+}
+
+/**
+ * Put the given table in a scroll container, so that it scrolls on its own
+ * instead of making its container overflow.
+ *
+ * @param {HTMLTableElement} table
+ * @returns {HTMLDivElement}
+ */
+export function wrapTableInScrollContainer(table) {
+    const wrapper = table.ownerDocument.createElement("div");
+    wrapper.className = TABLE_WRAPPER_CLASS;
+    table.before(wrapper);
+    wrapper.append(table);
+    return wrapper;
+}
+
+/**
+ * Get the element standing for the given table in the block flow, its wrapper
+ * if it has one, the table itself otherwise. Use it over the table to reach
+ * its siblings, or to insert/remove content around it.
+ *
+ * @param {Node} node A wrapper, a table, or any node inside a table.
+ * @returns {HTMLElement|null}
+ */
+export function getTableRoot(node) {
+    return getTableWrapper(node) ?? closestElement(node, "table");
+}

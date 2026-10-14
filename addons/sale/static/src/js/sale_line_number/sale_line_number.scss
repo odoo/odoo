@@ -2,7 +2,7 @@
     --LineNumber-width: 29px;
 
     table tbody {
-        counter-reset: sale_line_counter;
+        counter-reset: sale_line_counter var(--LineNumber-offset, 0);
     }
 
     .o_data_row:not(.o_hide_composition) {

@@ -353,7 +353,7 @@ describe("format links", () => {
 
         await click(".o_we_apply_link");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.com/" class="btn btn-secondary">link2[]</a></p>'
+            '<p><a href="http://test.com/" class="btn btn-secondary o_link_in_selection">link2[]</a></p>'
         );
     });
     test("clicking the discard button should revert the link format", async () => {

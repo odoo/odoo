@@ -299,6 +299,7 @@ export class HtmlField extends Component {
         this.state.showCodeView = this.state.forceCodeView || !this.state.showCodeView;
         if (!this.state.showCodeView && this.editor) {
             this.editor.editable.innerHTML = this.value;
+            this.editor.processThrough("html_compatibility_processors", this.editor.editable);
             this.editor.shared.history.commit();
         }
     }
@@ -443,6 +444,12 @@ export const htmlField = {
         }
         if ("allowChecklist" in options) {
             editorConfig.allowChecklist = Boolean(options.allowChecklist);
+        }
+        if ("allowScrollableTables" in options) {
+            editorConfig.allowScrollableTables = Boolean(options.allowScrollableTables);
+        }
+        if ("saveScrollableTables" in options) {
+            editorConfig.saveScrollableTables = Boolean(options.saveScrollableTables);
         }
         if ("allowAttachmentCreation" in options) {
             editorConfig.allowImage = Boolean(options.allowAttachmentCreation);

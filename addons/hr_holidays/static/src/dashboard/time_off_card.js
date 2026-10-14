@@ -2,6 +2,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { formatNumber } from "@hr_holidays/views/hooks";
+import { formatDuration } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
 import { Component, computed, t, useProps } from "@odoo/owl";
 export class TimeOffCardPopover extends Component {
@@ -128,20 +129,9 @@ export class TimeOffCard extends Component {
 
     warning = computed(() => this.updateWarning());
 
-    // e.g.: Input: 9.5 Output: 9:30
-    formatHour(hoursFloat) {
-        const sign = hoursFloat < 0 ? "-" : "";
-        const absValue = Math.abs(hoursFloat);
-        const hours = Math.floor(absValue);
-        const minutes = Math.round((absValue - hours) * 60);
-        // Pad minutes with leading zero if needed
-        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-        return `${sign}${hours}:${formattedMinutes}`;
-    }
-
     formatDuration(duration) {
         if (this.props.data.unit_of_measure === "hour") {
-            return this.formatHour(duration);
+            return formatDuration({ hours: duration });
         }
         return formatNumber(this.lang, duration);
     }

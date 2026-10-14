@@ -63,6 +63,7 @@ class PosSelfOrderController(http.Controller):
         for o in orders:
             del o['email']
             del o['mobile']
+            o['partner_id'] = order._get_signed_self_partner_id(config, o['partner_id']) if o.get('partner_id') else False
 
         result = {
             'pos.order': orders,
@@ -122,7 +123,8 @@ class PosSelfOrderController(http.Controller):
     def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None, preset_id=None):
         pos_config = self._verify_pos_config(access_token)
         preset = pos_config.env['pos.preset'].browse(int(preset_id)) if preset_id else False
-        existing_partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
+        POSOrder = pos_config.env['pos.order']
+        existing_partner = POSOrder._get_self_partner_from_token(pos_config, partner_id)
         google_places_api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
 
         if existing_partner and existing_partner.exists():
@@ -131,7 +133,7 @@ class PosSelfOrderController(http.Controller):
                 if error:
                     return {'error': error}
             return {
-                'res.partner': existing_partner.read(['id'], load=False),
+                'res.partner': [{'id': partner_id}],
             }
 
         state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
@@ -153,7 +155,7 @@ class PosSelfOrderController(http.Controller):
                 return {'error': error}
 
         return {
-            'res.partner': partner_sudo.read(['id'], load=False),
+            'res.partner': [{'id': POSOrder._get_signed_self_partner_id(pos_config, partner_sudo.id)}],
         }
 
     def _check_delivery_address_for_partner(self, preset, partner):
@@ -340,6 +342,18 @@ class PosSelfOrderController(http.Controller):
 
     def _verify_config_constraint(self, pos_config_sudo):
         return not pos_config_sudo or (pos_config_sudo.self_ordering_mode != 'mobile' and pos_config_sudo.self_ordering_mode != 'kiosk')
+
+    def _verify_pos_order(self, pos_config, order_id, order_access_token):
+        """Verify the POS order and its access token for the given POS config."""
+        pos_order = pos_config.env['pos.order'].browse(int(order_id))
+        if (
+            not pos_order.exists()
+            or pos_order.config_id != pos_config
+            or not order_access_token
+            or not consteq(pos_order.access_token, order_access_token)
+        ):
+            raise NotFound()
+        return pos_order
 
     def _verify_authorization(self, access_token, table_identifier, order):
         """

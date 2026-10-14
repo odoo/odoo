@@ -548,6 +548,7 @@
         <field name="name">Voluntarily Net-Overtime hours (Horeca)</field>
         <field name="color">4</field>
         <field name="code">039.05</field>
+        <field name="display_code">VNH</field>
         <field name="country_id" ref="base.be"/>
     </record>
 
@@ -555,6 +556,7 @@
         <field name="name">Net-Overtime hours (Horeca)</field>
         <field name="color">4</field>
         <field name="code">039.00</field>
+        <field name="display_code">NOH</field>
         <field name="country_id" ref="base.be"/>
     </record>
 
@@ -590,7 +592,7 @@
     <record id="l10n_be_work_entry_type_overtime_recoverable" model="hr.work.entry.type">
         <field name="name">Overtime hours (recoverable) - 50%</field>
         <field name="code">026.00</field>
-        <field name="display_code">OT26</field>
+        <field name="display_code">OT5</field>
         <field name="color">4</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">working_time</field>
@@ -721,6 +723,7 @@
     <record id="l10n_be_work_entry_type_death_close_family" model="hr.work.entry.type">
         <field name="name">Bereavement leave-Spouse/Child</field>
         <field name="code">007.21</field>
+        <field name="display_code">BER</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.be"/>
     </record>
@@ -783,7 +786,7 @@
         <field name="name">Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis (Short Term Employee)</field>
         <field name="code">082.01</field>
         <field name="color">5</field>
-        <field name="display_code">WASEMP</field>
+        <field name="display_code">W2A</field>
         <field name="amount_rate">0.8693</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
@@ -794,7 +797,7 @@
         <field name="code">072.01</field>
         <field name="color">5</field>
         <field name="amount_rate">0.8693</field>
-        <field name="display_code">IW2EMP</field>
+        <field name="display_code">I2W</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
     </record>

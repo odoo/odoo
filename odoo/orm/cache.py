@@ -93,6 +93,37 @@ class ormcache:
         key = self.key(*args, **kwargs)
         d[key] = cache_value
 
+    def get_value(self, *args, cache_default=None, **kwargs):
+        """ Return the cached result of the call, or ``cache_default`` if it is
+        not in the cache. Unlike ``lookup``, this never computes it. """
+        model: BaseModel = args[0]
+        try:
+            d = model.env.transaction.ormcaches__[self.cache_name]
+        except TypeError:
+            if model.env.transaction is None:
+                raise RuntimeError("Trying to get cache from a closed transaction") from None
+            return cache_default
+        key = self.key(*args, **kwargs)
+        counter = _COUNTERS[model.pool.db_name, self.method]
+
+        tx_lookups = model.env.cr.cache.setdefault('_ormcache_lookups', set())
+        # tx: is it the first call in the transation for that key
+        tx_key = tuple(map(hash, key))
+        tx_first_lookup = tx_key not in tx_lookups
+        if tx_first_lookup:
+            counter.cache_name = self.cache_name
+            tx_lookups.add(tx_key)
+
+        try:
+            value = d[key]
+        except KeyError:
+            counter.miss += 1
+            counter.tx_miss += tx_first_lookup
+            return cache_default
+        counter.hit += 1
+        counter.tx_hit += tx_first_lookup
+        return value
+
     def determine_key(self) -> None:
         """ Determine the function that computes a cache key from arguments. """
         assert self.method is not None

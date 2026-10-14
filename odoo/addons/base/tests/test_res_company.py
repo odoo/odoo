@@ -88,6 +88,15 @@ class TestCompany(TransactionCase):
         with patch('odoo.addons.base.models.res_company.ResCompany._get_company_root_delegated_field_names', return_value=["currency_id", "zip"]):
             self.env.company.write({'currency_id': new_currency.id, 'zip': '12345'})
 
+    def test_write_country_installs_l10n_modules(self):
+        company = self.env['res.company'].create({'name': 'foo'})
+        with patch('odoo.addons.base.models.res_company.ResCompany.install_l10n_modules', autospec=True) as install:
+            company.write({'country_id': self.env.ref('base.be').id})
+            install.assert_called_once_with(company)
+            install.reset_mock()
+            company.write({'country_id': self.env.ref('base.fr').id})
+            install.assert_not_called()
+
 
 class TestResCompanyForm(TransactionCase):
     def test_create_res_company(self):

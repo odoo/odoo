@@ -22,5 +22,6 @@ class IrWebsocket(models.AbstractModel):
                 employee_channel_ids.append(int(emp_id))
 
         if employee_channel_ids and has_employee_public_access:
-            new_channels_list.extend(self.env["hr.employee.public"].browse(employee_channel_ids).exists().employee_id)
+            public_employees = self.env["hr.employee.public"].search([("id", "in", employee_channel_ids)])
+            new_channels_list.extend(public_employees.employee_id)
         return super()._build_bus_channel_list(new_channels_list)

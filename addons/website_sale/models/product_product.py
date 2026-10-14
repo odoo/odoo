@@ -511,26 +511,34 @@ class ProductProduct(models.Model):
         grouped_notifications = self.env["product.stock.notification"]._read_group(
             [], groupby=["product_id", "website_id"], aggregates=["id:recordset"]
         )
-        notifications_to_send = [
+        notifications_to_send = self.env["product.stock.notification"].concat([
             notification
             for product, website, notification in grouped_notifications
             if not product
             .with_company(website.company_id)
             .with_context(website_id=website.id)
             ._is_sold_out()
-        ]
+        ])
         self.env["ir.cron"]._commit_progress(remaining=len(notifications_to_send))
         for notification in notifications_to_send:
             website = notification.website_id
             partner = notification.partner_id
             product = notification.product_id
+            product_taxes = product.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+            product_price = product._apply_taxes_to_price(
+                product.list_price,
+                product.currency_id,
+                product_taxes=product_taxes,
+                taxes=product_taxes,
+                website=website,
+            )
             sender_email = (
                 website.company_id.partner_id.email_formatted
                 or website.salesperson_id.email_formatted
                 or website.company_id.email_formatted
             )
             email_template.with_user(website.salesperson_id).sudo().with_context(
-                customer_name=partner.name, lang=partner.lang, website_id=website.id
+                customer_name=partner.name, lang=partner.lang, website_id=website.id, product_price=product_price,
             ).send_mail(
                 product.id,
                 force_send=True,

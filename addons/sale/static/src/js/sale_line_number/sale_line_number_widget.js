@@ -10,6 +10,7 @@ export class LineNumberWidget extends Component {
 
 export const lineNumber = {
     component: LineNumberWidget,
+    fieldDependencies: [{ name: "line_number_offset", type: "integer" }],
 };
 
 registry.category("view_widgets").add("line_number", lineNumber);

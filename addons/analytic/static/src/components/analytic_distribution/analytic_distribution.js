@@ -698,7 +698,7 @@ export class AnalyticDistribution extends Component {
             widgetEl &&
             !widgetEl.contains(ev.target) &&
             (!ev.target.closest(selectors.join(",")) ||
-                document.querySelector(".modal:not(.o_inactive_modal)").contains(widgetEl)) &&
+                document.querySelector(".modal:not(.o_inactive_modal)")?.contains(widgetEl)) &&
             !ev.target.isSameNode(document.documentElement)
         ) {
             this.forceCloseEditor();

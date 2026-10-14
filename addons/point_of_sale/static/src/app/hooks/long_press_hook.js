@@ -4,6 +4,7 @@ export function useLongPress(callback, delay = LONG_PRESS_DURATION) {
     let timer = null;
 
     function startLongPress(params, offset = 0) {
+        cancelLongPress();
         timer = setTimeout(() => {
             callback(params);
         }, delay + offset);

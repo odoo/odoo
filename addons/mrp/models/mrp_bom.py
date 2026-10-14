@@ -108,11 +108,17 @@ class MrpBom(models.Model):
     @api.depends('bom_line_ids')
     def _compute_component_count(self):
         for bom in self:
+            if not bom.id:
+                bom.component_count = bom._origin.component_count
+                continue
             bom.component_count = len(bom.bom_line_ids)
 
     @api.depends('bom_line_ids')
     def _compute_subassembly_count(self):
         for bom in self:
+            if not bom.id:
+                bom.subassembly_count = bom._origin.subassembly_count
+                continue
             _, subassembly_count = bom._get_exploded_bom_data()
             bom.subassembly_count = subassembly_count
 

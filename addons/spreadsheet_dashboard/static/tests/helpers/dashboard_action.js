@@ -14,6 +14,7 @@ import { loadBundle } from "@web/core/assets";
 import { WebClient } from "@web/webclient/webclient";
 import { getDashboardServerData } from "./data";
 import { DashboardLoader } from "../../src/bundle/dashboard_action/dashboard_loader_service";
+import { MobileFigureContainer } from "../../src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container";
 /**
  * @param {object} params
  * @param {object} [params.serverData]
@@ -25,6 +26,13 @@ export async function createSpreadsheetDashboard(params = {}) {
     let model = undefined;
     let env = undefined;
     patchWithCleanup(Spreadsheet.prototype, {
+        setup() {
+            super.setup();
+            model = this.env.model;
+            env = this.env;
+        },
+    });
+    patchWithCleanup(MobileFigureContainer.prototype, {
         setup() {
             super.setup();
             model = this.env.model;

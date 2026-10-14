@@ -1,30 +1,44 @@
 <?xml version="1.0"?>
 <templates>
 <t t-name="api_doc.DocClient">
-    <div class="o-doc-client-root">
+    <div class="o-doc-client-root" t-att-class="{ 'o-doc-small': this.ui.isSmall, 'o-doc-medium': this.ui.isMedium }">
         <header class="position-fixed bg-1 d-flex flex-nowrap gap-1 align-items-center justify-content-between w-100">
-            <div class="d-flex flex-nowrap">
-                <h2>Odoo Runtime Doc</h2>
+            <div class="d-flex flex-nowrap align-items-center gap-2">
+                <button class="btn" t-on-click="() => this.state.showSidebar = !this.state.showSidebar" title="Toggle Left Sidebar" data-hotkey="l">
+                    <i class="oi" data-icon="dock_to_right" aria-hidden="true"></i>
+                </button>
+                <h2 class="m-0">Odoo Runtime Doc</h2>
             </div>
             <div>
                 <input
+                    t-if="!this.ui.isSmall"
                     t-on-click="() => this.state.showSearchModal = true"
                     placeholder="Find anything..."
+                    data-hotkey="f"
                 />
             </div>
             <div class="d-flex flex-nowrap gap-1">
-                <button class="btn" t-on-click="() => this.env.modelStore.showApiKeyModal = true">
+                <button class="btn" t-on-click="() => this.state.showSearchModal = true" t-if="this.ui.isSmall" title="Search" data-hotkey="f">
+                    <i class="oi" data-icon="search" aria-hidden="true"></i>
+                </button>
+                <button class="btn" t-on-click="() => this.env.modelStore.showApiKeyModal = true" title="API Key" data-hotkey="k">
                     <i class="oi" data-icon="key" aria-hidden="true"></i>
                 </button>
-                <button class="btn" t-on-click="() => this.toggleTheme()">
+                <button class="btn" t-on-click="() => this.toggleTheme()" title="Toggle Theme" data-hotkey="t">
                     <i class="oi" data-icon="dark_mode" aria-hidden="true"></i>
+                </button>
+                <button class="btn" t-on-click="() => this.state.showAside = !this.state.showAside" title="Toggle Right Sidebar" data-hotkey="r">
+                    <i class="oi" data-icon="dock_to_left" aria-hidden="true"></i>
                 </button>
             </div>
         </header>
         <main class="position-relative d-flex flex-nowrap">
-            <DocSidebar t-if="!this.ui.isSmall"/>
+           <DocSidebar t-if="this.state.showSidebar" onModelSelected="() => this.onSidebarModelSelected()"/>
             <t t-if="this.modelStore.models.length > 0">
-                <DocModel t-if="this.modelStore.activeModel"/>
+                <DocModel
+                    t-if="this.modelStore.activeModel"
+                    showAside="this.state.showAside"
+                    onMethodSelected="() => this.onAsideMethodSelected()"/>
             </t>
             <div t-elif="!this.modelStore.error" class="h-100 w-100 d-flex flex-nowrap align-items-center justify-content-center gap-1">
                 <i class="oi o-doc-spinner" data-icon="progress_activity" aria-hidden="true"></i>
@@ -38,6 +52,11 @@
                     traceback="this.modelStoreError.traceback"
                 />
             </div>
+            <div
+                t-if="this.hasOverlayOpen"
+                class="o-doc-panel-backdrop o-fade-in"
+                t-on-click="this.closePanels"
+            />
         </main>
         <ApiKeyModal t-if="this.modelStore.showApiKeyModal"/>
         <SearchModal

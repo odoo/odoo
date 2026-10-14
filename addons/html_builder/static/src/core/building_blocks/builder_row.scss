@@ -76,15 +76,15 @@
 
     .o_hb_collapse_toggler {
         position: absolute;
+        margin-left: -1px;
         padding-left: 0;
-        align-self: baseline;
         z-index: $_z-index + 1;
         box-shadow: none;
-        font-size: 1em;
+        font-size: 1.25em;
         color: inherit;
 
-        &.active i {
-            margin-left: -1px;
+        &:focus-visible {
+            box-shadow: var(--btn-active-shadow), var(--btn-focus-box-shadow);
         }
     }
 

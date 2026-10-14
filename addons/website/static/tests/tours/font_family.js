@@ -20,6 +20,10 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            content: "Check the Arvo font link is added to the page head",
+            trigger: ":iframe head link[rel='stylesheet'][href*='family=Arvo']:not(:visible)",
+        },
+        {
             content: "Verify that the 'Arvo' font family is correctly applied to the heading.",
             trigger: "button.dropdown-toggle span[style*='font-family: Arvo;']",
         },

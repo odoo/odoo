@@ -32,7 +32,7 @@
                 t-attf-class="o-mail-DeviceSelect-button btn rounded-3 d-flex align-items-center w-100 {{ this.props.label ? 'border-transparent text-start px-2 py-1' : 'btn-secondary bg-300' }}"
                 t-att-data-kind="this.props.kind"
                 t-on-pointerdown.prevent="(ev) => this.onPointerdownButton(ev)"
-                t-on-keydown.prevent="() => this.showPermissionDialog(this.props.kind)"
+                t-on-keydown="this.handlePermissionKeydown"
                 t-ref="this.rootRef"
             >
                 <t t-if="this.props.label">

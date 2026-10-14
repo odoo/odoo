@@ -35,8 +35,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-09-21 10:23+0000\n"
+"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"PO-Revision-Date: 2026-10-09 11:23+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "hr_holidays/fi/>\n"
@@ -134,7 +134,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_view_tree
 msgid "# Public Holidays"
-msgstr "# Arkipyhät"
+msgstr "# yleistä vapaapäivää"
 
 #. module: hr_holidays
 #. odoo-python
@@ -951,7 +951,7 @@ msgstr "Toimenpiteiden tyyppi"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.load_public_holiday_wizard_view_form
 msgid "Add Public Holidays"
-msgstr ""
+msgstr "Lisää yleisiä vapaapäiviä"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1034,7 +1034,7 @@ msgstr "Koko päivä"
 #: code:addons/hr_holidays/wizard/load_public_holiday_wizard.py:0
 msgid ""
 "All public holidays for %(year)s are already present for: %(companies)s."
-msgstr ""
+msgstr "Kaikki %(year)s yleiset vapaapäivät on jo merkitty: %(companies)s."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_time_rule__leave_compensation_rate
@@ -2603,7 +2603,7 @@ msgstr "Kuvake"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Kuvake, joka kertoo poikkeustoiminnosta."
+msgstr "Poikkeustoimenpiteeseen viittaava kuvake."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2688,7 +2688,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__include_public_holidays_in_duration
 msgid "Ignore Public Holidays"
-msgstr "Ohita pyhäpäivät"
+msgstr "Ohita yleiset vapaapäivät"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2878,7 +2878,7 @@ msgstr "Tasot"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.load_public_holiday_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_leaves_tree_inherit
 msgid "Load Public Holidays"
-msgstr ""
+msgstr "Lataa yleiset vapaapäivät"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
@@ -2931,7 +2931,7 @@ msgstr "Maaliskuu"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols -kuvake, esim. muistilista"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__max_leaves
@@ -3244,7 +3244,7 @@ msgstr "Seuraavan toimenpiteen eräpäivä"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_summary
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_summary
 msgid "Next Activity Summary"
-msgstr "Seuraavan toimenpiteen kuvaus"
+msgstr "Seuraavan toimenpiteen yhteenveto"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_id
@@ -3310,7 +3310,7 @@ msgstr "Suunnitelmassa ei ole vielä yhtään välitavoitetta. Luodaan sellainen
 #. odoo-python
 #: code:addons/hr_holidays/wizard/load_public_holiday_wizard.py:0
 msgid "No public holidays were added."
-msgstr ""
+msgstr "Yleisiä vapaapäiviä ei lisätty."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -3594,6 +3594,8 @@ msgstr "Suunniteltu"
 msgid ""
 "Please select a work entry type for all public holidays before adding them."
 msgstr ""
+"Valitse jokaiselle yleiselle vapaapäivälle työkirjaustyyppi ennen sen "
+"lisäämistä."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
@@ -3648,7 +3650,7 @@ msgstr ""
 msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
-msgstr "Arkipyhät on laskettava mukaan loman kestoon lomia haettaessa"
+msgstr "Yleiset vapaapäivät on laskettava mukaan kestoon lomia haettaessa"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
@@ -4685,7 +4687,7 @@ msgstr "Vapaat: Peruuta virheelliset vapaat"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.ir_cron_generate_public_holidays_ir_actions_server
 msgid "Time Off: Generate Public Holidays"
-msgstr ""
+msgstr "Vapaat: Luo yleisiä vapaapäiviä"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_day_time_rules_cron_ir_actions_server
@@ -4941,7 +4943,7 @@ msgstr "Tyyppi Pyyntö Yksikkö"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_decoration
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Kirjattu poikkeustoimenpiteen tyyppi."
+msgstr "Kirjatun poikkeustoimenpiteen tyyppi."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz
@@ -5541,6 +5543,10 @@ msgid ""
 "leaves for that time type are overlapping with public holidays, meaning that "
 "the balance of those employees would be affected by this change."
 msgstr ""
+"Et voi muuttaa 'Yleinen vapaapäivä sisältyy' -asetusta, koska yksi tai "
+"useampi kyseisen tyyppinen vapaa osuu päällekkäin julkisten vapaapäivien "
+"kanssa, mikä tarkoittaa, että tämä muutos vaikuttaisi kyseisten "
+"työntekijöiden lomapäivien saldoon."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5678,6 +5684,12 @@ msgstr "klikkaa tästä"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
 msgstr "päivämäärät"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "day"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript

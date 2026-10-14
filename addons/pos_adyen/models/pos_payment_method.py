@@ -290,7 +290,7 @@ class PosPaymentMethod(models.Model):
         req = requests.post(endpoint, json=data, headers=headers, timeout=TIMEOUT)
 
         # Authentication error doesn't return JSON
-        if req.status_code == 401:
+        if req.status_code in [401, 403]:
             return {
                 'error': {
                     'status_code': req.status_code,

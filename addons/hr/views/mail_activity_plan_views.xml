@@ -28,11 +28,13 @@
                     <field name="responsible_type" widget="filterable_selection"
                            options="{'whitelisted_values': ['on_demand', 'other', 'role']}"/>
                 </xpath>
-                <xpath expr="//group[@name='group_plan_fields']/group[@name='company_id']" position="before">
+                <!-- model and company in the same group to align them, the department on the right -->
+                <xpath expr="//group[@name='group_plan_fields']/group[1]" position="inside">
+                    <xpath expr="//group[@name='company_id']/field[@name='company_id']" position="move"/>
+                </xpath>
+                <xpath expr="//group[@name='group_plan_fields']/group[@name='company_id']" position="inside">
                     <field name="department_assignable" invisible="1"/>
-                    <group invisible="not department_assignable">
-                        <field name="department_id" placeholder="Available for all Departments"/>
-                    </group>
+                    <field name="department_id" placeholder="Available for all Departments" invisible="not department_assignable"/>
                 </xpath>
             </field>
         </record>

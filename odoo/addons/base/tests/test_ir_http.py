@@ -28,3 +28,15 @@ class TestIrHttpPerformances(TransactionCase):
         self.env['ir.http'].routing_map(key=1)
         duration = time.time() - start
         _logger.info('Routing map website1 generated in %.3fs', duration)
+
+
+@tagged('-at_install', 'post_install')
+class TestIrHttpConverters(TransactionCase):
+
+    def test_models_converter_to_url(self):
+        partners = self.env['res.partner'].create([
+            {'name': 'Test Partner 1'},
+            {'name': 'Test Partner 2'},
+        ])
+        converter = self.env['ir.http']._get_converters()['models'](None, 'res.partner')
+        self.assertEqual(converter.to_url(partners), f"{partners[0].id},{partners[1].id}")

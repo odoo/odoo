@@ -17,8 +17,8 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
             }
 
             @if $fallback-card-id {
-                &:not(:has(> [data-kpi-id="invoice_layout"]))
-                    > [data-kpi-id="#{$fallback-card-id}"] {
+                &.o_account_dashboard_kpis_without_invoice_layout
+                    > .o_account_dashboard_kpi_card[data-kpi-id="#{$fallback-card-id}"] {
                     display: flex;
                 }
             }
@@ -64,7 +64,7 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     }
 
     > [data-kpi-id="invoice_layout"],
-    &:not(:has(> [data-kpi-id="invoice_layout"])) > [data-kpi-id="invoices"] {
+    &.o_account_dashboard_kpis_without_invoice_layout > .o_account_dashboard_kpi_card[data-kpi-id="invoices"] {
         display: flex;
     }
 }

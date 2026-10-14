@@ -235,6 +235,9 @@ class PosOrder(models.Model):
 
     def _l10n_eg_edi_pos_build_buyer(self):
         self.ensure_one()
+        if self.refunded_order_id:
+            # A return receipt must carry the same buyer block as its original (ETA RR308/RR322).
+            return self.refunded_order_id._l10n_eg_edi_pos_build_buyer()
         partner = self.partner_id
         if not partner:
             return {'type': 'P', 'paymentNumber': ''}

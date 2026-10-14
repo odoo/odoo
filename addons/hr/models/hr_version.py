@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import date
+from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
 from babel.dates import format_date, get_date_format
 from zoneinfo import ZoneInfo
@@ -754,11 +754,35 @@ class HrVersion(models.Model):
         start_version = versions[idx]
         for j in range(idx - 1, -1, -1):
             prev = versions[j]
-            if prev[field_name] != current_value:
+            if prev[field_name] != current_value or not prev._is_continuous_with(start_version):
                 break
             start_version = prev
 
         return start_version.contract_date_start
+
+    def _has_work_hours_between_versions(self, version_to):
+        # we consider two versions to be consecutive if no work hours are
+        # in the period between the two versions
+        tz = ZoneInfo(self._get_tz())
+        date_from = datetime.combine(self.date_end, time.max, tz) if self.date_end else date.max
+        date_to = datetime.combine(version_to.date_start, time.min, tz)
+        calendar_id = self.resource_calendar_id
+        if not calendar_id:
+            return False
+        if self.date_end and self.date_end + relativedelta(days=1) == version_to.date_start:
+            # fast path: back-to-back versions cannot have work hours between them.
+            # We can bypass the expensive calendar lookup
+            return False
+        return bool(calendar_id.get_work_hours_count(date_from, date_to, compute_leaves=False))
+
+    def _is_continuous_with(self, next_version):
+        """
+        return whether `next_version` continues `self` without breaking
+        continuity. By default, any gap between contracts is ignored
+        Localizations can override this to define a tolerated gap.
+        """
+        self.ensure_one()
+        return True
 
     def action_open_version(self):
         self.ensure_one()

@@ -20,12 +20,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_fiscal_country_id': 'base.id',
                 'bank_account_code_prefix': '1112',
                 'cash_account_code_prefix': '1111',
-                'transfer_account_code_prefix': '1999999',
+                'transfer_account_id': 'l10n_id_19999991',
                 'default_cash_difference_income_account_id': 'l10n_id_99900002',
                 'default_cash_difference_expense_account_id': 'l10n_id_99900001',
                 'account_default_pos_receivable_account_id': 'l10n_id_11210011',
                 'income_currency_exchange_account_id': 'l10n_id_81100030',
                 'expense_currency_exchange_account_id': 'l10n_id_91100020',
+                'account_journal_suspense_account_id': 'l10n_id_11120001',
                 'account_journal_early_pay_discount_loss_account_id': 'l10n_id_99900003',
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_id_99900004',
                 'account_sale_tax_id': 'tax_ST4',
@@ -37,6 +38,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_valuation_id': 'l10n_id_11300180',
                 'deferred_expense_account_id': 'l10n_id_11210040',
                 'deferred_revenue_account_id': 'l10n_id_28110030',
+                'account_bills_to_receive_id': 'l10n_id_25110120',
+                'account_billed_not_received_id': 'l10n_id_11210040',
+                'account_invoices_to_issue_id': 'l10n_id_11210050',
+                'account_invoiced_not_delivered_id': 'l10n_id_28110030',
             },
         }
 
@@ -68,7 +73,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('id', 'account.journal')
     def _get_id_account_journal(self):
         return {
-            'bank': {'default_account_id': 'l10n_id_11120001'},
+            'bank': {'default_account_id': 'l10n_id_11120004'},
             'cash': {
                 'name': self.env._("Cash"),
                 'type': 'cash',

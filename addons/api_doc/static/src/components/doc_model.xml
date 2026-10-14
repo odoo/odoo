@@ -3,10 +3,9 @@
 
 <t t-name="web.DocModel">
     <div t-if="!this.state.error" class="o-doc-model position-relative d-flex flex-nowrap flex-fill flex-column p-3">
-        <h2 class="w-100 mb-2 mt-2" t-out="this.state.model?.name ?? ''"></h2>
-        <p t-if="this.state.model?.doc" title="Derived from _explanation attribute" t-out="this.state.model.doc"/>
-        <DocTable data="this.state.modelData"/>
-
+        <h2 class="w-100 mb-2 mt-2" t-out="this.modelName"></h2>
+        <DocCopyablePre class="'o-doc-model-name mb-2'" value="this.modelTechnicalName"/>
+        <p t-if="this.showDescription" title="Derived from _explanation attribute" t-out="this.state.model.doc"/>
         <h3 class="mt-3 mb-2" id="fields">Fields</h3>
         <DocLoadingIndicator
             isLoaded="this.isDocTableLoaded()"
@@ -32,7 +31,7 @@
         <div style="min-height: 30vh"/>
     </div>
 
-    <aside t-if="!this.ui.isSmall and !this.state.error" class="o-doc-model-aside overflow-auto position-sticky d-block flex-fill bg-default pt-2 pb-2 ps-3 pe-3 border-start">
+    <aside t-if="this.props.showAside and !this.state.error" class="o-doc-model-aside overflow-auto position-sticky d-block flex-fill bg-default pt-2 pb-2 ps-3 pe-3 border-start">
         <div
             class="d-flex flex-nowrap w-100 cursor-pointer text-capitalize align-items-center"
             t-on-click="() => this.state.showModulesFilter = !this.state.showModulesFilter"
@@ -72,6 +71,7 @@
             t-out="method.name"
             t-if="this.isModuleActive(method.module)"
             t-att-href="'#' + method.name"
+            t-on-click="() => this.selectMethod()"
             class="d-block w-100 text-truncate o-doc-aside-methods"
         >
         </a>

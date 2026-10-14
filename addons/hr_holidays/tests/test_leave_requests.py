@@ -1731,7 +1731,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertTrue(leave_mail_message, "A mail notification should be sent for approval")
         self.assertEqual(
             leave_mail_message.subject,
-            "I'm requesting 1 days of TimeNotLimited from 2022-03-11 to 2022-03-11",
+            "I'm requesting 1 day of TimeNotLimited from 2022-03-11 to 2022-03-11",
             "The email subject should describe the leave request details correctly."
         )
         self.assertIn(
@@ -2054,7 +2054,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'am',
             'request_date_to_period': 'am',
         })
-        self.assertEqual(irregular_leave.duration_display, '1 days')
+        self.assertEqual(irregular_leave.duration_display, '1 day')
 
         irregular_leave2 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Tuesday Afternoon and Wednesday Morning',
@@ -2087,7 +2087,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'am',
             'request_date_to_period': 'am',
         })
-        self.assertEqual(irregular_leave4.duration_display, '1 days')
+        self.assertEqual(irregular_leave4.duration_display, '1 day')
 
     def test_unified_time_off_hours_scenarios(self):
         with self.assertRaises(UserError):
@@ -3330,14 +3330,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave = self._leave(worked)
         self.assertEqual(
             (leave.date_from, leave.date_to),
-            (self._utc(self._wall(self.monday, 8)), self._utc(self._wall(self.monday, 17))),
-            "the request borrowed the hours of the day it stands on",
+            (self._utc(self._wall(self.monday, 8)), self._utc(self._wall(self.monday, 16))),
+            "the request borrowed the start and the hours of the day it stands on",
         )
         self.assertEqual(leave.number_of_hours, 8)
 
         # mapping any of these back would end the request the day before
         for label, wall_from, wall_to in (
-            ('an echo of the compute', self._wall(self.monday, 8), self._wall(self.monday, 17)),
+            ('an echo of the compute', self._wall(self.monday, 8), self._wall(self.monday, 16)),
             ('the end dragged onto the start', None, self._wall(self.monday, 8)),
             ('the start dragged past the end', self._wall(self.monday, 18), None),
         ):
@@ -3559,3 +3559,55 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             employee_allowed,
             "A regular user must not be able to select an unselectable time off type",
         )
+
+    def test_leave_autovalidation_for_manager(self):
+        """ A time off officer creating a time off for someone else gets it automatically approved,
+            but not when creating it for themselves.
+        """
+        HrLeave = self.env['hr.leave'].with_user(self.user_hrmanager)
+        own_leave = HrLeave.create({
+            'name': 'Own Leave',
+            'employee_id': self.employee_hrmanager_id,
+            'work_entry_type_id': self.holidays_type_1.id,
+            'request_date_from': '2025-09-02',
+            'request_date_to': '2025-09-02',
+        })
+        self.assertEqual(own_leave.state, 'confirm')
+
+        other_leave = HrLeave.create({
+            'name': 'Employee Leave',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.holidays_type_1.id,
+            'request_date_from': '2025-09-02',
+            'request_date_to': '2025-09-02',
+        })
+        self.assertEqual(other_leave.state, 'validate')
+
+    def test_working_time_beyond_the_schedule_becomes_overtime(self):
+        """
+        10h of Work from 08:00 on a day scheduled 08:00-12:00 and 13:00-17:00 end at 18:00 the
+        same day, and the 2 hours beyond the schedule become overtime.
+        """
+        overtime_rule = self.env.ref('hr_work_entry.hr_time_rule_employee_schedule')
+        self.env['hr.time.rule'].search([]).active = False
+        overtime_rule.active = True
+        work = self.env.ref('hr_work_entry.generic_work_entry_type_attendance')
+        work.write({'request_unit': 'hour', 'requires_allocation': False})
+        employee = self._employee_on(self.company.resource_calendar_id)
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as form:
+            form.work_entry_type_id = work
+            form.request_date_hour_from = self._utc(self._wall(self.monday, 8))
+            form.request_date_hour_to = self._utc(self._wall(self.monday, 17))
+            form.number_of_hours = 10
+            self.assertEqual(form.request_hour_to, 18, "08:00 + 10h ends at 18:00, on the same day")
+        leave = form.record
+
+        overtime = self.env['hr.leave'].search([('source_leave_id', '=', leave.id)])
+        self.assertEqual((leave.date_from, leave.date_to, leave.number_of_hours),
+                         (self._utc(self._wall(self.monday, 8)), self._utc(self._wall(self.monday, 16)), 8),
+                         "the 8 scheduled hours stay Work")
+        self.assertEqual((overtime.work_entry_type_id, overtime.date_from, overtime.date_to),
+                         (overtime_rule.work_entry_type_id,
+                          self._utc(self._wall(self.monday, 16)), self._utc(self._wall(self.monday, 18))),
+                         "the 2 hours beyond the schedule are overtime")

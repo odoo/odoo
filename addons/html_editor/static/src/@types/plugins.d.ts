@@ -1,5 +1,5 @@
 declare module "plugins" {
-    import { clean_for_save_processors, on_editor_started_handlers } from "@html_editor/editor";
+    import { clean_for_save_processors, html_compatibility_processors, on_editor_started_handlers } from "@html_editor/editor";
     import { Plugin } from "@html_editor/plugin";
     import { ResourceWithSequence } from "@html_editor/utils/resource";
 
@@ -18,7 +18,7 @@ declare module "plugins" {
     import { OverlayShared } from "@html_editor/core/overlay_plugin";
     import { ProtectedNodeShared } from "@html_editor/core/protected_node_plugin";
     import { SanitizeShared } from "@html_editor/core/sanitize_plugin";
-    import { double_click_overrides, fix_selection_on_editable_root_overrides, is_node_fully_selected_predicates, is_char_tangible_for_keyboard_navigation_predicates, is_node_editable_predicates, on_selection_leave_handlers, on_selectionchange_handlers, SelectionShared, targeted_nodes_processors, triple_click_overrides } from "@html_editor/core/selection_plugin";
+    import { double_click_overrides, fix_selection_on_no_inline_root_overrides, is_node_fully_selected_predicates, is_char_tangible_for_keyboard_navigation_predicates, is_node_editable_predicates, is_no_inline_root_predicates, on_selection_leave_handlers, on_selectionchange_handlers, SelectionShared, targeted_nodes_processors, triple_click_overrides } from "@html_editor/core/selection_plugin";
     import { shortcuts, shorthands } from "@html_editor/core/shortcut_plugin";
     import { on_element_split_handlers, on_will_split_block_handlers, split_element_block_overrides, SplitShared, is_node_splittable_predicates } from "@html_editor/core/split_plugin";
     import { StyleShared } from "@html_editor/core/style_plugin";
@@ -195,7 +195,7 @@ declare module "plugins" {
         delete_image_overrides: delete_image_overrides;
         delete_range_overrides: delete_range_overrides;
         double_click_overrides: double_click_overrides;
-        fix_selection_on_editable_root_overrides: fix_selection_on_editable_root_overrides;
+        fix_selection_on_no_inline_root_overrides: fix_selection_on_no_inline_root_overrides;
         insert_line_break_element_overrides: insert_line_break_element_overrides;
         paste_text_overrides: paste_text_overrides;
         paste_url_overrides: paste_url_overrides;
@@ -223,6 +223,7 @@ declare module "plugins" {
         is_link_eligible_for_zwnbsp_predicates: is_link_eligible_for_zwnbsp_predicates;
         is_mutation_savable_predicates: is_mutation_savable_predicates;
         is_node_editable_predicates: is_node_editable_predicates;
+        is_no_inline_root_predicates: is_no_inline_root_predicates;
         is_node_fully_selected_predicates: is_node_fully_selected_predicates;
         is_node_removable_predicates: is_node_removable_predicates;
         is_node_splittable_predicates: is_node_splittable_predicates;
@@ -245,6 +246,7 @@ declare module "plugins" {
         clipboard_content_processors: clipboard_content_processors;
         clipboard_text_processors: clipboard_text_processors;
         deselect_custom_selected_nodes_processors: deselect_custom_selected_nodes_processors;
+        html_compatibility_processors: html_compatibility_processors;
         move_widget_position_processors: move_widget_position_processors;
         node_to_insert_processors: node_to_insert_processors;
         normalize_processors: normalize_processors;

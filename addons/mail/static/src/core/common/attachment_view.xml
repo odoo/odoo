@@ -3,7 +3,7 @@
 
     <t t-name="mail.AttachmentView">
         <div t-if="this.thread().attachmentsInWebClientView.length > 0" class="o-mail-Attachment">
-            <div class="o_attachment_control popout d-print-none cursor-pointer"
+            <div t-if="this.showsPopoutControl" class="o_attachment_control popout d-print-none cursor-pointer"
                  t-on-click="this.onClickPopout"
                  data-tooltip="Open preview in a separate window."
                  data-tooltip-delay="400">

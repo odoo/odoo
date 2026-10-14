@@ -77,10 +77,10 @@
                         string="Cancel E-Invoice Sending"
                         invisible="peppol_move_state != 'to_send' or state == 'draft' or country_code not in ('FR', 'GP', 'MQ', 'RE')"/>
             </button>
-            <xpath expr="//div[contains(text(), 'There was an error while sending this invoice via Peppol.')]" position="attributes">
+            <xpath expr="//div[hasclass('alert-danger')][contains(@invisible, 'peppol_move_state')]" position="attributes">
                 <attribute name="invisible" add="country_code in ('FR', 'GP', 'MQ', 'RE')" separator="or"/>
             </xpath>
-            <xpath expr="//div[contains(text(), 'There was an error while sending this invoice via Peppol.')]" position="after">
+            <xpath expr="//div[hasclass('alert-danger')][contains(@invisible, 'peppol_move_state')]" position="after">
                 <div class="alert alert-danger" role="alert"
                      invisible="peppol_move_state != 'error' or country_code not in ('FR', 'GP', 'MQ', 'RE')">
                     There was an error while sending this invoice via the Approved Platform.

@@ -6,14 +6,15 @@
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Yoshi Tashiro <tashiro@quartile.co>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-08-31 19:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-08 08:41+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/"
 "account_edi_ubl_cii/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +45,24 @@ msgid ""
 "present in the `EAS list\n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 msgstr ""
+"\n"
+"電子請求モジュール\n"
+"===========================\n"
+"\n"
+"以下のフォーマットのエクスポートおよびインポートが可能です：E-FFF、UBL Bis 3"
+"、EHF3、NLCIUS、Factur-X (CII)、XRechnung (UBL)。\n"
+"請求書のPDFを生成する際、すべてのUBLフォーマットにおいて、PDFはXML内に埋め込"
+"まれます。これにより、\n"
+"受信者はXMLファイルだけでPDFを取得することが可能になります。 なお、**EHF3は"
+"UBL Bis 3によって完全に実装されています**（`参照\n"
+"<HTTPS://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
+"#_implementation>`_）。\n"
+"\n"
+"なお、E-FFF、NLCIUS、およびXRechnung（UBL）は、それぞれベルギー、オランダ、"
+"ドイツの企業のみに\n"
+"利用可能です。UBL Bis 3は、`EASリスト\n"
+"<HTTPS://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_に記載されている国"
+"の企業のみに利用可能です。\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -196,7 +215,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "CII用の基本ヘルパー"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
@@ -578,7 +597,7 @@ msgstr "EU域外への輸出"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/ZUGFeRD CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/ZUGFeRD CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__au
@@ -738,7 +757,7 @@ msgstr "税ごとに明細行をグループ化"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Has Grouped Lines"
-msgstr ""
+msgstr "グループ化された明細行あり"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9910
@@ -786,7 +805,7 @@ msgstr "アイスランド Kennitala"
 #. module: account_edi_ubl_cii
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
 msgid "Import/Export electronic invoices with UBL/CII"
-msgstr ""
+msgstr "UBL/CIIで、電子請求書をインポート・エクスポート"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0202
@@ -853,7 +872,7 @@ msgstr "UNECEコードのサポート"
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Is move lines Grouped"
-msgstr ""
+msgstr "仕訳明細がグループ化済"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0097
@@ -1113,6 +1132,10 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"リバースチャージ：請求書受領後1か月以内に書面による異議申立てがない場合、顧客"
+"は、定期申告を行う義務を有する課税事業者であることを認めたものとみなされます"
+"。この条件が満たされない場合、顧客は、本条件に関連して支払うべき税額、利息お"
+"よび罰金の支払い責任を負うものとします。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9947
@@ -2128,7 +2151,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-f
 msgid "VATEX-FR-F - Second-hand sales"
-msgstr ""
+msgstr "VATEX-FR-F - 中古品販売"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
@@ -2138,12 +2161,12 @@ msgstr "VATEX-FR-FRANCHISE - フランス国内のVATフランチャイズベー
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-i
 msgid "VATEX-FR-I - Sales of works of art"
-msgstr ""
+msgstr "VATEX-FR-I - 美術品の販売"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-j
 msgid "VATEX-FR-J - Sales of antiques"
-msgstr ""
+msgstr "VATEX-FR-J - 骨董品の販売"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9953
@@ -2188,7 +2211,7 @@ msgstr "請求書の明細行はグループ化のみ可能です"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You need at least two lines to group them."
-msgstr ""
+msgstr "これらをグループ化するには、少なくとも2明細行が必要です。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

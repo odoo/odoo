@@ -10,13 +10,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-09-30 05:33+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"PO-Revision-Date: 2026-10-08 13:33+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/"
 "calendar/ja/>\n"
 "Language: ja\n"
@@ -91,7 +92,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "%s has accepted the invitation"
-msgstr "%s が招待を承諾しました"
+msgstr "%sが招待を承認しました"
 
 #. module: calendar
 #. odoo-python
@@ -1435,7 +1436,7 @@ msgstr "参加者"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Attendees"
-msgstr "参加者"
+msgstr "出席者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
@@ -2397,7 +2398,7 @@ msgstr "無効な取引先Eメール"
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation Status"
-msgstr ""
+msgstr "招待ステータス"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
@@ -2684,7 +2685,7 @@ msgstr "月"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/calendar_form/calendar_event_quick_create.xml:0
 msgid "More Options"
-msgstr "他のオプション"
+msgstr "さらなるオプション"
 
 #. module: calendar
 #. odoo-javascript
@@ -3210,7 +3211,7 @@ msgstr "土曜"
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Schedule Meeting"
-msgstr ""
+msgstr "ミーティングをスケジュール"
 
 #. module: calendar
 #: model:ir.module.module,summary:base.module_calendar
@@ -3329,8 +3330,9 @@ msgstr "カレンダーに活動を表示"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Show all opportunities for which the next action date is before today"
-msgstr "次の行動日が今日までのすべての案件を表示"
+msgstr "次の行動日が今日までのすべての案件を表示する"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -3432,8 +3434,8 @@ msgstr "同期に失敗しました"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-msgid "Synchronize with"
-msgstr "以下と同期"
+msgid "Sync with"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -3612,8 +3614,9 @@ msgstr "今日"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#, fuzzy
 msgid "Today Activities"
-msgstr "本日の活動"
+msgstr "今日の活動"
 
 #. module: calendar
 #. odoo-javascript
@@ -3670,7 +3673,7 @@ msgstr "使用不可"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids
 msgid "Unavailable Attendees"
-msgstr "参加不可の参加者"
+msgstr "参加不可の出席者"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3704,7 +3707,7 @@ msgstr "今後のミーティング"
 #: model:mail.template,description:calendar.calendar_template_delete_event
 #: model:mail.template,description:calendar.calendar_template_meeting_update
 msgid "Used to manually notify attendees"
-msgstr "参加者に手動で通知するために使用します"
+msgstr "出席者に手動で通知するために使用します。"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -3751,8 +3754,9 @@ msgstr "ビデオコールソース"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
+#, fuzzy
 msgid "View"
-msgstr "表示"
+msgstr "ビュー"
 
 #. module: calendar
 #. odoo-javascript
@@ -3897,7 +3901,7 @@ msgstr "ベースイベントなしに繰返しを更新することはできま
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "You cannot duplicate a calendar attendee."
-msgstr "カレンダの参加者は重複できません。"
+msgstr "カレンダの出席者は重複できません。"
 
 #. module: calendar
 #. odoo-python
@@ -3998,8 +4002,9 @@ msgstr "ゲスト"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
+#, fuzzy
 msgid "more"
-msgstr "他"
+msgstr "さらに表示"
 
 #. module: calendar
 #. odoo-javascript
@@ -4027,6 +4032,9 @@ msgstr "{{ object.event_id.name }}: 日付が更新されました"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: イベント更新"
+
+#~ msgid "Synchronize with"
+#~ msgstr "以下と同期"
 
 #~ msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
 #~ msgstr "<span class=\"me-1 o_form_label\">Googleカレンダ</span>"

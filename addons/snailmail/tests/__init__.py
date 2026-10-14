@@ -3,4 +3,5 @@
 
 from .import common
 from . import test_attachment_access
+from . import test_snailmail_letter
 from . import test_snailmail_webhook

@@ -1,6 +1,7 @@
 import { Component, proxy, t, useEffect, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
+import { formatDuration } from "@web/views/fields/formatters";
 
 export class AttendanceCalendarOverview extends Component {
     static template = "hr_attendance.AttendanceCalendarOverview";
@@ -11,21 +12,13 @@ export class AttendanceCalendarOverview extends Component {
 
     setup() {
         this.orm = useService("orm");
+        this.formatDuration = formatDuration;
         this.state = proxy({
             entries: [],
         });
         useEffect(() => {
             this.loadData();
         });
-    }
-
-    formatHours(hours) {
-        return `${Math.floor(Math.round(hours * 60) / 60)}h`;
-    }
-
-    formatMins(hours) {
-        const m = Math.round(hours * 60) % 60;
-        return m > 0 ? `${m}m` : "";
     }
 
     async loadData() {

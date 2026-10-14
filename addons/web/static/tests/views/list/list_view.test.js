@@ -217,9 +217,7 @@ defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 
 async function clickControlPanelAction(buttonName) {
     if (isSmall()) {
-        await contains(
-            ".o_cp_action_menus [data-icon='more_vert']"
-        ).click();
+        await contains(".o_cp_action_menus [data-icon='more_vert']").click();
         await contains(`.o-dropdown-item button[name="${buttonName}"]`).click();
     } else {
         await contains(`.o_control_panel_actions button[name="${buttonName}"]`).click();
@@ -1448,14 +1446,10 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
         `,
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
     await clickRecordSelector();
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
         "Export",
@@ -1463,9 +1457,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
         "Delete",
     ]);
     await clickRecordSelector();
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
 });
 
@@ -1545,9 +1537,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
     ]);
 
     await clickRecordSelector();
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "",
         "default-selection",
@@ -2265,7 +2255,9 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row");
 
     if (isSmall()) {
-        await contains(".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown").click();
+        await contains(
+            ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
+        ).click();
         expect(`.o_list_button_discard`).toHaveCount(0);
         expect(`.o_control_panel .o_list_button_add`).toHaveCount(1);
     } else {
@@ -2288,6 +2280,19 @@ test(`basic grouped list rendering`, async () => {
     expect(`th:contains(Bar)`).toHaveCount(1, { message: "should contain Bar" });
     expect(`tr.o_group_header`).toHaveCount(2, { message: "should have 2 .o_group_header" });
     expect(`th.o_group_name`).toHaveCount(2, { message: "should have 2 .o_group_name" });
+});
+
+test(`removing the default group by facet reloads the list without groups`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list default_group_by="bar"><field name="foo"/><field name="bar"/></list>`,
+    });
+    expect(`tr.o_group_header`).toHaveCount(2);
+
+    await removeFacet("Bar");
+    expect(`tr.o_group_header`).toHaveCount(0);
+    expect(`tr.o_data_row`).toHaveCount(4);
 });
 
 test(`basic grouped list rendering with widget="handle" col`, async () => {
@@ -5304,6 +5309,50 @@ test(`monetary aggregates in grouped list (!= currencies in same group)`, async 
     expect(`.o_list_footer .o_list_number span`).toHaveText("$ 2,000.00?");
 });
 
+test(`monetary aggregates in grouped list (aggregate that is not a sum)`, async () => {
+    Foo._fields.amount = fields.Monetary({ currency_field: "currency_id", aggregator: "max" });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="amount" max="Max"/>
+                <field name="currency_id"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+    });
+    expect(`.o_group_header`).toHaveCount(2);
+    expect(`.o_group_header:first`).toHaveText("No 1 record $ 0.00", { inline: true });
+    expect(`.o_group_header:last`).toHaveText("Yes 3 records 1,200.00", { inline: true });
+    // the maximum of the "Yes" group can't be converted, so the total has no currency
+    expect(`.o_list_footer .o_list_number span`).toHaveText("1,200.00");
+});
+
+test(`monetary aggregates in grouped list (sum_currency aggregator)`, async () => {
+    Foo._fields.amount = fields.Monetary({
+        currency_field: "currency_id",
+        aggregator: "sum_currency",
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="amount" sum="Sum"/>
+                <field name="currency_id"/>
+            </list>
+        `,
+        groupBy: ["currency_id"],
+    });
+    // aggregates are already in the company currency, the total doesn't convert them again
+    expect(`.o_group_header:first`).toHaveText("USD 3 records $ 800.00", { inline: true });
+    expect(`.o_group_header:last`).toHaveText("EUR 1 record $ 1,200.00", { inline: true });
+    expect(`.o_list_footer .o_list_number span`).toHaveText("$ 2,000.00?");
+});
+
 test(`monetary aggregates in grouped list (!= currencies in same group, delete)`, async () => {
     await mountView({
         resModel: "foo",
@@ -7801,9 +7850,8 @@ test(`display a tooltip on a field`, async () => {
 
     await hover(`th[data-name="foo"] div`);
     await runAllTimers();
-    expect(`.o-tooltip .o-tooltip--technical`).toHaveCount(0);
-    expect(`.o-tooltip`).toHaveCount(1);
-    expect(`.o-tooltip`).toHaveText("Foo");
+    // the label is entirely displayed, so the tooltip would only repeat it
+    expect(`.o-tooltip`).toHaveCount(0);
 
     serverState.debug = "1";
 
@@ -7832,6 +7880,66 @@ test("field (with help) tooltip in non debug mode", async function () {
     await runAllTimers();
     expect(`.o-tooltip`).toHaveCount(1);
     expect(`.o-tooltip`).toHaveText("Foo\nThis is a foo field");
+});
+
+test.tags("desktop");
+test("field (with help) tooltip displays the label of the arch", async function () {
+    Foo._fields.foo.help = "This is a foo field";
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `<list><field name="foo" string="Custom"/></list>`,
+    });
+    await hover(`th[data-name="foo"] div`);
+    await runAllTimers();
+    expect(`.o-tooltip`).toHaveCount(1);
+    expect(`.o-tooltip`).toHaveText("Custom\nThis is a foo field");
+});
+
+test.tags("desktop");
+test(`no tooltip on a column header if its label is entirely displayed`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/></list>`,
+    });
+
+    const labelEl = queryOne(`th[data-name="foo"] div span`);
+    expect(labelEl.scrollWidth).toBe(labelEl.clientWidth); // the label isn't truncated
+
+    await hover(`th[data-name="foo"] div`);
+    await runAllTimers();
+    expect(`.o-tooltip`).toHaveCount(0);
+});
+
+test.tags("desktop");
+test(`tooltip on a column header if its label is truncated`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo" string="A very long column label that certainly does not fit in the space available for that column"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+                <field name="m2o"/>
+                <field name="qux"/>
+                <field name="date"/>
+                <field name="datetime"/>
+                <field name="amount"/>
+                <field name="currency_id"/>
+            </list>`,
+    });
+
+    const labelEl = queryOne(`th[data-name="foo"] div span`);
+    expect(labelEl.scrollWidth).toBeGreaterThan(labelEl.clientWidth); // the label is truncated
+
+    await hover(`th[data-name="foo"] div`);
+    await runAllTimers();
+    expect(`.o-tooltip`).toHaveCount(1);
+    expect(`.o-tooltip`).toHaveText(
+        "A very long column label that certainly does not fit in the space available for that column"
+    );
 });
 
 test(`support row decoration`, async () => {
@@ -21160,6 +21268,8 @@ test(`multi_edit: edit field with operator with localization`, async () => {
     await checkFieldValue("amount", "*=1.4", "Amount * 1.4");
     await checkFieldValue("amount", "- =1.4", "Amount - 1.4");
     await checkFieldValue("amount", "+= 1.4", "Amount + 1.4");
+    await checkFieldValue("amount", "*=(1+0.4)", "Amount * 1.4");
+    await checkFieldValue("amount", "-= 2*0.7", "Amount - 1.4");
 
     let field = "amount";
     await contains(`.o_data_cell[name=${field}]`).click();
@@ -22563,4 +22673,32 @@ test("Empty Groups: filter out empty groups", async () => {
     await contains(".modal-footer .btn-primary").click();
 
     expect(".o_group_header").toHaveCount(1);
+});
+
+test("handles empty column node", async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <column/>
+                <field name="display_name" />
+            </list>
+        `,
+    });
+    expect(".o_list_view th:not(.o_list_record_selector)").toHaveCount(1);
+});
+
+test("handles column node with untolerrated content", async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <column><button name="a" type="obj" string="button"/></column>
+                <field name="display_name" />
+            </list>
+        `,
+    });
+    expect(".o_list_view th:not(.o_list_record_selector)").toHaveCount(1);
 });

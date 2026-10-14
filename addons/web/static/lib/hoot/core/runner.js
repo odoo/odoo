@@ -1891,18 +1891,19 @@ export class Runner {
             return;
         }
         const error = ensureError(ev);
-        if (ev.type === "unhandledrejection" && error.name === "AbortError") {
-            return ev.preventDefault();
+        if (isInstanceOf(ev, Event)) {
+            // Ignore abort errors
+            if (ev.type === "unhandledrejection" && error.name === "AbortError") {
+                return ev.preventDefault();
+            }
+        } else {
+            ev = new ErrorEvent("error", { error });
         }
         if (handledErrors.has(error)) {
             // Already handled
             return ev.preventDefault();
         }
         handledErrors.add(error);
-
-        if (!isInstanceOf(ev, Event)) {
-            ev = new ErrorEvent("error", { error });
-        }
 
         mockPreventDefault(ev);
 

@@ -86,6 +86,9 @@ class AuthRequirements(typing.TypedDict, total=False):
     using the device fingerprint alone.
     """
 
+    log_reason: str
+    """Message to be logged if ``logout`` or ``check_identity`` is ``True``."""
+
 
 class CheckIdentityResult(typing.TypedDict, total=False):
     auth_methods: list[str]
@@ -134,7 +137,7 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         return env[self.model].browse(int(v) for v in value.split(','))
 
     def to_url(self, value: models.BaseModel) -> str:
-        return ",".join(value.ids)
+        return ",".join(map(str, value.ids))
 
 
 class SignedIntConverter(NumberConverter):
@@ -405,9 +408,14 @@ class IrHttp(models.AbstractModel):
             and request.session.uid is not None
             and (must_check_identity := cls._must_check_identity())
         ):
+            log_reason = must_check_identity.get('log_reason')
             if must_check_identity.get('logout'):
+                if log_reason:
+                    _logger.info("User %r (uid: %s): %s", request.session.login, request.session.uid, log_reason)
                 raise SessionExpiredException(f'User {request.session.uid} needs to login again')
             if must_check_identity.get('check_identity') and routing.get('check_identity', True):
+                if log_reason:
+                    _logger.info("User %r (uid: %s): %s", request.session.login, request.session.uid, log_reason)
                 raise CheckIdentityException(f'User {request.session.uid} needs to confirm his identity')
 
     @classmethod
@@ -555,6 +563,25 @@ class IrHttp(models.AbstractModel):
         return translations_per_module, lang_params
 
     @api.model
+    def _get_web_translations_modules(self):
+        """ Return the modules whose translations are served to the web client
+        when it doesn't ask for specific ones. """
+        return self.env.registry._init_modules.union(odoo.tools.config['server_wide_modules'])
+
+    @api.model
+    def _get_web_translations_lang(self, lang):
+        """ Return ``lang`` if it is an installed language, ``None`` otherwise.
+
+        Normalize the language with this method before calling
+        ``_get_web_translations_hash``, so that the hash served by the
+        translations endpoints and the one precomputed in the session info
+        are computed on the same language.
+        """
+        if lang and lang not in {code for code, _ in self.env['res.lang'].sudo().get_installed()}:
+            return None
+        return lang
+
+    @api.model
     @api.ormcache('frozenset(modules)', 'lang')
     def _get_web_translations_hash(self, modules, lang):
         translations, lang_params = self._get_translations_for_webclient(modules, lang)
@@ -568,6 +595,17 @@ class IrHttp(models.AbstractModel):
             # put in the transactional cache
             self.env.cr.cache['translation_data'] = translation_cache
         return hashlib.sha1(json.dumps(translation_cache, sort_keys=True, default=json_default).encode()).hexdigest()
+
+    @api.model
+    def _get_cached_web_translations_hash(self, modules, lang):
+        """ Return the result of ``_get_web_translations_hash`` if it is in
+        the ormcache, an empty string otherwise.
+
+        Computing the hash requires building all the translations, which is
+        too expensive to do while rendering a page. On a cold cache, the client
+        gets no hash and asks the translations endpoint, which fills the cache.
+        """
+        return self._get_web_translations_hash.__cache__.get_value(self, modules, lang, cache_default='')
 
     @api.model
     def _is_allowed_cookie(self, cookie_type):

@@ -47,6 +47,7 @@ class TestCiiImportFacturXFRRetrieveProduct(CiiImportFacturXFR):
 
     @freeze_time('2020-01-01')
     def test_partial_import_product_invoice_predictive(self):
+        self.ensure_installed('account_accountant')
         # First invoice to train the prediction.
         product = self._create_product(name='XYZ')
         self._create_invoice_one_line(

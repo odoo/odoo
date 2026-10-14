@@ -14,6 +14,7 @@ export class ProductMatrixDialog extends Component {
         editedCellAttributes: t.string(),
         product_template_id: t.number(),
         record: t.object(),
+        defaultSequence: t.number().optional(),
         close: t.function(),
     });
 
@@ -71,7 +72,7 @@ export class ProductMatrixDialog extends Component {
         return markup(`&nbsp;${sign}&nbsp;${formatted}&nbsp;`);
     }
 
-    _onConfirm() {
+    async _onConfirm() {
         const inputs = document.getElementsByClassName("o_matrix_input");
         const matrixChanges = [];
         for (const matrixInput of inputs) {
@@ -86,13 +87,16 @@ export class ProductMatrixDialog extends Component {
         }
         if (matrixChanges.length > 0) {
             // NB: server also removes current line opening the matrix
-            this.props.record.update({
+            await this.props.record.update({
                 grid: JSON.stringify({
                     changes: matrixChanges,
                     product_template_id: this.props.product_template_id,
+                    sequence: this.props.defaultSequence,
                 }),
                 grid_update: true, // to say that the changes to grid have to be applied to the SO.
             });
+
+            await this.props.record.data.order_line._sort();
         }
         this.props.close();
     }

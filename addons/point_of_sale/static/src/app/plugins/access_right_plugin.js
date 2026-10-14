@@ -30,6 +30,10 @@ export class PosAccessRightPlugin extends Plugin {
 
     resetCashier() {
         this.cashier = false;
+        this.forgetConnectedCashier();
+    }
+
+    forgetConnectedCashier() {
         sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
     }
 
@@ -173,7 +177,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get disablePriceButton() {
-        return this.config.restrict_price_control || this.loggedCashier?._role !== "manager";
+        return !this.config.restrict_price_control || this.loggedCashier?._role === "manager";
     }
 
     get canCancelOrder() {

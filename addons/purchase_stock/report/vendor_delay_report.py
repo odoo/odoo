@@ -32,7 +32,15 @@ SELECT pol.id                   AS id,
        Sum(CASE
              WHEN (m.state = 'done' and pol.date_promised::date >= m.date::date) THEN ((ml.quantity * ml_uom.factor) / pt_uom.factor)
              ELSE 0
-           END)                 AS qty_on_time
+           END)                 AS qty_on_time,
+       CASE
+         WHEN pol.product_uom_qty != 0 THEN
+           Sum(CASE
+                 WHEN (m.state = 'done' and pol.date_promised::date >= m.date::date) THEN ((ml.quantity * ml_uom.factor) / pt_uom.factor)
+                 ELSE 0
+               END) / pol.product_uom_qty * 100
+         ELSE 100
+       END                      AS on_time_rate
 FROM   stock_move m
        JOIN purchase_order_line pol
          ON pol.id = m.purchase_line_id

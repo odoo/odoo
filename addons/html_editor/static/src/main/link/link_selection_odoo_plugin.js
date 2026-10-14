@@ -13,10 +13,5 @@ export class OdooLinkSelectionPlugin extends Plugin {
                 }
             },
         ],
-        is_link_eligible_for_visual_indication_predicates: (link) => {
-            if (link.matches(".btn")) {
-                return false;
-            }
-        },
     };
 }
