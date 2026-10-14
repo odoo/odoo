@@ -285,7 +285,15 @@ class AccountMove(models.Model):
         """ Get the invoice currency / HUF rate. """
         self.ensure_one()
 
-        return 1 / self.invoice_currency_rate
+        if self.company_currency_id == self.env.ref('base.HUF'):
+            return 1 / self.invoice_currency_rate
+        else:
+            return self.env['res.currency']._get_conversion_rate(
+                from_currency=self.currency_id,
+                to_currency=self.env.ref('base.HUF'),
+                company=self.company_id,
+                date=self._get_invoice_currency_rate_date(),
+            )
 
     def _l10n_hu_edi_set_chain_index(self):
         """ Set the l10n_hu_invoice_chain_index field. """
