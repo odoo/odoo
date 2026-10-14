@@ -12,6 +12,7 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            Dialog.cancel(), // Offline mode after opening register will trigger the offline popup since the device try to sync
             ProductScreen.addOrderline("Letter Tray", "10"),
             ProductScreen.clickPayButton(),
             PaymentScreen.emptyPaymentlines("52.8"),
