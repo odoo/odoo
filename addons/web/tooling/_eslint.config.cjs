@@ -84,7 +84,6 @@ module.exports = [
             curly: ["error", "all"],
             "no-restricted-syntax": [
                 "error",
-                "PrivateIdentifier",
                 {
                     selector: "CallExpression[callee.name='useEffect'][arguments.length>1]",
                     message:
