@@ -1,5 +1,6 @@
 import {
     SIZES,
+    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -17,10 +18,12 @@ import {
     scroll,
     start,
     startServer,
+    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { browser } from "@web/core/browser/browser";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
+import { Deferred, advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
@@ -1199,4 +1202,106 @@ test("Tab to select of canned response suggestion works in chat window", async (
     await contains(".o-mail-ChatWindow:eq(0) .o-mail-Composer-input", {
         value: "Goodbye! See you soon! ",
     });
+});
+
+test("mentioned partners are saved in the composer draft", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ email: "zara@odoo.com", name: "Zara" });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Chatter-logNote");
+    await insertText(".o-mail-Composer-input", "@Zara");
+    await click(".o-mail-Composer-suggestion strong", { text: "Zara" });
+    await insertText(".o-mail-Composer-input", "hello");
+    await advanceTime(5000); // the draft is saved with a 5 seconds debounce
+    const composer = getService("mail.store").Thread.get({
+        model: "res.partner",
+        id: partnerId,
+    }).composer;
+    const draft = JSON.parse(browser.localStorage.getItem(composer.localId));
+    expect(draft.mentionedPartners).toEqual([{ id: partnerId, name: "Zara" }]);
+});
+
+test("restored composer draft only mentions partners validated by the server", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ email: "zara@odoo.com", name: "Zara" });
+    // hold the validation, to post while the draft mentions are being restored
+    const validationDef = new Deferred();
+    patchWithCleanup(Composer.prototype, {
+        async getValidMentionedPartnerIds() {
+            await validationDef;
+            return super.getValidMentionedPartnerIds(...arguments);
+        },
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect(args.post_data.partner_ids).toEqual([partnerId]);
+        step("message_post");
+    });
+    await start();
+    // simulate a draft saved before a page reload; the local storage can be altered, so the
+    // saved partner with an unknown id must not be mentioned
+    const composer = getService("mail.store").Thread.insert({
+        model: "res.partner",
+        id: partnerId,
+    }).composer;
+    browser.localStorage.setItem(
+        composer.localId,
+        JSON.stringify({
+            emailAddSignature: true,
+            text: "@Zara hello",
+            mentionedPartners: [
+                { id: partnerId, name: "Zara" },
+                { id: partnerId + 1000, name: "Zara" },
+            ],
+        })
+    );
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Chatter-logNote");
+    await contains(".o-mail-Composer-input", { value: "@Zara hello" });
+    await click(".o-mail-Composer button", { text: "Log" });
+    validationDef.resolve();
+    await assertSteps(["message_post"]);
+    await contains(".o-mail-Message a.o_mail_redirect", { text: "@Zara" });
+});
+
+test("restored composer draft in a group chat only mentions its members", async () => {
+    const pyEnv = await startServer();
+    const [memberId, otherId] = pyEnv["res.partner"].create([
+        { email: "zara@odoo.com", name: "Zara" },
+        { email: "bob@odoo.com", name: "Bob" },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "group",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: memberId }),
+        ],
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect(args.post_data.partner_ids).toEqual([memberId]);
+        step("message_post");
+    });
+    await start();
+    // Bob exists but is not a member: he cannot be mentioned in this group chat
+    const composer = getService("mail.store").Thread.insert({
+        model: "discuss.channel",
+        id: channelId,
+    }).composer;
+    browser.localStorage.setItem(
+        composer.localId,
+        JSON.stringify({
+            emailAddSignature: true,
+            text: "@Zara @Bob hello",
+            mentionedPartners: [
+                { id: memberId, name: "Zara" },
+                { id: otherId, name: "Bob" },
+            ],
+        })
+    );
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input", { value: "@Zara @Bob hello" });
+    await press("Enter");
+    await assertSteps(["message_post"]);
+    await contains(".o-mail-Message a.o_mail_redirect", { text: "@Zara" });
+    await contains(".o-mail-Message a.o_mail_redirect", { count: 1 });
 });
