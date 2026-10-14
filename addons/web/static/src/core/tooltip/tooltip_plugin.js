@@ -49,7 +49,7 @@ export const SHOW_AFTER_DELAY = 250;
 const TOOLTIP_SELECTOR = "[data-tooltip], [data-tooltip-template]";
 const TOOLTIP_SELECTOR_WITH_TITLE = TOOLTIP_SELECTOR + ", [title]";
 
-class TooltipPlugin extends Plugin {
+export class TooltipPlugin extends Plugin {
     #popover = usePlugin(PopoverPlugin);
     #openTooltipTimeout = null;
     #closeTooltip = null;

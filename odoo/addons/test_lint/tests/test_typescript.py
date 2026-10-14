@@ -63,11 +63,11 @@ class TestTypeScript(LintCase):
         }
 
         def _get_missing_manifests():
-            missing = []
+            missing = set()
             for manifest in dependency_manifests.values():
-                missing += [
+                missing |= {
                     dep for dep in manifest["depends"] if dep not in dependency_manifests
-                ]
+                }
             return missing
 
         while missing := _get_missing_manifests():
