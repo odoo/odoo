@@ -431,14 +431,20 @@ class PaymentTransaction(models.Model):
         # Extract the Stripe objects from the payment data.
         if self.operation == "online_direct":
             customer_id = payment_data["payment_intent"]["customer"]
+            charge_id = payment_data["payment_intent"]["latest_charge"]
             try:
                 charge = self._send_api_request(
                     "GET",
-                    f"charges/{payment_data['payment_intent']['latest_charge']}",
+                    f"charges/{charge_id}",
                     data={"expand[]": "payment_method_details.card.mandate"},
                 )
-            except ValidationError as e:
-                self._set_error(str(e))
+            except ValidationError as e:  # The payment succeeded; only skip the tokenization
+                _logger.warning(
+                    "Unable to fetch charge %s to tokenize transaction %s: %s",
+                    charge_id,
+                    self.reference,
+                    e,
+                )
                 return {}
             payment_method_details = charge.get("payment_method_details")
             if payment_method_details:

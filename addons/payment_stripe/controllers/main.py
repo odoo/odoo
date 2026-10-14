@@ -137,24 +137,20 @@ class StripeController(http.Controller):
                     if not stripe_object["captured"]:  # The charge was authorized and then voided
                         return request.make_json_response("")  # Don't process void-related events
 
-                    if "refunds" not in stripe_object:
-                        stripe_object["refunds"] = tx_sudo._send_api_request(
-                            "GET", "refunds", data={"charge": stripe_object["id"], "limit": 100}
-                        )
-                    refunds = stripe_object["refunds"]["data"]
-                    # The refunds linked to this charge are paginated, fetch the remaining refunds.
-                    has_more = stripe_object["refunds"]["has_more"]
+                    # The refunds are not included in the charge; fetching them page by page.
+                    refunds = []
+                    has_more = True
                     while has_more:
-                        payload = {
-                            "charge": stripe_object["id"],
-                            "starting_after": refunds[-1]["id"],
-                            "limit": 100,
-                        }
-                        additional_refunds = tx_sudo._send_api_request(
-                            "GET", "refunds", data=payload
-                        )
-                        refunds += additional_refunds["data"]
-                        has_more = additional_refunds["has_more"]
+                        payload = {"charge": stripe_object["id"], "limit": 100}
+                        if refunds:
+                            payload["starting_after"] = refunds[-1]["id"]
+                        try:
+                            refunds_page = tx_sudo._send_api_request("GET", "refunds", data=payload)
+                        except ValidationError:  # Don't acknowledge, to let Stripe retry later
+                            _logger.exception("Unable to fetch the refunds of the charge")
+                            return request.make_json_response("", status=503)
+                        refunds += refunds_page["data"]
+                        has_more = refunds_page["has_more"]
 
                     # Process the refunds for which a refund transaction has not been created yet.
                     # Include refunds of capture transactions, as they are grandchildren of the

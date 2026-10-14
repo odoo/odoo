@@ -12,6 +12,7 @@ export class StripeOptions {
         const locale = document.documentElement.lang;
         return {
             ...(locale ? { locale } : {}),  // Default to browser locale if not set.
+            developerTools: { assistant: { enabled: false } },
         };
     };
 }

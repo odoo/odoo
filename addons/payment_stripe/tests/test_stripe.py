@@ -118,7 +118,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
     def test_extract_token_values_maps_fields_correctly(self):
         tx = self._create_transaction("direct")
         payment_data = {
-            "payment_intent": {"charges": {"data": [{}]}, "customer": "test_customer"},
+            "payment_intent": {"latest_charge": "ch_test", "customer": "test_customer"},
             "payment_method": {
                 "card": {"brand": "visa", "last4": "1111"},
                 "id": "pm_test",
@@ -126,7 +126,11 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
                 "type": "card",
             },
         }
-        token_values = tx._extract_token_values(payment_data)
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
+            return_value={"id": "ch_test"},
+        ):
+            token_values = tx._extract_token_values(payment_data)
         self.assertDictEqual(
             token_values,
             {
