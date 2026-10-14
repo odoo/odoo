@@ -321,6 +321,7 @@ class BusDispatcher(threading.Thread):
             selectors.DefaultSelector() as sel,
         ):
             cr.execute("listen imbus")
+            cr.execute("listen imbus_resubscribe")
             cr.commit()
             conn = cr._cnx
             sel.register(conn, selectors.EVENT_READ)
@@ -329,8 +330,21 @@ class BusDispatcher(threading.Thread):
                     continue
                 conn.poll()
                 channels_by_dbname = defaultdict(list)
+                last_by_resubscribe_channel_by_dbname = defaultdict(dict)
                 while conn.notifies:
-                    for channel in orjson.loads(conn.notifies.pop().payload):
+                    notify = conn.notifies.pop()
+                    if notify.channel == "imbus_resubscribe":
+                        try:
+                            for channel, last in orjson.loads(notify.payload):
+                                channel = tuplify(channel)
+                                last_by_channel = last_by_resubscribe_channel_by_dbname[channel[0]]
+                                last_by_channel[channel] = min(
+                                    last, last_by_channel.get(channel, last),
+                                )
+                        except (IndexError, TypeError, ValueError):
+                            _logger.warning("Bus: malformed imbus_resubscribe payload.")
+                        continue
+                    for channel in orjson.loads(notify.payload):
                         try:  # noqa: SIM105
                             channels_by_dbname[channel[0]].append(tuplify(channel))
                         except (IndexError, TypeError):
@@ -349,9 +363,28 @@ class BusDispatcher(threading.Thread):
                                 # be guaranteed.
                                 topic._state = DispatchState.DIRTY
                             # DIRTY and QUEUED: stay in that state.
+                for dbname, last_by_channel in last_by_resubscribe_channel_by_dbname.items():
+                    self._subscribe_again(dbname, last_by_channel)
 
     def run(self):
         self._run_with_retry(self._listener_loop, "Bus._listener_loop")
+
+    def _subscribe_again(self, dbname: str, last_by_channel: dict):
+        """Make the websockets of the given channels subscribe again, each new channel of
+        a websocket starting after the lowest ``last`` of its channels."""
+        last_by_websocket = {}
+        with self._lock_for_db(dbname):
+            for channel, last in last_by_channel.items():
+                if topic := self._topic_by_channel.get(channel):
+                    websockets = chain(
+                        topic._websockets, topic._waiting_room, topic._waiting_room_snapshot,
+                    )
+                    for websocket in websockets:
+                        last_by_websocket[websocket] = min(
+                            last, last_by_websocket.get(websocket, last),
+                        )
+        for websocket, last in last_by_websocket.items():
+            websocket.subscribe_again(last)
 
     def _worker_loop(self):
         while not stop_event.is_set():
