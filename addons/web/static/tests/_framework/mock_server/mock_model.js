@@ -834,7 +834,9 @@ function orderByField(model, orderBy, records) {
             }
         }
         let result;
-        if (v1 === false) {
+        if (v1 === false && v2 === false) {
+            result = 0;
+        } else if (v1 === false) {
             result = 1;
         } else if (v2 === false) {
             result = -1;
