@@ -1,5 +1,7 @@
 import re
-from stdnum.exceptions import InvalidFormat
+from stdnum.at import uid as at_vat
+from stdnum.at import tin as at_steuernummer
+from stdnum.exceptions import InvalidChecksum, InvalidFormat
 from odoo.tools import single_email_re
 
 NON_DIGIT_RE = re.compile(r'\D')
@@ -9,6 +11,8 @@ NL_KVK_RE = re.compile(r'\d{8}')
 NL_OIN_RE = re.compile(r'\d{20}')
 # TH Branch Code: 5-digit
 TH_BRANCH_CODE_RE = re.compile(r'\d{5}')
+# AT TIN: 9-digit
+AT_TIN_RE = re.compile(r'\d{9}')
 
 
 # ===========================================================
@@ -41,3 +45,19 @@ def validate_email(value):
     if not single_email_re.match(value):
         raise InvalidFormat()
     return value
+
+
+def at_steuernummer_validate(number):
+    """Check if the number is a valid tax identification number.
+    This checks the length (9 digits) and the verification digit.
+    We have to use this instead of stdnum.at tin validate because
+    it tries to import another one. (Can't open orphan path)"""
+    if (at_vat.is_valid(number)):  # temporary on stable (19.4)
+        return number
+    number = at_steuernummer.compact(number)
+    if not AT_TIN_RE.fullmatch(number):
+        raise InvalidFormat()
+    s = at_steuernummer.calc_check_digit(number)
+    if s != number[-1]:
+        raise InvalidChecksum()
+    return number
