@@ -1,16 +1,21 @@
 .o_accordion_toggle {
-    @include caret();
-
-    &.open {
-        @include caret('up');
-    }
-
+    /* Caret, positioned at the right of the toggle and pointing up when open */
     &::after {
+        content: "";
         position: absolute;
         top: 0;
         left: auto;
         bottom: auto;
         right: 0;
+        border-top: var(--o-bs-caret-width, .3em) solid;
+        border-right: var(--o-bs-caret-width, .3em) solid transparent;
+        border-bottom: 0;
+        border-left: var(--o-bs-caret-width, .3em) solid transparent;
         transform: translate(-0.6em, 0.8em) /*rtl:translate(0.6em, 0.8em) scaleX(-1)*/;
+    }
+
+    &.open::after {
+        border-top: 0;
+        border-bottom: var(--o-bs-caret-width, .3em) solid;
     }
 }
