@@ -1,5 +1,5 @@
 import * as hootDom from "@odoo/hoot-dom";
-import { enableEventLogs, setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
+import { _enableEventLogs, _setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { browser } from "@web/core/browser/browser";
 import { Macro } from "@web/core/macro";
 import { config as transitionConfig } from "@web/core/transition";
@@ -28,8 +28,8 @@ export class TourAutomatic {
     }
 
     start() {
-        setupEventActions(document.createElement("div"), { allowSubmit: true });
-        enableEventLogs(this.debugMode);
+        _setupEventActions(document.createElement("div"), { allowSubmit: true });
+        _enableEventLogs(this.debugMode);
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => step.actions);

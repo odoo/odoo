@@ -423,23 +423,6 @@ export function safeToString(value) {
     }
 }
 
-/**
- * @param {Node} node
- * @param {{ raw?: boolean }} [options]
- */
-export function toSelector(node, options) {
-    const tagName = getTag(node);
-    const id = node.id ? `#${node.id}` : "";
-    const classNames = node.classList
-        ? [...node.classList].map((className) => `.${className}`)
-        : [];
-    if (options?.raw) {
-        return { tagName, id, classNames };
-    } else {
-        return [tagName, id, ...classNames].join("");
-    }
-}
-
 export class HootDebugHelpers {
     /**
      * @param {...any} helpers

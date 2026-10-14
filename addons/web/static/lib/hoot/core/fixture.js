@@ -1,8 +1,8 @@
 /** @odoo-module */
 
 import { animationFrame } from "@odoo/hoot-dom";
-import { getActiveElement, getCurrentDimensions } from "@web/../lib/hoot-dom/helpers/dom";
-import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
+import { _getCurrentDimensions, getActiveElement } from "@web/../lib/hoot-dom/helpers/dom";
+import { _setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { HootError } from "../hoot_utils";
 import { subscribeToTransitionChange } from "../mock/animation";
 import { getViewPortHeight, getViewPortWidth } from "../mock/window";
@@ -80,7 +80,7 @@ export class FixtureManager {
                 this.currentFixture.show();
             }
 
-            const { width, height } = getCurrentDimensions();
+            const { width, height } = _getCurrentDimensions();
             if (width !== getViewPortWidth()) {
                 this.currentFixture.style.width = `${width}px`;
             }
@@ -160,7 +160,7 @@ export class HootFixtureElement extends HTMLElement {
     _iframes = new Map();
 
     connectedCallback() {
-        setupEventActions(this);
+        _setupEventActions(this);
         subscribeToTransitionChange((allowTransitions) =>
             this.classList.toggle(this.constructor.CLASSES.transitions, allowTransitions)
         );
@@ -197,7 +197,7 @@ export class HootFixtureElement extends HTMLElement {
             }
             this._iframes.set(iframe, waitForIframe(iframe));
             if (iframe.contentDocument) {
-                setupEventActions(iframe.contentWindow);
+                _setupEventActions(iframe.contentWindow);
             }
         }
         for (const iframe of toRemove) {

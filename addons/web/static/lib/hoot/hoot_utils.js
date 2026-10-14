@@ -2,7 +2,7 @@
 
 import { on, queryAll } from "@odoo/hoot-dom";
 import { t, useEffect, useListener, validateType } from "@odoo/owl";
-import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
+import { _isNode, _toSelector } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     isInstanceOf,
     isIterable,
@@ -10,7 +10,6 @@ import {
     parseRegExp,
     R_WHITE_SPACE,
     safeToString,
-    toSelector,
 } from "@web/../lib/hoot-dom/hoot_dom_utils";
 
 /**
@@ -119,7 +118,7 @@ const $writeText = $clipboard?.writeText.bind($clipboard);
 
 /** @type {number} */
 export const T_INTEGER = t.customValidator(t.number(), $isInteger, "value is not an integer");
-export const T_NODE = t.customValidator(t.object(), isNode, "value is not a node");
+export const T_NODE = t.customValidator(t.object(), _isNode, "value is not a node");
 export const T_REGEX = t.instanceOf(RegExp);
 /** @type {null} */
 export const T_NULL = t.literal(null);
@@ -236,7 +235,7 @@ function _deepCopy(value, cache) {
         if (isInstanceOf(value, String, Number, Boolean)) {
             return value;
         }
-        if (isNode(value)) {
+        if (_isNode(value)) {
             // Nodes
             return value.cloneNode(true);
         } else if (isInstanceOf(value, Date, RegExp)) {
@@ -285,8 +284,8 @@ function _deepEqual(a, b, ignoreOrder, partial, cache) {
     cache.add(a, b);
 
     // Nodes
-    if (isNode(a)) {
-        return isNode(b) && a.isEqualNode(b);
+    if (_isNode(a)) {
+        return _isNode(b) && a.isEqualNode(b);
     }
 
     // Files
@@ -396,8 +395,10 @@ function _formatHumanReadable(value, length, cache) {
     }
     cache.add(value);
 
-    if (isNode(value)) {
-        return value.nodeType === Node.ELEMENT_NODE ? `<${toSelector(value)}>` : toSelector(value);
+    if (_isNode(value)) {
+        return value.nodeType === Node.ELEMENT_NODE
+            ? `<${_toSelector(value)}>`
+            : _toSelector(value);
     }
 
     // Generic objects
@@ -409,7 +410,7 @@ function _formatHumanReadable(value, length, cache) {
     // Iterable objects
     if (isIterable(value)) {
         const values = [...value];
-        if (values.length === 1 && isNode(values[0])) {
+        if (values.length === 1 && _isNode(values[0])) {
             // Special case for single-element nodes arrays
             return _formatHumanReadable(values[0], length, cache);
         }
@@ -502,8 +503,10 @@ function _formatTechnical(value, depth, isObjectValue, cache) {
     }
     cache.add(value);
 
-    if (isNode(value)) {
-        return value.nodeType === Node.ELEMENT_NODE ? `<${toSelector(value)}>` : toSelector(value);
+    if (_isNode(value)) {
+        return value.nodeType === Node.ELEMENT_NODE
+            ? `<${_toSelector(value)}>`
+            : _toSelector(value);
     }
 
     const startIndent = " ".repeat((depth + 1) * 2);
@@ -1084,7 +1087,7 @@ export function getTypeOf(value) {
             if (isInstanceOf(value, Error)) {
                 return "error";
             }
-            if (isNode(value)) {
+            if (_isNode(value)) {
                 return "node";
             }
             if (isInstanceOf(value, RegExp)) {
@@ -1156,7 +1159,7 @@ export function isOfType(value, type) {
         case "integer":
             return $isInteger(value);
         case "node":
-            return isNode(value);
+            return _isNode(value);
         case "regex":
             return isInstanceOf(value, RegExp);
         case "url":
