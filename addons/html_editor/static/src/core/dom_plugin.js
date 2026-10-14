@@ -223,11 +223,26 @@ export class DomPlugin extends Plugin {
 
         let currentBlock;
         let shouldBreakLine = true;
-        for (const node of children) {
+        for (let i = 0; i < children.length; i++) {
+            const node = children[i];
             if (isBlock(node)) {
                 shouldBreakLine = true;
             } else if (!visibleNodes.has(node) && !this.dependencies.delete.isUnremovable(node)) {
+                // Unremovable descendants take the place of the removed node.
+                const unremovableDescendants = [];
+                for (const descendant of descendants(node)) {
+                    if (
+                        !unremovableDescendants.at(-1)?.contains(descendant) &&
+                        this.dependencies.delete.isUnremovable(descendant, { cascade: true })
+                    ) {
+                        cursors.update(callbacksForCursorUpdate.before(node, descendant));
+                        node.before(descendant);
+                        unremovableDescendants.push(descendant);
+                    }
+                }
                 removeNode(node, cursors);
+                // Handle them next, like any other child.
+                children.splice(i + 1, 0, ...unremovableDescendants);
             } else if (node.nodeName === "BR") {
                 if (shouldBreakLine) {
                     wrapInBlock(node, cursors);
