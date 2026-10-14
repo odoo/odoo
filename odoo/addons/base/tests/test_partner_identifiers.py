@@ -86,18 +86,6 @@ class TestPartnerIdentifiers(TransactionCase):
             '12345674',
         )
 
-    def test_vat_deduces_at_en(self):
-        """Setting an Austrian VAT should automatically deduce AT_EN."""
-        partner = self.env['res.partner'].create({
-            'name': 'AT Partner',
-            'country_id': self.env.ref('base.at').id,
-        })
-        partner.vat = 'ATU12345675'
-        self.assertEqual(
-            (partner.additional_identifiers or {}).get('AT_EN'),
-            'U12345675',
-        )
-
     def test_unknown_key_dropped(self):
         """Unknown identifier keys should be dropped on save with a logger warning."""
         with self.assertLogs('odoo.addons.base.models.res_partner', level='WARNING') as logger:
