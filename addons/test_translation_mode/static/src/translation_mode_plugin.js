@@ -31,7 +31,7 @@ function getLang() {
     if (!urlParams.lang) {
         const code = localization.code;
         if (code === "en_US") {
-            urlParams.lang = "en";
+            urlParams.lang = DEFAULT_LANG;
         } else {
             urlParams.lang = WEBLATE_LANG_MAPPING[code] || code;
         }
@@ -48,11 +48,10 @@ function getPxValue(style, property) {
 }
 
 /**
- * @param {string} source
- * @param {string} context
+ * @param {ContextualizedTranslation} translation
  */
-function getTranslationLink(source, context) {
-    const lang = getLang();
+function getTranslationLink({ context, isTranslated, source }) {
+    const lang = isTranslated ? getLang() : DEFAULT_LANG;
     const version = getVersion();
     if (!termHashes.has(source)) {
         termHashes.set(source, siphash(WEBLATE_SIPHASH_KEY, source));
@@ -151,7 +150,7 @@ class TranslationScanner {
                 for (const translation of positionTranslations) {
                     translationsBySources[translation.source] ||= {
                         targets: [],
-                        link: getTranslationLink(translation.source, translation.context),
+                        link: getTranslationLink(translation),
                         ...translation,
                     };
                     translationsBySources[translation.source].targets.push([el, position]);
@@ -298,6 +297,7 @@ class TranslationScanner {
 }
 
 const CAPTURE = { capture: true };
+const DEFAULT_LANG = "en";
 const IGNORE_SELECTOR = [`[data-translation-highlight]`].join(",");
 /**
  * !TODO: replace by a parser... JS does not support (?R) recursion in regexes so this is not possible
