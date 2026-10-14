@@ -15,20 +15,19 @@
             </t>
             <t t-foreach="this.buttonTypesData.slice(1)" t-as="opt" t-key="opt.type">
                 <BuilderSelectItem actionValue="opt.type" preview="opt.type !== 'custom'">
-                    <div class="d-flex gap-2">
-                        <div class="btn my-2" aria-hidden="true"
-                            t-attf-class="o_hb_button_style_preview btn-{{opt.type}} pe-none {{this.state.hasAlpha[opt.type] ? 'o_hb_has_alpha' : ''}}"
-                            t-att-style="this.state.buttonStyles[opt.type]">
-                            Aa
+                    <t t-call="html_builder.BuilderSelectItemEdit" editAction="opt.type === 'custom' ? false : this.getEditAction(opt.type)">
+                        <div class="d-flex gap-2">
+                            <div class="btn my-2" aria-hidden="true"
+                                t-attf-class="o_hb_button_style_preview btn-{{opt.type}} pe-none {{this.state.hasAlpha[opt.type] ? 'o_hb_has_alpha' : ''}}"
+                                t-att-style="this.state.buttonStyles[opt.type]">
+                                Aa
+                            </div>
+                            <div t-out="opt.label" class="my-2"/>
                         </div>
-                        <div t-out="opt.label" class="my-2"/>
-                    </div>
+                    </t>
                 </BuilderSelectItem>
             </t>
         </BuilderSelect>
-        <a class="oi oi-filled btn o_hb_theme_tab_link" data-icon="edit"
-            title="Edit color in Theme Tab"
-            t-on-click="this.goToThemeTab"/>
     </BuilderRow>
 
     <t t-if="this.state.currentButtonType === 'custom'">

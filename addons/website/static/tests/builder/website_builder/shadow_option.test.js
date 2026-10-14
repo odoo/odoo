@@ -1,8 +1,11 @@
 import { expect, test } from "@odoo/hoot";
+import { xml } from "@odoo/owl";
+import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
+    waitForThemeReveal,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -34,4 +37,24 @@ test("bootstrap shadow controls in the theme tab of website builder", async () =
         '/website/static/src/scss/options/user_values.scss {"box-shadow-color":"#FF0000"}',
         "asset reload",
     ]);
+});
+
+test("expands and highlights the shadow size that was edited", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<ShadowOption/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-label='Shadow'] .o_hb_select_toggle").click();
+    await contains(
+        ".o_popover .o_hb_select_dropdown_item:contains('Small') a.o_hb_theme_tab_link"
+    ).click();
+
+    await waitForThemeReveal();
+    expect(".o_hb_row[data-label='Small']").toHaveClass("o_hb_row_highlight");
+    expect(
+        ".o_hb_row[data-label='Small'] + .o_hb_collapse_content [data-label='Blur']"
+    ).toHaveCount(1);
 });

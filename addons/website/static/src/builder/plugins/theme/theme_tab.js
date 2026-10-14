@@ -10,16 +10,16 @@ export class ThemeTab extends Component {
         // optionsContainers: t.array().optional([]),
         colorPresetToShow: t.or([t.number(), t.literal(null)]).optional(),
         targetRowId: t.or([t.string(), t.literal(null)]).optional(),
-        targetContainerId: t.or([t.string(), t.literal(null)]).optional(),
     });
     contentRef = signal.ref();
 
     setup() {
         useOptionsSubEnv(() => [this.env.editor.document.body]);
         useSubEnv({
-            colorPresetToShow: this.props.colorPresetToShow,
-            targetRowId: this.props.targetRowId,
-            targetContainerId: this.props.targetContainerId,
+            themeReveal: {
+                colorPresetToShow: this.props.colorPresetToShow,
+                targetRowId: this.props.targetRowId,
+            },
         });
         this.state = proxy({
             fontsData: {},
