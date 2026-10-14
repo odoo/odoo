@@ -21,6 +21,12 @@ export class ScaleScreen extends Component {
         this.scale = this.pos.scale;
         this.scale.setErrorCallback(this.onError.bind(this));
         useSubEnv({ dialogData: { ...this.env.dialogData, close: this.close.bind(this) } });
+        this.pos.debounceUpdateCustomerDisplay();
+    }
+
+    async readWeight() {
+        await this.scale.readWeight();
+        this.pos.debounceUpdateCustomerDisplay();
     }
 
     confirm() {
@@ -32,6 +38,7 @@ export class ScaleScreen extends Component {
         this.props.close();
         this.scale.setErrorCallback(null);
         this.scale.product = null;
+        this.pos.debounceUpdateCustomerDisplay();
     }
 
     onError(message, isFatalError) {
