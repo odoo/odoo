@@ -478,7 +478,8 @@ class MailMessage(models.Model):
         if not isinstance(domain, Domain):
             domain = Domain.TRUE
         # Non-employee see only messages with a subtype and not internal
-        domain = self._get_search_domain_share() & domain
+        share_domain = self._get_search_domain_share()
+        domain = share_domain & domain
         self = self.sudo(False)  # noqa: PLW0642
 
         # searching for all messages or a subset of models
@@ -531,7 +532,10 @@ class MailMessage(models.Model):
             model_codomains |= codomain
 
         partner = self.env.user.partner_id
-        domain &= Domain.OR((
+        # The search domain is only used above to restrict the models and ids
+        # to check: the caller already filters on it, repeating it here would
+        # only duplicate its conditions in the final query.
+        return share_domain & Domain.OR((
             Domain('author_id', '=', partner.id),
             Domain('create_uid', '=', self.env.uid),
             # force an IN condition with a list of values
@@ -542,8 +546,6 @@ class MailMessage(models.Model):
             # complete from records-based domain).
             model_codomains & Domain('message_type', '!=', 'user_notification'),
         ))
-
-        return domain
 
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
