@@ -1193,6 +1193,38 @@ test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () 
     ]);
 });
 
+test("MediaDialog does not contain 'Videos' tab when sanitize = true and sanitize_tags = false", async () => {
+    class SanitizePartner extends models.Model {
+        _name = "sanitize.partner";
+
+        txt = fields.Html({ sanitize: true, sanitize_tags: false });
+        _records = [{ id: 1, txt: "<p>first sanitize</p>" }];
+    }
+
+    defineModels([SanitizePartner]);
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "sanitize.partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "/media");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
+
+    await press("Enter");
+    await animationFrame();
+    expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
+        "Images",
+        "Documents",
+        "Icons",
+    ]);
+});
+
 test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'disableVideo' = false", async () => {
     class SanitizePartner extends models.Model {
         _name = "sanitize.partner";
