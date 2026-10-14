@@ -8,7 +8,7 @@ const discussChannelPatch = {
         super.setup(...arguments);
         this.isDisplayedInDiscussAppDesktop = this.computed(() =>
             Boolean(
-                this.discussAppAsThread &&
+                (this.discussAppAsThread || this.discussAppAsSideChannel) &&
                     this.store.discuss.isActive &&
                     !this.store.env.services.ui.isSmall
             )

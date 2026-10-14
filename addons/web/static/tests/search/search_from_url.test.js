@@ -240,8 +240,8 @@ test("Good URL does not apply default filters", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([["state", "=", "sent"]]);
 });
 
-// TODO JESC Fix this after owl refactor
-test.todo("hotkey sharing available after dialog", async () => {
+test.tags("desktop");
+test("hotkey sharing available after dialog", async () => {
     defineActions([
         {
             id: 1,
@@ -286,7 +286,7 @@ test.todo("hotkey sharing available after dialog", async () => {
     await contains('button[name="2"]').click();
     await contains(".btn-close").click();
 
-    // The command should still be here (but isn't due to render issues)
+    // The command should still be here
     await press(["control", "k"]);
     await animationFrame();
     expect(queryAllTexts(".o_command_hotkey").some((key) => key.includes(SHARE_KEY))).toBe(true);

@@ -1,4 +1,4 @@
-import { Component, computed, proxy, signal, types, useOnChange } from "@odoo/owl";
+import { Component, computed, providePlugins, proxy, signal, types, useOnChange } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -12,6 +12,7 @@ import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
 import { propSignal } from "@mail/utils/common/hooks";
 import { computedShallowEqual } from "@mail/utils/common/signal";
+import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 
 export class DiscussContent extends Component {
     static components = {
@@ -30,14 +31,14 @@ export class DiscussContent extends Component {
         this.channel = propSignal("channel", types.instanceOf(this.store["discuss.channel"]), {
             optional: true,
         });
+        providePlugins([MessageHighlightPlugin], { thread: () => this.thread });
         this.ui = useService("ui");
         this.notification = useService("notification");
         this.rootRef = signal.ref(HTMLDivElement);
         this.threadAvatarRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
-        this.headerActionsList = computedShallowEqual(() => {
-            const partition = this.threadActions.partition;
-            return [partition.quick, partition.other, ...partition.group.slice().reverse()];
+        this.headerActionsList = computedShallowEqual(() => this.computeHeaderActionsList(), {
+            nested: true,
         });
         this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;
@@ -59,6 +60,12 @@ export class DiscussContent extends Component {
         if (memberListAction && this.store.discuss.isMemberPanelOpenByDefault) {
             memberListAction.actionPanelOpen();
         }
+    }
+
+    /** @returns {Array<import("@mail/core/common/thread_actions").ThreadAction[]>} */
+    computeHeaderActionsList() {
+        const partition = this.threadActions.partition;
+        return [partition.quick, partition.other, ...partition.group.slice().reverse()];
     }
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
