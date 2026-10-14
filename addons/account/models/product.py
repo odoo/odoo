@@ -158,8 +158,8 @@ class ProductTemplate(models.Model):
             chunk.invalidate_recordset(['supplier_taxes_id'])
 
     def _force_default_tax(self, companies):
-        self._force_default_sale_tax(companies)
-        self._force_default_purchase_tax(companies)
+        self.filtered(lambda p: p.sale_ok)._force_default_sale_tax(companies)
+        self.filtered(lambda p: p.purchase_ok)._force_default_purchase_tax(companies)
 
     @api.model_create_multi
     def create(self, vals_list):
