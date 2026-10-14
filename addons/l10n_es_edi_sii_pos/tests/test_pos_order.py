@@ -72,8 +72,8 @@ class TestL10nEsEdiSiiPosOrder(TestL10nEsEdiSiiPosCommon):
         self.assertEqual(len(closing_move), 1)
         self.assertEqual(closing_move.l10n_es_invoice_type, 'F4')
         ordered = orders.sorted('sequence_number')
-        self.assertEqual(closing_move.first_invoice, ordered[0].pos_reference)
-        self.assertEqual(closing_move.last_invoice, ordered[-1].pos_reference)
+        self.assertEqual(closing_move.first_invoice, ordered[0]._l10n_es_sii_get_ticket_name())
+        self.assertEqual(closing_move.last_invoice, ordered[-1]._l10n_es_sii_get_ticket_name())
 
     def test_closing_move_excludes_invoiced_orders(self):
         with self.with_pos_session():
@@ -82,8 +82,8 @@ class TestL10nEsEdiSiiPosOrder(TestL10nEsEdiSiiPosCommon):
             last = self._create_sale()
             self._create_sale(is_invoiced=True, customer=self.partner_b)
         closing_move = self.pos_session.sale_move_ids
-        self.assertEqual(closing_move.first_invoice, first.pos_reference)
-        self.assertEqual(closing_move.last_invoice, last.pos_reference)
+        self.assertEqual(closing_move.first_invoice, first._l10n_es_sii_get_ticket_name())
+        self.assertEqual(closing_move.last_invoice, last._l10n_es_sii_get_ticket_name())    
 
     def test_closing_move_payload_f4(self):
         with self.with_pos_session():

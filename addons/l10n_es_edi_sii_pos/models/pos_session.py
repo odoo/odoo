@@ -10,7 +10,7 @@ class PosSession(models.Model):
             sorted_orders = orders.sorted('sequence_number')
             move.write({
                 'l10n_es_invoice_type': 'F4',
-                'first_invoice': sorted_orders[0].pos_reference,
-                'last_invoice': sorted_orders[-1].pos_reference,
+                'first_invoice': sorted_orders[0]._l10n_es_sii_get_ticket_name(),
+                'last_invoice': sorted_orders[-1]._l10n_es_sii_get_ticket_name(),
             })
         return move

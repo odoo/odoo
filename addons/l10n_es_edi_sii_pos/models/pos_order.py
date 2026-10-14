@@ -18,7 +18,11 @@ class PosOrder(models.Model):
     @api.model
     def _l10n_es_refund_reason_selection(self):
         return self.env['account.move']._l10n_es_refund_reason_selection()
-    
+
+    def _l10n_es_sii_get_ticket_name(self):
+        self.ensure_one()
+        return f"{self.config_id.id}/{str(self.sequence_number).zfill(6)}"
+
     def _l10n_es_sii_prepare_refund(self):
         simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
         for order in self:
@@ -34,13 +38,8 @@ class PosOrder(models.Model):
         return action
 
     def _process_saved_order(self, draft):
-        if self.l10n_es_sii_required and self.refunded_order_id:
-            self.to_invoice = True
-            if not self.partner_id:
-                simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
-                if simplified_partner:
-                    self.partner_id = simplified_partner
-
+        self.ensure_one()
+        self._l10n_es_sii_prepare_refund()
         return super()._process_saved_order(draft)
 
     def _prepare_invoice_vals(self):
@@ -52,7 +51,7 @@ class PosOrder(models.Model):
             res['l10n_es_invoice_type'] = self.l10n_es_invoice_type
         elif self.refunded_order_id:
             simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
-            if simplified_partner and self.partner_id == simplified_partner:
+            if not self.partner_id or self.partner_id == simplified_partner:
                 res['l10n_es_invoice_type'] = 'R5'
 
         else:
