@@ -7,11 +7,6 @@
         <li t-if="company.income_tax_id and company.account_fiscal_country_id.code == 'SK'">
             Tax ID: <span t-field="company.income_tax_id"/>
         </li>
-        <li t-if="company.vat and company.account_fiscal_country_id.code == 'SK'">
-            <t t-set="default_vat_label">Tax ID</t>
-            <t t-out="company.country_id.vat_label or default_vat_label"/>:
-            <span t-out="company.vat"/>
-        </li>
     </template>
 
     <template id="l10n_sk_external_layout_standard" inherit_id="web.external_layout_standard">
@@ -57,11 +52,6 @@
             </div>
             <div t-if="company.income_tax_id and company.account_fiscal_country_id.code == 'SK'">
                 Tax ID: <span t-field="company.income_tax_id"/>
-            </div>
-            <div t-if="company.vat and company.account_fiscal_country_id.code == 'SK'">
-                <t t-set="default_vat_label">Tax ID</t>
-                <t t-out="company.country_id.vat_label or default_vat_label"/>:
-                <span t-out="company.vat"/>
             </div>
         </xpath>
     </template>
