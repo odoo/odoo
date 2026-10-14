@@ -52,7 +52,7 @@
         }
 
         .o_form_label:has(+ .o_outlined),
-        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label label,
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label:not(.o_property_folded) label,
         .o_inner_group:not(.oe_subtotal_footer) .o_wrap_label:has(+ .o_cell:not(.o_no_box)) .o_form_label {
             display: block !important;
             width: max-content !important;
@@ -75,7 +75,7 @@
         }
 
         .o_form_label:has(+ .o_outlined) *,
-        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label label *,
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label:not(.o_property_folded) label *,
         .o_inner_group:not(.oe_subtotal_footer) .o_wrap_label:has(+ .o_cell:not(.o_no_box)) .o_form_label * {
             color: inherit !important;
             font-size: inherit !important;
@@ -84,7 +84,7 @@
         }
 
         .o_form_label:has(+ .o_outlined) sup,
-        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label label sup,
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label:not(.o_property_folded) label sup,
         .o_inner_group:not(.oe_subtotal_footer) .o_wrap_label:has(+ .o_cell:not(.o_no_box)) .o_form_label sup {
             color: var(--o-action) !important;
             position: static;
