@@ -2626,6 +2626,10 @@ class AccountEdiUBL(models.AbstractModel):
             first_line = group[0]
             total_excluded_currency = sum(bl['tax_details']['total_excluded_currency'] for bl in group)
 
+            tax_details = first_line['tax_details']
+            for base_line in group[1:]:
+                tax_details = AccountTax._merge_tax_details(tax_details, base_line['tax_details'])
+
             collapsed_line = AccountTax._prepare_base_line_for_taxes_computation(
                 first_line['record'],
                 quantity=1.0,
@@ -2633,14 +2637,13 @@ class AccountEdiUBL(models.AbstractModel):
                 discount=0.0,
                 tax_ids=first_line['tax_ids'],
                 currency_id=first_line['currency_id'],
+                tax_details=tax_details,
             )
             collapsed_line.update({
                 'name': section.name,
                 '_line_name': section.name,
                 'product_id': self.env['product.product'],
             })
-            AccountTax._add_tax_details_in_base_lines([collapsed_line], invoice.company_id)
-            AccountTax._round_base_lines_tax_details([collapsed_line], invoice.company_id)
             return collapsed_line
 
         def _get_collapsed_section_line_ids(invoice, base_lines):

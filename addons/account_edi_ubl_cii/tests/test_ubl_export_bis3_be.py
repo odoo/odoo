@@ -1005,6 +1005,25 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_as_invoice_lines')
 
+    def test_export_collapsed_sections_amounts(self):
+        """ Test that the amounts of collapsed sections are correctly exported. """
+        tax_21 = self.percent_tax(21.0)
+        for rounding_method, sections in (
+            ('round_globally', [[(10.03, tax_21)], [(10.03, tax_21)]]),
+            ('round_per_line', [[(10.03, tax_21), (10.03, tax_21)]]),
+        ):
+            self.env.company.tax_calculation_rounding_method = rounding_method
+            invoice_line_ids = []
+            for index, lines in enumerate(sections):
+                invoice_line_ids.append(self._prepare_invoice_line(name=f"Section {index}", display_type='line_section', collapse_composition=True, price_unit=0.0))
+                invoice_line_ids += [self._prepare_invoice_line(product_id=self.product_a, price_unit=price_unit, tax_ids=tax) for price_unit, tax in lines]
+            invoice = self._create_invoice(partner_id=self.partner_be, invoice_line_ids=invoice_line_ids, post=True)
+
+            xml_tree = etree.fromstring(self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0])
+            self.assertEqual(float(xml_tree.findtext('./{*}TaxTotal/{*}TaxAmount')), invoice.amount_tax)
+            self.assertEqual(float(xml_tree.findtext('./{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')), invoice.amount_untaxed)
+            self.assertEqual(float(xml_tree.findtext('./{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')), invoice.amount_total)
+
     def test_invoice_tax_subtotal_exempt_amount(self):
         """ Test that the taxable amount for exempt taxes is correctly computed,
         regardless of the tax calculation rounding method.
