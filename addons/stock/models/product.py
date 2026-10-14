@@ -932,7 +932,7 @@ class ProductTemplate(models.Model):
     def _compute_has_available_route_ids(self):
         self.has_available_route_ids = self.env['stock.route'].search_count([('product_selectable', '=', True)])
 
-    @api.depends('product_variant_count', 'tracking')
+    @api.depends('product_variant_count', 'tracking', 'store_by')
     def _compute_show_qty_update_button(self):
         for product in self:
             product.show_qty_update_button = (
@@ -1203,6 +1203,7 @@ class ProductTemplate(models.Model):
         return (
             any(self.env.user.has_group(g) for g in advanced_option_groups)
             or bool(self.tracking)
+            or self.store_by in ['lot', 'serial']
         )
 
     # Be aware that the exact same function exists in product.product
