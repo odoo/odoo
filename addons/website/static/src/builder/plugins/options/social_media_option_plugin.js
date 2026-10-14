@@ -151,7 +151,7 @@ export class SocialMediaOptionPlugin extends Plugin {
             { selector: ".s_share > a > *", target: ".s_share" },
         ],
         replace_media_dialog_params_processors: this.applyMediaDialogParams.bind(this),
-        immutable_link_selectors: [".s_share a"],
+        properties: { predicate: ".s_share a", immutableLink: true },
     };
 
     async onSnippetDropped({ snippetEl }) {
