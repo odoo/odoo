@@ -155,7 +155,11 @@
         color: $input-color;
         border: 0px;
         appearance: none;
-        @include transition($input-transition);
+        transition: var(--o-bs-input-transition);
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
 
         &:focus {
             outline: none; /* remove default blue outline */
