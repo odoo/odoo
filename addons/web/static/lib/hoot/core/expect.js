@@ -16,6 +16,7 @@ import {
     getActiveElement,
     queryRect,
 } from "@web/../lib/hoot-dom/helpers/dom";
+import { _getDefaultWaitTimeout } from "@web/../lib/hoot-dom/helpers/time";
 import {
     addInteractionListener,
     getColorHex,
@@ -474,8 +475,6 @@ const LABEL_EXPECTED = "Expected:";
 const LABEL_RECEIVED = "Received:";
 /** @type {CaseEventType[]} */
 const CASE_EVENT_LOG_COLORS = ["assertion", "query", "step", "time"];
-// Time waitForSteps and waitForErrors give the steps and errors to arrive.
-const DEFAULT_WAIT_TIMEOUT = 10000;
 const MAX_STACK_LENGTH = 10;
 
 /** @type {WeakMap<any, any>} */
@@ -910,8 +909,8 @@ export function makeExpect(params) {
 
     /**
      * Same as {@link verifyErrors}, but will not immediatly fail if errors are
-     * not caught yet, and will instead wait for a certain timeout (default: 10000ms)
-     * to allow errors to be caught later.
+     * not caught yet, and will instead wait for a certain timeout (see
+     * `waitUntil`) to allow errors to be caught later.
      *
      * Checks are performed initially, at the end of the timeout, and each time
      * an error is detected.
@@ -950,7 +949,7 @@ export function makeExpect(params) {
             {
                 timeout: setTimeout(
                     () => checkErrors(currentResult.errorResolver, true),
-                    options?.timeout ?? DEFAULT_WAIT_TIMEOUT
+                    options?.timeout ?? _getDefaultWaitTimeout()
                 ),
             },
             Promise.withResolvers()
@@ -960,8 +959,8 @@ export function makeExpect(params) {
 
     /**
      * Same as {@link verifySteps}, but will not immediatly fail if steps have not
-     * been registered yet, and will instead wait for a certain timeout (default:
-     * 10000ms) to allow steps to be registered later.
+     * been registered yet, and will instead wait for a certain timeout (see
+     * `waitUntil`) to allow steps to be registered later.
      *
      * Checks are performed initially, at the end of the timeout, and each time
      * a step is registered.
@@ -1000,7 +999,7 @@ export function makeExpect(params) {
             {
                 timeout: setTimeout(
                     () => checkSteps(currentResult.stepResolver, true),
-                    options?.timeout ?? DEFAULT_WAIT_TIMEOUT
+                    options?.timeout ?? _getDefaultWaitTimeout()
                 ),
             },
             Promise.withResolvers()
