@@ -7,7 +7,28 @@
         --bs-bg-opacity: 1;
         background-color: rgba(25, 135, 84, var(--bs-bg-opacity)) !important;
     }
-    .o_kanban_group {
-        @include o-kanban-css-filter(success-done, rgba(25, 135, 84, 1));
+    .o_kanban_group.o_kanban_group_show_success-done {
+        --KanbanGroup-accent-color: rgba(25, 135, 84, 1);
+        --KanbanGroup-background: color-mix(in srgb, var(--KanbanGroup-accent-color) 5%, var(--o-kanban-background));
+
+        outline: var(--border-width) solid var(--o-view-background-color);
+        box-shadow: inset 2px 0 0 var(--KanbanGroup-accent-color), inset -2px 0 0 var(--KanbanGroup-accent-color);
+
+        .oe_kanban_card_success-done {
+            order: 1;
+        }
+
+        .o_kanban_load_more {
+            order: 2;
+        }
+
+        .o_kanban_record:not(.oe_kanban_card_success-done) {
+            order: 3;
+            opacity: 0.5;
+
+            &:hover, &:focus, &.focus {
+                opacity: 1;
+            }
+        }
     }
 }

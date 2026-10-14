@@ -1,38 +1,63 @@
-@mixin o-kanban-css-filter($class, $accent-color) {
-    /* Provide CSS reordering and highlight */
-    &.o_kanban_group_show_#{$class} {
-        --KanbanGroup-background: #{mix($accent-color, $o-kanban-background, 5%)};
-
-        outline: var(--border-width) solid var(--o-view-background-color);
-        box-shadow: inset 2px 0 0 $accent-color, inset -2px 0 0 $accent-color;
-
-        .oe_kanban_card_#{$class} {
-            order: 1;
-        }
-
-        .o_kanban_load_more {
-            order: 2;
-        }
-
-        .o_kanban_record:not(.oe_kanban_card_#{$class}) {
-            order: 3;
-            @include o-hover-opacity(0.5);
-        }
-    }
-}
-
 .o_kanban_renderer {
 
     .o_kanban_counter {
         transition: opacity 0.3s ease 0s;
     }
 
+    /* Provide CSS reordering and highlight */
     .o_kanban_group {
-        @include o-kanban-css-filter(success, map-get($theme-colors, "success"));
-        @include o-kanban-css-filter(warning, map-get($theme-colors, "warning"));
-        @include o-kanban-css-filter(danger, map-get($theme-colors, "danger"));
-        @include o-kanban-css-filter(muted, map-get($theme-colors, "dark"));
-        @include o-kanban-css-filter(info, map-get($theme-colors, "info"));
-        @include o-kanban-css-filter(purple, purple);
+        &.o_kanban_group_show_success {
+            --KanbanGroup-accent-color: var(--success);
+        }
+        &.o_kanban_group_show_warning {
+            --KanbanGroup-accent-color: var(--warning);
+        }
+        &.o_kanban_group_show_danger {
+            --KanbanGroup-accent-color: var(--danger);
+        }
+        &.o_kanban_group_show_muted {
+            --KanbanGroup-accent-color: var(--dark);
+        }
+        &.o_kanban_group_show_info {
+            --KanbanGroup-accent-color: var(--info);
+        }
+        &.o_kanban_group_show_purple {
+            --KanbanGroup-accent-color: purple;
+        }
+
+        &:is(.o_kanban_group_show_success, .o_kanban_group_show_warning, .o_kanban_group_show_danger,
+             .o_kanban_group_show_muted, .o_kanban_group_show_info, .o_kanban_group_show_purple) {
+            --KanbanGroup-background: color-mix(in srgb, var(--KanbanGroup-accent-color) 5%, var(--o-kanban-background));
+
+            outline: var(--border-width) solid var(--o-view-background-color);
+            box-shadow: inset 2px 0 0 var(--KanbanGroup-accent-color), inset -2px 0 0 var(--KanbanGroup-accent-color);
+
+            .o_kanban_load_more {
+                order: 2;
+            }
+        }
+
+        &.o_kanban_group_show_success .oe_kanban_card_success,
+        &.o_kanban_group_show_warning .oe_kanban_card_warning,
+        &.o_kanban_group_show_danger .oe_kanban_card_danger,
+        &.o_kanban_group_show_muted .oe_kanban_card_muted,
+        &.o_kanban_group_show_info .oe_kanban_card_info,
+        &.o_kanban_group_show_purple .oe_kanban_card_purple {
+            order: 1;
+        }
+
+        &.o_kanban_group_show_success .o_kanban_record:not(.oe_kanban_card_success),
+        &.o_kanban_group_show_warning .o_kanban_record:not(.oe_kanban_card_warning),
+        &.o_kanban_group_show_danger .o_kanban_record:not(.oe_kanban_card_danger),
+        &.o_kanban_group_show_muted .o_kanban_record:not(.oe_kanban_card_muted),
+        &.o_kanban_group_show_info .o_kanban_record:not(.oe_kanban_card_info),
+        &.o_kanban_group_show_purple .o_kanban_record:not(.oe_kanban_card_purple) {
+            order: 3;
+            opacity: 0.5;
+
+            &:hover, &:focus, &.focus {
+                opacity: 1;
+            }
+        }
     }
 }
