@@ -41,7 +41,8 @@
     .caption {
 
         a {
-            @include o-hover-text-color($default-color: $o-main-text-color, $hover-color: $headings-color);
+            --o-hover-text-color: var(--o-main-text-color);
+            --o-hover-text-color--hover: var(--o-bs-headings-color);
         }
     }
 

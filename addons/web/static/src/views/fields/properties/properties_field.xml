@@ -18,11 +18,11 @@
                             <span t-if="propertiesListGroup.title" t-out="propertiesListGroup.title"/>
                             <i
                                 t-if="this.state.isInEditMode and !propertiesListGroup.columnSeparator"
-                                class="o_field_property_open_popover oi oi-filled ms-3"
+                                class="o_field_property_open_popover o_hover_text_color oi oi-filled ms-3"
                                 data-icon="edit"
                                 t-on-click.prevent.stop="(event) => this.onPropertyEdit(event, propertiesListGroup.name)"/>
                             <i t-if="this.state.isInEditMode"
-                                class="oi ms-1 d-none d-sm-block" data-icon="drag_indicator"/>
+                                class="o_hover_text_color oi ms-1 d-none d-sm-block" data-icon="drag_indicator"/>
                         </div>
                     </div>
                     <div
@@ -51,11 +51,11 @@
                             </i>
                             <i
                                 t-if="this.state.isInEditMode"
-                                class="o_field_property_open_popover oi oi-filled ms-2"
+                                class="o_field_property_open_popover o_hover_text_color oi oi-filled ms-2"
                                 data-icon="edit"
                                 t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
                             <i t-if="this.state.isInEditMode"
-                                class="oi ms-1 d-none d-sm-block mt-1" data-icon="drag_indicator"/>
+                                class="o_hover_text_color oi ms-1 d-none d-sm-block mt-1" data-icon="drag_indicator"/>
                         </label>
                         <div class="o_property_field_value d-flex w-100">
                             <div class="w-100">
