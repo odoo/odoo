@@ -33,13 +33,10 @@ class OverlayItem extends Component {
             },
         });
 
-        const app = this.__owl__.app;
-        const root = app.createRoot(this.props.component, {
-            props: this.props.props,
-            env: this.__owl__.childEnv,
+        this.state = useState({ showOverlay: false });
+        onMounted(() => {
+            this.state.showOverlay = true;
         });
-        onMounted(() => root.mount(this.rootRef.el));
-        onWillDestroy(() => root.destroy());
     }
 
     get subOverlays() {
