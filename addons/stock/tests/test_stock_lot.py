@@ -9,11 +9,11 @@ from odoo.exceptions import ValidationError
 
 class TestLotSerial(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -332,7 +332,7 @@ class TestLotSerial(TestStockCommon):
     def test_lot_search_partner_ids(self):
         """Test that the correct lots show when doing searches based on partner_ids"""
         # create everything from scratch to avoid test failures due to demo data/test setup changes
-        lot_location = self.env['stock.location'].create({
+        lot_location = self.env['stock.location'].sudo().create({
             'name': 'Test Lots Only',
             'usage': 'internal',
         })

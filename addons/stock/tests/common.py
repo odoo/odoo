@@ -39,10 +39,10 @@ class TestStockCommon(ProductVariantsCommon):
     in the future, stock tests will be using a dedicated set of test data.
     """
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User'
 
     def _create_move(self, product, src_location, dst_location, **values):
         # TDE FIXME: user as parameter

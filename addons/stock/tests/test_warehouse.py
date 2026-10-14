@@ -2,23 +2,18 @@
 
 from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests import tagged, Form
-from odoo.tests.common import new_test_user
+from odoo.tests import tagged, Form, users
 
 
 @tagged('-post_install', 'at_install')  # test_resupply_route breaks post install
 class TestWarehouse(TestStockCommon):
 
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',  # FIXME: use base.group_stock_user
-        # FIXME: warehouse configuration writes res.groups (base.group_user.implied_ids)
-        # without sudo in stock.warehouse._check_multiwarehouse_group (stock/models/
-        # stock_warehouse.py) and creates res.company for multi-company scenarios.
-        'base.group_erp_manager',
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Stock & Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def test_inventory_product(self):
         self.product_1.is_storable = True
@@ -83,8 +78,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(quant.location_id, self.stock_location)
 
     def test_basic_move(self):
-        self.user_stock_manager.group_ids += self.env.ref("product.group_product_manager")
-        product = self.product_3.with_user(self.user_stock_manager)
+        product = self.product_3
         product.is_storable = True
         picking_out = self.env['stock.picking'].create({
             'partner_id': self.partner_1.id,
@@ -235,7 +229,7 @@ class TestWarehouse(TestStockCommon):
             'code': 'STK',
         })
 
-        distribution_partner = self.env['res.partner'].create({'name': 'Distribution Center'})
+        distribution_partner = self.env['res.partner'].sudo().create({'name': 'Distribution Center'})
         warehouse_distribution = self.env['stock.warehouse'].sudo().create({
             'name': 'Dist.',
             'code': 'DIST',
@@ -447,10 +441,12 @@ class TestWarehouse(TestStockCommon):
         # Ensure there still no quants in distribution warehouse
         self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id).mapped('quantity')), 0)
 
+    @users('julie')
     def test_add_resupply_warehouse_one_by_one(self):
         """ Checks that selecting a warehouse as a resupply warehouse one after another correctly sets the routes as well.
         """
-        warehouse_A, warehouse_B, warehouse_C = self.env['stock.warehouse'].sudo().create([{
+        self.group_user.sudo().implied_ids += self.env.ref('stock.group_stock_multi_warehouses')
+        warehouse_A, warehouse_B, warehouse_C = self.env['stock.warehouse'].create([{
             'name': code,
             'code': code,
         } for code in ['WH_A', 'WH_B', 'WH_C']])
@@ -466,14 +462,16 @@ class TestWarehouse(TestStockCommon):
             {'supplier_wh_id': warehouse_C.id},
         ])
 
+    @users('julie')
     def test_toggle_resupply_warehouse(self):
         """ Checks that selecting then unselecting a warehouse as resupply correctly archives/unarchives the related route.
         """
-        warehouse_A = self.env['stock.warehouse'].sudo().create({
+        self.group_user.sudo().implied_ids += self.env.ref('stock.group_stock_multi_warehouses')
+        warehouse_A = self.env['stock.warehouse'].create({
             'name': 'Warehouse A',
             'code': 'WH_A',
         })
-        warehouse_B = self.env['stock.warehouse'].sudo().create({
+        warehouse_B = self.env['stock.warehouse'].create({
             'name': 'Warehouse B',
             'code': 'WH_B',
             'resupply_wh_ids': [Command.set(warehouse_A.ids)],
@@ -550,14 +548,16 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_3, warehouse_A.lot_stock_id), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_3, warehouse_B.lot_stock_id), 1)
 
+    @users('julie')
     def test_change_delivery_step_resupply_warehouse(self):
         """ Verifies that when changing the delivery steps of a warehouse, it correctly edits the rules to initiate the resupply.
         """
-        warehouse_A = self.env['stock.warehouse'].sudo().create({
+        self.group_user.sudo().implied_ids += self.env.ref('stock.group_stock_multi_warehouses')
+        warehouse_A = self.env['stock.warehouse'].create({
             'name': 'Warehouse X',
             'code': 'WH_X',
         })
-        warehouse_B = self.env['stock.warehouse'].sudo().create({
+        warehouse_B = self.env['stock.warehouse'].create({
             'name': 'Warehouse Y',
             'code': 'WH_Y',
             'resupply_wh_ids': [Command.link(warehouse_A.id)],
@@ -587,8 +587,8 @@ class TestWarehouse(TestStockCommon):
 
     def test_noleak(self):
         # non-regression test to avoid company_id leaking to other warehouses (see blame)
-        partner = self.env['res.partner'].create({'name': 'Chicago partner'})
-        company = self.env['res.company'].create({
+        partner = self.env['res.partner'].sudo().create({'name': 'Chicago partner'})
+        company = self.env['res.company'].sudo().create({
             'name': 'My Company (Chicago)1',
             'currency_id': self.ref('base.USD')
         })
@@ -606,7 +606,7 @@ class TestWarehouse(TestStockCommon):
 
         companies_before = wh.mapped(lambda w: (w.id, w.company_id))
         # writing on any field should change the company of warehouses
-        wh.name = "whatever"
+        wh.sudo().name = "whatever"
         companies_after = wh.mapped(lambda w: (w.id, w.company_id))
 
         self.assertEqual(companies_after, companies_before)
@@ -615,7 +615,7 @@ class TestWarehouse(TestStockCommon):
         """If the company does not have any warehouse yet, the storage locations activation
         warning should not be shown when creating its first warehouse.
         """
-        self.group_user.implied_ids = [Command.unlink(self.ref('stock.group_stock_multi_locations'))]
+        self.group_user.sudo().implied_ids = [Command.unlink(self.ref('stock.group_stock_multi_locations'))]
         Warehouse = self.env['stock.warehouse']
         # default company of the user (My Company), but not active in self.env
         main_company = self.env.user.company_id
@@ -625,16 +625,17 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(Warehouse.new({'company_id': main_company.id})._onchange_company_id())
 
         # The main company has no warehouse anymore: no warning should be raised.
-        Warehouse.with_company(main_company).search([('company_id', '=', main_company.id)], limit=1).action_archive()
+        Warehouse.with_company(main_company).search([('company_id', '=', main_company.id)], limit=1).sudo().action_archive()
         self.assertTrue(Warehouse.new()._onchange_company_id())
         self.assertFalse(Warehouse.new({'company_id': main_company.id})._onchange_company_id())
 
+    @users('julie')
     def test_toggle_active_warehouse_1(self):
         """ Basic test that create a warehouse with classic configuration.
         Archive it and check that locations, picking types, routes, rules are
         correclty active or archive.
         """
-        wh = Form(self.env['stock.warehouse'])
+        wh = Form(self.env['stock.warehouse'].sudo())
         wh.name = "The attic of Willy"
         wh.code = "WIL"
         warehouse = wh.save()
@@ -692,10 +693,11 @@ class TestWarehouse(TestStockCommon):
         self.assertFalse(warehouse.pick_type_id.active)
         self.assertFalse(warehouse.pack_type_id.active)
 
+    @users('julie')
     def test_toggle_active_warehouse_2(self):
         # Required for `delivery_steps` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_adv_location')
-        wh = Form(self.env['stock.warehouse'])
+        wh = Form(self.env['stock.warehouse'].sudo())
         wh.name = "The attic of Willy"
         wh.code = "WIL"
         wh.reception_steps = "two_steps"
@@ -771,7 +773,9 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(warehouse.pick_type_id.active)
         self.assertTrue(warehouse.pack_type_id.active)
 
+    @users('julie')
     def test_edit_warehouse_1(self):
+        self.group_user.sudo().implied_ids += self.env.ref('stock.group_stock_multi_warehouses')
         wh = Form(self.env['stock.warehouse'])
         wh.name = "Chicago"
         wh.code = "chic"
@@ -793,18 +797,20 @@ class TestWarehouse(TestStockCommon):
         # Updating warehouse partner should also update resupply rule push_domain
         warehouse.partner_id = self.partner_1
         self.assertIn(f'("partner_id", "in", [{self.partner_1.id}])', rule_to_wh.push_domain)
-        self.warehouse_1.partner_id = previous_address
+        self.warehouse_1.with_user(self.env.user).partner_id = previous_address
         self.assertEqual(rule_to_wh.partner_address_id, previous_address)
 
+    @users('julie')
     def test_location_warehouse(self):
         """ Check that the closest warehouse is selected
         in a warehouse within warehouse situation
         """
-        wh = self.env['stock.warehouse'].sudo().create({
+        self.group_user.sudo().implied_ids += self.env.ref('stock.group_stock_multi_warehouses')
+        wh = self.env['stock.warehouse'].create({
             'name': 'Main Test Warehouse',
             'code': 'MTWH',
         })
-        test_warehouse = self.warehouse_1
+        test_warehouse = self.warehouse_1.with_user(self.env.user)
         location = test_warehouse.lot_stock_id
         self.assertEqual(location.warehouse_id, test_warehouse)
 
@@ -857,7 +863,7 @@ class TestWarehouse(TestStockCommon):
         Check the pickings of the multi-step routes are correctly generated
         in multi-company set up.
         """
-        companies = self.env['res.company'].create([
+        companies = self.env['res.company'].sudo().create([
             {'name': 'COMP1'},
             {'name': 'COMP2'},
         ])
@@ -876,8 +882,7 @@ class TestWarehouse(TestStockCommon):
         ])
         warehouse = warehouses[0]
         warehouse.delivery_steps = 'pick_ship'
-        user = new_test_user(self.env, login='bub', groups='stock.group_stock_user', company_id=companies.ids[1], company_ids=[Command.set(companies.ids)])
-        pick = self.env['stock.picking'].with_context(allowed_company_ids=companies.ids).with_user(user).create({
+        pick = self.env['stock.picking'].with_context(allowed_company_ids=companies.ids).create({
             'partner_id': self.partner_1.id,
             'picking_type_id': warehouse.pick_type_id.id,
             'location_id': warehouse.lot_stock_id.id,
@@ -892,21 +897,23 @@ class TestWarehouse(TestStockCommon):
                 'location_dest_id': warehouse.wh_output_stock_loc_id.id,
             })]
         })
-        pick.with_user(user).action_confirm()
-        pick.with_user(user).button_validate()
+        pick.action_confirm()
+        pick.button_validate()
         ship = pick.move_ids.move_dest_ids
         self.assertRecordValues(ship, [{
             'picking_type_id': warehouse.out_type_id.id, 'company_id': companies.ids[0], 'location_id': warehouse.wh_output_stock_loc_id.id,
         }])
 
+    @users('julie')
     def test_sequence_preservation_on_step_change(self):
         out_type = self.warehouse_1.out_type_id
         sequence = out_type.sequence_id
         end_of_prefix = 'LOREM/'
         sequence.sudo().prefix += end_of_prefix
-        self.warehouse_1.delivery_steps = 'pick_ship'
+        self.warehouse_1.with_user(self.env.user).delivery_steps = 'pick_ship'
         self.assertTrue(sequence.prefix.endswith(end_of_prefix))
 
+    @users('julie')
     def test_modified_global_route(self):
         """ Ensure that _find_or_create_global_route, if called multiple time, only creates the route once
 
@@ -914,14 +921,14 @@ class TestWarehouse(TestStockCommon):
           then the system would create multiple duplicates with the new name when creating a new warehouse;
           one duplicate for each call _find_or_create_global_route.
         """
-        company_2 = self.env["res.company"].create({"name": "Company 2"})
+        company_2 = self.env["res.company"].sudo().create({"name": "Company 2"})
         self.env.user.sudo().company_ids += company_2
 
         mto_route = self.warehouse_1.mto_pull_id.route_id
         mto_route.sudo().rule_ids.unlink()  # Quick patch to be able to set a company on the route
-        mto_route.write({"name": "New Name (MTO)", "company_id": self.warehouse_1.company_id.id})
+        mto_route.with_user(self.env.user).write({"name": "New Name (MTO)", "company_id": self.warehouse_1.company_id.id})
 
-        self.env["stock.warehouse"].with_company(company_2).create({"name": "Warehouse 2", "code": "2"})
+        self.env["stock.warehouse"].sudo().with_company(company_2).create({"name": "Warehouse 2", "code": "2"})
 
         route_sudo = self.env["stock.route"].sudo().with_context(active_test=False)
         renamed_route_count = route_sudo.search_count([("name", "=", "New Name (MTO)")])
@@ -931,6 +938,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(len(new_mto_route), 1)
         self.assertEqual(new_mto_route.company_id.id, company_2.id)
 
+    @users('julie')
     def test_search_qty_to_order_of_0(self):
         """
         Test that searching for orderpoints on `qty_to_order` with value = 0 for different operators
@@ -980,11 +988,11 @@ class TestWarehouse(TestStockCommon):
 @tagged('-at_install', 'post_install')
 class TestWarehousePostInstall(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def test_manual_resupply_from_wh_partner_propagation(self):
         """

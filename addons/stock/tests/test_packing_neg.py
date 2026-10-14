@@ -9,11 +9,11 @@ from odoo.addons.stock.tests.test_packing import TestPackingCommon
 class TestPackingNeg(TestPackingCommon):
 
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
+        'product.group_product_manager',
         'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def test_packing_neg(self):
         partner_2 = self.env['res.partner'].sudo().create({
