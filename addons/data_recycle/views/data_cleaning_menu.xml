@@ -14,6 +14,14 @@
             sequence="10"/>
 
         <menuitem
+            id="menu_data_recycle_trash_record"
+            name="Deleted Records"
+            parent="menu_data_cleaning_root"
+            action="action_data_recycle_trash_record"
+            groups="base.group_system"
+            sequence="20"/>
+
+        <menuitem
             id="menu_data_cleaning_config"
             name="Configuration"
             parent="menu_data_cleaning_root"
@@ -31,4 +39,12 @@
                     parent="menu_data_cleaning_config_rules"
                     action="action_data_recycle_config"
                     sequence="10"/>
+
+                <menuitem
+                    id="menu_data_cleaning_config_rules_trash"
+                    name="Trash"
+                    parent="menu_data_cleaning_config_rules"
+                    action="action_data_recycle_trash_config"
+                    groups="base.group_system"
+                    sequence="20"/>
 </odoo>
