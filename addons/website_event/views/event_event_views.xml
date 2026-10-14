@@ -87,17 +87,22 @@
             <xpath expr="//kanban" position="inside">
                 <field name="cover_image_url"/>
             </xpath>
-            <xpath expr="//aside" position="before">
+            <xpath expr="//t[@t-set='date_parts_order']" position="after">
                 <t t-set="has_cover" t-value="!!record.cover_image_url.raw_value"/>
             </xpath>
-            <xpath expr="//aside/div" position="before">
-                <img t-if="has_cover" t-att-src="record.cover_image_url.raw_value" class="position-absolute top-0 start-0 w-100 object-fit-cover" t-att-alt="record.name.value"/>
-                <span class="position-absolute top-0 start-0 w-100 bg-black bg-opacity-25"/>
+            <xpath expr="//div[hasclass('o_event_card_main')]" position="before">
+                <div class="o_event_card_banner position-relative pb-5 pt-4 rounded-bottom-0 overflow-hidden" t-att-class="has_cover ? 'bg-black' : 'bg-400 bg-gradient'">
+                    <img t-if="has_cover" t-att-src="record.cover_image_url.raw_value" class="position-absolute start-0 top-0 w-100 h-100 object-fit-cover opacity-75" t-att-alt="record.name.value"/>
+                </div>
             </xpath>
+            <xpath expr="//div[hasclass('o_event_card_calendar')]" position="attributes">
+                <attribute name="class" add="translate-middle-y" separator=" "/>
+            </xpath>
+            <!--
             <xpath expr="//aside/div" position="attributes">
                 <attribute name="class" remove="text-bg-600" separator=" "/>
                 <attribute name="t-att-class">has_cover ? '' : 'text-bg-600'</attribute>
-            </xpath>
+            </xpath> -->
         </field>
     </record>
 

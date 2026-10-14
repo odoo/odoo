@@ -234,50 +234,15 @@
                 <field name="date_begin"/>
                 <field name="date_end"/>
                 <templates>
-                    <t t-name="card" class="flex-row">
+                    <t t-name="card">
                         <t t-set="date_begin" t-value="luxon.DateTime.fromISO(record.date_begin.raw_value)"/>
                         <t t-set="date_end" t-value="luxon.DateTime.fromISO(record.date_end.raw_value)"/>
-                        <t t-set="datetime_format" t-value="{month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'}"/>
+                        <t t-set="datetime_format" t-value="date_end.hasSame(date_begin, 'year')
+                            ? {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'}
+                            : {year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'}"/>
                         <t t-set="date_parts_order" t-value="date_begin.toLocaleParts({year: 'numeric', month: 'short', day: 'numeric'}).map(part => part.type).filter(type => type !== 'literal')"/>
-                        <aside class="o_card_aside_full position-relative">
-                            <div class="o_event_aside_inner position-relative d-flex flex-column gap-1 w-100 p-2 bg-gradient text-bg-600 text-center fw-bold">
-                                <div class="d-flex flex-column text-bg-view p-1 rounded border shadow-sm">
-                                    <div class="d-flex justify-content-center text-uppercase text-danger smaller" t-att-class="'order-' + date_parts_order.indexOf('month')">
-                                        <span t-out="date_begin.toFormat('MMM')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
-                                        <t t-if="!date_end.hasSame(date_begin, 'month')">
-                                            -
-                                            <span t-out="date_end.toFormat('MMM')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
-                                        </t>
-                                    </div>
-                                    <div class="d-flex justify-content-center fs-4 fw-bold" t-att-class="'order-' + date_parts_order.indexOf('day')">
-                                        <span t-out="date_begin.toFormat('d')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
-                                        <t t-if="!date_end.hasSame(date_begin, 'day')">
-                                            -
-                                            <span t-out="date_end.toFormat('d')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
-                                        </t>
-                                    </div>
-                                    <div class="d-flex justify-content-center smaller text-muted" t-att-class="'order-' + date_parts_order.indexOf('year')">
-                                        <span t-out="date_begin.toFormat('yyyy')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
-                                        <t t-if="!date_end.hasSame(date_begin, 'year')">
-                                            -
-                                            <span t-out="date_end.toFormat('yyyy')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
-                                        </t>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- <div class="o_event_aside_inner position-relative d-flex flex-column justify-content-center gap-1 w-100 p-2 bg-gradient text-center fw-bold">
-                                <div t-att-class="{'d-flex flex-column gap-1 lh-1': !date_end.hasSame(date_begin, 'day')}" class="fs-3">
-                                    <span t-out="date_begin.toFormat('d')"/>
-                                    <t t-if="!date_end.hasSame(date_begin, 'day')">
-                                        <hr class="w-25 my-0 mx-auto"/>
-                                        <span t-out="date_end.toFormat('d')"/>
-                                    </t>
-                                </div>
-                                <div class="text-uppercase fw-bold smaller" t-out="date_begin.toFormat('MMM yyyy')"/>
-                            </div> -->
-                        </aside>
-                        <main class="o_record_main justify-content-between">
-                            <div>
+                        <div class="o_event_card_main d-flex gap-2 align-items-start">
+                            <div class="o_event_card_inner flex-grow-1 min-w-0">
                                 <field name="name" class="d-block h5 text-truncate"/>
                                 <div class="d-flex gap-2 align-items-baseline">
                                     <i class="oi" data-icon="calendar_clock" title="Date"/>
@@ -298,14 +263,37 @@
                                     <field name="seats_taken"/> Attendees
                                 </div>
                             </div>
-                            <footer>
-                                <field name="activity_ids" widget="kanban_activity"/>
-                                <div class="d-flex align-items-center gap-1 ms-auto">
-                                    <field name="user_id" widget="many2one_avatar_user"/>
-                                    <field name="kanban_state" widget="event_state_selection"/>
+                            <div class="o_event_card_calendar flex-shrink-0 d-flex flex-column p-1 rounded border shadow-sm text-center justify-content-center">
+                                <div class="d-flex justify-content-center text-uppercase text-danger smaller" t-att-class="'order-' + date_parts_order.indexOf('month')">
+                                    <span t-out="date_begin.toFormat('MMM')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    <t t-if="!date_end.hasSame(date_begin, 'month')">
+                                        -
+                                        <span t-out="date_end.toFormat('MMM')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    </t>
                                 </div>
-                            </footer>
-                        </main>
+                                <div class="d-flex justify-content-center fs-3 fw-bold" t-att-class="'order-' + date_parts_order.indexOf('day')">
+                                    <span t-out="date_begin.toFormat('d')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    <t t-if="!date_end.hasSame(date_begin, 'day')">
+                                        -
+                                        <span t-out="date_end.toFormat('d')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    </t>
+                                </div>
+                                <div class="d-flex justify-content-center smaller text-muted" t-att-class="'order-' + date_parts_order.indexOf('year')">
+                                    <span t-out="date_begin.toFormat('yyyy')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    <t t-if="!date_end.hasSame(date_begin, 'year')">
+                                        -
+                                        <span t-out="date_end.toFormat('yyyy')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <footer>
+                            <field name="activity_ids" widget="kanban_activity"/>
+                            <div class="d-flex align-items-center gap-1 ms-auto">
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                                <field name="kanban_state" widget="event_state_selection"/>
+                            </div>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
