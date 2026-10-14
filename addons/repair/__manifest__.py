@@ -18,16 +18,14 @@ The following topics are covered by this module:
     * Repair quotation report
     * Notes for the technician and for the final customer
 """,
-    'depends': ['sale_stock', 'sale_management'],
+    'depends': ['stock'],
     'data': [
         'views/product_views.xml',
         'views/stock_move_views.xml',
         'views/repair_views.xml',
-        'views/sale_order_views.xml',
         'views/stock_lot_views.xml',
         'views/stock_picking_views.xml',
         'views/stock_warehouse_views.xml',
-        'views/account_move_views.xml',
         'views/res_partner_views.xml',
         'report/repair_reports.xml',
         'report/repair_templates_repair_order.xml',

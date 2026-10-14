@@ -61,18 +61,6 @@ class SaleOrderLine(models.Model):
             elif len(line.move_ids) == 1 and line.move_ids.repair_id and line.move_ids.description_picking_manual:
                 line.name = line.move_ids.description_picking
 
-    def _prepare_qty_delivered(self):
-        repair_delivered_qties = defaultdict(float)
-        remaining_so_lines = self
-        for so_line in self:
-            move = so_line.move_ids.sudo().filtered(lambda m: m.repair_id and m.state == 'done')
-            if len(move) != 1:
-                continue
-            remaining_so_lines -= so_line
-            repair_delivered_qties[so_line] = move.quantity
-        delivered_qties = super(SaleOrderLine, remaining_so_lines)._prepare_qty_delivered()
-        delivered_qties.update(repair_delivered_qties)
-        return delivered_qties
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -133,3 +121,16 @@ class SaleOrderLine(models.Model):
     def has_valued_move_ids(self):
         res = super().has_valued_move_ids()
         return res and not self.move_ids.repair_id
+
+    def _prepare_qty_delivered(self):
+        repair_delivered_qties = defaultdict(float)
+        remaining_so_lines = self
+        for so_line in self:
+            move = so_line.move_ids.sudo().filtered(lambda m: m.repair_id and m.state == 'done')
+            if len(move) != 1:
+                continue
+            remaining_so_lines -= so_line
+            repair_delivered_qties[so_line] = move.quantity
+        delivered_qties = super(SaleOrderLine, remaining_so_lines)._prepare_qty_delivered()
+        delivered_qties.update(repair_delivered_qties)
+        return delivered_qties
