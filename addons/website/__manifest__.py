@@ -394,6 +394,7 @@
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/*/*',
+            ('remove', 'website/static/src/client_actions/*/*.dark.css'),
             ('remove', 'website/static/src/client_actions/website_preview/website_builder_action_test_mode.js'),
             'website/static/src/components/fields/*',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',
@@ -411,6 +412,7 @@
         ],
         "web.assets_web_dark": [
             'website/static/src/components/dialog/*.dark.css',
+            'website/static/src/client_actions/*/*.dark.css',
             'website/static/src/scss/website.backend.dark.css',
             'website/static/src/components/website_loader/website_loader.dark.css'
         ],
