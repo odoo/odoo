@@ -1,9 +1,12 @@
 import { describe, expect, test } from "@odoo/hoot";
 import {
     advanceTime,
+    animationFrame,
+    drag,
     freezeTime,
     leave,
     queryOne,
+    queryRect,
     runAllTimers,
     waitFor,
     waitForNone,
@@ -744,4 +747,28 @@ test("Chat bubble bounces on new important messages only, until they stop coming
     await advanceTime(1);
     await bounce();
     await waitForNone(".o-mail-ChatBubble.o-bouncing");
+});
+
+test("Can move chat bubbles vertically", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    await waitFor(".o-mail-ChatBubble:count(1)");
+    const initialRect = queryRect(".o-mail-ChatBubble");
+    const { drop, moveTo } = await drag(".o-mail-ChatBubble");
+    await moveTo(document.body, {
+        position: { x: initialRect.left - 100, y: initialRect.top - 200 },
+    });
+    await animationFrame();
+    await drop();
+    await animationFrame();
+    const droppedRect = queryRect(".o-mail-ChatBubble");
+    expect(droppedRect.left).toBeLessThan(initialRect.left - 50);
+    expect(droppedRect.top).toBeLessThan(initialRect.top - 150);
+    await click("button[title='Chat Options']");
+    await click(".o-dropdown-item:text('Reset initial position')");
+    await animationFrame();
+    const resetRect = queryRect(".o-mail-ChatBubble");
+    expect([resetRect.left, resetRect.top]).toEqual([initialRect.left, initialRect.top]);
 });
