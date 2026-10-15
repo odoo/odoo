@@ -2786,6 +2786,26 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.out_type_id.id},
         ])
 
+    def test_sale_partner_shipping_update_with_order_lines(self):
+        """
+        Check that the new delivery address of a confirmed SO is propagated to
+        its delivery when the order lines are modified in the same write.
+        """
+        for new_qty in (8, 2):
+            sale_order = self._get_new_sale_order(amount=5, product=self.product_a)
+            sale_order.action_confirm()
+            line = sale_order.order_line
+            sale_order.write({
+                'partner_shipping_id': self.partner_b.id,
+                'order_line': [Command.update(line.id, {'product_uom_qty': new_qty})],
+            })
+            self.assertRecordValues(sale_order.picking_ids, [
+                {'partner_id': self.partner_b.id, 'picking_type_id': sale_order.warehouse_id.out_type_id.id},
+            ])
+            self.assertRecordValues(sale_order.picking_ids.move_ids, [
+                {'partner_id': self.partner_b.id, 'product_uom_qty': new_qty},
+            ])
+
     def test_invoice_zero_quantity_after_delivery_fifo(self):
         """
         Posting an invoice with quantity = 0 after delivery

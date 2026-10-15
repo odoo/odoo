@@ -149,7 +149,7 @@ class SaleOrder(models.Model):
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
 
-        elif values.get('partner_shipping_id'):
+        if values.get('partner_shipping_id'):
             new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
             for record in self:
                 picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
