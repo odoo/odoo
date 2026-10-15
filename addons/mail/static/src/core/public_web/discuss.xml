@@ -92,7 +92,7 @@
                 <div class="o-mail-Discuss-core overflow-auto d-flex flex-grow-1 w-100" t-ref="core">
                     <t name="core-content">
                         <t t-if="thread">
-                            <div class="o-mail-Discuss-threadContainer d-flex flex-column flex-grow-1">
+                            <div class="o-mail-Discuss-threadContainer d-flex flex-column flex-grow-1 o-min-width-0">
                                 <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/></t>
                                 <Composer t-if="thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
                             </div>

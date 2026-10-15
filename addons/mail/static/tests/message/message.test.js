@@ -837,6 +837,38 @@ test("Reaction summary opens again after clicking it", async () => {
     await contains(".o-mail-MessageReactionList-preview");
 });
 
+test("Reaction with long content stays inside the thread", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    const content = "long".repeat(100);
+    pyEnv["mail.message.reaction"].create({
+        message_id: messageId,
+        content,
+        partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageReaction");
+    const contentRect = queryFirst(".o-mail-Discuss-content").getBoundingClientRect();
+    const reactionRect = queryFirst(".o-mail-MessageReaction").getBoundingClientRect();
+    expect(reactionRect.right).not.toBeGreaterThan(contentRect.right);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='View Reactions']");
+    await contains(".o-mail-MessageReactionMenu-persona");
+    const persona = queryFirst(".o-mail-MessageReactionMenu-persona");
+    expect(persona.scrollWidth).not.toBeGreaterThan(persona.clientWidth);
+    await contains(`.o-mail-MessageReactionMenu button[title='${content}']`);
+});
+
 test("Select already reacted emoji from the emoji picker keeps the reaction on message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
