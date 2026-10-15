@@ -39,7 +39,10 @@ patch(DiscussClientAction.prototype, {
     async joinCallWithDefaultSettings() {
         const mute = window.localStorage.getItem("discuss_call_preview_join_mute") === "true";
         const camera = window.localStorage.getItem("discuss_call_preview_join_video") === "true";
-        await this.rtc.toggleCall(this.store.discuss.thread.channel, { audio: !mute, camera });
+        const channel = this.store.discuss.thread.channel;
+        if (channel.notEq(this.rtc.channel)) {
+            await this.rtc.toggleCall(channel, { audio: !mute, camera });
+        }
         await this.rtc.enterFullscreen();
     },
 });
