@@ -20,7 +20,7 @@ export class FloatTimeTzField extends FloatTimeField {
      * The user's UTC offset, expressed in the unit of the field.
      */
     get offset() {
-        const hours = DateTime.now().setZone(user.tz).offset / 60;
+        const hours = DateTime.now().setZone(user.tz || "default").offset / 60;
         return (hours * DAY[this.props.unit]) / 24;
     }
 

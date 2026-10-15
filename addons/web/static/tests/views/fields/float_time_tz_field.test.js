@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { mockTimeZone } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -79,4 +80,22 @@ test("FloatTimeTzField wraps around midnight", async () => {
     await contains(".o_field_float_time_tz[name=qux] input").edit("01:00");
     await clickSave();
     expect(".o_field_float_time_tz[name=qux] input").toHaveValue("1:00");
+});
+
+test("FloatTimeTzField uses the default timezone when the user timezone is unset", async () => {
+    expect.assertions(4);
+    mockTimeZone(+2);
+    patchWithCleanup(user, { tz: false });
+    onRpc("foo", "web_save", ({ args }) => {
+        expect(args[1].qux).toBe(2);
+    });
+
+    await mountView({ type: "form", resModel: "foo", arch: TZ_ARCH, resId: 5 });
+    expect(".o_field_float_time_tz[name=qux] input").toHaveValue("11:06");
+
+    await contains(".o_field_float_time_tz[name=qux] input").edit("4");
+    expect(".o_field_float_time_tz[name=qux] input").toHaveValue("4:00");
+
+    await clickSave();
+    expect(".o_field_float_time_tz[name=qux] input").toHaveValue("4:00");
 });
