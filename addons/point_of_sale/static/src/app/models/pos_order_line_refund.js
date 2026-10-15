@@ -19,7 +19,7 @@ export class PosOrderLineRefund {
             return false;
         }
 
-        return this.models["pos.order.line"].find((l) => l.uuid === this.line_uuid);
+        return this.models["pos.order.line"].getBy("uuid", this.line_uuid) || false;
     }
 
     get destinationOrder() {
@@ -27,7 +27,7 @@ export class PosOrderLineRefund {
             return false;
         }
 
-        return this.models["pos.order"].find((o) => o.uuid === this.destination_order_uuid);
+        return this.models["pos.order"].getBy("uuid", this.destination_order_uuid) || false;
     }
 
     get refundableQty() {
