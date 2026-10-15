@@ -54,15 +54,11 @@ export class FilePlugin extends Plugin {
             {
                 predicate: (node) => closestElement(node, ".o_file_box"),
                 powerbox: false,
+                shorthands: false,
                 toolbar: DISABLED_NAMESPACE,
             },
             { predicate: ".o_file_box", editable: false, functionalEmpty: true, splittable: false },
         ],
-        are_shorthands_available_predicates: (node) => {
-            if (closestElement(node, ".o_file_box")) {
-                return false;
-            }
-        },
 
         /** Predicates */
         should_paste_as_text_predicates: (selection) => {
