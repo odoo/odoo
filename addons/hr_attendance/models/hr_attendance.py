@@ -702,7 +702,12 @@ class HrAttendance(models.Model):
         if not companies:
             return
 
-        checked_in_employees = self.env['hr.attendance.overtime.line'].search([('date', '=', yesterday)]).employee_id
+        today = yesterday + relativedelta(days=1)
+        checked_in_employees = self.env['hr.attendance'].search([
+            '|',
+                '&', ('check_in', '>=', yesterday), ('check_in', '<=', today),
+                '&', ('check_out', '>=', yesterday), ('check_out', '<=', today),
+        ]).employee_id
 
         technical_attendances_vals = []
         absent_employees = self.env['hr.employee'].search([
