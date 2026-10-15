@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
 import { QWEB_STYLE_ATTRS, isElement } from "@html_editor/utils/dom_info";
@@ -29,7 +29,7 @@ const QWEB_DATA_ATTRIBUTES = [
 const dataAttributesSelector = QWEB_DATA_ATTRIBUTES.map((attr) => `[${attr}]`).join(", ");
 
 // Selector for QWeb-specific attributes
-const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
+export const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
 
 export const isUnremovableQWebElement = (node) =>
     node.getAttribute?.("t-set") || node.getAttribute?.("t-call");
@@ -41,9 +41,6 @@ export class QWebPlugin extends Plugin {
     resources = {
         /** Handlers */
         on_selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
-
-        /** Overrides */
-        apply_color_overrides: this.applyColorToFieldNodes.bind(this),
 
         /** Processors */
         clean_for_save_processors: (root) => {
@@ -78,6 +75,11 @@ export class QWebPlugin extends Plugin {
                 return true;
             }
         },
+        is_node_editable_predicates: (node) => {
+            if (node.nodeName === "T") {
+                return false;
+            }
+        },
         can_format_content_predicates: (selection) => {
             const targetedNodes = new Set(
                 this.dependencies.selection.getTargetedNodes().map((n) => closestElement(n))
@@ -109,19 +111,6 @@ export class QWebPlugin extends Plugin {
         });
         this.addDomListener(this.editable, "click", this.onClick);
         this.groupIndex = 0;
-    }
-
-    applyColorToFieldNodes(color, mode, coloredNodes) {
-        const fieldNodes = new Set(
-            this.dependencies.selection
-                .getTargetedNodes()
-                .map((n) => closestElement(n, PROTECTED_QWEB_SELECTOR))
-                .filter(Boolean)
-        );
-        for (const fieldNode of fieldNodes) {
-            this.dependencies.color.colorElement(fieldNode, color, mode);
-            [fieldNode, ...descendants(fieldNode)].forEach((n) => coloredNodes.add(n));
-        }
     }
 
     isValidTargetForDomListener(ev) {

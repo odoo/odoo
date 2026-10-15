@@ -286,8 +286,7 @@ export class ColorPlugin extends Plugin {
                 .getTargetedNodes()
                 .filter(
                     (node) =>
-                        this.dependencies.selection.isNodeEditable(node) &&
-                        node.nodeName !== "T" &&
+                        (!isTextNode(node) || this.dependencies.selection.isNodeEditable(node)) &&
                         this.dependencies.selection.areNodeContentsFullySelected(node)
                 );
             if (isEmptyBlock(selection.endContainer)) {
@@ -451,6 +450,14 @@ export class ColorPlugin extends Plugin {
                     } else {
                         font = [];
                     }
+                } else if (
+                    isElement(node) &&
+                    this.checkPredicates("is_formattable_node_predicates", node) &&
+                    this.dependencies.selection.isNodeEditable(node)
+                ) {
+                    // Editable formattable element (e.g. a QWeb field): color
+                    // it directly instead of wrapping it in a <font>.
+                    font = node;
                 } else if (
                     (node.nodeType === Node.TEXT_NODE &&
                         (isVisibleTextNode(node) || isZWS(node))) ||
