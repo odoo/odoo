@@ -83,6 +83,21 @@ registerStoreHandler("mail.activity", function store_get_mail_activity(store, pa
     store.add(MailActivity.browse(activities.map((a) => a.id)), "_store_activity_fields");
 });
 
+registerStoreHandler(
+    "/mail/poll_option/votes",
+    function store_poll_option_votes(store, params) {
+        /** @type {import("mock_models").MailPollOption} */
+        const MailPollOption = this.env["mail.poll.option"];
+        /** @type {import("mock_models").MailPollVote} */
+        const MailPollVote = this.env["mail.poll.vote"];
+        const [option] = MailPollOption.browse(params.poll_option_id);
+        if (option) {
+            store.add(MailPollVote.browse(option.vote_ids), "_store_vote_fields");
+        }
+    },
+    { audience: "everyone" }
+);
+
 registerStoreHandler("failures", function store_get_failures(store) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
