@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { destroy, expect, test } from "@odoo/hoot";
 import {
     isInViewPort,
     isScrollable,
@@ -903,4 +903,38 @@ test("autocomplete scrolls when moving with arrows", async () => {
     expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:last")).toBe(false, {
         message: "last " + msgNotInView,
     });
+});
+
+test("skip handling input when destroyed while loading", async () => {
+    const optionsDoLoad = new Deferred();
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`
+            <AutoComplete value="''" sources="sources" onSelect="(option) => this.onSelect(option)"/>
+        `;
+        static props = {};
+        get sources() {
+            return [
+                {
+                    async options() {
+                        await optionsDoLoad;
+                        return [{ label: "World" }];
+                    },
+                },
+            ];
+        }
+        onSelect(option) {
+            expect.step(option.label);
+        }
+    }
+
+    const parent = await mountWithCleanup(Parent);
+    await contains(".o-autocomplete input").fill("W", { confirm: false });
+    await runAllTimers();
+    await press("Enter");
+
+    destroy(parent);
+    optionsDoLoad.resolve();
+    await animationFrame();
+    expect.verifySteps([]);
 });
