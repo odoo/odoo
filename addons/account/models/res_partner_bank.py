@@ -185,6 +185,11 @@ class ResPartnerBank(models.Model):
             elif bank._origin and bank.allow_out_payment:
                 bank.lock_trust_fields = True
 
+    @api.model
+    def _get_trust_lock_fields(self):
+        """ Return the fields deciding where the payments to this account go, locked once the account is trusted. """
+        return {'account_number', 'sanitized_account_number', 'partner_id', 'account_type'}
+
     def _build_qr_code_vals(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
         """ Returns the QR-code vals needed to generate the QR-code report link to pay this account with the given parameters,
         or None if no QR-code could be generated.
@@ -393,16 +398,16 @@ class ResPartnerBank(models.Model):
             # If we were on a trusted account, we only allow changes if the account is moving to untrusted.
             should_allow_changes = self.env.su or ('allow_out_payment' in vals and vals['allow_out_payment'] is False)
 
-        lock_fields = {'account_number', 'sanitized_account_number', 'partner_id', 'account_type'}
+        lock_fields = self._get_trust_lock_fields() & set(vals)
         if not should_allow_changes and any(
             account[fname] != account._fields[fname].convert_to_record(
                 account._fields[fname].convert_to_cache(vals[fname], account),
                 account,
             )
-            for fname in lock_fields & set(vals)
+            for fname in lock_fields
             for account in trusted_accounts
         ):
-            raise UserError(_("You cannot modify the account number or partner of an account that has been trusted."))
+            raise UserError(_("You cannot modify the account number, partner or payment settings of an account that has been trusted."))
 
         if 'allow_out_payment' in vals and any(not bank._user_can_trust() for bank in self):
             raise UserError(_("You do not have the rights to trust or un-trust accounts."))

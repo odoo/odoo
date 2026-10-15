@@ -175,8 +175,10 @@ class TestUiHK(TestPosQrCommon):
         """ Test Point of Sale QR Payment flow with FPS.
         """
 
-        # Set missing info that were missing in test_01
+        # Set missing info that were missing in test_01, the account must be untrusted to change its QR settings
+        self.bank_account.allow_out_payment = False
         self.bank_account.write({
+            'allow_out_payment': True,
             'proxy_type': 'mobile',
             'proxy_value': '+852-67891234',
             'include_reference': True,
@@ -191,7 +193,10 @@ class TestUiHK(TestPosQrCommon):
         return the raw EMV payload the bank application expects, and not the URL
         of the report rendering that payload.
         """
+        # The account must be untrusted to change its QR settings
+        self.bank_account.allow_out_payment = False
         self.bank_account.write({
+            'allow_out_payment': True,
             'proxy_type': 'mobile',
             'proxy_value': '+852-67891234',
             'include_reference': True,
@@ -250,8 +255,10 @@ class TestUIBR(TestPosQrCommon):
         """ Test Point of Sale QR Payment flow with PIX
         """
 
-        # Set missing info that were missing in test_01
+        # Set missing info that were missing in test_01, the account must be untrusted to change its QR settings
+        self.bank_account.allow_out_payment = False
         self.bank_account.write({
+            "allow_out_payment": True,
             "proxy_type": "br_random",
             "proxy_value": "71d6c6e1-64ea-4a11-9560-a10870c40ca2",
             "include_reference": True,

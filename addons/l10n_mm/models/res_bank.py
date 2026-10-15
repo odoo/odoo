@@ -58,6 +58,11 @@ class ResPartnerBank(models.Model):
         bank_mm.display_qr_setting = True
         super(ResPartnerBank, self - bank_mm)._compute_display_qr_setting()
 
+    @api.model
+    def _get_trust_lock_fields(self):
+        # EXTENDS account
+        return super()._get_trust_lock_fields() | {'l10n_mm_terminal_id'}
+
     # Follow the documentation of the Myanmar QR Code Standard [1]
     # [1]: https://myanmarpay.com.mm/frontend/assets/files/MyanmarQRSpecification.pdf
     def _get_merchant_account_info(self):
