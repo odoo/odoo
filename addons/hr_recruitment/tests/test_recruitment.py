@@ -21,6 +21,19 @@ class TestRecruitment(MailCase, TransactionCase):
 
         cls.Attachment = cls.env['ir.attachment']
 
+    def test_infer_applicant_lang_from_context(self):
+        # Prerequisites
+        self.env['res.lang']._activate_lang('pl_PL')
+        self.env['res.lang']._activate_lang('en_US')
+        self.env['ir.default'].set('res.partner', 'lang', 'en_US')
+
+        # Creating an applicant will create a partner (email_from inverse)
+        applicant = self.env['hr.applicant'].sudo().with_context(lang='pl_PL', auto_create_partner=True).create({
+            'partner_name': 'Test Applicant',
+            'email_from': "test_aplicant@example.com"
+        })
+        self.assertEqual(applicant.partner_id.lang, 'pl_PL', 'Context langague not used for partner creation')
+
     def test_duplicate_email(self):
         # Tests that duplicate email matching is case insesitive
         dup1, dup2, no_dup = self.env['hr.applicant'].create([
@@ -248,15 +261,8 @@ class TestRecruitment(MailCase, TransactionCase):
             'partner_name': 'Test',
             'email_from': 'test@thisisatest.com',
         }
-        # First application, + creation of partner
-        applicant = self.env['hr.applicant'].create(applicant_data)
-        email_normalized = tools.email_normalize(applicant.email_from or '')
-        applicant.partner_id = applicant._partner_find_from_emails_single(
-            [applicant.email_from], no_create=False,
-            additional_values={
-                email_normalized: {'lang': self.env.lang}
-            },
-        )
+        # First application, a partner should be created
+        self.env['hr.applicant'].with_context(auto_create_partner=True).create(applicant_data)
         partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
         self.assertEqual(partner_count, 1)
         # Second application, no partner should be created
@@ -509,7 +515,7 @@ class TestRecruitment(MailCase, TransactionCase):
         self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")
 
     def test_applicant_modify_email_number(self):
-        applicant = self.env['hr.applicant'].create({
+        applicant = self.env['hr.applicant'].with_context(auto_create_partner=True).create({
             'partner_name': 'Mary Applicant',
             'email_from': 'applicant@example.com',
             'partner_phone': '123456789',
