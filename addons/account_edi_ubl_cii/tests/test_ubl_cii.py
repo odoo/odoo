@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import io
 
 from lxml import etree
 from odoo import fields, Command
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
 from odoo.tests import tagged
+from odoo.tools.pdf import OdooPdfFileWriter
 from odoo.tools.safe_eval import datetime
 
 
@@ -157,6 +159,17 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
         new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
+    def _get_pdf_bytes(self, xml_content=None, filename='factur-x.xml'):
+        """ Small A4 PDF, with `xml_content` embedded as `filename` if given. """
+        a4_width_pt, a4_height_pt = 595, 842
+        writer = OdooPdfFileWriter()
+        writer.addBlankPage(a4_width_pt, a4_height_pt)
+        if xml_content:
+            writer.addAttachment(filename, xml_content, subtype='text/xml', afrelationship='/Alternative')
+        buffer = io.BytesIO()
+        writer.write(buffer)
+        return buffer.getvalue()
+
     def _configure_seller_for_cii_export(self):
         """ Factur-X/ZUGFeRD/CII exports require a fully configured seller (VAT, phone, email,
         bank account with a sanitized account number) or the export raises validation errors. """
@@ -192,12 +205,39 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
                 self.assertEqual(wizard.invoice_edi_format, edi_format)
                 wizard.action_send_and_print()
 
+                # no wkhtmltopdf in tests: the hook doesn't embed the XML, so put it in the PDF here
+                xml_content = base64.b64decode(invoice.ubl_cii_xml_file)
+                pdf_bytes = self._get_pdf_bytes(xml_content, filename='factur-x.xml')
+                invoice.invoice_pdf_report_file = base64.b64encode(pdf_bytes)
+
                 # the XML was generated and embedded in the PDF...
                 self.assertTrue(invoice.ubl_cii_xml_id)
                 # ...but must not be listed as an extra attachment (it would duplicate the email attachment)
                 extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(invoice)
                 self.assertEqual(extra_attachments, invoice.invoice_pdf_report_id)
                 self.assertNotIn(invoice.ubl_cii_xml_id, extra_attachments)
+
+    def test_facturx_zugferd_keeps_xml_attachment_if_pdf_not_hybrid(self):
+        """ The PDF is not regenerated when it already exists, so it can be a plain PDF without the
+        XML inside. In that case the XML must still be sent as a separate attachment. """
+        company = self._configure_seller_for_cii_export()
+        self.partner_be.invoice_edi_format = 'zugferd'
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_be,
+            price_unit=100.0,
+            tax_ids=self.company_data['default_tax_sale'],
+            partner_bank_id=company.partner_id.bank_ids[:1].id,
+            post=True,
+        )
+        # plain PDF generated before, without any XML embedded
+        invoice.invoice_pdf_report_file = base64.b64encode(self._get_pdf_bytes())
+
+        wizard = self._create_account_move_send_wizard_single(invoice, sending_methods=['manual'])
+        wizard.action_send_and_print()
+
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(invoice)
+        self.assertIn(invoice.ubl_cii_xml_id, extra_attachments)
 
     def test_ubl_bis3_keeps_xml_attachment(self):
         """ Unlike Factur-X/ZUGFeRD, Peppol UBL formats don't embed an identical XML in the PDF,
