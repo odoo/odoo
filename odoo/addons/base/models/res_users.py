@@ -462,6 +462,7 @@ class ResUsers(models.Model):
                 self.group_ids += self._default_groups()
             # Reduce all access to light user.
             self.group_ids = group_user + self.group_ids._origin._reduce_to_light_groups()
+            self.company_ids = self.company_id
 
     def _search_role(self, operator, value):
         if operator != 'in':

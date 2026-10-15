@@ -683,6 +683,49 @@ class TestUsers2(UsersCommonCase):
             self.assertEqual(user.role, 'light_user')
             self.assertEqual(set(user.group_ids.mapped('name')), {'Role / User', 'HR Interviewer'})
 
+    def test_change_user_to_light_multi_company(self):
+        user = self.user_internal
+        default_company = self.env['res.company'].create({'name': 'Light User Company'})
+        other_company = user.company_id
+        user.write({
+            'company_id': default_company.id,
+            'company_ids': [Command.set(default_company.ids)],
+        })
+
+        with Form(user, view='base.view_users_form') as user_form:
+            user_form.company_ids.add(other_company)
+        self.assertEqual(user.role, 'regular_user')
+        self.assertTrue(user.has_group('base.group_multi_company'))
+        self.assertEqual(set(user._get_company_ids()), {default_company.id, other_company.id})
+
+        with Form(user, view='base.view_users_form') as user_form:
+            user_form.role = 'light_user'
+            self.assertEqual(user_form.company_id, default_company)
+            self.assertEqual(user_form.company_ids[:], default_company)
+
+        self.assertEqual(user.company_id, default_company)
+        self.assertEqual(user.company_ids, default_company)
+        self.assertEqual(user.role, 'light_user')
+        self.assertFalse(user.has_group('base.group_multi_company'))
+        self.assertEqual(user._get_company_ids(), (default_company.id,))
+        with self.assertRaises(AccessError):
+            user.with_user(user).with_context(allowed_company_ids=other_company.ids).env.company
+
+    def test_change_user_to_light_multi_company_unsaved(self):
+        user = self.user_internal
+        default_company = user.company_id
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+
+        with Form(user, view='base.view_users_form') as user_form:
+            user_form.role = 'regular_user'
+            user_form.company_ids.add(other_company)
+            user_form.role = 'light_user'
+            self.assertEqual(user_form.company_ids[:], default_company)
+
+        self.assertEqual(user.company_ids, default_company)
+        self.assertEqual(user.role, 'light_user')
+        self.assertFalse(user.has_group('base.group_multi_company'))
+
     @users('user_internal', 'portal_1')
     @mute_logger('odoo.addons.base.models.ir_access')
     def test_user_writeable_fields(self):
