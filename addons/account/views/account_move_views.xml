@@ -1221,6 +1221,7 @@
                                         <div name="currency_conversion_div"
                                              class="d-flex gap-1 text-muted"
                                              invisible="currency_id == company_currency_id">
+                                            <field name="company_currency_id" invisible="1"/> <!-- company_currency read by the account_currency_exchange_rate widget below -->
                                             <field name="invoice_currency_rate" invisible="1"/> <!-- rate_field read by the account_currency_exchange_rate widget below -->
                                             <widget name="account_currency_exchange_rate" readonly="state != 'draft'" options="{'rate_field': 'invoice_currency_rate'}"/>
                                             <div

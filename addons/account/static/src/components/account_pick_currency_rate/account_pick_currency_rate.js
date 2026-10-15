@@ -49,7 +49,7 @@ export class AccountCurrencyExchangeRate extends Component {
     setup() {
         this._swapKey = "account.currency_exchange_rate.swapped";
         this.state = proxy({
-            swapped: localStorage.getItem(this._swapKey) === "true" 
+            swapped: localStorage.getItem(this._swapKey) === "true"
         });
     }
 
@@ -105,6 +105,10 @@ export const accountCurrencyExchangeRate = {
     extractProps: ({ options }) => ({
         rateField: options.rate_field,
     }),
+    fieldDependencies: [
+        { name: "currency_id", type: "many2one" },
+        { name: "company_currency_id", type: "many2one" },
+    ],
 };
 
 registry.category("view_widgets").add("account_pick_currency_date",  accountPickCurrencyDate);
