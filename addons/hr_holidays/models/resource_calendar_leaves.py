@@ -209,8 +209,8 @@ class ResourceCalendarLeaves(models.Model):
                     else:
                         public_holidays_values_dict[holiday_date] = {
                             'name': holiday_name,
-                            'date_from': holiday_date,
-                            'date_to': holiday_date,
+                            'date_from': holiday_start_utc,
+                            'date_to': holiday_end_utc,
                             'company_id': company.id,
                         }
 

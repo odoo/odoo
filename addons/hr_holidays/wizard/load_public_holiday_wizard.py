@@ -44,19 +44,17 @@ class LoadPublicHolidaysWizard(models.TransientModel):
                 start_date = date(wizard.year, 1, 1)
                 end_date = date(wizard.year, 12, 31)
                 prepared_public_holidays = self.env['resource.calendar.leaves']._prepare_public_holidays_data(start_date, end_date)
-                preview_values = [
-                    public_holiday_value
-                    for company_data in prepared_public_holidays['prepared_public_holidays'].values()
-                    for public_holiday_value in company_data
-                ]
-                commands.extend(
-                    Command.create({
-                        'name': preview_value['name'],
-                        'start_date': preview_value['date_from'],
-                        'company_id': preview_value['company_id'],
-                    })
-                    for preview_value in preview_values
-                )
+                for company_id, company_data in prepared_public_holidays['prepared_public_holidays'].items():
+                    company = self.env['res.company'].browse(company_id)
+                    company_tz = ZoneInfo(company.tz or self.env.user.tz or 'UTC')
+                    commands.extend(
+                        Command.create({
+                            'name': preview_value['name'],
+                            'start_date': preview_value['date_from'].replace(tzinfo=UTC).astimezone(company_tz).date(),
+                            'company_id': company_id,
+                        })
+                        for preview_value in company_data
+                    )
             wizard.line_ids = commands
 
     def action_add_public_holidays(self):
