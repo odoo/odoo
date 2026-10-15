@@ -34,3 +34,9 @@ class TestWebsiteResetPassword(TransactionCase):
         self.assertEqual(image.format, 'ICO')
         self.assertEqual(image.size, (256, 256))
         self.assertEqual(image.getpixel((0, 0)), bg_color)
+
+        # In RPC calls, binary fields are written as base64 strings,
+        # ensuring it is properly converted to BinaryValue before image processing
+        website.write({'favicon': Website._default_favicon().to_base64()})
+        image = binary_to_image(website.favicon)
+        self.assertEqual(image.format, 'ICO')
