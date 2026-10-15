@@ -90,6 +90,23 @@
                                     placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
                             </group>
                         </group>
+                        <notebook>
+                            <page string="Accounting" name="accounting" invisible="True">
+                                <group>
+                                    <group string="Customer Invoices" name="invoice_send_settings" invisible="not is_company and parent_id">
+                                        <field name="invoice_sending_method" placeholder="e-Invoicing &amp; Email"/>
+                                        <field name="invoice_edi_format" placeholder="XML format" invisible="not display_invoice_edi_format"/>
+                                        <field name="qr_code_method"/>
+                                    </group>
+                                </group>
+                                <p invisible="is_company or not parent_id">
+                                    Accounting-related settings are managed on<button name="action_open_commercial_partner_view" type="object" string="the parent company" class="oe_link"/>
+                                </p>
+                            </page>
+                            <page string="Notes" name="internal_notes">
+                                <field name="comment" placeholder="Internal notes..."/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
