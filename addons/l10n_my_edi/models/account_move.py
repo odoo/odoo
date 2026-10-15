@@ -678,6 +678,11 @@ Customs form No. 1, 9, etc for Vendor Bills""",
             'action_forbidden': _('Permission to do this action has not been granted. Please ensure that Odoo has sufficient permissions on the MyInvois platform.'),
         }
 
+        if error['reference'] == 'document_too_large':
+            # Data contains the size of the document and the maximum size accepted by MyInvois, in KB.
+            return _('This invoice is too large to be sent to MyInvois (%(size)s KB, the maximum is %(max_size)s KB). Please reduce its number of lines.',
+                     size=error['data']['size'], max_size=error['data']['max_size'])
+
         if error.get('target'):
             # When validating a part of the invoice, they give random numerical codes with no explanation whatsoever.
             # So instead of trying to guess what they mean, we just give a generic "this is not valid" error and hope for the best.
