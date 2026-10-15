@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="before">
-                    <field name="l10n_ch_qr_iban" invisible="not l10n_ch_display_qr_bank_options"/>
+                    <field name="l10n_ch_qr_iban" invisible="not l10n_ch_display_qr_bank_options" readonly="lock_trust_fields" force_save="1"/>
                 </field>
             </field>
         </record>

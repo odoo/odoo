@@ -9,8 +9,8 @@
             <xpath expr="//page[@name='internal_notes']" position="before">
                 <page string="Payment QR Settings" name="l10n_id_qris_settings" invisible="country_code != 'ID' or not company_qr_code">
                     <group>
-                        <field name="l10n_id_qris_api_key"/>
-                        <field name="l10n_id_qris_mid"/>
+                        <field name="l10n_id_qris_api_key" readonly="lock_trust_fields" force_save="1"/>
+                        <field name="l10n_id_qris_mid" readonly="lock_trust_fields" force_save="1"/>
                         <label for="l10n_id_qris_webhook_url" invisible="not l10n_id_qris_webhook_url" groups="base.group_system"/>
                         <div class="d-flex flex-row" invisible="not l10n_id_qris_webhook_url" groups="base.group_system">
                             <field name="l10n_id_qris_webhook_url" class="oe_inline mb-0 text-break min-w-0" widget="CopyClipboardChar"/>

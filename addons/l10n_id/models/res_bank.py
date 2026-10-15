@@ -81,6 +81,11 @@ class ResPartnerBank(models.Model):
             bank.l10n_id_qris_webhook_version += 1
 
     @api.model
+    def _get_lock_trust_fields(self):
+        # EXTENDS account
+        return super()._get_lock_trust_fields() | {'l10n_id_qris_api_key', 'l10n_id_qris_mid'}
+
+    @api.model
     def _get_available_qr_methods(self):
         # EXTENDS account
         rslt = super()._get_available_qr_methods()
