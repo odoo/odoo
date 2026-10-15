@@ -36,6 +36,7 @@ import {
     mockUserAgent,
     queryFirst,
     test,
+    waitUntil,
 } from "@odoo/hoot";
 import {
     asyncStep,
@@ -50,6 +51,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { redirect } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -767,6 +769,40 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
     };
     await click("[title='Mute']");
     await waitForSteps(["is_muted:true"]);
+});
+
+test("Cross tab calls: opening the fullscreen URL of the hosted call does not leave it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        default_display_mode: "video_full_screen",
+        name: "Meeting",
+    });
+    const sessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].search([
+            ["channel_id", "=", channelId],
+        ])[0],
+        channel_id: channelId,
+    });
+    const broadcastChannel = new BroadcastChannel("call_sync_state");
+    broadcastChannel.onmessage = (event) => {
+        if (event.data.type === CROSS_TAB_CLIENT_MESSAGE.INIT) {
+            broadcastChannel.postMessage({
+                type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
+                hostedChannelId: channelId,
+                hostedSessionId: sessionId,
+                changes: { [sessionId]: { is_deaf: false, is_muted: false } },
+            });
+        }
+        if (event.data.type === CROSS_TAB_CLIENT_MESSAGE.LEAVE) {
+            asyncStep("leave");
+        }
+    };
+    redirect("?fullscreen=1");
+    const env = await start();
+    await waitUntil(() => env.services["mail.store"].rtc.isRemote);
+    await openDiscuss(channelId);
+    await contains(".o-mail-Meeting .o-discuss-Call");
+    await waitForSteps([]);
 });
 
 test("automatically cancel incoming call after some time", async () => {
