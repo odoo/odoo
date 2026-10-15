@@ -95,6 +95,12 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
 
         with freeze_time('2025-01-03'):
             self._receive(purchase_order=po)
+<<<<<<< c218a9c9af9e7e659d18f8d607eed729371de0e0
+||||||| e64dd9c513b719847e5bad92bf3311f7e85704ad
+            self.assertEqual(self.product_avco.total_value, 66.7)
+=======
+            self.assertEqual(self.product_avco.total_value, 66.67)
+>>>>>>> ebac02d909af05294c15010ac30339880520d945
 
         with freeze_time('2025-01-05'):
             self._create_bill(purchase_order=po)
