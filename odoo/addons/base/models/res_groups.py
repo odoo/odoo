@@ -432,6 +432,7 @@ class ResGroups(models.Model):
             'base.group_no_one',
             'base.group_multi_currency',
             'base.default_user_group',
+            'base.group_multi_company',
         )
 
     def _apply_group_regular(self):
