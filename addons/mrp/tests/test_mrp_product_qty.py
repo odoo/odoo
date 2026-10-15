@@ -47,6 +47,23 @@ class TestMrpProductQty(TestMrpCommon):
         self.assertEqual(mo.state, 'done')
         return mo
 
+    def _create_and_setup_qty_producing_mo(self, product, bom, qty=1.0, qty_producing=None):
+        """Helper: create an MO, set qty_producing, and return the MO.
+        Does not mark the MO as done."""
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product
+        mo_form.bom_id = bom
+        mo_form.product_qty = qty
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = qty_producing if qty_producing is not None else qty
+        mo = mo_form.save()
+
+        self.assertEqual(mo.state, 'confirmed')
+        return mo
+
     def test_mrp_product_qty_normal_mo(self):
         """Test that mrp_product_qty correctly counts finished product
         quantity from a normal (no byproduct) manufacturing order."""
@@ -143,3 +160,18 @@ class TestMrpProductQty(TestMrpCommon):
             self.product_4.mrp_product_qty, 3.5,
             "mrp_product_qty should convert UoMs: 3 units + 6 units = 3.5 dozen",
         )
+
+    def test_update_mrp_product_qty(self):
+        """Test that qty_producing is not updated when qty_producing is updated on a manufacturing order"""
+
+        mo = self._create_and_setup_qty_producing_mo(self.product_4, self.bom_1, qty=5.0, qty_producing=2.0)
+        self.assertEqual(mo.qty_producing, 2.0)
+        self.assertEqual(mo.product_qty, 5.0)
+
+        wiz = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 10.0,
+        })
+        wiz.change_prod_qty()
+        self.assertEqual(mo.qty_producing, 2.0)
+        self.assertEqual(mo.product_qty, 10.0)

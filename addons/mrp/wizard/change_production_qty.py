@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-from odoo.tools import float_is_zero
+from odoo import api, fields, models
 
 
 class ChangeProductionQty(models.TransientModel):
@@ -55,7 +53,6 @@ class ChangeProductionQty(models.TransientModel):
         return move.move_dest_ids and not move.uom_id.is_zero(qty)
 
     def change_prod_qty(self):
-        precision = self.env['decimal.precision'].precision_get('Product Unit')
         for wizard in self:
             production = wizard.mo_id
             old_production_qty = production.product_qty
@@ -77,16 +74,10 @@ class ChangeProductionQty(models.TransientModel):
             self._update_finished_moves(production, new_production_qty, old_production_qty)
             production.write({'product_qty': new_production_qty})
             if not production.uom_id.is_zero(production.qty_producing) and not production.workorder_ids:
-                production.qty_producing = new_production_qty
+                production.qty_producing = min(new_production_qty, production.qty_producing)
                 production._set_qty_producing(False)
 
             for wo in production.workorder_ids:
-                quantity = wo.qty_production - wo.qty_produced
-                if production.product_id.tracking == 'serial':
-                    quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
-                else:
-                    quantity = quantity if (quantity > 0 and not float_is_zero(quantity, precision_digits=precision)) else 0
-                wo._update_qty_producing(quantity if wo.production_id.state != 'to_close' else wo.qty_production)
                 wo.duration_expected = wo._get_duration_expected(ratio=1 if wo.operation_id else new_production_qty / old_production_qty)
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
