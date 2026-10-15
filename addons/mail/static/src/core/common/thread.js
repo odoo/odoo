@@ -95,7 +95,6 @@ export class Thread extends Component {
             isReplyingTo: false,
             mountedAndLoaded: false,
             showJumpPresent: false,
-            scrollTop: null,
         });
         // before hooks depending on `mountedAndLoaded`, so they see it on mount
         onMounted(() => (this.state.mountedAndLoaded = this.props.thread.isLoaded));
