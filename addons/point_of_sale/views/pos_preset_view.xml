@@ -54,6 +54,7 @@
                                 <span invisible="not is_return or pricelist_id" class="oe_inline ps-2 text-info">Tip: add a return pricelist (i.e. 0€)</span>
                             </div>
                             <field name="color" widget="color_picker"/>
+                            <field name="company_id" string="Company" groups="base.group_multi_company" placeholder="Visible to all" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -84,8 +85,10 @@
         <field name="arch" type="xml">
             <list string="Presets" sample="1">
                 <field name="name"/>
-                <field name="use_timing"/>
+                <field name="use_timing" width="200px"/>
                 <field name="identification"/>
+                <field name="pos_config_ids" widget="many2many_tags"/>
+                <field name="company_display" string="Company" groups="base.group_multi_company"/>
                 <field name="color" widget="color_picker"/>
             </list>
         </field>
