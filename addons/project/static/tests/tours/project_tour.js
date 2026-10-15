@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         id: 'project_creation',
     }, {
         trigger: '.o_open_tasks',
-        run: "click .modal:visible .btn.btn-primary",
+        run: "click",
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
         run: "edit New",

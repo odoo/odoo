@@ -12,7 +12,10 @@ registry.category("web_tour.tours").add("bookmark_message_tour", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
-            run: "click #chatterRoot:shadow button[name='add-bookmark']",
+        },
+        {
+            trigger: "#chatterRoot:shadow button[name='add-bookmark']",
+            run: "click",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message[data-bookmarked]:contains(Test Message)",
@@ -62,7 +65,10 @@ registry.category("web_tour.tours").add("message_actions_tour", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
-            run: "click #chatterRoot:shadow button[name='edit']",
+        },
+        {
+            trigger: "#chatterRoot:shadow button[name='edit']",
+            run: "click",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
@@ -90,7 +96,10 @@ registry.category("web_tour.tours").add("message_actions_tour", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
-            run: "click #chatterRoot:shadow button[name='delete']",
+        },
+        {
+            trigger: "#chatterRoot:shadow button[name='delete']",
+            run: "click",
         },
         {
             trigger: "#chatterRoot:shadow .modal button:contains(Delete)",

@@ -49,7 +49,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
-            run: "click #chatterRoot:shadow button[name='delete']",
+        },
+        {
+            trigger: "#chatterRoot:shadow button[name='delete']",
+            run: "click",
         },
         {
             trigger: "#chatterRoot:shadow .modal button:contains(Delete)",
@@ -144,7 +147,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
-            run: "click #chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
+            run: "click",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
@@ -208,7 +214,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
-            run: "click #chatterRoot:shadow button[name='delete']",
+        },
+        {
+            trigger: "#chatterRoot:shadow button[name='delete']",
+            run: "click",
         },
         {
             trigger: "#chatterRoot:shadow .modal button:contains(Delete)",
@@ -241,7 +250,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
-            run: "click #chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
+            run: "click",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
@@ -266,7 +278,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
-            run: "click #chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu [name='edit']",
+            run: "click",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
