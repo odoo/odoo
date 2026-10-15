@@ -58,20 +58,20 @@ test("getPaymentInterfaceStates", async () => {
     expect(result3).toEqual({ status: false, message: "Test Message" });
 });
 
-test("paymentProviderKey", async () => {
+test("paymentInterfaceKey", async () => {
     const store = await setupPosEnv();
     const card = store.models["pos.payment.method"].get(2);
 
     // No provider
-    expect(card.paymentProviderKey).toBe(false);
+    expect(card.paymentInterfaceKey).toBe(false);
 
     // Provider
     card.payment_provider = "adyen";
     card.payment_method_type = "terminal";
-    expect(card.paymentProviderKey).toBe("adyen");
+    expect(card.paymentInterfaceKey).toBe("adyen");
 
-    // Bank QR methods have no provider: the key is their type
+    // Bank transfer methods have no provider: the key is their type
     card.payment_provider = false;
-    card.payment_method_type = "bank_qr_code";
-    expect(card.paymentProviderKey).toBe("bank_qr_code");
+    card.payment_method_type = "bank_transfer";
+    expect(card.paymentInterfaceKey).toBe("bank_transfer");
 });

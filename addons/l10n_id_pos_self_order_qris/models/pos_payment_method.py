@@ -21,7 +21,7 @@ class PosPaymentMethod(models.Model):
 
     def _is_kiosk_qris(self):
         self.ensure_one()
-        return self.payment_method_type == "bank_qr_code" and self.qr_code_method == "id_qr"
+        return self.payment_method_type == "bank_transfer" and self.qr_code_method == "id_qr"
 
     @api.model
     def _load_pos_data_fields(self, config):
@@ -32,7 +32,7 @@ class PosPaymentMethod(models.Model):
         """
         Add the QRIS method to the kiosk's payment options.
 
-        A `bank_qr_code` method has no `payment_provider`, so the base self-order domain
+        A `bank_transfer` method has no `payment_provider`, so the base self-order domain
         (cash OR provider) leaves it out; add it back for the kiosk.
         """
         domain = super()._load_pos_self_data_domain(data)
@@ -41,7 +41,7 @@ class PosPaymentMethod(models.Model):
             return domain
         qris_domain = Domain.AND([
             Domain("id", "in", config.payment_method_ids.ids),
-            Domain("payment_method_type", "=", "bank_qr_code"),
+            Domain("payment_method_type", "=", "bank_transfer"),
             Domain("qr_code_method", "=", "id_qr"),
         ])
         return Domain.OR([qris_domain, domain])

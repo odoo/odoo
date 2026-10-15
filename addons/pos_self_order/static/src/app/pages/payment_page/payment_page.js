@@ -59,7 +59,7 @@ export class PaymentPage extends Component {
     }
 
     get showQrCode() {
-        return this.state.paymentMethodType === "external_qr" && this.state.qrCode;
+        return this.state.paymentMethodType === "qr_payment" && this.state.qrCode;
     }
 
     selectMethod(methodId) {
@@ -107,7 +107,7 @@ export class PaymentPage extends Component {
                 try {
                     const paymentSuccessful = await newPaymentLine.pay();
                     if (!paymentSuccessful) {
-                        if (newPaymentLine.useQr && newPaymentLine.qr_code) {
+                        if (newPaymentLine.useQrPayment && newPaymentLine.qr_code) {
                             this.state.fadeOut = true;
                             setTimeout(() => {
                                 this.state.qrCode = newPaymentLine.qr_code;

@@ -77,7 +77,7 @@ export class PaymentScreenPaymentLines extends Component {
     getLineControls(line) {
         const controls = { start: [], end: [] };
 
-        if (line.useQr) {
+        if (line.useQrPayment) {
             controls.start.push({
                 id: "qr_code",
                 icon: "qr_code",
@@ -132,7 +132,7 @@ export class PaymentScreenPaymentLines extends Component {
      * @type {PaymentActionState}
      */
     getPaymentActionState(line) {
-        if (line.useBankQrCode && line.payment_status === "waiting") {
+        if (line.useBankTransfer && line.payment_status === "waiting") {
             return null;
         }
 

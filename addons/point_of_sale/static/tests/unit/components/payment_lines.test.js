@@ -198,8 +198,8 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waiting on a bank QR line: the transfer is confirmed in the QR popup
-    card.payment_method_type = "bank_qr_code";
+    // waiting on a bank transfer line: the transfer is confirmed in the QR popup
+    card.payment_method_type = "bank_transfer";
     expect(comp.getPaymentActionState(paymentline)).toBe(null);
     card.payment_method_type = "none";
 
@@ -300,7 +300,7 @@ describe("show qr code button", () => {
         const card = store.models["pos.payment.method"].get(2);
         const paymentline = createPaymentLine(store, order, card);
 
-        paymentline.payment_method_id.payment_method_type = "external_qr";
+        paymentline.payment_method_id.payment_method_type = "qr_payment";
         paymentline.qr_code = "https://example.com/qr-code-data";
         paymentline.payment_status = "waiting_scan";
 
@@ -325,7 +325,7 @@ describe("show qr code button", () => {
         const card = store.models["pos.payment.method"].get(2);
         const paymentline = createPaymentLine(store, order, card);
 
-        paymentline.payment_method_id.payment_method_type = "external_qr";
+        paymentline.payment_method_id.payment_method_type = "qr_payment";
         paymentline.qr_code = "https://example.com/qr-code-data";
         paymentline.payment_status = "done";
 
@@ -350,7 +350,7 @@ describe("show qr code button", () => {
         const card = store.models["pos.payment.method"].get(2);
         const paymentline = createPaymentLine(store, order, card);
 
-        paymentline.payment_method_id.payment_method_type = "external_qr";
+        paymentline.payment_method_id.payment_method_type = "qr_payment";
         paymentline.qr_code = null;
         paymentline.payment_status = "pending";
 
@@ -369,7 +369,7 @@ describe("show qr code button", () => {
         expect(".paymentline .paymentline_show_qr_code").toHaveAttribute("disabled");
     });
 
-    test("not external qr code", async () => {
+    test("not a QR provider method", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         const card = store.models["pos.payment.method"].get(2);

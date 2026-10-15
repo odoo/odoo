@@ -124,8 +124,8 @@ test("handlePaymentCancelResponse", async () => {
     expect(responseFailTerminal).toBe(false);
     expect(paymentline.payment_status).toBe("waiting_card");
 
-    // Failed - External QR
-    card.payment_method_type = "external_qr";
+    // Failed - QR Provider
+    card.payment_method_type = "qr_payment";
     paymentline.payment_status = "waiting_scan";
     const responseFailNonTerminal = paymentline.handlePaymentCancelResponse(false);
     expect(responseFailNonTerminal).toBe(false);
