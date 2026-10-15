@@ -3,6 +3,7 @@
 from odoo.exceptions import AccessError, ValidationError
 from odoo.http import Controller, request, route
 from odoo.http.session import touch
+from odoo.tools import lazy
 from odoo.tools.mail import email_re
 
 
@@ -31,6 +32,7 @@ class ProductWishlist(Controller):
 
         if not partner_id:
             request.session["wishlist_ids"] = request.session.get("wishlist_ids", []) + [wish.id]
+        request.wishlist = lazy(self.env.website._get_current_wishlist)
 
         return wish
 
@@ -60,6 +62,7 @@ class ProductWishlist(Controller):
                 wish.sudo().unlink()
         else:
             wish.unlink()
+        request.wishlist = lazy(self.env.website._get_current_wishlist)
         return True
 
     @route(

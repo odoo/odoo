@@ -25,6 +25,7 @@ class IrHttp(models.AbstractModel):
         request.cart = lazy(website._get_and_cache_current_cart)
         request.fiscal_position = lazy(website._get_and_cache_current_fiscal_position)
         request.pricelist = lazy(website._get_and_cache_current_pricelist)
+        request.wishlist = lazy(website._get_current_wishlist)
 
     @classmethod
     def _slug(cls, value: models.BaseModel | tuple[int, str]) -> str:
