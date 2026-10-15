@@ -1,4 +1,4 @@
-import { Plugin, usePlugin, signal } from "@odoo/owl";
+import { asyncComputed, Plugin, usePlugin, signal } from "@odoo/owl";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
@@ -11,21 +11,29 @@ export class PosAccessRightPlugin extends Plugin {
     router = usePlugin(PosRouterPlugin);
     data = usePlugin(PosDataPlugin);
     hasLoggedIn = signal(false);
+    #cashier = signal(null);
+    #canReorderProducts = asyncComputed(() => user.checkAccessRight("product.template", "write"), {
+        initial: false,
+    });
+    #canUserCreateProduct = asyncComputed(
+        () => user.checkAccessRight("product.product", "create"),
+        { initial: false }
+    );
 
-    setup() {
-        this.cashier = null;
-        this.canReorderProducts = false;
-        this.canUserCreateProduct = false;
-        this.checkAccessRight();
+    get cashier() {
+        return this.#cashier();
     }
 
-    async checkAccessRight() {
-        try {
-            this.canUserCreateProduct = await user.checkAccessRight("product.product", "create");
-            this.canReorderProducts = await user.checkAccessRight("product.template", "write");
-        } catch (error) {
-            console.error("Failed to check access rights:", error);
-        }
+    set cashier(cashier) {
+        this.#cashier.set(cashier);
+    }
+
+    get canReorderProducts() {
+        return this.#canReorderProducts();
+    }
+
+    get canUserCreateProduct() {
+        return this.#canUserCreateProduct();
     }
 
     resetCashier() {
