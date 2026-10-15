@@ -48,12 +48,12 @@ class Populate(Command):
                 sys.exit(1)
 
             try:
-                session = self._create(env) if config['resuming'] is None else self._resume(env)
+                session = self._create(env) if config['populate_resuming'] is None else self._resume(env)
             except ValueError as e:
                 _logger.critical("%s", e)
                 sys.exit(1)
 
-            self._execute(session, profile=config['profile'])
+            self._execute(session, profile=config['populate_profile'])
 
     def _setup_options(self):
         """Register populate-specific options on the global Odoo CLI parser."""
@@ -61,29 +61,29 @@ class Populate(Command):
         parser.prog = self.prog
         group = optparse.OptionGroup(parser, "Populate Configuration")
         group.add_option(
-            '--blueprint', '-b', dest='blueprint',
+            '--blueprint', '-b', dest='populate_blueprint',
             help="Full xmlid of the Blueprint to execute, or its name.",
         )
         group.add_option(
-            '--seed', dest='seed', type='int', my_default=None,
+            '--seed', dest='populate_seed', type='int', my_default=None,
             help="Seed for the random number generator.",
         )
         group.add_option(
-            '--scale', dest='scale', type='float', my_default=1,
+            '--scale', dest='populate_scale', type='float', my_default=1,
             help="Factor by which 'counts' in the blueprint should be scaled.",
         )
         group.add_option(
-            '--jobs', '-j', dest='job_runners', type='string', my_default='1',
+            '--jobs', '-j', dest='populate_job_runners', type='string', my_default='1',
             help="Number of parallel processes to be used for the populate.\n"
                  "Use 'auto' to use all hardware threads.",
         )
         group.add_option(
-            '--resume', dest='resuming', type='int', nargs='?', const=0, my_default=None,
+            '--resume', dest='populate_resuming', type='int', nargs='?', const=0, my_default=None,
             help="Resume from a previous session.\n"
                  "Use without argument to resume the last session, or provide a session ID.",
         )
         group.add_option(
-            '--profile', dest='profile', action='store_true', my_default=False,
+            '--profile', dest='populate_profile', action='store_true', my_default=False,
             help="Profile populate execution.",
         )
         parser.add_option_group(group)
@@ -113,7 +113,7 @@ class Populate(Command):
         :return: Singleton ``populate.blueprint`` record to execute.
         :raise ValueError: If no blueprint is configured, missing, or ambiguous.
         """
-        name = config['blueprint']
+        name = config['populate_blueprint']
         if not name:
             msg = "Blueprint is required. Use -b/--blueprint option."
             raise ValueError(msg)
@@ -148,15 +148,15 @@ class Populate(Command):
         blueprint = Populate._resolve_blueprint(env)
         worker_count = (
             os.cpu_count()
-            if config['job_runners'] == 'auto'
-            else int(config['job_runners'])
+            if config['populate_job_runners'] == 'auto'
+            else int(config['populate_job_runners'])
         )
         vals = {
             'blueprint_id': blueprint.id,
             'worker_count': worker_count,
-            'scaling_factor': config['scale'],
+            'scaling_factor': config['populate_scale'],
         }
-        if (seed := config['seed']) is not None:
+        if (seed := config['populate_seed']) is not None:
             vals['seed'] = seed
 
         session = env['populate.session'].create(vals)
@@ -177,7 +177,7 @@ class Populate(Command):
         :return: Existing unfinished ``populate.session`` record.
         :raise ValueError: If no resumable session exists.
         """
-        session_id = config['resuming']
+        session_id = config['populate_resuming']
         if session_id:
             session = env['populate.session'].browse(session_id)
         else:
