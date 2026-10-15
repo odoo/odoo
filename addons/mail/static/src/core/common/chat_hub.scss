@@ -1,6 +1,9 @@
 .o-mail-ChatHub-bubbles {
     width: $o-mail-ChatHub-bubblesWidth;
     z-index: $o-mail-NavigableList-zIndex - 1;
+}
+
+.o-mail-ChatHub:not(.o-dragged) .o-mail-ChatHub-bubbles {
     bottom: calc(#{var(--mail-ChatHub-bubbles-bottom, 0px)} + #{var(--mail-ChatHub-bubbles-bottomLift, 0px)});
 
     &.o-liftUp {
