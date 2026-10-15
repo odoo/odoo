@@ -1,9 +1,11 @@
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useListener } from "@odoo/owl";
+import { useListener, usePlugin } from "@odoo/owl";
 
 export function useCalendarPopover(component) {
+    const ui = usePlugin(UIPlugin);
     let popoverClass = "";
-    const popoverOptions = { position: "right", onClose: cleanup };
+    const popoverOptions = { position: "right", onClose: cleanup, useBottomSheet: ui.isSmall(), class: "p-0" };
     Object.defineProperty(popoverOptions, "popoverClass", { get: () => popoverClass });
     const popover = usePopover(component, popoverOptions);
     let removeDialog = null;

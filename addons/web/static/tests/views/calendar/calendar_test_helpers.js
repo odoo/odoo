@@ -499,7 +499,11 @@ export async function selectAllDayRange(startDate, endDate) {
     await animationFrame();
 }
 export async function closeCwPopOver() {
-    await contains(`.o_card_popover_close`).click();
+    if (isSmall()) {
+        await contains(`.o_bottom_sheet_backdrop`).click();
+    } else {
+        await contains(`.o_card_popover_close`).click();
+    }
 }
 /**
  * @param {number} eventId
