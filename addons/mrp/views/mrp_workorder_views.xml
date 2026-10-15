@@ -8,6 +8,8 @@
                 <field name="production_id"/>
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
+                <filter string="My Work Orders" name="my_work_order" domain="[('employee_assigned_ids.user_id', '=', uid)]"/>
+                <separator/>
                 <filter string="Draft" name="draft" domain="[('production_state', '=', 'draft')]"/>
                 <filter string="To Do" name="ready" domain="[('production_state', '!=', 'draft'), ('state','=','ready')]"/>
                 <filter string="Blocked" name="blocked" domain="[('state','=','blocked')]"/>
@@ -183,6 +185,9 @@
                 <field name="product_id"/>
                 <field name="production_lot_producing_id"/>
                 <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
+                <field name="employee_assigned_ids"/>
+                <filter string="My Work Orders" name="my_work_order" domain="[('employee_assigned_ids.user_id', '=', uid)]"/>
+                <separator/>
                 <filter string="Draft" name="draft" domain="[('production_state', '=', 'draft')]"/>
                 <filter string="To Do" name="ready" domain="[('production_state', '!=', 'draft'), ('state', '=', 'ready')]"/>
                 <filter string="Blocked" name="blocked" domain="[('state', '=', 'blocked')]"/>
@@ -199,6 +204,7 @@
                 <group>
                     <filter string="Work Center" name="work_center" domain="[]" context="{'group_by': 'workcenter_id'}"/>
                     <filter string="Manufacturing Order" name="production" domain="[]" context="{'group_by': 'production_id'}"/>
+                    <filter string="Assigned" name="assigned_employee" context="{'group_by': 'employee_assigned_ids'}"/>
                     <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Date" name="scheduled_month" domain="[]" context="{'group_by': 'date_start'}"/>
                 </group>
@@ -231,6 +237,7 @@
                 <field name="qty_reported_from_previous_wo" invisible="1"/>
                 <field name="costs_hour" invisible="1"/>
                 <field name="qty_production" invisible="1"/>
+                <field name="employee_costs_hour" invisible="1"/>
             </graph>
         </field>
     </record>
@@ -249,6 +256,7 @@
                 <field name="qty_reported_from_previous_wo" invisible="1"/>
                 <field name="costs_hour" invisible="1"/>
                 <field name="qty_production" invisible="1"/>
+                <field name="employee_costs_hour" invisible="1"/>
             </pivot>
         </field>
     </record>
@@ -257,7 +265,8 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <kanban highlight_color="color" class="o_mrp_workorder_kanban" js_class="mrp_workorder_kanban" can_open="1" create="0" sample="1" default_group_by="workcenter_id">
-                <field name="last_working_user_id"/>
+                <!-- <field name="last_working_user_id"/> remove field if unused everywhere-->
+                <field t-if="record.employee_assigned_ids.raw_value" name="employee_assigned_ids" widget="many2many_avatar_employee" class="ms-1"/>
                 <field name="workcenter_id" invisible="True"/>
                 <field name="uom_id" invisible="True" force_save="True"/>
                 <field name="operation_id" invisible="True"/>
@@ -393,6 +402,10 @@
                         </div>
                     </group>
                     <group>
+                        <field name="employee_assigned_ids"
+                                widget="many2many_avatar_employee"
+                                readonly="state == 'done'"
+                                domain="not all_employees_allowed and [('id','in',allowed_employees)] or []"/>
                         <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                         <field name="duration_expected" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="state in ['cancel', 'done']"/>
                         <field
@@ -408,7 +421,7 @@
                     <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}" readonly="production_state in ('done', 'cancel')">
                             <list editable="bottom">
-                                <field name="user_id"/>
+                                <field name="employee_id" domain="['|',(parent.all_employees_allowed , '=', True),('id', 'in', parent.allowed_employees)]"/>
                                 <field name="duration" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="0" sum="Time Spent"/>
                                 <field name="workcenter_id" column_invisible="True"/> <!-- passed as default_workcenter_id in the context of time_ids -->
                                 <field name="date_start" optional="hide"/>
