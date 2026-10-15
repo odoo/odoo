@@ -1014,13 +1014,13 @@ Please change the quantity done or the rounding precision of your unit of measur
         assert mode in ('generate', 'import')
         default_vals = {}
 
-        def generate_lot_qty(quantity, qty_per_lot):
+        def generate_lot_qty(quantity, qty_per_lot, rounding):
             if qty_per_lot <= 0:
                 raise UserError(_("The quantity per lot should always be a positive value."))
             line_count = int(quantity // qty_per_lot)
             leftover = quantity % qty_per_lot
             qty_array = [qty_per_lot] * line_count
-            if leftover:
+            if not float_is_zero(leftover, precision_rounding=rounding):
                 qty_array.append(leftover)
             return qty_array
 
@@ -1034,7 +1034,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 default_vals[remove_prefix(key, 'default_')] = context[key]
 
         if default_vals['tracking'] == 'lot' and mode == 'generate':
-            lot_qties = generate_lot_qty(default_vals['quantity'], count)
+            product = self.env['product.product'].browse(default_vals['product_id'])
+            lot_qties = generate_lot_qty(default_vals['quantity'], count, product.uom_id.rounding)
         else:
             lot_qties = [1] * count
 
