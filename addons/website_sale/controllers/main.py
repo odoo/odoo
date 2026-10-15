@@ -865,6 +865,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 int(ptav_data['value']) for ptav_data in no_variants_attribute_values_data
             ]
 
+        # Combo item lines are updated together with their combo
+        if line_id:
+            target_line = order.order_line.filtered(lambda sol: sol.id == line_id)
+            if target_line.combo_item_id:
+                return {
+                    "warning": _(
+                        "This product is part of a combo and can't be updated individually."
+                    )
+                }
+
         values = order._cart_update(
             product_id=product_id,
             line_id=line_id,
