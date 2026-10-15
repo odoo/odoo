@@ -1075,9 +1075,9 @@ class ProductTemplate(models.Model):
             # If the price should be hidden, we don't want to send any price information regarding
             # the product, including the price before discount
             combination_info.update({
-                'compare_list_price': 0,
-                'has_discounted_price': False,
-                'list_price': combination_info['price'],
+                "compare_list_price": 0,
+                "has_discounted_price": False,
+                "list_price": combination_info["price"],
             })
 
         if product_or_template._has_multiple_uoms():
@@ -1293,16 +1293,25 @@ class ProductTemplate(models.Model):
         if taxes is None:
             taxes = fiscal_position.map_tax(product_taxes)
 
-        price = product._get_tax_included_unit_price_from_price(
+        # Convert the display mode into the document tax mode expected below
+        website_tax_mode = "tax_excluded" if tax_display == "total_excluded" else "tax_included"
+
+        # Changes Fiscal Position when necessary
+        price_after_fp = product._get_tax_included_unit_price_from_price(
             price, product_taxes, product_taxes_after_fp=taxes
         )
-
-        # The list_price is always the price of one.
-        tax_details = taxes.compute_all(
-            price, currency, 1, product or self, self.env.user.partner_id
+        # Adapts the price to the needed tax mode
+        tax_included_price = product._adapt_price_unit_to_document_tax_mode(
+            product_price_unit=price_after_fp,
+            product_taxes=taxes,
+            product_uom=product.uom_id,
+            document_tax_mode=website_tax_mode,
         )
 
-        return tax_details[tax_display]
+        return float_round(
+            tax_included_price,
+            precision_digits=self.env["decimal.precision"].precision_get("Product Price"),
+        )
 
     def create_product_variant(self, product_template_attribute_value_ids):
         """Create if necessary and possible and return the id of the product
