@@ -980,3 +980,11 @@ class TestCreatePicking(ProductVariantsCommon):
         move = po.picking_ids.move_ids
 
         self.assertEqual(move.description_picking, "[P01] Product 1", f'The vendor reference "{move.description_picking}" is not the expected one.')
+
+    def test_receipt_empty_list_help_purchase_orders_button(self):
+        """ The "Purchase Orders" button of the empty receipts list must only be
+        shown to users having access to the Purchase app. """
+        stock_user = mail_new_test_user(self.env, login='stock_user_no_purchase', groups='stock.group_stock_user')
+        Picking = self.env['stock.picking'].with_context(restricted_picking_type_code='incoming')
+        self.assertNotIn('purchase.purchase_form_action', Picking.with_user(stock_user).get_empty_list_help(''))
+        self.assertIn('purchase.purchase_form_action', Picking.with_user(self.user_purchase_user).get_empty_list_help(''))
