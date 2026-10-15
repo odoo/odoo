@@ -8,8 +8,7 @@ class TestIrDefault(TransactionCase):
 
     def test_defaults(self):
         """ check the mechanism of user-defined defaults """
-        companyA = self.env.company
-        companyB = companyA.create({'name': 'CompanyB'})
+        companyB = self.add_company('base.test_company_template')
         user1 = self.env.user
         user2 = user1.create({'name': 'u2', 'login': 'u2'})
         user3 = user1.create({'name': 'u3', 'login': 'u3',
@@ -110,8 +109,8 @@ class TestIrDefault(TransactionCase):
 
     def test_multi_company_defaults(self):
         """Check defaults in multi-company environment."""
-        company_a = self.env["res.company"].create({"name": "C_A"})
-        company_b = self.env["res.company"].create({"name": "C_B"})
+        company_a = self.add_company('base.test_company_template')
+        company_b = self.add_company('base.test_company_template2')
         company_a_b = (company_a + company_b)
         company_b_a = (company_b + company_a)
         multi_company_user = self.env['res.users'].create({

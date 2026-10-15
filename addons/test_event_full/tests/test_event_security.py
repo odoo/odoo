@@ -253,7 +253,7 @@ class TestEventSecurity(TestEventFullCommon):
     def test_multi_companies(self):
         """Test ACLs with multi company. """
         company_1 = self.env.ref("base.main_company")
-        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        company_2 = self.add_company('base.test_company_template')
         user_company_1 = self.user_eventuser
 
         event_company_1, event_company_2 = self.env['event.event'].create([

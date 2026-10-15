@@ -372,8 +372,8 @@ class TestFiscalPosition(common.TransactionCase):
         _get_first_matching_fpos sorts by company.parent_ids, because the parent
         company is outside that user's allowed companies.
         """
-        parent_company = self.env['res.company'].create({'name': 'Test Parent'})
-        child_company = self.env['res.company'].create({'name': 'Test Child', 'parent_id': parent_company.id})
+        self.add_company('base.test_company_with_branch')
+        child_company = self.env.ref('base.test_company_branch_a')
 
         child_user = common.new_test_user(
             self.env,

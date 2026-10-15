@@ -81,7 +81,7 @@ class TestResPartner(TransactionCase):
         """Check the partner's meeting accesses in a multi-company environment."""
 
         company1 = self.env.ref('base.main_company')
-        company2 = self.env['res.company'].create({'name': 'OtherCompany'})
+        company2 = self.add_company('base.test_company_template')
 
         company1.partner_id.company_id = company1
 

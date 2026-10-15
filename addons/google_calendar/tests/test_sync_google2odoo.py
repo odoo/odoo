@@ -19,7 +19,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.other_company = cls.env['res.company'].create({'name': 'Other Company'})
+        cls.other_company = cls.add_class_company('base.test_company_template')
         cls.public_partner = cls.env['res.partner'].create({
             'name': 'Public Contact',
             'email': 'public_email@example.com',

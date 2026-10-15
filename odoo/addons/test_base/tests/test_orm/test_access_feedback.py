@@ -350,7 +350,7 @@ If you really, really need access, perhaps you can win over your friendly admini
             'operation': 'crud',
             'domain': '[("parent_id.company_id", "=", user.company_id.id)]',
         })
-        self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
+        self.record.sudo().company_id = self.add_company('base.test_company_template')
         self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]
         child_record = ChildModel.create({'parent_id': self.record.id}).with_user(self.user)
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
@@ -372,7 +372,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         """ because of prefetching, read() goes through a different codepath
         to apply rules
         """
-        self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
+        self.record.sudo().company_id = self.add_company('base.test_company_template')
         self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]", attr='read')
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
@@ -402,10 +402,8 @@ This seems to be a multi-company issue, you might be able to access the record b
 
     def test_warn_company_access_multi_record(self):
         """ Test that AccessError handle correctly several companies """
-        company_1, company_2 = self.env['res.company'].create([
-            {'name': 'Brosse Inc.'},
-            {'name': 'Brosse Inc. 2'},
-        ])
+        company_1 = self.add_company('base.test_company_template')
+        company_2 = self.add_company('base.test_company_template2')
         records = self.env["test_access_right.some_obj"].create([
             {"val": 1, "company_id": company_1.id},
             {"val": 2, "company_id": company_2.id},

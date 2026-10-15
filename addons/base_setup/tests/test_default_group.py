@@ -10,7 +10,7 @@ class TestResConfig(TransactionCase):
         super(TestResConfig, self).setUp()
 
         self.user = self.env.ref('base.user_admin')
-        self.company = self.env['res.company'].create({'name': 'oobO'})
+        self.company = self.add_company('base.test_company_template')
         self.user.write({'company_ids': [(4, self.company.id)], 'company_id': self.company.id})
         Settings = self.env['res.config.settings'].with_user(self.user.id)
         self.config = Settings.create({})
@@ -18,7 +18,7 @@ class TestResConfig(TransactionCase):
     def test_create_user_default_user_groups(self):
         # Add a group to the default user groups
 
-        company = self.env['res.company'].create({'name': 'My Last Company'})
+        company = self.add_company('base.test_company_template2')
         partner = self.env['res.partner'].create({
             'name': 'My User'
         })

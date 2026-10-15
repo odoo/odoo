@@ -48,7 +48,7 @@ class TestMailComposerForm(TestMailComposer):
     @classmethod
     def setUpClass(cls):
         super(TestMailComposerForm, cls).setUpClass()
-        cls.other_company = cls.env['res.company'].create({'name': 'Other Company'})
+        cls.other_company = cls.add_class_company('base.test_company_template2')
         cls.user_employee.write({
             'company_ids': [(4, cls.other_company.id)]
         })

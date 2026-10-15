@@ -38,7 +38,7 @@ class TestDefaultTeam(TestSalesCommon):
         # sales_team_1--------5--------False
         # data----------------9999-----??
 
-        cls.company_2 = cls.env['res.company'].create({
+        cls.company_2 = cls.add_class_company('base.test_company_template', {
             'name': 'New Test Company',
             'email': 'company.2@test.example.com',
             'country_id': cls.env.ref('base.fr').id,

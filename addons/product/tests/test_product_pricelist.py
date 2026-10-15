@@ -341,11 +341,8 @@ class TestProductPricelist(ProductCommon):
     def test_pricelist_sync_on_partners(self):
         ResPartner = self.env['res.partner']
 
-        company_1, company_2 = self.env['res.company'].sudo().create([
-            {'name': 'company_1'},
-            {'name': 'company_2'},
-        ])
-        self.env.user.company_ids += company_1 + company_2
+        company_1 = self.add_company('base.test_company_template')
+        company_2 = self.add_company('base.test_company_template2')
 
         test_partner_company = ResPartner.create({
             'name': 'This company',
