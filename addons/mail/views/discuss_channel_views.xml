@@ -81,7 +81,13 @@
                         <div class="oe_title">
                             <label for="name" string="Group Name"/>
                             <h1>
+<<<<<<< d32c1e430100cec6d160bd7ff4acf15c0dc77d52
                                 #<field name="name" class="oe_inline" default_focus="1" placeholder="e.g. support" readonly="not is_editable or (id and is_readonly and not can_self_edit_readonly_channel)"/>
+||||||| 5ce600033cdb46b278122b1a519bc1e356c2ebe2
+                                #<field name="name" class="oe_inline" default_focus="1" placeholder="e.g. support" readonly="not is_editable"/>
+=======
+                                #<field name="name" class="oe_inline" default_focus="1" placeholder="e.g. support" readonly="not is_editable" required="channel_type != 'group'"/>
+>>>>>>> ecec1c8f3d3c603327cf707802f310fd7961e17a
                             </h1>
                         </div>
                         <group class="o_label_nowrap">
