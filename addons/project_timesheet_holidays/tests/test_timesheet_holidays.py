@@ -589,6 +589,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             self.assertEqual(len(leave.timesheet_ids), expected_entries, f"{leave.name}: incorrect number of timesheet entries.")
             self.assertEqual(sum(leave.timesheet_ids.mapped('unit_amount')), expected_hours, f"{leave.name}: incorrect total timesheet hours.")
 
+    @freeze_time('2026-10-15')
     def test_archive_employee_timesheet_with_leave(self):
         """ Test that future timesheets linked to leaves are successfully deleted upon departure. """
         Timesheet = self.env['account.analytic.line']
@@ -618,6 +619,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.env['hr.employee.departure'].with_context(employee_termination=True).create({
             'employee_id': self.empl_employee.id,
             'departure_date': yesterday,
+            'dismissal_date': yesterday,
         }).action_register()
 
         self.assertFalse(leave_timesheet.exists(), "The timesheet should be safely unlinked from the leave and deleted.")
