@@ -61,7 +61,7 @@ class ResPartner(models.Model):
         return res
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_if_partner_in_account_move(self):
+    def _unlink_if_partner_in_purchase_order(self):
         """ Prevent the deletion of a partner if it is used in a PO dropship address"""
 
         po = self.sudo().env['purchase.order'].search_count([
