@@ -839,6 +839,40 @@ class Website(models.Model):
 
         return fpos_sudo
 
+    def _get_current_wishlist(self):
+        """Retrieve the wishlist items of the current user or session.
+
+        Unpublished products are filtered out.
+
+        Note: self.ensure_one()
+
+        :return: The wishlist items, sudoed for the public user.
+        :rtype: product.wishlist
+        """
+        self.ensure_one()
+
+        if self.is_public_user():
+            wishes = (
+                self
+                .env["product.wishlist"]
+                .sudo()
+                .search([("id", "in", request.session.get("wishlist_ids", []))])
+            )
+        else:
+            wishes = self.env["product.wishlist"].search([
+                ("partner_id", "=", self.env.user.partner_id.id),
+                ("website_id", "=", self.id),
+            ])
+
+        # TODO for /shop page, no need to check _has_ecommerce_sellable_variants as it's only used
+        # to see whether the product is in the wishlist.
+        return wishes.filtered(
+            lambda wish: (
+                wish.sudo().product_id._is_published()
+                and wish.sudo().product_id.product_tmpl_id._has_ecommerce_sellable_variants()
+            )
+        )
+
     def _get_and_cache_current_cart(self):
         """Retrieve and cache the current cart for the session.
 

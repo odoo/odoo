@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from odoo import api, fields, models
 from odoo.http import request
+from odoo.tools import lazy
 
 
 class ProductWishlist(models.Model):
@@ -34,23 +35,9 @@ class ProductWishlist(models.Model):
         website = self.env.website
         if not request or not website:
             return self
-
-        if website.is_public_user():
-            wish = self.sudo().search([("id", "in", request.session.get("wishlist_ids", []))])
-        else:
-            wish = self.search([
-                ("partner_id", "=", self.env.user.partner_id.id),
-                ("website_id", "=", website.id),
-            ])
-
-        # TODO for /shop page, no need to check _has_ecommerce_sellable_variants as it's only used to see
-        # whether the product is in the wishlist.
-        return wish.filtered(
-            lambda wish: (
-                wish.sudo().product_id._is_published()
-                and wish.sudo().product_id.product_tmpl_id._has_ecommerce_sellable_variants()
-            )
-        )
+        if hasattr(request, "wishlist"):
+            return request.wishlist
+        return website._get_current_wishlist()
 
     @api.model
     def _add_to_wishlist(
@@ -80,6 +67,7 @@ class ProductWishlist(models.Model):
         # Assign the rest to the user
         session_wishes.write({"partner_id": self.env.user.partner_id.id})
         request.session.pop("wishlist_ids")
+        request.wishlist = lazy(self.env.website._get_current_wishlist)
 
     @api.autovacuum
     def _gc_sessions(self, *_args, **kwargs):
