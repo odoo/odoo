@@ -14,7 +14,9 @@ class MessageTranslation(models.Model):
         "Source Language", required=True, help="Result of the language detection based on its content."
     )
     target_lang = fields.Char(
-        "Target Language", required=True, help="Shortened language code used as the target for the translation request."
+        "Target Language",
+        required=True,
+        help="Language code used as the target for the translation request.",
     )
     body = fields.Html(
         "Translation Body", required=True, sanitize_style=True, help="String received from the translation request."
