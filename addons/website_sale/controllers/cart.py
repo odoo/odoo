@@ -156,7 +156,7 @@ class Cart(PaymentPortal):
         values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
             product_id=product_id,
             quantity=quantity,
-            uom_id=uom_id,
+            uom_id=uom_id if product.type != 'combo' else None,
             product_custom_attribute_values=product_custom_attribute_values,
             no_variant_attribute_value_ids=no_variant_attribute_value_ids,
             **kwargs,
@@ -192,7 +192,9 @@ class Cart(PaymentPortal):
                 product_values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
                     product_id=product_data['product_id'],
                     quantity=product_data['quantity'],
-                    uom_id=product_data.get('uom_id'),
+                    uom_id=product_data.get('uom_id')
+                    if (product_sudo.type != 'combo' and not product_data.get('combo_item_id'))
+                    else None,
                     product_custom_attribute_values=product_data['product_custom_attribute_values'],
                     no_variant_attribute_value_ids=[
                         int(value_id) for value_id in product_data['no_variant_attribute_value_ids']
