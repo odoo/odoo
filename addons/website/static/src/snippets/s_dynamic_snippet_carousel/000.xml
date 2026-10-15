@@ -7,6 +7,12 @@
                 <span class="visually-hidden">Previous</span>
             </a>
         </div>
+        <div class="o_carousel_arrow_wrap align-items-center">
+            <button class="o_carousel_pause o_btn_reset pe-auto" t-attf-aria-controls="#{this.unique_id}_inner" title="Pause slides">
+                <span class="o_carousel_arrow o_carousel_pause_icon oi oi-filled p-3" data-icon="pause" aria-hidden="true"/>
+                <span class="visually-hidden">Pause slides</span>
+            </button>
+        </div>
         <div class="o_carousel_arrow_wrap align-items-center justify-content-end pe-none">
             <a t-attf-href="##{this.unique_id}" class="carousel-control-next position-relative pe-auto" data-bs-slide="next" role="button" t-attf-aria-controls="#{this.unique_id}_inner" aria-label="Next" title="Next">
                 <span class="o_carousel_arrow oi p-3" data-icon="chevron_forward" role="img" aria-hidden="true"/>
@@ -31,6 +37,12 @@
                     <t t-call="website.s_dynamic_snippet.carousel.arrows" unique_id="this.unique_id"/>
                 </div>
             </t>
+            <div class="o_carousel_pause_bottom_wrap justify-content-start">
+                <button class="o_carousel_pause o_snippet_not_selectable o_not_editable o_btn_reset" t-attf-aria-controls="#{this.unique_id}_inner" title="Pause slides">
+                    <span class="o_carousel_pause_icon p-3 oi oi-filled" data-icon="pause" aria-hidden="true"/>
+                    <span class="visually-hidden">Pause slides</span>
+                </button>
+            </div>
             <!-- Content -->
             <t t-set="rowIndexGenerator" t-value="Array(this.rowPerSlide)"/>
             <t t-set="colIndexGenerator" t-value="Array(rowSize)"/>
