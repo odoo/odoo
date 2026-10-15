@@ -1,6 +1,5 @@
 import { EventBus, markup } from "@odoo/owl";
 import { browser } from "../browser/browser";
-import { omit } from "../utils/objects";
 
 /**
  * @typedef {{
