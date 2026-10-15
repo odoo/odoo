@@ -27,7 +27,7 @@ class ResPartner(models.Model):
         """
         l10n_hu_partners = self.filtered(lambda p: p.country_code == 'HU')
         for partner in l10n_hu_partners:
-            if not partner.has_vat:
+            if partner.commercial_partner_id != partner or not partner.has_vat:
                 partner.is_company = False
                 continue
             vat = (partner.vat).replace(' ', '').upper()
