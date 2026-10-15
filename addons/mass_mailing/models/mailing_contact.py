@@ -158,6 +158,15 @@ class MailingContact(models.Model):
             contact.opened_ratio = float_round(100.0 * opened / total_no_error, precision_digits=2)
             contact.replied_ratio = float_round(100.0 * line['reply'] / total_no_error, precision_digits=2)
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        partner = self.partner_id
+        self.company_name = partner.parent_id.name
+        self.email = partner.email
+        self.country_id = partner.country_id or partner.parent_id.country_id
+        self.name = partner.name
+        self.tag_ids = partner.category_id
+
     @api.model_create_multi
     def create(self, vals_list):
         """ Synchronize default_list_ids (currently used notably for computed

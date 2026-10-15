@@ -1329,7 +1329,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertMessageFields(
             rec1.message_ids[0], {
                 'subject': f'Test Template on {rec1.name}',
-                'subtype_id': self.env['mail.message.subtype'],
+                'subtype_id': self.env.ref('mail.mt_note'),
             }
         )
         # write tracking message

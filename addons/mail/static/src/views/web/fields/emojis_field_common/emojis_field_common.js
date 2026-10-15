@@ -37,6 +37,7 @@ export const EmojisFieldCommon = (T) =>
                 },
                 {
                     position: "bottom",
+                    popoverClass: "o_field_emojis_picker",
                 }
             );
         }

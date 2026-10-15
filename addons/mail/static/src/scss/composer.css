@@ -28,6 +28,31 @@
     flex-direction: column;
     justify-content: flex-end;
 }
+body:has(.o_model_field_selector_popover, .o_field_emojis_picker)
+    .o_field_widget:has(.o_mail_emojis_buttons) .o_field_input_buttons {
+    visibility: visible;
+}
+.o_modal_fullscreen {
+    z-index: $o-mail-ChatWindow-zindex + 1;
+
+    .arrow {
+        position: absolute;
+        top: 50%;
+        left: auto;
+        bottom: auto;
+        right: calc(var(--o-bs-grid-gutter-width) * 0.5);
+        border-radius: 100%;
+        padding: 12px 16px 11px 18px;
+        @include o-FileViewer-arrow;
+    }
+
+    .arrow-left {
+        left: calc(var(--o-bs-grid-gutter-width) * 0.5);
+        right: auto;
+        padding: 12px 18px 11px 16px;
+    }
+}
+
 .o_document_viewer_topbar_button {
     display: flex;
     align-items: center;
