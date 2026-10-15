@@ -82,9 +82,8 @@ describe("collapsed selection", () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
             stepFunction: insertHTML("<div><p>content</p></div>"),
-            contentAfterEdit:
-                '<p data-selection-placeholder=""><br></p><div><p>content[]</p></div><p data-selection-placeholder=""><br></p>',
-            contentAfter: "<div><p>content[]</p></div>",
+            contentAfterEdit: `<p data-selection-placeholder=""><br></p><div><p>content</p></div><p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`,
+            contentAfter: "<div><p>content</p></div>[]",
         });
     });
 
@@ -186,7 +185,6 @@ describe("collapsed selection", () => {
         const table = "<table><tbody><tr><td/></tr></tbody></table>";
         const normalizedTable = table.replace("<td/>", "<td><br></td>");
         const wrappedTable = `<div class="o_table_wrapper">${normalizedTable}</div>`;
-        const wrappedTableWithSelection = wrappedTable.replace("<br>", "[]<br>");
         test("never unwrap tables in breakable paragraph", async () => {
             // P elements' content can only be "phrasing" content
             // Adding a table within p is not possible
@@ -207,7 +205,7 @@ describe("collapsed selection", () => {
             const { editor } = await setupEditor(`<p>[]<br></p>`, {});
             insertHTML(table, [normalizedTable])(editor);
             expect(getContent(editor.editable)).toBe(
-                `<p data-selection-placeholder=""><br></p>${wrappedTableWithSelection}<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+                `<p data-selection-placeholder=""><br></p>${wrappedTable}<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
             );
         });
 
@@ -247,7 +245,7 @@ describe("collapsed selection", () => {
             const { editor } = await setupEditor(`<p class="oe_unbreakable">content[]</p>`, {});
             insertHTML(table, [normalizedTable])(editor);
             expect(getContent(editor.editable)).toBe(
-                `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>${wrappedTableWithSelection}<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+                `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>${wrappedTable}<p data-selection-placeholder="" style="margin: -9px 0px 8px;" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
             );
         });
 
@@ -258,7 +256,7 @@ describe("collapsed selection", () => {
             );
             insertHTML(table, [normalizedTable])(editor);
             expect(getContent(editor.editable)).toBe(
-                `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content\u200B</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>${wrappedTableWithSelection}<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+                `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content\u200B</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>${wrappedTable}<p data-selection-placeholder="" style="margin: -9px 0px 8px;" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
             );
         });
 
@@ -266,7 +264,7 @@ describe("collapsed selection", () => {
             const { editor } = await setupEditor(`<p class="oe_unbreakable">[]<br></p>`, {});
             insertHTML(table, [normalizedTable])(editor);
             expect(getContent(editor.editable)).toBe(
-                `<p data-selection-placeholder=""><br></p>${wrappedTableWithSelection}<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+                `<p data-selection-placeholder=""><br></p>${wrappedTable}<p data-selection-placeholder="" style="margin: -9px 0px 8px;" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
             );
         });
 
@@ -292,8 +290,8 @@ describe("collapsed selection", () => {
         const { editor } = await setupEditor(`<p>cont[]</p>`, {});
         insertHTML(`<p class="oe_unbreakable">1</p>`)(editor);
         expect(getContent(editor.editable)).toBe(
-            `<p>cont</p><p class="oe_unbreakable">1[]</p>` +
-                '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>'
+            `<p>cont</p><p class="oe_unbreakable">1</p>` +
+                `<p data-selection-placeholder="" style="margin: -9px 0px 8px;" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
         );
     });
 
@@ -301,7 +299,7 @@ describe("collapsed selection", () => {
         const { editor } = await setupEditor(`<p>cont[]</p><p>+</p>`, {});
         insertHTML(`<p class="oe_unbreakable">1</p>`)(editor);
         expect(getContent(editor.editable)).toBe(
-            `<p>cont</p><p class="oe_unbreakable">1[]</p><p>+</p>`
+            `<p>cont</p><p class="oe_unbreakable">1</p><p>[]+</p>`
         );
     });
 
@@ -314,8 +312,8 @@ describe("collapsed selection", () => {
         expect(getContent(editor.editable)).toBe(
             `<p>cont</p><p class="oe_unbreakable">1</p>` +
                 `<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>` +
-                `<p class="oe_unbreakable">2[]</p>` +
-                `<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+                `<p class="oe_unbreakable">2</p>` +
+                `<p data-selection-placeholder="" style="margin: -9px 0px 8px;" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
         );
     });
 
@@ -331,7 +329,7 @@ describe("collapsed selection", () => {
         expect(insertedNodes[0].outerHTML).toBe(`<p class="oe_unbreakable">1</p>`);
         expect(insertedNodes[1].outerHTML).toBe(`<p class="oe_unbreakable">2</p>`);
         expect(getContent(editor.editable)).toBe(
-            `<p>cont</p><p class="oe_unbreakable">1</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><p class="oe_unbreakable">2[]</p><p>+</p>`
+            `<p>cont</p><p class="oe_unbreakable">1</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><p class="oe_unbreakable">2</p><p>[]+</p>`
         );
     });
 
@@ -359,7 +357,7 @@ describe("collapsed selection", () => {
         const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
         insertHTML(`<p class="oe_unbreakable">in</p>`)(editor);
         expect(getContent(editor.editable)).toBe(
-            `<p>cont</p><p class="oe_unbreakable">in[]</p><p>ent</p>`
+            `<p>cont</p><p class="oe_unbreakable">in</p><p>[]ent</p>`
         );
     });
 
@@ -449,7 +447,8 @@ describe("collapsed selection", () => {
                 <div>
                     <p>a</p>
                     <span>b</span>
-                    <div class="o-paragraph oe_unbreakable">c[]</div>
+                    <div class="o-paragraph oe_unbreakable">c</div>
+                    []
                     <p>d</p>
                 </div>
                 <p data-selection-placeholder=""><br></p>`)
@@ -506,7 +505,8 @@ describe("collapsed selection", () => {
                     <span>b</span>
                     <div class="o-paragraph oe_unbreakable">c</div>
                     <i>d</i>
-                    <p class="oe_unbreakable">e[]</p>
+                    <p class="oe_unbreakable">e</p>
+                    []
                     <p>f</p>
                 </div>
                 <p data-selection-placeholder=""><br></p>`)
@@ -536,7 +536,8 @@ describe("collapsed selection", () => {
                 <p data-selection-placeholder=""><br></p>
                 <div>
                     <p>a</p>
-                    <div class="o-paragraph oe_unbreakable">b[]</div>
+                    <div class="o-paragraph oe_unbreakable">b</div>
+                    []
                     <span>c</span>
                     <p>d</p>
                 </div>
@@ -591,7 +592,8 @@ describe("collapsed selection", () => {
                     <p>a</p>
                     <div class="o-paragraph oe_unbreakable">b</div>
                     <i>c</i>
-                    <p class="oe_unbreakable">d[]</p>
+                    <p class="oe_unbreakable">d</p>
+                    []
                     <span>e</span>
                     <p>f</p>
                 </div>

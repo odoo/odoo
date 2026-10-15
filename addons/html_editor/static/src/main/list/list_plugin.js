@@ -229,7 +229,6 @@ export class ListPlugin extends Plugin {
                 return false;
             }
         },
-        can_hold_selection_after_insertion_predicates: isListPredicate,
         can_insert_block_in_parent_predicates: (block, parent) => {
             if (isListItemElement(block) && isListItemElement(parent)) {
                 return false;

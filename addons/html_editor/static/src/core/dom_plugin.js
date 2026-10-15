@@ -118,7 +118,6 @@ const getNodesFromNodesAndFragments = (nodes) =>
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
  * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
  *
- * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
  * @typedef {((block: HTMLElement, parent: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
  * @typedef {((block: HTMLElement) => boolean)[]} is_retagging_safe_predicates
  * Allows to bypass the check in `isRetaggingSafe`, to handle the block in `on_will_set_tag_handlers`
@@ -589,17 +588,13 @@ export class DomPlugin extends Plugin {
         }
         let target = insertedNodes.at(-1);
         const systemNode = this.getResource("system_node_selectors").join(",");
-        if (isBlock(target)) {
-            const leaf = lastLeaf(target, {
+        const mayEnterNode = (node) => isContentEditable(node) && !this.isUnsplittable(node);
+        if (isBlock(target) && mayEnterNode(target)) {
+            target = lastLeaf(target, {
                 predicate: (child) => isVisible(child) && !child.matches?.(systemNode),
             });
-            const parent = leaf.parentElement;
-            if (
-                isContentEditable(parent) &&
-                (this.checkPredicates("can_hold_selection_after_insertion_predicates", parent) ??
-                    isParagraphRelatedElement(parent))
-            ) {
-                target = leaf;
+            while (target !== insertedNodes.at(-1) && !mayEnterNode(target.parentElement)) {
+                target = target.parentElement;
             }
         }
         // Set the selection after or at the end of the last inserted node.

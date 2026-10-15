@@ -123,10 +123,10 @@ describe("Html Paste cleaning - whitelist", () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p>[]<br></p></td>
+                            <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table>[]
             `),
         });
     });
@@ -157,9 +157,9 @@ describe("Html Paste cleaning - whitelist", () => {
                     <tbody>
                         <tr><th class="o_table_header">Header 1</th></tr>
                         <tr><td>Header 2</td></tr>
-                        <tr><td>Cell[]</td></tr>
+                        <tr><td>Cell</td></tr>
                     </tbody>
-                </table>
+                </table>[]
             `),
         });
     });
@@ -4534,10 +4534,10 @@ describe("Paste HTML tables", () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p>[]<br></p></td>
+                            <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table>[]
             `),
         });
     });
@@ -4582,10 +4582,10 @@ describe("Paste HTML tables", () => {
                                 </tr>
                                 <tr>
                                     <td>1</td>
-                                    <td>2[]</td>
+                                    <td>2</td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table>[]
                     `),
         });
     });
@@ -4612,10 +4612,10 @@ describe("Paste HTML tables", () => {
                             <tbody>
                                 <tr>
                                     <th class="o_table_header">1</th>
-                                    <th class="o_table_header">2[]</th>
+                                    <th class="o_table_header">2</th>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table>[]
                     `),
         });
     });
@@ -5032,9 +5032,10 @@ describe("paste table cells into an existing table", () => {
                                 <p>before</p>
                                 <table class="table table-bordered o_table">
                                     <tbody>
-                                        <tr><td><p>x[]</p></td></tr>
+                                        <tr><td><p>x</p></td></tr>
                                     </tbody>
                                 </table>
+                                []
                                 <p>a</p>
                             </td>
                             <td><p>b</p></td>
