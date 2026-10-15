@@ -39,7 +39,8 @@ export const seoContext = proxy({
     metaImage: "",
     defaultTitle: "",
     updatedAlts: [],
-    updatedTitles: [],
+    titleAttributes: [],
+    hasDelayedTranslation: false,
     brokenLinks: [],
 });
 
@@ -721,8 +722,29 @@ export class TitleDescription extends Component {
     // Handlers
     //--------------------------------------------------------------------------
 
-    autoFill() {
+    async autoFill() {
         getSeo(this);
+        await this.fillVideoTitles();
+    }
+
+    /**
+     * Fill the empty video descriptions with the title of the video, for the
+     * providers exposing one.
+     */
+    async fillVideoTitles() {
+        if (this.seoContext.hasDelayedTranslation) {
+            return;
+        }
+        const videos = this.seoContext.titleAttributes.filter((video) => !video.title.trim());
+        await Promise.allSettled(
+            videos.map(async (video) => {
+                const title = await PLATFORMS[video.platform]?.getTitle?.(video.video_id);
+                if (title && !video.title.trim()) {
+                    video.title = title;
+                    video.updated = true;
+                }
+            })
+        );
     }
 
     /**
@@ -827,23 +849,19 @@ export class SeoChecks extends Component {
         this.object = seoObject || mainObject;
         this.state = proxy({
             altAttributes: [],
-            titleAttributes: [],
             checkingLinks: false,
             checkedLinks: false,
             counterLinks: 0,
             totalLinks: 0,
         });
         this.imgUpdated = this.imgUpdated.bind(this);
-        this.videoUpdated = this.videoUpdated.bind(this);
         onWillStart(async () => {
             const { altAttributes, titleAttributes } = await this.getMediaAttributes();
             this.state.altAttributes = altAttributes;
-            this.state.titleAttributes = titleAttributes;
+            this.seoContext.titleAttributes = titleAttributes;
             this.seoContext.updatedAlts = [];
-            this.seoContext.updatedTitles = [];
-            if (!this.props.isDefaultLang) {
-                this.hasDelayedTranslation = await fetchDelayedTranslations(path);
-            }
+            this.seoContext.hasDelayedTranslation =
+                !this.props.isDefaultLang && (await fetchDelayedTranslations(path));
         });
         onMounted(() => {
             if (this.props.isDefaultLang) {
@@ -859,7 +877,6 @@ export class SeoChecks extends Component {
 
     videoUpdated(video) {
         video.updated = true;
-        this.seoContext.updatedTitles = this.state.titleAttributes.filter((video) => video.updated);
     }
 
     async getMediaAttributes() {
@@ -912,6 +929,9 @@ export class SeoChecks extends Component {
                 if (!videoData) {
                     return;
                 }
+                // Kept to fetch the video title on "Fill with AI".
+                video.platform = videoData.platform;
+                video.video_id = videoData.videoId;
                 if (IFRAME_PREVIEW_PLATFORMS.has(videoData.platform)) {
                     video.preview_url = videoData.embedUrl;
                     return;
@@ -1230,9 +1250,10 @@ export class OptimizeSEODialog extends Component {
                 })
             );
         }
+        const updatedTitles = seoContext.titleAttributes.filter((video) => video.updated);
         if (!this.isDefaultLang) {
             const translationsByRecord = {};
-            for (const media of [...seoContext.updatedAlts, ...seoContext.updatedTitles]) {
+            for (const media of [...seoContext.updatedAlts, ...updatedTitles]) {
                 const key = `${media.res_model}::${media.res_id}::${media.field}`;
                 translationsByRecord[key] ??= {
                     model: media.res_model,
@@ -1255,10 +1276,10 @@ export class OptimizeSEODialog extends Component {
                     })
                 );
             }
-        } else if (seoContext.updatedAlts.length || seoContext.updatedTitles.length) {
+        } else if (seoContext.updatedAlts.length || updatedTitles.length) {
             rpcCalls.push(
                 rpc("/website/update_media_elements", {
-                    elements: [...seoContext.updatedAlts, ...seoContext.updatedTitles],
+                    elements: [...seoContext.updatedAlts, ...updatedTitles],
                 })
             );
         }

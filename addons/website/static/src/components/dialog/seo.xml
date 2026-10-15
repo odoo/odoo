@@ -117,7 +117,7 @@
                                t-model.proxy="item[textProperty]"
                                type="text"
                                t-att-class="'form-control ' + (item[textProperty].trim().length ? 'is-valid' : 'is-invalid')"
-                               t-att-disabled="this.hasDelayedTranslation"
+                               t-att-disabled="this.seoContext.hasDelayedTranslation"
                                t-on-change="() => updateFn(item)"/>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
 
 <t t-name="website.SeoChecks">
     <section class="mt-3 o_seo_images_check position-relative">
-        <div t-if="this.hasDelayedTranslation" class="o_seo_checks_overlay d-flex justify-content-center align-items-center">
+        <div t-if="this.seoContext.hasDelayedTranslation" class="o_seo_checks_overlay d-flex justify-content-center align-items-center">
             <p class="alert alert-info d-flex align-items-center shadow-sm m-0" role="alert">
                 <i role="img" aria-hidden="true" class="oi me-2" data-icon="info"/>
                 Translation may differ from original content. Click on "Edit/Translate" to see most recent changes.
@@ -160,7 +160,7 @@
            previewText="videoPreview"
            placeholderText="videoPlaceholder"
            hasDecorativeOption="false"
-           items="this.state.titleAttributes"
+           items="this.seoContext.titleAttributes"
            textProperty="'title'"
            updateFn="this.videoUpdated"/>
 
