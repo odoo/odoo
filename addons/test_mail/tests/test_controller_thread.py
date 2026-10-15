@@ -217,3 +217,13 @@ class TestMessageController(MailControllerThreadCommon):
         self.assertEqual(len(mail), 1)
         header = literal_eval(mail.headers)
         self.assertEqual(header.get('X-Msg-Cc-Add'), ','.join(partner_cc.mapped('email_formatted')))
+
+    def test_message_fetch_access(self):
+        """Test access to fetch the messages on a record with group_user access."""
+        record = self.env["mail.performance.thread"].create({"name": "Test"})
+        self._execute_message_fetch_subtests(
+            (self.user_admin, self.user_employee), record, allowed="all"
+        )
+        self._execute_message_fetch_subtests(
+            (self.guest, self.user_portal, self.user_public), record, allowed=False
+        )

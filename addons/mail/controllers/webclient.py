@@ -5,7 +5,6 @@ from odoo.fields import Domain
 from odoo.http import request
 
 from odoo.addons.mail.controllers.thread import ThreadController
-from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.store_handler import store_handler
 
@@ -143,6 +142,8 @@ class WebclientController(ThreadController):
         thread_id,
         fetch_params=None,
         access_params=None,
+        share_only=False,
+        **params,
     ):
         request.update_context(add_chatter_fields=True)
         if thread := self._get_thread_with_access(
@@ -151,13 +152,14 @@ class WebclientController(ThreadController):
             mode="read",
             **(access_params or {}),
         ):
+            self._prepare_fetch_context(thread, access_params)
             domain = Domain.TRUE
-            if not request.env.user._is_internal() or not thread.sudo(False).has_access("read"):
-                domain = (
-                    SHARE_DOMAIN
-                    & Domain("message_type", "in", thread._get_customer_portal_message_types())
-                    & ~request.env["mail.message"]._get_empty_domain()
-                )
+            if (
+                share_only
+                or not request.env.user._is_internal()
+                or not thread.sudo(False).has_access("read")
+            ):
+                domain = self._get_fetch_share_domain(thread, **params)
             messages = self._resolve_messages(
                 store,
                 domain=domain,
@@ -226,7 +228,7 @@ class WebclientController(ThreadController):
         )
         messages = fetch_res.pop("messages")
         if add_to_store:
-            request.update_context(messages=request.env.context["messages"] | messages)
+            request.update_context(messages=messages | request.env.context["messages"])
         store.resolve_data_request(
             lambda res: (
                 [res.attr(k, v) for k, v in fetch_res.items()],
@@ -234,3 +236,19 @@ class WebclientController(ThreadController):
             ),
         )
         return messages
+
+    @classmethod
+    def _prepare_fetch_context(cls, thread, access_params=None):
+        """To override to update the context before fetching thread messages if needed."""
+
+    @classmethod
+    def _get_fetch_share_domain(cls, records, **params):
+        """Return the domain to fetch messages in a shared context like portal.
+        In this context, internal users have the same visibility as non-internal users.
+        Message types are further filtered per model via `_get_customer_portal_message_types`."""
+        return (
+            Domain([("model", "=", records._name), ("res_id", "in", records.ids)])
+            & records._get_share_message_domain()
+            & Domain("message_type", "in", records._get_customer_portal_message_types())
+            & ~records.env["mail.message"]._get_empty_domain()
+        )
