@@ -31,6 +31,7 @@ import {
     animationFrame,
     Deferred,
     press,
+    queryOne,
     rightClick,
     tick,
     waitFor,
@@ -2510,6 +2511,52 @@ test("Escape key should focus the composer if it's not focused", async () => {
     await click("button[title='Pinned Messages']");
     triggerHotkey("escape");
     await contains(".o-mail-Composer-input:focus");
+});
+
+test("header fits a narrow content area", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await patchUiSize({ width: 800 });
+    await animationFrame();
+    const content = queryOne(".o-mail-DiscussContent");
+    expect(content.scrollWidth).toBe(content.clientWidth);
+    const description = queryOne(".o-mail-DiscussContent-threadDescription");
+    const actions = queryOne(".o-mail-DiscussContent-header .o-mail-ActionList");
+    expect(description.getBoundingClientRect().right).toBeLessThan(
+        actions.getBoundingClientRect().left
+    );
+});
+
+test("long description does not truncate the parent channel name", async () => {
+    const pyEnv = await startServer();
+    const parentId = pyEnv["discuss.channel"].create({ name: "General" });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        name: "Troubleshooting",
+        parent_channel_id: parentId,
+        description: "A description too long for the header. ".repeat(5),
+    });
+    await start();
+    await openDiscuss(subChannelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await patchUiSize({ width: 1400 });
+    await animationFrame();
+    const parentName = queryOne(".o-mail-DiscussContent-header span[title='General']");
+    expect(parentName.scrollWidth).toBe(parentName.clientWidth);
+});
+
+test("short description keeps the width of its text", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General", description: "Short" });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await patchUiSize({ width: 1400 });
+    await animationFrame();
+    const description = queryOne(".o-mail-DiscussContent-threadDescription");
+    expect(description.offsetWidth).toBe(parseFloat(description.style.width));
 });
 
 test("Notification settings: basic rendering", async () => {
