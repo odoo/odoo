@@ -44,10 +44,9 @@ class TestL10nTHEmvQrCode(AccountTestInvoicingCommon):
     def test_emv_qr_code_generation(self):
         self.emv_qr_invoice._generate_qr_code()
 
-        # Using invoice currency other than THB should fail
+        # Using invoice currency other than THB: no QR-code method is eligible, so none is generated
         self.emv_qr_invoice.currency_id = self.env.ref('base.USD')
-        with self.assertRaises(UserError, msg="The chosen QR-code type is not eligible for this invoice."):
-            self.emv_qr_invoice._generate_qr_code()
+        self.assertIsNone(self.emv_qr_invoice._generate_qr_code())
 
         # Without company partner city should fail
         self.emv_qr_invoice.currency_id = self.env.ref('base.THB')

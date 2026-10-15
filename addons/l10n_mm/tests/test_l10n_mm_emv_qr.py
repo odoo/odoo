@@ -121,10 +121,9 @@ class TestL10nMMEmvQrCode(AccountTestInvoicingCommon):
     def test_emv_qr_code_generation_errors(self):
         self.emv_qr_invoice._generate_qr_code()
 
-        # Using an invoice currency other than MMK should fail
+        # Using an invoice currency other than MMK: no QR-code method is eligible, so none is generated
         self.emv_qr_invoice.currency_id = self.env.ref('base.USD')
-        with self.assertRaises(UserError, msg="Can't generate an MMQR code with a currency other than MMK."):
-            self.emv_qr_invoice._generate_qr_code()
+        self.assertIsNone(self.emv_qr_invoice._generate_qr_code())
 
         # Without the account holder city should fail, tag 60 is mandatory
         self.emv_qr_invoice.currency_id = self.env.ref('base.MMK')

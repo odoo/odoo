@@ -34,6 +34,7 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
 
         cls.acc_emv_vn_without_paynow_info = cls.env['res.partner.bank'].create({
             'account_number': '1234567890',
+            'bank_bic': '970422',
             'partner_id': cls.company_data['company'].partner_id.id,
             'allow_out_payment': True,
         })
@@ -64,10 +65,9 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
     def test_emv_qr_code_generation(self):
         self.emv_qr_invoice._generate_qr_code()
 
-        # Using invoice currency other than VND should fail
+        # Using invoice currency other than VND: no QR-code method is eligible, so none is generated
         self.emv_qr_invoice.currency_id = self.env.ref('base.USD')
-        with self.assertRaises(UserError, msg="The chosen QR-code type is not eligible for this invoice."):
-            self.emv_qr_invoice._generate_qr_code()
+        self.assertIsNone(self.emv_qr_invoice._generate_qr_code())
 
         # Without company partner city or state should fail
         self.emv_qr_invoice.currency_id = self.env.ref('base.VND')
