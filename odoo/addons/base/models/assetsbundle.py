@@ -166,6 +166,8 @@ class AssetsBundle(object):
                     if binary.extension == asset_type:
                         assets = [binary]
                         break
+                else:
+                    assets = []
             else:
                 raise ValueError(f'Asset type {asset_type} not known')
 
