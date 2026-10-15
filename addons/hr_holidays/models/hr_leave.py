@@ -1793,15 +1793,14 @@ class HrLeave(models.Model):
             self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', validated_leaves.ids)
 
         employee_id = values.get('employee_id', False)
-        if not self.env.context.get('leave_fast_create'):
-            if values.get('state'):
-                self._check_approval_update(values['state'])
-                if any(holiday.validation_type == 'both' for holiday in self):
-                    if values.get('employee_id'):
-                        employees = self.env['hr.employee'].browse(values.get('employee_id'))
-                    else:
-                        employees = self.mapped('employee_id')
-                    self._check_double_validation_rules(employees, values['state'])
+        if values.get('state'):
+            self._check_approval_update(values['state'])
+            if any(holiday.validation_type == 'both' for holiday in self):
+                if values.get('employee_id'):
+                    employees = self.env['hr.employee'].browse(values.get('employee_id'))
+                else:
+                    employees = self.mapped('employee_id')
+                self._check_double_validation_rules(employees, values['state'])
 
         skip_leave_version_check = False
         if {'date_from', 'date_to'} & values.keys():
