@@ -133,6 +133,36 @@ test("Attachment view popout controls test", async () => {
     expect(".o_attachment_preview").not.toBeVisible();
 });
 
+test("Attachment view popout keeps its content when the main window is resized", async () => {
+    const pyEnv = await startServer();
+    const recordId = pyEnv["mail.test.simple.main.attachment"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: recordId,
+        res_model: "mail.test.simple.main.attachment",
+    });
+    registerArchs({
+        "mail.test.simple.main.attachment,false,form": `
+            <form string="Test document">
+                <div class="o_popout_holder"/>
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+    patchUiSize({ size: SIZES.XXL });
+    await start();
+    await openFormView("mail.test.simple.main.attachment", recordId);
+    await click(".o_attachment_preview .o_attachment_control");
+    await popoutContains("img");
+    await contains(".o-mail-Form-chatter.o-isInFormSheetBg");
+    await patchUiSize({ size: SIZES.LG });
+    await contains(".o-mail-Form-chatter:not(.o-isInFormSheetBg)");
+    await popoutContains("img");
+});
+
 async function hasFloatingPopoutControl(count) {
     await contains(".o_attachment_preview .o_attachment_control", { count });
 }
@@ -219,19 +249,21 @@ test("Popout does not crash when the browser blocks the popup", async () => {
 
 test("Chatter main attachment: can change from non-viewable to viewable", async () => {
     const pyEnv = await startServer();
-    const recordId = pyEnv['mail.test.simple.main.attachment'].create({});
-    const irAttachmentId = pyEnv['ir.attachment'].create({
-        mimetype: 'text/plain',
+    const recordId = pyEnv["mail.test.simple.main.attachment"].create({});
+    const irAttachmentId = pyEnv["ir.attachment"].create({
+        mimetype: "text/plain",
         name: "Blah.txt",
         res_id: recordId,
-        res_model: 'mail.test.simple.main.attachment',
+        res_model: "mail.test.simple.main.attachment",
     });
-    pyEnv['mail.message'].create({
+    pyEnv["mail.message"].create({
         attachment_ids: [irAttachmentId],
-        model: 'mail.test.simple.main.attachment',
+        model: "mail.test.simple.main.attachment",
         res_id: recordId,
     });
-    pyEnv['mail.test.simple.main.attachment'].write([recordId], {message_main_attachment_id : irAttachmentId});
+    pyEnv["mail.test.simple.main.attachment"].write([recordId], {
+        message_main_attachment_id: irAttachmentId,
+    });
 
     registerArchs({
         "mail.test.simple.main.attachment,false,form": `
