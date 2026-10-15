@@ -163,8 +163,8 @@ class PosConfig(models.Model):
     default_bill_ids = fields.Many2many('pos.bill', string="Coins/Bills")
     use_pricelist = fields.Boolean("Use a pricelist.")
     use_presets = fields.Boolean("Use Presets")
-    default_preset_id = fields.Many2one('pos.preset', string='Default Preset')
-    available_preset_ids = fields.Many2many('pos.preset', string='Available Presets')
+    default_preset_id = fields.Many2one('pos.preset', string='Default Preset', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    available_preset_ids = fields.Many2many('pos.preset', string='Available Presets', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
     limit_categories = fields.Boolean("Restrict Categories")
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
@@ -1494,3 +1494,20 @@ class PosConfig(models.Model):
             rounding_method = self.rounding_method
 
         return rounding_method
+
+    @api.constrains('company_id', 'default_preset_id', 'available_preset_ids')
+    def _check_presets_company(self):
+        for config in self:
+            presets = config.default_preset_id | config.available_preset_ids
+            invalid = presets.filtered(lambda preset: preset.company_id and preset.company_id != config.company_id)
+            if invalid:
+                invalid_names = invalid.mapped('name')
+                formatted_names = [f'"{name}"' for name in invalid_names[:5]]
+                presets_str = ", ".join(formatted_names)
+                if len(invalid_names) > 5:
+                    presets_str += ", ..."
+                raise ValidationError(_(
+                    "The preset(s) %(presets)s are not available in the company \"%(company)s\".",
+                    presets=presets_str,
+                    company=config.company_id.name
+                ))

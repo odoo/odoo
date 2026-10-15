@@ -21,6 +21,8 @@ class PosPreset(models.Model):
     has_image = fields.Boolean(compute='_compute_has_image')
     count_linked_orders = fields.Integer(compute='_compute_count_linked_orders')
     count_linked_config = fields.Integer(compute='_compute_count_linked_config')
+    company_id = fields.Many2one('res.company', string="Linked company")
+    company_display = fields.Char(string="Company", compute="_compute_company_display")
 
     # Service Fee
     service_fee = fields.Boolean(string='Service Fee', default=False)
@@ -59,7 +61,10 @@ class PosPreset(models.Model):
     def _load_pos_data_domain(self, data):
         config = data['pos.config']
         preset_ids = config.available_preset_ids + config.default_preset_id
-        return [('id', 'in', preset_ids.ids)]
+        return [
+            ('id', 'in', preset_ids.ids),
+            '|', ('company_id', '=', False), ('company_id', '=', config.company_id.id),
+        ]
 
     @api.model
     def _load_pos_data_dependencies(self):
@@ -141,3 +146,39 @@ class PosPreset(models.Model):
         for preset in self:
             if preset.count_linked_config:
                 raise UserError(_('You cannot delete a preset that is linked to a POS configuration.'))
+
+    @api.constrains('company_id')
+    def _check_company_id_linked_config(self):
+        for preset in self.filtered('company_id'):
+            configs = self.env['pos.config'].sudo().search([
+                ('use_presets', '=', True),
+                '|', ('default_preset_id', '=', preset.id),
+                ('available_preset_ids', 'in', preset.id),
+                ('company_id', '!=', preset.company_id.id),
+            ])
+            if configs:
+                config_lines = [
+                    f"- {c.name} ({c.company_id.name})" for c in configs[:5]
+                ]
+
+                if len(configs) > 5:
+                    config_lines.append("- ...")
+
+                configs_str = "\n".join(config_lines)
+
+                raise UserError(_(
+                    "You cannot restrict the preset '%(preset)s' to the company '%(company)s'.\n"
+                    "It is already used by the following active PoS configuration(s):\n"
+                    "%(configs_list)s",
+                    preset=preset.name,
+                    company=preset.company_id.name,
+                    configs_list=configs_str,
+                ))
+
+    @api.depends('company_id')
+    def _compute_company_display(self):
+        for record in self:
+            if record.company_id:
+                record.company_display = record.company_id.name
+            else:
+                record.company_display = _("Visible to all")
