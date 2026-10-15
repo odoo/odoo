@@ -28,6 +28,7 @@ import {
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
+import { Component, onMounted, onWillStart, proxy, xml } from "@odoo/owl";
 import {
     Command,
     contains,
@@ -1862,6 +1863,51 @@ test("composer should not restore sent content when unmounted during pending pos
     destroyApp();
     expect(await getIndexedDB("composer", thread.composer.localId)).toBe(undefined);
     resolvePost();
+});
+
+test("composer destroyed before being mounted keeps the saved content", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner" });
+    await start();
+    const store = getService("mail.store");
+    const thread = await store["mail.thread"].getOrFetch({ model: "res.partner", id: partnerId });
+    await setIndexedDB("composer", thread.composer.localId, { composerHtml: "Draft" });
+    patch(Composer.prototype, {
+        setup() {
+            super.setup(...arguments);
+            expect.step("composer setup");
+            onMounted(() => expect.step("composer mounted"));
+        },
+    });
+    const willStart = Promise.withResolvers();
+    class Pending extends Component {
+        static template = xml`<t/>`;
+        setup() {
+            onWillStart(() => willStart.promise);
+        }
+    }
+    class Parent extends Component {
+        static components = { Composer, Pending };
+        static template = xml`
+            <t t-if="this.state.show">
+                <Composer composer="this.composer" type="'message'"/>
+                <Pending/>
+            </t>
+        `;
+        setup() {
+            this.composer = thread.composer;
+            this.state = proxy({ show: false });
+        }
+    }
+    const parent = await mountWithCleanup(Parent);
+    parent.state.show = true;
+    await expect.waitForSteps(["composer setup"]);
+    parent.state.show = false;
+    await animationFrame();
+    willStart.resolve();
+    parent.state.show = true;
+    await mailContains(".o-mail-Composer-input", { value: "Draft" });
+    expect.verifySteps(["composer setup", "composer mounted"]);
 });
 
 test("Post message trims outer whitespaces and newlines", async () => {

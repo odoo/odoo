@@ -293,7 +293,8 @@ export class Composer extends Component {
         );
         useOnChange(
             () => [this.props.composer.composerText],
-            () => this.saveContentDebounced()
+            () => this.saveContentDebounced(),
+            { initialRun: false }
         );
         // measured and restored on the patched textarea, after the text it renders changed
         let resizedFor;
