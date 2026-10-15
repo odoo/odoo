@@ -596,13 +596,20 @@ class Message(models.Model):
             # TDE: probably clean me
             parent_ids = [message.get('parent_id') for message in message_values.values()
                           if message.get('parent_id')]
-            self._cr.execute("""SELECT DISTINCT m.id, partner_rel.res_partner_id FROM "%s" m
+            self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, partner_rel.res_partner_id
+                FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
                 WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, parent_ids,))
-            not_parent_ids = [mid[0] for mid in self._cr.fetchall() if mid[1]]
-            notified_ids += [mid for mid, message in message_values.items()
-                             if message.get('parent_id') in not_parent_ids]
+            notified_parents = {
+                mid: (rmod, rid) for mid, rmod, rid, partner_id in self._cr.fetchall() if partner_id
+            }
+            notified_ids += [
+                mid
+                for mid, message in message_values.items()
+                if notified_parents.get(message.get("parent_id"))
+                == (message.get("model"), message.get("res_id"))
+            ]
 
         messages_to_check = messages_to_check.difference(set(notified_ids))
         if not messages_to_check:
