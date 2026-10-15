@@ -71,6 +71,13 @@ export class MessageReactionMenu extends Component {
     }
 
     getEmojiShortcode(reaction) {
+<<<<<<< 5b68c88b113ead8a61ff0c9d5f283c9bd0773af3
         return loader.loaded?.emojiValueToShortcode?.[reaction.content] ?? "?";
+||||||| 02d3a1d847bb4c3f784e3b018b581ee4d8f3fe4e
+        return this.emojis.find((emoji) => emoji.codepoints === reaction.content).shortcodes[0];
+=======
+        const emoji = this.emojis.find((emoji) => emoji.codepoints === reaction.content);
+        return emoji ? emoji.shortcodes[0] : reaction.content;
+>>>>>>> 99b9251d2115ad8c5927c7fa02f6a6f082daf67f
     }
 }
