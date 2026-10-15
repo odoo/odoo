@@ -20,7 +20,7 @@ class PurchaseReport(models.Model):
                 extract(
                     epoch from age(
                         COALESCE(
-                            order_effective_date.date_done,
+                            po.effective_date,
                             l.date_planned
                         ),
                         po.date_order
@@ -34,27 +34,8 @@ class PurchaseReport(models.Model):
             """
                 %s
                 LEFT JOIN stock_picking_type spt ON (spt.id=po.picking_type_id)
-                LEFT JOIN (
-                    SELECT MIN(picking.date_done)                                   AS date_done,
-                        purchase.id                                                 AS purchase_id
-                    FROM purchase_order                                             AS purchase
-                    JOIN purchase_order_line                                        AS order_line
-                        ON order_line.order_id = purchase.id
-                    JOIN stock_move                                                 AS move
-                        ON move.purchase_line_id = order_line.id
-                    JOIN stock_picking                                              AS picking
-                        ON picking.id = move.picking_id
-                    JOIN stock_location                                             AS location_dest
-                        ON location_dest.id = picking.location_dest_id
-                    WHERE picking.state = 'done'
-                        AND location_dest.usage != 'supplier'
-                        AND picking.date_done IS NOT NULL
-                    GROUP BY
-                        purchase.id
-                ) order_effective_date
-                    ON order_effective_date.purchase_id = l.order_id
             """, super()._from()
         )
 
     def _group_by(self) -> SQL:
-        return SQL("%s, spt.warehouse_id, effective_date, order_effective_date.date_done", super()._group_by())
+        return SQL("%s, spt.warehouse_id, effective_date", super()._group_by())
