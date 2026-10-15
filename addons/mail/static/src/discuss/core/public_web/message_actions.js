@@ -7,9 +7,12 @@ registerMessageAction("create-or-view-thread", {
         message.thread.hasSubChannelFeature &&
         store.self_user?.share === false,
     icon: "fa fa-comments-o",
-    onSelected: ({ message }) => {
+    onSelected: async ({ message, store }) => {
         if (message.linkedSubChannel) {
-            message.linkedSubChannel.open({ focus: true });
+            const subChannel = await store["discuss.channel"].getOrFetch(
+                message.linkedSubChannel.id
+            );
+            subChannel?.open({ focus: true });
         } else {
             message.thread.createSubChannel({ initialMessage: message });
         }
