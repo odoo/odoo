@@ -7,8 +7,8 @@ class StockMoveLine(models.Model):
     def _get_lot_partner(self):
         self.ensure_one()
         picking = self.move_id.picking_id
-        if picking.is_dropship and picking.sale_id.partner_shipping_id:
-            return picking.sale_id.partner_shipping_id
+        if picking.is_dropship and (partner := picking.purchase_id.dest_address_id or picking.sale_id.partner_shipping_id):
+            return partner
         return super()._get_lot_partner()
 
     def _action_done(self):
