@@ -1551,7 +1551,7 @@ class ProductTemplate(models.Model):
             price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
-            data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
+            data["image_url"] = self.env.website.image_url(product, "image_128")
 
             if search_term:
                 data["website_url"] = product._get_product_url(query_params={"search": search_term})
