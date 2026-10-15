@@ -71,10 +71,13 @@ patch(Thread.prototype, {
     },
 
     get avatarUrl() {
-        if (this.channel?.channel_type === "livechat") {
-            return this.livechat_operator_id.avatarUrl;
+        if (this.channel?.channel_type !== "livechat") {
+            return super.avatarUrl;
         }
-        return super.avatarUrl;
+        if (this.livechatVisitorMember && this.self_member_id?.notEq(this.livechatVisitorMember)) {
+            return this.livechatVisitorMember.avatarUrl;
+        }
+        return this.livechat_operator_id.avatarUrl;
     },
     get displayName() {
         if (
