@@ -5,6 +5,7 @@ import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 
 definePosModels();
 
@@ -192,4 +193,24 @@ test("breakCombo with course allocation", async () => {
     expect(order.getOrderlines()).toHaveLength(1);
     expect(order.courses).toHaveLength(1);
     expect(order.courses[0].name).toBe("Default Course 2");
+});
+
+test("test_reduce_qty: reduce line qty through popup when disallowLineQuantityChange", async () => {
+    const store = await setupPosEnv();
+    store.disallowLineQuantityChange = () => true;
+    const order = await getFilledOrder(store);
+    order.updateLastOrderChange();
+    await store.syncAllOrders();
+
+    // try to update the qty of 2nd line from 2 to 1, a new line with -1 qty should be created
+    const orderSummary = await mountWithCleanup(OrderSummary);
+    orderSummary.updateQuantityNumber(1);
+    expect(order.lines.length).toBe(3);
+    expect(order.lines[1].qty).toBe(2);
+    expect(order.lines[2].qty).toBe(-1);
+
+    // In the changes the new -ve line should be there as a addedQuantity change
+    const changes = order.getChanges();
+    expect(changes.addedQuantity.length).toBe(1);
+    expect(changes.addedQuantity[0].quantity).toBe(-1);
 });
