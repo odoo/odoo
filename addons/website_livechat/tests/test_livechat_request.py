@@ -43,6 +43,7 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             self.operator_b.partner_id,
             chat_request.livechat_agent_partner_ids,
         )
+        self._send_message(chat_request, self.operator_b.email, "Hello !", author_id=self.operator_b.partner_id.id)
 
         # Click on livechatbutton at client side
         res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
@@ -53,6 +54,10 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
         # Check that the chat request has been canceled.
         self.assertTrue(chat_request.livechat_end_dt, "The livechat request must be inactive as the visitor started himself a livechat session.")
+        self.assertIn(
+            "Live chat conversation closed automatically: the visitor started a new conversation with another agent.",
+            chat_request.message_ids[0].body,
+        )
         self.assertEqual(len(channel), 1)
         self.assertEqual(
             self.operator.partner_id,
