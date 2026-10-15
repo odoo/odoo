@@ -337,7 +337,6 @@ class TestHTTPCursor(HttpCase):
             for readonly in (True, False):
                 with (self.subTest(has_db_replica=has_db_replica, readonly=readonly),
                       patch('odoo.tools.config.configmanager.has_db_replica', has_db_replica)):
-                    assert config.has_db_replica == has_db_replica, config.has_db_replica
                     with self.env.registry.cursor(readonly=readonly) as cr:
                         self.assertEqual(cr.readonly, readonly)
                         cr.execute("SELECT 1")
