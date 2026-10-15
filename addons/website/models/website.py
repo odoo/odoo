@@ -418,6 +418,7 @@ class Website(models.CachedModel):
     @api.model
     def _handle_favicon(self, vals):
         if icon := vals.get('favicon'):
+            icon = self._fields['favicon'].convert_to_cache(icon, self)
             filename = icon.filename if isinstance(icon, BinaryValue) else ''
             vals['favicon'] = BinaryBytes(image_process(icon, size=(256, 256), crop='center', output_format='ICO'), filename)
 
