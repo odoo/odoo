@@ -7,6 +7,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeTestEnv } from "../helpers/mock_env";
 import {
     click,
+    destroy,
     editInput,
     getFixture,
     makeDeferred,
@@ -568,5 +569,37 @@ QUnit.module("Components", (hooks) => {
             ),
             ["World", "Hello"]
         );
+    });
+
+    QUnit.test("skip handling input when destroyed while loading", async (assert) => {
+        const optionsDoLoad = makeDeferred();
+        class Parent extends Component {
+            onSelect(option) {
+                assert.step(option.label);
+            }
+            get sources() {
+                return [
+                    {
+                        async options() {
+                            await optionsDoLoad;
+                            return [{ label: "World" }];
+                        },
+                    },
+                ];
+            }
+        }
+        Parent.components = { AutoComplete };
+        Parent.template = xml`
+            <AutoComplete value="''" sources="sources" onSelect.bind="onSelect"/>
+        `;
+
+        const parent = await mount(Parent, target, { env });
+        await editInput(target, ".o-autocomplete--input", "W");
+        await triggerEvent(target, ".o-autocomplete--input", "keydown", { key: "Enter" });
+
+        destroy(parent);
+        optionsDoLoad.resolve();
+        await nextTick();
+        assert.verifySteps([], "the destroyed component does not select an option");
     });
 });
