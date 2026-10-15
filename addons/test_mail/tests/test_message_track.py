@@ -559,7 +559,7 @@ class TestTrackingTemplate(TestTrackingCommon):
                     'body': f'<p>Hello {test_record.name}</p>',
                     'notified_partner_ids': self.partner_admin,
                     'subject': f'Test Template on {test_record.name}',
-                    'subtype_id': self.env['mail.message.subtype'],  # tde: to check ?
+                    'subtype_id': self.env.ref('mail.mt_note'),  # tde: to check ?
                     'tracking_values': [],  # no tracking sent with template
                 }
             )
