@@ -60,7 +60,9 @@ class ProductTemplate(models.Model):
         """
         start_sequence = 10000
         # Schema initialization may evaluate the default before adding the column.
-        if self.env.context.get('module') and not column_exists(self.env.cr, self._table, 'website_sequence'):
+        if self.env.context.get("module") and not column_exists(
+            self.env.cr, self._table, "website_sequence"
+        ):
             return start_sequence
         self.env.cr.execute(
             SQL("SELECT MAX(website_sequence) FROM %s", SQL.identifier(self._table))
@@ -1242,16 +1244,36 @@ class ProductTemplate(models.Model):
             price, product_taxes, product_taxes_after_fp=taxes
         )
 
-        # The list_price is always the price of one.
-        tax_details = taxes.compute_all(
-            price, currency, 1, product or self, self.env.user.partner_id
+        # Only the totals are needed: skip `compute_all` as it also computes the accounting data
+        # (repartition lines, tax tags, accounts) of each tax, which costs extra queries.
+        AccountTax = self.env["account.tax"]
+        company = (
+            taxes and (taxes[0].company_id._accessible_branches()[:1] or taxes[0].company_id)
+        ) or self.env.company
+        currency = currency or company.currency_id
+        special_mode = False
+        if "force_price_include" in self.env.context:
+            special_mode = (
+                "total_included" if self.env.context["force_price_include"] else "total_excluded"
+            )
+        base_line = AccountTax._prepare_base_line_for_taxes_computation(
+            None,
+            partner_id=self.env.user.partner_id,
+            currency_id=currency,
+            product_id=product or self,
+            tax_ids=taxes,
+            price_unit=price,
+            quantity=1,  # The list_price is always the price of one.
+            special_mode=special_mode,
         )
+        AccountTax._add_tax_details_in_base_line(base_line, company)
+        AccountTax._round_base_lines_tax_details([base_line], company)
 
         if not tax_display:
             show_tax = (website or self.env.website).tax_display
             tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
 
-        return tax_details[tax_display]
+        return base_line["tax_details"][f"{tax_display}_currency"]
 
     def create_product_variant(self, product_template_attribute_value_ids):
         """Create if necessary and possible and return the id of the product
