@@ -303,6 +303,54 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_wizard.action_generate_time_off()
 
     @users('Titus')
+    def test_create_group_leave_refuse_conflicting_leave_without_hr_right(self):
+        """ The group time off refuses the conflicting time off of the employees, even the ones the
+        Time Off Responsible can't refuse by themselves (validated by a Time Off Officer). """
+        leave_date = date_utils.start_of(date.today() + relativedelta(weeks=2), 'week')
+        leave = self.env['hr.leave'].sudo().create({
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': leave_date,
+            'request_date_to': leave_date,
+        })
+        leave.action_approve()
+        self.assertEqual(leave.state, 'validate')
+
+        self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': leave_date,
+            'date_to': leave_date,
+            'employee_ids': self.employee_emp.ids,
+        }).action_generate_time_off()
+
+        self.assertEqual(leave.state, 'refuse')
+        group_leave = self.env['hr.leave'].search([('employee_id', '=', self.employee_emp_id), ('id', '!=', leave.id)])
+        self.assertEqual(len(group_leave), 1)
+
+    @users('Titus')
+    def test_create_group_leave_conflicting_leave_without_write_right(self):
+        """ The group time off can't refuse a conflicting time off the Time Off Responsible isn't allowed to modify. """
+        leave_date = date_utils.start_of(date.today() + relativedelta(weeks=2), 'week')
+        leave = self.env['hr.leave'].sudo().create({
+            'employee_id': self.employee_responsible.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': leave_date,
+            'request_date_to': leave_date,
+        })
+        leave.action_approve()
+        self.assertEqual(leave.state, 'validate')
+
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': leave_date,
+            'date_to': leave_date,
+            'employee_ids': self.employee_responsible.ids,
+        })
+        with self.assertRaises(AccessError):
+            leave_wizard.action_generate_time_off()
+        self.assertEqual(leave.state, 'validate')
+
+    @users('Titus')
     def test_create_group_leave_form_allocation_mode_without_hr_right(self):
         employee_1, employee_2, employee_3 = self.env['hr.employee'].sudo().create([
             {
