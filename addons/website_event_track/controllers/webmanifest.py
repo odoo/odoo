@@ -27,9 +27,11 @@ class TrackManifest(http.Controller):
             'background_color': '#ffffff',
             'theme_color': '#875A7B',
         }
+        website = self.env.website
         icon_sizes = ['192x192', '512x512']
         manifest['icons'] = [{
-            'src': self.env.website.image_url(self.env.website, 'app_icon', size=size),
+            'src': website.image_url(website, 'app_icon', size=size) if website.app_icon
+                else f'/web/static/img/odoo-icon-{size}.png',
             'sizes': size,
             'type': 'image/png',
         } for size in icon_sizes]

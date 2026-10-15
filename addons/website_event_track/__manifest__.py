@@ -60,5 +60,6 @@
         ],
     },
     'author': 'Odoo S.A.',
+    'post_init_hook': '_post_init_hook',
     'license': 'LGPL-3',
 }
