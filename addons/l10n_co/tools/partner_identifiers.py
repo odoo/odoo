@@ -3,11 +3,11 @@ from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 
-CO_NIT_DIAN_CODE = '31'
 CO_FOREIGN_VAT_DIAN_CODE = '50'  # NIT de otro país
 CO_FOREIGN_ID_DIAN_CODE = '42'  # Documento de identificación extranjero
 
 CO_DIAN_CODES = {
+    'CO_NIT': '31',
     'CO_CC': '13',
     'CO_CE': '22',
     'CO_NIUP': '91',
