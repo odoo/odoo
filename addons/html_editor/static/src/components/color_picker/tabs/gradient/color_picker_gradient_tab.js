@@ -19,6 +19,8 @@ export const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
 ];
 
+const MAX_USED_GRADIENTS_TO_SHOW = 4;
+
 export class ColorPickerGradientTab extends Component {
     static template = "html_editor.ColorPickerGradientTab";
     static components = { GradientPicker };
@@ -44,7 +46,6 @@ export class ColorPickerGradientTab extends Component {
     showGradientPicker = signal(false);
 
     setup() {
-        this.standardizeGradient = standardizeGradient;
         this.isColorGradient = isColorGradient;
         this.DEFAULT_GRADIENTS_WITH_OPACITY = DEFAULT_GRADIENT_COLORS.map((gradient) =>
             applyOpacityToGradient(gradient, this.props.defaultOpacity)
@@ -58,8 +59,35 @@ export class ColorPickerGradientTab extends Component {
             wasOpen = isOpen;
         });
         this.allUsedCustomGradients = Array.from(this.props.getUsedCustomColors()).filter(
-            isColorGradient
+            (gradient) =>
+                isColorGradient(gradient) && !this.DEFAULT_GRADIENTS_WITH_OPACITY.includes(gradient)
         );
+    }
+
+    get usedGradients() {
+        const { currentCustomColor, currentColorPreview } = this.props;
+        const currentSelectedGradient =
+            isColorGradient(currentCustomColor) && standardizeGradient(currentCustomColor);
+        const previewGradient =
+            isColorGradient(currentColorPreview) && standardizeGradient(currentColorPreview);
+
+        const gradients = this.allUsedCustomGradients.filter(
+            (gradient) => gradient !== currentSelectedGradient && gradient !== previewGradient
+        );
+        const additionalGradients = [];
+        if (
+            currentSelectedGradient &&
+            !this.DEFAULT_GRADIENTS_WITH_OPACITY.includes(currentSelectedGradient)
+        ) {
+            additionalGradients.push(currentSelectedGradient);
+        }
+        if (previewGradient && previewGradient !== additionalGradients[0]) {
+            additionalGradients.push(previewGradient);
+        }
+        // Keep one slot free for the gradient to be previewed.
+        const freeSlot = previewGradient ? 0 : 1;
+        const availableSlots = MAX_USED_GRADIENTS_TO_SHOW - additionalGradients.length - freeSlot;
+        return [...gradients.slice(0, Math.max(0, availableSlots)), ...additionalGradients];
     }
 
     getCurrentGradientColor() {
