@@ -399,7 +399,7 @@ describe("Mount and Destroy embedded components", () => {
             unformat(`
                 <p data-selection-placeholder=""><br></p>
                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">
-                    []<div>
+                    <div>
                         <div class="click count-2">Count:2</div>
                         <div class="innerEditable-2">
                             <div data-prop-name="innerValue" data-oe-protected="false" contenteditable="true">
@@ -430,7 +430,7 @@ describe("Mount and Destroy embedded components", () => {
                         </div>
                     </div>
                 </div>
-                <p data-selection-placeholder=""><br></p>
+                <p>[]<br></p>
             `)
         );
         for (const index of indexOrder) {
@@ -456,8 +456,8 @@ describe("Mount and Destroy embedded components", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false">[]</div>
-                <p data-selection-placeholder=""><br></p>
+                <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false"></div>
+                <p>[]<br></p>
             `)
         );
         // Verify that there is no potential host outside of the editable,
@@ -1146,7 +1146,7 @@ describe("editable descendants", () => {
                             <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                                 <div class="deep">
                                     <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
-                                        <p>deep[]</p>
+                                        <p>deep</p>
                                     </div>
                                 </div>
                             </div>
@@ -1154,7 +1154,7 @@ describe("editable descendants", () => {
                         </div>
                     </div>
                 </div>
-                <p>after</p>
+                <p>[]after</p>
             `)
         );
         undo(editor);

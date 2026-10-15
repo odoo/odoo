@@ -734,10 +734,10 @@ describe("data-oe-protected", () => {
                 <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false" data-oe-protected="true">
                     <div contenteditable="true" data-oe-protected="false">
-                        <p>d[]</p>
+                        <p>d</p>
                     </div>
                 </div>
-                <p>a</p>
+                <p>[]a</p>
             `)
         );
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
@@ -1020,14 +1020,10 @@ describe("Collaboration with embedded components", () => {
                     <p>deep12</p>
                 </div>
             </div>
-            <p>a</p>
+            <p>[]a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-            editable.replace("deep12", "deep[]12")
-        );
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-            editable.replace("<p>a</p>", "<p>[]a</p>")
-        );
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
         await animationFrame();
         // After mount:
         editable = unformat(`
@@ -1041,14 +1037,10 @@ describe("Collaboration with embedded components", () => {
                     </div>
                 </div>
             </div>
-            <p>a</p>
+            <p>[]a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-            editable.replace("deep12", "deep[]12")
-        );
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-            editable.replace("<p>a</p>", "<p>[]a</p>")
-        );
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
         deep1.append(e1.document.createTextNode("3"));
         e1.shared.history.commit();
         mergePeersCommits(peerInfos);
@@ -1066,14 +1058,10 @@ describe("Collaboration with embedded components", () => {
                     </div>
                 </div>
             </div>
-            <p>a</p>
+            <p>[]a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-            editable.replace("deep1234", "deep[]1234")
-        );
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-            editable.replace("<p>a</p>", "<p>[]a</p>")
-        );
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
     });
 
     test("editableDescendants for components are collaborative (with different template shapes)", async () => {
@@ -1136,13 +1124,13 @@ describe("Collaboration with embedded components", () => {
                         <div class="switched">
                             <div class="deep">
                                 <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
-                                    <p>deep[]12</p>
+                                    <p>deep12</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <p>a</p>
+                <p>[]a</p>
             `)
         );
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
@@ -1292,14 +1280,10 @@ describe("Collaboration with embedded components", () => {
                     </div>
                 </div>
             </div>
-            <p>a</p>
+            <p>[]a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-            editable.replace("deep98", "deep[]98")
-        );
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-            editable.replace("<p>a</p>", "<p>[]a</p>")
-        );
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
     });
 
     describe("Embedded state", () => {

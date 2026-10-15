@@ -435,9 +435,9 @@ describe("wrapInlinesInBlocks", () => {
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
                 <p>
-                    <span class="a">span</span>
+                    <span class="a">span[]</span>
                 </p>
-                <div class="o-paragraph">[]text</div>
+                <div class="o-paragraph">text</div>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
