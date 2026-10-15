@@ -21,6 +21,20 @@ class HrWorkEntryType(models.Model):
         tracking=True,
         help="The code is used as a reference in salary rules. Careful, changing an existing code can lead to unwanted behaviors.")
     external_code = fields.Char(tracking=True, help="Use this code to export your data to a third party")
+
+    # Color Palette Specification (corresponds to default 12-color palette / .o_calendar_color_N / badges):
+    #  0: No color / Gray - Out of contract / not applicable (Outside contract, career break)
+    #  1: Red             - Unpaid absence & Disciplinary (Leave without pay, unjustified absence, tardiness)
+    #  2: Orange          - Overtime / premium pay (Overtime, extra hours, worked holidays)
+    #  3: Yellow          - Non-working day (Calendar-driven: public holidays, weekends)
+    #  4: Cyan            - Compensatory time off (Time off in lieu, recovered overtime)
+    #  5: Purple          - Family / life event leave (Maternity, paternity, bereavement, marriage)
+    #  6: Almond (Beige)  - External disruption (Economic unemployment, bad weather, strike)
+    #  7: Teal            - Training / education (Educational leave, training, study leave)
+    #  8: Blue            - Earned paid leave (Annual leave, legal leave / PTO, extra-legal)
+    #  9: Raspberry       - Sickness / injury (Illness, guaranteed wage illness, work accident)
+    # 10: Green           - Working time (Standard scheduled work, attendance, home working)
+    # 11: Violet          - Civic / statutory duty (Jury duty, union mission, military obligation)
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
     active = fields.Boolean(
