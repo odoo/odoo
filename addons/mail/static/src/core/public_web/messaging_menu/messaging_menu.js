@@ -125,7 +125,10 @@ export class MessagingMenu extends Component {
                     return (
                         normalize(m.thread?.displayName).includes(normalizedTerms) ||
                         normalize(m.authorName).includes(normalizedTerms) ||
-                        normalize(htmlToTextContentInline(m.inlineBody)).includes(normalizedTerms)
+                        normalize(htmlToTextContentInline(m.bodyPreview || "")).includes(
+                            normalizedTerms
+                        ) ||
+                        normalize(m.bodyTextContentInline).includes(normalizedTerms)
                     );
                 }),
             deps: () => [this.filteredMessages()],
