@@ -51,7 +51,7 @@ export class PaymentPage extends Component {
                     return;
                 }
                 this.state.paymentCancelled = true;
-                await this.selectedPaymentMethod.payment_interface.sendPaymentCancel(paymentLine);
+                await paymentLine.cancelPayment();
             }
         }
         this.selfOrder.currentOrder.uiState.lineChanges = {};

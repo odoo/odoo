@@ -333,14 +333,14 @@ export class PaymentAdyen extends PaymentInterface {
         }
         // when starting to wait for the payment response we create a promise
         // that will be resolved when the payment response is received.
-        // In case this resolver is lost ( for example on a refresh ) we
-        // we use the handle_payment_response method on the payment line
+        // In case this resolver is lost ( for example on a refresh )
+        // we use the handlePaymentResponse method of the payment interface
         const resolver = this.paymentLineResolvers?.[line.uuid];
         if (resolver) {
             this.paymentLineResolvers[line.uuid] = null;
             resolver(isPaymentSuccessful);
         } else {
-            line.handlePaymentResponse(isPaymentSuccessful);
+            this.handlePaymentResponse(line, isPaymentSuccessful);
         }
     }
 

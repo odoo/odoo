@@ -340,7 +340,7 @@ export class PaymentScreen extends Component {
     }
 
     async sendPaymentCancel(line) {
-        await line.cancelPayment(this.currentOrder);
+        await line.cancelPayment();
     }
 
     async sendForceDone(line) {
