@@ -1,10 +1,13 @@
 import {
+    asyncComputed,
     onMounted,
     onPatched,
+    onWillStart,
     onWillUnmount,
     proxy,
     t,
     toRaw,
+    useEffect,
     useOnChange,
     useScope,
 } from "@odoo/owl";
@@ -30,6 +33,22 @@ import { useEnv } from "@web/owl2/utils";
 /**
  * @typedef {import("@odoo/owl").Signal<HTMLElement> | (() => HTMLElement | null)} Ref
  */
+
+//-----------------------------------------------------------------------------
+// useAsyncComputed
+//-----------------------------------------------------------------------------
+
+/** @type {typeof asyncComputed} */
+export function useAsyncComputed(...args) {
+    const ac = asyncComputed(...args);
+    onWillStart(ac.currentPromise);
+    useEffect(() => {
+        if (ac.error()) {
+            Promise.reject(ac.error());
+        }
+    });
+    return ac;
+}
 
 // -----------------------------------------------------------------------------
 // useAutofocus
