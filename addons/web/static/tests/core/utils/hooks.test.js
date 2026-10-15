@@ -36,6 +36,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 import {
+    useAsyncComputed,
     useAutofocus,
     useBackButton,
     useBus,
@@ -43,6 +44,105 @@ import {
     useService,
     useSpellCheck,
 } from "@web/core/utils/hooks";
+
+describe("useAsyncComputed", () => {
+    test("waits for the first value before mounting", async () => {
+        const { promise, resolve } = Promise.withResolvers();
+
+        class TestComponent extends Component {
+            static template = xml`<span class="value" t-out="this.value()" />`;
+            value = useAsyncComputed(() => promise, { initial: "initial" });
+        }
+
+        const mountPromise = mountWithCleanup(TestComponent);
+        await animationFrame();
+
+        expect(".value").toHaveCount(0);
+
+        resolve("loaded");
+        await mountPromise;
+
+        expect(".value").toHaveText("loaded");
+    });
+
+    test("fetches again when a dependency changes", async () => {
+        const recordId = signal(1);
+
+        class TestComponent extends Component {
+            static template = xml`<span class="value" t-out="this.value()" />`;
+            value = useAsyncComputed(async () => {
+                const id = recordId();
+                expect.step(`fetch ${id}`);
+                return `record ${id}`;
+            });
+        }
+
+        await mountWithCleanup(TestComponent);
+
+        expect(".value").toHaveText("record 1");
+        expect.verifySteps(["fetch 1"]);
+
+        recordId.set(2);
+        await animationFrame();
+
+        expect(".value").toHaveText("record 2");
+        expect.verifySteps(["fetch 2"]);
+    });
+
+    test("reports a failing first fetch without blocking the mount", async () => {
+        expect.errors(1);
+
+        class TestComponent extends Component {
+            static template = xml`<span class="value" t-out="this.value()" />`;
+            value = useAsyncComputed(
+                async () => {
+                    throw new Error("first fetch failed");
+                },
+                { initial: "initial" }
+            );
+        }
+
+        await mountWithCleanup(TestComponent);
+
+        expect(".value").toHaveText("initial");
+
+        await expect.waitForErrors(["first fetch failed"]);
+    });
+
+    test("reports each error as it arises and keeps working afterwards", async () => {
+        expect.errors(2);
+        const recordId = signal(1);
+
+        class TestComponent extends Component {
+            static template = xml`<span class="value" t-out="this.value()" />`;
+            value = useAsyncComputed(async () => {
+                const id = recordId();
+                if (id % 2 === 0) {
+                    throw new Error(`fetch ${id} failed`);
+                }
+                return `record ${id}`;
+            });
+        }
+
+        await mountWithCleanup(TestComponent);
+
+        expect(".value").toHaveText("record 1");
+
+        recordId.set(2);
+        await expect.waitForErrors(["fetch 2 failed"]);
+        await animationFrame();
+
+        expect(".value").toHaveText("record 1");
+
+        recordId.set(3);
+        await animationFrame();
+
+        expect(".value").toHaveText("record 3");
+
+        recordId.set(4);
+        await expect.waitForErrors(["fetch 4 failed"]);
+    });
+});
 
 describe("useAutofocus", () => {
     test.tags("desktop");
