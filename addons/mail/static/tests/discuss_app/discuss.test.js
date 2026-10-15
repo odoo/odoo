@@ -35,7 +35,15 @@ import {
 import { Store } from "@mail/../tests/mock_server/store";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, press, rightClick, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    press,
+    queryOne,
+    rightClick,
+    tick,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { rpc } from "@web/core/network/rpc";
@@ -2506,6 +2514,47 @@ test("Escape key should focus the composer if it's not focused", async () => {
     await contains("button[title='Pinned Messages']:count(1)").click();
     triggerHotkey("escape");
     await waitFor(".o-mail-Composer-html:focus:count(1)");
+});
+
+test("header fits a narrow content area", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
+    await patchUiSize({ width: 800 });
+    await animationFrame();
+    const content = queryOne(".o-mail-DiscussContent");
+    expect(content.scrollWidth).toBe(content.clientWidth);
+});
+
+test("long description does not truncate the parent channel name", async () => {
+    const pyEnv = await startServer();
+    const parentId = pyEnv["discuss.channel"].create({ name: "General" });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        name: "Troubleshooting",
+        parent_channel_id: parentId,
+        description: "A description too long for the header. ".repeat(5),
+    });
+    await start();
+    await openDiscuss(subChannelId);
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
+    await patchUiSize({ width: 1400 });
+    await animationFrame();
+    const parentName = queryOne(".o-mail-DiscussContent-header span[title='General']");
+    expect(parentName.scrollWidth).toBe(parentName.clientWidth);
+});
+
+test("short description keeps the width of its text", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General", description: "Short" });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
+    await patchUiSize({ width: 1400 });
+    await animationFrame();
+    const description = queryOne(".o-mail-DiscussContent-threadDescription");
+    expect(description.scrollWidth).toBe(description.clientWidth);
 });
 
 test("Notification settings: basic rendering", async () => {
