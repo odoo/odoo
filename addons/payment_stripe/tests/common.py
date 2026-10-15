@@ -44,6 +44,11 @@ class StripeCommon(PaymentCommon):
             "type": "payment_intent.succeeded",
         }
 
+        cls.tokenization_payment_data = {
+            "payment_intent": {"latest_charge": "ch_test", "customer": "test_customer"},
+            "payment_method": {"card": {"last4": "1111"}, "id": "pm_test", "type": "card"},
+        }
+
         cls.refund_object = {
             "charge": "ch_000000000000000000000000",
             "id": "re_000000000000000000000000",
@@ -62,6 +67,7 @@ class StripeCommon(PaymentCommon):
                     "id": "ch_000000000000000000000000",
                     "object": "charge",
                     "description": cls.reference,
+                    "captured": True,
                     "status": "succeeded",
                     **cls.notification_amount_and_currency,
                 }

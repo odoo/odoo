@@ -67,15 +67,17 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
             provider_reference=self.refund_object["id"],
         )
         url = self._build_url(StripeController._webhook_url)
-        payload = dict(self.refund_payment_data)
-        payload["data"] = dict(payload["data"])
-        payload["data"]["object"] = dict(payload["data"]["object"], captured=True)
-        with patch(
-            "odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"
-        ), patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
-        ) as process_mock:
-            self._make_json_request(url, data=payload)
+        with (
+            patch("odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"),
+            patch(
+                "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
+                return_value={"object": "list", "data": [self.refund_object], "has_more": False},
+            ),
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as process_mock,
+        ):
+            self._make_json_request(url, data=self.refund_payment_data)
         refund_txs = self.env["payment.transaction"].search([
             ("operation", "=", "refund"),
             ("source_transaction_id", "in", (source_tx | capture_tx).ids),

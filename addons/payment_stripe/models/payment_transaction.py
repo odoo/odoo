@@ -131,7 +131,7 @@ class PaymentTransaction(models.Model):
         """
         ppm_code = self.payment_method_id.primary_payment_method_id.code
         payment_method_type = ppm_code or self.payment_method_code
-        if payment_method_type == "unknown":  # Express checkout (Apple Pay, Google Pay).
+        if payment_method_type == "unknown":  # Express checkout (Apple Pay, Google Pay)
             payment_method_type = "card"
         payment_intent_payload = {
             "amount": payment_utils.to_minor_currency_units(
@@ -141,7 +141,7 @@ class PaymentTransaction(models.Model):
             ),
             "currency": self.currency_id.name.lower(),
             "description": self.reference,
-            "capture_method": "manual" if self.provider_id.capture_manually else "automatic",
+            "capture_method": self.provider_id._stripe_get_capture_method(),
             "allowed_payment_method_types[]": const.PAYMENT_METHODS_MAPPING.get(
                 payment_method_type, payment_method_type
             ),
@@ -449,7 +449,7 @@ class PaymentTransaction(models.Model):
             payment_method_details = charge.get("payment_method_details")
             if payment_method_details:
                 mandate = payment_method_details[payment_method_details["type"]].get("mandate")
-            if isinstance(mandate, dict):  # Only card mandates are expanded.
+            if isinstance(mandate, dict):  # Only card mandates are expanded
                 # India card mandates are returned even if their registration failed.
                 # Inactive mandates can't be used for off-session payments.
                 mandate = mandate["id"] if mandate["status"] != "inactive" else None
