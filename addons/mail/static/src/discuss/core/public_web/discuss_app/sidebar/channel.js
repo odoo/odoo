@@ -61,7 +61,7 @@ export class DiscussSidebarChannel extends Component {
             "bg-inherit": !this.channel.discussAppAsThread,
             "o-active": this.channel.discussAppAsThread,
             "o-unread":
-                this.channel.self_member_id?.message_unread_counter > 0 &&
+                this.channel.self_member_id?.message_unread_counter_ui > 0 &&
                 !this.channel.self_member_id?.mute_until_dt,
             "border-bottom-0 rounded-bottom-0": this.bordered,
             "opacity-50": this.channel.self_member_id?.mute_until_dt,
@@ -92,10 +92,10 @@ export class DiscussSidebarChannel extends Component {
     get itemNameAttClass() {
         return {
             "o-unread fw-bolder":
-                this.channel.self_member_id?.message_unread_counter > 0 &&
+                this.channel.self_member_id?.message_unread_counter_ui > 0 &&
                 !this.channel.self_member_id?.mute_until_dt,
             "opacity-75 opacity-100-hover":
-                this.channel.self_member_id?.message_unread_counter === 0 ||
+                this.channel.self_member_id?.message_unread_counter_ui === 0 ||
                 this.channel.self_member_id?.mute_until_dt,
         };
     }

@@ -31,18 +31,18 @@
                 'o-active': channel.discussAppAsThread,
                 'px-1 py-2 mx-1 text-wrap word-break lh-1': store.discuss.isSidebarCompact,
                 'o-nonCompact me-1 pe-0 ps-1 o-py-0_5': !store.discuss.isSidebarCompact,
-                'o-unread': channel.self_member_id?.message_unread_counter > 0 and !channel.self_member_id?.mute_until_dt,
+                'o-unread': channel.self_member_id?.message_unread_counter_ui > 0 and !channel.self_member_id?.mute_until_dt,
                 'opacity-50': channel.self_member_id?.mute_until_dt,
             }" data-available-offline="">
                 <span class="text-truncate" t-esc="channel.displayName" t-att-class="{
-                    'fw-bolder': channel.self_member_id?.message_unread_counter > 0,
-                    'opacity-75 opacity-100-hover': !(channel.self_member_id?.message_unread_counter > 0 and !channel.self_member_id?.mute_until_dt),
+                    'fw-bolder': channel.self_member_id?.message_unread_counter_ui > 0,
+                    'opacity-75 opacity-100-hover': !(channel.self_member_id?.message_unread_counter_ui > 0 and !channel.self_member_id?.mute_until_dt),
                 }" t-att-style="store.discuss.isSidebarCompact ? 'text-overflow: clip;' : ''"/>
                 <span class="flex-grow-1"/>
                 <t t-if="!store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.actions"/>
                 <span t-if="channel.importantCounter > 0" t-attf-class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold {{channel.self_member_id?.mute_until_dt ? 'o-muted' : ''}}" t-att-class="{ 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute o-compact': store.discuss.isSidebarCompact }" t-esc="channel.importantCounter"/>
             </button>
-            <t t-if="channel.self_member_id?.message_unread_counter > 0 and !channel.self_member_id?.mute_until_dt and channel.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
+            <t t-if="channel.self_member_id?.message_unread_counter_ui > 0 and !channel.self_member_id?.mute_until_dt and channel.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
         </li>
     </t>
 </templates>
