@@ -11,7 +11,7 @@
                 aria-controls="quick_reorder_sidebar"
                 t-att-disabled="this.state.is_public_user || !this.state.order_history.length"
             >
-                <i class="fa fa-rotate-left me-1"/>
+                <i class="oi" data-icon="undo"/>
                 <t t-out="this.props.templateData.quickReorderLabel"/>
             </button>
         </span>

@@ -135,7 +135,7 @@
                         t-on-click="() => this.addToWishlist()"
                         aria-label="Wishlist"
                     >
-                        <i class="fa fa-fw fa-heart-o"/>
+                        <i class="oi oi-fw" data-icon="favorite"/>
                     </button>
                     <button
                         class="js_delete_product btn btn-link d-inline-block d-md-none px-2"
@@ -143,7 +143,7 @@
                         t-on-click="() => this.updateQuantity(0)"
                         aria-label="Remove"
                     >
-                        <i class="fa fa-fw fa-trash-o"/>
+                        <i class="oi oi-fw" data-icon="delete"/>
                     </button>
                 </div>
             </div>
@@ -218,7 +218,8 @@
                     t-on-click="() => this.updateQuantity(this.state.quantity - 1)"
                 >
                     <i
-                        class="oi oi-minus position-relative z-1"
+                        class="oi position-relative z-1"
+                        data-icon="remove"
                         t-out="isMobile ? this.props.templateData.qtyMinusButtonTextMobile : this.props.templateData.qtyMinusButtonText"
                     />
                 </button>
@@ -247,7 +248,8 @@
                     t-on-click="() => this.updateQuantity(this.state.quantity + 1)"
                 >
                     <i
-                        class="oi oi-plus position-relative z-1"
+                        class="oi position-relative z-1"
+                        data-icon="add"
                         t-out="isMobile ? this.props.templateData.qtyPlusButtonTextMobile : this.props.templateData.qtyPlusButtonText"
                     />
                 </button>
@@ -295,7 +297,8 @@
 
     <t t-name="website_sale.AlertInline">
         <i
-            t-attf-class="fa fa-{{level == 'info' ? 'info-circle' : 'warning'}} text-{{level ? 'danger' : ''}} {{classes}}"
+            t-attf-class="oi text-{{level ? 'danger' : ''}} {{classes}} {{level == 'info' ? 'oi-filled' : ''}}"
+            t-att-data-icon="level == 'info' ? 'info' : 'warning'"
             t-att-title="message"
             t-att-aria-label="message"
             data-bs-toggle="tooltip"

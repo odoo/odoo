@@ -1,5 +1,4 @@
 import { markup } from '@odoo/owl';
-import { setElementContent } from '@web/core/utils/html';
 import { patch } from '@web/core/utils/patch';
 import { Checkout } from '@website_sale/interactions/checkout';
 
