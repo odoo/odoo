@@ -11,6 +11,7 @@ from odoo.exceptions import AccessError
 from odoo.http import request, content_disposition
 
 from odoo.tools import consteq
+from .thread import with_active_company
 from ..models.discuss.mail_guest import add_guest_to_context
 
 logger = logging.getLogger(__name__)
@@ -92,7 +93,7 @@ class AttachmentController(http.Controller):
         message = request.env["mail.message"].search([("attachment_ids", "in", attachment.ids)], limit=1)
         if not request.env.user.share:
             # Check through standard access rights/rules for internal users.
-            attachment._delete_and_notify(message)
+            with_active_company(attachment)._delete_and_notify(message)
             return
         # For non-internal users 2 cases are supported:
         #   - Either the attachment is linked to a message: verify the request is made by the author of the message (portal user or guest).

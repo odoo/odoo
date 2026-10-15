@@ -13,7 +13,7 @@ from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import tagged, users, HttpCase
+from odoo.tests import tagged, users, HttpCase, JsonRpcException
 from odoo.tools import mute_logger
 
 
@@ -344,6 +344,57 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
                     self.assertEqual(result["hasWriteAccess"], has_w)
                     self.assertEqual(result["hasReadAccess"], has_r)
                     self.assertEqual(result["canPostOnReadonly"], can_post)
+
+    def test_mail_thread_access_active_company_rule(self):
+        self.env["ir.rule"].create({
+            "domain_force": "[('company_id', '=', company_id)]",
+            "model_id": self.env["ir.model"]._get_id("mail.test.multi.company"),
+            "name": "Write on the records of the active company",
+            "perm_read": False,
+        })
+        self.user_employee_c2.company_ids = self.company_admin + self.company_2
+        self.assertEqual(self.user_employee_c2.company_id, self.company_2)
+        record_c1, record_c2 = self.test_records_mc
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        self.opener.cookies.set("cids", str(self.company_admin.id))
+        for record, can_write in ((record_c1, True), (record_c2, False)):
+            with self.subTest(record=record.name):
+                result = self.make_jsonrpc_request(
+                    "/mail/thread/data",
+                    {"request_list": [], "thread_id": record.id, "thread_model": record._name},
+                )
+                self.assertTrue(result["hasReadAccess"])
+                self.assertEqual(result["hasWriteAccess"], can_write)
+                attachment = self.env["ir.attachment"].create({
+                    "name": "test.txt",
+                    "res_id": record.id,
+                    "res_model": record._name,
+                })
+                message = record.message_post(body="Test", message_type="comment")
+                if can_write:
+                    self.make_jsonrpc_request(
+                        "/mail/attachment/delete",
+                        {"attachment_id": attachment.id},
+                    )
+                    self.make_jsonrpc_request(
+                        "/mail/message/reaction",
+                        {"action": "add", "content": "👍", "message_id": message.id},
+                    )
+                    self.assertFalse(attachment.exists())
+                    self.assertEqual(message.reaction_ids.partner_id, self.partner_employee_c2)
+                else:
+                    for route, params in (
+                        ("/mail/attachment/delete", {"attachment_id": attachment.id}),
+                        (
+                            "/mail/message/reaction",
+                            {"action": "add", "content": "👍", "message_id": message.id},
+                        ),
+                    ):
+                        with self.assertRaises(JsonRpcException) as error, mute_logger("odoo.http"):
+                            self.make_jsonrpc_request(route, params)
+                        self.assertEqual(str(error.exception), "odoo.exceptions.AccessError")
+                    self.assertTrue(attachment.exists())
+                    self.assertFalse(message.reaction_ids)
 
     def test_redirect_to_records(self):
         """ Test mail/view redirection in MC environment, notably cids being
