@@ -2679,8 +2679,11 @@
 
 <!-- Language selector templates -->
 <template id="lang_flag" name="Language Flag">
+    <t t-if="flag_lang_id and flag_image_url.startswith('/web/image/')"
+       t-set="flag_image_url"
+       t-value="website.image_url(website.env['res.lang'].browse(flag_lang_id), 'flag_image')"/>
     <img t-attf-class="o_lang_flag #{_flag_class}"
-         t-attf-src="#{flag_image_url}?height=25"
+         t-attf-src="#{flag_image_url}#{'&amp;' if '?' in flag_image_url else '?'}height=25"
          t-att-alt="flag_lang_alt or ''"/>
 </template>
 
@@ -2696,14 +2699,16 @@
         <t t-if="flags">
             <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="active_lang.name.split('/').pop()"/>
             <t t-call="website.lang_flag"
-                flag_image_url="active_lang.flag_image_url"/>
+                flag_image_url="active_lang.flag_image_url"
+                flag_lang_id="active_lang.id"/>
         </t>
     </xpath>
     <xpath expr="//*[contains(@t-attf-class, 'js_change_lang')]/span" position="before">
         <t t-if="flags">
             <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="lg.name.split('/').pop()"/>
             <t t-call="website.lang_flag"
-                flag_image_url="lg.flag_image_url"/>
+                flag_image_url="lg.flag_image_url"
+                flag_lang_id="lg.id"/>
         </t>
     </xpath>
 </template>
