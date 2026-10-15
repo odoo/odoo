@@ -469,21 +469,24 @@ test("edit message with multiple mentions keeps the links", async () => {
         pyEnv["res.partner"].write(p, idOverrides[i]);
     });
 
-    pyEnv["mail.message"].create([{
-        author_id: serverState.partnerId,
-        body: "@Other Partner says hi to @Test Partner",
-        model: "res.partner",
-        message_type: "comment",
-        partner_ids: [123, 1234],
-        res_id: serverState.partnerId,
-    }, {
-        author_id: serverState.partnerId,
-        body: "@Test Partner Junior says hi to @Test Partner",
-        model: "res.partner",
-        message_type: "comment",
-        partner_ids: [123, 125],
-        res_id: serverState.partnerId,
-    }]);
+    pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "@Other Partner says hi to @Test Partner",
+            model: "res.partner",
+            message_type: "comment",
+            partner_ids: [123, 1234],
+            res_id: serverState.partnerId,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "@Test Partner Junior says hi to @Test Partner",
+            model: "res.partner",
+            message_type: "comment",
+            partner_ids: [123, 125],
+            res_id: serverState.partnerId,
+        },
+    ]);
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Message:eq(0) [title='Expand']");
@@ -1075,6 +1078,37 @@ test("Notification Sent", async () => {
     await contains(".o-mail-MessageNotificationPopover i");
     expect(".o-mail-MessageNotificationPopover i:first").toHaveClass("fa-check");
     await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
+});
+
+test("Notification popover with many recipients fits in the screen", async () => {
+    const pyEnv = await startServer();
+    const threadId = pyEnv["res.partner"].create({});
+    const partnerIds = pyEnv["res.partner"].create(
+        Array.from({ length: 60 }, (_, i) => ({ name: `Someone ${i}` }))
+    );
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        message_type: "email",
+        model: "res.partner",
+        res_id: threadId,
+    });
+    pyEnv["mail.notification"].create(
+        partnerIds.map((partnerId) => ({
+            mail_message_id: messageId,
+            notification_status: "sent",
+            notification_type: "email",
+            res_partner_id: partnerId,
+        }))
+    );
+    await start();
+    await openFormView("res.partner", threadId);
+    await click(".o-mail-Message-notification");
+    await contains(".o-mail-MessageNotificationPopover > div", { count: 60 });
+    const content = queryFirst(".o-mail-MessageNotificationPopover");
+    expect(content.scrollHeight).toBeGreaterThan(content.clientHeight);
+    expect(queryFirst(".o_popover").getBoundingClientRect().height).toBeLessThan(
+        window.innerHeight
+    );
 });
 
 test("Notification Error", async () => {
@@ -2040,13 +2074,11 @@ test("Copy Message Link", async () => {
 
 test("Notification sent for nameless partner", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create(
-        {
-            type: 'invoice',
-            email: 'invoice@test.example.com',
-            parent_id: serverState.partnerId,
-        }
-    );
+    const partnerId = pyEnv["res.partner"].create({
+        type: "invoice",
+        email: "invoice@test.example.com",
+        parent_id: serverState.partnerId,
+    });
     const messageId = pyEnv["mail.message"].create({
         body: "Hello",
         model: "res.partner",
@@ -2063,5 +2095,7 @@ test("Notification sent for nameless partner", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Message-notification");
-    await contains(".o-mail-MessageNotificationPopover", { text: "Mitchell Admin, Invoice Address" });
+    await contains(".o-mail-MessageNotificationPopover", {
+        text: "Mitchell Admin, Invoice Address",
+    });
 });
