@@ -1,0 +1,6 @@
+#!/bin/bash
+tooling_dir=$(cd -- "$(dirname "$0")" &> /dev/null && cd .. && pwd)
+"$tooling_dir/check_node.sh" || exit 0
+if ! cmp -s -- "$tooling_dir/_package.json" package.json; then
+    echo "The JS tooling changed, it will be reloaded at your next commit (or run addons/web/tooling/reload.sh now)"
+fi
