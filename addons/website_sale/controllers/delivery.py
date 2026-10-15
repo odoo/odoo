@@ -67,7 +67,7 @@ class Delivery(WebsiteSale):
         :return: The order summary values.
         :rtype: dict
         """
-        result =  {
+        result = {
             "success": True,
             "is_free_delivery": not bool(order.amount_delivery),
             "compute_price_after_delivery": order.carrier_id.invoice_policy == "real",

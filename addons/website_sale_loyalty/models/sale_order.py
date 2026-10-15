@@ -7,7 +7,6 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import html_sanitize
 
 
 class SaleOrder(models.Model):
