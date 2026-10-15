@@ -1,5 +1,6 @@
 import io
 import json
+import secrets
 import textwrap
 import zipfile
 from base64 import b64encode as b64
@@ -58,6 +59,10 @@ class TestL10nPlEdiCron(TestL10nPlEdi, CronMixinCase):
         cls.unencrypted_zip_content = inner_zip_buffer.getvalue()
         cls.encrypted_payload = cls.service.aes_cbc_content(cls.unencrypted_zip_content, key, iv)
         cls.content_map = {cls.batch_number: cls._create_parts_dict(cls.encrypted_payload)}
+
+    @classmethod
+    def _create_encryption_pair(cls):
+        return secrets.token_bytes(32), secrets.token_bytes(16)
 
     @classmethod
     def _create_parts_dict(cls, content, batch_number=None, is_encrypted=True):
