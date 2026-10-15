@@ -22,8 +22,8 @@ import { fields } from "@mail/model/export";
 import { messagingMenuHelpers } from "@mail/../tests/mock_server/controllers/discuss/messaging_menu";
 
 import { describe, expect, mockPermission, test } from "@odoo/hoot";
-import { rightClick, waitUntil } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
+import { rightClick, waitFor, waitUntil } from "@odoo/hoot-dom";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
 
 import {
     Command,
@@ -751,6 +751,36 @@ test("can search messages", async () => {
     // Switching tabs clears the search.
     await click(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHAT}']`);
     await contains(".o-mail-DiscussSearch input", { value: "" });
+});
+
+test("search messages on the text of their preview and body, not on their markup", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: '<p>Visit <a href="https://www.odoo.com">our website</a></p>',
+        bookmarked_partner_ids: [serverState.partnerId],
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.BOOKMARK);
+    await waitFor(
+        ".o-mail-MessagingMenuItem:has(:text('You: Visit https://www.odoo.com')):count(1)"
+    );
+    await insertText(".o-mail-DiscussSearch input", "href");
+    await animationFrame();
+    await waitFor(".o-mail-MessagingMenuEmpty:text('No results for \"href\".'):count(1)");
+    await insertText(".o-mail-DiscussSearch input", "odoo.com", { replace: true });
+    await animationFrame();
+    await waitFor(
+        ".o-mail-MessagingMenuItem:has(:text('You: Visit https://www.odoo.com')):count(1)"
+    );
+    await insertText(".o-mail-DiscussSearch input", "website", { replace: true });
+    await animationFrame();
+    await waitFor(
+        ".o-mail-MessagingMenuItem:has(:text('You: Visit https://www.odoo.com')):count(1)"
+    );
 });
 
 test("push notification request stays on the chat tab regardless of user notification preference", async () => {
