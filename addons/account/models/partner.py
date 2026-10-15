@@ -924,7 +924,10 @@ class ResPartner(models.Model):
         normalized_vat = vat.replace(' ', '').replace('.', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
-        criteria = [{'domain': [('vat', 'in', (normalized_vat, vat))]}]
+        criteria = []
+        if country_code := customer_values.get('country_code'):
+            criteria.append({'domain': [('vat', 'in', (normalized_vat, vat)), ('country_id.code', '=', country_code.upper())]})
+        criteria.append({'domain': [('vat', 'in', (normalized_vat, vat))]})
         extra_vat_values = self._get_country_specific_vat_variants(normalized_vat, country_prefix)
         if extra_vat_values:
             criteria.append({'domain': [('vat', 'in', extra_vat_values)]})

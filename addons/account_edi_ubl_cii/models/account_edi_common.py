@@ -1162,19 +1162,20 @@ class AccountEdiCommon(models.AbstractModel):
 
         vat_mismatch = False
         if customer:
+            country = self._import_retrieve_country(collected_values)
             if not customer.vat:
-                country = self._import_retrieve_country(collected_values)
                 if self.env['res.partner']._run_vat_test(vat, country, True):
                     customer.vat = vat
                 return
-            if self._check_customer_vat_match(customer, vat, collected_values):
+            country_mismatch = bool(country and customer.country_id and customer.country_id != country)
+            if not country_mismatch and self._check_customer_vat_match(customer, vat, collected_values):
                 return
             vat_mismatch = True
 
         partner_create_values = self._import_prepare_missing_customer_create_values(collected_values)
         customer = self.env['res.partner'].create(partner_create_values)
         if vat_mismatch:
-            logs.append(_("Could not retrieve a partner corresponding to '%s' with the same VAT. A new partner was created.", name))
+            logs.append(_("Could not retrieve a partner corresponding to '%s' with the same VAT and country. A new partner was created.", name))
         else:
             logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
         customer_values['customer'] = customer
