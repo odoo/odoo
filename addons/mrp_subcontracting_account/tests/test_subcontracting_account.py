@@ -7,6 +7,8 @@ from odoo.tools.float_utils import float_round, float_compare
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 from odoo.addons.mrp_account.tests.test_bom_price import TestBomPriceCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.tests import tagged
 
 class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_subcontracting_account_flow_1(self):
@@ -209,6 +211,119 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             {'quantity': 5, 'value': 5 * (10 + 20 + 50)},
             {'quantity': 3, 'value': 3 * (10 + 20 + 50)},
             {'quantity': 2, 'value': 2 * (10 + 20 + 50)},
+        ])
+
+
+@tagged('post_install', '-at_install')
+class TestSubcontractingProductionLocationAccount(ValuationReconciliationTestCommon):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.wip_account = cls.env['account.account'].create({
+            'name': 'Work in Progress',
+            'code': 'WIP',
+            'account_type': 'asset_current',
+            'company_id': cls.env.company.id,
+        })
+        cls.production_location = cls.env['stock.location'].create({
+            'name': 'Production with accounts',
+            'usage': 'production',
+            'company_id': cls.env.company.id,
+            'valuation_in_account_id': cls.wip_account.id,
+            'valuation_out_account_id': cls.wip_account.id,
+        })
+        cls.subcontractor = cls.env['res.partner'].create({'name': 'Subcontractor'})
+        cls.component = cls.env['product.product'].create({
+            'name': 'Component',
+            'type': 'product',
+            'categ_id': cls.stock_account_product_categ.id,
+        })
+        cls.finished = cls.env['product.product'].create({
+            'name': 'Finished',
+            'type': 'product',
+            'categ_id': cls.stock_account_product_categ.id,
+        })
+        (cls.component | cls.finished).with_company(cls.env.company).property_stock_production = cls.production_location
+        cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.finished.product_tmpl_id.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.link(cls.subcontractor.id)],
+            'bom_line_ids': [Command.create({'product_id': cls.component.id, 'product_qty': 1.0})],
+        })
+
+    def _receive_subcontracted(self):
+        move = self.env['stock.move'].create({
+            'name': 'IN 10 units @ 10.00 per unit',
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.env.company.subcontracting_location_id.id,
+            'product_id': self.component.id,
+            'product_uom': self.component.uom_id.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 10.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.move_line_ids.qty_done = 10.0
+        move._action_done()
+
+        all_amls_ids = self.env['account.move.line'].search([]).ids
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.company_data['default_warehouse'].in_type_id
+        picking_form.partner_id = self.subcontractor
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 2
+        picking_receipt = picking_form.save()
+        picking_receipt.move_ids.price_unit = 30.0
+        picking_receipt.action_confirm()
+        picking_receipt.move_ids.quantity_done = 2.0
+        picking_receipt._action_done()
+
+        mo = picking_receipt._get_subcontract_production()
+        self.assertEqual(mo.move_finished_ids.stock_valuation_layer_ids.value, 80)
+        amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
+        return amls.sorted(lambda l: (l.product_id.id, l.balance))
+
+    def test_subcontracting_split_account_move(self):
+        """ Receiving a subcontracted product credits the subcontracting service to
+        the stock input account and the components to the stock output account
+        they were consumed into, so both are balanced.
+        """
+        # pylint: disable=bad-whitespace
+        self.production_location.write({'valuation_in_account_id': False, 'valuation_out_account_id': False})
+        stock_in_acc_id = self.company_data['default_account_stock_in'].id
+        stock_out_acc_id = self.company_data['default_account_stock_out'].id
+        stock_valu_acc_id = self.company_data['default_account_stock_valuation'].id
+
+        self.assertRecordValues(self._receive_subcontracted(), [
+            # Components consumed by the subcontractor
+            {'account_id': stock_valu_acc_id,   'product_id': self.component.id,  'debit': 0.0,   'credit': 20.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.component.id,  'debit': 20.0,  'credit': 0.0},
+            # Receipt from subcontractor
+            {'account_id': stock_in_acc_id,     'product_id': self.finished.id,   'debit': 0.0,   'credit': 60.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.finished.id,   'debit': 0.0,   'credit': 20.0},
+            {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,   'debit': 80.0,  'credit': 0.0},
+        ])
+
+    def test_subcontracting_production_location_account(self):
+        """ With valuation accounts on the production location, the components are
+        credited back to that account, which stays balanced, and the subcontracting
+        service to the stock input account.
+        """
+        # pylint: disable=bad-whitespace
+        stock_in_acc_id = self.company_data['default_account_stock_in'].id
+        stock_valu_acc_id = self.company_data['default_account_stock_valuation'].id
+
+        self.assertRecordValues(self._receive_subcontracted(), [
+            # Components consumed by the subcontractor
+            {'account_id': stock_valu_acc_id,   'product_id': self.component.id,  'debit': 0.0,   'credit': 20.0},
+            {'account_id': self.wip_account.id, 'product_id': self.component.id,  'debit': 20.0,  'credit': 0.0},
+            # Receipt from subcontractor
+            {'account_id': stock_in_acc_id,     'product_id': self.finished.id,   'debit': 0.0,   'credit': 60.0},
+            {'account_id': self.wip_account.id, 'product_id': self.finished.id,   'debit': 0.0,   'credit': 20.0},
+            {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,   'debit': 80.0,  'credit': 0.0},
         ])
 
 
