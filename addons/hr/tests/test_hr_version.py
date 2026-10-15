@@ -1004,6 +1004,24 @@ class TestHrVersion(TestHrCommon):
         versions = self.env['hr.version'].search([('id', 'in', (template_1 | template_2).ids), ('date_end', '=', False)])
         self.assertEqual(versions, template_1 | template_2)
 
+    def test_multi_version_changes_hr_officer(self):
+        # HR officer who edits the old version must get the summary of the changes to apply to the next versions (without access error)
+        job_developer, job_manager = self.env['hr.job'].create([{'name': 'Developer'}, {'name': 'Manager'}])
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'job_id': job_developer.id,
+            'job_title': 'Old Title',
+        })
+
+        changes = employee.with_user(self.res_users_hr_officer).get_multi_version_changes({
+            'job_id': job_manager.id,
+            'job_title': 'New Title',
+        })
+        self.assertEqual(changes, {
+            '(Job)': ('Developer', 'Manager'),
+            '(Job Title)': ('Old Title', 'New Title'),
+        })
+
     def test_version_id_context_multi_employees(self):
         """The ``version_id`` context key applies to its employee in a multi-employee recordset."""
         employee_a, employee_b = self.env['hr.employee'].create([
