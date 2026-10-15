@@ -1260,20 +1260,24 @@ class ProductTemplate(models.Model):
         if taxes is None:
             taxes = request.fiscal_position.map_tax(product_taxes)
 
-        price = product._get_tax_included_unit_price_from_price(
+        # Prices are displayed tax included unless the website explicitly excludes them
+        show_tax = (website or self.env.website).tax_display or "tax_included"
+        if tax_display:
+            show_tax = "tax_excluded" if tax_display == "total_excluded" else "tax_included"
+
+        # Changes Fiscal Position when necessary
+        price_after_fp = product._get_tax_included_unit_price_from_price(
             price, product_taxes, product_taxes_after_fp=taxes
         )
-
-        # The list_price is always the price of one.
-        tax_details = taxes.compute_all(
-            price, currency, 1, product or self, self.env.user.partner_id
+        # Adapts the price to the needed tax mode
+        tax_included_price = product._adapt_price_unit_to_document_tax_mode(
+            product_price_unit=price_after_fp,
+            product_taxes=taxes,
+            product_uom=product.uom_id,
+            document_tax_mode=show_tax,
         )
-
-        if not tax_display:
-            show_tax = (website or self.env.website).tax_display
-            tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
-
-        return tax_details[tax_display]
+        # The displayed price must be rounded to the currency, e.g. 61.98 + 21% = 74.9958 -> 75.00
+        return (currency or self.env.company.currency_id).round(tax_included_price)
 
     def create_product_variant(self, product_template_attribute_value_ids):
         """Create if necessary and possible and return the id of the product
