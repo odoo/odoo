@@ -58,11 +58,10 @@ class TestL10nBrPix(AccountTestInvoicingCommon):
             self.partner_bank.write({"proxy_type": "br_random", "proxy_value": False})
 
     def _get_qr_code_string(self):
-        self.invoice.qr_code_method = "emv_qr"
         demo_payment_reference = "NFe TÉST 0001"  # É and spaces should be removed
 
         emv_qr_vals = self.invoice.partner_bank_id._get_qr_vals(
-            qr_method=self.invoice.qr_code_method,
+            qr_method="emv_qr",
             amount=self.invoice.amount_residual,
             currency=self.invoice.currency_id,
             debtor_partner=self.invoice.partner_id,

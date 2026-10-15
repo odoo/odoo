@@ -412,7 +412,19 @@ class AccountMoveSend(models.AbstractModel):
         :param invoice:         An account.move record.
         :param invoice_data:    The collected data for the invoice so far.
         """
-        return
+        # Rendering the invoice report raises when its QR-code can't be generated, which would
+        # break the whole batch: report the error on the invoice instead, so that it is skipped
+        # (and the error logged in its chatter when sending from the cron).
+        if (
+            invoice.display_qr_code
+            and self.env['ir.actions.report']._is_invoice_report(invoice_data.get('pdf_report'))
+            and (qr_code_errors := invoice._get_qr_code_errors())
+        ):
+            qr_method_name = dict(invoice.partner_bank_id.get_available_qr_methods_in_sequence())[invoice._get_qr_code_method()]
+            invoice_data['error'] = {
+                'error_title': _('Errors occurred during the generation of the "%s" QR-code.', qr_method_name),
+                'errors': [qr_code_errors],
+            }
 
     @api.model
     def _prepare_invoice_pdf_report(self, invoices_data):

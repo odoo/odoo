@@ -165,7 +165,14 @@ class ReportAccountReport_Invoice(models.AbstractModel):
         qr_code_urls = {}
         for invoice in docs:
             if invoice.display_qr_code:
-                new_code_url = invoice._generate_qr_code(silent_errors=data['report_type'] == 'html')
+                # When the QR-code can't be generated, print and send raise the error so that the
+                # configuration gets fixed, while the customer portal shows the invoice without it.
+                silent_errors = (
+                    data['report_type'] == 'html'
+                    or data.get('proforma')
+                    or self.env.context.get('proforma_invoice')
+                )
+                new_code_url = invoice._generate_qr_code(silent_errors=silent_errors)
                 if new_code_url:
                     qr_code_urls[invoice.id] = new_code_url
 

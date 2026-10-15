@@ -468,6 +468,7 @@ class AccountMove(models.Model):
             self.company_id.l10n_in_upi_id
             and self.amount_residual
             and self.move_type == 'out_invoice'
+            and self.currency_id.name == 'INR'
         ):
             payment_url = 'upi://pay?pa=%s&pn=%s&am=%s&tr=%s&tn=%s' % (
                 self.company_id.l10n_in_upi_id,
