@@ -932,6 +932,14 @@ class TestChannelInternals(MailCommon, HttpCase):
         ):
             channel.image_128 = BinaryBytes(b"<svg/>")
 
+    def test_group_write_empty_name(self):
+        group = self.env["discuss.channel"]._create_group(
+            partners_to=self.user_employee.partner_id.ids,
+            name="Group",
+        )
+        group.write({"name": False})
+        self.assertEqual(group.name, "")
+
     @freeze_time("2025-04-08 10:00:00")
     def test_channel_notification(self):
         all_test_user = mail_new_test_user(
