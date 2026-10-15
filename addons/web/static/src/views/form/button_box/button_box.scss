@@ -112,6 +112,11 @@
         margin-left: -$border-width;
     }
 
+    // Buttons that don't fit go to the "More" dropdown instead of shrinking
+    &:not(.dropdown-menu) > * {
+        flex-shrink: 0;
+    }
+
     @include media-breakpoint-up(md) {
         .oe_stat_button,
         .oe_stat_button > button {
