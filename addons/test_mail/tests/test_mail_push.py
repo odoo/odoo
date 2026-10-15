@@ -127,13 +127,12 @@ class TestWebPushNotification(SMSCommon):
                         self.assertNotIn("False", payload_value['title'])
                     else:
                         self.assertEqual(payload_value['title'], f'#{channel.name}')
-                    icon = (
-                        '/web/static/img/odoo-icon-192x192.png'
-                        if sender == self.guest
-                        else f'/web/image/res.partner/{self.user_email.partner_id.id}/avatar_128'
-                    )
+                    author = self.guest if sender == self.guest else self.user_email.partner_id
+                    icon_record = channel if channel.channel_type in ["channel", "group"] else author
+                    icon = f"/web/image/{icon_record._name}/{icon_record.id}/avatar_128"
+                    body = f"{author.name}: Test Push" if channel.channel_type != "chat" else "Test Push"
                     self.assertEqual(payload_value['options']['icon'], icon)
-                    self.assertEqual(payload_value['options']['body'], 'Test Push')
+                    self.assertEqual(payload_value['options']['body'], body)
                     self.assertEqual(payload_value['options']['data']['res_id'], channel.id)
                     self.assertEqual(payload_value['options']['data']['model'], channel._name)
                     self.assertEqual(push_to_end_point.call_args.kwargs['device']['endpoint'], 'https://test.odoo.com/webpush/user2')
@@ -310,7 +309,7 @@ class TestWebPushNotification(SMSCommon):
             if has_notif:
                 # user_inbox is notified by Odoo, hence receives a push notification
                 self.assertPushNotification(
-                    mail_push_count=0, title_content=self.user_email.name,
+                    mail_push_count=0, title_content=test_record.display_name,
                     body_content='Please call me as soon as possible this afternoon!\n\n--\nSylvie',
                 )
             else:
@@ -333,8 +332,8 @@ class TestWebPushNotification(SMSCommon):
                     self.assertPushNotification(
                         mail_push_count=0,
                         endpoint='https://test.odoo.com/webpush/user2', keys=('vapid_private_key', 'vapid_public_key'),
-                        title=f'{self.user_admin.name}: {self.record_simple.display_name}',
-                        body_content='Test Push Body',
+                        title=self.record_simple.display_name,
+                        body_content=f"{self.user_admin.name}: Test Push Body",
                         options={
                             'data': {'model': self.record_simple._name, 'res_id': self.record_simple.id,},
                         },
@@ -354,11 +353,11 @@ class TestWebPushNotification(SMSCommon):
         payload_value = json.loads(push_to_end_point.call_args_list[1].kwargs['payload'])
         self.assertEqual(
             payload_value['title'],
-            "Incoming call",
+            inviting_user.partner_id.name,
         )
         options = payload_value['options']
         self.assertTrue(options['requireInteraction'])
-        self.assertEqual(options['body'], f"Conference: {channel.name}")
+        self.assertEqual(options['body'], "Incoming call")
         self.assertEqual(options['actions'], [
             {
                 "action": "DECLINE",
@@ -419,7 +418,7 @@ class TestWebPushNotification(SMSCommon):
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
         self.assertEqual(
-            f'{container_update_subtype.description}\n{container.name} → *{container2.name}* ({container.name})',
+            f'{self.user_email.name}: {container_update_subtype.description}\n{container.name} → *{container2.name}* ({container.name})',
             payload_value['options']['body'],
             'Tracking changes should be included in push notif payload'
         )
@@ -582,7 +581,10 @@ class TestWebPushNotification(SMSCommon):
         - ASCII characters (X)
         - UTF-8 characters (Ø), at various offsets
         """
-        # compute the size of an empty notification with these parameters
+        # push notification bodies are prefixed with the author name, which is part of
+        # the truncated text: sizes below are those of the message text on top of it
+        author_prefix = f"{self.user_email.partner_id.name}: "
+        # compute the size of a notification with an empty message body with these parameters
         # this could change based on the id of record_simple for example
         # but is otherwise constant for any notification sent with the same parameters
         self.record_simple.with_user(self.user_email).message_notify(
@@ -628,7 +630,8 @@ class TestWebPushNotification(SMSCommon):
                     len(encrypted_payload), 4096, 'Final encrypted payload should not exceed 4096 bytes'
                 )
                 self.assertEqual(
-                    len(json.loads(payload_before_encryption)['options']['body']), expected_body_length
+                    len(json.loads(payload_before_encryption)['options']['body']),
+                    len(author_prefix) + expected_body_length,
                 )
                 self.assertEqual(
                     len(encrypted_payload),
@@ -666,16 +669,21 @@ class TestWebPushNotification(SMSCommon):
 
         body = "BØDY"
         body_json = json.dumps(body)[1:-1]
+        # push notification bodies are prefixed with the author name, which is part of the truncated text
+        author_prefix = f"{self.user_email.partner_id.name}: "
         for size_limit, expected_body in [
-            (base_payload_size + len(body_json), "BØDY"),
-            (base_payload_size + len(body_json) - 1, "BØD"),
-            (base_payload_size + len(body_json) - 2, "BØ"),
+            (base_payload_size + len(body_json), f"{author_prefix}BØDY"),
+            (base_payload_size + len(body_json) - 1, f"{author_prefix}BØD"),
+            (base_payload_size + len(body_json) - 2, f"{author_prefix}BØ"),
         ] + [  # truncating anywhere in \u00d8 (Ø) should truncate to the nearest full character (B)
-            (base_payload_size + len(body_json) - n, "B")
+            (base_payload_size + len(body_json) - n, f"{author_prefix}B")
             for n in range(3, 9)
         ] + [
-            (base_payload_size + len(body_json) - 9, ""),
-            (base_payload_size + len(body_json) - 10, ""),  # should still work even if it would still be too big after truncate
+            (base_payload_size + len(body_json) - 9, author_prefix),  # nothing left of the message text
+            # the author prefix is truncated as well once the message text is gone
+            (base_payload_size + len(body_json) - 10, author_prefix[:-1]),
+            # should still work even if it would still be too big after truncate
+            (base_payload_size - len(author_prefix) - 1, ""),
         ]:
             with self.subTest(size_limit=size_limit), patch.object(
                 odoo.addons.mail.models.mail_thread.MailThread, '_truncate_payload_get_max_payload_length',
@@ -698,7 +706,7 @@ class TestWebPushNotification(SMSCommon):
                 self.assertEqual(
                     json.loads(payload_at_push)['options']['body'], expected_body
                 )
-                if not expected_body:
+                if expected_body == author_prefix:
                     self.assertEqual(
                         payload_before_encrypt, base_payload,
                         "Only the contents of the body should be truncated, not the rest of the payload."
