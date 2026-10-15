@@ -19,6 +19,8 @@ export const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
 ];
 
+const MAX_USED_GRADIENTS_TO_SHOW = 4;
+
 export class ColorPickerGradientTab extends Component {
     static template = "html_editor.ColorPickerGradientTab";
     static components = { GradientPicker };
@@ -56,8 +58,22 @@ export class ColorPickerGradientTab extends Component {
             wasOpen = isOpen;
         });
         this.usedCustomGradients = Array.from(this.props.getUsedCustomColors()).filter(
-            isColorGradient
+            (gradient) =>
+                isColorGradient(gradient) && !this.DEFAULT_GRADIENTS_WITH_OPACITY.includes(gradient)
         );
+    }
+
+    get usedGradients() {
+        const currentGradient = this.getCurrentGradientColor();
+        const gradients = this.usedCustomGradients.filter(
+            (gradient) => gradient !== this.standardizeGradient(currentGradient)
+        );
+        const additionalGradient =
+            currentGradient &&
+            !this.DEFAULT_GRADIENTS_WITH_OPACITY.includes(
+                this.standardizeGradient(currentGradient)
+            );
+        return gradients.slice(0, MAX_USED_GRADIENTS_TO_SHOW - (additionalGradient ? 1 : 0));
     }
 
     getCurrentGradientColor() {

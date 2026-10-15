@@ -218,6 +218,37 @@ test("custom background colors used in the editor are shown in the colorpicker",
     });
 });
 
+test("used custom colors in custom colorpicker should not exceed two rows", async () => {
+    let content = "<p>";
+    for (let i = 1; i <= 18; i++) {
+        content += `<font style="background-color: rgb(${i * 10}, 0, 0);">color ${i}</font>`;
+    }
+    content += "</p>";
+    const { el } = await setupEditor(content);
+    setSelection({
+        anchorNode: el.firstElementChild,
+        anchorOffset: 0,
+        focusNode: el.firstElementChild,
+        focusOffset: 1,
+    });
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-background");
+    await animationFrame();
+    await click(".btn:contains('Custom')");
+    const usedCustomColors = queryAll(".o_colorpicker_section:first .o_color_button");
+    expect(usedCustomColors).toHaveCount(16);
+    expect(usedCustomColors[15]).toHaveClass("selected");
+
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await contains(hexInputEl).edit("#FFFF00");
+    expect(usedCustomColors).toHaveCount(16);
+    expect(usedCustomColors[15]).toHaveStyle({ backgroundColor: "rgb(255, 255, 0)" });
+});
+
 test("text gradients used in the editor are shown in gradient picker", async () => {
     await setupEditor(
         `<p>
@@ -283,6 +314,37 @@ test("preview and apply used gradient in gradient picker", async () => {
     expect(targetFont).toHaveOuterHTML(
         '<font style="background-image: linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%);" class="text-gradient">test</font>'
     );
+});
+
+test("used custom gradients in gradient picker should not exceed two rows", async () => {
+    await setupEditor(
+        `<p>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(91, 189, 245) 0%, rgb(108, 53, 130) 100%);">test</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%);">[test]</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%);">test</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(223, 170, 124) 0%, rgb(108, 53, 130) 100%);">test</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(124, 150, 223) 0%, rgb(108, 53, 130) 100%);">test</font>
+        </p>`
+    );
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    expect(".o_font_color_selector").toHaveCount(0);
+    await expectElementCount(".btn.active:contains('Gradient')", 1);
+    await contains(".o_custom_gradient_button").click();
+    await expectElementCount(".o_colorpicker_widget", 1);
+    const usedCustomColors = queryAll(".o_colorpicker_gradient_section:first .o_color_button");
+    expect(usedCustomColors).toHaveCount(4);
+    expect(usedCustomColors[3]).toHaveClass("selected");
+
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await contains(hexInputEl).edit("#FFFF00");
+    expect(usedCustomColors).toHaveCount(4);
+    expect(usedCustomColors[3]).toHaveStyle({
+        backgroundImage: "linear-gradient(135deg, rgb(255, 255, 0) 0%, rgb(130, 53, 53) 100%)",
+    });
 });
 
 test("background gradients used in the editor are shown in gradient picker", async () => {
