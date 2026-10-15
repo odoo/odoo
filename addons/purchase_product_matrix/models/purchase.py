@@ -139,6 +139,7 @@ class PurchaseOrder(models.Model):
     def get_report_matrixes(self):
         """Reporting method."""
         matrixes = []
+        self = self.with_context(show_template_name_in_grid=True)  # noqa: PLW0642
         grid_configured_templates = self.order_line.filtered('is_configurable_product').product_template_id
         # TODO is configurable product and product_variant_count > 1
         # configurable products are only configured through the matrix in purchase, so no need to check product_add_mode.
