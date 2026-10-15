@@ -45,6 +45,19 @@ class ThreadController(http.Controller):
         return cls._get_thread_with_access(thread_model, thread_id, mode=access_mode, **kwargs)
 
     @classmethod
+    def _get_notified_message(cls, thread_model, thread_id, message_id):
+        if thread_model == "discuss.channel" or not message_id:
+            return request.env["mail.message"]
+        domain = [
+            ("id", "=", int(message_id)),
+            ("model", "=", thread_model),
+            ("res_id", "=", int(thread_id)),
+            ("notification_ids.res_partner_id", "=", request.env.user.partner_id.id),
+        ]
+        # sudo: mail.message - can read the notifications of the parent message to reply to it
+        return request.env["mail.message"].sudo().search(domain, limit=1)
+
+    @classmethod
     def _get_thread_with_access(cls, thread_model, thread_id, mode="read", **kwargs):
         """ Simplified getter that filters access params only, making model methods
         using strong parameters. """
@@ -228,14 +241,26 @@ class ThreadController(http.Controller):
                 'ids': canned_response_ids,
             })
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
+        parent_su = request.env["mail.message"]
+        if not thread and (
+            parent_su := self._get_notified_message(
+                thread_model,
+                thread_id,
+                post_data.get("parent_id"),
+            )
+        ):
+            thread = request.env[thread_model].browse(int(thread_id))
         if not thread:
             raise NotFound()
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
             thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
-        # sudo: mail.thread - users can post on accessible threads
-        message = thread.sudo().message_post(
-            **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
+        message_data = self._prepare_message_data(
+            post_data, thread=thread, from_create=True, **kwargs,
         )
+        if parent_su.subtype_id.internal:
+            message_data["subtype_xmlid"] = "mail.mt_note"
+        # sudo: mail.thread - users can post on accessible threads
+        message = thread.sudo().message_post(**message_data)
         return {
             "store_data": store.add(message).get_result(),
             "message_id": message.id,
