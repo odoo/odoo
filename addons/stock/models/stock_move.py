@@ -1628,13 +1628,27 @@ Please change the quantity done or the rounding precision in your settings.""",
         type (moves should already have them identical). Otherwise, create a new
         picking to assign them to. """
         Picking = self.env['stock.picking']
-        grouped_moves = groupby(self, key=lambda m: m._key_assign_picking())
-        for _group, moves in grouped_moves:
-            moves = self.env['stock.move'].concat(moves)
-            new_picking = False
-            # Could pass the arguments contained in group but they are the same
+        moves_by_key = defaultdict(lambda: self.env['stock.move'])
+        for move in self:
+            moves_by_key[move._key_assign_picking()] |= move
+
+        # Fetch, in a single search, every picking that could be a match for any of the
+        # groups above, instead of searching once per group; `reference_ids` already rules
+        # out a group entirely (see `_search_picking_for_assignation`), so only build/run a
+        # domain for groups that actually have a chance of matching an existing picking.
+        search_domains = {
+            key: moves[0]._search_picking_for_assignation_domain()
+            for key, moves in moves_by_key.items() if moves[0].reference_ids
+        }
+        existing_pickings = Picking.search(Domain.OR(search_domains.values())) if search_domains else Picking
+
+        new_picking_vals = []
+        new_picking_moves = []
+        for key, moves in moves_by_key.items():
+            # Could pass the arguments contained in key but they are the same
             # for each move that why moves[0] is acceptable
-            picking = moves[0]._search_picking_for_assignation()
+            domain = search_domains.get(key)
+            picking = existing_pickings.filtered_domain(domain)[:1] if domain is not None else Picking
             if picking:
                 # If a picking is found, we'll append `move` to its move list and thus its
                 # `partner_id` and `ref` field will refer to multiple records. In this
@@ -1642,17 +1656,22 @@ Please change the quantity done or the rounding precision in your settings.""",
                 vals = moves._assign_picking_values(picking)
                 if vals:
                     picking.write(vals)
+                moves.write({'picking_id': picking.id})
+                moves._assign_picking_post_process(new=False)
             else:
                 # Don't create picking for negative moves since they will be
                 # reverse and assign to another picking
                 moves = moves.filtered(lambda m: m.uom_id.compare(m.product_uom_qty, 0.0) >= 0)
                 if not moves:
                     continue
-                new_picking = True
-                picking = Picking.create(moves._get_new_picking_values())
+                new_picking_vals.append(moves._get_new_picking_values())
+                new_picking_moves.append(moves)
 
-            moves.write({'picking_id': picking.id})
-            moves._assign_picking_post_process(new=new_picking)
+        if new_picking_vals:
+            new_pickings = Picking.create(new_picking_vals)
+            for picking, moves in zip(new_pickings, new_picking_moves):
+                moves.write({'picking_id': picking.id})
+                moves._assign_picking_post_process(new=True)
         return True
 
     def _assign_picking_values(self, picking):
@@ -1773,8 +1792,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         """
         # Use OrderedSet of id (instead of recordset + |= ) for performance
         consumed_from_stock_dict = self.env.context.get('consumed_from_stock_dict', defaultdict(float))
-        move_create_proc, move_to_confirm, move_waiting = OrderedSet(), OrderedSet(), OrderedSet()
-        to_assign = defaultdict(OrderedSet)
+        move_create_proc, move_to_confirm, move_waiting, to_assign = OrderedSet(), OrderedSet(), OrderedSet(), OrderedSet()
         for move in self:
             if move.state != 'draft':
                 continue
@@ -1792,8 +1810,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             else:
                 move_to_confirm.add(move.id)
             if move._should_be_assigned():
-                key = (frozenset(move.reference_ids.ids), move.location_id.id, move.location_dest_id.id)
-                to_assign[key].add(move.id)
+                to_assign.add(move.id)
 
         # create procurements for make to order moves
         procurement_requests = []
@@ -1815,9 +1832,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         (move_to_confirm | move_waiting).filtered(lambda m: m.picking_type_id.reservation_method == 'at_confirm')\
             .write({'reservation_date': fields.Date.context_today(self)})
 
-        # assign picking in batch for all confirmed move that share the same details
-        for moves_ids in to_assign.values():
-            self.browse(moves_ids).with_context(clean_context(self.env.context))._assign_picking()
+        # assign picking in batch for all confirmed moves that should be assigned
+        if to_assign:
+            self.browse(to_assign).with_context(clean_context(self.env.context))._assign_picking()
 
         self._check_company()
         moves = self
