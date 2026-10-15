@@ -75,6 +75,9 @@ const discussChannelPatch = {
         if (this.channel_type !== "livechat") {
             return super.avatarUrl;
         }
+        if (this.livechatVisitorMember && this.self_member_id?.notEq(this.livechatVisitorMember)) {
+            return this.livechatVisitorMember.avatarUrl;
+        }
         let bestScore = -1;
         let bestMemberHistory;
         // Agents are preferred over bots, current members over former members, and higher IDs over lower IDs
