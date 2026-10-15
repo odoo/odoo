@@ -437,6 +437,7 @@ export async function insertText(selector, content, options = {}) {
  */
 export async function scroll(selector, scrollTop, options) {
     await contains(selector, { setScroll: scrollTop, ...options });
+    await animationFrame(); // wait for the scroll event
 }
 
 /**
