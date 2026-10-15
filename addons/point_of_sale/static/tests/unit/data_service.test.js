@@ -1,5 +1,12 @@
 import { expect, test } from "@odoo/hoot";
-import { defineModels, makeMockEnv, models } from "@web/../tests/web_test_helpers";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import {
+    defineModels,
+    makeMockEnv,
+    MockServer,
+    models,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
 
 class PosSession extends models.ServerModel {
@@ -138,4 +145,16 @@ test("don't retry sending data to the server if the reason that caused the failu
         expect(env.services.pos_data.network.unsyncData.length).toBe(0);
     }
     expect.verifySteps(["create failed"]);
+});
+
+test("websocket notification is handled once after the bus reconnects", async () => {
+    patchWithCleanup(odoo, { access_token: "pos_access_token" });
+    defineMailModels();
+    await defineModels({ PosSession });
+    const env = await makeMockEnv();
+    env.services.pos_data.connectWebSocket("SYNCHRONISATION", () => expect.step("SYNCHRONISATION"));
+    env.services.pos_data.reconnectWebSocket();
+    MockServer.env["bus.bus"]._sendone("broadcast", "pos_access_token-SYNCHRONISATION", {});
+    await expect.waitForSteps(["SYNCHRONISATION"]);
+    expect.verifySteps([]);
 });
