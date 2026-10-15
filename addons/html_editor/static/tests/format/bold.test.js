@@ -1,5 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, manuallyDispatchProgrammaticEvent, press, queryOne } from "@odoo/hoot-dom";
+import {
+    click,
+    dblclick,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    queryOne,
+} from "@odoo/hoot-dom";
 import { animationFrame, tick, advanceTime } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
@@ -15,6 +21,7 @@ import {
     undo,
 } from "../_helpers/user_actions";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
+import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
@@ -53,8 +60,11 @@ test("should make two paragraphs not bold", async () => {
 
 test("should make qweb tag bold (1)", async () => {
     await testEditor({
-        contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
-        stepFunction: bold,
+        contentBefore: `<div><p t-out="'Test'" contenteditable="false">Test</p></div>`,
+        stepFunction: async (editor) => {
+            await dblclick("p[t-out]");
+            bold(editor);
+        },
         contentAfter: `<div>[<p t-out="'Test'" style="font-weight: bolder;">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
     });
@@ -62,18 +72,22 @@ test("should make qweb tag bold (1)", async () => {
 
 test("should make qweb tag bold (2)", async () => {
     await testEditor({
-        contentBefore: `<div><p t-field="record.name" contenteditable="false">[Test]</p></div>`,
-        stepFunction: bold,
+        contentBefore: `<div><p t-field="record.name" contenteditable="false">Test</p></div>`,
+        stepFunction: async (editor) => {
+            await dblclick("p[t-field]");
+            bold(editor);
+        },
         contentAfter: `<div>[<p t-field="record.name" style="font-weight: bolder;">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
     });
 });
 
-test("should make qweb tag bold and create a commit even with partial selection inside contenteditable false", async () => {
+test("should make qweb tag bold with one commit that only changes its style", async () => {
     const { editor, el } = await setupEditor(
-        `<div><p t-out="'Test'" contenteditable="false">T[e]st</p></div>`,
+        `<div><p t-out="'Test'" contenteditable="false">Test</p></div>`,
         { config: { includePlugins: [QWebPlugin] } }
     );
+    await dblclick("p[t-out]");
     bold(editor);
     expect(getContent(el)).toBe(
         '<p data-selection-placeholder=""><br></p>' +
@@ -88,6 +102,23 @@ test("should make qweb tag bold and create a commit even with partial selection 
     expect(lastCommit.data.mutations[0].type).toBe(EDITOR_MUTATION_TYPES.ATTRIBUTES);
     expect(lastCommit.data.mutations[0].attributeName).toBe("style");
     expect(lastCommit.data.mutations[0].value).toBe("font-weight: bolder;");
+});
+
+test("should make dynamic field bold after selecting it with a single click", async () => {
+    const { editor, el } = await setupEditor(
+        `<div><p t-out="'Test'" data-oe-expression-readable="Test" contenteditable="false">Test</p></div>`,
+        { config: { includePlugins: DYNAMIC_FIELD_PLUGINS } }
+    );
+    await click("p[t-out]");
+    await animationFrame();
+    bold(editor);
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <div>[<p t-out="'Test'" data-oe-expression-readable="Test" contenteditable="false" data-oe-protected="true" style="font-weight: bolder;">Test</p>]</div>
+            <p data-selection-placeholder=""><br></p>
+        `)
+    );
 });
 
 test("bold is active when the selection wraps a bold qweb node", async () => {

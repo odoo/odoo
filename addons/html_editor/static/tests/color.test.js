@@ -4,7 +4,7 @@ import { unformat } from "./_helpers/format";
 import { insertText, setColor } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { getContent } from "./_helpers/selection";
-import { animationFrame, press } from "@odoo/hoot-dom";
+import { animationFrame, dblclick, press } from "@odoo/hoot-dom";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
@@ -21,8 +21,11 @@ test("should apply a color to a slice of text in a span in a font", async () => 
 
 test("should apply a color to the qweb tag (1)", async () => {
     await testEditor({
-        contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
-        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentBefore: `<div><p t-out="'Test'" contenteditable="false">Test</p></div>`,
+        stepFunction: async (editor) => {
+            await dblclick("p[t-out]");
+            setColor("rgb(255, 0, 0)", "color")(editor);
+        },
         contentAfter: `<div>[<p t-out="'Test'" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
     });
@@ -30,8 +33,11 @@ test("should apply a color to the qweb tag (1)", async () => {
 
 test("should apply a color to the qweb tag (2)", async () => {
     await testEditor({
-        contentBefore: `<div><p t-field="record.display_name" contenteditable="false">[Test]</p></div>`,
-        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentBefore: `<div><p t-field="record.display_name" contenteditable="false">Test</p></div>`,
+        stepFunction: async (editor) => {
+            await dblclick("p[t-field]");
+            setColor("rgb(255, 0, 0)", "color")(editor);
+        },
         contentAfter: `<div>[<p t-field="record.display_name" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
     });
