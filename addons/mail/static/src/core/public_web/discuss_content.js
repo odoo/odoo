@@ -89,7 +89,7 @@ export class DiscussContent extends Component {
 
     get threadDescriptionAttClass() {
         return {
-            "o-mail-DiscussContent-threadDescription flex-shrink-1 small pt-1": true,
+            "o-mail-DiscussContent-threadDescription o-min-width-0 small pt-1": true,
         };
     }
 
