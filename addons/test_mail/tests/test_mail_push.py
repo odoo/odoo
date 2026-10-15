@@ -77,6 +77,7 @@ class TestWebPushNotification(SMSCommon):
         )
         # not using cron, as max 1 push notif -> direct send
         self._assert_notification_count_for_cron(0)
+        self.env.cr.postcommit.run()
         # two recipients, comment notifies both inbox and email people
         self.assertEqual(push_to_end_point.call_count, 2)
 
@@ -111,6 +112,7 @@ class TestWebPushNotification(SMSCommon):
                         message_type='comment',
                         subtype_xmlid='mail.mt_comment',
                     )
+                self.env.cr.postcommit.run()
                 self.assertEqual(push_to_end_point.call_count, notification_count)
                 if notification_count > 0:
                     payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
@@ -149,6 +151,7 @@ class TestWebPushNotification(SMSCommon):
             message_type='comment',
             subtype_xmlid='mail.mt_comment',
         )
+        self.env.cr.postcommit.run()
         push_to_end_point.assert_not_called()
         push_to_end_point.reset_mock()
 
@@ -166,7 +169,29 @@ class TestWebPushNotification(SMSCommon):
             message_type='comment',
             subtype_xmlid='mail.mt_comment',
         )
+        self.env.cr.postcommit.run()
         push_to_end_point.assert_called_once()
+
+    @patch.object(odoo.addons.mail.models.mail_thread, "push_to_end_point")
+    def test_notify_by_push_after_commit(self, push_to_end_point):
+        bus_pending_at_push = []
+        push_to_end_point.side_effect = lambda **kwargs: bus_pending_at_push.append(
+            "bus.bus.channels" in self.env.cr.postcommit.data,
+        )
+        chat = (
+            self.env["discuss.channel"]
+            .with_user(self.user_email)
+            .channel_get(partners_to=self.user_inbox.partner_id.ids)
+        )
+        self.env.cr.postcommit.run()
+        chat.with_user(self.user_email).message_post(
+            body="Test Push",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        push_to_end_point.assert_not_called()
+        self.env.cr.postcommit.run()
+        self.assertEqual(bus_pending_at_push, [False], "bus notify should run before the push")
 
     @patch.object(odoo.addons.mail.models.mail_thread, "push_to_end_point")
     def test_notify_by_push_channel_with_channel_notifications_settings(self, push_to_end_point):
@@ -236,6 +261,7 @@ class TestWebPushNotification(SMSCommon):
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
         )
+        self.env.cr.postcommit.run()
         push_to_end_point.assert_called_once()
         # all_test_user should be notified
         self.assertEqual(push_to_end_point.call_args.kwargs["device"]["endpoint"], "https://test.odoo.com/webpush/user20")
@@ -248,6 +274,7 @@ class TestWebPushNotification(SMSCommon):
             partner_ids=(all_test_user + mentions_test_user + nothing_test_user).partner_id.ids,
             subtype_xmlid="mail.mt_comment",
         )
+        self.env.cr.postcommit.run()
         self.assertEqual(push_to_end_point.call_count, 2)
         # all_test_user and mentions_test_user should be notified
         self.assertEqual(push_to_end_point.call_args_list[0].kwargs["device"]["endpoint"], "https://test.odoo.com/webpush/user20")
@@ -271,6 +298,7 @@ class TestWebPushNotification(SMSCommon):
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
         )
+        self.env.cr.postcommit.run()
         push_to_end_point.assert_not_called()
         # mention messages in channel
         channel_channel.with_user(self.user_email).message_post(
@@ -278,6 +306,7 @@ class TestWebPushNotification(SMSCommon):
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
         )
+        self.env.cr.postcommit.run()
         push_to_end_point.assert_not_called()
 
     @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
@@ -306,6 +335,7 @@ class TestWebPushNotification(SMSCommon):
             extra='In-Reply-To:\r\n\t%s\n' % fake_email.message_id,
         )
         self._assert_notification_count_for_cron(0)
+        self.env.cr.postcommit.run()
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
         self.assertIn(self.user_email.name, payload_value['title'])
@@ -329,6 +359,7 @@ class TestWebPushNotification(SMSCommon):
                 )
                 # not using cron, as max 1 push notif -> direct send
                 self._assert_notification_count_for_cron(0)
+                self.env.cr.postcommit.run()
                 if has_notification:
                     push_to_end_point.assert_called_once()
                     payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
@@ -370,6 +401,7 @@ class TestWebPushNotification(SMSCommon):
         })
         self.flush_tracking()
         self._assert_notification_count_for_cron(0)
+        self.env.cr.postcommit.run()
         push_to_end_point.assert_not_called()
 
         container2 = self.env['mail.test.container'].create({'name': 'Container Two'})
@@ -384,6 +416,7 @@ class TestWebPushNotification(SMSCommon):
         })
         self.flush_tracking()
         self._assert_notification_count_for_cron(0)
+        self.env.cr.postcommit.run()
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
         self.assertIn(
@@ -421,13 +454,15 @@ class TestWebPushNotification(SMSCommon):
     @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post',
                   return_value=SimpleNamespace(**{'status_code': 404, 'text': 'Device Unreachable'}))
     def test_push_notifications_error_device_unreachable(self, post):
-        with mute_logger('odoo.addons.mail.tools.web_push'):
-            self.record_simple.with_user(self.user_email).message_notify(
-                partner_ids=self.user_inbox.partner_id.ids,
-                body='Test message send via Web Push',
-                subject='Test Activity',
-                record_name=self.record_simple._name,
-            )
+        with mute_logger("odoo.addons.mail.tools.web_push"):
+            for _ in range(2):
+                self.record_simple.with_user(self.user_email).message_notify(
+                    partner_ids=self.user_inbox.partner_id.ids,
+                    body="Test message send via Web Push",
+                    subject="Test Activity",
+                    record_name=self.record_simple._name,
+                )
+            self.env.cr.postcommit.run()
 
         self._assert_notification_count_for_cron(0)
         post.assert_called_once()
@@ -448,6 +483,7 @@ class TestWebPushNotification(SMSCommon):
         )
 
         self._assert_notification_count_for_cron(0)
+        self.env.cr.postcommit.run()
         post.assert_called_once()
         self.assertEqual(post.call_args.args[0], 'https://test.odoo.com/webpush/user2')
         self.assertIn('headers', post.call_args.kwargs)
@@ -483,6 +519,7 @@ class TestWebPushNotification(SMSCommon):
         )
 
         self._assert_notification_count_for_cron(0)
+        self.env.cr.postcommit.run()
         post.assert_called_once()
         # Test that the device with the invalid TLD is deleted from the DB
         device_count = self.env['mail.push.device'].search_count([('endpoint', '=', 'https://test.odoo.invalid/webpush/user')])
@@ -564,6 +601,7 @@ class TestWebPushNotification(SMSCommon):
             subject='Test Payload',
             record_name=self.record_simple._name,
         )
+        self.env.cr.postcommit.run()
         base_payload_size = len(thread_push_mock.call_args.kwargs['payload'].encode())
         effective_payload_size_limit = self.env['mail.thread']._truncate_payload_get_max_payload_length()
         # this is just a sanity check that the value makes sense, feel free to update as needed
@@ -593,6 +631,7 @@ class TestWebPushNotification(SMSCommon):
             with self.subTest(description):
                 message.body = body
                 self.record_simple._notify_thread_by_web_push(message, recipients_data)
+                self.env.cr.postcommit.run()
 
                 encrypted_payload = session_post_mock.call_args.kwargs['data']
                 payload_before_encryption = thread_push_mock.call_args.kwargs['payload']
@@ -634,6 +673,7 @@ class TestWebPushNotification(SMSCommon):
             subject='Test Payload',
             record_name=self.record_simple._name,
         )
+        self.env.cr.postcommit.run()
         base_payload = thread_push_mock.call_args.kwargs['payload'].encode()
         base_payload_size = len(base_payload)
         encryption_overhead = ENCRYPTION_HEADER_SIZE + ENCRYPTION_BLOCK_OVERHEAD
@@ -658,6 +698,7 @@ class TestWebPushNotification(SMSCommon):
             ):
                 message.body = body
                 self.record_simple._notify_thread_by_web_push(message, recipients_data)
+                self.env.cr.postcommit.run()
                 payload_at_push = thread_push_mock.call_args.kwargs['payload']
                 payload_before_encrypt = web_push_encrypt_payload_mock.call_args.args[0]
                 encrypted_payload = session_post_mock.call_args.kwargs['data']

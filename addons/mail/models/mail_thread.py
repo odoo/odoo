@@ -28,7 +28,7 @@ from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, Command
+from odoo import _, api, exceptions, fields, models, Command, SUPERUSER_ID
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import (
     push_to_end_point, DeviceUnreachableError,
@@ -3814,32 +3814,49 @@ class MailThread(models.AbstractModel):
         payload = self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
         payload = self._truncate_payload(payload)
         if len(devices) < MAX_DIRECT_PUSH:
-            session = Session()
-            devices_to_unlink = set()
-            for device in devices:
-                try:
-                    push_to_end_point(
-                        base_url=self.get_base_url(),
-                        device={
-                            'id': device.id,
-                            'endpoint': device.endpoint,
-                            'keys': device.keys
-                        },
-                        payload=json.dumps(payload),
-                        vapid_private_key=vapid_private_key,
-                        vapid_public_key=vapid_public_key,
-                        session=session,
-                    )
-                except DeviceUnreachableError:
-                    devices_to_unlink.add(device.id)
-                except Exception as e:  # pylint: disable=broad-except
-                    # Avoid blocking the whole request just for a notification
-                    _logger.error('An error occurred while contacting the endpoint: %s', e)
+            base_url = self.get_base_url()
+            devices_vals = [
+                {"id": device.id, "endpoint": device.endpoint, "keys": device.keys}
+                for device in devices
+            ]
+            registry = self.env.registry
+            unreachable_ids = self.env.cr.postcommit.data.setdefault(
+                "mail.push.device.unreachable_ids",
+                set(),
+            )
 
-            # clean up obsolete devices
-            if devices_to_unlink:
-                devices_list = list(devices_to_unlink)
-                self.env['mail.push.device'].sudo().browse(devices_list).unlink()
+            @self.env.cr.postcommit.add
+            def push_to_end_points():
+                session = Session()
+                devices_to_unlink = set()
+                for device_vals in devices_vals:
+                    if device_vals["id"] in unreachable_ids:
+                        continue
+                    try:
+                        push_to_end_point(
+                            base_url=base_url,
+                            device=device_vals,
+                            payload=json.dumps(payload),
+                            vapid_private_key=vapid_private_key,
+                            vapid_public_key=vapid_public_key,
+                            session=session,
+                        )
+                    except DeviceUnreachableError:
+                        devices_to_unlink.add(device_vals["id"])
+                        unreachable_ids.add(device_vals["id"])
+                    except Exception:  # pylint: disable=broad-except
+                        # Avoid blocking the whole request just for a notification
+                        _logger.exception("An error occurred while contacting the endpoint")
+
+                # clean up obsolete devices
+                if devices_to_unlink:
+                    try:
+                        with registry.cursor() as cr:
+                            # sudo: mail.push.device - removing the devices whose endpoint is gone
+                            env = api.Environment(cr, SUPERUSER_ID, {})
+                            env["mail.push.device"].browse(list(devices_to_unlink)).unlink()
+                    except Exception:  # pylint: disable=broad-except
+                        _logger.exception("An error occurred while removing obsolete devices")
 
         else:
             self.env['mail.push'].sudo().create([{
