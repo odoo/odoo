@@ -77,7 +77,7 @@
 
 <t t-name="website.SeoChecks">
     <section class="o_seo_images_check position-relative">
-        <div t-if="this.hasDelayedTranslation" class="o_seo_checks_overlay position-absolute top-0 end-0 bottom-0 start-0 d-flex justify-content-center align-items-center">
+        <div t-if="this.seoContext.hasDelayedTranslation" class="o_seo_checks_overlay position-absolute top-0 end-0 bottom-0 start-0 d-flex justify-content-center align-items-center">
             <p class="alert alert-info d-flex align-items-center shadow-sm m-0" role="alert">
                 <i role="img" aria-hidden="true" class="oi me-2" data-icon="info"/>
                 Translation may differ from original content. Click on "Edit/Translate" to see most recent changes.
@@ -102,7 +102,7 @@
                             <label t-att-for="'decorative-' + img.id">Mark as decorative</label>
                         </div>
                         <div class="input-group mt-2">
-                            <input aria-label="Image description" placeholder="Describe the image..." t-model.proxy="img.alt" type="text" t-att-class="'form-control rounded ' + (img.decorative ? '' : img.alt.trim().length ? 'is-valid' : 'is-invalid')" t-att-disabled="this.hasDelayedTranslation or img.decorative" t-on-change="() => img.updated = true"/>
+                            <input aria-label="Image description" placeholder="Describe the image..." t-model.proxy="img.alt" type="text" t-att-class="'form-control rounded ' + (img.decorative ? '' : img.alt.trim().length ? 'is-valid' : 'is-invalid')" t-att-disabled="this.seoContext.hasDelayedTranslation or img.decorative" t-on-change="() => img.updated = true"/>
                         </div>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
                     </div>
                     <div class="d-flex flex-column justify-content-center flex-grow-1">
                         <div class="input-group">
-                            <input aria-label="Video description" placeholder="Describe the video..." t-model.proxy="video.description" type="text" t-att-class="'form-control rounded ' + (video.description.trim().length ? 'is-valid' : 'is-invalid')" t-att-disabled="this.hasDelayedTranslation" t-on-change="() => video.updated = true"/>
+                            <input aria-label="Video description" placeholder="Describe the video..." t-model.proxy="video.description" type="text" t-att-class="'form-control rounded ' + (video.description.trim().length ? 'is-valid' : 'is-invalid')" t-att-disabled="this.seoContext.hasDelayedTranslation" t-on-change="() => video.updated = true"/>
                         </div>
                     </div>
                 </div>
