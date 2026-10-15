@@ -683,6 +683,22 @@
         direction : ltr;
     }
 
+    /* keep monetary fields next to their label in rtl */
+    .o_rtl & .o_inner_group .o_cell {
+        > .o_field_monetary,
+        > div > .o_field_monetary {
+            justify-content: end;
+            > div {
+                justify-content: end;
+                > input {
+                    flex-grow: 0 !important;
+                    /*rtl:ignore*/
+                    text-align: right;
+                }
+            }
+        }
+    }
+
     .o_list_monetary {
         /*rtl:ignore*/
         text-align: right;
