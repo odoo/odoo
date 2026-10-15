@@ -482,7 +482,7 @@
                 <div class="d-inline-block position-relative">
                     <img class="rounded-circle img-fluid"
                         style="width: 128px; height: 128px; object-fit: cover;"
-                         t-att-src="'/profile/avatar/%s?field=avatar_256%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
+                         t-att-src="'%s%s' % (user['avatar_256_url'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
                     <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user_index + 1}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
                 <h3 class="mt-2 mb-0" t-out="user['name']"></h3>
@@ -505,7 +505,7 @@
             <span t-out="user['position']"/>
         </td>
         <td class="align-middle d-none d-sm-table-cell">
-            <img class="object-fit-cover rounded-circle o_wprofile_img_small" width="30" height="30" t-att-src="'/profile/avatar/%s?field=avatar_128%s' % (user['id'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
+            <img class="object-fit-cover rounded-circle o_wprofile_img_small" width="30" height="30" t-att-src="'%s%s' % (user['avatar_128_url'], '&amp;res_model=%s&amp;res_id=%s' % (record._name, record.id) if record else '')"/>
         </td>
         <td class="align-middle w-md-75">
             <span class="fw-bold" t-out="user['name']"/><br/>

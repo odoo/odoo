@@ -83,8 +83,8 @@ class WebsiteProfile(http.Controller):
 
     @http.route([
         '/profile/avatar/<int:user_id>',
-    ], type='http', auth="public", website=True, sitemap=False, readonly=True)
-    def get_user_profile_avatar(self, user_id, field='avatar_256', width=0, height=0, crop=False, **post):
+    ], type='http', auth="public", website=True, multilang=False, sitemap=False, readonly=True, save_session=False)
+    def get_user_profile_avatar(self, user_id, field='avatar_256', width=0, height=0, crop=False, unique=False, **post):
         if field not in ('image_128', 'image_256', 'avatar_128', 'avatar_256'):
             return werkzeug.exceptions.Forbidden()
 
@@ -92,10 +92,13 @@ class WebsiteProfile(http.Controller):
             width, height = tools.image.image_guess_size_from_field_name(field)
 
         can_sudo = self._check_avatar_access(int(user_id), **post)
-        return request.env['ir.binary']._get_image_stream_from(
+        stream = request.env['ir.binary']._get_image_stream_from(
             request.env['res.users'].sudo(can_sudo).browse(int(user_id)),
             field_name=field, width=int(width), height=int(height), crop=crop
-        ).get_response()
+        )
+        # without sudo, the image depends on the visitor's access rights
+        stream.public = can_sudo
+        return stream.get_response(immutable=bool(unique and can_sudo))
 
     def _prepare_url_from_info(self):
         url_from = request.httprequest.headers.get('Referer')
@@ -199,6 +202,8 @@ class WebsiteProfile(http.Controller):
         for user in users:
             user_values.append({
                 'id': user.id,
+                'avatar_128_url': user._get_profile_avatar_url('avatar_128'),
+                'avatar_256_url': user._get_profile_avatar_url('avatar_256'),
                 'name': user.name,
                 'company_name': user.company_id.name,
                 'rank': user.rank_id.name,

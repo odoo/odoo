@@ -36,6 +36,13 @@ class TestWebsiteProfile(HttpCaseGamification):
                 mock_request.httprequest.headers = {'Referer': f'{base_url_other}{referer}' if referer else None}
                 self.assertEqual(controller._prepare_url_from_info(), {'url_from': None, 'url_from_label': None})
 
+    def test_profile_avatar_cache(self):
+        """ The avatar of an unpublished user depends on the visitor's rights:
+        it stays private, even with a `unique`. """
+        private = odoo.tests.new_test_user(self.env, 'private', karma=10)
+        response = self.url_open(f'/profile/avatar/{private.id}?field=avatar_128&unique=1')
+        self.assertEqual(response.headers['Cache-Control'], 'no-cache, private')
+
     def test_save_change_description(self):
         odoo.tests.new_test_user(
             self.env, 'test_user',
