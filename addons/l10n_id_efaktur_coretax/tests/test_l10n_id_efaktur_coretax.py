@@ -403,7 +403,13 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
+<<<<<<< cf2cecb5addd53ab7418b933a813b074b83825d0
                 Command.create({'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
+||||||| b6f6ba2b1432e020677de32ba41b1fe6df45ed8f
+                Command.create({'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000})
+=======
+                Command.create({'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
+>>>>>>> bce2bbec2e247964e30d07b777c709a4273085f6
             ],
             'l10n_id_kode_transaksi': '04',
         })
