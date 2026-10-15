@@ -25,9 +25,6 @@ export default class OrderPaymentValidation {
     setup(vals) {
         this.pos = vals.pos;
         this.orderUuid = vals.orderUuid;
-        this.payment_methods_from_config = this.pos.config.payment_method_ids
-            .slice()
-            .sort((a, b) => a.sequence - b.sequence);
         if (vals.fastPaymentMethod) {
             this.order.addPaymentline(vals.fastPaymentMethod);
         }

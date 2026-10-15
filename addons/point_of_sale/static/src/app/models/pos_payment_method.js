@@ -21,6 +21,12 @@ export class PosPaymentMethod extends Base {
         return Boolean(this.payment_interface);
     }
 
+    isAvailable(order) {
+        return (
+            !order.isRefund || !this.payment_interface || this.payment_interface.supports_refunds
+        );
+    }
+
     get paymentInterfaceKey() {
         return this.useBankTransfer ? this.payment_method_type : this.payment_provider;
     }

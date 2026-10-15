@@ -33,7 +33,6 @@ export class PaymentScreen extends Component {
         this.dialog = useService("dialog");
         this.invoiceService = useService("account_move");
         this.notification = useService("notification");
-        this.payment_methods_from_config = this.configPaymentMethods || [];
         this.numberBuffer = usePlugin(PosNumberBufferPlugin);
         this.numberBuffer.use(this._getNumberBufferConfig);
         this.error = false;
@@ -46,8 +45,12 @@ export class PaymentScreen extends Component {
         return false;
     }
 
-    get configPaymentMethods() {
-        return this.pos.config.paymentMethods;
+    get paymentMethods() {
+        return this.pos.paymentMethods.getAvailablePaymentMethods(this.currentOrder);
+    }
+
+    get firstPaymentMethod() {
+        return this.pos.paymentMethods.getFirstAvailable(this.currentOrder);
     }
 
     onMounted() {
@@ -94,16 +97,6 @@ export class PaymentScreen extends Component {
                 "The amount cannot be higher than the due amount if you don't have a cash payment method configured."
             ),
         });
-    }
-
-    showPaymentMethod(paymentMethod) {
-        return (
-            (paymentMethod.type !== "pay_later" || this.pos.accessRight.canAccessPaymentMethod) &&
-            (!this.isRefundOrder ||
-                !paymentMethod.payment_interface ||
-                paymentMethod.payment_interface.supports_refunds ||
-                false)
-        );
     }
 
     get _getNumberBufferConfig() {
@@ -174,8 +167,9 @@ export class PaymentScreen extends Component {
         return true;
     }
     async updateSelectedPaymentline(amount = false) {
-        if (this.paymentLines.every((line) => line.paid)) {
-            this.currentOrder.addPaymentline(this.payment_methods_from_config[0]);
+        const firstPaymentMethod = this.firstPaymentMethod;
+        if (firstPaymentMethod && this.paymentLines.every((line) => line.paid)) {
+            this.currentOrder.addPaymentline(firstPaymentMethod);
         }
         if (!this.selectedPaymentLine?.isAmountEditable) {
             return;
@@ -189,11 +183,8 @@ export class PaymentScreen extends Component {
                 amount = this.numberBuffer.getFloat();
             }
         }
-        const hasCashPaymentMethod = this.payment_methods_from_config.some(
-            (method) => method.type === "cash"
-        );
         if (
-            !hasCashPaymentMethod &&
+            !this.pos.paymentMethods.hasPaymentMethodType(this.currentOrder, "cash") &&
             amount > this.currentOrder.remainingDue + this.selectedPaymentLine.amount
         ) {
             this.selectedPaymentLine.setAmount(0, this.selectedPaymentLine.currency);

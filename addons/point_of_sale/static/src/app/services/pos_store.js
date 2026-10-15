@@ -60,6 +60,7 @@ import { formatFloat } from "@web/core/utils/numbers";
 import { PosDataPlugin } from "../plugins/pos_data_plugin";
 import { PosTicketPrinterPlugin } from "../plugins/pos_ticket_printer_plugin";
 import { PosAlertPlugin } from "../plugins/pos_alert_plugin";
+import { PosPaymentMethodPlugin } from "../plugins/pos_payment_method_plugin";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { clearLocalStorage } from "../utils/devices_identifier_sequence";
@@ -73,6 +74,7 @@ export class PosStore extends WithLazyGetterTrap {
     router = usePlugin(PosRouterPlugin);
     customerDisplay = usePlugin(CustomerDisplayTerminalPlugin);
     accessRight = usePlugin(PosAccessRightPlugin);
+    paymentMethods = usePlugin(PosPaymentMethodPlugin);
 
     static excludedLazyGetters = [
         "defaultPage",
@@ -597,13 +599,7 @@ export class PosStore extends WithLazyGetterTrap {
         // Check cashier
         this.checkPreviousLoggedCashier();
 
-        // Add Payment Interface to Payment Method
-        for (const pm of this.config.payment_method_ids) {
-            const PaymentInterface = registry
-                .category("pos_payment_providers")
-                .get(pm.paymentInterfaceKey, null);
-            pm.payment_interface = PaymentInterface ? new PaymentInterface(this, pm) : null;
-        }
+        this.paymentMethods.init(this);
 
         // Add Scale
         for (const ScaleInterface of registry.category("electronic_scales").getAll()) {
@@ -2787,21 +2783,9 @@ export class PosStore extends WithLazyGetterTrap {
     getValidationOrderOptions(args = {}) {
         const { order = this.getOrder() } = args;
         const opts = { pos: this, orderUuid: order.uuid };
-
-        // Fast payment should be applied in the following cases:
-        // 1. When there are no existing payment lines, but a payment method is configured.
-        // 2. When the customer's due has been settled (i.e., a negative payment entry exists).
-        //    In this case, the negative payment line is present in `paymentLines` but not shown in the UI,
-        //    so `fastPayment` should still be triggered by passing `opts`.
-        const paymentLines = order.payment_ids;
-        if (
-            !paymentLines.length ||
-            (!order.is_refund &&
-                paymentLines.length === 1 &&
-                paymentLines[0].payment_method_id.type === "pay_later" &&
-                this.currency.isNegative(paymentLines[0].amount))
-        ) {
-            opts.fastPaymentMethod = this.config.paymentMethods[0];
+        const fastPaymentMethod = this.paymentMethods.getFastPaymentMethod(order);
+        if (fastPaymentMethod) {
+            opts.fastPaymentMethod = fastPaymentMethod;
         }
         return opts;
     }
