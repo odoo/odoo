@@ -809,7 +809,13 @@ class Partner(models.Model):
                 vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
-        partners = super().create(vals_list)
+        create_self = self
+        if 'default_user_ids' in self.env.context:
+            # default_user_ids targets other models (e.g. task assignees); as
+            # user_ids is the inverse of res.users.partner_id, applying it here
+            # would re-link those users to the new partner
+            create_self = self.with_context({k: v for k, v in self.env.context.items() if k != 'default_user_ids'})
+        partners = super(Partner, create_self).create(vals_list)
 
         if self.env.context.get('_partners_skip_fields_sync'):
             return partners
