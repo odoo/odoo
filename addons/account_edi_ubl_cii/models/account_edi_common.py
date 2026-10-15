@@ -1419,6 +1419,13 @@ class AccountEdiCommon(models.AbstractModel):
         country = self._import_retrieve_country(collected_values)
         return self._vat_is_equal(customer.vat, vat, country)
 
+    def _import_get_valid_additional_identifiers(self, customer_values):
+        return {
+            key: value
+            for key, value in (customer_values.get('additional_identifiers') or {}).items()
+            if self.env['res.partner']._validate_identifier(key, value)['valid']
+        }
+
     def _import_create_missing_customer(self, collected_values):
         customer_values = collected_values['customer_values']
         logs = collected_values['logs']
@@ -1426,7 +1433,9 @@ class AccountEdiCommon(models.AbstractModel):
 
         name = customer_values.get('name')
         vat = customer_values.get('vat')
-        if not name or not vat:
+        if not name or (customer and not vat):
+            return
+        if not vat and not self._import_get_valid_additional_identifiers(customer_values):
             return
 
         vat_mismatch = False
@@ -1457,16 +1466,8 @@ class AccountEdiCommon(models.AbstractModel):
             if value := customer_values.get(key):
                 partner_create_values[key] = value
 
-        # The additional identifiers and routing endpoint come from an external
-        # file: keep only the values that validate, so create() does not raise
-        if identifiers := customer_values.get('additional_identifiers'):
-            valid_identifiers = {
-                key: value
-                for key, value in identifiers.items()
-                if self.env['res.partner']._validate_identifier(key, value)['valid']
-            }
-            if valid_identifiers:
-                partner_create_values['additional_identifiers'] = valid_identifiers
+        if valid_identifiers := self._import_get_valid_additional_identifiers(customer_values):
+            partner_create_values['additional_identifiers'] = valid_identifiers
 
         if (scheme := customer_values.get('routing_scheme')) and (endpoint := customer_values.get('routing_endpoint')):
             result = self.env['res.partner']._validate_identifier_by_scheme(scheme, endpoint)
