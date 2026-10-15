@@ -55,7 +55,7 @@ export class MessageReactionMenu extends Component {
     }
 
     getEmojiShortcode(reaction) {
-        return emojiLoader.getShortCode(reaction.content);
+        return emojiLoader.map.get(reaction.content)?.shortcodes?.[0] ?? reaction.content;
     }
 
     get contentClass() {
