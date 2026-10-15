@@ -65,6 +65,7 @@ class MailTestStageField(models.Model):
     _name = 'mail.test.rotting.stage'
 
     name = fields.Char()
+    active = fields.Boolean(default=True)
     rotting_threshold_days = fields.Integer(default=3)
     no_rot = fields.Boolean(default=False)
 
