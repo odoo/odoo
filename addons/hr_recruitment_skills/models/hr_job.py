@@ -41,7 +41,7 @@ class HrJob(models.Model):
                 + applicant_degree
             )
 
-            job.applicant_matching_score = applicant_total / job_total * 100
+            job.applicant_matching_score = applicant_total / job_total * 100 if job_total else 0
 
     def action_search_matching_applicants(self):
         self.ensure_one()
