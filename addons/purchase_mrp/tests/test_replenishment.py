@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import tagged
 
@@ -166,3 +167,40 @@ class TestReplenishment(TestStockCommon):
 
         self.assertEqual(orderpointA.route_id_placeholder, 'Manufacture')
         self.assertEqual(orderpointB.route_id_placeholder, 'Buy')
+
+    def test_orderpoint_buy_route_overrides_warehouse_manufacture_route(self):
+        "An explicit Buy route must override a manufacturing route applying to all warehouses."
+        buy_rule = self.warehouse_1.buy_pull_id
+        manufacture_route = self.env['stock.route'].create({
+            'name': 'Manufacture in all warehouses',
+            'warehouse_selectable': True,
+            'sequence': 0,
+            'rule_ids': [Command.create({
+                'name': 'Manufacture into stock',
+                'action': 'manufacture',
+                'location_dest_id': self.stock_location.id,
+                'picking_type_id': self.warehouse_1.manu_type_id.id,
+            })],
+        })
+        self.env['product.supplierinfo'].create({
+            'product_id': self.productA.id,
+            'partner_id': self.partner_1.id,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.productA.id,
+            'location_id': self.stock_location.id,
+            'product_max_qty': 4,
+            'route_id': buy_rule.route_id.id,
+        })
+        self.assertEqual(orderpoint.rule_ids, buy_rule)
+
+        # Explicit routes also take precedence over routes assigned to the product.
+        self.productA.route_ids = manufacture_route
+        self.assertEqual(orderpoint.rule_ids, buy_rule)
+        orderpoint.action_replenish()
+        purchase_line = self.env['purchase.order.line'].search([('orderpoint_id', '=', orderpoint.id)])
+        self.assertRecordValues(purchase_line, [{
+            'product_id': self.productA.id,
+            'product_qty': 4,
+            'partner_id': self.partner_1.id,
+        }])
