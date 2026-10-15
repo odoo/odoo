@@ -348,3 +348,41 @@ class TestImage(HttpCase):
                     "inline; filename=placeholder.png",
                     f"{user} should not have access to {attachment.description} with {token or 'no token'}",
                 )
+
+    def test_07_web_image_field_attachment_cache_control(self):
+        """An image field stored as a (non-public) attachment must be
+        cacheable by shared caches (CDN) when served to the public user,
+        like inline binary fields are, but stay private otherwise."""
+        lang = self.env.ref('base.lang_en')
+        lang.flag_image = b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
+        self.assertFalse(self.env['ir.attachment'].sudo().search([
+            ('res_model', '=', 'res.lang'),
+            ('res_id', '=', lang.id),
+            ('res_field', '=', 'flag_image'),
+        ]).public)
+        new_test_user(self.env, "internal_user")
+
+        def get_cache_control(url):
+            res = self.url_open(url)
+            res.raise_for_status()
+            return res.headers['Cache-Control'].split(', ')
+
+        url = f'/web/image/res.lang/{lang.id}/flag_image?unique=1'
+        self.authenticate(None, None)
+        cache_control = get_cache_control(url)
+        self.assertIn('public', cache_control)
+        self.assertNotIn('private', cache_control)
+
+        # the placeholder stays private
+        cache_control = get_cache_control('/web/image/res.lang/0/flag_image?unique=1')
+        self.assertIn('private', cache_control)
+        self.assertNotIn('public', cache_control)
+        self.patch(lang._fields['flag_image'], 'groups', 'base.group_user')
+        cache_control = get_cache_control(url)
+        self.assertIn('private', cache_control)
+        self.assertNotIn('public', cache_control)
+
+        self.authenticate('internal_user', 'internal_user')
+        cache_control = get_cache_control(url)
+        self.assertIn('private', cache_control)
+        self.assertNotIn('public', cache_control)
