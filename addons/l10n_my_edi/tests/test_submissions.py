@@ -377,6 +377,16 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             wizard.button_request_update()
             self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'cancelled')
 
+    def test_12_document_too_large(self):
+        """ Ensure that a document refused by the proxy because it exceeds the MyInvois size limit shows a clear error. """
+        send_and_print = self.create_send_and_print(self.basic_invoice)
+        with patch(CONTACT_PROXY_METHOD, new=self._test_12_mock), \
+             self.assertRaisesRegex(UserError, r'This invoice is too large to be sent to MyInvois \(350 KB, the maximum is 250 KB\)'):
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
+
     # -------------------------------------------------------------------------
     # Patched methods
     # -------------------------------------------------------------------------
@@ -685,6 +695,20 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         elif endpoint == 'api/l10n_my_edi/1/update_status':
             return {
                 'success': True,
+            }
+        else:
+            raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
+
+    def _test_12_mock(self, endpoint, params):
+        """ Basic mocked method that simulate what the proxy would return depending on the endpoint. """
+        if endpoint == 'api/l10n_my_edi/1/submit_invoices':
+            return {
+                'submission_uid': '',
+                'documents': [{
+                    'move_id': params['documents'][0]['move_id'],
+                    'success': False,
+                    'errors': [{'reference': 'document_too_large', 'data': {'size': 350, 'max_size': 250}}],
+                }],
             }
         else:
             raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
