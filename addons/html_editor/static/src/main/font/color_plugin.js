@@ -28,6 +28,7 @@ import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_edit
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { PROTECTED_QWEB_SELECTOR } from "@html_editor/others/qweb_plugin";
 
 const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
 const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`).join(", ");
@@ -282,8 +283,7 @@ export class ColorPlugin extends Plugin {
                 .getTargetedNodes()
                 .filter(
                     (node) =>
-                        this.dependencies.selection.isNodeEditable(node) &&
-                        node.nodeName !== "T" &&
+                        (!isTextNode(node) || this.dependencies.selection.isNodeEditable(node)) &&
                         this.dependencies.selection.areNodeContentsFullySelected(node)
                 );
             if (isEmptyBlock(selection.endContainer)) {
@@ -421,7 +421,13 @@ export class ColorPlugin extends Plugin {
                         fillEmpty(font);
                     }
                 } else {
-                    font = []; // Ignore non-text or invisible text nodes.
+                    // Ignore non-text or invisible text nodes.
+                    font =
+                        node.nodeType === Node.ELEMENT_NODE &&
+                        node.matches(PROTECTED_QWEB_SELECTOR) &&
+                        this.dependencies.selection.isNodeEditable(node)
+                            ? node
+                            : [];
                 }
                 return font;
             });
