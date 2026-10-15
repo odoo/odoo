@@ -66,7 +66,7 @@
         </xpath>
 
         <xpath expr="//div[@id='qrcode_info']" position="after">
-            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_upi_id">
+            <t t-if="qr_code_url and o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_upi_id">
                 <div style="display:-webkit-flex;" class="flex-column">
                     <strong>PAYMENT QR CODE</strong>
                     <div class="mt-1 mb-1">

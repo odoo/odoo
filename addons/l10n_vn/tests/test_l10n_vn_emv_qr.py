@@ -34,6 +34,7 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
 
         cls.acc_emv_vn_without_paynow_info = cls.env['res.partner.bank'].create({
             'account_number': '1234567890',
+            'bank_bic': '970422',
             'partner_id': cls.company_data['company'].partner_id.id,
             'allow_out_payment': True,
         })
@@ -62,13 +63,11 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
         })
 
     def test_emv_qr_code_generation(self):
-        self.emv_qr_invoice.qr_code_method = 'emv_qr'
         self.emv_qr_invoice._generate_qr_code()
 
-        # Using invoice currency other than VND should fail
+        # Using invoice currency other than VND: no QR-code method is eligible, so none is generated
         self.emv_qr_invoice.currency_id = self.env.ref('base.USD')
-        with self.assertRaises(UserError, msg="The chosen QR-code type is not eligible for this invoice."):
-            self.emv_qr_invoice._generate_qr_code()
+        self.assertIsNone(self.emv_qr_invoice._generate_qr_code())
 
         # Without company partner city or state should fail
         self.emv_qr_invoice.currency_id = self.env.ref('base.VND')
@@ -87,10 +86,9 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
             self.emv_qr_invoice._generate_qr_code()
 
     def test_emv_qr_vals(self):
-        self.emv_qr_invoice.qr_code_method = 'emv_qr'
         unstruct_ref = 'INV/TEST/0001'
         emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
-            qr_method=self.emv_qr_invoice.qr_code_method,
+            qr_method='emv_qr',
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,
             debtor_partner=self.emv_qr_invoice.partner_id,
@@ -108,10 +106,9 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
 
     def test_emv_qr_vals_with_accent_partner(self):
         self.company_data['company'].partner_id.name = 'áÁéÉóÓíÍúÚýÝđĐ'
-        self.emv_qr_invoice.qr_code_method = 'emv_qr'
         unstruct_ref = 'INV/TEST/0002'
         emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
-            qr_method=self.emv_qr_invoice.qr_code_method,
+            qr_method='emv_qr',
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,
             debtor_partner=self.emv_qr_invoice.partner_id,

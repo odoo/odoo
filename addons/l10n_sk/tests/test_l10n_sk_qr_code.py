@@ -5,7 +5,6 @@ import binascii
 import lzma
 
 from odoo import Command
-from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -65,14 +64,12 @@ class TestL10nSKQRCode(AccountTestInvoicingCommon):
 
     def test_l10n_sk_qr_code_detection(self):
         """ PAY by square is the method picked for a Slovak account. """
-        self.invoice._generate_qr_code()
-        self.assertEqual(self.invoice.qr_code_method, 'sk_qr')
+        self.assertEqual(self.invoice._get_qr_code_method(), 'sk_qr')
 
         # ... but not for an account located outside of Slovakia, where whichever
         # other method is available gets its turn.
         foreign_invoice = self.invoice.copy({'partner_bank_id': self.foreign_bank_account.id})
-        foreign_invoice._generate_qr_code()
-        self.assertNotEqual(foreign_invoice.qr_code_method, 'sk_qr')
+        self.assertNotEqual(foreign_invoice._get_qr_code_method(), 'sk_qr')
 
     def test_l10n_sk_encode_pay_by_square(self):
         """ The encoding matches the codes a reference implementation produces.
@@ -123,7 +120,6 @@ class TestL10nSKQRCode(AccountTestInvoicingCommon):
 
     def test_l10n_sk_qr_code_payment_data(self):
         """ The generated code holds the payment data of the invoice. """
-        self.invoice.qr_code_method = 'sk_qr'
         self.assertTrue(self.invoice._generate_qr_code())
 
         code = self.sk_bank_account.with_context(invoice_date_due=self.invoice.invoice_date_due)._get_qr_vals(
@@ -172,15 +168,12 @@ class TestL10nSKQRCode(AccountTestInvoicingCommon):
         self.assertEqual(decode_pay_by_square(code)[5], '')
 
     def test_l10n_sk_qr_code_eligibility(self):
-        """ A PAY by square code is only generated for a Slovak IBAN in EUR. """
-        self.invoice.qr_code_method = 'sk_qr'
-        self.invoice._generate_qr_code()
+        """ PAY by square is only picked for a Slovak IBAN in EUR. """
+        self.assertEqual(self.invoice._get_qr_code_method(), 'sk_qr')
 
         self.invoice.currency_id = self.env.ref('base.USD')
-        with self.assertRaises(UserError, msg="PAY by square is a SEPA credit transfer, it only carries EUR."):
-            self.invoice._generate_qr_code()
+        self.assertNotEqual(self.invoice._get_qr_code_method(), 'sk_qr', "PAY by square is a SEPA credit transfer, it only carries EUR.")
 
         self.invoice.currency_id = self.env.ref('base.EUR')
         self.invoice.partner_bank_id = self.foreign_bank_account
-        with self.assertRaises(UserError, msg="PAY by square should not be usable on a foreign bank account."):
-            self.invoice._generate_qr_code()
+        self.assertNotEqual(self.invoice._get_qr_code_method(), 'sk_qr', "PAY by square should not be usable on a foreign bank account.")

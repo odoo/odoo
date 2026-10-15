@@ -53,15 +53,9 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
         })
 
     def test_swiss_qr_code_generation(self):
-        """ Check different cases of Swiss QR-code generation, when qr_method is
-        specified beforehand.
-        """
-        self.ch_qr_invoice.qr_code_method = 'ch_qr'
-
-        # flush manually  to have the right env to get possible values of `qr_code_method`
-        self.env.flush_all()
-
-        # First check with a regular IBAN
+        """ Check different cases of Swiss QR-code generation. """
+        # First check with a regular IBAN: the partner is Swiss, but its address is incomplete
+        self.ch_qr_invoice.partner_id.country_id = self.env.ref('base.ch')
         with self.assertRaises(UserError, msg="It shouldn't be possible to generate a Swiss QR-code for partners without a complete Swiss address."):
             self.ch_qr_invoice._generate_qr_code()
 
@@ -97,19 +91,16 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
         unstruct_ref = self.ch_qr_invoice.ref and self.ch_qr_invoice.ref or self.ch_qr_invoice.name
         vals = self.ch_qr_invoice.partner_bank_id._build_qr_code_vals(
             self.ch_qr_invoice.amount_residual, unstruct_ref, self.ch_qr_invoice.payment_reference,
-            self.ch_qr_invoice.currency_id, self.ch_qr_invoice.partner_id, self.ch_qr_invoice.qr_code_method)
+            self.ch_qr_invoice.currency_id, self.ch_qr_invoice.partner_id, 'ch_qr')
         value_list = self.ch_qr_invoice.partner_bank_id._get_qr_vals(**vals)
 
         self.assertEqual(''.join(value_list).count('\n'), 0, "Each element of the Swiss QR-code must be contained on one line.")
 
     def test_ch_qr_code_detection(self):
-        """ Checks Swiss QR-code auto-detection when no specific QR-method
-        is given to the invoice.
-        """
+        """ Checks Swiss QR-code auto-detection. """
         self._assign_partner_address(self.ch_qr_invoice.company_id.partner_id)
         self._assign_partner_address(self.ch_qr_invoice.partner_id)
-        self.ch_qr_invoice._generate_qr_code()
-        self.assertEqual(self.ch_qr_invoice.qr_code_method, 'ch_qr', "Swiss QR-code generator should have been chosen for this invoice.")
+        self.assertEqual(self.ch_qr_invoice._get_qr_code_method(), 'ch_qr', "Swiss QR-code generator should have been chosen for this invoice.")
 
     def test_ch_qr_code_cross_mask(self):
         for width, height in ((64, 128), (128, 128), (256, 256), (512, 512)):
