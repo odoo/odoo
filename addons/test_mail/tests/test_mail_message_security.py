@@ -166,6 +166,9 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_admin, {  # note: force reply_to normally computed by message_post avoiding ACLs issues
                 'parent_id': admin_msg.id,
             }, False, 'No access on record but reply to notified parent'),
+            (self.record_internal_ro, {
+                'parent_id': admin_msg.id,
+            }, True, 'Notified parent is on another record'),
         ]:
             with self.subTest(record=record, msg_vals=msg_vals, reason=reason):
                 if should_crash:
@@ -270,6 +273,9 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_admin, {
                 'parent_id': admin_msg.id,
             }, False, 'No access on record but reply to notified parent'),
+            (self.record_internal, {
+                'parent_id': admin_msg.id,
+            }, True, 'Notified parent is on another record'),
         ]:
             with self.subTest(record=record, msg_vals=msg_vals, reason=reason):
                 if should_crash:
