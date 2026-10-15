@@ -952,6 +952,42 @@ QUnit.test("Notification Sent", async (assert) => {
     await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
 });
 
+QUnit.test("Notification popover with many recipients fits in the screen", async (assert) => {
+    const pyEnv = await startServer();
+    const threadId = pyEnv["res.partner"].create({});
+    const partnerIds = pyEnv["res.partner"].create(
+        Array.from({ length: 60 }, (_, i) => ({ name: `Someone ${i}` }))
+    );
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        message_type: "email",
+        model: "res.partner",
+        res_id: threadId,
+    });
+    pyEnv["mail.notification"].create(
+        partnerIds.map((partnerId) => ({
+            mail_message_id: messageId,
+            notification_status: "sent",
+            notification_type: "email",
+            res_partner_id: partnerId,
+        }))
+    );
+    const { openView } = await start();
+    await openView({
+        res_id: threadId,
+        res_model: "res.partner",
+        views: [[false, "form"]],
+    });
+    await click(".o-mail-Message-notification");
+    await contains(".o-mail-MessageNotificationPopover > div", { count: 60 });
+    const content = document.querySelector(".o-mail-MessageNotificationPopover");
+    assert.ok(content.scrollHeight > content.clientHeight, "the recipient list scrolls");
+    assert.ok(
+        document.querySelector(".o_popover").getBoundingClientRect().height < window.innerHeight,
+        "the popover is shorter than the window"
+    );
+});
+
 QUnit.test("Notification Error", async (assert) => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([
