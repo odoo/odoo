@@ -19,7 +19,7 @@
             <nav class="navbar navbar-expand navbar-light bg-light">
                 <div class="container">
                     <a href="/" class="navbar-brand logo">
-                        <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                        <img t-att-src="res_company._get_logo_url()" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                     </a>
                     <ul id="top_menu" class="nav navbar-nav ms-auto">
                         <t t-call="portal.placeholder_user_sign_in" _item_class.f="nav-item" _link_class.f="nav-link"/>

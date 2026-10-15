@@ -12,7 +12,7 @@
                 <header>
                     <div><title>Odoo</title></div>
                     <div class="text-center">
-                        <img t-attf-src="/web/binary/company_logo?company={{ res_company.id }}"/>
+                        <img t-att-src="res_company._get_logo_url()"/>
                     </div>
                 </header>
                 <div id="wrap" class="oe_structure oe_empty"/>
