@@ -8,6 +8,10 @@
 
         <xpath expr="(//div[hasclass('order-container')]/t[@t-foreach='lines'])[1]" position="replace" >
             <t t-if="this.displayCourses">
+                <t t-foreach="this.getLinesWithoutCourse(lines)" t-as="line" t-key="line.uuid">
+                    <t t-if="this.props.slots.default" t-slot="default" line="line"/>
+                    <Orderline t-else="" line="line" mode="this.props.mode"/>
+                </t>
                 <t t-foreach="this.order.courses" t-as="course" t-key="course_index">
                     <OrderCourse course="course" course_index="course_index" t-slot-scope="course_scope">
                         <t t-if="this.props.slots.default" t-slot="default" line="course_scope.line"/>

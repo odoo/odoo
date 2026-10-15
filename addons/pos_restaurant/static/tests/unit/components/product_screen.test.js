@@ -193,3 +193,40 @@ test("breakCombo with course allocation", async () => {
     expect(order.courses).toHaveLength(1);
     expect(order.courses[0].name).toBe("Default Course 2");
 });
+
+test("removing a line keeps its course while other lines use it", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    order.config.use_course_allocation = true;
+    const screen = await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+
+    await screen.addProductToOrder(store.models["product.template"].get(6));
+    await screen.addProductToOrder(store.models["product.template"].get(8));
+    expect(order.courses).toHaveLength(1);
+
+    const line = screen.pos.getOrder().lines.find((l) => l.full_product_name === "Wood chair");
+    store.getOrder().removeOrderline(line);
+
+    expect(order.lines).toHaveLength(1);
+    expect(order.courses).toHaveLength(1);
+    expect(order.lines[0].course_id.name).toBe("Default Course 2");
+});
+
+test("lines of a deleted course stay visible", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    order.config.use_course_allocation = true;
+    const screen = await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+
+    await screen.addProductToOrder(store.models["product.template"].get(5));
+    await screen.addProductToOrder(store.models["product.template"].get(6));
+    const course = order.lines.find((l) => l.full_product_name === "TEST 2").course_id;
+
+    // Another device deleted the course while this order still has a line in it
+    store.deviceSync.processDeletedRecords({ "restaurant.order.course": [course.id] });
+    await animationFrame();
+
+    expect(order.courses).toHaveLength(1);
+    expect(order.lines).toHaveLength(2);
+    expect(".orderline:contains('TEST 2')").toHaveCount(1);
+});
