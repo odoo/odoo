@@ -130,8 +130,13 @@ export class MailMessage extends models.ServerModel {
         });
         // keep "record_name" and "res_id" for iOS app
         res.extend(["record_name", "res_id"]);
-        res.many("started_poll_ids", "_store_poll_fields");
-        res.many("ended_poll_ids", "_store_poll_fields");
+        const hasPoll = (m) => m.started_poll_ids.length || m.ended_poll_ids.length;
+        res.many("started_poll_ids", "_store_poll_fields", {
+            fields_params: { with_start_message_id: false },
+            predicate: hasPoll,
+            sudo: true,
+        });
+        res.many("ended_poll_ids", "_store_poll_fields", { predicate: hasPoll, sudo: true });
         res.attr("subject");
         res.one("subtype_id", ["description"], { sudo: true });
         res.attr("write_date");
