@@ -883,16 +883,16 @@ class DomainCondition(Domain):
         if value is None:
             value = False
         elif isinstance(value, NewId):
-            _logger.warning("Domains don't support NewId, use .ids instead, for %r", (self.field_expr, self.operator, self.value))
+            _logger.warning("Domains don't support NewId, use .ids instead, for %r", (self.field_expr, self.operator, self.value), stack_info=_logger.isEnabledFor(logging.DEBUG))
             operator = 'not in' if operator in NEGATIVE_CONDITION_OPERATORS else 'in'
             value = []
         elif isinstance(value, BaseModel):
-            _logger.warning("The domain condition %r should not have a value which is a model", (self.field_expr, self.operator, self.value))
+            _logger.warning("The domain condition %r should not have a value which is a model", (self.field_expr, self.operator, self.value), stack_info=_logger.isEnabledFor(logging.DEBUG))
             value = value.ids
         elif isinstance(value, (Domain, Query, SQL)) and operator not in ('any', 'not any', 'any!', 'not any!', 'in', 'not in'):
             # accept SQL object in the right part for simple operators
             # use case: compare 2 fields
-            _logger.warning("The domain condition %r should use the 'any' or 'not any' operator.", (self.field_expr, self.operator, self.value))
+            _logger.warning("The domain condition %r should use the 'any' or 'not any' operator.", (self.field_expr, self.operator, self.value), stack_info=_logger.isEnabledFor(logging.DEBUG))
         if value is not self.value:
             return DomainCondition(self.field_expr, operator, value)
         return self
@@ -1105,7 +1105,7 @@ class DomainCondition(Domain):
                 # Not strictly equivalent! If a search is executed, it will be done using sudo.
                 computed_domain = DomainCondition(self.field_expr, operator.rstrip('!'), value)
                 computed_domain = computed_domain._optimize_field_search_method(model.sudo())
-                _logger.warning("Field %s should implement 'any!' operator", field)
+                _logger.warning("Field %s should implement 'any!' operator", field, stack_info=_logger.isEnabledFor(logging.DEBUG))
                 return computed_domain
         except (NotImplementedError, UserError) as e:
             if original_exception is None:
