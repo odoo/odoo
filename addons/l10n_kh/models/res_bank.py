@@ -48,6 +48,11 @@ class ResPartnerBank(models.Model):
         super(ResPartnerBank, self - bank_kh)._compute_display_qr_setting()
 
     @api.model
+    def _get_trust_lock_fields(self):
+        # EXTENDS account
+        return super()._get_trust_lock_fields() | {'l10n_kh_merchant_id'}
+
+    @api.model
     def _get_emv_qr_code_names(self):
         return {**super()._get_emv_qr_code_names(), 'KH': _("KHQR Code")}
 
