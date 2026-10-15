@@ -492,6 +492,71 @@ describe("restaurant pos_store.js", () => {
         expect(order2.getCustomerCount()).toBe(8);
     });
 
+    test("unlinking tables restores lines in their own order's courses", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        store.config.use_course_allocation = true;
+        const table1 = models["restaurant.table"].get(2);
+        const table2 = models["restaurant.table"].get(3);
+        const addProduct = async (order, productId) => {
+            store.setOrder(order);
+            const product = models["product.template"].get(productId);
+            const allocation = store.autoCourseAllocation(product);
+            const line = await store.addLineToCurrentOrder({ product_tmpl_id: product });
+            store.cleanAutoCourseAllocation(line, allocation);
+        };
+        const order1 = store.addNewOrder({ table_id: table1 });
+        await addProduct(order1, 6);
+        await addProduct(order1, 5);
+        const order2 = store.addNewOrder({ table_id: table2 });
+        await addProduct(order2, 6);
+
+        const linkedOrder = await store.mergeTableOrders(order1.uuid, table2);
+        const restoredOrder = await store.restoreOrdersToOriginalTable(linkedOrder, table1);
+
+        expect(restoredOrder.lines).toHaveLength(2);
+        for (const line of restoredOrder.lines) {
+            expect(restoredOrder.course_ids).toInclude(line.course_id);
+        }
+        expect(linkedOrder.lines).toHaveLength(1);
+        expect(linkedOrder.courses.flatMap((course) => course.lines)).toEqual(linkedOrder.lines);
+    });
+
+    test("unlinking tables restores course names and drops emptied courses", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        store.config.use_course_allocation = true;
+        const table1 = models["restaurant.table"].get(2);
+        const table2 = models["restaurant.table"].get(3);
+        const addProduct = async (order, productId) => {
+            store.setOrder(order);
+            const product = models["product.template"].get(productId);
+            const allocation = store.autoCourseAllocation(product);
+            const line = await store.addLineToCurrentOrder({ product_tmpl_id: product });
+            store.cleanAutoCourseAllocation(line, allocation);
+        };
+        const order1 = store.addNewOrder({ table_id: table1 });
+        await addProduct(order1, 6);
+        await addProduct(order1, 5);
+        const order2 = store.addNewOrder({ table_id: table2 });
+        await addProduct(order2, 6);
+
+        const linkedOrder = await store.mergeTableOrders(order1.uuid, table2);
+        expect(linkedOrder.courses).toHaveLength(2);
+        const restoredOrder = await store.restoreOrdersToOriginalTable(linkedOrder, table1);
+
+        expect(linkedOrder.courses.map((course) => course.name)).toEqual(["Default Course 2"]);
+        expect(restoredOrder.courses.map((course) => course.name)).toEqual([
+            "Default Course 1",
+            "Default Course 2",
+        ]);
+
+        // Automatic allocation finds the restored course again
+        await addProduct(restoredOrder, 6);
+        expect(restoredOrder.courses).toHaveLength(2);
+        expect(restoredOrder.lines).toHaveLength(2);
+    });
+
     test("mergeOrders keeps kitchen sent quantities when merging identical products", async () => {
         const store = await setupPosEnv();
         const table6 = store.models["restaurant.table"].get(2);
