@@ -705,6 +705,15 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
         self.assertEqual(move.value, 0)
         self.assertEqual(move.quantity, 2)
 
+    def test_avco_receipt_unit_price_more_digits_than_precision(self):
+        """ The PO unit price can have more digits than the 'Product Price'
+        precision: the receipt must be valued with the full unit price. """
+        self.env.ref('product.decimal_price').digits = 2
+        po = self._create_purchase(self.product_avco, quantity=100, price_unit=0.124)
+        receipt = self._receive(po)
+        self.assertEqual(receipt.value, 12.4)
+        self.assertAlmostEqual(self.product_avco.standard_price, 0.124)
+
     def test_standard_valuation_return_credit_note(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id = self.category_standard_auto
