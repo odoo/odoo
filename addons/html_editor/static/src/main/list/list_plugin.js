@@ -159,6 +159,7 @@ export class ListPlugin extends Plugin {
             {
                 categoryId: "structure",
                 commandId: "toggleListUL",
+                keywords: [_t("list")],
             },
             {
                 categoryId: "structure",
