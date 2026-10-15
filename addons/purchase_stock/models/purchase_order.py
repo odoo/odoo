@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
+
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
@@ -390,26 +392,42 @@ class PurchaseOrder(models.Model):
         }
 
     def _create_picking(self):
-        for order in self.filtered(lambda po: po.state == 'purchase'):
+        orders = self.filtered(
+            lambda po: po.state == 'purchase' and any(product.type == 'consu' for product in po.order_line.product_id)
+        )
+        if not orders:
+            return True
+
+        # Group orders so that each group can be processed (stock moves creation, confirmation,
+        # assignation) in a single batch instead of one order at a time: `with_company`/`sudo`
+        # must be homogeneous within a group.
+        groups = defaultdict(lambda: self.env['purchase.order'])
+        for order in orders:
             is_multi_company = order.company_id != order.sudo().picking_type_id.company_id
-            if any(product.type == 'consu' for product in order.order_line.product_id):
-                order = order.with_company(order.company_id)
-                if is_multi_company:
-                    order = order.sudo()
-                moves = order.order_line._create_stock_moves()
-                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).with_context(move_picking_partner_id=self.partner_id).sudo()._action_confirm()
-                seq = 0
-                for move in sorted(moves, key=lambda move: move.date):
-                    seq += 5
-                    move.sequence = seq
-                moves._action_assign()
-                pickings = moves.picking_id
-                # Get following pickings (created by push rules) to confirm them as well.
-                forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
-                (pickings | forward_pickings).action_confirm()
-                pickings.message_post_with_source(
+            groups[(order.company_id, is_multi_company)] |= order
+
+        all_moves = self.env['stock.move']
+        for (company, is_multi_company), group_orders in groups.items():
+            group_orders = group_orders.with_company(company)
+            if is_multi_company:
+                group_orders = group_orders.sudo()
+            moves = group_orders.order_line._create_stock_moves()
+            moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).sudo()._action_confirm()
+
+            all_moves |= moves
+
+        all_moves._action_assign()
+        pickings = all_moves.picking_id
+        # Get following pickings (created by push rules) to confirm them as well.
+        forward_pickings = self.env['stock.picking']._get_impacted_pickings(all_moves)
+        (pickings | forward_pickings).action_confirm()
+
+        for order in orders:
+            order_pickings = order.order_line.move_ids.picking_id
+            if order_pickings:
+                order_pickings.message_post_with_source(
                     'mail.message_origin_link',
-                    render_values={'self': pickings, 'origin': order},
+                    render_values={'self': order_pickings, 'origin': order},
                     subtype_xmlid='mail.mt_note',
                 )
         return True
