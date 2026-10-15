@@ -764,7 +764,7 @@ class ResUsers(models.Model):
                 user = user.with_user(user).sudo()
                 auth_info = user._check_credentials(credential, user_agent_env)
                 tz = request.cookies.get('tz') if request else None
-                if tz in all_timezones and (not user.tz or not user.login_date):
+                if tz in all_timezones and (not user.tz or not user.login_date) and user.tz != tz:
                     # first login or missing tz -> set tz to browser tz
                     user.tz = tz
                 user._update_last_login()
