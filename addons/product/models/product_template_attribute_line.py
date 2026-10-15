@@ -48,14 +48,9 @@ class ProductTemplateAttributeLine(models.Model):
 
     @api.onchange('attribute_id')
     def _onchange_attribute_id(self):
-        if self.attribute_id.create_variant == 'no_variant':
-            self.value_ids = self.env['product.attribute.value'].search([
-                ('attribute_id', '=', self.attribute_id.id),
-            ])
-        else:
-            self.value_ids = self.value_ids.filtered(
-                lambda pav: pav.attribute_id == self.attribute_id
-            )
+        self.value_ids = self.value_ids.filtered(
+            lambda pav: pav.attribute_id == self.attribute_id
+        )
 
     @api.constrains('active', 'value_ids', 'attribute_id')
     def _check_valid_values(self):
