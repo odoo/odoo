@@ -151,3 +151,29 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("discuss_channel_public_page_as_anonymous_tour.js", {
+    test: true,
+    steps: () => [
+        {
+            trigger: ".o-mail-DiscussPublic .o-mail-Discuss-threadName[title='Test channel']",
+            isCheck: true,
+        },
+        {
+            trigger: ".o-mail-DiscussPublic .o-mail-Thread",
+            isCheck: true,
+        },
+        {
+            trigger: ".o-mail-DiscussPublic .o-mail-Discuss-header button[name='member-list']",
+            isCheck: true,
+        },
+        {
+            trigger: ".o-mail-DiscussPublic .o-mail-Discuss-header:not(:has(button[name='call']))",
+            isCheck: true,
+        },
+        {
+            trigger: ".o-mail-DiscussPublic .o-mail-Discuss:not(:has(.o-mail-Composer))",
+            isCheck: true,
+        },
+    ],
+});

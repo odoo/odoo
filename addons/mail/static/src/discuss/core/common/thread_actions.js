@@ -17,7 +17,7 @@ threadActionsRegistry
             return (
                 component.thread?.model === "discuss.channel" &&
                 !component.props.chatWindow &&
-                component.store.self.type !== "guest"
+                component.store.self?.type === "partner"
             );
         },
         setup(action) {
