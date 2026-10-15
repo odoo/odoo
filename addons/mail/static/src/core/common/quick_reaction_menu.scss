@@ -106,28 +106,23 @@ $quick-reaction-menu-picker-grow-duration: 0.25s;
 }
 
 .o-mail-QuickReactionMenu-pickerPopover {
+    --popover-bg: #{$gray-100};
+    --popover-border-color: var(--border-color);
+
     background-color: unset;
-    border: none;
     box-shadow: none;
 
     --originY: top;
-    --arrowTranslateY: 1px;
+    --arrowTranslateY: var(--popover-border-width);
 
     &[data-popper-placement="top"] {
         --originY: bottom;
-        --arrowTranslateY: -1px;
+        --arrowTranslateY: calc(-1 * var(--popover-border-width));
     }
 
     & .popover-arrow {
         z-index: 1 !important;
         transform: translateY(var(--arrowTranslateY));
-
-        &::after {
-            border-bottom-color: $gray-100!important;
-        }
-        &::before {
-            border-bottom-color: $gray-300!important;
-        }
     }
 
     & .o-EmojiPicker {
