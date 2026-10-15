@@ -1,6 +1,6 @@
 import { propSignal } from "@mail/utils/common/hooks";
 
-import { Component, onWillUnmount, signal, t, useOnChange } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal, t, useOnChange } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
@@ -120,10 +120,18 @@ export function usePopoutAttachment({ thread }) {
         mailPopoutService.popout(PopoutAttachmentView, { thread });
     }
 
+    function updatePopout() {
+        if (mailPopoutService.externalWindow) {
+            hideAttachmentView();
+            mailPopoutService.popout(PopoutAttachmentView, { thread });
+        }
+    }
+
     function resetPopout() {
         mailPopoutService.reset();
     }
 
+    onMounted(() => updatePopout());
     onWillUnmount(resetPopout);
     return { popout };
 }
