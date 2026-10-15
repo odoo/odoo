@@ -17,8 +17,15 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
-import { describe, test } from "@odoo/hoot";
-import { advanceTime, pointerDown, press, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    advanceTime,
+    pointerDown,
+    press,
+    queryAllRects,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
 import { location } from "@web/core/browser/browser";
@@ -153,4 +160,33 @@ test("click on a pin notification link highlights the message without folding th
     await contains("a[data-oe-type='highlight']:count(1)").click();
     await waitFor(".o-mail-Message.o-highlighted .o-mail-Message-content:text(Pin me):count(1)");
     await waitFor(".o-mail-ChatWindow:count(1)");
+});
+
+test("activity mark done popover buttons do not overlap (mobile)", async () => {
+    await patchUiSize({ width: 300 });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.activity"].create({
+        can_write: true,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Activity-markDone.btn:text('Done'):count(1)").click();
+    await waitFor(".o-mail-ActivityMarkAsDone button:count(3)");
+    await waitFor(
+        ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']:count(1)"
+    );
+    await waitFor(".o-mail-ActivityMarkAsDone button[aria-label='Done']:count(1)");
+    await waitFor(".o-mail-ActivityMarkAsDone button:text('Discard'):count(1)");
+    const rects = queryAllRects(".o-mail-ActivityMarkAsDone button");
+    for (let i = 1; i < rects.length; i++) {
+        if (Math.round(rects[i].top) === Math.round(rects[i - 1].top)) {
+            expect(rects[i].left).toBeGreaterThan(rects[i - 1].right);
+        } else {
+            expect(rects[i].left).toBe(rects[0].left);
+            expect(rects[i].top).toBeGreaterThan(rects[i - 1].bottom);
+        }
+    }
 });
