@@ -21,7 +21,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
-import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
+import { advanceTime, pointerDown, press, queryAllRects } from "@odoo/hoot-dom";
 import { Deferred, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
 import { browser } from "@web/core/browser/browser";
@@ -188,4 +188,31 @@ test("click on a pin notification link highlights the message without folding th
     await click("a[data-oe-type='highlight']");
     await contains(".o-mail-Message.o-highlighted .o-mail-Message-content:text(Pin me):count(1)");
     await contains(".o-mail-ChatWindow");
+});
+
+test("activity mark done popover buttons do not overlap (mobile)", async () => {
+    await patchUiSize({ width: 360 });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.activity"].create({
+        can_write: true,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".btn:text('Mark Done')");
+    await contains(".o-mail-ActivityMarkAsDone button", { count: 3 });
+    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
+    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
+    await contains(".o-mail-ActivityMarkAsDone button:text('Discard')");
+    const rects = queryAllRects(".o-mail-ActivityMarkAsDone button");
+    for (let i = 1; i < rects.length; i++) {
+        if (Math.round(rects[i].top) === Math.round(rects[i - 1].top)) {
+            expect(rects[i].left).toBeGreaterThan(rects[i - 1].right);
+        } else {
+            expect(rects[i].left).toBe(rects[0].left);
+            expect(rects[i].top).toBeGreaterThan(rects[i - 1].bottom);
+        }
+    }
 });
