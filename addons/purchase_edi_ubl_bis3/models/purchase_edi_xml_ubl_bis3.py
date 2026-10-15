@@ -1,6 +1,6 @@
 from lxml import etree
 
-from odoo import models, Command, _
+from odoo import Command, api, models, _
 from odoo.tools import html2plaintext
 from odoo.addons.account_edi_ubl_cii.tools import Order
 from odoo.addons.account.tools import dict_to_xml
@@ -239,11 +239,10 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
     def _add_purchase_order_line_nodes(self, document_node, vals):
         document_node['cac:OrderLine'] = order_line_nodes = []
 
-        line_idx = 1
         for base_line in vals['base_lines']:
             line_vals = {
                 **vals,
-                'line_idx': line_idx,
+                'line_idx': base_line['id'],
                 'base_line': base_line,
             }
 
@@ -257,7 +256,6 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
             order_line_nodes.append({
                 'cac:LineItem': line_node,
             })
-            line_idx += 1
 
     def _add_purchase_order_line_id_nodes(self, line_node, vals):
         self._add_document_line_id_nodes(line_node, vals)
@@ -386,10 +384,18 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         lines_vals += allowance_charges_line_vals
 
         # Update order with lines excluding discounts
-        order_vals['order_line'] = [Command.create(line_vals) for line_vals in lines_vals]
+        order_vals['order_line'] = [self._prepare_line_command(line_vals, order) for line_vals in lines_vals]
         logs += partner_logs + delivery_logs + line_logs + allowance_charges_logs
-
         return order_vals, logs
+
+    @api.model
+    def _prepare_line_command(self, line_vals, order):
+        line_vals.pop('id', None)  # Used in an override for intercompany sync
+        if product_id := line_vals.get('product_id'):
+            existing_pol = order.order_line.filtered(lambda line: line.product_id.id == product_id)
+            if len(existing_pol) == 1:
+                return Command.update(existing_pol.id, line_vals)
+        return Command.create(line_vals)
 
     def _retrieve_line_vals(self, record, tree, document_type=False, qty_factor=1):
         """Override of `account.edi.common` to adapt dictionary keys from the base method to be

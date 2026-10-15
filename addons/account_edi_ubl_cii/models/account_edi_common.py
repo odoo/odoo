@@ -841,6 +841,7 @@ class AccountEdiCommon(models.AbstractModel):
             if line_values is None:
                 continue
 
+            line_values['id'] = line_tree.findtext('./{*}ID')
             line_values['tax_ids'], tax_logs = self._retrieve_taxes(record, line_values, tax_type)
             logs += tax_logs
             if not line_values['product_uom_id']:
@@ -910,7 +911,7 @@ class AccountEdiCommon(models.AbstractModel):
                     'deferred_end_date': end_date,
                 }
         line_vals = self._retrieve_line_vals(record, tree, document_type, qty_factor)
-        if not line_vals.get('price_subtotal'):
+        if line_vals.get('price_subtotal') is None or (document_type != 'order' and not line_vals.get('price_subtotal')):
             return None
 
         return {

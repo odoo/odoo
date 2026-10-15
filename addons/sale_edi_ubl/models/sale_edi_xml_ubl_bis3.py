@@ -1,6 +1,6 @@
 from lxml import etree
 
-from odoo import models, Command, _
+from odoo import api, models, Command, _
 from odoo.tools import html2plaintext
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.addons.account_edi_ubl_cii.tools import Order
@@ -236,11 +236,10 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
     def _add_sale_order_line_nodes(self, document_node, vals):
         document_node['cac:OrderLine'] = order_line_nodes = []
 
-        line_idx = 1
         for base_line in vals['base_lines']:
             line_vals = {
                 **vals,
-                'line_idx': line_idx,
+                'line_idx': base_line['id'],
                 'base_line': base_line,
             }
             self._add_sale_order_line_vals(line_vals)
@@ -255,7 +254,6 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             order_line_nodes.append({
                 'cac:LineItem': line_node,
             })
-            line_idx += 1
 
     def _add_sale_order_line_vals(self, vals):
         self._add_document_line_vals(vals)
@@ -384,20 +382,32 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         lines_vals += allowance_charges_line_vals
 
         # Update order with lines excluding discounts
-        order_vals['order_line'] = [Command.create(line_vals) for line_vals in lines_vals]
+        order_vals['order_line'] = [self._prepare_line_command(line_vals, order) for line_vals in lines_vals]
         logs += partner_logs + delivery_logs + line_logs + allowance_charges_logs
 
         return order_vals, logs
 
+    @api.model
+    def _prepare_line_command(self, line_vals, order):
+        line_vals.pop('id', None)  # Used in an override for intercompany sync
+        if product_id := line_vals.get('product_id'):
+            existing_sol = order.order_line.filtered(lambda line: line.product_id.id == product_id)
+            if len(existing_sol) == 1:
+                return Command.update(existing_sol.id, line_vals)
+        return Command.create(line_vals)
+
     def _import_order_ubl(self, order, file_data, new):
         # Overriding the main method to recalculate the price unit and discount
         res = super()._import_order_ubl(order, file_data, new)
-        lines_with_products = order.order_line.filtered('product_id')
+        lines_to_recompute = self._get_lines_to_recompute(order)
         # Recompute product price and discount according to sale price
-        lines_with_products._compute_price_unit()
-        lines_with_products._compute_discount()
-
+        lines_to_recompute._compute_price_unit()
+        lines_to_recompute._compute_discount()
         return res
+
+    @api.model
+    def _get_lines_to_recompute(self, order):
+        return order.order_line.filtered('product_id')
 
     def _get_product_xpaths(self):
         """Override of `account.edi.xml.ubl_bis3` to support the `ExtendedID` field used to
