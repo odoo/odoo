@@ -9,6 +9,22 @@ class MailMessage(models.Model):
 
     def _extras_to_store(self, store: Store, format_reply):
         super()._extras_to_store(store, format_reply=format_reply)
+        if channel_messages := self.filtered(lambda message: message.model == "discuss.channel"):
+            # sudo: discuss.channel: reading the sub-channel of an accessible message is allowed
+            sub_channels = (
+                self.env["discuss.channel"]
+                .sudo()
+                .search_fetch(
+                    [("from_message_id", "in", channel_messages.ids)], ["from_message_id"]
+                )
+            )
+            sub_channel_by_message = {channel.from_message_id: channel for channel in sub_channels}
+            for message in channel_messages:
+                sub_channel = sub_channel_by_message.get(message, self.env["discuss.channel"])
+                store.add(
+                    message,
+                    {"linkedSubChannel": Store.one(sub_channel, as_thread=True, only_id=True)},
+                )
         if format_reply:
             # sudo: mail.message: access to parent is allowed
             for message in self.sudo().filtered(lambda message: message.model == "discuss.channel"):

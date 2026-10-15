@@ -1233,6 +1233,11 @@ class Channel(models.Model):
             }
         )
         sub_channel.add_members(partner_ids=(self.env.user.partner_id | message.author_id).ids, post_joined_message=False)
+        if message:
+            self._bus_send_store(
+                message,
+                {"linkedSubChannel": Store.one(sub_channel, as_thread=True, only_id=True)},
+            )
         notification = (
             Markup('<div class="o_mail_notification">%s</div>')
             % _(
