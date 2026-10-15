@@ -728,20 +728,26 @@ class MailMessage(models.Model):
                     parent_ids_msg_ids[message['parent_id']].append(mid)
             if parent_ids_msg_ids:
                 query = SQL(
-                    """ SELECT mail_message_id
-                          FROM mail_message_res_partner_rel
-                         WHERE res_partner_id = %s
-                           AND mail_message_id = ANY (%s)
-                         UNION
-                        SELECT mail_message_id
-                          FROM mail_message_res_partner_cc_rel
-                         WHERE res_partner_id = %s
-                           AND mail_message_id = ANY (%s) """,
+                    """ SELECT m.id, m.model, m.res_id
+                          FROM mail_message m
+                          JOIN (
+                                SELECT mail_message_id
+                                  FROM mail_message_res_partner_rel
+                                 WHERE res_partner_id = %s
+                                   AND mail_message_id = ANY (%s)
+                                 UNION
+                                SELECT mail_message_id
+                                  FROM mail_message_res_partner_cc_rel
+                                 WHERE res_partner_id = %s
+                                   AND mail_message_id = ANY (%s)
+                               ) notified ON notified.mail_message_id = m.id """,
                     pid, list(parent_ids_msg_ids), pid, list(parent_ids_msg_ids),
                 )
-                for [parent_id] in self.env.execute_query(query):
+                for parent_id, parent_model, parent_res_id in self.env.execute_query(query):
                     for mid in parent_ids_msg_ids[parent_id]:
-                        messages_to_check.pop(mid)
+                        message = messages_to_check[mid]
+                        if (message["model"], message["res_id"]) == (parent_model, parent_res_id):
+                            messages_to_check.pop(mid)
 
             if not messages_to_check:
                 return accessible
