@@ -106,6 +106,12 @@ export class Poll extends Component {
         return this.isShowingResults ? `background-size: ${option.vote_percentage}%;` : "";
     }
 
+    /** @param {PointerEvent} ev */
+    onPointerenterOptionLabel(ev) {
+        const el = ev.currentTarget;
+        el.dataset.tooltip = el.scrollWidth > el.clientWidth ? el.textContent : "";
+    }
+
     voteCountText(numberOfVotes) {
         switch (numberOfVotes) {
             case 0:
