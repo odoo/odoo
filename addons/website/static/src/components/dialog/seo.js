@@ -40,6 +40,7 @@ export const seoContext = proxy({
     defaultTitle: "",
     updatedAlts: [],
     titleAttributes: [],
+    hasDelayedTranslation: false,
     brokenLinks: [],
 });
 
@@ -721,8 +722,29 @@ export class TitleDescription extends Component {
     // Handlers
     //--------------------------------------------------------------------------
 
-    autoFill() {
+    async autoFill() {
         getSeo(this);
+        await this.fillVideoTitles();
+    }
+
+    /**
+     * Fill the empty video descriptions with the title of the video, for the
+     * providers exposing one.
+     */
+    async fillVideoTitles() {
+        if (this.seoContext.hasDelayedTranslation) {
+            return;
+        }
+        const videos = this.seoContext.titleAttributes.filter((video) => !video.title.trim());
+        await Promise.allSettled(
+            videos.map(async (video) => {
+                const title = await PLATFORMS[video.platform]?.getTitle?.(video.video_id);
+                if (title && !video.title.trim()) {
+                    video.title = title;
+                    video.updated = true;
+                }
+            })
+        );
     }
 
     /**
@@ -838,9 +860,8 @@ export class SeoChecks extends Component {
             this.state.altAttributes = altAttributes;
             this.seoContext.titleAttributes = titleAttributes;
             this.seoContext.updatedAlts = [];
-            if (!this.props.isDefaultLang) {
-                this.hasDelayedTranslation = await fetchDelayedTranslations(path);
-            }
+            this.seoContext.hasDelayedTranslation =
+                !this.props.isDefaultLang && (await fetchDelayedTranslations(path));
         });
         onMounted(() => {
             if (this.props.isDefaultLang) {
@@ -908,6 +929,9 @@ export class SeoChecks extends Component {
                 if (!videoData) {
                     return;
                 }
+                // Kept to fetch the video title on "Fill with AI".
+                video.platform = videoData.platform;
+                video.video_id = videoData.videoId;
                 if (IFRAME_PREVIEW_PLATFORMS.has(videoData.platform)) {
                     video.preview_url = videoData.embedUrl;
                     return;
