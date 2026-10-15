@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { BottomSheet } from "@web/core/bottom_sheet/bottom_sheet";
-import { onMounted, t, useProps } from "@odoo/owl";
+import { t, useProps } from "@odoo/owl";
 import { useViewportChange } from "@web/core/utils/dvu";
 
 patch(BottomSheet.prototype, {
@@ -9,11 +9,6 @@ patch(BottomSheet.prototype, {
         this.htmlEditorProps = useProps({
             withUnfocus: t.boolean().optional(false),
             fitOnResize: t.boolean().optional(false),
-        });
-        onMounted(() => {
-            if (this.htmlEditorProps.withUnfocus) {
-                this.sheetRef().ownerDocument.activeElement?.blur();
-            }
         });
         // Adapt dimensions when mobile virtual-keyboards or browsers bars toggle
         if (this.htmlEditorProps.fitOnResize) {
@@ -34,10 +29,12 @@ patch(BottomSheet.prototype, {
             if (!iframeDoc.hasFocus()) {
                 const defaultActiveElement = doc.activeElement;
                 const inputEl = iframeDoc.querySelector("input");
-                inputEl.focus();
-                // Somehow this does not display the keyboard - which is what we want.
+                defaultActiveElement?.blur(); // For iOS
+                inputEl.click(); // For iOS
+                inputEl.focus(); // For Android
+                // DO NOT SWAP ABOVE LINES
                 // If we disable the field, some phones keep displaying the selection widgets.
-                if (defaultActiveElement) {
+                if (defaultActiveElement?.closest(".o_bottom_sheet")) {
                     // But we need to restore the actual default focused element.
                     defaultActiveElement.focus();
                     inputEl.remove();
