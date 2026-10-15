@@ -1,9 +1,10 @@
-import { useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 
 import { Component } from "@odoo/owl";
 
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
@@ -21,8 +22,21 @@ export class Poll extends Component {
         this.state = useState({
             isShowingResults: false,
             selectedOptionIds: new Set(),
+            truncatedOptionIds: new Set(),
             voting: false,
         });
+        this.root = useRef("root");
+        if (hasTouch()) {
+            useLayoutEffect(() => this.updateTruncatedOptionIds());
+            useLayoutEffect(
+                (el) => {
+                    const observer = new ResizeObserver(() => this.updateTruncatedOptionIds());
+                    observer.observe(el);
+                    return () => observer.disconnect();
+                },
+                () => [this.root.el]
+            );
+        }
         useDynamicInterval(
             (endDt) => {
                 if (!endDt) {
@@ -111,5 +125,24 @@ export class Poll extends Component {
 
     percentageAttStyle(option) {
         return this.isShowingResults ? `background-size: ${option.vote_percentage}%;` : "";
+    }
+
+    /** @param {PointerEvent} ev */
+    onPointerenterOptionLabel(ev) {
+        const el = ev.currentTarget;
+        el.dataset.tooltip = el.scrollWidth > el.clientWidth ? el.textContent : "";
+    }
+
+    updateTruncatedOptionIds() {
+        const ids = new Set();
+        for (const el of this.root.el.querySelectorAll("[data-option-id]")) {
+            if (el.scrollWidth > el.clientWidth) {
+                ids.add(Number(el.dataset.optionId));
+            }
+        }
+        const current = this.state.truncatedOptionIds;
+        if (ids.size !== current.size || [...ids].some((id) => !current.has(id))) {
+            this.state.truncatedOptionIds = ids;
+        }
     }
 }

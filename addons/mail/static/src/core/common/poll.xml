@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.Poll">
-        <div class="o-mail-Poll card border-secondary rounded w-100" t-att-class="{'o-ongoing': !this.props.poll.end_message_id, 'o-isShowingResults': this.isShowingResults}">
+        <div class="o-mail-Poll card border-secondary rounded w-100" t-ref="root" t-att-class="{'o-ongoing': !this.props.poll.end_message_id, 'o-isShowingResults': this.isShowingResults}">
             <div class="card-body d-flex flex-column gap-1 o-px-2_5 o-py-1_5">
                 <p class="card-title text-start fw-bold mb-0" t-att-class="{ 'me-1': this.props.poll.end_message_id }" t-out="this.props.poll.poll_question"/>
                 <p t-if="!this.props.poll.end_message_id" class="card-subtitle mb-1 text-muted smaller">
@@ -10,7 +10,7 @@
                 </p>
                 <div class="o-mail-PollOption rounded" t-foreach="this.props.poll.option_ids" t-as="option" t-key="option.id" t-att-style="this.percentageAttStyle(option)" t-att-class="{'o-selected': this.state.selectedOptionIds.has(option.id), 'o-winningOption': option.eq(this.props.poll.winning_option_id), 'o-hasVotes': option.number_of_votes > 0 }">
                     <div t-if="this.isShowingResults" class="d-flex justify-content-between p-2">
-                        <span class="fw-bold me-1 text-truncate" t-out="option.option_label"/>
+                        <span class="fw-bold me-1 text-truncate" t-out="option.option_label" data-tooltip-touch-tap-to-show="true" t-on-pointerenter="this.onPointerenterOptionLabel"/>
                         <span class="flex-shrink-0">
                             <span class="me-2 smaller" t-out="this.props.poll.voteCountText(option.number_of_votes)"/>
                             <span class="o-fw-600"><t t-out="option.vote_percentage"/>%</span>
@@ -18,7 +18,8 @@
                         </span>
                     </div>
                     <label t-else="" class="d-flex justify-content-between p-2 cursor-pointer">
-                        <span class="fw-bold me-1 text-truncate" t-out="option.option_label"/>
+                        <span class="fw-bold me-1 text-truncate" t-out="option.option_label" t-att-data-option-id="option.id" t-on-pointerenter="this.onPointerenterOptionLabel"/>
+                        <i t-if="this.state.truncatedOptionIds.has(option.id)" class="me-2 fa fa-info-circle" aria-hidden="true" t-att-data-tooltip="option.option_label" data-tooltip-touch-tap-to-show="true" t-on-click.prevent=""/>
                         <input class="form-check-input" t-att-disabled="this.state.voting" t-att-checked="this.state.selectedOptionIds.has(option.id)" t-on-change="(ev) => this.onOptionCheckboxToggle(option.id, ev.target.checked)" t-att-type="this.props.poll.allow_multiple_options ? 'checkbox' : 'radio'"/>
                     </label>
                 </div>
