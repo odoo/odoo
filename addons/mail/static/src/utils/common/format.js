@@ -36,6 +36,7 @@ const MENTION_CLASSNAMES = new Set([
     "o-discuss-mention",
 ]);
 const JS_HANDLED_LINK_ATTRIBUTES = new Set(["oeId", "oeModel", "oeType"]);
+const INLINE_FORMAT_TAGS = new Set(["B", "CODE", "EM", "I", "S", "STRONG", "U"]);
 
 /**
  * @param {string|ReturnType<markup>} rawBody
@@ -496,7 +497,7 @@ export function trimEmptyBlocksAround(content) {
 
 /**
  * Converts the content of an element to its inline representation.
- * - Links and mentions are preserved
+ * - Links, mentions and text formats (bold, italic, underline, strike, code) are preserved
  * - For the rest: text content of nodes
  *
  * @param {Element} element modified in place
@@ -569,6 +570,15 @@ export function inlineElement(element) {
                 link.append(element.ownerDocument.createTextNode(href));
                 parent.append(link);
             }
+            return;
+        }
+        if (INLINE_FORMAT_TAGS.has(node.tagName)) {
+            const formatEl = element.ownerDocument.createElement(node.tagName);
+            if (node.classList.contains("o_inline_code")) {
+                formatEl.classList.add("o_inline_code");
+            }
+            appendInlinePreviewChildren(formatEl, [...node.childNodes]);
+            parent.append(formatEl);
             return;
         }
         appendInlinePreviewChildren(parent, [...node.childNodes]);
