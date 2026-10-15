@@ -871,7 +871,7 @@ class ResUsers(models.Model):
                     # zones, which ZoneInfo resolves to the canonical one
                     with contextlib.suppress(KeyError, ValueError):
                         tz = ZoneInfo(browser_tz).key
-                if tz in all_timezones and (not user.tz or not user.login_date):
+                if tz in all_timezones and (not user.tz or not user.login_date) and user.tz != tz:
                     # first login or missing tz -> set tz to browser tz
                     user.tz = tz
                 user._update_last_login()
