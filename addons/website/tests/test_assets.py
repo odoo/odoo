@@ -156,6 +156,9 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         self.assertEqual(b'wOFF', font.content[:4])
         new_version = urlsplit(font.url).path.split("/assets/")[1].split("/")[0]
         self.assertNotEqual(old_version, new_version)
+        with odoo.tools.mute_logger('odoo.addons.base.models.assetsbundle'):
+            font = self.url_open('/web/assets/1/web.fontawsome.min.woff2')  # Non-existing asset (typo)
+            self.assertEqual(font.status_code, 404)
 
     def test_binary_asset_website(self):
         # Make website 1's CSS distinct from base one
