@@ -8,7 +8,13 @@ import {
     queryFirst,
     queryOne,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
+import {
+    Deferred,
+    advanceTime,
+    animationFrame,
+    mockTimeZone,
+    runAllTimers,
+} from "@odoo/hoot-mock";
 
 import { onWillDestroy, onWillStart, reactive, useState, xml } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
@@ -8051,6 +8057,57 @@ test("one2many field: change value before pending onchange returns", async () =>
     // check name_search result
     expect(".o_field_many2one input").toHaveValue("first");
     expect(".dropdown-menu li:not(.o_m2o_dropdown_option)").toHaveCount(1);
+});
+
+test("deleting lines on a slow connection does not send a virtual delete", async () => {
+    Partner._onChanges = {
+        p: function () {},
+    };
+    let slowOnchange = null;
+    onRpc("partner", "onchange", ({ args }) => {
+        const commands = args[1].p || [];
+        expect(commands.some(([cmd, id]) => cmd === 2 && typeof id === "string")).toBe(false, {
+            message: "a virtual id must never be sent in a DELETE command",
+        });
+        if(slowOnchange) expect.step("onchange");
+        return slowOnchange;
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="p">
+                    <list editable="bottom">
+                        <field name="foo"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    await contains(".o_field_x2many_list_row_add button").click();
+    await contains("div[name='foo'] input").edit("First line", { confirm: "blur" });
+    await contains(".o_field_x2many_list_row_add button").click();
+    await contains("div[name='foo'] input").edit("Second line", { confirm: "blur" });
+    expect(".o_data_row").toHaveCount(2);
+
+    // Throttle the connection: the onchange of the first deletion stays pending.
+    slowOnchange = new Deferred();
+    await contains(".o_data_row:eq(0) .o_list_record_remove").click();
+    await animationFrame();
+    // The first line is removed locally even though its onchange is still pending.
+    expect(".o_data_row").toHaveCount(1);
+
+    // Delete the second line twice, waiting out the remove button's 500ms debounce.
+    await contains(".o_data_row:eq(0) .o_list_record_remove").click();
+    await advanceTime(500);
+    await contains(".o_data_row:eq(0) .o_list_record_remove").click();
+
+    slowOnchange.resolve();
+    await animationFrame();
+    await animationFrame();
+    expect(".o_data_row").toHaveCount(0);
+    expect.verifySteps(["onchange", "onchange"]);
 });
 
 test.tags("desktop");
