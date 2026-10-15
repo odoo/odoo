@@ -1,42 +1,10 @@
 import { Thread } from "@mail/core/common/thread";
 
-import { useListener, useOnChange } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {Thread} */
 const threadPatch = {
-    setup() {
-        super.setup(...arguments);
-        useListener(
-            this.scrollableRef,
-            "scrollend",
-            () => (this.state.scrollTop = this.scrollableRef().scrollTop)
-        );
-        useOnChange(
-            () => [this.props.thread.loadNewer, this.state.mountedAndLoaded, this.state.scrollTop],
-            (loadNewer, mountedAndLoaded, scrollTop) => {
-                if (
-                    loadNewer ||
-                    !mountedAndLoaded ||
-                    !this.channel?.self_member_id ||
-                    !this.scrollableRef()
-                ) {
-                    return;
-                }
-                if (
-                    Math.abs(
-                        scrollTop +
-                            this.scrollableRef().clientHeight -
-                            this.scrollableRef().scrollHeight
-                    ) <= 1
-                ) {
-                    this.channel.self_member_id.hideUnreadBanner = true;
-                }
-            }
-        );
-    },
     /** @override */
     applyScrollContextually(thread) {
         if (thread.channel?.self_member_id && thread.scrollUnread) {

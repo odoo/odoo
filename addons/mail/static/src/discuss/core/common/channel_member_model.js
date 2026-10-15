@@ -133,7 +133,6 @@ export class ChannelMember extends Record {
         },
     });
     seen_message_id = fields.One("mail.message");
-    hideUnreadBanner = false;
     message_unread_counter = 0;
     message_unread_counter_ui = 0;
     message_unread_counter_bus_id = 0;
