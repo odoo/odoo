@@ -550,6 +550,18 @@ export class DiscussChannel extends models.ServerModel {
         );
         const store = new mailDataHelpers.Store(subChannels);
         BusBus._sendone(partner, "mail.record/insert", store.get_result());
+        if (message) {
+            BusBus._sendone(
+                self,
+                "mail.record/insert",
+                new mailDataHelpers.Store(MailMessage.browse(message.id), {
+                    linkedSubChannel: mailDataHelpers.Store.one(
+                        subChannels,
+                        makeKwArgs({ only_id: true })
+                    ),
+                }).get_result()
+            );
+        }
         this.message_post(
             self.id,
             makeKwArgs({
