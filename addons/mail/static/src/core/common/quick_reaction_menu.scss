@@ -106,8 +106,10 @@ $quick-reaction-menu-picker-grow-duration: 0.25s;
 }
 
 .o-mail-QuickReactionMenu-pickerPopover {
+    --popover-bg: #{$gray-100};
+    --popover-border-color: var(--border-color);
+
     background-color: unset;
-    border: none;
     box-shadow: none;
 
     --originY: top;
@@ -121,13 +123,6 @@ $quick-reaction-menu-picker-grow-duration: 0.25s;
     & .popover-arrow {
         z-index: 1 !important;
         transform: translateY(var(--arrowTranslateY));
-
-        &::after {
-            border-bottom-color: $gray-100!important;
-        }
-        &::before {
-            border-bottom-color: $gray-300!important;
-        }
     }
 
     & .o-EmojiPicker {
