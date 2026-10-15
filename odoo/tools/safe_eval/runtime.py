@@ -296,11 +296,16 @@ class _SafeChecker:
     SEQUENCES = frozenset((list, tuple, set, frozenset, OrderedSet))
     ITERATORS = frozenset((
         enumerate, filter, map, range, reversed, zip,
-        type(iter('')), type(iter(b'')), type(iter(bytearray())),
-        type(iter([])), type(iter(())), type(iter(set())),
-        type(iter(reversed([]))),
-        type(iter({}.keys())), type(iter({}.values())), type(iter({}.items())),
+        type(iter('')), type(iter('\xFF')), type(iter(b'')),
+        type(iter(bytearray())),
+        type(iter(())), type(iter(set())),
+        type(iter([])), type(iter(reversed([]))),
+        type(iter({}.keys())), type(iter(reversed({}.keys()))),
+        type(iter({}.values())), type(iter(reversed({}.values()))),
+        type(iter({}.items())), type(iter(reversed({}.items()))),
+        type(iter(OrderedDict())),
         type(iter(range(0))), type(iter(range(1 << 1000))),  # `range_iterator` vs `longrange_iterator`
+        type(iter(lambda: 0, 0)),
     ))
 
     def __init__(self):
