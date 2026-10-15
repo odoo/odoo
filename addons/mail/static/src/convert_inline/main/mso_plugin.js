@@ -160,4 +160,4 @@ export class MsoPlugin extends Plugin {
     }
 }
 
-registry.category("mail-html-conversion-main-plugins").add(MsoPlugin.id, MsoPlugin);
+// registry.category("mail-html-conversion-main-plugins").add(MsoPlugin.id, MsoPlugin);

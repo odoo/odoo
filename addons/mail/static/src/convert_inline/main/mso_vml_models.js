@@ -67,25 +67,25 @@ export function buildButtonVmlNodes({
     linkText,
 }) {
     const arcSize = cssBorderRadiusToVml({ borderRadius, height });
-    const { top, right, bottom, left } = padding;
-    const prefixContent = `
-        <v:roundrect
-            xmlns:v="urn:schemas-microsoft-com:vml"
-            arcsize="${arcSize}%"
-            fillcolor="${backgroundColor}"
-            href="${href}"
-            mso-position-horizontal:${horizontalAlignment};
-            mso-position-vertical:top;
-            mso-wrap-style:none;
-            stroked="false"
-        >
-            <v:textbox inset="${left}px,${top}px,${right}px,${bottom}px" style="mso-fit-shape-to-text:true;"
-                <center style="${linkStyle}">
-                    ${linkText}
-                </center>
-            </v:textbox>
-        </v:roundrect>
-    `;
+    // const { top, right, bottom, left } = padding;
+    // const prefixContent = `
+    //     <v:roundrect
+    //         xmlns:v="urn:schemas-microsoft-com:vml"
+    //         arcsize="${arcSize}%"
+    //         fillcolor="${backgroundColor}"
+    //         href="${href}"
+    //         mso-position-horizontal:${horizontalAlignment};
+    //         mso-position-vertical:top;
+    //         mso-wrap-style:none;
+    //         stroked="false"
+    //     >
+    //         <v:textbox inset="${left}px,${top}px,${right}px,${bottom}px" style="mso-fit-shape-to-text:true;"
+    //             <center style="${linkStyle}">
+    //                 ${linkText}
+    //             </center>
+    //         </v:textbox>
+    //     </v:roundrect>
+    // `;
 }
 
 export function buildBackgroundImageVmlNodes({ position, src, width }) {
