@@ -81,7 +81,7 @@
                         <div class="oe_title">
                             <label for="name" string="Name"/>
                             <h1>
-                                #<field name="name" class="oe_inline" default_focus="1" placeholder="e.g. support" readonly="not is_editable or (id and is_readonly and not can_self_edit_readonly_channel)"/>
+                                #<field name="name" class="oe_inline" default_focus="1" placeholder="e.g. support" readonly="not is_editable or (id and is_readonly and not can_self_edit_readonly_channel)" required="channel_type != 'group'"/>
                             </h1>
                         </div>
                         <group class="o_label_nowrap">
