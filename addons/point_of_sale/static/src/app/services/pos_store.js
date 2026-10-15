@@ -281,14 +281,14 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
     handleQRPaymentLines() {
-        // Ensure that all Bank QR payments in the 'waiting' status are automatically set to 'retry'
+        // Ensure that all bank transfer payments in the 'waiting' status are automatically set to 'retry'
         // when the POS session is started or restarted.
         const order = this.getOrder();
         if (!order) {
             return;
         }
         order.payment_ids?.forEach((payment) => {
-            if (payment.payment_method_id.useBankQrCode && payment.payment_status === "waiting") {
+            if (payment.useBankTransfer && payment.payment_status === "waiting") {
                 payment.payment_status = "retry";
             }
         });

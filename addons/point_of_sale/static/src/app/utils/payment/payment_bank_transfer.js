@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 
-export class PaymentBankQr extends PaymentInterface {
+export class PaymentBankTransfer extends PaymentInterface {
     setup() {
         super.setup(...arguments);
         this.supports_refunds = false;
@@ -17,4 +17,4 @@ export class PaymentBankQr extends PaymentInterface {
     }
 }
 
-registry.category("pos_payment_providers").add("bank_qr_code", PaymentBankQr);
+registry.category("pos_payment_providers").add("bank_transfer", PaymentBankTransfer);

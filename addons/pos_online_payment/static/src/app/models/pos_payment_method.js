@@ -3,8 +3,8 @@ import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 
 patch(PosPaymentMethod.prototype, {
-    get paymentProviderKey() {
-        return this.type === "online" ? this.type : super.paymentProviderKey;
+    get paymentInterfaceKey() {
+        return this.type === "online" ? this.type : super.paymentInterfaceKey;
     },
     _checkOrder({ order, paymentline }) {
         if (this.type !== "online") {

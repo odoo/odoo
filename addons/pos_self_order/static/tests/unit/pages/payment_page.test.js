@@ -17,7 +17,7 @@ class MockPaymentInterface extends PaymentInterface {
     }
     sendPaymentRequest(line) {
         this.hasBeenCalled = true;
-        if (line.useQr) {
+        if (line.useQrPayment) {
             line.qr_code = "mock_qr_code";
             return false;
         }
@@ -36,7 +36,7 @@ class MockPaymentInterface extends PaymentInterface {
 class MockPaymentInterfaceWithError extends MockPaymentInterface {
     sendPaymentRequest(line) {
         this.hasBeenCalled = true;
-        if (line.useQr) {
+        if (line.useQrPayment) {
             throw new Error("Payment failed");
         }
         return false;
@@ -66,19 +66,19 @@ const setupPaymentPage = async () => {
     });
     paymentTerminalWithError.payment_interface = new MockPaymentInterfaceWithError();
 
-    const paymentExternalQr = store.models["pos.payment.method"].create({
+    const paymentQrPayment = store.models["pos.payment.method"].create({
         name: "QR",
         payment_provider: "mock_qr",
-        payment_method_type: "external_qr",
+        payment_method_type: "qr_payment",
     });
-    paymentExternalQr.payment_interface = new MockPaymentInterface();
+    paymentQrPayment.payment_interface = new MockPaymentInterface();
 
-    const paymentExternalQrWithError = store.models["pos.payment.method"].create({
+    const paymentQrPaymentWithError = store.models["pos.payment.method"].create({
         name: "QRError",
         payment_provider: "mock_qr",
-        payment_method_type: "external_qr",
+        payment_method_type: "qr_payment",
     });
-    paymentExternalQrWithError.payment_interface = new MockPaymentInterfaceWithError();
+    paymentQrPaymentWithError.payment_interface = new MockPaymentInterfaceWithError();
 
     const paymentCashMachine = store.models["pos.payment.method"].create({
         name: "CashMachine",
@@ -96,8 +96,8 @@ const setupPaymentPage = async () => {
         paymentNoProvider,
         paymentTerminal,
         paymentTerminalWithError,
-        paymentExternalQr,
-        paymentExternalQrWithError,
+        paymentQrPayment,
+        paymentQrPaymentWithError,
         paymentCashMachine,
     };
 };
@@ -167,23 +167,23 @@ describe("startPayment", () => {
         expect(store.paymentError).toBe(true);
     });
 
-    test("succeeds if the external QR code payment interface succeeds and backend returns no error", async () => {
-        const { paymentPage, store, paymentExternalQr } = await setupPaymentPage();
+    test("succeeds if the QR provider payment interface succeeds and backend returns no error", async () => {
+        const { paymentPage, store, paymentQrPayment } = await setupPaymentPage();
 
-        await clickPaymentMethod(paymentExternalQr);
+        await clickPaymentMethod(paymentQrPayment);
 
-        expect(paymentExternalQr.payment_interface.hasBeenCalled).toBe(true);
+        expect(paymentQrPayment.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(false);
         await advanceTime(500); // Wait timeout fade out
         expect(paymentPage.state.qrCode).toBe("mock_qr_code");
     });
 
-    test("fails if the external QR code payment interface fails", async () => {
-        const { store, paymentExternalQrWithError } = await setupPaymentPage();
+    test("fails if the QR provider payment interface fails", async () => {
+        const { store, paymentQrPaymentWithError } = await setupPaymentPage();
 
-        await clickPaymentMethod(paymentExternalQrWithError);
+        await clickPaymentMethod(paymentQrPaymentWithError);
 
-        expect(paymentExternalQrWithError.payment_interface.hasBeenCalled).toBe(true);
+        expect(paymentQrPaymentWithError.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
     });
 

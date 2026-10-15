@@ -9,20 +9,20 @@ export class PosPaymentMethod extends Base {
         return this.payment_method_type === "terminal";
     }
 
-    get useQr() {
-        return this.payment_method_type === "external_qr";
+    get useQrPayment() {
+        return this.payment_method_type === "qr_payment";
     }
 
-    get useBankQrCode() {
-        return this.payment_method_type === "bank_qr_code";
+    get useBankTransfer() {
+        return this.payment_method_type === "bank_transfer";
     }
 
     get usePaymentInterface() {
         return Boolean(this.payment_interface);
     }
 
-    get paymentProviderKey() {
-        return this.useBankQrCode ? this.payment_method_type : this.payment_provider;
+    get paymentInterfaceKey() {
+        return this.useBankTransfer ? this.payment_method_type : this.payment_provider;
     }
 
     get config() {

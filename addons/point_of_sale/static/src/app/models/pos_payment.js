@@ -61,12 +61,12 @@ export class PosPayment extends Base {
         return this.payment_method_id.useTerminal;
     }
 
-    get useQr() {
-        return this.payment_method_id.useQr;
+    get useQrPayment() {
+        return this.payment_method_id.useQrPayment;
     }
 
-    get useBankQrCode() {
-        return this.payment_method_id.useBankQrCode;
+    get useBankTransfer() {
+        return this.payment_method_id.useBankTransfer;
     }
 
     get usePaymentInterface() {
@@ -156,7 +156,7 @@ export class PosPayment extends Base {
             this.payment_status = "retry";
         } else if (this.useTerminal) {
             this.payment_status = "waiting_card";
-        } else if (this.useQr) {
+        } else if (this.useQrPayment) {
             this.payment_status = "waiting_scan";
         } else {
             this.payment_status = "waiting";

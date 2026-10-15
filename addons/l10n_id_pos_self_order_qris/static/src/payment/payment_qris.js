@@ -8,7 +8,7 @@ const QRIS_QR_SIZE = { width: 400, height: 400 };
 
 export function isKioskQris(paymentMethod) {
     return (
-        paymentMethod?.payment_method_type === "bank_qr_code" &&
+        paymentMethod?.payment_method_type === "bank_transfer" &&
         paymentMethod?.qr_code_method === "id_qr"
     );
 }
