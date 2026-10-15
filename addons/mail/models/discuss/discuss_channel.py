@@ -435,6 +435,8 @@ class DiscussChannel(models.Model):
             channel._bus_send("discuss.channel/delete", {"id": channel.id})
 
     def write(self, vals):
+        if "name" in vals and not vals["name"] and set(self.mapped("channel_type")) == {"group"}:
+            vals = {**vals, "name": ""}
         if 'channel_type' in vals:
             failing_channels = self.filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
