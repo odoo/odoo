@@ -744,3 +744,20 @@ class TestMrpStockReports(TestReportsCommon):
         report_data = self.env['report.mrp.report_mo_overview']._get_report_data(mo.id)
         self.assertEqual(report_data['components'][0]['replenishments'][0]['summary']['bom_cost'], 10.0)
         self.assertEqual(report_data['components'][0]['replenishments'][1]['summary']['bom_cost'], 10.0)
+
+        # Make sure it also works when the MO has no bom.
+        mo.action_cancel()
+        mo_2 = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'product_qty': 20,
+            'move_raw_ids': [
+                Command.create({
+                    'product_id': component.id,
+                    'product_uom_qty': 2,
+                }),
+            ],
+        })
+        mo_2.action_confirm()
+        report_data = self.env['report.mrp.report_mo_overview']._get_report_data(mo_2.id)
+        self.assertEqual(report_data['components'][0]['replenishments'][0]['summary']['bom_cost'], 0.0)
+        self.assertEqual(report_data['components'][0]['replenishments'][1]['summary']['bom_cost'], 0.0)
