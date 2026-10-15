@@ -555,7 +555,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         Google then propagates the change to every instance. """
         recurrence_google_id = 'rrrrrrrrr'
         recurrence = self._create_synced_recurrence(recurrence_google_id)
-        recurrence.calendar_event_ids.attendee_ids.do_decline('all_events')
+        recurrence.calendar_event_ids.attendee_ids.do_decline()
 
         # Exactly one patch must have been issued, targeting the master recurrence.
         self.assertEqual(
@@ -573,7 +573,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         # RSVP on a single instance of the chain (it still follows the recurrence).
         instance = recurrence.calendar_event_ids.sorted('start')[1]
         self.assertTrue(instance.follow_recurrence)
-        instance.attendee_ids.do_decline('self_only')
+        instance.attendee_ids.do_decline()
 
         # Exactly one patch must have been issued, targeting the instance, never the master recurrence.
         self.assertEqual(
@@ -585,41 +585,15 @@ class TestSyncOdoo2Google(TestSyncGoogle):
 
     @patch_api
     def test_updating_future_events_breaks_recurrence(self):
-        """ RSVP on "this and following": the old master is trimmed once, the tail
-        becomes a new recurrence inserted once, and no instance is patched. """
-        recurrence_google_id = 'rrrrrrrrr'
-        recurrence = self._create_synced_recurrence(recurrence_google_id)
+        """ RSVP on "this and following": instances are patched one by one, only the first one notifies. """
+        recurrence = self._create_synced_recurrence()
         first, second, third = recurrence.calendar_event_ids.sorted('start')
-        instance_ids = recurrence.calendar_event_ids.mapped('google_id')
 
-        self.env.user.partner_id = second.attendee_ids.mapped('partner_id')[0]
         second.with_user(self.attendee_user).change_attendee_status('declined', 'future_events')
 
-        new_recurrence = second.recurrence_id
-        self.assertNotEqual(new_recurrence, recurrence)
-        self.assertEqual(recurrence.calendar_event_ids, first)
-        self.assertEqual(new_recurrence.calendar_event_ids, second | third)
-        self.assertEqual(first.attendee_ids[0].state, 'needsAction')
-        self.assertEqual((second | third).attendee_ids.mapped('state'), ['declined', 'declined'])
-        self.assertEqual(len(self._gsync_insert_values), 1, "New master inserted once")
-        self.assertGoogleEventPatched(recurrence_google_id, {
-            'id': recurrence_google_id,
-            'start': {'date': '2020-01-15', 'dateTime': None},
-            'end': {'date': '2020-01-16', 'dateTime': None},
-            'summary': 'Event with attendees',
-            'description': first.description,
-            'location': '',
-            'guestsCanModify': True,
-            'organizer': {'email': 'a.a@example.com', 'self': False},
-            'attendees': [{'email': 'a.a@example.com', 'responseStatus': 'needsAction'}, {'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
-            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: recurrence.id}},
-            'reminders': {'overrides': [], 'useDefault': False},
-            'conferenceData': None,
-            'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;UNTIL=20200118T235959Z;BYDAY=WE'],
-            'transparency': 'opaque'
-        }, timeout=3)
-        for google_id in instance_ids:
-            self.assertNotIn(google_id, self._gsync_patch_values, "No instance may be patched individually")
+        self.assertNotIn(recurrence.google_id, self._gsync_patch_values)
+        self.assertEqual(len(self._gsync_patch_values), 2)
+        self.assertEqual(self._gsync_patch_notified, [True, False])
 
     @patch_api
     def test_attendee_state(self):

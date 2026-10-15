@@ -275,7 +275,7 @@ class GoogleCalendarSync(models.AbstractModel):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
                 try:
-                    send_updates = not self._is_event_over()
+                    send_updates = not self.env.context.get('google_skip_update_notification') and not self._is_event_over()
                     google_service.google_service = google_service.google_service.with_context(send_updates=send_updates)
                     google_service.patch(google_id, values, token=token, timeout=timeout)
                 except HTTPError as e:

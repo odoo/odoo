@@ -7,22 +7,21 @@ from odoo import models
 class CalendarAttendee(models.Model):
     _inherit = 'calendar.attendee'
 
-    def do_tentative(self, recurrence_update_setting=None):
+    def do_tentative(self):
         # Synchronize event after state change
-        res = super().do_tentative(recurrence_update_setting)
+        res = super().do_tentative()
         self._microsoft_sync_event('tentativelyAccept')
         return res
 
-    def do_accept(self, recurrence_update_setting=None):
+    def do_accept(self):
         # Synchronize event after state change
-        res = super().do_accept(recurrence_update_setting)
+        res = super().do_accept()
         self._microsoft_sync_event('accept')
         return res
 
-
-    def do_decline(self, recurrence_update_setting=None):
+    def do_decline(self):
         # Synchronize event after state change
-        res = super().do_decline(recurrence_update_setting)
+        res = super().do_decline()
         self._microsoft_sync_event('decline')
         return res
 
