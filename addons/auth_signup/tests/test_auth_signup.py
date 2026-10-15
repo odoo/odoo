@@ -160,3 +160,15 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         # Expect user not to be registered because of invalid email
         new_user = self.env['res.users'].search([('name', '=', name)])
         self.assertFalse(new_user)
+
+    def test_signup_does_not_invalidate_cache(self):
+        from odoo.orm.environments import Transaction  # noqa: PLC0415
+
+        self.env['ir.config_parameter'].sudo().set_str('auth_signup.invitation_scope', 'b2c')
+        with patch.object(Transaction, 'invalidate_ormcache') as invalidate_ormcache:
+            self.env['res.users'].sudo().signup({
+                'login': 'cache_signup@example.com',
+                'name': 'Cache Signup',
+                'password': 'cache_signup_password',
+            })
+        invalidate_ormcache.assert_not_called()
