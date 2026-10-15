@@ -712,6 +712,7 @@ class TestSafeEvalRuntime(TransactionCase):
     def test_trust_iterators(self):
         iterators = (
             iter(''),
+            iter('\xFF'),
             iter(b''),
             iter(bytearray()),
             iter({}.keys()),
