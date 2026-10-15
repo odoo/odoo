@@ -5,6 +5,14 @@ from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 
 @tagged("discuss_action")
 class TestDiscussAction(HttpCase, MailCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.alice_user = mail_new_test_user(cls.env, "alice_user")
+        cls.group = cls.env["discuss.channel"].with_user(cls.alice_user)._create_group(
+            users_to=cls.alice_user + cls.user_employee,
+        )
+
     def test_go_back_to_thread_from_breadcrumbs(self):
         bob_user = mail_new_test_user(self.env, "bob_user")
         channel_a = self.env["discuss.channel"].with_user(bob_user).create({"name": "Channel A"})
@@ -14,6 +22,15 @@ class TestDiscussAction(HttpCase, MailCommon):
             "discuss_go_back_to_thread_from_breadcrumbs.js",
             login="bob_user",
         )
+
+    def test_group_form_save_without_name(self):
+        self.start_tour(
+            f"/odoo/discuss.channel/{self.group.id}",
+            "discuss_group_form_save_without_name.js",
+            login="alice_user",
+        )
+        self.assertEqual(self.group.description, "Holiday plans")
+        self.assertFalse(self.group.name)
 
     def test_join_call_with_client_action(self):
         inviting_user = self.env['res.users'].sudo().create({'name': "Inviting User", 'login': 'inviting'})
