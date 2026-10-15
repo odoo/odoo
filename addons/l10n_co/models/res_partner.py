@@ -8,7 +8,6 @@ from odoo.addons.l10n_co.tools.partner_identifiers import (
     CO_DIAN_CODES,
     CO_FOREIGN_ID_DIAN_CODE,
     CO_FOREIGN_VAT_DIAN_CODE,
-    CO_NIT_DIAN_CODE,
 )
 
 
@@ -43,7 +42,7 @@ class ResPartner(models.Model):
                 if vals.get('category') not in TIN_CATEGORIES:
                     dian_code = CO_FOREIGN_ID_DIAN_CODE
                 elif 'CO' in (vals.get('countries') or []):
-                    dian_code = CO_NIT_DIAN_CODE
+                    dian_code = CO_DIAN_CODES['CO_NIT']
                 else:
                     dian_code = CO_FOREIGN_VAT_DIAN_CODE
             partner.l10n_co_dian_id_code = dian_code
