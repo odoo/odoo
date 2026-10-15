@@ -2,8 +2,10 @@ import { proxy, usePlugin, Plugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { PosDataPlugin } from "./pos_data_plugin";
 import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { PosAccessRightPlugin } from "@point_of_sale/app/plugins/access_right_plugin";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { SelectDefaultPaymentMethodPopup } from "@point_of_sale/app/components/popups/select_default_payment_method_popup/select_default_payment_method_popup";
+import { services } from "@web/core/services";
 
 export class PosPaymentMethodPlugin extends Plugin {
     // After PosDataPlugin (20)
@@ -11,6 +13,7 @@ export class PosPaymentMethodPlugin extends Plugin {
 
     data = usePlugin(PosDataPlugin);
     dialog = usePlugin(DialogPlugin);
+    accessRight = usePlugin(PosAccessRightPlugin);
 
     setup() {
         this.defaultGroups = {};
@@ -31,7 +34,7 @@ export class PosPaymentMethodPlugin extends Plugin {
         for (const pm of this.config.payment_method_ids) {
             const PaymentInterface = registry
                 .category("pos_payment_providers")
-                .get(pm.payment_provider, null);
+                .get(pm.paymentInterfaceKey, null);
             pm.payment_interface = PaymentInterface ? new PaymentInterface(pos, pm) : null;
         }
     }
@@ -90,4 +93,55 @@ export class PosPaymentMethodPlugin extends Plugin {
         }
         return true;
     }
+
+    /**
+     * Payment methods the order may use. Patch this to add or remove methods.
+     */
+    getPaymentMethods(order) {
+        return this.config.paymentMethods;
+    }
+
+    /**
+     * Payment methods the order can use right now.
+     */
+    getAvailablePaymentMethods(order) {
+        return this.getPaymentMethods(order).filter(
+            (pm) =>
+                pm.isAvailable(order) &&
+                (pm.type !== "pay_later" || this.accessRight.canAccessPaymentMethod)
+        );
+    }
+
+    /**
+     * Payment method used when no payment line is chosen yet, may be undefined.
+     */
+    getFirstAvailable(order) {
+        return this.getAvailablePaymentMethods(order)[0];
+    }
+
+    hasPaymentMethodType(order, type) {
+        return this.getPaymentMethods(order).some((pm) => pm.type === type);
+    }
+
+    /**
+     * Payment method used to validate the order without choosing one, may be undefined.
+     * Applies when:
+     * 1. There are no payment lines yet.
+     * 2. The customer's due has been settled: the negative pay_later line is in
+     *    `payment_ids` but not shown in the UI.
+     */
+    getFastPaymentMethod(order) {
+        const paymentLines = order.payment_ids;
+        if (
+            !paymentLines.length ||
+            (!order.is_refund &&
+                paymentLines.length === 1 &&
+                paymentLines[0].payment_method_id.type === "pay_later" &&
+                order.currency.isNegative(paymentLines[0].amount))
+        ) {
+            return this.getFirstAvailable(order);
+        }
+    }
 }
+
+services.add(PosPaymentMethodPlugin);

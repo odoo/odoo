@@ -11,7 +11,7 @@ patch(OrderPaymentValidation.prototype, {
             return false;
         }
 
-        if (!this.payment_methods_from_config.some((pm) => pm.type === "online")) {
+        if (!this.pos.paymentMethods.hasPaymentMethodType(this.order, "online")) {
             return true;
         }
 

@@ -88,11 +88,11 @@
                 {{ this.currentOrder.canBeValidated() ? 'highlight' : 'disabled' }}
             "
         >
-            <t t-if="this.paymentLines.length">
+            <t t-if="this.paymentLines.length or !this.firstPaymentMethod">
                 <span>Validate</span>
             </t>
             <t t-else="">
-                <span t-out="this.payment_methods_from_config[0].name"/>
+                <span t-out="this.firstPaymentMethod.name"/>
             </t>
         </button>
     </t>

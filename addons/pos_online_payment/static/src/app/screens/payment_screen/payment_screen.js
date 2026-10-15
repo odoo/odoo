@@ -4,14 +4,6 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 
 patch(PaymentScreen.prototype, {
-    get configPaymentMethods() {
-        let configMethods = super.configPaymentMethods;
-        // don't allow to update and edit and pay with online payments
-        if (this.currentOrder.state === "paid") {
-            configMethods = configMethods.filter((pm) => pm.type !== "online");
-        }
-        return configMethods;
-    },
     async deletePaymentLine(uuid) {
         const order = this.currentOrder;
         const line = this.paymentLines.find((line) => line.uuid === uuid);
