@@ -16,7 +16,7 @@ patch(DiscussPublic.prototype, {
         super.displayChannel();
         const video = browser.localStorage.getItem("discuss_call_preview_join_video") === "true";
         const mute = browser.localStorage.getItem("discuss_call_preview_join_mute") === "true";
-        if (this.thread.defaultDisplayMode === "video_full_screen") {
+        if (this.store.self && this.thread.defaultDisplayMode === "video_full_screen") {
             this.rtc.toggleCall(this.thread, { video }).then(() => {
                 if (mute) {
                     this.rtc.toggleMicrophone();

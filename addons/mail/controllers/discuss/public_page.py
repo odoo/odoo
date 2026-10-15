@@ -111,9 +111,10 @@ class PublicPageController(http.Controller):
 
     def _response_discuss_public_template(self, channel, discuss_public_view_data=None):
         discuss_public_view_data = discuss_public_view_data or {}
+        guest = request.env["mail.guest"]._get_guest_from_context()
         if "guest_name" not in discuss_public_view_data:
-            guest = request.env["mail.guest"]._get_guest_from_context()
             discuss_public_view_data["guest_name"] = guest.name
+        is_anonymous = not guest and request.env.user._is_public()
         return request.render(
             "mail.discuss_public_channel_template",
             {
@@ -121,7 +122,8 @@ class PublicPageController(http.Controller):
                     "channelData": channel._channel_info()[0],
                     "discussPublicViewData": dict(
                         {
-                            "shouldDisplayWelcomeViewInitially": channel.default_display_mode == "video_full_screen",
+                            "shouldDisplayWelcomeViewInitially": not is_anonymous
+                            and channel.default_display_mode == "video_full_screen",
                         },
                         **discuss_public_view_data,
                     ),
