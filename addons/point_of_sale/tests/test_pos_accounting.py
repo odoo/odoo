@@ -2176,3 +2176,37 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(session.sale_move_ids.journal_id, closing_journal)
         self.assertEqual(session.sale_move_ids.move_type, 'out_invoice')
         self.assertEqual(session.sale_move_ids.amount_total, 10.6)
+
+    def test_closing_untaxed_line_keeps_global_rounding_delta(self):
+        """ With global rounding, the base delta of an order can be allocated to an
+        untaxed line. It must be kept in the closing entry or the move is unbalanced.
+        """
+        self.main_company.tax_calculation_rounding_method = 'round_globally'
+        tax_21_incl, tax_12_incl = (self.tax_21 + self.tax_12).copy({'price_include_override': 'tax_included'})
+        product_21 = self.product_21.copy({'taxes_id': [(6, 0, tax_21_incl.ids)]})
+        product_12 = self.product_12.copy({'taxes_id': [(6, 0, tax_12_incl.ids)]})
+        product_untaxed = self.product_21.copy({'taxes_id': [(5, 0, 0)]})
+
+        session = self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 4.5}]],
+            products=[
+                [product_21, {'price_unit': 0.4}],
+                [product_12, {'price_unit': 0.12}],
+                [product_12, {'price_unit': 1.47}],
+                [product_12, {'price_unit': 0.15}],
+                [product_12, {'price_unit': 0.36}],
+                [product_21, {'price_unit': 3.2}],
+                [product_21, {'price_unit': 3.8}],
+                [product_untaxed, {'price_unit': -5.0}],
+            ],
+        )
+        self.assertEqual(order.amount_total, 4.5)
+        self.close_session()
+
+        move = session.sale_move_ids
+        self.assertEqual(move.state, 'posted')
+        self.assertEqual(move.amount_total, 4.5)
+        self.assertEqual(sum(move.line_ids.mapped('debit')), sum(move.line_ids.mapped('credit')))
+        untaxed_line = move.line_ids.filtered(lambda line: line.display_type == 'product' and not line.tax_ids)
+        self.assertEqual(untaxed_line.balance, 4.99)

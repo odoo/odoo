@@ -1224,18 +1224,29 @@ class PosOrder(models.Model):
         if product:
             name = product.description_sale
 
+        # Untaxed lines get no manual amounts, so the global rounding delta
+        # allocated to them must be kept in the price, or the move is unbalanced.
+        total = base_line['price_unit']
+        tax_details = base_line['tax_details']
+        if not tax_details['taxes_data']:
+            total = tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']
+
         if self.config_id._is_quantities_set():
             quantity = base_line['_aggregated_quantity']
-            price_unit = base_line['price_unit'] / quantity if quantity else base_line['price_unit']
+            price_unit = total / quantity if quantity else total
         else:
-            quantity, price_unit = 1.0, base_line['price_unit']
+            quantity, price_unit = 1.0, total
 
         line_vals = {
             'name': name,
             'quantity': quantity,
             'price_unit': price_unit,
             'display_type': 'product',
-            'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data(base_line),
+            'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data({
+                **base_line,
+                'quantity': quantity,
+                'price_unit': price_unit,
+            }),
             'account_id': base_line['account_id'].id,
             'tax_ids': [(6, 0, base_line['tax_ids'].ids)],
         }
