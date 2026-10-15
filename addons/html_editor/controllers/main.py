@@ -113,7 +113,7 @@ class HTML_Editor(http.Controller):
                         if not bundle_css:
                             bundle = 'web.assets_frontend'
                             asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
-                            bundle_css = asset.css().index_content
+                            bundle_css = (asset.css().raw or b'').decode()
                         color_search = re.search(r'(?i)--%s:\s+(%s|%s)' % (css_color_value, regex_hex, regex_rgba), bundle_css)
                         if not color_search:
                             raise werkzeug.exceptions.BadRequest()

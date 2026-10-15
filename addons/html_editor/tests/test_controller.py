@@ -97,6 +97,28 @@ class TestController(HttpCase):
             self.assertTrue('ABCDEF' in str(response.content), 'Expect patched c1')
             self.assertTrue('3AADAA' not in str(response.content), 'Old c1 should not be there anymore')
 
+    def test_02_illustration_shape_with_theme_colors(self):
+        """The theme color is read from the CSS bundle, not from its indexed content."""
+        self.authenticate('admin', 'admin')
+        svg = b'<svg viewBox="0 0 400 400"><rect width="300" height="300" style="fill:#3AADAA;"/></svg>'
+        attachment = self.env['ir.attachment'].create({
+            'name': 'test_theme_color.svg',
+            'mimetype': 'image/svg+xml',
+            'datas': binascii.b2a_base64(svg, newline=False),
+            'public': True,
+            'res_model': 'ir.ui.view',
+            'res_id': 0,
+        })
+        url = '/html_editor/shape/illustration/theme_color'
+        attachment['url'] = url
+        self.env['ir.qweb']._get_asset_bundle('web.assets_frontend').css()
+        # Some databases do not index the content of the attachments.
+        with patch.object(type(self.env['ir.attachment']), '_index', return_value=False):
+            self.env['ir.attachment'].search([('url', 'like', '/web/assets/%web.assets_frontend%.css')]).unlink()
+            response = self.url_open(url + '?c1=o-color-1')
+        self.assertEqual(200, response.status_code, 'Expect response')
+        self.assertNotIn('o-color-1', str(response.content), 'Expect the theme color to be replaced')
+
     def test_03_get_image_info(self):
         gif_base64 = "R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
         self.authenticate('admin', 'admin')
