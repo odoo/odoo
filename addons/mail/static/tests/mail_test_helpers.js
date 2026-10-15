@@ -82,6 +82,9 @@ import { MailMessageLinkPreview } from "./mock_server/mock_models/mail_message_l
 import { MailMessageReaction } from "./mock_server/mock_models/mail_message_reaction";
 import { MailMessageSubtype } from "./mock_server/mock_models/mail_message_subtype";
 import { MailNotification } from "./mock_server/mock_models/mail_notification";
+import { MailPoll } from "./mock_server/mock_models/mail_poll";
+import { MailPollOption } from "./mock_server/mock_models/mail_poll_option";
+import { MailPollVote } from "./mock_server/mock_models/mail_poll_vote";
 import { MailPushDevice } from "./mock_server/mock_models/mail_push_device";
 import { MailScheduledMessage } from "./mock_server/mock_models/mail_scheduled_message";
 import { MailTemplate } from "./mock_server/mock_models/mail_template";
@@ -176,6 +179,9 @@ export const mailModels = {
     MailMessageReaction,
     MailMessageSubtype,
     MailNotification,
+    MailPoll,
+    MailPollOption,
+    MailPollVote,
     MailPushDevice,
     MailScheduledMessage,
     MailTemplate,

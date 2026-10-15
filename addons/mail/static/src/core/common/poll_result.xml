@@ -17,7 +17,7 @@
                             <span t-if="this.props.poll.winning_option_id.option_emoji" class="o-mail-PollResult-emojiWrapper d-flex align-items-center justify-content-center rounded-3 fs-2 o-px-1_5" t-out="this.props.poll.winning_option_id.option_emoji"/>
                             <div class="d-flex flex-column gap-1 min-w-0">
                                 <div class="d-flex align-items-center fs-5">
-                                    <p class="text-start fw-bold mb-0 text-truncate" t-out="this.props.poll.winning_option_id.option_label"/>
+                                    <p class="text-start fw-bold mb-0 text-truncate" t-out="this.props.poll.winning_option_id.option_label" t-att-data-tooltip="this.props.poll.winning_option_id.option_label" data-tooltip-touch-tap-to-show="true"/>
                                     <i t-if="this.props.poll.winning_option_id.selected_by_self" class="oi oi-filled ms-1 text-primary" data-icon="check_circle"/>
                                 </div>
                                 <p class="card-subtitle mb-0 text-muted smaller">Winning Answer<span class="o-mx-0_5">&#8729;</span><t t-out="this.props.poll.winning_option_id.vote_percentage"/>%</p>
