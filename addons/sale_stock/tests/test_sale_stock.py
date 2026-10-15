@@ -2678,3 +2678,12 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_order.order_line, [
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
         ])
+
+    def test_delivery_empty_list_help_sales_orders_button(self):
+        """ The "Sales Orders" button of the empty deliveries list must only be
+        shown to users having access to the Sales app. """
+        stock_user = new_test_user(self.env, login='stock_user_no_sale', groups='stock.group_stock_user')
+        salesman = self.company_data['default_user_salesman']
+        Picking = self.env['stock.picking'].with_context(restricted_picking_type_code='outgoing')
+        self.assertNotIn('sale.action_orders', Picking.with_user(stock_user).get_empty_list_help(''))
+        self.assertIn('sale.action_orders', Picking.with_user(salesman).get_empty_list_help(''))

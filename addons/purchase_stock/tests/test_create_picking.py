@@ -848,3 +848,11 @@ class TestCreatePicking(common.TestProductCommon):
         # Exchange: receipt for 1 item
         self.assertEqual(po.picking_ids[2].picking_type_id, picking_type_in)
         self.assertEqual(po.picking_ids[2].move_ids.quantity, 1)
+
+    def test_receipt_empty_list_help_purchase_orders_button(self):
+        """ The "Purchase Orders" button of the empty receipts list must only be
+        shown to users having access to the Purchase app. """
+        stock_user = mail_new_test_user(self.env, login='stock_user_no_purchase', groups='stock.group_stock_user')
+        Picking = self.env['stock.picking'].with_context(restricted_picking_type_code='incoming')
+        self.assertNotIn('purchase.purchase_form_action', Picking.with_user(stock_user).get_empty_list_help(''))
+        self.assertIn('purchase.purchase_form_action', Picking.with_user(self.user_purchase_user).get_empty_list_help(''))
