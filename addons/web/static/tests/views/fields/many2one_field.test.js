@@ -438,6 +438,39 @@ test("[Offline] many2one autopopulated", async () => {
     expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual(["first record", "aaa"]);
 });
 
+test("[Offline] new record: untouched falsy values are not saved", async () => {
+    const setOffline = mockOffline();
+    onRpc("web_save", ({ args }) => expect.step(JSON.stringify(args[1])));
+
+    Partner._views = {
+        form: `
+            <form>
+                <field name="name"/>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+                <field name="trululu"/>
+                <field name="p"><list><field name="name"/></list></field>
+            </form>`,
+    };
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+
+    await setOffline(true);
+    await contains(".o_field_widget[name=name] input").edit("new partner");
+    await clickSave();
+
+    await setOffline(false);
+    await expect.waitForSteps([
+        JSON.stringify({ name: "new partner", foo: "My little Foo Value", bar: true }),
+    ]);
+});
+
 test("editing a many2one (with form view opened with external button)", async () => {
     expect.assertions(4);
     Partner._views = {
