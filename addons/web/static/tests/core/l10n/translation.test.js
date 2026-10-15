@@ -40,6 +40,12 @@ class TestComponent extends Component {
     static props = ["*"];
 }
 
+defineParams({
+    lang_parameters: {
+        time_format: "%I:%M:%S %p",
+    },
+});
+
 /**
  * Patches the 'lang' of the user session and context.
  *

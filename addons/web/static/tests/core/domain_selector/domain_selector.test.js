@@ -87,6 +87,12 @@ async function makeDomainSelector(params = {}) {
 
 defineModels([Partner, Product, Country, Stage, Team, Player]);
 
+defineParams({
+    lang_parameters: {
+        time_format: "%I:%M:%S %p",
+    },
+});
+
 test("creating a domain from scratch", async () => {
     await makeDomainSelector({
         isDebugMode: true,

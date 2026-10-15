@@ -126,6 +126,12 @@ class Currency extends models.Model {
 
 defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 
+defineParams({
+    lang_parameters: {
+        time_format: "%I:%M:%S %p",
+    },
+});
+
 beforeEach(() => {
     resize({ width: 800 });
     document.body.style.fontFamily = "sans-serif";

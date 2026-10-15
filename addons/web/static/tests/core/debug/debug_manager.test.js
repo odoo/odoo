@@ -13,6 +13,7 @@ import {
     clearRegistry,
     contains,
     defineModels,
+    defineParams,
     defineWebModels,
     fields,
     getService,
@@ -44,6 +45,12 @@ class DebugMenuParent extends Component {
 }
 
 const debugRegistry = registry.category("debug");
+
+defineParams({
+    lang_parameters: {
+        time_format: "%I:%M:%S %p",
+    },
+});
 
 onRpc("has_access", () => true);
 onRpc("ir.attachment", "regenerate_assets_bundles", () => {
