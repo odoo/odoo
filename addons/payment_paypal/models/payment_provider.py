@@ -184,6 +184,15 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS === #
 
+    def _get_apple_pay_domain_association_file_path(self):
+        """Override of `payment` to return PayPal's Apple Pay domain association file path."""
+        if self.code != "paypal":
+            return super()._get_apple_pay_domain_association_file_path()
+        live_mode = "live" if self.is_live else "sandbox"
+        return (
+            f"payment_paypal/static/files/{live_mode}-apple-developer-merchantid-domain-association"
+        )
+
     def _paypal_update_onboarding_status(self):
         """Fetch the status of the merchant account and update the provider accordingly.
 
