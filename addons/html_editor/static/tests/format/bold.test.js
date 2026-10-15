@@ -17,6 +17,7 @@ import {
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
+import { Plugin } from "../../src/plugin";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -686,5 +687,34 @@ test("removing bold on list item should remove neutral style from its nested lis
             '<ul><li style="font-weight: bolder;"><p>[A]</p><ul style="font-weight: normal;"><li>B</li></ul></li></ul>',
         stepFunction: bold,
         contentAfter: "<ul><li><p>[A]</p><ul><li>B</li></ul></li></ul>",
+    });
+});
+
+describe("Format non editable", () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            is_formattable_node_predicates: (node) => {
+                if (node.matches?.(".target")) {
+                    return true;
+                }
+            },
+        };
+    }
+    test("should wrap non editable in `strong` element (1)", async () => {
+        await testEditor({
+            contentBefore: `<p>[<span contenteditable="false" class="target">b</span>]</p>`,
+            stepFunction: bold,
+            contentAfter: `<p><strong>[<span contenteditable="false" class="target">b</span></strong>]</p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+    });
+    test("should wrap non editable in `strong` element (2)", async () => {
+        await testEditor({
+            contentBefore: `<p>[a<span contenteditable="false" class="target">b</span>c]</p>`,
+            stepFunction: bold,
+            contentAfter: `<p><strong>[a<span contenteditable="false" class="target">b</span>c]</strong></p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
     });
 });
