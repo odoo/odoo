@@ -311,7 +311,7 @@ export function getParsedDataFor(formId, parentEl) {
  */
 export function cloneContentEls(content, keepScripts = false) {
     let copyFragment;
-    if (typeof content === "string") {
+    if (typeof content === "string" || content instanceof String) {
         copyFragment = new Range().createContextualFragment(content);
     } else {
         copyFragment = new DocumentFragment();
