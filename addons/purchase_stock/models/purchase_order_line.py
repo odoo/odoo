@@ -3,7 +3,6 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, api, Command, fields, models, _
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
 
@@ -267,7 +266,6 @@ class PurchaseOrderLine(models.Model):
             at_date = fields.Date.today()
         order = self.order_id
         price_unit = self.price_unit_discounted
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if self.tax_ids:
             qty = self.product_qty or 1
             price_unit = self.tax_ids.compute_all(
@@ -285,7 +283,7 @@ class PurchaseOrderLine(models.Model):
         if order.currency_id != order.company_id.currency_id:
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, self.company_id, at_date, round=False)
-        return float_round(price_unit, precision_digits=price_unit_prec)
+        return price_unit
 
     def _get_qty_procurement(self):
         self.ensure_one()
