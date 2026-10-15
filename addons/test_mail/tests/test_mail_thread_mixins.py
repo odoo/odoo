@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from odoo import exceptions, tools
+from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
 from odoo.addons.test_mail.tests.common import TestRecipients
@@ -178,6 +179,84 @@ class TestMailThreadRottingMixin(MailTrackingDurationMixinCase):
                     item.is_rotting,
                     'Items that are not done, won, or in a disabled rotting stage are not rotting',
                 )
+
+    def test_resource_rotting_search(self):
+        """ Searching on is_rotting matches the stage thresholds, the maximum age of the last stage
+        update and _get_rotting_domain(). Records without stage or date are never rotting. """
+        Resource = self.env['mail.test.rotting.resource']
+        stage_no_threshold, stage_archived, stage_long = self.env['mail.test.rotting.stage'].create([
+            {'name': 'stage_no_threshold', 'rotting_threshold_days': 0},
+            {'name': 'stage_archived', 'rotting_threshold_days': 2, 'active': False},
+            # more than the default maximum of 12 months (crm.lead.rot.max.months)
+            {'name': 'stage_long', 'rotting_threshold_days': 400},
+        ])
+        with self.mock_datetime_and_now(datetime(2025, 1, 1)):
+            [
+                new,
+                qualif,
+                archived_stage,
+                no_threshold,
+                long_threshold,
+                done,
+                no_rot_stage,
+                no_stage,
+                no_date,
+                too_old,
+            ] = records = Resource.create([
+                {'name': 'new', 'stage_id': self.stage_new.id},
+                {'name': 'qualif', 'stage_id': self.stage_qualification.id},
+                {'name': 'archived stage', 'stage_id': stage_archived.id},
+                {'name': 'no threshold', 'stage_id': stage_no_threshold.id},
+                {'name': 'long threshold', 'stage_id': stage_long.id},
+                {'name': 'done', 'stage_id': self.stage_new.id, 'done': True},
+                {'name': 'no rot stage', 'stage_id': self.stage_finished.id},
+                {'name': 'no stage'},
+                {'name': 'no date', 'stage_id': self.stage_new.id},
+                {'name': 'too old', 'stage_id': self.stage_new.id},
+            ])
+            records.flush_recordset(['date_last_stage_update'])
+        with self.mock_datetime_and_now(datetime(2025, 1, 8)):
+            [new_recent, qualif_recent] = recent_records = Resource.create([
+                {'name': 'new recent', 'stage_id': self.stage_new.id},
+                {'name': 'qualif recent', 'stage_id': self.stage_qualification.id},
+            ])
+            recent_records.flush_recordset(['date_last_stage_update'])
+        records += recent_records
+        no_date.date_last_stage_update = False
+        too_old.date_last_stage_update = datetime(2023, 1, 1)
+        long_threshold.date_last_stage_update = datetime(2023, 11, 1)
+
+        def search(domain):
+            return Resource.search(Domain('id', 'in', records.ids) & Domain(domain))
+
+        rotting = new + qualif + archived_stage
+        with self.mock_datetime_and_now(datetime(2025, 1, 10)):
+            self.assertEqual(search([('is_rotting', '=', True)]), rotting)
+            self.assertEqual(search([('is_rotting', '!=', False)]), rotting)
+            for domain in ([('is_rotting', '=', False)], [('is_rotting', '!=', True)], ['!', ('is_rotting', '=', True)]):
+                self.assertEqual(
+                    search(domain), records - rotting,
+                    'Records without stage or without date of last stage update are not rotting',
+                )
+
+            self.assertEqual(search([('is_rotting', '=', True), ('name', 'ilike', 'qualif')]), qualif)
+            self.assertEqual(search([('is_rotting', '=', False), ('name', 'ilike', 'qualif')]), qualif_recent)
+            self.assertEqual(search(['|', ('is_rotting', '=', True), ('stage_id', '=', False)]), rotting + no_stage)
+
+            # the cutoff is inclusive: rotting exactly when date_last_stage_update + threshold <= now
+            new_recent.date_last_stage_update = datetime(2025, 1, 7)
+            self.assertIn(new_recent, search([('is_rotting', '=', True)]))
+            new_recent.date_last_stage_update = datetime(2025, 1, 7, 0, 0, 1)
+            self.assertNotIn(new_recent, search([('is_rotting', '=', True)]))
+
+            # a larger maximum age makes the stage with a long threshold rot
+            self.env['ir.config_parameter'].sudo().set_param('crm.lead.rot.max.months', '24')
+            self.assertEqual(search([('is_rotting', '=', True)]), rotting + long_threshold)
+            self.assertNotIn(too_old, search([('is_rotting', '=', True)]))
+
+            self.env['mail.test.rotting.stage'].with_context(active_test=False).search([]).rotting_threshold_days = 0
+            self.assertFalse(search([('is_rotting', '=', True)]))
+            self.assertEqual(search([('is_rotting', '=', False)]), records)
 
 
 @tagged('mail_thread', 'mail_blacklist')
