@@ -463,7 +463,7 @@ class Profiler:
     Will save sql and async stack trace by default.
     """
     def __init__(self, collectors=None, db=..., profile_session=None,
-                 description=None, disable_gc=False, params=None, log=False):
+                 description=None, disable_gc=False, params=None, log=False, init_frame=None):
         """
         :param db: database name to use to save results.
             Will try to define database automatically by default.
@@ -473,6 +473,8 @@ class Profiler:
         :param description: description of the current profiler Suggestion: (route name/test method/loading module, ...)
         :param disable_gc: flag to disable gc durring profiling (usefull to avoid gc while profiling, especially during sql execution)
         :param params: parameters usable by collectors (like frame interval)
+        :param init_frame: optional live stack boundary when a helper enters the
+            profiler on behalf of a caller. It must remain active during profiling.
         """
         self.start_time = 0
         self.duration = 0
@@ -480,7 +482,7 @@ class Profiler:
         self.cpu_duration = 0
         self.profile_session = profile_session or make_session()
         self.description = description
-        self.init_frame = None
+        self.init_frame = init_frame
         self.init_stack_trace = None
         self.init_thread = None
         self.disable_gc = disable_gc
@@ -522,7 +524,8 @@ class Profiler:
     def __enter__(self):
         self.init_thread = threading.current_thread()
         try:
-            self.init_frame = get_current_frame(self.init_thread)
+            if self.init_frame is None:
+                self.init_frame = get_current_frame(self.init_thread)
             self.init_stack_trace = _get_stack_trace(self.init_frame)
         except KeyError:
             # when using thread pools (gevent) the thread won't exist in the current_frames

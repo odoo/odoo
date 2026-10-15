@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
+import sys
 import time
+from contextlib import contextmanager
 from unittest.mock import patch
 
 from psycopg2.errors import UndefinedTable
@@ -612,6 +614,46 @@ class TestProfiling(TransactionCase):
 
         self.assertTrue(p.done)
         self.assertTrue(p.profile_id)
+
+    def test_live_boundary_for_generator_context_manager(self):
+        # The benchmark framework enters its profiler through a generator wrapper,
+        # like this simplified example:
+        #
+        #     @contextmanager
+        #     def measure():
+        #         with Profiler(...):
+        #             yield
+        #
+        #     with measure():
+        #         cr.execute('SELECT 1')
+        #
+        # On entry, measure() is on the stack, so the profiler normally chooses
+        # its frame as the boundary. At yield, that frame is suspended: the SQL
+        # runs on the caller's stack, which no longer contains measure(). The
+        # profiler cannot find its boundary, logs "Limit frame was not found",
+        # and includes unrelated test-runner frames in each recorded SQL stack.
+        #
+        # Passing the caller's frame fixes this: it remains on the stack while
+        # SQL runs. Nested skips its own frames, but cannot skip a wrapper outside
+        # profiler.py, so the same explicit boundary is needed when using Nested.
+        caller_frame = sys._getframe()
+
+        @contextmanager
+        def profile_scope():
+            recording = Profiler(db=None, collectors=['sql'], init_frame=caller_frame)
+            self.assertIs(recording.init_frame, caller_frame)
+            with profiler.Nested(recording):
+                yield recording
+
+        with profile_scope() as recording:
+            self.cr.execute('SELECT 1')
+
+        self.assertIs(recording.init_frame, caller_frame)
+        entries = recording.collectors[0].entries
+        self.assertEqual(len(entries), 1)
+        names = [frame[2] for frame in entries[0]['stack']]
+        self.assertNotIn('test_live_boundary_for_generator_context_manager', names)
+        self.assertNotIn('profile_scope', names)
 
 
 def deep_call(func, depth):
