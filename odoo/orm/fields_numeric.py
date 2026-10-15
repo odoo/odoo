@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import typing
 from operator import attrgetter
+from psycopg2.extras import Json as PsycopgJson
 from xmlrpc.client import MAXINT  # TODO change this
 
 from odoo.exceptions import AccessError
@@ -22,6 +23,9 @@ class Integer(Field[int]):
 
     aggregator = 'sum'
 
+    # ------------------------------------------------------------------------------------------------------------------
+    # Setup field parameter attributes
+    # ------------------------------------------------------------------------------------------------------------------
     def _get_attrs(self, model_class, name):
         res = super()._get_attrs(model_class, name)
         # The default aggregator is None for sequence fields
@@ -29,13 +33,29 @@ class Integer(Field[int]):
             res['aggregator'] = None
         return res
 
+    # ------------------------------------------------------------------------------------------------------------------
+    # Conversion of values
+    # ------------------------------------------------------------------------------------------------------------------
     def convert_to_column(self, value, record, values=None, validate=True):
-        return int(value or 0)
+        return value
+
+    def convert_to_column_insert(self, value, record, values=None, validate=True):
+        if not self.company_dependent:
+            return value
+
+        fallback = record.env['ir.default']._get_model_defaults(record._name).get(self.name)
+
+        if value == fallback:
+            return None
+
+        return PsycopgJson({record.env.company.id: value})
 
     def convert_to_cache(self, value, records, validate=True):
         if isinstance(value, dict):
             # special case, when an integer field is used as inverse for a one2many
-            return value.get('id', None)
+            if id_value := value.get('id'):
+                return int(id_value or 0)
+            return None
         return int(value or 0)
 
     def convert_to_record(self, value, record):
@@ -48,13 +68,17 @@ class Integer(Field[int]):
             return float(value)
         return value
 
-    def _update_inverse(self, records: BaseModel, value: BaseModel):
-        self._update_cache(records, value.id or 0)
+    def convert_to_write(self, value, record):
+        return self.convert_to_cache(value, record, validate=False) or 0
 
     def convert_to_export(self, value, record):
-        if value or value == 0:
-            return value
-        return ''
+        return value
+
+    # ------------------------------------------------------------------------------------------------------------------
+    # Descriptor methods
+    # ------------------------------------------------------------------------------------------------------------------
+    def _update_inverse(self, records: BaseModel, value: BaseModel):
+        self._update_cache(records, value.id or 0)
 
 
 class Float(Field[float]):

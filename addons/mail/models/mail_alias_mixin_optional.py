@@ -185,7 +185,7 @@ class MailAliasMixinOptional(models.AbstractModel):
             creation.
         """
         values = {
-            'alias_parent_thread_id': self.id if self.id else False,
+            'alias_parent_thread_id': self.id or 0,
             'alias_parent_model_id': self.env['ir.model']._get_id(self._name),
         }
         if 'default_alias_domain_id' in self.env.context:
