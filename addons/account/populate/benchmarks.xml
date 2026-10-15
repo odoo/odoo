@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="benchmark_invoice_setup" model="populate.blueprint">
+        <field name="name">Benchmark: Invoice Setup</field>
+        <field name="definition_xml" type="xml">
+            <create model="account.account" count="1" id="income_account" scale="False">
+                <field name="name" eval="'Benchmark Income'"/>
+                <field name="code" eval="model._search_new_account_code('BMKINCOME')"/>
+                <field name="account_type" eval="'income'"/>
+                <field name="company_ids" eval="[Command.set(env.company.ids)]"/>
+            </create>
+
+            <create model="account.account" count="1" id="receivable_account" scale="False">
+                <field name="name" eval="'Benchmark Receivable'"/>
+                <field name="code" eval="model._search_new_account_code('BMKRECEIVABLE')"/>
+                <field name="account_type" eval="'asset_receivable'"/>
+                <field name="reconcile" eval="True"/>
+                <field name="company_ids" eval="[Command.set(env.company.ids)]"/>
+            </create>
+
+            <create model="account.journal" count="1" id="sales_journal" scale="False">
+                <field name="name" eval="'Benchmark Sales'"/>
+                <field name="type" eval="'sale'"/>
+                <field name="default_account_id" ref="income_account"/>
+            </create>
+        </field>
+    </record>
+
     <!--
         ==========================================================
         BENCHMARK 1: Deep Journal — 1 journal with 10,000 moves
