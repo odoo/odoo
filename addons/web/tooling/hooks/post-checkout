@@ -1,0 +1,4 @@
+#!/bin/bash
+# $3 is 1 for a branch checkout, 0 for a file checkout
+[[ $3 == 1 ]] || exit 0
+exec "$(dirname "$0")/post-merge"

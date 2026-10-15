@@ -6,6 +6,7 @@ if [[ $testRealPath == "" ]]; then
     echo "Please install realpath"
     exit 1
 fi
+"$tooling/check_node.sh"
 
 enableInDir () {
     cd "$1" || exit
