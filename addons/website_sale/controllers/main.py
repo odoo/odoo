@@ -1021,7 +1021,361 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order_sudo.pricelist_id = pricelist
             order_sudo._recompute_prices()
 
+<<<<<<< 081324e0d3be691e13032e178ef48b53bb320d79
     @route('/shop/save_shop_layout_mode', type='jsonrpc', auth='public', website=True)
+||||||| e8f6bc8f56ab971b6cd2c6b8b218c689dd9784cc
+        values = {}
+        if access_token:
+            abandoned_order = request.env['sale.order'].sudo().search([('access_token', '=', access_token)], limit=1)
+            if not abandoned_order:  # wrong token (or SO has been deleted)
+                raise NotFound()
+            if abandoned_order.state != 'draft':  # abandoned cart already finished
+                values.update({'abandoned_proceed': True})
+            elif revive == 'squash' or (revive == 'merge' and not request.session.get('sale_order_id')):  # restore old cart or merge with unexistant
+                request.session['sale_order_id'] = abandoned_order.id
+                return request.redirect('/shop/cart')
+            elif revive == 'merge':
+                abandoned_order.order_line.write({'order_id': request.session['sale_order_id']})
+                abandoned_order.action_cancel()
+            elif abandoned_order.id != request.session.get('sale_order_id'):  # abandoned cart found, user have to choose what to do
+                values.update({'access_token': abandoned_order.access_token})
+
+        values.update({
+            'website_sale_order': order,
+            'date': fields.Date.today(),
+            'suggested_products': [],
+        })
+        if order:
+            order.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
+            values['suggested_products'] = order._cart_accessories()
+            values.update(self._get_express_shop_payment_values(order))
+
+        values.update(self._cart_values(**post))
+        return request.render("website_sale.cart", values)
+
+    @route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
+    def cart_update(
+        self, product_id, add_qty=1, set_qty=0, product_custom_attribute_values=None,
+        no_variant_attribute_value_ids=None, **kwargs
+    ):
+        """This route is called when adding a product to cart (no options)."""
+        sale_order = request.website.sale_get_order(force_create=True)
+        if sale_order.state != 'draft':
+            request.session['sale_order_id'] = None
+            sale_order = request.website.sale_get_order(force_create=True)
+
+        if product_custom_attribute_values:
+            product_custom_attribute_values = json_scriptsafe.loads(product_custom_attribute_values)
+
+        # old API, will be dropped soon with product configurator refactorings
+        no_variant_attribute_values = kwargs.pop('no_variant_attribute_values', None)
+        if no_variant_attribute_values and no_variant_attribute_value_ids is None:
+            no_variants_attribute_values_data = json_scriptsafe.loads(no_variant_attribute_values)
+            no_variant_attribute_value_ids = [
+                int(ptav_data['value']) for ptav_data in no_variants_attribute_values_data
+            ]
+
+        sale_order._cart_update(
+            product_id=int(product_id),
+            add_qty=add_qty,
+            set_qty=set_qty,
+            product_custom_attribute_values=product_custom_attribute_values,
+            no_variant_attribute_value_ids=no_variant_attribute_value_ids,
+            **kwargs
+        )
+
+        request.session['website_sale_cart_quantity'] = sale_order.cart_quantity
+
+        return request.redirect("/shop/cart")
+
+    @route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
+    def cart_update_json(
+        self, product_id, line_id=None, add_qty=None, set_qty=None, display=True,
+        product_custom_attribute_values=None, no_variant_attribute_value_ids=None, **kwargs
+    ):
+        """
+        This route is called :
+            - When changing quantity from the cart.
+            - When adding a product from the wishlist.
+            - When adding a product to cart on the same page (without redirection).
+        """
+        order = request.website.sale_get_order(force_create=True)
+        if order.state != 'draft':
+            request.website.sale_reset()
+            if kwargs.get('force_create'):
+                order = request.website.sale_get_order(force_create=True)
+            else:
+                return {}
+
+        if product_custom_attribute_values:
+            product_custom_attribute_values = json_scriptsafe.loads(product_custom_attribute_values)
+
+        # old API, will be dropped soon with product configurator refactorings
+        no_variant_attribute_values = kwargs.pop('no_variant_attribute_values', None)
+        if no_variant_attribute_values and no_variant_attribute_value_ids is None:
+            no_variants_attribute_values_data = json_scriptsafe.loads(no_variant_attribute_values)
+            no_variant_attribute_value_ids = [
+                int(ptav_data['value']) for ptav_data in no_variants_attribute_values_data
+            ]
+
+        values = order._cart_update(
+            product_id=product_id,
+            line_id=line_id,
+            add_qty=add_qty,
+            set_qty=set_qty,
+            product_custom_attribute_values=product_custom_attribute_values,
+            no_variant_attribute_value_ids=no_variant_attribute_value_ids,
+            **kwargs
+        )
+
+        # If the line is a combo product line, and it already has combo items, we need to update
+        # the combo item quantities as well.
+        line = request.env['sale.order.line'].browse(values['line_id'])
+        if line.product_type == 'combo' and line.linked_line_ids:
+            quantity = values['quantity']
+            combo_quantity = quantity
+            # A combo product and its items should have the same quantity (by design). So, if the
+            # requested quantity isn't available for one or more combo items, we should lower the
+            # quantity of the combo product and its items to the maximum available quantity of the
+            # combo item with the least available quantity.
+            for linked_line in line.linked_line_ids:
+                if quantity != linked_line.product_uom_qty:
+                    combo_item_quantity, warning = order._verify_updated_quantity(
+                        linked_line, linked_line.product_id.id, quantity, **kwargs
+                    )
+                    combo_quantity = min(combo_quantity, combo_item_quantity)
+            for linked_line in line.linked_line_ids:
+                order._cart_update(
+                    product_id=linked_line.product_id.id,
+                    line_id=linked_line.id,
+                    set_qty=combo_quantity,
+                    **kwargs,
+                )
+            if combo_quantity < quantity:
+                order._cart_update(
+                    product_id=product_id,
+                    line_id=line_id,
+                    set_qty=combo_quantity,
+                    **kwargs,
+                )
+
+        values['notification_info'] = self._get_cart_notification_information(order, [values['line_id']])
+        values['notification_info']['warning'] = values.pop('warning', '')
+        request.session['website_sale_cart_quantity'] = order.cart_quantity
+
+        if not order.cart_quantity:
+            request.website.sale_reset()
+            return values
+
+        values['cart_quantity'] = order.cart_quantity
+
+        # Values for express checkout
+        values['minor_amount'] = payment_utils.to_minor_currency_units(
+            order._get_amount_total_excluding_delivery(), order.currency_id
+        )
+        values['amount'] = order.amount_total
+
+        if not display:
+            return values
+
+        values['cart_ready'] = order._is_cart_ready()
+        values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
+            "website_sale.cart_lines", {
+                'website_sale_order': order,
+                'date': fields.Date.today(),
+                'suggested_products': order._cart_accessories()
+            }
+        )
+        values['website_sale.total'] = request.env['ir.ui.view']._render_template(
+            "website_sale.total", {
+                'website_sale_order': order,
+            }
+        )
+        return values
+
+    @route('/shop/save_shop_layout_mode', type='json', auth='public', website=True)
+=======
+        values = {}
+        if access_token:
+            abandoned_order = request.env['sale.order'].sudo().search([('access_token', '=', access_token)], limit=1)
+            if not abandoned_order:  # wrong token (or SO has been deleted)
+                raise NotFound()
+            if abandoned_order.state != 'draft':  # abandoned cart already finished
+                values.update({'abandoned_proceed': True})
+            elif revive == 'squash' or (revive == 'merge' and not request.session.get('sale_order_id')):  # restore old cart or merge with unexistant
+                request.session['sale_order_id'] = abandoned_order.id
+                return request.redirect('/shop/cart')
+            elif revive == 'merge':
+                abandoned_order.order_line.write({'order_id': request.session['sale_order_id']})
+                abandoned_order.action_cancel()
+            elif abandoned_order.id != request.session.get('sale_order_id'):  # abandoned cart found, user have to choose what to do
+                values.update({'access_token': abandoned_order.access_token})
+
+        values.update({
+            'website_sale_order': order,
+            'date': fields.Date.today(),
+            'suggested_products': [],
+        })
+        if order:
+            order.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
+            values['suggested_products'] = order._cart_accessories()
+            values.update(self._get_express_shop_payment_values(order))
+
+        values.update(self._cart_values(**post))
+        return request.render("website_sale.cart", values)
+
+    @route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
+    def cart_update(
+        self, product_id, add_qty=1, set_qty=0, product_custom_attribute_values=None,
+        no_variant_attribute_value_ids=None, **kwargs
+    ):
+        """This route is called when adding a product to cart (no options)."""
+        sale_order = request.website.sale_get_order(force_create=True)
+        if sale_order.state != 'draft':
+            request.session['sale_order_id'] = None
+            sale_order = request.website.sale_get_order(force_create=True)
+
+        if product_custom_attribute_values:
+            product_custom_attribute_values = json_scriptsafe.loads(product_custom_attribute_values)
+
+        # old API, will be dropped soon with product configurator refactorings
+        no_variant_attribute_values = kwargs.pop('no_variant_attribute_values', None)
+        if no_variant_attribute_values and no_variant_attribute_value_ids is None:
+            no_variants_attribute_values_data = json_scriptsafe.loads(no_variant_attribute_values)
+            no_variant_attribute_value_ids = [
+                int(ptav_data['value']) for ptav_data in no_variants_attribute_values_data
+            ]
+
+        sale_order._cart_update(
+            product_id=int(product_id),
+            add_qty=add_qty,
+            set_qty=set_qty,
+            product_custom_attribute_values=product_custom_attribute_values,
+            no_variant_attribute_value_ids=no_variant_attribute_value_ids,
+            **kwargs
+        )
+
+        request.session['website_sale_cart_quantity'] = sale_order.cart_quantity
+
+        return request.redirect("/shop/cart")
+
+    @route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
+    def cart_update_json(
+        self, product_id, line_id=None, add_qty=None, set_qty=None, display=True,
+        product_custom_attribute_values=None, no_variant_attribute_value_ids=None, **kwargs
+    ):
+        """
+        This route is called :
+            - When changing quantity from the cart.
+            - When adding a product from the wishlist.
+            - When adding a product to cart on the same page (without redirection).
+        """
+        order = request.website.sale_get_order(force_create=True)
+        if order.state != 'draft':
+            request.website.sale_reset()
+            if kwargs.get('force_create'):
+                order = request.website.sale_get_order(force_create=True)
+            else:
+                return {}
+
+        if product_custom_attribute_values:
+            product_custom_attribute_values = json_scriptsafe.loads(product_custom_attribute_values)
+
+        # old API, will be dropped soon with product configurator refactorings
+        no_variant_attribute_values = kwargs.pop('no_variant_attribute_values', None)
+        if no_variant_attribute_values and no_variant_attribute_value_ids is None:
+            no_variants_attribute_values_data = json_scriptsafe.loads(no_variant_attribute_values)
+            no_variant_attribute_value_ids = [
+                int(ptav_data['value']) for ptav_data in no_variants_attribute_values_data
+            ]
+
+        # Combo item lines are updated together with their combo
+        if line_id:
+            target_line = order.order_line.filtered(lambda sol: sol.id == line_id)
+            if target_line.combo_item_id:
+                return {
+                    "warning": _(
+                        "This product is part of a combo and can't be updated individually."
+                    )
+                }
+
+        values = order._cart_update(
+            product_id=product_id,
+            line_id=line_id,
+            add_qty=add_qty,
+            set_qty=set_qty,
+            product_custom_attribute_values=product_custom_attribute_values,
+            no_variant_attribute_value_ids=no_variant_attribute_value_ids,
+            **kwargs
+        )
+
+        # If the line is a combo product line, and it already has combo items, we need to update
+        # the combo item quantities as well.
+        line = request.env['sale.order.line'].browse(values['line_id'])
+        if line.product_type == 'combo' and line.linked_line_ids:
+            quantity = values['quantity']
+            combo_quantity = quantity
+            # A combo product and its items should have the same quantity (by design). So, if the
+            # requested quantity isn't available for one or more combo items, we should lower the
+            # quantity of the combo product and its items to the maximum available quantity of the
+            # combo item with the least available quantity.
+            for linked_line in line.linked_line_ids:
+                if quantity != linked_line.product_uom_qty:
+                    combo_item_quantity, warning = order._verify_updated_quantity(
+                        linked_line, linked_line.product_id.id, quantity, **kwargs
+                    )
+                    combo_quantity = min(combo_quantity, combo_item_quantity)
+            for linked_line in line.linked_line_ids:
+                order._cart_update(
+                    product_id=linked_line.product_id.id,
+                    line_id=linked_line.id,
+                    set_qty=combo_quantity,
+                    **kwargs,
+                )
+            if combo_quantity < quantity:
+                order._cart_update(
+                    product_id=product_id,
+                    line_id=line_id,
+                    set_qty=combo_quantity,
+                    **kwargs,
+                )
+
+        values['notification_info'] = self._get_cart_notification_information(order, [values['line_id']])
+        values['notification_info']['warning'] = values.pop('warning', '')
+        request.session['website_sale_cart_quantity'] = order.cart_quantity
+
+        if not order.cart_quantity:
+            request.website.sale_reset()
+            return values
+
+        values['cart_quantity'] = order.cart_quantity
+
+        # Values for express checkout
+        values['minor_amount'] = payment_utils.to_minor_currency_units(
+            order._get_amount_total_excluding_delivery(), order.currency_id
+        )
+        values['amount'] = order.amount_total
+
+        if not display:
+            return values
+
+        values['cart_ready'] = order._is_cart_ready()
+        values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
+            "website_sale.cart_lines", {
+                'website_sale_order': order,
+                'date': fields.Date.today(),
+                'suggested_products': order._cart_accessories()
+            }
+        )
+        values['website_sale.total'] = request.env['ir.ui.view']._render_template(
+            "website_sale.total", {
+                'website_sale_order': order,
+            }
+        )
+        return values
+
+    @route('/shop/save_shop_layout_mode', type='json', auth='public', website=True)
+>>>>>>> 3bd8e37189057de7f7dd89027ac33ec4de8aed2a
     def save_shop_layout_mode(self, layout_mode):
         assert layout_mode in ('grid', 'list'), "Invalid shop layout mode"
         request.session['website_sale_shop_layout_mode'] = layout_mode
