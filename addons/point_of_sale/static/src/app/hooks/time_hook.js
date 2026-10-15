@@ -3,7 +3,7 @@ import { localization } from "@web/core/l10n/localization";
 const { DateTime } = luxon;
 
 export function useTime() {
-    const state = proxy({ hours: "", day: "", date: "" });
+    const state = proxy({ time: "", timeWithoutSeconds: "", day: "", date: "" });
     const timeFormat = localization.timeFormat;
     const dateFormat = localization.dateFormat
         .replace(/MM/g, "LLLL")
@@ -11,7 +11,8 @@ export function useTime() {
         .replace(/[^a-zA-Z]+/g, ", ");
     function setTime() {
         const dateNow = DateTime.now();
-        state.hours = dateNow.toFormat(timeFormat);
+        state.time = dateNow.toFormat(timeFormat);
+        state.timeWithoutSeconds = dateNow.toFormat(timeFormat.replace(/:ss/, ""));
         state.day = dateNow.toFormat("cccc");
         state.date = dateNow.toFormat(dateFormat);
     }

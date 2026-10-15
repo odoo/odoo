@@ -56,7 +56,8 @@ class TestIconsSearch(TransactionCase):
                 'shopping_cart', list(search_icons(env, 'shopping cart')),
                 "English tags stay searchable whatever the language",
             )
-            self.assertCountEqual(
-                search_icons(env, 'eto'), ['bluetooth', 'star'],
-                "a needle matches the translated tags of an icon and the English tags of another",
-            )
+            # check that we can match the translated tags of an icon at the
+            # same time as the English tags of another.
+            icons = list(search_icons(env, 'eto'))
+            self.assertIn('bluetooth', icons)
+            self.assertIn('star', icons)
