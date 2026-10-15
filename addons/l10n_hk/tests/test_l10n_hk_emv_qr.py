@@ -55,13 +55,11 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
         })
 
     def test_emv_qr_code_generation(self):
-        self.emv_qr_invoice.qr_code_method = 'emv_qr'
         self.emv_qr_invoice._generate_qr_code()
 
-        # Using invoice currency other than HKD or CNY should fail
+        # Using invoice currency other than HKD or CNY: no QR-code method is eligible, so none is generated
         self.emv_qr_invoice.currency_id = self.env.ref('base.USD')
-        with self.assertRaises(UserError, msg="The chosen QR-code type is not eligible for this invoice."):
-            self.emv_qr_invoice._generate_qr_code()
+        self.assertIsNone(self.emv_qr_invoice._generate_qr_code())
 
         # Without company partner city should fail
         self.emv_qr_invoice.currency_id = self.env.ref('base.HKD')
@@ -76,10 +74,9 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
             self.emv_qr_invoice._generate_qr_code()
 
     def test_emv_qr_vals(self):
-        self.emv_qr_invoice.qr_code_method = 'emv_qr'
         demo_payment_reference = 'INV/TEST/0001'
         emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
-            qr_method=self.emv_qr_invoice.qr_code_method,
+            qr_method='emv_qr',
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,
             debtor_partner=self.emv_qr_invoice.partner_id,
@@ -92,10 +89,9 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
         self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-6789123452040000530334454031005802HK5914company_1_data6002HK62170513INV/TEST/00016304A154')
 
     def test_emv_qr_vals_with_non_integer_amount(self):
-        self.emv_qr_invoice_with_non_integer_amount.qr_code_method = 'emv_qr'
         unstruct_ref = 'INV/TEST/0002'
         emv_qr_vals = self.emv_qr_invoice_with_non_integer_amount.partner_bank_id._get_qr_vals(
-            qr_method=self.emv_qr_invoice_with_non_integer_amount.qr_code_method,
+            qr_method='emv_qr',
             amount=self.emv_qr_invoice_with_non_integer_amount.amount_residual,
             currency=self.emv_qr_invoice_with_non_integer_amount.currency_id,
             debtor_partner=self.emv_qr_invoice_with_non_integer_amount.partner_id,
@@ -115,7 +111,6 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
     def test_invoice_wrong_method(self):
         """ If an EMV QR is selected on the invoice with a wrong country, it should raise errors messages. """
         self.acc_emv_hk.country_code = 'NZ'
-        self.emv_qr_invoice.qr_code_method = 'emv_qr'
 
         error_message = self.acc_emv_hk._get_error_messages_for_qr('emv_qr', self.partner_a, self.env.ref('base.HKD'))
         self.assertIsNotNone(error_message)

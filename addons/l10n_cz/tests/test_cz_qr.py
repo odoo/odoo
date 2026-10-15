@@ -1,7 +1,6 @@
 import re
 
 from odoo import fields
-from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -36,35 +35,29 @@ class TestCZKQRCode(AccountTestInvoicingCommon):
 
     def test_czk_qr_code_generation(self):
         """Check different cases of CZK QR-code generation."""
-        self.czk_qr_invoice.qr_code_method = 'czk_qr'
-
         # Using a valid CZK IBAN should work.
         self.czk_qr_invoice._generate_qr_code()
 
-        # Using a non-CZK currency shouldn't work.
+        # Using a non-CZK currency: the CZK QR-code is not eligible, so it is not picked.
         self.czk_qr_invoice.currency_id = self.env.ref('base.EUR')
-        with self.assertRaises(UserError):
-            self.czk_qr_invoice._generate_qr_code()
+        self.assertNotEqual(self.czk_qr_invoice._get_qr_code_method(), 'czk_qr')
 
         # Restore CZK currency.
         self.czk_qr_invoice.currency_id = self.env.ref('base.CZK')
 
-        # Using a non-IBAN account shouldn't work.
+        # Using a non-IBAN account: no QR-code method is eligible, so none is generated.
         self.czk_qr_invoice.partner_bank_id = self.env['res.partner.bank'].create({
             'account_number': '123456789',
             'partner_id': self.company_data['company'].partner_id.id,
             'allow_out_payment': True,
         })
 
-        with self.assertRaises(UserError):
-            self.czk_qr_invoice._generate_qr_code()
+        self.assertIsNone(self.czk_qr_invoice._generate_qr_code())
 
     def test_czk_qr_code_detection(self):
         """Check automatic detection of the CZK QR-code method."""
-        self.czk_qr_invoice._generate_qr_code()
-
         self.assertEqual(
-            self.czk_qr_invoice.qr_code_method,
+            self.czk_qr_invoice._get_qr_code_method(),
             'czk_qr',
             "CZK QR-code generator should have been chosen for this invoice.",
         )
