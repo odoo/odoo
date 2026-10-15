@@ -306,10 +306,16 @@ export class PosStore extends WithLazyGetterTrap {
         return [
             {
                 timeout: 180000, // 3 minutes
-                action: () =>
-                    this.router.state.current !== "PaymentScreen" &&
-                    this.saveIfOrder() &&
-                    this.navigate("SaverScreen"),
+                action: () => {
+                    if (this.router.state.current === "PaymentScreen") {
+                        return false;
+                    }
+                    if (!this.saveIfOrder()) {
+                        return false;
+                    }
+                    this.resetCashier();
+                    return this.navigate("SaverScreen");
+                },
             },
             {
                 timeout: 120000, // 2 minutes
