@@ -56,3 +56,11 @@ class ResPartner(models.Model):
                 continue
             address_part_without_country = partner.address_inline.split(', ')[:-1]
             partner.l10n_th_address_no_country = ', '.join(address_part_without_country)
+
+    def _get_vat_required_valid(self, company=None):
+        # Thai individuals use their citizen ID as Tax ID, only companies should
+        # match the fiscal positions requiring a Tax ID (e.g. Domestic Company).
+        vat_required_valid = super()._get_vat_required_valid(company=company)
+        if vat_required_valid and self.commercial_partner_id.country_code == "TH":
+            vat_required_valid = vat_required_valid and self.commercial_partner_id.is_company
+        return vat_required_valid
