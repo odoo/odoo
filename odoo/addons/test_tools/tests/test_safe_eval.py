@@ -1,5 +1,6 @@
 import ast
 import inspect
+from collections import OrderedDict
 from textwrap import dedent
 from unittest.mock import patch
 
@@ -712,17 +713,28 @@ class TestSafeEvalRuntime(TransactionCase):
     def test_trust_iterators(self):
         iterators = (
             iter(''),
+            iter('\xFF'),
             iter(b''),
             iter(bytearray()),
             iter({}.keys()),
             iter({}.values()),
             iter({}.items()),
+            iter(reversed({}.keys())),
+            iter(reversed({}.values())),
+            iter(reversed({}.items())),
+            iter(OrderedDict().keys()),
+            iter(OrderedDict().values()),
+            iter(OrderedDict().items()),
+            iter(reversed(OrderedDict().keys())),
+            iter(reversed(OrderedDict().values())),
+            iter(reversed(OrderedDict().items())),
             iter([]),
             iter(()),
             iter(set()),
             iter(reversed([])),
             iter(range(0)),
             iter(range(1 << 1000)),
+            iter(lambda: 0, 0),
             # No-operation iterators
             iter(zip()),
             iter(map(lambda: 0, [])),
