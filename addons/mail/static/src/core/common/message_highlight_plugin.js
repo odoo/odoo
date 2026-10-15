@@ -93,15 +93,10 @@ export class MessageHighlightPlugin extends Plugin {
         const { promise: scrollPromise, resolve: resolveScroll } = Promise.withResolvers();
         this.scrollPromise = scrollPromise;
         this.resolveScroll = resolveScroll;
-        if ("onscrollend" in window) {
-            document.addEventListener("scrollend", resolveScroll, {
-                capture: true,
-                once: true,
-            });
-        } else {
-            // To remove when safari will support the "scrollend" event.
-            setTimeout(resolveScroll, 250);
-        }
+        document.addEventListener("scrollend", resolveScroll, {
+            capture: true,
+            once: true,
+        });
         el.scrollIntoView({ behavior: "smooth", block: "center" });
         return scrollPromise;
     }

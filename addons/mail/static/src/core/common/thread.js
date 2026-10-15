@@ -52,8 +52,6 @@ export class Thread extends Component {
     scope = useScope();
     /** @type {Promise|undefined} */
     smoothScrollingPromise;
-    /** @type {number} */
-    smoothScrollingTimeout;
     isSmoothScrolling = false;
 
     setup() {
@@ -779,7 +777,6 @@ export class Thread extends Component {
     }
     setScroll(value, { smooth = false } = {}) {
         if (smooth) {
-            clearTimeout(this.smoothScrollingTimeout);
             this.isSmoothScrolling = true;
             const { promise, resolve: resolveSmoothScrolling } = Promise.withResolvers();
             this.smoothScrollingPromise = promise;
@@ -788,15 +785,10 @@ export class Thread extends Component {
                 this.smoothScrollingPromise = undefined;
                 this.isSmoothScrolling = false;
             };
-            if ("onscrollend" in window) {
-                document.addEventListener("scrollend", onSmoothScrollingEnd, {
-                    capture: true,
-                    once: true,
-                });
-            } else {
-                // To remove when safari will support the "scrollend" event.
-                this.smoothScrollingTimeout = setTimeout(onSmoothScrollingEnd, 250);
-            }
+            document.addEventListener("scrollend", onSmoothScrollingEnd, {
+                capture: true,
+                once: true,
+            });
         }
         this.scrollableRef().scrollTo({ behavior: smooth ? "smooth" : undefined, top: value });
         this.lastSetValue = value;
