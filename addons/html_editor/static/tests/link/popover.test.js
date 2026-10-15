@@ -872,6 +872,21 @@ describe("popover for file uploads", () => {
         );
     });
 
+    test("popover in preview mode correctly fetches metadata for URL with filename", async () => {
+        onRpc("ir.attachment", "read", ({ args }) => {
+            expect(args[0]).toEqual([1]);
+            return [{ id: 1, name: "report.pdf", mimetype: "application/pdf", type: "binary" }];
+        });
+        await setupEditor(
+            '<p><a href="/web/content/1/report.pdf?download=true&unique=123">report.pdf[]</a></p>',
+            {
+                config: { allowTargetBlank: true },
+            }
+        );
+        const favIcon = await waitFor(".o_we_preview_favicon span.o_image");
+        expect(favIcon).toHaveAttribute("data-mimetype", "application/pdf");
+    });
+
     test("should not insert attachment as link if popover is discarded during file upload", async () => {
         const patchUpload = (editor) => {
             const mockedUploadPromise = new Promise((resolve) => {
