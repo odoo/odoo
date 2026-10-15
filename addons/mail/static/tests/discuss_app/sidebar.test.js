@@ -21,7 +21,7 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { animationFrame, drag, press, queryFirst, rightClick } from "@odoo/hoot-dom";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
-import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -404,6 +404,82 @@ test("mark channel as seen on last message visible", async () => {
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel.o-unread:text('test')");
     await contains(".o-mail-DiscussSidebarChannel:not(.o-unread):text('test')");
+});
+
+test.tags("focus required");
+test("focused channel is not shown as unread on receiving a message", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        name: "General",
+    });
+    const { promise: markAsRead, resolve: resolveMarkAsRead } = Promise.withResolvers();
+    onRpc("/discuss/channel/mark_as_read", async () => {
+        expect.step("mark_as_read");
+        await markAsRead;
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer.o-focused");
+    await contains(".o-mail-Thread-empty:has(:text('This is the start of the #General channel'))");
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Message-content:has(:text('Hello'))");
+    await expect.waitForSteps(["mark_as_read"]);
+    await contains(".o-mail-DiscussSidebarChannel:not(.o-unread):has(:text('General'))");
+    await contains(".o-mail-DiscussSidebarChannel-itemName:not(.o-fw-600):text('General')");
+    await contains(
+        ".o-mail-DiscussSidebarChannel:has(:text('General')) .o-mail-DiscussSidebar-unreadIndicator",
+        { count: 0 }
+    );
+    resolveMarkAsRead();
+});
+
+test.tags("focus required");
+test("channel left unread while its thread was focused stays unread in sidebar", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        name: "General",
+    });
+    pyEnv["discuss.channel"].create({ name: "Other" });
+    onRpc("/discuss/channel/mark_as_read", () => expect.step("mark_as_read"));
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer.o-focused");
+    await contains(".o-mail-Thread-empty:has(:text('This is the start of the #General channel'))");
+    queryFirst(".o-mail-Thread").focus();
+    await contains(".o-mail-Thread.o-focused");
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Message-content:has(:text('Hello'))");
+    await click(".o-mail-DiscussSidebarChannel:has(:text('Other'))");
+    await contains(".o-mail-DiscussSidebarChannel.o-active:has(:text('Other'))");
+    await contains(".o-mail-DiscussSidebarChannel.o-unread:has(:text('General'))");
+    await contains(
+        ".o-mail-DiscussSidebarChannel:has(:text('General')) .o-mail-DiscussSidebar-unreadIndicator"
+    );
+    await expect.waitForSteps([]);
 });
 
 test("channel - counter: should not have a counter if the category is unfolded and without needaction messages", async () => {
