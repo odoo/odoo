@@ -9,6 +9,24 @@ import { Command, makeMockEnv, serverState } from "@web/../tests/web_test_helper
 describe.current.tags("desktop");
 defineLivechatModels();
 
+test("Agent sees the visitor name on the chat bubble of a live chat", async () => {
+    const pyEnv = await startServer();
+    await loadDefaultEmbedConfig();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Visitor 11 Mitchell Admin",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: serverState.partnerId,
+    });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    await contains(".o-mail-ChatBubble[name='Visitor 11']");
+});
+
 test("Do not show bot IM status", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
