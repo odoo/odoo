@@ -381,7 +381,8 @@ class RepairOrder(models.Model):
 
     @api.depends('sale_order_id.invoice_ids')
     def _compute_invoice_ids(self):
-        self.invoice_ids |= self.sale_order_id.invoice_ids
+        for repair in self:
+            repair.invoice_ids |= repair.sale_order_id.invoice_ids
 
     @api.depends('state')
     def _compute_validate_button_style(self):
