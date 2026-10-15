@@ -502,3 +502,18 @@ class TestApplicantSkills(TransactionCase):
         })
 
         self.assertEqual(self.t_applicant.matching_score, 0)
+
+    def test_job_matching_score_with_zero_progress_skill(self):
+        level_0 = self.env["hr.skill.level"].create({
+            "name": "No experience",
+            "skill_type_id": self.t_skill_type.id,
+            "level_progress": 0,
+        })
+        self.env["hr.job.skill"].create({
+            "job_id": self.t_job.id,
+            "skill_id": self.t_skill_1.id,
+            "skill_type_id": self.t_skill_type.id,
+            "skill_level_id": level_0.id,
+        })
+        job = self.t_job.with_context(active_applicant_id=self.t_applicant.id)
+        self.assertEqual(job.applicant_matching_score, 0)
