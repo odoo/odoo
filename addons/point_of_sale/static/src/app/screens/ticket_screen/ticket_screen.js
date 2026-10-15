@@ -135,6 +135,7 @@ export class TicketScreen extends Component {
         this.pos.printReceipt({ order: order });
     }
     async onFilterSelected(selectedFilter) {
+        this.state.page = 1;
         this.state.filter = selectedFilter;
         this.pos.screenState.ticketSCreen.totalCount = 0;
         this.pos.screenState.ticketSCreen.offsetByDomain = {};
