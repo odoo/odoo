@@ -45,7 +45,7 @@
             <div t-if="indicators.length" class="position-absolute rounded-circle p-0 o-xsmaller o-mail-DiscussSidebarChannel-indicatorCompact lh-1 bg-inherit" name="indicator-compact">
                 <t t-component="indicators[0]" t-props="{ channel }"/>
             </div>
-            <t t-if="channel.self_member_id?.message_unread_counter > 0 and !channel.self_member_id?.mute_until_dt and channel.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
+            <t t-if="channel.self_member_id?.message_unread_counter_ui > 0 and !channel.self_member_id?.mute_until_dt and channel.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
             <t t-if="channel.importantCounter > 0 and (showingActions.isOpen or store.discuss.isSidebarCompact or !hover.isHover)" t-call="mail.discuss_badge">
                 <t t-set="counter" t-value="channel.importantCounter"/>
                 <t t-set="badgeClass" t-value="'o-mail-DiscussSidebarChannel-badge o-mail-DiscussSidebar-badge shadow-sm flex-shrink-0 fw-bold ' + (channel.self_member_id?.mute_until_dt ? 'o-muted' : '') + ' ' + (store.discuss.isSidebarCompact ? 'position-absolute o-compact' : 'ms-1 me-0') + (channel.importantCounter &lt; 10 ? ' o-discuss-badge-circle' : '') "/>
