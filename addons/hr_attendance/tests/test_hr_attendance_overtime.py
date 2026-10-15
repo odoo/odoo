@@ -1219,12 +1219,20 @@ class TestHrAttendanceOvertime(HttpCase):
         """Validate that multiple overtime lines for today are summed correctly
         and that the entire attendance_employee_data response is consistent.
         """
-        for _ in range(2):
-            self.env['hr.attendance.overtime.line'].create({
-                'employee_id': self.employee.id,
-                'date': date.today(),
-                'duration': 5,
+        overtime_line_vals = {
+            'employee_id': self.employee.id,
+            'date': date.today(),
+            'duration': 5,
+        }
+        if 'compensable_as_leave' in self.env['hr.attendance.overtime.line']._fields:
+            overtime_line_vals.update({
+                'compensable_as_leave': True,
+                'leave_compensation_rate': 1.0,
             })
+
+        self.env['hr.attendance.overtime.line'].create([
+            overtime_line_vals.copy() for _ in range(2)
+        ])
         token = self.employee.company_id.attendance_kiosk_key
         response = self.make_jsonrpc_request(
             '/hr_attendance/attendance_employee_data',
