@@ -31,6 +31,15 @@ class SaleOrder(models.Model):
             }
         return super()._get_edi_decoder(file_data, new)
 
+    def _get_record_for_file_group(self, file_data_group):
+        xml_trees = [file['xml_tree'] for file in file_data_group if file.get('import_file_type', '') == 'sale.edi.xml.ubl_bis3' and file.get('xml_tree') is not None]
+        if len(xml_trees) == 1:
+            xml_tree = xml_trees[0]
+            xml_id = xml_tree.findtext('./{*}ID')
+            if existing_so := self.env['sale.order'].search([('client_order_ref', '=', xml_id)], limit=1):
+                return existing_so, False
+        return super()._get_record_for_file_group(file_data_group)
+
     def _create_activity_set_details(self, body):
         """ Create activity on sale order to set details.
 

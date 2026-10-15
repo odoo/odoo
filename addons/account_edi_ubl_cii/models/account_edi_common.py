@@ -847,6 +847,8 @@ class AccountEdiCommon(models.AbstractModel):
                 line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
             if self._need_vehicle_id(document_type):
                 line_values['vehicle_id'] = vehicle or self._import_vehicle(line_tree, 'line', document_type, record.company_id)
+            if self.env.context.get('intercompany_sync_ubl', False):
+                line_values['id'] = line_tree.findtext('./{*}ID')
             lines_values.append(line_values)
             lines_values += self._retrieve_line_charges(record, line_values, line_values['tax_ids'])
             if isinstance(record, self.env.registry['account.move']) and hasattr(self.env['account.move.line'], '_get_predicted_values'):
@@ -910,7 +912,7 @@ class AccountEdiCommon(models.AbstractModel):
                     'deferred_end_date': end_date,
                 }
         line_vals = self._retrieve_line_vals(record, tree, document_type, qty_factor)
-        if not line_vals.get('price_subtotal'):
+        if not line_vals.get('price_subtotal') and not self.env.context.get('intercompany_sync_ubl', False):
             return None
 
         return {

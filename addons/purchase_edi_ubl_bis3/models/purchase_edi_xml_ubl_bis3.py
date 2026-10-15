@@ -243,7 +243,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         for base_line in vals['base_lines']:
             line_vals = {
                 **vals,
-                'line_idx': line_idx,
+                'line_idx': base_line['id'] if self.env.context.get('intercompany_sync_ubl', False) else line_idx,
                 'base_line': base_line,
             }
 
@@ -376,6 +376,8 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         # adapt each line to purchase.order.line
         for line in lines_vals:
             # line level charges do not have product_uom_id
+            if self.env.context.get('intercompany_sync_ubl', False):
+                line['auto_sale_order_line_id'] = int(line.pop('id'))
             if line.get('product_uom_id'):
                 line['uom_id'] = line.pop('product_uom_id')
             # remove invoice line fields
@@ -386,10 +388,15 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         lines_vals += allowance_charges_line_vals
 
         # Update order with lines excluding discounts
-        order_vals['order_line'] = [Command.create(line_vals) for line_vals in lines_vals]
+        order_vals['order_line'] = [self._prepare_line_command(line_vals, order) for line_vals in lines_vals]
         logs += partner_logs + delivery_logs + line_logs + allowance_charges_logs
-
         return order_vals, logs
+
+    def _prepare_line_command(self, line_vals, order):
+        existing_pol = order.order_line.filtered(lambda line: line.product_id.id == line_vals.get('product_id'))
+        if existing_pol:
+            return Command.update(existing_pol.id, line_vals)
+        return Command.create(line_vals)
 
     def _retrieve_line_vals(self, record, tree, document_type=False, qty_factor=1):
         """Override of `account.edi.common` to adapt dictionary keys from the base method to be
