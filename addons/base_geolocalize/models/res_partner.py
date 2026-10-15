@@ -1,14 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, modules, _
+
+from odoo import api, fields, models, modules
+
+from odoo.addons.base_geolocalize.models.base_geocoder import GeoCodingError
 
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    date_localization = fields.Date(string='Geolocation Updated On')
+    date_localization = fields.Datetime(string='Geolocation Updated On')
     should_be_geolocalized = fields.Boolean(
         compute='_compute_should_be_geolocalized', store=True, readonly=False, default=False,
         help='Indicates whether the partner\'s address has changed, so we should geolocalize them from their new address.')
+    geo_localization_error = fields.Text(
+        compute='_compute_geo_localization_error',
+        store=True, readonly=False, copy=False, prefetch=False,
+        help='Reason of the last failed geolocation, cleared when the address changes.'
+    )
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_should_be_geolocalized(self):
@@ -18,6 +26,10 @@ class ResPartner(models.Model):
     def _is_geolocalized(self):
         self.ensure_one()
         return super()._is_geolocalized() and not self.should_be_geolocalized
+
+    @api.depends(lambda self: self._display_address_depends())
+    def _compute_geo_localization_error(self):
+        self.geo_localization_error = False
 
     @api.model
     def _geo_localize(self, street='', zip='', city='', state='', country=''):
@@ -38,31 +50,64 @@ class ResPartner(models.Model):
             or self.env.context.get('install_demo')
         ):
             return False
+
         partners_not_geo_localized = self.env['res.partner']
+        partners_in_error = self.env['res.partner']
         for partner in self.with_context(lang='en_US'):
-            result = partner._geo_localize(
+            address = (
                 partner.street,
                 partner.zip,
                 partner.city,
                 partner.state_id.name,
                 partner.country_id.name,
             )
+            try:
+                result = partner._geo_localize(*address)
+            except GeoCodingError as e:
+                partner.write({
+                    'geo_localization_error': str(e),
+                    'date_localization': fields.Datetime.now(),
+                })
+                partners_in_error |= partner
+                continue
 
             if result:
                 partner.write({
                     'partner_latitude': result[0],
                     'partner_longitude': result[1],
-                    'date_localization': fields.Date.context_today(partner),
+                    'date_localization': fields.Datetime.now(),
                     'should_be_geolocalized': False,
+                    'geo_localization_error': False,
                 })
             else:
+                partner.write({
+                    'geo_localization_error': self.env._(
+                        "No match found for address: %(address)s",
+                        address=self.env['base.geocoder'].geo_query_address(*address),
+                    ),
+                    'date_localization': fields.Datetime.now(),
+                    'should_be_geolocalized': False,
+                })
                 partners_not_geo_localized |= partner
+
         if partners_not_geo_localized and not self.env.context.get('cron_id'):
             self.env.user._bus_send("simple_notification", {
                 'type': 'danger',
-                'title': _("Warning"),
-                'message': _('No match found for %(partner_names)s address(es).',
-                             partner_names=', '.join(partners_not_geo_localized.mapped('display_name')))
+                'title': self.env._("Warning"),
+                'message': self.env._(
+                    'No match found for %(partner_names)s address(es).',
+                    partner_names=', '.join(partners_not_geo_localized.mapped('display_name'))
+                )
+            })
+        if partners_in_error and not self.env.context.get('cron_id'):
+            self.env.user._bus_send("simple_notification", {
+                'type': 'danger',
+                'title': self.env._("Warning"),
+                'message': self.env._(
+                    'Geolocation failed for %(partner_names)s: %(errors)s',
+                    partner_names=', '.join(partners_in_error.mapped('display_name')),
+                    errors=', '.join(set(partners_in_error.mapped('geo_localization_error'))),
+                ),
             })
         return True
 
@@ -77,7 +122,7 @@ class ResPartner(models.Model):
         return res
 
     def _cron_geolocalize(self, batch_size=20):
-        domain = [('should_be_geolocalized', '=', True)]
+        domain = [('should_be_geolocalized', '=', True), ('geo_localization_error', '=', False)]
         partners_to_geolocalize = self.search(domain, limit=batch_size)
         remaining = len(partners_to_geolocalize) if len(partners_to_geolocalize) < batch_size else self.search_count(domain)
         self.env['ir.cron']._commit_progress(remaining=remaining)
