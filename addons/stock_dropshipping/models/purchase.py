@@ -67,7 +67,7 @@ class PurchaseOrder(models.Model):
                 moves = lines._create_stock_moves()
                 moves = moves.filtered(lambda m: m.state not in ('done', 'cancel'))
                 picking = StockPicking.with_user(SUPERUSER_ID).create(
-                    moves.with_context(move_picking_partner_id=order.partner_id)._get_new_picking_values()
+                    moves._get_new_picking_values()
                 )
                 moves.picking_id = picking
                 moves = moves._action_confirm()
