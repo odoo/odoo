@@ -62,7 +62,6 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
         })
 
     def test_emv_qr_code_generation(self):
-        self.emv_qr_invoice.qr_code_method = 'emv_qr'
         self.emv_qr_invoice._generate_qr_code()
 
         # Using invoice currency other than VND should fail
@@ -87,10 +86,9 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
             self.emv_qr_invoice._generate_qr_code()
 
     def test_emv_qr_vals(self):
-        self.emv_qr_invoice.qr_code_method = 'emv_qr'
         unstruct_ref = 'INV/TEST/0001'
         emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
-            qr_method=self.emv_qr_invoice.qr_code_method,
+            qr_method='emv_qr',
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,
             debtor_partner=self.emv_qr_invoice.partner_id,
@@ -108,10 +106,9 @@ class TestL10nVNEmvQrCode(AccountTestInvoicingCommon):
 
     def test_emv_qr_vals_with_accent_partner(self):
         self.company_data['company'].partner_id.name = 'áÁéÉóÓíÍúÚýÝđĐ'
-        self.emv_qr_invoice.qr_code_method = 'emv_qr'
         unstruct_ref = 'INV/TEST/0002'
         emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
-            qr_method=self.emv_qr_invoice.qr_code_method,
+            qr_method='emv_qr',
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,
             debtor_partner=self.emv_qr_invoice.partner_id,

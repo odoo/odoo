@@ -36,8 +36,6 @@ class TestCZKQRCode(AccountTestInvoicingCommon):
 
     def test_czk_qr_code_generation(self):
         """Check different cases of CZK QR-code generation."""
-        self.czk_qr_invoice.qr_code_method = 'czk_qr'
-
         # Using a valid CZK IBAN should work.
         self.czk_qr_invoice._generate_qr_code()
 
@@ -61,10 +59,8 @@ class TestCZKQRCode(AccountTestInvoicingCommon):
 
     def test_czk_qr_code_detection(self):
         """Check automatic detection of the CZK QR-code method."""
-        self.czk_qr_invoice._generate_qr_code()
-
         self.assertEqual(
-            self.czk_qr_invoice.qr_code_method,
+            self.czk_qr_invoice._get_qr_code_method(),
             'czk_qr',
             "CZK QR-code generator should have been chosen for this invoice.",
         )

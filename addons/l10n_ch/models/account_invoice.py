@@ -34,6 +34,18 @@ class AccountMove(models.Model):
                 )
             )
 
+    def _l10n_ch_get_qr_bill_errors(self):
+        """ Returns the error preventing the QR-bill of this invoice to be generated, if any. """
+        self.ensure_one()
+        return self.partner_bank_id._check_for_qr_code_errors(
+            qr_method='ch_qr',
+            amount=self.amount_residual,
+            currency=self.currency_id,
+            debtor_partner=self.partner_id,
+            free_communication=self.payment_reference or self.name,
+            structured_communication=self.payment_reference,
+        )
+
     def get_l10n_ch_qrr_number(self):
         """Generates the QRR reference.
         QRR references are 27 characters long.
