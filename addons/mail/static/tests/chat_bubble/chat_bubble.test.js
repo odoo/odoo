@@ -1,5 +1,5 @@
-import { describe, test } from "@odoo/hoot";
-import { leave, runAllTimers } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, drag, leave, queryRect, runAllTimers } from "@odoo/hoot-dom";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import {
     assertChatHub,
@@ -656,4 +656,28 @@ test("Close chat window from bubble while bubble preview is displayed", async ()
     await hover(".o-mail-ChatBubble[name='John']");
     await click(`.o-mail-ChatBubble[name='John'] .o-mail-ChatBubble-close`);
     await contains(`.o-mail-ChatBubble[name='John']`, { count: 0 });
+});
+
+test("Can move chat bubbles vertically", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    await contains(".o-mail-ChatBubble");
+    const initialRect = queryRect(".o-mail-ChatBubble");
+    const { drop, moveTo } = await drag(".o-mail-ChatBubble");
+    await moveTo(document.body, {
+        position: { x: initialRect.left - 100, y: initialRect.top - 200 },
+    });
+    await animationFrame();
+    await drop();
+    await animationFrame();
+    const droppedRect = queryRect(".o-mail-ChatBubble");
+    expect(droppedRect.left).toBeLessThan(initialRect.left - 50);
+    expect(droppedRect.top).toBeLessThan(initialRect.top - 150);
+    await click("button[title='Chat Options']");
+    await click(".o-dropdown-item", { text: "Reset initial position" });
+    await animationFrame();
+    const resetRect = queryRect(".o-mail-ChatBubble");
+    expect([resetRect.left, resetRect.top]).toEqual([initialRect.left, initialRect.top]);
 });
