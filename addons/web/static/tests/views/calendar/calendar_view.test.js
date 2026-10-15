@@ -1205,7 +1205,8 @@ test(`create and change events on mobile`, async () => {
     expect(".o_calendar_popover").toHaveCount(1);
     expect(`.o_calendar_popover .o_calendar_popover_edit`).toHaveCount(1);
     expect(`.o_calendar_popover .o_calendar_popover_delete`).toHaveCount(1);
-    expect(`.o_calendar_popover .o_card_popover_close`).toHaveCount(1);
+    // On small screens the popover is a bottom sheet, no close button
+    expect(`.o_calendar_popover .o_card_popover_close`).not.toBeVisible();
 
     await contains(`.o_calendar_popover .o_calendar_popover_edit`).click();
     expect(`.modal-body`).toHaveCount(1);
@@ -4582,7 +4583,6 @@ test(`edit record and attempt to create a record with "create" attribute set to 
     expect(".o_calendar_popover").toHaveCount(1);
     expect(`.o_calendar_popover .o_calendar_popover_edit`).toHaveCount(1);
     expect(`.o_calendar_popover .o_calendar_popover_delete`).toHaveCount(1);
-    expect(`.o_calendar_popover .o_card_popover_close`).toHaveCount(1);
 
     await contains(`.o_calendar_popover .o_calendar_popover_edit`).click();
     expect(`.modal-body`).toHaveCount(1);
@@ -5351,10 +5351,10 @@ test(`calendar render properties in popover`, async () => {
 
     await clickEvent(1);
     // Only the 2 properties with view_in_cards=true are shown ("property_3" is hidden):
-    expect(`.o_popover .o_card_property_field`).toHaveCount(2);
+    expect(`.o_calendar_popover .o_card_property_field`).toHaveCount(2);
     // Values:
-    expect(`.o_popover .o_card_property_field:eq(0) span`).toHaveText("hello");
-    expect(`.o_popover .o_card_property_field:eq(1) span`).toHaveText("B");
+    expect(`.o_calendar_popover .o_card_property_field:eq(0) span`).toHaveText("hello");
+    expect(`.o_calendar_popover .o_card_property_field:eq(1) span`).toHaveText("B");
 });
 
 test(`calendar create record with default properties`, async () => {
