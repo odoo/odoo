@@ -1,9 +1,9 @@
-import {Interaction} from '@web/public/interaction';
-import {registry} from '@web/core/registry';
-import {_t} from '@web/core/l10n/translation';
-import {rpc} from '@web/core/network/rpc';
-import {createElementWithContent, setElementContent} from '@web/core/utils/html';
-import { markup } from '@owl/owl';
+import { Interaction } from '@web/public/interaction';
+import { registry } from '@web/core/registry';
+import { _t } from '@web/core/l10n/translation';
+import { rpc } from '@web/core/network/rpc';
+import { setElementContent, createElementWithContent } from '@web/core/utils/html';
+import { markup } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class Checkout extends Interaction {
