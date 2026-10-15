@@ -15,7 +15,7 @@ patch(registry.category("web_tour.tours").get("crm_tour"), {
             {
                 trigger: ".o_control_panel_main_buttons .o-dropdown",
                 content: markup(_t("Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool.")),
-                run: "click .o_control_panel_main_buttons .o-dropdown",
+                run: "click",
             },
             {
                 trigger: '.o_lead_mining_element[data-module-xml-id="base.module_crm_iap_mine"]',

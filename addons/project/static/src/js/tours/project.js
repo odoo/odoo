@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: '.o_open_tasks',
     content: markup(_t('Let\'s create your first <b>project</b>.')),
     tooltipPosition: 'top',
-    run: "click .modal:visible .btn.btn-primary",
+    run: "click",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_header input",
     content: markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),

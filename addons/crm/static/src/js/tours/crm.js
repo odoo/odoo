@@ -87,10 +87,10 @@ registry.category("web_tour.tours").add('crm_tour', {
     tooltipPosition: "bottom",
     run: "click",
 }, {
-    trigger: ".breadcrumb-item:not(.active):first",
+    trigger: ".breadcrumb-item:not(.active):last",
     content: _t("Click on the breadcrumbs to go back to your Pipeline. Odoo will save all your changes as you navigate."),
     tooltipPosition: "bottom",
-    run: "click .breadcrumb-item:not(.active):last",
+    run: "click",
 }, {
     id: "drag_opportunity_to_won_step",
     trigger: ".o_opportunity_kanban .o_kanban_record:last-of-type",
