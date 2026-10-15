@@ -524,6 +524,12 @@ class StockMove(models.Model):
     def _is_consuming(self):
         return super()._is_consuming() or self.picking_type_id.code == 'mrp_operation'
 
+    def _get_quantity_to_assign(self):
+        res = super()._get_quantity_to_assign()
+        if self.raw_material_production_id and self.raw_material_production_id.qty_producing:
+            return self.uom_id._compute_quantity(self.should_consume_qty, self.product_id.uom_id)
+        return res
+
     def _get_backorder_move_vals(self):
         self.ensure_one()
         return {
