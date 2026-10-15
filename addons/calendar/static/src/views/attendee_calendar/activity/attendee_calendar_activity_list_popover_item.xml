@@ -15,7 +15,7 @@
                     t-out="this.activity().res_name"/>
             </div>
             <Dropdown>
-                <button class="o-mail-ActivityListPopoverItem-reschedulebtn btn btn-sm btn-info btn-link" type="button" title="Reschedule" aria-label="Reschedule">
+                <button class="o-mail-ActivityListPopoverItem-reschedulebtn btn btn-sm btn-hover-info" type="button" title="Reschedule" aria-label="Reschedule">
                     <i class="oi oi-filled o_button_icon" data-icon="calendar_today"/>
                 </button>
                 <t t-set-slot="content">
@@ -54,7 +54,7 @@
             <t t-set="eventAtRender" t-value="this.activity().calendar_event_id"/>
             <button t-if="this.hasViewMeetingButton"
                 title="View Meeting" aria-label="View Meeting"
-                class="o-mail-ActivityListPopoverItem-viewmeetingbtn btn btn-sm btn-success btn-link"
+                class="o-mail-ActivityListPopoverItem-viewmeetingbtn btn btn-sm btn-hover-success"
                 t-on-click="(ev) => this.calendarProps.onViewMeeting(ev, { eventAtRender })">
                 <i class="oi" data-icon="visibility"/>
             </button>

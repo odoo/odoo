@@ -39,8 +39,8 @@
                     >
                         <span class="text-truncate" style="max-width: 400px;" t-out="template.name"/>
                         <div class="o_template_icon_group ms-auto d-flex align-items-center ps-2 pe-1" t-if="this.state.canManageTemplates">
-                            <button type="button" role="menuitem" t-on-click.stop="() => this.onEditClick(template.id)" class="o-navigable oi oi-filled btn btn-link p-1 text-action" data-icon="edit" aria-label="Edit template" title="Edit template"/>
-                            <button type="button" role="menuitem" t-on-click.stop="() => this.onDeleteClick(template.id)" class="o-navigable oi oi-filled btn btn-link p-1 text-danger" data-icon="delete" aria-label="Delete template" title="Delete template"/>
+                            <button type="button" role="menuitem" t-on-click.stop="() => this.onEditClick(template.id)" class="o-navigable oi oi-filled btn btn-hover-action p-1" data-icon="edit" aria-label="Edit template" title="Edit template"/>
+                            <button type="button" role="menuitem" t-on-click.stop="() => this.onDeleteClick(template.id)" class="o-navigable oi oi-filled btn btn-hover-danger p-1" data-icon="delete" aria-label="Delete template" title="Delete template"/>
                         </div>
                     </DropdownItem>
                 </t>
