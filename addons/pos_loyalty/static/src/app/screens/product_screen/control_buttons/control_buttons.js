@@ -12,7 +12,9 @@ patch(ControlButtons.prototype, {
     setup() {
         super.setup(...arguments);
         this.numberBuffer = usePlugin(PosNumberBufferPlugin);
-        this.nbrRewards = computed(() => this.getPotentialRewards().length);
+        this.nbrRewards = computed(
+            () => this.pos.accessRight.canApplyRewards && this.getPotentialRewards().length
+        );
     },
     _getEWalletRewards(order) {
         const appliedRewardIds = new Set(

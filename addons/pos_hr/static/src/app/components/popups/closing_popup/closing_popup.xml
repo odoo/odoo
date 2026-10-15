@@ -6,7 +6,7 @@
         </xpath>
         <xpath expr="//div[hasclass('payment-methods-overview')]" position="after">
             <t t-if="this.pos.config.module_pos_hr">
-                <div t-if="this.pos.config.cash_control and this.pos.config.module_pos_hr" class="w-100 mb-3">
+                <div t-if="this.pos.config.cash_control and this.pos.accessRight.canSeeExpectedCash" class="w-100 mb-3">
                     <t t-set="diff" t-value="this.getDifference(this.props.default_cash_details.id)" />
                     <t t-set="counted" t-value="this.state.payments[this.props.default_cash_details.id]?.counted || '0'" />
                     <div class="d-flex align-items-center justify-content-between fs-3">
