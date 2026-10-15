@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import contextmanager
 from datetime import datetime
 from odoo import exceptions, tools
 from odoo.fields import Domain
@@ -257,6 +258,58 @@ class TestMailThreadRottingMixin(MailTrackingDurationMixinCase):
             self.env['mail.test.rotting.stage'].with_context(active_test=False).search([]).rotting_threshold_days = 0
             self.assertFalse(search([('is_rotting', '=', True)]))
             self.assertEqual(search([('is_rotting', '=', False)]), records)
+
+    def test_resource_rotting_read_group(self):
+        """ The 'is_rotting:sum' aggregate counts the rotting records of each group in the grouping
+        query itself: the only additional query is the lookup of the stage thresholds. """
+        Resource = self.env['mail.test.rotting.resource']
+        with self.mock_datetime_and_now(datetime(2025, 1, 1)):
+            records = Resource.create([
+                {'name': 'new 1', 'stage_id': self.stage_new.id},
+                {'name': 'new 2', 'stage_id': self.stage_new.id},
+                {'name': 'qualif', 'stage_id': self.stage_qualification.id},
+                {'name': 'qualif done', 'stage_id': self.stage_qualification.id, 'done': True},
+                {'name': 'finished', 'stage_id': self.stage_finished.id},
+            ])
+            records.flush_recordset(['date_last_stage_update'])  # computed with the mocked date
+        domain = [('id', 'in', records.ids), ('name', '!=', 'new 1')]
+
+        with self.mock_datetime_and_now(datetime(2025, 1, 7)):
+            groups = Resource.formatted_read_group(domain, ['stage_id'], ['__count', 'is_rotting:sum'])
+            self.assertEqual(
+                {group['stage_id'][0]: (group['__count'], group['is_rotting:sum']) for group in groups},
+                {
+                    self.stage_new.id: (1, 1),
+                    self.stage_qualification.id: (2, 1),
+                    self.stage_finished.id: (1, 0),
+                },
+                'The domain should be applied, and only rotting records counted',
+            )
+
+            def web_read_group_queries(aggregates):
+                self.env.invalidate_all()
+                queries = []
+                with contextmanager(self._patchExecute)(queries):
+                    Resource.web_read_group(domain, ['stage_id'], aggregates)
+                return queries
+
+            web_read_group_queries(['is_rotting:sum'])  # warmup
+            queries_without = web_read_group_queries([])
+            queries_with = web_read_group_queries(['is_rotting:sum'])
+
+            def resource_queries(queries):
+                return [query for query in queries if f'FROM "{Resource._table}"' in query]
+
+            self.assertEqual(
+                len(resource_queries(queries_with)), len(resource_queries(queries_without)),
+                'The rotting count should not query the resources once more',
+            )
+            self.assertEqual(len(queries_with), len(queries_without) + 1, 'Only the stages should be read')
+            self.assertTrue(any('COUNT(*) FILTER (WHERE' in query for query in resource_queries(queries_with)))
+
+        unsupported = self.env['mail.test.track.duration.mixin'].create({'customer_id': self.env.user.partner_id.id})
+        groups = unsupported.formatted_read_group([('id', '=', unsupported.id)], ['customer_id'], ['is_rotting:sum'])
+        self.assertEqual(groups[0]['is_rotting:sum'], 0, 'Models not configured for rotting have no rotting record')
 
 
 @tagged('mail_thread', 'mail_blacklist')
