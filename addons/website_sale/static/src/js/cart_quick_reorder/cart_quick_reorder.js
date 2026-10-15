@@ -35,7 +35,7 @@ export class CartQuickReorder extends Component {
 
         onPatched(() => {
             if (!this.state.order_history.length) {
-                const offCanvas = Offcanvas.getInstance(this.offCanvasRef.el);
+                const offCanvas = Offcanvas.getInstance(this.offCanvasRef());
                 if (offCanvas) {
                     offCanvas.hide();
                 }

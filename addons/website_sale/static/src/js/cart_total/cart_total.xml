@@ -148,7 +148,7 @@
     <t t-name="website_sale.ReductionCode">
         <tbody>
             <tr>
-                <td colspan="3" class="text-end text-xl-end border-0 p-0">
+                <td colspan="3" class="text-end text-xl-end border-0 p-0 pb-2">
                     <div class="w-100">
                         <div class="input-group">
                             <input
@@ -160,6 +160,7 @@
                                 class="form-control"
                             />
                             <button
+                                name="apply_promo"
                                 t-out="this.props.templateData.applyPromoLabel"
                                 t-att-disabled="!this.state.promoCode"
                                 class="btn btn-light border"

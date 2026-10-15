@@ -13,7 +13,7 @@ export class OrderHistoryLine extends Component {
 
         onPatched(() => {
             if (this.props.focus) {
-                this.qtyInput.el.focus();
+                this.qtyInput().focus();
             }
         });
     }

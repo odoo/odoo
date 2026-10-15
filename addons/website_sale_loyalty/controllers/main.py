@@ -66,8 +66,8 @@ class WebsiteSale(main.WebsiteSale):
         redirect = url_parts.replace(query=url_encode(url_query))
         return request.redirect(redirect.to_url())
 
-    @route("/shop/claimreward", type="http", auth="public", website=True, sitemap=False)
-    def claim_reward(self, reward_id, code=None, **post):
+    @route("/shop/claimreward", type="jsonrpc", auth="public", website=True, sitemap=False)
+    def claim_reward(self, reward_id, code=None, product_id=None, **_post):
         if not (order_sudo := request.cart):
             return {"success": False}
 
@@ -80,10 +80,8 @@ class WebsiteSale(main.WebsiteSale):
         if not reward_sudo:
             return {"success": False}
 
-        if reward_sudo.multi_product and "product_id" in post:
-            request.update_context(product_id=int(post["product_id"]))
-        else:
-            return {"success": False}
+        if reward_sudo.multi_product and product_id:
+            request.update_context(product_id=int(product_id))
 
         program_sudo = reward_sudo.program_id
         claimable_rewards = order_sudo._get_claimable_and_showable_rewards()
@@ -104,8 +102,8 @@ class WebsiteSale(main.WebsiteSale):
                 ):
                     return self.pricelist_apply(code, reward_id=reward_id)
         if coupon:
-            self._apply_reward(order_sudo, reward_sudo, coupon)
-        return {"success": True}
+            return self._apply_reward(order_sudo, reward_sudo, coupon)
+        return {"success": False}
 
     def _apply_reward(self, order, reward, coupon):
         """Try to apply the given program reward.
@@ -118,12 +116,9 @@ class WebsiteSale(main.WebsiteSale):
         try:
             reward_status = order._apply_program_reward(reward, coupon, product=product)
         except UserError as e:
-            # todo NIPL: Hanlde this in JSON RPC
-            request.session["error_promo_code"] = str(e)
-            return False
+            return {"success": False, "message": str(e)}
         if "error" in reward_status:
-            request.session["error_promo_code"] = reward_status["error"]
-            return False
+            return {"success": False, "message": reward_status["error"]}
         order._update_programs_and_rewards()
         if order.carrier_id.free_over and not reward.program_id.is_payment_program:
             # update shipping cost if it's `free_over` and reward isn't eWallet or gift card

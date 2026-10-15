@@ -20,9 +20,8 @@ export function submitCouponCode(code) {
         },
         {
             content: "click on 'Apply'",
-            trigger: 'form[name="coupon_code"] button[type="submit"]',
-            run: 'click',
-            expectUnloadPage: true,
+            trigger: 'button[name="apply_promo"]',
+            run: "click",
         },
     ]
 }

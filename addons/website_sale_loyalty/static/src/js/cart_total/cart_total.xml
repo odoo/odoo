@@ -2,6 +2,9 @@
 <templates>
 
     <t t-inherit="website_sale.CartTotal" t-inherit-mode="extension">
+        <table name="cart_total_table" position="inside">
+            <CartRewards rewards="this.state.totals.cart_rewards || []"/>
+        </table>
         <t name="tax_included_lines" position="after">
             <tbody t-if="this.state.totals.promotion_progress_bars?.length">
                 <tr>
