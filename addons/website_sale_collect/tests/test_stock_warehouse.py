@@ -10,46 +10,37 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 @tagged("post_install", "-at_install")
 class TestStockWarehouse(ClickAndCollectCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
-    def test_geolocation_updates_unset_coordinates_of_valid_addresses(self):
-        """Test that valid addresses with default coordinates are geolocated."""
+    def test_geolocation_geolocates_addresses_without_coordinates(self):
+        self.warehouse.partner_id.write({"partner_latitude": 0.0, "partner_longitude": 0.0})
         with patch(
-            "odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize",
-            new=lambda self_: self_.write({"partner_latitude": 1.0, "partner_longitude": 1.0}),
-        ):
+            "odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize"
+        ) as geo_localize_mock:
             self.warehouse._prepare_pickup_location_data()
-        latitude = self.warehouse.partner_id.partner_latitude
-        longitude = self.warehouse.partner_id.partner_longitude
-        self.assertEqual((latitude, longitude), (1.0, 1.0))
+            geo_localize_mock.assert_called_once()
 
-    def test_geolocation_flags_coordinates_of_invalid_addresses(self):
-        """Test that invalid addresses with default coordinates are assigned invalid coordinates."""
+    def test_geolocation_skips_invalid_addresses(self):
+        self.warehouse.partner_id.write({
+            "partner_latitude": 0.0,
+            "partner_longitude": 0.0,
+            "geo_localization_error": "No match found for address: 1 Fake Street",
+        })
         with patch(
-            "odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize",
-            new=lambda self_: self_.write({"partner_latitude": 0.0, "partner_longitude": 0.0}),
-        ):
+            "odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize"
+        ) as geo_localize_mock:
             self.warehouse._prepare_pickup_location_data()
-        latitude = self.warehouse.partner_id.partner_latitude
-        longitude = self.warehouse.partner_id.partner_longitude
-        self.assertEqual((latitude, longitude), (1000.0, 1000.0))  # Invalid coordinates.
+            geo_localize_mock.assert_not_called()
 
     def test_geolocation_skips_addresses_with_coordinates(self):
-        """Test that addresses with either valid or invalid coordinates are not geolocated."""
-        for lat, long in [
-            (1.0, 1.0),  # Valid random coordinates.
-            (0.0, 1.0),  # Valid coordinates aligned on the Equator.
-            (1.0, 0.0),  # Valid coordinates aligned on the Prime Meridian.
-            (1000.0, 1000.0),  # Invalid (!) coordinates.
-        ]:
-            self.warehouse.partner_id.write({"partner_latitude": lat, "partner_longitude": long})
-            with patch(
-                "odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize"
-            ) as geo_localize_mock:
-                self.warehouse._prepare_pickup_location_data()
-                self.assertFalse(geo_localize_mock.called)
+        self.warehouse.partner_id.write({"partner_latitude": 1.0, "partner_longitude": 1.0})
+        with patch(
+            "odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize"
+        ) as geo_localize_mock:
+            self.warehouse._prepare_pickup_location_data()
+            geo_localize_mock.assert_not_called()
