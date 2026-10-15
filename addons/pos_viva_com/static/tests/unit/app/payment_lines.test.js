@@ -57,7 +57,6 @@ test("getPaymentActionState", async () => {
     expect(normalizeActionState(comp.getPaymentActionState(paymentline))).toEqual({
         id: "waiting_card",
         icon: "autorenew",
-        iconClass: "oi-spin",
         title: "Waiting for card",
         actions: [
             {
@@ -72,7 +71,6 @@ test("getPaymentActionState", async () => {
                 title: "Send Cancel Request",
                 action: "function",
                 severity: "danger",
-                show: true,
             },
         ],
     });
@@ -87,7 +85,6 @@ test("getPaymentActionState", async () => {
     expect(normalizeActionState(comp.getPaymentActionState(paymentline))).toEqual({
         id: "waiting_card",
         icon: "autorenew",
-        iconClass: "oi-spin",
         title: "Waiting for card",
         actions: [
             {
@@ -102,7 +99,6 @@ test("getPaymentActionState", async () => {
                 title: "Send Cancel Request",
                 action: "function",
                 severity: "danger",
-                show: true,
             },
             {
                 id: "viva_use_app",

@@ -32,7 +32,7 @@
                         <div class="paymentline_status_title d-flex justify-content-between align-items-center gap-2 py-3 px-4 fs-4" t-attf-class="paymentline_status_title_{{state.id}}">
                             <span class="text-truncate" t-out="state.title" />
                             <t t-if="state.icon">
-                                <i class="oi" t-att-class="state.iconClass" t-att-data-icon="state.icon" role="img" />
+                                <i class="oi" t-att-class="{ 'oi-spin': state.icon === 'autorenew' }" t-att-data-icon="state.icon" role="img" />
                             </t>
                         </div>
                         <div t-if="state.id == 'waiting' and line.payment_method_id.payment_interface?.amountInserted != null"
@@ -42,7 +42,6 @@
                         </div>
                         <div class="paymentline_status_actions btn-group d-flex w-100" role="group">
                             <button t-foreach="state.actions" t-as="button" t-key="button.id"
-                                    t-if="button.show === undefined || button.show"
                                     t-attf-class="paymentline_status_actions_button paymentline_status_actions_button_{{button.id}} ms-0 p-3 fs-4 btn btn-{{button.severity}}"
                                     t-att-title="button.title || button.label"
                                     t-on-click="button.action"

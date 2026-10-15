@@ -25,7 +25,7 @@ patch(PaymentScreenPaymentLines.prototype, {
         const state = super.getPaymentActionState(line);
 
         if (
-            ["paid", "refunded"].includes(state?.id) &&
+            state?.id === "done" &&
             line.canBeAdjusted() &&
             line.pos_order_id.amountPaid < line.pos_order_id.priceIncl
         ) {
