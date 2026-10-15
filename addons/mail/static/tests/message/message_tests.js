@@ -627,6 +627,38 @@ QUnit.test("Reaction summary", async () => {
     }
 });
 
+QUnit.test("Reaction with long content stays inside the thread", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    const content = "long".repeat(100);
+    pyEnv["mail.message.reaction"].create({
+        message_id: messageId,
+        content,
+        partner_id: pyEnv.currentPartnerId,
+    });
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await contains(".o-mail-MessageReaction");
+    const contentRect = document.querySelector(".o-mail-Discuss-content").getBoundingClientRect();
+    const reactionRect = document.querySelector(".o-mail-MessageReaction").getBoundingClientRect();
+    assert.ok(reactionRect.right <= contentRect.right);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message [title='View Reactions']");
+    await contains(".o-mail-MessageReactionMenu-persona");
+    const persona = document.querySelector(".o-mail-MessageReactionMenu-persona");
+    assert.ok(persona.scrollWidth <= persona.clientWidth);
+    await contains(`.o-mail-MessageReactionMenu button[title='${content}']`);
+});
+
 QUnit.test("Add the same reaction twice from the emoji picker", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
