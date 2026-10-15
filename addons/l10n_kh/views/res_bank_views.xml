@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account_qr_code_emv.view_partner_bank_form_inherit_account"/>
         <field name="arch" type="xml">
             <field name="proxy_value" position="after">
-                <field name="l10n_kh_merchant_id" invisible="proxy_type != 'bakong_id_merchant'"/>
+                <field name="l10n_kh_merchant_id" invisible="proxy_type != 'bakong_id_merchant'" readonly="lock_trust_fields" force_save="1"/>
             </field>
         </field>
     </record>
