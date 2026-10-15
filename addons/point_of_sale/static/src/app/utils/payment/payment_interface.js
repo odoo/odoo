@@ -45,9 +45,11 @@ export class PaymentInterface {
 
     /**
      * Called when a user clicks the "Send" button in the
-     * interface. This should initiate a payment request and return a
-     * Promise that resolves when the final status of the payment line
-     * is set in payment_status.
+     * interface, through `line.pay()`. This should initiate a payment
+     * request and return a Promise that resolves once the provider
+     * answered. The line is "waiting" meanwhile; an intermediate status
+     * (waiting_card, waiting_scan, waiting_capture) can be set here, the
+     * final one is set by handlePaymentResponse().
      *
      * For successful transactions setReceiptInfo() should be used
      * to set info that should to be printed on the receipt. You
@@ -55,24 +57,101 @@ export class PaymentInterface {
      * successful transactions.
      *
      * @param {Object} line - The payment line object
-     * @returns {Promise} resolved with a boolean that is false when
-     * the payment should be retried. Rejected when the status of the
-     * paymentline will be manually updated.
+     * @returns {Promise} resolved with the provider's response, passed
+     * to handlePaymentResponse(). By default a boolean that is false
+     * when the payment should be retried; an interface can resolve with
+     * anything else as long as its handlePaymentResponse() reads it.
+     * Rejected on error, see handlePaymentResponseError().
      */
     async sendPaymentRequest(line) {}
 
     /**
-     * Called when a user removes a payment line that's still waiting
-     * on send_payment_request to complete. Should execute some
+     * Called through `line.cancelPayment()` when a user cancels a
+     * payment line that's still waiting on sendPaymentRequest() to
+     * complete. Should execute some
      * request to ensure the current payment request is
      * cancelled. This is not to refund payments, only to cancel
      * them. The payment line being cancelled will be deleted
      * automatically after the returned promise resolves.
      *
      * @param {Object} line - The payment line object
-     * @returns {Promise}
+     * @returns {Promise} resolved with the provider's response, passed
+     * to handlePaymentCancelResponse(). By default a boolean that is
+     * true when the payment was cancelled.
      */
     async sendPaymentCancel(line) {}
+
+    /**
+     * Called by `line.pay()` with the response of sendPaymentRequest().
+     * Sets the final status of the payment line. Override it when the
+     * provider's flow differs (e.g. the payment is confirmed later by a
+     * webhook). Also called when the result arrives after the request
+     * promise was lost, e.g. on a refresh.
+     *
+     * @param {Object} line - The payment line object
+     * @param {any} response - The response of sendPaymentRequest()
+     * @returns {boolean} true when the order can be validated automatically
+     */
+    handlePaymentResponse(line, response) {
+        const isPaymentSuccessful = Boolean(response);
+        line.payment_status = isPaymentSuccessful ? "done" : "retry";
+        return isPaymentSuccessful;
+    }
+
+    /**
+     * Called by `line.pay()` when sendPaymentRequest() throws.
+     *
+     * @param {Object} line - The payment line object
+     * @param {Error} error - The error thrown by sendPaymentRequest()
+     */
+    handlePaymentResponseError(line, error) {
+        line.payment_status = "retry";
+    }
+
+    /**
+     * Called by `line.cancelPayment()` with the response of
+     * sendPaymentCancel(). A failed cancel restores the status the line
+     * had before the cancel was sent.
+     *
+     * @param {Object} line - The payment line object
+     * @param {any} response - The response of sendPaymentCancel()
+     * @param {string} previousStatus - The status before the cancel was sent
+     * @returns {boolean} true when the payment was cancelled
+     */
+    handlePaymentCancelResponse(line, response, previousStatus) {
+        const isCancelSuccessful = Boolean(response);
+        line.payment_status = isCancelSuccessful ? "retry" : previousStatus;
+        return isCancelSuccessful;
+    }
+
+    /**
+     * Called by `line.cancelPayment()` when sendPaymentCancel() throws.
+     *
+     * @param {Object} line - The payment line object
+     * @param {Error} error - The error thrown by sendPaymentCancel()
+     * @param {string} previousStatus - The status before the cancel was sent
+     */
+    handlePaymentCancelResponseError(line, error, previousStatus) {
+        line.payment_status = previousStatus;
+    }
+
+    /**
+     * Called when the user forces the payment line to done.
+     *
+     * @param {Object} line - The payment line object
+     */
+    handleForceDone(line) {
+        line.payment_status = "done";
+    }
+
+    /**
+     * Called when the user forces the cancellation of the payment line.
+     *
+     * @param {Object} line - The payment line object
+     */
+    handleForceCancel(line) {
+        line.payment_status = "retry";
+    }
 
     /**
      * Called when the payment screen in the POS is closed (by

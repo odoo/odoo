@@ -189,7 +189,7 @@ export class PaymentMollie extends PaymentInterface {
             this.paymentLineResolvers[paymentLine.uuid] = null;
             resolver(isSuccessful);
         } else {
-            paymentLine.handlePaymentResponse(isSuccessful);
+            this.handlePaymentResponse(paymentLine, isSuccessful);
         }
     }
 

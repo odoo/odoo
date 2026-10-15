@@ -51,7 +51,7 @@ export class PaymentCashdro extends PaymentInterface {
 
         if (this.operationId) {
             const isPaymentSuccessful = await this.waitForPaymentResponse();
-            this.paymentLine.handlePaymentResponse(isPaymentSuccessful);
+            this.handlePaymentResponse(this.paymentLine, isPaymentSuccessful);
         }
     }
 

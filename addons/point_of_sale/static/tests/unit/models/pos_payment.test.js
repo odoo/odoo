@@ -1,5 +1,6 @@
 import { expect, freezeTime, mockDate, test } from "@odoo/hoot";
 import { definePosModels } from "../data/generate_model_definitions";
+import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { createPaymentLine, getFilledOrder, setupPosEnv } from "../utils";
 
 const { DateTime } = luxon;
@@ -86,63 +87,72 @@ test("isRefund", async () => {
     expect(paymentline.isRefund).toBe(false);
 });
 
-test("handlePaymentResponse", async () => {
+test("pay", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
-    const paymentline = createPaymentLine(store, order, card);
+    card.payment_interface = new PaymentInterface(store, card);
+    const paymentline = createPaymentLine(store, order, card, { payment_status: "pending" });
 
     // Successful
-    paymentline.payment_status = "waiting_card";
-    const response = paymentline.handlePaymentResponse(true);
-    expect(response).toBe(true);
+    card.payment_interface.sendPaymentRequest = async () => {
+        expect(paymentline.payment_status).toBe("waiting");
+        return true;
+    };
+    expect(await paymentline.pay()).toBe(true);
     expect(paymentline.payment_status).toBe("done");
 
     // Failed
-    paymentline.payment_status = "waiting_card";
-    const responseFail = paymentline.handlePaymentResponse(false);
-    expect(responseFail).toBe(false);
+    card.payment_interface.sendPaymentRequest = async () => false;
+    expect(await paymentline.pay()).toBe(false);
+    expect(paymentline.payment_status).toBe("retry");
+
+    // Error
+    card.payment_interface.sendPaymentRequest = async () => {
+        throw new Error("Request failed");
+    };
+    await expect(paymentline.pay()).rejects.toThrow("Request failed");
     expect(paymentline.payment_status).toBe("retry");
 });
 
-test("handlePaymentCancelResponse", async () => {
+test("cancelPayment", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
+    card.payment_interface = new PaymentInterface(store, card);
     const paymentline = createPaymentLine(store, order, card);
 
     // Successful
-    paymentline.payment_status = "waiting_cancel";
-    const response = paymentline.handlePaymentCancelResponse(true);
-    expect(response).toBe(true);
+    paymentline.payment_status = "waiting_card";
+    card.payment_interface.sendPaymentCancel = async () => {
+        expect(paymentline.payment_status).toBe("waiting_cancel");
+        return true;
+    };
+    expect(await paymentline.cancelPayment()).toBe(true);
     expect(paymentline.payment_status).toBe("retry");
 
-    // Failed - Terminal
-    card.payment_method_type = "terminal";
-    paymentline.payment_status = "waiting_cancel";
-    const responseFailTerminal = paymentline.handlePaymentCancelResponse(false);
-    expect(responseFailTerminal).toBe(false);
-    expect(paymentline.payment_status).toBe("waiting_card");
+    // Failed: back to the status before the cancel
+    for (const status of ["waiting_card", "waiting_scan", "waiting"]) {
+        paymentline.payment_status = status;
+        card.payment_interface.sendPaymentCancel = async () => false;
+        expect(await paymentline.cancelPayment()).toBe(false);
+        expect(paymentline.payment_status).toBe(status);
+    }
 
-    // Failed - QR Provider
-    card.payment_method_type = "qr_payment";
+    // Error: back to the status before the cancel
     paymentline.payment_status = "waiting_scan";
-    const responseFailNonTerminal = paymentline.handlePaymentCancelResponse(false);
-    expect(responseFailNonTerminal).toBe(false);
+    card.payment_interface.sendPaymentCancel = async () => {
+        throw new Error("Cancel failed");
+    };
+    await expect(paymentline.cancelPayment()).rejects.toThrow("Cancel failed");
     expect(paymentline.payment_status).toBe("waiting_scan");
-
-    // Failed - Other
-    card.payment_method_type = "other";
-    paymentline.payment_status = "waiting_cancel";
-    const responseFailOther = paymentline.handlePaymentCancelResponse(false);
-    expect(responseFailOther).toBe(false);
-    expect(paymentline.payment_status).toBe("waiting");
 });
 
 test("forceDone", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
+    card.payment_interface = new PaymentInterface(store, card);
     const data = { payment_status: "waiting" };
     const paymentline = createPaymentLine(store, order, card, data);
 
@@ -154,6 +164,7 @@ test("forceCancel", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
+    card.payment_interface = new PaymentInterface(store, card);
     const data = { payment_status: "waiting" };
     const paymentline = createPaymentLine(store, order, card, data);
 

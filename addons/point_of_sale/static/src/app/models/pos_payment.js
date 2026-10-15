@@ -126,52 +126,38 @@ export class PosPayment extends Base {
     async pay() {
         this.payment_status = "waiting";
         try {
-            const success = await this.payment_interface.sendPaymentRequest(this);
-            return this.handlePaymentResponse(success);
+            const response = await this.payment_interface.sendPaymentRequest(this);
+            return this.payment_interface.handlePaymentResponse(this, response);
         } catch (error) {
-            this.handlePaymentResponse(false);
+            this.payment_interface.handlePaymentResponseError(this, error);
             throw error;
         }
-    }
-
-    handlePaymentResponse(isPaymentSuccessful) {
-        this.payment_status = isPaymentSuccessful ? "done" : "retry";
-        return isPaymentSuccessful;
     }
 
     // ----- Payment Cancel -----
     async cancelPayment() {
+        const previousStatus = this.payment_status;
         this.payment_status = "waiting_cancel";
         try {
-            const success = await this.payment_interface.sendPaymentCancel(this);
-            return this.handlePaymentCancelResponse(success);
+            const response = await this.payment_interface.sendPaymentCancel(this);
+            return this.payment_interface.handlePaymentCancelResponse(
+                this,
+                response,
+                previousStatus
+            );
         } catch (error) {
-            this.handlePaymentCancelResponse(false);
+            this.payment_interface.handlePaymentCancelResponseError(this, error, previousStatus);
             throw error;
         }
     }
 
-    handlePaymentCancelResponse(isCancelSuccessful) {
-        if (isCancelSuccessful) {
-            this.payment_status = "retry";
-        } else if (this.useTerminal) {
-            this.payment_status = "waiting_card";
-        } else if (this.useQrPayment) {
-            this.payment_status = "waiting_scan";
-        } else {
-            this.payment_status = "waiting";
-        }
-
-        return isCancelSuccessful;
-    }
-
     // ----- Payment Force State -----
     forceDone() {
-        this.payment_status = "done";
+        this.payment_interface.handleForceDone(this);
     }
 
     forceCancel() {
-        this.payment_status = "retry";
+        this.payment_interface.handleForceCancel(this);
     }
 
     /**

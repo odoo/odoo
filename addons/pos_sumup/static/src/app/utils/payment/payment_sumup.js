@@ -113,7 +113,7 @@ export class PaymentSumup extends PaymentInterface {
         if (resolve) {
             resolve(data.status === "successful");
         } else {
-            line.handlePaymentResponse(data.status === "successful");
+            this.handlePaymentResponse(line, data.status === "successful");
         }
     }
 

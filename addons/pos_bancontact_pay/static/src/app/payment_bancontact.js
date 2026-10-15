@@ -43,6 +43,24 @@ export class PaymentBancontact extends PaymentInterface {
         return true;
     }
 
+    handlePaymentResponse(line, response) {
+        line.payment_status = response ? "waiting_scan" : "retry";
+        // Force the payment to fail to avoid auto-validating the order.
+        // The payment success/failure will be handled by the Bancontact webhook - bancontact_pay_webhook
+        return false;
+    }
+
+    handleForceDone(line) {
+        super.handleForceDone(...arguments);
+        line.qr_code = false;
+    }
+
+    handleForceCancel(line) {
+        super.handleForceCancel(...arguments);
+        line.bancontact_id = false;
+        line.qr_code = false;
+    }
+
     async sendPaymentCancel(line) {
         const blockingErrorCodes = [422];
         const askForceCancel = async (errorCode) => {

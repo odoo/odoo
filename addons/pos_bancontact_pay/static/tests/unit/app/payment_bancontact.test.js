@@ -246,3 +246,61 @@ describe("sendPaymentCancel", () => {
         }
     });
 });
+
+describe("handlers", () => {
+    test("handlePaymentResponse", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const display = store.models["pos.payment.method"].get(4);
+        const sticker = store.models["pos.payment.method"].get(5);
+
+        const opts = { payment_status: "pending", qr_code: "http://example.com/qr" };
+        const paymentlineDisplay = createPaymentLine(store, order, display, opts);
+        const paymentlineSticker = createPaymentLine(store, order, sticker, opts);
+
+        for (const paymentline of [paymentlineDisplay, paymentlineSticker]) {
+            const paymentInterface = paymentline.payment_interface;
+
+            // Failed payment
+            const resFail = paymentInterface.handlePaymentResponse(paymentline, false);
+            expect(resFail).toBe(false);
+            expect(paymentline.payment_status).toBe("retry");
+
+            // Successful payment: the webhook confirms it, no auto-validation
+            const resSuccess = paymentInterface.handlePaymentResponse(paymentline, true);
+            expect(resSuccess).toBe(false);
+            expect(paymentline.payment_status).toBe("waiting_scan");
+        }
+    });
+
+    test("forceDone", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const display = store.models["pos.payment.method"].get(4);
+
+        const opts = { payment_status: "waiting_scan", qr_code: "http://example.com/qr" };
+        const paymentline = createPaymentLine(store, order, display, opts);
+
+        paymentline.forceDone();
+        expect(paymentline.payment_status).toBe("done");
+        expect(paymentline.qr_code).toBeEmpty();
+    });
+
+    test("forceCancel", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const display = store.models["pos.payment.method"].get(4);
+
+        const opts = {
+            payment_status: "waiting_scan",
+            qr_code: "http://example.com/qr",
+            bancontact_id: "bancontact_1",
+        };
+        const paymentline = createPaymentLine(store, order, display, opts);
+
+        paymentline.forceCancel();
+        expect(paymentline.payment_status).toBe("retry");
+        expect(paymentline.bancontact_id).toBeEmpty();
+        expect(paymentline.qr_code).toBeEmpty();
+    });
+});
