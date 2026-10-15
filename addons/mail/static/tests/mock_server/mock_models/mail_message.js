@@ -67,14 +67,25 @@ export class MailMessage extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _to_store(ids, store, fields, for_current_user, add_followers) {
-        const kwargs = getKwArgs(arguments, "ids", "store", "for_current_user", "add_followers");
+    _to_store(ids, store, fields, format_reply, for_current_user, add_followers) {
+        const kwargs = getKwArgs(
+            arguments,
+            "ids",
+            "store",
+            "fields",
+            "format_reply",
+            "for_current_user",
+            "add_followers"
+        );
         ids = kwargs.ids;
         store = kwargs.store;
         fields = kwargs.fields;
+        format_reply = kwargs.format_reply ?? true;
         for_current_user = kwargs.for_current_user ?? false;
         add_followers = kwargs.add_followers ?? false;
 
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailFollowers} */
@@ -181,6 +192,19 @@ export class MailMessage extends models.ServerModel {
                     makeKwArgs({ as_thread: true, only_id: true })
                 ),
             });
+            if (
+                format_reply &&
+                message.model === "discuss.channel" &&
+                thread?.channel_type === "channel" &&
+                !thread.parent_channel_id
+            ) {
+                data.linkedSubChannel = mailDataHelpers.Store.one(
+                    DiscussChannel.browse(
+                        DiscussChannel.search([["from_message_id", "=", message.id]])
+                    ),
+                    makeKwArgs({ as_thread: true, only_id: true })
+                );
+            }
             if (message.subtype_id) {
                 const [subtype] = MailMessageSubtype.browse(message.subtype_id);
                 data.subtype_description = subtype.description;
@@ -188,11 +212,11 @@ export class MailMessage extends models.ServerModel {
             if (for_current_user) {
                 data["needaction"] = Boolean(
                     this.env.user &&
-                    MailNotification.search([
-                        ["mail_message_id", "=", message.id],
-                        ["is_read", "=", false],
-                        ["res_partner_id", "=", this.env.user.partner_id],
-                    ]).length
+                        MailNotification.search([
+                            ["mail_message_id", "=", message.id],
+                            ["is_read", "=", false],
+                            ["res_partner_id", "=", this.env.user.partner_id],
+                        ]).length
                 );
                 data["starred"] = message.starred_partner_ids?.includes(this.env.user?.partner_id);
                 const trackingValues = MailTrackingValue.browse(message.tracking_value_ids);
