@@ -199,7 +199,7 @@ export class LayoutModel {
         mainFragment.appendChild(fragment);
         if (this.suffixLayouts.length > 0) {
             mainFragment.append(
-                ...this.suffixLayouts.reverse().map((suffix) => suffix.renderToFragment())
+                ...this.suffixLayouts.toReversed().map((suffix) => suffix.renderToFragment())
             );
         }
         return mainFragment;

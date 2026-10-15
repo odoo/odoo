@@ -74,6 +74,7 @@ export class ImageStrategyPlugin extends Plugin {
         });
     }
 
+    // TODO EGGMAIL
     // fix images padding
     // padding concern is only there for microsoft outlook => should be solved then
     // that concern is actually there for any node which is not a td

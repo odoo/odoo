@@ -1,7 +1,5 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
-import { getImageSrc } from "@html_editor/utils/image";
-import { loadImage } from "@html_editor/utils/image_processing";
 
 export class ImagePlugin extends Plugin {
     static id = "image";
@@ -9,6 +7,16 @@ export class ImagePlugin extends Plugin {
     resources = {
         on_load_reference_content_handlers: () => this.loadImages(this.config.reference),
     };
+
+    loadImage(img) {
+        return new Promise((resolve, reject) => {
+            if (img.complete) {
+                resolve(img);
+            }
+            img.addEventListener("load", () => resolve(img), { once: true });
+            img.addEventListener("error", reject, { once: true });
+        });
+    }
 
     /**
      * Return promises for every image to control when they have their final
@@ -22,10 +30,7 @@ export class ImagePlugin extends Plugin {
     loadImages(root) {
         const promises = [];
         for (const img of root.querySelectorAll('img[src]:not([src=""])')) {
-            const src = getImageSrc(img);
-            if (src) {
-                promises.push(loadImage(src, img));
-            }
+            promises.push(this.loadImage(img));
         }
         return Promise.allSettled(promises);
     }

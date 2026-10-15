@@ -115,6 +115,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
             }
             Object.assign(editingElement.dataset, imageEl.dataset);
         }
+        this.trigger("on_image_updated_handlers", { imageEl: editingElement });
     }
     /**
      *

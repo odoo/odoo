@@ -29,8 +29,6 @@ export class HybridFluidStrategyPlugin extends Plugin {
         synthetic_email_node_processors: this.fillHybridFluidContainer.bind(this),
         refine_layout_processors: [
             withSequence(DEFAULT_SPACING_SEQUENCE - 1, this.applyTableSpacing.bind(this)),
-            this.applyDescendantBackground.bind(this),
-            this.applyDescendantBorder.bind(this),
             this.forcePercentWidth.bind(this),
         ],
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),

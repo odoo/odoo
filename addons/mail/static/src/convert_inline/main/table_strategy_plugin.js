@@ -42,8 +42,6 @@ export class TableStrategyPlugin extends Plugin {
     static shared = [
         "addTableOuterSpacingFacts",
         "applyCellNewWidth",
-        "applyDescendantBackground",
-        "applyDescendantBorder",
         "attemptCellMerge",
         "buildCell",
         "buildCellWithOffset",

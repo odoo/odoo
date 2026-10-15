@@ -1,4 +1,3 @@
-// import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { PluginManager } from "./plugin_manager";
 
 export class EmailHtmlConverter extends PluginManager {
@@ -16,12 +15,6 @@ export class EmailHtmlConverter extends PluginManager {
             return null;
         }
         return inlineTemplate;
-
-        // // Old toInline
-        // // TODO EGGMAIL: adapt usage, use plugin instead of old method
-        // const cssRules = getCSSRules(this.config.referenceDocument);
-        // await toInline(this.config.reference, cssRules);
-        // return this.config.reference.innerHTML;
     }
 
     async measureReference(config) {

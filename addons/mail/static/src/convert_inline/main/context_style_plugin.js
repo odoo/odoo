@@ -89,7 +89,7 @@ export class ContextStylePlugin extends Plugin {
             "font-size"
         );
         const fontSizeValue = parseCssValue(rootFontSize);
-        if (!fontSizeValue.number < 0 || fontSizeValue.unit !== "px") {
+        if (!(fontSizeValue.number > 0) || fontSizeValue.unit !== "px") {
             return;
         }
         return `${fontSizeValue.number * number}px`;

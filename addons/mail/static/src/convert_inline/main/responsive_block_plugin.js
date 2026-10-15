@@ -141,8 +141,8 @@ export class ResponsiveBlockPlugin extends Plugin {
         for (const band of bands) {
             // TODO EGGMAIL: sorting is not perfect (clusters with same center position are "identical")
             band.clusters.sort((cluster1, cluster2) => {
-                const { left: l1, width: w1 } = cluster1;
-                const { left: l2, width: w2 } = cluster2;
+                const { left: l1, width: w1 } = cluster1.rect;
+                const { left: l2, width: w2 } = cluster2.rect;
                 return l1 + w1 / 2 - (l2 + w2 / 2);
             });
         }

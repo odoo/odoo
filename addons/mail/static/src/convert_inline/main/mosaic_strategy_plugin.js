@@ -233,7 +233,7 @@ export class MosaicStrategyPlugin extends Plugin {
             }
             return true;
         };
-        const rowsWithoutHeight = rows.difference(new Set(Object.keys(rowsWithHeight).map(Number)));
+        const rowsWithoutHeight = rows.difference(new Set(rowsWithHeight.keys().map(Number)));
         let rowspan = 1;
         let lastSize;
         do {
@@ -422,7 +422,7 @@ export class MosaicStrategyPlugin extends Plugin {
         }
         composite.opacity = Math.max(0, Math.min(100, 100 * alpha));
         const { red, green, blue, opacity } = composite;
-        return convertRgbaToCSSColor(red, green, blue, opacity);
+        return convertRgbaToCSSColor(Math.round(red), Math.round(green), Math.round(blue), opacity);
     }
 
     processCellAncestors(tableMeasures) {

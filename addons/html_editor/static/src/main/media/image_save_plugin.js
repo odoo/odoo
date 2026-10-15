@@ -94,9 +94,9 @@ export class ImageSavePlugin extends Plugin {
         }
     }
 
-    createAttachment({ name, imageData, resModel, resId }) {
+    createAttachment({ name, el, imageData, resModel, resId }) {
         return rpc("/html_editor/attachment/add_data", {
-            name: name || "",
+            name: name || el?.dataset.fileName || "",
             data: imageData,
             is_image: true,
             res_model: resModel,
@@ -283,7 +283,6 @@ export class ImageSavePlugin extends Plugin {
             srcset.push(`${newAttachmentUrls["original"]} ${maxSize}w`);
         }
 
-        el.classList.remove("o_modified_image_to_save");
         if (isBackground) {
             const parts = backgroundImageCssToParts(el.style["background-image"]);
             parts.url = `url('${newAttachmentUrls["original"]}')`;
@@ -291,6 +290,7 @@ export class ImageSavePlugin extends Plugin {
             el.style["background-image"] = combined;
         } else {
             if (attachmentNotFound) {
+                // TODO: add a test for this case.
                 // Reset image to a clean state if a placeholder is returned,
                 // without changing its reference and keeping its original
                 // style.
@@ -311,6 +311,7 @@ export class ImageSavePlugin extends Plugin {
                 el.setAttribute("srcset", srcset.join(", "));
             }
         }
+        el.classList.remove("o_modified_image_to_save");
         this.trigger("on_image_saved_handlers", { imageEl: el });
     }
 

@@ -330,13 +330,15 @@ export class MassMailingIframe extends Component {
             snippetsName: "mass_mailing.email_designer_snippets",
             config: {
                 ...this.props.config,
-                onEditorReady: () =>
-                    onEditorReady().then(() => {
+                onEditorReady: () => {
+                    const updateEditorReady = () => {
                         if (this.editor?.editable) {
                             this.state.editorReady = true;
                             this.state.emptyBody = !isVisible(this.editor.editable);
                         }
-                    }),
+                    };
+                    return onEditorReady().then(updateEditorReady, updateEditorReady);
+                },
             },
             isMobile: this.state.isMobile,
             toggleMobile: () => {

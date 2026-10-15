@@ -143,7 +143,7 @@ export class MathPlugin extends Plugin {
                 output.width += value;
             } else if (key === "top" || key === "y") {
                 output.top += value;
-                output.x += value;
+                output.y += value;
                 output.height -= value;
             } else if (key === "bottom") {
                 output.bottom += value;

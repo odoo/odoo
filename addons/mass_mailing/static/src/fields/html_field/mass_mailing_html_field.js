@@ -237,6 +237,10 @@ export class MassMailingHtmlField extends HtmlField {
         this.state.key++;
     }
 
+    onEditorReady() {
+        return this.commitChanges();
+    }
+
     /**
      * @override
      */
@@ -272,7 +276,7 @@ export class MassMailingHtmlField extends HtmlField {
             allowTextColumnResize: false,
             record: this.props.record,
             mobileBreakpoint: "md",
-            onEditorReady: () => this.commitChanges(),
+            onEditorReady: () => this.onEditorReady(),
             measureReference: this.converter.measureReference,
         };
     }
@@ -288,7 +292,7 @@ export class MassMailingHtmlField extends HtmlField {
         }
         return {
             ...config,
-            onEditorReady: () => this.commitChanges(),
+            onEditorReady: () => this.onEditorReady(),
             measureReference: this.converter.measureReference,
             Plugins: [
                 ...MAIN_EDITOR_PLUGINS,

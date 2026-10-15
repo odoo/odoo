@@ -179,14 +179,12 @@ export class RenderPlugin extends Plugin {
             let parentNode, parentEmailNode, isOnlyChild;
             if (node !== treeWalker.root) {
                 const parentPath = new Set();
-                for (
-                    parentNode = node.parentNode;
-                    parentNode && !parentEmailNode;
-                    parentNode = parentNode.parentNode
-                ) {
+                parentNode = node.parentNode;
+                while (parentNode && !parentEmailNode) {
                     parentEmailNode = nodeToEmailNode.get(parentNode);
                     if (!parentEmailNode) {
                         parentPath.add(parentNode);
+                        parentNode = parentNode.parentNode;
                     }
                 }
                 // set emailNode of the first non-skipped node for skipped nodes

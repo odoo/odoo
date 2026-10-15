@@ -78,47 +78,29 @@ export class SpacingPlugin extends Plugin {
         if (!propertyName.match(/^(margin|padding)-inline(-(start|end))?$/)) {
             return false;
         }
-        const values = this.decomposeSpacingShorthandValue(propertyInfo.value);
-        if (values.length === 0 || values.length > 2) {
+        const values = propertyInfo.value.split(" ");
+        const isInlineShorthand = propertyName.endsWith("-inline");
+        if (values.length === 0 || values.length > (isInlineShorthand ? 2 : 1)) {
             return false;
         }
         const spacing = propertyName.startsWith("margin") ? "margin" : "padding";
-        const ending = propertyName.split("-").at(-1);
         const sequence = propertyInfo.sequence;
         const priority = propertyInfo.priority;
         const indexByPropertyName = styleInfo.getIndexByPropertyName();
         const index = indexByPropertyName.get(propertyName);
         styleInfo.delete(propertyName);
         const fixedStyleInfo = new StyleInfo();
-        if (values.length === 1) {
-            if (ending === "inline") {
-                for (const side in SPACING_INLINE) {
-                    fixedStyleInfo.setProperty(
-                        `${spacing}-${side}`,
-                        values.at(0),
-                        priority,
-                        sequence
-                    );
-                }
-            } else {
-                fixedStyleInfo.setProperty(
-                    `${spacing}-${ending}`,
-                    values.at(0),
-                    priority,
-                    sequence
-                );
-            }
-        } else if (values.length === 2) {
-            let index = 0;
-            for (const side in SPACING_INLINE) {
-                fixedStyleInfo.setProperty(
-                    `${spacing}-${side}`,
-                    values.at(index),
-                    priority,
-                    sequence
-                );
-                index++;
-            }
+        if (isInlineShorthand) {
+            fixedStyleInfo.setProperty(`${spacing}-left`, values[0], priority, sequence);
+            fixedStyleInfo.setProperty(
+                `${spacing}-right`,
+                values[1] ?? values[0],
+                priority,
+                sequence
+            );
+        } else {
+            const side = SPACING_INLINE[propertyName.split("-").at(-1)];
+            fixedStyleInfo.setProperty(`${spacing}-${side}`, values[0], priority, sequence);
         }
         styleInfo.merge(fixedStyleInfo, { index });
         return true;
@@ -364,7 +346,7 @@ export class SpacingPlugin extends Plugin {
         } else if (splitValue.length === 2) {
             values = [splitValue[0], splitValue[1], splitValue[0], splitValue[1]];
         } else if (splitValue.length === 3) {
-            values = [splitValue[0], splitValue[1], splitValue[1], splitValue[2]];
+            values = [splitValue[0], splitValue[1], splitValue[2], splitValue[1]];
         } else {
             values = splitValue;
         }

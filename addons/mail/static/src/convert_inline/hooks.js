@@ -57,10 +57,13 @@ export function useEmailHtmlConverter({ Plugins, bundles, targetRef, isVisible }
             }
             await scope.run(() => Promise.all([contentPromise, assetsPromise]));
             return true;
-        } catch (e) {
-            if (e?.name === "AbortError") {
+        } catch (error) {
+            if (error?.name === "AbortError") {
+                // Ignore loading errors if the Component was destroyed, since
+                // the iframe was removed, there is nothing to load for.
                 return false;
             }
+            throw error;
         }
     };
     const updateLayoutDimensions = (dimensions = DIMENSIONS.DESKTOP) => {

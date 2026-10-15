@@ -13,7 +13,7 @@ export class ConditionalVisibilityPlugin extends Plugin {
      * by QWeb.
      */
     preprocessFilterDomains() {
-        for (const el of this.config.reference.querySelectorAll("[data-filter-domain]")) {
+        this.config.reference.querySelectorAll("[data-filter-domain]").forEach((el) => {
             let domain;
             try {
                 domain = new Domain(JSON.parse(el.dataset.filterDomain));
@@ -22,7 +22,7 @@ export class ConditionalVisibilityPlugin extends Plugin {
                 return;
             }
             el.setAttribute("t-if", `object.filtered_domain(${domain.toString()})`);
-        }
+        });
     }
 }
 

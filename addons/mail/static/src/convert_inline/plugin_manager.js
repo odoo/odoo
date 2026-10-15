@@ -1,41 +1,5 @@
+import { sortPlugins } from "@html_editor/plugin_utils";
 import { resourceSequenceSymbol, withSequence } from "@html_editor/utils/resource";
-
-/**
- * @param {PluginConstructor[]} plugins
- * @returns {PluginConstructor[]}
- */
-function sortPlugins(plugins) {
-    const initialPlugins = new Set(plugins);
-    const inResult = new Set();
-    // need to sort them
-    const result = [];
-    let P;
-
-    function findPlugin() {
-        for (const P of initialPlugins) {
-            if (P.dependencies.every((dep) => inResult.has(dep))) {
-                initialPlugins.delete(P);
-                return P;
-            }
-        }
-    }
-    while ((P = findPlugin())) {
-        inResult.add(P.id);
-        result.push(P);
-    }
-    if (initialPlugins.size) {
-        const messages = [];
-        for (const P of initialPlugins) {
-            messages.push(
-                `"${P.id}" is missing (${P.dependencies
-                    .filter((d) => !inResult.has(d))
-                    .join(", ")})`
-            );
-        }
-        throw new Error(`Missing dependencies:  ${messages.join(", ")}`);
-    }
-    return result;
-}
 
 /**
  * Abstract class to handle Plugins

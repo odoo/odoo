@@ -173,7 +173,7 @@ export class RulesPlugin extends Plugin {
                 // TODO EGGMAIL: search parents before applying computed style?
                 filteredStyleInfo.setProperty(
                     propertyName,
-                    this.getStylePropertyValue(referenceNode)
+                    this.getStylePropertyValue(referenceNode, propertyName)
                 );
             },
         });

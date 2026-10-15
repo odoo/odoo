@@ -205,7 +205,7 @@ export class FilterContentPlugin extends Plugin {
         });
         rules.allow("height", { when: ({ referenceNode }) => referenceNode.nodeName === "TR" });
         rules.allow("width", {
-            when: ({ referenceNode }) => isTableCell(referenceNode.nodeName),
+            when: ({ referenceNode }) => isTableCell(referenceNode),
         });
         rules.allow("background-color", {
             when: ({ referenceNode }) => referenceNode.nodeName === "TH",

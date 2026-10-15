@@ -404,7 +404,7 @@ class MailController(http.Controller):
         width = max(1, width)
         height = max(1, height)
         font_size = max(1, font_size)
-        max_size = max(width, height, font_size)
+        max_size = max(width, height)
         if max_size > 512:
             scale = 512 / max_size
             width = max(1, round(width * scale))

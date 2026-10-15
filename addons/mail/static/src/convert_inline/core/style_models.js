@@ -7,7 +7,7 @@ export class StyleInfoMap extends Map {
     }
     assign(source, key) {
         const styleInfo = this.get(key);
-        styleInfo.merge(StyleInfo.from(source), { sequence: styleInfo.maxSequence });
+        styleInfo.merge(StyleInfo.from(source));
         return styleInfo;
     }
 }
@@ -55,7 +55,6 @@ export class StyleInfo extends Map {
     dirtyIndexByPropertyName = true;
     sortedEntries = null;
     indexByPropertyName = null;
-    maxSequence = 0;
     getPropertyValue(propertyName) {
         return this.get(propertyName)?.value ?? "";
     }
@@ -87,9 +86,6 @@ export class StyleInfo extends Map {
             value = { value };
         }
         value = new PropertyInfo(value);
-        if (this.maxSequence < value.sequence) {
-            this.maxSequence = value.sequence;
-        }
         return super.set(key, value);
     }
     delete() {
@@ -108,17 +104,41 @@ export class StyleInfo extends Map {
      * @param {StyleInfo} styleInfo
      * @param {Object} options
      * @param {number} [options.sequence] incoming properties forced sequence
-     * @param {number} [options.index] incoming properties relative index
+     * @param {number} [options.index] incoming properties relative index. To
+     *   replace (and not overwrite), an entry by a series of other entries,
+     *   sometimes these other entries already have a value in the current
+     *   StyleInfo, with the same sequence and importance, but with a later
+     *   insertion order. In that case, index can be used as a tie breaker if
+     *   the overwrite should not happen.
      */
     merge(styleInfo, { sequence, index } = {}) {
         const indexByPropertyName = index !== undefined ? this.getIndexByPropertyName() : new Map();
+        let sequenceOffset;
+        if (sequence === undefined) {
+            let thisMaxSequence, minSequence;
+            for (const propertyInfo of styleInfo.values()) {
+                if (minSequence === undefined) {
+                    minSequence = propertyInfo.sequence ?? 0;
+                }
+                minSequence = Math.min(minSequence, propertyInfo.sequence ?? 0);
+            }
+            for (const propertyInfo of this.values()) {
+                if (thisMaxSequence === undefined) {
+                    thisMaxSequence = propertyInfo.sequence ?? 0;
+                }
+                thisMaxSequence = Math.max(thisMaxSequence, propertyInfo.sequence ?? 0);
+            }
+            sequenceOffset = thisMaxSequence + 1 - minSequence;
+        }
         for (const [propertyName, propertyInfo] of styleInfo) {
             const thisPriority = this.getPropertyPriority(propertyName);
             const thisSequence = this.getPropertySequence(propertyName);
             const thisIndex = indexByPropertyName.get(propertyName);
             const priority = styleInfo.getPropertyPriority(propertyName);
             const propertySequence =
-                sequence !== undefined ? sequence : styleInfo.getPropertySequence(propertyName);
+                sequence !== undefined
+                    ? sequence
+                    : styleInfo.getPropertySequence(propertyName) + sequenceOffset;
             const winsTie =
                 propertySequence > thisSequence ||
                 (propertySequence === thisSequence &&
@@ -128,12 +148,13 @@ export class StyleInfo extends Map {
                 (priority && !thisPriority) ||
                 (priority === thisPriority && winsTie)
             ) {
-                this.set(
-                    propertyName,
-                    Object.assign(new PropertyInfo(propertyInfo), {
-                        sequence: propertySequence,
-                    })
-                );
+                // overwriting should also reset map insertion order
+                // (see getSortedEntries).
+                this.delete(propertyName);
+                this.set(propertyName, {
+                    ...propertyInfo,
+                    sequence: propertySequence,
+                });
             }
         }
         return this;
