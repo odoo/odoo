@@ -154,7 +154,7 @@ export class FormatPlugin extends Plugin {
                 id: "bold",
                 description: _t("Bold (Ctrl + B)"),
                 groupId: "decoration",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "text"],
                 commandId: "formatBold",
                 isActive: () =>
                     this.activeFormats["bold"]?.applyStyle ?? this.isFormatActive("bold"),
@@ -163,7 +163,7 @@ export class FormatPlugin extends Plugin {
                 id: "italic",
                 description: _t("Italic (Ctrl + I)"),
                 groupId: "decoration",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "text"],
                 commandId: "formatItalic",
                 isActive: () =>
                     this.activeFormats["italic"]?.applyStyle ?? this.isFormatActive("italic"),
@@ -172,7 +172,7 @@ export class FormatPlugin extends Plugin {
                 id: "underline",
                 description: _t("Underline (Ctrl + U)"),
                 groupId: "decoration",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "text"],
                 commandId: "formatUnderline",
                 isActive: () =>
                     this.activeFormats["underline"]?.applyStyle ?? this.isFormatActive("underline"),
@@ -271,6 +271,28 @@ export class FormatPlugin extends Plugin {
                 return false;
             }
         },
+        toolbar_namespace_providers: withSequence(101, (targetedNodes) => {
+            if (
+                targetedNodes.length &&
+                targetedNodes.some(
+                    (node) =>
+                        node?.matches?.(`[contenteditable="false"]`) &&
+                        node.parentElement?.isContentEditable
+                )
+            ) {
+                return "text";
+            }
+        }),
+        formattable_node_providers: withSequence(101, (node) => {
+            const target = closestElement(node, `[contenteditable]`);
+            if (
+                !isContentEditable(target) &&
+                target?.parentElement &&
+                isContentEditable(target.parentElement)
+            ) {
+                return target;
+            }
+        }),
     };
 
     setup() {
@@ -385,9 +407,6 @@ export class FormatPlugin extends Plugin {
                 return predicatesResult;
             }
             if (systemNodesSelector && closestElement(node, systemNodesSelector)) {
-                return false;
-            }
-            if (!this.dependencies.selection.isNodeEditable(node)) {
                 return false;
             }
             if (isTextNode(node)) {
@@ -507,42 +526,55 @@ export class FormatPlugin extends Plugin {
         const formatSpec = this.getFormatSpec(formatName);
         const unformattedNodes = [
             ...new Set(
-                this.getFormattableNodes(targetedNodes).flatMap((node) => {
-                    let target;
-                    for (const provider of this.getResource("formattable_node_providers")) {
-                        target = provider(node, formatName, { applyStyle, formatProps });
-                        if (target) {
-                            break;
+                this.getFormattableNodes(targetedNodes)
+                    .flatMap((node) => {
+                        let target;
+                        for (const provider of this.getResource("formattable_node_providers")) {
+                            target = provider(node, formatName, { applyStyle, formatProps });
+                            if (target) {
+                                break;
+                            }
                         }
-                    }
-                    if (
-                        target &&
-                        (this.checkPredicates("is_formattable_node_predicates", target) ?? true) &&
-                        // Format can only be applied to block if it can
-                        // be neutralized.
-                        (!isBlock(target) || formatSpec.addNeutralStyle)
-                    ) {
-                        return [target];
-                    }
-                    const block = closestElement(node, paragraphRelatedElementsSelector);
-                    if (
-                        block &&
-                        // we only allow to remove style from
-                        // paragraphRelatedElements not apply.
-                        !applyStyle &&
-                        isContentEditable(block) &&
-                        (this.dependencies.selection.areNodeContentsFullySelected(block) ||
-                            (selection.isCollapsed && isEmptyBlock(block)))
-                    ) {
-                        return [block];
-                    }
-                    return [node];
-                })
+                        if (
+                            target &&
+                            (this.checkPredicates("is_formattable_node_predicates", target) ??
+                                true) &&
+                            // Format can only be applied to block if it can
+                            // be neutralized.
+                            (!isBlock(target) || formatSpec.addNeutralStyle)
+                        ) {
+                            return [target];
+                        }
+                        const block = closestElement(node, paragraphRelatedElementsSelector);
+                        if (
+                            block &&
+                            // we only allow to remove style from
+                            // paragraphRelatedElements not apply.
+                            !applyStyle &&
+                            isContentEditable(block) &&
+                            (this.dependencies.selection.areNodeContentsFullySelected(block) ||
+                                (selection.isCollapsed && isEmptyBlock(block)))
+                        ) {
+                            return [block];
+                        }
+                        if (
+                            isBlock(target) &&
+                            !isContentEditable(target) &&
+                            !formatSpec.addNeutralStyle
+                        ) {
+                            // since we can't wrap blocks in inline elements because we don't
+                            // have `addNeutralStyle` so we skip it for this style.
+                            return [undefined];
+                        }
+                        return [node];
+                    })
+                    .filter(Boolean)
             ),
         ];
 
         for (const node of unformattedNodes) {
-            if (isTextNode(node) || node.nodeName === "BR") {
+            const isEditable = this.dependencies.selection.isNodeEditable(node);
+            if (isTextNode(node) || node.nodeName === "BR" || !isEditable) {
                 const { inlineAncestor, parentNode } = this.splitInlineAncestors(node, {
                     formatName,
                     formatProps,

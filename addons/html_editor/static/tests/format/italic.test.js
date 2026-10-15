@@ -157,7 +157,7 @@ test("should not format non-editable text (italic)", async () => {
     await testEditor({
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
         stepFunction: italic,
-        contentAfter: `<p><em>[a</em></p><p contenteditable="false">b</p><p><em>c]</em></p>`,
+        contentAfter: `<p><em>[a</em></p><p contenteditable="false" style="font-style: italic;">b</p><p><em>c]</em></p>`,
     });
 });
 

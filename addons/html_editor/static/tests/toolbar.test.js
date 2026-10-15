@@ -2325,6 +2325,12 @@ describe("toolbar open and close on user interaction", () => {
             await animationFrame();
             await expectElementCount(".o-we-toolbar", 0);
         });
+
+        test("toolbar should open with a non-collapsed selection around a contenteditable=false", async () => {
+            await setupEditor(`<div>[<span contenteditable="false">test</span>]</div>`);
+            await animationFrame();
+            await expectElementCount(".o-we-toolbar", 1);
+        });
     });
 });
 

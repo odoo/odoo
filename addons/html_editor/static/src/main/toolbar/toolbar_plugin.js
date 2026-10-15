@@ -1,6 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
-import { isEmptyTextNode, isZWS } from "@html_editor/utils/dom_info";
+import { isContentEditable, isEmptyTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { composeToolbarButton, Toolbar } from "./toolbar";
 import { hasTouch, isMacOS, isIOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
@@ -416,10 +416,6 @@ export class ToolbarPlugin extends Plugin {
         }
         // Prevent toolbar to open if the selection is only non-editable nodes.
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        if (targetedNodes.every((node) => !this.dependencies.selection.isNodeEditable(node))) {
-            this.closeToolbar();
-            return;
-        }
         // Determine the namespace to use
         let currentNamespace = null;
         let filteredtargetedNodes = [];
@@ -456,8 +452,7 @@ export class ToolbarPlugin extends Plugin {
         return targetedNodes
             .filter(
                 (node) =>
-                    this.dependencies.selection.isNodeEditable(node) &&
-                    (node.nodeType !== Node.TEXT_NODE || (!isEmptyTextNode(node) && !isZWS(node)))
+                    node.nodeType !== Node.TEXT_NODE || (!isEmptyTextNode(node) && !isZWS(node))
             )
             .filter((node) => {
                 const element = closestElement(node);
@@ -473,6 +468,9 @@ export class ToolbarPlugin extends Plugin {
 
         const isCollapsed = editableSelection.isCollapsed;
         if (isCollapsed) {
+            return false;
+        }
+        if (targetedNodes.every((node) => !isContentEditable(node))) {
             return false;
         }
         // Only allow the toolbar to open if the selection contains visible selected characters.
