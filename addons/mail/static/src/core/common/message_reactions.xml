@@ -16,7 +16,7 @@
                 'ms-1': env.inChatWindow and env.alignedRight,
                 'me-1': !(env.inChatWindow and env.alignedRight),
          }" t-att-title="getReactionSummary(reaction)">
-            <span class="mx-1" t-esc="reaction.content"/>
+            <span class="o-mail-MessageReaction-content mx-1 text-truncate" t-esc="reaction.content"/>
             <span class="mx-1" t-esc="reaction.count"/>
         </button>
     </div>
