@@ -2624,7 +2624,7 @@ class AccountEdiUBL(models.AbstractModel):
             """Build a single base_line representing all lines of a tax group under a collapsed section"""
             AccountTax = self.env['account.tax']
             first_line = group[0]
-            total_excluded_currency = sum(bl['tax_details']['total_excluded_currency'] for bl in group)
+            total_excluded_currency = sum(bl['tax_details']['raw_total_excluded_currency'] for bl in group)
 
             collapsed_line = AccountTax._prepare_base_line_for_taxes_computation(
                 first_line['record'],
@@ -2633,6 +2633,7 @@ class AccountEdiUBL(models.AbstractModel):
                 discount=0.0,
                 tax_ids=first_line['tax_ids'],
                 currency_id=first_line['currency_id'],
+                special_mode='total_excluded',
             )
             collapsed_line.update({
                 'name': section.name,

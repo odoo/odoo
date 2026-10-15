@@ -1005,6 +1005,24 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_as_invoice_lines')
 
+    def test_export_collapsed_section_price_included_tax(self):
+        """ Test that a collapsed section with price-included taxes is exported with the amounts of the hidden lines. """
+        tax_21 = self.percent_tax(21.0, price_include_override='tax_included')
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(name="Section A", display_type='line_section', collapse_composition=True, price_unit=0.0),
+                self._prepare_invoice_line(product_id=self.product_a, price_unit=10.0, tax_ids=tax_21),
+                self._prepare_invoice_line(name="Section B", display_type='line_section', price_unit=0.0),
+                self._prepare_invoice_line(product_id=self.product_b, price_unit=20.0, tax_ids=tax_21),
+            ],
+            post=True,
+        )
+        self.assertEqual(invoice.amount_tax, 5.21)
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_export_collapsed_section_price_included_tax')
+
     def test_invoice_tax_subtotal_exempt_amount(self):
         """ Test that the taxable amount for exempt taxes is correctly computed,
         regardless of the tax calculation rounding method.
