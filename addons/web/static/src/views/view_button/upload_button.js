@@ -11,9 +11,6 @@ import { checkFileSize } from "@web/core/utils/files";
  * - `multiple`: allow to pick several files. Default: true.
  * - `max_size`: the maximum size of a file, in bytes. Default: the upload
  *   limit of the server. The larger files are left out with a warning.
- * - `res_model`: the model whose method `name` is called (on no record), instead
- *   of the model of the view. The button `context` passes what it needs, and a
- *   form is not saved first.
  */
 
 export function getUploadOptions({ options }) {

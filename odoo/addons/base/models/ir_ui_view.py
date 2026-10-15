@@ -20,7 +20,6 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError, AccessError, UserError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.models import get_public_method
 from odoo.modules.module import get_resource_from_path
 from odoo.tools import _, config, frozendict, partition, unique, SQL
 from odoo.tools.convert import _fix_multiple_roots
@@ -2074,25 +2073,7 @@ actual arch.
         elif type_:
             if type_ not in ('action', 'object', 'upload') or not name:
                 return
-            options = {}
-            if type_ == 'upload':
-                try:
-                    options = ast.literal_eval(node.get('options') or '{}')
-                except (ValueError, SyntaxError) as e:
-                    msg = _("Invalid options: “%(expr)s”\n%(error)s", expr=node.get('options'), error=e)
-                    self._raise_view_error(msg, node, from_exception=e)
-            if type_ == 'upload' and (model_name := options.get('res_model')):
-                if model_name not in self.env:
-                    self._raise_view_error(_("Model not found: %(model)s", model=model_name), node)
-                try:
-                    get_public_method(self.env[model_name], name)
-                except (AccessError, AttributeError):
-                    msg = _(
-                        "%(action_name)s is not a valid action on %(model_name)s",
-                        action_name=name, model_name=model_name,
-                    )
-                    self._raise_view_error(msg, node)
-            elif type_ in ('object', 'upload'):
+            if type_ in ('object', 'upload'):
                 func = getattr(name_manager.model, name, None)
                 if not func:
                     msg = _(

@@ -3427,21 +3427,6 @@ class TestViews(ViewCase):
             'not_a_method is not a valid action on ir.ui.view',
             name='upload button name is not a method',
         )
-        self.assertInvalid(
-            arch % ('not_a_method', "{'res_model': 'res.partner'}"),
-            'not_a_method is not a valid action on res.partner',
-            name='upload button name is checked on the model of its options',
-        )
-        self.assertInvalid(
-            arch % ('name_create', "{'res_model': 'not.a.model'}"),
-            'Model not found: not.a.model',
-            name='upload button model of its options does not exist',
-        )
-        self.assertInvalid(
-            arch % ('name_create', "{'res_model': res_model}"),
-            'Invalid options',
-            name='upload button options are not a literal',
-        )
 
     def test_tree(self):
         arch = """

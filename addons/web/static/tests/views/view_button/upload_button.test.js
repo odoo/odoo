@@ -369,33 +369,7 @@ test("form view: the record is saved before the upload", async () => {
     expect(JSON.parse(uploads[0].formData.get("res_ids"))).toHaveLength(1);
 });
 
-test("form view: options.res_model calls the method of that model, with the button context", async () => {
-    const uploads = mockFileUpload();
-    onRpc("web_save", () => expect.step("web_save"));
-    await mountView({
-        resModel: "foo",
-        type: "form",
-        resId: 1,
-        arch: `
-            <form>
-                <header>
-                    <button type="upload" name="upload_it" string="Upload"
-                        options="{'res_model': 'bar'}" context="{'default_foo': foo}"/>
-                </header>
-                <field name="foo"/>
-            </form>`,
-    });
-    await contains(".o_field_widget[name=foo] input").edit("new");
-    await contains("button[name=upload_it]").click();
-    await setInputFiles([new File(["x"], "a.pdf")]);
-    await animationFrame();
-    expect.verifySteps([]);
-    expect(uploads[0].formData.get("model")).toBe("bar");
-    expect(uploads[0].formData.get("res_ids")).toBe("[]");
-    expect(JSON.parse(uploads[0].formData.get("context"))).toMatchObject({ default_foo: "new" });
-});
-
-test("form view: an upload button in the header of an x2many calls the comodel, without saving", async () => {
+test("form view: an upload button in the header of an x2many saves the parent and calls the comodel", async () => {
     const uploads = mockFileUpload();
     onRpc("web_save", () => expect.step("web_save"));
     await mountView({
@@ -419,8 +393,9 @@ test("form view: an upload button in the header of an x2many calls the comodel, 
     await contains(".o_field_x2many .o_cp_buttons button[name=upload_lines]").click();
     await setInputFiles([new File(["x"], "a.pdf")]);
     await animationFrame();
-    expect.verifySteps([]);
+    expect.verifySteps(["web_save"]);
     expect(uploads[0].formData.get("model")).toBe("line");
+    expect(uploads[0].formData.get("res_ids")).toBe("[]");
     expect(uploads[0].formData.get("method")).toBe("upload_lines");
     expect(JSON.parse(uploads[0].formData.get("context"))).toMatchObject({
         active_model: "foo",

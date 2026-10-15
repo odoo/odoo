@@ -142,11 +142,10 @@ export function useViewButtons(ref, options = {}) {
             let error;
             try {
                 if (isUpload) {
-                    const { res_model: model } = getUploadOptions(clickParams);
                     const result = await uploadFiles(env.services, {
                         clickParams,
-                        resModel: model || params.resModel,
-                        resIds: model ? [] : params.resId ? [params.resId] : params.resIds,
+                        resModel: params.resModel,
+                        resIds: params.resId ? [params.resId] : params.resIds,
                         context: Object.assign({}, params.context, buttonContext),
                         files,
                     });

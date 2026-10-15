@@ -21,7 +21,6 @@ import { CardCompiler } from "@web/views/card/card_compiler";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
-import { getUploadOptions } from "@web/views/view_button/upload_button";
 import { ViewButton } from "@web/views/view_button/view_button";
 
 import { Component, t, useProps } from "@odoo/owl";
@@ -62,19 +61,9 @@ export class X2ManyField extends Component {
         if (this.props.viewMode === "kanban") {
             this.controls = controls || [];
         }
-        // the method of the comodel is called on no record: the parent is not saved
-        this.uploadButtons = (headerButtons || [])
-            .filter((button) => button.clickParams.type === "upload")
-            .map((button) => ({
-                ...button,
-                clickParams: {
-                    ...button.clickParams,
-                    options: {
-                        ...getUploadOptions(button.clickParams),
-                        res_model: this.field.relation,
-                    },
-                },
-            }));
+        this.uploadButtons = (headerButtons || []).filter(
+            (button) => button.clickParams.type === "upload"
+        );
         const subViewActiveActions = activeActions;
         this.activeActions = useActiveActions({
             crudOptions: Object.assign({}, this.props.crudOptions, {
