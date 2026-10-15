@@ -3,6 +3,7 @@ import { MessageInDialog } from "@mail/core/public_web/messaging_menu/message_in
 import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messaging_menu_empty";
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
+import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { useOnBottomScrolled, useSearch } from "@mail/utils/common/hooks";
 import { computedShallowEqual, incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
@@ -75,7 +76,10 @@ export class MessagingMenu extends Component {
                     return (
                         normalize(m.thread?.displayName).includes(normalizedTerms) ||
                         normalize(m.authorName).includes(normalizedTerms) ||
-                        normalize(m.inlineBody).includes(normalizedTerms)
+                        normalize(htmlToTextContentInline(m.bodyPreview || "")).includes(
+                            normalizedTerms
+                        ) ||
+                        normalize(m.bodyTextContentInline).includes(normalizedTerms)
                     );
                 }),
             deps: () => [this.filteredMessages()],
