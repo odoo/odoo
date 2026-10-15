@@ -51,7 +51,9 @@ from lxml import etree, html
 from passlib.context import CryptContext
 from requests import PreparedRequest, Session
 from urllib3.util import parse_url
+from werkzeug.datastructures import ResponseCacheControl
 from werkzeug.exceptions import BadRequest
+from werkzeug.http import parse_cache_control_header
 
 import odoo.cli
 import odoo.models
@@ -60,6 +62,7 @@ from odoo import api, fields
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.http import request, request_var
+from odoo.http.dispatcher import Dispatcher
 from odoo.http.requestlib import Request
 from odoo.http.session import (
     DEFAULT_LANG,
@@ -69,6 +72,7 @@ from odoo.http.session import (
     session_store,
 )
 from odoo.http.session import Session as OdooHttpSession
+from odoo.http.stream import STATIC_CACHE
 from odoo.orm.environments import CacheLayer
 from odoo.orm.model_classes import is_model_definition
 from odoo.modules.registry import Registry
@@ -1610,6 +1614,28 @@ class TransactionCase(BaseCase):
 class ChromeBrowserException(Exception):
     pass
 
+
+# Local resources served as files, cached with their bundle or module version.
+STATIC_RESOURCE_RE = re.compile(r'/[^/]+/static/|/web/assets/')
+# Images addressed by xmlid: their URL is copied into the saved HTML of pages,
+# so they need a cache rule on the server side rather than a `unique`.
+XMLID_IMAGE_RE = re.compile(r'/web/image/[a-z0-9_]+\.\w+(/\d+x\d+)?')
+
+
+def is_cacheable_resource(headers) -> bool:
+    """ Whether browsers and CDNs can keep a resource served with ``headers``:
+    not private, and immutable or with a max-age of at least a week.
+
+    The placeholder served for a record the visitor can't read is private on
+    purpose, as a user who can read it gets the real image at the same URL. It
+    must still be immutable.
+    """
+    cache_control = parse_cache_control_header(headers.get('Cache-Control'), cls=ResponseCacheControl)
+    placeholder = 'placeholder' in headers.get('Content-Disposition', '')
+    return (not cache_control.private or placeholder) and (
+        cache_control.immutable or (cache_control.max_age or 0) >= STATIC_CACHE)
+
+
 def run(gen_func):
     def done(f):
         try:
@@ -3015,6 +3041,7 @@ class HttpCase(TransactionCase):
                     WebsocketConnectionHandler, "websocket_allowed", return_value=True
                 ))
 
+            uncacheable_resources = atexit.enter_context(self._check_resources_cacheable())
             self.authenticate(login, login, browser=browser)
             url = urljoin(self.base_url(), url_path)
             if watch:
@@ -3054,6 +3081,42 @@ class HttpCase(TransactionCase):
                 error = chrome_browser_exception
             if error:  # dont keep initial traceback, keep that outside of except
                 self.fail(str(error))
+            if uncacheable_resources:
+                self.fail("Resources of public pages must be cacheable by CDNs (not private, with a `unique` URL):\n%s" % '\n'.join(
+                    f"{url}  [{status} {content_type} | {cache_control}]  on {page}"
+                    for url, (page, status, content_type, cache_control) in sorted(uncacheable_resources.items())
+                ))
+
+    @contextmanager
+    def _check_resources_cacheable(self):
+        """ Record the dynamic resources (images, stylesheets, fonts) that the
+        browser loads as the public user, the only one whose responses CDNs
+        can share, and that aren't cacheable (see ``is_cacheable_resource``).
+
+        :return: dict mapping the url of each resource to a tuple
+            ``(page, status, content_type, cache_control)``
+        """
+        uncacheable_resources = {}
+        original_post_dispatch = Dispatcher.post_dispatch
+
+        def post_dispatch_wrapper(dispatcher, response):
+            original_post_dispatch(dispatcher, response)
+            httprequest = dispatcher.request.httprequest
+            user = dispatcher.request.env.user  # empty on auth='none' routes
+            if httprequest.headers.get('Sec-Fetch-Dest') not in ('image', 'style', 'font') \
+                    or (user and not user._is_public()) \
+                    or response.status_code >= 400 or response.status_code in (301, 308) \
+                    or STATIC_RESOURCE_RE.match(httprequest.path) \
+                    or XMLID_IMAGE_RE.fullmatch(httprequest.path) \
+                    or is_cacheable_resource(response.headers):
+                return
+            url = httprequest.full_path.removesuffix('?')
+            page = urlsplit(httprequest.headers.get('Referer', '')).path
+            uncacheable_resources.setdefault(url, (
+                page, response.status_code, response.headers.get('Content-Type', ''), response.headers.get('Cache-Control', '')))
+
+        with patch.object(Dispatcher, 'post_dispatch', post_dispatch_wrapper):
+            yield uncacheable_resources
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
