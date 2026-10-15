@@ -3,6 +3,8 @@ import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_te
 import { MailTestMultiCompany } from "@test_mail/../tests/mock_server/models/mail_test_multi_company";
 import { MailTestMultiCompanyRead } from "@test_mail/../tests/mock_server/models/mail_test_multi_company_read";
 import { MailTestProperties } from "@test_mail/../tests/mock_server/models/mail_test_properties";
+import { MailTestRottingResource } from "@test_mail/../tests/mock_server/models/mail_test_rotting_resource";
+import { MailTestRottingStage } from "@test_mail/../tests/mock_server/models/mail_test_rotting_stage";
 import { MailTestSimpleMainAttachment } from "./mock_server/models/mail_test_simple_main_attachment";
 import { MailTestSimple } from "@test_mail/../tests/mock_server/models/mail_test_simple";
 import { MailTestTrackAll } from "@test_mail/../tests/mock_server/models/mail_test_track_all";
@@ -14,6 +16,8 @@ export const testMailModels = {
     MailTestMultiCompany,
     MailTestMultiCompanyRead,
     MailTestProperties,
+    MailTestRottingResource,
+    MailTestRottingStage,
     MailTestSimpleMainAttachment,
     MailTestSimple,
     MailTestTrackAll,

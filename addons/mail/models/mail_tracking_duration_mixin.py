@@ -216,3 +216,9 @@ class MailTrackingDurationMixin(models.AbstractModel):
 
         is_rotting_searched = (operator == 'in') == (True in value)
         return rotting if is_rotting_searched else ~rotting
+
+    def _read_group_select(self, aggregate_spec, query):
+        if aggregate_spec != 'is_rotting:sum':
+            return super()._read_group_select(aggregate_spec, query)
+        rotting = Domain('is_rotting', '=', True).optimize_full(self)
+        return SQL("COUNT(*) FILTER (WHERE %s)", rotting._to_sql(self, self._table, query))
