@@ -36,7 +36,6 @@ class TestQris(AccountTestInvoicingCommon):
             'partner_bank_id': cls.acc_qris_id.id,
             'company_id': cls.company_data['company'].id,
             'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 100})],
-            'qr_code_method': 'id_qr',
         })._post()
 
         cls.success_qris_get = {
