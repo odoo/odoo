@@ -17,6 +17,7 @@ import {
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
+import { Plugin } from "../../src/plugin";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -66,6 +67,33 @@ test("should make qweb tag bold (2)", async () => {
         contentBefore: `<div><p t-field="record.name" contenteditable="false">[Test]</p></div>`,
         stepFunction: bold,
         contentAfter: `<div>[<p t-field="record.name" style="font-weight: bolder;">Test</p>]</div>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+    });
+});
+
+test("should wrap a qweb `t` node in a `strong` element", async () => {
+    await testEditor({
+        contentBefore: `<p>[<t t-out="'Test'">Test</t>]</p>`,
+        stepFunction: bold,
+        contentAfter: `<p><strong>[<t t-out="'Test'">Test</t></strong>]</p>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+    });
+});
+
+test("should wrap a qweb `t` node and the text around it in a `strong` element", async () => {
+    await testEditor({
+        contentBefore: `<p>[a<t t-out="'Test'">Test</t>b]</p>`,
+        stepFunction: bold,
+        contentAfter: `<p><strong>[a<t t-out="'Test'">Test</t>b]</strong></p>`,
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+    });
+});
+
+test("should make an inline qweb field bold", async () => {
+    await testEditor({
+        contentBefore: `<p>[<span t-field="record.name">Test</span>]</p>`,
+        stepFunction: bold,
+        contentAfter: `<p>[<span t-field="record.name" style="font-weight: bolder;">Test</span>]</p>`,
         config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
     });
 });
@@ -756,4 +784,46 @@ test("should apply the style on the link itself (5)", async () => {
     expect(getContent(el)).toBe(
         `<p><strong>a</strong>[a\ufeff<a href="test">\ufeffbb\ufeff</a>\ufeffc]<strong>c</strong></p>`
     );
+});
+
+describe("Format non editable", () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            is_formattable_node_predicates: (node) => {
+                if (node.matches?.(".target")) {
+                    return true;
+                }
+            },
+            is_node_editable_predicates: (node) => {
+                if (node?.matches?.(".target")) {
+                    return false;
+                }
+            },
+        };
+    }
+    test("should wrap non editable in `strong` element (1)", async () => {
+        await testEditor({
+            contentBefore: `<p>[<span class="target">b</span>]</p>`,
+            stepFunction: bold,
+            contentAfter: `<p><strong>[<span class="target">b</span></strong>]</p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+    });
+    test("should not wrap non editable without formattable class in `strong` element", async () => {
+        await testEditor({
+            contentBefore: `<p>[a<span contenteditable="false">b</span>c]</p>`,
+            stepFunction: bold,
+            contentAfter: `<p><strong>[a</strong><span contenteditable="false">b</span><strong>c]</strong></p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+    });
+    test("should wrap non editable in `strong` element (2)", async () => {
+        await testEditor({
+            contentBefore: `<p>[a<span class="target">b</span>c]</p>`,
+            stepFunction: bold,
+            contentAfter: `<p><strong>[a<span class="target">b</span>c]</strong></p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+    });
 });
