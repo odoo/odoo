@@ -9,7 +9,8 @@ defineMailModels();
 
 test.tags("desktop");
 test("account dashboard KPIs are loaded, rendered, and clickable", async () => {
-    mockService("orm", {
+    const orm = {
+        cache: () => orm,
         async call(model, method, args) {
             expect(model).toBe("account.journal");
             expect(args).toEqual([]);
@@ -30,7 +31,8 @@ test("account dashboard KPIs are loaded, rendered, and clickable", async () => {
                 },
             ];
         },
-    });
+    };
+    mockService("orm", orm);
 
     mockService("action", {
         doAction(action) {
