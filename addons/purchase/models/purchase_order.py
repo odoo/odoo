@@ -706,18 +706,17 @@ class PurchaseOrder(models.Model):
         return {}
 
     def button_confirm(self):
-        for order in self:
-            if order.state not in ['draft', 'sent']:
-                continue
+        orders = self.filtered(lambda order: order.state in ('draft', 'sent'))
+        for order in orders:
             error_msg = order._confirmation_error_message()
             if error_msg:
                 raise UserError(error_msg)
-            order.order_line._validate_analytic_distribution()
+        orders.order_line._validate_analytic_distribution()
+        for order in orders:
             # Deal with double validation process
-            if order._approval_allowed():
-                order.button_approve()
-            else:
-                order.write({'state': 'to approve'})
+            approvable_orders = orders.filtered(lambda order: order._approval_allowed())
+        approvable_orders.button_approve()
+        (orders - approvable_orders).write({'state': 'to approve'})
         return True
 
     def button_cancel(self):
