@@ -584,6 +584,10 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
         with self.assertRaises(UserError):
             self.employee_leave.with_user(self.user_employee_id).write({'state': 'validate'})
 
+        with self.assertRaises(UserError):
+            self.employee_leave.with_user(self.user_employee_id).with_context(leave_fast_create=True).write({'state': 'validate'})
+        self.assertEqual(self.employee_leave.state, 'confirm')
+
     # hr_holidays.group_hr_holidays_user
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
