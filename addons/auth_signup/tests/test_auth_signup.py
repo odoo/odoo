@@ -8,6 +8,7 @@ from urllib.parse import parse_qs, urlsplit
 import odoo
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged
+from odoo.modules.registry import Registry
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
@@ -130,3 +131,13 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             u.create_date = datetime.now() - timedelta(days=5, minutes=10)
         with self.registry.cursor() as cr:
             users.with_env(users.env(cr=cr)).send_unregistered_user_reminder(after_days=5, batch_size=100)
+
+    def test_signup_does_not_invalidate_cache(self):
+        self.env['ir.config_parameter'].sudo().set_str('auth_signup.invitation_scope', 'b2c')
+        with patch.object(Registry, 'clear_cache') as clear_cache:
+            self.env['res.users'].sudo().signup({
+                'login': 'cache_signup@example.com',
+                'name': 'Cache Signup',
+                'password': 'cache_signup_password',
+            })
+        clear_cache.assert_not_called()

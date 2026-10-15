@@ -36,7 +36,7 @@ class PosConfig(models.Model):
             )
             allowed_employees = group_users.employee_id
             if not allowed_employees and group_users:
-                target_user = group_users.with_company(config.company_id).filtered(lambda user: not user.employee_id)[0]
+                target_user = group_users.with_company(config.company_id).filtered(lambda user: not user.employee_id).sorted()[0]
                 target_user.action_create_employee()
                 allowed_employees = target_user.employee_id
 
