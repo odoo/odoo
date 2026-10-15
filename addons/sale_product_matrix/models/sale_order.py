@@ -172,6 +172,7 @@ class SaleOrder(models.Model):
         """
         matrixes = []
         if self.report_grids:
+            self = self.with_context(show_template_name_in_grid=True)  # noqa: PLW0642
             grid_configured_templates = self.order_line.filtered(
                 "is_configurable_product"
             ).product_template_id.filtered(lambda ptmpl: ptmpl.product_add_mode == "matrix")
