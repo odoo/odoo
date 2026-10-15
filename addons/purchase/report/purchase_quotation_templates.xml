@@ -18,6 +18,7 @@
         </div>
     </t>
     <t t-call="web.external_layout"
+        company="o.company_id.sudo()"
         forced_vat="o.fiscal_position_id.foreign_vat"
         address="address"
         layout_document_title="layout_document_title"
