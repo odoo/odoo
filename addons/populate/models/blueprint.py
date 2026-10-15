@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import json
 import re
+import shlex
+from unittest import SkipTest
 
 from lxml import etree
 
-from odoo import api, fields, models
+from odoo import api, fields, models, modules
 from odoo.exceptions import ValidationError
 
 from ..utils import loading, xml
@@ -13,6 +15,10 @@ from ..utils.orm import get_model_method
 
 DEFINITION_PREFETCH_GROUP = 'Definitions'
 _IMPORT_NAMESPACE_RE = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_-]*$')
+
+
+class PopulateDataMissing(SkipTest):
+    """No finished population session is available for the blueprint."""
 
 
 class Blueprint(models.Model):
@@ -305,6 +311,76 @@ class Blueprint(models.Model):
 
         definition = resolve(self, frozenset())
         return etree.tostring(definition, encoding='unicode') if definition is not None else None
+
+    def _get_populated(self, ref):
+        """Return records for a create block's ID in the resolved blueprint.
+
+        ref is a block ID, not a business-record XML ID. Imported blocks use
+        namespaced references such as catalog/products. Relational traversal
+        is unsupported.
+
+        Only available during tests.
+        Raise PopulateDataMissing (SkipTest) if no session is finished,
+        or ValueError for unknown IDs, multiple finished sessions or deleted records.
+        With one finished session, ignore unfinished sessions. Return records in
+        business-record ID order, or an empty recordset if the valid ID has no entries.
+
+        In a benchmark's ``setUpClass()``:
+
+        .. code-block:: python3
+
+            blueprint = cls.env.ref('product.benchmark_pricelists')
+            cls.products = blueprint._get_populated('price_products')
+        """
+        assert modules.module.current_test, "_get_populated() is only available in the testing framework"
+        self.ensure_one()
+        block = next((
+            block
+            for block in self.definition
+            if block['operation'] == 'create' and block.get('id') == ref
+        ), None)
+        if block is None:
+            raise ValueError(self.env._(
+                "Unknown create reference %(ref)s in blueprint %(blueprint)s",
+                ref=ref, blueprint=self.name,
+            ))
+
+        sessions = self.env['populate.session'].search([('blueprint_id', '=', self.id)])
+        finished = sessions.filtered(lambda session: session.is_done)
+        if not finished:
+            dbname = shlex.quote(self.env.cr.dbname)
+            if sessions:
+                command = f'odoo-bin populate -d {dbname} --resume {sessions[-1].id}'
+            else:
+                xmlid = self.get_external_id()[self.id] or self.name
+                command = f'odoo-bin populate -d {dbname} -b {shlex.quote(xmlid)}'
+            raise PopulateDataMissing(self.env._(
+                "Blueprint %(blueprint)s has no finished session. Run: %(command)s",
+                blueprint=self.name, command=command,
+            ))
+        if len(finished) > 1:
+            details = ', '.join(
+                f'{session.id} (seed={session.seed}, scale={session.scaling_factor}, jobs={session.worker_count})'
+                for session in finished
+            )
+            raise ValueError(self.env._(
+                "Blueprint %(blueprint)s has multiple finished sessions: %(details)s",
+                blueprint=self.name, details=details,
+            ))
+
+        model_name = block['model']
+        entries = self.env['populate.model.data'].search([
+            ('session_id', '=', finished.id), ('ref', '=', ref), ('res_model', '=', model_name),
+        ], order='res_id')
+        records = self.env[model_name].browse(entries.mapped('res_id'))
+        existing = records.exists()
+        missing = set(records.ids) - set(existing.ids)
+        if missing:
+            raise ValueError(self.env._(
+                "Deleted records for %(ref)s in session %(session)s: %(records)s",
+                ref=ref, session=finished.id, records=sorted(missing),
+            ))
+        return records
 
     def _register_hook(self):
         """Load populate data if the `populate` module was installed or upgraded."""
