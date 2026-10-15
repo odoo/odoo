@@ -1410,22 +1410,30 @@ class IrModelFields(models.Model):
 
         data_list = []
         for (field_model, field_name), field_id in field_ids.items():
-            model = self.env[field_model]
-            field = model._fields.get(field_name)
-            if field and (
-                module == model._original_module
-                or module in field._modules
-                or any(
-                    # module introduced field on model by inheritance
-                    field_name in self.env[parent]._fields
-                    for parent, parent_module in model._inherit_module.items()
-                    if module == parent_module
-                )
-            ):
+            if self._is_field_defined_by_module(field_model, field_name, module):
                 xml_id = field_xmlid(module, field_model, field_name)
                 record = self.browse(field_id)
                 data_list.append({'xml_id': xml_id, 'record': record})
         self.env['ir.model.data']._update_xmlids(data_list)
+
+    @api.model
+    def _is_field_defined_by_module(self, model_name, field_name, module):
+        """ Return whether ``module`` defines the field ``field_name`` of the
+        model ``model_name`` in the registry, i.e. whether reflecting the field
+        for ``module`` gives it an XML id.
+        """
+        model = self.env.get(model_name)
+        field = model._fields.get(field_name) if model is not None else None
+        return bool(field) and (
+            module == model._original_module
+            or module in field._modules
+            or any(
+                # module introduced field on model by inheritance
+                field_name in self.env[parent]._fields
+                for parent, parent_module in model._inherit_module.items()
+                if module == parent_module
+            )
+        )
 
     def _reflect_field_groups(self, model_names):
         """ Synchronize the groups field based on the 'groups' attribute declared
@@ -2766,6 +2774,18 @@ class IrModelData(models.Model):
                     break
             if keep:
                 continue
+
+            # A field is reflected for a module only on the models that are in
+            # the registry when that module is loaded. A field the module adds
+            # through an inherited parent (e.g. a stored field on 'base') also
+            # exists on models of modules loaded after it, which a partial
+            # update does not reflect again for that module. Never drop a field
+            # that the module still defines: it would drop its column and data.
+            if model == 'ir.model.fields':
+                field = Model.browse(res_id)
+                module = xmlid.split('.', 1)[0]
+                if field.exists() and Model._is_field_defined_by_module(field.model, field.name, module):
+                    continue
 
             # if the record has other associated xids, only remove the xid
             if self.search_count([
