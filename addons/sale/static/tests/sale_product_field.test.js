@@ -1,10 +1,12 @@
 import { startServer } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
+import { advanceTime, animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     clickSave,
     Command,
     contains,
     mountView,
+    onRpc,
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { ProductProduct } from "./mock_server/mock_models/product_product";
@@ -35,6 +37,53 @@ const WithoutTranslatedNameForm = `
 `;
 
 defineSaleModels();
+
+test("deleting sale order lines on a slow connection does not send a virtual delete", async () => {
+    await startServer();
+    let slowOnchange = null;
+    onRpc("sale.order", "onchange", ({ args }) => {
+        const commands = args[1].order_line || [];
+        expect(commands.some(([cmd, id]) => cmd === 2 && typeof id === "string")).toBe(false, {
+            message: "a virtual id must never be sent in a DELETE command",
+        });
+        return slowOnchange;
+    });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        arch: `
+            <form>
+                <field name="order_line" widget="sol_o2m" on_change="1">
+                    <list editable="bottom">
+                        <field name="name" widget="sol_text"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains('div[name="name"] textarea').edit("First line", { confirm: "blur" });
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains('div[name="name"] textarea').edit("Second line", { confirm: "blur" });
+    expect(".o_data_row").toHaveCount(2);
+
+    // Throttle the connection: the onchange of the first deletion stays pending.
+    slowOnchange = new Deferred();
+    await contains(".o_data_row:eq(0) .o_list_record_remove").click();
+    await animationFrame();
+    // The first line is removed locally even though its onchange is still pending.
+    expect(".o_data_row").toHaveCount(1);
+
+    // Delete the second line twice, waiting out the remove button's 500ms debounce.
+    await contains(".o_data_row:eq(0) .o_list_record_remove").click();
+    await advanceTime(500);
+    await contains(".o_data_row:eq(0) .o_list_record_remove").click();
+
+    slowOnchange.resolve(); 
+    await animationFrame();
+    await animationFrame();
+    expect(".o_data_row").toHaveCount(0);
+});
 
 test("On updated form, product name should stay hidden", async () => {
     const product = ProductProduct._records[0];

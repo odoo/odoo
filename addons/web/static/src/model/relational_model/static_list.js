@@ -145,7 +145,11 @@ export class StaticList extends DataPoint {
 
     delete(record) {
         return this.model.mutex.exec(async () => {
-            await this._applyCommands([[x2ManyCommands.DELETE, record.resId || record._virtualId]]);
+            const recordId = record.resId || record._virtualId;
+            if (!this._currentIds.includes(recordId)) {
+                return;
+            }
+            await this._applyCommands([[x2ManyCommands.DELETE, recordId]]);
             await this._onUpdate();
         });
     }
