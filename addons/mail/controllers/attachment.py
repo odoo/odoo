@@ -83,7 +83,9 @@ class AttachmentController(http.Controller):
 
     @http.route("/mail/attachment/delete", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def mail_attachment_delete(self, attachment_id, access_token=None):
+    def mail_attachment_delete(self, attachment_id, access_token=None, context=None):
+        if context:
+            request.update_context(**context)
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
         if not attachment:
             target = request.env.user.partner_id

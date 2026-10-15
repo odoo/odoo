@@ -46,6 +46,20 @@ QUnit.test("simple chatter on a record", async (assert) => {
     ]);
 });
 
+QUnit.test("chatter fetches its data with the user context", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const { openFormView } = await start({
+        mockRPC(route, args) {
+            if (route === "/mail/thread/data") {
+                step(`uid: ${args.context?.uid}`);
+            }
+        },
+    });
+    openFormView("res.partner", partnerId);
+    await assertSteps([`uid: ${pyEnv.currentUserId}`]);
+});
+
 QUnit.test("can post a message on a record thread", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });

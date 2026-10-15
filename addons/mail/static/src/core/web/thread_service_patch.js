@@ -36,6 +36,7 @@ patch(ThreadService.prototype, {
             this.fetchNewMessages(thread);
         }
         const result = await this.rpc("/mail/thread/data", {
+            context: this.user.context,
             request_list: requestList,
             thread_id: thread.id,
             thread_model: thread.model,

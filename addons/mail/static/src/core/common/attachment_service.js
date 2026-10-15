@@ -17,6 +17,7 @@ export class AttachmentService {
         this.env = env;
         this.store = services["mail.store"];
         this.rpc = services["rpc"];
+        this.user = services["user"];
     }
 
     /**
@@ -42,7 +43,7 @@ export class AttachmentService {
             await this.rpc(
                 "/mail/attachment/delete",
                 assignDefined(
-                    { attachment_id: attachment.id },
+                    { attachment_id: attachment.id, context: this.user.context },
                     { access_token: attachment.accessToken }
                 )
             );
@@ -52,7 +53,7 @@ export class AttachmentService {
 }
 
 export const attachmentService = {
-    dependencies: ["mail.store", "rpc"],
+    dependencies: ["mail.store", "rpc", "user"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

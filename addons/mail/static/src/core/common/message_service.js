@@ -144,6 +144,7 @@ export class MessageService {
             {
                 action: "add",
                 content,
+                context: this.userService.context,
                 message_id: message.id,
             },
             { silent: true }
@@ -156,6 +157,7 @@ export class MessageService {
             {
                 action: "remove",
                 content: reaction.content,
+                context: this.userService.context,
                 message_id: reaction.message.id,
             },
             { silent: true }
