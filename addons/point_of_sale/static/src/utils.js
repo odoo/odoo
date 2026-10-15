@@ -294,6 +294,22 @@ export function imageDataUri(base64Source) {
     return `data:image/${imageType};base64,${base64Source}`;
 }
 
+export async function resizeImageDataUrl(dataUrl, maxWidth) {
+    const img = new Image();
+    img.src = dataUrl;
+    await img.decode();
+    if (img.naturalWidth <= maxWidth) {
+        return dataUrl;
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = maxWidth;
+    canvas.height = Math.round((img.naturalHeight * maxWidth) / img.naturalWidth);
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL();
+}
+
 export function getDisplayDateInfo(sqlDate) {
     const dateTime = deserializeDateTime(sqlDate);
     if (!dateTime.isValid) {
