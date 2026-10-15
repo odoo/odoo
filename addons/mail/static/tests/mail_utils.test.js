@@ -264,6 +264,23 @@ test("inlineElement copies rel and target attributes from links", () => {
     );
 });
 
+test("inlineElement keeps the text formats of the composer", () => {
+    expect(
+        inlineHtml(
+            markup`<p><strong style="color: red;">bold</strong> <em>italic</em> <u>underline</u> <s>strike</s> <code class="o_inline_code" id="c">code</code></p>`
+        ).toString()
+    ).toBe(
+        '<strong>bold</strong> <em>italic</em> <u>underline</u> <s>strike</s> <code class="o_inline_code">code</code>'
+    );
+    expect(
+        inlineHtml(
+            markup`<strong>a <em>b</em> <a href="https://odoo.com">Odoo</a> <a href="#" class="o_mail_redirect">@Bob</a></strong>`
+        ).toString()
+    ).toBe(
+        '<strong>a <em>b</em> <a href="https://odoo.com">https://odoo.com</a> <a href="#" class="o_mail_redirect">@Bob</a></strong>'
+    );
+});
+
 test("inlineHtml keeps only the text of JS-handled links", () => {
     expect(
         inlineHtml(

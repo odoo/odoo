@@ -770,6 +770,25 @@ test("can search messages", async () => {
     await mailContains(".o-mail-DiscussSearch input", { value: "" });
 });
 
+test("search messages ignores the tags of the text formats", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "<p>Some <strong>bold</strong> text</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        bookmarked_partner_ids: [serverState.partnerId],
+    });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.BOOKMARK);
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('You: Some bold text')):count(1)");
+    await insertText(".o-mail-DiscussSearch input", "bold");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('You: Some bold text')):count(1)");
+    await insertText(".o-mail-DiscussSearch input", "strong", { replace: true });
+    await waitFor(".o-mail-MessagingMenuEmpty:text('No results for \"strong\".'):count(1)");
+});
+
 test("push notification request stays on the chat tab regardless of user notification preference", async () => {
     mockPermission("notifications", "prompt");
     await start();
