@@ -154,7 +154,7 @@ export function usePopoutAttachment() {
         mailPopoutService.reset();
     }
 
-    onMounted(updatePopout);
+    onMounted(() => updatePopout());
     onWillUpdateProps((props) => {
         const oldProps = extractPopoutProps(component.props);
         const newProps = extractPopoutProps(props);
