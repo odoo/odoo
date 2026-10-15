@@ -1937,7 +1937,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 elif missing_reserved_quantity:
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
                                                             ml.location_id == move.location_id and
-                                                            ml.location_dest_id == move.location_dest_id and
+                                                            ml.location_dest_id._child_of(move.location_dest_id) and
                                                             ml.picking_id == move.picking_id and
                                                             not ml.picked and
                                                             not ml.lot_id and
