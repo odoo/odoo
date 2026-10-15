@@ -1,7 +1,8 @@
-import { onWillStart } from "@odoo/owl";
+import { onMounted, onPatched, onWillStart } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 import { convertRecordToEvent } from "@web/views/calendar/utils";
+import { formatFloatTime } from "@web/views/fields/formatters";
 import { useMandatoryDays } from "../../hooks";
 
 export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
@@ -11,6 +12,9 @@ export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
         onWillStart(async () => {
             this.isManager = await user.hasGroup("hr_holidays.group_hr_holidays_user");
         });
+        // a reload of the same range keeps the day cells, so the badges are redrawn on each render
+        onMounted(() => this.renderExpectedHours());
+        onPatched(() => this.renderExpectedHours());
     }
 
     /**
@@ -56,6 +60,23 @@ export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
             startEditable: movable,
             durationEditable: resizable,
         };
+    }
+
+    renderExpectedHours() {
+        const cells = this.ref().querySelectorAll(".o_calendar_fc_view_dayGridMonth .o_calendar_day[data-date]");
+        for (const cell of cells) {
+            cell.querySelector(".o_expected_hours")?.remove();
+            const hours = this.props.model.expectedHours?.[cell.dataset.date];
+            const dayTop = cell.querySelector(".o_calendar_day_top");
+            if (hours > 0 && dayTop) {
+                // in the corner opposite to the week number, so it never covers the events
+                const badge = document.createElement("span");
+                badge.className =
+                    "o_expected_hours position-absolute top-0 end-0 m-1 badge rounded-pill bg-success bg-opacity-25 text-success pe-none";
+                badge.textContent = formatFloatTime(hours);
+                dayTop.append(badge);
+            }
+        }
     }
 
     getDayCellClassNames(info) {
