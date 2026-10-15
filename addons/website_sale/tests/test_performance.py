@@ -340,6 +340,24 @@ class TestWebsiteSalePerformanceCategoriesSidebar(TestWebsiteSalePerformanceNoPr
         )
 
 
+# RIBBONS
+
+
+class TestWebsiteSalePerformanceWithAutoAssignedRibbon(TestWebsiteSalePerformanceNoPricelist):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # The automatically assigned ribbons are fetched with the search, in a single query
+        cls.env["product.ribbon"].create({"name": "New!", "assign": "new"})
+
+    def test_shop_page_generation(self):
+        select_queries = self._get_shop_page_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries
+        )
+
+
 # STOCK
 
 
