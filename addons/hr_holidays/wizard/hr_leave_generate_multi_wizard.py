@@ -98,7 +98,8 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             if invalid_time_off:
                 raise UserError(self.env._('Some employees already have time off requests in hours that overlap with the selected period, Odoo cannot automatically adjust or split hourly leaves during batch generation. Conflicting time off:\n%s', '\n'.join(f"- {l.display_name}" for l in invalid_time_off)))
             one_day_leaves = conflicting_leaves.filtered(lambda leave: leave.request_date_from == leave.request_date_to)
-            one_day_leaves.action_refuse()
+            one_day_leaves.check_access('write')
+            one_day_leaves.sudo().action_refuse()
             split_source_leaves = conflicting_leaves - one_day_leaves
             split_source_leaves._split_leaves(self.date_from, self.date_to + timedelta(days=1))
 
