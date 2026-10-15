@@ -292,7 +292,7 @@ export class PaymentScreen extends Component {
 
         const pLine =
             this.selectedPaymentLine &&
-            (!this.selectedPaymentLine.payment_status ||
+            (!this.selectedPaymentLine.usePaymentInterface ||
                 this.selectedPaymentLine.payment_status === "pending")
                 ? this.selectedPaymentLine
                 : false;
