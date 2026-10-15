@@ -61,7 +61,7 @@
     height: calc(var(--o-wsale-css-attribute-image__height) - var(--o-wsale-css-attribute-image__outline-width));
     aspect-ratio: 1;
     padding: $border-width * 5;
-    background-color: var(--wsale-product-thumb-bg, #{$gray-100});
+    background-color: var(--wsale-product-thumb-bg, var(--o-color-3));
     border-radius: MIN(var(--o-wsale-product-image-radius, var(--o-wsale-opt-border-radius, var(--border-radius))), 20%);
     outline: none;
     overflow: hidden;
@@ -80,7 +80,7 @@
 .css_attribute_thumbnail {
     box-sizing: content-box;
     padding: 1px;
-    background-color: var(--wsale-product-thumb-bg, #{$gray-100});
+    background-color: var(--wsale-product-thumb-bg, var(--o-color-3));
     border-radius: MIN(var(--o-wsale-product-image-radius), 20%);
     outline: none;
     aspect-ratio: var(--o-wsale-product-image-ratio);
