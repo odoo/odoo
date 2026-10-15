@@ -204,6 +204,42 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(employee_allocation.number_of_hours, 10)
         self.assertEqual(employee_emp_allocation.number_of_hours, 10)
 
+    def test_allocation_hours_0_hour_calendar(self):
+        self.work_entry_type.request_unit = 'hour'
+        self.work_entry_type.unit_of_measure = 'hour'
+        calendar_8h = self.employee_emp.resource_calendar_id
+        self.employee.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Calendar - 0H',
+            'company_id': self.company.id,
+            'calendar_type': 'fixed',
+            'days_per_week': 5,
+            'hours_per_day': 0,
+        })
+        self.assertEqual(self.employee.resource_calendar_id.hours_per_day, 0.0)
+        self.assertEqual(calendar_8h.hours_per_day, 8.0)
+
+        self.env['hr.leave.allocation.generate.multi.wizard'].create({
+            'name': 'Hours Allocation',
+            'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
+            'work_entry_type_id': self.work_entry_type.id,
+            'duration': 10,
+        }).action_generate_allocations()
+
+        employee_allocation = self.env['hr.leave.allocation'].search([
+            ('employee_id', '=', self.employee.id),
+        ])
+        employee_emp_allocation = self.env['hr.leave.allocation'].search([
+            ('employee_id', '=', self.employee_emp.id),
+        ])
+        self.assertEqual(employee_emp_allocation.number_of_hours, 10)
+
+        # Editing the hours and switching back to a working schedule must not divide by zero
+        employee_allocation.number_of_hours = 16
+        self.assertEqual(employee_allocation.number_of_days, 0)
+        self.employee.resource_calendar_id = calendar_8h
+        employee_allocation.number_of_hours = 16
+        self.assertEqual(employee_allocation.number_of_days, 2)
+
     def test_allocation_hours_recompute_on_schedule_change(self):
         self.work_entry_type.request_unit = 'hour'
         self.work_entry_type.unit_of_measure = 'hour'
