@@ -211,12 +211,7 @@ export class QWebPlugin extends Plugin {
             this.picker.close();
         }
         if (ev.detail > 1) {
-            const selectionData = this.dependencies.selection.getSelectionData();
-            const selection = selectionData.documentSelection;
-            const qwebNode =
-                selection &&
-                selection.anchorNode &&
-                closestElement(selection.anchorNode, PROTECTED_QWEB_SELECTOR);
+            const qwebNode = closestElement(ev.target, PROTECTED_QWEB_SELECTOR);
             if (qwebNode && this.editable.contains(qwebNode)) {
                 // select the whole qweb node
                 const [anchorNode, anchorOffset] = leftPos(qwebNode);

@@ -295,7 +295,6 @@ export class Composer extends Component {
             focusedFor = current;
             if (focus && this.editor?.editable) {
                 this.editor.shared.selection.focusEditable();
-                this.editor.shared.selection.selectAroundNonEditable();
             }
         };
         onMounted(focusComposer);

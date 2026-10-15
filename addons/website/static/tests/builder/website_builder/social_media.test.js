@@ -64,6 +64,8 @@ async function testSocialSnippetOptions(snippetName, containerTitle, iconName) {
             color: inherit !important;
         }`,
     });
+    const snippetEl = core.getEditableContent().querySelector(`.${snippetName}`);
+    await core.getEditor().shared.socialMediaOptionPlugin.prefillSocialMediaLinks(snippetEl);
 
     expect(snippetSelector).toHaveCount(1);
     await click(`${snippetSelector} i:first-child`);

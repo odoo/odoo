@@ -167,7 +167,6 @@ export class MailComposerPlugin extends Plugin {
         } else {
             this.dependencies.selection.setCursorEnd(lastNode);
         }
-        this.dependencies.selection.selectAroundNonEditable();
     }
 
     /** Turns the editable on or off, according to whether it is editable. */

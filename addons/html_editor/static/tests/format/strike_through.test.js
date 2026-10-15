@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
-import { press } from "@odoo/hoot-dom";
+import { dblclick, press } from "@odoo/hoot-dom";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
@@ -106,8 +106,11 @@ test("should make two paragraphs not strikeThrough", async () => {
 
 test("should make qweb tag strikeThrough", async () => {
     await testEditor({
-        contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
-        stepFunction: strikeThrough,
+        contentBefore: `<div><p t-out="'Test'" contenteditable="false">Test</p></div>`,
+        stepFunction: async (editor) => {
+            await dblclick("p[t-out]");
+            strikeThrough(editor);
+        },
         contentAfter: `<div>[<p t-out="'Test'" style="text-decoration-line: line-through;">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
     });
