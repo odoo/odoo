@@ -28,9 +28,9 @@ export class ModelSelector extends Component {
             if (!this.props.models) {
                 this.models = await this._fetchAvailableModels();
             } else {
-                this.models = await this.orm.call("ir.model", "display_name_for", [
-                    this.props.models,
-                ]);
+                this.models = await this.orm
+                    .cache()
+                    .call("ir.model", "display_name_for", [this.props.models]);
             }
 
             this.models = this.models.map((record) => ({
@@ -98,7 +98,7 @@ export class ModelSelector extends Component {
      * selected for the relational properties.
      */
     async _fetchAvailableModels() {
-        const result = await this.orm.call("ir.model", "get_available_models");
+        const result = await this.orm.cache().call("ir.model", "get_available_models");
         return result || [];
     }
 }
