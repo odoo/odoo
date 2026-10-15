@@ -10,3 +10,6 @@ class StockMove(models.Model):
             order_lines = lines_data[move.bom_line_id.bom_id.product_tmpl_id.product_variant_id.id]['order_lines']
             qty = sum(order_lines.mapped("qty")) * move.bom_line_id.product_qty
         return qty
+
+    def _should_track_kit_product(self):
+        return super()._should_track_kit_product() or self.bom_line_id and self.product_id.tracking != 'none'
