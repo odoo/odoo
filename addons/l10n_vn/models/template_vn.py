@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('vn')
     def _get_vn_template_data(self):
         return {
-            'code_digits': '4',
+            'code_digits': '3',
         }
 
     @template('vn', 'res.company')
@@ -19,8 +19,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'display_invoice_amount_total_words': True,
                 'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.vn',
-                'bank_account_code_prefix': '112',
-                'cash_account_code_prefix': '111',
+                'bank_account_code_prefix': '1121',
+                'cash_account_code_prefix': '1111',
                 'transfer_account_code_prefix': '113',
                 'account_default_pos_receivable_account_id': 'chart1311',
                 'income_currency_exchange_account_id': 'chart515',
