@@ -388,7 +388,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                Command.create({'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000})
+                Command.create({'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': self.tax_sale_a.ids})
             ],
             'l10n_id_kode_transaksi': '04',
         })
