@@ -285,7 +285,9 @@ class ResPartner(models.Model):
             return 'not_valid'
 
         if partner:
-            partner.peppol_supported_documents = [service['document_id'] for service in participant_info.get('services', []) if service.get('document_id')]
+            supported_documents = [service['document_id'] for service in participant_info.get('services', []) if service.get('document_id')]
+            if supported_documents != (partner.peppol_supported_documents or []):
+                partner.peppol_supported_documents = supported_documents
 
         accepted_formats = {
             ubl_format
