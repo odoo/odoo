@@ -6,7 +6,7 @@
             <Tabs ref="this.tabsRef" initialTabId="this.props.initialReaction?.content"  direction="this.store.useMobileView ? 'h' : 'v'">
                 <t t-set-slot="headers">
                     <TabHeader t-foreach="this.props.message.reactions" t-as="reaction" t-key="reaction.content" id="reaction.content" title="this.getEmojiShortcode(reaction)">
-                        <span class="mx-1 fs-2" t-out="reaction.content"/>
+                        <span class="mx-1 fs-2 text-truncate" t-out="reaction.content"/>
                         <span class="mx-1" t-out="reaction.count"/>
                     </TabHeader>
                 </t>
