@@ -6,6 +6,16 @@ import requests
 from odoo.addons.mail.tools.discuss import mail_route
 from odoo.http import request, Controller
 
+# Google Translate rejects an unlisted region instead of falling back to the language.
+GOOGLE_LANG_CODES = {
+    "fr_CA": "fr-CA",
+    "pt_AO": "pt-PT",
+    "pt_PT": "pt-PT",
+    "zh_CN": "zh-CN",
+    "zh_HK": "zh-TW",
+    "zh_TW": "zh-TW",
+}
+
 
 class GoogleTranslateController(Controller):
     @mail_route("/mail/message/translate", type="jsonrpc", auth="public")
@@ -27,7 +37,7 @@ class GoogleTranslateController(Controller):
             request_lang = request.env.user.lang
         if not request_lang:
             return
-        target_lang = request_lang.split("_")[0]
+        target_lang = GOOGLE_LANG_CODES.get(request_lang, request_lang.split("_")[0])
         domain = [("message_id", "=", message.id), ("target_lang", "=", target_lang)]
         # sudo: mail.message.translation - searching translations of a message that can be read with standard ACL
         translation = request.env["mail.message.translation"].sudo().search(domain)
