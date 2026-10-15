@@ -1,7 +1,7 @@
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { beforeEach, describe, test, expect, mockUserAgent } from "@odoo/hoot";
 import { queryOne, waitUntil } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 import {
     click,
     contains,
@@ -131,6 +131,36 @@ test("Attachment view popout controls test", async () => {
     await click(".o_attachment_preview .o_attachment_control");
     await animationFrame();
     expect(".o_attachment_preview").not.toBeVisible();
+});
+
+test("Attachment view popout keeps its content when the main window is resized", async () => {
+    const pyEnv = await startServer();
+    const recordId = pyEnv["mail.test.simple.main.attachment"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: recordId,
+        res_model: "mail.test.simple.main.attachment",
+    });
+    registerArchs({
+        "mail.test.simple.main.attachment,false,form": `
+            <form string="Test document">
+                <div class="o_popout_holder"/>
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+    patchUiSize({ size: SIZES.XXL });
+    await start();
+    await openFormView("mail.test.simple.main.attachment", recordId);
+    await click(".o_attachment_preview .o_attachment_control");
+    await popoutContains("img");
+    await patchUiSize({ size: SIZES.LG });
+    await advanceTime(200);
+    await contains(".o-mail-Form-chatter:not(.o-isInFormSheetBg)");
+    await popoutContains("img");
 });
 
 async function hasFloatingPopoutControl(count) {
