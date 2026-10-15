@@ -2,7 +2,6 @@ import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestEditablePosition,
     getDeepestPosition,
-    isContentEditable,
     isEmptyTextNode,
     isMediaElement,
     isProtected,
@@ -31,7 +30,6 @@ import {
     getSelection,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
-    normalizeNotEditableNode,
     normalizeSelfClosingElement,
 } from "../utils/selection";
 import { closestScrollableY } from "@web/core/utils/scrolling";
@@ -181,7 +179,6 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['setSelection'] } setSelection
  * @property { SelectionPlugin['isSelectionInEditable'] } isSelectionInEditable
  * @property { SelectionPlugin['isNodeEditable'] } isNodeEditable
- * @property { SelectionPlugin['selectAroundNonEditable'] } selectAroundNonEditable
  * @property { SelectionPlugin['selectElement'] } selectElement
  * @property { SelectionPlugin['editableDocumentHasFocus'] } editableDocumentHasFocus
  * @property { SelectionPlugin['getCachedSelection'] } getCachedSelection
@@ -203,6 +200,7 @@ function scrollToSelection(selection) {
  * @typedef {((ev: Event, char: string, lastSkipped: string) => boolean | undefined)[]} is_char_tangible_for_keyboard_navigation_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_node_editable_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_no_inline_root_predicates
+ * @typedef {((el: Element, ev: MouseEvent) => boolean | undefined)[]} is_selectable_on_click_predicates
  *
  * @typedef {((targetedNodes: Node[]) => Node[])[]} targeted_nodes_processors
  */
@@ -228,7 +226,6 @@ export class SelectionPlugin extends Plugin {
         // "collapseIfZWS",
         "isSelectionInEditable",
         "isNodeEditable",
-        "selectAroundNonEditable",
         "selectElement",
         "editableDocumentHasFocus",
         "getCachedSelection",
@@ -363,6 +360,16 @@ export class SelectionPlugin extends Plugin {
                 this.stageSelection();
             }
         });
+        // Select elements (like media, icons, or dynamic fields) as a
+        // unit when clicked. Uses a global listener because a dynamic
+        // field is itself protected.
+        this.addDomListener(
+            this.editable,
+            "click",
+            (ev) => this.selectClickedElement(ev),
+            false,
+            true
+        );
 
         this.focusEditableDocument = true;
         if (this.document !== document) {
@@ -1378,26 +1385,25 @@ export class SelectionPlugin extends Plugin {
     }
 
     /**
-     * @returns {EditorSelection}
+     * Selects the closest ancestor of the clicked element which is
+     * meant to be selected as a whole when clicked, if any.
+     *
+     * @param {MouseEvent} ev
      */
-    selectAroundNonEditable() {
-        // Get up-to-date selection
-        const { editableSelection } = this.getSelectionData();
-        // Avoid setting the selection if it's not inside an uneditable element
-        const isInUneditable = (node) => !isContentEditable(closestElement(node));
-        let { startContainer: start, endContainer: end } = editableSelection;
-        if (!(isInUneditable(start) || (end !== start && isInUneditable(end)))) {
-            return editableSelection;
+    selectClickedElement(ev) {
+        if (ev.detail !== 1) {
+            return;
         }
-        // Normalize both sides
-        let { startOffset, endOffset, direction } = editableSelection;
-        [start, startOffset] = normalizeNotEditableNode(start, startOffset, "left");
-        [end, endOffset] = normalizeNotEditableNode(end, endOffset, "right");
-        // Set the new selection
-        const [anchorNode, anchorOffset, focusNode, focusOffset] = direction
-            ? [start, startOffset, end, endOffset]
-            : [end, endOffset, start, startOffset];
-        return this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+        const element = closestElement(
+            ev.target,
+            (el) => this.checkPredicates("is_selectable_on_click_predicates", el, ev) ?? false
+        );
+        // Skip elements inside a protected node (e.g. the icons of an
+        // embedded component).
+        if (element && this.editable.contains(element) && !isProtected(element)) {
+            this.selectElement(element);
+            this.focusEditable();
+        }
     }
 
     /**
