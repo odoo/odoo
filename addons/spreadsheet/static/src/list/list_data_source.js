@@ -379,7 +379,7 @@ export class ListDataSource extends OdooViewsDataSource {
                 return selectedOption ? selectedOption[1] : "";
             }
             case "boolean":
-                return value ? true : false;
+                return !!value;
             case "date":
                 return value ? toNumber(this._formatDate(value), DEFAULT_LOCALE) : "";
             case "datetime":
@@ -393,6 +393,8 @@ export class ListDataSource extends OdooViewsDataSource {
             case "float":
             case "integer":
                 return value ?? "";
+            case "html":
+                return String(value || "");
             default:
                 return value || "";
         }
