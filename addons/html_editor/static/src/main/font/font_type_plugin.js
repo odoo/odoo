@@ -212,7 +212,7 @@ export class FontTypePlugin extends Plugin {
             { is: "H5", hintText: _t("Heading 5") },
             { is: "H6", hintText: _t("Heading 6") },
             { is: "BLOCKQUOTE", hintText: _t("Quote"), placeholderHost: true },
-            { within: "pre", powerbox: false },
+            { within: "pre", powerbox: false, shorthands: false },
         ],
 
         /** Handlers */
@@ -233,13 +233,6 @@ export class FontTypePlugin extends Plugin {
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
         set_block_overrides: this.handleSetBlock.bind(this),
-
-        /** Predicates */
-        are_shorthands_available_predicates: (node) => {
-            if (closestElement(node, "pre")) {
-                return false;
-            }
-        },
 
         /** Processors */
         clipboard_content_processors: this.processContentForClipboard.bind(this),
