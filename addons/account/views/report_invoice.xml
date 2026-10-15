@@ -97,6 +97,7 @@
                 </t>
             </t>
             <t t-call="web.external_layout"
+                company="o.company_id.sudo()"
                 forced_vat="o.fiscal_position_id.foreign_vat"
                 layout_document_title="layout_document_title"
                 information_block="information_block"
