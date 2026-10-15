@@ -745,6 +745,14 @@ class TestChannelInternals(MailCommon, HttpCase):
         ):
             channel.image_128 = base64.b64encode(("<svg/>").encode())
 
+    def test_group_write_empty_name(self):
+        group = self.env["discuss.channel"]._create_group(
+            partners_to=self.user_employee.partner_id.ids,
+            name="Group",
+        )
+        group.write({"name": False})
+        self.assertEqual(group.name, "")
+
     def test_channel_notification(self):
         all_test_user = mail_new_test_user(
             self.env,
