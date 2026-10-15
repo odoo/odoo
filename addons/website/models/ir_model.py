@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import api, models
 
 
 class Base(models.AbstractModel):
@@ -38,6 +38,15 @@ class Base(models.AbstractModel):
         # dummy version of 'get_website_meta' above; this is a graceful fallback
         # for models that don't inherit from 'website.seo.metadata'
         return {}
+
+    @api.model
+    def get_computed_value(self, model_name, field_name):
+        Model = self.env[model_name]
+        dummy = Model.new({})
+        value = dummy[field_name]
+        if isinstance(value, models.BaseModel):
+            return value.id
+        return value
 
     def _get_base_lang(self):
         """ Returns the default language of the website as the base language if the record is bound to it """
