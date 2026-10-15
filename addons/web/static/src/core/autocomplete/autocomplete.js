@@ -4,7 +4,7 @@ import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps, props, proxy, t, useListener } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, status, t, useListener } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 
 export const autoCompleteProps = {
@@ -410,6 +410,9 @@ export class AutoComplete extends Component {
             }
 
             await this.loadingPromise.promise;
+            if (status(this) === "destroyed") {
+                return;
+            }
         }
 
         switch (hotkey) {

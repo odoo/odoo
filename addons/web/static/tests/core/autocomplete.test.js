@@ -16,7 +16,7 @@ import {
 } from "@odoo/hoot-dom";
 import { Component, xml, proxy, signal } from "@odoo/owl";
 
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, destroyApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 /**
@@ -1089,4 +1089,32 @@ test("dropdown minWidth should match input width", async () => {
     expect(".o-autocomplete--dropdown-menu").toHaveStyle({
         "min-width": queryRect(".o-autocomplete--input").width,
     });
+});
+
+test("skip handling input when destroyed while loading", async () => {
+    const optionsDoLoad = Promise.withResolvers();
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
+        static props = {};
+
+        sources = buildSources(async () => {
+            await optionsDoLoad.promise;
+            return [item("World", this.onSelect.bind(this))];
+        });
+
+        onSelect(option) {
+            expect.step(option.label);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    await contains(".o-autocomplete input").fill("W", { confirm: false });
+    await runAllTimers();
+    await press("Enter");
+
+    destroyApp();
+    optionsDoLoad.resolve();
+    await animationFrame();
+    expect.verifySteps([]);
 });
