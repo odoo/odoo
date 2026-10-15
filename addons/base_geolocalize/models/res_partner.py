@@ -16,8 +16,8 @@ class ResPartner(models.Model):
         if any(field in vals for field in ['street', 'zip', 'city', 'state_id', 'country_id']) \
                 and not all('partner_%s' % field in vals for field in ['latitude', 'longitude']):
             vals.update({
-                'partner_latitude': 0.0,
-                'partner_longitude': 0.0,
+                'partner_latitude': False,
+                'partner_longitude': False,
             })
         return super().write(vals)
 
