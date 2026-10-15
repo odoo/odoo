@@ -33,6 +33,6 @@ class MrpProduction(models.Model):
             action['res_id'] = repair_ids.id
         elif self.repair_count > 1:
             action['name'] = _("Repair Source of %s", self.name)
-            action['views'] = [[False, 'list']]
+            action['views'] = [[False, 'list'], [False, 'form']]
             action['domain'] = [('id', 'in', repair_ids.ids)]
         return action
