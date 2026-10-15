@@ -69,6 +69,10 @@ export class PosPayment extends Base {
         return this.payment_method_id.useBankQrCode;
     }
 
+    get usePaymentInterface() {
+        return this.payment_method_id.usePaymentInterface;
+    }
+
     get displayName() {
         return this.payment_method_id.name;
     }
@@ -96,7 +100,7 @@ export class PosPayment extends Base {
     }
 
     get isSettled() {
-        return !this.payment_status || this.payment_status === "done";
+        return !this.usePaymentInterface || this.payment_status === "done";
     }
 
     get isProcessing() {
@@ -111,7 +115,7 @@ export class PosPayment extends Base {
     }
 
     get isAmountEditable() {
-        return !this.payment_interface || ["pending", "retry"].includes(this.payment_status);
+        return !this.usePaymentInterface || ["pending", "retry"].includes(this.payment_status);
     }
 
     get isRefund() {

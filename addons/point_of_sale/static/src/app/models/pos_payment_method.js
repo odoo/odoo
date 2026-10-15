@@ -17,6 +17,10 @@ export class PosPaymentMethod extends Base {
         return this.payment_method_type === "bank_qr_code";
     }
 
+    get usePaymentInterface() {
+        return Boolean(this.payment_interface);
+    }
+
     get paymentProviderKey() {
         return this.useBankQrCode ? this.payment_method_type : this.payment_provider;
     }
