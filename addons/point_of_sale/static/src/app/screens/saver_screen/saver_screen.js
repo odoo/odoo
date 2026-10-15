@@ -16,7 +16,7 @@ export class SaverScreen extends Component {
     }
 
     closeAllOverlays() {
-        this.overlayService.overlays.items().forEach((overlay) => overlay.remove());
+        this.overlayService.overlays().forEach((overlay) => overlay.remove());
     }
 }
 
