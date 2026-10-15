@@ -55,16 +55,31 @@ patch(Thread.prototype, {
     },
 
     get avatarUrl() {
-        if (this.channel_type === "livechat") {
-            return this.operator.avatarUrl;
+        if (this.channel_type !== "livechat") {
+            return super.avatarUrl;
         }
-        return super.avatarUrl;
+        if (this.visitorMember && this.selfMember?.notEq(this.visitorMember)) {
+            return this.visitorMember.persona.avatarUrl;
+        }
+        return this.operator.avatarUrl;
     },
     get displayName() {
+        if (
+            this.channel_type === "livechat" &&
+            this.visitorMember &&
+            this.selfMember?.notEq(this.visitorMember)
+        ) {
+            return this.custom_channel_name || this.visitorMember.name;
+        }
         if (this.channel_type === "livechat" && this.operator) {
             return this.operator.user_livechat_username || this.operator.name;
         }
         return super.displayName;
+    },
+    get visitorMember() {
+        return [...this.channelMembers]
+            .sort((a, b) => a.id - b.id)
+            .find((member) => member.persona.notEq(this.operator));
     },
     get hasWelcomeMessage() {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;

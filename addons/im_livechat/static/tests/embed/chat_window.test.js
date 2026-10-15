@@ -119,6 +119,13 @@ test("avatar url contains access token for non-internal users", async () => {
             guest.id
         }/avatar_128?access_token=${guest.id}&unique=${deserializeDateTime(guest.write_date).ts}"]`
     );
+    await contains(
+        `.o-mail-ChatWindow-threadAvatar img[data-src="${getOrigin()}/web/image/res.partner/${
+            partner.id
+        }/avatar_128?access_token=${partner.id}&unique=${
+            deserializeDateTime(partner.write_date).ts
+        }"]`
+    );
 });
 
 test("livechat is shown as bubble on page reload", async () => {
@@ -164,4 +171,77 @@ test("thread actions are not displayed on temporary thread", async () => {
     await contains(".o-mail-ChatWindow-command", { count: 2 });
     await contains(".o-mail-ChatWindow-command[title='Fold']");
     await contains(".o-mail-ChatWindow-command[title*='Close Chat Window']");
+});
+
+test("Agent sees the visitor avatar on the chat bubble of a live chat", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob Operator" });
+    const ownSessionId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "livechat",
+        livechat_active: true,
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: bobPartnerId,
+    });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, fold_state: "folded" }),
+            Command.create({ guest_id: guestId }),
+        ],
+        channel_type: "livechat",
+        livechat_active: true,
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: serverState.partnerId,
+    });
+    expirableStorage.setItem(
+        "im_livechat.saved_state",
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: ownSessionId }] },
+            persisted: true,
+            livechatUserId: serverState.userId,
+        })
+    );
+    await start();
+    const [guest] = pyEnv["mail.guest"].read(guestId);
+    await contains(
+        `.o-mail-ChatBubble img[data-src='${getOrigin()}/web/image/mail.guest/${guestId}/avatar_128?unique=${
+            deserializeDateTime(guest.write_date).ts
+        }']`
+    );
+    await contains(".o-mail-ChatBubble[name='Visitor 11']");
+});
+
+test("Agent sees their own avatar on the chat bubble of their own live chat", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, fold_state: "folded" }),
+        ],
+        channel_type: "livechat",
+        livechat_active: true,
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: serverState.partnerId,
+    });
+    expirableStorage.setItem(
+        "im_livechat.saved_state",
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: channelId }] },
+            persisted: true,
+            livechatUserId: serverState.userId,
+        })
+    );
+    await start();
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    await contains(
+        `.o-mail-ChatBubble img[data-src='${getOrigin()}/web/image/res.partner/${
+            serverState.partnerId
+        }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}']`
+    );
+    await contains(".o-mail-ChatBubble[name='Mitchell Admin']");
 });
