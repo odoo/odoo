@@ -60,7 +60,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
     def _get_shop_page_queries(self):
         res = defaultdict(int)
         res.update({
-            "account_account_tag": 2,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
             "ir_ui_view": 2,
@@ -102,7 +101,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
     def _get_product_page_queries(self):
         res = defaultdict(int)
         res.update({
-            "account_account_tag": 2,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
             "ir_attachment": 1,
