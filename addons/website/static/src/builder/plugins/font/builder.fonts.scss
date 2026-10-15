@@ -7,7 +7,7 @@
         $name: map-get($font-config, 'name');
         $attachment: map-get($font-config, 'attachment');
         @if $attachment {
-            @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}");
+            @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}?unique=1");
         }
     }
 }

@@ -270,9 +270,10 @@ class WebsiteAssets(models.AbstractModel):
                         })
                         nonlocal font_family_attachments
                         font_family_attachments += attachment
-                        return 'src: url(/web/content/%s/%s) %s' % (
+                        return 'src: url(/web/content/%s/%s?unique=%s) %s' % (
                             attachment.id,
                             name,
+                            attachment.checksum,
                             font_format,
                         )
 
