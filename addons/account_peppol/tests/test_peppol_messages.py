@@ -1041,6 +1041,14 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         all_peppol_responses = self.env['account.peppol.response'].search([])
         self.assertEqual(len(all_peppol_responses), 1)
 
+    @mock_lookup_success('0208:0428759497')
+    def test_check_partner_endpoint_unchanged_documents(self):
+        """ Test that we don't write on a partner or its contacts if the supported documents haven't changed. """
+        self.valid_partner.button_account_peppol_check_partner_endpoint()
+        self.assertTrue(self.valid_partner.peppol_supported_documents)
+        with patch.object(self.registry['res.partner'], 'write', side_effect=AssertionError("The partner should not be written again")):
+            self.valid_partner.button_account_peppol_check_partner_endpoint()
+
     def test_belgian_partner_eas_fallback(self):
         """ Test fallback between Belgian EAS 0208 and 9925 when sending via Peppol.
             If a partner is registered on Peppol under 0208 but configured with 9925 (or vice versa),
