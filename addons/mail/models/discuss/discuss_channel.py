@@ -1734,6 +1734,11 @@ class DiscussChannel(models.Model):
             partners=message.author_id,
             post_joined_message=False,
         )
+        if message:
+            Store(bus_channel=self).add(
+                message,
+                lambda res: res.one("linkedSubChannel", [], value=sub_channel),
+            )
         notification = (
             Markup('<div class="o_mail_notification">%s</div>')
             % _(
