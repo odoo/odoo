@@ -670,6 +670,10 @@ class BaseCase(case.TestCase):
         self.http_request_key: str = ''
         self.http_request_allow_all: bool = False
 
+    def _callTestMethodForUser(self, method, *args, **kwargs):
+        """Override to customize execution for each @users login."""
+        method(self, *args, **kwargs)
+
     def cursor(self):
         return self.registry.cursor()
 
@@ -1302,6 +1306,20 @@ class Approx:  # noqa: PLW1641
         return self.cmp(self.value, other) == 0
 
 
+@contextmanager
+def _preserve_cursor_callbacks(cr):
+    snapshots = [
+        (callback, deque(callback._funcs), deepcopy(callback.data))
+        for callback in (cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback)
+    ]
+    try:
+        yield
+    finally:
+        for callback, funcs, data in reversed(snapshots):
+            callback._funcs = funcs
+            callback.data = data
+
+
 class TransactionCase(BaseCase):
     """ Test class in which all test methods are run in a single transaction,
     but each test method is run in a sub-transaction managed by a savepoint.
@@ -1455,11 +1473,7 @@ class TransactionCase(BaseCase):
 
         # This prevents precommit functions and data from piling up
         # until cr.flush is called in 'assertRaises' clauses
-        def _reset(cb, funcs, data):
-            cb._funcs = funcs
-            cb.data = data
-        for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
-            self.addCleanup(_reset, callback, deque(callback._funcs), deepcopy(callback.data))
+        self.enterContext(_preserve_cursor_callbacks(cr))
 
         self.addCleanup(self.savepoint.rollback)
 
@@ -3078,7 +3092,7 @@ def users(*logins):
                     with self.subTest(login=login):
                         # switch user and execute func
                         self.uid = user_id[login]
-                        func(self, *args, **kwargs)
+                        self._callTestMethodForUser(func, *args, **kwargs)
                         self.env.flush_all()
                     # Invalidate the cache between subtests, in order to not reuse
                     # the former user's cache (`test_read_mail`, `test_write_mail`)
@@ -3086,6 +3100,9 @@ def users(*logins):
             finally:
                 self.uid = old_uid
 
+        with_users._users = logins
+        # Identify the call target even when other decorators wrap this method.
+        with_users._users_method = func
         return with_users
     return users_decorator
 
@@ -3115,6 +3132,7 @@ def warmup(func, /):
         self.env.invalidate_all()
         self.warm = True
         func(self, *args, **kwargs)
+    warmup._warmup = True
     return warmup
 
 

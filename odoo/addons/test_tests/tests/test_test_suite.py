@@ -205,7 +205,9 @@ Exception: {message}
 '''ERROR: Subtest TestRunnerLogging.test_with_decorators (login='__system__')
 Traceback (most recent call last):
   File "/root_path/odoo/odoo/tests/common.py", line $line, in with_users
-    func(self, *args, **kwargs)
+    self._callTestMethodForUser(func, *args, **kwargs)
+  File "/root_path/odoo/odoo/tests/common.py", line $line, in _callTestMethodForUser
+    method(self, *args, **kwargs)
   File "/root_path/odoo/odoo/tests/common.py", line $line, in warmup
     func(self, *args, **kwargs)
   File "/root_path/odoo/odoo/addons/test_tests/tests/test_test_suite.py", line $line, in test_with_decorators
