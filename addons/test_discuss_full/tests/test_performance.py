@@ -137,7 +137,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
     #   1: _get_last_messages
-    #   23: store add message:
+    #   24: store add message:
     #       - fetch mail_message
     #       - search mail_message (_compute_linked_message_ids)
     #       - fetch mail_message (_compute_linked_message_ids)
@@ -160,8 +160,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (author)
     #       - fetch user (author)
     #       - fetch discuss_call_history
+    #       - search discuss_channel (linkedSubChannel)
     #       - select the current db snapshot
-    _query_count_discuss_channels = 63
+    _query_count_discuss_channels = 64
 
     def setUp(self):
         super().setUp()
@@ -1435,6 +1436,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": last_message.id,
                 "incoming_email_cc": False,
                 "incoming_email_to": False,
+                "linkedSubChannel": False,
                 "message_link_preview_ids": [],
                 "message_type": "comment",
                 "model": "discuss.channel",
@@ -1472,6 +1474,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": last_message.id,
                 "incoming_email_cc": False,
                 "incoming_email_to": False,
+                "linkedSubChannel": False,
                 "message_link_preview_ids": [],
                 "message_type": "comment",
                 "model": "discuss.channel",
@@ -1512,6 +1515,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": last_message.id,
                 "incoming_email_cc": False,
                 "incoming_email_to": False,
+                "linkedSubChannel": False,
                 "message_link_preview_ids": [],
                 "message_type": "notification",
                 "model": "discuss.channel",
@@ -1549,6 +1553,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": last_message.id,
                 "incoming_email_cc": False,
                 "incoming_email_to": False,
+                "linkedSubChannel": False,
                 "message_link_preview_ids": [],
                 "message_type": "notification",
                 "model": "discuss.channel",
@@ -1585,6 +1590,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": last_message.id,
                 "incoming_email_cc": False,
                 "incoming_email_to": False,
+                "linkedSubChannel": False,
                 "message_link_preview_ids": [],
                 "message_type": "notification",
                 "model": "discuss.channel",
@@ -1619,6 +1625,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "incoming_email_cc": False,
                 "incoming_email_to": False,
                 "is_bookmarked": False,
+                "linkedSubChannel": False,
                 "message_link_preview_ids": [],
                 "message_type": "comment",
                 "model": "discuss.channel",

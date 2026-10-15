@@ -2,15 +2,25 @@
 
 from odoo import Command
 
+import json
 from datetime import datetime, timedelta
 from freezegun import freeze_time
-from unittest.mock import patch
+from unittest.mock import ANY, patch
 
 from odoo.tests.common import HttpCase, new_test_user
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class TestDiscussSubChannels(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_employee = mail_new_test_user(cls.env, "user_employee", groups="base.group_user")
+        cls.general = cls.env["discuss.channel"].create({"name": "General"})
+        cls.general.add_members(partner_ids=cls.user_employee.partner_id.ids)
+        cls.general_message = cls.general.message_post(body="Hello there!")
+
     def test_01_gc_unpin_outdated_sub_channels(self):
         bob = new_test_user(self.env, "bob_user", groups="base.group_user")
         parent = self.env["discuss.channel"].create({"name": "General"})
@@ -252,3 +262,46 @@ class TestDiscussSubChannels(HttpCase):
         )
         self.assertIn(alice_user.partner_id, sub_channel.channel_member_ids.partner_id)
         self.assertIn(carol_user.partner_id, sub_channel.channel_member_ids.partner_id)
+
+    def test_14_sub_channel_of_message_sent_to_non_member(self):
+        other_message = self.general.message_post(body="Hello again!")
+        sub_channel = self.general._create_sub_channel(from_message_id=self.general_message.id)
+        self.assertNotIn(self.user_employee.partner_id, sub_channel.channel_member_ids.partner_id)
+        self.authenticate(self.user_employee.login, self.user_employee.password)
+        data = self.make_jsonrpc_request(
+            "/mail/data",
+            {"fetch_params": [["/discuss/channel/messages", {"channel_id": self.general.id}]]},
+        )
+        vals_by_message_id = {vals["id"]: vals for vals in data["mail.message"]}
+        self.assertEqual(
+            vals_by_message_id[self.general_message.id]["linkedSubChannel"],
+            sub_channel.id,
+        )
+        self.assertFalse(vals_by_message_id[other_message.id]["linkedSubChannel"])
+
+    def test_15_sub_channel_sent_to_parent_channel_on_create(self):
+        self.env["bus.bus"].sudo().search([]).unlink()
+        sub_channel = self.general._create_sub_channel(from_message_id=self.general_message.id)
+        self.env.cr.precommit.run()
+        notifications = [
+            (json.loads(notif.channel), json.loads(notif.message))
+            for notif in self.env["bus.bus"].sudo().search([])
+        ]
+        self.assertIn(
+            (
+                [self.env.cr.dbname, "discuss.channel", self.general.id],
+                {
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "mail.message": [
+                            {
+                                "id": self.general_message.id,
+                                "linkedSubChannel": sub_channel.id,
+                            },
+                        ],
+                        "__store_version__": ANY,
+                    },
+                },
+            ),
+            notifications,
+        )
