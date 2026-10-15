@@ -1081,7 +1081,16 @@ class HrLeave(models.Model):
             validated_leaves._remove_resource_leave()
 
         employee_id = values.get('employee_id', False)
+        if values.get('state'):
+            self._check_approval_update(values['state'])
+            if any(holiday.validation_type == 'both' for holiday in self):
+                if values.get('employee_id'):
+                    employees = self.env['hr.employee'].browse(values.get('employee_id'))
+                else:
+                    employees = self.mapped('employee_id')
+                self._check_double_validation_rules(employees, values['state'])
         if not self.env.context.get('leave_fast_create'):
+<<<<<<< c06c5d81ce33fdbdf51dd01de8690169f6556dfa
             if values.get('state'):
                 self._check_approval_update(values['state'])
                 if any(holiday.validation_type == 'both' for holiday in self):
@@ -1090,6 +1099,19 @@ class HrLeave(models.Model):
                     else:
                         employees = self.mapped('employee_id')
                     self._check_double_validation_rules(employees, values['state'])
+||||||| 27fb1f9f7f1b84c1373e06804493b07f70e319ac
+            if values.get('state'):
+                self._check_approval_update(values['state'])
+                if any(holiday.validation_type == 'both' for holiday in self):
+                    if values.get('employee_id'):
+                        employees = self.env['hr.employee'].browse(values.get('employee_id'))
+                    else:
+                        employees = self.mapped('employee_id')
+                    self._check_double_validation_rules(employees, values['state'])
+            employee = self.env['hr.employee'].browse(employee_id) or self.employee_id
+=======
+            employee = self.env['hr.employee'].browse(employee_id) or self.employee_id
+>>>>>>> 81c8007636487bf796aeec9c5c07bcf402613ad9
             if 'date_from' in values:
                 values['request_date_from'] = values['date_from']
             if 'date_to' in values:
