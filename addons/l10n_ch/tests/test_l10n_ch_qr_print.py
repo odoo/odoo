@@ -63,6 +63,13 @@ class QRPrintTest(AccountTestInvoicingCommon):
             _logger.warning(str(e))
             return False
 
+    def test_qr_iban_trusted_lock(self):
+        with self.assertRaisesRegex(UserError, "has been trusted"):
+            self.qr_bank_account.l10n_ch_qr_iban = 'CH21 3080 8001 2345 6782 7'
+
+        self.qr_bank_account.write({'allow_out_payment': False, 'l10n_ch_qr_iban': 'CH21 3080 8001 2345 6782 7'})
+        self.assertEqual(self.qr_bank_account.l10n_ch_qr_iban, 'CH21 3080 8001 2345 6782 7')
+
     def test_print_qr(self):
         self.correct_invoice_chf.action_post()
         self.assertTrue(self.print_qr_bill(self.correct_invoice_chf))
