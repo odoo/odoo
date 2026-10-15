@@ -13,7 +13,7 @@ registerComposerAction("add-gif", {
             const href = encodeURI(gifUrl);
             await owner._sendMessage(
                 markup`<a href="${href}" target="_blank" rel="noreferrer noopener">${gifUrl}</a>`,
-                { parentId: owner.props.composer.replyToMessage?.id }
+                { parentId: owner.props.composer().replyToMessage?.id }
             );
         },
         onClose: () => action.actionPanelClose(),

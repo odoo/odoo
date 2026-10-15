@@ -10,7 +10,7 @@ const messagingMenuItemPatch = {
     get attClass() {
         return {
             ...super.attClass,
-            "o-p-1_5 o-mail-callBordered": this.channel?.hasRtcSessionActive,
+            "o-p-1_5 o-mail-callBordered": this.props.channel?.hasRtcSessionActive,
         };
     },
 };

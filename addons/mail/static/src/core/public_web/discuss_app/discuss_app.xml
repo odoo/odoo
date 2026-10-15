@@ -7,7 +7,7 @@
             <MessagingMenu t-if="this.store.discuss.hasRestoredThread" state="this.menuState"/>
         </ResizablePanel>
         <MessagingMenu t-if="this.ui.isSmall" state="this.menuState"/>
-        <DiscussContent t-else="" channel="this.channel"/>
+        <DiscussContent t-else="" channel="this.props.channel"/>
     </div>
 </t>
 
