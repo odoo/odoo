@@ -11,25 +11,25 @@
                         <b class="text-900 me-2 text-truncate" t-out="this.activity().activity_type_id[1]"/>
                     </t>
                 </span>
-                <button t-if="this.hasAssignButton" class="o-mail-ActivityListPopoverItem-assignbtn btn btn-sm btn-success btn-link" title="Assign" aria-label="Assign" t-on-click="this.onClickAssignButton">
+                <button t-if="this.hasAssignButton" class="o-mail-ActivityListPopoverItem-assignbtn btn btn-sm btn-hover-success" title="Assign" aria-label="Assign" t-on-click="this.onClickAssignButton">
                     <i class="oi oi-filled" data-icon="person" role="img" aria-label="Assign"/>
                 </button>
-                <button t-if="this.hasMailButton" class="o-mail-ActivityListPopoverItem-mailbtn btn btn-sm btn-success btn-link" title="Compose Email" aria-label="Compose Email" t-on-click="this.onClickMailButton">
+                <button t-if="this.hasMailButton" class="o-mail-ActivityListPopoverItem-mailbtn btn btn-sm btn-hover-success" title="Compose Email" aria-label="Compose Email" t-on-click="this.onClickMailButton">
                     <i class="oi" data-icon="mail" role="img" aria-label="Compose Email"/>
                 </button>
                 <t t-if="this.activity().can_write">
                     <FileUploader t-if="this.hasFileUploader" onUploaded.bind="this.onFileUploaded">
                         <t t-set-slot="toggler">
-                            <button class="btn btn-sm btn-success btn-link" title="Upload file" aria-label="Upload File">
+                            <button class="btn btn-sm btn-hover-success" title="Upload file" aria-label="Upload File">
                                 <i class="oi" data-icon="upload"/>
                             </button>
                         </t>
                     </FileUploader>
-                    <button t-if="this.hasMarkDoneButton" class="o-mail-ActivityListPopoverItem-markAsDone btn btn-sm btn-success btn-link" title="Mark as done" aria-label="Mark as done" t-on-click="this.toggleFn(this.hasMarkDoneView)">
+                    <button t-if="this.hasMarkDoneButton" class="o-mail-ActivityListPopoverItem-markAsDone btn btn-sm btn-hover-success" title="Mark as done" aria-label="Mark as done" t-on-click="this.toggleFn(this.hasMarkDoneView)">
                         <i class="oi" data-icon="check"/>
                     </button>
                 </t>
-                <button t-if="this.hasEditButton" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-success btn-link" title="Edit" aria-label="Edit" t-on-click="this.onClickEditActivityButton">
+                <button t-if="this.hasEditButton" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-hover-success" title="Edit" aria-label="Edit" t-on-click="this.onClickEditActivityButton">
                     <i class="oi oi-filled" data-icon="edit"/>
                 </button>
             </div>
