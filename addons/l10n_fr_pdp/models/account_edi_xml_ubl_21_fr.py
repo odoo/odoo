@@ -188,20 +188,6 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             },
         }
 
-        # B2G
-        customer = vals['customer'].commercial_partner_id
-        if not self._pdp_needs_b2g_fields(customer):
-            return
-
-        if siret := commercial_partner._l10n_fr_pdp_get_siret():
-            vals['party_node']['cac:PartyLegalEntity'] = [{
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': siret,
-                    'schemeID': '0009',
-                },
-            }]
-
     def _ubl_add_line_price_node(self, vals, in_foreign_currency=True):
         # OVERRIDE
         line_node = vals['line_node']
