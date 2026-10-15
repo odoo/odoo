@@ -2075,7 +2075,7 @@ class Base(models.AbstractModel):
                 for field_name in sub_fields_spec:
                     field = lines._fields[field_name]
                     for new_line, line in zip(new_lines, lines):
-                        line_value = field.convert_to_cache(line[field_name], new_line, validate=False)
+                        line_value = field._convert_to_cache_from_origin(line[field_name], new_line)
                         field._update_cache(new_line, line_value)
 
         # Isolate changed values, to handle inconsistent data sent from the

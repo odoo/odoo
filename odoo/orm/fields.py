@@ -1045,6 +1045,19 @@ class Field(typing.Generic[T]):
         """
         return value
 
+    def _convert_to_cache_from_origin(self, value, record):
+        """ Convert ``value``, read on the origin record of the new record
+        ``record``, to the cache format. This is used when a new record takes
+        the stored values of its origin (onchange snapshot, field read on a new
+        record).
+
+        Unlike an assignment, ``value`` is already stored: a field type may keep
+        it as is instead of applying its rounding (see ``Float``). Relational
+        values must still be converted to new records, as done by
+        :meth:`convert_to_cache`.
+        """
+        return self.convert_to_cache(value, record, validate=False)
+
     def convert_to_record(self, value, record):
         """ Convert ``value`` from the cache format to the record format.
         If the value represents a recordset, it should share the prefetching of
@@ -1721,7 +1734,7 @@ class Field(typing.Generic[T]):
             try:
                 for rec in recs:
                     if (rec_origin := rec._origin):
-                        value = self.convert_to_cache(rec_origin[self.name], rec, validate=False)
+                        value = self._convert_to_cache_from_origin(rec_origin[self.name], rec)
                         self._update_cache(rec, value)
                 fallback_single = False
             except (AccessError, KeyError, MissingError):
@@ -1729,7 +1742,7 @@ class Field(typing.Generic[T]):
                     raise
                 fallback_single = True
             if fallback_single:
-                value = self.convert_to_cache(record._origin[self.name], record, validate=False)
+                value = self._convert_to_cache_from_origin(record._origin[self.name], record)
                 self._update_cache(record, value)
             # get the final value (see patches in x2many fields)
             value = field_cache[record_id]

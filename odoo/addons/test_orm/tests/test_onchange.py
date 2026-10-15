@@ -109,6 +109,31 @@ class TestOnchange(SavepointCaseWithUserDemo):
         result = self.Message.onchange(values, ['body'], fields_spec)
         self.assertNotIn('name', result['value'])
 
+    def test_onchange_keep_stored_float_precision(self):
+        """ The lines of the snapshot keep their stored values, even if they are
+        more precise than the field's digits, while the values sent are rounded. """
+        order = self.env['test_orm.monetary_order'].create({'line_ids': [
+            Command.create({'subtotal': 1.0}),
+            Command.create({'subtotal': 1.0}),
+        ]})
+        stored_line, edited_line = order.line_ids
+        # store a subtotal with 3 digits, while the field has 2
+        self.env.flush_all()
+        self.env.cr.execute("UPDATE test_orm_monetary_order_line SET subtotal = 1.004 WHERE id = %s", [stored_line.id])
+        self.env.invalidate_all()
+
+        # the client sends the stored line unchanged, and a new value for the other one
+        fields_spec = {'total': {}, 'line_ids': {'fields': {'subtotal': {}}}}
+        result = order.onchange({
+            'line_ids': [
+                Command.link(stored_line.id),
+                Command.update(edited_line.id, {'subtotal': 2.004}),
+            ],
+        }, ['line_ids'], fields_spec)
+
+        # 1.004 (stored value, kept) + 2.0 (sent value 2.004, rounded)
+        self.assertEqual(result['value']['total'], 3.004)
+
     def test_onchange_many2one(self):
         Category = self.env['test_orm.category']
 
