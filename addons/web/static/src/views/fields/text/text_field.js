@@ -26,10 +26,11 @@ export class TextField extends Component {
     };
     props = useProps(textFieldProps);
     textareaRef = signal.ref();
+    buttonRef = signal.ref();
 
     setup() {
         if (this.props.dynamicPlaceholder) {
-            this.dynamicPlaceholder = useDynamicPlaceholder(this.textareaRef);
+            this.dynamicPlaceholder = useDynamicPlaceholder(this.textareaRef, this.buttonRef);
             useListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
             const updatePlaceholderModel = () => {
                 this.dynamicPlaceholder.updateModel(
