@@ -1178,7 +1178,7 @@ class MailComposeMessage(models.TransientModel):
         email_mode = self.composition_mode == 'mass_mail'
 
         if email_mode:
-            subtype_id = False
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         elif self.subtype_id:
             subtype_id = self.subtype_id.id
         else:
