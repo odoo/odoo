@@ -40,7 +40,11 @@
             'website_livechat/static/src/js/**/*',
         ],
         'web.assets_frontend': [
-            "website_livechat/static/src/core/common/**/*",
+            "website_livechat/static/src/core/common/**/*.css",
+        ],
+        # Already in web.assets_frontend.
+        'im_livechat.assets_embed_frontend': [
+            ('remove', "website_livechat/static/src/core/common/**/*.css"),
         ],
         'web.assets_backend': [
             "website_livechat/static/src/core/common/**/*",

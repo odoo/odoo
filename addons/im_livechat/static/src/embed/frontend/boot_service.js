@@ -1,11 +1,12 @@
 import { makeRoot, makeShadow } from "@im_livechat/embed/common/boot_helpers";
 import { canLoadLivechat } from "@im_livechat/embed/common/misc";
+import { livechatStarted } from "@im_livechat/embed/frontend_loader";
 import { LivechatRoot } from "@im_livechat/embed/frontend/livechat_root";
 import { registry } from "@web/core/registry";
 import { useRootCreator } from "@web/core/utils/hooks";
 
 export const livechatBootService = {
-    dependencies: ["mail.store"],
+    dependencies: ["mail.store", "im_livechat.livechat"],
 
     /**
      * To be overriden in tests.
@@ -15,6 +16,7 @@ export const livechatBootService = {
     },
 
     start(env) {
+        livechatStarted.resolve();
         if (!canLoadLivechat()) {
             return;
         }
