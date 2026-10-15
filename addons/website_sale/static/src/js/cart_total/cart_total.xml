@@ -63,7 +63,7 @@
                     </td>
                 </tr>
             </tbody>
-            <tbody t-if="this.state.totals.amount_paid and not this.state.totals.is_paid">
+            <tbody t-if="this.state.totals.amount_paid and !this.state.totals.is_paid">
                 <tr name="o_order_amount_paid" class="text-success">
                     <td
                         t-out="this.props.templateData.amountPaidLabel"

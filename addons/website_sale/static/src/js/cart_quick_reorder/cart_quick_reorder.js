@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useSubEnv } from "@web/owl2/utils";
 import { OrderHistoryLine } from "./order_history_line/order_history_line";
-import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 
 export class CartQuickReorder extends Component {
     static template = "website_sale.CartQuickReorder";
@@ -19,8 +19,6 @@ export class CartQuickReorder extends Component {
             currency_id: null,
         });
         this.cartService = useService("cart");
-
-        useAutofocus();
 
         useSubEnv({
             formatPrice: this.formatPrice.bind(this),
