@@ -15,8 +15,9 @@
                            class="o_address_plot_identification" options='{"no_open": True, "no_create": True}'/>
                 </xpath>
                 <xpath expr="//field[@name='vat']" position="before">
+                    <field name="l10n_sa_is_vat_group_member" invisible="1"/>
                     <field name="l10n_sa_additional_identification_scheme" invisible="country_code != 'SA'"/>
-                    <field name="l10n_sa_additional_identification_number" invisible="country_code != 'SA' or l10n_sa_additional_identification_scheme == 'TIN'"/>
+                    <field name="l10n_sa_additional_identification_number" invisible="country_code != 'SA' or (l10n_sa_additional_identification_scheme == 'TIN' and not l10n_sa_is_vat_group_member)"/>
                 </xpath>
                 <xpath expr="//field[@name='street2']" position="replace">
                     <field name="street2" placeholder="District" class="o_address_street" invisible="country_code != 'SA'"/>
