@@ -1,4 +1,4 @@
-from odoo.tests import tagged
+from odoo.tests import freeze_time, tagged
 from odoo.tools import html2plaintext
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -77,6 +77,7 @@ class TestL10nTHTaxInvoice(AccountTestInvoicingCommon):
             post=True,
         )
 
+    @freeze_time('2026-10-01')
     def test_tax_invoice_sequence_for_branch_companies(self):
         """Ensure that each branch company uses its parent company's tax invoice sequence if it doesn't have its own."""
 
@@ -99,12 +100,14 @@ class TestL10nTHTaxInvoice(AccountTestInvoicingCommon):
             'code': 'l10n_th.tax.invoice.tax_invoice_number',
             'prefix': 'BRANCH-TINV/%(year)s/',
             'padding': 5,
+            'use_date_range': True,
             'company_id': self.branch_company.id,
         })
 
         invoice_2 = self._create_invoice_for_company(self.branch_company_data)
         self.assertEqual(invoice_2.l10n_th_tax_invoice_ids.tax_invoice_number, 'BRANCH-TINV/2026/00001')
 
+    @freeze_time('2026-10-01')
     def test_tax_invoice_sequence_for_sub_branch_companies(self):
         """Ensure that a company uses its own tax invoice sequence when available;
         otherwise, use the closest parent company's sequence.
@@ -125,6 +128,7 @@ class TestL10nTHTaxInvoice(AccountTestInvoicingCommon):
             'code': 'l10n_th.tax.invoice.receipt_tax_invoice_number',
             'prefix': 'BRANCH1-TINV/%(year)s/',
             'padding': 5,
+            'use_date_range': True,
             'company_id': self.branch_company.id,
         })
         self.env['ir.sequence'].create({
@@ -132,6 +136,7 @@ class TestL10nTHTaxInvoice(AccountTestInvoicingCommon):
             'code': 'l10n_th.tax.invoice.receipt_tax_invoice_number',
             'prefix': 'BRANCH2-TINV/%(year)s/',
             'padding': 5,
+            'use_date_range': True,
             'company_id': self.branch_company.id,
         })
 
