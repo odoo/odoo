@@ -184,7 +184,6 @@ registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
                 orderlines: [
                     {
                         name: "Desk Pad",
-                        price_unit: "19", // use baseprice with discount
                     },
                 ],
                 total_amount: "19.00",

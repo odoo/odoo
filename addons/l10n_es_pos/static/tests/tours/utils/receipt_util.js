@@ -7,7 +7,7 @@ export function checkSimplifiedInvoiceNumber(number) {
         ...FeedbackScreen.checkTicketData({
             cssRules: [
                 {
-                    css: ".simplified-invoice-number",
+                    css: "td",
                     text: number,
                 },
             ],
