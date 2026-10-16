@@ -56,7 +56,8 @@ class PosPrinter(models.Model):
         ('receipt', "Receipt"),
     ], string="Type", default="preparation")
     product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')
-    pos_config_ids = fields.Many2many('pos.config', 'pos_config_receipt_printer_rel', 'printer_id', 'config_id', string="Point of Sale")
+    pos_config_ids = fields.Many2many('pos.config', 'pos_config_receipt_printer_rel', 'printer_id', 'config_id')
+    preparation_pos_config_ids = fields.Many2many('pos.config', 'pos_config_printer_rel', 'printer_id', 'config_id')
     printer_ip = fields.Char(
         string='Printer IP Address',
         help=(
@@ -121,3 +122,11 @@ class PosPrinter(models.Model):
         for rec in self:
             if rec.paper_size not in rec.paper_size_keys.split(","):
                 rec.paper_size = '80'
+
+    def write(self, vals):
+        if vals.get("use_type") == "receipt":
+            vals["preparation_pos_config_ids"] = [(5, 0, 0)]
+        elif vals.get("use_type") == "preparation":
+            vals["pos_config_ids"] = [(5, 0, 0)]
+
+        return super().write(vals)
