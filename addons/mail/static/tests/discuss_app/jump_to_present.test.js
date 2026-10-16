@@ -56,6 +56,16 @@ test("Jump to present reaches the bottom in a browser without scrollend", async 
     const onscrollend = Object.getOwnPropertyDescriptor(window, "onscrollend");
     delete window.onscrollend;
     after(() => Object.defineProperty(window, "onscrollend", onscrollend));
+    // Simulate a smooth scroll that starts late.
+    patchWithCleanup(Element.prototype, {
+        scrollTo(...args) {
+            if (args[0]?.behavior === "smooth") {
+                setTimeout(() => super.scrollTo(...args), 500);
+                return;
+            }
+            return super.scrollTo(...args);
+        },
+    });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     for (let i = 0; i < 20; i++) {
