@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectTaskColumnQuickCreate" t-inherit="web.KanbanColumnQuickCreate" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_kanban_remove')]" position="attributes">
+            <attribute name="t-if">this.props.canFold</attribute>
+        </xpath>
+    </t>
+
+</templates>
