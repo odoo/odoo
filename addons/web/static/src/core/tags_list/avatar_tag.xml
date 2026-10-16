@@ -6,7 +6,7 @@
             <t t-if="this.props.onDelete">
                 <span class="o_avatar_backdrop position-absolute top-0 end-0 bottom-0 start-0 ms-n2 mt-n1 mb-n1 bg-view rounded border shadow opacity-0 opacity-100-hover"/>
             </t>
-            <img class="o_avatar o_m2m_avatar position-relative rounded" t-att-src="this.props.imageUrl" t-on-click="this.onAvatarClick"/>
+            <img loading="lazy" class="o_avatar o_m2m_avatar position-relative rounded" t-att-src="this.props.imageUrl" t-on-click="this.onAvatarClick"/>
             <t t-slot="default">
                 <t t-if="this.props.text">
                     <div class="o_tag_badge_text position-relative ms-1" t-out="this.props.text"/>
