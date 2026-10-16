@@ -6,19 +6,19 @@
             <SearchInput search="this.search" placeholder.translate="Search by name or email" autofocus="true" onClear="() => this.onClearSearch()"/>
         </div>
         <div class="d-flex align-items-center gap-1 px-2 py-1">
-            <button t-if="this.props.thread.selfFollower" class="btn btn-link btn-sm text-danger d-inline-flex align-items-center gap-1" t-on-click="() => this.onClickUnfollow()" title="Unfollow">
+            <button t-if="this.props.thread.selfFollower" class="o-navigable btn btn-link btn-sm text-danger d-inline-flex align-items-center gap-1" t-on-click="() => this.onClickUnfollow()" title="Unfollow">
                 <i class="oi oi-fw oi-filled" data-icon="person" aria-hidden="true"/>
                 <span>Unfollow</span>
             </button>
-            <button t-else="" class="btn btn-link btn-sm text-success d-inline-flex align-items-center gap-1" t-on-click="() => this.onClickFollow()" title="Follow">
+            <button t-else="" class="o-navigable btn btn-link btn-sm text-success d-inline-flex align-items-center gap-1" t-on-click="() => this.onClickFollow()" title="Follow">
                 <i class="oi oi-fw" data-icon="person" aria-hidden="true"/>
                 <span>Follow</span>
             </button>
-            <button t-if="this.props.thread.selfFollower" class="btn btn-hover-secondary btn-sm d-inline-flex align-items-center gap-1" title="Edit Notification Preferences" t-on-click.stop="(ev) => this.onClickEdit(ev)">
+            <button t-if="this.props.thread.selfFollower" class="o-navigable btn btn-hover-secondary btn-sm d-inline-flex align-items-center gap-1" title="Edit Notification Preferences" t-on-click.stop="(ev) => this.onClickEdit(ev)">
                 <i class="oi oi-fw oi-filled" data-icon="notifications" aria-hidden="true"/>
                 <span>Notifications</span>
             </button>
-            <button t-if="this.props.thread.hasWriteAccess" class="btn btn-hover-secondary btn-sm d-inline-flex align-items-center gap-1 ms-auto" t-on-click="() => this.onClickAddFollowers()" title="Add Followers">
+            <button t-if="this.props.thread.hasWriteAccess" class="o-navigable btn btn-hover-secondary btn-sm d-inline-flex align-items-center gap-1 ms-auto" t-on-click="() => this.onClickAddFollowers()" title="Add Followers">
                 <i class="oi oi-fw oi-filled" data-icon="person_add" aria-hidden="true"/>
                 <span>Add</span>
             </button>
@@ -27,7 +27,7 @@
             <t t-foreach="this.followerListView.followers" t-as="follower" t-key="follower.id">
                 <Follower follower="follower" onFollowerChanged="this.props.onFollowerChanged" close="() => this.props.dropdown.close()"/>
             </t>
-            <span t-if="!this.followersFullyLoaded()" class="btn btn-link" t-on-click="() => this.loadFollowers()" t-ref="this.loadMoreRef">Load more</span>
+            <button t-if="!this.followersFullyLoaded()" t-key="this.followerListView.followers.length" class="o-navigable btn btn-link" t-on-click="() => this.loadFollowers()" t-ref="this.loadMoreRef">Load more</button>
         </div>
         <div t-elif="this.search.searchTerm" class="dropdown-item disabled">
             No Matching Followers
