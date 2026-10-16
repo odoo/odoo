@@ -1,10 +1,249 @@
 .o-mail-Discuss {
+    /* The sidebar and the panel open and close alike. */
+    --mail-Discuss-transition: 150ms cubic-bezier(0.2, 0, 0, 1);
     background-color: var(--o-webclient-background-color);
 }
 
+/* The list mixes the page tint of the tabs and the white of the conversation, one card with it. */
 .o-mail-DiscussApp-sidebar {
-    flex-shrink: 0;
+    --mail-DiscussApp-listBg: color-mix(in srgb, var(--o-webclient-background-color) 70%, var(--white));
+    --mail-DiscussApp-sidebarExpandedWidth: min(var(--mail-DiscussApp-sidebarWidth), 30vw);
+    /* the tabs, as wide as `.o-mail-MessagingMenu-navbar` */
+    --mail-DiscussApp-sidebarTabsWidth: 4.5rem;
+    --mail-DiscussApp-sidebarFade: 120ms ease;
     max-width: 30vw;
+
+    /* Collapsed, the list is hidden: only the tabs remain, and hovering them shows it. */
+    &.o-collapsed {
+        width: var(--mail-DiscussApp-sidebarTabsWidth) !important;
+    }
+
+    /* Peeking, it spans the list without pushing the content, so that its handle resizes the list. */
+    &.o-collapsed:has(.o-mail-MessagingMenu-container.o-peek) {
+        width: var(--mail-DiscussApp-sidebarExpandedWidth) !important;
+        margin-inline-end: calc(
+            var(--mail-DiscussApp-sidebarTabsWidth) - var(--mail-DiscussApp-sidebarExpandedWidth)
+        );
+
+        /* At the edge of the list, inset by `m-1`, as it is at the edge of the docked list. */
+        .o_resizable_panel_outer_handle_end {
+            left: calc(100% - var(--o-bs-spacer-1));
+        }
+    }
+
+    &.o-collapsed:not(:has(.o-mail-MessagingMenu-container.o-peek)) .o_resizable_panel_handle {
+        display: none !important;
+    }
+
+    &.o-toggling {
+        transition: width var(--mail-Discuss-transition);
+    }
+
+    .o-mail-MessagingMenu-container {
+        width: 100%;
+    }
+
+    /* Out of the flow so the list shows over the content, instead of pushing it. */
+    &:is(.o-collapsed, .o-toggling) .o-mail-MessagingMenu-container {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        transition: width var(--mail-Discuss-transition);
+    }
+
+    &.o-toggling:not(.o-collapsed) .o-mail-MessagingMenu-container,
+    .o-mail-MessagingMenu-container.o-peek {
+        width: var(--mail-DiscussApp-sidebarExpandedWidth);
+    }
+
+    /* Shown at once at its full width, so that the pointer heading to it is never ahead of it. */
+    &.o-collapsed .o-mail-MessagingMenu-container.o-peek {
+        transition-duration: 0s;
+    }
+
+    /* The list keeps its expanded width while the sidebar narrows: it is clipped, not reflowed. */
+    &:is(.o-collapsed, .o-toggling) .o-mail-MessagingMenu {
+        flex-shrink: 0;
+        width: calc(
+            var(--mail-DiscussApp-sidebarExpandedWidth) - var(--mail-DiscussApp-sidebarTabsWidth)
+        );
+    }
+
+    /* Peeking, it floats inset in that width and fills the rest of it, edged stronger than the card under it. */
+    &.o-collapsed .o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu {
+        --mail-DiscussApp-peekCardOffset: calc(-1 * var(--o-bs-spacer-1));
+        flex-shrink: 1;
+        width: auto;
+        border-color: var(--gray-400) !important;
+        /* Its shadow stays on that card, `m-1` around it, and spreads over the conversation. */
+        clip-path: inset(
+            var(--mail-DiscussApp-peekCardOffset) -100vw var(--mail-DiscussApp-peekCardOffset)
+                var(--mail-DiscussApp-peekCardOffset) round var(--border-radius-xl) 0 0
+                var(--border-radius-xl)
+        );
+    }
+
+    /* It fades in once the sidebar has started to widen, and out at once. */
+    .o-mail-MessagingMenu {
+        transition: opacity var(--mail-DiscussApp-sidebarFade) 60ms,
+            visibility var(--mail-DiscussApp-sidebarFade) 60ms;
+    }
+
+    &.o-collapsed .o-mail-MessagingMenu-container:not(.o-peek) .o-mail-MessagingMenu {
+        opacity: 0;
+        visibility: hidden;
+        transition-delay: 0s;
+    }
+}
+
+.o-mail-DiscussApp-sidebar .o-mail-MessagingMenu {
+    background-color: var(--mail-DiscussApp-listBg);
+
+    .o-mail-SearchInput {
+        --mail-SearchInput-bgColor: var(--o-view-background-color);
+    }
+}
+
+.o-mail-DiscussContent {
+    /* Its own stacking context: nothing inside goes over the list shown above it. */
+    isolation: isolate;
+    /* What is painted inside on the view color blends with the surface. */
+    --o-view-background-color: var(--o-mail-discussMainBgColor);
+    /* Clips the panel sliding at the end; `hidden` would scroll the content on focus. */
+    overflow: clip;
+
+    --o-mail-DiscussContent-headerHeight: 3.5rem;
+
+    /* The conversation is a card, the panel is flat on the page next to it. */
+    .o-mail-DiscussContent-column {
+        border: var(--border-width) solid var(--border-color);
+        border-radius: var(--border-radius-xl);
+        background-color: var(--o-view-background-color);
+        overflow: clip;
+    }
+
+    /* Clear of the panel actions, which are over the open panel instead. */
+    .o-mail-DiscussContent-header {
+        min-height: var(--o-mail-DiscussContent-headerHeight);
+        padding-inline-end: calc(0.5rem + var(--o-mail-DiscussContent-panelActionsWidth, 0px));
+    }
+
+    /* Along with the panel as it widens and narrows. */
+    &:has(.o-mail-DiscussContent-panelContainer) .o-mail-DiscussContent-header {
+        transition: padding-inline-end var(--mail-Discuss-transition);
+    }
+
+    &:has(.o-mail-DiscussContent-panelTransition-enter-active) .o-mail-DiscussContent-header {
+        padding-inline-end: 0.5rem;
+    }
+
+    /* Level with the panel actions, out of the flow, when the header is taller. */
+    .o-mail-DiscussContent-headerActions {
+        align-self: flex-start;
+        height: var(--o-mail-DiscussContent-headerHeight);
+    }
+
+    /* Stays in its title row, open panel or not; only its buttons catch the pointer. */
+    .o-mail-DiscussContent-panelActions {
+        /* Level with the header, which is under the border of the card. */
+        top: var(--border-width);
+        height: var(--o-mail-DiscussContent-headerHeight);
+        pointer-events: none;
+
+        .o-mail-ActionList {
+            pointer-events: auto;
+        }
+    }
+
+    /* On the side, the whole height: it opens by widening and closes by narrowing. */
+    .o-mail-DiscussContent-panelContainer {
+        /* Under the panel actions, whatever is stacked inside. */
+        isolation: isolate;
+        interpolate-size: allow-keywords;
+        /* Narrower than its content while it widens, which overflows to the end. */
+        min-width: 0;
+        background-color: var(--o-webclient-background-color);
+        transition: width var(--mail-Discuss-transition);
+
+        @starting-style {
+            width: 0;
+        }
+
+        &.o-mail-DiscussContent-panelTransition-leave {
+            width: 0;
+        }
+
+        .o-mail-SearchInput {
+            --mail-SearchInput-bgColor: var(--o-view-background-color);
+        }
+
+        /* Centered with the panel actions, under the top padding of the header of the panel. */
+        .o-mail-ActionPanel-headerRow {
+            min-height: calc(
+                var(--o-mail-DiscussContent-headerHeight) - 1rem + 2 * var(--border-width)
+            );
+            padding-inline-end: var(--o-mail-DiscussContent-panelActionsWidth, 0px);
+        }
+
+        /* Inside, clear of the scrollbar of the thread next to it. */
+        .o_resizable_panel_outer_handle_start {
+            right: auto;
+            left: 0;
+        }
+    }
+
+    /* A tinted pill, 3rem tall. */
+    .o-mail-Composer:not(.o-editing) {
+        --mail-Composer-bg: var(--o-webclient-background-color);
+        --o-mail-Composer-vPadding: calc(
+            (3rem - 1em * var(--o-mail-Composer-lineHeight)) / 2 - var(--border-width)
+        );
+
+        /* As tall as the first line of text with its padding, centering the actions on it. */
+        .o-mail-Composer-mainActions {
+            height: calc(1em * var(--o-mail-Composer-lineHeight) + 2 * var(--o-mail-Composer-vPadding));
+            margin-top: 0;
+
+            .o-mail-ActionList {
+                align-self: center;
+            }
+        }
+    }
+
+    .o-mail-Composer-input:focus {
+        background-color: var(--mail-Composer-bg);
+    }
+
+    /* On the surface, over the top of the thread. */
+    .o-discuss-Typing {
+        background-color: var(--o-view-background-color);
+    }
+}
+
+/* The switcher is styled by the enterprise web client; this frames it without, and yields to it. */
+:where(.o-mail-DiscussContent-header .o_switcher) {
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: var(--border-width) solid var(--border-color);
+    background-color: var(--o-view-background-color);
+}
+
+/* Hovered, unlike the plain inline actions of the list. */
+.o-mail-DiscussContent-header .o-mail-ActionList .o_switcher button.o-inline:not(.o-hasBtnBg):not(.active) {
+    --btn-hover-bg: color-mix(in srgb, var(--o-gray-300) 50%, transparent);
+}
+
+/* The circles outside the switcher are hovered and active alike. */
+.o-mail-DiscussContent .o-mail-DiscussContent-headerActions .o-mail-ActionList button.o_btn_circle.o-inline:not(.o-hasBtnBg) {
+    --btn-hover-bg: color-mix(in srgb, var(--o-gray-300) 50%, transparent);
+    --btn-active-bg: var(--o-gray-200);
+}
+
+/* Framed with the shown list, whose border separates them. */
+.o-mail-Discuss:has(.o-mail-DiscussApp-sidebar:not(.o-collapsed)) .o-mail-DiscussContent-column {
+    border-inline-start-width: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
 }
 
 

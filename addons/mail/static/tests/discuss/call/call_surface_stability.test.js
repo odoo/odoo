@@ -329,6 +329,8 @@ test("dragging the inset moves it to the corner it is dropped in", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
+    // The member list on the side would narrow the stage, where the inset rests in a top corner.
+    getService("mail.store").discuss.isMemberPanelOpenByDefault = false;
     await openDiscuss(channelId);
     await contains("[title='Start Call']:count(1)").click();
     await contains("[title='Share Screen']:count(1)").click();
