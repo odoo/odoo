@@ -61,6 +61,9 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree" />
         <field name="arch" type="xml">
+            <field name="invoice_date_due" position="after">
+                <field name="l10n_my_edi_validation_time" optional="hide" options="{'show_time': false}"/>
+            </field>
             <field name="status_in_payment" position="before">
                 <field name="l10n_my_edi_state" optional="hide" widget="badge"
                        decoration-info="l10n_my_edi_state == 'in_progress'"
