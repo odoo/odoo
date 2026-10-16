@@ -428,6 +428,11 @@ class Cart(PaymentPortal):
             """Check if two combo lines have the same linked product combination."""
             return line1_.linked_line_ids.product_id.ids == line2_.linked_line_ids.product_id.ids
 
+        # The public partner is shared by every anonymous visitor: it has no order history of its
+        # own, and searching its orders by date scans the whole table on large databases.
+        if request.website.is_public_user():
+            return {'order_history': []}
+
         # Get the last 10 confirmed orders from the current website user.
         previous_orders_lines_sudo = request.env['sale.order'].sudo().search(
             [
