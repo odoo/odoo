@@ -5,6 +5,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as PosSale from "@pos_sale/../tests/tours/utils/pos_sale_utils";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
@@ -224,6 +225,17 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Down Payment (POS)"),
             ProductScreen.totalAmountIs(980.0),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_so_without_downpayment_product", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.selectNthOrder(1),
+            SelectionPopup.has("Settle the order", { run: "click" }),
+            Dialog.is({ title: "No down payment product" }),
         ].flat(),
 });
 
