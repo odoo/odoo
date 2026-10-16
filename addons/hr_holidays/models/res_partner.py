@@ -32,11 +32,16 @@ class ResPartner(models.Model):
         for partner in self:
             if 'out_of_office_date_end' in fields:
                 # in the rare case of multi-user partner, return the earliest possible return date
-                dates = partner.mapped('user_ids.leave_date_to')
-                states = partner.mapped('user_ids.current_leave_state')
+                dates = []
+                # sudo: hr.employee - can read the leave of users to show their out of office date
+                for user in partner.user_ids.sudo().with_context(active_test=True):
+                    user_dates = [
+                        user.with_company(company).employee_id.leave_date_to
+                        for company in user.company_ids
+                    ]
+                    dates.append(min(filter(None, user_dates), default=False))
                 date = sorted(dates)[0] if dates and all(dates) else False
-                state = sorted(states)[0] if states and all(states) else False
                 partners_format.get(partner).update({
-                    'out_of_office_date_end': date.strftime(DEFAULT_SERVER_DATE_FORMAT) if state == 'validate' and date else False,
+                    'out_of_office_date_end': date and date.strftime(DEFAULT_SERVER_DATE_FORMAT),
                 })
         return partners_format
