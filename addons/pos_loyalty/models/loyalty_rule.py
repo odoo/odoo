@@ -87,6 +87,10 @@ class LoyaltyRule(models.Model):
         self.ensure_one()
         if self.mode == 'with_code' and self.code not in (order.applied_codes or []):
             return False
+
+        if self.program_id.is_nominative and not order.partner_id:
+            return False
+
         qualifying = self._qualifying_lines(order, lines)
         if not qualifying:
             return False

@@ -14,6 +14,7 @@ import { mountPosApp } from "@point_of_sale/../tests/unit/ui_utils";
 import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ResCurrency } from "./data/res_currency.data";
+import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 
 const { DateTime } = luxon;
 
@@ -609,6 +610,22 @@ export function createFiscalPosition(store, config = {}) {
         opts.id = id;
     }
     return store.models["account.fiscal.position"].create(opts);
+}
+
+export async function loadQwebTemplates(xmlIds) {
+    const views = await unmockedOrm(
+        "ir.ui.view",
+        "search_read",
+        [[["key", "in", xmlIds]], ["key"]],
+        {}
+    );
+    const idByKey = Object.fromEntries(views.map(({ id, key }) => [key, id]));
+    return Promise.all(
+        xmlIds.map(async (key) => ({
+            key,
+            _template: await unmockedOrm("ir.ui.view", "get_combined_arch", [[idByKey[key]]], {}),
+        }))
+    );
 }
 
 export function enableCashRounding(store, method = "UP", onlyCash = true) {

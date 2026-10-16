@@ -144,6 +144,7 @@ describe("pos.order - loyalty", () => {
         const store = await setupPosEnv();
         const models = store.models;
         const order = store.addNewOrder();
+        order.partner_id = models["res.partner"].get(3);
 
         // Restrict loyalty rule #1 (program #1, order-mode, 1 point) to product #5 only.
         const rule = models["loyalty.rule"].get(1);
