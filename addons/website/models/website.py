@@ -728,8 +728,8 @@ class Website(models.CachedModel):
             r['industries'] = []
         return r
 
-    def _get_configurator_theme_preview_url(self, theme_name):
-        preview_path = f"{theme_name}/static/description/preview.html"
+    def _get_configurator_theme_preview_url(self, theme_name, is_dark=False):
+        preview_path = f"{theme_name}/static/description/{'preview_dark' if is_dark else 'preview'}.html"
         try:
             with file_open(preview_path):
                 return f'/{preview_path}'
