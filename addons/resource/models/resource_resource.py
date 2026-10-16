@@ -160,7 +160,7 @@ class ResourceResource(models.Model):
         """ Gets a dict of dict with resource's id as first key and resource's calendar as secondary key
             The value is the validity interval of the calendar for the given resource.
 
-            Here the validity interval for each calendar is the whole interval but it's meant to be overriden in further modules
+            Here the validity interval for each calendar is the whole interval but it's meant to be overridden in further modules
             handling resource's employee contracts.
         """
         assert start.tzinfo and end.tzinfo
