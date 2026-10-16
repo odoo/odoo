@@ -529,5 +529,5 @@ class ProductPricelist(models.Model):
                 ("date_start", "!=", False),
                 ("date_end", "!=", False),
             ],
-            "context": {"default_pricelist_id": self.id},
+            "context": {"default_pricelist_id": self.id, "default_compute_price": "discount"},
         }
