@@ -871,3 +871,19 @@ registry.category("web_tour.tours").add("test_barcode_scan_no_variant_extra_pric
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_negative_price_line_tax_grouping_key", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product A"),
+            ProductScreen.clickDisplayedProduct("Test Product B"),
+            ProductScreen.totalAmountIs("1,473"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            Chrome.endTour(),
+        ].flat(),
+});
