@@ -542,7 +542,8 @@ export class FormatPlugin extends Plugin {
         ];
 
         for (const node of unformattedNodes) {
-            if (isTextNode(node) || node.nodeName === "BR") {
+            const isEditable = this.dependencies.selection.isNodeEditable(node);
+            if (isTextNode(node) || node.nodeName === "BR" || !isEditable) {
                 const { inlineAncestor, parentNode } = this.splitInlineAncestors(node, {
                     formatName,
                     formatProps,

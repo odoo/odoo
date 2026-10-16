@@ -7,6 +7,7 @@ import { getContent } from "./_helpers/selection";
 import { animationFrame, press } from "@odoo/hoot-dom";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { Plugin } from "../src/plugin";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
 const greenToBlueGradient = "linear-gradient(rgb(0, 255, 0), rgb(0, 0, 255))";
@@ -1390,5 +1391,34 @@ test("should only target fully selected nodes when applying color", async () => 
         stepFunction: setColor("red", "color"),
         contentAfter:
             '<p><b>a<font style="color: red;">[b</font></b><font style="color: red;">c]</font>d</p>',
+    });
+});
+
+describe("Format non editable", () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            is_formattable_node_predicates: (node) => {
+                if (node.matches?.(".target")) {
+                    return true;
+                }
+            },
+        };
+    }
+    test("should wrap non editable in `font` element (1)", async () => {
+        await testEditor({
+            contentBefore: `<p>[<span contenteditable="false" class="target">b</span>]</p>`,
+            stepFunction: setColor("red", "color"),
+            contentAfter: `<p><font style="color: red;">[<span contenteditable="false" class="target">b</span></font>]</p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+    });
+    test("should wrap non editable in `font` element (2)", async () => {
+        await testEditor({
+            contentBefore: `<p>[a<span contenteditable="false" class="target">b</span>c]</p>`,
+            stepFunction: setColor("red", "color"),
+            contentAfter: `<p><font style="color: red;">[a<span contenteditable="false" class="target">b</span>c]</font></p>`,
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
     });
 });
