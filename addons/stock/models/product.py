@@ -913,12 +913,9 @@ class ProductTemplate(models.Model):
     @api.depends('lot_sequence_id.number_next_actual')
     def _compute_next_serial(self):
         for template in self:
-            if template.lot_sequence_id:
-                template.next_serial = '{:0{}d}{}'.format(
-                    template.lot_sequence_id.number_next_actual,
-                    template.lot_sequence_id.padding,
-                    template.lot_sequence_id.suffix or ""
-                )
+            sequence = template.lot_sequence_id
+            if sequence:
+                template.next_serial = sequence.get_next_char(sequence.number_next)
             else:
                 template.next_serial = '0000001'
 
