@@ -45,6 +45,7 @@ class IrDefault(models.Model):
         for record in self:
             if field := record.field_id:
                 model = self.env[field.model]
+                model.check_access_rights('create')
                 model.check_field_access_rights('write', [field.name])
 
     @api.model_create_multi
