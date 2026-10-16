@@ -481,6 +481,31 @@ class DiscussChannel(models.Model):
             raise AccessError(self.env._("Only channel owners or administrators can reset the invite link."))
         self.uuid = self._generate_random_token()
 
+    @api.model
+    def _setup_builtin_channels(self):
+        admin_lang = self.env.ref("base.partner_admin").lang
+        translate_env = self.env(context=dict(self.env.context, lang=admin_lang))
+        channel_general = self.env.ref("mail.channel_all_employees", raise_if_not_found=False)
+        if channel_general and not channel_general.name:
+            channel_general.write({
+                "name": translate_env._("General"),
+                "description": translate_env._(
+                    "A place to connect and exchange news with colleagues across the company.",
+                ),
+            })
+        channel_admin = self.env.ref("mail.channel_admin", raise_if_not_found=False)
+        if channel_admin and not channel_admin.name:
+            channel_admin.write({
+                "name": translate_env._("Administrators"),
+                "description": translate_env._("General channel for administrators."),
+            })
+        welcome_message = self.env.ref("mail.module_install_notification", raise_if_not_found=False)
+        if welcome_message and not welcome_message.body:
+            welcome_message.body = Markup("%s<br/>%s") % (
+                translate_env._("Welcome to the #General channel 🎉"),
+                translate_env._("This is a space for the whole team to connect and share updates."),
+            )
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_all_employee_channel(self):
         # Delete discuss.channel
