@@ -1168,12 +1168,38 @@ class ProjectTask(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        template_id = self.env.context.get('creation_template_id')
+        if template_id:
+            template = self.browse(template_id)
+            template_data = template.with_context(copy_from_template=True).copy_data(
+                {field: False for field in self._get_template_field_blacklist()},
+            )[0]
+            state_default = self.env['project.task'].default_get(['state']).get('state', '01_in_progress')
+
+            def _process_commands(records, commands):
+                for record, command in zip(records, commands):
+                    if len(command) == 3 and isinstance(command[2], dict):
+                        command[2]['is_template'] = False
+                        command[2]['state'] = command[2].get('state', state_default)
+                        if record.date_deadline:
+                            command[2]['date_deadline'] = record.date_deadline
+                        if 'child_ids' in command[2]:
+                            _process_commands(record.child_ids, command[2]['child_ids'])
+                return commands
+            for vals in vals_list:
+                if vals.get('child_ids'):
+                    for tmpl_record, cmd_tmpl, cmd in zip(template.child_ids, template_data.get('child_ids', []), vals.get('child_ids', [])):
+                        if len(cmd_tmpl) == 3 and isinstance(cmd_tmpl[2], dict) and len(cmd) == 3 and isinstance(cmd[2], dict):
+                            if cmd_tmpl[2].get('child_ids'):
+                                cmd[2]['child_ids'] = _process_commands(tmpl_record.child_ids, cmd_tmpl[2]['child_ids'])
+
         # Some values are determined by this override and must be written as
         # sudo for portal users, because they do not have access to these
         # fields. Other values must not be written as sudo.
         additional_vals_list = [{} for _ in vals_list]
 
         new_context = dict(self.env.context)
+        new_context.pop('creation_template_id', False)  # Pops context to prevent infinite recursion on sub-tasks
         default_personal_stage = new_context.pop('default_personal_stage_type_ids', False)
         default_project_id = new_context.pop('default_project_id', False)
         new_context.pop('project_sharing_create', False)
@@ -2138,6 +2164,31 @@ class ProjectTask(models.Model):
         if project_id and not self.env['project.project'].browse(project_id).allow_recurring_tasks:
             fields.extend(self._get_recurrence_fields() + ["recurrence_id", "recurring_task"])
         return fields
+
+    def get_template_context(self):
+        self.ensure_one()
+        default = {field: False for field in self._get_template_field_blacklist()}
+        data = {
+            'default_is_template': False,
+            'creation_template_id': self.id,
+        }
+        if self.depend_on_ids:
+            data['default_depend_on_ids'] = self.depend_on_ids.ids
+        if self.date_deadline:
+            data['default_date_deadline'] = self.date_deadline
+        for key, value in self.with_context(copy_from_template=True, copy_from_project_template=self.id).copy_data(default)[0].items():
+            if key == 'child_ids' and isinstance(value, list):
+                state_default = self.env['project.task'].default_get(['state']).get('state', '01_in_progress')
+                for tmpl_child, cmd in zip(self.child_ids, value):
+                    if len(cmd) == 3 and isinstance(cmd[2], dict):
+                        cmd[2]['is_template'] = False
+                        cmd[2]['state'] = cmd[2].get('state', state_default)
+                        if tmpl_child.date_deadline:
+                            cmd[2]['date_deadline'] = tmpl_child.date_deadline
+                data['default_child_ids'] = value
+            elif key not in ['is_template', 'depend_on_ids']:
+                data[f'default_{key}'] = value
+        return data
 
     def action_create_from_template(self, values=None):
         self.ensure_one()
