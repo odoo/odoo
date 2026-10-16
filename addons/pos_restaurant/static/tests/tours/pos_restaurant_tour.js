@@ -23,6 +23,7 @@ import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import { delay } from "@odoo/hoot-dom";
 import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
+import * as Offline from "@point_of_sale/../tests/tours/utils/offline_util";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -904,5 +905,70 @@ registry.category("web_tour.tours").add("test_quantity_correctly_displayed_after
             ProductScreen.clickOrderButton(),
             Dialog.confirm(),
             ProductScreen.OrderButtonNotContain("Drinks"),
+        ].flat(),
+});
+
+function payTableOrderOfflineAfterDraftSync(tableName) {
+    return [
+        Chrome.startPoS(),
+        Dialog.confirm("Open Register"),
+        FloorScreen.clickTable(tableName),
+        ProductScreen.clickDisplayedProduct("Coca-Cola"),
+        // Going back to the floor plan syncs the draft order: it gets a server id
+        Chrome.clickPlanButton(),
+        FloorScreen.clickTable(tableName),
+        {
+            content: "Check that the draft order has a server id",
+            trigger: "body",
+            run: () => {
+                if (typeof posmodel.get_order().id !== "number") {
+                    throw new Error("The draft order should have been synced");
+                }
+            },
+        },
+        Offline.setOfflineMode(),
+        ProductScreen.clickPayButton(),
+        PaymentScreen.clickPaymentMethod("Bank"),
+        PaymentScreen.clickValidate(),
+        ReceiptScreen.isShown(),
+        {
+            content: "Wait for the local data to be saved in IndexedDB",
+            trigger: "body",
+            run: async () => await delay(1000),
+        },
+        Offline.setOnlineMode(),
+    ].flat();
+}
+
+registry.category("web_tour.tours").add("test_paid_offline_synced_draft_not_reopened", {
+    steps: () =>
+        [
+            payTableOrderOfflineAfterDraftSync("5"),
+            {
+                content: "Another device synchronises: the paid order must not be reopened",
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.models["pos.order"].find((o) => o.state === "paid");
+                    await posmodel.deviceSync.readDataFromServer();
+                    if (order.state !== "paid") {
+                        throw new Error(`The paid order has been reopened (state: ${order.state})`);
+                    }
+                    await posmodel.syncAllOrders();
+                },
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_paid_offline_synced_draft_kept_after_reload", {
+    steps: () =>
+        [
+            payTableOrderOfflineAfterDraftSync("5"),
+            refresh(),
+            FloorScreen.isShown(),
+            {
+                content: "Wait for the pending orders to be synced after the reload",
+                trigger: "body",
+                run: async () => await delay(2000),
+            },
         ].flat(),
 });

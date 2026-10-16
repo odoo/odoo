@@ -568,3 +568,29 @@ class TestFrontend(TestFrontendCommon):
     def test_quantity_correctly_displayed_after_transfer(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_quantity_correctly_displayed_after_transfer', login="pos_user")
+
+    def _assert_table_order_paid(self, table_number):
+        order = self.pos_config.current_session_id.order_ids.filtered(
+            lambda o: o.table_id.table_number == table_number
+        )
+        self.assertEqual(len(order), 1)
+        self.assertEqual(order.state, 'paid', "The order paid while offline should be paid on the server")
+        self.assertEqual(len(order.payment_ids), 1)
+
+    def test_paid_offline_synced_draft_not_reopened(self):
+        """ A table order already synced as draft, then paid while the server is unreachable,
+            must not be reopened by a synchronisation from another device.
+        """
+        self.pos_config.write({'printer_ids': False})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_paid_offline_synced_draft_not_reopened')
+        self._assert_table_order_paid(5)
+
+    def test_paid_offline_synced_draft_kept_after_reload(self):
+        """ A table order already synced as draft, then paid while the server is unreachable,
+            must be kept locally and synced as paid after a reload of the PoS.
+        """
+        self.pos_config.write({'printer_ids': False})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_paid_offline_synced_draft_kept_after_reload')
+        self._assert_table_order_paid(5)
