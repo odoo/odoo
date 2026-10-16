@@ -66,6 +66,7 @@ CREATE TABLE ir_module_module (
     sequence integer DEFAULT 100,
     auto_install boolean default False,
     to_buy boolean default False,
+    imported boolean default False,
     primary key(id)
 );
 
