@@ -29,8 +29,8 @@ class PosPaymentMethod(models.Model):
     dpopay_test_mode = fields.Boolean(string='Enable Test Mode', help="Check this to use DPO Pay's sandbox environment for testing purposes.")
     dpopay_bearer_token = fields.Char(default='Token', help="Bearer token used for authenticating requests. Automatically refreshed when expired.", groups="point_of_sale.group_pos_manager")
 
-    def _get_terminal_provider_selection(self):
-        return super()._get_terminal_provider_selection() + [('dpopay', 'DPO Pay')]
+    def _get_provider_selection(self):
+        return super()._get_provider_selection() + [('dpopay', 'DPO Pay')]
 
     def _get_dpopay_transaction_type(self):
         if self.dpopay_payment_mode == 'momo':

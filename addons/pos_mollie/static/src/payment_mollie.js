@@ -20,10 +20,7 @@ export class PaymentMollie extends PaymentInterface {
                     !paymentLine.isSettled &&
                     paymentLine.payment_status !== "retry"
                 ) {
-                    paymentLine.payment_method_id.payment_interface.handleMollieStatusResponse(
-                        paymentLine,
-                        payload
-                    );
+                    paymentLine.payment_interface.handleMollieStatusResponse(paymentLine, payload);
                 }
             }
         });
@@ -117,8 +114,7 @@ export class PaymentMollie extends PaymentInterface {
 
         const amountDue = Math.abs(currentOrder.remainingDue);
         const matchedPaymentLine = orderToRefund.payment_ids.find(
-            (line) =>
-                line.payment_method_id.payment_provider === "mollie" && line.amount <= amountDue
+            (line) => line.payment_provider === "mollie" && line.amount <= amountDue
         );
 
         return matchedPaymentLine?.transaction_id ?? null;

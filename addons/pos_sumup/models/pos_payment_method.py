@@ -46,8 +46,8 @@ def _sumup_pair_reader(merchant_code: str, api_key: str, pairing_code: str, name
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
-    def _get_terminal_provider_selection(self):
-        return super()._get_terminal_provider_selection() + [("sumup", "SumUp")]
+    def _get_provider_selection(self):
+        return super()._get_provider_selection() + [("sumup", "SumUp")]
 
     # SumUp
     sumup_api_key = fields.Char(

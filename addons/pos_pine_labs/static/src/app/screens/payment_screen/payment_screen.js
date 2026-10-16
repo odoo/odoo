@@ -8,14 +8,14 @@ patch(PaymentScreen.prototype, {
         onMounted(async () => {
             const waitingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
-                    paymentLine.payment_method_id.payment_provider === "pine_labs" &&
+                    paymentLine.payment_provider === "pine_labs" &&
                     !paymentLine.isSettled &&
                     paymentLine.payment_status !== "pending"
             );
             if (waitingPaymentLine) {
                 waitingPaymentLine.payment_status = "waiting_card";
                 const payment_status =
-                    await waitingPaymentLine.payment_method_id.payment_interface._waitForPaymentToConfirm();
+                    await waitingPaymentLine.payment_interface._waitForPaymentToConfirm();
                 if (payment_status?.status === "TXN APPROVED") {
                     waitingPaymentLine.payment_status = "done";
                 } else if (payment_status?.status === "TXN UPLOADED") {

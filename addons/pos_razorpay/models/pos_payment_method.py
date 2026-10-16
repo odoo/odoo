@@ -13,8 +13,8 @@ class PosPaymentMethod(models.Model):
     razorpay_api_key = fields.Char(string='Razorpay API Key', help='Used when connecting to Razorpay: https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/', groups='point_of_sale.group_pos_manager')
     razorpay_test_mode = fields.Boolean(string='Razorpay Test Mode', default=False, help='Turn it on when in Test Mode')
 
-    def _get_terminal_provider_selection(self):
-        return super()._get_terminal_provider_selection() + [('razorpay', 'Razorpay')]
+    def _get_provider_selection(self):
+        return super()._get_provider_selection() + [('razorpay', 'Razorpay')]
 
     def razorpay_make_refund_request(self, data):
         razorpay = RazorpayPosRequest(self)

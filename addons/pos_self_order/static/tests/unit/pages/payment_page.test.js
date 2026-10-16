@@ -17,7 +17,7 @@ class MockPaymentInterface extends PaymentInterface {
     }
     sendPaymentRequest(line) {
         this.hasBeenCalled = true;
-        if (line.useQrPayment) {
+        if (line.payment_provider === "mock_qr") {
             line.qr_code = "mock_qr_code";
             return false;
         }
@@ -36,7 +36,7 @@ class MockPaymentInterface extends PaymentInterface {
 class MockPaymentInterfaceWithError extends MockPaymentInterface {
     sendPaymentRequest(line) {
         this.hasBeenCalled = true;
-        if (line.useQrPayment) {
+        if (line.payment_provider === "mock_qr") {
             throw new Error("Payment failed");
         }
         return false;
@@ -55,28 +55,28 @@ const setupPaymentPage = async () => {
     const paymentTerminal = store.models["pos.payment.method"].create({
         name: "Terminal",
         payment_provider: "mock_terminal",
-        payment_method_type: "terminal",
+        payment_method_type: "provider",
     });
     paymentTerminal.payment_interface = new MockPaymentInterface();
 
     const paymentTerminalWithError = store.models["pos.payment.method"].create({
         name: "TerminalError",
         payment_provider: "mock_terminal",
-        payment_method_type: "terminal",
+        payment_method_type: "provider",
     });
     paymentTerminalWithError.payment_interface = new MockPaymentInterfaceWithError();
 
     const paymentQrPayment = store.models["pos.payment.method"].create({
         name: "QR",
         payment_provider: "mock_qr",
-        payment_method_type: "qr_payment",
+        payment_method_type: "provider",
     });
     paymentQrPayment.payment_interface = new MockPaymentInterface();
 
     const paymentQrPaymentWithError = store.models["pos.payment.method"].create({
         name: "QRError",
         payment_provider: "mock_qr",
-        payment_method_type: "qr_payment",
+        payment_method_type: "provider",
     });
     paymentQrPaymentWithError.payment_interface = new MockPaymentInterfaceWithError();
 

@@ -29,7 +29,7 @@ test("canStartPayment", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
-    card.payment_method_type = "terminal";
+    card.payment_method_type = "provider";
 
     const success = { status: true, message: "" };
     const failure = {
@@ -78,7 +78,7 @@ test("paymentInterfaceKey", async () => {
 
     // Provider
     card.payment_provider = "adyen";
-    card.payment_method_type = "terminal";
+    card.payment_method_type = "provider";
     expect(card.paymentInterfaceKey).toBe("adyen");
 
     // Bank transfer methods have no provider: the key is their type

@@ -57,12 +57,8 @@ export class PosPayment extends Base {
         return this.payment_method_id.payment_provider;
     }
 
-    get useTerminal() {
-        return this.payment_method_id.useTerminal;
-    }
-
-    get useQrPayment() {
-        return this.payment_method_id.useQrPayment;
+    get useProvider() {
+        return this.payment_method_id.useProvider;
     }
 
     get useBankTransfer() {

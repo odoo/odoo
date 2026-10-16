@@ -27,7 +27,7 @@ test("LipaNaMpesa: the customer display shows the QR code to scan", async () => 
 
     // Not awaited: the request only settles once the cashier closes the
     // transaction popup, while the QR is meant to be on the display before that.
-    line.payment_method_id.payment_interface.sendPaymentRequest(line);
+    line.payment_interface.sendPaymentRequest(line);
 
     await waitFor(".qr-payment-card");
     // The QR reached the payment line, and the display renders one for it.

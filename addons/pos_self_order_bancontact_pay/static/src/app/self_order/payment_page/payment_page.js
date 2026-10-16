@@ -2,6 +2,13 @@ import { patch } from "@web/core/utils/patch";
 import { PaymentPage } from "@pos_self_order/app/pages/payment_page/payment_page";
 
 patch(PaymentPage.prototype, {
+    getPanelShown() {
+        if (this.selectedPaymentMethod?.payment_provider === "bancontact_pay") {
+            return this.state.qrCode ? "qr_code" : false;
+        }
+        return super.getPanelShown(...arguments);
+    },
+
     get showBancontact() {
         return (
             this.selectedPaymentMethod.payment_provider === "bancontact_pay" && this.state.qrCode
@@ -25,7 +32,7 @@ patch(PaymentPage.prototype, {
         const waitingBancontactPayment = payments.find(
             (p) =>
                 p.payment_method_id.id === this.state.paymentMethodId &&
-                p.payment_method_id.payment_provider === "bancontact_pay" &&
+                p.payment_provider === "bancontact_pay" &&
                 p.bancontact_id &&
                 p.qr_code &&
                 ["waiting", "waiting_scan", "waiting_cancel"].includes(p.payment_status)

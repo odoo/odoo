@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
     <t t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('paymentline_status')]" position="after">
-            <div t-if="line.payment_method_id.payment_provider === 'glory'" class="d-flex flex-column gap-3">
-                <t t-set="glory" t-value="line.payment_method_id.payment_interface"/>
+            <div t-if="line.payment_provider === 'glory'" class="d-flex flex-column gap-3">
+                <t t-set="glory" t-value="line.payment_interface"/>
 
                 <div class="d-flex gap-2 mt-3 fs-4">
                     <strong>Cash machine status:</strong>

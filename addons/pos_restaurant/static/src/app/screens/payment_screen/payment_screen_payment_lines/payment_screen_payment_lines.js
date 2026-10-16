@@ -11,8 +11,7 @@ patch(PaymentScreenPaymentLines.prototype, {
         line.setAmount(newAmount);
         line.payment_status = "waiting";
 
-        const isAdjustSuccessful =
-            await line.payment_method_id.payment_interface?.sendPaymentAdjust(line.uuid);
+        const isAdjustSuccessful = await line.payment_interface?.sendPaymentAdjust(line.uuid);
 
         if (!isAdjustSuccessful) {
             line.setAmount(prevAmount);

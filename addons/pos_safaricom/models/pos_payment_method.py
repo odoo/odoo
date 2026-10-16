@@ -33,8 +33,8 @@ class PosPaymentMethod(models.Model):
         default='till',
     )
 
-    def _get_terminal_provider_selection(self):
-        return super()._get_terminal_provider_selection() + [('safaricom', 'M-Pesa')]
+    def _get_provider_selection(self):
+        return super()._get_provider_selection() + [('safaricom', 'M-Pesa')]
 
     def _get_business_shortcode(self):
         self.ensure_one()

@@ -32,7 +32,7 @@ class TestSumupPaymentMethod(TestPointOfSaleHttpCommon):
                             "name": "SumUp",
                             "type": "bank",
                             "payment_provider": "sumup",
-                            "payment_method_type": "terminal",
+                            "payment_method_type": "provider",
                             "sumup_api_key": "test_api_key",
                             "sumup_merchant_code": "MTEST01",
                             "sumup_terminal_id": "rdr_test123",

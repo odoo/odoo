@@ -283,7 +283,7 @@ export class PaymentStripe extends PaymentInterface {
         var line = order.getPaymentlineByUuid(uuid);
         return (
             this.pos.config.set_tip_after_payment &&
-            line.payment_method_id.payment_provider === "stripe" &&
+            line.payment_provider === "stripe" &&
             line.card_type !== "interac" &&
             line.uiState.stripeCardPresentNetwork !== "eftpos_au"
         );

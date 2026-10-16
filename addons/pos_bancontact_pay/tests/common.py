@@ -42,7 +42,7 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
         cls.payment_method_display = cls.env["pos.payment.method"].create({
             'type': 'bank',
             "name": "Bancontact - Display",
-            "payment_method_type": "qr_payment",
+            "payment_method_type": "provider",
             "payment_provider": "bancontact_pay",
             "bancontact_usage": "display",
             "company_id": cls.company.id,
@@ -54,7 +54,7 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
         cls.payment_method_display_2 = cls.env["pos.payment.method"].create({
             'type': 'bank',
             "name": "Bancontact - Display2",
-            "payment_method_type": "qr_payment",
+            "payment_method_type": "provider",
             "payment_provider": "bancontact_pay",
             "bancontact_usage": "display",
             "company_id": cls.company_2.id,
@@ -65,7 +65,7 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
         })
         cls.payment_method_sticker_1 = cls.env["pos.payment.method"].create({
             "name": "Bancontact - Sticker 1",
-            "payment_method_type": "qr_payment",
+            "payment_method_type": "provider",
             "payment_provider": "bancontact_pay",
             "bancontact_usage": "sticker",
             "type": "bank",
@@ -77,7 +77,7 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
         })
         cls.payment_method_sticker_2 = cls.env["pos.payment.method"].create({
             "name": "Bancontact - Sticker 2",
-            "payment_method_type": "qr_payment",
+            "payment_method_type": "provider",
             "payment_provider": "bancontact_pay",
             "bancontact_usage": "sticker",
             "type": "bank",
