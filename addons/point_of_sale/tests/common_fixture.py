@@ -97,10 +97,11 @@ class PosTestRecords(AccountTestInvoicingCommon):
     @classmethod
     def _setup_categories(cls):
         # PoS Categories
-        cls.cat_no_tax, cls.cat_tax_five_incl, cls.cat_tax_ten_incl, cls.cat_tax_fifteen_incl = cls.env['pos.category'].create([
-            {'name': 'No tax', 'sequence': 0},
-            {'name': 'Tax five incl', 'sequence': 1},
-            {'name': 'Tax ten incl', 'sequence': 2},
+        (cls.pos_desk_misc_test, cls.pos_cat_chair_test, cls.pos_cat_desk_test,
+         cls.pos_car_other_test) = cls.env['pos.category'].create([
+            {'name': 'Misc test', 'sequence': 0},
+            {'name': 'Chair test', 'sequence': 1},
+            {'name': 'Desk test', 'sequence': 2},
             {'name': 'Tax fifteen incl', 'sequence': 3},
         ])
         # Product Categories
@@ -109,32 +110,29 @@ class PosTestRecords(AccountTestInvoicingCommon):
             'name': 'Services',
             'parent_id': cls.categ_basic.id,
         })
-        cls.pos_desk_misc_test = cls.cat_no_tax
-        cls.pos_cat_chair_test = cls.cat_tax_five_incl
-        cls.pos_cat_desk_test = cls.cat_tax_ten_incl
 
     @classmethod
     def _setup_pos_products(cls):
-        cls.ten_dollars_no_tax = cls.create_product_template('Ten dollars no tax', 10.0, [cls.cat_no_tax.id])
-        cls.twenty_dollars_no_tax = cls.create_product_template('Twenty dollars no tax', 20.0, [cls.cat_no_tax.id])
-        cls.ten_dollars_with_5_incl = cls.create_product_template('Ten dollars with 5 included', 10.0, [cls.cat_tax_five_incl.id], [cls.taxes['tax5_incl'].id])
-        cls.twenty_dollars_with_5_incl = cls.create_product_template('Twenty dollars with 5 included', 20.0, [cls.cat_tax_five_incl.id], [cls.taxes['tax5_incl'].id])
-        cls.ten_dollars_with_10_incl = cls.create_product_template('Ten dollars with 10 included', 10.0, [cls.cat_tax_ten_incl.id], [cls.taxes['tax10_incl'].id])
-        cls.twenty_dollars_with_10_incl = cls.create_product_template('Twenty dollars with 10 included', 20.0, [cls.cat_tax_ten_incl.id], [cls.taxes['tax10_incl'].id])
-        cls.ten_dollars_with_15_incl = cls.create_product_template('Ten dollars with 15 included', 10.0, [cls.cat_tax_fifteen_incl.id], [cls.taxes['tax15_incl'].id])
-        cls.twenty_dollars_with_15_incl = cls.create_product_template('Twenty dollars with 15 included', 20.0, [cls.cat_tax_fifteen_incl.id], [cls.taxes['tax15_incl'].id])
+        cls.whiteboard_pen = cls.create_product_template('Whiteboard Pen', 10, [cls.pos_desk_misc_test.id], weight=0.01)
+        cls.wall_shelf = cls.create_product_template('Wall Shelf Unit', 20, barcode='2100005000000')
+        cls.small_shelf = cls.create_product_template('Small Shelf', 10, tax_ids=[cls.taxes['tax5_incl'].id])
+        cls.magnetic_board = cls.create_product_template('Magnetic Board', 20, tax_ids=[cls.taxes['tax5_incl'].id], barcode='2305000000004')
+        cls.monitor_stand = cls.create_product_template('Magnetic Stand', 10, tax_ids=[cls.taxes['tax10_incl'].id], barcode='0123456789')
+        cls.desk_pad = cls.create_product_template('Desk Pad', 20, [cls.pos_cat_desk_test.id], [cls.taxes['tax10_incl'].id])
+        cls.letter_tray = cls.create_product_template('Letter Tray', 10, [cls.pos_cat_chair_test.id], [cls.taxes['tax15_incl'].id])
+        cls.desk_organizer = cls.create_product_template('Desk Organizer', 20, tax_ids=[cls.taxes['tax15_incl'].id], barcode='2300002000007')
 
-        # HTTP tests adapt these records to their tour names and prices.
-        cls.whiteboard_pen = cls.ten_dollars_no_tax
-        cls.wall_shelf = cls.twenty_dollars_no_tax
-        cls.small_shelf = cls.ten_dollars_with_5_incl
-        cls.magnetic_board = cls.twenty_dollars_with_5_incl
-        cls.monitor_stand = cls.ten_dollars_with_10_incl
-        cls.desk_pad = cls.twenty_dollars_with_10_incl
-        cls.letter_tray = cls.ten_dollars_with_15_incl
-        cls.desk_organizer = cls.twenty_dollars_with_15_incl
-        cls.configurable_chair = cls.create_product_template('Configurable Chair', 10.0, available_in_pos=False)
-        cls.vanela_gathiya = cls.create_product_template('Vanela Gathiya', 10.0, available_in_pos=False, to_weight=True)
+        cls.configurable_chair = cls.create_product_template('Configurable Chair', 10.0)
+        cls.vanela_gathiya = cls.create_product_template('Vanela Gathiya', 10.0, to_weight=True)
+
+        cls.ten_dollars_no_tax = cls.whiteboard_pen
+        cls.twenty_dollars_no_tax = cls.wall_shelf
+        cls.ten_dollars_with_5_incl = cls.small_shelf
+        cls.twenty_dollars_with_5_incl = cls.magnetic_board
+        cls.ten_dollars_with_10_incl = cls.monitor_stand
+        cls.twenty_dollars_with_10_incl = cls.desk_pad
+        cls.ten_dollars_with_15_incl = cls.letter_tray
+        cls.twenty_dollars_with_15_incl = cls.desk_organizer
 
     @classmethod
     def _setup_customers(cls):

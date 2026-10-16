@@ -71,10 +71,6 @@ class TestPointOfSaleHttpCommon(TestPoSCommon, PosHttpCommon):
         cls.whiteboard_pen.attribute_line_ids.product_template_value_ids[0].price_extra = 2
 
         cls._setup_users()
-        cls.pos_desk_misc_test.name = 'Misc test'
-        cls.pos_cat_chair_test.name = 'Chair test'
-        cls.pos_cat_desk_test.name = 'Desk test'
-        cls.cat_tax_fifteen_incl.active = False
 
         products = (
             cls.whiteboard_pen | cls.wall_shelf | cls.small_shelf | cls.magnetic_board
@@ -87,9 +83,7 @@ class TestPointOfSaleHttpCommon(TestPoSCommon, PosHttpCommon):
             ('id', 'not in', products.ids),
         ])._write({'active': False})
         products.write({
-            'is_storable': False,
             'available_in_pos': True,
-            'taxes_id': [Command.clear()],
             'pos_categ_ids': [Command.clear()],
         })
         for product, name, price, values in [
