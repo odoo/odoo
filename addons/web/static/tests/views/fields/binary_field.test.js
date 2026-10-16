@@ -11,6 +11,7 @@ import {
     mountView,
     onRpc,
     pagerNext,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
 import { toBase64Length } from "@web/core/utils/binary";
@@ -527,4 +528,37 @@ test("Binary field in list view doesn't open the record when clicked", async () 
 
     await contains(`.o_data_row .o_data_cell:eq(1)`).click();
     expect.verifySteps(["selectRecord"]);
+});
+
+test("empty file upload is rejected and keeps the existing value", async () => {
+    const fileName = "empty_file.txt";
+    // Check the expected warning for an empty file upload.
+    patchWithCleanup(console, { warn: (msg) => {
+        expect(msg).toBe(`Error while uploading file : ${fileName}`);
+    } });
+
+    await mountView({
+        resModel: "res.partner",
+        resId: 1,
+        type: "form",
+        arch: `<form><field name="document"/></form>`,
+    });
+
+    const input = `.o_field_widget[name="document"].o_field_binary .o_input`;
+    expect(input).toHaveValue("coucou==");
+
+    await click(`.o_select_file_button`);
+    await animationFrame();
+
+    const emptyFile = new File([""], fileName, { type: "text/plain" });
+    await setInputFiles([emptyFile]);
+    await animationFrame();
+
+    expect(".o_notification_manager .o_notification").toHaveCount(1);
+    expect(".o_notification_manager .o_notification .o_notification_content").toHaveText(
+        "There was a problem while uploading your file."
+    );
+    expect(input).toHaveValue("coucou==", {
+        message: "The binary field should keep the existing value after an empty file upload failed.",
+    });
 });
