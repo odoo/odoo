@@ -38,6 +38,11 @@
             overflow: visible;
         }
     }
+    @media screen and (forced-colors: active) {
+        .gradient-preview, .gradient-colors {
+            forced-color-adjust: none;
+        }
+    }
     input[type="range"] {
         -webkit-appearance: none;
         appearance: none;

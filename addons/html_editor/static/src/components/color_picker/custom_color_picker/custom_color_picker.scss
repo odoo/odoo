@@ -15,6 +15,13 @@
         margin-right: 2%;
         cursor: pointer;
     }
+
+    @media screen and (forced-colors: active) {
+        .o_color_pick_area, .o_color_slider, .o_opacity_slider {
+            forced-color-adjust: none;
+        }
+    }
+
     .o_slider_pointer, .o_opacity_pointer {
         position: absolute;
         top: auto;

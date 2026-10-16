@@ -18,6 +18,17 @@
 
             background-color: var(--o-hb-form-switch-color-active, var(--o-hb-form-check-input-checked-bg-color));
             border-color: var(--o-hb-form-switch-color-active, var(--o-hb-form-check-input-checked-border-color));
+
+            @media screen and (forced-colors: active) {
+                @media (prefers-color-scheme: light) {
+                    background-color: Canvas;
+                }
+
+                @media (prefers-color-scheme: dark) {
+                    background-color: CanvasText;
+                    border-color: CanvasText;
+                }
+            }
         }
     }
 

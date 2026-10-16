@@ -163,6 +163,13 @@
             }
         }
     }
+
+    @media screen and (forced-colors: active) {
+        .o_hb_color_combination_button,
+        .gradient-angle-thumb {
+            forced-color-adjust: none;
+        }
+    }
 }
 
 .o_builder_open:has(.o_hb_snippets_tabs [data-name='theme'].active) {
