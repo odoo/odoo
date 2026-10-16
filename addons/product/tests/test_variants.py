@@ -658,6 +658,21 @@ class TestVariantsNoCreate(ProductAttributesCommon):
         self.assertTrue(second_product.active)
         self.assertTrue(second_product.product_variant_ids)
 
+    def test_unarchive_template_without_active_test(self):
+        """ Unarchiving from the 'Archived' list runs with active_test=False,
+        the variants must be reactivated as well. """
+        template = self.env['product.template'].create({'name': 'Desk'})
+        variant = template.product_variant_ids
+        self.assertEqual(len(variant), 1)
+
+        template = template.with_context(active_test=False)
+        template.action_archive()
+        self.assertFalse(variant.active)
+        template.action_unarchive()
+        self.assertTrue(template.active)
+        self.assertTrue(variant.active)
+        self.assertEqual(template.with_context(active_test=True).product_variant_ids, variant)
+
 @tagged('post_install', '-at_install')
 class TestVariantsManyAttributes(TransactionCase):
 
