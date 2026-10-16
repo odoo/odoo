@@ -33,3 +33,18 @@ class TestMailGroupMailing(TestMailListCommon, HttpCase):
 
         self.assertEqual(test_group.member_ids, self.test_group_member_4_emp,
                          "Mail Group: people should have been unsubscribed")
+
+    def test_unsubscribe_oneclick_non_ascii_token(self):
+        """ A non-ascii token is rejected like any other wrong token """
+        test_group = self.test_group.with_env(self.env)
+        members = test_group.member_ids
+
+        response = self.url_open(
+            '/group/%s/unsubscribe_oneclick' % test_group.id,
+            data={'token': 'é' * 64, 'email': self.test_group_member_1.email_normalized},
+        )
+
+        self.assertEqual(response.status_code, 404)
+        test_group.invalidate_recordset(['member_ids'])
+        self.assertEqual(test_group.member_ids, members,
+                         "Mail Group: nobody should have been unsubscribed")
