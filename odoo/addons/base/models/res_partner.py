@@ -18,7 +18,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import SQL, LazyTranslate
+from odoo.tools import SQL, LazyTranslate, frozendict
 from odoo.tools.business_data import street_split, split_vat
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.translate import LazyGettext
@@ -46,16 +46,16 @@ if typing.TYPE_CHECKING:
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 
 
-EU_EXTRA_VAT_CODES = {
+EU_EXTRA_VAT_CODES = frozendict({
     'GR': 'EL',
     'GB': 'XI',
-}
-EU_EXTRA_VAT_CODES_INV = {v: k for k, v in EU_EXTRA_VAT_CODES.items()}
+})
+EU_EXTRA_VAT_CODES_INV = frozendict({v: k for k, v in EU_EXTRA_VAT_CODES.items()})
 
 PK_VAT = re.compile(r'[a-zA-Z\d]{7,8}|\d{13}')
 
 _lt = LazyTranslate(__name__)
-_ref_vat = {
+_ref_vat = frozendict({
     'al': 'ALJ91402501L',
     'ar': '20055361682',
     'at': 'ATU12345675',
@@ -120,7 +120,7 @@ _ref_vat = {
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
     'sa': _lt('310175397400003 [Fifteen digits, first and last digits should be "3"]'),
-}
+})
 
 
 @api.model
