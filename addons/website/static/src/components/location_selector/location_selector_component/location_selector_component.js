@@ -21,12 +21,14 @@ export class LocationSelectorComponent extends Component {
         sidebarLocation: t.string().optional(),
         showDetailsTooltip: t.boolean().optional(),
         showDetailsTextArea: t.boolean().optional(),
+        showDetailsPinIndicator: t.boolean().optional(false),
         hideOffscreenLocations: t.boolean().optional(false),
         locationsList: t.string().optional(),
         showEmail: t.boolean().optional(false),
         showImage: t.boolean().optional(false),
         showPhone: t.boolean().optional(false),
         showWebsite: t.boolean().optional(false),
+        singleLineAddress: t.boolean().optional(false),
         zipCode: t.string().optional(),
     });
 

@@ -21,7 +21,6 @@ export class Map extends Component {
         showDetailsTooltip: t.boolean(),
         showIndexes: t.boolean(),
         showEmail: t.boolean().optional(),
-        showImage: t.boolean().optional(),
         showPhone: t.boolean().optional(),
         showWebsite: t.boolean().optional(),
         showLocationNameOnMarkerHover: t.boolean().optional(),

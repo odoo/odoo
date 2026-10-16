@@ -11,6 +11,7 @@ export class LocationList extends Component {
         locations: LOCATION_LIST,
         selectedLocationId: t.string(),
         setSelectedLocation: t.function(),
+        showImage: t.boolean().optional(false),
         showIndexes: t.boolean().optional(true),
         showPinIndicator: t.boolean().optional(true),
         validateSelection: t.function().optional(),

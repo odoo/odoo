@@ -13,6 +13,8 @@ export class Location extends Component {
         street: t.string(),
         city: t.string(),
         zipCode: t.string(),
+        showImage: t.boolean().optional(false),
+        image: t.string().optional(),
         openingHours: t.record(t.array(t.string()).optional()).optional({}),
         isSelected: t.boolean(),
         setSelectedLocation: t.function(),

@@ -12,7 +12,8 @@
                     </t>
                 </BuilderSelect>
             </BuilderRow>
-            <BuilderRow label.translate="Display Sidebar" preview="false">
+            <BuilderRow label.translate="Display Sidebar"
+                tooltip.translate="Display all locations in a sidebar next to the map" preview="false">
                 <BuilderCheckbox dataAttributeAction="'mapSidebar'" id="'sidebar_opt'"
                     dataAttributeActionValue="'true'" />
             </BuilderRow>
@@ -29,7 +30,7 @@
             <BuilderRow label.translate="Placeholder" t-if="this.isActiveItem('searchbar_opt')" level="2">
                 <BuilderTextInput dataAttributeAction="'mapSearchbarPlaceholder'" preview="false" default.translate="Zip or City"/>
             </BuilderRow>
-            <BuilderRow label.translate="Sidebar Location" t-if="this.isActiveItem('sidebar_opt')">
+            <BuilderRow label.translate="Sidebar Location" t-if="this.isActiveItem('sidebar_opt')" level="1">
                 <BuilderButtonGroup dataAttributeAction="'mapSidebarLocation'" preview="false">
                     <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" dataAttributeActionValue="'left'"
                         iconImg="'/website/static/src/img/snippets_options/pos_left.svg'" />

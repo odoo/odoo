@@ -12,7 +12,6 @@
                 setSelectedLocation="this.props.setSelectedLocation"
                 showIndexes="this.props.showIndexes"
                 showEmail="this.props.showEmail"
-                showImage="this.props.showImage"
                 showPhone="this.props.showPhone"
                 showWebsite="this.props.showWebsite"
                 showLocationNameOnMarkerHover="this.props.showLocationNameOnMarkerHover"
@@ -29,14 +28,17 @@
             <div t-if="this.selectedLocation and this.props.showDetailsTextArea" class="o_location_selector_textarea d-none d-md-flex overflow-auto justify-content-between flex-column flex-lg-row gap-3 gap-lg-0 p-4">
                 <div class="col-lg-5 d-flex flex-column justify-content-between">
                     <div class="d-flex gap-2">
+                        <span t-if="this.props.showDetailsPinIndicator" class="o_location_selector_marker_icon_selected flex-shrink-0">
+                            <t t-call="website.locationSelector.map.pinIndicator"/>
+                        </span>
                         <div class="d-flex flex-column flex-grow-1">
                             <strong class="h5 fw-bold" t-out="this.selectedLocation.name"/>
-                            <small t-out="this.selectedLocation.street"/>
-                            <small t-out="this.getCityAndZipCode(this.selectedLocation)"/>
-                            <br/>
-                            <t t-if="(this.props.showImage and this.selectedLocation.image_256) or (this.props.showPhone and this.selectedLocation.phone) or (this.props.showEmail and this.selectedLocation.email) or (this.props.showWebsite and this.selectedLocation.website)">
-                                <strong>Additional details:</strong>
+                            <small t-if="this.props.singleLineAddress" t-out="this.getFullAddress(this.selectedLocation)"/>
+                            <t t-else="">
+                                <small t-out="this.selectedLocation.street"/>
+                                <small t-out="this.getCityAndZipCode(this.selectedLocation)"/>
                             </t>
+                            <br/>
                             <t t-if="this.props.showPhone and this.selectedLocation.phone">
                                 <small>
                                     <i class="oi oi-fw me-1" data-icon="phone" role="img" aria-label="phone"/>
@@ -58,9 +60,6 @@
                                         <t t-out="this.selectedLocation.website"/>
                                     </a>
                                 </small>
-                            </t>
-                            <t t-if="this.props.showImage and this.selectedLocation.image_256">
-                                <img t-attf-src="data:image/png;base64,{{this.selectedLocation.image_256.content}}" style="max-width: 256px; width: 100%; height: auto;"/>
                             </t>
                         </div>
                     </div>
@@ -105,14 +104,15 @@
                 <span class="d-flex flex-column gap-1 w-100">
                     <span class="d-flex flex-column">
                         <strong class="fw-bold" t-out="this.selectedLocation.name"/>
-                        <small class="text-muted">
+                        <small t-if="this.props.singleLineAddress" class="text-muted" t-out="this.getFullAddress(this.selectedLocation)"/>
+                        <small t-else="" class="text-muted">
                             <span t-out="this.selectedLocation.street"/>
                             <span class="d-block" t-out="this.getCityAndZipCode(this.selectedLocation)"/>
                         </small>
                     </span>
 
                     <!-- Additional details -->
-                    <t t-if="(this.props.showImage and this.selectedLocation.image_256) or (this.props.showPhone and this.selectedLocation.phone) or (this.props.showEmail and this.selectedLocation.email) or (this.props.showWebsite and this.selectedLocation.website)">
+                    <t t-if="(this.props.showPhone and this.selectedLocation.phone) or (this.props.showEmail and this.selectedLocation.email) or (this.props.showWebsite and this.selectedLocation.website)">
                         <span class="d-flex align-items-center gap-1 small fw-bold">
                             Additional details:
                             <i class="o_location_selector_hours_caret oi ms-auto transition-base" data-icon="arrow_drop_up" role="img" aria-hidden="true"/>
@@ -141,10 +141,6 @@
                                         <t t-out="this.selectedLocation.website"/>
                                     </a>
                                 </small>
-                                <br/>
-                            </t>
-                            <t t-if="this.props.showImage and this.selectedLocation.image_256">
-                                <img t-attf-src="data:image/png;base64,{{this.selectedLocation.image_256.content}}" style="max-width: 256px; width: 100%; height: auto;"/>
                                 <br/>
                             </t>
                             <t t-if="Object.keys(this.selectedLocation.opening_hours || {}).length">

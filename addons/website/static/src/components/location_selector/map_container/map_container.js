@@ -17,13 +17,14 @@ export class MapContainer extends Component {
         validateSelection: t.function().optional(),
         showDetailsTooltip: t.boolean().optional(false),
         showDetailsTextArea: t.boolean().optional(true),
+        showDetailsPinIndicator: t.boolean().optional(false),
         mapZoom: t.string().optional("13"),
         showIndexes: t.boolean(),
         showEmail: t.boolean().optional(false),
-        showImage: t.boolean().optional(false),
         showPhone: t.boolean().optional(false),
         showWebsite: t.boolean().optional(false),
         showLocationNameOnMarkerHover: t.boolean().optional(false),
+        singleLineAddress: t.boolean().optional(false),
     });
 
     setup() {
@@ -67,6 +68,18 @@ export class MapContainer extends Component {
      */
     getCityAndZipCode(selectedLocation) {
         return `${selectedLocation.zip_code} ${selectedLocation.city}`;
+    }
+
+    /**
+     * Get the street, the zip code and the city on a single line.
+     *
+     * @param {Object} selectedLocation - The location from which the address is taken.
+     * @return {String} The full address.
+     */
+    getFullAddress(selectedLocation) {
+        return [selectedLocation.street, this.getCityAndZipCode(selectedLocation).trim()]
+            .filter(Boolean)
+            .join(", ");
     }
 
     /**

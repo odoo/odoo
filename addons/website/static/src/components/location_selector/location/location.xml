@@ -41,6 +41,16 @@
                     <LocationSchedule openingHours="this.props.openingHours"/>
                 </span>
             </span>
+            <t t-if="this.props.showImage">
+                <img
+                    t-if="this.props.image"
+                    class="o_location_selector_image flex-shrink-0 rounded object-fit-cover"
+                    t-attf-src="data:image/png;base64,{{this.props.image}}"
+                    t-att-alt="this.props.name"
+                />
+                <!-- Keep the same space when the image is missing, so all entries have the same height -->
+                <span t-else="" class="o_location_selector_image flex-shrink-0"/>
+            </t>
         </button>
     </t>
 </templates>

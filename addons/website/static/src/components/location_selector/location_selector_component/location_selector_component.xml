@@ -35,6 +35,7 @@
                     selectedLocationId="this.state.selectedLocationId.toString()"
                     setSelectedLocation.bind="this.setSelectedLocation"
                     showDetailsTextArea="this.showDetailsTextArea"
+                    showDetailsPinIndicator="this.props.showDetailsPinIndicator"
                     showDetailsTooltip="this.showDetailsTooltip"
                     showEmail="this.props.showEmail"
                     showImage="this.props.showImage"
@@ -42,6 +43,7 @@
                     showPhone="this.props.showPhone"
                     showPinIndicator="this.showPinIndicator"
                     showWebsite="this.props.showWebsite"
+                    singleLineAddress="this.props.singleLineAddress"
                     validateSelection="this.validateSelection"
                 />
             </div>
@@ -70,6 +72,7 @@
                     locations="this.locations"
                     selectedLocationId="this.state.selectedLocationId.toString()"
                     setSelectedLocation.bind="this.setSelectedLocation"
+                    showImage="this.props.showImage"
                     showIndexes="this.showIndexes"
                     showPinIndicator="this.showPinIndicator"
                     visibleLocations="this.state.visibleLocations"
@@ -86,13 +89,14 @@
                     setSelectedLocation.bind="this.setSelectedLocation"
                     setVisibleLocations="(l) => this.setVisibleLocations?.(l)"
                     showDetailsTextArea="this.showDetailsTextArea"
+                    showDetailsPinIndicator="this.props.showDetailsPinIndicator"
                     showDetailsTooltip="this.showDetailsTooltip"
                     showEmail="this.props.showEmail"
-                    showImage="this.props.showImage"
                     showIndexes="this.showIndexes"
                     showLocationNameOnMarkerHover="this.showLocationNameOnMarkerHover"
                     showPhone="this.props.showPhone"
                     showWebsite="this.props.showWebsite"
+                    singleLineAddress="this.props.singleLineAddress"
                     validateSelection="this.validateSelection"
                 />
             </section>
