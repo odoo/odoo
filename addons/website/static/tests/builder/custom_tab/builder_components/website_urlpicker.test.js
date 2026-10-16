@@ -67,7 +67,14 @@ after(() => {
 });
 
 test("link button opens in new window if url not empty", async () => {
+<<<<<<< 3c7ca86d1719187c6bfe60cefee85bfc59a751cb
     addBuilderOption({
+||||||| a5424bff9b477b1350456ddd91582399eeaa1fd6
+    addOption({
+=======
+    mockGetSuggestedLinks();
+    addOption({
+>>>>>>> 9fd8adb3d5d05ee2ed3c2ae57c4cc37fdf1ba098
         selector: ".test-options-target",
         template: xml`<BuilderUrlPicker dataAttributeAction="'url'"/>`,
     });
