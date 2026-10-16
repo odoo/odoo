@@ -100,3 +100,10 @@ class LoyaltyProgram(models.Model):
         super()._compute_total_order_count()
         for program in self:
             program.total_order_count += program.pos_order_count
+
+    def _get_per_point_discount(self):
+        self.ensure_one()
+        per_point_rewards = self.reward_ids.filtered(
+            lambda r: r.reward_type == 'discount' and r.discount_mode == 'per_point'
+        )
+        return per_point_rewards.discount if len(per_point_rewards) == 1 else None
