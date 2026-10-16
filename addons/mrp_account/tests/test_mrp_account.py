@@ -529,6 +529,62 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
             {'account_id': self.env.company.account_production_wip_account_id.id, 'debit': 0.0, 'credit': 0.0},
         ])
 
+    def test_wip_component_different_valuation_accounts(self):
+        """ Check that the WIP account move lines target the valuation account of the components"""
+        account_comp_valuation = self.env['account.account'].create({
+            'name': 'Component Stock Valuation',
+            'code': '100112',
+            'account_type': 'asset_current',
+        })
+        category_specific = self.category_standard_auto.copy({
+            'name': 'Standard Auto - specific valuation account',
+            'property_stock_valuation_account_id': account_comp_valuation.id,
+        })
+        finished = self._create_product('Finished', 0, quantity=0, category=self.category_standard_auto)
+        comp_1 = self._create_product('Comp 1', 10, category=category_specific)
+        comp_2 = self._create_product('Comp 2', 20, category=self.category_standard_auto)
+        bom = self.env['mrp.bom'].create({
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [
+                Command.create({'product_id': comp_1.id, 'product_qty': 1}),
+                Command.create({'product_id': comp_2.id, 'product_qty': 1}),
+            ],
+        })
+        # create MO, produce partially and confirm WIP wizard
+        mo = self._create_mo(bom, 10)
+        mo = self._produce(mo, quantity=4)
+
+        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
+        wizard.save().confirm()
+        wip_entry = self.env['account.move'].search([
+            ('ref', 'ilike', 'WIP - ' + mo.name),
+            ('reversed_entry_id', '=', False),
+        ])
+        # we check the WIP entry
+        self.assertEqual(len(wip_entry), 1)
+        self.assertEqual(len(wip_entry.line_ids), 4, "2 'Component Value' lines (1 per valuation account) + overhead + WIP")
+        self.assertRecordValues(wip_entry.line_ids.sorted('balance'), [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 80.0},
+            {'account_id': account_comp_valuation.id, 'debit': 0.0, 'credit': 40.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id, 'debit': 120.0, 'credit': 0.0},
+        ])
+        # we also check the reverse WIP entry
+        reverse_wip_entry = self.env['account.move'].search([
+            ('ref', 'ilike', 'WIP - ' + mo.name),
+            ('reversed_entry_id', '=', wip_entry.id),
+        ])
+        self.assertEqual(len(reverse_wip_entry), 1)
+        self.assertEqual(len(reverse_wip_entry.line_ids), 4, "2 'Component Value' lines (1 per valuation account) + overhead + WIP")
+        self.assertRecordValues(reverse_wip_entry.line_ids.sorted('balance'), [
+            {'account_id': self.env.company.account_production_wip_account_id.id, 'debit': 0.0, 'credit': 120.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': account_comp_valuation.id, 'debit': 40.0, 'credit': 0.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 80.0, 'credit': 0.0},
+        ])
+
     def test_labor_cost_balancing(self):
         """ When the workcenter_cost ends up like x.xx5 with a currency rounding of 0.01,
         the valuation 'account.move' was unbalanced.
