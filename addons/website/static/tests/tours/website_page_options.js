@@ -3,6 +3,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
+    goToTheme,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
@@ -189,6 +190,31 @@ registerWebsitePreviewTour(
                 ":iframe nav[aria-label='breadcrumb'] ol.breadcrumb li:first-child a:contains(Home)",
         },
         ...clickOnEditAndWaitEditMode(),
+        ...goToTheme(),
+        {
+            content: "Open the Page Layout dropdown",
+            trigger: ".hb-row[data-label='Page Layout'] .o-dropdown",
+            run: "click",
+        },
+        {
+            content: "Select the Postcard layout",
+            trigger: ".o-hb-select-dropdown-item[data-action-value='postcard']",
+            run: "click",
+        },
+        {
+            content: "Verify the spacing moved from the header to the breadcrumb",
+            trigger: ":iframe .o_page_breadcrumb",
+            run() {
+                const headerEl = this.anchor.ownerDocument.querySelector("#wrapwrap > header");
+                const headerMargin = getComputedStyle(headerEl).marginBottom;
+                const breadcrumbMargin = getComputedStyle(this.anchor).marginBottom;
+                if (headerMargin !== "0px" || breadcrumbMargin === "0px") {
+                    throw new Error(
+                        `Expected header margin 0px and breadcrumb margin > 0px, got "${headerMargin}" and "${breadcrumbMargin}".`
+                    );
+                }
+            },
+        },
         ...clickOnSnippet(breadcrumb),
         ...openBackgroundColorPicker("Background Color", "Theme"),
         {
