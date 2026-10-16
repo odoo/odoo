@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Action and menu for 'account.payment.method' model  -->
+    <record id="action_payment_methods" model="ir.actions.act_window">
+        <field name="name">Payment Methods</field>
+        <field name="res_model">account.payment.method</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Payment Methods</p>
+        </field>
+    </record>
+    <!--    Menu for Payment method-->
+    <menuitem id="seller_payment_method" parent="configuration_root"
+              name="Seller Payment Method" sequence="55"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+              action="action_payment_methods"/>
+</odoo>

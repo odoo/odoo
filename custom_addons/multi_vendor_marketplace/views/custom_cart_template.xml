@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Custom Cart Page Template -->
+    <template id="custom_cart_template" name="Custom Cart Design" inherit_id="website_sale.cart">
+        <!-- Replace the main cart container -->
+        <xpath expr="//div[hasclass('oe_cart')]" position="replace">
+            <div class="oe_cart custom-cart-container py-4">
+                <!-- Cart Header -->
+                <div class="cart-header">
+                    <h1 class="cart-title">Ваша корзина</h1>
+                    <p class="cart-subtitle" t-if="website_sale_order and website_sale_order.order_line">Проверьте товары перед оформлением заказа</p>
+                    <p class="cart-empty-message" t-if="not website_sale_order or not website_sale_order.order_line">В вашей корзине нет товаров</p>
+                </div>
+
+                <!-- Cart Items Container -->
+                <div class="cart-items-container" t-if="website_sale_order and website_sale_order.order_line">
+                    <!-- Cart Items Table -->
+                    <div class="cart-items">
+                        <t t-foreach="website_sale_order.order_line" t-as="line">
+                            <!-- Removed the condition that checks for is_delivery -->
+                            <div class="cart-item">
+                                <div class="cart-item-image">
+                                    <img t-attf-src="/web/image/product.product/#{line.product_id.id}/image_128" alt="Product Image"/>
+                                </div>
+                                <div class="cart-item-details">
+                                    <div class="cart-item-name">
+                                        <h4><a t-att-href="'/shop/product/%s' % slug(line.product_id.product_tmpl_id)" t-field="line.product_id.display_name">Product Name</a></h4>
+                                    </div>
+                                    <div class="cart-item-variant" t-if="line.product_custom_attribute_value_ids">
+                                        <t t-foreach="line.product_custom_attribute_value_ids" t-as="attribute_value">
+                                            <span class="badge text-bg-light">
+                                                <t t-esc="attribute_value.attribute_value_id.name"/>
+                                            </span>
+                                        </t>
+                                    </div>
+                                    <div class="cart-item-subtotal">
+                                        <span class="cart-item-price" t-field="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                                    </div>
+                                </div>
+                                <div class="cart-item-quantity">
+                                    <div class="quantity-selector">
+                                        <button type="button" class="btn-quantity minus" t-att-data-line-id="line.id" aria-label="Уменьшить количество">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                        <input type="text" class="form-control quantity" t-att-value="int(line.product_uom_qty)" t-att-data-line-id="line.id" readonly="readonly"/>
+                                        <button type="button" class="btn-quantity plus" t-att-data-line-id="line.id" aria-label="Увеличить количество">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="cart-item-actions">
+                                    <button type="button" class="remove-item-btn" t-att-data-line-id="line.id" aria-label="Удалить товар">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Cart Summary -->
+                    <div class="cart-summary">
+                        <div class="cart-subtotal">
+                            <span class="subtotal-label">Итого:</span>
+                            <span class="subtotal-value" t-field="website_sale_order.amount_untaxed" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                        </div>
+                        
+                        <!-- Removed the problematic delivery div that was causing errors -->
+                        
+                        <div class="cart-total">
+                            <span class="total-label">К оплате:</span>
+                            <span class="total-value" t-field="website_sale_order.amount_total" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                        </div>
+                    </div>
+
+                    <!-- Cart Actions -->
+                    <div class="cart-actions">
+                        <a href="/shop" class="btn btn-secondary continue-shopping">
+                            <i class="fa fa-arrow-left me-2"></i>Продолжить покупки
+                        </a>
+                        <a href="/shop/checkout?express=1" class="btn btn-primary proceed-checkout">
+                            Оформить заказ<i class="fa fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Empty Cart -->
+                <div class="empty-cart-container" t-if="not website_sale_order or not website_sale_order.order_line">
+                    <div class="empty-cart-icon">
+                        <i class="fa fa-shopping-cart fa-4x"></i>
+                    </div>
+                    <p class="empty-cart-message">Ваша корзина пуста. Добавьте товары из нашего каталога.</p>
+                    <a href="/shop" class="btn btn-primary start-shopping">Перейти в каталог</a>
+                </div>
+            </div>
+        </xpath>
+
+        <!-- Add JavaScript for Quantity Control with proper AJAX calls -->
+        <xpath expr="//div[hasclass('oe_cart')]/../.." position="after">
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    // Quantity buttons functionality
+                    $('.btn-quantity.plus').click(function() {
+                        var line_id = $(this).data('line-id');
+                        var input = $(this).siblings('input.quantity');
+                        var currentQty = parseInt(input.val());
+                        var newQty = currentQty + 1;
+                        input.val(newQty);
+                        
+                        // AJAX call to update quantity
+                        $.ajax({
+                            url: '/shop/cart/update_json',
+                            type: 'POST',
+                            data: {
+                                line_id: line_id,
+                                set_qty: newQty,
+                            },
+                            dataType: 'json',
+                            success: function(data) {
+                                if (data.cart_quantity !== undefined) {
+                                    // Update cart quantity display if needed
+                                    $(".my_cart_quantity").text(data.cart_quantity);
+                                }
+                                // Refresh page to update totals
+                                window.location.reload();
+                            },
+                            error: function() {
+                                alert('Не удалось обновить количество товара');
+                            }
+                        });
+                    });
+                    
+                    $('.btn-quantity.minus').click(function() {
+                        var line_id = $(this).data('line-id');
+                        var input = $(this).siblings('input.quantity');
+                        var currentQty = parseInt(input.val());
+                        if (currentQty > 1) {
+                            var newQty = currentQty - 1;
+                            input.val(newQty);
+                            
+                            // AJAX call to update quantity
+                            $.ajax({
+                                url: '/shop/cart/update_json',
+                                type: 'POST',
+                                data: {
+                                    line_id: line_id,
+                                    set_qty: newQty,
+                                },
+                                dataType: 'json',
+                                success: function(data) {
+                                    if (data.cart_quantity !== undefined) {
+                                        // Update cart quantity display if needed
+                                        $(".my_cart_quantity").text(data.cart_quantity);
+                                    }
+                                    // Refresh page to update totals
+                                    window.location.reload();
+                                },
+                                error: function() {
+                                    alert('Не удалось обновить количество товара');
+                                }
+                            });
+                        }
+                    });
+                    
+                    // Remove item functionality
+                    $('.remove-item-btn').click(function() {
+                        var line_id = $(this).data('line-id');
+                        
+                        // AJAX call to remove item
+                        $.ajax({
+                            url: '/shop/cart/update_json',
+                            type: 'POST',
+                            data: {
+                                line_id: line_id,
+                                set_qty: 0,
+                            },
+                            dataType: 'json',
+                            success: function(data) {
+                                if (data.cart_quantity !== undefined) {
+                                    // Update cart quantity display if needed
+                                    $(".my_cart_quantity").text(data.cart_quantity);
+                                }
+                                // Refresh page to update totals
+                                window.location.reload();
+                            },
+                            error: function() {
+                                alert('Не удалось удалить товар из корзины');
+                            }
+                        });
+                    });
+                });
+            </script>
+        </xpath>
+    </template>
+</odoo>
