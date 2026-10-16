@@ -13,7 +13,7 @@ import { EditorOverlay } from "./overlay";
  */
 export class OverlayPlugin extends Plugin {
     static id = "overlay";
-    static dependencies = ["domObserver", "selection"];
+    static dependencies = ["domObserver", "selection", "history"];
     static shared = ["createOverlay"];
 
     overlays = [];
@@ -103,6 +103,7 @@ export class Overlay {
                         getSelectionData: this.plugin.dependencies.selection.getSelectionData,
                         editableDocumentHasFocus:
                             this.plugin.dependencies.selection.editableDocumentHasFocus,
+                        getIsPreviewing: this.plugin.dependencies.history.getIsPreviewing,
                     },
                 }),
                 {

@@ -739,7 +739,7 @@ test("toolbar works: apply custom font size on a selection inside block default 
 });
 
 test("toolbar works: show the correct text alignment", async () => {
-    const { el } = await setupEditor("<p>[test</p><p><br>]</p>");
+    const { el } = await setupEditor("<p>[test</p><p>]<br></p>");
     await expandToolbar();
     expect("button[name='text_align']").toHaveCount(1);
     expect("button[name='text_align'] span").toHaveInnerHTML(
@@ -747,9 +747,7 @@ test("toolbar works: show the correct text alignment", async () => {
     );
     await click("button[name='text_align']");
     await contains(".o-we-toolbar-dropdown .btn[data-icon='format_align_right']").click();
-    expect(getContent(el)).toBe(
-        `<p style="text-align: end;">[test</p><p style="text-align: end;"><br>]</p>`
-    );
+    expect(getContent(el)).toBe(`<p style="text-align: end;">[test</p><p>]<br></p>`);
     expect("button[name='text_align'] span").toHaveInnerHTML(
         `<i class="oi" data-icon="format_align_right"> </i>`
     );

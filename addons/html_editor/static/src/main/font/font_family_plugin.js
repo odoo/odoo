@@ -32,7 +32,7 @@ export const fontFamilyItems = [
 
 export class FontFamilyPlugin extends Plugin {
     static id = "fontFamily";
-    static dependencies = ["split", "selection", "dom", "format"];
+    static dependencies = ["split", "selection", "dom", "format", "history"];
     fontFamily = proxy({ displayName: defaultFontFamily.nameShort });
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -65,13 +65,7 @@ export class FontFamilyPlugin extends Plugin {
                     fontFamilyItems: fontFamilyItems,
                     currentFontFamily: this.fontFamily,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
-                    onSelected: (item) => {
-                        this.dependencies.format.requestFormat("fontFamily", {
-                            applyStyle: item.fontFamily !== false,
-                            formatProps: item,
-                        });
-                        this.fontFamily.displayName = item.nameShort;
-                    },
+                    previewable: () => this.previewableSetFontFamily,
                 },
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
                 isAvailable: (selection) =>
@@ -82,7 +76,20 @@ export class FontFamilyPlugin extends Plugin {
         on_selectionchange_handlers: withSequence(READ, this.updateCurrentFontFamily.bind(this)),
         on_history_commit_undone_handlers: this.updateCurrentFontFamily.bind(this),
         on_history_commit_redone_handlers: this.updateCurrentFontFamily.bind(this),
+        on_savepoint_restored_handlers: this.updateCurrentFontFamily.bind(this),
     };
+
+    setup() {
+        this.previewableSetFontFamily = this.dependencies.history.makePreviewableOperation(
+            (item) => {
+                this.dependencies.format.requestFormat("fontFamily", {
+                    applyStyle: item.fontFamily !== false,
+                    formatProps: item,
+                });
+                this.fontFamily.displayName = item.nameShort;
+            }
+        );
+    }
 
     updateCurrentFontFamily(ev) {
         const selelectionData = this.dependencies.selection.getSelectionData();

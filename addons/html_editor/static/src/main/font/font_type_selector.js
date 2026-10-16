@@ -4,6 +4,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import {
     useDropdownAutoVisibility,
+    useToolbarDropdownPreview,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -14,7 +15,7 @@ export class FontTypeSelector extends Component {
         ...toolbarButtonProps,
         getItems: t.function(),
         getDisplay: t.function(),
-        onSelected: t.function(),
+        previewable: t.function(),
     });
     static components = { Dropdown, DropdownItem };
 
@@ -27,9 +28,13 @@ export class FontTypeSelector extends Component {
         this.dropdown = useDropdownState();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         useToolbarDropdownFocus(this.dropdown, this.fontTypeSelector);
+        this.preview = useToolbarDropdownPreview({
+            dropdown: this.dropdown,
+            previewable: this.props.previewable,
+        });
     }
 
     onSelected(item) {
-        this.props.onSelected(item);
+        this.preview.commit(item);
     }
 }
