@@ -170,6 +170,21 @@ class HrEmployee(models.Model):
     private_phone_sanitized = fields.Char(compute='_compute_restricted_phone_companion_fields', store=False, export_string_translation=False, groups='hr.group_hr_user')
     private_phone_formatted = fields.Char(compute='_compute_restricted_phone_companion_fields', store=False, export_string_translation=False, groups='hr.group_hr_user')
     private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
+    sex = fields.Selection([
+        ('male', 'Male'),
+        ('female', 'Female'),
+    ], groups="hr.group_hr_user", tracking=1, help="This is the legal sex as recognized by the state, used for official and statutory purposes.")
+    private_street = fields.Char(string="Private Street", groups="hr.group_hr_user", tracking=1)
+    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user", tracking=1)
+    private_city = fields.Char(string="Private City", groups="hr.group_hr_user", tracking=1)
+    allowed_country_state_ids = fields.Many2many("res.country.state", compute='_compute_allowed_country_state_ids', groups="hr.group_hr_user")
+    private_state_id = fields.Many2one(
+        "res.country.state", string="Private State",
+        domain="[('id', 'in', allowed_country_state_ids)]",
+        groups="hr.group_hr_user", tracking=1)
+    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user", tracking=1)
+    private_country_id = fields.Many2one("res.country", string="Private Country", index='btree_not_null',
+                                         groups="hr.group_hr_user", tracking=1, default=lambda self: self.env.company.country_id)
     lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_user")
     place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
     country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
@@ -660,6 +675,16 @@ class HrEmployee(models.Model):
         splitting_country_codes = self._get_splitting_legal_name_countries()
         for employee in self:
             employee.split_legal_name = employee.company_country_code in splitting_country_codes
+
+    @api.depends("private_country_id")
+    def _compute_allowed_country_state_ids(self):
+        employees_with_countries = self.filtered("private_country_id")
+        for employee in employees_with_countries:
+            employee.allowed_country_state_ids = employee.private_country_id.state_ids
+        if employees_without_countries := (self - employees_with_countries):
+            states = self.env["res.country.state"].search([])
+            for employee in employees_without_countries:
+                employee.allowed_country_state_ids = states
 
     @api.depends('current_version_id')
     @api.depends_context('version_id')
