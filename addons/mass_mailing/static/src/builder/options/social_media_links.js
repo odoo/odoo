@@ -133,7 +133,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
             ResCompanyUpdateDialog,
             {
                 resId: companyId,
-                onRecordSaved: (state) => {
+                onRecordSaved: async (state) => {
                     const editingElement = this.env.getEditingElement();
                     const platformLinks = editingElement.querySelectorAll(
                         "[data-platform]:not([data-platform*=customLink-])"
@@ -164,6 +164,31 @@ export class SocialMediaLinks extends BaseOptionComponent {
                                 delete medias[platform];
                             }
                         } else if (href) {
+                            let getIndex = () =>
+                                editingElement
+                                    .querySelector(".s_social_media_links")
+                                    .querySelectorAll("[data-platform]").length;
+
+                            // look for an existing customLink with the same platform
+                            if (medias[`customLink-${platform}`]) {
+                                // find the link's index to insert the replacement at the same one
+                                const existingElement = editingElement.querySelector(
+                                    `[data-platform=customLink-${platform}]`
+                                );
+                                const index = Array.from(
+                                    existingElement.parentElement.children
+                                ).indexOf(existingElement);
+                                getIndex = () => index;
+                                // remove the previous link
+                                this.dependencies.builderActions
+                                    .getAction("removeCustomMediaLink")
+                                    .apply({
+                                        editingElement,
+                                        params: {
+                                            platform: `customLink-${platform}`,
+                                        },
+                                    });
+                            }
                             this.dependencies.builderActions
                                 .getAction("toggleSocialMediaLink")
                                 .apply({
@@ -171,10 +196,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
                                     params: {
                                         href,
                                         platform,
-                                        getIndex: () =>
-                                            editingElement
-                                                .querySelector(".s_social_media_links")
-                                                .querySelectorAll("[data-platform]").length,
+                                        getIndex: getIndex,
                                     },
                                 });
                             medias[platform] = { href, active: true, custom: false };
@@ -182,6 +204,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
                     }
                     this.domState.medias = Object.entries(medias);
                     this.dependencies.history.addStep();
+                    await this.config.snippetModel.reload();
                 },
             },
             {
