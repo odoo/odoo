@@ -96,3 +96,7 @@ class PosPaymentMethod(models.Model):
     def _check_pine_labs_terminal(self):
         if any(record.payment_provider == 'pine_labs' and record.company_id.currency_id.name != 'INR' for record in self):
             raise UserError(_('This Payment Terminal is only valid for INR Currency'))
+
+    @api.model
+    def _allowed_actions_in_self_order(self):
+        return super()._allowed_actions_in_self_order() + ['pine_labs_make_payment_request', 'pine_labs_fetch_payment_status', 'pine_labs_cancel_payment_request']
