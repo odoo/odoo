@@ -23,7 +23,7 @@
                                     </div>
                                     <span t-if="this.shouldShowPriceExtra(value)" t-out="this.formatExtraPrice(value)"
                                         class="d-block position-absolute badge top-0 end-0 me-3 mt-3 rounded-3 text-bg-primary fw-medium" />
-                                    <img  t-if="value.image" t-attf-src="data:image/png;base64,{{value.image}}" class="img-fluid rounded-4" style="max-height:70px; max-width:70px"/>
+                                    <img t-if="value.image" t-attf-src="data:image/png;base64,{{value.image.content}}" class="img-fluid rounded-4" style="max-height:70px; max-width:70px"/>
                                     <div t-if="value.html_color and !value.image" t-attf-style="min-height: 25px; min-width: 25px; background-color: {{value.html_color}}" class="rounded-5"/> 
                                 </div>
                             </button>
