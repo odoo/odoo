@@ -127,6 +127,12 @@ class Cart(PaymentPortal):
                 "The given product does not exist therefore it cannot be added to cart."
             ))
 
+        if kwargs.pop("combo_item_id", None):
+            raise UserError(_("You cannot add a combo item separately from its combo."))
+
+        if kwargs.pop("linked_line_id", None):
+            raise UserError(_("Linked lines must be added to the cart with their parent."))
+
         def check_selected_combo_items(combo_product, linked_products):
             combo_item_products = [
                 linked_product for linked_product in linked_products or []
