@@ -91,7 +91,7 @@ class ReportCmr(models.AbstractModel):
                     product_processed_details = _get_processed_product_details(product, no_variant_att, unit, sum(mls.mapped('quantity')))
                     products.append(product_processed_details)
                     hs_codes.append(product.hs_code if 'hs_code' in product._fields else False)
-                    weight = package.shipping_weight or packages_weight.get(package, 0) if package else (sum(mls.mapped('quantity_product_uom')) * product.weight)
+                    weight = package.shipping_weight or package.weight if package else (sum(mls.mapped('quantity_product_uom')) * product.weight)
                     volume = 0.0
                     if package:
                         volume = package.package_type_id.packaging_length *\
@@ -130,9 +130,6 @@ class ReportCmr(models.AbstractModel):
         ongoing_outermost_packages = (pickings - done_pickings).move_line_ids.result_package_id.outermost_package_id
         packageless_moves = pickings.move_ids.filtered(lambda m: not m.package_ids)
 
-        packages_weight = done_outermost_packages._get_weight()
-        packages_weight.update(ongoing_outermost_packages._get_weight(pickings.ids))
-
         consignee_id = pickings[0].sale_id.partner_id if 'sale_id' in pickings[0]._fields and pickings[0].sale_id else pickings[0].partner_id
         en_lang = self.env['res.lang'].search([('code', '=like', 'en_%')], limit=1)
         primary_lang = en_lang.code if en_lang else (pickings[0].company_id.partner_id.lang or 'en_US')
@@ -144,7 +141,7 @@ class ReportCmr(models.AbstractModel):
             goods_rows.append(_get_goods_row(package, False, mls))
             processed_mls_ids.update(mls.ids)
 
-        for package in ongoing_outermost_packages:
+        for package in ongoing_outermost_packages.with_context(picking_ids=pickings.ids):
             mls = package.move_line_ids.filtered(lambda ml: ml.quantity and ml.picking_id.id in pickings.ids)
             goods_rows.append(_get_goods_row(package, False, mls))
             processed_mls_ids.update(mls.ids)
