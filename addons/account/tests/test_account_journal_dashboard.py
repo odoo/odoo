@@ -323,6 +323,302 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         self.assertEqual(dashboard_data.get('misc_operations_balance', 0), None)
         self.assertEqual(dashboard_data.get('misc_class', ''), 'text-warning')
 
+    def test_draft_amount_sale_journal(self):
+        ''' Tests that the 'To validate' button includes all draft moves in a Sale journal
+        and that its amount is ('out_invoice' - 'out_refund')
+        '''
+        journal = self.env['account.journal'].create({
+            'name': 'Test Sale Journal',
+            'type': 'sale',
+            'code': 'TEST',
+            'currency_id': self.env.ref('base.USD').id,
+            'company_id': self.env.company.id,
+            'autocheck_on_post': False,
+        })
+
+        self._create_invoice_one_line(move_type='out_invoice', journal_id=journal.id, price_unit=100, tax_ids=[])
+        self._create_invoice_one_line(move_type='out_refund', journal_id=journal.id, price_unit=50, tax_ids=[])
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_draft'], 2)
+        self.assertEqual(dashboard_data['sum_draft'], journal.currency_id.format(50))
+
+        self._create_invoice_one_line(move_type='out_refund', journal_id=journal.id, price_unit=75, tax_ids=[])
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_draft'], 3)
+        self.assertEqual(dashboard_data['sum_draft'], journal.currency_id.format(-25))
+
+    def test_draft_amount_different_currency_sale_journal(self):
+        """
+        We want the to_check amount to be displayed in the journal currency
+        Company currency = $
+        Journal's currency = €
+        Inv01 of 100 EUR; rate: 2€/1$
+        Inv02 of 100 CHF; rate: 4CHF/1$
+        => to validate = 150 €
+
+        Rev01 of 75  EUR;
+        => to validate = 75 €
+        """
+        currency_eur = self.setup_other_currency('EUR', rates=[('2024-12-01', 2.0)])
+        currency_chf = self.setup_other_currency('CHF', rates=[('2024-12-01', 4.0)])
+
+        journal = self.env['account.journal'].create({
+            'name': 'Test Foreign Currency Sale Journal',
+            'type': 'sale',
+            'code': 'TEST',
+            'currency_id': currency_eur.id,
+            'company_id': self.env.company.id,
+            'autocheck_on_post': False,
+        })
+
+        [self._create_invoice_one_line(
+            move_type='out_invoice',
+            journal_id=journal.id,
+            currency_id=currency.id,
+            price_unit=100,
+            tax_ids=[],
+        ) for currency in [currency_eur, currency_chf]]
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['sum_draft'], journal.currency_id.format(150))
+
+        self._create_invoice_one_line(
+            move_type='out_refund',
+            currency_id=currency_eur.id,
+            journal_id=journal.id,
+            price_unit=75,
+            tax_ids=[],
+        )
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['sum_draft'], journal.currency_id.format(75))
+
+    def test_to_check_amount_sale_journal(self):
+        ''' Tests that the 'To check' button includes all moves to be checked in a Sale journal
+        and that its amount is ('out_invoice' - 'out_refund')
+        '''
+        journal = self.env['account.journal'].create({
+            'name': 'Test Sale Journal',
+            'type': 'sale',
+            'code': 'TEST',
+            'currency_id': self.env.ref('base.USD').id,
+            'company_id': self.env.company.id,
+            'autocheck_on_post': False,
+        })
+
+        self._create_invoice_one_line(move_type='out_invoice', journal_id=journal.id, price_unit=100, tax_ids=[], checked=False, post=True)
+        self._create_invoice_one_line(move_type='out_refund', journal_id=journal.id, price_unit=50, tax_ids=[], checked=False, post=True)
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_to_check'], 2)
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(50))
+
+        self._create_invoice_one_line(move_type='out_refund', journal_id=journal.id, price_unit=75, tax_ids=[], checked=False, post=True)
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_to_check'], 3)
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(-25))
+
+    def test_to_check_amount_different_currency_sale_journal(self):
+        """
+        We want the to_check amount to be displayed in the journal currency
+        Company currency = $
+        Journal's currency = €
+        Inv01 of 100 EUR; rate: 2€/1$
+        Inv02 of 100 CHF; rate: 4CHF/1$
+        => to check = 150 €
+
+        Rev01 of 75  EUR;
+        => to check = 75 €
+        """
+        currency_eur = self.setup_other_currency('EUR', rates=[('2024-12-01', 2.0)])
+        currency_chf = self.setup_other_currency('CHF', rates=[('2024-12-01', 4.0)])
+
+        journal = self.env['account.journal'].create({
+            'name': 'Test Foreign Currency Sale Journal',
+            'type': 'sale',
+            'code': 'TEST',
+            'currency_id': currency_eur.id,
+            'company_id': self.env.company.id,
+            'autocheck_on_post': False,
+        })
+
+        [self._create_invoice_one_line(
+            move_type='out_invoice',
+            journal_id=journal.id,
+            currency_id=currency.id,
+            price_unit=100,
+            tax_ids=[],
+            checked=False,
+            post=True
+        ) for currency in [currency_eur, currency_chf]]
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(150))
+
+        self._create_invoice_one_line(
+            move_type='out_refund',
+            currency_id=currency_eur.id,
+            journal_id=journal.id,
+            price_unit=75,
+            tax_ids=[],
+            checked=False,
+            post=True
+        )
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(75))
+
+    def test_draft_amount_bill_journal(self):
+        ''' Tests that the 'To validate' button includes all moves in draft in a Purchase journal
+        and that its amount is (-1 * ('in_invoice' - 'in_refund'))
+        '''
+        journal = self.env['account.journal'].create({
+            'name': 'Test Purchase Journal',
+            'type': 'purchase',
+            'code': 'TEST',
+            'currency_id': self.env.ref('base.USD').id,
+            'company_id': self.env.company.id,
+            'autocheck_on_post': False,
+        })
+
+        self._create_invoice_one_line(move_type='in_invoice', journal_id=journal.id, price_unit=100, tax_ids=[])
+        self._create_invoice_one_line(move_type='in_refund', journal_id=journal.id, price_unit=50, tax_ids=[])
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_draft'], 2)
+        self.assertEqual(dashboard_data['sum_draft'], journal.currency_id.format(50))
+
+        self._create_invoice_one_line(move_type='in_refund', journal_id=journal.id, price_unit=75, tax_ids=[])
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_draft'], 3)
+        self.assertEqual(dashboard_data['sum_draft'], journal.currency_id.format(-25))
+
+    def test_draft_amount_different_currency_bill_journal(self):
+        """
+        We want the to_check amount to be displayed in the journal currency
+        Company currency = $
+        Journal's currency = €
+        Inv01 of 100 EUR; rate: 2€/1$
+        Inv02 of 100 CHF; rate: 4CHF/1$
+        => to validate = 150 €
+
+        Rev01 of 75  EUR;
+        => to validate = 75 €
+        """
+        currency_eur = self.setup_other_currency('EUR', rates=[('2024-12-01', 2.0)])
+        currency_chf = self.setup_other_currency('CHF', rates=[('2024-12-01', 4.0)])
+
+        journal = self.env['account.journal'].create({
+            'name': 'Test Foreign Currency Purchase Journal',
+            'type': 'purchase',
+            'code': 'TEST',
+            'currency_id': currency_eur.id,
+            'company_id': self.env.company.id,
+            'autocheck_on_post': False,
+        })
+
+        [self._create_invoice_one_line(
+            move_type='in_invoice',
+            journal_id=journal.id,
+            currency_id=currency.id,
+            price_unit=100,
+            tax_ids=[],
+        ) for currency in [currency_eur, currency_chf]]
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['sum_draft'], journal.currency_id.format(150))
+
+        self._create_invoice_one_line(
+            move_type='in_refund',
+            currency_id=currency_eur.id,
+            journal_id=journal.id,
+            price_unit=75,
+            tax_ids=[],
+        )
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['sum_draft'], journal.currency_id.format(75))
+
+    def test_to_check_amount_bill_journal(self):
+        ''' Tests that the 'To check' button includes all moves to be checked in a Purchase journal
+        and that its amount is (-1 * ('in_invoice' - 'in_refund'))
+        '''
+        journal = self.env['account.journal'].create({
+            'name': 'Test Purchase Journal',
+            'type': 'purchase',
+            'code': 'TEST',
+            'currency_id': self.env.ref('base.USD').id,
+            'company_id': self.env.company.id,
+            'autocheck_on_post': False,
+        })
+
+        self._create_invoice_one_line(move_type='in_invoice', journal_id=journal.id, price_unit=100, tax_ids=[], checked=False, post=True)
+        self._create_invoice_one_line(move_type='in_refund', journal_id=journal.id, price_unit=50, tax_ids=[], checked=False, post=True)
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_to_check'], 2)
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(50))
+
+        self._create_invoice_one_line(move_type='in_refund', journal_id=journal.id, price_unit=75, tax_ids=[], checked=False, post=True)
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_to_check'], 3)
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(-25))
+
+    def test_to_check_amount_different_currency_bill_journal(self):
+        """
+        We want the to_check amount to be displayed in the journal currency
+        Company currency = $
+        Journal's currency = €
+        Inv01 of 100 EUR; rate: 2€/1$
+        Inv02 of 100 CHF; rate: 4CHF/1$
+        => to check = 150 €
+
+        Rev01 of 75  EUR;
+        => to check = 75 €
+        """
+        currency_eur = self.setup_other_currency('EUR', rates=[('2024-12-01', 2.0)])
+        currency_chf = self.setup_other_currency('CHF', rates=[('2024-12-01', 4.0)])
+
+        journal = self.env['account.journal'].create({
+            'name': 'Test Foreign Currency Bill Journal',
+            'type': 'purchase',
+            'code': 'TEST',
+            'currency_id': currency_eur.id,
+            'company_id': self.env.company.id,
+            'autocheck_on_post': False,
+        })
+
+        [self._create_invoice_one_line(
+            move_type='in_invoice',
+            journal_id=journal.id,
+            currency_id=currency.id,
+            price_unit=100,
+            tax_ids=[],
+            checked=False,
+            post=True
+        ) for currency in [currency_eur, currency_chf]]
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(150))
+
+        self._create_invoice_one_line(
+            move_type='in_refund',
+            currency_id=currency_eur.id,
+            journal_id=journal.id,
+            price_unit=75,
+            tax_ids=[],
+            checked=False,
+            post=True
+        )
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(75))
+
     def test_to_check_posted(self):
         """We want to only have the information on posted moves"""
         journal = self.env['account.journal'].create({
@@ -355,51 +651,3 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
 
         dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
         self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(100))
-
-    def test_to_check_amount_different_currency(self):
-        """
-        We want the to_check amount to be displayed in the journal currency
-        Company currency = $
-        Journal's currency = €
-        Inv01 of 100 EUR; rate: 2€/1$
-        Inv02 of 100 CHF; rate: 4CHF/1$
-
-        => to check = 150 €
-        """
-        self.env.ref('base.CHF').write({'active': True})
-        self.env['res.currency.rate'].create({
-            'currency_id': self.env.ref('base.EUR').id,
-            'name': '2024-12-01',
-            'rate': 2.0,
-        })
-        self.env['res.currency.rate'].create({
-            'currency_id': self.env.ref('base.CHF').id,
-            'name': '2024-12-01',
-            'rate': 4.0,
-        })
-        journal = self.env['account.journal'].create({
-            'name': 'Test Foreign Currency Journal',
-            'type': 'sale',
-            'code': 'TEST',
-            'currency_id': self.env.ref('base.EUR').id,
-            'company_id': self.env.company.id,
-            'autocheck_on_post': False,
-        })
-        self.env['account.move'].create([{
-            'move_type': 'out_invoice',
-            'journal_id': journal.id,
-            'partner_id': self.partner_a.id,
-            'currency_id': currency.id,
-            'checked': False,
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                    'quantity': 1,
-                    'price_unit': 100,
-                    'tax_ids': [],
-                })
-            ]
-        } for currency in (self.env.ref('base.EUR'), self.env.ref('base.CHF'))]).action_post()
-
-        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
-        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(150))
