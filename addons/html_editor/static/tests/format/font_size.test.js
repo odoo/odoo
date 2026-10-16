@@ -8,7 +8,7 @@ import {
     tripleClick,
 } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
-import { press, waitFor } from "@odoo/hoot-dom";
+import { dblclick, press, waitFor } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
@@ -22,8 +22,11 @@ test("should change the font size of a few characters", async () => {
 
 test("should change the font size the qweb tag", async () => {
     await testEditor({
-        contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
-        stepFunction: setFontSize("36px"),
+        contentBefore: `<div><p t-out="'Test'" contenteditable="false">Test</p></div>`,
+        stepFunction: async (editor) => {
+            await dblclick("p[t-out]");
+            setFontSize("36px")(editor);
+        },
         contentAfter: `<div>[<p t-out="'Test'" style="font-size: 36px;">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
     });

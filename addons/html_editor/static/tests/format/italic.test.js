@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { dblclick, press } from "@odoo/hoot-dom";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
@@ -48,8 +48,11 @@ test("should make two paragraphs not italic", async () => {
 
 test("should make qweb tag italic", async () => {
     await testEditor({
-        contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
-        stepFunction: italic,
+        contentBefore: `<div><p t-out="'Test'" contenteditable="false">Test</p></div>`,
+        stepFunction: async (editor) => {
+            await dblclick("p[t-out]");
+            italic(editor);
+        },
         contentAfter: `<div>[<p t-out="'Test'" style="font-style: italic;">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
     });
