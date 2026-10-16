@@ -4,7 +4,8 @@ import requests
 
 from urllib import parse
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
+from odoo.exceptions import UserError
 
 from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
@@ -210,3 +211,106 @@ class ResPartner(models.Model):
             # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
             # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
             partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+
+    def _l10n_fr_pdp_get_lookup_siren(self):
+        """SIREN used to list annuaire billing addresses.
+
+        Prefer the SIREN already stored on the contact. A 0225 endpoint that
+        starts with 9 digits (SIREN, SIREN_SIRET or SIREN_suffix) is enough
+        when the SIRET is not filled in.
+        """
+        self.ensure_one()
+        siren = self._l10n_fr_pdp_get_siren()
+        endpoint = self.peppol_endpoint or ''
+        prefix = endpoint[:9]
+        # ASCII digits only: ``isdigit`` also matches non-latin numerals.
+        if (
+            not siren
+            and self.peppol_eas == '0225'
+            and len(prefix) == 9
+            and prefix.isascii()
+            and prefix.isdigit()
+        ):
+            siren = prefix
+        return siren or False
+
+    @api.model
+    @handle_demo
+    def _fetch_active_annuaire_lines(self, siren):
+        """Return the active annuaire lines registered for ``siren``.
+
+        17.0 only calls the single-identifier route ``annuaire_lookup``.
+        The line list is the same IAP route 18.0 uses (``pdp_annuaire_lookup``).
+        An empty dict means the annuaire could not be queried.
+        """
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
+        query = parse.urlencode({'pdp_endpoint': siren, 'active_only': True})
+        endpoint = f'{origin}/api/pdp/1/pdp_annuaire_lookup?{query}'
+        try:
+            response = requests.get(endpoint, timeout=10)
+            decoded_response = response.json()
+        except (requests.exceptions.RequestException, ValueError) as error:
+            _logger.debug("failed to query active annuaire lines for identifier %s: %s", siren, error)
+            return {}
+
+        if decoded_error := decoded_response.get('error'):
+            _logger.error(
+                'error when querying annuaire lines for identifier %s: %s',
+                siren, decoded_error.get('message', 'unknown error'),
+            )
+            return {}
+        if not response.ok:
+            _logger.error(
+                'unsuccessful response %s when querying annuaire lines for identifier %s',
+                response.status_code, siren,
+            )
+            return {}
+
+        lines = [
+            line for line in (decoded_response.get('annuaire_lines') or [])
+            if line.get('identifier')
+        ]
+        lines.sort(key=lambda line: line['identifier'])
+        identifiers = [line['identifier'] for line in lines]
+        return {
+            'in_annuaire': bool(identifiers),
+            'identifiers': identifiers,
+            'count': len(identifiers),
+            'lines': lines,
+        }
+
+    def action_pdp_annuaire_lookup(self):
+        """Open a wizard to pick one annuaire billing address for this contact."""
+        self.ensure_one()
+        siren = self._l10n_fr_pdp_get_lookup_siren()
+        if not siren:
+            raise UserError(_("Set a SIREN or SIRET on the contact to enable the annuaire lookup."))
+
+        result = self._fetch_active_annuaire_lines(siren)
+        if not result:
+            raise UserError(_("The annuaire could not be reached. Try again later."))
+        lines = result.get('lines') or []
+        if not lines:
+            raise UserError(_("No active annuaire line found for this SIREN."))
+
+        wizard = self.env['l10n_fr_pdp.partner.lookup'].create({
+            'partner_id': self.id,
+            'available_annuaire_line_ids': [
+                Command.create({
+                    'identifier': line.get('identifier'),
+                    'platform_id': line.get('platform_id'),
+                    'nature': line.get('nature'),
+                })
+                for line in lines
+            ],
+        })
+        # TransientModel has no ``_get_records_action`` on 17.0.
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Choose the billing address"),
+            'res_model': 'l10n_fr_pdp.partner.lookup',
+            'res_id': wizard.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }

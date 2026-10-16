@@ -50,6 +50,15 @@ def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification):
     return {'in_annuaire': peppol_eas == '0225'}
 
 
+def _mock_fetch_active_annuaire_lines(func, self, siren):
+    return {
+        'in_annuaire': False,
+        'identifiers': [],
+        'count': 0,
+        'lines': [],
+    }
+
+
 def _mock_button_trigger_authentication(func, self):
     self.pdp_kyc_status = 'success'
     return self._action_open_pdp_form()
@@ -60,6 +69,7 @@ _demo_behaviour = {
     '_peppol_register_receiver': _mock_peppol_register_receiver,  # account_edi_proxy_client.user
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
     '_pdp_annuaire_lookup_participant': _mock_pdp_annuaire_lookup_participant,  # res.partner
+    '_fetch_active_annuaire_lines': _mock_fetch_active_annuaire_lines,  # res.partner
     'button_trigger_authentication': _mock_button_trigger_authentication,  # pdp.registration
 }
 

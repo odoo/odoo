@@ -34,6 +34,14 @@
                            string="E-Invoicing Identifier"
                            invisible="hide_peppol_fields or 'FR' not in fiscal_country_codes"/>
                 </xpath>
+                <xpath expr="//field[@name='peppol_endpoint'][@string='E-Invoicing Identifier']" position="after">
+                    <div colspan="2" invisible="hide_peppol_fields or 'FR' not in fiscal_country_codes">
+                        <button name="action_pdp_annuaire_lookup" type="object" string="Choose the billing address"
+                                icon="oi-search" class="btn btn-link p-0"
+                                groups="account.group_account_invoice"
+                                title="List the billing addresses registered in the annuaire for this SIREN"/>
+                    </div>
+                </xpath>
             </data>
         </field>
     </record>
