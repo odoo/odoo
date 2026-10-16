@@ -2054,7 +2054,8 @@ export class PosStore extends Reactive {
             this.redirectToBackend();
         }
 
-        if (this.session.state === "opening_control") {
+        // A newer window took this session over: it is still in use, so it must not be deleted.
+        if (this.session.state === "opening_control" && !this.sessionTakenOver) {
             const data = await this.data.call("pos.session", "delete_opening_control_session", [
                 this.session.id,
             ]);
@@ -2246,6 +2247,7 @@ export class PosStore extends Reactive {
                     const msg = JSON.parse(event.newValue);
                     if (msg.message === "close_tabs" && msg.session == this.session.id) {
                         console.info("POS / Session opened in another window. EXITING POS");
+                        this.sessionTakenOver = true;
                         this.closePos();
                     }
                 }
