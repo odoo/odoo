@@ -155,3 +155,61 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
             'invoice_origin': po_child.name,
             'partner_id': child.id,
         }])
+
+    def _create_vehicles(self):
+        self.ensure_installed('account_fleet')
+        brand = self.env['fleet.vehicle.model.brand'].sudo().create({'name': 'Test Brand'})  # noqa: OLS03001
+        model = self.env['fleet.vehicle.model'].sudo().create({'name': 'Test Model', 'brand_id': brand.id})  # noqa: OLS03001
+        return self.env['fleet.vehicle'].sudo().create([  # noqa: OLS03001
+            {'model_id': model.id, 'license_plate': '1-ABC-123'},
+            {'model_id': model.id, 'vin_sn': 'ABCDEF012346GHJKL'},
+        ])
+
+    def test_po_total_match_keeps_imported_vehicles(self):
+        """
+        When an imported bill fully matches a purchase order, its lines are replaced by
+        the purchase order lines. The vehicles found in the XML must be kept on them.
+        """
+        car_1, car_2 = self._create_vehicles()
+        product_lease, product_fuel = self.env['product.product'].create([
+            {'name': 'Car Lease', 'default_code': 'CAR-LEASE', 'supplier_taxes_id': False},
+            {'name': 'Car Fuel', 'default_code': 'CAR-FUEL', 'supplier_taxes_id': False},
+        ])
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_open_wood.id,
+            'partner_ref': 'VEHICLE-PO',
+            'order_line': [
+                Command.create({'product_id': product_lease.id, 'product_qty': 1.0, 'price_unit': 100.0, 'tax_ids': False}),
+                Command.create({'product_id': product_fuel.id, 'product_qty': 1.0, 'price_unit': 200.0, 'tax_ids': False}),
+            ],
+        })
+        purchase_order.button_confirm()
+
+        bill = self._create_bill_from_xml('ubl_bis3_PO_vehicle.xml')
+        self.assertRecordValues(bill.invoice_line_ids.filtered(lambda l: l.display_type == 'product'), [
+            {'purchase_line_id': purchase_order.order_line[0].id, 'vehicle_id': car_1.id},
+            {'purchase_line_id': purchase_order.order_line[1].id, 'vehicle_id': car_2.id},
+        ])
+
+    def test_po_total_match_keeps_single_vehicle(self):
+        """
+        When the bill lines replaced by the purchase order lines all share the same vehicle,
+        it is set on all the purchase order lines, even if their products differ.
+        """
+        car = self._create_vehicles()[0]
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_origin': self.purchase_order.name,
+            'partner_id': self.partner_open_wood.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'Car rental',
+                'quantity': 1,
+                'price_unit': self.purchase_order.amount_untaxed,
+                'tax_ids': self.purchase_order.order_line.tax_ids.ids,
+                'vehicle_id': car.id,
+            })],
+        })
+        bill._link_bill_origin_to_purchase_orders()
+        self.assertRecordValues(bill.invoice_line_ids.filtered(lambda l: l.display_type == 'product'), [
+            {'purchase_line_id': self.purchase_order.order_line.id, 'vehicle_id': car.id},
+        ])
