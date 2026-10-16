@@ -114,6 +114,10 @@ class Website(models.Model):
 
     shop_gap = fields.Char(string="Grid-gap on the shop", default="16px", required=False)
 
+    shop_opt_products_thumb_bg = fields.Char(
+        string="Product thumbnail background color on the shop"
+    )
+
     shop_opt_products_design_classes = fields.Char(
         string="Shop Design Class",
         default=(
@@ -1268,6 +1272,23 @@ class Website(models.Model):
             if class_name in design_classes:
                 return image_height
         return "64px"
+
+    def _get_product_thumb_roundness_class(self):
+        """Return the shop's configured product-image roundness class."""
+        design_classes = (self.shop_opt_products_design_classes or "").split()
+        for class_name in design_classes:
+            if class_name.startswith("o_wsale_products_opt_rounded_"):
+                return class_name
+        return ""
+
+    def _get_wishlist_design_classes(self):
+        """Return the wishlist design classes, with the shop's product-image roundness."""
+        design_classes = [
+            class_name
+            for class_name in (self.wishlist_opt_products_design_classes or "").split()
+            if not class_name.startswith("o_wsale_products_opt_rounded_")
+        ]
+        return " ".join([*design_classes, self._get_product_thumb_roundness_class()])
 
     def _get_basic_feed_product_domain(self):
         return Domain.AND([
