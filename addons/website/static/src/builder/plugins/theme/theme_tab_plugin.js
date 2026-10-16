@@ -2,6 +2,7 @@ import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
+import { ThemeWebsiteIdentificationOption } from "./theme_website_identification_plugin";
 import { ThemeAdvancedOption } from "./theme_advanced_option";
 import { ThemeShadowOption } from "./theme_shadow_option";
 import { ThemeButtonOption } from "./theme_button_option";
@@ -58,7 +59,8 @@ export const OPTION_POSITIONS = {
     LINK: 60,
     INPUT: 70,
     SHADOW: 80,
-    ADVANCED: 90,
+    IDENTIFICATION: 90,
+    ADVANCED: 100,
 };
 
 const FONT_WEIGHT_OPTIONS = [
@@ -180,6 +182,14 @@ export class ThemeTabPlugin extends Plugin {
             withSequence(
                 OPTION_POSITIONS.SHADOW,
                 this.getThemeOptionBlock("theme-shadow", _t("Shadow"), ThemeShadowOption)
+            ),
+            withSequence(
+                OPTION_POSITIONS.IDENTIFICATION,
+                this.getThemeOptionBlock(
+                    "theme-identification",
+                    _t("Website Identification"),
+                    ThemeWebsiteIdentificationOption
+                )
             ),
             withSequence(
                 OPTION_POSITIONS.ADVANCED,
