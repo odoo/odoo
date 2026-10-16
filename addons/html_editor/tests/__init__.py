@@ -6,3 +6,4 @@ from . import test_modify_image_no_data
 from . import test_html_field_pending_attachments
 from . import test_ir_attachment
 from . import test_icons
+from . import test_assets
