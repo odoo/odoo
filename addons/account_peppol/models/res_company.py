@@ -368,6 +368,8 @@ class ResCompany(models.Model):
             raise UserError(_("The database you are trying to connect to is not suitable for Peppol."))
         if not can_connect_vals.get('auth_required'):
             return None
+        if can_connect_vals.get('kyc_error'):
+            raise UserError(_("Cannot initiate KYC for your selected code. Please try a different one"))
         available_auths = can_connect_vals.get('available_auths') or {}
         auth = available_auths.get('generic') or next(iter(available_auths.values()), None)
         if not auth or not auth.get('authorization_url'):
