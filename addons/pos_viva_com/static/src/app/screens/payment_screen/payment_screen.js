@@ -11,9 +11,9 @@ patch(PaymentScreen.prototype, {
         onMounted(() => {
             const pendingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
-                    paymentLine.payment_method_id.payment_provider === "viva_com" &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "pending"
+                    paymentLine.payment_provider === "viva_com" &&
+                    !paymentLine.isSettled &&
+                    paymentLine.payment_status !== "pending"
             );
             if (!pendingPaymentLine) {
                 return;
@@ -62,7 +62,7 @@ patch(PaymentScreen.prototype, {
             if (previousAnswer === "true") {
                 for (const lineUuid of this.currentOrder.payment_ids.map((line) => line.uuid)) {
                     const paymentLine = this.currentOrder.getPaymentlineByUuid(lineUuid);
-                    if (this.vivaApp.use(paymentLine.payment_method_id) && !paymentLine.isDone()) {
+                    if (this.vivaApp.use(paymentLine.payment_method_id) && !paymentLine.isSettled) {
                         paymentLine.delete();
                     }
                 }
@@ -76,9 +76,7 @@ patch(PaymentScreen.prototype, {
             const refundedOrder = this.currentOrder.lines[0]?.refunded_orderline_id?.order_id;
             const amountDue = Math.abs(this.currentOrder.remainingDue);
             const matchedPaymentLine = refundedOrder.payment_ids.find(
-                (line) =>
-                    line.payment_method_id.payment_provider === "viva_com" &&
-                    line.amount === amountDue
+                (line) => line.payment_provider === "viva_com" && line.amount === amountDue
             );
             if (matchedPaymentLine) {
                 const paymentLineAddedSuccessfully = await super.addNewPaymentLine(pm, args);
@@ -92,10 +90,10 @@ patch(PaymentScreen.prototype, {
 
         return await super.addNewPaymentLine(pm, args);
     },
-    deletePaymentLine(lineUuid) {
+    async deletePaymentLine(lineUuid) {
         const line = this.currentOrder.getPaymentlineByUuid(lineUuid);
         if (!this.vivaApp.use(line.payment_method_id) && !this.integrated()) {
-            return super.deletePaymentLine(lineUuid);
+            return await super.deletePaymentLine(lineUuid);
         }
 
         this.currentOrder.removePaymentline(line);

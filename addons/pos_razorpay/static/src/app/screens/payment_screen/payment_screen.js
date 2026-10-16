@@ -9,17 +9,17 @@ patch(PaymentScreen.prototype, {
         onMounted(async () => {
             const pendingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
-                    paymentLine.payment_method_id.payment_provider === "razorpay" &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "pending"
+                    paymentLine.payment_provider === "razorpay" &&
+                    !paymentLine.isSettled &&
+                    paymentLine.payment_status !== "pending"
             );
             if (pendingPaymentLine) {
                 const payment_status =
-                    await pendingPaymentLine.payment_method_id.payment_interface._waitForPaymentConfirmation();
+                    await pendingPaymentLine.payment_interface._waitForPaymentConfirmation();
                 if (payment_status?.status === "AUTHORIZED") {
-                    pendingPaymentLine.setPaymentStatus("done");
+                    pendingPaymentLine.payment_status = "done";
                 } else {
-                    pendingPaymentLine.setPaymentStatus("force_done");
+                    pendingPaymentLine.payment_status = "force_done";
                 }
             }
         });
@@ -35,7 +35,7 @@ patch(PaymentScreen.prototype, {
             );
             const razorpayPaymentline = refundedOrder.payment_ids.find(
                 (pi) =>
-                    pi.payment_method_id.payment_provider === "razorpay" &&
+                    pi.payment_provider === "razorpay" &&
                     !transactionsIds.find((x) => x === pi.transaction_id)
             );
             const currentDue = this.currentOrder.remainingDue;

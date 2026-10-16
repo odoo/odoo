@@ -211,7 +211,7 @@ export class GeneratePrinterData {
         const baseUrl = this.config._base_url;
         const company = this.company;
         const url = `${baseUrl}/pos/ticket?order_uuid=${this.order.uuid}`;
-        const useQrCode =
+        const useQrPayment =
             company.point_of_sale_ticket_portal_url_display_mode !== "url" && this.order.finalized;
         const useTips = this.config.set_tip_after_payment && this.order.displayPrice > 0;
         const tipPercentages = [
@@ -251,14 +251,14 @@ export class GeneratePrinterData {
             lines: this.generateLineData(),
             payments: this.generatePaymentData(),
             image: {
-                invoice_qr_code: useQrCode ? this.generateQrCode(url) : false,
+                invoice_qr_code: useQrPayment ? this.generateQrCode(url) : false,
                 logo: this.config.receiptLogoUrl,
             },
             conditions: {
                 basic_receipt: this.basicReceipt,
                 simplified_receipt: this.simplified,
                 display_vat: this.config._IS_VAT,
-                display_qr_code: useQrCode,
+                display_qr_code: useQrPayment,
                 display_url: company.point_of_sale_ticket_portal_url_display_mode != "qr_code",
                 use_self_invoicing: company.point_of_sale_use_ticket_qr_code,
                 module_pos_restaurant: this.config.module_pos_restaurant,

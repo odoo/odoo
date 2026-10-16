@@ -16,8 +16,8 @@ class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
     # ----- Fields ----- #
-    def _get_external_qr_provider_selection(self):
-        return super()._get_external_qr_provider_selection() + [("bancontact_pay", "Bancontact Pay")]
+    def _get_provider_selection(self):
+        return super()._get_provider_selection() + [("bancontact_pay", "Bancontact Pay")]
 
     bancontact_api_key = fields.Char("Bancontact API Key", groups="point_of_sale.group_pos_manager", help="Bancontact Pro Portal > Admin Centre > Shops and products > Select a product > Manage API keys > View API key")
     bancontact_ppid = fields.Char("Bancontact PPID", help="Bancontact Pro Portal > Admin Centre > Shops and products > Select a shop > Read the product ID from the card")

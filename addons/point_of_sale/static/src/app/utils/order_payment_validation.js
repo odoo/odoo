@@ -25,9 +25,6 @@ export default class OrderPaymentValidation {
     setup(vals) {
         this.pos = vals.pos;
         this.orderUuid = vals.orderUuid;
-        this.payment_methods_from_config = this.pos.config.payment_method_ids
-            .slice()
-            .sort((a, b) => a.sequence - b.sequence);
         if (vals.fastPaymentMethod) {
             this.order.addPaymentline(vals.fastPaymentMethod);
         }
@@ -115,7 +112,7 @@ export default class OrderPaymentValidation {
             // remove pending payments before finalizing the validation
             const toRemove = [];
             for (const line of this.paymentLines) {
-                if (!line.isDone() || line.amount === 0) {
+                if (!line.isSettled || line.amount === 0) {
                     toRemove.push(line);
                 }
             }
@@ -283,10 +280,6 @@ export default class OrderPaymentValidation {
     }
 
     async isOrderValid(isForceValidate) {
-        if (this.order.isRefundInProcess()) {
-            return false;
-        }
-
         if (this.order.getOrderlines().length === 0 && this.order.isToInvoice()) {
             this.pos.dialog.add(AlertDialog, {
                 title: _t("Empty Order"),

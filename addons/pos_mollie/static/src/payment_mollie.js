@@ -17,20 +17,17 @@ export class PaymentMollie extends PaymentInterface {
 
                 if (
                     paymentLine &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "retry"
+                    !paymentLine.isSettled &&
+                    paymentLine.payment_status !== "retry"
                 ) {
-                    paymentLine.payment_method_id.payment_interface.handleMollieStatusResponse(
-                        paymentLine,
-                        payload
-                    );
+                    paymentLine.payment_interface.handleMollieStatusResponse(paymentLine, payload);
                 }
             }
         });
     }
 
     async sendPaymentRequest(line) {
-        if (line.amount < 0) {
+        if (line.isRefund) {
             const originalPaymentId = this._findOriginalPaymentId(line);
             if (!originalPaymentId) {
                 this._showMollieError(
@@ -117,8 +114,7 @@ export class PaymentMollie extends PaymentInterface {
 
         const amountDue = Math.abs(currentOrder.remainingDue);
         const matchedPaymentLine = orderToRefund.payment_ids.find(
-            (line) =>
-                line.payment_method_id.payment_provider === "mollie" && line.amount <= amountDue
+            (line) => line.payment_provider === "mollie" && line.amount <= amountDue
         );
 
         return matchedPaymentLine?.transaction_id ?? null;
@@ -189,7 +185,7 @@ export class PaymentMollie extends PaymentInterface {
             this.paymentLineResolvers[paymentLine.uuid] = null;
             resolver(isSuccessful);
         } else {
-            paymentLine.handlePaymentResponse(isSuccessful);
+            this.handlePaymentResponse(paymentLine, isSuccessful);
         }
     }
 

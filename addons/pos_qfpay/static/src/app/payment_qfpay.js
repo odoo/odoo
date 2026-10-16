@@ -21,7 +21,7 @@ export class PaymentQFpay extends PaymentInterface {
 
         const order = line.pos_order_id;
         const uuid = line.uuid;
-        if (line.amount < 0) {
+        if (line.isRefund) {
             const originalPayment = order.refunded_order_id?.payment_ids.find(
                 (l) => l.payment_method_id.id === this.payment_method_id.id
             );
@@ -78,7 +78,7 @@ export class PaymentQFpay extends PaymentInterface {
             });
         }
 
-        line.setPaymentStatus("waitingCard");
+        line.payment_status = "waiting_card";
         return this.waitForPaymentConfirmation(uuid);
     }
 
@@ -136,12 +136,12 @@ export class PaymentQFpay extends PaymentInterface {
         // when starting to wait for the payment response we create a promise
         // that will be resolved when the payment response is received.
         // In case this resolver is lost ( for example on a refresh )
-        // we use the handlePaymentResponse method on the payment line
+        // we use the handlePaymentResponse method of the payment interface
         const resolver = this.paymentLineResolvers?.[line.uuid];
         if (resolver) {
             resolver(isPaymentSuccessful);
         } else {
-            line.handlePaymentResponse(isPaymentSuccessful);
+            this.handlePaymentResponse(line, isPaymentSuccessful);
         }
     }
 

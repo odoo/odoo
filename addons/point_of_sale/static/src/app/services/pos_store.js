@@ -60,6 +60,7 @@ import { formatFloat } from "@web/core/utils/numbers";
 import { PosDataPlugin } from "../plugins/pos_data_plugin";
 import { PosTicketPrinterPlugin } from "../plugins/pos_ticket_printer_plugin";
 import { PosAlertPlugin } from "../plugins/pos_alert_plugin";
+import { PosPaymentMethodPlugin } from "../plugins/pos_payment_method_plugin";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { clearLocalStorage } from "../utils/devices_identifier_sequence";
@@ -73,6 +74,7 @@ export class PosStore extends WithLazyGetterTrap {
     router = usePlugin(PosRouterPlugin);
     customerDisplay = usePlugin(CustomerDisplayTerminalPlugin);
     accessRight = usePlugin(PosAccessRightPlugin);
+    paymentMethods = usePlugin(PosPaymentMethodPlugin);
 
     static excludedLazyGetters = [
         "defaultPage",
@@ -279,7 +281,7 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
     handleQRPaymentLines() {
-        // Ensure that all Bank QR payments in the 'waiting' status are automatically set to 'retry'
+        // Ensure that all bank transfer payments in the 'waiting' status are automatically set to 'retry'
         // when the POS session is started or restarted.
         const order = this.getOrder();
         if (!order) {
@@ -287,10 +289,10 @@ export class PosStore extends WithLazyGetterTrap {
         }
         order.payment_ids?.forEach((payment) => {
             if (
-                payment.payment_method_id.useBankQrCode &&
-                payment.getPaymentStatus() === "waiting"
+                payment.payment_interface?.cashier_confirms &&
+                payment.payment_status === "waiting"
             ) {
-                payment.setPaymentStatus("retry");
+                payment.payment_status = "retry";
             }
         });
     }
@@ -600,13 +602,7 @@ export class PosStore extends WithLazyGetterTrap {
         // Check cashier
         this.checkPreviousLoggedCashier();
 
-        // Add Payment Interface to Payment Method
-        for (const pm of this.config.payment_method_ids) {
-            const PaymentInterface = registry
-                .category("pos_payment_providers")
-                .get(pm.payment_provider, null);
-            pm.payment_interface = PaymentInterface ? new PaymentInterface(this, pm) : null;
-        }
+        this.paymentMethods.init(this);
 
         // Add Scale
         for (const ScaleInterface of registry.category("electronic_scales").getAll()) {
@@ -1982,8 +1978,8 @@ export class PosStore extends WithLazyGetterTrap {
             const paymentLine = order.payment_ids.find(
                 (paymentLine) =>
                     paymentLine.payment_provider === provider &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "retry"
+                    !paymentLine.isSettled &&
+                    paymentLine.payment_status !== "retry"
             );
             if (paymentLine) {
                 return paymentLine;
@@ -2487,7 +2483,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
             return false;
         }
-        payment.setPaymentStatus("waiting");
         let qrCodeValue;
         try {
             qrCodeValue = await this.data.call("pos.payment.method", "get_qr_code_value", [
@@ -2791,21 +2786,9 @@ export class PosStore extends WithLazyGetterTrap {
     getValidationOrderOptions(args = {}) {
         const { order = this.getOrder() } = args;
         const opts = { pos: this, orderUuid: order.uuid };
-
-        // Fast payment should be applied in the following cases:
-        // 1. When there are no existing payment lines, but a payment method is configured.
-        // 2. When the customer's due has been settled (i.e., a negative payment entry exists).
-        //    In this case, the negative payment line is present in `paymentLines` but not shown in the UI,
-        //    so `fastPayment` should still be triggered by passing `opts`.
-        const paymentLines = order.payment_ids;
-        if (
-            !paymentLines.length ||
-            (!order.is_refund &&
-                paymentLines.length === 1 &&
-                paymentLines[0].payment_method_id.type === "pay_later" &&
-                this.currency.isNegative(paymentLines[0].amount))
-        ) {
-            opts.fastPaymentMethod = this.config.paymentMethods[0];
+        const fastPaymentMethod = this.paymentMethods.getFastPaymentMethod(order);
+        if (fastPaymentMethod) {
+            opts.fastPaymentMethod = fastPaymentMethod;
         }
         return opts;
     }
@@ -2819,11 +2802,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     async autoValidateOrder(args = {}) {
         const { order = this.getOrder() } = args;
-        if (
-            order.toBeValidate() &&
-            this.config.auto_validate_electronic_payment &&
-            !order.isRefundInProcess()
-        ) {
+        if (order.toBeValidate() && this.config.auto_validate_electronic_payment) {
             return await this.validateOrder({ ...args, order });
         }
         return false;
@@ -3161,7 +3140,7 @@ export class PosStore extends WithLazyGetterTrap {
         // No QR was explicitly pushed: default to the selected payment line's own
         // QR code while it's mid-processing (e.g. a terminal waiting to be scanned).
         const payment = this.getOrder()?.getSelectedPaymentline();
-        return payment?.isProcessing() && payment.qr_code
+        return payment?.isProcessing && payment.qr_code
             ? { title: _t("Scan the QR for payment"), ...payment.getQrPopupProps() }
             : null;
     }

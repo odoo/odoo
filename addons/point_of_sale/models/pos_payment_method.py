@@ -15,27 +15,26 @@ class PosPaymentMethod(models.Model):
     def _default_sequence(self):
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
 
-    def _get_terminal_provider_selection(self):
-        return []
-
-    def _get_external_qr_provider_selection(self):
+    def _get_provider_selection(self):
         return []
 
     def _get_cash_machine_selection(self):
         return []
 
-    def _get_provider_selection(self):
-        return self._get_terminal_provider_selection() + self._get_external_qr_provider_selection() + self._get_cash_machine_selection()
+    def _get_bank_transfer_selection(self):
+        return self.env['res.partner.bank'].get_available_qr_methods_in_sequence()
+
+    def _get_payment_provider_selection(self):
+        return self._get_provider_selection() + self._get_cash_machine_selection()
 
     def _get_payment_method_type(self):
         selection = [
             ('none', self.env._('None required')),
-            ('terminal', self.env._('Terminal')),
-            ('external_qr', self.env._('Quick Pay (QR Code)')),
+            ('provider', self.env._('Payment Provider')),
             ('cash_machine', self.env._("Cash Machine")),
         ]
-        if self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
-            selection.append(('bank_qr_code', self.env._('Bank App (QR Code)')))
+        if self._get_bank_transfer_selection():
+            selection.append(('bank_transfer', self.env._('Bank Transfer (QR)')))
         return selection
 
     name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
@@ -92,11 +91,11 @@ class PosPaymentMethod(models.Model):
     default_qr = fields.Char(compute='_compute_qr')
     qr_code_method = fields.Selection(
         string='QR Code Format', copy=False,
-        selection=lambda self: self.env['res.partner.bank'].get_available_qr_methods_in_sequence(),
+        selection=lambda self: self._get_bank_transfer_selection(),
         help='Type of QR-code to be generated for this payment method.',
     )
-    hide_qr_code_method = fields.Boolean(compute='_compute_hide_qr_code_method')
-    payment_provider = fields.Selection(selection=lambda self: self._get_provider_selection(), string='Payment Provider', help='Payment provider that will be used to process payments made with this payment method.')
+    show_qr_code_method = fields.Boolean(compute='_compute_show_qr_code_method')
+    payment_provider = fields.Selection(selection=lambda self: self._get_payment_provider_selection(), string='Payment Provider', help='Payment provider that will be used to process payments made with this payment method.')
     available_payment_providers = fields.Json(compute='_compute_available_payment_providers')
     currency_ids = fields.Many2many('res.currency', string="Currencies")
 
@@ -110,22 +109,21 @@ class PosPaymentMethod(models.Model):
     @api.model
     def get_payment_providers(self):
         return [
-            {"type": "terminal", "provider": "worldline", "module": "pos_iot_worldline", "name": "Axepta BNP Paribas"},
-            {"type": "terminal", "provider": "six_iot", "module": "pos_iot_six", "name": "SIX"},
-            {"type": "terminal", "provider": "adyen", "module": "pos_adyen", "name": "Adyen"},
-            {"type": "terminal", "provider": "mercado_pago", "module": "pos_mercado_pago", "name": "Mercado Pago"},
-            {"type": "terminal", "provider": "razorpay", "module": "pos_razorpay", "name": "Razorpay"},
-            {"type": "terminal", "provider": "stripe", "module": "pos_stripe", "name": "Stripe"},
-            {"type": "terminal", "provider": "viva_com", "module": "pos_viva_com", "name": "Viva.com"},
-            {"type": "terminal", "provider": "worldline", "module": "pos_iot_worldline", "name": "Worldline"},
-            {"type": "terminal", "provider": "tyro", "module": "pos_tyro", "name": "Tyro"},
-            {"type": "terminal", "provider": "pine_labs", "module": "pos_pine_labs", "name": "Pine Labs"},
-            {"type": "terminal", "provider": "qfpay", "module": "pos_qfpay", "name": "QFPay"},
-            {"type": "terminal", "provider": "dpopay", "module": "pos_dpopay", "name": "DPO Pay"},
-            {"type": "terminal", "provider": "mollie", "module": "pos_mollie", "name": "Mollie"},
-            {"type": "terminal", "provider": "safaricom", "module": "pos_safaricom", "name": "Safaricom"},
-            {"type": "terminal", "provider": "sumup", "module": "pos_sumup", "name": "SumUp"},
-            {"type": "external_qr", "provider": "bancontact_pay", "module": "pos_bancontact_pay", "name": "Bancontact Pay"},
+            {"type": "provider", "provider": "six_iot", "module": "pos_iot_six", "name": "SIX"},
+            {"type": "provider", "provider": "adyen", "module": "pos_adyen", "name": "Adyen"},
+            {"type": "provider", "provider": "mercado_pago", "module": "pos_mercado_pago", "name": "Mercado Pago"},
+            {"type": "provider", "provider": "razorpay", "module": "pos_razorpay", "name": "Razorpay"},
+            {"type": "provider", "provider": "stripe", "module": "pos_stripe", "name": "Stripe"},
+            {"type": "provider", "provider": "viva_com", "module": "pos_viva_com", "name": "Viva.com"},
+            {"type": "provider", "provider": "worldline", "module": "pos_iot_worldline", "name": "Worldline"},
+            {"type": "provider", "provider": "tyro", "module": "pos_tyro", "name": "Tyro"},
+            {"type": "provider", "provider": "pine_labs", "module": "pos_pine_labs", "name": "Pine Labs"},
+            {"type": "provider", "provider": "qfpay", "module": "pos_qfpay", "name": "QFPay"},
+            {"type": "provider", "provider": "dpopay", "module": "pos_dpopay", "name": "DPO Pay"},
+            {"type": "provider", "provider": "mollie", "module": "pos_mollie", "name": "Mollie"},
+            {"type": "provider", "provider": "safaricom", "module": "pos_safaricom", "name": "Safaricom"},
+            {"type": "provider", "provider": "sumup", "module": "pos_sumup", "name": "SumUp"},
+            {"type": "provider", "provider": "bancontact_pay", "module": "pos_bancontact_pay", "name": "Bancontact Pay"},
             {"type": "cash_machine", "provider": "glory", "module": "pos_glory_cash", "name": "Glory"},
             {"type": "cash_machine", "provider": "cashdro", "module": "pos_cashdro", "name": "Cashdro"},
             {"type": "cash_machine", "provider": "cashmatic", "module": "pos_cashmatic", "name": "Cashmatic"},
@@ -142,36 +140,23 @@ class PosPaymentMethod(models.Model):
             'default_qr', 'currency_ids',
         ]
 
-    @api.depends('payment_method_type')
-    def _compute_hide_qr_code_method(self):
+    @api.depends('type', 'payment_method_type')
+    def _compute_show_qr_code_method(self):
+        # No need to display the field if there is only one option
+        show_qr_code_method = len(self._get_bank_transfer_selection()) > 1
         for payment_method in self:
-            payment_method.hide_qr_code_method = payment_method.payment_method_type != 'bank_qr_code' or len(self.env['res.partner.bank'].get_available_qr_methods_in_sequence()) == 1
+            payment_method.show_qr_code_method = (
+                show_qr_code_method
+                and payment_method.type == 'bank'
+                and payment_method.payment_method_type == 'bank_transfer'
+            )
 
     @api.onchange('payment_method_type')
     def _onchange_payment_method_type(self):
-        # When changing the payment method type, ensure the payment provider is still valid
         for payment_method in self:
-            if (payment_method.payment_provider not in (payment_method.available_payment_providers or [])) or \
-                (payment_method.payment_method_type not in ('terminal', 'external_qr', 'cash_machine')):
+            # The available providers depend on the type
+            if payment_method.payment_provider not in (payment_method.available_payment_providers or []):
                 payment_method.payment_provider = False
-
-        # We don't display the field if there is only one option and cannot set a default on it
-        selection_options = self.env['res.partner.bank'].get_available_qr_methods_in_sequence()
-        if len(selection_options) == 1:
-            self.qr_code_method = selection_options[0][0]
-
-    @api.onchange('payment_provider')
-    def _onchange_payment_provider(self):
-        terminal_selection = [pm[0] for pm in self._get_terminal_provider_selection()]
-        external_qr_selection = [pm[0] for pm in self._get_external_qr_provider_selection()]
-        cash_machine_selection = [pm[0] for pm in self._get_cash_machine_selection()]
-        for payment_method in self:
-            if payment_method.payment_provider in terminal_selection and payment_method.payment_method_type != 'terminal':
-                payment_method.payment_method_type = 'terminal'
-            elif payment_method.payment_provider in external_qr_selection and payment_method.payment_method_type != 'external_qr':
-                payment_method.payment_method_type = 'external_qr'
-            elif payment_method.payment_provider in cash_machine_selection and payment_method.payment_method_type != 'cash_machine':
-                payment_method.payment_method_type = 'cash_machine'
 
     @api.depends('config_ids')
     def _compute_open_session_ids(self):
@@ -221,15 +206,13 @@ class PosPaymentMethod(models.Model):
     @api.depends('type', 'payment_method_type')
     def _compute_available_payment_providers(self):
         for payment_method in self:
-            match payment_method.payment_method_type:
-                case "cash_machine":
-                    payment_method.available_payment_providers = [selection[0] for selection in self._get_cash_machine_selection()]
-                case "terminal":
-                    payment_method.available_payment_providers = [selection[0] for selection in self._get_terminal_provider_selection()]
-                case "external_qr":
-                    payment_method.available_payment_providers = [selection[0] for selection in self._get_external_qr_provider_selection()]
-                case _:
-                    payment_method.available_payment_providers = []
+            if payment_method.payment_method_type == 'provider':
+                selection = self._get_provider_selection()
+            elif payment_method.payment_method_type == 'cash_machine':
+                selection = self._get_cash_machine_selection()
+            else:
+                selection = []
+            payment_method.available_payment_providers = [provider for provider, _name in selection]
 
     @api.onchange('available_payment_method_types')
     def _onchange_available_payment_method_types(self):
@@ -278,9 +261,9 @@ class PosPaymentMethod(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        default_type = self.default_get(['payment_method_type']).get('payment_method_type', 'none')
         for vals in vals_list:
-            if vals.get('payment_method_type', False):
-                self._force_payment_method_type_values(vals, vals['payment_method_type'])
+            self._force_payment_method_type_values(vals, vals.get('payment_method_type', default_type))
         return super().create(vals_list)
 
     def write(self, vals):
@@ -305,46 +288,30 @@ class PosPaymentMethod(models.Model):
                         configs=', '.join(blocking_sessions.config_id.mapped('name')),
                     ))
 
-        if 'payment_method_type' in vals:
-            self._force_payment_method_type_values(vals, vals['payment_method_type'])
+        if not vals.keys() & {'payment_method_type', 'payment_provider', 'qr_code_method'}:
             return super().write(vals)
 
-        pmt_terminal = self.filtered(lambda pm: pm.payment_method_type == 'terminal')
-        pmt_bank_qr = self.filtered(lambda pm: pm.payment_method_type == 'bank_qr_code')
-        pmt_external_qr = self.filtered(lambda pm: pm.payment_method_type == 'external_qr')
-        not_pmt = self - pmt_terminal - pmt_bank_qr - pmt_external_qr
+        for payment_method_type, payment_methods in self.grouped(lambda pm: vals.get('payment_method_type', pm.payment_method_type)).items():
+            type_vals = dict(vals)
+            self._force_payment_method_type_values(type_vals, payment_method_type)
+            super(PosPaymentMethod, payment_methods).write(type_vals)
+        return True
 
-        res = True
-        forced_vals = vals.copy()
-        if pmt_terminal:
-            self._force_payment_method_type_values(forced_vals, 'terminal', True)
-            res = super(PosPaymentMethod, pmt_terminal).write(forced_vals) and res
-        if pmt_bank_qr:
-            self._force_payment_method_type_values(forced_vals, 'bank_qr_code', True)
-            res = super(PosPaymentMethod, pmt_bank_qr).write(forced_vals) and res
-        if pmt_external_qr:
-            self._force_payment_method_type_values(forced_vals, 'external_qr', True)
-            res = super().write(forced_vals) and res
-        if not_pmt:
-            res = super(PosPaymentMethod, not_pmt).write(vals) and res
-
-        return res
-
-    @staticmethod
-    def _force_payment_method_type_values(vals, payment_method_type, if_present=False):
-        if payment_method_type in ['terminal', 'external_qr', 'cash_machine']:
+    def _force_payment_method_type_values(self, vals, payment_method_type):
+        if payment_method_type in ('provider', 'cash_machine'):
             disabled_fields_name = ['qr_code_method']
-        elif payment_method_type == 'bank_qr_code':
+        elif payment_method_type == 'bank_transfer':
             disabled_fields_name = ['payment_provider']
         else:
             disabled_fields_name = ['payment_provider', 'qr_code_method']
-        if if_present:
-            for name in disabled_fields_name:
-                if name in vals:
-                    vals[name] = False
-        else:
-            for name in disabled_fields_name:
-                vals[name] = False
+        for name in disabled_fields_name:
+            vals[name] = False
+
+        # The field is hidden when there is only one option, so it cannot be filled in
+        if payment_method_type == 'bank_transfer' and not vals.get('qr_code_method'):
+            bank_transfer_methods = self._get_bank_transfer_selection()
+            if len(bank_transfer_methods) == 1:
+                vals['qr_code_method'] = bank_transfer_methods[0][0]
 
     def copy_data(self, default=None):
         default = dict(default or {}, config_ids=[(5, 0, 0)])
@@ -359,9 +326,9 @@ class PosPaymentMethod(models.Model):
     @api.constrains('payment_method_type', 'journal_id', 'qr_code_method')
     def _check_payment_method(self):
         for rec in self:
-            if rec.payment_method_type == "bank_qr_code":
+            if rec.payment_method_type == "bank_transfer":
                 if (rec.journal_id.type != 'bank' or not rec.journal_id.bank_account_id):
-                    raise ValidationError(_("At least one bank account must be defined on the journal to allow registering QR code payments with Bank apps."))
+                    raise ValidationError(_("At least one bank account must be defined on the journal to allow registering bank transfer payments."))
                 if not rec.qr_code_method:
                     raise ValidationError(_("You must select a QR-code method to generate QR-codes for this payment method."))
                 error_msg = rec.journal_id.bank_account_id._get_error_messages_for_qr(rec.qr_code_method, False, rec.company_id.currency_id)
@@ -393,7 +360,7 @@ class PosPaymentMethod(models.Model):
     @api.depends('payment_method_type', 'journal_id')
     def _compute_qr(self):
         for pm in self:
-            if pm.payment_method_type != "bank_qr_code":
+            if pm.payment_method_type != "bank_transfer":
                 pm.default_qr = False
                 continue
             try:
@@ -418,7 +385,7 @@ class PosPaymentMethod(models.Model):
         of a report rendering it.
         """
         self.ensure_one()
-        if self.payment_method_type != "bank_qr_code" or not self.qr_code_method:
+        if self.payment_method_type != "bank_transfer" or not self.qr_code_method:
             raise UserError(_("This payment method is not configured to generate QR codes."))
         payment_bank = self.journal_id.bank_account_id
         debtor_partner = self.env['res.partner'].browse(debtor_partner)

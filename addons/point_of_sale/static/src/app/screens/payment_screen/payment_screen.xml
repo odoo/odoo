@@ -16,8 +16,7 @@
                     sendPaymentCancel.bind="this.sendPaymentCancel"
                     sendPaymentRequest.bind="this.sendPaymentRequest"
                     selectLine.bind="this.selectPaymentLine"
-                    updateSelectedPaymentline.bind="this.updateSelectedPaymentline"
-                    isRefundOrder="this.isRefundOrder" />
+                    updateSelectedPaymentline.bind="this.updateSelectedPaymentline" />
                 <div class="payment-screen-status-mobile">
                     <PaymentScreenStatus order="this.currentOrder" />
                 </div>
@@ -56,8 +55,7 @@
                                 sendPaymentCancel.bind="this.sendPaymentCancel"
                                 sendPaymentRequest.bind="this.sendPaymentRequest"
                                 selectLine.bind="this.selectPaymentLine"
-                                updateSelectedPaymentline.bind="this.updateSelectedPaymentline"
-                                isRefundOrder="this.isRefundOrder" />
+                                updateSelectedPaymentline.bind="this.updateSelectedPaymentline" />
                             <div class="payment-screen-status">
                                 <PaymentScreenStatus order="this.currentOrder" />
                             </div>
@@ -87,14 +85,14 @@
             t-on-click="() => this.onClickValidate()"
             t-attf-class="
                 {{ this.ui.isSmall ? 'btn-switchpane flex-fill' : 'button next w-50' }}
-                {{ this.currentOrder.canBeValidated() and !this.currentOrder.isRefundInProcess() ? 'highlight' : 'disabled' }}
+                {{ this.currentOrder.canBeValidated() ? 'highlight' : 'disabled' }}
             "
         >
-            <t t-if="this.paymentLines.length">
+            <t t-if="this.paymentLines.length or !this.firstPaymentMethod">
                 <span>Validate</span>
             </t>
             <t t-else="">
-                <span t-out="this.payment_methods_from_config[0].name"/>
+                <span t-out="this.firstPaymentMethod.name"/>
             </t>
         </button>
     </t>
@@ -158,10 +156,10 @@
         <div class="paymentmethods-container" t-att-class="this.ui.isSmall ? 'rounded-3' : 'flex-grow-1'">
         <!-- Add scrollbar if more than 4 payment methods are configured -->
             <div class="paymentmethods gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-200': this.ui.isSmall, 'd-flex flex-column gap-lg-2': !this.ui.isSmall }" t-att-style="this.ui.isSmall ? 'max-height: 120px;' : ''">
-                <t t-foreach="this.payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
-                    <div t-if="this.showPaymentMethod(paymentMethod)">
+                <t t-foreach="this.paymentMethods" t-as="paymentMethod" t-key="paymentMethod.id">
+                    <div>
                         <div class="d-flex paymentmethod justify-content-between align-items-center button btn btn-secondary btn-lg lh-lg flex-fill"
-                            t-att-class="{ 'opacity-50': !paymentMethod.getPaymentInterfaceStates().status }"
+                            t-att-class="{ 'opacity-50': this.isPaymentMethodBlocked(paymentMethod) }"
                             t-on-click="() => this.addNewPaymentLine(paymentMethod)"
                             role="button">
                             <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
@@ -178,7 +176,7 @@
                                 t-key="currency.id"
                                 t-on-click="() => this.addNewPaymentLine(paymentMethod, { currency })"
                                 class="currency-wise-method btn btn-secondary d-flex justify-content-between w-100 mt-1"
-                                t-att-class="{ 'opacity-50': !paymentMethod.getPaymentInterfaceStates().status }">
+                                t-att-class="{ 'opacity-50': this.isPaymentMethodBlocked(paymentMethod) }">
                                 <span class="text-muted me-1" t-out="currency.name" />
                                 <span t-out="currency.convertFormatted(this.currentOrder.totalDue)" />
                             </button>

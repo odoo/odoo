@@ -15,7 +15,7 @@ export class PaymentAdyen extends PaymentInterface {
             const pendingLine = this.pos.getPendingPaymentLine("adyen");
 
             if (pendingLine) {
-                pendingLine.payment_method_id.payment_interface.handleAdyenStatusResponse();
+                pendingLine.payment_interface.handleAdyenStatusResponse();
             }
         });
     }
@@ -65,7 +65,7 @@ export class PaymentAdyen extends PaymentInterface {
         // handle timeout
         var line = this.pendingAdyenline();
         if (line) {
-            line.setPaymentStatus("retry");
+            line.payment_status = "retry";
         }
         this._show_error(
             _t(
@@ -171,12 +171,12 @@ export class PaymentAdyen extends PaymentInterface {
         const order = this.pos.getOrder();
         const line = order.payment_ids.find((paymentLine) => paymentLine.uuid === uuid);
 
-        if (line.amount < 0 && !line.uiState.adyenRefundTransactionId) {
+        if (line.isRefund && !line.uiState.adyenRefundTransactionId) {
             this._show_error(_t("Cannot refund non-Adyen transactions via Adyen."));
             return false;
         }
 
-        const data = line.amount < 0 ? this._adyenReversalData() : this._adyenPayData();
+        const data = line.isRefund ? this._adyenReversalData() : this._adyenPayData();
         line.setTerminalServiceId(this.most_recent_service_id);
         return this._callAdyen(data).then((data) => this._adyenHandleResponse(data));
     }
@@ -247,7 +247,7 @@ export class PaymentAdyen extends PaymentInterface {
         if (!response || (response.error && [401, 403].includes(response.error.status_code))) {
             this._show_error(_t("Authentication failed. Please check your Adyen credentials."));
             if (line) {
-                line.setPaymentStatus("force_done");
+                line.payment_status = "force_done";
             }
             return false;
         }
@@ -266,14 +266,14 @@ export class PaymentAdyen extends PaymentInterface {
 
             this._show_error(_t("An unexpected error occurred. Message from Adyen: %s", msg));
             if (line) {
-                line.setPaymentStatus("force_done");
+                line.payment_status = "force_done";
             }
             return false;
         } else {
             if (!line) {
                 return false;
             }
-            line.setPaymentStatus("waitingCard");
+            line.payment_status = "waiting_card";
             return this.waitForPaymentConfirmation();
         }
     }
@@ -304,7 +304,7 @@ export class PaymentAdyen extends PaymentInterface {
                 const isPaymentStillValid = () =>
                     this.paymentLineResolvers[paymentLine.uuid] &&
                     this.pendingAdyenline()?.terminalServiceId === serviceId &&
-                    paymentLine.payment_status === "waitingCard";
+                    paymentLine.payment_status === "waiting_card";
 
                 if (!isPaymentStillValid()) {
                     clearInterval(intervalId);
@@ -333,14 +333,14 @@ export class PaymentAdyen extends PaymentInterface {
         }
         // when starting to wait for the payment response we create a promise
         // that will be resolved when the payment response is received.
-        // In case this resolver is lost ( for example on a refresh ) we
-        // we use the handle_payment_response method on the payment line
+        // In case this resolver is lost ( for example on a refresh )
+        // we use the handlePaymentResponse method of the payment interface
         const resolver = this.paymentLineResolvers?.[line.uuid];
         if (resolver) {
             this.paymentLineResolvers[line.uuid] = null;
             resolver(isPaymentSuccessful);
         } else {
-            line.handlePaymentResponse(isPaymentSuccessful);
+            this.handlePaymentResponse(line, isPaymentSuccessful);
         }
     }
 

@@ -26,7 +26,7 @@ class TestUiSEPA(TestPosQrCommon):
         qr_payment = cls.env['pos.payment.method'].sudo().create({
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
-            'payment_method_type': "bank_qr_code",
+            'payment_method_type': "bank_transfer",
             'qr_code_method': "sct_qr",
             'type': 'bank',
         })
@@ -91,7 +91,7 @@ class TestUiCH(TestPosQrCommon):
         qr_payment = cls.env['pos.payment.method'].sudo().create({
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
-            'payment_method_type': "bank_qr_code",
+            'payment_method_type': "bank_transfer",
             'qr_code_method': "ch_qr",
             'type': 'bank',
         })
@@ -154,7 +154,7 @@ class TestUiHK(TestPosQrCommon):
         qr_payment = cls.env['pos.payment.method'].sudo().create({
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
-            'payment_method_type': "bank_qr_code",
+            'payment_method_type': "bank_transfer",
             'qr_code_method': "emv_qr",
             'type': 'bank',
         })
@@ -196,7 +196,7 @@ class TestUiHK(TestPosQrCommon):
             'proxy_value': '+852-67891234',
             'include_reference': True,
         })
-        qr_payment = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.payment_method_type == 'bank_qr_code')
+        qr_payment = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.payment_method_type == 'bank_transfer')
 
         self.assertEqual(
             qr_payment.get_qr_code_value(4.8, 'Order 00042', '', self.company.currency_id.id, False),
@@ -229,7 +229,7 @@ class TestUIBR(TestPosQrCommon):
         qr_payment = cls.env['pos.payment.method'].sudo().create({
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
-            'payment_method_type': "bank_qr_code",
+            'payment_method_type': "bank_transfer",
             'qr_code_method': "emv_qr",
             'type': 'bank',
         })

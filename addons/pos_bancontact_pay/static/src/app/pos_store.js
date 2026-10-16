@@ -16,7 +16,7 @@ patch(PosStore.prototype, {
         const paymentline = this.models["pos.payment"].find(
             (line) => line.bancontact_id === bancontact_id
         );
-        if (!paymentline || paymentline.isDone()) {
+        if (!paymentline || paymentline.isSettled) {
             return;
         }
 
@@ -29,7 +29,7 @@ patch(PosStore.prototype, {
 
         // --- SUCCEEDED ---
         if (bancontact_status === "SUCCEEDED") {
-            paymentline.setPaymentStatus("done");
+            paymentline.payment_status = "done";
             paymentline.qr_code = null;
 
             // Other order selected
@@ -59,7 +59,7 @@ patch(PosStore.prototype, {
             paymentline.payment_status !== "retry" &&
             ["AUTHORIZATION_FAILED", "FAILED", "EXPIRED", "CANCELLED"].includes(bancontact_status)
         ) {
-            paymentline.setPaymentStatus("retry");
+            paymentline.payment_status = "retry";
             paymentline.bancontact_id = null;
             paymentline.qr_code = null;
 

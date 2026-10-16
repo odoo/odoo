@@ -28,7 +28,7 @@ patch(PosStore.prototype, {
                 // Add available payment lines of refunded order based on conditions.
                 // Settle current order terminal based payment lines with refunded order terminal based payment lines
                 const razorpayPaymentlines = paymentIds.filter(
-                    (pi) => pi.payment_method_id.payment_provider === "razorpay"
+                    (pi) => pi.payment_provider === "razorpay"
                 );
                 razorpayPaymentlines.forEach((pi) => {
                     const currentDue = currentOrder.remainingDue;
@@ -48,7 +48,7 @@ patch(PosStore.prototype, {
                         if (
                             currentDue < 0 &&
                             pi.payment_method_id &&
-                            pi.payment_method_id.payment_provider !== "razorpay"
+                            pi.payment_provider !== "razorpay"
                         ) {
                             currentOrder
                                 .addPaymentline(pi.payment_method_id)

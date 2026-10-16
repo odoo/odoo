@@ -8,14 +8,14 @@ patch(PaymentScreen.prototype, {
         onMounted(() => {
             const pendingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
-                    paymentLine.payment_method_id.payment_provider === "adyen" &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "pending"
+                    paymentLine.payment_provider === "adyen" &&
+                    !paymentLine.isSettled &&
+                    paymentLine.payment_status !== "pending"
             );
             if (!pendingPaymentLine) {
                 return;
             }
-            pendingPaymentLine.payment_method_id.payment_interface.setMostRecentServiceId(
+            pendingPaymentLine.payment_interface.setMostRecentServiceId(
                 pendingPaymentLine.terminalServiceId
             );
         });
@@ -26,8 +26,7 @@ patch(PaymentScreen.prototype, {
             const refundedOrder = this.currentOrder.lines[0]?.refunded_orderline_id?.order_id;
             const amountDue = Math.abs(this.currentOrder.remainingDue);
             const matchedPaymentLine = refundedOrder?.payment_ids.find(
-                (line) =>
-                    line.payment_method_id.payment_provider === "adyen" && line.amount >= amountDue
+                (line) => line.payment_provider === "adyen" && line.amount >= amountDue
             );
             if (matchedPaymentLine) {
                 const paymentLineAddedSuccessfully = await super.addNewPaymentLine(
