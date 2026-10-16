@@ -73,7 +73,7 @@ from odoo.orm.environments import CacheLayer
 from odoo.orm.model_classes import is_model_definition
 from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor
-from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
+from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler, classproperty
 from odoo.tools.binary import BinaryBytes
 from odoo.tools.lru import LRU
 from odoo.tools.mail import single_email_re
@@ -581,7 +581,25 @@ class DummyRLock:
         self.release()
 
 
-class BaseCase(case.TestCase):
+class MetaCase(type):
+    def __setattr__(cls, name, value):
+        if hasattr(cls, "_loked_test_class"):
+            raise AttributeError(f"Cannot set {name!r} on test class after setUpClass")
+        super().__setattr__(name, value)
+
+    def __delattr__(cls, name):
+        if hasattr(cls, "_loked_test_class"):
+            raise AttributeError(f"Cannot delete {name!r}: on test class after setUpClass")
+        super().__delattr__(name)
+
+    def lock_test_class(cls):
+        type.__setattr__(cls, "_loked_test_class", True)  # ruff: ignore[unnecessary-dunder-call]
+
+    def unlock_test_class(cls):
+        type.__delattr__(cls, "_loked_test_class")  # ruff: ignore[unnecessary-dunder-call]
+
+
+class BaseCase(case.TestCase, metaclass=MetaCase):
     """ Subclass of TestCase for Odoo-specific code. This class is abstract and
     expects self.registry, self.cr and self.uid to be initialized by subclasses.
     """
@@ -1092,6 +1110,10 @@ class BaseCase(case.TestCase):
         with file_open(path, 'rb') as f:
             return BinaryBytes(f.read())
 
+    @classproperty
+    def _registry_patched(cls):
+        return cls.registry and getattr(cls.registry.cursor, 'patched', False)
+
     @classmethod
     @contextmanager
     def registry_test_mode(cls, *, cr: Cursor | None = None, registry: Registry | None = None):
@@ -1108,6 +1130,7 @@ class BaseCase(case.TestCase):
             cr = cls.cr
         if registry is None:
             registry = cls.registry
+
         assert cr, 'No cursor'
         assert registry, 'No registry'
 
@@ -1115,6 +1138,7 @@ class BaseCase(case.TestCase):
             return test_cursor.TestCursor(
                 cr, _registry_test_lock, readonly and cls._registry_readonly_enabled
             )
+        _patched_cursor.patched = True
 
         try:
             from odoo.addons.bus.tools import misc as bus_misc  # noqa: PLC0415
@@ -1146,7 +1170,6 @@ class BaseCase(case.TestCase):
         with ExitStack() as stack:
             for additional_patch in additional_patches:
                 stack.enter_context(additional_patch)
-            stack.enter_context(patch.object(cls, '_registry_patched', True))
             # New cursor should point to the test's cursor
             stack.enter_context(patch.object(registry, 'cursor', _patched_cursor))
             # Disable locking and signaling
@@ -1480,6 +1503,13 @@ class TransactionCase(BaseCase):
         cls._crypt_context_patcher = patch('odoo.addons.base.models.res_users.ResUsersPatchedInTest._crypt_context', _crypt_context)
         cls.startClassPatcher(cls._crypt_context_patcher)
 
+    @classmethod
+    def postSetUpClass(cls):
+        sp = cls.cr.savepoint(flush=True)  # flush everything in setUpClass before introducing a savepoint
+        cls.addClassCleanup(sp.close, rollback=False)
+        cls.savepoint = sp
+        cls.addClassCleanup(delattr, cls, 'savepoint')
+
     def setUp(self):
         super().setUp()
 
@@ -1505,15 +1535,7 @@ class TransactionCase(BaseCase):
 
         self.addCleanup(_check_registry_lock)
 
-        # flush everything in setUpClass before introducing a savepoint
         cr = self.cr
-        if self.savepoint is None:
-            # create savepoint, and close it at class cleanup
-            sp = self.cr.savepoint(flush=True)
-            self.addClassCleanup(sp.close, rollback=False)
-            # store savepoint on the class (to be shared across all test instances)
-            self.__class__.savepoint = sp
-            self.addClassCleanup(setattr, self.__class__, 'savepoint', None)
 
         # This prevents precommit functions and data from piling up
         # until cr.flush is called in 'assertRaises' clauses
@@ -1559,8 +1581,7 @@ class TransactionCase(BaseCase):
         mock_dt = fields.Datetime.to_datetime(mock_dt)
         with freeze_time(mock_dt) as frozen_datetime_mock, \
              patch.object(cls.env.cr, 'now', lambda: mock_dt):
-            cls.frozen_datetime_mock = frozen_datetime_mock
-            yield
+            yield frozen_datetime_mock
 
     @classmethod
     @contextmanager
