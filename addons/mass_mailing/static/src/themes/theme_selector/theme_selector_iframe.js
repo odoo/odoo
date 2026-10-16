@@ -2,7 +2,6 @@ import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils
 import {
     asyncComputed,
     Component,
-    markup,
     onMounted,
     onWillUnmount,
     signal,
@@ -71,7 +70,7 @@ export class ThemeSelectorIframe extends Component {
             domain,
         ]);
         return templates.map((template) => ({
-            bodyArch: markup(template.body_arch),
+            bodyArch: template.body_arch,
             id: template.id,
             modelId: template.mailing_model_id[0],
             modelName: template.mailing_model_id[1],

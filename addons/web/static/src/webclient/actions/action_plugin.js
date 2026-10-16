@@ -382,6 +382,9 @@ export function useActionManager(router = _router) {
                 }
             } else {
                 action = JSON.parse(currentController.action._originalAction);
+                if (action.help && currentController.action._originalActionHelpIsMarkup) {
+                    action.help = markup(action.help);
+                }
             }
         }
         return action;
@@ -418,9 +421,6 @@ export function useActionManager(router = _router) {
                 },
                 { cache: { type: "disk" } }
             );
-            if (action.help) {
-                action.help = markup(action.help);
-            }
             return Object.assign({}, action);
         }
 
@@ -447,8 +447,16 @@ export function useActionManager(router = _router) {
      * with a unique jsId.
      */
     function _preprocessAction(action, context = {}) {
+        action._originalAction = null;
+        action._originalActionHelpIsMarkup = false;
+        if (action.help) {
+            if (isHtmlEmpty(action.help)) {
+                delete action.help;
+            } else {
+                action._originalActionHelpIsMarkup = action.help instanceof markup().constructor;
+            }
+        }
         try {
-            delete action._originalAction;
             action._originalAction = JSON.stringify(action);
         } catch {
             // do nothing, the action might simply not be serializable
@@ -459,11 +467,6 @@ export function useActionManager(router = _router) {
             typeof domain === "string"
                 ? evaluateExpr(domain, Object.assign({}, user.context, action.context))
                 : domain;
-        if (action.help) {
-            if (isHtmlEmpty(action.help)) {
-                delete action.help;
-            }
-        }
         action = { ...action }; // manipulate a copy to keep cached action unmodified
         action.jsId = `action_${++id}`;
         if (action.type === "ir.actions.act_window" || action.type === "ir.actions.client") {
@@ -543,12 +546,12 @@ export function useActionManager(router = _router) {
         let actionRequest = null;
         const storedAction = browser.sessionStorage.getItem("current_action");
         const lastAction = JSON.parse(storedAction || "{}");
+        if (lastAction.help && browser.sessionStorage.getItem("current_action_help_is_markup")) {
+            lastAction.help = markup(lastAction.help);
+        }
         // If this method is called because of a company switch, the
         // stored allowed_company_ids is incorrect.
         delete lastAction.context?.allowed_company_ids;
-        if (lastAction.help) {
-            lastAction.help = markup(lastAction.help);
-        }
         if (state.action) {
             const context = {};
             if (state.active_id) {
@@ -900,13 +903,16 @@ export function useActionManager(router = _router) {
 
         // Store current action of the current window
         const currentAction = browser.sessionStorage.getItem("current_action");
+        const currentActionHelpIsMarkup = !!browser.sessionStorage.getItem("current_action_help_is_markup");
         const currentState = browser.sessionStorage.getItem("current_state");
         // Store on the session the action for the new window
         browser.sessionStorage.setItem("current_action", action._originalAction || "{}");
+        browser.sessionStorage.setItem("current_action_help_is_markup", action._originalActionHelpIsMarkup || "");
         browser.sessionStorage.setItem("current_state", JSON.stringify(state));
         _openURL(router.stateToUrl(state));
         // restore the current action from the current window
         browser.sessionStorage.setItem("current_action", currentAction);
+        browser.sessionStorage.setItem("current_action_help_is_markup", currentActionHelpIsMarkup || "");
         browser.sessionStorage.setItem("current_state", currentState);
     }
 
@@ -1082,6 +1088,7 @@ export function useActionManager(router = _router) {
                         "current_action",
                         action._originalAction || "{}"
                     );
+                    browser.sessionStorage.setItem("current_action_help_is_markup", action._originalActionHelpIsMarkup || "");
                     browser.sessionStorage.setItem("current_lang", user.lang);
                 }
                 resolve();
@@ -1508,9 +1515,6 @@ export function useActionManager(router = _router) {
             context: makeContext([user.context, action.context]),
         });
         let nextAction = await keepLast.add(runProm);
-        if (nextAction.help) {
-            nextAction.help = markup(nextAction.help);
-        }
         nextAction = nextAction || { type: "ir.actions.act_window_close" };
         if (typeof nextAction === "object") {
             nextAction.path ||= action.path;
@@ -1633,9 +1637,6 @@ export function useActionManager(router = _router) {
                 action && typeof action === "object"
                     ? action
                     : { type: "ir.actions.act_window_close" };
-            if (action.help) {
-                action.help = markup(action.help);
-            }
         } else if (params.type === "action") {
             // execute a given action, so load it first
             context.active_id = params.resId || null;

@@ -4,6 +4,12 @@ import { deepCopy } from "../utils/objects";
 import { Crypto, CRYPTO_ALGO } from "../crypto";
 
 /**
+ * Version of the format of the stored values, to bump when it changes so
+ * stale disk caches get discarded.
+ */
+const CACHE_FORMAT = 1;
+
+/**
  * The rpc cache can be turned off for the current browsing session by putting
  * `cache=0` in the url (see the "Disable RPC Cache" debug menu item). This is
  * useful to check whether a bug comes from stale cached data.
@@ -83,7 +89,7 @@ class RamCache {
 export class RPCCache {
     constructor(name, version, secret) {
         this.crypto = new Crypto(secret);
-        this.indexedDB = new IndexedDB(name, version + CRYPTO_ALGO);
+        this.indexedDB = new IndexedDB(name, `${version}${CRYPTO_ALGO}-${CACHE_FORMAT}`);
         this.ramCache = new RamCache();
         this.pendingRequests = {};
         this.checkSize(); // we want to control the disk space used by Odoo

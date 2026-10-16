@@ -5,7 +5,7 @@ from collections import namedtuple
 
 from ast import literal_eval
 from collections import defaultdict
-from markupsafe import escape
+from markupsafe import Markup
 from psycopg2 import Error
 
 from odoo import _, api, fields, models
@@ -447,21 +447,22 @@ class StockQuant(models.Model):
         view_id = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id
         action = {
             'name': _('Physical Inventory'),
-            'view_mode': 'list',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
             'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'views': [(view_id, 'list')],
-            'help': """
+            'help': Markup("""
                 <p class="o_view_nocontent_smiling_face">
                     {}
                 </p>
                 <p>
                     {} <span class="oi oi-filled" data-icon="settings"/>
                 </p>
-                """.format(escape(_('Your stock is currently empty')),
-                           escape(_('Press the "New" button to define the quantity for a product in your stock or import quantities from a spreadsheet via the Actions menu'))),
+            """).format(
+                _('Your stock is currently empty'),
+                _('Press the "New" button to define the quantity for a product in your stock or import quantities from a spreadsheet via the Actions menu'),
+            ),
         }
         return action
 

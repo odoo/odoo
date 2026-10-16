@@ -108,6 +108,31 @@ class TestHttpEchoReplyJsonNoDB(TestHttpBase):
         self.assertEqual(res.headers['Content-Type'], 'application/json; charset=utf-8')
         self.assertEqual(res.text, r'{"jsonrpc": "2.0", "id": 1234, "result": null}', "result must not be absent")
 
+    def test_echojson6_markup(self):
+        def call(params):
+            res = self.nodb_url_open("/test_http/echo-json-markup", data=json.dumps({
+                'jsonrpc': '2.0',
+                'id': 1234,
+                'params': params,
+            }), headers=CT_JSON)
+            res.raise_for_status()
+            return res.json()
+
+        self.assertEqual(
+            call({'race': '<b>Asgard</b>'}),
+            {'jsonrpc': '2.0', 'id': 1234, 'result': {'race': '<b>Asgard</b>'}},
+            "markup must be absent if there is no markup value",
+        )
+        self.assertEqual(
+            call({'race': '<b>Asgard</b>', 'markup_commander': '<i>Thor</i>'}),
+            {
+                'jsonrpc': '2.0',
+                'id': 1234,
+                'result': {'race': '<b>Asgard</b>', 'markup_commander': '<i>Thor</i>'},
+                'markup': [['markup_commander']],
+            },
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestHttpEchoReplyHttpWithDB(TestHttpBase):

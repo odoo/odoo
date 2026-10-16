@@ -1,4 +1,4 @@
-import { Component, markup, onMounted, onWillStart, proxy, useProps } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
@@ -139,10 +139,9 @@ export class ProductPricelistReport extends Component {
             this.state.html = "";
             return
         }
-        let html = await this.orm.call(
+        this.state.html = await this.orm.call(
             "report.product.report_pricelist", "get_html", [], {data: this.reportParams}
         );
-        this.state.html = markup(html);
     }
 
     // events

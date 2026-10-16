@@ -2,6 +2,8 @@
 
 from collections import defaultdict
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.fields import Domain
 
@@ -65,15 +67,14 @@ class AccountMove(models.Model):
             'res_model': 'account.analytic.line',
             'view_id': False,
             'view_mode': 'list,form',
-            'help': _("""
-                <p class="o_view_nocontent_smiling_face">
-                    Record timesheets
-                </p><p>
+            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+                _("Record timesheets"),
+                _("""
                     You can register and track your workings hours by project every
                     day. Every time spent on a project will become a cost and can be re-invoiced to
                     customers if required.
-                </p>
-            """),
+                """)
+            ),
             'limit': 80,
             'context': {
                 'default_project_id': self.id,

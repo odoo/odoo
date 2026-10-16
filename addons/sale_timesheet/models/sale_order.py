@@ -2,6 +2,8 @@
 
 from collections import defaultdict
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -136,13 +138,10 @@ class SaleOrder(models.Model):
         action.update({
             'context': context,
             'domain': [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)],
-            'help': _("""
-                <p class="o_view_nocontent_smiling_face">
-                    No activities found. Let's start a new one!
-                </p><p>
-                    Track your working hours by projects every day and invoice this time to your customers.
-                </p>
-            """)
+            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+                _("No activities found. Let's start a new one!"),
+                _("Track your working hours by projects every day and invoice this time to your customers."),
+            )
         })
 
         return action

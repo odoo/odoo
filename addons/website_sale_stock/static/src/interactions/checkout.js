@@ -1,10 +1,8 @@
-import { rpc } from '@web/core/network/rpc';
-import { patch } from '@web/core/utils/patch';
-import { patchDynamicContent } from "@web/public/utils";
-import { Checkout } from '@website_sale/interactions/checkout';
-import {
-    LocationSelectorDialog
-} from '@website_sale_stock/js/location_selector/location_selector_dialog/location_selector_dialog';
+import {rpc} from '@web/core/network/rpc';
+import {patch} from '@web/core/utils/patch';
+import {patchDynamicContent} from "@web/public/utils";
+import {Checkout} from '@website_sale/interactions/checkout';
+import {LocationSelectorDialog} from '@website_sale_stock/js/location_selector/location_selector_dialog/location_selector_dialog';
 
 patch(Checkout.prototype, {
     setup() {
@@ -179,10 +177,9 @@ patch(Checkout.prototype, {
      * @return {Dict} - Updated cart summary.
      */
     async _setPickupLocation(pickupLocationData) {
-        const orderSummaryValues = await this.waitFor(rpc('/website_sale_stock/set_pickup_location',
-            { pickup_location_data: pickupLocationData }
+        return this.waitFor(rpc('/website_sale_stock/set_pickup_location',
+            {pickup_location_data: pickupLocationData}
         ));
-        return this._markupOrderSummaryValues(orderSummaryValues);
     },
 
     /**

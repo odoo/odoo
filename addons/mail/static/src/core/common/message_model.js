@@ -843,7 +843,7 @@ export class Message extends Record {
                 return;
             }
             const { error, lang_name, body } = resp;
-            this.translationValue = body && markup(body);
+            this.translationValue = body;
             this.translationSource = lang_name;
             this.translationErrors = error;
         }

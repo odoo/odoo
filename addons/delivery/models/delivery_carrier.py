@@ -5,6 +5,8 @@ import json
 
 import psycopg2
 
+from markupsafe import Markup
+
 from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
@@ -262,9 +264,7 @@ class DeliveryCarrier(models.Model):
             ],
             "domain": [["name", "=like", "delivery_%"], ["name", "not in", exclude_apps]],
             "type": "ir.actions.act_window",
-            "help": self.env._("""<p class="o_view_nocontent">
-                    Buy Odoo Enterprise now to get more providers.
-                </p>"""),
+            "help": Markup('<p class="o_view_nocontent">%s</p>') % self.env._("Buy Odoo Enterprise now to get more providers."),
         }
 
     def _is_available_for_order(self, order):

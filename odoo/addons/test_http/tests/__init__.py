@@ -9,6 +9,7 @@ from . import test_error_rpc
 from . import test_greeting
 from . import test_misc
 from . import test_models
+from . import test_rpc_markup
 from . import test_rpc_path
 from . import test_security
 from . import test_session

@@ -1,4 +1,3 @@
-import { markup } from '@odoo/owl';
 import { location } from '@web/core/browser/browser';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { _t } from '@web/core/l10n/translation';
@@ -467,7 +466,6 @@ export class PaymentForm extends Interaction {
             const processingValues = await this.waitFor(rpc(
                 this.paymentContext['transactionRoute'], this._prepareTransactionRouteParams()
             ));
-            processingValues['redirect_form_html'] = markup(processingValues['redirect_form_html']);
             if (processingValues.state === 'error') {
                 this._handlePaymentProcessingError(processingValues);
                 return;

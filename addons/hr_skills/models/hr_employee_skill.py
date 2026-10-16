@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
+
+from markupsafe import Markup
+
 from odoo import fields, models
 
 
@@ -55,16 +58,17 @@ class HrEmployeeSkill(models.Model):
         )
         action["context"] = {"show_certificate": show_certificate_button}
         if self.env.user.has_group("hr.group_hr_manager"):
-            action["help"] = (
-                self.env._("""<p class="o_view_nocontent_smiling_face">No Certifications available. Navigate to Skill types!</p>
+            action["help"] = Markup(
+                """<p class="o_view_nocontent_smiling_face">%s</p>
                 <a type="action" name="hr_skills.hr_skill_type_action" class="btn btn-primary">
-                Show Skill Types
-                </a>""")
+                %s
+                </a>"""
+            ) % (
+                self.env._("No Certifications available. Navigate to Skill types!"),
+                self.env._("Show Skill Types"),
             )
         else:
-            action["help"] = self.env._(
-                """<p class="o_view_nocontent_smiling_face">No Certifications available!</p>"""
-            )
+            action["help"] = Markup('<p class="o_view_nocontent_smiling_face">%s</p>') % self.env._("No Certifications available!")
         return action
 
     def action_save(self):

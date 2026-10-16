@@ -731,7 +731,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         html_content = response.render()
         product_count = response.qcontext.get("search_count", 0)
 
-        return {"product_count": product_count, "html": str(html_content)}
+        return {"product_count": product_count, "html": html_content}
 
     @route(
         [

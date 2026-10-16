@@ -19,10 +19,11 @@ from werkzeug.exceptions import (
     UnprocessableEntity,
     abort,
 )
+from markupsafe import Markup
 from werkzeug.exceptions import default_exceptions as werkzeug_default_exceptions
 
 from odoo.exceptions import UserError
-from odoo.tools import exception_to_unicode
+from odoo.tools import exception_to_unicode, json_default
 
 from .response import Response
 from .session import (
@@ -312,6 +313,102 @@ class HttpDispatcher(Dispatcher):
         return InternalServerError()
 
 
+# exact types which can be neither markup nor containers, skipped eagerly
+_JSON_SCALARS = {str, int, float, bool, type(None)}
+_EXIT = object()
+
+
+def _json_key(key):
+    if isinstance(key, str):
+        return str(key)
+    if isinstance(key, float):
+        if key != key:
+            return 'NaN'
+        if key == float('inf'):
+            return 'Infinity'
+        if key == float('-inf'):
+            return '-Infinity'
+        return float.__repr__(key)
+    if key is True:
+        return 'true'
+    if key is False:
+        return 'false'
+    if key is None:
+        return 'null'
+    if isinstance(key, int):
+        return int.__repr__(key)
+    return key  # json.dumps will reject it
+
+
+def _markup_paths(obj):
+    """ Lists the paths to all :class:`~markupsafe.Markup` values in ``obj``.
+
+    ``Markup`` is a ``str`` subclass so it is serialized as a regular JSON
+    string, which loses its markup-ness. This walks ``obj`` the way
+    ``json.dumps(obj, default=json_default)`` does and returns the location
+    of every ``Markup`` it contains, allowing the client to restore them.
+
+    A path is a list of object keys (str) and array indices (int) leading
+    from the root of ``obj`` to the value, e.g.::
+
+        >>> _markup_paths({'a': [1, Markup('<b>')], 'b': Markup('<i>')})
+        [['a', 1], ['b']]
+    """
+    paths = []
+    markers = set()
+    # `path` is a linked list of (parent, key), as a nested tuple, or the
+    # `_EXIT` marker
+    stack = [(None, obj)]
+    while stack:
+        path, o = stack.pop()
+        if path is _EXIT:
+            markers.remove(o)
+            continue
+
+        if isinstance(o, dict):
+            items = o.items()
+            if any(type(k) is not str for k in o):
+                # dedup keys which collide once serialized, last one wins
+                items = {_json_key(k): v for k, v in items}.items()
+        elif isinstance(o, (list, tuple)):
+            items = enumerate(o)
+        elif isinstance(o, Markup):
+            # keep empty markup as plain strings, makes no difference and avoids confusing JS
+            if o:
+                # convert the path linked list to a path list
+                keys = []
+                while path is not None:
+                    path, key = path
+                    keys.append(key)
+                keys.reverse()
+                paths.append(keys)
+            continue
+        elif o is None or isinstance(o, (str, int, float)):
+            continue
+        else:
+            items = None
+
+        if items is not None:
+            children = [((path, k), v) for k, v in items if type(v) not in _JSON_SCALARS]
+            if not children:
+                continue  # can't be part of a cycle, no need for a marker
+        else:
+            # if o is not directly jsonifiable loop around using the same path
+            # but the jsonifiable equivalent
+            children = [(path, json_default(o))]
+
+        oid = id(o)
+        if oid in markers:
+            raise ValueError("Circular reference detected")
+        markers.add(oid)
+        stack.append((_EXIT, oid))
+        stack.extend(children)
+
+    # children are popped last-first, so markups are found in reverse order
+    paths.reverse()
+    return paths
+
+
 class JsonRPCDispatcher(Dispatcher):
     routing_type = 'jsonrpc'
     mimetypes = ('application/json', 'application/json-rpc')
@@ -353,6 +450,13 @@ class JsonRPCDispatcher(Dispatcher):
           --> {"jsonrpc": "2.0", "method": "call", "params": {"arg1": "val1" }, "id": null}
 
           <-- {"jsonrpc": "2.0", "error": {"code": 1, "message": "End user error message.", "data": {"code": "codestring", "debug": "traceback" } }, "id": null}
+
+        When the result contains :class:`~markupsafe.Markup` values,
+        their paths from the root of the result are listed in an
+        additional ``markup`` member, so the client can restore their
+        markup-ness. The member is absent if there is no markup::
+
+          <-- {"jsonrpc": "2.0", "result": { "res1": "<b>val1</b>" }, "id": null, "markup": [["res1"]]}
 
         """
         try:
@@ -403,6 +507,8 @@ class JsonRPCDispatcher(Dispatcher):
             response['error'] = error
         else:
             response['result'] = result
+            if paths := _markup_paths(result):
+                response['markup'] = paths
 
         res = self.request.make_json_response(response)
         if error is not None:

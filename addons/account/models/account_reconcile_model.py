@@ -1,5 +1,7 @@
 import re
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -224,6 +226,6 @@ class AccountReconcileModel(models.Model):
         action.update({
             'context': {},
             'domain': [('id', 'in', self.env.cr.fetchone()[0])],
-            'help': """<p class="o_view_nocontent_empty_folder">{}</p>""".format(_('This reconciliation model has created no entry so far')),
+            'help': Markup('<p class="o_view_nocontent_empty_folder">%s</p>') % _('This reconciliation model has created no entry so far'),
         })
         return action

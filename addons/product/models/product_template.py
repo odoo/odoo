@@ -5,6 +5,8 @@ import logging
 
 from collections import defaultdict
 
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -1007,7 +1009,7 @@ class ProductTemplate(models.Model):
             },
             'domain': self._get_product_document_domain(),
             'target': 'current',
-            'help': """
+            'help': Markup("""
                 <p class="o_view_nocontent_smiling_face">
                     %s
                 </p>
@@ -1016,7 +1018,7 @@ class ProductTemplate(models.Model):
                     <br/>
                     %s
                 </p>
-            """ % (
+            """) % (
                 _("Upload files to your product"),
                 _("Use this feature to store any files you would like to share with your customers"),
                 _("(e.g: product description, ebook, legal notice, ...)."),

@@ -1,6 +1,7 @@
 import { after, describe, expect, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { mockFetch } from "@odoo/hoot-mock";
+import { markup } from "@odoo/owl";
 
 import {
     ConnectionAbortedError,
@@ -178,4 +179,59 @@ test("Cache: can cache a simple rpc", async () => {
     expect(await rpc("/test/", {}, { cache: true })).toEqual({ action_id: 123 });
     expect(await rpc("/test/", {}, { cache: true })).toEqual({ action_id: 123 });
     expect.verifySteps(["Fetch"]);
+});
+
+const Markup = markup("").constructor;
+
+test("markup values signaled by the server are hydrated", async () => {
+    mockFetch(() => ({
+        result: { a: ["<b>", "<i>"], b: { c: "<u>" }, d: "<s>" },
+        markup: [["a", 1], ["b", "c"]],
+    }));
+    onRpcResponse(({ detail }) => {
+        expect(detail.result.a[1]).toBeInstanceOf(Markup);
+    });
+
+    const result = await rpc("/test/");
+    expect(result.a[0]).toBe("<b>");
+    expect(result.a[1]).toBeInstanceOf(Markup);
+    expect(String(result.a[1])).toBe("<i>");
+    expect(result.b.c).toBeInstanceOf(Markup);
+    expect(result.d).toBe("<s>");
+});
+
+test("markup result is hydrated", async () => {
+    mockFetch(() => ({ result: "<b>", markup: [[]] }));
+
+    const result = await rpc("/test/");
+    expect(result).toBeInstanceOf(Markup);
+    expect(String(result)).toBe("<b>");
+});
+
+test("Cache: markup values are preserved", async () => {
+    rpc.setCache(
+        new RPCCache(
+            "mockRpc",
+            1,
+            "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
+        )
+    );
+    mockFetch(() => {
+        expect.step("Fetch");
+        return { result: { a: "<b>", b: "<i>" }, markup: [["a"]] };
+    });
+    const callback = (result) => {
+        expect.step("callback");
+        expect(result.a).toBeInstanceOf(Markup);
+        expect(result.b).toBe("<i>");
+    };
+
+    for (let i = 0; i < 2; i++) {
+        const result = await rpc("/test/", {}, { cache: { callback, update: "always" } });
+        expect(result.a).toBeInstanceOf(Markup);
+        expect(String(result.a)).toBe("<b>");
+        expect(result.b).toBe("<i>");
+    }
+    // the second call resolves from the cache, then calls back after fetching
+    await expect.waitForSteps(["Fetch", "callback", "Fetch", "callback"]);
 });
