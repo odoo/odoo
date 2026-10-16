@@ -8,7 +8,7 @@ class DashboardDataRoute(Controller):
         ['/spreadsheet/dashboard/data/<model("spreadsheet.dashboard"):dashboard>'],
         type='http',
         auth='user',
-        readonly=True,
+        replica=True,
     )
     def get_dashboard_data(self, dashboard):
         dashboard = dashboard.exists()

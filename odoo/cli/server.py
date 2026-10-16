@@ -62,10 +62,8 @@ def report_configuration():
     port = config['db_port'] or os.environ.get('PGPORT', 'default')
     user = config['db_user'] or os.environ.get('PGUSER', 'default')
     _logger.info('database: %s@%s:%s', user, host, port)
-    replica_host = config['db_replica_host']
-    replica_port = config['db_replica_port']
-    if replica_host or replica_port or 'replica' in config['dev_mode']:
-        _logger.info('replica database: %s@%s:%s', user, replica_host or 'default', replica_port or 'default')
+    if config.has_db_replica:
+        _logger.info('replica database: %s@%s:%s', user, config['db_replica_host'] or 'default', config['db_replica_port'] or 'default')
     if sys.version_info[:2] > odoo.release.MAX_PY_VERSION:
         _logger.warning("Python %s is not officially supported, please use Python %s instead",
             '.'.join(map(str, sys.version_info[:2])),

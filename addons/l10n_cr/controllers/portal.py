@@ -32,7 +32,7 @@ class L10nCRPortalAccount(PortalAccount):
         auth='public',
         methods=['POST'],
         website=True,
-        readonly=True,
+        replica=True,
     )
     def l10n_cr_districts(self, city_id=None, state_id=None):
         return self._l10n_cr_get_districts(city_id, state_id)

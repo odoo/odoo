@@ -164,11 +164,11 @@ class DocController(http.Controller):
         ]
         return modules, models
 
-    @http.route('/doc-bearer/<model_name>.json', type='json2', auth='bearer', bearer_scope='rpc', readonly=True)
+    @http.route('/doc-bearer/<model_name>.json', type='json2', auth='bearer', bearer_scope='rpc', replica=True)
     def doc_bearer_modec(self, model_name):
         return self.doc_model(model_name)
 
-    @http.route('/doc/<model_name>.json', type='json2', auth='user', readonly=True)
+    @http.route('/doc/<model_name>.json', type='json2', auth='user', replica=True)
     def doc_model(self, model_name):
         """
         Get a complete listing of all the methods and fields for a

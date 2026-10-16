@@ -25,13 +25,13 @@ class DataSet(http.Controller):
                 return method._readonly
         return False
 
-    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='jsonrpc', auth="user", readonly=_call_kw_readonly)
+    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='jsonrpc', auth="user", replica=_call_kw_readonly)
     def call_kw(self, model, method, args, kwargs, path=None):
         if path != f'{model}.{method}':
             threading.current_thread().rpc_model_method = f'{model}.{method}'
         return call_kw(request.env[model], method, args, kwargs)
 
-    @http.route(['/web/dataset/call_button', '/web/dataset/call_button/<path:path>'], type='jsonrpc', auth="user", readonly=_call_kw_readonly)
+    @http.route(['/web/dataset/call_button', '/web/dataset/call_button/<path:path>'], type='jsonrpc', auth="user", replica=_call_kw_readonly)
     def call_button(self, model, method, args, kwargs, path=None):
         if path != f'{model}.{method}':
             threading.current_thread().rpc_model_method = f'{model}.{method}'

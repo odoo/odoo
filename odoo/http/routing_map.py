@@ -35,7 +35,7 @@ if typing.TYPE_CHECKING:
         auth: typing.NotRequired[str]
         cors: typing.NotRequired[str]
         csrf: typing.NotRequired[bool]
-        readonly: typing.NotRequired[bool | Callable[[typing.Any, werkzeug.routing.Rule, typing.Any], bool]]  # controller, rule, args
+        replica: typing.NotRequired[bool | Callable[[typing.Any, werkzeug.routing.Rule, typing.Any], bool]]  # controller, rule, args
         handle_params_access_error: typing.NotRequired[Callable[[Exception], Response | HTTPException]]
         captcha: typing.NotRequired[str]
         save_session: typing.NotRequired[bool]
@@ -169,9 +169,12 @@ def route(
     :param bool csrf: Whether CSRF protection should be enabled for the
         route. Enabled by default for ``'http'``-type requests, disabled
         by default for ``'jsonrpc'``-type requests.
-    :param Union[bool, Callable[[registry, request], bool]] readonly:
-        Whether this endpoint should open a cursor on a read-only
+    :param Union[bool, Callable[[registry, request], bool]] replica:
+        Whether this endpoint should try and open a cursor on a read-only
         replica instead of (by default) the primary read/write database.
+        The primary read/write database is used in case no replica
+        exists, or the controller does an operation that is not possible
+        on a read-only replica (e.g. SQL UPDATE).
     :param Callable[[Exception], Response] handle_params_access_error:
         Implement a custom behavior if an error occurred when retrieving
         the record from the URL parameters (access error or missing error).
@@ -183,6 +186,7 @@ def route(
         by default for ``auth='bearer'``. ``True`` by default otherwise.
     """
     def decorator(endpoint: Callable[..., Response | typing.Any]) -> Endpoint:
+        sentinel = object()
         fname = f"<function {endpoint.__module__}.{endpoint.__name__}>"
 
         # Sanitize the routing
@@ -197,10 +201,12 @@ def route(
             f"@route(type={routing['type']!r}) is not one of {_dispatchers.keys()}"
         if route:
             routing['routes'] = [route] if isinstance(route, str) else route
-        wrong = routing.pop('method', None)  # type: ignore
-        if wrong is not None:
+        if (wrong := routing.pop('method', sentinel) is not sentinel):
             _logger.warning("%s defined with invalid routing parameter 'method', assuming 'methods'", fname)
             routing['methods'] = wrong
+        if (wrong := routing.pop('readonly', sentinel) is not sentinel):
+            _logger.warning("%s defined with invalid routing parameter 'readonly', assuming 'replica'", fname)
+            routing['replica'] = wrong
         if routing.get('auth') == 'bearer':
             routing.setdefault('save_session', False)  # stateless
             assert 'bearer_scope' in routing, "bearer_scope must be set for auth='bearer'"
@@ -352,14 +358,14 @@ def _check_and_complete_route_definition(controller_cls: type[Controller], subme
     submethod.original_routing['type'] = routing_type
 
     default_auth = submethod.original_routing.get('auth', merged_routing['auth'])
-    default_mode = submethod.original_routing.get('readonly', default_auth == 'none')
-    parent_readonly = merged_routing.setdefault('readonly', default_mode)
-    child_readonly = submethod.original_routing.get('readonly')
-    if child_readonly not in (None, parent_readonly) and not callable(child_readonly):
+    default_mode = submethod.original_routing.get('replica', default_auth == 'none')
+    parent_replica = merged_routing.setdefault('replica', default_mode)
+    child_replica = submethod.original_routing.get('replica')
+    if child_replica not in (None, parent_replica) and not callable(child_replica):
         _logger.warning(
             "The endpoint %s made the route %s altough its parent was defined as %s. Setting the route read/write.",
             f'{controller_cls.__module__}.{controller_cls.__name__}.{submethod.__name__}',
-            'readonly' if child_readonly else 'read/write',
-            'readonly' if parent_readonly else 'read/write',
+            'replica' if child_replica else 'read/write',
+            'replica' if parent_replica else 'read/write',
         )
-        submethod.original_routing['readonly'] = False
+        submethod.original_routing['replica'] = False

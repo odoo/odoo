@@ -52,7 +52,7 @@ class DiscussGifController(Controller):
         if response:
             return response.json()
 
-    @route("/discuss/gif/categories", type="jsonrpc", auth="user", readonly=True)
+    @route("/discuss/gif/categories", type="jsonrpc", auth="user", replica=True)
     def categories(self, locale="en", country="US"):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
@@ -95,7 +95,7 @@ class DiscussGifController(Controller):
         if response:
             return response.json()["results"]
 
-    @route("/discuss/gif/favorites", type="jsonrpc", auth="user", readonly=True)
+    @route("/discuss/gif/favorites", type="jsonrpc", auth="user", replica=True)
     def get_favorites(self, offset=0):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()

@@ -28,7 +28,7 @@ _logger = logging.getLogger(__name__)
 class WebJsonController(http.Controller):
 
     # for /json, the route should work in a browser, therefore type=http
-    @http.route('/json/<path:subpath>', auth='user', type='http', readonly=True)
+    @http.route('/json/<path:subpath>', auth='user', type='http', replica=True)
     def web_json(self, subpath, **kwargs):
         self._check_json_route_active()
         return request.redirect(
@@ -36,7 +36,7 @@ class WebJsonController(http.Controller):
             HTTPStatus.TEMPORARY_REDIRECT
         )
 
-    @http.route('/json/1/<path:subpath>', auth='bearer', bearer_scope='rpc', type='http', readonly=True)
+    @http.route('/json/1/<path:subpath>', auth='bearer', bearer_scope='rpc', type='http', replica=True)
     def web_json_1(self, subpath, **kwargs):
         """Simple JSON representation of the views.
 
@@ -218,9 +218,6 @@ class WebJsonController(http.Controller):
             # force read-only evaluation of action_data
             try:
                 with action.pool.cursor(readonly=True) as ro_cr:
-                    if not ro_cr.readonly:
-                        ro_cr.connection.set_session(readonly=True)
-                    assert ro_cr.readonly
                     action_data = action.with_env(action.env(cr=ro_cr, su=False)).run()
             except psycopg2.errors.ReadOnlySqlTransaction as e:
                 # never retry on RO connection, just leave

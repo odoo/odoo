@@ -34,7 +34,7 @@ class ProductWishlist(Controller):
 
         return wish
 
-    @route("/shop/wishlist", type="http", auth="public", website=True, readonly=True, sitemap=False)
+    @route("/shop/wishlist", type="http", auth="public", website=True, replica=True, sitemap=False)
     def shop_wishlist(self, **_kw):
         wishes = self.env["product.wishlist"].current()
         values = {"wishes": wishes.with_context(display_default_code=False)}
@@ -63,7 +63,7 @@ class ProductWishlist(Controller):
         return True
 
     @route(
-        "/shop/wishlist/get_product_ids", type="jsonrpc", auth="public", website=True, readonly=True
+        "/shop/wishlist/get_product_ids", type="jsonrpc", auth="public", website=True, replica=True
     )
     def shop_wishlist_get_product_ids(self):
         return self.env["product.wishlist"].current().product_id.ids

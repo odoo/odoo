@@ -56,7 +56,7 @@ class WebsiteMail(http.Controller):
 
         record.sudo().message_unsubscribe([partner_id])
 
-    @http.route(['/website_mail/is_follower'], type='jsonrpc', auth="public", website=True, readonly=True)
+    @http.route(['/website_mail/is_follower'], type='jsonrpc', auth="public", website=True, replica=True)
     def is_follower(self, records, **post):
         """ Given a list of `models` containing a list of res_ids, return
             the res_ids for which the user is follower and some practical info.

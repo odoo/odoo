@@ -26,7 +26,7 @@ class Profiling(Controller):
 
     @route([
         '/web/speedscope/<profile>',
-    ], type='http', sitemap=False, auth='user', readonly=True)
+    ], type='http', sitemap=False, auth='user', replica=True)
     def speedscope(self, profile=None, action=False, **kwargs):
         profiles = request.env['ir.profile'].browse(int(p) for p in profile.split(',')).exists()
         profile_str = profile
@@ -71,7 +71,7 @@ class Profiling(Controller):
 
     @route([
       '/web/profile_config/<profile>',
-    ], type='http', sitemap=False, auth='user', readonly=True)
+    ], type='http', sitemap=False, auth='user', replica=True)
     def profile_config(self, profile=None, action=False, **kwargs):
         profile_str = profile
         profiles = request.env['ir.profile'].browse(int(p) for p in profile_str.split(',')).exists()
