@@ -303,9 +303,9 @@ class WebsiteEventController(http.Controller):
         registrations_to_create = []
         for registration_values in registration_data:
             registration_values['event_id'] = event.id
-            if not registration_values.get('partner_id') and visitor_sudo.partner_id:
+            if visitor_sudo.partner_id:
                 registration_values['partner_id'] = visitor_sudo.partner_id.id
-            elif not registration_values.get('partner_id'):
+            else:
                 registration_values['partner_id'] = False if request.env.user._is_public() else request.env.user.partner_id.id
 
             # update registration based on visitor
