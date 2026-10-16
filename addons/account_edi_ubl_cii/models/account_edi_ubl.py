@@ -2893,6 +2893,22 @@ class AccountEdiUBL(models.AbstractModel):
         invoiced_quantity = invoiced_quantity_str and float(invoiced_quantity_str) * file_document_sign
         base_quantity = base_quantity_str and float(base_quantity_str)
 
+        # Some files report line-level allowances/charges that are already included in the net price
+        # (net price * quantity == line subtotal): they are only informative and must not be applied again.
+        if (
+            price_amount
+            and invoiced_quantity
+            and line_extension_amount is not None
+            and not collected_values['price_allowance_values']
+            and (collected_values['allowances'] or collected_values['charges'])
+            and currency.compare_amounts(
+                price_amount * invoiced_quantity / (base_quantity or 1.0),
+                line_extension_amount,
+            ) == 0
+        ):
+            collected_values['allowances'] = []
+            collected_values['charges'] = []
+
         total_allowances = sum(allowance['amount'] for allowance in collected_values['allowances'])
         total_charges = sum(charge['amount'] for charge in collected_values['charges'])
         price_allowance_values = collected_values['price_allowance_values']
