@@ -6648,9 +6648,6 @@ class BaseModel(metaclass=MetaModel):
                     res['warning'].get('type') or "",
                 ))
 
-    def onchange(self, values: dict, field_names: list[str], fields_spec: dict) -> dict:
-        raise NotImplementedError("onchange() is implemented in module 'web'")
-
     def _get_placeholder_filename(self, field: str) -> bool:
         """ Returns the filename of the placeholder to use,
             set on web/static/img by default, or the
