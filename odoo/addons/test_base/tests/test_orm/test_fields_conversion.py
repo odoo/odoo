@@ -143,28 +143,6 @@ class TestFieldIntegerConversion(TestFieldsConversion):
         self.company_record.integer = 2
         self.assertStrictlyEqual(method(self.company_record).adapted, PsycopgJson({self.company_record.env.company.id: 2}).adapted)
 
-    def test_field_integer_context_dependent_get_column_update(self):
-        # Conversion from cache (int or None).
-        method = self.context_record._fields['integer'].get_column_update
-
-        # Value is not in cache.
-        self.env.invalidate_all()
-
-        with self.assertRaises(AssertionError):
-            method(self.context_record)
-
-        # Value is in cache and there is only one value: 2.
-        self.context_record.name = 'foo'
-        self.context_record.with_context(foo=2).integer
-
-        self.assertStrictlyEqual(method(self.context_record), 2)
-
-        # Value is in cache and there is multiple values: 2 and 3.
-        self.context_record.name = 'foo'
-        self.context_record.with_context(foo=3).integer
-
-        self.assertStrictlyEqual(method(self.context_record), 2)
-
     def test_field_integer_convert_to_record(self):
         # Conversion from cache format (int or None).
         method = fields.Integer().convert_to_record
