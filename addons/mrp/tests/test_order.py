@@ -5521,6 +5521,39 @@ class TestMrpOrder(TestMrpCommon):
             mo_form.bom_id = self.env['mrp.bom']
             self.assertEqual(len(mo_form.workorder_ids), 0)
 
+    def test_workorder_date_finished_uses_calendar_timezone(self):
+        calendar = self.workcenter_1.resource_calendar_id
+        calendar.tz = 'Europe/Brussels'
+        self.workcenter_1.resource_id.tz = 'UTC'
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'product_uom_id': self.bom_1.product_uom_id.id,
+        })
+        wo = self.env['mrp.workorder'].create({
+            'name': 'Test order',
+            'workcenter_id': self.workcenter_1.id,
+            'product_uom_id': self.bom_1.product_uom_id.id,
+            'production_id': mo.id,
+            'duration_expected': 1,
+        })
+
+        date_start = datetime(2024, 1, 17, 11)
+        self.assertEqual(
+            wo._calculate_date_finished(date_start),
+            date_start + timedelta(hours=1, minutes=1),
+        )
+
+        workcenter_2 = self.env['mrp.workcenter'].create({
+            'name': 'Matching timezone',
+            'resource_calendar_id': calendar.id,
+            'tz': calendar.tz,
+        })
+        self.assertEqual(
+            wo.with_context(new_workcenter_id=workcenter_2)._calculate_date_finished(date_start),
+            date_start + timedelta(hours=1, minutes=1),
+        )
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
