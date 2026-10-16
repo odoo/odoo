@@ -44,11 +44,8 @@ export class PosOrderAccounting extends Base {
         }
 
         const currency = otherCurrencyPayments[0].currency;
-        const totalOtherCurrencyAmount = otherCurrencyPayments.reduce(
-            (total, payment) => total + payment.amount_currency,
-            0
-        );
-        return formatCurrency(totalOtherCurrencyAmount, currency.id);
+        const totalInDefaultCurrency = this.currency.convertToDefaultCurrency(this.totalDue);
+        return formatCurrency(currency.convert(totalInDefaultCurrency), currency.id);
     }
 
     /**
