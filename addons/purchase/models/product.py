@@ -255,11 +255,8 @@ class ProductProduct(models.Model):
         }
 
     def _is_last_po_fallback_applicable(self, params=False):
-        """ Whether the last confirmed po line may act as a vendor pricelist.
-            Overridden when the params restrict the sellers to partners that a
-            past purchase does not qualify as, e.g. subcontractors.
-        """
-        return True
+        """ Whether the last confirmed po line may act as a vendor pricelist."""
+        return not params or params.get('last_po_fallback', True)
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
         seller_info = super()._select_seller(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, ordered_by=ordered_by, params=params)

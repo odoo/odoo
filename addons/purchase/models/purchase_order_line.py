@@ -339,7 +339,8 @@ class PurchaseOrderLine(models.Model):
     def _compute_selected_seller_id(self):
         for line in self:
             if line.product_id:
-                line.selected_seller_id = line._get_seller_info().get('supplierinfo')
+                # Only an actual pricelist can be selected, skip the last po line lookup
+                line.selected_seller_id = line._get_seller_info(last_po_fallback=False).get('supplierinfo')
             else:
                 line.selected_seller_id = False
 
@@ -921,14 +922,14 @@ class PurchaseOrderLine(models.Model):
             "force_uom": True,
         }
 
-    def _get_seller_info(self):
+    def _get_seller_info(self, last_po_fallback=True):
         self.ensure_one()
         return self.product_id._select_seller(
             partner_id=self.partner_id,
             quantity=abs(self.product_qty),
             date=fields.Date.context_today(self, timestamp=self.order_id.date_order),
             uom_id=self.uom_id,
-            params=self._get_select_sellers_params())
+            params={**self._get_select_sellers_params(), 'last_po_fallback': last_po_fallback})
 
     def _get_section_totals(self):
         section_lines = self.order_id.order_line.filtered(self._is_line_in_section)
