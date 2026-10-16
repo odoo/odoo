@@ -24,7 +24,7 @@
             <div class="o-mail-MessagingMenu-searchContainer d-flex flex-column gap-2" t-att-class="{ 'px-2 o-py-2_5': !this.peek.isOpen(), 'px-1 pt-2 o-pb-2_5': this.peek.isOpen() }">
                 <div class="o-mail-MessagingMenu-searchRow d-flex align-items-stretch gap-1">
                     <t t-foreach="this.activeTab().actions" t-as="action" t-key="action.id">
-                        <div t-if="action.subActions?.length" class="flex-shrink-0">
+                        <div t-if="action.subActions?.length" class="d-flex flex-shrink-0">
                             <IsolatedDropdown
                                 items="action.subActions.map(subAction => ({ id: subAction.id, label: subAction.text, onSelected: () => this.onClickAction(subAction) }))"
                                 menuClass="'o-mail-MessagingMenu-dropdownMenu'"
@@ -101,7 +101,7 @@
 <t t-name="mail.MessagingMenu-action">
     <t t-set="togglesDropdown" t-value="action.subActions?.length"/>
     <button
-        class="btn btn-sm btn-primary rounded-3 py-1 o-my-0_5 d-flex align-items-center justify-content-center"
+        class="btn btn-sm btn-primary rounded-pill py-1 d-flex align-items-center justify-content-center"
         t-att-class="togglesDropdown ? 'w-100 position-relative pe-4' : 'flex-shrink-0'"
         t-att-disabled="action.isDisabled?.()"
         t-att-title="action.title"
