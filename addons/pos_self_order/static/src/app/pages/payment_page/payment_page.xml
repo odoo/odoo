@@ -27,7 +27,7 @@
                     </div>
                     <div t-else="" class="payment-state-container d-flex flex-column gap-4 align-items-center justify-content-center w-sm-75 w-50-md mx-auto"
                         t-att-class="{'fade-out': this.state.fadeOut}">
-                        <t name="terminal" t-if="this.state.paymentMethodType === 'terminal'">
+                        <t name="terminal" t-if="this.selectedPaymentMethod?.useTerminal">
                             <h1 class="text-center">Follow instructions on the terminal</h1>
                             <div class="btn btn-light btn-lg w-100 py-5 border border-light shadow-sm">
                                 <i class="oi oi-3x" data-icon="credit_card" aria-hidden="true"></i>
@@ -39,7 +39,7 @@
                                 <div class="border rounded-4 p-4 bg-view"><img class="w-100" t-att-src="this.state.qrCode" /></div>
                             </div>
                         </t>
-                        <t name="cash_machine" t-elif="this.state.paymentMethodType === 'cash_machine'">
+                        <t name="cash_machine" t-elif="this.selectedPaymentMethod?.useCashMachine">
                             <h1 class="text-center">
                                 <t t-if="this.state.paymentCancelled">
                                     Cancellation in progress
@@ -63,7 +63,7 @@
             </div>
 
             <div class="o_self_footer container o_self_container d-flex justify-content-between align-items-center position-relative py-3">
-                <button class="btn btn-secondary btn-lg" t-if="(this.state.selection || this.state.paymentMethodType !== 'terminal' || this.selfOrder.paymentError) and !this.state.paymentCancelled" t-on-click="this.back">Back</button>
+                <button class="btn btn-secondary btn-lg" t-if="(this.state.selection || !this.selectedPaymentMethod?.useTerminal || this.selfOrder.paymentError) and !this.state.paymentCancelled" t-on-click="this.back">Back</button>
                 <button class="btn btn-primary btn-lg" t-if="!this.state.selection and this.selfOrder.paymentError" t-on-click="this.startPayment">Retry</button>
             </div>
 

@@ -17,6 +17,10 @@ export class PosPaymentMethod extends Base {
         return this.payment_method_type === "bank_transfer";
     }
 
+    get useCashMachine() {
+        return this.payment_method_type === "cash_machine";
+    }
+
     get usePaymentInterface() {
         return Boolean(this.payment_interface);
     }

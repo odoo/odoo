@@ -29,6 +29,7 @@ export class PaymentInterface {
         this.payment_method_id = payment_method_id;
         this.supports_refunds = true;
         this.auto_send_request = false;
+        this.cashier_confirms = false;
     }
 
     /**

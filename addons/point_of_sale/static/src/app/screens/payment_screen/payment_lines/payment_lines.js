@@ -77,14 +77,14 @@ export class PaymentScreenPaymentLines extends Component {
     getLineControls(line) {
         const controls = { start: [], end: [] };
 
-        if (line.useQrPayment) {
+        if (line.qr_code) {
             controls.start.push({
                 id: "qr_code",
                 icon: "qr_code",
                 classes: "paymentline_show_qr_code ms-2 ps-3",
                 title: _t("Show QR Code"),
                 action: () => this.showQrCode(line),
-                disabled: !line.qr_code || !line.isProcessing,
+                disabled: !line.isProcessing,
             });
         }
 
@@ -176,7 +176,7 @@ export class PaymentScreenPaymentLines extends Component {
      * @property {string} [icon]                  - Icon shown next to the title, the spinner while processing.
      */
     getPaymentActionState(line) {
-        if (line.useBankTransfer && line.payment_status === "waiting") {
+        if (line.payment_interface?.cashier_confirms && line.payment_status === "waiting") {
             return null;
         }
 

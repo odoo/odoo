@@ -4,12 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 
 patch(PaymentPage.prototype, {
-    get showQrCode() {
-        return (
-            super.showQrCode ||
-            (this.selectedPaymentIsOnline && this.selfOrder.config.self_ordering_mode === "kiosk")
-        );
-    },
     get paymentMethods() {
         if (this.selfOrder.config.self_ordering_mode === "mobile") {
             return [this.selfOrder.config.self_order_online_payment_method_id].filter(Boolean);

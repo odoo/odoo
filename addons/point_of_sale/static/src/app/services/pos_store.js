@@ -290,7 +290,10 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
         order.payment_ids?.forEach((payment) => {
-            if (payment.useBankTransfer && payment.payment_status === "waiting") {
+            if (
+                payment.payment_interface?.cashier_confirms &&
+                payment.payment_status === "waiting"
+            ) {
                 payment.payment_status = "retry";
             }
         });
