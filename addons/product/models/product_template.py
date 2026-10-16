@@ -19,7 +19,7 @@ class ProductTemplate(models.Model):
     _name = "product.template"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _description = "Product"
-    _order = "is_favorite desc, name"
+    _order = "is_favorite desc, name, id"
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
