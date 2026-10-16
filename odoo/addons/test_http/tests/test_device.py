@@ -12,6 +12,7 @@ from odoo.addons.test_http.utils import (
     USER_AGENT_linux_chrome,
     USER_AGENT_linux_firefox
 )
+from odoo.tools._vendor.useragents import UserAgent
 from .test_common import TestHttpBase
 
 
@@ -169,6 +170,23 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(session._trace), 2)
         self.assertEqual(self.info_trace(session._trace[1])['platform'], 'linux')
         self.assertEqual(self.info_trace(session._trace[1])['browser'], 'firefox')
+
+    def test_chromium_based_browser_detection(self):
+        chrome_agent = (
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+            'AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/140.0.0.0 Safari/537.36'
+        )
+        for token, browser, version in (
+            ('Edg/140.0.0.0', 'edge', '140.0.0.0'),
+            ('OPR/125.0.0.0', 'opera', '125.0.0.0'),
+            ('MyEdg/1.2', 'chrome', '140.0.0.0'),
+            ('Opry/1.2', 'chrome', '140.0.0.0'),
+        ):
+            with self.subTest(token=token):
+                user_agent = UserAgent(f'{chrome_agent} {token}')
+                self.assertEqual(user_agent.browser, browser)
+                self.assertEqual(user_agent.version, version)
 
     def test_detection_device_according_to_ipaddress(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
