@@ -97,9 +97,11 @@ class AttachmentController(ThreadController):
     @mail_route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")
     def mail_attachment_delete(self, attachment_id, access_token=None):
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
-        if not attachment or not attachment._has_attachments_ownership([access_token]):
+        if not attachment or (not attachment._has_attachments_ownership([access_token]) and not attachment.has_access("read")):
             request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
             raise NotFound()
+        if not attachment._has_attachments_ownership([access_token]):
+            raise AccessError(request.env._("You do not have the rights to delete this attachment."))
         message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
         if message:
