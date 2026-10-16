@@ -208,6 +208,146 @@ export function useHover(refs, { onHover, onAway, stateObserver } = {}) {
     return state;
 }
 
+export const PEEK_DELAY = 150;
+export const PEEK_CLOSE_DELAY = 300;
+
+/**
+ * Shows a hidden element (e.g. a collapsed sidebar) while it is hovered or focused with the
+ * keyboard, until the pointer and focus leave it or a click lands elsewhere.
+ *
+ * @param {import("@odoo/owl").Signal<HTMLElement>} ref
+ * @param {Object} param1
+ * @param {() => boolean} param1.enabled whether the element is hidden, so that it can show.
+ * @param {() => boolean} [param1.keep] whether it also stays shown otherwise, e.g. while
+ *   searching in it.
+ * @param {() => void} [param1.onClose] called when it hides, also when left before showing.
+ */
+export function usePeek(ref, { enabled, keep = () => false, onClose } = {}) {
+    const isOpen = signal(false);
+    /** Whether the mouse is on the element: a touch tap does not count as hovering. */
+    let isHovered = false;
+    /** Whether its use is over, so that `keep` no longer holds it. */
+    let isReleased = false;
+    /** Whether a press that began on it is held, wherever the pointer goes. */
+    let isPressed = false;
+    let timeout;
+    function clear() {
+        clearTimeout(timeout);
+        timeout = undefined;
+    }
+    function open() {
+        clear();
+        isReleased = false;
+        isOpen.set(true);
+    }
+    function close() {
+        clear();
+        isReleased = false;
+        isOpen.set(false);
+        onClose?.();
+    }
+    /** Closes now, or once the mouse on it leaves, regardless of `keep`. */
+    function closeOnceLeft() {
+        if (isHovered) {
+            isReleased = true;
+        } else {
+            close();
+        }
+    }
+    /** Opens now if the mouse is on it. */
+    function openIfHovered() {
+        if (isHovered && enabled()) {
+            open();
+        }
+    }
+    /** @param {Element} el */
+    function contains(el) {
+        return ref().contains(el) || Boolean(el.closest(".o-overlay-container"));
+    }
+    /** Whether an element triggered from it is active: its shown focus, or a dropdown it opened. */
+    function hasActiveElement() {
+        return Boolean(ref().querySelector(":focus-visible, [aria-expanded='true']"));
+    }
+    function isKept() {
+        return isPressed || hasActiveElement() || (!isReleased && keep());
+    }
+    useListener(ref, "pointerenter", (ev) => {
+        if (ev.pointerType !== "mouse") {
+            return;
+        }
+        isHovered = true;
+        if (!enabled() || isOpen()) {
+            return;
+        }
+        clear();
+        timeout = setTimeout(open, PEEK_DELAY);
+    });
+    // Left before the delay: nothing to show. Once shown, it hides on where the pointer goes.
+    useListener(ref, "pointerleave", () => {
+        isHovered = false;
+        if (enabled() && !isOpen()) {
+            close();
+        }
+    });
+    useListener(ref, "focusin", (ev) => {
+        if (enabled() && ev.target.matches(":focus-visible")) {
+            open();
+        }
+    });
+    useListener(ref, "focusout", (ev) => {
+        if (
+            isOpen() &&
+            !(ev.relatedTarget && contains(ev.relatedTarget)) &&
+            !ref().matches(":hover") &&
+            !isKept()
+        ) {
+            close();
+        }
+    });
+    useEffect(() => {
+        if (!isOpen()) {
+            return;
+        }
+        /** @param {PointerEvent} ev */
+        const onPointerdown = (ev) => {
+            isPressed = contains(ev.target);
+            if (!isPressed) {
+                close();
+            }
+        };
+        const onPointerup = () => (isPressed = false);
+        // Wherever the pointer goes next, also from one of the dropdowns of the element.
+        /** @param {PointerEvent} ev */
+        const onPointerover = (ev) => {
+            if (ev.pointerType !== "mouse") {
+                return;
+            }
+            if (contains(ev.target) || isKept()) {
+                clear();
+            } else if (!timeout) {
+                // Some grace, for a pointer briefly out of the element on its way.
+                timeout = setTimeout(() => {
+                    timeout = undefined;
+                    if (!ref().matches(":hover") && !isKept()) {
+                        close();
+                    }
+                }, PEEK_CLOSE_DELAY);
+            }
+        };
+        document.addEventListener("pointerdown", onPointerdown, { capture: true });
+        document.addEventListener("pointerup", onPointerup, { capture: true });
+        document.addEventListener("pointerover", onPointerover);
+        return () => {
+            document.removeEventListener("pointerdown", onPointerdown, { capture: true });
+            document.removeEventListener("pointerup", onPointerup, { capture: true });
+            document.removeEventListener("pointerover", onPointerover);
+            isPressed = false;
+        };
+    });
+    onWillUnmount(clear);
+    return { isOpen, open, close, closeOnceLeft, openIfHovered };
+}
+
 /**
  * Calls `onIntent` when the element is about to be left clicked, on pointer down. Useful
  * to start loading what the click opens.

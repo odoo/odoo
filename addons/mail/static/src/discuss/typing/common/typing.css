@@ -51,7 +51,12 @@
     }
 }
 
+.o-discuss-Typing {
+    background-color: var(--gray-100);
+}
+
 .o-mail-DiscussContent .o-discuss-Typing {
     transform: translateY(-85%);
-    padding-left: calc(var(--o-mail-Message-sidebarWidth) + var(--o-bs-spacer-2));
+    /* Aligned with the first action inside the composer, whose own padding is 1.5rem. */
+    padding-inline-start: 2rem;
 }

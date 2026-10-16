@@ -4,6 +4,32 @@
  * being compiled by libsass. Every bundle including this file emits its
  * own values (light, dark...).
  */
+
+/* Background of the main discussions, in the discuss app and in chat windows */
+$o-mail-discussMainBgColor: if($o-webclient-color-scheme == dark, mix($gray-100, $white, 75%), $white);
+
+/*
+ * Tints of the messages and chat bubble previews with a bubble color, mixed into the surface
+ * they are on, at `$strength` of their full tint.
+ */
+@mixin o-mail-bubble-tints($surface, $strength: 1) {
+    @each $-type, $-color in (blue: $info, green: $success, orange: $warning) {
+        @if $o-webclient-color-scheme == dark {
+            $-dark-color: if($-type == blue, darken($info, 10%), if($-type == green, lighten($success, 2.5%), $warning));
+            $-base-bg: mix($white, $surface, 35%);
+            --o-mail-bubble-#{$-type}-bg: #{mix($-base-bg, $-dark-color, 100% - if($-type == orange, 45%, 25%) * $strength)};
+            --o-mail-bubble-#{$-type}-bg-muted: #{mix(mix($white, $surface, 75%), $-dark-color, 82.5%)};
+            --o-mail-bubble-#{$-type}-border-color: #{mix($-base-bg, mix($-dark-color, $body-color, 90%), 100% - 30% * $strength)};
+            --o-mail-bubble-#{$-type}-color-base: #{$-dark-color};
+        } @else {
+            --o-mail-bubble-#{$-type}-bg: #{mix($surface, $-color, 100% - if($-type == orange, 20%, 10%) * $strength)};
+            --o-mail-bubble-#{$-type}-bg-muted: color-mix(in srgb, #{$surface} 97.5%, #{$-color} 2.5%);
+            --o-mail-bubble-#{$-type}-border-color: #{mix($surface, mix($-color, $body-color, 75%), 100% - if($-type == orange, 35%, 20%) * $strength)};
+            --o-mail-bubble-#{$-type}-color-base: #{$-color};
+        }
+    }
+}
+
 :root,
 :host {
     --o-mail-Avatar-size: #{$o-mail-Avatar-size};
@@ -19,6 +45,7 @@
     --o-mail-Composer-chatWindowVPadding: #{$o-mail-Composer-chatWindowVPadding};
     --o-mail-Composer-lineHeight: #{$o-mail-Composer-lineHeight};
     --o-mail-Composer-pillRadiusBase: #{$o-mail-Composer-pillRadiusBase};
+    --o-mail-discussMainBgColor: #{$o-mail-discussMainBgColor};
     --o-mail-LinkPreview-dialogWidth: #{$o-mail-LinkPreview-dialogWidth};
     --o-mail-LinkPreview-width: #{$o-mail-LinkPreview-width};
     --o-mail-LinkPreviewCard-height: #{$o-mail-LinkPreviewCard-height};
@@ -29,20 +56,11 @@
     --o-mail-Message-sidebarWidth: #{$o-mail-Message-sidebarWidth};
     --o-mail-NavigableList-zIndex: #{$o-mail-NavigableList-zIndex};
 
-    /* Tints of the messages and chat bubble previews with a bubble color */
-    @each $-type, $-color in (blue: $info, green: $success, orange: $warning) {
-        @if $o-webclient-color-scheme == dark {
-            $-dark-color: if($-type == blue, darken($info, 10%), if($-type == green, lighten($success, 2.5%), $warning));
-            $-base-bg: mix($white, $gray-100, 35%);
-            --o-mail-bubble-#{$-type}-bg: #{mix($-base-bg, $-dark-color, if($-type == orange, 55%, 75%))};
-            --o-mail-bubble-#{$-type}-bg-muted: #{mix(mix($white, $gray-100, 75%), $-dark-color, 82.5%)};
-            --o-mail-bubble-#{$-type}-border-color: #{mix($-base-bg, mix($-dark-color, $body-color, 90%), 70%)};
-            --o-mail-bubble-#{$-type}-color-base: #{$-dark-color};
-        } @else {
-            --o-mail-bubble-#{$-type}-bg: #{mix($o-view-background-color, $-color, if($-type == orange, 80%, 90%))};
-            --o-mail-bubble-#{$-type}-bg-muted: color-mix(in srgb, #{$o-view-background-color} 97.5%, #{$-color} 2.5%);
-            --o-mail-bubble-#{$-type}-border-color: #{mix($o-view-background-color, mix($-color, $body-color, 75%), if($-type == orange, 65%, 80%))};
-            --o-mail-bubble-#{$-type}-color-base: #{$-color};
-        }
-    }
+    @include o-mail-bubble-tints(if($o-webclient-color-scheme == dark, $gray-100, $o-view-background-color));
+}
+
+/* Fainter on the main discuss background than on the page, which contrasts less with them. */
+.o-mail-DiscussContent-column,
+.o-mail-ChatWindow {
+    @include o-mail-bubble-tints($o-mail-discussMainBgColor, 0.85);
 }

@@ -84,8 +84,8 @@ registerThreadAction("search-messages", {
         component: SearchMessagesPanel,
         props: ({ thread }) => ({ thread }),
     },
-    sequence: 20,
-    sequenceGroup: 20,
+    sequence: ({ owner }) => (owner.isDiscussContent ? 1 : 20),
+    sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
 });
 registerThreadAction("meeting-chat", {
     availableOffline: true,

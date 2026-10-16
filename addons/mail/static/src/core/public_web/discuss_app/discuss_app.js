@@ -10,6 +10,7 @@ import {
     providePlugins,
     signal,
     t,
+    useEffect,
     useListener,
     useOnChange,
     usePlugin,
@@ -20,9 +21,16 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { DiscussContent } from "@mail/core/public_web/discuss_content";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
+import { attClassObjectToString } from "@mail/utils/common/format";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
+
+/**
+ * Ends the toggling when no `transitionend` does. Longer than the 150ms width transition, set by
+ * `--mail-Discuss-transition` in `discuss_app.css`.
+ */
+const SIDEBAR_TOGGLING_TIMEOUT = 500;
 
 export class Discuss extends Component {
     static components = {
@@ -32,7 +40,16 @@ export class Discuss extends Component {
     };
     static template = "mail.Discuss";
 
+    /** Whether the sidebar width is animating after a toggle (not while resizing). */
+    isSidebarToggling = signal(false);
     root = signal.ref();
+    sidebarClass = computed(() =>
+        attClassObjectToString({
+            "o-mail-DiscussApp-sidebar d-flex flex-column flex-shrink-0 h-100 z-1 d-print-none": true,
+            "o-collapsed": this.store.discuss.isSidebarCollapsed,
+            "o-toggling": this.isSidebarToggling(),
+        })
+    );
 
     setup() {
         super.setup();
@@ -82,6 +99,16 @@ export class Discuss extends Component {
                 }
             );
         }
+        useEffect(() => {
+            if (!this.isSidebarToggling()) {
+                return;
+            }
+            const timeout = setTimeout(
+                () => this.isSidebarToggling.set(false),
+                SIDEBAR_TOGGLING_TIMEOUT
+            );
+            return () => clearTimeout(timeout);
+        });
         onMounted(() => {
             document.body.classList.add("o_mail_discuss");
         });
@@ -93,5 +120,20 @@ export class Discuss extends Component {
 
     get thread() {
         return this.channel?.()?.thread || this.store.discuss.thread;
+    }
+
+    /** @param {TransitionEvent} ev */
+    onTransitionend(ev) {
+        if (
+            ev.propertyName === "width" &&
+            ev.target.classList.contains("o-mail-DiscussApp-sidebar")
+        ) {
+            this.isSidebarToggling.set(false);
+        }
+    }
+
+    toggleSidebar() {
+        this.store.discuss.isSidebarCollapseEnabled = !this.store.discuss.isSidebarCollapseEnabled;
+        this.isSidebarToggling.set(true);
     }
 }

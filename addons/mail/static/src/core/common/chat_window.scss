@@ -1,5 +1,6 @@
 .o-mail-ChatWindow {
     width: var(--o-mail-ChatWindow-width);
+    background-color: var(--o-mail-discussMainBgColor);
 
     z-index: var(--o-bs-zindex-sticky);
     &.o-mobile {
@@ -15,6 +16,11 @@
     transition: box-shadow 2.0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     &.o-highlighted {
         box-shadow: 0 0 1.5rem var(--o-component-active-border) !important;
+    }
+
+    /* A tinted pill on the surface. */
+    .o-mail-Composer:not(.o-editing) {
+        --mail-Composer-bg: var(--o-webclient-background-color);
     }
 }
 

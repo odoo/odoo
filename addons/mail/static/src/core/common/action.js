@@ -19,7 +19,7 @@ export const ACTION_TAGS = Object.freeze({
 });
 
 export const ACTION_GROUP_TAGS = Object.freeze({
-    INLINE_SWITCHER_LOOK: "INLINE_SWITCHER_LOOK",
+    ACTION_PANELS: "ACTION_PANELS",
 });
 
 export const IS_ACTION_DEFINITION_SYM = Symbol("isActionDefinition");

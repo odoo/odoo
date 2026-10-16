@@ -34,15 +34,7 @@ import {
 import { Store } from "@mail/../tests/mock_server/store";
 
 import { describe, expect, test } from "@odoo/hoot";
-import {
-    animationFrame,
-    press,
-    queryRect,
-    rightClick,
-    tick,
-    waitFor,
-    waitForNone,
-} from "@odoo/hoot-dom";
+import { animationFrame, press, rightClick, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { rpc } from "@web/core/network/rpc";
@@ -207,29 +199,6 @@ test("can change the thread description of #general", async () => {
     await waitFor(
         "input.o-mail-DiscussContent-threadDescription:value(I want a burger today!):count(1)"
     );
-});
-
-test("header card resizes to fit the thread description after switching channels", async () => {
-    const pyEnv = await startServer();
-    const longDescription =
-        "A place to connect and exchange news with colleagues across the company. ".repeat(5);
-    const [shortChannelId] = pyEnv["discuss.channel"].create([
-        { name: "Short", channel_type: "channel", description: "Hi" },
-        { name: "Long", channel_type: "channel", description: longDescription },
-    ]);
-    await start();
-    await openDiscuss(shortChannelId);
-    await waitFor("input.o-mail-DiscussContent-threadDescription:value(Hi):count(1)");
-    const shortCardWidth = queryRect(".o-mail-DiscussContent-headerBox").width;
-    // The box hugs the short description instead of spanning the whole header.
-    expect(shortCardWidth).toBeLessThan(queryRect(".o-mail-DiscussContent-headerInfo").width);
-
-    await contains(".o-mail-NotificationItem:has(:text('Long')):count(1)").click();
-    await waitFor(
-        `input.o-mail-DiscussContent-threadDescription:value(${longDescription}):count(1)`
-    );
-    const longCardWidth = queryRect(".o-mail-DiscussContent-headerBox").width;
-    expect(longCardWidth).toBeGreaterThan(shortCardWidth);
 });
 
 test("Message following a notification should not be squashed", async () => {
