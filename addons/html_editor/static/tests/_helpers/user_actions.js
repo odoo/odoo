@@ -1,5 +1,5 @@
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
-import { findInSelection } from "@html_editor/utils/selection";
+import { findInSelection, normalizeDeepCursorPosition } from "@html_editor/utils/selection";
 import {
     animationFrame,
     advanceTime,
@@ -12,7 +12,7 @@ import {
 import { setSelection } from "./selection";
 import { execCommand } from "./userCommands";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { isTextNode } from "@html_editor/utils/dom_info";
+import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { COMMIT_DEBOUNCE_DELAY } from "@html_editor/core/history_plugin";
 
@@ -42,11 +42,23 @@ export async function insertText(editor, text) {
         // the editor to detect them since they would not trigger the default
         // browser behavior otherwise.
         const range = editor.document.getSelection().getRangeAt(0);
-        if (!range.collapsed) {
+        const isCollapsed = range.collapsed;
+        if (!isCollapsed) {
             range.deleteContents();
         }
         let offset = range.startOffset;
         let node = range.startContainer;
+        if (isCollapsed && isElement(node)) {
+            // Mirror the browser's native contenteditable behavior. When the
+            // caret is between adjacent inline elements, text is inserted into
+            // the preceding inline element instead of between the elements.
+            // This keeps the test utility consistent with native editing
+            // behavior.
+            const leftNode = node.childNodes[offset - 1];
+            if (leftNode && isElement(leftNode) && !isBlock(leftNode)) {
+                [node, offset] = normalizeDeepCursorPosition(node, offset);
+            }
+        }
 
         if (node.nodeType !== Node.TEXT_NODE) {
             node = document.createTextNode(char);
