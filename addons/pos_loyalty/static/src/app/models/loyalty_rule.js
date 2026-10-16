@@ -70,6 +70,9 @@ export class LoyaltyRule extends Base {
         if (this.mode === "with_code" && !order.applied_codes.includes(this.code)) {
             return false;
         }
+        if (this.program_id?.is_nominative && !order.getPartner()) {
+            return false;
+        }
         const qualifyingLines = this._qualifyingLines(order);
         if (!qualifyingLines.length) {
             return false;
