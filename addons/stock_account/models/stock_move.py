@@ -288,10 +288,15 @@ class StockMove(models.Model):
         return (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
 
     def _create_analytic_move(self):
-        for move in self:
-            analytic_line_vals = move._prepare_analytic_lines()
-            if analytic_line_vals:
-                move.analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(analytic_line_vals)
+        analytic_lines_per_move = self._prepare_analytic_lines()
+        if not analytic_lines_per_move:
+            return
+        all_analytic_line_vals = [vals for move_vals in analytic_lines_per_move.values() for vals in move_vals]
+        analytic_lines = self.env['account.analytic.line'].sudo().create(all_analytic_line_vals)
+        index = 0
+        for move, vals_list in analytic_lines_per_move.items():
+            move.analytic_account_line_ids += analytic_lines[index:index + len(vals_list)]
+            index += len(vals_list)
 
     def _get_account_move_line_vals(self):
         if self.location_id.valuation_account_id:
@@ -710,35 +715,45 @@ class StockMove(models.Model):
         return super()._is_outgoing() and not self._is_dropshipped_returned()
 
     def _prepare_analytic_lines(self):
-        self.ensure_one()
-        if not self._get_analytic_distribution() and not self.analytic_account_line_ids:
-            return False
+        """ Compute the analytic line values to create for each move in self.
 
-        if self.state in ['cancel', 'draft']:
-            return False
-        amount, unit_amount = 0, 0
+        :return: a dict mapping each move that needs new analytic lines to the list of
+                 value dicts to create for it.
+        """
+        analytic_lines_per_move = {}
+        for move in self:
+            if not move._get_analytic_distribution() and not move.analytic_account_line_ids:
+                continue
 
-        if self.state != 'done':
-            if self.picked:
-                unit_amount = self.uom_id._compute_quantity(
-                    self.quantity, self.product_id.uom_id)
-                # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
-                # we would have to recompute all the analytic estimation at each out.
-                amount = unit_amount * self.product_id.standard_price
-                if self._is_out():
-                    amount = -amount
+            if move.state in ['cancel', 'draft']:
+                continue
+            amount, unit_amount = 0, 0
+
+            if move.state != 'done':
+                if move.picked:
+                    unit_amount = move.uom_id._compute_quantity(
+                        move.quantity, move.product_id.uom_id)
+                    # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
+                    # we would have to recompute all the analytic estimation at each out.
+                    amount = unit_amount * move.product_id.standard_price
+                    if move._is_out():
+                        amount = -amount
+                else:
+                    continue
             else:
-                return False
-        else:
-            amount = self.value
-            unit_amount = self._get_valued_qty()
+                amount = move.value
+                unit_amount = move._get_valued_qty()
 
-        if self.analytic_account_line_ids and amount == 0 and unit_amount == 0:
-            self.analytic_account_line_ids.unlink()
-            return False
+            if move.analytic_account_line_ids and amount == 0 and unit_amount == 0:
+                move.analytic_account_line_ids.unlink()
+                continue
 
-        return self.env['account.analytic.account']._perform_analytic_distribution(
-            self._get_analytic_distribution(), amount, unit_amount, self.analytic_account_line_ids, self)
+            analytic_line_vals = self.env['account.analytic.account']._perform_analytic_distribution(
+                move._get_analytic_distribution(), amount, unit_amount, move.analytic_account_line_ids, move)
+            if analytic_line_vals:
+                analytic_lines_per_move[move] = analytic_line_vals
+
+        return analytic_lines_per_move
 
     def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
         self.ensure_one()
