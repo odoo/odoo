@@ -72,7 +72,6 @@ class Im_LivechatReportChannel(models.Model):
     chatbot_script_id = fields.Many2one("chatbot.script", "Chatbot", readonly=True)
     chatbot_answers_path = fields.Char("Chatbot Answers", readonly=True)
     chatbot_answers_path_str = fields.Char("Chatbot Answers (String)", readonly=True)
-    session_expertises = fields.Char("Expertises used in this session (String)", readonly=True)
     session_expertise_ids = fields.Many2many(
         "im_livechat.expertise",
         readonly=True,
@@ -87,6 +86,16 @@ class Im_LivechatReportChannel(models.Model):
     agent_providing_help_history = fields.Many2one(
         "im_livechat.channel.member.history",
         related="channel_id.livechat_agent_providing_help_history",
+        readonly=True,
+    )
+    agent_history_ids = fields.One2many(
+        "im_livechat.channel.member.history",
+        related="channel_id.livechat_agent_history_ids",
+        readonly=True,
+    )
+    customer_history_ids = fields.One2many(
+        "im_livechat.channel.member.history",
+        related="channel_id.livechat_customer_history_ids",
         readonly=True,
     )
 
@@ -136,8 +145,7 @@ class Im_LivechatReportChannel(models.Model):
                 CASE WHEN call_history_data.call_duration_hour IS NOT NULL THEN 1 ELSE 0 END AS has_call,
                 call_history_data.call_duration_hour,
                 chatbot_answer_history.chatbot_answers_path,
-                chatbot_answer_history.chatbot_answers_path_str,
-                expertise_history.expertises session_expertises
+                chatbot_answer_history.chatbot_answers_path_str
             """,
             rating_percentage=self.env["discuss.channel"]._rating_selection_to_percentage_sql(
                 SQL("C.livechat_rating")
@@ -209,29 +217,6 @@ class Im_LivechatReportChannel(models.Model):
             ) AS chatbot_answer_history ON TRUE
         LEFT JOIN LATERAL
             (
-                SELECT STRING_AGG(
-                            COALESCE(
-                                im_livechat_expertise.name->>%s,
-                                im_livechat_expertise.name->>'en_US',
-                                fallback.value
-                            ),
-                            ' - ' ORDER BY im_livechat_expertise.id
-                       ) AS expertises
-                  FROM im_livechat_channel_member_history_im_livechat_expertise_rel REL
-                  JOIN im_livechat_expertise
-                    ON im_livechat_expertise.id = REL.im_livechat_expertise_id
-                  JOIN im_livechat_channel_member_history
-                    ON im_livechat_channel_member_history.id = REL.im_livechat_channel_member_history_id
-                  JOIN LATERAL
-                    (
-                        SELECT value
-                          FROM jsonb_each_text(im_livechat_expertise.name)
-                         LIMIT 1
-                    ) AS fallback ON TRUE
-                 WHERE im_livechat_channel_member_history.channel_id = C.id
-            ) AS expertise_history ON TRUE
-        LEFT JOIN LATERAL
-            (
                 SELECT COUNT(DISTINCT M.id) AS message_count,
                        MIN(CASE WHEN H.livechat_member_type = 'agent' THEN M.create_date END) AS first_agent_message_dt,
                        MAX(CASE WHEN H.livechat_member_type = 'bot' THEN M.create_date END) AS last_bot_message_dt
@@ -242,7 +227,6 @@ class Im_LivechatReportChannel(models.Model):
             """,
             self.env.lang,
             self._unknown_chatbot_answer_name,
-            self.env.lang,
         )
 
     def _where(self) -> SQL:
