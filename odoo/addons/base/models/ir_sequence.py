@@ -49,17 +49,22 @@ def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
     cr.execute(statement)
 
 
-def _select_nextval(cr, seq_name):
-    cr.execute("SELECT nextval(%s)", [seq_name])
-    return cr.fetchone()
+def _select_nextval(cr, seq_name, count=None):
+    if count is None:
+        cr.execute("SELECT nextval(%s)", [seq_name])
+        return cr.fetchone()
+    cr.execute("SELECT nextval(%s) FROM generate_series(1, %s)", [seq_name, count])
+    return [number for (number,) in cr.fetchall()]
 
 
-def _update_nogap(self, number_increment):
+def _update_nogap(self, number_increment, count=None):
     number_next = self.number_next
     self.invalidate_recordset(['number_next'])
     self.env.cr.execute(SQL("SELECT number_next FROM %s WHERE id=%s FOR UPDATE NOWAIT", self._table_sql, self.id))
-    self.env.cr.execute(SQL("UPDATE %s SET number_next = number_next + %s WHERE id = %s", self._table_sql, number_increment, self.id))
-    return number_next
+    self.env.cr.execute(SQL("UPDATE %s SET number_next = number_next + %s WHERE id = %s", self._table_sql, number_increment * (count or 1), self.id))
+    if count is None:
+        return number_next
+    return [number_next + number_increment * i for i in range(count)]
 
 
 def _predict_nextval(self, seq_id):
@@ -213,12 +218,14 @@ class IrSequence(models.Model):
         self.flush_model(vals.keys())
         return res
 
-    def _next_do(self):
+    def _next_do(self, count=None):
         if self.implementation == 'standard':
-            number_next = _select_nextval(self.env.cr, 'ir_sequence_%03d' % self.id)
+            number_next = _select_nextval(self.env.cr, 'ir_sequence_%03d' % self.id, count)
         else:
-            number_next = _update_nogap(self, self.number_increment)
-        return self.get_next_char(number_next)
+            number_next = _update_nogap(self, self.number_increment, count)
+        if count is None:
+            return self.get_next_char(number_next)
+        return [self.get_next_char(number) for number in number_next]
 
     def _get_prefix_suffix(self, date=None, date_range=None):
         def _interpolate(s, d):
@@ -274,25 +281,25 @@ class IrSequence(models.Model):
         })
         return seq_date_range
 
-    def _next(self, sequence_date=None):
+    def _next(self, sequence_date=None, count=None):
         """ Returns the next number in the preferred sequence in all the ones given in self."""
         if not self.use_date_range:
-            return self._next_do()
+            return self._next_do(count)
         # date mode
         dt = sequence_date or self.env.context.get('ir_sequence_date', fields.Datetime.now())
         seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
         if not seq_date:
             seq_date = self._create_date_range_seq(dt)
         ir_sequence_date = dt.replace(tzinfo=None) if isinstance(dt, datetime) else dt
-        return seq_date.with_context(ir_sequence_date_range=seq_date.date_from, ir_sequence_date=ir_sequence_date)._next()
+        return seq_date.with_context(ir_sequence_date_range=seq_date.date_from, ir_sequence_date=ir_sequence_date)._next(count=count)
 
-    def next_by_id(self, sequence_date=None):
+    def next_by_id(self, sequence_date=None, count=None):
         """ Draw an interpolated string using the specified sequence."""
         self.browse().check_access('read')
-        return self._next(sequence_date=sequence_date)
+        return self._next(sequence_date=sequence_date, count=count)
 
     @api.model
-    def next_by_code(self, sequence_code, sequence_date=None):
+    def next_by_code(self, sequence_code, sequence_date=None, count=None):
         """ Draw an interpolated string using a sequence with the requested code.
             If several sequences with the correct code are available to the user
             (multi-company cases), the one from the user's current company will
@@ -303,9 +310,9 @@ class IrSequence(models.Model):
         seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [company_id, False])], order='company_id')
         if not seq_ids:
             _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
-            return False
+            return False if count is None else [False] * count
         seq_id = seq_ids[0]
-        return seq_id._next(sequence_date=sequence_date)
+        return seq_id._next(sequence_date=sequence_date, count=count)
 
 
 class IrSequenceDate_Range(models.Model):
@@ -351,12 +358,14 @@ class IrSequenceDate_Range(models.Model):
                                         help="Next number that will be used. This number can be incremented "
                                              "frequently so the displayed value might already be obsolete")
 
-    def _next(self):
+    def _next(self, count=None):
         if self.sequence_id.implementation == 'standard':
-            number_next = _select_nextval(self.env.cr, 'ir_sequence_%03d_%03d' % (self.sequence_id.id, self.id))
+            number_next = _select_nextval(self.env.cr, 'ir_sequence_%03d_%03d' % (self.sequence_id.id, self.id), count)
         else:
-            number_next = _update_nogap(self, self.sequence_id.number_increment)
-        return self.sequence_id.get_next_char(number_next)
+            number_next = _update_nogap(self, self.sequence_id.number_increment, count)
+        if count is None:
+            return self.sequence_id.get_next_char(number_next)
+        return [self.sequence_id.get_next_char(number) for number in number_next]
 
     def _alter_sequence(self, number_increment=None, number_next=None):
         for seq in self:
