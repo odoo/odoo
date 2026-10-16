@@ -20,6 +20,20 @@
         </div>
     </t>
 
+    <t t-name="hr_work_entry.Many2ManyWorkEntryTypeTagsField" t-inherit="web.Many2ManyTagsField" t-inherit-mode="primary">
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="specification">{ display_code: 1, color: 1 }</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='autoCompleteItem']" position="replace">
+            <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                <div class="o_avatar_many2x_autocomplete d-flex align-items-center"
+                     t-att-class="{ 'fw-bold': this.isSelected(autoCompleteItemScope.record) }">
+                    <t t-call="hr_work_entry.WorkEntryType" data="autoCompleteItemScope.record" className="'me-1'" label="autoCompleteItemScope.label"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
     <t t-name="hr_work_entry.WorkEntryType">
         <div class="o_calendar_renderer o_radio_item position-relative cursor-pointer d-flex gap-1 align-items-center"
              t-att-class="className"
