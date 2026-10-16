@@ -60,6 +60,7 @@ _ref_vat = {
     'ar': '20055361682',
     'at': 'ATU12345675',
     'au': '83 914 571 673',
+    'bd': '123456789-0101',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
     'br': _lt('either 11 digits for CPF or 14 characters for CNPJ'),
