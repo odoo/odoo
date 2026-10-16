@@ -12,6 +12,11 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def _default_website(self):
+        target_id = self.env.context.get('website_id') or self.env.context.get('host_id')
+        if target_id:
+            website = self.env['website'].browse(target_id)
+            if website.exists():
+                return website
         return self.env['website'].search([('company_id', '=', self.env.company.id)], limit=1)
 
     website_id = fields.Many2one(
