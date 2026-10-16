@@ -522,8 +522,9 @@ class MockHTTPClient(AbstractContextManager):
                 resp.encoding = 'utf-8'
                 resp._content = json.dumps(self.return_json(req), ensure_ascii=False).encode()
             else:
+                resp.encoding = requests.utils.get_encoding_from_headers(resp.headers)
                 return_body = self.return_body(req)
-                resp._content = return_body.encode() if isinstance(return_body, str) else return_body or b''
+                resp._content = return_body.encode(resp.encoding or 'utf-8') if isinstance(return_body, str) else return_body or b''
 
             return resp
 
