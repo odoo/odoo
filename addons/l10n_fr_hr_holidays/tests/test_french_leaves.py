@@ -18,7 +18,7 @@ class TestFrenchLeaves(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         country_fr = cls.env.ref('base.fr')
-        cls.company = cls.env['res.company'].create({
+        cls.company = cls.setup_localization_company('fr', {
             'name': 'French Company',
             'country_id': country_fr.id,
         })

@@ -39,5 +39,8 @@ This module add, for accounting:
     ],
     'post_init_hook': '_l10n_sg_post_init',
     'uninstall_hook': '_l10n_sg_uninstall',
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

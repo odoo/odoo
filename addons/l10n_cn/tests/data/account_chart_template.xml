@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>cn</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_cn')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>cn</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_cn_2')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>cn_large_bis</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_chart_cn_large_bis')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>cn_large_bis</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_chart_cn_large_bis_2')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+</odoo>

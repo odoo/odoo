@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data>
+    <!-- Shared fixtures must not generate accounting returns during module loading. -->
+    <function model="res.company" name="write">
+        <value model="ir.model.data" eval="obj().search([('module', '=', 'base'), ('model', '=', 'res.company'), ('name', '=like', 'test_company%')]).mapped('res_id')"/>
+        <value eval="{'account_opening_date': False, 'terms_type': 'plain'}"/>
+    </function>
     <!-- Calls _load() directly instead of try_loading() to avoid the warning -->
     <function model="account.chart.template" name="_load" eval="(False, 'generic_coa', obj().env['res.company'].browse(ref('base.test_company')), False)"/>
     <function model="account.chart.template" name="_load" eval="(False, 'generic_coa', obj().env['res.company'].browse(ref('base.test_company_with_branch')), False)"/>

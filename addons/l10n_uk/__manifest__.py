@@ -27,5 +27,8 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
         'demo/l10n_uk_demo.xml',
         'demo/demo_company.xml',
     ],
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

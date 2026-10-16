@@ -11,17 +11,17 @@ class TestSInvoiceSymbol(TransactionCase):
         super().setUpClass()
         cls.vietnam = cls.env.ref('base.vn')
 
-        cls.company_vn_1 = cls.env['res.company'].create({
+        cls.company_vn_1 = cls.setup_localization_company('vn', {
             'name': 'VN Company A',
             'country_id': cls.vietnam.id,
             'vat': '0123456789',
         })
-        cls.company_vn_2 = cls.env['res.company'].create({
+        cls.company_vn_2 = cls.setup_localization_company('vn', {
             'name': 'VN Company B',
             'country_id': cls.vietnam.id,
             'vat': '9876543210',
         })
-        cls.company_us = cls.env['res.company'].create({
+        cls.company_us = cls.setup_localization_company('us', {
             'name': 'US Company',
             'country_id': cls.env.ref('base.us').id,
             'vat': '111222333',
