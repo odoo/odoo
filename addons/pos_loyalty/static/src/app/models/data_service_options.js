@@ -10,11 +10,15 @@ patch(DataServiceOptions.prototype, {
                 condition: (record) =>
                     record
                         .backLink("<-pos.order.line.card_id")
-                        .find((l) => !l.order_id?.canBeRemovedFromIndexedDB),
+                        .filter((l) => !l.order_id?.canBeRemovedFromIndexedDB).length === 0,
                 getRecordsBasedOnLines: (orderlines) =>
                     orderlines.map((line) => line.card_id).filter((c) => c),
             },
         };
+    },
+    get cleanupIgnoredReferences() {
+        // Only used to print the coupons created by the order on its receipt
+        return [...super.cleanupIgnoredReferences, "loyalty.card.source_pos_order_id"];
     },
     get prohibitedAutoLoadedModels() {
         return [

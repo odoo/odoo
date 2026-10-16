@@ -16,7 +16,11 @@ export class ComboSuggestion {
         this.currency = currency;
         this.company = company;
         this.config = config;
-        this.productCombos = this._getProductCombos();
+    }
+
+    // Not cached: products can be loaded or removed (outdated records) during the session
+    get productCombos() {
+        return this._getProductCombos();
     }
 
     _getProductCombos() {

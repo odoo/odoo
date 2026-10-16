@@ -1162,7 +1162,9 @@ describe("Related Model", () => {
             []
         );
         expect(calls).toEqual(["setup", "initState", "restoreState"]);
-        expect(order1.uiState).toEqual({ test: true });
+        const state = order1.uiState;
+        delete state.lastUse;
+        expect(state).toEqual({ test: true });
 
         //Loading new data
         calls = [];

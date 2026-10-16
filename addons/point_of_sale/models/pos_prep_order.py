@@ -16,6 +16,10 @@ class PosPrepOrder(models.Model):
         return [('pos_order_id', 'in', data['pos.order'].ids)]
 
     @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.order']
+
+    @api.model
     def update_last_order_change(self, order):
         """
         This method is use to create order changes for orders than was
