@@ -33,6 +33,8 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
     def get_default_groups(cls):
         # needed to create sale orders in test_export_downpayments_partner_fr
         groups = super().get_default_groups()
+        if cls.env['ir.module.module']._get('sales_team').state != 'installed':
+            return groups
         return groups | cls.quick_ref('sales_team.group_sale_manager')
 
     @classmethod
