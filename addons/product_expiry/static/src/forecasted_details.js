@@ -15,11 +15,11 @@ patch(ForecastedDetails.prototype, {
         // Whenever there's a Free Stock line without an expiration date,
         // remove the quantities "to remove" from this line to improve readibility
         super._prepareData();
-        for (const productId of this.productIds){
-            if (!(productId in this.FreeStockLinesPerProduct)){
+        for (const key of this.productIds){
+            if (!(key in this.FreeStockLinesPerProduct)){
                 continue;
             }
-            const lines = this.FreeStockLinesPerProduct[productId]
+            const lines = this.FreeStockLinesPerProduct[key]
             let noRemovalDateLine = lines.find(line => !line.removal_date);
             let withRemovalDateLines = lines.filter(line => line.removal_date);
             if (noRemovalDateLine && withRemovalDateLines.length) {
@@ -34,7 +34,7 @@ patch(ForecastedDetails.prototype, {
     },
     _sameLineRule(line, nextLine){
         const res = super._sameLineRule(line, nextLine);
-        const FreeStock = this.FreeStockLinesPerProduct[line.product.id] || [];
+        const FreeStock = this.FreeStockLinesPerProduct[this._getGroupKey(line)] || [];
         return res || (FreeStock.includes(line) && FreeStock.includes(nextLine));
     }
 });
