@@ -397,11 +397,22 @@ class AccountEdiCommon(models.AbstractModel):
 
     @api.model
     def _vat_is_equal(self, partner_vat, other_vat, country=False):
+        """
+        Compare the VAT against a partner's stored VAT:
+        - country-specific normalization where needed, which should stay consistent
+            with `_get_country_specific_vat_variants`,
+        - country prefixes are ignored, as the VAT may be stored with or without one
+            (ISO code or VAT-specific prefix, e.g. EL for Greece).
+        """
         partner_vat = partner_vat.replace(' ', '').upper()
         vat_to_compare = other_vat.replace(' ', '').replace('.', '').upper()
         if country and country.code == 'CH':
             partner_vat = re.sub(r"(TVA|IVA|MWST)?$", "", partner_vat.replace('.', '').replace('-', ''))
             vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
+        if country:
+            for prefix in {country.code, *{'GB': ('XI',), 'GR': ('EL',), 'JP': ('T',)}.get(country.code, ())}:
+                partner_vat = partner_vat.removeprefix(prefix)
+                vat_to_compare = vat_to_compare.removeprefix(prefix)
         return partner_vat == vat_to_compare
 
     # -------------------------------------------------------------------------
@@ -1302,9 +1313,11 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _check_customer_vat_match(self, customer, vat, collected_values):
         """
-        Compare the VAT from an EDI document against a partner's stored VAT,
-        with country-specific normalization where needed.
-        Should stay consistent with `_get_country_specific_vat_variants`.
+        Compare the VAT from an EDI document against a partner's stored VAT:
+        - country-specific normalization where needed, which should stay consistent
+          with `_get_country_specific_vat_variants`,
+        - country prefixes are ignored, as the VAT may be stored with or without one
+          (ISO code or VAT-specific prefix, e.g. EL for Greece).
         """
         country = self._import_retrieve_country(collected_values) or customer.country_id
         return self._vat_is_equal(customer.vat, vat, country)
