@@ -1,6 +1,7 @@
 import { Logger } from "@bus/workers/bus_worker_utils";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { lna } from "@iot_base/network_utils/lna";
 
 const CASHDRO_URL = "/Cashdro3WS/index3.php";
 
@@ -134,7 +135,7 @@ export class CashdroService {
         this._log("REQUEST", url);
 
         try {
-            const response = await fetch(url, {
+            const response = await lna.fetch(url, {
                 targetAddressSpace: this.forceHttp ? "local" : undefined,
                 signal: AbortSignal.timeout(10000),
             });
