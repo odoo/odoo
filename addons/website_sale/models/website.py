@@ -318,7 +318,7 @@ class Website(models.Model):
 
     def get_cta_data(self, website_purpose, website_type):
         cta_data = super().get_cta_data(website_purpose, website_type)
-        cta_data['shop_btn_href'] = '/shop'
+        cta_data["shop_btn_href"] = "/shop"
         return cta_data
 
     @api.model
@@ -592,7 +592,8 @@ class Website(models.Model):
             pricelists |= (
                 self
                 .env["res.country.group"]
-                .search([("country_ids.code", "=", country_code)]).sudo()
+                .search([("country_ids.code", "=", country_code)])
+                .sudo()
                 .pricelist_ids.filtered(
                     lambda pl: pl._is_available_on_website(self) and check_pricelist(pl)
                 )
@@ -696,7 +697,7 @@ class Website(models.Model):
                     self.env["product.template"]._get_saleable_tracking_types(),
                 ),
             ]
-        company_domain = [('company_id', 'in', [False, website.company_id.id])]
+        company_domain = [("company_id", "in", [False, website.company_id.id])]
         return Domain.AND([website._product_domain(), website_domain, user_domain, company_domain])
 
     def _product_domain(self):  # noqa: PLR6301
@@ -731,7 +732,9 @@ class Website(models.Model):
         return {
             "company_id": self.company_id.id,
             "partner_id": partner_sudo.id,
-            **(self.is_public_user() and {"fiscal_position_id": request.fiscal_position.id} or {}),
+            **(
+                (self.is_public_user() and {"fiscal_position_id": request.fiscal_position.id}) or {}
+            ),
             "pricelist_id": request.pricelist.id,
             "team_id": self.salesteam_id.id,
             "website_id": self.id,
@@ -921,7 +924,9 @@ class Website(models.Model):
         if not self.has_ecommerce_access():
             return result
         if search_type in ["products", "product_public_category", "all"]:
-            result.append(self.env["product.public.category"]._search_get_detail(self, order, options))
+            result.append(
+                self.env["product.public.category"]._search_get_detail(self, order, options)
+            )
         if search_type in ["products", "product_template", "all"]:
             result.append(self.env["product.template"]._search_get_detail(self, order, options))
         return result
@@ -975,7 +980,8 @@ class Website(models.Model):
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
                 template = self.env.ref("website_sale.mail_template_sale_cart_recovery")
-                # fallback email_vals in case partner_to,email_to were emptied or default recipients is false
+                # fallback email_vals in case partner_to,email_to were emptied or default recipients
+                # is false
                 email_vals = (
                     {}
                     if template.email_to or template.partner_to or template.use_default_to
@@ -1162,11 +1168,10 @@ class Website(models.Model):
         return "64px"
 
     def _get_basic_feed_product_domain(self):
-        return Domain.AND([
-            Domain("is_published", "=", True),
-            Domain("type", "in", ("consu", "combo")),
-            self.website_domain(),
-        ])
+        return (
+            Domain("type", "in", {"consu", "combo"})
+            & self.with_user(self.user_id).sale_product_domain()
+        )
 
     def _default_feed_is_valid(self):
         self.ensure_one()
