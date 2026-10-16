@@ -1125,9 +1125,11 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _check_customer_vat_match(self, customer, vat, collected_values):
         """
-        Compare the VAT from an EDI document against a partner's stored VAT,
-        with country-specific normalization where needed.
-        Should stay consistent with `_get_country_specific_vat_variants`.
+        Compare the VAT from an EDI document against a partner's stored VAT:
+        - country-specific normalization where needed, which should stay consistent
+          with `_get_country_specific_vat_variants`,
+        - country prefixes are ignored, as the VAT may be stored with or without one
+          (ISO code or VAT-specific prefix, e.g. EL for Greece).
         """
         country = self._import_retrieve_country(collected_values)
         customer_vat = customer.vat.replace(' ', '').upper()
@@ -1135,6 +1137,10 @@ class AccountEdiCommon(models.AbstractModel):
         if country and country.code == 'CH':
             customer_vat = re.sub(r"(TVA|IVA|MWST)?$", "", customer_vat.replace('.', '').replace('-', ''))
             vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
+        if country:
+            for prefix in {country.code, *{'GB': ('XI',), 'GR': ('EL',)}.get(country.code, ())}:
+                customer_vat = customer_vat.removeprefix(prefix)
+                vat_to_compare = vat_to_compare.removeprefix(prefix)
         return customer_vat == vat_to_compare
 
     def _import_create_missing_customer(self, collected_values):
