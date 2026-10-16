@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:38+0000\n"
-"PO-Revision-Date: 2026-08-11 21:53+0000\n"
+"PO-Revision-Date: 2026-10-12 11:34+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/"
 "pos_self_order/ar/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -84,6 +84,42 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">مرحباً <t t-"
+"out=\"client_name\">\"اسم العميل\"</t>،</t>\n"
+"                        <t t-else=\"\">مرحباً،</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>لقد تم تأكيد طلبك <t t-"
+"out=\"object.tracking_number\">...</t> والذي تبلغ قيمته <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> "
+"بنجاح. <span t-if=\"object.preset_time or client.street\">وسيكون جاهزاً في "
+"تمام الساعة</span> <span t-if=\"object.preset_time\"><t t-out=\"format_time"
+"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
+"مساءً</t></span> <span t-if=\"client.street\">في الشارع <t t-out=\"street\"></"
+"t><t t-out=\"state\">المحافظة</t>، <t t-out=\"client.zip or ''\">zip</t>، <t "
+"t-out=\"city\">المدينة</t>، <t t-out=\"country\">الدولة</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>مع وافر الشكر والتقدير،</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">اسم المتجر</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -114,6 +150,31 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">مرحباً <t t-"
+"out=\"client_name\">\"اسم العميل\"</t>،</t>\n"
+"                        <t t-else=\"\">مرحباً،</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>لقد تم تأكيد طلبك <t t-"
+"out=\"object.tracking_number\">...</t> والذي تبلغ قيمته <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> "
+"بنجاح. <span t-if=\"object.preset_time\">سيكون طلبك جاهزاً في تمام الساعة <t "
+"t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 مساءً</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>شكراً لك،</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">\"اسم المتجر\"</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -326,7 +387,7 @@ msgstr "تهيئة الإعدادات"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Connection restored"
-msgstr ""
+msgstr "تم استعادة الاتصال"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_partner
@@ -480,7 +541,7 @@ msgstr "اسم العرض"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Do not refresh the page."
-msgstr ""
+msgstr "لا تقم بتحديث الصفحة."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -564,13 +625,13 @@ msgstr "قم بإدخال قيمتك المخصصة"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Enter your tracker number"
-msgstr ""
+msgstr "أدخل رقم التتبع الخاص بك"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Extra:"
-msgstr ""
+msgstr "إضافي:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -589,7 +650,7 @@ msgstr "اتبع الإرشادات على جهاز الدفع"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Free Metal / Wood Stands"
-msgstr ""
+msgstr "حاملات معدنية/خشبية مجانية"
 
 #. module: pos_self_order
 #. odoo-python
@@ -730,13 +791,13 @@ msgstr "معلومات"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Internet Connection Lost"
-msgstr ""
+msgstr "انقطع الاتصال بالإنترنت"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid preset"
-msgstr ""
+msgstr "إعداد مسبق غير صالح"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -754,7 +815,7 @@ msgstr "يبدو أن"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "It seems that the network connection was lost."
-msgstr ""
+msgstr "يبدو أن الاتصال بالشبكة قد انقطع."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1219,13 +1280,13 @@ msgstr "إعادة المحاولة"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.js:0
 msgid "Retrying in %s second..."
-msgstr ""
+msgstr "إعادة المحاولة خلال %s ثانية..."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.js:0
 msgid "Retrying in %s seconds..."
-msgstr ""
+msgstr "إعادة المحاولة بعد %s ثانية..."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1247,7 +1308,7 @@ msgstr "رمز الحماية"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/missing_required_details/missing_required_details.xml:0
 msgid "See what you missed"
-msgstr ""
+msgstr "اطلع على ما فاتك"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1353,12 +1414,12 @@ msgstr "رابط URL للطلب الذاتي"
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__kiosk
 msgid "Self-Order Kiosk"
-msgstr ""
+msgstr "كشك الطلب الذاتي"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__mobile
 msgid "Self-Order Mobile"
-msgstr ""
+msgstr "الطلب الذاتي عبر الهاتف المحمول"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1376,7 +1437,7 @@ msgstr "الطلب الذاتي:"
 #: model:mail.template,description:pos_self_order.delivery_email_template
 #: model:mail.template,description:pos_self_order.takeout_email_template
 msgid "Sent to customers"
-msgstr ""
+msgstr "تم إرساله للعملاء"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
@@ -1458,7 +1519,7 @@ msgstr "متتبع الطاولات:"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__self_ordering_table_id
 msgid "Table reference"
-msgstr ""
+msgstr "مرجع الجدول"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1632,7 +1693,7 @@ msgstr "أين ترغب في تناول طعامك؟"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Would you like to continue?"
-msgstr ""
+msgstr "هل ترغب في المتابعة؟"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1696,7 +1757,7 @@ msgstr "الرمز البريدي"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "a"
-msgstr ""
+msgstr "a"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1742,7 +1803,7 @@ msgstr "https://odoo.com"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "included &"
-msgstr ""
+msgstr "مشمول و"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1765,14 +1826,14 @@ msgstr "أودو"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "per extra unit"
-msgstr ""
+msgstr "لكل وحدة إضافية"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"

@@ -21,8 +21,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:36+0000\n"
-"PO-Revision-Date: 2026-08-11 00:42+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-10-12 13:31+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/ar/>\n"
 "Language: ar\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -84,6 +84,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"يُرجى التواصل مع مديرك."
 
 #. module: account
 #. odoo-python
@@ -176,14 +178,12 @@ msgstr "%(exception)s لـ %(user)s%(end_datetime_string)s%(reason)s."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%(label)s at %(currency_amount)s"
 msgstr "%(label)s بـ %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%(label)s at %(currency_amount)s (Draft)"
 msgstr "%(label)s بـ %(currency_amount)s (مسودة)"
 
@@ -213,7 +213,6 @@ msgstr "%(name)s%(ref)s بمبلغ %(currency_amount)s"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, fuzzy
 msgid ""
 "%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
 "delivered at %(unit_price)s"
@@ -244,7 +243,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, fuzzy
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
 msgstr "%(order)s - %(order_line)s؛ فرق السعر لـ %(product)s"
 
@@ -391,7 +389,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
 msgid "- Ending"
-msgstr ""
+msgstr "- الرصيد الختامي"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1486,7 +1484,6 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "<span>1.00</span>"
 msgstr "<span>1.00</span>"
 
@@ -3302,7 +3299,7 @@ msgstr "الاستهلاك المتراكم"
 #: model:account.account,name:account.1_retained_earnings
 #: model:account.account,name:account.2_account_account_us_retained_earnings
 msgid "Accumulated Retained Earnings"
-msgstr ""
+msgstr "الأرباح المحتجزة المتراكمة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -4229,7 +4226,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "تخصيص الأرباح أو الخسائر"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -4808,7 +4805,7 @@ msgstr "بنك أودو"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "إعدادات البنك"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -5143,7 +5140,6 @@ msgstr "عند إلغاء تحديد حقل نشط، يمكنك إخفاء شر�
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, fuzzy
 msgid "C"
 msgstr "C"
 
@@ -6150,7 +6146,6 @@ msgstr "تكلفة أثاث المكاتب والتجهيزات والمعدات
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, fuzzy
 msgid "Cost of revenue"
 msgstr "تكلفة الإيرادات"
 
@@ -6198,12 +6193,12 @@ msgstr "لم نتمكن من رفع الملفات"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
 msgid "Count Reconciled Lines"
-msgstr ""
+msgstr "عدد البنود التي تمت تسويتها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
 msgid "Count Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "عدد البنود التي تمت تسويتها باستثناء فروق سعر الصرف"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -6706,7 +6701,7 @@ msgstr "الرصيد التراكمي بناء على النطاق والأمر 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "الأرباح والخسائر المتراكمة غير الموزعة"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -6990,7 +6985,7 @@ msgstr "استقطاع {label} {percent}%"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -8291,7 +8286,7 @@ msgstr "تبادل البيانات إلكترونياً"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "الفوترة الإلكترونية "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -8934,12 +8929,12 @@ msgstr "التسلسل الجديد الأول"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
 msgid "First Reconciled Lines"
-msgstr ""
+msgstr "البنود التي تمت تسويتها أولاً"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
 msgid "First Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "البنود التي تمت تسويتها أولا باستثناء فرق سعر الصرف"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -9292,7 +9287,7 @@ msgstr "من"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "From Category"
-msgstr ""
+msgstr "من الفئة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__from_invoice
@@ -9510,13 +9505,13 @@ msgstr "البضائع"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
+msgstr "البضائع المُسلَّمة غير المُفوترة (التقييم المستمر للمخزون)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
+msgstr "البضائع المُفوترة غير المُسلَّمة (التقييم المستمر للمخزون)"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
@@ -11118,7 +11113,7 @@ msgstr "قيود"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
 msgid "Is Exact Move Duplicate"
-msgstr ""
+msgstr "حركة مكررة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -11854,7 +11849,7 @@ msgstr "Licenses or computer services (like repairs or upgrades)"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__open_on
 msgid "Limit the date for the Residual (at date) fields."
-msgstr ""
+msgstr "تحديد تاريخ حقول القيمة المتبقية (في تاريخ محدد)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
@@ -12667,7 +12662,7 @@ msgstr "بحاجة إلى إلغاء الطلب"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "يحتاج إلى تحديث "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -14722,12 +14717,12 @@ msgstr "حساب الربح"
 #: model:account.account,name:account.1_profit_or_loss
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Profit or Loss Appropriation"
-msgstr ""
+msgstr "تخصيص الأرباح أو الخسائر"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
 msgid "Profitability"
-msgstr ""
+msgstr "الربحية"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -18490,6 +18485,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"الإجراء المجدول 'إرسال الفواتير تلقائيًا' مؤرشف. لن تتمكن من إرسال الفواتير "
+"على دفعات."
 
 #. module: account
 #. odoo-python
@@ -18817,7 +18814,7 @@ msgstr ""
 msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
-msgstr ""
+msgstr "حدث خطأ أثناء استيراد الفاتورة، يمكنك العثور على ملف XML الوارد مرفقًا "
 
 #. module: account
 #. odoo-python
@@ -18963,7 +18960,7 @@ msgstr ""
 msgid ""
 "This entry has already been supervised. You need the accounting manager role "
 "to change it."
-msgstr ""
+msgstr "تمت مراجعة هذا القيد بالفعل. تحتاج إلى صلاحية مدير المحاسبة لتغييره."
 
 #. module: account
 #. odoo-python
@@ -18989,6 +18986,8 @@ msgstr "لقد تم عكس هذا القيد من %s"
 msgid ""
 "This entry has been reviewed, You need the bookkeeper role to change it."
 msgstr ""
+"تمت مراجعة هذا القيد بالفعل. تحتاج إلى صلاحيات وصول المحاسب حتى تتمكن من "
+"تغييره."
 
 #. module: account
 #. odoo-python
@@ -19529,7 +19528,6 @@ msgstr "التحويل إلى %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
-#, fuzzy
 msgid "Translated Product Name"
 msgstr "الاسم المترجم للمنتج"
 
@@ -19638,7 +19636,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
 msgid "Uncategorized"
-msgstr ""
+msgstr "غير مصنف"
 
 #. module: account
 #. odoo-python
@@ -19695,7 +19693,6 @@ msgstr "سعر الوحدة:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
 msgid "Units"
 msgstr "الوحدات"
 
@@ -19859,7 +19856,7 @@ msgstr "تحديث الشروط والأحكام"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "تحديث التطبيق"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20641,7 +20638,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
 msgid "You can use '/' to indicate that the customer has no Tax ID."
-msgstr ""
+msgstr "يمكنك استخدام '/' للإشارة إلى أن العميل ليس لديه رقم تعريف ضريبي."
 
 #. module: account
 #. odoo-python
@@ -20803,7 +20800,7 @@ msgstr "لا يمكنك إضافة/تعديل القيود قبل وأثناء %
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
-msgstr ""
+msgstr "لا يمكنك تغيير مبلغ دفعة تحتوي على عدة بنود سيولة."
 
 #. module: account
 #. odoo-python
@@ -20882,7 +20879,7 @@ msgstr "لا يمكنك حذف عناصر اليومية التي تنتمي إ�
 msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
-msgstr ""
+msgstr "لا يمكنك حذف الضرائب المستخدمة حاليًا. يُرجى أرشفتها بدلًا من ذلك."
 
 #. module: account
 #. odoo-python
@@ -21063,7 +21060,7 @@ msgstr "لا يمكنك ترحيل قيد في يومية مؤرشفة (%(journa
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "لا يمكنك ترحيل قيد يحتوي على حساب تحليلي مؤرشف: %s"
 
 #. module: account
 #. odoo-python
@@ -21080,7 +21077,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You cannot register payments for blocked invoices."
-msgstr ""
+msgstr "لا يمكنك تسجيل المدفوعات الخاصة بالفواتير المحجوبة."
 
 #. module: account
 #. odoo-python
@@ -21180,7 +21177,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
-msgstr ""
+msgstr "لا يمكنك تغيير نوع مستند يحتوي على رقم تسلسلي مستخدم بالفعل."
 
 #. module: account
 #. odoo-python
