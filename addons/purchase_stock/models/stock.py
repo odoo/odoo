@@ -70,6 +70,31 @@ class StockPicking(models.Model):
             )
         return super()._log_less_quantities_than_expected(moves)
 
+    def _check_backorder(self):
+        backorder_pickings = super()._check_backorder()
+        for picking in self.filtered(lambda p: p.picking_type_id.code != 'dropship' and p.purchase_id):
+            if picking.picking_type_id.create_backorder != 'ask':
+                continue
+            order_lines = picking.purchase_id.order_line.filtered(lambda l: l.product_id.type == "consu")
+            if not all(order_lines.mapped(lambda l: bool(l.move_ids))):
+                backorder_pickings |= picking
+        return backorder_pickings
+
+    def _get_moves_to_backorder(self):
+        backorder_moves = super()._get_moves_to_backorder()
+        for picking in self.filtered(lambda p: p.picking_type_id.code != 'dropship' and p.purchase_id):
+            for line in picking.purchase_id.order_line:
+                if line.product_id.type == "consu" and not line.move_ids:
+                    backorder_moves |= self.env['stock.move'].create([{
+                        'product_id': line.product_id.id,
+                        'purchase_line_id': line.id,
+                        'product_uom_qty': line.product_uom_qty - line.qty_received,
+                        'location_id': picking.location_id.id,
+                        'location_dest_id': picking.location_dest_id.id,
+                        'company_id': picking.company_id.id,
+                    }])
+        return backorder_moves
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'

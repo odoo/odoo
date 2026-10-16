@@ -408,6 +408,31 @@ class StockPicking(models.Model):
             vals['sale_id'] = self.sale_id.id
         return vals
 
+    def _check_backorder(self):
+        backorder_pickings = super()._check_backorder()
+        for picking in self.filtered(lambda p: p.picking_type_id.code != 'dropship' and p.sale_id):
+            if picking.picking_type_id.create_backorder != 'ask':
+                continue
+            order_lines = picking.sale_id.order_line.filtered(lambda l: l.product_id.type == "consu")
+            if not all(order_lines.mapped(lambda l: bool(l.move_ids))):
+                backorder_pickings |= picking
+        return backorder_pickings
+
+    def _get_moves_to_backorder(self):
+        backorder_moves = super()._get_moves_to_backorder()
+        for picking in self.filtered(lambda p: p.picking_type_id.code != 'dropship' and p.sale_id):
+            for line in picking.sale_id.order_line:
+                if line.product_id.type == "consu" and not line.move_ids:
+                    backorder_moves |= self.env['stock.move'].create([{
+                        'product_id': line.product_id.id,
+                        'sale_line_id': line.id,
+                        'product_uom_qty': line.product_uom_qty - line.qty_delivered,
+                        'location_id': picking.location_id.id,
+                        'location_dest_id': picking.location_dest_id.id,
+                        'company_id': picking.company_id.id,
+                    }])
+        return backorder_moves
+
 
 class StockLot(models.Model):
     _inherit = 'stock.lot'
