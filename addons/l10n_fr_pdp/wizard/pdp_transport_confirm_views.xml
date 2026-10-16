@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pdp_transport_confirm_view_form" model="ir.ui.view">
+        <field name="name">l10n.fr.pdp.transport.confirm.form</field>
+        <field name="model">l10n.fr.pdp.transport.confirm</field>
+        <field name="arch" type="xml">
+            <form string="Peppol transport alert">
+                <field name="alert_level" invisible="1"/>
+                <div class="alert alert-danger" role="alert" invisible="alert_level != 'critical'">
+                    <strong>Critical.</strong> The sender of the transport differs from the party declared in the XML.
+                    Posting this document may record an invoice that was not issued by the vendor shown.
+                    Check with the vendor before confirming.
+                </div>
+                <div class="alert alert-warning" role="alert" invisible="alert_level != 'warning'">
+                    <strong>Information.</strong> The sender of the transport could not be fully compared with the XML.
+                    Check the details below before posting.
+                </div>
+                <field name="move_ids" nolabel="1" readonly="1">
+                    <tree>
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="l10n_fr_pdp_transport_sender"/>
+                        <field name="l10n_fr_pdp_transport_alert_level" widget="badge"
+                               decoration-danger="l10n_fr_pdp_transport_alert_level == 'critical'"
+                               decoration-warning="l10n_fr_pdp_transport_alert_level == 'warning'"/>
+                        <field name="l10n_fr_pdp_transport_alert_message"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button string="Confirm and post anyway" name="action_confirm" type="object" class="btn btn-danger"
+                            invisible="alert_level != 'critical'" data-hotkey="q"/>
+                    <button string="Confirm and post" name="action_confirm" type="object" class="btn btn-primary"
+                            invisible="alert_level == 'critical'" data-hotkey="q"/>
+                    <button string="Cancel" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

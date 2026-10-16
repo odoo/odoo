@@ -18,6 +18,13 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     ubl_cii_format = fields.Selection(selection_add=[('ubl_21_fr', "France E-Invoicing (UBL 2.1)")])
+    l10n_fr_pdp_billing_mandate = fields.Boolean(
+        string='Invoices through a third party',
+        company_dependent=True,
+        help="Tick when this vendor legitimately sends its invoices through another Peppol participant "
+             "(billing mandate, accounting firm, group entity). The transport sender is then not flagged "
+             "when it differs from the vendor declared in the XML.",
+    )
     pdp_verification_display_state = fields.Selection(
         selection=[
             ('not_verified', 'Not verified yet'),

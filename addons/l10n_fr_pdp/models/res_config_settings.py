@@ -38,6 +38,10 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_fr_pdp_registered',
         string="Approved Platform Registered",
     )
+    l10n_fr_pdp_transport_alert_user_id = fields.Many2one(
+        related='company_id.l10n_fr_pdp_transport_alert_user_id',
+        readonly=False,
+    )
     l10n_fr_pdp_periodicity = fields.Selection(
         string="Flow 10 Report Periodicity",
         related='company_id.l10n_fr_pdp_periodicity', readonly=False,

@@ -89,6 +89,13 @@ class ResCompany(models.Model):
         string="Authentication IAP UUID",
         groups='account.group_account_invoice',
     )
+    l10n_fr_pdp_transport_alert_user_id = fields.Many2one(
+        'res.users',
+        string='Transport alert reviewer',
+        groups='base.group_user',
+        help="Receives an activity when a received e-invoice has a transport sender "
+             "that does not match the parties declared in its XML. Optional.",
+    )
 
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_pdp_identifier(self):

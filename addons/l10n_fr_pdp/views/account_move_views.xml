@@ -97,4 +97,33 @@
         </field>
     </record>
 
+    <record id="l10n_fr_pdp_view_move_form_transport" model="ir.ui.view">
+        <field name="name">account.move.form.l10n.fr.pdp.transport</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <field name="l10n_fr_pdp_transport_alert_level" invisible="1"/>
+                <div class="alert alert-danger mb-0" role="alert" invisible="l10n_fr_pdp_transport_alert_level != 'critical'">
+                    <strong>Transport alert:</strong>
+                    <span class="ms-1"><field name="l10n_fr_pdp_transport_alert_message" class="oe_inline" readonly="1"/></span>
+                </div>
+                <div class="alert alert-warning mb-0" role="alert" invisible="l10n_fr_pdp_transport_alert_level != 'warning'">
+                    <strong>Transport information:</strong>
+                    <span class="ms-1"><field name="l10n_fr_pdp_transport_alert_message" class="oe_inline" readonly="1"/></span>
+                </div>
+            </sheet>
+            <xpath expr="//page[@id='other_tab']" position="inside">
+                <group string="Peppol / PDP transport" name="l10n_fr_pdp_transport" invisible="not l10n_fr_pdp_transport_sender">
+                    <field name="l10n_fr_pdp_transport_sender"/>
+                    <field name="l10n_fr_pdp_transport_receiver"/>
+                    <field name="l10n_fr_pdp_transport_party_role"/>
+                    <field name="l10n_fr_pdp_transport_parties_display"/>
+                    <field name="l10n_fr_pdp_transport_confirmed_uid" invisible="not l10n_fr_pdp_transport_confirmed_uid"/>
+                    <field name="l10n_fr_pdp_transport_confirmed_date" invisible="not l10n_fr_pdp_transport_confirmed_uid"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

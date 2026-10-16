@@ -5,6 +5,7 @@
     'description': """
         - Support for the mandatory electronic invoicing in France
         - Send and receive documents via the Odoo approved platform
+        - Warn when the transport sender of a received document differs from the party declared in its XML
 """,
     'depends': [
         'l10n_fr',
@@ -15,6 +16,7 @@
     'auto_install': ['l10n_fr'],
     'data': [
         'data/ir_cron.xml',
+        'data/mail_activity_transport_alert.xml',
         'security/ir.model.access.csv',
         'views/account_journal_dashboard_views.xml',
         'views/account_move_views.xml',
@@ -27,6 +29,7 @@
         'wizard/account_move_send_views.xml',
         'wizard/pdp_registration_views.xml',
         'wizard/pdp_response_wizard_views.xml',
+        'wizard/pdp_transport_confirm_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

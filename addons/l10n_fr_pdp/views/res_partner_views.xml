@@ -34,6 +34,9 @@
                            string="E-Invoicing Identifier"
                            invisible="hide_peppol_fields or 'FR' not in fiscal_country_codes"/>
                 </xpath>
+                <xpath expr="//field[@name='peppol_endpoint'][@string='E-Invoicing Identifier']" position="after">
+                    <field name="l10n_fr_pdp_billing_mandate"/>
+                </xpath>
             </data>
         </field>
     </record>

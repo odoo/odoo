@@ -15,6 +15,12 @@
 
             <xpath expr="//block[@id='peppol']" position="after">
                 <block title="French Electronic Invoicing" id="pdp" invisible="country_code != 'FR'">
+                    <div class="row mb-2">
+                        <label string="Transport alert reviewer"
+                               for="l10n_fr_pdp_transport_alert_user_id"
+                               class="col-lg-3 o_light_label"/>
+                        <field name="l10n_fr_pdp_transport_alert_user_id" domain="[('share', '=', False)]"/>
+                    </div>
                     <div id="l10n_fr_pdp" class="col-12 o_setting_box">
                         <div class="o_setting_right_pane border-0">
                             <field name="l10n_fr_pdp_registered" invisible="1"/>  <!-- used in `invisible` modifier below -->
