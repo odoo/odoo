@@ -311,6 +311,19 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         # no other variant
         self.assertNotIn('item_group_id', self.items[product_one_variant])
 
+    def test_gmc_feed_excludes_products_from_other_companies(self):
+        """The feed should only contain products available on the website's company, even though
+        the controller serves it in sudo, bypassing the multi-company record rules."""
+        other_company = self.env["res.company"].create({"name": "Other Company"})
+        other_company_product = self._create_product(
+            name="Other Company Product", company_id=other_company.id
+        )
+
+        feed_products = self.gmc_feed.sudo()._get_feed_products()
+
+        self.assertIn(self.blanket, feed_products)
+        self.assertNotIn(other_company_product, feed_products)
+
     def test_gmc_items_bundle_if_is_combo_product(self):
         self.update_items()
 
