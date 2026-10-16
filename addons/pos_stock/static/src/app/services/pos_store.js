@@ -17,8 +17,9 @@ patch(PosStore.prototype, {
     },
 
     async handleOrderLineConfiguration(order, values, code, vals, options, configure) {
+        let pack_lot_ids = {};
         if ((configure || code) && values.product_tmpl_id.isTracked()) {
-            const pack_lot_ids = await this.configureNewOrderLine(
+            pack_lot_ids = await this.configureNewOrderLine(
                 values.product_tmpl_id,
                 vals,
                 values,
@@ -29,9 +30,9 @@ patch(PosStore.prototype, {
             if (!pack_lot_ids) {
                 return false;
             }
-            return pack_lot_ids;
         }
-        return super.handleOrderLineConfiguration(...arguments);
+        const ret = await super.handleOrderLineConfiguration(...arguments);
+        return ret && { ...ret, ...pack_lot_ids };
     },
 
     processOrderlineConfiguration(order, values, extraConfig) {
