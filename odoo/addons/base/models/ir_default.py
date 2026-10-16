@@ -40,6 +40,7 @@ class IrDefault(models.Model):
             if record.field_id:
                 field = record.field_id.sudo()
                 model = self.env[field.model]
+                model.check_access_rights('create')
                 model.check_field_access_rights('write', [field.name])
 
     @api.model_create_multi

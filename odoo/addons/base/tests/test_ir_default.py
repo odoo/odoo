@@ -153,6 +153,15 @@ class TestIrDefault(TransactionCase):
         with self.assertRaises(AccessError):
             # cannot create global defaults as non-system user
             IrDefault.with_user(user).create({'field_id': field_id, 'json_value': '"test"'})
+        # can create a default
+        IrDefault.with_user(user).create({'field_id': field_id, 'json_value': '"test"', 'user_id': user.id}).unlink()
+
+        # the user cannot add a default if they cannot create records
+        access = self.env['ir.model.access'].search([('perm_create', '=', True), ('model_id.model', '=', 'res.partner')])
+        access.active = False
+        with self.assertRaises(AccessError):
+            IrDefault.with_user(user).create({'field_id': field_id, 'json_value': '"test"', 'user_id': user.id})
+        access.active = True
 
         self.patch(field, 'groups', 'base.group_system')
         # the user cannot create a default
