@@ -46,6 +46,16 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         trigger: '.oe_product_cart:contains("Color T-Shirt")',
         run: "hover && click .oe_product_cart:contains(Color T-Shirt) .o_add_compare",
     },
+    {
+        content: "reload the shop page",
+        trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color T-Shirt")',
+        run: "goToUrl /shop",
+        expectUnloadPage: true,
+    },
+    {
+        content: "check compare button is disabled for a product already in the comparison",
+        trigger: '.oe_product_cart:contains("Color T-Shirt"):has(.o_add_compare:disabled)',
+    },
     // test form product page
     {
         content: "go to product page of Color Shoes (with variants)",

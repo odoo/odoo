@@ -31,6 +31,14 @@ export class ProductComparison extends Interaction {
         );
     }
 
+    start() {
+        const productIds = comparisonUtils.getComparisonProductIds();
+        for (const button of this.el.querySelectorAll('[data-action="o_comparelist"]')) {
+            const productId = parseInt(button.dataset.productProductId);
+            comparisonUtils.updateDisabled(button, productIds.includes(productId));
+        }
+    }
+
     /**
      * Add a product to the comparison.
      *

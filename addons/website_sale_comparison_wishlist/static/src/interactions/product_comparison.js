@@ -13,6 +13,15 @@ patch(ProductComparison.prototype, {
         });
     },
 
+    start() {
+        super.start();
+        const productIds = comparisonUtils.getComparisonProductIds();
+        for (const button of this.el.querySelectorAll('.wishlist-section .o_add_to_compare')) {
+            const productId = parseInt(button.dataset.productId);
+            comparisonUtils.updateDisabled(button, productIds.includes(productId));
+        }
+    },
+
     /**
      * Add a product to the comparison from the wishlist page.
      *
