@@ -2142,6 +2142,17 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         with self.assertQueryCount(18):
             messages.mapped('author_message_count')
 
+        # however, if the error is not due to the record and the prefetch is
+        # filled, the field should still be computed properly
+        def sometimes_count(self):
+            if messages[3] in self:
+                raise AccessError('ok')
+            self.author_message_count = 1
+        messages.invalidate_model(['author_message_count'])
+        with patch.object(self.registry['test_orm.message'], '_compute_author_message_count', sometimes_count):
+            message = messages[2].with_prefetch(messages._ids)
+            message.mapped('author_message_count')
+
     def test_40_real_vs_new(self):
         """ test field access on new records vs real records. """
         Model = self.env['test_orm.category']

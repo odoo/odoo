@@ -1829,8 +1829,10 @@ class Field[T]:
                         if recs is recs0:  # first iteration only
                             recs = recs.exists()._filtered_access('read')
                             (recs0 - recs).invalidate_recordset()
-                            if record not in recs or len(recs) == len(recs0):
+                            if record not in recs:
                                 raise
+                            if len(recs0) == len(recs):
+                                recs = record
                         else:  # second iteration only
                             recs = record
 
