@@ -8,6 +8,7 @@ declare module "models" {
         markAsDone: (attachmentIds: number[]) => Promise<void>;
         markAsDoneAndScheduleNext: () => Promise<import("@web/webclient/actions/action_plugin").ActionDescription>;
         remove: (param0: { broadcast: boolean }) => void;
+        uploadAndMarkAsDone: (uploadDatas: { data: string, name: string, type: string }[]) => Promise<boolean>;
     }
     export interface Message {
         canForward: Readonly<boolean>;
