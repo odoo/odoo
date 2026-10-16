@@ -71,6 +71,28 @@ class TestSubcontractingBasic(TransactionCase):
         })
         self.assertEqual(warehouse.subcontracting_resupply_type_id.code, 'internal')
 
+    def test_subcontracting_to_resupply_archives_routes_and_rules(self):
+        """Test that 'on_order' on subcontracting_to_resupply field keeps the Resupply Subcontractor route and
+        the Resupply Subcontractor on Order rules. 'periodic' keeps only the Resupply Subcontractor route but archives
+        the rules on the Resupply Subcontractor on Order route. 'never' archives everything, even the subcontracting
+        operation type."""
+        warehouse = self.env['stock.warehouse'].sudo().create({'name': 'Subcontracting WH', 'code': 'SBCT'})
+
+        warehouse.subcontracting_to_resupply = 'periodic'
+        self.assertTrue(warehouse.subcontracting_route_id.active)
+        self.assertFalse(warehouse.subcontracting_pull_id.active)
+        self.assertTrue(warehouse.subcontracting_resupply_type_id.active)
+
+        warehouse.subcontracting_to_resupply = 'never'
+        self.assertFalse(warehouse.subcontracting_route_id.active)
+        self.assertFalse(warehouse.subcontracting_pull_id.active)
+        self.assertFalse(warehouse.subcontracting_resupply_type_id.active)
+
+        warehouse.subcontracting_to_resupply = 'on_order'
+        self.assertTrue(warehouse.subcontracting_route_id.active)
+        self.assertTrue(warehouse.subcontracting_pull_id.active)
+        self.assertTrue(warehouse.subcontracting_resupply_type_id.active)
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingFlows(TestMrpSubcontractingCommon):
@@ -1374,7 +1396,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         is opened. Check that MO backorder auto-reserves components
         """
         todo_nb = 3
-        self.warehouse.subcontracting_to_resupply = True
+        self.warehouse.subcontracting_to_resupply = 'on_order'
         self.finished.tracking = 'serial'
         finished_serials = self.env['stock.lot'].create([{
             'name': 'sn_%s' % str(i),
