@@ -76,7 +76,7 @@ class PosOrderLine(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('order_id', 'in', data['pos.order'].ids), ('product_id.active', '=', True)]
+        return [('order_id', 'in', data['pos.order'].ids)]
 
     @api.model
     def _load_pos_data_dependencies(self):

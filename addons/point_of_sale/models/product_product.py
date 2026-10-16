@@ -32,6 +32,17 @@ class ProductProduct(models.Model):
         return ['product.template.attribute.value', 'product.template']
 
     @api.model
+    def _load_pos_metadata(self, data, search_params={}):
+        super()._load_pos_metadata(data, search_params)
+        if search_params.get('domain', False):
+            return data
+        order_lines = data.get('pos.order.line', {}).get('records')
+        if order_lines:
+            # Archived variants can still be referenced by loaded order lines.
+            data[self._name]['records'] |= order_lines.product_id._filtered_access('read')
+        return data
+
+    @api.model
     def _load_pos_data_fields(self, config):
         taxes = self.env['account.tax'].search(self.env['account.tax']._check_company_domain(config.company_id.id))
         product_fields = taxes._eval_taxes_computation_prepare_product_fields()
