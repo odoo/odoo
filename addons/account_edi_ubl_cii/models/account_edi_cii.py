@@ -772,21 +772,35 @@ class AccountEdiCii(models.AbstractModel):
             }
 
     def _cii_add_monetary_summation_grand_total_amount_node(self, vals):
+        # BT-112 (Grand total) = BT-109 (Tax basis total) + BT-110 (Tax total).
+        # The rounding amount (BT-114) must NOT be included here; it is only applied
+        # to the amount due for payment (BT-115), otherwise BR-CO-15 is violated.
         vals['monetary_summation_node']['ram:GrandTotalAmount'] = {
             '_text': FloatFmt(sum(vals['monetary_summation_node'].get(node, {}).get('_text', 0.0)
-            for node in ['ram:LineTotalAmount', 'ram:TaxTotalAmount', 'ram:RoundingAmount']), max_dp=2),
+            for node in ['ram:LineTotalAmount', 'ram:TaxTotalAmount']), max_dp=2),
         }
 
     def _cii_add_monetary_summation_total_prepaid_amount(self, vals):
-        prepaid_amount = vals['monetary_summation_node']['ram:GrandTotalAmount']['_text'] - vals['invoice'].amount_residual
-        vals['monetary_summation_node']['ram:TotalPrepaidAmount'] = {
+        # The already-paid amount (BT-113) is the rounded document total minus what
+        # is still due. The rounded total is the grand total (BT-112) plus the
+        # rounding amount (BT-114).
+        node = vals['monetary_summation_node']
+        prepaid_amount = (
+            node['ram:GrandTotalAmount']['_text']
+            + node.get('ram:RoundingAmount', {}).get('_text', 0.0)
+            - vals['invoice'].amount_residual
+        )
+        node['ram:TotalPrepaidAmount'] = {
             '_text': FloatFmt(prepaid_amount, max_dp=2),
         }
 
     def _cii_add_monetary_summation_due_payable_amount_node(self, vals):
+        # BT-115 (Amount due) = BT-112 (Grand total) - BT-113 (Prepaid) + BT-114 (Rounding).
+        node = vals['monetary_summation_node']
         vals['monetary_summation_node']['ram:DuePayableAmount'] = {
-            '_text': FloatFmt(vals['monetary_summation_node']['ram:GrandTotalAmount']['_text'] -
-                              vals['monetary_summation_node']['ram:TotalPrepaidAmount']['_text'], max_dp=2),
+            '_text': FloatFmt(node['ram:GrandTotalAmount']['_text']
+                              - node['ram:TotalPrepaidAmount']['_text']
+                              + node.get('ram:RoundingAmount', {}).get('_text', 0.0), max_dp=2),
         }
 
     def _cii_constraints(self, invoice, vals):
