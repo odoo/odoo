@@ -120,9 +120,10 @@ export class WebsiteConfigFooterAction extends BuilderAction {
                 "/website/static/src/scss/options/user_values.scss",
                 vars
             ),
-            rpc("/website/update_footer_template", {
-                template_key: view,
-                possible_values: [...possibleValues],
+            rpc("/website/theme_customize_data", {
+                is_view_data: true,
+                enable: [view],
+                disable: [...possibleValues].filter((v) => v !== view),
             }),
         ]);
     }
