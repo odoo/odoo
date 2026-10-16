@@ -1163,17 +1163,6 @@ class TestOrmAttachment(models.Model):
         for rec in self:
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
 
-    # DLE P55: `test_cache_invalidation`
-    def modified(self, fnames, *args, **kwargs):
-        if not self:
-            return None
-        comodel = self.env[self.res_model]
-        if 'res_id' in fnames and 'attachment_ids' in comodel:
-            record = comodel.browse(self.res_id)
-            record.invalidate_recordset(['attachment_ids'])
-            record.modified(['attachment_ids'])
-        return super().modified(fnames, *args, **kwargs)
-
 
 class TestOrmAttachmentHost(models.Model):
     _name = 'test_orm.attachment.host'
