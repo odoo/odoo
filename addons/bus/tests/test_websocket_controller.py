@@ -3,7 +3,7 @@
 from freezegun import freeze_time
 
 from odoo.http.session import SESSION_ROTATION_INTERVAL
-from odoo.tests import HttpCase, JsonRpcException, new_test_user
+from odoo.tests import HttpCase, JsonRpcException
 
 from .common import BusCase
 
@@ -56,7 +56,7 @@ class TestWebsocketController(HttpCase, BusCase):
             })
 
     def test_websocket_peek_session_expired_logout(self):
-        test_user = new_test_user(self.env, login="test_user", password="test_user")
+        test_user = self.env.ref('base.test_user')
         self.authenticate(test_user.login, test_user.password)
         # first rpc should be fine
         self.make_jsonrpc_request('/websocket/peek_notifications', {

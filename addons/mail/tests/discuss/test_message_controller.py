@@ -9,7 +9,7 @@ from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import HttpCase
-from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
+from odoo.addons.mail.tests.common import MailCommon
 
 
 @odoo.tests.tagged("mail_controller")
@@ -349,7 +349,7 @@ class TestMessageLinks(MailCommon, HttpCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.user_employee_1 = mail_new_test_user(cls.env, login='tao1', groups='base.group_user', name='Tao Lee')
+        cls.user_employee_1 = cls.env.ref('base.test_user')
         cls.public_channel = cls.env['discuss.channel']._create_channel(name='Public Channel1', group_id=None)
         cls.private_group = cls.env['discuss.channel']._create_group(users_to=cls.user_employee_1, name="Group")
 

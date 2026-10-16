@@ -225,7 +225,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     @patch_api
     def test_valid_owner_property(self):
-        user = new_test_user(self.env, login='calendar-user')
+        user = self.env.ref('base.test_user')
         values = {
             'id': 'oj44nep1ldf8a3ll02uip0c9aa',
             'description': 'Small mini desc',
@@ -275,7 +275,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
     @patch_api
     def test_attendee_cancelled(self):
         """ Cancel event when the current user is not the organizer """
-        user = new_test_user(self.env, login='calendar-user')
+        user = self.env.ref('base.test_user')
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         event = self.env['calendar.event'].create({
             'name': 'coucou',
@@ -369,7 +369,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     @patch_api
     def test_attendee_removed(self):
-        user = new_test_user(self.env, login='calendar-user')
+        user = self.env.ref('base.test_user')
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         event = self.env['calendar.event'].with_user(user).create({
             'name': 'coucou',
@@ -409,7 +409,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
     @patch_api
     def test_attendee_removed_multiple(self):
 
-        user = new_test_user(self.env, login='calendar-user')
+        user = self.env.ref('base.test_user')
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         base_event = self.env['calendar.event'].create({
             'name': 'coucou',

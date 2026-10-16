@@ -145,7 +145,7 @@ class TestIrDefault(TransactionCase):
         )
 
     def test_ir_default_field(self):
-        user = self.env.user.create({'name': 'u2', 'login': 'u2'})
+        user = self.env.ref('base.test_user')
         IrDefault = self.env['ir.default']
         field_id = self.env['ir.model.fields']._get('res.partner', 'ref').id
         field = self.env['res.partner']._fields['ref']

@@ -6,7 +6,6 @@ from odoo.http.session import SESSION_ROTATION_INTERVAL
 from odoo.tests import HttpCase
 
 from odoo.addons.bus.tests.common import BusCase
-from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class TestWebsocketController(HttpCase, BusCase):
@@ -15,7 +14,7 @@ class TestWebsocketController(HttpCase, BusCase):
         self.env["bus.bus"]._sendone("dummy", "dummy_notification", None)  # Subscribing with 0 would fallback to last id.
         self.env.cr.precommit.run()  # Trigger bus record creation.
         initial_last_id = self.env["bus.bus"]._bus_last_id()
-        test_user = mail_new_test_user(self.env, login="test_user", password="test_user")
+        test_user = self.env.ref('base.test_user')
         self.authenticate(test_user.login, test_user.password)
         self.env["mail.presence"]._update_presence(test_user)
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
