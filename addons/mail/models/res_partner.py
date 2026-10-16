@@ -21,6 +21,7 @@ class ResPartner(models.Model):
     # override to add and order tracking
     name = fields.Char(tracking=1)
     email = fields.Char(tracking=1)
+    email_normalized = fields.Char(index='btree_not_null')
     phone = fields.Char(tracking=2)
     parent_id = fields.Many2one(tracking=3)
     user_id = fields.Many2one(tracking=4)
