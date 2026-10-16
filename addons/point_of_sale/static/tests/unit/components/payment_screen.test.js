@@ -5,6 +5,7 @@ import { definePosModels } from "../data/generate_model_definitions";
 import { queryOne } from "@odoo/hoot-dom";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { localization } from "@web/core/l10n/localization";
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 
 definePosModels();
 
@@ -139,4 +140,33 @@ test("invoice button is enabled for normal orders", async () => {
 
     const invoiceBtn = queryOne(".js_invoice");
     expect(invoiceBtn.disabled).toBe(false);
+});
+
+test("Caba pay later always invoice", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const existingPartner = store.models["res.partner"].get(3);
+    order.partner_id = existingPartner;
+    const customerAccount = store.models["pos.payment.method"].get(3);
+    const tax = store.models["account.tax"].get(1);
+    tax.update({ tax_exigibility: "on_payment" });
+    order.config.iface_tax_included = "total";
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    expect(order.isToInvoice()).toBe(false);
+    await comp.addNewPaymentLine(customerAccount);
+    expect(order.isToInvoice()).toBe(true);
+
+    const validation = new OrderPaymentValidation({ pos: store, orderUuid: order.uuid });
+    comp.toggleIsToInvoice();
+    expect(order.isToInvoice()).toBe(false);
+    const res = await validation.isOrderValid();
+    expect(res).toBe(false);
+
+    const validation2 = new OrderPaymentValidation({ pos: store, orderUuid: order.uuid });
+    comp.toggleIsToInvoice();
+    expect(order.isToInvoice()).toBe(true);
+    const res2 = await validation2.isOrderValid();
+    expect(res2).toBe(true);
 });
