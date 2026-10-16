@@ -21,6 +21,15 @@ class ProductProduct(models.Model):
     _order = 'is_favorite desc, default_code, name, id'
     _check_company_domain = models.check_company_domain_parent_of
 
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'uom_id' in fields_list and not res.get('uom_id'):
+            # Since uom is required, always fallback on a default (if any) even when the context
+            # gives an empty default value. Delegating to the product template default_get override
+            # as it already handles erroneous `{'default_uom_id': False}` context value.
+            res['uom_id'] = self.env['product.template'].default_get(['uom_id']).get('uom_id', False)
+        return res
+
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
