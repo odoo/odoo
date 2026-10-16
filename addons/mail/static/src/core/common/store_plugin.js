@@ -68,6 +68,12 @@ export class Store extends BaseStore {
      * public page.
      */
     inPublicPage = false;
+    /**
+     * Color scheme of the public page, false when it cannot be chosen.
+     *
+     * @type {"light"|"dark"|false|undefined}
+     */
+    publicColorScheme;
     /** @type {boolean|undefined} */
     isOdooWhiteTheme;
     odoobot = fields.One("res.partner");
@@ -267,7 +273,7 @@ export class Store extends BaseStore {
      * crash and listeners to be registered twice.
      */
     onStarted() {
-        this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark" || this.inPublicPage;
+        this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark";
         navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
             const { type, payload } = data;
             if (type === "notification-display-request") {
