@@ -32,20 +32,13 @@ patch(PaymentPage.prototype, {
             partner &&
             isEwallet &&
             this.selfOrder.models["loyalty.card"].some(
-                (c) => c.program_id.program_type === "ewallet" && c.partner_id.id === partner.id
+                (c) => c.program_id.program_type === "ewallet" && c.partner_id?.id === partner.id
             )
         );
     },
     async scanCode(code) {
+        // Same as a hardware scan on this page, see syncCodeAppliedOnPaymentPage
         await this.selfOrder._barcodeCouponCodeAction({ code: code });
-        const order = await this.selfOrder.sendDraftOrderToServer();
-        if (order && this.selfOrder.currency.isZero(order.priceIncl)) {
-            this.selfOrder.confirmationPage(
-                "pay",
-                this.selfOrder.config.self_ordering_mode,
-                order.access_token
-            );
-        }
     },
     useGiftCard() {
         this.dialog.add(UserInputPopup, {
@@ -68,7 +61,7 @@ patch(PaymentPage.prototype, {
     cardTotal(type = "gift_card") {
         return this.selfOrder.currentOrder.lines
             .filter(
-                (line) => line.is_reward_line && line.reward_id.program_id.program_type === type
+                (line) => line.is_reward_line && line.reward_id?.program_id?.program_type === type
             )
             .reduce((acc, line) => acc + line.displayPrice, 0);
     },

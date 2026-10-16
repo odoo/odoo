@@ -118,7 +118,7 @@ export class BarcodeReader {
 export const barcodeReaderService = {
     dependencies: ["dialog", "barcode", "orm", "notification"],
     async start(env, deps) {
-        const { dialog, barcode, orm, notification } = deps;
+        const { dialog, barcode, orm } = deps;
         let barcodeReader = null;
 
         try {

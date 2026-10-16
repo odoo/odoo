@@ -408,4 +408,31 @@ describe("pos.order - loyalty", () => {
         const rewardLine = order.getOrderlines().find((line) => line.is_reward_line);
         expect(rewardLine?.product_id?.id).toBe(chosenProduct.id);
     });
+
+    test("a free product reward without chosen attributes copies those of the same product ordered", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [7]);
+
+        // Product 51 (Cake, Chocolate) has the no_variant attribute value 7.
+        const product = models["product.product"].get(51);
+        const attributeValue = models["product.template.attribute.value"].get(7);
+        const reward = models["loyalty.reward"].get(3);
+        reward.update({ reward_product_id: product, reward_product_ids: [product] });
+        store.setPartnerToCurrentOrder(models["res.partner"].get(1));
+
+        await addProductLineToOrder(store, order, {
+            productId: 51,
+            templateId: product.product_tmpl_id.id,
+            attribute_value_ids: [attributeValue],
+        });
+        // As an automatically applied reward: no attribute chosen
+        order.active_rewards = [{ reward_id: reward.id }];
+        order.recomputeRewards();
+        await tick();
+
+        const rewardLine = order.getOrderlines().find((line) => line.is_reward_line);
+        expect(rewardLine.attribute_value_ids.map((value) => value.id)).toEqual([attributeValue.id]);
+    });
 });

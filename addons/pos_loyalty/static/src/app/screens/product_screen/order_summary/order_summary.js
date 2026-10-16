@@ -86,6 +86,9 @@ patch(OrderSummary.prototype, {
             const rewardObject = order.active_rewards.find(
                 (active_reward) => active_reward.reward_id === orderline.reward_id?.id
             );
+            if (!rewardObject) {
+                return res;
+            }
             rewardObject.attribute_value_ids = attribute_value_ids.map((av) => av.id);
             rewardObject.attribute_custom_values = {};
             custom_attribute_value_ids.forEach((cav) => {
