@@ -54,6 +54,13 @@ test("getSubCategories and selectCategory", async () => {
     expect(comp.getSubCategories()).toHaveLength(2);
     expect(comp.getSubCategories().map((c) => c.id)).toEqual([4, 5]);
 
+    // Child category without any self order available product is hidden
+    // Burger (id=4) only contains the "Bacon burger"
+    models["product.template"].get(12).self_order_available = false;
+    store.computeAvailableCategories();
+    comp.selectCategory(foodCatg);
+    expect(comp.getSubCategories().map((c) => c.id)).toEqual([5]);
+
     // for mobile mode
     store.config.self_ordering_mode = "mobile";
     expect(comp.getSubCategories()).toHaveLength(0);
