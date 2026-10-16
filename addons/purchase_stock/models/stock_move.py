@@ -119,6 +119,10 @@ class StockMove(models.Model):
         if not line:
             return convert_date
 
+        # For purchase return, use the origin move currency rate
+        if self.origin_returned_move_id:
+            return self.origin_returned_move_id.date
+
         # Use currency rate at bill date when invoice before receipt
         qty_received = self._get_qty_received_without_self()
         if float_compare(line.qty_invoiced, qty_received, precision_rounding=line.product_uom.rounding) > 0:
