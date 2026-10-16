@@ -6,6 +6,7 @@ export class PaymentBankTransfer extends PaymentInterface {
         super.setup(...arguments);
         this.supports_refunds = false;
         this.auto_send_request = true;
+        this.cashier_confirms = true;
     }
 
     async sendPaymentRequest(line) {

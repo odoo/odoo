@@ -7,10 +7,7 @@ const QRIS_POLL_INTERVAL = 3000;
 const QRIS_QR_SIZE = { width: 400, height: 400 };
 
 export function isKioskQris(paymentMethod) {
-    return (
-        paymentMethod?.payment_method_type === "bank_transfer" &&
-        paymentMethod?.qr_code_method === "id_qr"
-    );
+    return paymentMethod?.useBankTransfer && paymentMethod?.qr_code_method === "id_qr";
 }
 
 export class PaymentQris {

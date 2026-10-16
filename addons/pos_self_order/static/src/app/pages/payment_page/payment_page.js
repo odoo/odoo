@@ -19,7 +19,6 @@ export class PaymentPage extends Component {
             paymentCancelled: false,
             qrCode: null,
             fadeOut: false,
-            paymentMethodType: null,
         });
 
         onMounted(() => {
@@ -38,7 +37,7 @@ export class PaymentPage extends Component {
     }
 
     async back() {
-        if (this.state.paymentMethodType === "cash_machine" && !this.selfOrder.paymentError) {
+        if (this.selectedPaymentMethod?.useCashMachine && !this.selfOrder.paymentError) {
             const paymentLine = this.selfOrder.getPendingPaymentLine(
                 this.selectedPaymentMethod.payment_provider
             );
@@ -59,7 +58,7 @@ export class PaymentPage extends Component {
     }
 
     get showQrCode() {
-        return this.state.paymentMethodType === "qr_payment" && this.state.qrCode;
+        return Boolean(this.state.qrCode);
     }
 
     selectMethod(methodId) {
@@ -73,7 +72,6 @@ export class PaymentPage extends Component {
         }
         this.state.selection = false;
         this.state.paymentMethodId = methodId;
-        this.state.paymentMethodType = this.selectedPaymentMethod.payment_method_type;
         this.startPayment();
     }
 
@@ -107,7 +105,7 @@ export class PaymentPage extends Component {
                 try {
                     const paymentSuccessful = await newPaymentLine.pay();
                     if (!paymentSuccessful) {
-                        if (newPaymentLine.useQrPayment && newPaymentLine.qr_code) {
+                        if (newPaymentLine.qr_code) {
                             this.state.fadeOut = true;
                             setTimeout(() => {
                                 this.state.qrCode = newPaymentLine.qr_code;
