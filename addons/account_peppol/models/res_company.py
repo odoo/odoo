@@ -157,8 +157,9 @@ class ResCompany(models.Model):
 
             self._compute_account_peppol_contact_email()
             self._compute_account_peppol_phone_number()
-        self.partner_id._compute_peppol_eas()
-        self.partner_id._compute_peppol_endpoint()
+        if not soft:
+            self.partner_id._compute_peppol_eas()
+            self.partner_id._compute_peppol_endpoint()
 
     @api.model
     def _check_phonenumbers_import(self):

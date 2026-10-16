@@ -72,6 +72,29 @@ class TestPdpUser(TestL10nFrPdpCommon):
         with self.assertRaisesRegex(UserError, "The Identifier is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"):
             wizard.button_register_pdp_participant()
 
+    def test_soft_reset_preserves_pdp_identification(self):
+        company = self.env.company
+        company.partner_id.write({
+            'peppol_eas': '0225',
+            'peppol_endpoint': '123456789',
+        })
+
+        company._reset_peppol_configuration(soft=True)
+
+        self.assertEqual(company.account_peppol_proxy_state, 'not_registered')
+        self.assertEqual(company.peppol_eas, '0225')
+        self.assertEqual(company.peppol_endpoint, '123456789')
+        self.assertEqual(company.pdp_identifier, '123456789')
+
+    def test_pdp_out_of_sync_uses_pdp_endpoint(self):
+        with patch(
+            'odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user.Account_Edi_Proxy_ClientUser._make_request',
+            return_value={},
+        ) as make_request:
+            self.proxy_user._mark_connection_out_of_sync()
+
+        self.assertIn('/api/pdp/1/mark_connection_out_of_sync', make_request.call_args.args[0])
+
     def test_pdp_create_participant_missing_pdp_identifier(self):
         # When the company does not have a 0225 peppol EAS set we should still suggest
         # an identifier in the wizard.
