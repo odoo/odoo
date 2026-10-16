@@ -221,6 +221,7 @@ class AccountMove(models.Model):
             'name': self.name,
             'partner': self.commercial_partner_id,
             'invoice_type': self.l10n_es_invoice_type,
+            'refunded_move': reversed_move,
             'refunded_document': reversed_move.l10n_es_edi_verifactu_document_ids._get_last('submission'),
             'substituted_document': substituted_move.l10n_es_edi_verifactu_document_ids._get_last('submission'),
             'substituted_document_reversal_document': substituted_move.reversal_move_ids.l10n_es_edi_verifactu_document_ids._get_last('submission'),
