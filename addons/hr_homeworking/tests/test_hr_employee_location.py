@@ -3,6 +3,7 @@
 from freezegun import freeze_time
 
 from odoo.addons.hr_homeworking.tests.common import TestHrHomeworkingCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 from odoo.tests import tagged
 from datetime import datetime
@@ -108,6 +109,21 @@ class TestHrHomeworkingHrEmployeeLocation(TestHrHomeworkingCommon):
 
         # exception should be deleted
         self.assertEqual(len(created_worklocations), 0, 'should have deleted the worklocation record')
+
+    @freeze_time("2023-10-04")
+    def test_im_status_takes_exceptional_location_of_today(self):
+        alice_user = mail_new_test_user(self.env, login="alice_user", groups="base.group_user")
+        self.assertFalse(alice_user.has_group("hr.group_hr_user"))
+        partner = self.user_employee.partner_id.with_user(alice_user)
+        self.assertEqual(partner.im_status, "office_offline")
+        self.env["homework.location.wizard"].create({
+            "date": datetime(2023, 10, 4),
+            "employee_id": self.employee_emp.id,
+            "weekly": False,
+            "work_location_id": self.work_home.id,
+        }).set_employee_location()
+        self.env.invalidate_all()
+        self.assertEqual(partner.im_status, "home_offline")
 
     def test_get_views_replace_hw_location_by_date(self):
         view = self.env["ir.ui.view"].create({
