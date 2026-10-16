@@ -152,8 +152,15 @@ test("remove banner when opening thread at the bottom", async () => {
 
 test("keep banner after mark as unread when scrolling to bottom", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        name: "general",
+    });
     for (let i = 0; i < 30; ++i) {
         pyEnv["mail.message"].create({
             author_id: bobPartnerId,
@@ -167,8 +174,28 @@ test("keep banner after mark as unread when scrolling to bottom", async () => {
     await hover(".o-mail-Message:has(:text('message 29'))");
     await click("[title='Expand']", { parent: [".o-mail-Message:has(:text('message 29'))"] });
     await contains(".o-dropdown-item:text('Mark as Unread'):count(1)").click();
-    await scroll(".o-mail-Thread", "bottom");
     await waitFor(".o-mail-Thread-banner:has(:text('1 new message')):count(1)");
+    await focus(".o-mail-Thread");
+    await waitFor(".o-mail-Thread-jumpPresent:count(1)");
+    await scroll(".o-mail-Thread", "bottom");
+    await waitForNone(".o-mail-Thread-jumpPresent");
+    const channel = getService("mail.store")["discuss.channel"].get(channelId);
+    await scroll(".o-mail-Thread", "top");
+    await scroll(".o-mail-Thread", "bottom");
+    await waitUntil(() => channel.scrollTop === "bottom");
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "message 30",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await waitFor(".o-mail-Message:has(:text('message 30')):count(1)");
+    await waitFor(".o-mail-Thread-banner:has(:text('2 new messages')):count(1)");
 });
 
 test("sidebar and banner counters display same value", async () => {
