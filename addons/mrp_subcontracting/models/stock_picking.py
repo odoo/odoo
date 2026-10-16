@@ -155,7 +155,7 @@ class StockPicking(models.Model):
                     production_to_split = move.move_orig_ids[0].production_id
                     original_qty = move.move_orig_ids[0].product_qty
                     move.move_orig_ids = False
-                    _, new_mo = production_to_split.with_context(allow_more=True)._split_productions({production_to_split: [original_qty, move.product_qty]})
+                    _, new_mo = production_to_split.with_context(allow_more=True, skip_subcontract_move_split=True)._split_productions({production_to_split: [original_qty, move.product_qty]})
                     new_mo.move_finished_ids.move_dest_ids = move
                     continue
                 else:
