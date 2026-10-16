@@ -63,8 +63,8 @@ export function computeM2OProps(fieldProps) {
         string: fieldProps.string || fieldProps.record.fields[fieldProps.name].string || "",
         update: (value, options = {}) =>
             fieldProps.record.update({ [fieldProps.name]: value }, options),
-        willOpenRecordInDialog: () => fieldProps.record.saveBeforeDialog(),
-        onRecordSaved: () => fieldProps.record.reloadAfterDialog(),
+        willOpenRecordInDialog: () => fieldProps.record.safeSave(),
+        onRecordSaved: () => fieldProps.record.safeLoad(),
         value: toRaw(fieldProps.record.data[fieldProps.name]),
     };
 }
