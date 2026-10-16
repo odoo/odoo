@@ -22,7 +22,6 @@ export class BoardArchParser {
                     break;
                 case "board":
                     archInfo.layout = node.getAttribute("style");
-                    archInfo.colNumber = archInfo.layout.split("-").length;
                     break;
                 case "column":
                     currentIndex++;
@@ -51,6 +50,10 @@ export class BoardArchParser {
                 }
             }
         });
+        if (!archInfo.layout) {
+            archInfo.layout = archInfo.columns[2].actions.length ? "1-1-1" : "2-1";
+        }
+        archInfo.colNumber = archInfo.layout.split("-").length;
         return archInfo;
     }
 }
