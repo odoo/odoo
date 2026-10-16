@@ -59,6 +59,20 @@ class TestProduct(AccountTestInvoicingCommon):
             'supplier_taxes_id': self.company_data['company'].account_purchase_tax_id.ids,
         }])
 
+    def test_tax_default_tax_on_product(self):
+        """
+        Product tax fields should be empty if the company's default taxes have an incompatible type.
+        """
+        company = self.env.company
+        company.account_purchase_tax_id.type_tax_use = 'none'
+        company.account_sale_tax_id.type_tax_use = 'none'
+
+        product = self.env['product.template'].create({
+            'name': 'Demo Product',
+        })
+        self.assertFalse(product.taxes_id)
+        self.assertFalse(product.supplier_taxes_id)
+
     def test_account_manager_user_can_create_product(self):
         """Test that a user with group_account_manager can create a product."""
         product = self.env['product.product'].with_user(self.account_manager_user).create({
