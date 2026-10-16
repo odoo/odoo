@@ -1130,7 +1130,7 @@ class ChromeBrowser:
                 self.chrome_log_level = logging.RUNBOT
             self._logger.info("Closing websocket connection")
             self.ws.close()
-        if self.chrome:
+        if self.chrome.poll() is None:
             self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
             main = psutil.Process(self.chrome.pid)
             children = main.children(recursive=True)
@@ -1377,10 +1377,16 @@ class ChromeBrowser:
                 self._logger.debug('\n<- %s', msg)
             except websocket.WebSocketTimeoutException:
                 continue
-            except websocket.WebSocketConnectionClosedException as e:
+            except websocket.WebSocketConnectionClosedException:
                 if not self._result.done():
                     del self.ws
-                    self._result.set_exception(e)
+                    try:
+                        status = "exit status %s" % self.chrome.wait(5)
+                    except subprocess.TimeoutExpired:
+                        status = "still running"
+                    self._result.set_exception(
+                        ChromeBrowserException("Lost connection to browser: %s" % status),
+                    )
                     while True:
                         try:
                             _, f = self._responses.popitem()
@@ -1765,7 +1771,7 @@ which leads to stray network requests and inconsistencies."""
 
         if isinstance(err, concurrent.futures.TimeoutError):
             raise ChromeBrowserException('Script timeout exceeded') from err
-        raise ChromeBrowserException("Unknown error") from err
+        raise ChromeBrowserException("Unknown error: %r" % err) from err
 
     def navigate_to(self, url, wait_stop=False):
         self._logger.info('Navigating to: "%s"', url)
