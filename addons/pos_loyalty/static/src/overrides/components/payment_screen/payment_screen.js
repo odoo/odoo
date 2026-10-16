@@ -1,8 +1,16 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
+<<<<<<< fc5b7c7f7d314c4f8decce5d9852e80f195151b4
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
+||||||| 375133c114d00fecf82a042f07238ae624339fa7
+import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+=======
+import { PosLoyaltyCard, updateRewardsMutex } from "@pos_loyalty/overrides/models/loyalty";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+>>>>>>> 12bf33d23193b6845e15d6e42d9c93a632723ce6
 
 patch(PaymentScreen.prototype, {
     setup() {
@@ -71,4 +79,202 @@ patch(PaymentScreen.prototype, {
         }
         await super.validateOrder(...arguments);
     },
+<<<<<<< fc5b7c7f7d314c4f8decce5d9852e80f195151b4
+||||||| 375133c114d00fecf82a042f07238ae624339fa7
+    /**
+     * @override
+     */
+    async _postPushOrderResolve(order, server_ids) {
+        // Compile data for our function
+        const { program_by_id, reward_by_id, couponCache } = this.pos;
+        const rewardLines = order._get_reward_lines();
+        const partner = order.get_partner();
+        let couponData = Object.values(order.couponPointChanges).reduce((agg, pe) => {
+            agg[pe.coupon_id] = Object.assign({}, pe, {
+                points: pe.points - order._getPointsCorrection(program_by_id[pe.program_id]),
+            });
+            const program = program_by_id[pe.program_id];
+            if (program.is_nominative && partner) {
+                agg[pe.coupon_id].partner_id = partner.id;
+            }
+            if (program.program_type != 'loyalty') {
+                agg[pe.coupon_id].date_to = program.date_to;
+            }
+            return agg;
+        }, {});
+        for (const line of rewardLines) {
+            const reward = reward_by_id[line.reward_id];
+            if (!couponData[line.coupon_id]) {
+                couponData[line.coupon_id] = {
+                    points: 0,
+                    program_id: reward.program_id.id,
+                    coupon_id: line.coupon_id,
+                    barcode: false,
+                };
+                if (reward.program_type != 'loyalty') {
+                    couponData[line.coupon_id].date_to = reward.program_id.date_to;
+                }
+            }
+            if (!couponData[line.coupon_id].line_codes) {
+                couponData[line.coupon_id].line_codes = [];
+            }
+            if (!couponData[line.coupon_id].line_codes.includes(line.reward_identifier_code)) {
+                !couponData[line.coupon_id].line_codes.push(line.reward_identifier_code);
+            }
+            couponData[line.coupon_id].points -= line.points_cost;
+        }
+        // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
+        couponData = Object.fromEntries(
+            Object.entries(couponData).filter(([key, value]) => {
+                const program = program_by_id[value.program_id];
+                if (program.applies_on === "current") {
+                    return value.line_codes && value.line_codes.length;
+                }
+                return true;
+            })
+        );
+        if (Object.keys(couponData || []).length > 0) {
+            const payload = await this.orm.call("pos.order", "confirm_coupon_programs", [
+                server_ids,
+                couponData,
+            ]);
+            if (payload.coupon_updates) {
+                for (const couponUpdate of payload.coupon_updates) {
+                    let dbCoupon = couponCache[couponUpdate.old_id];
+                    if (dbCoupon) {
+                        dbCoupon.id = couponUpdate.id;
+                        dbCoupon.balance = couponUpdate.points;
+                        dbCoupon.code = couponUpdate.code;
+                    } else {
+                        dbCoupon = new PosLoyaltyCard(
+                            couponUpdate.code,
+                            couponUpdate.id,
+                            couponUpdate.program_id,
+                            couponUpdate.partner_id,
+                            couponUpdate.points
+                        );
+                    }
+                    delete couponCache[couponUpdate.old_id];
+                    couponCache[couponUpdate.id] = dbCoupon;
+                }
+            }
+            // Update the usage count since it is checked based on local data
+            if (payload.program_updates) {
+                for (const programUpdate of payload.program_updates) {
+                    const program = program_by_id[programUpdate.program_id];
+                    if (program) {
+                        program.total_order_count = programUpdate.usages;
+                    }
+                }
+            }
+            if (payload.coupon_report) {
+                for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
+                    await this.report.doAction(actionId, active_ids);
+                }
+                order.has_pdf_gift_card = Object.keys(payload.coupon_report).length > 0;
+            }
+            order.new_coupon_info = payload.new_coupon_info;
+        }
+        return super._postPushOrderResolve(order, server_ids);
+    },
+=======
+    /**
+     * @override
+     */
+    async _postPushOrderResolve(order, server_ids) {
+        // Ensure the pending rewards recompute has settled so `couponPointChanges` is up to date.
+        await updateRewardsMutex.getUnlockedDef();
+        // Compile data for our function
+        const { program_by_id, reward_by_id, couponCache } = this.pos;
+        const rewardLines = order._get_reward_lines();
+        const partner = order.get_partner();
+        let couponData = Object.values(order.couponPointChanges).reduce((agg, pe) => {
+            agg[pe.coupon_id] = Object.assign({}, pe, {
+                points: pe.points - order._getPointsCorrection(program_by_id[pe.program_id]),
+            });
+            const program = program_by_id[pe.program_id];
+            if (program.is_nominative && partner) {
+                agg[pe.coupon_id].partner_id = partner.id;
+            }
+            if (program.program_type != 'loyalty') {
+                agg[pe.coupon_id].date_to = program.date_to;
+            }
+            return agg;
+        }, {});
+        for (const line of rewardLines) {
+            const reward = reward_by_id[line.reward_id];
+            if (!couponData[line.coupon_id]) {
+                couponData[line.coupon_id] = {
+                    points: 0,
+                    program_id: reward.program_id.id,
+                    coupon_id: line.coupon_id,
+                    barcode: false,
+                };
+                if (reward.program_type != 'loyalty') {
+                    couponData[line.coupon_id].date_to = reward.program_id.date_to;
+                }
+            }
+            if (!couponData[line.coupon_id].line_codes) {
+                couponData[line.coupon_id].line_codes = [];
+            }
+            if (!couponData[line.coupon_id].line_codes.includes(line.reward_identifier_code)) {
+                !couponData[line.coupon_id].line_codes.push(line.reward_identifier_code);
+            }
+            couponData[line.coupon_id].points -= line.points_cost;
+        }
+        // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
+        couponData = Object.fromEntries(
+            Object.entries(couponData).filter(([key, value]) => {
+                const program = program_by_id[value.program_id];
+                if (program.applies_on === "current") {
+                    return value.line_codes && value.line_codes.length;
+                }
+                return true;
+            })
+        );
+        if (Object.keys(couponData || []).length > 0) {
+            const payload = await this.orm.call("pos.order", "confirm_coupon_programs", [
+                server_ids,
+                couponData,
+            ]);
+            if (payload.coupon_updates) {
+                for (const couponUpdate of payload.coupon_updates) {
+                    let dbCoupon = couponCache[couponUpdate.old_id];
+                    if (dbCoupon) {
+                        dbCoupon.id = couponUpdate.id;
+                        dbCoupon.balance = couponUpdate.points;
+                        dbCoupon.code = couponUpdate.code;
+                    } else {
+                        dbCoupon = new PosLoyaltyCard(
+                            couponUpdate.code,
+                            couponUpdate.id,
+                            couponUpdate.program_id,
+                            couponUpdate.partner_id,
+                            couponUpdate.points
+                        );
+                    }
+                    delete couponCache[couponUpdate.old_id];
+                    couponCache[couponUpdate.id] = dbCoupon;
+                }
+            }
+            // Update the usage count since it is checked based on local data
+            if (payload.program_updates) {
+                for (const programUpdate of payload.program_updates) {
+                    const program = program_by_id[programUpdate.program_id];
+                    if (program) {
+                        program.total_order_count = programUpdate.usages;
+                    }
+                }
+            }
+            if (payload.coupon_report) {
+                for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
+                    await this.report.doAction(actionId, active_ids);
+                }
+                order.has_pdf_gift_card = Object.keys(payload.coupon_report).length > 0;
+            }
+            order.new_coupon_info = payload.new_coupon_info;
+        }
+        return super._postPushOrderResolve(order, server_ids);
+    },
+>>>>>>> 12bf33d23193b6845e15d6e42d9c93a632723ce6
 });
