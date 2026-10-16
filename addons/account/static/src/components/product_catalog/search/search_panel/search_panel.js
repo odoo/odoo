@@ -26,6 +26,7 @@ export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel 
         this.childField = this.env.model.config.context.child_field;
         this.orderId = this.env.model.config.context.order_id;
         this.currencyId = this.env.model.config.context.product_catalog_currency_id;
+        this.canCreateSections = true;
 
         this.orm = useService("orm");
 
