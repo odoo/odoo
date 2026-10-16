@@ -273,3 +273,15 @@ class AccountMove(models.Model):
             if not record._is_last_from_seq_chain():
                 return False
         return True
+
+    def _get_base_document_title(self):
+        self.ensure_one()
+
+        if (
+            self._l10n_lk_is_tax_invoice_company()
+            and self.move_type == 'out_invoice'
+            and self.state == 'posted'
+        ):
+            return self.env._("Tax Invoice")
+
+        return super()._get_base_document_title()
