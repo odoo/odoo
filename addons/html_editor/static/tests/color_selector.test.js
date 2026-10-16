@@ -107,7 +107,7 @@ test("default opacity should get applied when applying background color to icon"
     await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(
-        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[ab</font><font style="background-color: rgba(255, 0, 0, 0.6);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font><font style="background-color: rgba(255, 0, 0, 0.6);">cd]</font></p>`
+        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[ab</font>\ufeff<span class="fa fa-glass" contenteditable="false" style="background-color: rgba(255, 0, 0, 0.6);">\u200b</span>\ufeff<font style="background-color: rgba(255, 0, 0, 0.6);">cd]</font></p>`
     );
 });
 
@@ -177,7 +177,9 @@ test("custom text-colors used in the editor are shown in the colorpicker", async
     expect("button[data-color='#00FF00']").toHaveCount(1);
     expect("button[data-color='#00FF00']").toHaveStyle({ backgroundColor: "rgb(0, 255, 0)" });
     expect("button[data-color='#6632CD66']").toHaveCount(1);
-    expect("button[data-color='#6632CD66']").toHaveStyle({ backgroundColor: "rgba(102, 50, 205, 0.4)" });
+    expect("button[data-color='#6632CD66']").toHaveStyle({
+        backgroundColor: "rgba(102, 50, 205, 0.4)",
+    });
 });
 
 test("custom background colors used in the editor are shown in the colorpicker", async () => {
@@ -200,7 +202,9 @@ test("custom background colors used in the editor are shown in the colorpicker",
     expect("button[data-color='#00FF00']").toHaveCount(1);
     expect("button[data-color='#00FF00']").toHaveStyle({ backgroundColor: "rgb(0, 255, 0)" });
     expect("button[data-color='#00FF00']").toHaveCount(1);
-    expect("button[data-color='#6632CD66']").toHaveStyle({ backgroundColor: "rgba(102, 50, 205, 0.4)" });
+    expect("button[data-color='#6632CD66']").toHaveStyle({
+        backgroundColor: "rgba(102, 50, 205, 0.4)",
+    });
 });
 
 test("applied custom color should be shown in colorpicker after switching tab", async () => {
