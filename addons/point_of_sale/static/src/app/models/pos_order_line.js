@@ -484,9 +484,9 @@ export class PosOrderline extends Base {
         const taxDetails = baseLine.tax_details;
 
         if (this.config.iface_tax_included === "total") {
-            return taxDetails.total_included_currency;
+            return taxDetails.total_included_currency + taxDetails.delta_total_excluded_currency;
         } else {
-            return taxDetails.total_excluded_currency;
+            return taxDetails.total_excluded_currency + taxDetails.delta_total_excluded_currency;
         }
     }
 
@@ -563,10 +563,18 @@ export class PosOrderline extends Base {
         }
 
         return {
-            priceWithTax: baseLine.tax_details.total_included_currency,
-            priceWithoutTax: baseLine.tax_details.total_excluded_currency,
-            priceWithTaxBeforeDiscount: baseLineNoDiscount.tax_details.total_included_currency,
-            priceWithoutTaxBeforeDiscount: baseLineNoDiscount.tax_details.total_excluded_currency,
+            priceWithTax:
+                baseLine.tax_details.total_included_currency +
+                baseLine.tax_details.delta_total_excluded_currency,
+            priceWithoutTax:
+                baseLine.tax_details.total_excluded_currency +
+                baseLine.tax_details.delta_total_excluded_currency,
+            priceWithTaxBeforeDiscount:
+                baseLineNoDiscount.tax_details.total_included_currency +
+                baseLineNoDiscount.tax_details.delta_total_excluded_currency,
+            priceWithoutTaxBeforeDiscount:
+                baseLineNoDiscount.tax_details.total_excluded_currency +
+                baseLineNoDiscount.tax_details.delta_total_excluded_currency,
             tax:
                 baseLine.tax_details.total_included_currency -
                 baseLine.tax_details.total_excluded_currency,
