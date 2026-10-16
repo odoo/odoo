@@ -397,5 +397,6 @@ class WebsiteHrRecruitment(WebsiteForm):
                         })
                         file.stream.seek(0)
                 if attachment_value:
-                    request.env['ir.attachment'].sudo().create(attachment_value)
+                    attachments = request.env['ir.attachment'].sudo().create(attachment_value)
+                    candidate_id.sudo()._message_set_main_attachment_id(attachments)
         super().insert_attachment(model, id_record, files)
