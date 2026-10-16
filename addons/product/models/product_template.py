@@ -409,9 +409,13 @@ class ProductTemplate(models.Model):
 
     def _set_qty_available(self):
         for template in self:
-            if len(template.product_variant_ids) != 1:
-                continue
-            template.product_variant_ids.qty_available = template.qty_available
+            if template.product_variant_count == 1:
+                template.product_variant_ids.qty_available = template.qty_available
+
+            # force update of computed quantities
+            quantities_fields = ['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty', 'free_qty']
+            template.invalidate_recordset(fnames=quantities_fields)
+            template.product_variant_ids.invalidate_recordset(fnames=quantities_fields)
 
     def _search_incoming_qty(self, operator, value):
         return self._search_product_quantity(operator, value, 'incoming_qty')
@@ -618,7 +622,7 @@ class ProductTemplate(models.Model):
 
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
-        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'product_properties']
+        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'product_properties', 'qty_available']
 
     def _compute_import_attribute_values(self):
         self.import_attribute_values = ''
