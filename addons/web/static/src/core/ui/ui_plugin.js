@@ -107,28 +107,28 @@ export function useActiveElement(ref) {
 }
 
 export class UIPlugin extends Plugin {
-    /** @private */
-    activeElems = signal.Array([document]);
-    /** @private */
-    blockCount = signal(0);
+    #activeElems = signal.Array([document]);
+    #blockCount = signal(0);
     bus = new EventBus();
-    // `isSmall`/`size` can't be computed here: field initializers run in the
+    // `#isSmall`/`#size` can't be computed here: field initializers run in the
     // constructor, before `setup()` below has a chance to (re)populate the
     // media query list, so `utils.isSmall()`/`utils.getSize()` would see an
     // empty (or stale) list and produce a wrong value that then never
     // self-corrects (a `matchMedia` "change" event only fires on a
     // transition, so if the query already matches on load, nothing fixes it).
     // They're set to their real value at the top of `setup()` instead.
-    isSmall = signal(false);
-    size = signal(-1);
+    #isSmall = signal(false);
+    #size = signal(-1);
 
-    activeElement = computed(() => this.activeElems()[this.activeElems().length - 1]);
-    isBlocked = computed(() => this.blockCount() > 0);
+    isSmall = computed(() => this.#isSmall());
+    size = computed(() => this.#size());
+    activeElement = computed(() => this.#activeElems()[this.#activeElems().length - 1]);
+    isBlocked = computed(() => this.#blockCount() > 0);
 
     setup() {
         const medias = refreshMedias();
-        this.size.set(utils.getSize());
-        this.isSmall.set(utils.isSmall(this));
+        this.#size.set(utils.getSize());
+        this.#isSmall.set(utils.isSmall(this));
 
         // block/unblock code
         registry
@@ -147,8 +147,8 @@ export class UIPlugin extends Plugin {
         // listen to media query status changes
         const updateSizeHandler = (ev) => {
             if (ev.matches) {
-                this.size.set(medias.indexOf(ev.target));
-                this.isSmall.set(utils.isSmall(this));
+                this.#size.set(medias.indexOf(ev.target));
+                this.#isSmall.set(utils.isSmall(this));
                 this.bus.trigger("resize");
             }
         };
@@ -160,10 +160,10 @@ export class UIPlugin extends Plugin {
     }
 
     block(data) {
-        this.blockCount.set(this.blockCount() + 1);
+        this.#blockCount.set(this.#blockCount() + 1);
         // TODO could probably be improved to handle multiple block demands
         // but that have different messages and delays
-        if (this.blockCount() === 1) {
+        if (this.#blockCount() === 1) {
             this.bus.trigger("BLOCK", {
                 message: data?.message,
                 delay: data?.delay,
@@ -172,14 +172,14 @@ export class UIPlugin extends Plugin {
     }
 
     unblock() {
-        this.blockCount.set(this.blockCount() - 1);
-        if (this.blockCount() < 0) {
+        this.#blockCount.set(this.#blockCount() - 1);
+        if (this.#blockCount() < 0) {
             console.warn(
                 "Unblock ui was called more times than block, you should only unblock the UI if you have previously blocked it."
             );
-            this.blockCount.set(0);
+            this.#blockCount.set(0);
         }
-        if (this.blockCount() === 0) {
+        if (this.#blockCount() === 0) {
             this.bus.trigger("UNBLOCK");
         }
     }
@@ -187,17 +187,17 @@ export class UIPlugin extends Plugin {
     // UI active element code
 
     activateElement(el) {
-        this.activeElems().push(el);
+        this.#activeElems().push(el);
         this.bus.trigger("active-element-changed", el);
     }
 
     deactivateElement(el) {
-        this.activeElems.set(this.activeElems().filter((x) => x !== el));
+        this.#activeElems.set(this.#activeElems().filter((x) => x !== el));
         this.bus.trigger("active-element-changed", this.activeElement());
     }
 
     getActiveElementOf(el) {
-        for (const activeElement of [...this.activeElems()].reverse()) {
+        for (const activeElement of [...this.#activeElems()].reverse()) {
             if (activeElement.contains(el)) {
                 return activeElement;
             }
@@ -240,8 +240,11 @@ export const uiService = {
             },
         });
 
+        service.block = uiPlugin.block.bind(uiPlugin);
+        service.unblock = uiPlugin.unblock.bind(uiPlugin);
         service.activateElement = uiPlugin.activateElement.bind(uiPlugin);
         service.deactivateElement = uiPlugin.deactivateElement.bind(uiPlugin);
+        service.getActiveElementOf = uiPlugin.getActiveElementOf.bind(uiPlugin);
 
         return service;
     },
