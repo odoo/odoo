@@ -2322,6 +2322,25 @@ class TestViews(ViewCase):
         view_arch = view.get_views([(view.id, 'form')])['views']['form']['arch']
         self.assertTrue(etree.fromstring(view_arch).xpath('//field/form/field[@name="model"][@invisible][@readonly]'))
 
+    def test_x2many_missing_kanban_with_card_id(self):
+        card = self.View.create({
+            'name': 'card',
+            'model': 'ir.ui.view',
+            'type': 'card',
+            'arch': '<card><templates><t t-name="card"><field name="name"/></t></templates></card>',
+        })
+        self.View.create({
+            'name': 'kanban',
+            'model': 'ir.ui.view',
+            'priority': 1,
+            'arch': f'<kanban card_id="{card.id}"/>',
+        })
+        view = self.assertValid('<form><field name="inherit_children_ids"/></form>')
+        view_arch = view.get_views([(view.id, 'form')], {'mobile': True})['views']['form']['arch']
+        self.assertTrue(etree.fromstring(view_arch).xpath(
+            '//field[@name="inherit_children_ids"]/kanban/card//t[@t-name="card"]/field[@name="name"]'
+        ))
+
     def test_context_in_subview_with_parent(self):
         arch = """
             <form string="View">

@@ -1637,7 +1637,12 @@ actual arch.
             for view_type in missing_view_types
         })
 
-        return [comodel._get_view(view_type=view_type) for view_type in missing_view_types]
+        archs = []
+        for view_type in missing_view_types:
+            arch, view = comodel._get_view(view_type=view_type)
+            comodel._inline_card_view(arch)
+            archs.append((arch, view))
+        return archs
 
     def _postprocess_attributes(self, node, name_manager, node_info):
         # get mandatory fields
@@ -3098,6 +3103,12 @@ class Base(models.AbstractModel):
         )
 
     @api.model
+    def _inline_card_view(self, arch):
+        if card_id := arch.get('card_id'):
+            card_arch, _card_view = self._get_view(view_id=int(card_id), view_type='card')
+            arch.append(card_arch)
+
+    @api.model
     @tools.conditional(
         'xml' not in config['dev_mode'],
         api.ormcache('self._get_view_cache_key(view_id, view_type, **options)', cache='templates'),
@@ -3136,9 +3147,7 @@ class Base(models.AbstractModel):
         # The card arch is appended as a <card> child so that _postprocess_tag_card can
         # process it as a nested sub-view, ensuring that fields auto-added for expression
         # evaluation land inside <card> rather than at the parent view root.
-        if card_id := arch.get('card_id'):
-            card_arch, _card_view = self._get_view(view_id=int(card_id), view_type='card')
-            arch.append(card_arch)
+        self._inline_card_view(arch)
 
         # Apply post processing, groups and modifiers etc...
         arch, models = self._get_view_postprocessed(view, arch, **options)
