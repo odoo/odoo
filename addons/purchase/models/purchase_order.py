@@ -453,18 +453,21 @@ class PurchaseOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        orders = self.browse()
+        seq_groups = defaultdict(list)
         for vals in vals_list:
-            company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
-            # Ensures default picking type and currency are taken from the right company.
-            self_comp = self.with_company(company_id)
-            if vals.get('name', _('New')) == _('New'):
+            if vals.get("name", _("New")) == _("New"):
                 seq_date = None
-                if 'date_order' in vals:
-                    seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
-                vals['name'] = self_comp.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
-            orders |= super(PurchaseOrder, self_comp).create(vals)
-        return orders
+                if "date_order" in vals:
+                    seq_date = fields.Datetime.context_timestamp(
+                        self, fields.Datetime.to_datetime(vals["date_order"])
+                    )
+                seq_groups[(vals.get("company_id"), seq_date)].append(vals)
+        for (company_id, seq_date), group_vals in seq_groups.items():
+            names = self.with_company(company_id).env['ir.sequence'].next_by_code(
+                'purchase.order', sequence_date=seq_date, count=len(group_vals))
+            for vals, name in zip(group_vals, names):
+                vals["name"] = name or "/"
+        return super().create(vals_list)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_cancelled(self):
