@@ -1,0 +1,73 @@
+PRESENLY "MY APPROVALS" MENU DISABLING — ROLLOUT POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.13.1.0
+
+PURPOSE
+- Remove the misleading Approvals > My Approvals menu that produced
+  "You don't have enough access rights to run this action."
+- Keep Approval Journey data intact.
+- Keep Time Off / Permission approval working directly from their forms.
+
+ROOT CAUSE CONFIRMED
+- The menu `My Approvals` pointed to a server action
+  `action_server_presenly_my_approvals`.
+- That server action had empty `group_ids`.
+- Odoo's `_can_execute_action_on_records` falls back to
+  `check_access("write")` on the action's model
+  (`presenly.approval.request`) when `group_ids` is empty.
+- Presenly Approver ACL for `presenly.approval.request` is read-only
+  (write=False), so any Approver opening the menu got an AccessError.
+- Approval from the Time Off form was never broken; the error was only on
+  the menu action.
+
+CHANGES
+1. Disabled menus (active=False), not deleted:
+   - Attendances > Approvals
+   - Attendances > Approvals > My Approvals
+   - Attendances > Approvals > Permission Approvals (already inactive)
+   - Attendances > Approvals > Time Off Approvals (already inactive)
+2. Added defensive `group_ids = Presenly Approver` to
+   `action_server_presenly_my_approvals` so it would not demand write access
+   if re-enabled later.
+3. Version bump to 19.0.13.1.0.
+
+VERIFICATION
+- Presenly menu states:
+  - menu_presenly_approvals: active f
+  - menu_presenly_my_approvals: active f
+  - menu_presenly_permission_approvals: active f
+  - menu_presenly_leave_approvals: active f
+- Server action group_ids contains Presenly Approver.
+- Yusril (Approver) can still approve Time Off leave 16 from its form
+  (confirmed after fix, no data change).
+- Existing leave/approval journey data unchanged.
+
+TESTING
+- Isolated clone: odoo_presenly_disable_approvals_test_20260906_142000.
+- Final result: 41 test cases / 53 test stats.
+- Failures: 0.
+- Errors: 0.
+- Clone database and filestore were removed.
+
+STATIC VALIDATION
+- XML parsing: 18 files passed.
+- git diff --check: passed.
+
+DATA PRESERVATION
+- Time Off requests 15/16 and their approval journeys were not modified by
+  this rollout.
+
+BACKUP
+- backups/presenly-migration/odoo-before-disable-my-approvals-20260906-142000.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.13.0.0.
+- After: presenly 19.0.13.1.0.
+- Main server PID: 24780.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, or traceback.
+
+NO COMMIT
+- No Git commit was created.

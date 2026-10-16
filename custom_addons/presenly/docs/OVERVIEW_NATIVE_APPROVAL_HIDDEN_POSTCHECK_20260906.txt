@@ -1,0 +1,88 @@
+PRESENLY OVERVIEW NATIVE APPROVAL HIDING — ROLLOUT POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.13.2.0
+
+PURPOSE
+- Remove the native Odoo Time Off approval affordances that still appeared on
+  the Overview pages (My Time Off form/list/kanban).
+- Keep Presenly Approval Routes as the single, user-facing approval path.
+
+APPROACH
+- Did not delete native views or buttons. Instead, the native computed flags
+  that control their visibility are forced to False for Presenly-managed Time
+  Off:
+  - can_approve
+  - can_validate
+  - can_refuse
+  - can_back_to_approve
+
+CHANGES
+1. `HrLeavePresenly` now overrides native `_compute_can_approve`,
+   `_compute_can_validate`, `_compute_can_refuse`, and
+   `_compute_can_back_to_approve`.
+2. Each override calls `super()` and then sets the flag to False when
+   `presenly_approval_engine == 'presenly'`.
+3. Presenly workflow flags (`presenly_can_submit`, `presenly_can_approve`,
+   `presenly_can_reject`, `presenly_can_cancel`) are unchanged.
+4. Server-side guards (native `action_approve`, `_action_validate`,
+   `action_refuse`, `action_back_to_approval` overrides) remain in place.
+
+EFFECT ON UI
+- On Presenly-managed Time Off:
+  - Native "Approve" disappears from form header.
+  - Native "Validate" disappears from form header.
+  - Native "Refuse" disappears from form header.
+  - Native "Back to Approval" disappears.
+  - List/kanban native approve/refuse action buttons no longer show.
+- Presenly buttons remain:
+  - Submit for Approval
+  - Approve Current Level
+  - Reject
+  - Cancel Request
+
+VERIFICATION
+- Leave ID 16 (Presenly-managed, approved by Yusril) reports:
+  - native can_approve: False
+  - native can_validate: False
+  - native can_refuse: False
+  - native can_back_to_approve: False
+- Presenly can_approve correctly reflects current workflow state.
+
+TESTING
+- Isolated clone: odoo_presenly_disable_approvals_test_20260906_142000.
+- Final result: 42 test cases / 54 test stats.
+- Failures: 0.
+- Errors: 0.
+- Added test verifies native approval flags are forced False for Presenly Time
+  Off while Presenly approve flag still resolves for the approver.
+- Clone database and filestore were removed.
+
+STATIC VALIDATION
+- Python compilation: passed.
+- XML parsing: 18 files passed.
+- git diff --check: passed.
+
+DATA PRESERVATION
+Business fingerprint before and after rollout is identical:
+- Attendance: 4; ID sum 12.
+- Evidence: 10; ID sum 55.
+- Referenced selfie attachments: 7; ID sum 1210.
+- Permission requests: 0.
+- Time Off requests: 2; ID sum 31.
+- Approval routes: 2; ID sum 4.
+- Approval journeys: 1; ID sum 1.
+
+BACKUP
+- backups/presenly-migration/odoo-before-disable-my-approvals-20260906-142000.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.13.1.0.
+- After: presenly 19.0.13.2.0.
+- Main server PID: 27330.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, or traceback.
+
+NO COMMIT
+- No Git commit was created.
