@@ -1285,6 +1285,13 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 // This style is shared by the new versions of carousels
 // 001 for s_carousel & 002 for s_quotes_carousel
 %s_carousel_variants {
+    --o-carousel-dark-control-icon-filter: #{$carousel-dark-control-icon-filter};
+    --o-forced-colors-active-outline-offset: -2px;
+
+    @media (forced-colors: active) {
+        --o-carousel-dark-control-icon-filter: FILTER(0);
+    }
+
     // Before media-breakpoint-down so that it's overridden.
     .o_carousel_pause {
         width: $carousel-control-width;
@@ -1349,6 +1356,12 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
                 box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
             }
         }
+
+        &, .o_carousel_pause {
+            @media (forced-colors: active) {
+                background-color: ButtonFace !important;
+            }
+        }
     }
 
     .o_carousel_pause {
@@ -1389,12 +1402,17 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 
     .carousel-control-prev-icon, .carousel-control-next-icon {
         background-size: 50%;
+
+        @media (forced-colors: active) {
+            background-color: transparent !important;
+            filter: INVERT(1) !important;
+        }
     }
 
     &.carousel-dark:not(.s_carousel_controllers_indicators_outside),
     &.carousel-dark.s_carousel_controllers_indicators_outside:has(.s_carousel_indicators_hidden) {
         .o_carousel_pause_icon {
-            filter: $carousel-dark-control-icon-filter;
+            filter: var(--o-carousel-dark-control-icon-filter);
         }
     }
 
@@ -1423,7 +1441,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             border-radius: $border-radius;
             border: $border-width solid $border-color;
             background-color: $carousel-dark-indicator-active-bg;
-            filter: $carousel-dark-control-icon-filter;
+            filter: var(--o-carousel-dark-control-icon-filter);
         }
 
         &.carousel-dark {
@@ -1489,6 +1507,10 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             border-radius: $border-radius-pill;
             transform: scale(.5);
             transition: opacity .6s ease, transform .6s ease; // Mirror '$carousel-indicator-transition' duration
+
+            @media (forced-colors: active) {
+                background-color: ButtonText;
+            }
 
             // Increases the click area for easier navigation.
             &:before {
@@ -3812,15 +3834,18 @@ in a huge font size since it isn’t redefined for the frontend.
     font-size: 1.35rem !important;
 }
 
-.stretched-link:focus-visible::after,
-.slide-link:focus-visible {
-    box-shadow:
-        inset 0 0 0 2px white,
-        inset 0 0 0 4px black;
+.stretched-link:focus-visible::after {
+    --o-forced-colors-active-outline-offset: -2px;
 
     @media (forced-colors: active) {
-        outline: 2px solid transparent;
-        outline-offset: -2px;
+        outline: var(--o-forced-colors-active-outline-width) solid AccentColor !important;
+        outline-offset: var(--o-forced-colors-active-outline-offset) !important;
+    }
+
+    &, .slide-link:focus-visible {
+        box-shadow:
+            inset 0 0 0 2px white,
+            inset 0 0 0 4px black;
     }
 }
 

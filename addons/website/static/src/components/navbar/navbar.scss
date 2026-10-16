@@ -15,6 +15,13 @@
         margin-bottom: -$o-navbar-padding-v;
         padding-top: $o-navbar-padding-v;
         padding-bottom: $o-navbar-padding-v;
+
+        @media (forced-colors: active) {
+            &:focus-visible {
+                --o-forced-colors-active-outline-offset: -2px;
+            }
+        }
+
     }
 
     .o_website_systray_separator {

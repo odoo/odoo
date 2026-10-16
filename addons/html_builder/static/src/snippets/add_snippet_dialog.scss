@@ -39,6 +39,10 @@
                 box-shadow: inset 0 0 0 2px $o-we-handles-accent-color;
                 border-color: $o-we-handles-accent-color;
                 outline: none;
+
+                @media (forced-colors: active) {
+                    --o-forced-colors-active-outline-offset: -2px;
+                }
             }
         }
     }
