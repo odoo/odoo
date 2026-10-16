@@ -81,7 +81,7 @@ export class MailingTemplateKanbanIframe extends Component {
                 });
                 await Promise.all([
                     this.loadIframeAssets(),
-                    this.templateKanbanRoot.mount(this.iframeRef().contentDocument.body),
+                    this.templateKanbanRoot.mount(iframe.contentDocument.body),
                 ]);
             });
         } catch (error) {
