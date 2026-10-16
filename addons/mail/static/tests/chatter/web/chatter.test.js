@@ -17,7 +17,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, mockUserAgent, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -340,6 +340,33 @@ test('post message with "CTRL-Enter" keyboard shortcut in chatter', async () => 
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
+    await contains(".o-mail-Message");
+});
+
+test('post message with "CMD-Enter" keyboard shortcut in chatter (macOS)', async () => {
+    mockUserAgent("mac");
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Message", { count: 0 });
+    await insertText(".o-mail-Composer-input", "Test");
+    await contains(".o-mail-Composer span", { text: "or press CMD + Enter" });
+    triggerHotkey("Enter", false, { metaKey: true });
+    await contains(".o-mail-Message");
+});
+
+test('post message with "CTRL-Enter" keyboard shortcut in chatter (macOS)', async () => {
+    mockUserAgent("mac");
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Message", { count: 0 });
+    await insertText(".o-mail-Composer-input", "Test");
+    triggerHotkey("Enter", false, { ctrlKey: true });
     await contains(".o-mail-Message");
 });
 
