@@ -41,6 +41,25 @@ class CalendarEvent(models.Model):
         for event in events:
             if event.opportunity_id and not event.meeting_activity_ids:
                 event.opportunity_id.log_meeting(event)
+            if not event.opportunity_id and event.res_model == "crm.lead":
+                lead = self.env["crm.lead"].browse(event.res_id)
+                if lead.type == "opportunity":
+                    event.opportunity_id = lead.id
+
+        return events
+
+    def write(self, vals):
+        events = super().write(vals)
+        if "res_record" in vals:
+            for event in self:
+                opportunity = False
+                if event.res_model == "crm.lead":
+                    lead = self.env["crm.lead"].browse(event.res_id)
+                    if lead.type == "opportunity":
+                        opportunity = lead
+                if event.opportunity_id != opportunity:
+                    event.opportunity_id = opportunity
+
         return events
 
     def _is_crm_lead(self, defaults, ctx=None):
