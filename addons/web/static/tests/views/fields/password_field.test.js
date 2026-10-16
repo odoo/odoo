@@ -102,6 +102,23 @@ test("PasswordField: placeholder attribute", async () => {
     expect(".o_field_password input").toHaveAttribute("placeholder", "Enter password");
 });
 
+test("PasswordField: autocomplete attribute", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name" widget="password"/>
+                <field name="bio" widget="password" autocomplete="current-password"/>
+            </form>`,
+    });
+    expect(".o_field_password[name=name] input").toHaveAttribute("autocomplete", "new-password");
+    expect(".o_field_password[name=bio] input").toHaveAttribute(
+        "autocomplete",
+        "current-password"
+    );
+});
+
 test("PasswordField on readonly text field in form view", async () => {
     await mountView({
         type: "form",
