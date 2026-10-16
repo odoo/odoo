@@ -240,7 +240,18 @@ class MailActivityMixin(models.AbstractModel):
             self.env['mail.activity'].sudo().search(
                 [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
             ).unlink()
-        return super(MailActivityMixin, self).write(vals)
+        result = super().write(vals)
+        # Update activity names if any of the dependencies (and transitively those fields' dependencies) is written to
+        # i.e. if self.display_name depends on 'sale_order_id.name, customer_name' and self.customer_name depends on 'partner_id'
+        # then writing to either `sale_order_id`, `customer_name` or `partner_id` will recompute the name of all activities.
+        # The trigger tree "root" is cached and already contains all the fields on this record which need to be recomputed
+        # so simply checking if "display_name" is one of them for each written field is sufficient and relatively cheap.
+        if any(
+            self._fields['display_name'] in self.pool.get_field_trigger_tree(self._fields[fname]).root
+            for fname in vals
+        ):
+            self.sudo().with_context(active_test=False).activity_ids._compute_res_name()
+        return result
 
     def unlink(self):
         """ Override unlink to delete records activities through (res_model, res_id). """

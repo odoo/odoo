@@ -867,6 +867,53 @@ class TestActivityMixin(TestActivityCommon):
             self.assertFalse(record, "Should not find record if the only late activity is done")
 
     @users('employee')
+    def test_record_rename(self):
+        records = (self.test_record + self.test_record_2).with_user(self.env.user)
+        activities = records.activity_schedule(user_id=self.env.uid)
+        activities += records.activity_schedule(active=False, user_id=self.env.uid)
+        self.assertEqual(activities.mapped('res_name'), ['Test', 'Test_2', 'Test', 'Test_2'])
+
+        records.write({'name': 'Renamed'})
+        self.env.invalidate_all()
+        self.assertEqual(activities.mapped('res_name'), ['Renamed'] * 4)
+        self.assertEqual(self.env['mail.activity'].with_context(active_test=False).search([
+            ('id', 'in', activities.ids), ('res_name', '=', 'Renamed'),
+        ]), activities)
+
+    @users('employee')
+    def test_record_rename_computed_name(self):
+        """ Check activities follow renames of their record when its name is
+        computed from other fields of the record, directly, transitively or
+        through an inverse method. """
+        container = self.env['mail.test.container'].sudo().create({'name': 'Container'})
+        record = self.env['mail.test.activity.computed.name'].create({'code': 'A'})
+        activities = record.activity_schedule(user_id=self.env.uid)
+        # archived activities still need to be updated
+        activities += record.activity_schedule(active=False, user_id=self.env.uid)
+        self.assertEqual(activities.mapped('res_name'), ['No Container / MACN-REF-A'] * 2)
+
+        # code -> barcode -> name
+        record.code = 'B'
+        self.assertEqual(activities.mapped('res_name'), ['No Container / MACN-REF-B'] * 2)
+
+        # code_short -> write on code via inverse: code -> barcode -> name
+        record.code_short = 'C'
+        self.assertEqual(activities.mapped('res_name'), ['No Container / MACN-REF-code_C'] * 2)
+
+        # container -> name
+        record.container_id = container
+        self.assertEqual(activities.mapped('res_name'), ['Container / MACN-REF-code_C'] * 2)
+
+        # Updating the container is not easily detected from the mixin -> activities keep their name
+        container.name = 'Renamed Container'
+        self.assertEqual(record.name, 'Renamed Container / MACN-REF-code_C')
+        self.assertEqual(activities.mapped('res_name'), ['Container / MACN-REF-code_C'] * 2)
+
+        with patch.object(MailActivity, '_compute_res_name') as mock_compute:
+            record.move_date = date(2024, 1, 1)
+        mock_compute.assert_not_called()
+
+    @users('employee')
     def test_record_unlink(self):
         test_record = self.test_record.with_user(self.env.user)
         act1 = test_record.activity_schedule(summary='Active')
