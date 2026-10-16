@@ -446,6 +446,26 @@ function isMobile(self) {
 }
 
 /**
+ * Parses a JSON string without throwing if it is missing or malformed (e.g. a
+ * value stored in the page HTML that was edited by hand). Use it as
+ * `parseJSON(json) || fallback`.
+ *
+ * @param {string} [json] the JSON string to parse
+ * @returns {any} the parsed value, or `undefined` if `json` is empty or is not
+ * valid JSON
+ */
+export function parseJSON(json) {
+    if (!json) {
+        return;
+    }
+    try {
+        return JSON.parse(json);
+    } catch {
+        return;
+    }
+}
+
+/**
  * Returns the parsed data coming from the data-for element for the given form.
  *
  * @param {string} formId
@@ -457,7 +477,7 @@ function getParsedDataFor(formId, parentEl) {
     if (!dataForEl) {
         return;
     }
-    return JSON.parse(dataForEl.dataset.values
+    return parseJSON(dataForEl.dataset.values
         // replaces `True` by `true` if they are after `,` or `:` or `[`
         .replace(/([,:\[]\s*)True/g, '$1true')
         // replaces `False` and `None` by `""` if they are after `,` or `:` or `[`
@@ -542,6 +562,7 @@ export default {
     generateGMapLink: generateGMapLink,
     isMobile: isMobile,
     getParsedDataFor: getParsedDataFor,
+    parseJSON: parseJSON,
     cloneContentEls: cloneContentEls,
     checkAndNotifySEO: checkAndNotifySEO,
 };
