@@ -141,7 +141,7 @@ class HrVersion(models.Model):
                 for c in self.sudo()
             )
         domain = [
-            ('state', '!=', 'refuse'),
+            ('state', 'not in', ['refuse', 'cancel']),
             ('employee_id', 'in', self.employee_id.ids),
             ('date_to', '>=', min_date),
         ]
