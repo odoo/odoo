@@ -163,6 +163,6 @@ class SpreadsheetMixin(models.AbstractModel):
         file_record = self.env['ir.binary']._find_record(
             res_model='ir.attachment',
             res_id=int(match.group(1)),
-            access_token=query_args.get('access_token', [])[0],
+            access_token=query_args.get('access_token', [""])[0],
         )
         return self.env['ir.binary']._get_stream_from(file_record).read()
