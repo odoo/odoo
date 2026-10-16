@@ -8,7 +8,7 @@ class ResPartner(models.Model):
         comodel_name='l10n_tr.nilvera.alias',
         string="eInvoice Alias",
         compute='_compute_nilvera_customer_alias_id',
-        domain="[('partner_id', '=', id)]",
+        domain="[('partner_id', '=', id), ('global_user_type', '=', 'Invoice')]",
         copy=False,
         store=True,
         readonly=False,
@@ -25,13 +25,28 @@ class ResPartner(models.Model):
             if not partner.env.context.get("formatted_display_name"):
                 partner.display_name = (f"{partner.display_name}\n{partner.l10n_tr_tax_office_id.name}")
 
-    @api.depends('l10n_tr_nilvera_customer_alias_ids', 'l10n_tr_nilvera_customer_status')
+    @api.depends('l10n_tr_nilvera_customer_alias_ids.global_user_type', 'l10n_tr_nilvera_customer_status')
     def _compute_nilvera_customer_alias_id(self):
         for record in self:
-            if record.l10n_tr_nilvera_customer_status == 'einvoice' and not record.l10n_tr_nilvera_customer_alias_id:
-                record.l10n_tr_nilvera_customer_alias_id = record.l10n_tr_nilvera_customer_alias_ids[:1]
+            if (
+                record.l10n_tr_nilvera_customer_status == 'einvoice'
+                and (
+                    not record.l10n_tr_nilvera_customer_alias_id
+                    or record.l10n_tr_nilvera_customer_alias_id.global_user_type != 'Invoice'
+                )
+            ):
+                record.l10n_tr_nilvera_customer_alias_id = record.l10n_tr_nilvera_customer_alias_ids.filtered(
+                    lambda alias: alias.global_user_type == 'Invoice'
+                )[:1]
             elif record.l10n_tr_nilvera_customer_status == 'earchive':
                 record.l10n_tr_nilvera_customer_alias_id = False
+
+    def _check_nilvera_customer(self):
+        if not super()._check_nilvera_customer():
+            return False
+        if self.l10n_tr_nilvera_customer_status == 'einvoice':
+            return self._l10n_tr_nilvera_sync_customer_aliases('Invoice')
+        return True
 
     def _get_tax_office_missing_message(self):
         # OVERRIDE
