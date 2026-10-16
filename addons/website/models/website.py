@@ -455,26 +455,11 @@ class Website(models.CachedModel):
             self.env['ir.model.data'].invalidate_model()
 
             # Display a notification to inform the user
-            if len(transferred_settings) > 0:
-                self.env.user._bus_send("simple_notification", {
-                    'type': 'info',
-                    'title': _("Default website changed"),
-                    'message': _(
-                        'The new default website is %(default_website_name)s. '
-                        'The following default settings were copied from the old default website '
-                        'to the new one: %(transferred_settings)s. Note that these settings are still '
-                        'present on the old default website.',
-                        default_website_name=first_website.name,
-                        transferred_settings=", ".join(transferred_settings)),
-                    'sticky': True,
-                })
-            else:
-                self.env.user._bus_send("simple_notification", {
-                    'type': 'success',
-                    'title': _("Default website changed"),
-                    'message': _('The new default website is %(default_website_name)s.',
-                        default_website_name=first_website.name),
-                })
+            self.env.user._bus_send("simple_notification", {
+                'type': 'success',
+                'message': _("Default website changed to %(default_website_name)s.",
+                    default_website_name=first_website.name),
+            })
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_website(self):
