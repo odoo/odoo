@@ -1,13 +1,16 @@
-import { scrollFixedOffset, scrollTo } from "@html_builder/utils/scrolling";
-import { Interaction } from "@web/public/interaction";
+import { scrollTo } from "@html_builder/utils/scrolling";
 import { registry } from "@web/core/registry";
 import { location } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
+import { StickyBelowHeader } from "@website/interactions/sticky_below_header";
 import { verifyHttpsUrl } from "@website/utils/misc";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { BlogNavSheet } from "./components/blog_nav_sheet";
 
-export class WebsiteBlog extends Interaction {
+export const COMPATIBILITY_SHARE_SELECTOR =
+    ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete";
+
+export class WebsiteBlog extends StickyBelowHeader {
     static selector = ".website_blog";
     dynamicContent = {
         ".o_wblog_sheet_trigger": {
@@ -17,34 +20,27 @@ export class WebsiteBlog extends Interaction {
             "t-on-click.prevent": this.onNextBlogClick,
             "t-on-keydown": this.onNextBlogKeydown,
         },
-        ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete":
-            {
-                "t-on-click.prevent": this.onShareArticleClick,
-            },
-        ".o_sticky_reactive": {
+        [COMPATIBILITY_SHARE_SELECTOR]: {
+            "t-on-click.prevent": this.onShareArticleClick,
+        },
+        ...this.dynamicContent,
+        _root: {
             "t-att-style": () => ({
-                top: `${this.position || this.defaultPosition}px`,
-                transition: "top 0.2s",
+                "--wblog-sticky-top": `${this.offset}px`,
             }),
         },
     };
 
     setup() {
-        this.defaultPosition = this._isCompactListOrSplitGridView() ? 0 : 16;
+        this.defaultOffset = this._isCompactListOrSplitGridView() ? 0 : 16;
         // The sidebar becomes sticky once the scroll reaches the table of
         // content.
         if (this._hasBlogTableOfContent()) {
             const blogToCEl = this.el.querySelector("#o_wblog_post_sidebar .o_wblog_toc");
-            this.defaultPosition -= blogToCEl.offsetTop;
+            this.defaultOffset -= blogToCEl.offsetTop;
         }
-        this.position = this.defaultPosition;
-    }
-
-    start() {
-        this._adaptToHeaderChange();
-        this.registerCleanup(
-            this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this))
-        );
+        super.setup();
+        this.stickyEl = this.el.querySelectorAll(".o_sticky_reactive");
     }
 
     onBlogSheetTriggerClick() {
@@ -127,18 +123,6 @@ export class WebsiteBlog extends Interaction {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _adaptToHeaderChange() {
-        const position = this.defaultPosition + scrollFixedOffset(this.el.ownerDocument);
-        if (this.position !== position) {
-            this.position = position;
-            this.el.style.setProperty("--wblog-sticky-top", `${position}px`);
-            this.updateContent();
-        }
-    }
 
     /**
      * Checks if the layout is "Compact" list view or "Split" grid view (which
