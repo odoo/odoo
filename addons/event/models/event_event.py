@@ -29,6 +29,27 @@ except ImportError:
     vobject = None
 
 
+class _IcsZoneInfo(ZoneInfo):
+    """ZoneInfo with the pytz-style interface vobject expects.
+
+    vobject names TZIDs after the pytz ``zone`` attribute and is unaware of
+    ``ZoneInfo.key``; without it, the TZID falls back to the timezone
+    abbreviation (e.g. "EST" instead of "America/Detroit").
+    """
+
+    @property
+    def zone(self):
+        return self.key
+
+    def dst(self, dt):
+        # vobject finds DST transitions from naive datetimes, expecting
+        # ambiguous / nonexistent local times to resolve to the offset after
+        # the transition like pytz's ``is_dst`` handling; fold=1 does that.
+        if dt is not None and dt.tzinfo is None:
+            dt = dt.replace(fold=1)
+        return super().dst(dt)
+
+
 class EventEvent(models.Model):
     """Event"""
     _name = 'event.event'
@@ -858,8 +879,9 @@ class EventEvent(models.Model):
             # py-vobject/vobject#88 which isn't even in 0.9.9, current release
             # as of now)
             cal_event.add('created').value = fields.Datetime.now().replace(tzinfo=ZoneInfo("UTC"))
-            cal_event.add('dtstart').value = start.astimezone(ZoneInfo(event.date_tz))
-            cal_event.add('dtend').value = end.astimezone(ZoneInfo(event.date_tz))
+            event_tz = _IcsZoneInfo(event.date_tz)
+            cal_event.add('dtstart').value = start.astimezone(event_tz)
+            cal_event.add('dtend').value = end.astimezone(event_tz)
             cal_event.add('summary').value = event.name
             external_description = event._get_external_description()
             cal_event.add('description').value = external_description
