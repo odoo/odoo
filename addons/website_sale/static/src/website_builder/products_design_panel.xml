@@ -306,7 +306,11 @@
 
                 <BuilderRow
                     label.translate="Roundness"
-                    t-if="!this.isActiveItem('wsale_design_grid_catalog') &amp;&amp; !this.isActiveItem('wsale_design_grid_list')"
+                    t-if="(
+                        !this.isActiveItem('wsale_design_grid_catalog')
+                        &amp;&amp; !this.isActiveItem('wsale_design_grid_list')
+                        &amp;&amp; this.props.recordName !== 'wishlist_opt_products_design_classes'
+                    )"
                 >
                     <BuilderRange
                         max="5"
@@ -558,6 +562,15 @@
                     <BuilderCheckbox
                         id="'wsale_products_opt_img_secondary_show'"
                         classAction="'o_wsale_products_opt_img_secondary_show'"
+                    />
+                </BuilderRow>
+
+                <BuilderRow
+                    label.translate="Background"
+                    tooltip.translate="Background color behind product images. Also applied to product images in the cart, checkout, comparison and configuration popups."
+                >
+                    <BuilderColorPicker
+                        styleAction="'--wsale-product-thumb-bg'" enabledTabs="['solid', 'custom']"
                     />
                 </BuilderRow>
 

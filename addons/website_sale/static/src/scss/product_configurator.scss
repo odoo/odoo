@@ -62,24 +62,15 @@
 
     height: calc(var(--o-wsale-css-attribute-image__height) - var(--o-wsale-css-attribute-image__outline-width));
     aspect-ratio: 1;
-    border: calc(var(--o-bs-border-width) * 5) solid var(--body-bg);
-    outline: var(--o-wsale-css-attribute-image__outline-width) solid var(--o-border-color);
+    padding: calc(var(--o-bs-border-width) * 5);
+    background-color: var(--wsale-product-thumb-bg, var(--o-color-3));
+    border-radius: MIN(var(--o-wsale-product-image-radius, var(--o-wsale-opt-border-radius, var(--border-radius))), 20%);
+    outline: none;
+    overflow: hidden;
     transition: var(--o-bs-input-transition);
-
-    &:hover, &.active {
-        outline-color: var(--primary);
-    }
 
     &:where(:has(input:focus-visible)) {
         box-shadow: var(--o-bs-focus-ring-box-shadow);
-    }
-
-    &.custom_value {
-        background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
-    }
-
-    &.transparent {
-        background-image: url(/web/static/img/transparent.png);
     }
 
     &.size_small {
@@ -90,15 +81,12 @@
 
 .css_attribute_thumbnail {
     box-sizing: content-box;
-    border: 1px solid var(--body-bg);
-    border-radius: MIN(var(--o-wsale-product-image-radius), var(--border-radius));
-    outline: var(--o-bs-border-width) solid var(--o-border-color);
+    padding: 1px;
+    background-color: var(--wsale-product-thumb-bg, var(--o-color-3));
+    border-radius: MIN(var(--o-wsale-product-image-radius), 20%);
+    outline: none;
     aspect-ratio: var(--o-wsale-product-image-ratio);
     width: 64px;
-
-    &:hover, &.active {
-        outline-color: var(--primary);
-    }
 
     &:where(:has(input:focus-visible)) {
         box-shadow: var(--o-bs-focus-ring-box-shadow);
