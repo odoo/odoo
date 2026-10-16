@@ -8,5 +8,3 @@ class HrEmployeePublic(models.Model):
 
     email_sent = fields.Boolean(default=False)
     ip_connected = fields.Boolean(default=False)
-    manually_set_present = fields.Boolean(default=False)
-    manually_set_presence = fields.Boolean(default=False)

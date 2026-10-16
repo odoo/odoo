@@ -15,8 +15,6 @@ class HrEmployee(models.Model):
 
     email_sent = fields.Boolean(default=False)
     ip_connected = fields.Boolean(default=False)
-    manually_set_present = fields.Boolean(default=False)
-    manually_set_presence = fields.Boolean(default=False)
 
     @api.model
     def _check_presence(self):
@@ -26,12 +24,9 @@ class HrEmployee(models.Model):
         employees.write({
             'email_sent': False,
             'ip_connected': False,
-            'manually_set_present': False,
-            'manually_set_presence': False,
         })
 
         all_employees = employees
-
 
         # Check on IP
         if company.hr_presence_control_ip:
@@ -64,55 +59,6 @@ class HrEmployee(models.Model):
             employees = employees - email_employees
 
         company.sudo().hr_presence_last_compute_date = Datetime.now()
-
-    def get_presence_server_action_data(self):
-        server_action_xmlids = [
-            'action_hr_employee_presence_present',
-            'action_hr_employee_presence_absent',
-            'action_hr_employee_presence_sms',
-            'action_hr_employee_presence_time_off',
-        ]
-        actions = self.env['ir.actions.server'].sudo()
-        for xmlid in server_action_xmlids:
-            actions += actions.env.ref(f"hr_presence.{xmlid}")
-        return actions.read(['id', 'name', 'value'])
-
-    def _action_set_manual_presence(self, state):
-        if not self.env.user.has_group('hr.group_hr_manager'):
-            raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
-        self.write({
-            'manually_set_present': state,
-            'manually_set_presence': True,
-        })
-
-    def action_set_present(self):
-        self._action_set_manual_presence(True)
-
-    def action_set_absent(self):
-        self._action_set_manual_presence(False)
-
-    def action_open_leave_request(self):
-        if len(self) == 1:
-            model = 'hr.leave'
-            context = {'default_employee_id': self.id}
-        else:
-            model = 'hr.leave.generate.multi.wizard'
-            today = fields.Date.context_today(self)
-            context = {
-                'default_employee_ids': self.ids,
-                'default_date_from': today,
-                'default_date_to': today,
-                'default_name': _('Unplanned Absence'),
-            }
-
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': model,
-            'views': [[False, 'form']],
-            'view_mode': 'form',
-            'context': context,
-            'target': 'new',
-        }
 
     # --------------------------------------------------
     # Messaging
@@ -152,10 +98,10 @@ Thank you for your prompt attention to this matter.""")
                 continue
             if company.hr_presence_last_compute_date and employee.id in working_now_list and \
                     company.hr_presence_last_compute_date.day == fields.Datetime.now().day and \
-                    (employee.email_sent or employee.ip_connected or employee.manually_set_present):
+                    (employee.email_sent or employee.ip_connected):
                 employee.hr_presence_state = 'present'
             elif employee.id in working_now_list and employee.is_absent and \
-                not (employee.email_sent or employee.ip_connected or employee.manually_set_present):
+                not (employee.email_sent or employee.ip_connected):
                 employee.hr_presence_state = 'absent'
             else:
                 employee.hr_presence_state = 'out_of_working_hour'
