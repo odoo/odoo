@@ -9,7 +9,7 @@ import { PinnedMessagesPanel } from "@mail/discuss/core/common/pinned_messages_p
 
 import { _t } from "@web/core/l10n/translation";
 
-describeThreadActionGroup(10, { tags: ACTION_GROUP_TAGS.INLINE_SWITCHER_LOOK });
+describeThreadActionGroup(10, { tags: ACTION_GROUP_TAGS.ACTION_PANELS });
 
 registerThreadAction("pinned-messages", {
     availableOffline: true,

@@ -25,8 +25,8 @@ registerThreadAction("livechat-info", {
         },
         props: ({ thread }) => ({ thread }),
     },
-    sequence: 10,
-    sequenceGroup: 7,
+    sequence: ({ owner }) => (owner.isDiscussContent ? 40 : 10),
+    sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 7),
 });
 registerThreadAction("livechat-status", {
     condition: ({ channel, store, owner }) =>

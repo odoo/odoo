@@ -428,6 +428,7 @@ export class ActionList extends Component {
             panelContainer: actionPanelContainerSchema,
             /** More-action whose dropdown shows this list. */
             parentAction: t.instanceOf(ActionModel).optional(),
+            switcher: t.boolean().optional(),
             ...actionListPropsSchema,
         });
         this.store = useService("mail.store");

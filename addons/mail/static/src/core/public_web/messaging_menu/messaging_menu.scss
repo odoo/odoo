@@ -38,6 +38,35 @@
     width: 4.5rem;
 }
 
+.o-mail-MessagingMenu-selfToggler {
+    --btn-active-bg: rgba(var(--emphasis-color-rgb), 0.08);
+    --btn-hover-bg: rgba(var(--emphasis-color-rgb), 0.08);
+    --btn-active-border-color: transparent;
+    --btn-focus-box-shadow: none;
+}
+
+.o-mail-GuestNamePopover {
+    width: 15rem;
+}
+
+.o-mail-MessagingMenu-selfAvatar {
+    width: var(--o-mail-Avatar-size);
+    height: var(--o-mail-Avatar-size);
+}
+
+/* Level with the single-line composer: flush with the bottom of the tabs, two lines for the name. */
+.o-mail-MessagingMenu-self {
+    margin-bottom: -0.75rem;
+}
+
+.o-mail-MessagingMenu-selfName {
+    min-height: 2em;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
 .o-mail-MessagingMenu-filters {
     overflow-x: auto;
     scrollbar-width: none;
@@ -72,12 +101,18 @@
 }
 
 .o-mail-MessagingMenu-tab {
-    &:hover .o-mail-MessagingMenu-tabIcon {
-        background: var(--gray-200);
+    --mail-MessagingMenu-tabLabelOpacity: .65;
+
+    // Peeked: its list shows, without being the active tab.
+    &:hover, &.o-peeked {
+        .o-mail-MessagingMenu-tabIcon {
+            background: var(--gray-200);
+        }
     }
 
     &.active {
         --btn-active-color: var(--o-enterprise-action-color);
+        --mail-MessagingMenu-tabLabelOpacity: 1;
 
         .o-mail-MessagingMenu-tabIcon {
             background: var(--o-component-active-bg);
@@ -94,6 +129,10 @@
     .o-mail-MessagingMenu-tabIcon {
         width: calc(var(--o-bs-spacer) * 3);
     }
+}
+
+.o-mail-MessagingMenu-tabLabel {
+    opacity: var(--mail-MessagingMenu-tabLabelOpacity);
 }
 
 .o-mail-MessagingMenu-dropdownMenu {
