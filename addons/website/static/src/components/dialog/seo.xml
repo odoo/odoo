@@ -332,7 +332,7 @@
             pageImages="this.pageImages"
             url="this.url"/>
         <MetaKeywords t-if="this.canEditSeo"/>
-        <SeoChecks t-if="this.canEditSeo" isDefaultLang="this.isDefaultLang"/>
+        <SeoChecks t-if="this.canEditSeo" isDefaultLang="this.isDefaultLang" liveImages="!!this.props.applyImageAlts"/>
     </WebsiteDialog>
 </t>
 </templates>
