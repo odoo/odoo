@@ -114,6 +114,7 @@ class SaleOrderLine(models.Model):
             order = line.order_id
             new_repair_vals.append({
                 'state': 'confirmed',
+                'company_id': order.company_id.id,
                 'partner_id': order.partner_id.id,
                 'sale_order_id': order.id,
                 'sale_order_line_id': line.id,
