@@ -126,3 +126,19 @@ class TestPdf(TransactionCase):
 
         for i, expected_shape in enumerate(expected_shapes):
             self.assertEqual(processed_text[i], expected_shape)
+
+    def test_legacy_api_multi_page(self):
+        """ The selected pdf implementation must support the legacy API used
+        e.g. to split multi-record reports; the PyPDF2 2.x shim must not be
+        selected with PyPDF2 3.x, which turned that API into hard errors. """
+        writer = pdf.PdfFileWriter()
+        writer.addBlankPage(200, 200)
+        writer.addBlankPage(200, 200)
+        out = io.BytesIO()
+        writer.write(out)
+
+        reader = pdf.PdfFileReader(io.BytesIO(out.getvalue()))
+        self.assertEqual(reader.numPages, 2)
+        self.assertEqual(reader.getNumPages(), 2)
+        self.assertEqual(reader.getPage(1).mediaBox.getWidth(), 200)
+        out.close()
