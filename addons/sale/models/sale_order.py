@@ -7,7 +7,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
+from odoo.tools import float_compare, float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
 from odoo.tools.sql import create_index
 
 from odoo.addons.payment import utils as payment_utils
@@ -1428,8 +1428,16 @@ class SaleOrder(models.Model):
                 # but must also be accounted for on the final invoice.
 
                 delta_amount = 0
+                discount_dp = self.env['decimal.precision'].precision_get('Discount')
                 for order_line in self.order_line:
                     if not order_line.is_downpayment:
+                        continue
+                    # Skip the correction when a discount is added to the downpayment line
+                    # after it was invoiced
+                    if any(float_compare(invoice_line.discount, order_line.discount, precision_rounding=discount_dp)
+                        for invoice_line in order_line.invoice_lines
+                        if invoice_line.move_id.state != 'cancel'
+                    ):
                         continue
                     inv_amt = order_amt = 0
                     for invoice_line in order_line.invoice_lines:
