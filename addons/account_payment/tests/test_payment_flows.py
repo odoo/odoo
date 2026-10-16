@@ -22,8 +22,12 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         """Test the payment of an invoice through the payment/pay route"""
 
         # Pay for this invoice (no impact even if amounts do not match)
+        # We need to create a new invoice in order to pass the portal payment error checks
         route_values = self._prepare_pay_values()
-        route_values['invoice_id'] = self.invoice.id
+        invoice = self.init_invoice(
+            'out_invoice', partner=self.partner, amounts=[route_values['amount']], currency=self.currency, post=True
+        )
+        route_values['invoice_id'] = invoice.id
         tx_context = self._get_portal_pay_context(**route_values)
 
         # /invoice/transaction/<id>
@@ -46,7 +50,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         # self.assertEqual(tx_sudo.invoice_ids, invoice)
         # doesn't work, and cache invalidation doesn't work either.
         self.invoice.invalidate_recordset(['transaction_ids'])
-        self.assertEqual(self.invoice.transaction_ids, tx_sudo)
+        self.assertEqual(invoice.transaction_ids, tx_sudo)
 
     def test_check_portal_access_token_before_rerouting_flow(self):
         """ Test that access to the provided invoice is checked against the portal access token
