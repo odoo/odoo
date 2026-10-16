@@ -197,7 +197,7 @@ class SaleReport(models.Model):
 
     def _where_sale(self):
         return """
-            l.display_type IS NULL"""
+            l.display_type IS NULL AND t.type != 'combo'"""
 
     def _group_by_sale(self):
         return """
