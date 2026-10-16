@@ -34,7 +34,7 @@ export class ProductListPage extends Component {
         if (initCategories) {
             this.selfOrder.computeAvailableCategories();
         }
-        const topCategories = this.selfOrder.topCategories;
+        const topCategories = this.topCategories;
         const selectedCategory =
             initCategories && topCategories.length > 0
                 ? topCategories[0]
@@ -43,7 +43,6 @@ export class ProductListPage extends Component {
         this.state = proxy({
             selectedCategory: selectedCategory,
             quantityByProductTmplId: {},
-            topCategories: topCategories,
             subCategories: [],
         });
 
@@ -53,9 +52,7 @@ export class ProductListPage extends Component {
                 this.categoryListRef,
                 this.productListRef,
                 (catId) => {
-                    this.state.selectedCategory = this.state.topCategories.find(
-                        (c) => c.id === catId
-                    );
+                    this.state.selectedCategory = this.topCategories.find((c) => c.id === catId);
                 }
             ).scrollToCategory;
         }
@@ -145,7 +142,7 @@ export class ProductListPage extends Component {
     }
 
     ensureCategoryVisible() {
-        if (!this.selfOrder.kioskMode) {
+        if (!this.selfOrder.kioskMode || !this.selectedCategory) {
             return;
         }
 
@@ -179,11 +176,15 @@ export class ProductListPage extends Component {
         );
     }
 
+    get topCategories() {
+        return this.selfOrder.topCategories;
+    }
+
     get productCategories() {
         if (this.selfOrder.kioskMode) {
-            return [this.selectedCategory];
+            return this.selectedCategory ? [this.selectedCategory] : [];
         }
-        return this.state.topCategories;
+        return this.topCategories;
     }
 
     getProducts(category) {
