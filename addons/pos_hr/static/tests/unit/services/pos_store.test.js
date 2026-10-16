@@ -1,9 +1,16 @@
 import { test, expect } from "@odoo/hoot";
+import { queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { makeServerError, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    makeServerError,
+    MockServer,
+    mountWithCleanup,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { location } from "@web/core/browser/browser";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 
 definePosModels();
@@ -45,6 +52,27 @@ test("price mode follows the active cashier's price rights", async () => {
 test("_getConnectedCashier", async () => {
     const store = await setupPosEnv();
     expect(store.accessRight._getConnectedCashier().id).toBe(2);
+});
+test("selectCashier does not list the cashier of a trusted config's order", async () => {
+    const store = await setupPosEnv();
+    store.setCashier(store.models["hr.employee"].get(2));
+    const trustedConfigId = MockServer.env["pos.config"].create({});
+    const trustedEmployeeId = MockServer.env["hr.employee"].create({ name: "Trusted Employee" });
+    MockServer.env["pos.order"].create({
+        config_id: trustedConfigId,
+        employee_id: trustedEmployeeId,
+        state: "draft",
+    });
+    await store.deviceSync.readDataFromServer();
+    await mountWithCleanup(MainComponentsContainer);
+
+    store.selectCashier(false, true, true);
+    await waitFor(".o_dialog");
+    expect(queryAllTexts("button.cashier-selection-item .fw-bold")).toEqual([
+        "A Little Guy",
+        "Employee1",
+        "Supervised Employee",
+    ]);
 });
 test("shouldShowOpeningControl", async () => {
     const store = await setupPosEnv();

@@ -32,15 +32,33 @@ patch(PosAccessRightPlugin.prototype, {
         }
         return true;
     },
+    /**
+     * Employees allowed on this PoS (see `pos.config._employee_domain`). Other employees can be
+     * loaded as the cashier of an order (e.g. of a trusted config), but can't log in here.
+     */
+    getPosEmployees() {
+        const config = this.config;
+        const posEmployees = new Set([
+            ...config.supervised_employee_ids,
+            ...config.restrictive_employee_ids,
+            ...config.cashier_employee_ids,
+            ...config.manager_employee_ids,
+        ]);
+        const sessionUser = config.current_user_id;
+        return this.data.models["hr.employee"].filter(
+            (employee) =>
+                posEmployees.has(employee) || (sessionUser && employee.user_id === sessionUser)
+        );
+    },
     getEmployeeByPinCode(employees = [], code = "") {
         if (!employees.length) {
-            employees = this.data.models["hr.employee"].getAll();
+            employees = this.getPosEmployees();
         }
 
         return employees.filter((employee) => !code || Sha1.hash(code) === employee._pin);
     },
     getEmployeeByBarcode(code) {
-        return this.data.models["hr.employee"].find((emp) => emp._barcode === Sha1.hash(code));
+        return this.getPosEmployees().find((emp) => emp._barcode === Sha1.hash(code));
     },
     get employeeIsAdmin() {
         const cashier = this.loggedCashier;
