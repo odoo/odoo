@@ -702,6 +702,13 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'countries': ['IE'],
     },
     # Note: 'IT_CODICE' skipped for now, will need a refactor in itself.
+    'IT_CUC': {
+        'label': _lt('CUC'),
+        'help': _lt('CBI CUC code (Codice Univoco CBI) used for electronic banking.'),
+        'placeholder': 'A1B2C3D4',
+        'category': 'EN',
+        'countries': ['IT'],
+    },
     'JP_EN': {
         'sequence': 10,
         'scheme': '0188',
