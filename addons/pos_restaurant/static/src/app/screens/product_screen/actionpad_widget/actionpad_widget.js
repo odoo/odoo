@@ -94,4 +94,8 @@ patch(ActionpadWidget.prototype, {
             !this.pos.config.use_course_allocation
         );
     },
+    async clickNew() {
+        await this.pos.syncAllOrders({ orders: [this.pos.getOrder()] });
+        this.pos.showDefault();
+    },
 });
