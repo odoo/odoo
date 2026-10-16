@@ -37,17 +37,29 @@ class GoogleEventSync(models.AbstractModel):
         if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
             vals['need_sync'] = True
 
-        if 'calendar_id' in vals or 'user_id' in vals:
+        # Handle calendar change
+        target_calendar_id = None
+        if 'calendar_id' in vals:
+            target_calendar_id = vals['calendar_id']
+        elif 'user_id' in vals:
+            new_user = self.env['res.users'].browse(vals['user_id'])
+            target_calendar_id = new_user._find_or_create_primary_calendar().id if new_user else False
+
+        reassigned = self.browse()
+        if target_calendar_id is not None:
             for record in self:
-                if 'calendar_id' in vals:
-                    record._handle_calendar_change(google_service, vals['calendar_id'])
-                elif 'user_id' in vals and vals.get('user_id') != record.user_id.id:
-                    record._handle_calendar_change(
-                        google_service,
-                        vals['user_id'] and self.env['res.users'].browse(vals['user_id'])._find_or_create_primary_calendar().id
-                    )
+                if target_calendar_id == record.calendar_id.id or 'calendar_id' not in vals and vals['user_id'] == record.user_id.id:
+                    continue
+                if record._handle_calendar_change(google_service, target_calendar_id):
+                    reassigned |= record
 
         result = super().write(vals)
+
+        if reassigned:
+            reassigned.write({'google_id': False, 'last_google_calendar_sync_path': False, 'need_sync': True})
+            for record in reassigned:
+                record._sync_new_organizer_or_send_invitation(google_service)
+
         if self.env.user._get_google_sync_status() != "sync_paused":
             for record in self:
                 if record.google_id and record._should_be_synced():
@@ -65,7 +77,7 @@ class GoogleEventSync(models.AbstractModel):
                         timeout=3
                     )
                 elif vals.get('is_draft') is False:
-                    record.with_user(record._get_event_owner())._google_insert(google_service, record._google_values(), timeout=3)
+                    record.with_user(record._get_event_owner())._google_insert(google_service, record._get_google_calendar_path(), record._google_values(), timeout=3)
 
         return result
 
@@ -89,22 +101,39 @@ class GoogleEventSync(models.AbstractModel):
         return super().unlink()
 
     def _handle_calendar_change(self, google_service, new_calendar_id):
+        """Return True if the event should be re-inserted for its new organizer after we write the new values."""
         self.ensure_one()
         if not self.calendar_id or not self.google_id or not self._get_event_owner():
-            return
-        if new_calendar_id in self._get_event_owner().calendar_ids.filtered(lambda c: c.google_sync_enabled).ids:
+            return False
+        if new_calendar_id in self._get_event_owner().calendar_ids.filtered('google_sync_enabled').ids:
             # Event was moved to another calendar of the same user - we need to keep a record of the previous
             # calendar id to be able to move it in Google later.
             # Do not update the last synced calendar if already set - It should only be cleared once we move it in Google
             if not self.last_google_calendar_sync_path:
                 self.last_google_calendar_sync_path = self.calendar_id.get_google_path()
+            return False
         else:
             # If the event is moved to another user's calendar or an unsynced one, we should delete the event from
             # the original owner's Google calendar and let the new owner synchronize it to ensure the owner is correct on Google.
             # This also prevents potential access right issues if we tried to simply move the event to someone else's calendar.
-            if self.env.user._get_google_sync_status() == "sync_active":
+            # TODO: replace token check with `_get_google_sync_status() == "sync_active"` after task 6620119
+            if self._get_event_user().google_calendar_token:
                 self.with_user(self._get_event_user())._google_delete(google_service, self.calendar_id.get_google_path(), self.google_id)
-                self.write({'google_id': False, 'last_google_calendar_sync_path': False, 'need_sync': True})
+            return True
+
+    def _sync_new_organizer_or_send_invitation(self, google_service):
+        """After an event changes organizer, we want to insert it into their calendar - let Google handle notifications.
+        If they are not synchronized, we need to send an invitation email to the attendees instead."""
+        self.ensure_one()
+        owner = self._get_event_owner()
+        # TODO: replace token check with `_get_google_sync_status() == "sync_active"` after task 6620119
+        if owner and owner.google_calendar_token and self._should_be_synced():
+            # Google sends the invitation (sendUpdates=all)
+            self.with_user(owner)._google_insert(google_service, self._get_google_calendar_path(), self._google_values(), timeout=3)
+        elif not self.env.context.get('dont_notify'):
+            self.attendee_ids.filtered(
+                lambda a: a.partner_id not in [self.user_id.partner_id, self.env.user.partner_id]
+            )._send_invitation_emails()
 
     @api.model_create_multi
     def create(self, vals_list):
