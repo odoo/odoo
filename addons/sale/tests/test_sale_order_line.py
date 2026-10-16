@@ -74,3 +74,36 @@ class TestSaleOrderLine(SaleCommon):
                 },
             ],
         )
+
+    def test_sale_order_line_description_skips_empty_custom_value(self):
+        engraving_attribute = self.env["product.attribute"].create({
+            "name": "Engraving",
+            "create_variant": "no_variant",
+            "value_ids": [
+                Command.create({"name": "Initials"}),
+                Command.create({"name": "Custom", "is_custom": True}),
+            ],
+        })
+        product_template = self.env["product.template"].create({
+            "name": "Pen",
+            "description_sale": "Description",
+            "attribute_line_ids": [
+                Command.create({
+                    "attribute_id": engraving_attribute.id,
+                    "value_ids": [Command.set(engraving_attribute.value_ids.ids)],
+                })
+            ],
+        })
+        custom_ptav = product_template.attribute_line_ids.product_template_value_ids.filtered(
+            "is_custom"
+        )
+
+        self.sale_order.order_line = [
+            Command.clear(),
+            Command.create({
+                "product_id": product_template.product_variant_id.id,
+                "product_no_variant_attribute_value_ids": [Command.set(custom_ptav.ids)],
+            }),
+        ]
+
+        self.assertEqual(self.sale_order.order_line.name, "Description")

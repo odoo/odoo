@@ -54,7 +54,7 @@ export class ProductTemplateAttributeLine {
      * @return {Boolean} Whether this PTAL has selected custom PTAVs.
      */
     get hasSelectedCustomPtav() {
-        return this.selected_ptavs.some(ptav => ptav.custom_value);
+        return this.selected_ptavs.some(ptav => (ptav.custom_value || "").trim());
     }
 
     /**

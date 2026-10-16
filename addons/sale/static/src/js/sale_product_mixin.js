@@ -14,7 +14,7 @@ async function applyProduct(record, product) {
     ];
     for (const ptal of product.attribute_lines) {
         const selectedCustomPTAV = getSelectedCustomPtav(ptal);
-        if (selectedCustomPTAV) {
+        if (selectedCustomPTAV && (ptal.customValue || "").trim()) {
             customAttributesCommands.push(
                 x2ManyCommands.create(undefined, {
                     custom_product_template_attribute_value_id: [

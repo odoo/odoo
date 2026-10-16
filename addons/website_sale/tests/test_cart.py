@@ -503,6 +503,37 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         self.assertEqual(len(cart.order_line), 2)
         self.assertEqual(cart.order_line.mapped("product_uom_qty"), [4, 1])
 
+    def test_cart_add_saves_only_filled_custom_values_on_separate_lines(self):
+        product_template = self.env["product.template"].create({
+            "name": "Engravable pen",
+            "attribute_line_ids": [
+                Command.create({
+                    "attribute_id": self.custom_attribute.id,
+                    "value_ids": [Command.set(self.custom_attribute.value_ids.ids)],
+                })
+            ],
+        })
+        custom_ptav = product_template.attribute_line_ids.product_template_value_ids
+        cart = self._create_so(order_line=[])
+        add_one = partial(
+            cart._cart_add, product_id=product_template.product_variant_id.id, quantity=1
+        )
+
+        for custom_value in ("", "Wood"):
+            add_one(
+                product_custom_attribute_values=[
+                    {
+                        "custom_product_template_attribute_value_id": custom_ptav.id,
+                        "custom_value": custom_value,
+                    }
+                ]
+            )
+
+        self.assertEqual(
+            [line.product_custom_attribute_value_ids.custom_value for line in cart.order_line],
+            [False, "Wood"],
+        )
+
     def test_cart_new_pricelist_from_geoip(self):
         """Check that, when adding a new partner to a website order, the partner's GeoIP
         is factored into the pricelist recomputation.
