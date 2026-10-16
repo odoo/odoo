@@ -742,3 +742,8 @@ class CalendarEvent(models.Model):
         self.ensure_one()
         has_different_owner = self.user_id and self.user_id != sender_user
         return has_different_owner
+
+    def _creation_message(self):
+        if self.env.context.get('microsoft_calendar_from_sync'):
+            return _('Calendar Event imported from Outlook')
+        return super()._creation_message()

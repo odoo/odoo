@@ -159,8 +159,9 @@ class ResUsers(models.Model):
             synced_recurrences |= self.env['calendar.recurrence']._sync_google2odoo(recurrences_to_sync, calendar, recurrences_write_dates)
             synced_events |= self.env['calendar.event']._sync_google2odoo(events_to_sync, calendar, events_write_dates, default_reminders=default_reminders)
 
+        need_refresh = bool(synced_recurrences or synced_events)
         if not self._check_pending_odoo_records():
-            return bool(synced_recurrences or synced_events)
+            return need_refresh
 
         # Odoo -> Google
         for calendar in self.env.user.calendar_ids:
@@ -175,8 +176,6 @@ class ResUsers(models.Model):
             synced_events |= synced_recurrences.calendar_event_ids - synced_recurrences._get_outliers()
             events = self.env['calendar.event']._get_records_to_sync(calendar, full_sync=full_sync)
             (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
-            if bool(events | synced_events) or bool(recurrences | synced_recurrences):
-                need_refresh = True
 
         return need_refresh
 
