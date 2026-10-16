@@ -147,6 +147,27 @@ test(`remove a "Group By" facet properly unchecks groupbys in groupby menu`, asy
     expect(isItemSelected("Foo")).toBe(false);
 });
 
+test("remove a default groupby shared by the action and the view", async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["groupBy"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter string="Foo" name="group_by_foo" context="{'group_by': 'foo'}"/>
+            </search>
+        `,
+        context: { search_default_group_by_foo: 1 },
+        defaultGroupBy: ["foo"],
+    });
+    expect(getFacetTexts()).toEqual(["Foo"]);
+    expect(searchBar.env.searchModel.groupBy).toEqual(["foo"]);
+
+    await removeFacet("Foo");
+    expect(getFacetTexts()).toEqual([]);
+    expect(searchBar.env.searchModel.groupBy).toEqual([]);
+});
+
 test("group by a date field using interval works", async () => {
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "foo",
