@@ -3,6 +3,7 @@
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import new_test_user
+from odoo.tools import convert_file
 
 
 class TestDiscussChannelMember(MailCommon):
@@ -135,3 +136,17 @@ class TestDiscussChannelMember(MailCommon):
         last_message_id = channel.message_ids[0].id
         new_members = channel.with_user(self.user_1)._add_members(users=self.user_2)
         self.assertEqual(new_members.new_message_separator, last_message_id + 1)
+
+    def test_data_update_after_admin_left_and_rejoined_channels(self):
+        """Leaving a channel deletes the member record created by the data file
+        (and its xmlid); joining again creates a new one. Updating the module
+        must not try to create the data member again (unique partner/channel)."""
+        admin = self.env.ref("base.user_admin")
+        for xmlid in ("mail.channel_all_employees", "mail.channel_admin"):
+            channel = self.env.ref(xmlid)
+            channel.with_user(admin).action_unfollow()
+            channel._add_members(users=admin)
+        convert_file(self.env, "mail", "data/discuss_channel_data.xml", {}, mode="update", noupdate=True)
+        for xmlid in ("mail.channel_all_employees", "mail.channel_admin"):
+            members = self.env.ref(xmlid).channel_member_ids.filtered(lambda m: m.partner_id == admin.partner_id)
+            self.assertEqual(len(members), 1)
