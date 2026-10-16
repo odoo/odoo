@@ -43,6 +43,13 @@
                     widget="password"
                 />
             </group>
+            <field name="allow_tokenization" position="after">
+                <field
+                    name="mercado_pago_cash_payment_days_to_settle"
+                    invisible="code != 'mercado_pago'"
+                    required="code == 'mercado_pago'"
+                />
+            </field>
             <group name="provider_config" position="before">
                 <div
                     invisible="
