@@ -4,6 +4,10 @@ import { scrollTo } from "@web/core/utils/scrolling";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import PortalSidebar from "@portal/js/portal_sidebar";
 
+// Same page size as the document layout preview (iframe_wrapper_field.scss).
+const PAGE_WIDTH = 1040;
+const PAGE_HEIGHT = 1464;
+
 publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
     selector: '.o_portal_invoice_sidebar',
     events: {
@@ -37,16 +41,21 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
 
     /**
      * Called when the iframe is loaded or the window is resized on customer portal.
-     * The goal is to expand the iframe height to display the full report without scrollbar.
+     * The goal is to display the full report as a page fitting the portal width, without scrollbar.
      *
      * @private
      * @param {object} $el: the iframe
      */
     _updateIframeSize: function ($el) {
         var $wrapwrap = $el.contents().find('div#wrapwrap');
+        // Pin the footer to the bottom of the page.
+        $el.contents().find('main').addClass('d-flex flex-column min-vh-100');
         // Set it to 0 first to handle the case where scrollHeight is too big for its content.
-        $el.height(0);
-        $el.height($wrapwrap[0].scrollHeight);
+        $el.css({ width: PAGE_WIDTH, height: 0 });
+        const height = Math.max($wrapwrap[0].scrollHeight, PAGE_HEIGHT);
+        const scale = $el.parent().width() / PAGE_WIDTH;
+        $el.css({ height, transform: `scale(${scale})` });
+        $el.parent().height(height * scale);
 
         // scroll to the right place after iframe resize
         const isAnchor = /^#[\w-]+$/.test(window.location.hash)
