@@ -537,7 +537,7 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
         """
         self.italian_partner_a.l10n_it_codice_fiscale = '00465840031'
         existing_partners = self.env['res.partner'].search([])
-        iban = "IT75F0200839061000400xxxxx"
+        iban = "IT75F0200839061000400XXXXX"
         invoice = self._assert_import_invoice('IT01234567889_FPR03.xml', [{}], f"""
             <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento" position="inside">
                 <IBAN>{iban}</IBAN>
