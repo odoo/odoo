@@ -1,4 +1,8 @@
-from odoo import models, fields, api
+from odoo import api, fields, models
+
+from odoo.addons.l10n_eg_edi_eta.tools.partner_identifiers import (
+    EG_ADDITIONAL_IDENTIFIERS_METADATA,
+)
 
 
 class ResPartner(models.Model):
@@ -9,6 +13,27 @@ class ResPartner(models.Model):
     @api.model
     def _commercial_fields(self):
         return super()._commercial_fields() + ['l10n_eg_building_no']
+
+    @api.model
+    def _get_all_additional_identifiers_metadata(self):
+        return {**super()._get_all_additional_identifiers_metadata(), **EG_ADDITIONAL_IDENTIFIERS_METADATA}
+
+    @api.depends('country_id', 'additional_identifiers')
+    @api.depends_context('company')
+    def _compute_available_additional_identifiers_metadata(self):
+        # The Foreign ID identifies non-Egyptian individuals: only offer it on foreign partners of an Egyptian company.
+        super()._compute_available_additional_identifiers_metadata()
+        foreign_id_metadata = self._lazy_translate_additional_identifiers_metadata(EG_ADDITIONAL_IDENTIFIERS_METADATA['EG_FID'])
+        is_eg_company = self.env.company.account_fiscal_country_id.code == 'EG'
+        for partner in self:
+            metadata = partner.available_additional_identifiers_metadata or {}
+            if 'EG_FID' in (partner.additional_identifiers or {}) or (
+                is_eg_company and partner.country_code and partner.country_code != 'EG'
+            ):
+                metadata['EG_FID'] = foreign_id_metadata
+            else:
+                metadata.pop('EG_FID', None)
+            partner.available_additional_identifiers_metadata = metadata
 
     def _address_fields(self):
         return super()._address_fields() + ['l10n_eg_building_no']
