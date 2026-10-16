@@ -22,6 +22,7 @@ from contextlib import contextmanager
 from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
+from typing import ParamSpec, TypeVar, Any, Callable
 
 try:
     from decorator import decoratorx as decorator
@@ -33,6 +34,10 @@ from .tools import classproperty, frozendict, lazy_property, OrderedSet, Query, 
 from .tools.translate import _
 
 _logger = logging.getLogger(__name__)
+
+P = ParamSpec("P")
+R = TypeVar("R", bound=Any)
+
 
 # The following attributes are used, and reflected on wrapping methods:
 #  - method._constrains: set by @constrains, specifies constraint dependencies
@@ -97,7 +102,7 @@ def propagate(method1, method2):
     return method2
 
 
-def constrains(*args):
+def constrains(*args: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """Decorate a constraint checker.
 
     Each argument must be a field name used in the check::
@@ -243,7 +248,7 @@ def onchange(*args):
     return attrsetter('_onchange', args)
 
 
-def depends(*args):
+def depends(*args: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """ Return a decorator that specifies the field dependencies of a "compute"
         method (for new-style function fields). Each argument must be a string
         that consists in a dot-separated sequence of field names::
