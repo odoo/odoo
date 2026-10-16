@@ -510,10 +510,14 @@ export class HierarchyModel extends Model {
         this.activeFields = params.activeFields;
         this.defaultOrderBy = params.defaultOrderBy;
         this.notification = notification;
+        this.totalRecords = 0;
+        this.doCount = true;
         this.config = {
             domain: [],
             ...params.config,
             isRoot: true,
+            limit: params.limit,
+            offset: 0,
         };
     }
 
@@ -767,10 +771,15 @@ export class HierarchyModel extends Model {
                 // Just needed for the first load.
                 delete config.context.hierarchy_res_id;
             }
+            this.doCount = true  // domain changed so need a recount
         }
 
         // orderBy
         config.orderBy = "orderBy" in params ? params.orderBy : config.orderBy;
+
+        config.limit = params.limit === undefined ? currentConfig.limit : params.limit;
+        config.offset = params.offset === undefined ? currentConfig.offset : params.offset;
+
         // re-apply previous orderBy if not given (or no order)
         if (!config.orderBy.length) {
             config.orderBy = currentConfig.orderBy || [];
@@ -840,6 +849,15 @@ export class HierarchyModel extends Model {
                 ? this.defaultDomain
                 : Domain.and([this.defaultDomain, domain]).toList({});
         }
+        if (config.limit && this.doCount) {
+            const totalCount = await this.orm.searchCount(
+                this.resModel,
+                domain,
+                { context: this.context }
+            );
+            this.totalRecords = totalCount;
+            this.doCount = false;
+        }
         const fieldsSpec = this._getFieldsSpec(config.context);
         const hierarchyRead = async () => {
             return await this.orm.call(
@@ -850,6 +868,8 @@ export class HierarchyModel extends Model {
                     fieldsSpec,
                     this.parentFieldName,
                     this.childFieldName,
+                    config.offset,
+                    config.limit,
                     orderByToString(config.orderBy),
                 ],
                 { context: this.context }
