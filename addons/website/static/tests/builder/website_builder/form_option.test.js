@@ -772,6 +772,40 @@ test("Checkbox default value option stays visible when changing label position",
     expect("[data-attribute-action='checked']").toHaveCount(1);
 });
 
+test("Checkbox description position none persists after multiple clicks", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(
+        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+                <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
+                    <div class="s_website_form_rows">
+                        <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="boolean">
+                            <label class="s_website_form_label" for="opftfejmju">
+                                <span class="s_website_form_label_content">My Field</span>
+                            </label>
+                            <div class="form-check">
+                                <input type="checkbox" value="Yes" class="s_website_form_input form-check-input" name="My field" id="opftfejmju">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>`
+    );
+
+    await contains(":iframe section span:contains('My Field')").click();
+    expect("[data-label='Description'] button").toHaveText("None");
+    await contains("[data-label='Description'] button").click();
+    await contains("[data-action-value='stacked']").click();
+    expect("[data-label='Description'] button").toHaveText("Stacked");
+    await contains("[data-label='Description'] button").click();
+    await contains("[data-action-value='none']").click();
+    expect("[data-label='Description'] button").toHaveText("None");
+    await contains("[data-label='Description'] button").click();
+    await contains("[data-action-value='none']").click();
+    expect("[data-label='Description'] button").toHaveText("None");
+});
+
 test("multiple conditional visiblity value for 'contains'", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(
