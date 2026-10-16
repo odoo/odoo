@@ -566,3 +566,37 @@ class TestTransferWizard(AccountTestInvoicingCommon):
             {'balance': 2000, 'analytic_distribution': {str(self.analytic_account_1.id): 50, str(self.analytic_account_2.id): 50}},
             {'balance': 1000, 'analytic_distribution': False},
         ])
+
+    def test_change_period_reconcile_receivable_lines(self):
+        accrual_account = self.env['account.account'].create({
+            'name': 'Accrual',
+            'code': 'ACCR01',
+            'account_type': 'asset_current',
+            'reconcile': True,
+        })
+        invoices = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2024-01-15',
+            'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': price, 'tax_ids': []})],
+        } for price in (1000.0, 2000.0)])
+        invoices.action_post()
+        receivable_lines = invoices.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
+
+        wizard = self.env['account.automatic.entry.wizard'].with_context(
+            active_model='account.move.line',
+            active_ids=receivable_lines.ids,
+        ).create({
+            'action': 'change_period',
+            'date': '2024-01-31',
+            'journal_id': self.journal.id,
+            'expense_accrual_account': accrual_account.id,
+        })
+        created_moves = self.env['account.move'].browse(wizard.do_action()['domain'][0][2])
+
+        self.assertFalse(any(receivable_lines.mapped('reconciled')))
+        for invoice in invoices:
+            lines = created_moves.line_ids.filtered(lambda line: invoice.name in line.name and line.account_id == self.receivable_account)
+            self.assertEqual(len(lines), 2)
+            self.assertTrue(all(lines.mapped('reconciled')))
+            self.assertEqual(lines.full_reconcile_id.reconciled_line_ids, lines)
