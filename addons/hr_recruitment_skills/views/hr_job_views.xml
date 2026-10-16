@@ -31,6 +31,13 @@
             <xpath expr="//group[@id='job_skills']/field[@name='current_job_skill_ids']" position="attributes">
                 <attribute name="groups">!hr.group_hr_user,!hr_recruitment.group_hr_recruitment_interviewer</attribute>
             </xpath>
+
+            <group name="matching_criteria" position="inside">
+                <field name="expected_degree" position="move"/>
+                <label name="expected_experience_label" position="move"/>
+                <div name="expected_experience_div" position="move"/>
+            </group>
+
         </field>
     </record>
 

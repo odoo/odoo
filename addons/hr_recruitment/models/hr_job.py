@@ -84,6 +84,7 @@ class HrJob(models.Model):
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True, groups="hr_recruitment.group_hr_recruitment_interviewer")
     industry_id = fields.Many2one('res.partner.industry', 'Industry', tracking=True)
     expected_degree = fields.Many2one("hr.recruitment.degree", groups="hr_recruitment.group_hr_recruitment_interviewer")
+    expected_experience = fields.Integer("Experience", groups="hr_recruitment.group_hr_recruitment_interviewer")
 
     activity_count = fields.Integer(compute='_compute_activities', groups="hr_recruitment.group_hr_recruitment_interviewer")
 
@@ -110,6 +111,11 @@ class HrJob(models.Model):
         ('yearly', 'Year'),
     ], string='Scheduled Pay', default='monthly', required=True, groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user")
     company_partner_id = fields.Many2one('res.partner', compute='_compute_company_partner_id')
+
+    _expected_experience_negative = models.Constraint(
+        'CHECK(expected_experience >= 0)',
+        'Expected experience cannot be negative.',
+    )
 
     @api.depends('application_ids.date_closed')
     def _compute_no_of_hired_employee(self):
