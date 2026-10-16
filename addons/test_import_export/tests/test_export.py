@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from odoo import Command, http
 from odoo.tests import common, tagged, warmup
+from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import get_lang
 from odoo.addons.web.controllers.export import ExportXlsxWriter
 
@@ -143,6 +144,19 @@ class TestExport(XlsxCreatorCase):
         expected_fields = set(f.name for f in model_fields.filtered(lambda field: field.readonly == False)) | {'id'}
 
         self.assertEqual(expected_fields, set(field['id'] for field in res))
+
+    def test_export_several_batches(self):
+        count = PREFETCH_MAX + 1
+        self.make([{'int_sum': i} for i in range(count)])
+
+        export = self.export(fields=['int_sum'], params={})
+        self.assertExportEqual(export, [['Int Sum']] + [[str(i)] for i in range(count)])
+
+        response = self.url_open('/web/export/csv', data={
+            'data': json.dumps(dict(self.default_params, fields=[{'name': 'int_sum', 'label': 'Int Sum'}])),
+            'csrf_token': self.csrf_token(),
+        })
+        self.assertEqual(response.text.splitlines(), ['"Int Sum"'] + [f'"{i}"' for i in range(count)])
 
 
 @tagged('-at_install', 'post_install')
