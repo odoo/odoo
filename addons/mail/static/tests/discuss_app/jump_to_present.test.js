@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, press, queryFirst, tick } from "@odoo/hoot-dom";
-import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { Command, patchWithCleanup, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import {
     SIZES,
@@ -19,6 +19,7 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -45,6 +46,54 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
     await click("[title='Jump to Present']");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
+});
+
+test("Jump to present reaches the bottom when a message arrives during the smooth scroll", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "General",
+    });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 20 });
+    const smoothScrollStarted = Promise.withResolvers();
+    patchWithCleanup(Element.prototype, {
+        scrollTo(...args) {
+            if (args[0]?.behavior === "smooth") {
+                this.addEventListener("scroll", () => smoothScrollStarted.resolve(), {
+                    once: true,
+                });
+            }
+            return super.scrollTo(...args);
+        },
+    });
+    await click("[title='Jump to Present']");
+    await smoothScrollStarted.promise;
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "New message", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Thread", {
+        contains: [".o-mail-Message", { count: 21 }],
+        scroll: "bottom",
+    });
 });
 
 test("Basic jump to present when scrolling to outdated messages (DESC, chatter aside)", async () => {
