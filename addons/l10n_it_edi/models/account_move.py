@@ -173,12 +173,12 @@ class AccountMove(models.Model):
     # Overrides
     # -------------------------------------------------------------------------
 
-    @api.depends('l10n_it_edi_transaction')
+    @api.depends('l10n_it_edi_transaction', 'l10n_it_edi_state')
     def _compute_show_reset_to_draft_button(self):
         # EXTENDS 'account'
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            move.show_reset_to_draft_button = not (move.is_sale_document() and move.l10n_it_edi_transaction) and move.show_reset_to_draft_button
+            move.show_reset_to_draft_button = not (move.l10n_it_edi_state not in (False, 'rejected') and move.l10n_it_edi_transaction) and move.show_reset_to_draft_button
 
     def _get_edi_decoder(self, file_data, new=False):
         # EXTENDS 'account'
