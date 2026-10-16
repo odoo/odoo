@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fidelity_program_view_form" model="ir.ui.view">
+        <field name="name">fidelity.program.view.form</field>
+        <field name="model">fidelity.program</field>
+        <field name="arch" type="xml">
+            <form string="Fidelity Program">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_open_fidelity_cards" icon="fa-tags" domain="[('program_id','=',id)]">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="nb_cards"/>
+                                </span>
+                                <span class="o_stat_text">Cards / Coupons</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. 10% discount on laptops"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type" />
+                            <field name="trigger" />
+                            <field name="company_id" />
+                            <field name="currency_id" />
+                            <field name="point_unit" />
+                        </group>
+                        <group>
+                            <p class="o_form_label" id="fidelity_program_availabilities_label">Available On</p>
+                            <div id="fidelity_program_availabilities" invisible="1"/>
+                            <field name="start_date" />
+                            <field name="end_date" />
+                            <field name="pricelist_ids" widget="many2many_tags" groups="product.group_product_pricelist"/>
+                            <field name="limit_usage" />
+                            <field name="limit_usage_maximum" invisible="not limit_usage" />
+                            <field name="limit_usage_remaining" invisible="not limit_usage" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="rules_and_rewards" string="Rules &amp; Rewards">
+                            <group class="p-0">
+                                <group class="px-1">
+                                    <field name="rule_ids" colspan="2" mode="kanban" nolabel="1" />
+                                </group>
+                                <group class="px-1">
+                                    <field name="reward_ids" colspan="2" mode="kanban" nolabel="1" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fidelity_program_view_list" model="ir.ui.view">
+        <field name="name">fidelity.program.view.list</field>
+        <field name="model">fidelity.program</field>
+        <field name="arch" type="xml">
+            <list js_class="fidelity_program_list_view">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="fidelity_program_fidelity_action" model="ir.actions.act_window">
+        <field name="name">Fidelity Management</field>
+        <field name="res_model">fidelity.program</field>
+        <field name="path">fidelity</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <div class="o_loyalty_not_found container mt64">
+                <h1>No program found.</h1>
+                <p class="lead">Create one from scratch, or use a templates below:</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="action_fidelity_program_tree_fidelity" model="ir.actions.act_window.view">
+        <field name="view_mode">list</field>
+        <field name="sequence">1</field>
+        <field name="view_id" ref="fidelity_program_view_list"/>
+        <field name="act_window_id" ref="fidelity_program_fidelity_action"/>
+    </record>
+
+    <record id="action_fidelity_program_form_fidelity" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="sequence">2</field>
+        <field name="view_id" ref="fidelity_program_view_form"/>
+        <field name="act_window_id" ref="fidelity_program_fidelity_action"/>
+    </record>
+</odoo>

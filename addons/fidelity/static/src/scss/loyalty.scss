@@ -1,0 +1,36 @@
+.loyalty-templates-container {
+    pointer-events: auto;
+
+    .loyalty-template {
+
+        &,
+        * {
+            transition: all .15s;
+        }
+
+        cursor: pointer !important;
+
+        img {
+            filter: invert(.5);
+        }
+
+        &:hover {
+            * {
+                color: #7C6576 !important;
+            }
+
+            background-color: var(--o-color-4);
+            box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1),
+            0 2px 2px 0 rgba(0, 0, 0, 0.05);
+            border-color: #7C6576 !important;
+
+            img {
+                filter: invert(0);
+            }
+
+            .card-body {
+                background-color: var(--o-color-4) !important;
+            }
+        }
+    }
+}
