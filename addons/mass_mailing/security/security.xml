@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="0">
         <record id="properties_base_definition_rule_mailing_user" model="ir.rule">
             <field name="name">properties.base.definition: mailing user</field>
             <field name="model_id" ref="base.model_properties_base_definition"/>
             <field name="groups" eval="[Command.link(ref('mass_mailing.group_mass_mailing_user'))]"/>
-            <field name="domain_force">[('properties_field_id', '=', user.env.ref('mass_mailing.field_mailing_contact__properties').id)]</field>
+            <field name="domain_force">[('properties_field_id', '=', user.env.ref('mass_mailing.field_mailing_contact__properties').id)]</field>   
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="perm_create" eval="True"/>
         </record>
+    </data>
 
+    <data noupdate="1">
         <record id="ir_ui_view_mass_mailing_user_read_access" model="ir.rule">
             <field name="name">ir.ui.view: mailing user</field>
             <field name="model_id" ref="base.model_ir_ui_view"/>
