@@ -14,6 +14,7 @@ class PosOrderLine(models.Model):
     _name = 'pos.order.line'
     _description = "Point of Sale Order Line"
     _rec_name = 'product_id'
+    _parent_name = 'combo_parent_id'
     _inherit = ['pos.load.mixin', 'res.currency.rate.consolidation.mixin']
 
     company_id = fields.Many2one('res.company', string='Company', related='order_id.company_id', store=True)
