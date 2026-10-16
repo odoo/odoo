@@ -72,7 +72,7 @@
                 <field name="working_state" column_invisible="True"/>
                 <field name="operation_id" column_invisible="True" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/>
                 <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
-                <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
+                <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']" force_save="1"/>
                 <field name="product_id" optional="show"/>
                 <field name="qty_production" optional="show" string="Quantity"/>
                 <field name="qty_produced" optional="hide" string="Produced"/>
@@ -382,7 +382,7 @@
                         <label for="qty_produced"  class="d-touch-none"/>
                         <div class="o_row g-0 d-flex" name="qty">
                             <div class="o_row flex-grow-1">
-                                <field name="qty_produced" string="Produced Quantity" class="text-start text-truncate" readonly="production_state in ('draft', 'cancel') or state in ('cancel', 'done')" force_save="1"/>
+                                <field name="qty_produced" string="Produced Quantity" class="text-start text-truncate" readonly="(id and production_state in ('draft', 'cancel')) or state in ('cancel', 'done')" force_save="1"/>
                                 /
                             </div>
                             <div class="d-flex gap-1">
