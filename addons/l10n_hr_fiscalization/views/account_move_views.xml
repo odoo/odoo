@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <button name="action_check_fiscalization_status" string="Check Status" class="oe_highlight" type="object" invisible="not l10n_hr_fiscalization_jir"/>
+                </xpath>
+                <xpath expr="//page[@id='l10n_hr_edi_tab']" position="replace">
+                    <page id="l10n_hr_edi_tab"
+                          string="Croatia: Fiscalization"
+                          name="page_hr_edi_tab"
+                          invisible="country_code != 'HR'">
+
+                        <group string="Accounting information" name="l10n_hr_accounting_info_group">
+                            <field name="l10n_hr_process_type" readonly="state in ('cancel', 'posted')"/>
+                            <field name="l10n_hr_customer_defined_process_name" invisible="l10n_hr_process_type != 'P99'" readonly="state in ('cancel', 'posted')"/>
+                            <field name="l10n_hr_invoice_sending_time" invisible="not l10n_hr_invoice_sending_time" readonly="True"/>
+                            <field name="l10n_hr_fiscal_user_id" invisible="move_type not in ('out_invoice', 'out_refund')" readonly="state in ('cancel', 'posted')"/>
+                            <field name="l10n_hr_operator_name" invisible="move_type not in ('out_invoice', 'out_refund')" readonly="True"/>
+                            <field name="l10n_hr_operator_oib" invisible="move_type not in ('out_invoice', 'out_refund')" readonly="True"/>
+                        </group>
+
+                        <group string="Fiscalization" name="l10n_hr_fiscalization_group">
+                            <field name="l10n_hr_fiscalization_status" readonly="True"/>
+                            <field name="l10n_hr_fiscalization_error" invisible="not l10n_hr_fiscalization_error" readonly="True"/>
+                            <field name="l10n_hr_payment_method_type"/>
+                        </group>
+
+                        <group string="Fiscalization 1.0 (B2C)" name="l10n_hr_fiscalization_b2c_group" readonly="True">
+                            <field name="l10n_hr_fiscalization_jir"/>
+                            <field name="l10n_hr_fiscalization_zki"/>
+                            <field name="l10n_hr_fiscalization_payment_method_change_date" invisible="not l10n_hr_fiscalization_payment_method_change_date"/>
+                        </group>
+
+                        <group string="Fiscalization 2.0 (B2B)" name="l10n_hr_fiscalization_b2b_group" invisible="not l10n_hr_edi_addendum_id or partner_id.vat" readonly="True">
+                            <field name="l10n_hr_business_document_status"/>
+                            <field name="l10n_hr_business_status_reason" invisible="not l10n_hr_business_status_reason"/>
+                            <field name="l10n_hr_fiscalization_number"/>
+                            <field name="l10n_hr_fiscalization_request" invisible="not l10n_hr_fiscalization_request"/>
+                            <field name="l10n_hr_fiscalization_channel_type"/>
+                        </group>
+
+                        <group string="Payment reporting" name="l10n_hr_payment_info_group" invisible="not l10n_hr_edi_addendum_id or move_type not in ('out_invoice', 'out_refund')">
+                            <field name="l10n_hr_payment_reported_amount" readonly="True"/>
+                        </group>
+
+                        <group string="MojEracun" name="l10n_hr_mojeracun_info_group" invisible="not l10n_hr_mer_document_eid" readonly="True">
+                            <field name="l10n_hr_mer_document_eid"/>
+                            <field name="l10n_hr_mer_document_status"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

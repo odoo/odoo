@@ -78,7 +78,10 @@ class AccountMoveSend(models.AbstractModel):
         for move in moves:
             if move.country_code == 'HR' and move.is_sale_document():
                 if not move.l10n_hr_edi_addendum_id:
-                    move.l10n_hr_edi_addendum_id = self.env['l10n_hr_edi.addendum'].create({'move_id': move.id})
+                    move.l10n_hr_edi_addendum_id = self.env['l10n_hr_edi.addendum'].create({
+                        'move_id': move.id,
+                        'payment_method_type': move.l10n_hr_payment_method_type,
+                    })
                 move.l10n_hr_edi_addendum_id.write({
                     'fiscalization_number': move._get_l10n_hr_fiscalization_number(move.name),
                     'invoice_sending_time': fields.Datetime.now(zoneinfo.ZoneInfo('Europe/Zagreb')),
