@@ -356,6 +356,8 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             delete_mobile_order_from_backend,
             create=True,
         ):
+            # Invalidate routing cache to ensure new route is registered
+            self.env.transaction.invalidate_ormcache('routing')
             self.start_tour(self_route, 'test_delete_mobile_order_from_backend')
 
     def test_pos_self_order_table_transfer(self):
