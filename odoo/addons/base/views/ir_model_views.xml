@@ -536,7 +536,7 @@
         <record model="ir.ui.view" id="view_model_constraint_form">
             <field name="model">ir.model.constraint</field>
             <field name="arch" type="xml">
-                <form string="Model Constraints">
+                <form string="Model Constraints" delete="0">
                 <sheet>
                     <group col="4">
                         <field name="type"/>
@@ -554,7 +554,7 @@
         <record id="view_model_constraint_list" model="ir.ui.view">
             <field name="model">ir.model.constraint</field>
             <field name="arch" type="xml">
-                <list string="Model Constraints">
+                <list string="Model Constraints" delete="0">
                     <field name="type"/>
                     <field name="name"/>
                     <field name="module"/>
