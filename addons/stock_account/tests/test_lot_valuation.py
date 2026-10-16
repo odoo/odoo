@@ -749,3 +749,50 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot1.total_value, 60)
         self.assertEqual(self.lot1.avg_cost, 30)
         self.assertEqual(self.lot1.standard_price, 30)
+
+    def test_avco_lot_out_from_empty_lot(self):
+        """ Delivering from a lot with no stock values it at the product cost """
+        product = self.product_avco.create({
+            **self.product_common_vals,
+            'name': 'Lot Valuated Product Without Cost',
+            'categ_id': self.category_avco.id,
+            'lot_valuated': True,
+            'tracking': 'lot',
+            'standard_price': 0,
+        })
+        lot_a, lot_b = self.env['stock.lot'].create([
+            {'name': 'lot_a', 'product_id': product.id},
+            {'name': 'lot_b', 'product_id': product.id},
+        ])
+        self._make_in_move(product, 10, 10, lot_ids=[lot_a])
+        out_move = self._make_out_move(product, 5, lot_ids=[lot_b])
+
+        self.assertEqual(out_move.value, 50)
+        self.assertEqual(lot_b.product_qty, -5)
+        self.assertEqual(lot_b.total_value, -50)
+        self.assertEqual(lot_a.total_value, 100)
+        self.assertEqual(product.standard_price, 10)
+        self.assertEqual(product.total_value, 50)
+
+    def test_fifo_lot_out_from_empty_lot(self):
+        product = self.product_fifo.create({
+            **self.product_common_vals,
+            'name': 'Lot Valuated Product Without Cost',
+            'categ_id': self.category_fifo.id,
+            'lot_valuated': True,
+            'tracking': 'lot',
+            'standard_price': 0,
+        })
+        lot_a, lot_b = self.env['stock.lot'].create([
+            {'name': 'lot_a', 'product_id': product.id},
+            {'name': 'lot_b', 'product_id': product.id},
+        ])
+        self._make_in_move(product, 10, 10, lot_ids=[lot_a])
+        out_move = self._make_out_move(product, 5, lot_ids=[lot_b])
+
+        self.assertEqual(out_move.value, 50)
+        self.assertEqual(lot_b.product_qty, -5)
+        self.assertEqual(lot_b.total_value, -50)
+        self.assertEqual(lot_a.total_value, 100)
+        self.assertEqual(product.standard_price, 10)
+        self.assertEqual(product.total_value, 50)
