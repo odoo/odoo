@@ -17,6 +17,33 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
     #   1: search res_partner (odooot ref exists)
     #   1: search res_groups (internalUserGroupId ref exists)
+<<<<<<< 89ddb59529e4bd1f47308a8b84fac1d4a6ecd85e
+||||||| 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
+    #   10: store add odoobot:
+    #       - fetch res_partner (_read_format)
+    #       - search res_users (_compute_im_status)
+    #       - search presence (_compute_im_status)
+    #       - fetch presence (_compute_im_status)
+    #       - _get_on_leave_ids (_compute_im_status hr_holidays override)
+    #       - search employee (_compute_im_status hr_homeworking override)
+    #       - fetch employee (_compute_im_status hr_homeworking override)
+    #       - fetch res_users (_read_format)
+    #       - fetch hr_employee (user)
+    #       - search hr_employee (partner)
+=======
+    #   11: store add odoobot:
+    #       - fetch res_partner (_read_format)
+    #       - search res_users (_compute_im_status)
+    #       - search presence (_compute_im_status)
+    #       - fetch presence (_compute_im_status)
+    #       - _get_on_leave_ids (_compute_im_status hr_holidays override)
+    #       - search employee (_compute_im_status hr_homeworking override)
+    #       - fetch employee (_compute_im_status hr_homeworking override)
+    #       - search hr_employee_location (_compute_im_status hr_homeworking override)
+    #       - fetch res_users (_read_format)
+    #       - fetch hr_employee (user)
+    #       - search hr_employee (partner)
+>>>>>>> a10896bdc6f45559dc23c6742eaeb9a4bb2dca33
     #   6: settings:
     #       - search res_users_settings (_find_or_create_for_user)
     #       - search res_users_settings_embedded_action (_format_settings)
@@ -27,6 +54,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: hasCannedResponses
     #       - fetch res_groups_users_rel
     #       - search mail_canned_response
+<<<<<<< 89ddb59529e4bd1f47308a8b84fac1d4a6ecd85e
     #   2: show_livechat_category
     #       - search discuss_channel_member (is_self for ACL check)
     #       - search_count discuss_channel_member
@@ -43,6 +71,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search hr_employee_location
     #       - search hr_leave
     _query_count_init_store = 23
+||||||| 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
+    _query_count_init_store = 20
+=======
+    _query_count_init_store = 21
+>>>>>>> a10896bdc6f45559dc23c6742eaeb9a4bb2dca33
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
@@ -58,19 +91,27 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   4: _init_messaging (mail)
     #       - search bus_bus (_bus_last_id)
     #       - _get_needaction_count (inbox counter)
+<<<<<<< 89ddb59529e4bd1f47308a8b84fac1d4a6ecd85e
     #       - search mail_message (bookmark counter)
     #           - _check_access
     #   23: _process_request_for_all (discuss):
+||||||| 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
+    #       - search mail_message (starred counter)
+    #   23: _process_request_for_all (discuss):
+=======
+    #       - search mail_message (starred counter)
+    #   24: _process_request_for_all (discuss):
+>>>>>>> a10896bdc6f45559dc23c6742eaeb9a4bb2dca33
     #       - search discuss_channel (channels_domain)
-    #       22: store add channel:
+    #       23: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - search discuss_channel_rtc_session
     #           - fetch discuss_channel_rtc_session
     #           - search member (channel_member_ids)
     #           - fetch discuss_channel_member (manual prefetch)
-    #           10: member:
-    #               10: partner:
+    #           11: member:
+    #               11: partner:
     #                   - fetch res_partner (partner)
     #                   - fetch res_users (_compute_im_status)
     #                   - search mail_presence (_compute_im_status)
@@ -78,6 +119,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - _get_on_leave_ids (_compute_im_status override)
     #                   - search hr_employee (_compute_im_status override)
     #                   - fetch hr_employee (_compute_im_status override)
+    #                   - search hr_employee_location (_compute_im_status override)
     #                   - search hr_employee (user override)
     #                   - search hr_leave (leave_date_to)
     #                   - fetch res_users (_compute_main_user_id)
@@ -87,18 +129,36 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
     #           - fetch res_groups (group_public_id)
+<<<<<<< 89ddb59529e4bd1f47308a8b84fac1d4a6ecd85e
     _query_count_init_messaging = 36
+||||||| 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
+    _query_count_init_messaging = 34
+=======
+    _query_count_init_messaging = 35
+>>>>>>> a10896bdc6f45559dc23c6742eaeb9a4bb2dca33
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
     #       - search discuss_channel_member
     #       - fetch discuss_channel
+<<<<<<< 89ddb59529e4bd1f47308a8b84fac1d4a6ecd85e
     #   2: _get_channels_as_member
     #       - search discuss_channel (member_domain)
     #       - search discuss_channel (pinned_member_domain)
     #   34: channel _to_store_defaults:
     #       - read mail.message model for get_annotatable models and check access
+||||||| 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
+    #   2: channels_as_member
+    #       - search_fetch channel (channels)
+    #       - search_count member (has_unpinned_channels)
+    #   35: store add channel:
+=======
+    #   2: channels_as_member
+    #       - search_fetch channel (channels)
+    #       - search_count member (has_unpinned_channels)
+    #   36: store add channel:
+>>>>>>> a10896bdc6f45559dc23c6742eaeb9a4bb2dca33
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -109,7 +169,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       18: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
-    #           14: partner:
+    #           15: partner:
     #               - fetch res_partner (partner)
     #               - fetch res_users (_compute_im_status)
     #               - search mail_presence (_compute_im_status)
@@ -117,6 +177,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - _get_on_leave_ids (_compute_im_status override)
     #               - search hr_employee (_compute_im_status override)
     #               - fetch hr_employee (_compute_im_status override)
+    #               - search hr_employee_location (_compute_im_status override)
     #               - search hr_employee (user override)
     #               - search hr_leave (leave_date_to)
     #               - search res_users_settings (livechat username)
@@ -162,8 +223,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch user (author)
     #       - fetch discuss_call_history
     #       - search discuss_channel (linkedSubChannel)
+<<<<<<< 89ddb59529e4bd1f47308a8b84fac1d4a6ecd85e
     # TODO use assertQueries
     _query_count_discuss_channels = 66
+||||||| 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
+    _query_count_discuss_channels = 65
+=======
+    _query_count_discuss_channels = 66
+>>>>>>> a10896bdc6f45559dc23c6742eaeb9a4bb2dca33
 
     def setUp(self):
         super().setUp()

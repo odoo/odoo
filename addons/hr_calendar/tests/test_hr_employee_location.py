@@ -1,8 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from freezegun import freeze_time
 
+<<<<<<< 89ddb59529e4bd1f47308a8b84fac1d4a6ecd85e:addons/hr_calendar/tests/test_hr_employee_location.py
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common, tagged
+||||||| 7191168096ad0bfd77eaf15e3ef00299a84f9b7f:addons/hr_homeworking_calendar/tests/test_hr_employee_location.py
+from odoo.addons.hr_homeworking_calendar.tests.common import TestHrHomeworkingCommon
+
+from odoo.tests import tagged
+=======
+from odoo.addons.hr_homeworking_calendar.tests.common import TestHrHomeworkingCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
+
+from odoo.tests import tagged
+>>>>>>> a10896bdc6f45559dc23c6742eaeb9a4bb2dca33:addons/hr_homeworking_calendar/tests/test_hr_employee_location.py
 from datetime import datetime
 
 
@@ -168,6 +179,24 @@ class TestHrHomeworkingHrEmployeeLocation(common.TransactionCase):
             datetime(2026, 1, 5), datetime(2026, 1, 11)
         )
         self.assertEqual(self.work_home.id, res[other_employee.id]['exceptions']['2026-01-07']['work_location_id'])
+
+    @freeze_time("2023-10-04")
+    def test_im_status_takes_exceptional_location_of_today(self):
+        alice_user = mail_new_test_user(self.env, login="alice_user", groups="base.group_user")
+        self.assertFalse(alice_user.has_group("hr.group_hr_user"))
+        partner = self.user_employee.partner_id.with_user(alice_user)
+        user = self.user_employee.with_user(alice_user)
+        self.assertEqual(partner.im_status, "office_offline")
+        self.assertEqual(user.im_status, "office_offline")
+        self.env["homework.location.wizard"].create({
+            "date": datetime(2023, 10, 4),
+            "employee_id": self.employee_emp.id,
+            "weekly": False,
+            "work_location_id": self.work_home.id,
+        }).set_employee_location()
+        self.env.invalidate_all()
+        self.assertEqual(partner.im_status, "home_offline")
+        self.assertEqual(user.im_status, "home_offline")
 
     def test_get_views_replace_hw_location_by_date(self):
         view = self.env["ir.ui.view"].create({
