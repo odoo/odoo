@@ -578,6 +578,53 @@ describe("initProducts", () => {
         // Its products are still loaded, so they stay selectable as combo choices.
         expect(models["product.template"].get(220).self_order_available).toBe(true);
     });
+
+    test("availableCategories hides categories without self order available products", async () => {
+        const store = await setupSelfPosEnv();
+        const productTemplates = store.models["product.template"];
+        store.computeAvailableCategories();
+        let categoryIds = store.availableCategories.map((c) => c.id);
+        expect(categoryIds).toInclude(4);
+
+        // Burger (id=4) only contains the "Bacon burger"
+        productTemplates.get(12).self_order_available = false;
+        store.computeAvailableCategories();
+        categoryIds = store.availableCategories.map((c) => c.id);
+        expect(categoryIds).not.toInclude(4);
+        expect(categoryIds).toInclude(3);
+        expect(categoryIds).toInclude(5);
+
+        // Food (id=3) and its children "Burger" (4) and "Pizza" (5) have no available product left
+        productTemplates.get(13).self_order_available = false;
+        productTemplates.get(14).self_order_available = false;
+        store.computeAvailableCategories();
+        categoryIds = store.availableCategories.map((c) => c.id);
+        expect(categoryIds).not.toInclude(3);
+        expect(categoryIds).not.toInclude(4);
+        expect(categoryIds).not.toInclude(5);
+
+        expect(categoryIds).toInclude(0);
+
+        // Uncategorised (id=0) has no available product left
+        productTemplates
+            .filter((p) => !p.pos_categ_ids.length)
+            .forEach((p) => (p.self_order_available = false));
+        store.computeAvailableCategories();
+        categoryIds = store.availableCategories.map((c) => c.id);
+        expect(categoryIds).not.toInclude(0);
+    });
+
+    test("availableCategories are updated when a product becomes available again", async () => {
+        const store = await setupSelfPosEnv();
+        const productTemplate = store.models["product.template"].get(12);
+        productTemplate.self_order_available = false;
+        store.computeAvailableCategories();
+        expect(store.availableCategories.map((c) => c.id)).not.toInclude(4);
+
+        const { method } = store.data.channels.find((c) => c.channel === "PRODUCT_CHANGED");
+        method({ "product.template": [{ ...productTemplate.raw, self_order_available: true }] });
+        expect(store.availableCategories.map((c) => c.id)).toInclude(4);
+    });
 });
 
 describe("initHardware", () => {
