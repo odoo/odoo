@@ -940,44 +940,6 @@
         <aside id="o_wsale_offcanvas"
                class="o_website_offcanvas offcanvas offcanvas-end p-0">
             <div id="o_wsale_offcanvas_content" class="accordion accordion-flush flex-grow-1 overflow-auto">
-                <!-- Show sorting only if it's not avavailbe in the topbar already -->
-                <div t-if="not is_view_active('website_sale.sort')" class="accordion-item">
-                    <t t-if="isSortingBy" t-set="isSortingBy" t-value="isSortingBy[0][1]"/>
-                    <t t-else="" t-set="isSortingBy" t-value="website.shop_default_sort"/>
-                    <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
-                        <button class="o_wsale_offcanvas_title accordion-button rounded-0 collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#o_wsale_offcanvas_orderby"
-                                aria-expanded="false"
-                                aria-controls="o_wsale_offcanvas_orderby">
-                                <b>Sort By</b>
-                        </button>
-                    </h2>
-                    <div id="o_wsale_offcanvas_orderby"
-                         class="accordion-collapse collapse"
-                         aria-labelledby="o_wsale_offcanvas_orderby_header">
-                        <div class="accordion-body pt-0">
-                            <div class="list-group list-group-flush">
-                                <a t-foreach="website_sale_sortable" t-as="sortby"
-                                   role="menuitem"
-                                   rel="noindex,nofollow"
-                                   t-att-href="keep(order=sortby[0])"
-                                   class="list-group-item border-0 ps-0 pb-0">
-                                    <div class="form-check d-inline-block">
-                                        <input type="radio"
-                                               t-attf-onclick="location.href='#{keep(order=sortby[0])}';"
-                                               class="form-check-input o_not_editable"
-                                               name="wsale_sortby_radios_offcanvas"
-                                               t-att-checked="isSortingBy and isSortingBy == sortby[1]">
-                                            <label class="form-check-label fw-normal" t-out="sortby[1]"/>
-                                        </input>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <t
                     t-set="show_attribute_filters"
                     t-value="opt_wsale_attributes or opt_wsale_attributes_top"
