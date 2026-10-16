@@ -65,7 +65,10 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
                         snippet.group ? "group" : "snippet"
                     } [${n}/${snippetsNames.length}]`,
                     trigger: draggableElSelector,
-                    run: "drag_and_drop :iframe #wrapwrap .oe_drop_zone",
+                    run(helpers) {
+                        helpers.delay = 0;
+                        return helpers.drag_and_drop(":iframe #wrapwrap .oe_drop_zone");
+                    },
                 },
                 {
                     content: "Wait for the drag and drop to be over", // TODO find a better way
