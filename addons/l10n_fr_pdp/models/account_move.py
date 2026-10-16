@@ -121,12 +121,6 @@ class AccountMove(models.Model):
         copy=False,
     )
 
-    # TODO: remove in master
-    @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        self.env['res.config.settings']._pdp_ensure_selection_value('account.move', 'peppol_move_state', 'completed')
-        return super().fields_get(allfields, attributes)
-
     @api.depends(
         'line_ids.matched_debit_ids.debit_move_id',
         'line_ids.matched_credit_ids.credit_move_id',
