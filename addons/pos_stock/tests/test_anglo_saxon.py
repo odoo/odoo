@@ -207,6 +207,27 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(session_move.journal_id, self.pos_config.journal_id)
         self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
 
+    def test_fifo_valuation_no_invoice_closing_entry_by_product(self):
+        """The COGS of the closing entry must not be counted twice when its lines have a product"""
+        self.pos_config.use_closing_entry_by_product = True
+        pos_order_pos0 = self._prepare_pos_order()
+        context_make_payment = {"active_ids": [pos_order_pos0.id], "active_id": pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 7 * 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        self.pos_make_payment_0.with_context(active_id=pos_order_pos0.id).check()
+
+        current_session_id = self.pos_config.current_session_id
+        current_session_id.close_session_from_ui({self.cash_payment_method.id: 7 * 450.0})
+
+        session_move = pos_order_pos0.session_id.move_ids
+        self.assertEqual(session_move.line_ids.filtered('product_id').product_id, self.product)
+        expense_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.category.property_account_expense_categ_id)
+        valuation_lines = session_move.line_ids.filtered(lambda line: line.account_id == self.category.property_stock_valuation_account_id)
+        self.assertEqual(sum(expense_lines.mapped('balance')), 27)
+        self.assertEqual(sum(valuation_lines.mapped('balance')), -27)
+
     def test_fifo_valuation_with_invoice(self):
         """Register a payment and validate a session after selling a fifo
         product and make an invoice for the customer"""
