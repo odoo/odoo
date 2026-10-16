@@ -128,4 +128,4 @@ class WebsiteSale(main.WebsiteSale):
                 order.set_delivery_line(order.carrier_id, res["price"])
             else:
                 order._remove_delivery_line()
-        return True
+        return {"success": True}
