@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence for Payslip -->
+        <record id="seq_custom_payroll_slip" model="ir.sequence">
+            <field name="name">Custom Payslip</field>
+            <field name="code">custom.payroll.slip</field>
+            <field name="prefix">SLIP/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_custom_payroll_slip_detail_form" model="ir.ui.view">
+        <field name="name">custom.payroll.slip.detail.form</field>
+        <field name="model">custom.payroll.slip.detail</field>
+        <field name="arch" type="xml">
+            <form string="Payslip Detail">
+                <sheet>
+                    <group>
+                        <group string="Component">
+                            <field name="component_type"/>
+                            <field name="tunjangan_id" invisible="component_type != 'tunjangan'"/>
+                            <field name="bpjs_id" invisible="component_type != 'bpjs'"/>
+                            <field name="potongan_tetap_id" invisible="component_type != 'potongan'"/>
+                            <field name="rule_id" invisible="component_type != 'rule'"/>
+                            <field name="description"/>
+                        </group>
+                        <group string="Amount">
+                            <field name="nominal" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_custom_payroll_slip_detail_list" model="ir.ui.view">
+        <field name="name">custom.payroll.slip.detail.list</field>
+        <field name="model">custom.payroll.slip.detail</field>
+        <field name="arch" type="xml">
+            <list string="Payslip Details" editable="bottom">
+                <field name="component_type"/>
+                <field name="tunjangan_id" invisible="component_type != 'tunjangan'"/>
+                <field name="bpjs_id" invisible="component_type != 'bpjs'"/>
+                <field name="potongan_tetap_id" invisible="component_type != 'potongan'"/>
+                <field name="rule_id" invisible="component_type != 'rule'"/>
+                <field name="description"/>
+                <field name="nominal" widget="monetary"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_custom_payroll_slip_detail_search" model="ir.ui.view">
+        <field name="name">custom.payroll.slip.detail.search</field>
+        <field name="model">custom.payroll.slip.detail</field>
+        <field name="arch" type="xml">
+            <search string="Payslip Details">
+                <field name="description"/>
+                <field name="component_type"/>
+                <group>
+                    <filter name="group_type" string="Component Type" context="{'group_by': 'component_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_custom_payroll_slip_detail" model="ir.actions.act_window">
+        <field name="name">Payslip Details</field>
+        <field name="res_model">custom.payroll.slip.detail</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_custom_payroll_slip_detail_search"/>
+    </record>
+</odoo>

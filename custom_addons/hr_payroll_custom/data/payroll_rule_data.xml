@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default Categories -->
+        <record id="cat_basic" model="custom.payroll.rule.category">
+            <field name="name">Basic</field>
+            <field name="code">BASIC</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="cat_allowance" model="custom.payroll.rule.category">
+            <field name="name">Allowance</field>
+            <field name="code">ALW</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="cat_deduction" model="custom.payroll.rule.category">
+            <field name="name">Deduction</field>
+            <field name="code">DED</field>
+            <field name="sequence">30</field>
+        </record>
+        <record id="cat_bpjs" model="custom.payroll.rule.category">
+            <field name="name">BPJS</field>
+            <field name="code">BPJS</field>
+            <field name="sequence">40</field>
+        </record>
+        <record id="cat_thr" model="custom.payroll.rule.category">
+            <field name="name">THR</field>
+            <field name="code">THR</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <!-- Default Rules -->
+        <record id="rule_transport" model="custom.payroll.rule">
+            <field name="name">Transport Allowance</field>
+            <field name="code">ALW_TRANSPORT</field>
+            <field name="category_id" ref="cat_allowance"/>
+            <field name="sequence">20</field>
+            <field name="condition_mode">simple</field>
+            <field name="condition_type">always</field>
+            <field name="condition">True</field>
+            <field name="amount_mode">fixed</field>
+            <field name="amount_value">500000</field>
+            <field name="amount_python">result = 500000</field>
+            <field name="appears_on_payslip" eval="True"/>
+        </record>
+
+        <record id="rule_meal" model="custom.payroll.rule">
+            <field name="name">Meal Allowance</field>
+            <field name="code">ALW_MEAL</field>
+            <field name="category_id" ref="cat_allowance"/>
+            <field name="sequence">21</field>
+            <field name="condition_mode">simple</field>
+            <field name="condition_type">always</field>
+            <field name="condition">True</field>
+            <field name="amount_mode">fixed</field>
+            <field name="amount_value">300000</field>
+            <field name="amount_python">result = 300000</field>
+            <field name="appears_on_payslip" eval="True"/>
+        </record>
+
+        <record id="rule_thr" model="custom.payroll.rule">
+            <field name="name">THR (Tunjangan Hari Raya)</field>
+            <field name="code">THR</field>
+            <field name="category_id" ref="cat_thr"/>
+            <field name="sequence">50</field>
+            <field name="condition_mode">simple</field>
+            <field name="condition_type">payroll_month</field>
+            <field name="condition_operator">=</field>
+            <field name="condition_month">12</field>
+            <field name="condition">payslip.payroll_batch_id.periode_bulan == '12'</field>
+            <field name="amount_mode">percentage</field>
+            <field name="amount_base">contract_wage</field>
+            <field name="amount_value">100</field>
+            <field name="amount_python">result = contract.contract_wage if contract else 0</field>
+            <field name="appears_on_payslip" eval="True"/>
+        </record>
+
+        <record id="rule_pph21_simple" model="custom.payroll.rule">
+            <field name="name">PPh 21 Simplified (5%)</field>
+            <field name="code">PPH21</field>
+            <field name="category_id" ref="cat_deduction"/>
+            <field name="sequence">60</field>
+            <field name="condition_mode">simple</field>
+            <field name="condition_type">category</field>
+            <field name="condition_operator">&gt;</field>
+            <field name="condition_category">NET</field>
+            <field name="condition_value_float">4500000</field>
+            <field name="condition">categories.NET &gt; 4500000</field>
+            <field name="amount_mode">percentage</field>
+            <field name="amount_base">net</field>
+            <field name="amount_value">5</field>
+            <field name="amount_python">result = categories.NET * 0.05</field>
+            <field name="appears_on_payslip" eval="True"/>
+        </record>
+    </data>
+</odoo>

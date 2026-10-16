@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Rule Category Form -->
+    <record id="view_custom_payroll_rule_category_form" model="ir.ui.view">
+        <field name="name">custom.payroll.rule.category.form</field>
+        <field name="model">custom.payroll.rule.category</field>
+        <field name="arch" type="xml">
+            <form string="Rule Category">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="parent_id"/>
+                        <field name="sequence"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Rule Category List -->
+    <record id="view_custom_payroll_rule_category_list" model="ir.ui.view">
+        <field name="name">custom.payroll.rule.category.list</field>
+        <field name="model">custom.payroll.rule.category</field>
+        <field name="arch" type="xml">
+            <list string="Rule Categories">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="parent_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Rule Form -->
+    <record id="view_custom_payroll_rule_form" model="ir.ui.view">
+        <field name="name">custom.payroll.rule.form</field>
+        <field name="model">custom.payroll.rule</field>
+        <field name="arch" type="xml">
+            <form string="Salary Rule">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Rule Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Information">
+                            <field name="code"/>
+                            <field name="category_id"/>
+                            <field name="sequence"/>
+                            <field name="appears_on_payslip"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Settings">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Condition" name="condition">
+                            <group>
+                                <field name="condition_mode"/>
+                                <field name="condition_type" invisible="condition_mode != 'simple'"/>
+                                <field name="condition_operator"
+                                       invisible="condition_mode != 'simple' or condition_type == 'always'"/>
+                                <field name="condition_department_id"
+                                       invisible="condition_mode != 'simple' or condition_type != 'department'"/>
+                                <field name="condition_job_id"
+                                       invisible="condition_mode != 'simple' or condition_type != 'job'"/>
+                                <field name="condition_value_bool"
+                                       invisible="condition_mode != 'simple' or condition_type != 'active'"/>
+                                <field name="condition_value_float"
+                                       invisible="condition_mode != 'simple' or condition_type not in ('basic_salary', 'contract_wage', 'category')"/>
+                                <field name="condition_month"
+                                       invisible="condition_mode != 'simple' or condition_type != 'payroll_month'"
+                                       required="condition_mode == 'simple' and condition_type == 'payroll_month'"/>
+                                <field name="condition_category"
+                                       invisible="condition_mode != 'simple' or condition_type != 'category'"
+                                       required="condition_mode == 'simple' and condition_type == 'category'"/>
+                            </group>
+                            <group invisible="condition_mode != 'python'">
+                                <field name="condition" widget="ace" options="{'mode': 'python'}"
+                                       placeholder="Python expression returning True/False. e.g.: payslip.payroll_batch_id.periode_bulan == '12'"/>
+                            </group>
+                            <div class="text-muted mt8" invisible="condition_mode != 'simple'">
+                                <p><strong>Simple condition:</strong> choose a field, operator, and value. No Python is required.</p>
+                            </div>
+                            <div class="text-muted mt8" invisible="condition_mode != 'python'">
+                                <p><strong>Advanced variables:</strong> employee, contract, payslip, categories, result</p>
+                            </div>
+                        </page>
+                        <page string="Computation" name="computation">
+                            <group>
+                                <field name="amount_mode"/>
+                                <field name="amount_value"
+                                       string="Fixed Amount"
+                                       invisible="amount_mode != 'fixed'"
+                                       required="amount_mode == 'fixed'"/>
+                                <field name="amount_base"
+                                       invisible="amount_mode != 'percentage'"
+                                       required="amount_mode == 'percentage'"/>
+                                <field name="amount_value"
+                                       string="Percentage"
+                                       invisible="amount_mode != 'percentage'"
+                                       required="amount_mode == 'percentage'"/>
+                            </group>
+                            <group invisible="amount_mode != 'python'">
+                                <field name="amount_python" widget="ace" options="{'mode': 'python'}"
+                                       placeholder="Python code that sets 'result' variable. e.g.: result = categories.BASIC * 0.05"/>
+                            </group>
+                            <div class="text-muted mt8" invisible="amount_mode == 'python'">
+                                <p><strong>Structured computation:</strong> no Python is required.</p>
+                            </div>
+                            <div class="text-muted mt8" invisible="amount_mode != 'python'">
+                                <p><strong>Examples:</strong></p>
+                                <ul>
+                                    <li><code>result = categories.BASIC * 0.05</code> (5% of basic)</li>
+                                    <li><code>result = contract.contract_wage * 0.5</code> (50% of wage)</li>
+                                    <li><code>result = 500000 if employee.children &gt; 2 else 0</code></li>
+                                </ul>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Rule List -->
+    <record id="view_custom_payroll_rule_list" model="ir.ui.view">
+        <field name="name">custom.payroll.rule.list</field>
+        <field name="model">custom.payroll.rule</field>
+        <field name="arch" type="xml">
+            <list string="Salary Rules">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category_id"/>
+                <field name="appears_on_payslip"/>
+                <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Rule Search -->
+    <record id="view_custom_payroll_rule_search" model="ir.ui.view">
+        <field name="name">custom.payroll.rule.search</field>
+        <field name="model">custom.payroll.rule</field>
+        <field name="arch" type="xml">
+            <search string="Salary Rules">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category_id"/>
+                <filter name="filter_active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_custom_payroll_rule" model="ir.actions.act_window">
+        <field name="name">Salary Rules</field>
+        <field name="res_model">custom.payroll.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_custom_payroll_rule_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+    </record>
+
+    <record id="action_custom_payroll_rule_category" model="ir.actions.act_window">
+        <field name="name">Rule Categories</field>
+        <field name="res_model">custom.payroll.rule.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
