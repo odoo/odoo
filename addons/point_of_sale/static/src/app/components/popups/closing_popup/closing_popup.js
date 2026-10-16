@@ -11,6 +11,7 @@ import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PaymentMethodBreakdown } from "@point_of_sale/app/components/payment_method_breakdown/payment_method_breakdown";
 import { CashInput } from "@point_of_sale/app/components/inputs/input/cash_input/cash_input";
+import { roundPrecision } from "@web/core/utils/numbers";
 
 const { DateTime } = luxon;
 
@@ -56,13 +57,59 @@ export class ClosePosPopup extends Component {
             (o) => o.lines.length > 0 && o.preset_time > today && o.state === "draft"
         ).length;
     }
+    get paymentMethods() {
+        const paymentMethods = [...this.props.non_cash_payment_methods].sort(
+            (a, b) => a.editable - b.editable // Move editable payment methods to the end
+        );
+        const cashDetails = this.props.default_cash_details;
+        if (!Object.keys(cashDetails).length) {
+            return paymentMethods;
+        }
+
+        // To ensure the cash payment info is always on the left side of the bottom row
+        if (paymentMethods.length % 2 === 0 || this.ui.isSmall) {
+            paymentMethods.push(cashDetails);
+        } else {
+            paymentMethods.splice(-1, 0, cashDetails);
+        }
+        return paymentMethods;
+    }
+    get cashTransactionSummary() {
+        const paymentAmount = this.props.default_cash_details.payment_amount;
+        const { total: statementAmount, moves } = this.cashMoveData;
+        const transactionList = [
+            {
+                // Payments should be last in the list, and it
+                // will be replaced with per employee payments in pos_hr
+                id: 1,
+                name: _t("Payments"),
+                amount: paymentAmount,
+            },
+        ];
+        if (statementAmount) {
+            transactionList.unshift({
+                id: 0,
+                name: _t("Cash in/out"),
+                amount: statementAmount,
+                subTransactions: moves,
+            });
+        }
+        return {
+            total: statementAmount + paymentAmount,
+            list: transactionList,
+        };
+    }
     async cashMove() {
         await this.pos.cashMove();
         this.dialog.closeAll();
         this.pos.closeSession();
     }
     getInitialState() {
-        const initialState = { notes: "", payments: {} };
+        const initialState = {
+            opening_notes: this.props.opening_notes,
+            closing_notes: "",
+            payments: {},
+        };
         if (this.pos.config.cash_control) {
             const defaultCash = this.props.default_cash_details;
             initialState.payments[defaultCash.id] = {
@@ -134,7 +181,7 @@ export class ClosePosPopup extends Component {
                         noSymbol: true,
                     });
                 if (moneyDetailsNotes) {
-                    this.state.notes = moneyDetailsNotes;
+                    this.state.closing_notes = moneyDetailsNotes;
                 }
                 this.moneyDetails = moneyDetails;
             },
@@ -146,7 +193,7 @@ export class ClosePosPopup extends Component {
     }
     setManualCashInput(amount) {
         if (this.pos.isValidFloat(amount) && this.moneyDetails) {
-            this.state.notes = "";
+            this.state.closing_notes = "";
             this.moneyDetails = null;
         }
     }
@@ -179,7 +226,7 @@ export class ClosePosPopup extends Component {
                 ? this.props.default_cash_details.amount
                 : this.props.non_cash_payment_methods.find((pm) => pm.id === paymentId).amount;
 
-        return parseFloat(counted) - expectedAmount;
+        return roundPrecision(parseFloat(counted) - expectedAmount, this.pos.currency.rounding);
     }
 
     getMaxDifference() {
@@ -223,7 +270,12 @@ export class ClosePosPopup extends Component {
             const response = await this.pos.data.call(
                 "pos.session",
                 "close_session_from_ui",
-                [this.pos.session.id, amountByPaymentMethod],
+                [
+                    this.pos.session.id,
+                    amountByPaymentMethod,
+                    this.state.closing_notes,
+                    this.state.opening_notes,
+                ],
                 { context }
             );
             if (!response.status) {
@@ -280,21 +332,5 @@ export class ClosePosPopup extends Component {
                 dismiss: async () => {},
             });
         }
-    }
-    getMovesTotalAmount() {
-        const amounts = this.props.default_cash_details.moves.map((move) => move.amount);
-        return amounts.reduce((acc, x) => acc + x, 0);
-    }
-    get validPms() {
-        return this.props.non_cash_payment_methods.filter(
-            (pm) => pm.number !== 0 && (pm.type === "bank" || pm.type === "cash")
-        );
-    }
-    isTheLastPM(pm) {
-        return pm === this.validPms.at(-1) && this.validPms.length % 2 === 0;
-    }
-
-    isOnePmUsed() {
-        return this.validPms.length == 0;
     }
 }
