@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductScreen">
-        <div class="product-screen d-flex h-100">
+        <div t-if="this.currentOrder" class="product-screen d-flex h-100">
             <div t-att-class="{'flex-grow-1 w-100 mw-100': this.pos.isSmallProductScreen, 'flex-shrink-0': !this.pos.isSmallProductScreen, 'd-none': this.pos.isSmallProductScreen and this.pos.mobile_pane !== 'left'}"
                 class="leftpane d-flex flex-column pb-2 border-end bg-view">
                 <OrderSummary />
