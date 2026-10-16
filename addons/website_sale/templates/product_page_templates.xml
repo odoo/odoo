@@ -792,7 +792,8 @@
                 t-if="show_specs or has_more_information"
                 id="product_accordion"
                 t-attf-class="o_wsale_specs #{show_specs and 'o_wsale_specs_container' or ''}
-                    #{has_content and 'o_accordion_not_initialized' or ''} accordion accordion-flush my-4"
+                    #{has_content and 'o_accordion_not_initialized' or ''} accordion accordion-flush my-4
+                    #{editable and 'mx-n2 px-2' or ''}"
                 t-attf-style="#{not has_content and editable and 'min-height: 50px;' or ''}"
             >
                 <div
@@ -1491,12 +1492,12 @@
         name="Product Specifications Bottom"
         inherit_id="website_sale.product"
     >
-        <xpath expr="//div[@id='product_full_description']" position="after">
+        <div id="product_full_description" position="after">
             <t
                 t-call="website_sale.product_spec_section"
                 combination="combination_info['combination']"
             />
-        </xpath>
+        </div>
     </template>
 
     <template
@@ -1505,12 +1506,12 @@
         inherit_id="website_sale.product"
         active="False"
     >
-        <xpath expr="//div[@id='product_detail_main']" position="after">
+        <div id="product_detail_main" position="after">
             <t
                 t-call="website_sale.product_spec_section"
                 combination="combination_info['combination']"
             />
-        </xpath>
+        </div>
     </template>
 
     <template
