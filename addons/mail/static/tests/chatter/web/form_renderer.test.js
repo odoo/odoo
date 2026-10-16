@@ -11,6 +11,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
 import { range } from "@web/core/utils/numbers";
@@ -105,6 +106,37 @@ test("Attachments that have been unlinked from server should be visually unlinke
     pyEnv["ir.attachment"].write([attachmentId_1], { res_id: 0 });
     await click(".o_pager_previous");
     await contains("button[aria-label='Attach files']:text('1')");
+});
+
+test("ellipsis button in email message should unfold and stay unfolded upon click", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ display_name: "Someone" });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        message_type: "email",
+        body: `
+            <div>
+                <span data-o-mail-quote="1">-- <br data-o-mail-quote="1">
+                    System
+                </span>
+            </div>`,
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <chatter/>
+            </form>`,
+    });
+    await waitFor(".o-mail-Message-shadowBody:shadow .o-mail-ellipsis");
+    await click(".o-mail-Message-shadowBody:shadow .o-mail-ellipsis");
+    // After clicking the ellipsis, the message is unfolded.
+    expect(".o-mail-Message-shadowBody:shadow span[data-o-mail-quote]").toHaveAttribute("style", "");
 });
 
 test("ellipsis button is not duplicated when switching from read to edit mode", async () => {
