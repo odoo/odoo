@@ -98,7 +98,7 @@ class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
                     for invoice in invoices.sorted(lambda i: i.create_date):
                         if invoice.l10n_hu_edi_state:
                             # Case 1: An XML was already generated for this invoice.
-                            invoice_xml = invoice.l10n_hu_edi_attachment
+                            invoice_xml = invoice.l10n_hu_edi_attachment.content
                         else:
                             # Case 2: No XML was generated for this invoice.
                             if not invoice.l10n_hu_invoice_chain_index:
