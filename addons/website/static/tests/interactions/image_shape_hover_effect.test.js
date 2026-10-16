@@ -5,7 +5,6 @@ import { hover, queryOne } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { onceAllImagesLoaded } from "@website/utils/images";
 
 setupInteractionWhiteList(["website.image_shape_hover_effect", "website.clickable_card"]);
 
@@ -44,7 +43,6 @@ test("image_shape_hover_effect changes image on enter & leave", async () => {
             `<svg viewBox="0 0 300 100" width="500px"><g id="hoverEffects"><animate values="a=1;b=2"><rect width="100%" fill="red" height="100%" /></animate></g></svg>`
     );
     expect(core.interactions).toHaveLength(1);
-    await onceAllImagesLoaded(queryOne("#wrapwrap"));
     const imgEl = queryOne("img");
     const baseSrc = imgEl.getAttribute("src");
     expect(imgEl).toHaveAttribute("src", "/web/image/384-8a55a748/s_banner_3.svg");
@@ -101,7 +99,6 @@ test("image_shape_hover_effect is triggered from stretched-link hover", async ()
             `<svg viewBox="0 0 300 100" width="500px"><g id="hoverEffects"><animate values="a=1;b=2"><rect width="100%" fill="red" height="100%" /></animate></g></svg>`
     );
     expect(core.interactions).toHaveLength(2);
-    await onceAllImagesLoaded(queryOne("#wrapwrap"));
     const imgEl = queryOne("img");
     const baseSrc = imgEl.getAttribute("src");
     expect(imgEl).toHaveAttribute("src", "/web/image/384-8a55a748/s_banner_3.svg");
