@@ -15,6 +15,6 @@ class AccountMoveLine(models.Model):
                 line.name = line.translated_product_name + '\n' + line.repair_service_line_id.description
 
     def _eligible_for_stock_account(self):
-        moves = self._get_stock_moves()
+        moves = self.sudo()._get_stock_moves()
         already_accounted = any(m.repair_id and m.account_move_id for m in moves.filtered(lambda m: m.repair_line_type == 'add'))
         return super()._eligible_for_stock_account() and not already_accounted
