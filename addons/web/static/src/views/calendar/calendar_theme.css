@@ -191,6 +191,7 @@
             left: 0;
             bottom: calc(-1 * var(--o-calendar-divider-size));
             right: 0;
+            /* eslint-disable-next-line css/no-invalid-properties -- false positive: unknown var() mixed with a resolved one */
             background: linear-gradient(0deg, transparent, color-mix(in srgb, var(--o-calendar-shadow) calc(var(--o-calendar-divider-opacity) * 100%), transparent));
             pointer-events: none;
             content: "";

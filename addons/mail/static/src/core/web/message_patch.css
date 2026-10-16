@@ -1,4 +1,5 @@
 .o-needaction-message {
     --border-opacity: .25;
+    /* eslint-disable-next-line css/no-invalid-properties -- false positive: unknown var() mixed with a resolved one */
     border-color: color-mix(in srgb, var(--o-action) calc(var(--border-opacity) * 100%), transparent) !important;
 }

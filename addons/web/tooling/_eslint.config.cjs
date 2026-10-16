@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { fixupPluginRules, includeIgnoreFile } = require("@eslint/compat");
+const css = require("@eslint/css").default;
 const js = require("@eslint/js");
 const prettierConfig = require("eslint-config-prettier");
 const prettier = require("eslint-plugin-prettier");
@@ -11,13 +12,16 @@ const ignoreFile = path.join(__dirname, ".eslint-ignore");
 
 module.exports = [
     ...(fs.existsSync(ignoreFile) ? [includeIgnoreFile(ignoreFile)] : []),
-    js.configs.recommended,
-    prettierConfig,
     {
-        plugins: { prettier: fixupPluginRules(prettier) },
         linterOptions: {
             reportUnusedDisableDirectives: "off",
         },
+    },
+    { files: ["**/*.js"], ...js.configs.recommended },
+    { files: ["**/*.js"], ...prettierConfig },
+    {
+        files: ["**/*.js"],
+        plugins: { prettier: fixupPluginRules(prettier) },
         languageOptions: {
             ecmaVersion: 2022,
             sourceType: "module",
@@ -126,6 +130,31 @@ module.exports = [
     {
         files: ["**/service_worker.js"],
         languageOptions: { globals: globals.serviceworker },
+    },
+    {
+        files: ["**/*.css"],
+        ignores: [
+            "**/static/lib/**",
+            "**/o_spreadsheet/o_spreadsheet.css",
+            // nesting that @eslint/css cannot parse yet
+            "**/ai/static/src/editor/embedded_components/core/voice_transcription.css",
+            "**/appointment/static/src/scss/appointment_type_views.css",
+            "**/appointment/static/src/scss/web_calendar.css",
+            "**/hr_holidays/static/src/scss/time_off.css",
+            "**/mail/static/src/discuss/call/common/call_presentation_bar.css",
+            "**/social_linkedin/static/src/scss/social_linkedin.css",
+            "**/spreadsheet_dashboard/static/src/bundle/chart/chart_menu.css",
+            "**/web_studio/static/src/client_action/report_editor/qweb_table_plugin.css",
+        ],
+        plugins: { css },
+        language: "css/css",
+        rules: {
+            ...css.configs.recommended.rules,
+            "css/no-important": "off",
+            "css/no-invalid-properties": ["error", { allowUnknownVariables: true }],
+            "css/use-baseline": ["warn", { available: "newly" }],
+            "css/selector-complexity": ["warn", { disallowPseudoClasses: ["has"] }],
+        },
     },
     ...(process.env.ODOO_ESLINT_DIFF ? require("eslint-plugin-diff").configs["flat/diff"] : []),
 ];
