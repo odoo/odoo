@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
+from odoo.tools import parse_float, get_lang
 
 
 class AccountPayment(models.Model):
@@ -769,6 +769,17 @@ class AccountPayment(models.Model):
         res = super().unlink()
         moves.unlink()
         return res
+
+    def _where_calc(self, domain):
+        lang = get_lang(self.env)
+        def patch_amount(leaf):
+            if leaf[0] in ('amount', 'amount_company_currency_signed') and isinstance(leaf[2], str):
+                try:
+                    return (leaf[0], leaf[1], parse_float(leaf[2], lang))
+                except ValueError:
+                    raise UserError(_("Invalid amount: %s", leaf[2]))
+            return leaf
+        return super()._where_calc([patch_amount(leaf) for leaf in domain])
 
     @api.depends('move_id.name')
     def _compute_display_name(self):
