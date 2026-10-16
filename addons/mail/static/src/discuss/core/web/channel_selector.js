@@ -24,8 +24,10 @@ export class ChannelSelector extends Component {
         this.threadService = useState(useService("mail.thread"));
         this.suggestionService = useService("mail.suggestion");
         this.orm = useService("orm");
+        this.ui = useState(useService("ui"));
         this.sequential = useSequential();
         this.state = useState({
+            isStartingChat: false,
             value: "",
             selectedPartners: [],
             navigableListProps: {
@@ -179,13 +181,18 @@ export class ChannelSelector extends Component {
     async onValidate() {
         if (this.props.category.id === "chats") {
             const selectedPartnerIds = this.state.selectedPartners;
-            if (selectedPartnerIds.length === 0) {
+            if (selectedPartnerIds.length === 0 || this.state.isStartingChat) {
                 return;
             }
-            await this.discussCoreCommonService.startChat(
-                selectedPartnerIds,
-                this.env.inChatWindow
-            );
+            this.state.isStartingChat = true;
+            try {
+                await this.discussCoreCommonService.startChat(
+                    selectedPartnerIds,
+                    this.env.inChatWindow
+                );
+            } finally {
+                this.state.isStartingChat = false;
+            }
         }
         if (this.props.onValidate) {
             this.props.onValidate();
@@ -224,7 +231,7 @@ export class ChannelSelector extends Component {
     }
 
     get inputPlaceholder() {
-        return this.state.selectedPartners.length > 0
+        return this.state.selectedPartners.length > 0 && !this.ui.isSmall
             ? _t("Press Enter to start")
             : this.props.category.addTitle;
     }

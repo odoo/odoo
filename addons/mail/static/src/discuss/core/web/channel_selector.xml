@@ -14,6 +14,12 @@
             type="text"
             maxlength="100"
         />
+        <button
+            t-if="props.multiple and ui.isSmall and state.selectedPartners.length > 0"
+            class="btn btn-primary btn-sm m-1 ms-auto"
+            t-att-disabled="state.isStartingChat"
+            t-on-click="onValidate"
+        >Start</button>
     </div>
     <NavigableList class="'o-discuss-ChannelSelector-list z-index-1'" t-props="state.navigableListProps"/>
 </t>
