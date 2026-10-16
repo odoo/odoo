@@ -152,6 +152,64 @@ test("insert the response from Google translate", async () => {
     expect(getContent(el)).toBe(`<p>Bonjour[]</p>`);
 });
 
+test("should preserve the block tag when one block is selected", async () => {
+    loadLanguages.installedLanguages = false;
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English (US)"],
+        ["fr_BE", "French (BE) / Français (BE)"],
+    ]);
+    const { el } = await setupEditor("<h1>[Hello<br>World]</h1>", {
+        config: { includePlugins: [TranslatePlugin] },
+    });
+    onRpc("/html_editor/google_translate", () => ({
+        translated_text: "Bonjour\nLe monde",
+        isError: false,
+    }));
+
+    // Select Translate button in the toolbar.
+    await expandToolbar();
+    await translateButtonFromToolbar();
+    await waitFor(".dropdown-menu");
+    await translateDropdownFromToolbar();
+
+    // Insert the response.
+    await waitFor(".o-translator-translated");
+    expect("footer button.btn[disabled]").toHaveCount(0);
+    await contains("footer button.btn").click();
+
+    await animationFrame();
+    expect(getContent(el)).toBe(`<h1>Bonjour</h1><h1>Le monde[]</h1>`);
+});
+
+test("should fallback to default base container when multiple blocks are selected", async () => {
+    loadLanguages.installedLanguages = false;
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English (US)"],
+        ["fr_BE", "French (BE) / Français (BE)"],
+    ]);
+    const { el } = await setupEditor("<h1>[Hello</h1><h1>World]</h1>", {
+        config: { includePlugins: [TranslatePlugin] },
+    });
+    onRpc("/html_editor/google_translate", () => ({
+        translated_text: "Bonjour\nLe monde",
+        isError: false,
+    }));
+
+    // Select Translate button in the toolbar.
+    await expandToolbar();
+    await translateButtonFromToolbar();
+    await waitFor(".dropdown-menu");
+    await translateDropdownFromToolbar();
+
+    // Insert the response.
+    await waitFor(".o-translator-translated");
+    expect("footer button.btn[disabled]").toHaveCount(0);
+    await contains("footer button.btn").click();
+
+    await animationFrame();
+    expect(getContent(el)).toBe(`<p>Bonjour</p><p>Le monde[]</p>`);
+});
+
 test("insert the response from ChatGPT translate in debug mode", async () => {
     loadLanguages.installedLanguages = false;
     serverState.debug = "1";
