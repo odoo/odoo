@@ -892,6 +892,7 @@ class MyInvoisDocument(models.Model):
             "search_date_invalid": self.env._("The search params are invalid."),  # Should never happen
             'document_not_found': self.env._('The document provided in the request does not exist.'),  # Should never happen
             'submission_too_large': self.env._('The submission is too large, try to send fewer invoices at once.'),
+            'document_too_large': self.env._('This invoice is too large to be sent to MyInvois (%(size)s KB, the maximum is 300 KB). Please reduce its number of lines.', size=error.get('data')),
             'action_forbidden': self.env._('Permission to do this action has not been granted. Please ensure that Odoo has sufficient permissions on the MyInvois platform.'),
         }
 

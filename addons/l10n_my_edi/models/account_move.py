@@ -675,6 +675,7 @@ Customs form No. 1, 9, etc for Vendor Bills""",
             'document_not_found': _('The document provided in the request does not exist.'),  # Should never happen
             'search_date_invalid': _('The search params are invalid.'),  # Should also never happen
             'submission_too_large': _('The submission is too large, try to send fewer invoices at once.'),
+            'document_too_large': _('This invoice is too large to be sent to MyInvois (%(size)s KB, the maximum is 300 KB). Please reduce its number of lines.', size=error.get('data')),
             'action_forbidden': _('Permission to do this action has not been granted. Please ensure that Odoo has sufficient permissions on the MyInvois platform.'),
         }
 
