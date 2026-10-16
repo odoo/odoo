@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import time
 from datetime import timedelta
 from unittest.mock import patch
 from uuid import uuid4
@@ -12,7 +11,6 @@ from odoo import fields
 from odoo.fields import Command
 from odoo.tools import mute_logger
 
-VALID_TOKEN = object()
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -71,15 +69,17 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         )
         return response.json()
 
-    def _post_self_order(self, lines, partner=None, partner_token=VALID_TOKEN, order_id=None, order_uuid=None, applied_codes=None, order_values=None):
+    def _signed(self, partner, config=None):
+        """The partner id as the server signs it for a self-order client (see pos_self_order)."""
+        return self.env['pos.order']._get_signed_self_partner_id(config or self.pos_config, partner.id)
+
+    def _post_self_order(self, lines, partner=None, order_id=None, order_uuid=None, applied_codes=None, order_values=None):
         """Send a raw order payload on the public self-order endpoint.
 
-        By default the order is made for `loyalty_partner`, backed by a valid identification
-        token, as the genuine frontend does once the customer identified.
+        By default the order is made for `loyalty_partner`, with its signed id, as the genuine
+        frontend does once the customer identified.
         """
         partner = self.loyalty_partner if partner is None else partner
-        if partner_token is VALID_TOKEN:
-            partner_token = partner._get_self_order_token(self.pos_config) if partner else None
         order_uuid = order_uuid or str(uuid4())
         order = {
             "id": order_id,
@@ -91,11 +91,9 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
             "amount_paid": 0,
             "amount_return": 0,
             "uuid": order_uuid,
-            "partner_id": partner.id if partner else False,
+            "partner_id": self._signed(partner) if partner else False,
             "lines": lines,
         }
-        if partner_token:
-            order["partner_token"] = partner_token
         if applied_codes is not None:
             order["applied_codes"] = applied_codes
         order.update(order_values or {})
@@ -340,129 +338,157 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         ], "A discount can only carry taxes of the lines it discounts")
 
     # ------------------------------------------------------------------
-    # Identification token
+    # Identification: the partner id signed by pos_self_order
     # ------------------------------------------------------------------
+    # pos_self_order only trusts a partner_id the server signed ("<id>-<hmac>", see
+    # pos.order._get_signed_self_partner_id) and drops any other from the order.
 
-    def _assert_identification_refused(self, result, message):
-        self.assertTrue(
-            result.get('error', {}).get('data', {}).get('name', '').endswith('.SelfOrderIdentificationExpired'),
-            message,
-        )
-
-    def _expiration(self, token):
-        return int(token.partition('.')[0])
-
-    @mute_logger('odoo.http')
-    def test_partner_without_token_is_refused(self):
-        """
-        Claiming to be a customer without having identified must not spend their points:
-        with no card_id, _process_loyalty would otherwise pick the partner's own card.
-        """
-        card = self.env['loyalty.card'].create({
-            'program_id': self.program.id,
-            'partner_id': self.loyalty_partner.id,
-            'points': 500,
+    def _create_loyalty_card(self, partner, points=500, program=None):
+        return self.env['loyalty.card'].create({
+            'program_id': (program or self.program).id,
+            'partner_id': partner.id,
+            'points': points,
         })
-        result, order_uuid = self._post_self_order([self._reward_line(self.free, self.reward)], partner_token=None)
-        self._assert_identification_refused(result, "A partner without identification token must be refused")
-        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]))
-        card.invalidate_recordset()
-        self.assertEqual(card.points, 500, "The customer's card must not have been debited")
 
     @mute_logger('odoo.http')
-    def test_token_of_another_partner_is_refused(self):
-        token = self.other_partner._get_self_order_token(self.pos_config)
-        result, _order_uuid = self._post_self_order([], partner_token=token)
-        self._assert_identification_refused(result, "A token only proves the identity it was issued for")
-
-    @mute_logger('odoo.http')
-    def test_token_of_another_config_is_refused(self):
+    def test_unverified_partner_cannot_claim_a_loyalty_reward(self):
+        """
+        A reward of a program reserved to customers needs a verified partner: without one,
+        _process_loyalty finds no card to charge and the reward would be free.
+        """
+        card = self._create_loyalty_card(self.loyalty_partner)
         other_config = self.env['pos.config'].create({'name': 'Other Config'})
-        token = self.loyalty_partner._get_self_order_token(other_config)
-        result, _order_uuid = self._post_self_order([], partner_token=token)
-        self._assert_identification_refused(result, "A token is only valid on the config it was issued for")
+        for partner_id in (
+            False,
+            self.loyalty_partner.id,  # unsigned
+            f"{self.loyalty_partner.id}-forged",
+            self._signed(self.loyalty_partner, other_config),
+        ):
+            with self.subTest(partner_id=partner_id):
+                result, order_uuid = self._post_self_order(
+                    [self._reward_line(self.free, self.reward)], order_values={'partner_id': partner_id},
+                )
+                self.assertIn('error', result, "The reward would never be charged")
+                self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]))
+        card.invalidate_recordset()
+        self.assertEqual(card.points, 500)
 
-    @mute_logger('odoo.http')
-    def test_expired_token_is_refused(self):
-        with patch('odoo.addons.pos_self_order_loyalty.models.res_partner.time.time', return_value=time.time() - 3600):
-            token = self.loyalty_partner._get_self_order_token(self.pos_config)  # kiosk: 30 minutes
-        result, _order_uuid = self._post_self_order([], partner_token=token)
-        self._assert_identification_refused(result, "An expired token must be refused")
-
-    @mute_logger('odoo.http')
-    def test_tampered_token_is_refused(self):
-        token = self.loyalty_partner._get_self_order_token(self.pos_config)
-        forged = f"{self._expiration(token) + 3600 * 24 * 365}.{token.partition('.')[2]}"
-        result, _order_uuid = self._post_self_order([], partner_token=forged)
-        self._assert_identification_refused(result, "Extending a token's expiration must invalidate it")
-
-    def test_valid_token_is_accepted_and_renewed(self):
-        result, order_uuid = self._post_self_order([], partner_token=VALID_TOKEN)
+    def test_signed_partner_is_kept_on_the_order(self):
+        result, order_uuid = self._post_self_order([self._product_line(self.cola, 1)])
         self.assertNotIn('error', result, result.get('error'))
-        order = self.env['pos.order'].search([('uuid', '=', order_uuid)])
-        self.assertEqual(order.partner_id, self.loyalty_partner)
-        partners = result['result']['res.partner']
-        self.assertEqual([p['id'] for p in partners], self.loyalty_partner.ids)
-        self.assertTrue(partners[0]['_self_order_token'], "The identification must slide with each order")
+        self.assertEqual(self.env['pos.order'].search([('uuid', '=', order_uuid)]).partner_id, self.loyalty_partner)
 
-    @mute_logger('odoo.http')
-    def test_existing_order_keeps_its_partner_without_token(self):
-        cola_line = [Command.CREATE, 0, {
-            "uuid": str(uuid4()), "product_id": self.cola.id, "qty": 1, "price_unit": self.cola.lst_price,
-        }]
-        result, order_uuid = self._post_self_order([cola_line])
-        self.assertNotIn('error', result, result.get('error'))
-        order = self.env['pos.order'].search([('uuid', '=', order_uuid)])
+    def test_identification_returns_signed_partner_and_cards(self):
+        """The client must get the partner, and the cards' partner, with the id the base self-order trusts."""
+        card = self._create_loyalty_card(self.loyalty_partner)
+        result = self._get_partner_by_barcode()['result']
+        signed = self._signed(self.loyalty_partner)
+        self.assertEqual([p['id'] for p in result['res.partner']], [signed])
+        self.assertEqual([(c['id'], c['partner_id']) for c in result['loyalty.card']], [(card.id, signed)])
 
-        result, _order_uuid = self._post_self_order([], partner_token=None, order_id=order.id, order_uuid=order_uuid)
-        self.assertNotIn('error', result, "The partner already on the order was verified when it was set")
+    def test_check_card_code_only_trusts_a_signed_partner(self):
+        card = self._create_loyalty_card(self.loyalty_partner)
+        card.code = 'CARD-SELF-1'
+        unsigned = self._jsonrpc('/pos-self-order/check-card-code', {
+            'code': 'CARD-SELF-1', 'partner_id': self.loyalty_partner.id,
+        })['result']
+        self.assertEqual((unsigned['status'], unsigned['reason']), (False, 'invalid_partner'))
+        signed = self._jsonrpc('/pos-self-order/check-card-code', {
+            'code': 'CARD-SELF-1', 'partner_id': self._signed(self.loyalty_partner),
+        })['result']
+        self.assertTrue(signed['status'])
+        self.assertEqual(signed['data']['loyalty.card'][0]['partner_id'], self._signed(self.loyalty_partner))
 
-        result, _order_uuid = self._post_self_order(
-            [], partner=self.other_partner, partner_token=None, order_id=order.id, order_uuid=order_uuid,
-        )
-        self._assert_identification_refused(result, "Changing the partner of an order still requires a token")
-        self.assertEqual(order.partner_id, self.loyalty_partner)
+    def test_get_identified_partner(self):
+        result = self._jsonrpc('/pos-self-order/get-identified-partner', {
+            'partner_id': self._signed(self.loyalty_partner),
+        })['result']
+        self.assertEqual([p['id'] for p in result['res.partner']], [self._signed(self.loyalty_partner)])
+        for partner_id in (self.loyalty_partner.id, f"{self.loyalty_partner.id}-forged"):
+            result = self._jsonrpc('/pos-self-order/get-identified-partner', {'partner_id': partner_id})['result']
+            self.assertEqual(result['res.partner'], [])
 
-    def test_validate_partner_token(self):
-        """The address form proves the identity of the partner it creates, not of an existing one."""
-        params = {
+    def test_partner_from_the_delivery_form_is_kept_on_the_order(self):
+        """The base delivery form returns a signed partner id: orders using it must go through."""
+        partner_id = self._jsonrpc('/pos-self-order/validate-partner', {
             'name': 'Delivery Customer', 'phone': '+32 470 00 00 00', 'street': 'Rue de la Gare 1',
             'zip': '1000', 'city': 'Brussels', 'country_id': self.env.ref('base.be').id,
-        }
-        created = self._jsonrpc('/pos-self-order/validate-partner', params)['result']['res.partner'][0]
-        self.assertTrue(self.env['res.partner']._get_partner_from_self_order_token(
-            self.pos_config, created['id'], created['_self_order_token'],
-        ))
-        existing = self._jsonrpc('/pos-self-order/validate-partner', {**params, 'partner_id': self.loyalty_partner.id})
-        self.assertNotIn('_self_order_token', existing['result']['res.partner'][0])
+        })['result']['res.partner'][0]['id']
+        result, order_uuid = self._post_self_order(
+            [self._product_line(self.cola, 1)], order_values={'partner_id': partner_id},
+        )
+        self.assertNotIn('error', result, result.get('error'))
+        self.assertEqual(self.env['pos.order'].search([('uuid', '=', order_uuid)]).partner_id.name, 'Delivery Customer')
+
+    # ------------------------------------------------------------------
+    # Reward lines: updates and cards
+    # ------------------------------------------------------------------
 
     @mute_logger('odoo.http')
-    def test_check_card_code_requires_token(self):
-        result = self._jsonrpc('/pos-self-order/check-card-code', {
-            'code': 'WHATEVER', 'partner_id': self.loyalty_partner.id, 'partner_token': None,
+    def test_reward_line_update_is_checked(self):
+        """An update of an existing reward line is checked as one, even if the payload doesn't say so."""
+        self._create_loyalty_card(self.loyalty_partner)
+        result, order_uuid = self._post_self_order([
+            self._product_line(self.cola, 1),  # not free: the order stays draft and can be updated
+            self._reward_line(self.free, self.reward),
+        ])
+        self.assertNotIn('error', result, result.get('error'))
+        order = self.env['pos.order'].search([('uuid', '=', order_uuid)])
+        reward_line = order.lines.filtered('is_reward_line')
+
+        result, _order_uuid = self._post_self_order([
+            [Command.UPDATE, reward_line.id, {'product_id': self.desk_organizer.id, 'qty': 1, 'price_unit': -95}],
+        ], order_id=order.id, order_uuid=order_uuid)
+        self.assertIn('error', result, "A reward line can't be turned into another product")
+        self.assertEqual((reward_line.product_id, reward_line.price_unit), (self.free, 0))
+
+        result, _order_uuid = self._post_self_order([
+            [Command.UPDATE, reward_line.id, {'product_id': self.free.id, 'qty': 1, 'price_unit': -2.53}],
+        ], order_id=order.id, order_uuid=order_uuid)
+        self.assertNotIn('error', result, result.get('error'))
+        self.assertEqual(reward_line.price_unit, 0, "A free product reward stays free")
+
+    @mute_logger('odoo.http')
+    def test_reward_card_of_another_program_is_refused(self):
+        """A program's points can't pay for another program's rewards."""
+        other_program = self.env['loyalty.program'].create({
+            'name': 'Other Loyalty Program',
+            'program_type': 'loyalty',
+            'reward_ids': [Command.create({
+                'reward_type': 'product',
+                'reward_product_id': self.cola.id,
+                'required_points': 1,
+            })],
         })
-        self._assert_identification_refused(result, "check-card-code must not trust an unproven partner")
+        other_card = self._create_loyalty_card(self.loyalty_partner, program=other_program)
+        result, order_uuid = self._post_self_order([self._reward_line(self.free, self.reward, other_card)])
+        self.assertIn('error', result)
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]))
+        other_card.invalidate_recordset()
+        self.assertEqual(other_card.points, 500)
 
-    def test_refresh_partner_token(self):
-        token = self.loyalty_partner._get_self_order_token(self.pos_config)
-        result = self._jsonrpc('/pos-self-order/refresh-partner-token', {
-            'partner_id': self.loyalty_partner.id, 'partner_token': token,
-        })['result']
-        self.assertEqual([p['id'] for p in result['res.partner']], self.loyalty_partner.ids)
-        self.assertTrue(result['res.partner'][0]['_self_order_token'])
-
-        result = self._jsonrpc('/pos-self-order/refresh-partner-token', {
-            'partner_id': self.loyalty_partner.id, 'partner_token': 'invalid',
-        })['result']
-        self.assertEqual(result['res.partner'], [])
-
-    def test_token_lifetime(self):
-        now = time.time()
-        kiosk_token = self.loyalty_partner._get_self_order_token(self.pos_config)
-        self.assertAlmostEqual(self._expiration(kiosk_token) - now, 30 * 60, delta=60)
-        self.pos_config.self_ordering_mode = 'mobile'
-        mobile_token = self.loyalty_partner._get_self_order_token(self.pos_config)
-        self.assertAlmostEqual(self._expiration(mobile_token) - now, 90 * 24 * 3600, delta=60)
+    def test_paid_order_stays_paid_when_points_are_missing(self):
+        """
+        The card was spent by another order in the meantime: once the customer paid (payment
+        terminal, online), the order must still be marked paid, the shop is told instead.
+        """
+        card = self._create_loyalty_card(self.loyalty_partner)
+        result, order_uuid = self._post_self_order([
+            self._product_line(self.cola, 1),
+            self._reward_line(self.free, self.reward),
+        ])
+        self.assertNotIn('error', result, result.get('error'))
+        order = self.env['pos.order'].search([('uuid', '=', order_uuid)])
+        card.points = 0  # spent elsewhere before the payment is confirmed
+        self.env['pos.payment'].create({
+            'pos_order_id': order.id,
+            'payment_method_id': self.bank_payment_method.id,
+            'amount': order.amount_total,
+        })
+        order.amount_paid = order.amount_total
+        order.action_pos_order_paid()
+        self.assertEqual(order.state, 'paid')
+        self.assertIn("couldn't be processed", order.message_ids[:1].body)
 
     # ------------------------------------------------------------------
     # Codes: the code, not a card or program id, proves a code-based reward
@@ -555,6 +581,22 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         self.assertEqual(self.env['pos.order'].search([('uuid', '=', order_uuid)]).state, 'paid')
         card.invalidate_recordset()
         self.assertAlmostEqual(card.points, 74.70)
+
+    def test_promo_codes_are_not_loaded_in_self_order(self):
+        """With the public mobile access token, anyone could read the codes and apply them."""
+        fields = self.env['loyalty.rule']._load_pos_self_data_fields(self.pos_config)
+        self.assertNotIn('code', fields)
+        self.assertNotIn('promo_barcode', fields)
+
+    def test_entered_promo_code_is_returned(self):
+        """The client needs the rule's code to apply it: only revealed to who entered it."""
+        program = self._create_promo_code_program('PROMO-SELF')
+        result = self._jsonrpc('/pos-self-order/check-card-code', {'code': 'PROMO-SELF'})['result']
+        self.assertTrue(result['status'])
+        self.assertEqual(
+            [(rule['id'], rule['code']) for rule in result['data']['loyalty.rule']],
+            [(program.rule_ids.id, 'PROMO-SELF')],
+        )
 
     def test_applied_codes_are_loaded_in_self_order(self):
         """The self-order client only sends the fields it loads: applied_codes must be one of them."""
@@ -659,12 +701,18 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         self.loyalty_partner.barcode = '0420000000001'
         return self._jsonrpc('/pos-self-order/get-partner-by-barcode', {'partner_barcode': '0420000000001'})
 
+    def test_empty_barcode_identifies_nobody(self):
+        """A search on an empty barcode would match the customers who have none."""
+        for barcode in (False, None, ''):
+            with self.subTest(barcode=barcode):
+                result = self._jsonrpc('/pos-self-order/get-partner-by-barcode', {'partner_barcode': barcode})
+                self.assertEqual(result.get('result'), {})
+
     def test_partner_barcode_identifies_in_kiosk(self):
         result = self._get_partner_by_barcode()
         self.assertNotIn('error', result, result.get('error'))
         partners = result['result']['res.partner']
-        self.assertEqual([p['id'] for p in partners], self.loyalty_partner.ids)
-        self.assertTrue(partners[0]['_self_order_token'])
+        self.assertEqual([p['id'] for p in partners], [self._signed(self.loyalty_partner)])
 
     @mute_logger('odoo.http')
     def test_partner_barcode_refused_outside_kiosk(self):
@@ -697,7 +745,7 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         unknown = self._request_code('unknown@example.com')
         self.assertNotIn('error', unknown, unknown.get('error'))
         self.assertEqual(known['result'], unknown['result'], "The answer must not tell whether the email is a customer")
-        self.assertNotIn('_self_order_token', json.dumps(unknown['result']))
+        self.assertNotIn('res.partner', unknown['result'])
         self.assertFalse(self._partners_with_email('unknown@example.com'), "No customer before the code is validated")
 
     def test_new_customer_created_once_the_code_is_validated(self):
@@ -705,8 +753,7 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         result = self._validate_code('new@example.com', '111111')
         partner = self._partners_with_email('new@example.com')
         self.assertEqual(len(partner), 1)
-        self.assertEqual([p['id'] for p in result['res.partner']], partner.ids)
-        self.assertTrue(result['res.partner'][0]['_self_order_token'])
+        self.assertEqual([p['id'] for p in result['res.partner']], [self._signed(partner)])
 
     def test_wrong_code_is_refused(self):
         self._request_code('new@example.com')
@@ -718,7 +765,7 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         self.loyalty_partner.email = '"Alice" <Alice@Example.com>'
         self._request_code('alice@example.com')
         result = self._validate_code('alice@example.com', '111111')
-        self.assertEqual([p['id'] for p in result['res.partner']], self.loyalty_partner.ids)
+        self.assertEqual([p['id'] for p in result['res.partner']], [self._signed(self.loyalty_partner)])
         self.assertEqual(self._partners_with_email('alice@example.com'), self.loyalty_partner)
 
     def test_code_is_single_use_and_attempts_are_limited(self):

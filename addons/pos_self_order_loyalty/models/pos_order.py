@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import math
 from collections import defaultdict
 
 from odoo import api, models, Command, _
 from odoo.exceptions import UserError
-from odoo.addons.pos_self_order_loyalty.models.res_partner import SelfOrderIdentificationExpired
+
+
+_logger = logging.getLogger(__name__)
 
 
 def is_valid_id(value):
@@ -18,26 +21,34 @@ class PosOrder(models.Model):
 
     @api.model
     def _check_pos_order(self, pos_config, order, device_type, table=None):
-        """A partner on a public self-order payload must be backed by an identification token.
-
-        Once an order carries a partner, later syncs keeping that same partner are trusted:
-        it was verified when it was set.
-        """
-        partner_id = order.get('partner_id')
-        if partner_id:
-            existing_order = pos_config.env['pos.order']
-            if isinstance(order.get('id'), int) and order.get('uuid'):
-                existing_order = existing_order.search([('id', '=', order['id']), ('uuid', '=', order['uuid'])])
-            if existing_order.partner_id.id != partner_id and not pos_config.env['res.partner']._get_partner_from_self_order_token(
-                pos_config, partner_id, order.get('partner_token'),
-            ):
-                raise SelfOrderIdentificationExpired(_("Your identification has expired, please identify yourself again."))
+        # The partner is only trusted when the server signed its id (see
+        # _get_signed_self_partner_id): resolve it once for the loyalty checks, which run on
+        # this payload (lines, cards, loyalty state)
+        partner = self._get_self_partner_from_token(pos_config, order.get('partner_id'))
+        order = {**order, '_self_order_partner_id': partner.id if partner else False}
         result = super()._check_pos_order(pos_config, order, device_type, table)
         # pos.order._process_loyalty only lets a with_code rule earn points if its code was entered
         result['applied_codes'] = self._get_self_order_applied_codes(pos_config, order)
         # The classic POS replays this state when it opens the order (recomputeRewards)
         result.update(self._get_self_order_loyalty_state(pos_config, {**order, 'applied_codes': result['applied_codes']}))
         return result
+
+    def _process_loyalty(self):
+        if self.source not in ('kiosk', 'mobile') or self.currency_id.is_zero(self.amount_paid):
+            # Nothing paid yet (a free order is validated by the self-order controller itself):
+            # the order can still be refused, which is what we want
+            return super()._process_loyalty()
+        # The customer already paid (payment terminal, online payment) while the points were
+        # checked when the order was sent. A gift card or eWallet used at the same time on
+        # several orders may not cover this one anymore: rather than leaving a paid order
+        # unpaid, keep it paid and let the shop sort it out.
+        try:
+            with self.env.cr.savepoint():
+                return super()._process_loyalty()
+        except UserError as error:
+            _logger.warning("Loyalty not processed on the paid self-order %s: %s", self.name, error)
+            self.message_post(body=_("The loyalty points couldn't be processed on this paid order: %s", error))
+            return self.env['loyalty.card']
 
     def _load_pos_self_data_fields(self, config):
         # applied_codes: the codes entered are the proof for code-based rewards (see
@@ -172,12 +183,12 @@ class PosOrder(models.Model):
         """Whether a public self-order payload may spend `card`.
 
         A card reserved for a partner is spent by that partner only, whose identity is proven
-        by the identification token (see _check_pos_order). An anonymous card (gift card,
-        coupon) is spent by whoever knows its code, like a physical card: its id alone, a
-        guessable integer, is no proof.
+        by its signed id (see _check_pos_order). An anonymous card (gift card, coupon) is
+        spent by whoever knows its code, like a physical card: its id alone, a guessable
+        integer, is no proof.
         """
         if card.partner_id:
-            return card.partner_id.id == order.get('partner_id')
+            return card.partner_id.id == order.get('_self_order_partner_id')
         return card.code in (order.get('applied_codes') or [])
 
     @api.model
@@ -194,6 +205,10 @@ class PosOrder(models.Model):
         reward = pos_config.env['loyalty.reward'].browse(line_data.get('reward_id')).exists()
         if not reward or reward.program_id not in pos_config._get_program_ids():
             return False, False
+        if reward.program_id.is_nominative and not order.get('_self_order_partner_id'):
+            # The points are taken from the customer's card at payment (_process_loyalty):
+            # without a verified customer there is no card to charge, the reward would be free
+            return False, False
 
         if reward.reward_type == 'product':
             if product_id not in reward.reward_product_ids.ids:
@@ -204,7 +219,9 @@ class PosOrder(models.Model):
         card = pos_config.env['loyalty.card']
         if line_data.get('card_id'):
             card = card.browse(line_data['card_id']).exists()
-            if not card or not self._is_self_order_card_usable(card, order):
+            # _process_loyalty takes the points from the line's card: it must be one of the
+            # reward's program
+            if not card or card.program_id != reward.program_id or not self._is_self_order_card_usable(card, order):
                 return False, False
 
         return reward, card
@@ -216,6 +233,17 @@ class PosOrder(models.Model):
             return result
 
         line_data = line[2]
+        if result[0] == Command.UPDATE:
+            existing_line = pos_config.env['pos.order.line'].browse(result[1])
+            if existing_line.is_reward_line:
+                # The line stays a reward line (never repriced, see _compute_line_price): check
+                # it as one, whatever the payload claims
+                line_data = {
+                    'reward_id': existing_line.reward_id.id,
+                    'card_id': existing_line.card_id.id,
+                    **line_data,
+                    'is_reward_line': True,
+                }
         if not line_data.get('is_reward_line'):
             return result
 

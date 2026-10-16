@@ -13,8 +13,8 @@
                                 <t t-out="this.props.text"/>
                             </div>
                             <div class="d-flex flex-row px-3 mb-4 mb-lg-5 mt-2 gap-2 justify-content-center">
-                                <input type="text" pattern="[0-9a-fA-F]+(-[0-9a-fA-F]+)*" t-ref="this.inputRef" t-model="this.input" class="form-control w-100 w-lg-50 rounded-4 bg-white shadow-sm" t-att-placeholder="this.props.inputPlaceholder" />
-                                <button t-if="this.props.useMobileScanner and this.selfOrder.config.self_ordering_mode === 'mobile'" class="btn btn-secondary mobile-scanner px-4" t-on-click.stop="() => this.openMobileScanner()">
+                                <input type="text" t-ref="this.inputRef" t-model="this.input" class="form-control w-100 w-lg-50 rounded-4 bg-white shadow-sm" t-att-placeholder="this.props.inputPlaceholder" />
+                                <button t-if="this.props.useMobileScanner and this.selfOrder.config.self_ordering_mode === 'mobile'" class="btn btn-secondary mobile-scanner px-4" t-on-click.stop="() => this.selfOrder.openMobileScanner()">
                                     <i class="oi" data-icon="barcode" aria-hidden="true"></i>
                                 </button>
                             </div>

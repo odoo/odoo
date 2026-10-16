@@ -6,9 +6,14 @@ import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 
 patch(barcodeReaderService, {
     async start(env, deps) {
-        this.data = usePlugin(PosDataPlugin);
-        session.nomenclature_id = this.data.models["barcode.nomenclature"].getFirst();
-        session.nomenclature_id.rules = session.nomenclature_id.rule_ids; //TODO change rules to rule_ids everywhere
+        const data = usePlugin(PosDataPlugin);
+        // No nomenclature (the company field is optional): leave session.nomenclature_id unset,
+        // the base service then creates no reader and useBarcodeReader registers nothing
+        const nomenclature = data.models["barcode.nomenclature"]?.getFirst();
+        if (nomenclature) {
+            session.nomenclature_id = nomenclature;
+            nomenclature.rules = nomenclature.rule_ids; //TODO change rules to rule_ids everywhere
+        }
         return super.start(env, deps);
     },
 });

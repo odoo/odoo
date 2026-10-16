@@ -153,9 +153,6 @@ export class SelfOrder extends Reactive {
             });
             return;
         }
-        if (this.getOrder() == null) {
-            return this.startOrder();
-        }
         const product = this.models["product.product"].filter(
             (p) => p.barcode === code.base_code
         )?.[0];
@@ -184,6 +181,12 @@ export class SelfOrder extends Reactive {
         if (this.hasPresets() && !this.currentOrder.preset_id) {
             this.router.navigate("location");
             return;
+        } else if (
+            this.config.use_presets &&
+            this.availablePresets.length === 1 &&
+            !this.currentOrder.preset_id
+        ) {
+            this.currentOrder.setPreset(this.availablePresets[0]);
         }
         this.router.navigate("product_list");
     }
@@ -993,7 +996,7 @@ export class SelfOrder extends Reactive {
             }
         }
 
-        if (this.config.self_order_pay_after_meal === "meal") {
+        if (this.config.self_ordering_pay_after === "meal") {
             openOrder.recomputeChanges();
         }
         for (const [uuid, refreshedQty] of refreshedBaselines) {
