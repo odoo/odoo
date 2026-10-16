@@ -732,9 +732,31 @@ export class Thread extends Component {
             } else {
                 // To remove when safari will support the "scrollend" event.
                 let lastScrollTop = this.scrollableRef.el.scrollTop;
+                let previousScrollTop = lastScrollTop;
+                let movedAway = false;
+                const highlightScroll = this.messageHighlight?.scrollPromise;
+                const scrollListener = new AbortController();
+                this.scrollableRef.el.addEventListener(
+                    "scroll",
+                    (ev) => {
+                        const distance = Math.abs(value - ev.target.scrollTop);
+                        movedAway ||= distance > Math.abs(value - previousScrollTop);
+                        previousScrollTop = ev.target.scrollTop;
+                    },
+                    { signal: scrollListener.signal }
+                );
                 const checkSmoothScrollingEnd = () => {
                     const el = this.scrollableRef.el;
                     if (!el || el.scrollTop === lastScrollTop) {
+                        scrollListener.abort();
+                        if (
+                            el &&
+                            !movedAway &&
+                            thread.eq(this.props.thread) &&
+                            this.messageHighlight?.scrollPromise === highlightScroll
+                        ) {
+                            el.scrollTop = value;
+                        }
                         onSmoothScrollingEnd();
                         return;
                     }
