@@ -5,9 +5,8 @@
 import { ManyFieldVersion, SingleFieldVersion, SKIP_REVISION } from "@mail/model/field_version";
 import { isCommandList, isMany, normalizeManyCommands, untrackFunctions } from "@mail/model/misc";
 import { RecordInternal } from "@mail/model/record_internal";
-import { incrementFn } from "@mail/utils/common/signal";
 
-import { computed, htmlEscape, markup, signal } from "@odoo/owl";
+import { htmlEscape, markup, signal } from "@odoo/owl";
 
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 
@@ -38,14 +37,12 @@ export class StoreInternal extends RecordInternal {
      */
     app;
     /** See {@link Store#MAKE_UPDATE}. */
-    updateDepth = signal(0);
-    raiseUpdateDepth = incrementFn(this.updateDepth);
-    lowerUpdateDepth = incrementFn(this.updateDepth, -1);
+    updateDepth = 0;
     /**
-     * A computed of the depth, so a held field only recomputes when this
-     * flips, not on every nested raise. See {@link Store#MAKE_UPDATE}.
+     * Whether the depth is above 0. Only set when this flips, so a held field
+     * is not notified on every nested raise. See {@link Store#MAKE_UPDATE}.
      */
-    isUpdateInProgress = computed(() => this.updateDepth() > 0);
+    isUpdateInProgress = signal(false);
     /** See {@link Store#MAKE_UPDATE}. */
     isDrainingQueues = signal(false);
     /**
@@ -61,9 +58,18 @@ export class StoreInternal extends RecordInternal {
      */
     currentInsertVersion = null;
 
-    constructor() {
-        super(...arguments);
-        untrackFunctions(this, ["lowerUpdateDepth", "raiseUpdateDepth"]);
+    lowerUpdateDepth() {
+        this.updateDepth--;
+        if (this.updateDepth === 0) {
+            this.isUpdateInProgress.set(false);
+        }
+    }
+
+    raiseUpdateDepth() {
+        this.updateDepth++;
+        if (this.updateDepth === 1) {
+            this.isUpdateInProgress.set(true);
+        }
     }
 
     /**
