@@ -171,6 +171,7 @@ class MailActivityMixin(models.AbstractModel):
     def _compute_sql_activity_state(self, table):
         # find activities
         act_query = self.activity_ids._search(Domain('res_model', '=', self._name) & Domain('active', '=', True), bypass_access=True)
+        act_query.add_where(SQL("res_id=%s", table.id))
         activity_t = act_query.table
         res_id_sql = activity_t.res_id
         # group them by res_id and compute the state (as int)
@@ -195,7 +196,7 @@ class MailActivityMixin(models.AbstractModel):
 
         # join the results and translate int into the state value
         act_alias = table._make_alias('activity_state')
-        table._query.add_join('LEFT JOIN', act_alias, act_sql, SQL("%s = %s", table.id, act_alias.res_id))
+        table._query.add_join('LEFT JOIN LATERAL', act_alias, act_sql, SQL("TRUE"))
         col = act_alias.activity_state
         return SQL("""CASE
             WHEN %(col)s < 0 THEN 'overdue'
