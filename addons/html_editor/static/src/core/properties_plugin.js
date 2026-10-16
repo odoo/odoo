@@ -31,6 +31,21 @@ export class PropertiesPlugin extends Plugin {
     static id = "properties";
     static shared = ["get"];
 
+    setup() {
+        /** @type {Map<string, NodeProperties[]>} */
+        this.propertiesByName = new Map();
+        for (const declaration of this.getResource("properties")) {
+            for (const name in declaration) {
+                if (name !== "predicate") {
+                    if (!this.propertiesByName.has(name)) {
+                        this.propertiesByName.set(name, []);
+                    }
+                    this.propertiesByName.get(name).push(declaration);
+                }
+            }
+        }
+    }
+
     /**
      * @param {NodeProperties} declaration
      * @param {Node} node
@@ -64,10 +79,14 @@ export class PropertiesPlugin extends Plugin {
      */
     get(node, name, defaultValue) {
         let result;
-        for (const declaration of this.getResource("properties")) {
-            if (name in declaration && this.matches(declaration, node)) {
+        for (const declaration of this.propertiesByName.get(name) ?? []) {
+            if (this.matches(declaration, node)) {
                 const value = declaration[name];
                 result = typeof value === "boolean" ? (result ?? true) && value : result ?? value;
+                if (result === false) {
+                    // Nothing overrides a `false`.
+                    return false;
+                }
             }
         }
         return result ?? defaultValue;
