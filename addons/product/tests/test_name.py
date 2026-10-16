@@ -160,3 +160,17 @@ class TestName(TransactionCase):
             "The non-favorite product should still be suggested once the "
             "favorite one(s) have been listed.",
         )
+
+    def test_product_template_pagination_same_name(self):
+        """ Paginating through templates sharing the same name must show each
+        template exactly once. """
+        templates = self.env['product.template'].create([{'name': 'EGR valve'}] * 5)
+        # move the rows of the first templates to the end of the table, so that
+        # their physical order does not match the order of their ids anymore
+        templates[:3].write({'list_price': 2.0})
+        templates.flush_recordset()
+        domain = [('id', 'in', templates.ids)]
+        paginated_ids = []
+        for offset in range(0, 5, 1):
+            paginated_ids += self.env['product.template'].search(domain, offset=offset, limit=1).ids
+        self.assertEqual(paginated_ids, templates.ids)
