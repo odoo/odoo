@@ -5,12 +5,8 @@ import { _t } from "@web/core/l10n/translation";
 export class PosPaymentMethod extends Base {
     static pythonModel = "pos.payment.method";
 
-    get useTerminal() {
-        return this.payment_method_type === "terminal";
-    }
-
-    get useQrPayment() {
-        return this.payment_method_type === "qr_payment";
+    get useProvider() {
+        return this.payment_method_type === "provider";
     }
 
     get useBankTransfer() {

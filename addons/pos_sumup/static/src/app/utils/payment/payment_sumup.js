@@ -20,10 +20,7 @@ export class PaymentSumup extends PaymentInterface {
                 !paymentLine.isDone() &&
                 paymentLine.getPaymentStatus() !== "retry"
             ) {
-                paymentLine.payment_method_id.payment_interface.handleSumupStatusResponse(
-                    paymentLine,
-                    data
-                );
+                paymentLine.payment_interface.handleSumupStatusResponse(paymentLine, data);
             }
         });
     }

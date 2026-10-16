@@ -19,7 +19,7 @@ class TestMolliePaymentMethod(TestPointOfSaleHttpCommon):
                     "payment_provider": "mollie",
                     "mollie_terminal_id": "MOLLIE123",
                     "mollie_payment_provider_id": payment_provider.id,
-                    "payment_method_type": "terminal",
+                    "payment_method_type": "provider",
                     "journal_id": cls.bank_journal.id,
                 }),
             ],

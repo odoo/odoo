@@ -23,7 +23,7 @@ class TestMercadoPagoOrders(TransactionCase):
             cls.method = cls.env['pos.payment.method'].create({
                 'name': 'Mercado Pago test',
                 'type': 'bank',
-                'payment_method_type': 'terminal',
+                'payment_method_type': 'provider',
                 'payment_provider': 'mercado_pago',
                 'mp_bearer_token': 'APP_USR-test',
                 'mp_webhook_secret_key': 'secret-test',

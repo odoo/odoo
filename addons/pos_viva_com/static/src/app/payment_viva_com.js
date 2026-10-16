@@ -28,10 +28,7 @@ export class PaymentVivaCom extends PaymentInterface {
                     !paymentLine.isSettled &&
                     paymentLine.payment_status !== "retry"
                 ) {
-                    paymentLine.payment_method_id.payment_interface.handleVivaComStatusResponse(
-                        paymentLine,
-                        payload
-                    );
+                    paymentLine.payment_interface.handleVivaComStatusResponse(paymentLine, payload);
                 }
             }
         });

@@ -691,7 +691,7 @@ export class TicketScreen extends Component {
         return selectedOrder ? order.id && order.id == selectedOrder.id : false;
     }
     showCardholderName() {
-        return this.pos.models["pos.payment.method"].some((method) => method.useTerminal);
+        return this.pos.models["pos.payment.method"].some((method) => method.useProvider);
     }
     getSearchBarConfig() {
         return {

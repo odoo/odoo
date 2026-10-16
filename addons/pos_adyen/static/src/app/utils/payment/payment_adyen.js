@@ -15,7 +15,7 @@ export class PaymentAdyen extends PaymentInterface {
             const pendingLine = this.pos.getPendingPaymentLine("adyen");
 
             if (pendingLine) {
-                pendingLine.payment_method_id.payment_interface.handleAdyenStatusResponse();
+                pendingLine.payment_interface.handleAdyenStatusResponse();
             }
         });
     }

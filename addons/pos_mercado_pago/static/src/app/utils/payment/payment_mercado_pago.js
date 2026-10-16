@@ -44,7 +44,7 @@ export class PaymentMercadoPago extends PaymentInterface {
                 const pendingLine = this.pos.getPendingPaymentLine("mercado_pago");
 
                 if (pendingLine && pendingLine.payment_method_id.id === payload.payment_method_id) {
-                    pendingLine.payment_method_id.payment_interface.handleMercadoPagoWebhook();
+                    pendingLine.payment_interface.handleMercadoPagoWebhook();
                 }
             }
         });
@@ -132,7 +132,7 @@ export class PaymentMercadoPago extends PaymentInterface {
     _findOriginalMpPayment(refundLine) {
         const orderToRefund = refundLine.pos_order_id.lines[0]?.refunded_orderline_id?.order_id;
         const matched = orderToRefund?.payment_ids.find(
-            (l) => l.payment_method_id.payment_provider === "mercado_pago" && l.transaction_id
+            (l) => l.payment_provider === "mercado_pago" && l.transaction_id
         );
         return matched ? { transactionId: matched.transaction_id, amount: matched.amount } : null;
     }

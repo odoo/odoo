@@ -253,7 +253,7 @@ describe("show qr code button", () => {
         const card = store.models["pos.payment.method"].get(2);
         const paymentline = createPaymentLine(store, order, card);
 
-        paymentline.payment_method_id.payment_method_type = "qr_payment";
+        paymentline.payment_method_id.payment_method_type = "provider";
         paymentline.qr_code = "https://example.com/qr-code-data";
         paymentline.payment_status = "waiting_scan";
 
@@ -278,7 +278,7 @@ describe("show qr code button", () => {
         const card = store.models["pos.payment.method"].get(2);
         const paymentline = createPaymentLine(store, order, card);
 
-        paymentline.payment_method_id.payment_method_type = "qr_payment";
+        paymentline.payment_method_id.payment_method_type = "provider";
         paymentline.qr_code = "https://example.com/qr-code-data";
         paymentline.payment_status = "done";
 
@@ -303,7 +303,7 @@ describe("show qr code button", () => {
         const card = store.models["pos.payment.method"].get(2);
         const paymentline = createPaymentLine(store, order, card);
 
-        paymentline.payment_method_id.payment_method_type = "qr_payment";
+        paymentline.payment_method_id.payment_method_type = "provider";
         paymentline.qr_code = null;
         paymentline.payment_status = "pending";
 

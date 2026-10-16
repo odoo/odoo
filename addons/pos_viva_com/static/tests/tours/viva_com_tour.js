@@ -13,8 +13,7 @@ const mockVivaWebhook = () => ({
     content: "Waiting for Viva payment to be processed",
     trigger: ".paymentline_status_title_waiting_card",
     run: async function () {
-        const payment_terminal =
-            posmodel.getPendingPaymentLine("viva_com").payment_method_id.payment_interface;
+        const payment_terminal = posmodel.getPendingPaymentLine("viva_com").payment_interface;
 
         // ==> pretend to be viva and send the notification to the POS
         const resp = await fetch(

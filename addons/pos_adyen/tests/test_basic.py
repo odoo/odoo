@@ -24,7 +24,7 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
                     "adyen_terminal_identifier": "my_adyen_terminal",
                     "adyen_test_mode": False,
                     "payment_provider": "adyen",
-                    "payment_method_type": "terminal",
+                    "payment_method_type": "provider",
                     'journal_id': self.bank_journal.id,
                 }),
             ],

@@ -17,8 +17,8 @@ class PosPaymentMethod(models.Model):
         help='Accepted payment modes by Pine Labs for transactions.')
     pine_labs_test_mode = fields.Boolean(string='Pine Labs Test Mode', help='Test Pine Labs transaction process.')
 
-    def _get_terminal_provider_selection(self):
-        return super()._get_terminal_provider_selection() + [('pine_labs', 'Pine Labs')]
+    def _get_provider_selection(self):
+        return super()._get_provider_selection() + [('pine_labs', 'Pine Labs')]
 
     def pine_labs_make_payment_request(self, data):
         """

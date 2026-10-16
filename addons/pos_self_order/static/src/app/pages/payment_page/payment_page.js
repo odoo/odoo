@@ -37,7 +37,7 @@ export class PaymentPage extends Component {
     }
 
     async back() {
-        if (this.selectedPaymentMethod?.useCashMachine && !this.selfOrder.paymentError) {
+        if (this.getPanelShown() === "cash_machine" && !this.selfOrder.paymentError) {
             const paymentLine = this.selfOrder.getPendingPaymentLine(
                 this.selectedPaymentMethod.payment_provider
             );
@@ -57,8 +57,17 @@ export class PaymentPage extends Component {
         this.router.back();
     }
 
-    get showQrCode() {
-        return Boolean(this.state.qrCode);
+    getPanelShown() {
+        if (this.state.qrCode) {
+            return "qr_code";
+        }
+        if (this.selectedPaymentMethod?.useProvider) {
+            return "terminal";
+        }
+        if (this.selectedPaymentMethod?.useCashMachine) {
+            return "cash_machine";
+        }
+        return false;
     }
 
     selectMethod(methodId) {
