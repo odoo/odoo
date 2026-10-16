@@ -34,10 +34,19 @@ export class DiscussApp extends Record {
     );
     isActive = false;
     isMemberPanelOpenByDefault = this.localStorage(true);
+    isSidebarCollapsed = this.computed(
+        () => this.isSidebarCollapseEnabled && this.canCollapseSidebar()
+    );
+    isSidebarCollapseEnabled = this.localStorage(false);
     lastActiveId = this.localStorage(undefined);
     thread = fields.One("mail.thread", { inverse: "discussAppAsThread" });
     hasRestoredThread = false;
     sidebarWidth = this.localStorage(SIDEBAR_WIDTH);
+
+    /** Whether the sidebar offers to collapse: its toggle is in the tabs. */
+    canCollapseSidebar() {
+        return Boolean(this.store.messagingMenu?.sortedVisibleTabs.length);
+    }
 
     /**
      * Write the current discuss selection to the URL and action context so it survives

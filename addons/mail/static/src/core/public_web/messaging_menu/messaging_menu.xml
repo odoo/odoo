@@ -2,14 +2,24 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagingMenu">
-    <div class="o-mail-MessagingMenu-container d-flex flex-grow-1 overflow-hidden min-h-0 min-w-0 w-100 h-100 gap-2">
+    <div class="o-mail-MessagingMenu-container d-flex flex-grow-1 min-h-0 min-w-0 h-100" t-att-class="{ 'gap-2 w-100': !this.isCollapsible(), 'ps-3': this.isCollapsible() and !this.visibleTabs.length, 'overflow-hidden': !this.isPeeking(), 'o-peek': this.isPeeking() }">
         <t t-call="mail.MessagingMenu-navigation"/>
         <div class="o-mail-MessagingMenu d-flex flex-column flex-grow-1 overflow-hidden min-h-0 min-w-0"
-            t-att-class="this.ancestors.inDiscussApp or this.ui.isSmall ? 'rounded-4 border': 'rounded-0 border-start'">
+            t-att-class="{
+                'border': this.ancestors.inDiscussApp or this.ui.isSmall,
+                'rounded-4': (this.ancestors.inDiscussApp or this.ui.isSmall) and (!this.isCollapsible() or this.isPeeking()),
+                'rounded-start-4': this.isCollapsible() and !this.isPeeking(),
+                'rounded-0 border-start': !this.ancestors.inDiscussApp and !this.ui.isSmall,
+                'o-compact': this.isCompact(),
+                'shadow-lg': this.isPeeking(),
+            }"
+            t-on-mouseenter="() => this.onMouseenter()"
+            t-on-mouseleave="(ev) => this.onMouseleave(ev)"
+        >
             <div class="o-mail-MessagingMenu-searchContainer d-flex flex-column gap-2 px-2 o-py-2_5">
-                <div class="o-mail-MessagingMenu-searchRow d-flex align-items-stretch gap-1">
+                <div class="o-mail-MessagingMenu-searchRow d-flex align-items-stretch gap-1" t-att-class="{ 'o-searchInStrip': this.isCollapsible() and !this.activeTab().actions.some((action) => action.icon) }">
                     <t t-foreach="this.activeTab().actions" t-as="action" t-key="action.id">
-                        <div t-if="action.subActions?.length" class="flex-shrink-0">
+                        <div t-if="action.subActions?.length" class="d-flex flex-shrink-0">
                             <IsolatedDropdown
                                 items="action.subActions.map(subAction => ({ id: subAction.id, label: subAction.text, onSelected: () => this.onClickAction(subAction) }))"
                                 menuClass="'o-mail-MessagingMenu-dropdownMenu'"
@@ -22,10 +32,41 @@
                     </t>
                     <DiscussSearch autofocus="this.searchInputAutofocus" class="'flex-grow-1 min-w-0'" messagingMenuUiState="this.state"/>
                 </div>
-                <div t-if="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1" role="tablist">
+                <IsolatedDropdown
+                    t-if="this.activeTab().filters.length and this.isCollapsible() and this.store.discuss.isSidebarCollapsed"
+                    menuClass="'o-mail-MessagingMenu-dropdownMenu'"
+                    state="this.filterDropdownState"
+                >
+                    <button
+                        class="o-mail-MessagingMenu-filterToggle btn btn-sm rounded-pill o-px-2_5 o-py-0_5 align-self-start d-flex align-items-center justify-content-center"
+                        t-att-class="{ 'o-active': this.state().selectedFilter }"
+                        t-att-aria-label="this.filterToggleTitle()"
+                        t-att-title="this.filterToggleTitle()"
+                    >
+                        <i class="oi oi-fw" data-icon="filter_alt"/>
+                        <span class="o-mail-MessagingMenu-filterToggleLabel text-truncate" t-att-class="{ 'mx-1': !this.isCompact() }" t-out="this.state().selectedFilter?.text ?? this.allFilterText()"/>
+                        <i class="o-mail-MessagingMenu-filterToggleCaret oi" data-icon="keyboard_arrow_down"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <CheckboxItem class="{ selected: !this.state().selectedFilter }" checked="!this.state().selectedFilter" onSelected="() => this.state().selectedFilter = undefined">
+                            <t t-out="this.allFilterText()"/>
+                        </CheckboxItem>
+                        <CheckboxItem
+                            t-foreach="this.activeTab().sortedFilters"
+                            t-as="filter"
+                            t-key="filter.id"
+                            class="{ selected: this.state().selectedFilter?.id === filter.id }"
+                            checked="this.state().selectedFilter?.id === filter.id"
+                            onSelected="() => this.state().selectedFilter = filter"
+                        >
+                            <t t-out="filter.text"/>
+                        </CheckboxItem>
+                    </t>
+                </IsolatedDropdown>
+                <div t-elif="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1" role="tablist" t-ref="this.filtersRef">
                     <button
                         class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill o-px-2_5 o-py-0_5 flex-shrink-0"
-                        t-att-class="{ 'o-active': !this.state().selectedFilter, 'text-muted': this.state().selectedFilter }"
+                        t-att-class="{ 'o-active': !this.state().selectedFilter, 'text-muted': this.state().selectedFilter, 'position-absolute invisible pe-none': this.overflowFilters().includes(undefined) }"
                         t-att-aria-pressed="!this.state().selectedFilter"
                         t-on-click="() => this.state().selectedFilter = undefined"
                         data-available-offline=""
@@ -35,12 +76,21 @@
                         t-as="filter"
                         t-key="filter.id"
                         class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill o-px-2_5 o-py-0_5 flex-shrink-0"
-                        t-att-class="{ 'o-active': this.state().selectedFilter?.id === filter.id, 'text-muted': this.state().selectedFilter?.id !== filter.id }"
+                        t-att-class="{ 'o-active': this.state().selectedFilter?.id === filter.id, 'text-muted': this.state().selectedFilter?.id !== filter.id, 'position-absolute invisible pe-none': this.overflowFilters().includes(filter) }"
                         t-att-aria-pressed="this.state().selectedFilter?.id === filter.id"
                         t-on-click="() => this.state().selectedFilter = filter"
                         data-available-offline=""
                         t-out="filter.text"
                     />
+                    <IsolatedDropdown
+                        t-if="this.isCollapsible()"
+                        items="this.overflowFilters().map((filter) => ({ label: filter?.text ?? this.allFilterText(), onSelected: () => this.state().selectedFilter = filter }))"
+                        menuClass="'o-mail-MessagingMenu-dropdownMenu'"
+                    >
+                        <button class="o-mail-MessagingMenu-filterMore btn btn-sm rounded-pill o-px-2_5 o-py-0_5 flex-shrink-0 d-flex align-items-center" t-att-class="{ 'position-absolute invisible pe-none': !this.overflowFilters().length }">
+                            More<i class="oi" data-icon="keyboard_arrow_down"/>
+                        </button>
+                    </IsolatedDropdown>
                 </div>
             </div>
             <div t-ref="this.tabContentRef" class="o-mail-MessagingMenu-tabContent d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 o-px-1_5 o-gap-0_5">
@@ -86,22 +136,38 @@
 <t t-name="mail.MessagingMenu-action">
     <t t-set="togglesDropdown" t-value="action.subActions?.length"/>
     <button
-        class="btn btn-sm btn-primary rounded-3 py-1 o-my-0_5 d-flex align-items-center justify-content-center"
-        t-att-class="togglesDropdown ? 'w-100 position-relative pe-4' : 'flex-shrink-0'"
+        class="o-mail-MessagingMenu-action btn btn-sm btn-primary rounded-pill py-1 d-flex align-items-center justify-content-center"
+        t-att-class="{
+            'w-100 position-relative': togglesDropdown,
+            'pe-4': togglesDropdown and !this.isCompact(),
+            'flex-shrink-0': !togglesDropdown,
+        }"
         t-att-disabled="action.isDisabled?.()"
         t-att-title="action.title"
         t-on-click="() => togglesDropdown ? undefined : this.onClickAction(action)"
     >
-        <span t-if="action.icon" class="d-flex align-items-center flex-shrink-0" t-att-class="{'me-1': action.text}">
+        <span t-if="action.icon" class="o-mail-MessagingMenu-actionIcon d-flex align-items-center flex-shrink-0" t-att-class="{'me-1': action.text and !this.isCompact()}">
             <i class="oi oi-fw" t-att-class="action.iconClass" t-att-data-icon="action.icon"/>
         </span>
-        <span t-if="action.text" class="text-truncate" t-out="action.text"/>
-        <span t-if="togglesDropdown" class="oi oi-fw position-absolute end-0 me-1" data-icon="keyboard_arrow_down" aria-hidden="true"/>
+        <span t-if="action.text" class="o-mail-MessagingMenu-actionText text-truncate" t-out="action.text"/>
+        <span t-if="togglesDropdown" class="oi oi-fw position-absolute end-0 me-1" t-att-class="{ 'd-none': this.isCompact() }" data-icon="keyboard_arrow_down" aria-hidden="true"/>
     </button>
 </t>
 
 <t t-name="mail.MessagingMenu-navigation">
     <nav t-if="this.visibleTabs.length" class="o-mail-MessagingMenu-navbar d-flex flex-column flex-shrink-0 px-1 o-py-2_5 gap-2 overflow-auto h-100 o-scrollbar-thin">
+        <t t-if="this.isCollapsible() and this.store.discuss.canCollapseSidebar()">
+            <button
+                class="o-mail-MessagingMenu-toggleSidebar btn d-flex justify-content-center w-100 flex-shrink-0 px-1 py-0 bg-transparent border-0"
+                t-att-aria-expanded="!this.store.discuss.isSidebarCollapsed"
+                t-att-aria-label="this.toggleSidebarTitle()"
+                t-att-title="this.toggleSidebarTitle()"
+                t-on-click="() => this.onClickToggleSidebar()"
+            >
+                <i class="oi o-mail-MessagingMenu-tabIcon rounded-pill p-2 fs-5" data-icon="menu"/>
+            </button>
+            <span class="border-top w-50 mx-auto flex-shrink-0"/>
+        </t>
         <button
             t-foreach="this.visibleTabs" t-key="tab.localId" t-as="tab"
             class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center w-100 flex-shrink-0 p-1 bg-transparent position-relative border-0"

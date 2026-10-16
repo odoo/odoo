@@ -2,9 +2,279 @@
     background-color: var(--o-webclient-background-color);
 }
 
+/*
+ * The tabs are on the page tint, as the navbar, and the conversation is white: the list is a mix
+ * of both. The list and the conversation are one card, floating on the page.
+ */
 .o-mail-DiscussApp-sidebar {
-    flex-shrink: 0;
+    --mail-DiscussApp-listBg: color-mix(in srgb, var(--o-webclient-background-color) 70%, var(--white));
+    --mail-DiscussApp-sidebarExpandedWidth: min(var(--mail-DiscussApp-sidebarWidth), 30vw);
+    /* the tabs */
+    --mail-DiscussApp-sidebarListOffset: 4.5rem;
+    /* avatar, then on both sides: item padding and border, list padding, card border */
+    --mail-DiscussApp-sidebarStripWidth: calc(2rem + 4 * 0.375rem + 4 * var(--border-width));
+    /* avatar, then on both sides: item padding and border */
+    --mail-DiscussApp-compactItemWidth: calc(2rem + 2 * 0.375rem + 2 * var(--border-width));
+    /* the strip, inside the card border and the 0.5rem padding of the search container */
+    --mail-DiscussApp-compactButtonWidth: calc(
+        var(--mail-DiscussApp-sidebarStripWidth) - 2 * var(--border-width) - 1rem
+    );
+    --mail-DiscussApp-sidebarTransition: 200ms cubic-bezier(0.2, 0, 0, 1);
+    --mail-DiscussApp-sidebarFade: 160ms ease;
     max-width: 30vw;
+
+    &.o-collapsed {
+        width: calc(
+            var(--mail-DiscussApp-sidebarListOffset) + var(--mail-DiscussApp-sidebarStripWidth)
+        ) !important;
+    }
+
+    &.o-collapsed > .o_resizable_panel_handle {
+        display: none;
+    }
+
+    /* Below the border of the list, the toggle centers its icon on the search row of the list. */
+    .o-mail-MessagingMenu-toggleSidebar {
+        margin-top: calc(var(--border-width) + 1px);
+    }
+
+    &.o-toggling {
+        transition: width var(--mail-DiscussApp-sidebarTransition);
+    }
+
+    & > .o-mail-MessagingMenu-container {
+        width: 100%;
+    }
+
+    /* Out of the flow so the list can overlay the content, instead of pushing it. */
+    &:is(.o-collapsed, .o-toggling) > .o-mail-MessagingMenu-container {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        transition: width var(--mail-DiscussApp-sidebarTransition);
+    }
+
+    &.o-toggling:not(.o-collapsed) > .o-mail-MessagingMenu-container,
+    & > .o-mail-MessagingMenu-container.o-peek {
+        width: var(--mail-DiscussApp-sidebarExpandedWidth);
+    }
+
+    /* Content keeps its expanded width while the list narrows: it is clipped, not reflowed. */
+    &:is(.o-collapsed, .o-toggling) .o-mail-MessagingMenu > * {
+        flex-shrink: 0;
+        width: calc(
+            var(--mail-DiscussApp-sidebarExpandedWidth) - var(--mail-DiscussApp-sidebarListOffset) -
+                2 * var(--border-width)
+        );
+    }
+
+    /* Same for the text of the items, which would wrap anew as they narrow, changing their height. */
+    .o-mail-MessagingMenu-tabContent,
+    .o-mail-MessagingMenuItem {
+        container-type: inline-size;
+    }
+
+    &:is(.o-collapsed, .o-toggling) .o-mail-NotificationItem-content {
+        flex-shrink: 0;
+        /* the item, without its avatar and the `gap-2` after it */
+        width: calc(100cqi - var(--mail-DiscussApp-compactItemWidth) - 0.5rem);
+    }
+}
+
+.o-mail-DiscussApp-sidebar .o-mail-MessagingMenu {
+    background-color: var(--mail-DiscussApp-listBg);
+
+    .o-mail-SearchInput {
+        --mail-SearchInput-bgColor: var(--o-view-background-color);
+    }
+
+    .o-mail-MessagingMenu-searchRow > :not(.o-mail-MessagingMenu-action, :has(> .o-mail-MessagingMenu-action), .o-searchInStrip > .o-mail-DiscussSearch),
+    .o-mail-MessagingMenuEmpty,
+    .o-mail-NotificationItem-avatarDot {
+        transition: opacity var(--mail-DiscussApp-sidebarFade),
+            visibility var(--mail-DiscussApp-sidebarFade);
+    }
+
+    .o-searchInStrip > .o-mail-DiscussSearch {
+        max-width: 100%;
+        transition: max-width var(--mail-DiscussApp-sidebarTransition);
+
+        input {
+            transition: padding var(--mail-DiscussApp-sidebarTransition);
+        }
+
+        input::placeholder {
+            transition: opacity var(--mail-DiscussApp-sidebarFade) 90ms;
+        }
+    }
+
+    /* Texts fade in once the list has started to widen, and out at once. */
+    .o-mail-MessagingMenu-actionText,
+    .o-mail-MessagingMenu-filterToggleLabel,
+    .o-mail-MessagingMenu-filterToggleCaret {
+        max-width: 10rem;
+        transition: max-width var(--mail-DiscussApp-sidebarTransition),
+            margin var(--mail-DiscussApp-sidebarTransition),
+            opacity var(--mail-DiscussApp-sidebarFade) 90ms;
+    }
+
+    .o-mail-MessagingMenu-actionIcon {
+        transition: margin var(--mail-DiscussApp-sidebarTransition);
+    }
+
+    .o-mail-MessagingMenu-action:not(:has(.o-mail-MessagingMenu-actionIcon)) {
+        transition: min-width var(--mail-DiscussApp-sidebarTransition),
+            padding var(--mail-DiscussApp-sidebarTransition),
+            border-width var(--mail-DiscussApp-sidebarTransition),
+            margin var(--mail-DiscussApp-sidebarTransition),
+            opacity var(--mail-DiscussApp-sidebarFade) 90ms,
+            visibility var(--mail-DiscussApp-sidebarFade) 90ms;
+    }
+
+    .o-mail-MessagingMenu-action,
+    .o-mail-MessagingMenu-filterToggle {
+        min-width: var(--mail-DiscussApp-compactButtonWidth);
+    }
+
+    .o-mail-NotificationItem {
+        transition: width var(--mail-DiscussApp-sidebarTransition);
+    }
+
+    .o-mail-NotificationItem-content {
+        transition: opacity var(--mail-DiscussApp-sidebarFade) 90ms;
+    }
+
+    .o-mail-MessagingMenuItem.o-mail-callBordered {
+        transition: padding var(--mail-DiscussApp-sidebarTransition),
+            border-color var(--mail-DiscussApp-sidebarFade),
+            background-color var(--mail-DiscussApp-sidebarFade);
+    }
+
+    &.o-compact {
+        .o-mail-MessagingMenu-searchRow > :not(.o-mail-MessagingMenu-action, :has(> .o-mail-MessagingMenu-action), .o-searchInStrip > .o-mail-DiscussSearch),
+        .o-mail-MessagingMenuEmpty {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .o-searchInStrip > .o-mail-DiscussSearch {
+            max-width: var(--mail-DiscussApp-compactButtonWidth);
+
+            /* Its padding, the room of the icon, would keep it wider than the strip allows. */
+            input {
+                padding-inline: 0 !important;
+                color: transparent;
+            }
+
+            input::placeholder {
+                opacity: 0;
+                transition-delay: 0s;
+            }
+
+            .o-mail-SearchInput > button {
+                display: none;
+            }
+        }
+
+        .o-mail-MessagingMenu-actionText,
+        .o-mail-MessagingMenu-filterToggleLabel,
+        .o-mail-MessagingMenu-filterToggleCaret {
+            max-width: 0;
+            opacity: 0;
+            transition-delay: 0s;
+        }
+
+        /* Without icon, an action has nothing to show in the strip: it narrows away, with its gap. */
+        .o-mail-MessagingMenu-action:not(:has(.o-mail-MessagingMenu-actionIcon)) {
+            min-width: 0;
+            padding-inline: 0;
+            border-inline-width: 0;
+            margin-inline-end: -0.25rem;
+            opacity: 0;
+            visibility: hidden;
+            transition-delay: 0s;
+        }
+
+        .o-mail-NotificationItem {
+            width: var(--mail-DiscussApp-compactItemWidth) !important;
+        }
+
+        .o-mail-NotificationItem-content {
+            opacity: 0;
+            transition-delay: 0s;
+        }
+
+        .o-mail-NotificationItem-avatarDot {
+            opacity: 1;
+        }
+
+        /* In a call, the indicator on the avatar remains, not the frame with the participants. */
+        .o-mail-MessagingMenuItem.o-mail-callBordered {
+            padding: 0 !important;
+            border-color: transparent !important;
+            background-color: transparent !important;
+        }
+
+        .o-mail-MessagingMenuCallParticipants {
+            display: none !important;
+        }
+    }
+}
+
+.o-mail-Discuss > .o-mail-DiscussContent {
+    /* Its own stacking context: nothing inside goes over the list shown above it. */
+    isolation: isolate;
+    /* What is painted inside on the view color blends with the surface, also in dark mode. */
+    --o-view-background-color: var(--white);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius-xl);
+
+    .o-mail-DiscussContent-header {
+        min-height: 4rem;
+    }
+
+    .o-mail-DiscussContent-panelContainer {
+        background-color: var(--o-webclient-background-color);
+
+        .o-mail-SearchInput {
+            --mail-SearchInput-bgColor: var(--o-view-background-color);
+        }
+    }
+
+    /* A tinted pill, 3rem tall. */
+    .o-mail-Composer:not(.o-editing) {
+        --mail-Composer-bg: var(--o-webclient-background-color);
+        --o-mail-Composer-vPadding: 13px;
+
+        /* Centered on the first line of text, which is lower than in the default composer. */
+        .o-mail-Composer-mainActions {
+            margin-top: calc(var(--o-mail-Composer-vPadding) - 4.5px);
+        }
+    }
+
+    .o-mail-Composer-input:focus {
+        background-color: var(--mail-Composer-bg);
+    }
+
+    /* On the surface, over the top of the thread. */
+    .o-discuss-Typing {
+        background-color: var(--o-view-background-color);
+    }
+}
+
+/* The switcher is styled by the enterprise web client; this frames it without, and yields to it. */
+:where(.o-mail-DiscussContent-header .o_switcher) {
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: var(--border-width) solid var(--border-color);
+    background-color: var(--o-view-background-color);
+}
+
+/* Framed with the list, whose border separates them. */
+.o-mail-Discuss.o-hasSidebar > .o-mail-DiscussContent {
+    border-inline-start-width: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
 }
 
 

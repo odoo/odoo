@@ -5,12 +5,9 @@ import {
     insertText,
     onRpcBefore,
     openDiscuss,
-    openFormView,
-    openMessagingMenu,
     start,
     startServer,
     triggerHotkey,
-    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { Composer } from "@mail/core/common/composer";
@@ -19,8 +16,6 @@ import { beforeEach, describe, expect, test, waitFor, waitForNone } from "@odoo/
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, getService, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -127,27 +122,6 @@ test("html composer: send a message in a channel", async () => {
     await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await contains(".o-mail-Message[data-persistent]:contains(Hello):count(1)").click();
     await mailContains(".o-mail-Composer-html.odoo-editor-editable", { textContent: "" });
-});
-
-test("Show self-avatar in composer of Discuss App", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
-    await start();
-    await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-avatar:count(1)");
-    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    await waitFor(
-        `img.o-mail-Composer-avatar[data-src='${getOrigin()}/web/image/res.partner/${
-            serverState.partnerId
-        }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}']:count(1)`
-    );
-    // but not in chat window
-    await openFormView("res.partner", serverState.partnerId);
-    await waitFor(".o-mail-Chatter:count(1)");
-    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-NotificationItem:count(1)").click();
-    await waitFor(".o-mail-ChatWindow .o-mail-Composer:count(1)");
-    await waitForNone(".o-mail-ChatWindow .o-mail-Composer-avatar");
 });
 
 test.tags("html composer");

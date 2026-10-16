@@ -28,7 +28,7 @@ export class DiscussContent extends Component {
 
     setup() {
         super.setup();
-        this.ancestors = useAncestors();
+        this.ancestors = useAncestors({ inDiscussContent: true });
         this.store = useService("mail.store");
         this.channel = propSignal("channel", types.instanceOf(this.store["discuss.channel"]), {
             optional: true,
@@ -38,9 +38,11 @@ export class DiscussContent extends Component {
         this.rootRef = signal.ref(HTMLDivElement);
         this.threadAvatarRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
+        this.headerQuickActions = computedShallowEqual(() => this.threadActions.partition.quick);
+        /** All the actions but the quick ones, together in a single switcher. */
         this.headerActionsList = computedShallowEqual(() => {
             const partition = this.threadActions.partition;
-            return [partition.quick, partition.other, ...partition.group.slice().reverse()];
+            return [...partition.other, ...partition.group.toReversed().flat()];
         });
         this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;
