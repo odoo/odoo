@@ -194,9 +194,9 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
             '_name': name,
             '_register': False,
             '_original_module': model_def._module,
-            '_inherit_module': {},                  # map parent to introducing module
-            '_inherit_children': OrderedSet(),      # names of children models
-            '_inherits_children': set(),            # names of children models
+            '_inherit_module__': {},                # map parent to introducing module
+            '_inherit_children__': OrderedSet(),    # names of children models
+            '_inherits_children__': set(),          # names of children models
             '_fields__': {},                        # populated in _setup()
             '_fields_update_order__': {},           # populated in _post_model_setup__()
             '_table_objects': frozendict(),         # populated in _setup()
@@ -215,8 +215,8 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
         else:
             _check_model_parent_extension(model_cls, model_def, parent_cls)
             bases.add(parent_cls)
-            model_cls._inherit_module[parent_name] = model_def._module
-            parent_cls._inherit_children.add(name)
+            model_cls._inherit_module__[parent_name] = model_def._module
+            parent_cls._inherit_children__.add(name)
 
     # model_cls.__bases__ must be assigned those classes; however, this
     # operation is quite slow, so we do it once in method _prepare_setup()
@@ -311,10 +311,10 @@ def _init_model_class_attributes(model_cls: type[BaseModel]):
     # update _inherits_children of parent models
     registry = model_cls.pool
     for parent_name in model_cls._inherits:
-        registry[parent_name]._inherits_children.add(model_cls._name)
+        registry[parent_name]._inherits_children__.add(model_cls._name)
 
     # recompute attributes of _inherit_children models
-    for child_name in model_cls._inherit_children:
+    for child_name in model_cls._inherit_children__:
         _init_model_class_attributes(registry[child_name])
 
 
@@ -395,7 +395,7 @@ def _setup(model_cls: type[BaseModel], env: Environment):
     for cls in reversed(model_cls._model_classes__):
         # this condition is an optimization of is_model_definition(cls)
         if isinstance(cls, models.MetaModel):
-            for field in cls._field_definitions:
+            for field in cls._field_definitions__:
                 definitions[field.name].append(field)
 
     for name, fields_ in definitions.items():
@@ -485,12 +485,12 @@ def _setup(model_cls: type[BaseModel], env: Environment):
         model_cls._active_name = 'x_active'
 
     # 7. determine table objects
-    assert not model_cls._table_object_definitions, "model_cls is a registry model"
+    assert not model_cls._table_object_definitions__, "model_cls is a registry model"
     model_cls._table_objects = frozendict({
         cons.full_name(model_cls): cons
         for cls in reversed(model_cls._model_classes__)
         if isinstance(cls, models.MetaModel)
-        for cons in cls._table_object_definitions
+        for cons in cls._table_object_definitions__
     })
 
 
@@ -575,7 +575,7 @@ def _add_manual_models(env: Environment):
             # remove the model's name from its parents' _inherit_children
             for parent_cls in model_cls.__bases__:
                 if hasattr(parent_cls, 'pool'):
-                    parent_cls._inherit_children.discard(name)
+                    parent_cls._inherit_children__.discard(name)
 
     if removed_fields:
         env.registry._discard_fields(list(removed_fields))
