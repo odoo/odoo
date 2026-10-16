@@ -36,7 +36,7 @@
 
                                 <!-- Time Type (input filter) -->
                                 <label for="condition_work_entry_type_ids" string="Time Type" help="If set, only selected types will be considered by this rule."/>
-                                <field name="condition_work_entry_type_ids" widget="many2many_tags"
+                                <field name="condition_work_entry_type_ids" widget="many2many_work_entry_type_tags" options="{'color_field': 'color'}"
                                     nolabel="1"
                                     placeholder="Select the time types considered in the rule's computation"/>
 
