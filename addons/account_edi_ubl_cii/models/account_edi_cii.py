@@ -434,9 +434,38 @@ class AccountEdiCii(models.AbstractModel):
         for allowance_charge_node in vals['line_trade_allowance_charge_nodes']:
             sign = 1 if allowance_charge_node['ram:ChargeIndicator']['udt:Indicator']['_text'] == 'true' else -1
             total_excluded += sign * allowance_charge_node['ram:ActualAmount']['_text']
+        # Record the line net amount (BT-131) per VAT category so the document level
+        # sums (BT-106, BT-109, BT-116) equal the sum of the line net amounts, as
+        # EN16931 requires (BR-CO-10, BR-S-08, ...). Deriving them from the aggregated
+        # tax base instead rounds differently from the per line net amount and yields
+        # an invalid document (e.g. with price-included taxes).
+        self._cii_record_line_total_amount(vals, base_line, total_excluded)
         return {
             'ram:LineTotalAmount': {'_text': FloatFmt(total_excluded, max_dp=2)},
         }
+
+    def _cii_record_line_total_amount(self, vals, base_line, total_excluded):
+        currency = vals['currency_id']
+        vals['line_total_amount'] = vals.get('line_total_amount', 0.0) + total_excluded
+        line_total_by_key = vals.setdefault('line_total_by_key', {})
+        aggregated_values = self.env['account.tax']._aggregate_base_line_tax_details(
+            base_line=base_line,
+            grouping_function=lambda base_line, tax_data: self._cii_get_default_applicable_trade_tax_grouping_key(
+                base_line=base_line,
+                tax_data=tax_data,
+                vals=vals,
+                currency=currency,
+            ),
+        )
+        grouping_keys = [grouping_key for grouping_key in aggregated_values if grouping_key]
+        if len(grouping_keys) == 1:
+            # An invoice line is categorized with a single VAT category (BT-151).
+            grouping_key = grouping_keys[0]
+            line_total_by_key[grouping_key] = line_total_by_key.get(grouping_key, 0.0) + total_excluded
+        else:
+            for grouping_key in grouping_keys:
+                line_total_by_key[grouping_key] = line_total_by_key.get(grouping_key, 0.0) \
+                    + currency.round(aggregated_values[grouping_key].get('base_amount_currency', 0.0))
 
     def _cii_get_applicable_header_trade_agreement_node(self, vals):
         invoice = vals['invoice']
@@ -663,7 +692,7 @@ class AccountEdiCii(models.AbstractModel):
             tax_nodes.append(self._cii_get_applicable_trade_tax_node(vals, {
                 'calculated_amount': amount_currency if not currency.is_zero(amount_currency) else 0.0,
                 'tax_exemption_reason': grouping_key['tax_exemption_reason'],
-                'basis_amount': values['base_amount_currency'],
+                'basis_amount': vals.get('line_total_by_key', {}).get(grouping_key, values['base_amount_currency']),
                 'tax_category_code': grouping_key['tax_category_code'],
                 'tax_exemption_reason_code': grouping_key['tax_exemption_reason_code'],
                 'rate_applicable_percent': grouping_key['percent'],
@@ -736,19 +765,15 @@ class AccountEdiCii(models.AbstractModel):
         return node
 
     def _cii_add_monetary_summation_line_total_amount_node(self, vals):
+        # BT-106 = Σ line net amounts (BT-131), so that BR-CO-10 holds.
         vals['monetary_summation_node']['ram:LineTotalAmount'] = {
-            '_text': FloatFmt(sum(
-                tax_data['base_amount_currency']
-                for _grouping_key, tax_data in vals['tax_details'].items()
-            ), max_dp=2),
+            '_text': FloatFmt(vals.get('line_total_amount', 0.0), max_dp=2),
         }
 
     def _cii_add_monetary_summation_tax_basis_total_amount_node(self, vals):
+        # BT-109 is built on the same sum of line net amounts as BT-106.
         vals['monetary_summation_node']['ram:TaxBasisTotalAmount'] = {
-            '_text': FloatFmt(sum(
-                tax_data['base_amount_currency']
-                for _grouping_key, tax_data in vals['tax_details'].items()
-            ), max_dp=2),
+            '_text': FloatFmt(vals.get('line_total_amount', 0.0), max_dp=2),
         }
 
     def _cii_add_monetary_summation_tax_total_amount_node(self, vals):
@@ -766,27 +791,56 @@ class AccountEdiCii(models.AbstractModel):
                 base_line['tax_details']['total_excluded_currency']
                 for base_line in vals.setdefault('cash_rounding_base_lines', [])
             )
-        if cash_rounding_amount:
+        # The document level sums (BT-106/BT-109/BT-116) are built from the line net
+        # amounts, while the grand total must still match the invoice total. When a
+        # tax base is rounded (e.g. a price-included tax) the sum of the line net
+        # amounts can differ from the aggregated tax base by a rounding unit; this
+        # difference is carried by the rounding amount (BT-114) so that the amount due
+        # for payment (BT-115) stays equal to the invoice total.
+        aggregated_base_amount = sum(
+            tax_data['base_amount_currency']
+            for tax_data in vals['tax_details'].values()
+        )
+        rounding_amount = (
+            cash_rounding_amount
+            + aggregated_base_amount
+            - vals.get('line_total_amount', aggregated_base_amount)
+        )
+        if not vals['currency_id'].is_zero(rounding_amount):
             vals['monetary_summation_node']['ram:RoundingAmount'] = {
-                '_text': FloatFmt(cash_rounding_amount, max_dp=2),
+                '_text': FloatFmt(rounding_amount, max_dp=2),
             }
 
     def _cii_add_monetary_summation_grand_total_amount_node(self, vals):
+        # BT-112 (Grand total) = BT-109 (Tax basis total) + BT-110 (Tax total).
+        # The rounding amount (BT-114) must NOT be included here; it is only applied
+        # to the amount due for payment (BT-115), otherwise BR-CO-15 is violated.
         vals['monetary_summation_node']['ram:GrandTotalAmount'] = {
             '_text': FloatFmt(sum(vals['monetary_summation_node'].get(node, {}).get('_text', 0.0)
-            for node in ['ram:LineTotalAmount', 'ram:TaxTotalAmount', 'ram:RoundingAmount']), max_dp=2),
+            for node in ['ram:LineTotalAmount', 'ram:TaxTotalAmount']), max_dp=2),
         }
 
     def _cii_add_monetary_summation_total_prepaid_amount(self, vals):
-        prepaid_amount = vals['monetary_summation_node']['ram:GrandTotalAmount']['_text'] - vals['invoice'].amount_residual
-        vals['monetary_summation_node']['ram:TotalPrepaidAmount'] = {
+        # The already-paid amount (BT-113) is the rounded document total minus what
+        # is still due. The rounded total is the grand total (BT-112) plus the
+        # rounding amount (BT-114).
+        node = vals['monetary_summation_node']
+        prepaid_amount = (
+            node['ram:GrandTotalAmount']['_text']
+            + node.get('ram:RoundingAmount', {}).get('_text', 0.0)
+            - vals['invoice'].amount_residual
+        )
+        node['ram:TotalPrepaidAmount'] = {
             '_text': FloatFmt(prepaid_amount, max_dp=2),
         }
 
     def _cii_add_monetary_summation_due_payable_amount_node(self, vals):
+        # BT-115 (Amount due) = BT-112 (Grand total) - BT-113 (Prepaid) + BT-114 (Rounding).
+        node = vals['monetary_summation_node']
         vals['monetary_summation_node']['ram:DuePayableAmount'] = {
-            '_text': FloatFmt(vals['monetary_summation_node']['ram:GrandTotalAmount']['_text'] -
-                              vals['monetary_summation_node']['ram:TotalPrepaidAmount']['_text'], max_dp=2),
+            '_text': FloatFmt(node['ram:GrandTotalAmount']['_text']
+                              - node['ram:TotalPrepaidAmount']['_text']
+                              + node.get('ram:RoundingAmount', {}).get('_text', 0.0), max_dp=2),
         }
 
     def _cii_constraints(self, invoice, vals):
