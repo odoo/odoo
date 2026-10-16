@@ -6,7 +6,7 @@ import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step, triggerEvents } from "@web/../tests/utils";
 
 QUnit.module("messaging menu");
 
@@ -24,6 +24,38 @@ QUnit.test('"Start a conversation" item selection opens chat', async () => {
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { text: "Gandalf" });
+});
+
+QUnit.test('"Start a conversation" can be validated without keyboard on mobile', async () => {
+    patchUiSize({ height: 360, width: 640 });
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Gandalf" },
+        { name: "Legolas" },
+    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
+    const { openDiscuss } = await start({
+        mockRPC(route, args) {
+            if (args.method === "create_group") {
+                step("create_group");
+            }
+        },
+    });
+    openDiscuss();
+    await click("button", { text: "Chat" });
+    await click("button", { text: "Start a conversation" });
+    await insertText("input[placeholder='Start a conversation']", "Gandalf");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await contains(".o-discuss-ChannelSelector .o_tag", { text: "Gandalf" });
+    await insertText("input[placeholder='Start a conversation']", "Legolas");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await contains(".o-discuss-ChannelSelector .o_tag", { text: "Legolas" });
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
+    await triggerEvents(".o-discuss-ChannelSelector button", ["click", "click"], {
+        text: "Start",
+    });
+    await contains(".o-mail-ChatWindow");
+    await assertSteps(["create_group"]);
 });
 
 QUnit.test('"New channel" item selection opens channel (existing)', async () => {
