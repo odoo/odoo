@@ -125,6 +125,31 @@ class TestOwnChecks(L10nLatamCheckTest):
         self.assertEqual(payment.state, 'in_process', "Payment must stay 'In Process' until the checks are reconciled.")
         self.assertEqual(len(payment.l10n_latam_new_check_ids.outstanding_line_id), 2, "Each check must get its own liquidity line.")
 
+    def test_own_checks_relinked_after_reset_to_draft(self):
+        """ Resetting a payment with own checks to draft and posting it again must link each check
+        to its liquidity line again, so the checks stay 'handed' and visible in the own checks menu. """
+        payment_method_line = self.bank_journal._get_available_payment_method_lines('outbound').filtered_domain([('code', '=', 'own_checks')])[:1]
+        payment = self.env['account.payment'].create({
+            'payment_type': 'outbound',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.bank_journal.id,
+            'payment_method_line_id': payment_method_line.id,
+            'l10n_latam_new_check_ids': [
+                Command.create({'name': '00000020', 'payment_date': fields.Date.today(), 'amount': 100.0}),
+                Command.create({'name': '00000021', 'payment_date': fields.Date.today(), 'amount': 15.0}),
+            ],
+        })
+        payment.action_post()
+        payment.action_draft()
+        self.assertFalse(payment.l10n_latam_new_check_ids.outstanding_line_id)
+
+        payment.action_post()
+        checks = payment.l10n_latam_new_check_ids
+        self.assertEqual(len(checks.outstanding_line_id), 2, "Each check must be linked to its liquidity line again.")
+        self.assertEqual(checks.outstanding_line_id.move_id, payment.move_id)
+        self.assertEqual(checks.mapped('issue_state'), ['handed', 'handed'])
+        self.assertEqual(len(payment.move_id.line_ids), 3, "2 liquidity lines + 1 counterpart line")
+
     def test_invoice_status_after_voided_check(self):
         self.ensure_installed('l10n_ar')
         invoice = self._create_invoice(
