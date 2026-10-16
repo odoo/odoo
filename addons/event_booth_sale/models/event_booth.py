@@ -42,6 +42,9 @@ class EventBooth(models.Model):
         action['res_id'] = self.sale_order_id.id
         return action
 
+    def _get_release_values(self):
+        return {**super()._get_release_values(), 'sale_order_line_id': False, 'is_paid': False}
+
     def _get_booth_multiline_description(self):
         return '%s : \n%s' % (
             self.event_id.display_name,
