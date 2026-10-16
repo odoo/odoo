@@ -1400,6 +1400,7 @@ class PosOrder(models.Model):
             'is_total_cost_computed': False,
             'is_refund': True,
             'tracking_number': tracking_number,
+            'to_invoice': bool(self.account_move),
         }
 
     def _prepare_mail_values(self, email, ticket, basic_ticket):

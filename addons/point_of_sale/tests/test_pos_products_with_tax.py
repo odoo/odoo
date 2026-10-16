@@ -252,8 +252,8 @@ class TestPoSProductsWithTax(TestPoSCommon):
         +----------+----------+---------------+----------+-----+---------+-------------+-------+
 
         The order is invoiced so the tax of the invoiced order is in the account_move of the order.
-        However, the return order is not invoiced, thus, the journal items are in the session_move,
-        which will contain the tax lines of the returned products.
+        The return order is then invoiced too, thus, the tax lines of the returned products are
+        in its credit note.
 
         manually_calculated_taxes = (4.01, 6.37)
         """
@@ -275,15 +275,23 @@ class TestPoSProductsWithTax(TestPoSCommon):
                 'amount': -104.01,
             })
             make_payment.check()
-            self.assertEqual(refund_order.state, 'paid', 'Payment is registered, order should be paid.')
+            self.assertEqual(refund_order.state, 'done', 'Payment is registered, order should be invoiced.')
             self.assertAlmostEqual(refund_order.amount_paid, -104.01, msg='Amount paid for return order should be negative.')
 
         def _after_closing_cb():
-            manually_calculated_taxes = (4.01, 6.36)  # should be positive since it is return order
-            tax_lines = self.pos_session.move_id.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
-            self.assertAlmostEqual(sum(manually_calculated_taxes), sum(tax_lines.mapped('balance')))
-            for t1, t2 in zip(sorted(manually_calculated_taxes), sorted(tax_lines.mapped('balance'))):
-                self.assertAlmostEqual(t1, t2, msg='Taxes should be correctly combined and should be debit.')
+            refund_order = self.pos_session.order_ids.filtered('is_refund')
+            self._assert_account_move(refund_order.account_move, {
+                'line_ids': [
+                    {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 30, 'credit': 0, 'reconciled': False},
+                    {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 36.37, 'credit': 0, 'reconciled': False},
+                    {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 27.27, 'credit': 0, 'reconciled': False},
+                    {'account_id': self.tax_received_account.id, 'partner_id': self.customer.id, 'debit': 2.1, 'credit': 0, 'reconciled': False},
+                    {'account_id': self.tax_received_account.id, 'partner_id': self.customer.id, 'debit': 3.63, 'credit': 0, 'reconciled': False},
+                    {'account_id': self.tax_received_account.id, 'partner_id': self.customer.id, 'debit': 1.91, 'credit': 0, 'reconciled': False},
+                    {'account_id': self.tax_received_account.id, 'partner_id': self.customer.id, 'debit': 2.73, 'credit': 0, 'reconciled': False},
+                    {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 104.01, 'reconciled': True},
+                ],
+            })
 
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
@@ -307,12 +315,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
-                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 4.01, 'credit': 0, 'reconciled': False},
-                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 6.36, 'credit': 0, 'reconciled': False},
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 30, 'credit': 0, 'reconciled': False},
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 36.37, 'credit': 0, 'reconciled': False},
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 27.27, 'credit': 0, 'reconciled': False},
-                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 104.01, 'reconciled': True},
+                        {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 0, 'credit': 0, 'reconciled': True},
                     ],
                 },
                 'cash_statement': [],
