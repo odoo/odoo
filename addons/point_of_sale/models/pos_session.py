@@ -440,10 +440,12 @@ class PosSession(models.Model):
             try:
                 with self.env.cr.savepoint():
                     session.with_company(session.company_id)._validate_session_accounting()
-            except Exception as e:  # noqa: BLE001
+            except UserError as e:
+                _logger.warning("Failed to validate session accounting for session %s: %s", session.id, e)
+            except Exception:  # noqa: BLE001
                 # We don't block the cron if one session fails to validate, we log the error and continue with the next session
                 # The savepoint ensures a failure here does not leave partial accounting entries behind
-                _logger.error("Failed to validate session accounting for session %s: %s", session.id, e)
+                _logger.exception("Failed to validate session accounting for session %s", session.id)
 
     @api.model
     def _cron_generate_invoice_period(self):
