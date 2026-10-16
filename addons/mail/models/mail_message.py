@@ -624,7 +624,7 @@ class MailMessage(models.Model):
             values['id']: values
             for values in self.env.cr.dictfetchall()
         }
-        if len(messages_to_check) == MAX_SEARCH_LIMIT:  # avoid out of memory
+        if len(messages_to_check) > MAX_SEARCH_LIMIT:  # avoid out of memory
             raise ValueError(self.env._("Cannot search, too many messages"))
         accessible = self.browse(messages_to_check)
         if not messages_to_check:
