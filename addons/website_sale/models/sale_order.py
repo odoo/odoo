@@ -1188,18 +1188,28 @@ class SaleOrder(models.Model):
         rate = rate or delivery_method.rate_shipment(self)
         if rate.get("success"):
             self.set_delivery_line(delivery_method, rate["price"])
+            self._set_estimated_commitment_date()
 
-            if not delivery_method.enable_delivery_estimate:
-                return
-            if estimated_delivery_days := delivery_method._get_estimate_delivery_days():
-                if (
-                    not self.commitment_date
-                    or self.commitment_date.date().isoformat() not in estimated_delivery_days
-                ):
-                    self.commitment_date = estimated_delivery_days[0]
-            else:
-                # reset `commitment_date` if it doesn't have an estimated delivery date set
-                self.commitment_date = None
+    def _set_estimated_commitment_date(self):
+        """Set the commitment date to the first date that the delivery method can deliver on.
+
+        A date already set is kept if the delivery method still offers it. The commitment date is
+        left untouched when the delivery method has no estimated delivery, and reset when it has one
+        but gives no estimation.
+
+        :return: None
+        """
+        self.ensure_one()
+        if self.carrier_id.delivery_estimate_mode == "none":
+            return
+        if estimated_delivery_days := self.carrier_id._get_estimate_delivery_days(order=self):
+            if (
+                not self.commitment_date
+                or self.commitment_date.date().isoformat() not in estimated_delivery_days
+            ):
+                self.commitment_date = estimated_delivery_days[0]
+        else:
+            self.commitment_date = None
 
     def _get_delivery_methods(self):
         # searching on website_published will also search for available website (_search method on
@@ -1392,7 +1402,7 @@ class SaleOrder(models.Model):
         """Whether the commitment date is still up to date with the carrier constraints."""
         self.ensure_one()
         allowed_commitment_dates = (
-            self.commitment_date and self.carrier_id._get_estimate_delivery_days()
+            self.commitment_date and self.carrier_id._get_estimate_delivery_days(order=self)
         ) or []
         if (
             not allowed_commitment_dates  # No allowed date means any date is acceptable.

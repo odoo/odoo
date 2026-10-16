@@ -70,18 +70,21 @@
             </div>
             <!-- === Delivery estimated date === -->
             <div class="o_delivery_date_col order-1 order-md-0 order-lg-1 order-xl-0">
-                <t t-if="dm.enable_delivery_estimate">
+                <t t-if="dm.delivery_estimate_mode != 'none'">
                     <t t-set="tooltip_title" t-value="'Estimated Delivery'"/>
-                    <t t-set="available_delivery_days" t-value="dm._get_estimate_delivery_days()"/>
+                    <t
+                        t-set="estimate_delivery_days"
+                        t-value="dm._get_estimate_delivery_days(order=order)"
+                    />
                     <div
                         class="o_wsale_delivery_date_badge input-group"
-                        t-if="len(available_delivery_days) == 1"
+                        t-if="len(estimate_delivery_days) == 1"
                     >
                         <input
                             type="text"
                             name="estimated_delivery"
                             class="form-control pt-0 pt-md-2 pt-lg-0 pt-xl-2"
-                            t-att-value="dm._format_estimate_delivery_date(available_delivery_days[0])"
+                            t-att-value="dm._format_estimate_delivery_date(estimate_delivery_days[0])"
                             disabled="1"
                             t-att-title="tooltip_title"
                             data-bs-toggle="tooltip"
@@ -93,9 +96,9 @@
                         </label>
                     </div>
                     <div
-                        t-if="len(available_delivery_days) > 1"
+                        t-if="len(estimate_delivery_days) > 1"
                         class="o_website_sale_delivery_date_picker input-group o_daterange_picker"
-                        t-att-data-delivery-available-days="json.dumps(dm._get_estimate_delivery_days())"
+                        t-att-data-estimate-delivery-days="json.dumps(estimate_delivery_days)"
                     >
                         <input
                             t-attf-id="o_estimated_delivery_date_{{dm.id}}"
