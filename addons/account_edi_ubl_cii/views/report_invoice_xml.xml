@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_invoice_xml_readable" model="ir.actions.report">
+        <field name="name">Invoice (from XML)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">account_edi_ubl_cii.report_invoice_xml_readable</field>
+        <field name="report_file">account_edi_ubl_cii.report_invoice_xml_readable</field>
+        <field name="print_report_name">'%s_readable' % ((object.ref or object.name or 'Invoice'))</field>
+    </record>
+
+    <template id="report_invoice_xml_party">
+        <div class="col-6">
+            <strong><t t-out="title"/></strong>
+            <div class="fw-bold" t-out="party.get('name')"/>
+            <div t-if="party.get('street')" t-out="party['street']"/>
+            <div t-if="party.get('zip') or party.get('city')">
+                <t t-out="party.get('zip')"/> <t t-out="party.get('city')"/>
+                <t t-if="party.get('country')">(<t t-out="party['country']"/>)</t>
+            </div>
+            <div t-if="party.get('legal_id')">ID: <t t-out="party['legal_id']"/></div>
+            <div t-if="party.get('vat')">VAT: <t t-out="party['vat']"/></div>
+            <div t-if="party.get('email')" t-out="party['email']"/>
+            <div t-if="party.get('phone')" t-out="party['phone']"/>
+        </div>
+    </template>
+
+    <template id="report_invoice_xml_readable">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="d" t-value="xml_data[o.id]"/>
+                <t t-set="cur" t-value="d['currency']"/>
+                <t t-call="web.basic_layout">
+                    <div class="page o_xml_invoice">
+                        <style>.o_xml_invoice thead { display: table-row-group; }</style>
+                        <div class="row mb-3">
+                            <div class="col-8">
+                                <h2 class="mb-1">
+                                    <t t-if="d['is_credit_note']">Credit Note</t>
+                                    <t t-else="">Invoice</t>
+                                    <span t-out="d['number']"/>
+                                </h2>
+                                <div>
+                                    <span t-if="d['issue_date']"><strong>Invoice Date:</strong> <span t-out="d['issue_date']"/></span>
+                                    <span t-if="d['currency']" class="ms-3"><strong>Currency:</strong> <span t-out="d['currency']"/></span>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end text-muted small">
+                                <div t-if="d['syntax'] == 'facturx'">Factur-X</div>
+                                <div t-elif="d['syntax'] == 'cii'">CII</div>
+                                <div t-else="">UBL</div>
+                                Readable rendering of the received file
+                            </div>
+                        </div>
+
+                        <!-- Block order: issuer, invoiced party, delivery, payee, payment, legal mentions, then lines. -->
+                        <div class="row mb-3">
+                            <t t-call="account_edi_ubl_cii.report_invoice_xml_party">
+                                <t t-set="title">Issuer</t>
+                                <t t-set="party" t-value="d['seller']"/>
+                            </t>
+                            <t t-call="account_edi_ubl_cii.report_invoice_xml_party">
+                                <t t-set="title">Invoiced party</t>
+                                <t t-set="party" t-value="d['buyer']"/>
+                            </t>
+                        </div>
+                        <div class="row mb-3" t-if="d['delivery'] or d['payee']">
+                            <t t-if="d['delivery']" t-call="account_edi_ubl_cii.report_invoice_xml_party">
+                                <t t-set="title">Delivery address</t>
+                                <t t-set="party" t-value="d['delivery']"/>
+                            </t>
+                            <t t-if="d['payee']" t-call="account_edi_ubl_cii.report_invoice_xml_party">
+                                <t t-set="title">Payee</t>
+                                <t t-set="party" t-value="d['payee']"/>
+                            </t>
+                        </div>
+
+                        <div class="mb-3" t-if="d['payment_means_label'] or d['due_date'] or d['ibans'] or d['payment_terms'] or d['payment_reference'] or d['totals']">
+                            <strong>Payment</strong>
+                            <table class="table table-sm mb-0">
+                                <tr t-if="d['payment_means_label']">
+                                    <td style="width: 30%;">Means</td>
+                                    <td t-out="d['payment_means_label']"/>
+                                </tr>
+                                <tr t-if="d['due_date']">
+                                    <td>Due Date</td>
+                                    <td t-out="d['due_date']"/>
+                                </tr>
+                                <tr t-if="d['payment_reference']">
+                                    <td>Payment reference</td>
+                                    <td t-out="d['payment_reference']"/>
+                                </tr>
+                                <tr t-if="d['ibans']">
+                                    <td>IBAN</td>
+                                    <td t-out="', '.join(d['ibans'])"/>
+                                </tr>
+                                <tr t-if="d['payment_terms']">
+                                    <td>Payment Terms</td>
+                                    <td t-out="d['payment_terms']"/>
+                                </tr>
+                                <tr t-if="d['totals'].get('untaxed')">
+                                    <td>Untaxed Amount</td>
+                                    <td t-out="format_amount(d['totals']['untaxed'], cur)"/>
+                                </tr>
+                                <tr t-if="d['totals'].get('tax')">
+                                    <td>VAT</td>
+                                    <td t-out="format_amount(d['totals']['tax'], cur)"/>
+                                </tr>
+                                <tr t-if="d['totals'].get('total')">
+                                    <td class="fw-bold">Total</td>
+                                    <td class="fw-bold" t-out="format_amount(d['totals']['total'], cur)"/>
+                                </tr>
+                                <tr t-if="d['totals'].get('prepaid')">
+                                    <td>Prepaid</td>
+                                    <td t-out="format_amount(d['totals']['prepaid'], cur)"/>
+                                </tr>
+                                <tr t-if="d['totals'].get('due')">
+                                    <td class="fw-bold">Amount Due</td>
+                                    <td class="fw-bold" t-out="format_amount(d['totals']['due'], cur)"/>
+                                </tr>
+                            </table>
+                            <table class="table table-sm mt-2" t-if="d['taxes']">
+                                <thead>
+                                    <tr>
+                                        <th>VAT %</th>
+                                        <th class="text-end">Base</th>
+                                        <th class="text-end">VAT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="d['taxes']" t-as="tax">
+                                        <td t-out="tax['percent']"/>
+                                        <td class="text-end" t-out="format_amount(tax['base'], cur)"/>
+                                        <td class="text-end" t-out="format_amount(tax['amount'], cur)"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mb-3 small" t-if="d['notes']">
+                            <strong>Legal mentions</strong>
+                            <p class="mb-0" t-foreach="d['notes']" t-as="note" t-out="note"/>
+                        </div>
+
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="text-end">Quantity</th>
+                                    <th class="text-end">Unit Price</th>
+                                    <th class="text-end">VAT %</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="d['lines']" t-as="line">
+                                    <td>
+                                        <span t-out="line['name']"/>
+                                        <div class="text-muted small" t-if="line['description']" t-out="line['description']"/>
+                                    </td>
+                                    <td class="text-end"><t t-out="line['quantity']"/> <t t-out="line['unit']"/></td>
+                                    <td class="text-end" t-out="format_amount(line['price_unit'])"/>
+                                    <td class="text-end" t-out="line['tax_percent']"/>
+                                    <td class="text-end" t-out="format_amount(line['subtotal'], cur)"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
