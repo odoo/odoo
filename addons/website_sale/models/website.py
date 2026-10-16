@@ -450,7 +450,7 @@ class Website(models.Model):
                         footer_updated = True
                         ecommerce_categories_node[0].attrib["t-value"] = json.dumps([
                             {"name": cat.name, "id": cat.id} for cat in ecommerce_categories
-                        ])
+                        ], ensure_ascii=False)
 
                 if footer_updated:
                     footer_view.write({"arch": etree.tostring(arch_tree)})
