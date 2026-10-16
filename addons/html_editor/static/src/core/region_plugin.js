@@ -35,6 +35,21 @@ export class RegionPlugin extends Plugin {
     static id = "region";
     static shared = ["getProperty"];
 
+    indexDeclarations() {
+        /** @type {Map<string, NodeProperties[]>} */
+        this.declarationsByName = new Map();
+        for (const declaration of this.getResource("region_properties")) {
+            for (const name in declaration) {
+                if (name !== "is" && name !== "within") {
+                    if (!this.declarationsByName.has(name)) {
+                        this.declarationsByName.set(name, []);
+                    }
+                    this.declarationsByName.get(name).push(declaration);
+                }
+            }
+        }
+    }
+
     /**
      * @param {NodeProperties} declaration
      * @param {Node} node
@@ -70,11 +85,18 @@ export class RegionPlugin extends Plugin {
      * @returns {*}
      */
     getProperty(node, name) {
+        if (!this.declarationsByName) {
+            this.indexDeclarations();
+        }
         let result;
-        for (const declaration of this.getResource("region_properties")) {
-            if (name in declaration && this.matches(declaration, node)) {
+        for (const declaration of this.declarationsByName.get(name) ?? []) {
+            if (this.matches(declaration, node)) {
                 const value = declaration[name];
                 result = typeof value === "boolean" ? (result ?? true) && value : result ?? value;
+                if (result === false) {
+                    // Nothing overrides a `false`.
+                    return false;
+                }
             }
         }
         return result;
