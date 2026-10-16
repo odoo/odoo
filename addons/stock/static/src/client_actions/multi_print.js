@@ -31,7 +31,9 @@ async function doMultiPrint(env, action) {
         // handle special cases such as barcode
         action.params.onClose()
     } else {
-        return env.services.action.doAction("reload_context");
+        // reload the current view to show the updated record, without a full
+        // browser reload that would discard the reports' notifications
+        return env.services.action.doAction("soft_reload");
     }
 }
 
