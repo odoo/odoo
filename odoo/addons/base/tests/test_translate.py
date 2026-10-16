@@ -3,6 +3,7 @@
 from hashlib import sha256
 from unittest.mock import patch
 import ast
+import json
 import logging
 import time
 
@@ -12,13 +13,17 @@ import io
 
 from odoo.exceptions import UserError
 from odoo.tools import sql
-from odoo.tools.translate import _push, quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader, TranslationReader
+from odoo.tools.translate import (
+    _push, quote, unquote, xml_translate, html_translate,
+    TranslationImporter, TranslationModuleReader, TranslationReader,
+    extract_spreadsheet_terms,
+)
 from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
 
 _stats_logger = logging.getLogger('odoo.tests.stats')
 
 # a string with various unicode characters
-SPECIAL_CHARACTERS = " ¥®°²Æçéðπ⁉€∇⓵▲☑♂♥✓➔『にㄅ㊀中한︸🌈🌍👌😀"
+SPECIAL_CHARACTERS = "Â Â¥Â®Â°Â²Ã†Ã§Ã©Ã°Ï€â‰â‚¬âˆ‡â“µâ–²â˜‘â™‚â™¥âœ“âž”ã€Žã«ã„…ãŠ€ä¸­í•œï¸¸ðŸŒˆðŸŒðŸ‘ŒðŸ˜€"
 
 
 class TranslationToolsTestCase(BaseCase):
@@ -71,7 +76,7 @@ class TranslationToolsTestCase(BaseCase):
     def test_translate_xml_unicode(self):
         """ Test xml_translate() on plain text with unicode characters. """
         terms = []
-        source = u"Un heureux évènement"
+        source = u"Un heureux Ã©vÃ¨nement"
         result = xml_translate(terms.append, source)
         self.assertEqual(result, source)
         self.assertItemsEqual(terms, [source])
@@ -596,7 +601,7 @@ class TestTranslation(TransactionCase):
         self.env['res.lang']._activate_lang('nl_NL')
         self.customers.with_context(lang='nl_NL').name = 'Klanten'
         self.env['res.lang']._activate_lang('zh_CN')
-        self.customers.with_context(lang='zh_CN').name = '客户'
+        self.customers.with_context(lang='zh_CN').name = 'å®¢æˆ·'
         self.env.ref('base.lang_en').active = False
         self.env.ref('base.lang_zh_CN').active = False
 
@@ -608,7 +613,7 @@ class TestTranslation(TransactionCase):
                 'en_US': 'Customers',
                 'fr_FR': 'Clients',
                 'nl_NL': 'Klanten',
-                'zh_CN': '客户',
+                'zh_CN': 'å®¢æˆ·',
             }
         )
 
@@ -659,7 +664,7 @@ class TestTranslation(TransactionCase):
     def test_110_search_es(self):
         self.env['res.lang']._activate_lang('es_ES')
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français'), ('es_ES', 'Spanish / Español')],
+        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / FranÃ§ais'), ('es_ES', 'Spanish / EspaÃ±ol')],
                          langs, "Test did not start with the expected languages")
         CategoryEs = self.env['res.partner.category'].with_context(lang='es_ES')
         category_equal = CategoryEs.search([('name', '=', 'Customers')])
@@ -723,7 +728,7 @@ class TestTranslationWrite(TransactionCase):
         self.env['res.lang']._activate_lang('fr_FR')
 
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / FranÃ§ais')], langs,
                          "Test did not started with expected languages")
 
         category = self.env['res.partner.category'].with_context(lang='en_US').create({'name': 'English'})
@@ -772,7 +777,7 @@ class TestTranslationWrite(TransactionCase):
         self.env.ref('base.lang_en').active = False
 
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('fr_FR', 'French / Français')], langs, "Test did not started with expected languages")
+        self.assertEqual([('fr_FR', 'French / FranÃ§ais')], langs, "Test did not started with expected languages")
 
         self.category.with_context(lang='fr_FR').write({'name': 'French Name'})
 
@@ -790,7 +795,7 @@ class TestTranslationWrite(TransactionCase):
         self.env['res.lang']._activate_lang('fr_FR')
 
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / FranÃ§ais')], langs,
             "Test did not started with expected languages")
 
         po_string = '''
@@ -828,7 +833,7 @@ class TestTranslationWrite(TransactionCase):
         self.env.ref('base.lang_en').active = False
 
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('fr_FR', 'French / Français'), ('es_ES', 'Spanish / Español')], langs,
+        self.assertEqual([('fr_FR', 'French / FranÃ§ais'), ('es_ES', 'Spanish / EspaÃ±ol')], langs,
                          "Test did not start with the expected languages")
 
         self.category.with_context(lang='fr_FR').write({'name': 'French Name'})
@@ -855,7 +860,7 @@ class TestTranslationWrite(TransactionCase):
         self.env['res.lang']._activate_lang('fr_FR')
 
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / FranÃ§ais')], langs,
             "Test did not started with expected languages")
 
         belgium = self.env.ref('base.be')
@@ -908,7 +913,7 @@ class TestTranslationWrite(TransactionCase):
         self.env['res.lang']._activate_lang('nl_NL')
 
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('nl_NL', 'Dutch / Nederlands'), ('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+        self.assertEqual([('nl_NL', 'Dutch / Nederlands'), ('en_US', 'English (US)'), ('fr_FR', 'French / FranÃ§ais')], langs,
                          "Test did not started with expected languages")
 
         belgium = self.env.ref('base.be')
@@ -939,7 +944,7 @@ class TestTranslationWrite(TransactionCase):
     def _test_create_empty(self, empty_value):
         self.env['res.lang']._activate_lang('fr_FR')
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / FranÃ§ais')], langs,
                          "Test did not started with expected languages")
 
         group = self.env['res.groups'].create({'name': 'test_group', 'comment': empty_value})
@@ -1036,7 +1041,7 @@ class TestTranslationWrite(TransactionCase):
 
         # add translation for the string of field ir.model.name
         ir_model_field = self.env['ir.model.fields']._get('ir.model', 'name')
-        LABEL = "Description du Modèle"
+        LABEL = "Description du ModÃ¨le"
 
         ir_model_field_xml_id = ir_model_field.export_data(['id']).get('datas')[0][0]
         po_string = '''
@@ -1368,7 +1373,7 @@ class TestXMLTranslation(TransactionCase):
         """ Check translations of 'arch' after xml tags changes in source terms. """
         archf = '<form string="X">%s<div>%s</div>%s</form>'
         terms_en = ('RandomRandom1', 'RandomRandom2', 'RandomRandom3')
-        terms_fr = ('RandomRandom1', 'AléatoireAléatoire2', 'AléatoireAléatoire3')
+        terms_fr = ('RandomRandom1', 'AlÃ©atoireAlÃ©atoire2', 'AlÃ©atoireAlÃ©atoire3')
         view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr)
 
         env_nolang = self.env(context={})
@@ -1386,7 +1391,7 @@ class TestXMLTranslation(TransactionCase):
         # check whether close terms have correct translations
         self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
-        self.assertEqual(view.with_env(env_fr).arch_db, archf % ('RandomRandom1', 'SomethingElse', 'AléatoireAléatoire3'))
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % ('RandomRandom1', 'SomethingElse', 'AlÃ©atoireAlÃ©atoire3'))
 
     def test_sync_xml_upgrade(self):
         # text term and xml term with the same text content, text term is removed, xml term is changed
@@ -1788,20 +1793,20 @@ class TestXMLDuplicateTranslations(TransactionCase):
         cls.view1 = cls.env['ir.ui.view'].with_context(lang='fr_FR').create({
             'name': 'view_1',
             'model': 'res.partner',
-            'arch': cls.xml % ('un étudiant', 'une étudiante')
+            'arch': cls.xml % ('un Ã©tudiant', 'une Ã©tudiante')
         })
         # jsonb column value:
         # {
-        #     "en_US": "<form><div>un étudiant</div><div>une étudiante</div></form>",
-        #     "fr_FR": "<form><div>un étudiant</div><div>une étudiante</div></form>",
+        #     "en_US": "<form><div>un Ã©tudiant</div><div>une Ã©tudiante</div></form>",
+        #     "fr_FR": "<form><div>un Ã©tudiant</div><div>une Ã©tudiante</div></form>",
         # }
         cls.view1_en = cls.view1.with_context(lang='en_US')
         cls.view1_fr = cls.view1.with_context(lang='fr_FR')
         cls.view1_es = cls.view1.with_context(lang='es_ES')
         # translate 2 fr_FR terms to one en_US term
         cls.view1.update_field_translations('arch_db', {
-            'en_US': {'un étudiant': 'a student', 'une étudiante': 'a student'},
-            'es_ES': {'un étudiant': 'un estudiante', 'une étudiante': 'una estudiante'}
+            'en_US': {'un Ã©tudiant': 'a student', 'une Ã©tudiante': 'a student'},
+            'es_ES': {'un Ã©tudiant': 'un estudiante', 'une Ã©tudiante': 'una estudiante'}
         })
 
     # intuitive behaviour
@@ -1809,13 +1814,13 @@ class TestXMLDuplicateTranslations(TransactionCase):
         # the field value for en_US has 2 same terms
         self.assertEqual(self.view1_en.arch_db, self.xml % ('a student', 'a student'))
         # the field value for fr_FR has two different terms
-        self.assertHTMLEqual(self.view1_fr.arch_db, self.xml % ('un étudiant', 'une étudiante'))
+        self.assertHTMLEqual(self.view1_fr.arch_db, self.xml % ('un Ã©tudiant', 'une Ã©tudiante'))
         # the field value for es_SP has two different terms
         self.assertHTMLEqual(self.view1_es.arch_db, self.xml % ('un estudiante', 'una estudiante'))
         # jsonb column value:
         # {
         #     "en_US": "<form><div>a student</div><div>a student</div></form>",
-        #     "fr_FR": "<form><div>un étudiant</div><div>une étudiante</div></form>",
+        #     "fr_FR": "<form><div>un Ã©tudiant</div><div>une Ã©tudiante</div></form>",
         #     "es_ES": "<form><div>un estudiante</div><div>una estudiante</div></form>"
         # }
 
@@ -1824,19 +1829,19 @@ class TestXMLDuplicateTranslations(TransactionCase):
         # confirm translation for es_SP
         self.view1.update_field_translations('arch_db', {'es_ES': {}})
         self.assertEqual(self.view1_en.arch_db, self.xml % ('a student', 'a student'))
-        self.assertEqual(self.view1_fr.arch_db, self.xml % ('un étudiant', 'une étudiante'))
+        self.assertEqual(self.view1_fr.arch_db, self.xml % ('un Ã©tudiant', 'une Ã©tudiante'))
         self.assertEqual(self.view1_es.arch_db, self.xml % ('un estudiante', 'una estudiante'))
 
         # capitalize the en_US
         self.view1.update_field_translations('arch_db', {'en_US': {'a student': 'A STUDENT'}})
         self.assertEqual(self.view1_en.arch_db, self.xml % ('A STUDENT', 'A STUDENT'))
-        self.assertEqual(self.view1_fr.arch_db, self.xml % ('un étudiant', 'une étudiante'))
+        self.assertEqual(self.view1_fr.arch_db, self.xml % ('un Ã©tudiant', 'une Ã©tudiante'))
         self.assertEqual(self.view1_es.arch_db, self.xml % ('un estudiante', 'una estudiante'))
 
-        # capitalize 'un étudiant' in fr_FR only
-        self.view1.update_field_translations('arch_db', {'fr_FR': {'A STUDENT': 'UNE ÉTUDIANTE'}})
+        # capitalize 'un Ã©tudiant' in fr_FR only
+        self.view1.update_field_translations('arch_db', {'fr_FR': {'A STUDENT': 'UNE Ã‰TUDIANTE'}})
         self.assertEqual(self.view1_en.arch_db, self.xml % ('A STUDENT', 'A STUDENT'))
-        self.assertEqual(self.view1_fr.arch_db, self.xml % ('UNE ÉTUDIANTE', 'UNE ÉTUDIANTE'))  # 'un étudiant' is dropped
+        self.assertEqual(self.view1_fr.arch_db, self.xml % ('UNE Ã‰TUDIANTE', 'UNE Ã‰TUDIANTE'))  # 'un Ã©tudiant' is dropped
         self.assertEqual(self.view1_es.arch_db, self.xml % ('un estudiante', 'una estudiante'))
 
     # tricky behaviour
@@ -1848,12 +1853,12 @@ class TestXMLDuplicateTranslations(TransactionCase):
         """
 
         # there is only one term for fr_FR in the translation dialog
-        # {'lang': 'fr_FR', 'src': 'a student', 'value': 'un étudiant'} is missing
-        # because the fr_FR term 'une étudiante' appears after the 'un étudiant' and overwrites the translation mapping
+        # {'lang': 'fr_FR', 'src': 'a student', 'value': 'un Ã©tudiant'} is missing
+        # because the fr_FR term 'une Ã©tudiante' appears after the 'un Ã©tudiant' and overwrites the translation mapping
         # same for the es_SP
         self.assertItemsEqual(self.view1.get_field_translations('arch_db')[0], [
             {'lang': 'en_US', 'source': 'a student', 'value': ''},
-            {'lang': 'fr_FR', 'source': 'a student', 'value': 'une étudiante'},
+            {'lang': 'fr_FR', 'source': 'a student', 'value': 'une Ã©tudiante'},
             {'lang': 'es_ES', 'source': 'a student', 'value': 'una estudiante'}
         ])
 
@@ -1867,16 +1872,16 @@ class TestXMLDuplicateTranslations(TransactionCase):
 
         # write in fr_FR
         new_xml1 = '<form><div>%s</div><div>%s</div><div/></form>'
-        self.view1_fr.arch = new_xml1 % ('un étudiant', 'une étudiante')
+        self.view1_fr.arch = new_xml1 % ('un Ã©tudiant', 'une Ã©tudiante')
         self.assertEqual(self.view1_en.arch_db, new_xml1 % ('a student', 'a student'))
-        self.assertEqual(self.view1_fr.arch_db, new_xml1 % ('un étudiant', 'une étudiante'))
+        self.assertEqual(self.view1_fr.arch_db, new_xml1 % ('un Ã©tudiant', 'une Ã©tudiante'))
         self.assertEqual(self.view1_es.arch_db, new_xml1 % ('un estudiante', 'una estudiante'))
 
         # write in en_US
         new_xml2 = '<form><div>%s</div><div>%s</div><div/><div/></form>'
         self.view1_en.arch = new_xml2 % ('a student', 'a student')
         self.assertEqual(self.view1_en.arch_db, new_xml2 % ('a student', 'a student'))
-        self.assertEqual(self.view1_fr.arch_db, new_xml2 % ('une étudiante', 'une étudiante'))  # 'un étudiant' is dropped
+        self.assertEqual(self.view1_fr.arch_db, new_xml2 % ('une Ã©tudiante', 'une Ã©tudiante'))  # 'un Ã©tudiant' is dropped
         self.assertEqual(self.view1_es.arch_db, new_xml2 % ('una estudiante', 'una estudiante'))  # 'un estudiante' is dropped
 
     # tricky behaviour
@@ -1894,23 +1899,23 @@ class TestXMLDuplicateTranslations(TransactionCase):
         # copy the record in fr_FR
         view1_fr_copy = self.view1_fr.copy({'name': 'view1_fr_copy'})
         # view1_en_copy.update_field_translations('arch_db', {
-        #     'en_US': {'un étudiant': 'a student', 'une étudiante': 'a student'},
-        #     'es_ES': {'un étudiant': 'un estudiante', 'une étudiante': 'una estudiante'},
+        #     'en_US': {'un Ã©tudiant': 'a student', 'une Ã©tudiante': 'a student'},
+        #     'es_ES': {'un Ã©tudiant': 'un estudiante', 'une Ã©tudiante': 'una estudiante'},
         # })
         # is called when copy
         self.assertEqual(view1_fr_copy.with_context(lang='en_US').arch_db, self.xml % ('a student', 'a student'))
-        self.assertEqual(view1_fr_copy.arch_db, self.xml % ('un étudiant', 'une étudiante'))
+        self.assertEqual(view1_fr_copy.arch_db, self.xml % ('un Ã©tudiant', 'une Ã©tudiante'))
         self.assertEqual(view1_fr_copy.with_context(lang='es_ES').arch_db, self.xml % ('un estudiante', 'una estudiante'))
 
         # copy the record in en_US
         view1_en_copy = self.view1_en.copy({'name': 'view1_us_copy'})
         # view1_en_copy.update_field_translations('arch_db', {
-        #     'fr_FR': {'a student': 'une étudiante'},
+        #     'fr_FR': {'a student': 'une Ã©tudiante'},
         #     'es_ES': {'a student': ''una estudiante'},
         # })
         # is called when copy
         self.assertEqual(view1_en_copy.arch_db, self.xml % ('a student', 'a student'))
-        self.assertEqual(view1_en_copy.with_context(lang='fr_FR').arch_db, self.xml % ('une étudiante', 'une étudiante'))  # 'un étudiant' is dropped
+        self.assertEqual(view1_en_copy.with_context(lang='fr_FR').arch_db, self.xml % ('une Ã©tudiante', 'une Ã©tudiante'))  # 'un Ã©tudiant' is dropped
         self.assertEqual(view1_en_copy.with_context(lang='es_ES').arch_db, self.xml % ('una estudiante', 'una estudiante'))  # 'un estudiante' is dropped
 
 
@@ -1999,3 +2004,53 @@ class TestTranslationTrigramIndexPatterns(BaseCase):
         ]
         for original_pattern, escaped_pattern, message in cases:
             self.assertEqual(sql.pattern_to_translated_trigram_pattern(original_pattern), escaped_pattern, message)
+
+
+class SpreadsheetTermsExtractionTest(BaseCase):
+    def test_extract_carousel_and_list_header_terms(self):
+        data = {
+            "sheets": [{
+                "cells": {
+                    "A1": '=_t("Best Cities")',
+                    "B1": '=ODOO.LIST.HEADER(1, "city", "City")',
+                    "C1": '=ODOO.LIST.HEADER(1, "x", _t("# Leads"))',
+                },
+                "figures": [{
+                    "tag": "carousel",
+                    "data": {
+                        "title": {"text": "Top Countries"},
+                        "items": [
+                            {"type": "chart", "chartId": "c1", "title": "Leads"},
+                            {"type": "carouselDataView", "title": "Top 10"},
+                        ],
+                        "chartDefinitions": {
+                            "c1": {"title": {"text": "Revenues by source"}},
+                        },
+                    },
+                }],
+            }],
+            "globalFilters": [{"label": "Period"}],
+            "pivots": {
+                "1": {
+                    "name": "Product",
+                    "measures": [
+                        {"id": "order_reference", "fieldName": "order_reference", "userDefinedName": "Orders"},
+                        {"id": "price_subtotal", "fieldName": "price_subtotal", "userDefinedName": "Revenue"},
+                    ],
+                },
+            },
+        }
+        terms = {t[2] for t in extract_spreadsheet_terms(io.StringIO(json.dumps(data)), [], [], {})}
+        self.assertEqual(terms, {
+            "Best Cities",
+            "City",
+            "# Leads",
+            "Top Countries",
+            "Leads",
+            "Top 10",
+            "Revenues by source",
+            "Period",
+            "Product",
+            "Orders",
+            "Revenue",
+        })
