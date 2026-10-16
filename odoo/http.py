@@ -745,7 +745,7 @@ def route(route=None, **routing):
             routing['methods'] = wrong
 
         @functools.wraps(endpoint)
-        def route_wrapper(self, *args, **params):
+        def route_wrapper(self, /, *args, **params):
             params_ok = filter_kwargs(endpoint, params)
             params_ko = set(params) - set(params_ok)
             if params_ko:
