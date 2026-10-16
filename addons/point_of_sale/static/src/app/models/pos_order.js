@@ -423,7 +423,7 @@ export class PosOrder extends PosOrderAccounting {
     addPaymentline(payment_method, args = {}) {
         this.assertEditable();
 
-        const { status: canSend, message } = payment_method.getPaymentInterfaceStates();
+        const { status: canSend, message } = payment_method.canStartPayment({ order: this });
         if (!canSend) {
             return { status: false, data: message, size: "sm" };
         }

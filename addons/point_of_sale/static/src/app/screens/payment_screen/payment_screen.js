@@ -183,13 +183,10 @@ export class PaymentScreen extends Component {
         this.pos.addAnimation = true;
         setTimeout(() => (this.pos.addAnimation = false), 1000);
     }
+    isPaymentMethodBlocked(paymentMethod) {
+        return !paymentMethod.canStartPayment({ order: this.currentOrder }).status;
+    }
     async addNewPaymentLine(paymentMethod, args = {}) {
-        const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates();
-        if (!canSend) {
-            this.dialog.add(AlertDialog, { title: _t("Oh snap !"), body: message });
-            return;
-        }
-
         if (this.paymentLines.length === 0) {
             this.makeAnimation();
         }
@@ -364,12 +361,13 @@ export class PaymentScreen extends Component {
 
     async sendPaymentRequest(line) {
         const paymentMethod = line.payment_method_id;
-        const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates({
+        const { status: canSend, message } = paymentMethod.canStartPayment({
+            order: line.pos_order_id,
             paymentline: line,
         });
 
         if (!canSend) {
-            this.dialog.add(AlertDialog, { title: _t("Oh snap !"), body: _t(message) });
+            this.dialog.add(AlertDialog, { title: _t("Oh snap !"), body: message });
             return;
         }
 

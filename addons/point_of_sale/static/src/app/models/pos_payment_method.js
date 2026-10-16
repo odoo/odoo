@@ -48,40 +48,40 @@ export class PosPaymentMethod extends Base {
     }
 
     /**
-     * Check orders to know if the payment terminal is available for the current order.
-     * This is useful for payment methods that require specific conditions to be met,
-     * such as Bancontact which requires a single payment in progress per sticker.
-     * The method is called with the current payment method and line.
+     * Check if the processing `line` prevents this method from starting a
+     * payment on `order`. Override it for the lines a provider handles and
+     * call super for the others.
      */
-    _checkOrder({ order, paymentline }) {
-        const hasProcessingPayment = order.payment_ids.some(
-            (pl) =>
-                this.payment_method_type === pl.payment_method_id.payment_method_type &&
-                pl.uuid !== paymentline?.uuid &&
-                pl.isProcessing
-        );
-        if (hasProcessingPayment) {
-            return {
-                status: false,
-                message: _t("There is already an electronic payment in progress."),
-            };
-        }
-        return { status: true, message: "" };
+    isBlockedBy(line, { order, paymentline }) {
+        const type = this.payment_method_type;
+        return type !== "none" && line.payment_method_id.payment_method_type === type;
     }
 
     /**
-     * Called to check if a payment request can be sent for a given payment method and line.
+     * Message shown when `line` blocks this method.
      */
-    getPaymentInterfaceStates({ paymentline } = {}) {
-        const openOrder = this.models["pos.order"].filter((o) => !o.finalized);
-        for (const order of openOrder) {
-            const result = this._checkOrder({ order, paymentline });
-            if (!result.status) {
-                return result;
-            }
-        }
+    getBlockingMessage(line) {
+        return _t("There is already an electronic payment in progress.");
+    }
 
-        return { status: true, message: "" };
+    /**
+     * Check if this method can add or send a payment on `order` right now.
+     * `paymentline` is the line being sent, if any.
+     */
+    canStartPayment({ order, paymentline } = {}) {
+        if (!this.usePaymentInterface) {
+            return { status: true, message: "" };
+        }
+        const blockingLine = this.models["pos.payment"].find(
+            (line) =>
+                line.isProcessing &&
+                line.uuid !== paymentline?.uuid &&
+                !line.pos_order_id?.finalized &&
+                this.isBlockedBy(line, { order, paymentline })
+        );
+        return blockingLine
+            ? { status: false, message: this.getBlockingMessage(blockingLine) }
+            : { status: true, message: "" };
     }
 }
 

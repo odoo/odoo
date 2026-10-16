@@ -6,24 +6,19 @@ patch(PosPaymentMethod.prototype, {
     get paymentInterfaceKey() {
         return this.type === "online" ? this.type : super.paymentInterfaceKey;
     },
-    _checkOrder({ order, paymentline }) {
+    isBlockedBy(line, { order, paymentline }) {
         if (this.type !== "online") {
-            return super._checkOrder(...arguments);
+            return super.isBlockedBy(...arguments);
         }
-        const hasProcessingOnlinePayment =
-            paymentline?.pos_order_id === order &&
-            order.payment_ids.some(
-                (pl) =>
-                    pl.payment_method_id.type === "online" &&
-                    pl.uuid !== paymentline.uuid &&
-                    pl.isProcessing
-            );
-        if (hasProcessingOnlinePayment) {
-            return {
-                status: false,
-                message: _t("Another online payment is already in progress for this order."),
-            };
+        // Only sending is blocked, adding another online line is allowed
+        return Boolean(
+            paymentline && line.payment_method_id.type === "online" && line.pos_order_id === order
+        );
+    },
+    getBlockingMessage(line) {
+        if (this.type !== "online") {
+            return super.getBlockingMessage(...arguments);
         }
-        return { status: true, message: "" };
+        return _t("Another online payment is already in progress for this order.");
     },
 });
