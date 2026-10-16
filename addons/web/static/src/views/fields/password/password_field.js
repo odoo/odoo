@@ -9,6 +9,7 @@ export class PasswordField extends Component {
     static template = "web.PasswordField";
     props = useProps({
         ...standardFieldProps,
+        autocomplete: t.string().optional(),
         placeholder: t.string().optional(),
     });
 
@@ -39,7 +40,10 @@ export const passwordField = {
     component: PasswordField,
     displayName: _t("Password"),
     supportedTypes: ["char", "text"],
-    extractProps: ({ placeholder }) => ({ placeholder }),
+    extractProps: ({ attrs, placeholder }) => ({
+        autocomplete: attrs.autocomplete,
+        placeholder,
+    }),
 };
 
 registry.category("fields").add("password", passwordField);
