@@ -218,30 +218,30 @@ patch(PosStore.prototype, {
     async loadCode(code) {
         let card = this.models["loyalty.card"].find((card) => card.code === code);
 
-        let result = null;
         if (!card) {
             const isDiscountCode = this.models["loyalty.rule"].some((rule) => rule.matchCode(code));
             if (isDiscountCode) {
                 return "";
             }
-            result = await this.data.call("loyalty.card", "get_card_status", [
-                code,
-                this.config.id,
-            ]);
-            if (!result["loyalty.card"].length) {
-                return _t("That coupon is invalid (%s).", code);
-            }
-            const payload = { "loyalty.card": result["loyalty.card"] };
-            this.data.synchronizeServerDataInIndexedDB(payload);
-            this.models.loadConnectedData(payload);
-            card = this.models["loyalty.card"].get(result["loyalty.card"][0].id);
         }
+
+        const result = await this.data.call("loyalty.card", "get_card_status", [
+            code,
+            this.config.id,
+        ]);
+        if (!result["loyalty.card"].length) {
+            return _t("That coupon is invalid (%s).", code);
+        }
+        const payload = { "loyalty.card": result["loyalty.card"] };
+        this.data.synchronizeServerDataInIndexedDB(payload);
+        this.models.loadConnectedData(payload);
+        card = this.models["loyalty.card"].get(result["loyalty.card"][0].id);
 
         if (card?.isExpired()) {
             return _t("That card has expired (%s).", code);
         }
 
-        if (result && card?.program_id?.program_type === "gift_card" && !result.has_source_order) {
+        if (card?.program_id?.program_type === "gift_card" && !result.has_source_order) {
             const confirmed = await ask(this.dialog, {
                 title: _t("Unpaid gift card"),
                 body: _t(
