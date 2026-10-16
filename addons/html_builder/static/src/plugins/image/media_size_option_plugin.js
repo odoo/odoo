@@ -54,11 +54,7 @@ export class MediaSizeTextAction extends BuilderAction {
         return width === "auto" ? "" : width;
     }
     apply({ editingElement, value }) {
-        if (!value || value === "") {
-            setWidth(this.dependencies.builderActions.getAction, editingElement, "auto");
-            return;
-        }
-        setWidth(this.dependencies.builderActions.getAction, editingElement, value);
+        setWidth(this.dependencies.builderActions.getAction, editingElement, value || "");
     }
 }
 
@@ -70,7 +66,7 @@ export class SetMediaSizeAutoAction extends BuilderAction {
         return editingElement.style.width === "auto" || editingElement.style.width === "";
     }
     apply({ editingElement }) {
-        setWidth(this.dependencies.builderActions.getAction, editingElement, "auto");
+        setWidth(this.dependencies.builderActions.getAction, editingElement, "");
     }
     clean({ editingElement }) {
         setWidth(this.dependencies.builderActions.getAction, editingElement, "100%");
