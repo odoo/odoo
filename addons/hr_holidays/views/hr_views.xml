@@ -128,7 +128,7 @@
                         type="object"
                         class="oe_stat_button"
                         icon="calendar_today"
-                        invisible="not show_leaves or company_id not in allowed_company_ids or not id"
+                        invisible="not show_leaves or company_id not in allowed_company_ids or not id or allocation_display == '0'"
                         groups="base.group_user"
                         help="Remaining leaves">
                     <div class="o_field_widget o_stat_info">
@@ -138,6 +138,19 @@
                         <span class="o_stat_text">
                             Time Off
                         </span>
+                    </div>
+                </button>
+                <button name="action_time_off_dashboard"
+                        type="object"
+                        class="oe_stat_button bg-danger-subtle border-0"
+                        icon="calendar_today"
+                        icon_class="text-danger-emphasis"
+                        invisible="not show_leaves or company_id not in allowed_company_ids or not id or allocation_display != '0'"
+                        groups="base.group_user"
+                        help="Remaining leaves">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value text-danger-emphasis">Not defined</span>
+                        <span class="o_stat_text text-danger-emphasis">Time Off</span>
                     </div>
                 </button>
             </button>
