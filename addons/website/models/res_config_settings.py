@@ -127,6 +127,10 @@ class ResConfigSettings(models.TransientModel):
         inverse='_inverse_has_plausible_shared_key')
     module_website_livechat = fields.Boolean()
     module_website_address_autocomplete = fields.Boolean("Website Address Autocomplete")
+    website_distance_unit = fields.Selection([
+        ('km', 'Kilometers (km)'),
+        ('mi', 'Miles (mi)'),
+    ], string='Distance unit of measure', config_parameter='website.website_distance_unit', default='km')
 
     @api.depends('website_id')
     def _compute_shared_user_account(self):
@@ -218,6 +222,14 @@ class ResConfigSettings(models.TransientModel):
         elif self.website_default_lang_id not in language_ids:
             self.website_default_lang_id = language_ids[0]
         self.website_language_count = len(language_ids)
+
+    @api.model
+    def get_website_distance_unit(self):
+        return (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_str("website.website_distance_unit", "km")
+        )
 
     def action_website_create_new(self):
         return {
