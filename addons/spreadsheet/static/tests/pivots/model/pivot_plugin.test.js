@@ -32,6 +32,7 @@ import {
 } from "@spreadsheet/../tests/helpers/getters";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
+import { makeStoreWithModel } from "@spreadsheet/../tests/helpers/stores";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { localization } from "@web/core/l10n/localization";
@@ -45,6 +46,7 @@ import { Partner, Product } from "../../helpers/data";
 import { createSheet, deleteSheet } from "../../helpers/commands";
 const { toZone } = spreadsheet.helpers;
 const { pivotRegistry, pivotNormalizationValueRegistry } = spreadsheet.registries;
+const { PivotSidePanelStore } = spreadsheet.stores;
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -1159,48 +1161,24 @@ test("Can group by many2one_reference field ", async () => {
 });
 
 test("Can group by reference field ", async () => {
-    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) =>
-        // The mock server doesn't support well reference.
-        // It is fixed in master/saas-19.1, but for now we have to mock the correct output ourselves.
-        [
-            [{ __count: 3, "probability:avg": 11, __extra_domain: [] }],
-            [
-                {
-                    ref: "partner,2",
-                    __extra_domain: [["ref", "=", "partner,2"]],
-                    __count: 1,
-                    "probability:avg": 11,
-                },
-                {
-                    ref: "partner,3",
-                    __extra_domain: [["ref", "=", "partner,3"]],
-                    __count: 1,
-                    "probability:avg": 12,
-                },
-                {
-                    ref: false,
-                    __extra_domain: [["ref", "=", false]],
-                    __count: 1,
-                    "probability:avg": 13,
-                },
-            ],
-        ]
-    );
     Partner._fields = {
         ...Partner._fields,
         ref: fields.Reference({
-            selection: [["partner", "Partner"]],
+            selection: [
+                ["product", "Product"],
+                ["res.currency", "Currency"],
+            ],
         }),
     };
     Partner._records = [
         {
             id: 1,
-            ref: "partner,2",
+            ref: "product,37",
             probability: 11,
         },
         {
             id: 2,
-            ref: "partner,3",
+            ref: "res.currency,1",
             probability: 12,
         },
         {
@@ -1216,15 +1194,19 @@ test("Can group by reference field ", async () => {
                 <field name="probability" type="measure"/>
             </pivot>`,
     });
-    expect(getCellFormula(model, "A3")).toBe('=PIVOT.HEADER(1,"ref","partner,2")');
-    expect(getCellFormula(model, "A4")).toBe('=PIVOT.HEADER(1,"ref","partner,3")');
+    expect(getCellFormula(model, "A3")).toBe('=PIVOT.HEADER(1,"ref","product,37")');
+    expect(getCellFormula(model, "A4")).toBe('=PIVOT.HEADER(1,"ref","res.currency,1")');
     expect(getCellFormula(model, "A5")).toBe('=PIVOT.HEADER(1,"ref",FALSE)');
-    expect(getCellFormula(model, "B3")).toBe('=PIVOT.VALUE(1,"probability:avg","ref","partner,2")');
-    expect(getCellFormula(model, "B4")).toBe('=PIVOT.VALUE(1,"probability:avg","ref","partner,3")');
+    expect(getCellFormula(model, "B3")).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","ref","product,37")'
+    );
+    expect(getCellFormula(model, "B4")).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","ref","res.currency,1")'
+    );
     expect(getCellFormula(model, "B5")).toBe('=PIVOT.VALUE(1,"probability:avg","ref",FALSE)');
 
-    expect(getCellValue(model, "A3")).toBe("partner,2");
-    expect(getCellValue(model, "A4")).toBe("partner,3");
+    expect(getCellValue(model, "A3")).toBe("xphone");
+    expect(getCellValue(model, "A4")).toBe("EUR");
     expect(getCellValue(model, "A5")).toBe("None");
     expect(getCellValue(model, "B3")).toBe(11);
     expect(getCellValue(model, "B4")).toBe(12);
@@ -2693,6 +2675,26 @@ test("Groupable fields in pivot", async function () {
             message: `Field ${fieldType} should not be normalizable`,
         });
     }
+});
+
+test("Reference fields are available as pivot measures", async function () {
+    Partner._fields = {
+        ...Partner._fields,
+        ref: fields.Reference({
+            string: "Reference",
+            selection: [["product", "Product"]],
+        }),
+        non_stored_ref: fields.Reference({
+            string: "Non-stored Reference",
+            selection: [["product", "Product"]],
+            store: false,
+        }),
+    };
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const { store } = makeStoreWithModel(model, PivotSidePanelStore, pivotId);
+    const referenceMeasures = store.measureFields.filter((field) => field.type === "reference");
+
+    expect(referenceMeasures.map((field) => field.name)).toEqual(["ref"]);
 });
 
 test("REFRESH_PIVOT properly invalidates a pivot table", async function () {

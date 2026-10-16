@@ -141,6 +141,27 @@ test("Return display_name of many2one field", async () => {
     expect(getCellValue(model, "A2")).toBe("xphone");
 });
 
+test("Return display_name of reference field", async () => {
+    Partner._fields.ref = fields.Reference({
+        string: "Reference",
+        selection: [
+            ["product", "Product"],
+            ["res.currency", "Currency"],
+        ],
+    });
+    Partner._records = [
+        { id: 1, ref: "product,37" },
+        { id: 2, ref: "res.currency,1" },
+        { id: 3, ref: false },
+    ];
+    const { model } = await createSpreadsheetWithList({
+        columns: [{ name: "ref", string: "Reference" }],
+    });
+    expect(getCellValue(model, "A2")).toBe("xphone");
+    expect(getCellValue(model, "A3")).toBe("EUR");
+    expect(getCellValue(model, "A4")).toBe("");
+});
+
 test("Boolean fields are correctly formatted", async () => {
     const { model } = await createSpreadsheetWithList({
         columns: [{ name: "bar", string: "Bar" }],
@@ -1563,6 +1584,35 @@ test("Field chaining can be more than 1 deep", async function () {
     setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 2, "product_id.template_id.name")`);
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("xphone");
+});
+
+test("Support reference field at the end of a field chain", async function () {
+    Product._fields.ref = fields.Reference({
+        string: "Reference",
+        selection: [["res.currency", "Currency"]],
+    });
+    Product._records = [{ id: 37, ref: "res.currency,2" }];
+    Partner._records = [{ id: 1, product_id: 37 }];
+    const { model } = await createSpreadsheetWithList();
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 1, "product_id.ref")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("USD");
+});
+
+test("Reference field cannot be followed in a field chain", async function () {
+    Partner._fields.ref = fields.Reference({
+        string: "Reference",
+        selection: [["product", "Product"]],
+    });
+    Partner._records = [{ id: 1, ref: "product,37" }];
+    const { model } = await createSpreadsheetWithList();
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 1, "ref.name")`);
+    await animationFrame();
+    expect(getEvaluatedCell(model, "A1").message).toBe(
+        "The field ref.name does not exist or you do not have access to that field"
+    );
 });
 
 test("Chaining fields are fetched with the same web_search_read", async function () {
