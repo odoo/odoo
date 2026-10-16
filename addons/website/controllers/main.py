@@ -2,6 +2,7 @@
 import base64
 import colorsys
 import datetime
+import json
 import logging
 import math
 import os
@@ -31,7 +32,6 @@ from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools import OrderedSet, py_to_js_locale
 from odoo.tools import html_escape as escape
 from odoo.tools.image import hex_to_rgb
-from odoo.tools.json import scriptsafe as json
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.tools.sql import escape_like_value

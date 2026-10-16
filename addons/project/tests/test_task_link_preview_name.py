@@ -1,6 +1,7 @@
+import json
+
 import odoo.tests
 from odoo.tests.common import HttpCase, new_test_user
-from odoo.tools.json import scriptsafe as json_safe
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -30,7 +31,7 @@ class TestTaskLinkPreviewName(HttpCase):
         # retrieve metadata of an record with customerized link_preview_name
         response_with_preview_name = self.url_open(
             '/html_editor/link_preview_internal',
-            data=json_safe.dumps({
+            data=json.dumps({
                 "params": {
                     "preview_url": f"/odoo/all-tasks/{self.task_internal_link_customized.id}",
                 }
@@ -44,7 +45,7 @@ class TestTaskLinkPreviewName(HttpCase):
         self.authenticate(self.admin.login, self.admin.login)
         response_with_preview_name = self.url_open(
             '/html_editor/link_preview_internal',
-            data=json_safe.dumps({
+            data=json.dumps({
                 "params": {
                     "preview_url": f"/odoo/my-tasks/{self.task_internal_link_customized.id}",
                 }
