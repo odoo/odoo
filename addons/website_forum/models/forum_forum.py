@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import time
 
-import textwrap
 from collections import defaultdict
-from operator import itemgetter
-
+from functools import lru_cache
 from markupsafe import Markup
+from operator import itemgetter
 
 from odoo import _, api, fields, models
 from odoo.tools.translate import html_translate
@@ -159,13 +159,16 @@ class ForumForum(models.Model):
         for forum in self:
             forum.can_moderate = self.env.user.karma >= forum.karma_moderate
 
-    @api.depends('post_ids', 'post_ids.tag_ids', 'post_ids.tag_ids.posts_count', 'tag_ids')
-    def _compute_tag_ids_usage(self):
+    @lru_cache(maxsize=1)
+    def get_tag_cached(self, cache_key):
         forums_without_tags = self.filtered(lambda f: not f.tag_ids)
         forums_without_tags.tag_most_used_ids = forums_without_tags.tag_unused_ids = False
         forums_with_tags = self - forums_without_tags
+
+        forum_tags = defaultdict(lambda: {'most_used_ids': [], 'unused_ids': []})
+
         if not forums_with_tags:
-            return
+            return forums_with_tags.ids, forum_tags
 
         tags_data = self.env['forum.tag'].search_read(
             [('forum_id', 'in', forums_with_tags.ids)],
@@ -173,7 +176,6 @@ class ForumForum(models.Model):
             order='forum_id, posts_count DESC, name, id',
         )
         current_forum_id = tags_data[0]['forum_id'][0]
-        forum_tags = defaultdict(lambda: {'most_used_ids': [], 'unused_ids': []})
 
         for tag_data in tags_data:
             tag_id, tag_forum_id, posts_count = itemgetter('id', 'forum_id', 'posts_count')(tag_data)
@@ -184,9 +186,22 @@ class ForumForum(models.Model):
             elif len(forum_tags[current_forum_id]['most_used_ids']) < MOST_USED_TAGS_COUNT:
                 forum_tags[current_forum_id]['most_used_ids'].append(tag_id)
 
-        for forum in forums_with_tags:
-            forum.tag_most_used_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['most_used_ids'])
-            forum.tag_unused_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['unused_ids'])
+        return forums_with_tags.ids, forum_tags
+
+    @api.depends('post_ids', 'post_ids.tag_ids', 'post_ids.tag_ids.posts_count', 'tag_ids')
+    def _compute_tag_ids_usage(self):
+        ICP = self.env['ir.config_parameter'].sudo()
+        cached_time = int(ICP.get_param('website_forum.tag_usage_cache_time', default=30 * 60)) or 1
+        forum_ids_with_tags, forum_tags = self.get_tag_cached(int(time.time() / cached_time))
+        forums_with_tags = self.browse(forum_ids_with_tags)
+
+        for forum in self:
+            if forum in forums_with_tags:
+                forum.tag_most_used_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['most_used_ids'])
+                forum.tag_unused_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['unused_ids'])
+            else:
+                forum.tag_most_used_ids = False
+                forum.tag_unused_ids = False
 
     @api.depends('post_ids')
     def _compute_last_post_id(self):
