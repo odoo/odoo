@@ -9,10 +9,21 @@ from odoo.http import request
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
+def with_active_company(records):
+    """Check the rules with the active company of the web client, as the form view does."""
+    user = request.env.user
+    cids = request.httprequest.cookies.get("cids", "").split(",")
+    active_ids = [int(cid) for cid in cids if cid.isdigit() and int(cid) in user.company_ids.ids]
+    return records.with_context(allowed_company_ids=user.company_ids.ids).with_company(
+        active_ids[0] if active_ids else user.company_id,
+    )
+
+
 class ThreadController(http.Controller):
     @http.route("/mail/thread/data", methods=["POST"], type="json", auth="user")
     def mail_thread_data(self, thread_model, thread_id, request_list):
-        thread = request.env[thread_model].with_context(active_test=False).search([("id", "=", thread_id)])
+        thread = with_active_company(request.env[thread_model]).with_context(active_test=False)
+        thread = thread.search([("id", "=", thread_id)])
         return thread._get_mail_thread_data(request_list)
 
     @http.route("/mail/thread/messages", methods=["POST"], type="json", auth="user")
