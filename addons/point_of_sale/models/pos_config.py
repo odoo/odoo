@@ -390,22 +390,23 @@ class PosConfig(models.Model):
             return {'x': short_name, 'y': currency.round(amount), 'name': name}
 
         locale = get_lang(self.env).code
+        tz = str(self.env.tz)
+        today = fields.Date.context_today(self)
 
         self.env.cr.execute("""
             SELECT o.config_id,
-                   DATE(o.date_order AT TIME ZONE 'UTC') AS order_date,
+                   (o.date_order AT TIME ZONE 'UTC' AT TIME ZONE %(tz)s)::date AS order_date,
                    SUM(o.amount_total) AS total
               FROM pos_order o
-             WHERE o.config_id = ANY(%s)
+             WHERE o.config_id = ANY(%(config_ids)s)
                AND o.state IN ('done', 'paid', 'invoiced')
-               AND DATE(o.date_order AT TIME ZONE 'UTC') >= (CURRENT_DATE - INTERVAL '6 days')
+               AND (o.date_order AT TIME ZONE 'UTC' AT TIME ZONE %(tz)s)::date >= %(from_date)s
           GROUP BY o.config_id, order_date
-        """, (self.ids,))
+        """, {'tz': tz, 'config_ids': self.ids, 'from_date': today - timedelta(days=6)})
         rows = {}
         for config_id, order_date, total in self.env.cr.fetchall():
             rows.setdefault(config_id, {})[order_date] = total
 
-        today = datetime.utcnow().date()
         result = {}
         for config in self:
             currency = config.currency_id
