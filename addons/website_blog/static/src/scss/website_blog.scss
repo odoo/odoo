@@ -163,6 +163,7 @@
         .o_wblog_toc_nav .list-group {
             .o_wblog_toc_link {
                 &:focus-visible {
+                    --o-forced-colors-active-outline-offset: -2px;
                     --o-focus-ring: var(--o-focus-ring-inset);
                 }
 
@@ -208,6 +209,10 @@
                             width: calc(var(--o-bs-border-width) * 2);
                             background-color: var(--primary);
                             transition: background-color 0.2s;
+
+                            @media (forced-colors: active) {
+                                background-color: Highlight;
+                            }
                         }
                     }
                 }
