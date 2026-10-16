@@ -367,7 +367,17 @@ describe("Range collapsed", () => {
                     '<p><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></p>',
                 stepFunction: toggleCheckList,
                 contentAfter:
-                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0); font-size: 18px;">[abc]</li></ul>',
+                    '<ul class="o_checklist"><li style="font-size: 18px; color: rgb(255, 0, 0);">[abc]</li></ul>',
+            });
+        });
+
+        test("should carry color and font size of span in paragraph to list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="color: rgb(255, 0, 0); font-size: 18px;">[]abc</span></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0); font-size: 18px;">[]abc</li></ul>',
             });
         });
 
@@ -377,7 +387,7 @@ describe("Range collapsed", () => {
                     '<p><b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></i></b></p>',
                 stepFunction: toggleCheckList,
                 contentAfter:
-                    '<ul class="o_checklist"><li style="color: rgb(255, 0, 0); font-size: 18px;"><b><i>[abc]</i></b></li></ul>',
+                    '<ul class="o_checklist"><li style="font-size: 18px; color: rgb(255, 0, 0);"><b><i>[abc]</i></b></li></ul>',
             });
         });
 
@@ -418,6 +428,16 @@ describe("Range collapsed", () => {
                 stepFunction: toggleCheckList,
                 contentAfter:
                     '<ul class="o_checklist"><li style="font-size: 18px;"><b><font style="color: rgb(255, 0, 0);">a</font></b><i><font style="color: rgb(255, 0, 0);">a</font></i></li></ul>',
+            });
+        });
+
+        test("should carry font size of span in paragraph to list item while preserving font family", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="font-size: 18px; font-family: Roboto;">[]abc</span></p>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="font-size: 18px;"><span style="font-family: Roboto;">[]abc</span></li></ul>',
             });
         });
     });
