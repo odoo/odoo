@@ -114,6 +114,7 @@ export class SelfOrder extends Reactive {
             if (hasNewProducts) {
                 this.initProducts();
             }
+            this.availableCategories = this.getAvailableCategories();
         });
         if (this.config.self_ordering_mode === "kiosk") {
             this.data.connectWebSocket("STATUS", async ({ status }) => {
@@ -237,8 +238,10 @@ export class SelfOrder extends Reactive {
         let now = luxon.DateTime.now();
         now = now.hour + now.minute / 60;
         const availableCategories = this.productCategories
-            .filter(
-                (c) => this.productByCategIds[c.id]?.length > 0 || c.associatedProducts?.length > 0
+            .filter((c) =>
+                (c.associatedProducts || this.productByCategIds[c.id] || []).some(
+                    (p) => p.self_order_available
+                )
             )
             .sort((a, b) => a.sequence - b.sequence);
         return availableCategories.filter((c) => {
