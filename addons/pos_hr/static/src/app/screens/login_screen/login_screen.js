@@ -35,15 +35,20 @@ patch(LoginScreen.prototype, {
             this.pos.login = false;
         });
     },
-    async barcodeCashierAction(code) {
+    barcodeCashierAction(code) {
+        return this.loginWithBadge(code.code);
+    },
+    async loginWithBadge(badge, needsPin = () => true) {
         if (!this.pos.config.module_pos_hr) {
             return;
         }
-        const employee = this.pos.accessRight.getEmployeeByBarcode(code.code);
+        const employee = this.pos.accessRight.getEmployeeByBarcode(badge);
         if (
             employee &&
             employee !== this.loggedCashier &&
-            (!employee._pin || (await this.pos.accessRight.checkPin(employee)))
+            (!employee._pin ||
+                !needsPin(employee) ||
+                (await this.pos.accessRight.checkPin(employee)))
         ) {
             this.pos.setCashier(employee);
             this.cashierLogIn();
