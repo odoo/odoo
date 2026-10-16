@@ -640,6 +640,9 @@ export class Thread extends Component {
     }
 
     saveScroll() {
+        if (this.isSmoothScrolling) {
+            return;
+        }
         const thread = toRaw(this.props.thread);
         const isBottom = this.isAtBottom;
         if (isBottom) {
@@ -692,10 +695,21 @@ export class Thread extends Component {
             clearTimeout(this.smoothScrollingTimeout);
             this.isSmoothScrolling = true;
             this.smoothScrollingDeferred = new Deferred();
+            const thread = toRaw(this.props.thread);
             const onSmoothScrollingEnd = () => {
                 this.smoothScrollingDeferred.resolve();
                 this.smoothScrollingDeferred = undefined;
                 this.isSmoothScrolling = false;
+                const el = this.scrollableRef.el;
+                if (!el || thread.notEq(this.props.thread)) {
+                    return;
+                }
+                if (Math.abs(el.scrollTop - value) <= 1) {
+                    thread.scrollTop = "bottom";
+                    this.applyScroll();
+                } else {
+                    this.saveScroll();
+                }
             };
             if ("onscrollend" in window) {
                 document.addEventListener("scrollend", onSmoothScrollingEnd, {
