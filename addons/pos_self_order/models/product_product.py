@@ -29,7 +29,7 @@ class ProductTemplate(models.Model):
 
         combo_products = self.browse(p['id'] for p in products if p["type"] == "combo")
         combo_products_choice = self.search_read(
-            [("id", 'in', combo_products.combo_ids.combo_item_ids.product_id.product_tmpl_id.ids), ("id", "not in", [p['id'] for p in products])],
+            [("id", 'in', combo_products.combo_ids.combo_item_ids.product_id.sudo().product_tmpl_id.ids), ("id", "not in", [p['id'] for p in products])],
             fields,
             limit=config.get_limited_product_count(),
             order='is_favorite DESC,pos_sequence,name',
