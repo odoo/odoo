@@ -192,6 +192,7 @@ class MailFollowers(models.Model):
          ) sub_user ON TRUE
 
      WHERE sub_followers.subtype_follower OR partner.id = ANY(%s)
+     ORDER BY partner.id ASC
 """
             params = [subtype_id, records._name, tuple(records.ids), list(pids or []), list(pids or [])]
             self.env.cr.execute(query, tuple(params))
@@ -236,6 +237,7 @@ class MailFollowers(models.Model):
            sub_user.share,
            sub_user.notification_type,
            sub_user.groups
+  ORDER BY partner.id ASC
 """
             params = [records._name, tuple(records.ids), tuple(pids)]
             self.env.cr.execute(query, tuple(params))
@@ -288,6 +290,7 @@ class MailFollowers(models.Model):
            sub_user.share,
            sub_user.notification_type,
            sub_user.groups
+  ORDER BY partner.id ASC
 """
             params = [tuple(pids)]
             self.env.cr.execute(query, tuple(params))
