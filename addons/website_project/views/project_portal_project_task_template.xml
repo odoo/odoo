@@ -2,7 +2,8 @@
 <odoo>
     <template id="task_submitted" name="Task Submitted">
         <t t-call="website.layout">
-            <div class="oe_structure oe_empty h-100">
+            <div id="wrap" class="h-100">
+                <div class="oe_structure" id="oe_structure_website_project_thanks_you"/>
                 <div class="container d-flex flex-column justify-content-center h-100">
                     <div class="d-flex flex-column align-items-center mb16 p-4 text-center">
                         <t t-if="request.session.get('form_builder_model_model', '') == 'project.task'">
@@ -23,6 +24,7 @@
                         <a href="/">Go to Homepage</a>
                     </div>
                 </div>
+                <div class="oe_structure" id="oe_structure_website_project_thanks_you_bottom"/>
             </div>
         </t>
     </template>
