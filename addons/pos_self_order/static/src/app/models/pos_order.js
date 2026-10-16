@@ -14,7 +14,7 @@ patch(PosOrder.prototype, {
         };
     },
     get unsentLines() {
-        return this.lines.filter(
+        return this.getOrderlines().filter(
             (l) =>
                 !Object.keys(this.uiState.lineChanges).includes(l.uuid) ||
                 this.uiState.lineChanges[l.uuid].qty !== l.qty
