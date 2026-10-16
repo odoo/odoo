@@ -31,7 +31,7 @@
             <attribute
                 name="t-if"
                 separator="and"
-                add="(control.name !== 'add_section_control' or !this.env.state.sectionTemplates.length)"
+                add="(control.name !== 'add_section_control' or !this.env.state.sectionTemplates().length)"
             />
         </xpath>
         <xpath expr="//td[hasclass('o_field_x2many_list_row_add')]//button" position="after">
@@ -40,7 +40,7 @@
                     control.type === 'create'
                     and !this.evalColumnInvisible(control.invisible)
                     and control.name === 'add_section_control'
-                    and this.env.state.sectionTemplates.length
+                    and this.env.state.sectionTemplates().length
                 )"
                 menuClass="'o_section_templates_dropdown'"
                 position="'bottom-end'"
@@ -62,7 +62,7 @@
                     </DropdownItem>
 
                     <t
-                        t-foreach="this.env.state.sectionTemplates"
+                        t-foreach="this.env.state.sectionTemplates()"
                         t-as="sectionTemplate"
                         t-key="sectionTemplate.id"
                     >
