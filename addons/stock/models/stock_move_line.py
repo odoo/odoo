@@ -487,7 +487,7 @@ class StockMoveLine(models.Model):
                     new_reserved_qty = ml.quantity_product_uom
 
                 # Unreserve the old charateristics of the move line.
-                if not float_is_zero(ml.quantity_product_uom, precision_rounding=ml.product_uom_id.rounding):
+                if not float_is_zero(ml.quantity_product_uom, precision_rounding=ml.product_id.uom_id.rounding):
                     ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
 
                 # Reserve the maximum available of the new charateristics of the move line.
@@ -719,7 +719,7 @@ class StockMoveLine(models.Model):
         package = quants_value.get('package', self.package_id)
         owner = quants_value.get('owner', self.owner_id)
         available_qty = 0
-        if not self.product_id.is_storable or float_is_zero(quantity, precision_rounding=self.product_uom_id.rounding):
+        if not self.product_id.is_storable or float_is_zero(quantity, precision_rounding=self.product_id.uom_id.rounding):
             return 0, False
         if action == "available":
             available_qty, in_date = self.env['stock.quant']._update_available_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date)
