@@ -14,6 +14,18 @@ class User(models.Model):
     saturday_location_id = fields.Many2one("hr.work.location", related="employee_id.saturday_location_id", readonly=False, string='Saturday')
     sunday_location_id = fields.Many2one("hr.work.location", related="employee_id.sunday_location_id", readonly=False, string='Sunday')
 
+    def _get_employee_by_user(self):
+        Employee = self.env["hr.employee"].with_context(active_test=True)
+        employees = Employee.search([("user_id", "in", self.ids)], order="id desc")
+        employee_by_user = dict.fromkeys(self, Employee)
+        for user, user_employees in employees.grouped("user_id").items():
+            # the same employee for every viewer: the one of the user's company, else the newest one
+            employee_by_user[user] = next(
+                (employee for employee in user_employees if employee.company_id == user.company_id),
+                user_employees[:1],
+            )
+        return employee_by_user
+
     def _get_employee_fields_to_sync(self):
         return super()._get_employee_fields_to_sync() + DAYS
 
@@ -28,9 +40,10 @@ class User(models.Model):
     def _compute_im_status(self):
         super()._compute_im_status()
         dayfield = self.env['hr.employee']._get_current_day_location_field()
+        # sudo: hr.employee - can read the location of users, exceptions included, to show IM status
+        employee_by_user = self.sudo()._get_employee_by_user()
         for user in self:
-            # sudo: hr.employee.location - can read today's location of a user to show its IM status
-            employee = user.sudo().employee_id
+            employee = employee_by_user[user]
             location_type = (employee.exceptional_location_id or employee[dayfield]).location_type
             if not location_type:
                 continue
