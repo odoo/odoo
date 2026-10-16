@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="view_picking_form_to_refund" model="ir.ui.view">
+        <field name="name">stock.picking.form.to.refund</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_ids']/list/field[@name='product_uom_qty']" position="after">
+                <field name="to_refund" optional="hidden" column_invisible="not parent.return_id"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="filter_stock_move_aging_report" model="ir.filters">
         <field name="name">Aging Report</field>
         <field name="model_id">stock.move</field>
