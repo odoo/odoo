@@ -344,11 +344,15 @@
                     </div>
                     <small><t t-out="channel.completion"/>%</small>
                 </div>
-                <button class="btn btn-sm btn-primary">Continue</button>
+                <a t-attf-href="/slides/#{slug(channel)}">
+                    <button class="btn btn-sm btn-primary">Continue</button>
+                </a>
             </t>
             <t t-elif="channel.is_member and not channel.completion">
                 <small t-if="channel.total_time" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute', 'format': 'narrow'}"/>
-                <button class="btn btn-sm btn-primary">Start now</button>
+                <a t-attf-href="/slides/#{slug(channel)}">
+                    <button class="btn btn-sm btn-primary">Start now</button>
+                </a>
             </t>
             <span t-elif="channel.is_member and channel.completed" class="badge text-bg-success"><i class="oi" data-icon="check" aria-hidden="true"/> Completed</span>
             <t t-else="">
