@@ -178,6 +178,7 @@
         "website.assets_inside_builder_iframe": [
             "web/static/lib/bootstrap/scss/_variables.scss",
             "website_sale/static/src/website_builder/**/*.edit.*",
+            "website_sale/static/src/scss/product_page.edit.css",
         ],
         'website.assets_inside_builder_iframe_tests': [
             'website_sale/static/src/website_builder/**/*.edit.xml',
