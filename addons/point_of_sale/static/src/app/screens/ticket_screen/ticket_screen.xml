@@ -106,7 +106,7 @@
                                                 </button>
                                             </td>
                                             <td class="align-middle text-end delete-column" name="delete-column">
-                                                <button t-if="!this.shouldHideDeleteButton(order) and this.pos.accessRight.canDeleteOrder" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-hover-danger btn-lg">
+                                                <button t-if="!this.shouldHideDeleteButton(order) and this.pos.accessRight.canDeleteOrder" t-on-click.stop="() => this.onDeleteOrder(order)" t-on-dblclick.stop="() => {}" class="btn btn-hover-danger btn-lg">
                                                     <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                                                 </button>
                                                 <div t-if="this.state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">
