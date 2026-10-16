@@ -6,7 +6,7 @@ const saleManagementProductMixin = () => ({
     _getAdditionalDialogProps() {
         const props = super._getAdditionalDialogProps();
 
-        const isOptionalLine = this.env.shouldCollapse(this.props.record, "is_optional");
+        const isOptionalLine = this.env.shouldCollapse?.(this.props.record, 'is_optional') ?? false;
         props.options = {
             showQuantity: !isOptionalLine,
             showPrice: !isOptionalLine,
