@@ -13,6 +13,11 @@ fields are stored in a "serialized" field in the form of a JSON mapping.
         'views/views.xml',
         'security/ir.access.csv',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'base_sparse_field/static/src/**/*',
+        ],
+    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
