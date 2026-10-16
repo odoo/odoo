@@ -47,6 +47,13 @@ class PosVivaComController(http.Controller):
         result = kwargs.get('status')
         _logger.info('received abort callback from Viva.com with result %s', result)
 
+        pos_order = request.env['pos.order'].sudo().search([
+            ('uuid', '=', order_uuid),
+            ('config_id', '=', config_id),
+        ], limit=1)
+        if not pos_order:
+            return "Order not found"
+
         dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/payment/{order_uuid}")
         return request.redirect(dynamicLink, local=False)
 
@@ -58,17 +65,27 @@ class PosVivaComController(http.Controller):
 
         _logger.info('received payment callback from Viva.com with result %s', result)
 
-        pos_order = request.env['pos.order'].sudo().search([('uuid', '=', order_uuid)], limit=1)
+        pos_order = request.env['pos.order'].sudo().search([
+            ('uuid', '=', order_uuid),
+            ('config_id', '=', config_id),
+        ], limit=1)
         if not pos_order:
             return "Order not found"
 
-        # Update payment line
-        if not session_id:
-            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.use_payment_terminal == 'viva_com')
-        else:
-            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.use_payment_terminal == 'viva_com' and p.viva_com_session_id == session_id)[-1:]
+        if pos_order.state != 'draft':
+            return "Order already finalized"
 
-        if result == 'success':
+        final_statuses = ["done", "reversed", "error"]
+        if not session_id:
+            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.use_payment_terminal == 'viva_com' and p.payment_status not in final_statuses)
+        else:
+            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.use_payment_terminal == 'viva_com'
+                and p.viva_com_session_id == session_id
+                and p.payment_status not in final_statuses)[-1:]
+
+        transactions = payment_line._viva_com_verify_transactions(transaction_id) if result == 'success' and payment_line else []
+        mismatch = next((t for t in transactions if t['status'] == 'mismatch'), None)
+        if any(t['status'] == 'valid' for t in transactions):
             payment_line.write({
                 'transaction_id': transaction_id,
                 'payment_status': 'done',
@@ -78,7 +95,36 @@ class PosVivaComController(http.Controller):
 
                 dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/resume/{order_uuid}?post_validate=1")
                 return request.redirect(dynamicLink, local=False)
+        elif mismatch:
+            payment_line.write({'payment_status': 'error', 'transaction_id': transaction_id})
+            if mismatch['currency']:
+                currency = request.env['res.currency'].search([('iso_numeric', '=', mismatch['currency'])], limit=1)
+                query = urllib.parse.urlencode({
+                    'viva_com_error': 'mismatch',
+                    'currency_ask': payment_line.currency_id.full_name,
+                    'currency_paid': currency.full_name or mismatch['currency'],
+                })
+            elif mismatch['amount']:
+                query = urllib.parse.urlencode({
+                    'viva_com_error': 'mismatch',
+                    'amount_ask': payment_line.amount,
+                    'amount_paid': mismatch['amount'],
+                })
+            else:
+                query = urllib.parse.urlencode({
+                    'viva_com_error': 'mismatch',
+                })
+            dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/payment/{order_uuid}?{query}")
+            return request.redirect(dynamicLink, local=False)
+        elif result == 'success':
+            # A success we can't confirm with Viva.com. Redirect to the pos and wait for the backend polling to recheck the status
+            _logger.warning('Viva.com payment callback for order %s could not be verified and was ignored', order_uuid)
         else:
+            _logger.warning("Viva.com payment callback for order %s is not successful. Status: %s; Message: %s; TransactionEventId: %s",
+                order_uuid,
+                result,
+                kwargs.get('message'),
+                kwargs.get('transactionEventId'))
             payment_line.write({'payment_status': 'error', 'transaction_id': transaction_id})
 
         dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/payment/{order_uuid}")
