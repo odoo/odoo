@@ -211,7 +211,6 @@
                                         <field name="privacy" readonly="not user_can_edit" nolabel="1" placeholder="Default"/>
                                     </div>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
-                                    <field name="description" options="{'height': 100}" placeholder="Add description" readonly="not user_can_edit"/>
                         </group>
                         <group>
                             <field name="should_show_status" invisible="1"/>
@@ -241,6 +240,9 @@
                                     readonly="not user_can_edit"
                                 />
                             </div>
+                        </group>
+                        <group colspan="2">
+                            <field name="description" options="{'height': 100}" placeholder="Add description" readonly="not user_can_edit"/>
                         </group>
                     </group>
                     <notebook>
