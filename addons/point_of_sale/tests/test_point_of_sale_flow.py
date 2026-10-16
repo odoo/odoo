@@ -1085,6 +1085,29 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(credit_notes.ref, "Reversal of: "+invoices.name)
         self.assertEqual(credit_notes.reversed_entry_id.id, invoices.id)
 
+    def test_backend_refund_of_invoiced_order_creates_credit_note(self):
+        """Paying the refund of an invoiced order from the backend must create
+        a credit note reversing the invoice, even if to_invoice was not set."""
+        order, _ = self.create_backend_pos_order({
+            'order_data': {'partner_id': self.partner_adgu.id},
+            'line_data': [
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id}
+            ],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 20}
+            ],
+        })
+        order.action_pos_order_invoice()
+
+        refund = self.env['pos.order'].browse(order.refund()['res_id'])
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        self.env['pos.make.payment'].with_context(**payment_context).create({
+            'payment_method_id': self.bank_payment_method.id,
+        }).check()
+
+        self.assertEqual(refund.account_move.move_type, 'out_refund')
+        self.assertEqual(refund.account_move.reversed_entry_id, order.account_move)
+
     def test_multi_exp_account_real_time(self):
         self.real_time_categ = self.env['product.category'].create({
             'name': 'test category',
