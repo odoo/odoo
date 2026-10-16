@@ -113,6 +113,7 @@
                     t-att-title="ptav.name"
                     t-attf-style="#{img_style or color_style}"
                     t-att-class="{'o_sale_product_configurator_ptav_color': true,
+                                  'o_forced_colors_preserve': true,
                                   'active': this.props.selected_attribute_value_ids.includes(ptav.id),
                                   'custom_value': ptav.is_custom,
                                   'transparent': !ptav.is_custom and !ptav.html_color and !ptav.name,
