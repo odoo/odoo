@@ -448,9 +448,7 @@ class One2manyCase(TransactionExpressionCase):
 
         # invalidating the cache to force reading one2many again
         self.env.invalidate_all()
-        with self.assertRaisesRegex(ValueError, r'it is not stored'):
-            # Make sure the parent_record1 only has its own child records
-            self.assertEqual(parent_record1.child_ids.ids, children[parent_record1.id])
+        self.assertFalse(parent_record1.child_ids)
 
     def test_computed_inverse_one2many(self):
         record = self.env['test_orm.computed_inverse_one2many'].create({
