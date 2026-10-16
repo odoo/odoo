@@ -359,6 +359,33 @@ test('post message with "CMD-Enter" keyboard shortcut in chatter (MacOS)', async
     await postMesssageShortcutInChatter({ isMacOS: true });
 });
 
+test('post message with "CMD-Enter" keyboard shortcut in chatter (macOS)', async () => {
+    mockUserAgent("mac");
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button:text('Send message')");
+    await contains(".o-mail-Message", { count: 0 });
+    await insertText(".o-mail-Composer-input", "Test");
+    await contains(".o-mail-Composer span:text('or press CMD + Enter')");
+    triggerHotkey("Enter", false, { metaKey: true });
+    await contains(".o-mail-Message");
+});
+
+test('post message with "CTRL-Enter" keyboard shortcut in chatter (macOS)', async () => {
+    mockUserAgent("mac");
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button:text('Send message')");
+    await contains(".o-mail-Message", { count: 0 });
+    await insertText(".o-mail-Composer-input", "Test");
+    triggerHotkey("Enter", false, { ctrlKey: true });
+    await contains(".o-mail-Message");
+});
+
 test("base rendering when chatter has no attachment", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});

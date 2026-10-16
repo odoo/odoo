@@ -41,12 +41,23 @@ import {
 } from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { isEmail } from "@web/core/utils/strings";
+<<<<<<< 18808a1aa81cba5feefc1e64f9b28fec60621c8e
 import {
     isDisplayStandalone,
     isIOS,
     isMobileOS,
     isMacOS,
 } from "@web/core/browser/feature_detection";
+||||||| d24ed4c9ff8e0785070c7d69668cb6d8175d5008
+import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
+=======
+import {
+    isDisplayStandalone,
+    isIOS,
+    isMacOS,
+    isMobileOS,
+} from "@web/core/browser/feature_detection";
+>>>>>>> c027ed499231bd07c5e9d8c9184fc5d93692796a
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "@mail/core/common/composer_actions";
@@ -554,8 +565,16 @@ export class Composer extends Component {
                 if (this.isMobileOS || ev.isComposing) {
                     return;
                 }
+<<<<<<< 18808a1aa81cba5feefc1e64f9b28fec60621c8e
                 const modKey = isMacOS() ? ev.metaKey : ev.ctrlKey;
                 const shouldPost = this.env.inChatter ? modKey : !ev.shiftKey;
+||||||| d24ed4c9ff8e0785070c7d69668cb6d8175d5008
+                const shouldPost = this.env.inChatter ? ev.ctrlKey : !ev.shiftKey;
+=======
+                // CMD is the usual modifier on macOS, CTRL is kept for existing habits
+                const modKey = ev.ctrlKey || (isMacOS() && ev.metaKey);
+                const shouldPost = this.env.inChatter ? modKey : !ev.shiftKey;
+>>>>>>> c027ed499231bd07c5e9d8c9184fc5d93692796a
                 if (!shouldPost) {
                     return;
                 }
