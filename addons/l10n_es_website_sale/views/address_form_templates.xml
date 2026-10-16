@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="address_form_l10n_es_id_type" inherit_id="portal.address_form_fields" name="Address Form: Spain ID Type">
+        <div id="company_name_div" position="attributes">
+            <attribute name="class">col-lg-4 mb-2</attribute>
+        </div>
+        <div id="div_vat" position="attributes">
+            <attribute name="t-if">not l10n_es_id_type_metadata</attribute>
+        </div>
+        <div id="company_name_div" position="after">
+            <t t-if="is_used_as_billing and l10n_es_id_type_metadata">
+                <!-- No wrapper div around these two: siblings directly under the same row as
+                     "Company"/VAT, so they pick up the row's regular Bootstrap gutter instead of
+                     touching (a wrapper wide enough to hold both would need its own column width,
+                     which breaks the 4/3/5 split against the row's 12 columns). -->
+                <div class="col-lg-3 mb-2">
+                    <label class="col-form-label fw-normal label-optional" for="l10n_es_id_type_select">
+                        ID Type
+                    </label>
+                    <select id="l10n_es_id_type_select" class="form-select o_l10n_es_id_type_select">
+                        <t t-foreach="l10n_es_id_type_metadata.items()" t-as="entry">
+                            <option
+                                t-att-value="entry[0]"
+                                t-att-selected="entry[0] == l10n_es_id_type_current_key"
+                                t-out="entry[1]['label']"
+                            />
+                        </t>
+                    </select>
+                </div>
+                <div class="col-lg-5 mb-2">
+                    <label
+                        class="col-form-label fw-normal label-optional o_l10n_es_id_value_label"
+                        id="l10n_es_id_value_label"
+                        for="l10n_es_id_value_input"
+                        t-out="(l10n_es_id_type_metadata.get(l10n_es_id_type_current_key) or {}).get('label')"
+                    />
+                    <input
+                        type="text"
+                        id="l10n_es_id_value_input"
+                        class="form-control o_l10n_es_id_value_input"
+                        t-att-name="l10n_es_id_type_current_key"
+                        t-att-value="l10n_es_id_type_current_value"
+                    />
+                </div>
+            </t>
+        </div>
+    </template>
+</odoo>
