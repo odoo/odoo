@@ -2764,6 +2764,12 @@
     </xpath>
 </template>
 
+<template id="header_language_selector_show_icon" name="Header Language Selector Show Icon" inherit_id="website.header_language_selector" active="False">
+    <xpath expr="//t[@id='header_language_selector_call']" position="attributes">
+        <attribute name="show_icon">True</attribute>
+    </xpath>
+</template>
+
 <template id="footer_language_selector_inline" name="Footer Language Selector Inline" inherit_id="portal.footer_language_selector" active="True">
     <xpath expr="//t[@id='language_selector_call']" position="attributes">
         <attribute name="t-call">website.language_selector_inline</attribute>
