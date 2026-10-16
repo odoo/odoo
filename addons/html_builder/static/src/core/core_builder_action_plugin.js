@@ -19,6 +19,12 @@ import { getValueFromVar } from "@html_builder/utils/utils";
  *      params?: ActionParams,
  * ) => boolean)[]} apply_custom_css_style_overrides
  */
+/**
+ * @typedef {((context: {
+ *     editingElement: HTMLElement,
+ *     styleName: string,
+ * }) => void)[]} clean_custom_css_style_handlers
+ */
 
 export function withoutTransition(editingElement, callback) {
     if (editingElement.classList.contains("o_we_force_no_transition")) {
@@ -330,7 +336,10 @@ export class StyleAction extends BuilderAction {
         // new one. We keep an explicit method here for edge cases, such as a
         // `BuilderSelect` clearing its linked input behavior in the
         // `BuilderNumberSelect` component.
-        cleanStyle(editingElement, CSS_SHORTHANDS[styleName] || [styleName], extraClass);
+        withoutTransition(editingElement, () => {
+            this.trigger("clean_custom_css_style_handlers", { editingElement, styleName });
+            cleanStyle(editingElement, CSS_SHORTHANDS[styleName] || [styleName], extraClass);
+        });
     }
     _getValueWithoutTransition(el, styleName) {
         return withoutTransition(el, () => getStyleValue(el, styleName));

@@ -21,7 +21,29 @@ export class CompatibilityInlineBorderRemovalPlugin extends Plugin {
             20,
             this.removeInlineBorderIfNecessary.bind(this)
         ),
+        clean_custom_css_style_handlers: this.cleanInlineBorderIfNecessary.bind(this),
     };
+
+    cleanInlineBorderIfNecessary({ editingElement, styleName }) {
+        const newStyleBeingCleaned = NEW_STYLES.find(
+            (style) => styleName === style || CSS_SHORTHANDS[style].includes(styleName)
+        );
+        if (!newStyleBeingCleaned || !OLD_STYLES.some((style) => editingElement.style[style])) {
+            return;
+        }
+        const otherStyle =
+            newStyleBeingCleaned === "--box-border-radius" ? "border-width" : "border-radius";
+        if (editingElement.style[otherStyle]) {
+            const computedStyle = getComputedStyle(editingElement);
+            const cssProps = CSS_SHORTHANDS[otherStyle];
+            const values = cssProps.map((cssProp) => computedStyle.getPropertyValue(cssProp));
+            for (let i = 0; i < cssProps.length; i++) {
+                editingElement.style.setProperty(`--box-${cssProps[i]}`, values[i]);
+            }
+            editingElement.classList.add(otherStyle === "border-width" ? "border" : "rounded");
+        }
+        this.removeInlineBorderIfNecessary({ editingElement, styleName });
+    }
 
     // The border-width/radius calculation using --box-border-width/radius
     // variables is done at class level using "border" and "rounded" classes, so
