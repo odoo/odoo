@@ -110,8 +110,13 @@ class TestReorderingRule(TransactionCase):
             purchase_order.button_confirm()
         purchase_order.picking_type_id = warehouse_1.in_type_id
 
-        # On the po generated, the source document should be the name of the reordering rule
-        self.assertEqual(order_point.name, purchase_order.origin, 'Source document on purchase order should be the name of the reordering rule.')
+        orderpoint_display = "%g - %g for %s in %s" % (
+            order_point.product_min_qty,
+            order_point.product_max_qty,
+            order_point.product_id.display_name,
+            order_point.location_id.display_name,
+        )
+        self.assertEqual(orderpoint_display, purchase_order.origin, 'Source document on purchase order should be [min - max for product_id.display_name in location_id.displayname] of reordering rule.')
         self.assertEqual(purchase_order.order_line.product_qty, 10)
         self.assertEqual(purchase_order.order_line.label, 'Product A')
         self.assertEqual(purchase_order.user_id, buyer_id)

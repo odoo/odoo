@@ -685,7 +685,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             'route_id': other_warehouse.resupply_route_ids.id,
         })
         orderpoint.action_replenish()
-        pick_move = self.env['stock.move'].search([('origin', '=', orderpoint.name), ('location_id', '=', warehouse.lot_stock_id.id)])
+        pick_move = self.env['stock.move'].search([('origin', '=', orderpoint.display_name), ('location_id', '=', warehouse.lot_stock_id.id)])
         pick_move.write({
             'quantity': 20,
             'picked': 20,
