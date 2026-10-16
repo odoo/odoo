@@ -40,3 +40,13 @@ for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
         }
     });
 }
+
+test("vimeo: autoplaying videos disable autopause", async () => {
+    mockFetch(() => '{"data": "mockFetch api result data"}');
+    const Vimeo = PLATFORMS.vimeo;
+    const urlMatch = Vimeo.isValidVideoUrl(Vimeo.exampleUrls.base);
+    expect(Vimeo.getVideoUrlData(urlMatch).embedUrl).not.toInclude("autopause");
+    // Otherwise, only one of several autoplaying Vimeo videos on a page
+    // (e.g. background videos) would play.
+    expect(Vimeo.getVideoUrlData(urlMatch, { autoplay: true }).embedUrl).toInclude("autopause=0");
+});
