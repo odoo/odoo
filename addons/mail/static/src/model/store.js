@@ -1,6 +1,7 @@
 import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
 import { STORE_SYM, modelRegistry, untrackFunctions } from "./misc";
+import { untrack } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 
@@ -40,7 +41,10 @@ export class Store extends Record {
      * @param {() => any} fn
      */
     MAKE_UPDATE(fn) {
-        this._.raiseUpdateDepth();
+        const isDrainWrite = this._.UPDATE !== 0 && untrack(this._.isDrainingQueues);
+        if (!isDrainWrite) {
+            this._.raiseUpdateDepth();
+        }
         this._.UPDATE++;
         let res;
         try {
@@ -52,7 +56,9 @@ export class Store extends Record {
         if (this._.UPDATE === 0) {
             this._.isDrainingQueues.set(true);
         }
-        this._.lowerUpdateDepth();
+        if (!isDrainWrite) {
+            this._.lowerUpdateDepth();
+        }
         if (this._.UPDATE === 0) {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             this._.UPDATE++;
