@@ -223,6 +223,15 @@
                 .css_attribute_preview_thumbnail {
                     box-shadow: var(--o-focus-ring-inset);
                 }
+
+                @media (forced-colors: active) {
+                    outline: none !important;
+
+                    .css_attribute_preview_thumbnail {
+                        outline: var(--o-forced-colors-active-outline-width) solid Highlight;
+                        outline-offset: -2px;
+                    }
+                }
             }
         }
 

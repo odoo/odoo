@@ -497,6 +497,15 @@
                     .o_wsale_filmstrip_item {
                         box-shadow: var(--o-focus-ring-inset) !important;
                     }
+
+                    @media (forced-colors: active) {
+                        outline: none !important;
+
+                        .o_wsale_filmstrip_item {
+                            outline: var(--o-forced-colors-active-outline-width) solid Highlight;
+                            outline-offset: -2px;
+                        }
+                    }
                 }
             }
         }
