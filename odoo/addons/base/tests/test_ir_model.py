@@ -378,6 +378,53 @@ class TestIrModelEdition(TransactionCase):
         fnames = [str(field) for field in self.registry.field_setup_dependents[res_partner_name]]
         self.assertEqual(len(fnames), len(set(fnames)), "registry.field_setup_dependents contains duplicates")
 
+    def _make_manual_model_backed_by_view(self, model_name):
+        self.env['ir.model'].create({
+            'name': model_name,
+            'model': model_name,
+            'field_id': [Command.create({'name': 'x_name', 'ttype': 'char'})],
+        })
+        real_table = f'{model_name}_real'
+        self.env.cr.execute(f'ALTER TABLE {model_name} RENAME TO {real_table}')
+        self.env.cr.execute(f'CREATE VIEW {model_name} AS SELECT * FROM {real_table}')
+
+    def test_manual_model_backed_by_view_logs(self):
+        """ A manual model whose table unexpectedly turns out to be a view
+        (the common case: nothing declared it non-auto in advance) is still
+        logged about and switched to _auto = False, as before. """
+        self._make_manual_model_backed_by_view('x_test_view_backed')
+
+        with self.assertLogs('odoo.registry', level='INFO') as log_catcher:
+            self.registry._setup_models__(self.env.cr, [])
+        self.assertTrue(
+            any('is not a regular table' in message for message in log_catcher.output),
+            log_catcher.output,
+        )
+        self.assertFalse(self.registry['x_test_view_backed']._auto)
+
+    def test_manual_model_declared_non_auto_does_not_log(self):
+        """ A manual model whose _instanciate_attrs() already set
+        _auto = False (as an addon providing SQL-view-backed models would
+        do, see OCA/reporting-engine#1120) should not trigger the
+        "disabling automatic schema management" log: the addon already
+        knows and said so. """
+        self._make_manual_model_backed_by_view('x_test_view_backed_no_log')
+
+        IrModel = type(self.env['ir.model'])
+        instanciate_attrs = IrModel._instanciate_attrs
+
+        def _instanciate_attrs(self, model_data):
+            attrs = instanciate_attrs(self, model_data)
+            if model_data['model'] == 'x_test_view_backed_no_log':
+                attrs['_auto'] = False
+            return attrs
+
+        self.patch(IrModel, '_instanciate_attrs', _instanciate_attrs)
+
+        with self.assertNoLogs('odoo.registry', level='INFO'):
+            self.registry._setup_models__(self.env.cr, [])
+        self.assertFalse(self.registry['x_test_view_backed_no_log']._auto)
+
 @tagged('test_eval_context')
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEvalContext(TransactionCase):
