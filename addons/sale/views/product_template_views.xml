@@ -20,6 +20,18 @@
         </field>
     </record>
 
+    <record id="product_template_grid_view_form" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.sale.product.matrix</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <group name="upsell" position="inside">
+                <field name="has_configurable_attributes" invisible="1"/> <!-- needed to show the variant selection -->
+                <field name="product_add_mode" invisible="not has_configurable_attributes"/>
+            </group>
+        </field>
+    </record>
+
     <!-- view common to both template and product -->
     <record id="product_template_form_view_sale" model="ir.ui.view">
         <field name="name">product.template.sale.property.form.inherit</field>

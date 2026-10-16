@@ -10,16 +10,10 @@ class ResConfigSettings(models.TransientModel):
     group_auto_done_setting = fields.Boolean(
         string="Lock Confirmed Sales", implied_group="sale.group_auto_done_setting"
     )
-    group_discount_per_so_line = fields.Boolean(
-        string="Discounts", implied_group="sale.group_discount_per_so_line"
-    )
     group_proforma_sales = fields.Boolean(
         string="Pro Forma Invoice",
         implied_group="sale.group_proforma_sales",
         help="Allows you to send pro forma invoice.",
-    )
-    group_warning_sale = fields.Boolean(
-        string="Sale Order Warnings", implied_group="sale.group_warning_sale"
     )
     group_services_and_material = fields.Boolean(
         string="Services & Materials", implied_group="sale.group_services_and_material"
@@ -75,21 +69,8 @@ class ResConfigSettings(models.TransientModel):
     module_sale_gelato = fields.Boolean("Gelato")
     module_sale_loyalty = fields.Boolean("Coupons & Loyalty")
     module_sale_pdf_quote_builder = fields.Boolean("PDF Quote builder")
-    module_sale_product_matrix = fields.Boolean("Sales Grid Entry")
-    module_sale_shopee = fields.Boolean("Shopee Sync")
 
     # === ONCHANGE METHODS ===#
-
-    @api.depends("group_discount_per_so_line")
-    def _onchange_group_discount_per_so_line(self):
-        if self.group_discount_per_so_line:
-            self.group_product_pricelist = True
-
-    @api.onchange("group_product_variant")
-    def _onchange_group_product_variant(self):
-        """Disable the Product Grid module if variants are disabled."""
-        if self.module_sale_product_matrix and not self.group_product_variant:
-            self.module_sale_product_matrix = False
 
     @api.onchange("portal_confirmation_pay")
     def _onchange_portal_confirmation_pay(self):

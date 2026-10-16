@@ -6,6 +6,7 @@ import { x2ManyCommands } from "@web/core/orm_plugin";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
 import { getCustomPtavs, getNoVariantPtavIds, getSelectedComboItems, getSelectedCustomPtav } from "./sale_utils";
 import { openComboConfigurator } from "./combo_configurator_utils";
+import { useMatrixConfigurator } from "@product/js/product_matrix/matrix_configurator_hook";
 
 async function applyProduct(record, product) {
     // handle custom values & no variants
@@ -52,6 +53,7 @@ export const saleProductMixin = () => ({
         super.setup();
         this.dialog = useService("dialog");
         this.orm = useService("orm");
+        this.matrixConfigurator = useMatrixConfigurator();
     },
 
     get isCombo() {
@@ -130,7 +132,6 @@ export const saleProductMixin = () => ({
         } else if (!data.mode || data.mode === 'configurator' || !this._useGridConfigurator()) {
             this._openProductConfigurator({ data: data });
         } else {
-            // only triggered when sale_product_matrix is installed.
             this._openGridConfigurator();
         }
     },
@@ -143,7 +144,9 @@ export const saleProductMixin = () => ({
         return true;
     },
 
-    _openGridConfigurator(edit = false) {}, // sale_product_matrix
+    async _openGridConfigurator(edit = false) {
+        return this.matrixConfigurator.open(this.props.record, edit);
+    },
 
     async _onProductUpdate() {}, // event_booth_sale, event_sale, sale_renting
 
@@ -158,6 +161,9 @@ export const saleProductMixin = () => ({
     },
 
     async _openProductConfigurator({ edit = false, selectedComboItems = [], data } = {}) {
+        if (edit && this.props.record.data.product_add_mode == "matrix") {
+            return this._openGridConfigurator(true);
+        }
         const saleOrder = this.props.record.model.root.data;
         const saleOrderLine = this.props.record.data;
         let customPtavs = [];
