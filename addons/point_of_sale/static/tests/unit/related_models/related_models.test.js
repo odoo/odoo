@@ -845,8 +845,8 @@ describe("Related Model", () => {
         {
             let lines = att2.backLink("pos.order.line.attribute_value_ids");
             expect(lines.length).toBe(2);
-            expect(lines[0]).toBe(line2);
-            expect(lines[1]).toBe(line1);
+            expect(lines[0]).toBe(line1);
+            expect(lines[1]).toBe(line2);
 
             line1.delete();
             lines = att2.backLink("pos.order.line.attribute_value_ids");
@@ -1178,5 +1178,28 @@ describe("Related Model", () => {
             []
         );
         expect(calls).toEqual(["setup", "initState"]);
+    });
+
+    test("RecordStore update preserves record order", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
+
+        const order = models["pos.order"].create({ amount_total: 10 });
+        models["pos.order"].create({ amount_total: 20 });
+        const orderIndex = models["pos.order"].indexOf(order);
+
+        // Update the existing record.
+        models.connectNewData({
+            "pos.order": [
+                {
+                    uuid: order.uuid,
+                    amount_total: 100,
+                },
+            ],
+        });
+
+        expect(order.amount_total).toBe(100);
+        // Check that its position is unchanged.
+        expect(models["pos.order"].indexOf(order)).toBe(orderIndex);
     });
 });
