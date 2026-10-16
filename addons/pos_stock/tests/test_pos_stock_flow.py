@@ -1671,13 +1671,12 @@ class TestPosStockFlow(CommonPosStockTest):
                 Command.create({'partner_id': partner_b.id, 'company_id': company_a.id, 'min_qty': 1.0, 'price': 10.0}),
             ]
         })
-        vendor_a = product.seller_ids.filtered(lambda s: s.company_id == company_a and s.partner_id == partner_a)
         self.env['stock.warehouse.orderpoint'].create({
             'product_id': product.id,
             'company_id': company_a.id,
             'product_min_qty': 1.0,
             'product_max_qty': 5.0,
-            'supplier_id': vendor_a.id,
+            'partner_id': partner_a.id,
         })
         payment_method_b = self.env['pos.payment.method'].create({
             'name': 'Cash B',
