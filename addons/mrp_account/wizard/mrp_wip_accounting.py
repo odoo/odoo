@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
@@ -78,18 +79,24 @@ class MrpAccountWipAccounting(models.TransientModel):
             productions = self.env['mrp.production']
         if not date:
             date = datetime.now().replace(hour=23, minute=59, second=59)
-        compo_value = sum(
-            ml.quantity_product_uom * (ml.product_id.lot_valuated and ml.lot_id and ml.lot_id.standard_price or ml.product_id.standard_price)
-            for ml in productions.move_raw_ids.move_line_ids.filtered(lambda ml: ml.picked and ml.quantity and ml.date <= date)
-        )
+        compo_value_by_account = defaultdict(float)
+        company_valuation_account = self.env['product.category']._fields['property_stock_valuation_account_id'].get_company_dependent_fallback(self.env['product.category'])
+        for ml in productions.move_raw_ids.move_line_ids:
+            if not ml.picked or not ml.quantity or ml.date > date:
+                continue
+            unit_cost = ml.product_id.lot_valuated and ml.lot_id and ml.lot_id.standard_price or ml.product_id.standard_price
+            account = ml.product_id._get_product_accounts()['stock_valuation']
+            compo_value_by_account[account] += ml.quantity_product_uom * unit_cost
+        sum_compo_value = sum(compo_value_by_account.values())
         overhead_value = productions.workorder_ids._cal_cost(date)
-        sval_acc = self.env['product.category']._fields['property_stock_valuation_account_id'].get_company_dependent_fallback(self.env['product.category']).id
+        if not compo_value_by_account:
+            compo_value_by_account[company_valuation_account] = 0.0
         return [
-            Command.create({
-                'label': _("WIP - Component Value"),
-                'credit': compo_value,
-                'account_id': sval_acc,
-            }),
+            *[Command.create({
+                'label': self.env._("WIP - Component Value"),
+                'credit': value,
+                'account_id': account.id,
+            }) for account, value in compo_value_by_account.items()],
             Command.create({
                 'label': _("WIP - Overhead"),
                 'credit': overhead_value,
@@ -97,7 +104,7 @@ class MrpAccountWipAccounting(models.TransientModel):
             }),
             Command.create({
                 'label': _("Manufacturing WIP - %(orders_list)s", orders_list=productions.mapped('name') or _("Manual Entry")),
-                'debit': compo_value + overhead_value,
+                'debit': sum_compo_value + overhead_value,
                 'account_id': self.env.company.account_production_wip_account_id.id,
             })
         ]
