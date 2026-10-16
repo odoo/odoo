@@ -205,22 +205,23 @@ test("PaymentScreenTour2: change without cash payment method shows error", async
 });
 
 test("Check flow with multi currency payment lines", async () => {
-    await setupAndMountPosApp();
+    const store = await setupAndMountPosApp();
+    store.models["pos.payment.method"].get(1).currency_ids = [1, 125];
     await Utils.clickDisplayedProduct("Steel desk");
     await Utils.clickPayButton();
     await waitFor(".payment-screen");
-    await Utils.clickCurrencyWisePaymentMethod("Cash", "USD", "875.00");
+    await Utils.clickCurrencyWisePaymentMethod("Cash", "USD");
     expect(await Utils.selectedPaymentLineHasAmount("$875.00")).toBe(true);
     await Utils.paymentScreenAmountTotal("875.00");
     await Utils.deletePaymentline({ name: "Cash", amount: "875.00" });
-    await Utils.clickCurrencyWisePaymentMethod("Cash", "EUR", "761.25");
+    await Utils.clickCurrencyWisePaymentMethod("Cash", "EUR");
     expect(await Utils.selectedPaymentLineHasAmount("761.25€")).toBe(true);
     await Utils.paymentScreenAmountTotal("761.25");
     await Utils.sendBufferKeys("5");
     await Utils.paymentScreenRemainingTotal("756.25");
     expect(await Utils.selectedPaymentLineHasAmount("5.00€")).toBe(true);
     await Utils.deletePaymentline({ name: "Cash", amount: "5.00" });
-    await Utils.clickCurrencyWisePaymentMethod("Cash", "EUR", "761.25");
+    await Utils.clickCurrencyWisePaymentMethod("Cash", "EUR");
     await Utils.clickValidatePayment();
     await waitFor(".feedback-screen");
 });
