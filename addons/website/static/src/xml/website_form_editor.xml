@@ -29,7 +29,7 @@
             data-name="Field"
             t-att-data-translated-name="defaultName">
             <div t-if="field.formatInfo.labelPosition !== 'none' and field.formatInfo.labelPosition !== 'top'" class="row s_col_no_resize s_col_no_bgcolor">
-                <label t-attf-class="#{!field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{field.formatInfo.labelPosition === 'right' and 'text-end' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+                <label t-attf-class="#{!field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{field.formatInfo.labelPosition === 'right' and 'text-end' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.type === 'signature' ? field.id + '_sign' : field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
                 <div class="col-sm">
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <t t-else="">
-                <label t-attf-class="s_website_form_label #{field.formatInfo.labelPosition === 'none' and 'd-none' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+                <label t-attf-class="s_website_form_label #{field.formatInfo.labelPosition === 'none' and 'd-none' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.type === 'signature' ? field.id + '_sign' : field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
                 <t t-out="0"/>
@@ -375,6 +375,25 @@
                 t-att-data-max-files-number="field.maxFilesNumber or '1'"
                 t-att-data-max-file-size="field.maxFileSize or '64'"
             />
+        </t>
+    </t>
+
+    <!-- Keep a real file input for validation, visibility rules and multipart submission. -->
+    <t t-name="website.form_field_signature">
+        <t t-call="website.form_field">
+            <input type="file" class="s_website_form_input s_website_form_signature_input visually-hidden"
+                t-att-name="field.name" t-att-id="field.id" tabindex="-1" aria-hidden="true" accept="image/png"
+                t-att-required="field.required || field.modelRequired || None"
+                data-max-files-number="1" t-att-data-max-file-size="field.maxFileSize or '64'"/>
+            <button type="button" class="s_website_form_signature_sign form-control text-start"
+                t-att-id="field.id + '_sign'">
+                <img class="s_website_form_signature_preview img-fluid d-block mx-auto mb-2 d-none" alt="Your signature" style="max-height: 120px;"/>
+                <span class="d-flex align-items-center">
+                    <img src="/html_editor/static/src/img/signature-icon.svg" class="me-2 flex-shrink-0" width="20" height="20" alt="" aria-hidden="true"/>
+                    <span class="s_website_form_signature_label border-start ps-2 text-muted">Click to Sign</span>
+                </span>
+            </button>
+            <button type="button" class="s_website_form_signature_clear btn btn-link btn-sm d-block ms-auto mt-1 p-0 d-none">Clear signature</button>
         </t>
     </t>
 
