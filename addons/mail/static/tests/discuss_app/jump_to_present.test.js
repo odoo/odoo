@@ -1,5 +1,13 @@
 import { after, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, delay, press, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    delay,
+    press,
+    queryFirst,
+    tick,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { Command, contains, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
@@ -55,6 +63,17 @@ test("Jump to present reaches the bottom in a browser without scrollend", async 
     const onscrollend = Object.getOwnPropertyDescriptor(window, "onscrollend");
     delete window.onscrollend;
     after(() => Object.defineProperty(window, "onscrollend", onscrollend));
+    // Simulate a smooth scroll that stalls halfway.
+    patch(Element.prototype, {
+        scrollTo(...args) {
+            if (args[0]?.behavior === "smooth") {
+                super.scrollTo({ top: args[0].top / 2 });
+                setTimeout(() => super.scrollTo(...args), 1200);
+                return;
+            }
+            return super.scrollTo(...args);
+        },
+    });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -89,7 +108,7 @@ test("Jump to present reaches the bottom in a browser without scrollend", async 
     });
     await click("[title='Jump to Present']");
     await smoothScrollStarted.promise;
-    await delay(SMOOTH_SCROLLING_CHECK_DELAY + 50);
+    await delay(SMOOTH_SCROLLING_CHECK_DELAY * 3);
     await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "New message", message_type: "comment" },
@@ -101,6 +120,99 @@ test("Jump to present reaches the bottom in a browser without scrollend", async 
         contains: [".o-mail-Message", { count: 21 }],
         scroll: "bottom",
     });
+});
+
+test("Jump to a pinned message during jump to present in a browser without scrollend", async () => {
+    // Simulate a browser without the "scrollend" event.
+    const onscrollend = Object.getOwnPropertyDescriptor(window, "onscrollend");
+    delete window.onscrollend;
+    after(() => Object.defineProperty(window, "onscrollend", onscrollend));
+    // Simulate a smooth scroll that stalls at its start.
+    const smoothScrollStarted = Promise.withResolvers();
+    patch(Element.prototype, {
+        scrollIntoView(...args) {
+            if (args[0]?.behavior === "smooth") {
+                return super.scrollIntoView({ ...args[0], behavior: "instant" });
+            }
+            return super.scrollIntoView(...args);
+        },
+        scrollTo(...args) {
+            if (args[0]?.behavior === "smooth") {
+                smoothScrollStarted.resolve();
+                return;
+            }
+            return super.scrollTo(...args);
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: i === 14 ? "pinned-message" : "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            pinned_at: i === 14 ? "2020-02-12 08:30:00" : undefined,
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Message:count(20)");
+    await click("[title='Pinned Messages']");
+    await waitFor(`${actionPanel("Pinned Messages")} a[role='button']:text(Jump):count(1)`);
+    await click("[title='Jump to Present']");
+    await smoothScrollStarted.promise;
+    await click(`${actionPanel("Pinned Messages")} a[role='button']:text(Jump)`);
+    await waitFor(
+        ".o-mail-Message.o-highlighted .o-mail-Message-body:text(pinned-message):count(1)"
+    );
+    await waitForNone(".o-mail-Message.o-highlighted");
+    await isInViewportOf(
+        ".o-mail-Thread .o-mail-Message-body:text(pinned-message)",
+        ".o-mail-Thread"
+    );
+    await mailContains(".o-mail-Thread", { count: 0, scroll: "bottom" });
+});
+
+test("Jump to present keeps the position of a user who scrolls up in a browser without scrollend", async () => {
+    // Simulate a browser without the "scrollend" event.
+    const onscrollend = Object.getOwnPropertyDescriptor(window, "onscrollend");
+    delete window.onscrollend;
+    after(() => Object.defineProperty(window, "onscrollend", onscrollend));
+    // Simulate a smooth scroll that stalls halfway.
+    const smoothScrollStarted = Promise.withResolvers();
+    patch(Element.prototype, {
+        scrollTo(...args) {
+            if (args[0]?.behavior === "smooth") {
+                super.scrollTo({ top: args[0].top / 2 });
+                smoothScrollStarted.resolve();
+                return;
+            }
+            return super.scrollTo(...args);
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Message:count(20)");
+    await click("[title='Jump to Present']");
+    await smoothScrollStarted.promise;
+    await animationFrame();
+    await animationFrame(); // wait for the scroll event of the stalled scroll
+    const userScrollTop = queryFirst(".o-mail-Thread").scrollTop - 200;
+    await scroll(".o-mail-Thread", userScrollTop);
+    await delay(1000); // wait for the end of the smooth scroll check
+    expect(Math.abs(queryFirst(".o-mail-Thread").scrollTop - userScrollTop)).toBeLessThan(2);
+    await mailContains(".o-mail-Thread", { count: 0, scroll: "bottom" });
 });
 
 test("Jump to present reaches the bottom when a message arrives during the smooth scroll", async () => {
