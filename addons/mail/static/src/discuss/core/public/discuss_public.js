@@ -15,6 +15,11 @@ export class DiscussPublic extends Component {
     setup() {
         this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
+        this.thread = this.store.Thread.insert({
+            ...this.props.data.channelData,
+            model: "discuss.channel",
+            type: this.props.data.channelData.channel_type,
+        });
         this.state = useState({
             welcome: this.props.data.discussPublicViewData.shouldDisplayWelcomeViewInitially,
         });
@@ -39,14 +44,5 @@ export class DiscussPublic extends Component {
     displayChannel() {
         this.threadService.setDiscussThread(this.thread, false);
         this.threadService.fetchChannelMembers(this.thread);
-    }
-
-    get thread() {
-        return this.store.Thread.insert({
-            id: this.props.data.channelData.id,
-            model: "discuss.channel",
-            type: this.props.data.channelData.channel_type,
-            uuid: this.props.data.channelData.uuid,
-        });
     }
 }
