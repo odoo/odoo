@@ -5,7 +5,7 @@
         <div class="o-mail-FollowerList-header flex-shrink-0 pb-2">
             <div class="d-flex align-items-center justify-content-between gap-2 px-2 pt-1 pb-2">
                 <h5 class="mb-0">Followers</h5>
-                <button type="button" t-if="this.props.thread.hasWriteAccess" class="o-mail-FollowerList-action btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-1 rounded-2 o-py-1_5" t-on-click="this.onClickAddFollowers" title="Add Followers">
+                <button type="button" t-if="this.props.thread.hasWriteAccess" class="o-navigable o-mail-FollowerList-action btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-1 rounded-2 o-py-1_5" t-on-click="this.onClickAddFollowers" title="Add Followers">
                     <i class="oi oi-fw fs-5" data-icon="person_add" role="img" aria-hidden="true"/> Add
                 </button>
             </div>
@@ -18,20 +18,20 @@
                     </small>
                     <small t-else="" class="text-muted">Not following</small>
                 </div>
-                <button type="button" t-if="this.props.thread.selfFollower" class="o-mail-FollowerList-action btn btn-outline-secondary d-inline-flex align-items-center flex-shrink-0 border-0 o-p-1_5" title="Edit Notification Preferences" aria-label="Edit Notification Preferences" t-on-click="this.onClickEdit">
+                <button type="button" t-if="this.props.thread.selfFollower" class="o-navigable o-mail-FollowerList-action btn btn-outline-secondary d-inline-flex align-items-center flex-shrink-0 border-0 o-p-1_5" title="Edit Notification Preferences" aria-label="Edit Notification Preferences" t-on-click="this.onClickEdit">
                     <i class="oi oi-fw fs-5" data-icon="notifications" role="img" aria-hidden="true"/>
                 </button>
-                <button type="button" t-if="this.props.thread.selfFollower" class="o-mail-FollowerList-action btn btn-outline-secondary btn-sm flex-shrink-0 rounded-2" t-on-click="this.onClickUnfollow" title="Unfollow">Unfollow</button>
-                <button type="button" t-else="" class="btn btn-primary btn-sm flex-shrink-0" t-on-click="this.onClickFollow" title="Follow">Follow</button>
+                <button type="button" t-if="this.props.thread.selfFollower" class="o-navigable o-mail-FollowerList-action btn btn-outline-secondary btn-sm flex-shrink-0 rounded-2" t-on-click="this.onClickUnfollow" title="Unfollow">Unfollow</button>
+                <button type="button" t-else="" class="o-navigable btn btn-primary btn-sm flex-shrink-0" t-on-click="this.onClickFollow" title="Follow">Follow</button>
             </div>
-            <div t-if="this.otherFollowersCount() > this.LOAD_MORE_LIMIT || this.search.searchTerm" class="px-1 pt-2">
+            <div t-if="this.otherFollowersCount() > this.LOAD_MORE_LIMIT || this.search.searchTerm" class="o-navigable px-1 pt-2">
                 <SearchInput inputClassNames="'o-py-1_5'" search="this.search" placeholder.translate="Search by name or email" autofocus="true" onClear="() => this.onClearSearch()"/>
             </div>
         </div>
         <div class="o-mail-FollowerList-list o-scrollbar-thin overflow-y-auto">
             <div t-if="this.followerListView.followers.length" class="d-flex flex-column gap-1">
                 <Follower t-foreach="this.followerListView.followers" t-as="follower" t-key="follower.id" follower="follower" onFollowerChanged="this.props.onFollowerChanged"/>
-                <span t-if="!this.followersFullyLoaded()" class="btn btn-link" t-on-click="() => this.loadFollowers()" t-ref="this.loadMoreRef">Load more</span>
+                <button type="button" t-if="!this.followersFullyLoaded()" t-key="this.followerListView.followers.length" class="o-navigable btn btn-link" t-on-click="() => this.loadFollowers()" t-ref="this.loadMoreRef">Load more</button>
             </div>
             <div t-elif="this.pendingFollowersRequest()" class="text-muted text-center px-3 py-2" role="status">
                 <i class="oi oi-spin me-1" data-icon="autorenew" role="img" aria-hidden="true"/> Loading...

@@ -3,7 +3,7 @@
 
     <t t-name="mail.Follower">
         <div class="o-mail-Follower opacity-trigger-hover d-flex align-items-center rounded-3 mx-1" t-att-class="{ 'o-editing': this.isEditing() }">
-            <a class="o-mail-Follower-details d-flex align-items-center flex-grow-1 px-2 py-1 min-w-0 text-reset text-decoration-none" href="#" role="menuitem" t-on-click.prevent="this.onClickDetails">
+            <a class="o-mail-Follower-details o-navigable d-flex align-items-center flex-grow-1 px-2 py-1 min-w-0 text-reset text-decoration-none" href="#" role="menuitem" t-on-click.prevent="this.onClickDetails">
                 <img class="o-mail-Follower-avatar o_avatar me-2 rounded flex-shrink-0" t-att-class="{ 'opacity-50': !this.props.follower.is_active }" t-att-src="this.props.follower.partner_id.avatarUrl" alt=""/>
                 <div class="d-flex flex-column min-w-0 lh-sm">
                     <div class="d-flex align-items-center gap-1">
@@ -14,10 +14,10 @@
                 </div>
             </a>
             <div t-if="this.props.follower.isEditable" class="opacity-0 opacity-100-hover o-opacity-hoverable d-flex align-items-center gap-1 flex-shrink-0 me-1">
-                <button type="button" class="o-mail-Follower-action btn btn-outline-secondary d-inline-flex align-items-center border-0 o-p-1_5" title="Edit Notification Preferences" aria-label="Edit Notification Preferences" t-on-click="this.onClickEdit">
+                <button type="button" class="o-navigable o-mail-Follower-action btn btn-outline-secondary d-inline-flex align-items-center border-0 o-p-1_5" title="Edit Notification Preferences" aria-label="Edit Notification Preferences" t-on-click="this.onClickEdit">
                     <i class="oi oi-fw fs-5" data-icon="notifications" role="img" aria-hidden="true"/>
                 </button>
-                <button type="button" class="o-mail-Follower-action btn btn-hover-danger d-inline-flex align-items-center border-0 o-p-1_5" title="Remove this follower" aria-label="Remove this follower" t-on-click="this.onClickRemove">
+                <button type="button" class="o-navigable o-mail-Follower-action btn btn-hover-danger d-inline-flex align-items-center border-0 o-p-1_5" title="Remove this follower" aria-label="Remove this follower" t-on-click="this.onClickRemove">
                     <i class="oi oi-fw fs-5" data-icon="person_remove" role="img" aria-hidden="true"/>
                 </button>
             </div>
