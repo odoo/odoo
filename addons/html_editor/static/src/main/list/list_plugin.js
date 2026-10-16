@@ -21,6 +21,7 @@ import {
     isVisible,
     isVisibleTextNode,
     listElementSelector,
+    listItemElementSelector,
 } from "@html_editor/utils/dom_info";
 import {
     closestElement,
@@ -67,6 +68,13 @@ const listSelectorItems = [
         description: _t("Checklist (Ctrl + Shift + 9)"),
     },
 ];
+
+const isInList = (el) => (isBlock(el) ? el && isListItemElement(el) : isInList(el.parentElement));
+const isListPredicate = (node) => {
+    if (isListItemElement(node)) {
+        return true;
+    }
+};
 
 export class ListPlugin extends Plugin {
     static id = "list";
@@ -184,7 +192,6 @@ export class ListPlugin extends Plugin {
 
         /** Processors */
         normalize_processors: this.normalize.bind(this),
-        node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         fragment_to_insert_within_pre_processors: this.processFragmentToInsertWithinPre.bind(this),
         fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
@@ -215,14 +222,16 @@ export class ListPlugin extends Plugin {
                 }
             }
         },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (isListItemElement(container)) {
-                return true;
-            }
-        },
+        can_contain_selection_placeholder_predicates: isListPredicate,
         is_node_in_same_block_segment_predicates: (node, blockNode) => {
             const listAncestor = closestElement(node, "ul, ol");
             if (listAncestor && blockNode.contains(listAncestor)) {
+                return false;
+            }
+        },
+        can_hold_selection_after_insertion_predicates: isListPredicate,
+        can_insert_block_in_parent_predicates: (block, parent) => {
+            if (isListItemElement(block) && isListItemElement(parent)) {
                 return false;
             }
         },
@@ -893,24 +902,6 @@ export class ListPlugin extends Plugin {
     // Handlers of other plugins commands
     // --------------------------------------------------------------------------
 
-    processNodeToInsert(nodeToInsert, container) {
-        if (isListItemElement(container) && isParagraphRelatedElement(nodeToInsert)) {
-            nodeToInsert = this.dependencies.dom.setTagName(nodeToInsert, "LI");
-        }
-        const listEl = container && closestElement(container, listElementSelector);
-        if (!listEl) {
-            return nodeToInsert;
-        }
-        const mode = container && this.getListMode(listEl);
-        if (isListItemElement(nodeToInsert) && nodeToInsert.querySelector("ol, ul")) {
-            return this.convertList(nodeToInsert, mode);
-        }
-        if (isListElement(nodeToInsert)) {
-            return this.convertList(nodeToInsert, this.getListMode(nodeToInsert));
-        }
-        return nodeToInsert;
-    }
-
     handleTab() {
         if (
             !this.dependencies.selection
@@ -1402,6 +1393,52 @@ export class ListPlugin extends Plugin {
         if (!this.config.allowChecklist) {
             for (const list of fragment.querySelectorAll(".o_checklist > li")) {
                 this.liToBlocks(list);
+            }
+        }
+        const hasSingleChild = nodeSize(fragment) === 1;
+        const selection = this.dependencies.selection.getEditableSelection();
+
+        // Inserting a list at the start/end of an existing list item should
+        // merge its items into the current list instead of producing invalid or
+        // surprising nested list markup.
+        if (isInList(selection.anchorNode) && isListElement(fragment.firstChild)) {
+            unwrapContents(fragment.firstChild);
+        }
+        // Similarly if the html inserted ends with a list.
+        if (isInList(selection.focusNode) && isListElement(fragment.lastChild) && !hasSingleChild) {
+            unwrapContents(fragment.lastChild);
+        }
+
+        // Content inserted from a list item should extend the current list.
+        const listRef = closestElement(selection.anchorNode, listElementSelector);
+        if (listRef) {
+            const mode = this.getListMode(listRef);
+            const firstNode = fragment.firstChild;
+            // Outdent a nested list item when inserted as first element in a
+            // non-empty list.
+            if (
+                isListItemElement(firstNode) &&
+                firstNode.querySelector(listItemElementSelector) &&
+                !isEmptyBlock(closestElement(selection.anchorNode, listItemElementSelector))
+            ) {
+                const deepestFirstLi = firstLeaf(firstNode, {
+                    stopTraverseFunction: (leaf) =>
+                        isListItemElement(leaf) && !leaf.querySelector(listItemElementSelector),
+                });
+                const result = this.dependencies.split.splitAroundUntil(deepestFirstLi, firstNode);
+                if (result) {
+                    result.after(deepestFirstLi);
+                    result.remove();
+                }
+            }
+            for (const node of childNodes(fragment)) {
+                if (isParagraphRelatedElement(node)) {
+                    this.dependencies.dom.setTagName(node, "LI", true);
+                } else if (isListItemElement(node) && node.querySelector("ol, ul")) {
+                    this.convertList(node, mode);
+                } else if (isListElement(node)) {
+                    this.convertList(node, this.getListMode(node));
+                }
             }
         }
         return fragment;
