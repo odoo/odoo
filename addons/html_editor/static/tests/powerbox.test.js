@@ -134,6 +134,13 @@ describe("search", () => {
         expect(commandNames(el).includes("Separator")).toBe(true);
     });
 
+    test("should show Bulleted list first with term 'list'", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "/list");
+        await animationFrame();
+        expect(commandNames(el)[0]).toBe("Bulleted list");
+    });
+
     test("should hide categories when you have a search term", async () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
