@@ -206,7 +206,7 @@ export class ColorPlugin extends Plugin {
                 .getTargetedNodes()
                 .filter(
                     (node) =>
-                        this.dependencies.selection.isNodeEditable(node) &&
+                        (!isTextNode(node) || this.dependencies.selection.isNodeEditable(node)) &&
                         node.nodeName !== "T" &&
                         this.dependencies.selection.areNodeContentsFullySelected(node)
                 );
@@ -299,6 +299,8 @@ export class ColorPlugin extends Plugin {
         selectedNodes = [...new Set(selectedNodes)];
 
         const alreadyWithinFont = new Set();
+        const nodesToColor = [...selectedNodes, ...targetedFieldNodes];
+
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
                 // The node is already within a newly created font so we filter
@@ -407,17 +409,33 @@ export class ColorPlugin extends Plugin {
                         fillEmpty(font);
                     }
                 } else {
-                    font = []; // Ignore non-text or invisible text nodes.
+                    // Ignore non-text or invisible text nodes.
+                    font =
+                        node.nodeType === Node.ELEMENT_NODE &&
+                        node.matches(PROTECTED_QWEB_SELECTOR) &&
+                        this.dependencies.selection.isNodeEditable(node)
+                            ? node
+                            : [];
                 }
                 return font;
             });
 
+<<<<<<< fada838fb708065e4cc91e93c199277fe9a9a2c9
         let fonts = getFonts(selectedNodes);
+||||||| 25cdbf4f6a18b57176a18702e96e10391b3896e1
+        for (const fieldNode of targetedFieldNodes) {
+            this.colorElement(fieldNode, color, mode);
+        }
+
+        let fonts = getFonts(selectedNodes);
+=======
+        let fonts = getFonts(nodesToColor);
+>>>>>>> 6a419874a5e4f41cf95250b49182b18dce5a8971
         // Dirty fix as the previous call could have unconnected elements
         // because of the `splitAroundUntil`. Another call should provide he
         // correct list of fonts.
         if (!fonts.every((font) => font.isConnected)) {
-            fonts = getFonts(selectedNodes);
+            fonts = getFonts(nodesToColor);
         }
 
         // Color the selected <font>s and remove uncolored fonts.
