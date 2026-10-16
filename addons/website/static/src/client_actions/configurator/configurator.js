@@ -336,10 +336,11 @@ export class DescriptionScreen extends Component {
         this.state.formerSelectedPositioning = undefined;
         this.state.positioningsLoading = true;
         try {
-            const prompt = `${_t(
+            const sentence = _t(
                 "Design a website for my %(industry)s business with a _______ positioning.",
                 { industry: industryLabel }
-            )} Return only a JSON array of 6 possibilities in ${userLanguage} to fill in the blank.`;
+            );
+            const prompt = `"${sentence}"\nReturn only a JSON array of 6 possibilities in ${userLanguage} to fill in the blank.`;
             const response = await rpc("/html_editor/generate_text", {
                 prompt,
                 conversation_history: [],
