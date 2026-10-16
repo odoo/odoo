@@ -41,14 +41,16 @@ class TestESLint(LintCase):
         if not files_to_check:
             # without file arguments, eslint lints the whole cwd
             return
-        cwd = None
-        if flat_config:
-            # flat config ignores, with only a warning, files outside of the base
-            # path (the cwd when using -c), so run from the deepest directory
-            # containing every file to check
-            cwd = os.path.commonpath([os.path.dirname(p) for p in files_to_check])
+        # the overrides of both config formats only match files under the cwd, and
+        # flat config even ignores the other files with only a warning, so run from
+        # the deepest directory containing every file to check
+        cwd = os.path.commonpath([os.path.dirname(p) for p in files_to_check])
+        env = None
+        if not flat_config:
+            # eslint 8.57 switches to flat config when the cwd has an eslint.config.* file
+            env = {**os.environ, 'ESLINT_USE_FLAT_CONFIG': 'false'}
         cmd = [eslint, '--no-ignore', *options, '-c', config_path] + files_to_check
-        process = subprocess.run(cmd, capture_output=True, encoding="utf-8", check=False, cwd=cwd)
+        process = subprocess.run(cmd, capture_output=True, encoding="utf-8", check=False, cwd=cwd, env=env)
         self.assertEqual(process.returncode, 0, msg=f"""
 stdout: {process.stdout}
 Perhaps you might benefit from installing the tooling found at:
@@ -69,7 +71,8 @@ stderr: {process.stderr}
             return
         if major == 8:
             configs = ['test_lint/tests/eslintrc', 'web/tooling/_eslintrc.json']
-            options, flat_config = ['--no-eslintrc'], False
+            # the plugins are still resolved from the server's cwd
+            options, flat_config = ['--no-eslintrc', '--resolve-plugins-relative-to', os.getcwd()], False
         else:
             # eslintrc support is removed in eslint 10, use flat config from 9 on
             configs = ['test_lint/tests/eslint.config.cjs', 'web/tooling/_eslint.config.cjs']
