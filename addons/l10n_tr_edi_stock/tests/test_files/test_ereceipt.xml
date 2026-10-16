@@ -1,0 +1,273 @@
+<DespatchAdvice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+    xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    xmlns="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:CustomizationID>TR1.2.1</cbc:CustomizationID>
+    <cbc:ProfileID>TEMELIRSALIYE</cbc:ProfileID>
+    <cbc:ID>EIT2025000000009</cbc:ID>
+    <cbc:CopyIndicator>false</cbc:CopyIndicator>
+    <cbc:UUID>b6e621a4-56c1-4634-9aaf-ba732d72e2e1</cbc:UUID>
+    <cbc:IssueDate>2025-07-29</cbc:IssueDate>
+    <cbc:IssueTime>11:30:00</cbc:IssueTime>
+    <cbc:DespatchAdviceTypeCode>SEVK</cbc:DespatchAdviceTypeCode>
+    <cbc:LineCountNumeric>1</cbc:LineCountNumeric>
+    <cac:AdditionalDocumentReference>
+        <cbc:ID>e894550a-48c6-40f0-8b14-0c9c0cb6a32f</cbc:ID>
+        <cbc:IssueDate>2025-07-29</cbc:IssueDate>
+        <cbc:DocumentType>XSLT</cbc:DocumentType>
+        <cbc:DocumentDescription>E-İrsaliye stil dosyası.</cbc:DocumentDescription>
+        <cac:Attachment>
+            <cbc:EmbeddedDocumentBinaryObject characterSetCode="UTF-8" encodingCode="Base64"
+                mimeCode="application/xml" filename="e894550a-48c6-40f0-8b14-0c9c0cb6a32f.xslt">
+            </cbc:EmbeddedDocumentBinaryObject>
+        </cac:Attachment>
+    </cac:AdditionalDocumentReference>
+    <cac:DespatchSupplierParty>
+        <cac:Party>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="HIZMETNO">0222222</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="VKN">1234567802</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>Test Kurum İki</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>egribucak mah 15 cadde no:54</cbc:StreetName>
+                <cbc:CitySubdivisionName>Hacılar</cbc:CitySubdivisionName>
+                <cbc:CityName>Kayseri</cbc:CityName>
+                <cbc:PostalZone>38050</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:Name>Türkiye</cbc:Name>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cac:TaxScheme>
+                    <cbc:Name>Hacılar Malmüdürlüğü</cbc:Name>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:Contact>
+                <cbc:Telephone>03524013657</cbc:Telephone>
+                <cbc:Telefax />
+                <cbc:ElectronicMail>info@test12.com</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:DespatchSupplierParty>
+    <cac:DeliveryCustomerParty>
+        <cac:Party>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="VKN">1234567801</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>TEST KULLANICI BİR</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Beyazıt Mahallesi</cbc:StreetName>
+                <cbc:CitySubdivisionName>Kocasinan</cbc:CitySubdivisionName>
+                <cbc:CityName>Kayseri</cbc:CityName>
+                <cbc:PostalZone>38000</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:Name>Türkiye</cbc:Name>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme>
+                <cac:TaxScheme>
+                    <cbc:Name>Erciyes</cbc:Name>
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:Contact>
+                <cbc:Telephone />
+            </cac:Contact>
+        </cac:Party>
+    </cac:DeliveryCustomerParty>
+    <cac:BuyerCustomerParty>
+        <cac:Party>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="TCKN">12345678992</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PostalAddress>
+                <cbc:StreetName>odoo</cbc:StreetName>
+                <cbc:CitySubdivisionName>buffalo</cbc:CitySubdivisionName>
+                <cbc:CityName>New York</cbc:CityName>
+                <cbc:PostalZone>34580</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>US</cbc:IdentificationCode>
+                    <cbc:Name>Amerika Birleşik Devletleri</cbc:Name>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:Person>
+                <cbc:FirstName>Test</cbc:FirstName>
+                <cbc:FamilyName>Buyer</cbc:FamilyName>
+            </cac:Person>
+        </cac:Party>
+    </cac:BuyerCustomerParty>
+    <cac:SellerSupplierParty>
+        <cac:Party>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="VKN">1234567800</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>Test Seller</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>street 1</cbc:StreetName>
+                <cbc:CitySubdivisionName>amasya</cbc:CitySubdivisionName>
+                <cbc:CityName>Amasya</cbc:CityName>
+                <cbc:PostalZone>62800</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>TR</cbc:IdentificationCode>
+                    <cbc:Name>Türkiye</cbc:Name>
+                </cac:Country>
+            </cac:PostalAddress>
+        </cac:Party>
+    </cac:SellerSupplierParty>
+    <cac:Shipment>
+        <cbc:ID />
+        <cac:GoodsItem>
+            <cbc:ValueAmount currencyID="TRY">4500</cbc:ValueAmount>
+        </cac:GoodsItem>
+        <cac:ShipmentStage>
+            <cac:TransportMeans>
+                <cac:RoadTransport>
+                    <cbc:LicensePlateID schemeID="PLAKA">AED34121</cbc:LicensePlateID>
+                </cac:RoadTransport>
+            </cac:TransportMeans>
+            <cac:DriverPerson>
+                <cbc:FirstName>Test</cbc:FirstName>
+                <cbc:FamilyName>Driver</cbc:FamilyName>
+                <cbc:Title>Şoför</cbc:Title>
+                <cbc:NationalityID schemeID="TCKN">11234570890</cbc:NationalityID>
+            </cac:DriverPerson>
+            <cac:DriverPerson>
+                <cbc:FirstName>Test</cbc:FirstName>
+                <cbc:FamilyName>Driver2</cbc:FamilyName>
+                <cbc:Title>Şoför</cbc:Title>
+                <cbc:NationalityID schemeID="TCKN">22345670891</cbc:NationalityID>
+            </cac:DriverPerson>
+        </cac:ShipmentStage>
+        <cac:Delivery>
+            <cac:DeliveryAddress>
+                <cbc:StreetName>Beyazıt Mahallesi</cbc:StreetName>
+                <cbc:CitySubdivisionName>Kocasinan</cbc:CitySubdivisionName>
+                <cbc:CityName>Kayseri</cbc:CityName>
+                <cbc:PostalZone>38000</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:Name>Türkiye</cbc:Name>
+                </cac:Country>
+            </cac:DeliveryAddress>
+            <cac:Despatch>
+                <cbc:ActualDespatchDate>2025-07-29</cbc:ActualDespatchDate>
+                <cbc:ActualDespatchTime>11:30:00</cbc:ActualDespatchTime>
+            </cac:Despatch>
+        </cac:Delivery>
+        <cac:TransportHandlingUnit>
+            <cac:TransportEquipment>
+                <cbc:ID schemeID="DORSEPLAKA">PL01</cbc:ID>
+            </cac:TransportEquipment>
+            <cac:TransportEquipment>
+                <cbc:ID schemeID="DORSEPLAKA">PL02</cbc:ID>
+            </cac:TransportEquipment>
+        </cac:TransportHandlingUnit>
+    </cac:Shipment>
+    <cac:DespatchLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:DeliveredQuantity unitCode="C62">1</cbc:DeliveredQuantity>
+        <cac:OrderLineReference>
+            <cbc:LineID>1</cbc:LineID>
+        </cac:OrderLineReference>
+        <cac:Item>
+            <cbc:Name>Test Product 1</cbc:Name>
+            <cac:BuyersItemIdentification>
+                <cbc:ID>SKU-TP1</cbc:ID>
+            </cac:BuyersItemIdentification>
+            <cac:SellersItemIdentification>
+                <cbc:ID>SKU-TP1</cbc:ID>
+            </cac:SellersItemIdentification>
+        </cac:Item>
+        <cac:Shipment>
+            <cbc:ID />
+            <cac:GoodsItem>
+                <cac:InvoiceLine>
+                    <cbc:ID />
+                    <cbc:InvoicedQuantity>1</cbc:InvoicedQuantity>
+                    <cbc:LineExtensionAmount currencyID="TRY">4500</cbc:LineExtensionAmount>
+                    <cac:Item>
+                        <cbc:Name>Test Product 1</cbc:Name>
+                    </cac:Item>
+                    <cac:Price>
+                        <cbc:PriceAmount currencyID="TRY">4500</cbc:PriceAmount>
+                    </cac:Price>
+                </cac:InvoiceLine>
+            </cac:GoodsItem>
+        </cac:Shipment>
+    </cac:DespatchLine>
+    <cac:DespatchLine>
+        <cbc:ID>2</cbc:ID>
+        <cbc:DeliveredQuantity unitCode="KGM">3</cbc:DeliveredQuantity>
+        <cac:OrderLineReference>
+            <cbc:LineID>2</cbc:LineID>
+        </cac:OrderLineReference>
+        <cac:Item>
+            <cbc:Name>Test Product 2</cbc:Name>
+            <cac:BuyersItemIdentification>
+                <cbc:ID>SKU-TP2</cbc:ID>
+            </cac:BuyersItemIdentification>
+            <cac:SellersItemIdentification>
+                <cbc:ID>SKU-TP2</cbc:ID>
+            </cac:SellersItemIdentification>
+        </cac:Item>
+        <cac:Shipment>
+            <cbc:ID />
+            <cac:GoodsItem>
+                <cac:InvoiceLine>
+                    <cbc:ID />
+                    <cbc:InvoicedQuantity>3</cbc:InvoicedQuantity>
+                    <cbc:LineExtensionAmount currencyID="TRY">800</cbc:LineExtensionAmount>
+                    <cac:Item>
+                        <cbc:Name>Test Product 2</cbc:Name>
+                    </cac:Item>
+                    <cac:Price>
+                        <cbc:PriceAmount currencyID="TRY">2400</cbc:PriceAmount>
+                    </cac:Price>
+                </cac:InvoiceLine>
+            </cac:GoodsItem>
+        </cac:Shipment>
+    </cac:DespatchLine>
+    <cac:DespatchLine>
+        <cbc:ID>3</cbc:ID>
+        <cbc:DeliveredQuantity unitCode="GRM">4</cbc:DeliveredQuantity>
+        <cac:OrderLineReference>
+            <cbc:LineID>3</cbc:LineID>
+        </cac:OrderLineReference>
+        <cac:Item>
+            <cbc:Name>Product in GRM</cbc:Name>
+            <cac:BuyersItemIdentification>
+                <cbc:ID>SKU-PGRM</cbc:ID>
+            </cac:BuyersItemIdentification>
+            <cac:SellersItemIdentification>
+                <cbc:ID>SKU-PGRM</cbc:ID>
+            </cac:SellersItemIdentification>
+        </cac:Item>
+        <cac:Shipment>
+            <cbc:ID />
+            <cac:GoodsItem>
+                <cac:InvoiceLine>
+                    <cbc:ID />
+                    <cbc:InvoicedQuantity>4</cbc:InvoicedQuantity>
+                    <cbc:LineExtensionAmount currencyID="TRY">650</cbc:LineExtensionAmount>
+                    <cac:Item>
+                        <cbc:Name>Product in GRM</cbc:Name>
+                    </cac:Item>
+                    <cac:Price>
+                        <cbc:PriceAmount currencyID="TRY">2600</cbc:PriceAmount>
+                    </cac:Price>
+                </cac:InvoiceLine>
+            </cac:GoodsItem>
+        </cac:Shipment>
+    </cac:DespatchLine>
+</DespatchAdvice>
