@@ -26,6 +26,23 @@ QUnit.test('"Start a conversation" item selection opens chat', async () => {
     await contains(".o-mail-ChatWindow", { text: "Gandalf" });
 });
 
+QUnit.test('"Start a conversation" can be validated without keyboard on mobile', async () => {
+    patchUiSize({ height: 360, width: 640 });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Gandalf" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const { openDiscuss } = await start();
+    openDiscuss();
+    await click("button", { text: "Chat" });
+    await click("button", { text: "Start a conversation" });
+    await insertText("input[placeholder='Start a conversation']", "Gandalf");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await contains(".o-discuss-ChannelSelector .o_tag", { text: "Gandalf" });
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
+    await click(".o-discuss-ChannelSelector button", { text: "Start" });
+    await contains(".o-mail-ChatWindow", { text: "Gandalf" });
+});
+
 QUnit.test('"New channel" item selection opens channel (existing)', async () => {
     patchUiSize({ height: 360, width: 640 });
     const pyEnv = await startServer();

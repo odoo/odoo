@@ -24,6 +24,7 @@ export class ChannelSelector extends Component {
         this.threadService = useState(useService("mail.thread"));
         this.suggestionService = useService("mail.suggestion");
         this.orm = useService("orm");
+        this.ui = useState(useService("ui"));
         this.sequential = useSequential();
         this.state = useState({
             value: "",
@@ -224,7 +225,7 @@ export class ChannelSelector extends Component {
     }
 
     get inputPlaceholder() {
-        return this.state.selectedPartners.length > 0
+        return this.state.selectedPartners.length > 0 && !this.ui.isSmall
             ? _t("Press Enter to start")
             : this.props.category.addTitle;
     }
