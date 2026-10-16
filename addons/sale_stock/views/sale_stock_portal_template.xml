@@ -134,13 +134,13 @@
                     t-elif="order.delivery_status == 'partial'"
                     class="badge rounded-pill text-bg-info"
                 >
-                    Partially Delivered
+                    Partially Shipped
                 </span>
                 <span
                     t-elif="order.delivery_status == 'full'"
                     class="badge rounded-pill text-bg-success"
                 >
-                    Delivered
+                    Shipped
                 </span>
                 <span
                     t-else=""
