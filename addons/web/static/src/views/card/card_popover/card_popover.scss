@@ -2,4 +2,10 @@
     .o_card_record:focus-visible {
         outline: none;
     }
+    .o_card_record {
+        @media screen and (min-width: 768px) {
+            min-width: var(--Card-min-width);
+            padding: 0;
+        }
+    }
 }
