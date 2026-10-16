@@ -3,6 +3,8 @@
 import ast
 from collections import defaultdict
 
+from markupsafe import Markup
+
 from odoo import SUPERUSER_ID, Command, _, api, fields, models
 from odoo.tools import SQL, sql
 from odoo.tools.convert import convert_file
@@ -110,6 +112,23 @@ class HrJob(models.Model):
         ('yearly', 'Year'),
     ], string='Scheduled Pay', default='monthly', required=True, groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user")
     company_partner_id = fields.Many2one('res.partner', compute='_compute_company_partner_id')
+    applicant_matching_score = fields.Float(
+        string="Matching Score(%)",
+        compute="_compute_applicant_matching_score",
+        groups="hr_recruitment.group_hr_recruitment_interviewer",
+    )
+    matching_applicant_skill_ids = fields.Many2many(
+        string="Matching Skills",
+        comodel_name='hr.skill',
+        compute="_compute_applicant_matching_score",
+        groups="hr_recruitment.group_hr_recruitment_interviewer",
+    )
+    missing_applicant_skill_ids = fields.Many2many(
+        string="Missing Skills",
+        comodel_name='hr.skill',
+        compute="_compute_applicant_matching_score",
+        groups="hr_recruitment.group_hr_recruitment_interviewer",
+    )
 
     @api.depends('application_ids.date_closed')
     def _compute_no_of_hired_employee(self):
@@ -333,6 +352,53 @@ class HrJob(models.Model):
         for job in self:
             job.company_partner_id = job.company_id.partner_id or self.env.company.partner_id
 
+    @api.depends_context("active_applicant_id")
+    def _compute_applicant_matching_score(self):
+        active_applicant_id = self.env.context.get("active_applicant_id", [])
+
+        applicant = self.env["hr.applicant"].browse(active_applicant_id)
+        applicant_skill_map = {a.skill_id.id: a.level_progress for a in applicant.current_applicant_skill_ids}
+
+        for job in self:
+            if not active_applicant_id or not job.job_skill_ids:
+                job.applicant_matching_score = False
+                job.matching_applicant_skill_ids = False
+                job.missing_applicant_skill_ids = False
+                continue
+
+            job_degree = job.expected_degree.score * 100
+            job_total = job_degree
+            applicant_degree = applicant.type_id.score * 100 if job_degree > 1 else 0
+            applicant_total = applicant_degree
+            for skill in job.job_skill_ids:
+                job_total += skill.level_progress
+                applicant_total += min(applicant_skill_map.get(skill.skill_id.id, 0), skill.level_progress * 2)
+
+            job.applicant_matching_score = applicant_total / job_total * 100
+            job.matching_applicant_skill_ids = job.skill_ids.filtered(
+                lambda js: js.id in applicant_skill_map,
+            )
+            job.missing_applicant_skill_ids = job.skill_ids - job.matching_applicant_skill_ids
+
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        if self.env.context.get("show_matching_score_in_name", False):
+            for job in self:
+                if job.applicant_matching_score:
+                    name = f"{job.display_name or job.name} \t --{job.applicant_matching_score:.0f}%--"
+                    job.display_name = name.strip()
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        if self.env.context.get('show_matching_score_in_name'):
+            records = self.search_fetch(
+                domain=[('id', 'not in', self.env.context.get('active_applicant_job_ids', []))],
+                field_names=['display_name'],
+            )
+            records = records.sorted(lambda a: (a.no_of_recruitment > 0, a.applicant_matching_score), reverse=True)[:limit]
+            return [(r.id, r.display_name) for r in records]
+        return super().name_search(name, domain, operator, limit)
+
     @api.model_create_multi
     def create(self, vals_list):
         jobs = super().create(vals_list)
@@ -470,8 +536,41 @@ class HrJob(models.Model):
             },
         }
 
+    def action_search_matching_applicants(self):
+        self.ensure_one()
+        help_message_1 = self.env._("No Matching Talents")
+        help_message_2 = self.env._("We do not have any talents who meet the skill requirements for this job position in the database at the moment.")
+        action = self.env['ir.actions.actions']._for_xml_id('hr_recruitment.crm_case_categ0_act_job')
+        context = ast.literal_eval(action['context'])
+        context['matching_job_id'] = self.id
+        # This action always comes with search_default_applicant. However,
+        # we want talents to always be the default search.
+        del context['search_default_applicants']
+        context['search_default_talents'] = True
+        # Since matching_score is not stored, we use the sequence field to sort
+        talents = self.env['hr.applicant'].with_context(matching_job_id=self.id).search([
+            ('job_id', '!=', self.id),
+            ('skill_ids', 'in', self.job_skill_ids.skill_id.ids),
+        ])
+        for seq, talent in enumerate(talents.sorted('matching_score DESC')):
+            talent.sequence = seq
+        action.update({
+            'name': self.env._("Matching Applicants"),
+            'views': [
+                (self.env.ref('hr_recruitment.crm_case_tree_view_inherit_hr_recruitment_skills').id, 'list'),
+                (False, 'form'),
+            ],
+            'context': context,
+            'domain': [
+                ('job_id', '!=', self.id),
+                ('skill_ids', 'in', self.job_skill_ids.skill_id.ids),
+            ],
+            'help': Markup("<p class='o_view_nocontent_empty_folder'>%s</p><p>%s</p>") % (help_message_1, help_message_2),
+        })
+        return action
+
     def action_job_add_applicants(self):
-        return {
+        action = {
             "name": self.env._("Matching Talents"),
             "type": "ir.actions.act_window",
             "res_model": "job.add.applicants",
@@ -483,3 +582,7 @@ class HrJob(models.Model):
                 or self.env.context.get("default_job_ids"),
             },
         }
+        if len(self) == 1:
+            action["context"]["active_job_id"] = self.id
+            action["context"]["active_job_applicant_ids"] = self.application_ids.ids
+        return action

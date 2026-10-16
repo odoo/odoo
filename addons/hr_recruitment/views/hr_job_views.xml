@@ -31,6 +31,9 @@
                                     <h5 role="menuitem" class="o_kanban_card_manage_title">
                                         <span>View</span>
                                     </h5>
+                                    <div role="menuitem" name="menu_view_matching_applicants">
+                                        <a name="action_job_add_applicants" type="object" context="{'default_job_id': id}">Matching Talents</a>
+                                    </div>
                                     <div role="menuitem" name="menu_view_job_posts">
                                         <a name="%(action_hr_job_sources)d" type="action" context="{'default_job_id': id}">Trackers</a>
                                     </div>
@@ -276,6 +279,16 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
+            <header position="inside">
+                <button string="Matching Talents"
+                        name="action_job_add_applicants"
+                        type="object"
+                        groups="hr_recruitment.group_hr_recruitment_user"
+                />
+            </header>
+            <xpath expr="//group[@id='job_skills']/field[@name='current_job_skill_ids']" position="attributes">
+                <attribute name="groups">!hr.group_hr_user,!hr_recruitment.group_hr_recruitment_interviewer</attribute>
+            </xpath>
             <xpath expr="//h1" position="attributes">
                 <attribute name="class" add="d-flex align-items-center gap-2" separator=" "/>
             </xpath>
@@ -426,6 +439,12 @@
             <field name="name" position="after">
                 <field name="department_id" optional="hide"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="applicant_matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}"
+                    column_invisible="not context.get('active_applicant_id') and not context.get('active_applicant_skill_ids')"/>
+                <field name="matching_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                    column_invisible="not context.get('active_applicant_skill_ids')"/>
+                <field name="missing_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                    column_invisible="not context.get('active_applicant_skill_ids')"/>
                 <field name="open_application_count" string="Open Applications" groups="hr_recruitment.group_hr_recruitment_interviewer" optional="hide"/>
                 <field name="no_of_recruitment"/>
             </field>

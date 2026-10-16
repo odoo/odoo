@@ -383,6 +383,16 @@ class HrEmployee(models.Model):
     # by writing the computed res.users.state directly.
     user_state = fields.Selection(related='user_id.state', string="User Status", groups="hr.group_hr_user")
 
+    # skills and resume
+    resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resume lines")
+    employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills",
+        domain=[('skill_type_id.active', '=', True)])
+    current_employee_skill_ids = fields.One2many('hr.employee.skill',
+        compute='_compute_current_employee_skill_ids', readonly=False)
+    skill_ids = fields.Many2many('hr.skill', compute='_compute_skill_ids', store=True, groups="hr.group_hr_user")
+    certification_ids = fields.One2many('hr.employee.skill', compute='_compute_certification_ids', readonly=False)
+    display_certification_page = fields.Boolean(compute="_compute_display_certification_page")
+
     _barcode_uniq = models.Constraint(
         'unique (barcode)',
         'The Badge ID must be unique, this one is already assigned to another employee.',
@@ -415,6 +425,25 @@ class HrEmployee(models.Model):
                 **{k: v for k, v in version_vals.items() if k in version_fields},
             })
         return new_vals_list
+
+    @api.depends('employee_skill_ids')
+    def _compute_current_employee_skill_ids(self):
+        current_employee_skill_by_employee = self.employee_skill_ids.get_current_skills_by_employee()
+        for employee in self:
+            employee.current_employee_skill_ids = current_employee_skill_by_employee[employee.id]
+
+    @api.depends('employee_skill_ids.skill_id')
+    def _compute_skill_ids(self):
+        for employee in self:
+            employee.skill_ids = employee.employee_skill_ids.skill_id
+
+    @api.depends('employee_skill_ids')
+    def _compute_certification_ids(self):
+        for employee in self:
+            employee.certification_ids = employee.employee_skill_ids.filtered('is_certification')
+
+    def _compute_display_certification_page(self):
+        self.display_certification_page = bool(self.env['hr.skill.type'].search_count([('is_certification', '=', True)], limit=1))
 
     @api.depends('bank_account_ids.allow_out_payment')
     def _compute_is_trusted_bank_account(self):
@@ -1796,10 +1825,70 @@ class HrEmployee(models.Model):
                 current = parent_map.get(current)
         return list(in_cycle)
 
+    @api.model
+    def _pop_employee_skill_commands(self, vals):
+        """ Gather the commands written on any of the skill fields of the employee, as they all target
+        `employee_skill_ids` and must go through `hr.employee.skill._get_transformed_commands`. """
+        return vals.pop('current_employee_skill_ids', []) + vals.pop('certification_ids', []) \
+            + vals.get('employee_skill_ids', [])
+
+    def _get_current_skills_summary(self):
+        """ Snapshot of the current skills of the employees, see `_log_skill_changes`. """
+        return {
+            employee: {
+                skill.id: {
+                    'skill_id': skill.skill_id.id,
+                    'skill_name': skill.skill_id.name,
+                    'level_name': skill.skill_level_id.name,
+                    'is_certification': skill.is_certification,
+                    'label': skill._get_chatter_label(),
+                }
+                for skill in employee.current_employee_skill_ids
+            }
+            for employee in self
+        }
+
+    def _log_skill_changes(self, previous_skills_summary):
+        """ Log in the chatter of the employees the difference between the given summary of their
+        previous skills and their current ones. A regular skill whose level changed is logged as
+        a single update. """
+        # the validity of the skills is not part of the dependencies of the compute
+        self.invalidate_recordset(['current_employee_skill_ids'])
+        for employee, current_skills in self._get_current_skills_summary().items():
+            previous_skills = previous_skills_summary.get(employee, {})
+            removed_skills = {
+                skill_id: skill for skill_id, skill in previous_skills.items() if skill_id not in current_skills
+            }
+            removed_regular_skill_id_per_skill = {
+                skill['skill_id']: skill_id for skill_id, skill in removed_skills.items() if not skill['is_certification']
+            }
+            lines = []
+            for skill_id, skill in current_skills.items():
+                if skill_id in previous_skills:
+                    continue
+                previous_skill_id = not skill['is_certification'] and removed_regular_skill_id_per_skill.get(skill['skill_id'])
+                if previous_skill_id:
+                    lines.append(self.env._(
+                        "Updated: %(skill)s: %(previous_level)s → %(level)s",
+                        skill=skill['skill_name'],
+                        previous_level=removed_skills.pop(previous_skill_id)['level_name'],
+                        level=skill['level_name'],
+                    ))
+                else:
+                    lines.append(self.env._("Added: %(skill)s", skill=skill['label']))
+            lines += [self.env._("Removed: %(skill)s", skill=skill['label']) for skill in removed_skills.values()]
+            if lines:
+                employee._message_log(body=Markup("%(title)s<ul>%(lines)s</ul>") % {
+                    'title': self.env._("Skills updated"),
+                    'lines': Markup().join(Markup("<li>%s</li>") % line for line in lines),
+                })
+
     @api.model_create_multi
     def create(self, vals_list):
         vals_per_company = defaultdict(list)
         for idx, vals in enumerate(vals_list):
+            if skill_commands := self._pop_employee_skill_commands(vals):
+                vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(skill_commands, self)
             if vals.get('user_id'):
                 user = self.env['res.users'].browse(vals['user_id'])
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
@@ -1857,6 +1946,10 @@ class HrEmployee(models.Model):
         return employees
 
     def write(self, vals):
+        previous_skills_summary = {}
+        if skill_commands := self._pop_employee_skill_commands(vals):
+            previous_skills_summary = self._get_current_skills_summary()
+            vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(skill_commands, self)
         if 'work_contact_id' in vals:
             self.message_unsubscribe(self.work_contact_id.ids)
         if 'user_id' in vals:
@@ -1882,6 +1975,8 @@ class HrEmployee(models.Model):
         new_vals = vals.copy()
         version_vals = {val: new_vals.pop(val) for val in vals if val in self._fields and self._fields[val].inherited}
         res = super().write(new_vals)
+        if previous_skills_summary:
+            self._log_skill_changes(previous_skills_summary)
         if 'work_contact_id' in vals:
             account_ids = self.bank_account_ids.ids
             if account_ids:
@@ -1979,6 +2074,149 @@ class HrEmployee(models.Model):
     # ---------------------------------------------------------
     # Business Methods
     # ---------------------------------------------------------
+
+    @api.model
+    def _add_certification_activity_to_employees(self):
+        today = fields.Date.today()
+        three_months_later = today + relativedelta(months=3)
+        return_val = self.env["mail.activity"]
+
+        jobs_with_certification = self.env["hr.job"].search([("job_skill_ids.is_certification", "=", True)])
+        if not jobs_with_certification:
+            return return_val
+
+        job_skill_level_mapping = defaultdict(dict)
+
+        for job in jobs_with_certification:
+            for cert in job.job_skill_ids.filtered(lambda s: s.is_certification):
+                key = (cert.skill_id, cert.skill_level_id)
+                summary = f"{cert.skill_id.name}: {cert.skill_level_id.name}"
+                job_skill_level_mapping[job][key] = summary
+
+        if not job_skill_level_mapping:
+            return return_val
+
+        employee_domain = Domain.AND(
+            [
+                Domain("job_id", "in", jobs_with_certification.ids),
+                Domain.OR(
+                    [
+                        Domain("user_id", "!=", False),
+                        Domain("parent_id.user_id", "!=", False),
+                        Domain("job_id.recruiter_id.user_id", "!=", False),
+                    ],
+                ),
+            ],
+        )
+        employees = self.env["hr.employee"].search(employee_domain)
+        if not employees:
+            return return_val
+
+        emp_skills = self.env["hr.employee.skill"].search(
+            Domain.AND(
+                [Domain("employee_id", "in", employees.ids), Domain("is_certification", "=", True)],
+            ),
+        )
+
+        employee_cert_data = defaultdict(dict)
+        for es in emp_skills:
+            key = (es.skill_id, es.skill_level_id)
+            employee_cert_data[es.employee_id][key] = es.valid_to
+
+        existing_activities = self.env["mail.activity"].search(
+            Domain.AND(
+                [
+                    Domain("active", "=", True),
+                    Domain("activity_category", "=", "upload_file"),
+                    Domain("res_model", "=", "hr.employee"),
+                    Domain("res_id", "in", employees.ids),
+                ],
+            ),
+        )
+        existing_activity_keys = {(act.res_id, act.summary) for act in existing_activities}
+
+        for employee in employees:
+            job_id = employee.job_id
+            responsible = employee.user_id or employee.parent_id.user_id or job_id.recruiter_id.user_id
+            if job_id not in job_skill_level_mapping or not responsible:
+                continue
+
+            for skill_level_key, summary in job_skill_level_mapping[job_id].items():
+                if (employee.id, summary) in existing_activity_keys:
+                    continue
+
+                valid_to_date = employee_cert_data.get(employee, {}).get(skill_level_key)
+                if valid_to_date is not None and (valid_to_date is False or valid_to_date > three_months_later):
+                    continue
+
+                activity = employee.activity_schedule(
+                    act_type_xmlid="mail.mail_activity_data_upload_document",
+                    summary=summary or self.env._("Upload a document for a missing certification"),
+                    note="Certification missing or expiring soon",
+                    date_deadline=valid_to_date or today,
+                    user_id=responsible.id,
+                )
+                return_val += activity
+
+        return return_val
+
+    @api.model
+    def get_internal_resume_lines(self, res_id, res_model):
+        if not res_id:
+            return []
+        if res_model == 'res.users':
+            res_id = self.env['res.users'].browse(res_id).employee_id.id
+        if not self.env['hr.employee.public'].browse(res_id).has_access('read'):
+            raise AccessError(self.env._("You cannot access the resume of this employee."))
+        res = []
+        employee_versions = self.env['hr.employee'].sudo().browse(res_id).version_ids
+        if not employee_versions:
+            return res
+        interval_date_start = False
+        for i in range(len(employee_versions) - 1):
+            current_version = employee_versions[i]
+            next_version = employee_versions[i + 1]
+            current_date_start = max(current_version.date_version, current_version.contract_date_start or date.min)
+            current_date_end = min(next_version.date_version + relativedelta(days=-1), current_version.contract_date_end or date.max)
+            if not current_version.job_title:
+                if interval_date_start:
+                    previous_version = employee_versions[i - 1]
+                    res.append({
+                        'id': previous_version.id,
+                        'job_title': previous_version.job_title,
+                        'date_start': interval_date_start,
+                        'date_end': current_date_start + relativedelta(days=-1),
+                    })
+                    interval_date_start = False
+            elif current_version.job_title != next_version.job_title or current_date_end + relativedelta(days=1) != next_version.date_version:
+                res.append({
+                    'id': current_version.id,
+                    'job_title': current_version.job_title,
+                    'date_start': interval_date_start or current_date_start,
+                    'date_end': current_date_end,
+                })
+                interval_date_start = False
+            else:
+                interval_date_start = interval_date_start or current_date_start
+
+        last_version = employee_versions[-1]
+        if last_version.job_title:
+            current_date_start = max(last_version.date_version, last_version.contract_date_start or date.min)
+            res.append({
+                'id': last_version.id,
+                'job_title': last_version.job_title,
+                'date_start': interval_date_start or current_date_start,
+                'date_end': last_version.contract_date_end or False,
+            })
+        elif interval_date_start:
+            previous_version = employee_versions[-2]
+            res.append({
+                'id': previous_version.id,
+                'job_title': previous_version.job_title,
+                'date_start': interval_date_start,
+                'date_end': current_date_start + relativedelta(days=-1),
+            })
+        return res[::-1]
 
     def generate_random_barcode(self):
         for employee in self:
@@ -2366,6 +2604,7 @@ class HrEmployee(models.Model):
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.attr("resource_id", "_store_avatar_card_fields")
         res.one("user_id", "_store_avatar_card_fields")
+        res.many("employee_skill_ids", ["color", "display_name"])
         res.extend([
             "active",
             "company_id",

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_skill_view_form" model="ir.ui.view">
+        <field name="name">hr.skill.form</field>
+        <field name="model">hr.skill</field>
+        <field name="arch" type="xml">
+            <form string="Skills">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="skill_type_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="employee_skill_view_tree" model="ir.ui.view">
+        <field name="name">hr.skill.list</field>
+        <field name="model">hr.skill</field>
+        <field name="arch" type="xml">
+            <list string="Skill Levels">
+                <field name="name"/>
+                <field name="skill_type_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_skill_view_search" model="ir.ui.view">
+        <field name="name">hr.skill.view.search</field>
+        <field name="model">hr.skill</field>
+        <field name="arch" type="xml">
+            <search string="Search Skill">
+                <field name="name" string="Skill"/>
+                <field name="skill_type_id" string="Skill Type"/>
+                <separator/>
+                <group>
+                        <filter string="Skill Type" name="group_skill_type_id" domain="[]" context="{'group_by':'skill_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="employee_skill_level_view_form" model="ir.ui.view">
+        <field name="name">hr.skill.level.form</field>
+        <field name="model">hr.skill.level</field>
+        <field name="arch" type="xml">
+            <form string="Skill Level">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="level_progress" string="Progress (%)"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="employee_skill_level_view_tree" model="ir.ui.view">
+        <field name="name">hr.skill.level.list</field>
+        <field name="model">hr.skill.level</field>
+        <field name="arch" type="xml">
+            <list string="Skill Levels" class="o_skill_level_tree" editable="bottom" default_order="level_progress desc">
+                <field name="name"/>
+                <field name="level_progress" widget="progressbar" width="250"/>
+                <field name="default_level" widget="boolean_toggle_load"/>
+                <field name="technical_is_new_default" column_invisible="1"/> <!-- needs to be here to be accessible for the front-end -->
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_employee_skill_type_view_form" model="ir.ui.view">
+        <field name="name">hr.skill.type.form</field>
+        <field name="model">hr.skill.type</field>
+        <field name="arch" type="xml">
+            <form string="Skill Type">
+                <field name="id" invisible="1"/>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name" string="Skill Type"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Languages" required="True"/>
+                            <field name="active" invisible="1"/>
+                        </h1>
+                        <group name="name">
+                            <field name="color" widget="color_picker"/>
+                            <field name="is_certification" widget="boolean_toggle"/>
+                        </group>
+                    </div>
+                    <group string="Skills">
+                    </group>
+                    <field name="skill_ids" nolabel="1" context="{'default_skill_type_id': id}">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="name"/>
+                        </list>
+                    </field>
+                    <group string="Levels">
+                    </group>
+                    <field name="skill_level_ids" nolabel="1" context="{'default_skill_type_id': id}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_skill_type_view_tree" model="ir.ui.view">
+        <field name="name">hr.skill.type.list</field>
+        <field name="model">hr.skill.type</field>
+        <field name="arch" type="xml">
+            <list string="Skill Types">
+                <field name="sequence" widget="handle"/>
+                <field name="display_name" string="Skill Types"/>
+                <field name="color" widget="color_picker" optional="show"/>
+                <field name="skill_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
+                <field name="skill_level_ids" widget="many2many_tags_skills"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_skill_type_view_search" model="ir.ui.view">
+       <field name="name">hr.skill.type.search</field>
+       <field name="model">hr.skill.type</field>
+       <field name="arch" type="xml">
+           <search string="Search Skill Type">
+               <field name="name" string="Skill Types"/>
+               <field name="skill_ids"/>
+               <field name="skill_level_ids"/>
+               <field name="active" invisible="1"/>
+               <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+               <separator/>
+           </search>
+       </field>
+   </record>
+
+    <record id="hr_skill_type_action" model="ir.actions.act_window">
+        <field name="name">Skill Types</field>
+        <field name="res_model">hr.skill.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -42,6 +42,9 @@
                                 <label for="hr_presence_control_ip" class="o_light_label mb-0"/>
                             </div>
                         </setting>
+                        <setting id="skills_self_edit_setting" company_dependent="1" help="Allow employees to edit their own skills from their profile.">
+                            <field name="hr_skills_self_edit"/>
+                        </setting>
                         <setting id="presence_reporting_setting"
                             help="Define the minimum number of sent emails to be displayed as Present."
                             title="Advanced presence of employees" string="Presence Condition"
@@ -62,9 +65,6 @@
                         </setting>
                         <setting invisible="not module_hr_presence or not (hr_presence_control_ip or hr_presence_control_email) or (hr_presence_control_ip and hr_presence_control_email)"
                             help="This setting block is utilized to manage the frontend design."/>
-                        <setting help="Enrich employee profiles with skills and resumes" id="enrich_employee_setting">
-                            <field name="module_hr_skills"/>
-                        </setting>
                     </block>
                     <block title="Contract" id="contract_work_permit_expiration_notify">
                     <setting string="Contract Expiration Notice Period" id="contract_notice_period"

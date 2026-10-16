@@ -6,7 +6,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError
-from odoo.fields import Domain
+from odoo.fields import Command, Domain
 from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -140,6 +140,10 @@ class ResUsers(models.Model):
     birthday = fields.Date(**related_employee_field('birthday'), user_writeable=True)
     birthday_public_display = fields.Boolean(**related_employee_field('birthday_public_display'), user_writeable=True)
 
+    current_employee_skill_ids = fields.One2many('hr.employee.skill', compute='_compute_current_employee_skill_ids',
+        readonly=False, user_writeable=True)
+    can_edit_skills = fields.Boolean(compute='_compute_can_edit_skills')
+
     create_employee = fields.Boolean(store=False, default=False, copy=False, string="Technical field, whether to create an employee")
     create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")
 
@@ -162,6 +166,24 @@ class ResUsers(models.Model):
     def _compute_is_hr_user(self):
         is_hr_user = self.env.user.has_group('hr.group_hr_user')
         self.is_hr_user = is_hr_user
+
+    @api.depends('employee_id.current_employee_skill_ids')
+    @api.depends_context('uid')
+    def _compute_current_employee_skill_ids(self):
+        for user in self:
+            # sudo: hr.employee - the current user can read their own skills
+            employee = user.sudo().employee_id if user == self.env.user else user.employee_id
+            user.current_employee_skill_ids = employee.current_employee_skill_ids
+
+    @api.depends('employee_id.company_id.hr_skills_self_edit')
+    @api.depends_context('uid')
+    def _compute_can_edit_skills(self):
+        is_hr_user = self.env.user.has_group('hr.group_hr_user')
+        for user in self:
+            user.can_edit_skills = is_hr_user or (
+                # sudo: hr.employee - the current user can read the company of their own employee
+                user == self.env.user and user.sudo().employee_id.company_id.hr_skills_self_edit
+            )
 
     @api.depends('employee_ids')
     def _compute_employee_count(self):
@@ -211,6 +233,10 @@ class ResUsers(models.Model):
         and check access rights if employees are not allowed to update
         their own data (otherwise sudo is applied for self data).
         """
+        if skill_commands := vals.pop('current_employee_skill_ids', None):
+            self._write_employee_skills(skill_commands)
+            if not vals:
+                return True
         hr_fields = {
             field_name: field
             for field_name, field in self._fields.items()
@@ -261,6 +287,30 @@ class ResUsers(models.Model):
                 if employees:
                     employees.write(employee_values)
         return result
+
+    def _write_employee_skills(self, commands):
+        """ Write the skill commands on the employee of the user. Users without access to
+        `hr.employee` can only edit their own skills, through the record rules on `hr.employee.skill`. """
+        self.ensure_one()
+        if not self.can_edit_skills:
+            raise AccessError(_("You are not allowed to edit the skills of this employee."))
+        employee = self.employee_id
+        if employee.has_access('write'):
+            employee.write({'current_employee_skill_ids': commands})
+            return
+        # sudo: hr.employee - the current user can read their own skills
+        previous_skills_summary = employee.sudo()._get_current_skills_summary()
+        EmployeeSkill = self.env['hr.employee.skill']
+        transformed_commands = EmployeeSkill._get_transformed_commands(commands, employee)
+        # the same skill may be expired by several commands
+        to_delete = EmployeeSkill.browse({command[1] for command in transformed_commands if command[0] == Command.DELETE})
+        to_delete.unlink()
+        for command in transformed_commands:
+            if command[0] == Command.UPDATE and command[1] not in to_delete.ids:
+                EmployeeSkill.browse(command[1]).write(command[2])
+        EmployeeSkill.create([command[2] for command in transformed_commands if command[0] == Command.CREATE])
+        # sudo: hr.employee - log the changes in the chatter of the employee of the current user
+        employee.sudo()._log_skill_changes(previous_skills_summary)
 
     @api.model
     def action_get(self):
