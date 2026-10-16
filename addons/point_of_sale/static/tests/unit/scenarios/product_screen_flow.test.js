@@ -213,6 +213,9 @@ test("test_pos_snooze: snooze and unsnooze products", async () => {
     await contains('.modal .btn-primary:contains("Close")').click();
     await animationFrame();
 
+    const productBanner = document.querySelector('[data-product-id="5"] .product-snooze-banner');
+    expect(productBanner.textContent).toMatch(/Snoozed - 00:59:\d{2} left/);
+
     await Utils.clickDisplayedProduct("TEST");
     await animationFrame();
     expect(document.querySelector(".modal-body").textContent).toInclude("snoozed");

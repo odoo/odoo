@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.ProductCard">
         <article tabindex="0"
             role="button"
-            t-attf-class="{{this.props.class}} {{this.props.color ? `o_colorlist_item_color_transparent_${this.props.color}` : ''}} product-sortable product position-relative btn btn-light d-flex align-items-stretch p-0 rounded-3 text-start cursor-pointer {{ this.props.imgUrl ? 'd-flex align-items-stretch' : ''}} {{ this.props.available ? '' : 'opacity-50' }}"
+            t-attf-class="{{this.props.class}} {{this.props.color ? `o_colorlist_item_color_transparent_${this.props.color}` : ''}} product-sortable product position-relative btn btn-light d-flex align-items-stretch p-0 rounded-3 text-start cursor-pointer {{ this.props.imgUrl ? 'd-flex align-items-stretch' : ''}} {{ this.props.available ? '' : 'product-snoozed' }}"
             t-on-keypress="(event) => event.code === 'Space' ? this.props.onClick(event) : ()=>{}"
             t-on-click.stop="this.props.onClick"
             t-att-data-product-id="this.props.productId"
@@ -31,8 +31,11 @@
             <span t-if="this.props.comboExtraPrice" style="font-size: 0.65rem;" class="price-extra px-1 py-0 rounded-1 text-bg-info position-absolute top-0 end-0">
                 <t t-out="this.props.comboExtraPrice"/>
             </span>
+            <div t-if="!this.props.available and this.props.snoozeLabel" class="product-snooze-banner rounded-top position-absolute top-0 start-0 end-0 d-flex align-items-center justify-content-center gap-1 py-1 text-truncate text-white">
+                <i class="oi" data-icon="schedule" aria-hidden="true"/>
+                <span t-out="this.props.snoozeLabel"/>
+            </div>
             <t t-call-slot="quantityButtons" />
         </article>
     </t>
 </templates>
-
