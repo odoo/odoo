@@ -37,6 +37,15 @@
         }
     }
 
+    // Popover in a bottom sheet on small screens (see calendar popover hook)
+    .o_bottom_sheet_body & {
+        --CwPopover-max-width: 100%;
+        --CwPopover-width: 100%;
+        .o_card_popover_close {
+            display: none !important;
+        }
+    }
+
     .o_card {
         display: flex;
         flex-direction: column;
