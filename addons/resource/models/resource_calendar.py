@@ -92,6 +92,10 @@ class ResourceCalendar(models.Model):
         default=lambda self: self.env.company.resource_calendar_id,
         check_company=True,
         help="Reference working hours used to compute the full-time equivalent.")
+    display_hhmm_format = fields.Boolean(
+        string="Display HH:MM Format",
+        help="Display working hours in HH:MM format (e.g. 8:30) instead of hours and minutes (e.g. 8h 30m).",
+    )
 
     def _is_flexible(self):
         self.ensure_one()
