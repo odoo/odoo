@@ -113,7 +113,7 @@ class PaymentTransaction(models.Model):
         setup_intent_payload = {
             "customer": customer["id"],
             "description": self.reference,
-            "payment_method_types[]": const.PAYMENT_METHODS_MAPPING.get(
+            "allowed_payment_method_types[]": const.PAYMENT_METHODS_MAPPING.get(
                 self.payment_method_code, self.payment_method_code
             ),
         }
@@ -131,6 +131,8 @@ class PaymentTransaction(models.Model):
         """
         ppm_code = self.payment_method_id.primary_payment_method_id.code
         payment_method_type = ppm_code or self.payment_method_code
+        if payment_method_type == "unknown":  # Express checkout (Apple Pay, Google Pay)
+            payment_method_type = "card"
         payment_intent_payload = {
             "amount": payment_utils.to_minor_currency_units(
                 self.amount,
@@ -139,8 +141,8 @@ class PaymentTransaction(models.Model):
             ),
             "currency": self.currency_id.name.lower(),
             "description": self.reference,
-            "capture_method": "manual" if self.provider_id.capture_manually else "automatic",
-            "payment_method_types[]": const.PAYMENT_METHODS_MAPPING.get(
+            "capture_method": self.provider_id._stripe_get_capture_method(),
+            "allowed_payment_method_types[]": const.PAYMENT_METHODS_MAPPING.get(
                 payment_method_type, payment_method_type
             ),
             "expand[]": "payment_method",
@@ -429,10 +431,28 @@ class PaymentTransaction(models.Model):
         # Extract the Stripe objects from the payment data.
         if self.operation == "online_direct":
             customer_id = payment_data["payment_intent"]["customer"]
-            charges_data = payment_data["payment_intent"]["charges"]
-            payment_method_details = charges_data["data"][0].get("payment_method_details")
+            charge_id = payment_data["payment_intent"]["latest_charge"]
+            try:
+                charge = self._send_api_request(
+                    "GET",
+                    f"charges/{charge_id}",
+                    data={"expand[]": "payment_method_details.card.mandate"},
+                )
+            except ValidationError as e:  # The payment succeeded; only skip the tokenization
+                _logger.warning(
+                    "Unable to fetch charge %s to tokenize transaction %s: %s",
+                    charge_id,
+                    self.reference,
+                    e,
+                )
+                return {}
+            payment_method_details = charge.get("payment_method_details")
             if payment_method_details:
                 mandate = payment_method_details[payment_method_details["type"]].get("mandate")
+            if isinstance(mandate, dict):  # Only card mandates are expanded
+                # India card mandates are returned even if their registration failed.
+                # Inactive mandates can't be used for off-session payments.
+                mandate = mandate["id"] if mandate["status"] != "inactive" else None
         else:  # 'validation'
             customer_id = payment_data["setup_intent"]["customer"]
         # Another payment method (e.g., SEPA) might have been generated.
