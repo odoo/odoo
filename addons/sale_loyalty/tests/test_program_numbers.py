@@ -670,9 +670,6 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "amount_type": "percent",
             "amount": 0,
         })
-        fixed_amount_program.reward_ids.discount_line_product_id.write({
-            "taxes_id": [Command.link(self.tax_0pc_excl.id)]
-        })
         sol1 = self.env["sale.order.line"].create({
             "product_id": self.drawerBlack.id,
             "name": "Drawer Black",

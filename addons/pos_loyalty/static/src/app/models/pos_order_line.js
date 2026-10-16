@@ -146,22 +146,33 @@ patch(PosOrderline.prototype, {
         return super.isServiceFeeApplicable?.() ?? true;
     },
     /**
-     * Reward lines display the reward's description as their name (e.g. "Free Product - X").
+     * A reward line shows the description of its reward (e.g. "Free Product - X").
+     * A discount reward carries a generic product, shared by all discount rewards and named
+     * "Discount". Only the reward knows what the line stands for, thus read the reward.
      */
     get orderDisplayProductName() {
         const result = super.orderDisplayProductName;
         if (this.is_reward_line && this.reward_id) {
-            let name;
-            if (this.reward_id.reward_type === "product" && this.reward_id.multi_product) {
-                name = _t("Free Product - %s", this.product_id.display_name);
-            } else if (this.reward_id.reward_type === "discount") {
-                name = this.product_id.display_name;
-            } else {
-                name = this.reward_id.description;
-            }
+            const name =
+                this.reward_id.reward_type === "product" && this.reward_id.multi_product
+                    ? _t("Free Product - %s", this.product_id.display_name)
+                    : this.reward_id.description;
             return { ...result, name };
         }
         return result;
+    },
+    /**
+     * Name a discount or shipping reward line after its reward, not after the generic
+     * product. A free product reward keeps the name of its product, with its attributes.
+     * `getFullProductName` reads this value for the printed receipt, and the backend copies
+     * it onto the invoice line.
+     */
+    setFullProductName() {
+        if (this.is_reward_line && this.reward_id && this.reward_id.reward_type !== "product") {
+            this.full_product_name = this.reward_id.description;
+            return;
+        }
+        super.setFullProductName();
     },
     isRefund() {
         return super.isRefund(...arguments) && !this.is_reward_line;

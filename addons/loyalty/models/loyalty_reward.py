@@ -105,8 +105,9 @@ class LoyaltyReward(models.Model):
         help="This is the max amount this reward may discount, leave to 0 for no limit.",
     )
     discount_line_product_id = fields.Many2one(
-        help="Product used in the sales order to apply the discount. Each reward has its own"
-        " product for reporting purpose",
+        help="Product that carries the reward line on the sales order and in the Point of"
+        " Sale. Discount and shipping rewards share one generic product. A gift card or an"
+        " eWallet gets its own, because its taxes apply to the reward line.",
         comodel_name="product.product",
         ondelete="restrict",
         copy=False,
@@ -345,45 +346,29 @@ class LoyaltyReward(models.Model):
         if any(reward.reward_product_id.type == "combo" for reward in self):
             raise ValidationError(self.env._('A reward product can\'t be of type "combo".'))
 
-    def _create_missing_discount_line_products(self):
-        # Make sure we create the product that will be used for our discounts
-        rewards = self.filtered(lambda r: not r.discount_line_product_id)
-        products = self.env["product.product"].create(rewards._get_discount_product_values())
-        for reward, product in zip(rewards, products):
+    @api.model
+    def _get_generic_discount_line_product(self):
+        """Give back the generic product that carries discount and shipping reward lines."""
+        return self.env.ref("loyalty.discount_product", raise_if_not_found=False)
+
+    def _assign_discount_line_products(self):
+        """Give each reward the product that carries its line.
+
+        Discount and shipping rewards share one generic product: the reward names and
+        prices its own line, thus a product for each of them adds nothing. A gift card or
+        an eWallet gets its own product, because the taxes on that product apply to the
+        reward line.
+        """
+        rewards = self.filtered(lambda reward: not reward.discount_line_product_id)
+        payment_rewards = rewards.filtered(lambda reward: reward.program_id.is_payment_program)
+        products = self.env["product.product"].create(
+            payment_rewards._get_discount_product_values()
+        )
+        for reward, product in zip(payment_rewards, products):
             reward.discount_line_product_id = product
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        res._create_missing_discount_line_products()
-        return res
-
-    def write(self, vals):
-        res = super().write(vals)
-        if "description" in vals:
-            self._create_missing_discount_line_products()
-            # Keep the name of our discount product up to date
-            for reward in self:
-                reward.discount_line_product_id.write({"name": reward.description})
-        if "active" in vals:
-            if vals["active"]:
-                self.discount_line_product_id.action_unarchive()
-            else:
-                self.discount_line_product_id.action_archive()
-        return res
-
-    def update_field_translations(self, field_name, translations, source_lang=''):
-        res = super().update_field_translations(field_name, translations, source_lang=source_lang)
-        if field_name == 'description' and self.discount_line_product_id:
-            self.discount_line_product_id.update_field_translations('name', translations, source_lang=source_lang)
-        return res
-
-    def unlink(self):
-        programs = self.program_id
-        res = super().unlink()
-        # Not guaranteed to trigger the constraint
-        programs._constrains_reward_ids()
-        return res
+        (
+            rewards - payment_rewards
+        ).discount_line_product_id = self._get_generic_discount_line_product()
 
     def _get_discount_product_values(self):
         return [
@@ -398,3 +383,29 @@ class LoyaltyReward(models.Model):
             }
             for reward in self
         ]
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        rewards = super().create(vals_list)
+        rewards._assign_discount_line_products()
+        return rewards
+
+    def write(self, vals):
+        res = super().write(vals)
+        if "active" in vals:
+            # Only a payment program owns its product; the generic one is never archived
+            owned_products = self.filtered(
+                lambda reward: reward.program_id.is_payment_program
+            ).discount_line_product_id
+            if vals["active"]:
+                owned_products.action_unarchive()
+            else:
+                owned_products.action_archive()
+        return res
+
+    def unlink(self):
+        programs = self.program_id
+        res = super().unlink()
+        # Not guaranteed to trigger the constraint
+        programs._constrains_reward_ids()
+        return res
