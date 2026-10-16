@@ -2283,10 +2283,11 @@ class CrmLead(models.Model):
             result[-1][field]['lost_total'] += frequency['lost_count']
 
         # Get all won, lost and total count for all records in frequencies per team_id
+        first_stage = self.env['crm.stage'].search([('team_ids', '=', False)], order='sequence, id', limit=1)
         for team_id in result:
             result[team_id]['team_won'], \
             result[team_id]['team_lost'], \
-            result[team_id]['team_total'] = self._pls_get_won_lost_total_count(result[team_id])
+            result[team_id]['team_total'] = self._pls_get_won_lost_total_count(result[team_id], first_stage)
 
         save_team_id = None
         p_won, p_lost = 1, 1
@@ -2634,19 +2635,19 @@ class CrmLead(models.Model):
 
     # Compute Automated Probability Tools
     # -----------------------------------
-    def _pls_get_won_lost_total_count(self, team_results):
+    def _pls_get_won_lost_total_count(self, team_results, first_stage):
         """ Get all won and all lost + total :
                first stage can be used to know how many lost and won there is
                as won count are equals for all stage
                and first stage is always incremented in lost_count
         :param team_results:
+        :param first_stage: first ``crm.stage`` in sequence not linked to any team
         :return: won count, lost count and total count for all records in frequencies
         """
         # TODO : check if we need to handle specific team_id stages [for lost count] (if first stage in sequence is team_specific)
-        first_stage_id = self.env['crm.stage'].search([('team_ids', '=', False)], order='sequence, id', limit=1)
-        if str(first_stage_id.id) not in team_results.get('stage_id', []):
+        if str(first_stage.id) not in team_results.get('stage_id', []):
             return 0, 0, 0
-        stage_result = team_results['stage_id'][str(first_stage_id.id)]
+        stage_result = team_results['stage_id'][str(first_stage.id)]
         return stage_result['won'], stage_result['lost'], stage_result['won'] + stage_result['lost']
 
     # PLS: Rebuild Frequency Table Tools
