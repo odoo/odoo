@@ -159,7 +159,7 @@
                 <t t-foreach="this.paymentMethods" t-as="paymentMethod" t-key="paymentMethod.id">
                     <div>
                         <div class="d-flex paymentmethod justify-content-between align-items-center button btn btn-secondary btn-lg lh-lg flex-fill"
-                            t-att-class="{ 'opacity-50': !paymentMethod.getPaymentInterfaceStates().status }"
+                            t-att-class="{ 'opacity-50': this.isPaymentMethodBlocked(paymentMethod) }"
                             t-on-click="() => this.addNewPaymentLine(paymentMethod)"
                             role="button">
                             <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
@@ -176,7 +176,7 @@
                                 t-key="currency.id"
                                 t-on-click="() => this.addNewPaymentLine(paymentMethod, { currency })"
                                 class="currency-wise-method btn btn-secondary d-flex justify-content-between w-100 mt-1"
-                                t-att-class="{ 'opacity-50': !paymentMethod.getPaymentInterfaceStates().status }">
+                                t-att-class="{ 'opacity-50': this.isPaymentMethodBlocked(paymentMethod) }">
                                 <span class="text-muted me-1" t-out="currency.name" />
                                 <span t-out="currency.convertFormatted(this.currentOrder.totalDue)" />
                             </button>
