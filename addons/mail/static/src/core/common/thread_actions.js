@@ -89,10 +89,34 @@ threadActionsRegistry
 
 function transformAction(component, id, action) {
     return {
+        /** Makes this action the current action in its display area. */
+        activate({ keepPrevious } = {}) {
+            if (this.isPopover) {
+                this.activatePopover();
+                return;
+            }
+            this.activatePanel({ keepPrevious });
+        },
+        /** Makes this action the current panel action. */
+        activatePanel({ keepPrevious } = {}) {
+            if (component.threadActions.activeAction) {
+                if (keepPrevious) {
+                    component.threadActions.actionStack.push(component.threadActions.activeAction);
+                } else {
+                    component.threadActions.activeAction.close();
+                }
+            }
+            component.threadActions.activeAction = this;
+        },
+        /** Makes this action the current popover action. */
+        activatePopover() {
+            component.threadActions.openPopoverAction?.close();
+            component.threadActions.openPopoverActionId = this.id;
+        },
         /** Closes this action. */
         close() {
             if (this.toggle) {
-                component.threadActions.activeAction = component.threadActions.actionStack.pop();
+                this.deactivate();
             }
             action.close?.(component, this);
         },
@@ -100,7 +124,25 @@ function transformAction(component, id, action) {
         component: action.component,
         /** Condition to display the component of this action. */
         get componentCondition() {
-            return this.isActive && this.component && this.condition && !this.popover;
+            return this.isActive && this.component && this.condition && !this.isPopover;
+        },
+        /** Removes this action from its display area. */
+        deactivate() {
+            if (this.isPopover) {
+                this.deactivatePopover();
+                return;
+            }
+            this.deactivatePanel();
+        },
+        /** Removes this action from the panel area. */
+        deactivatePanel() {
+            component.threadActions.activeAction = component.threadActions.actionStack.pop();
+        },
+        /** Removes this action from the popover area. */
+        deactivatePopover() {
+            if (component.threadActions.openPopoverActionId === this.id) {
+                component.threadActions.openPopoverActionId = null;
+            }
         },
         /** Props to pass to the component of this action. */
         get componentProps() {
@@ -112,7 +154,7 @@ function transformAction(component, id, action) {
         },
         /** Condition to disable the button of this action (but still display it). */
         get disabledCondition() {
-            return action.disabledCondition?.(component);
+            return this.isDisabled;
         },
         /** Icon for the button this action. */
         get icon() {
@@ -128,12 +170,38 @@ function transformAction(component, id, action) {
         id,
         /** States whether this action is currently active. */
         get isActive() {
-            return id === component.threadActions.activeAction?.id;
+            return (
+                component.threadActions.openPopoverActionId === this.id ||
+                id === component.threadActions.activeAction?.id
+            );
+        },
+        /** States whether this action is disabled. */
+        get isDisabled() {
+            return this.isDisabledByAction || this.isDisabledByOpenPopover;
+        },
+        /** States whether this action is disabled by its own condition. */
+        get isDisabledByAction() {
+            return Boolean(
+                action.disabledCondition?.(component) && !(this.toggle && this.isActive)
+            );
+        },
+        /** States whether an open popover action temporarily disables this action. */
+        get isDisabledByOpenPopover() {
+            const openPopoverAction = component.threadActions.openPopoverAction;
+            return Boolean(openPopoverAction && openPopoverAction.id !== this.id);
+        },
+        /** States whether this action is displayed as a popover instead of a panel. */
+        get isPopover() {
+            return Boolean(this.popover);
         },
         /** Name of this action, displayed to the user. */
         get name() {
             const res = this.isActive && action.nameActive ? action.nameActive : action.name;
             return typeof res === "function" ? res(component) : res;
+        },
+        /** Callback for external popover close paths such as click-away or escape. */
+        onPopoverClose() {
+            this.deactivatePopover();
         },
         /**
          * Action to execute when this action is selected (on or off).
@@ -144,6 +212,9 @@ function transformAction(component, id, action) {
          * to the previous one.
          * */
         onSelect({ keepPrevious } = {}) {
+            if (this.disabledCondition) {
+                return;
+            }
             if (this.toggle && this.isActive) {
                 this.close();
             } else {
@@ -160,16 +231,7 @@ function transformAction(component, id, action) {
          * */
         open({ keepPrevious } = {}) {
             if (this.toggle) {
-                if (component.threadActions.activeAction) {
-                    if (keepPrevious) {
-                        component.threadActions.actionStack.push(
-                            component.threadActions.activeAction
-                        );
-                    } else {
-                        component.threadActions.activeAction.close();
-                    }
-                }
-                component.threadActions.activeAction = this;
+                this.activate({ keepPrevious });
             }
             action.open?.(component, this);
         },
@@ -255,8 +317,14 @@ export function useThreadActions() {
                 .sort((a1, a2) => a1.sequence - a2.sequence);
             return { quick, group, other };
         },
+        get openPopoverAction() {
+            return transformedActions.find(
+                (action) => action.id === this.openPopoverActionId && action.condition
+            );
+        },
         actionStack: [],
         activeAction: null,
+        openPopoverActionId: null,
     });
     return state;
 }
