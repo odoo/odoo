@@ -326,6 +326,14 @@
                                                         <field name="formula">sum</field>
                                                         <field name="subformula">editable;rounding=2</field>
                                                     </record>
+                                                    <!-- "VI. POREZNA OBVEZA U RAZDOBLJU" = "VI. Tax liability for the period" - the final net VAT
+                                                    amount for the period (positive = payable, negative = credit). No English name exists in
+                                                    this report. -->
+                                                    <record id="account_tax_report_line_porezna_closing_amount" model="account.report.expression">
+                                                        <field name="label">_closing_amount</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">VI_POREZNA_OBVEZA_U_RAZDOBLJU.balance</field>
+                                                    </record>
                                                 </field>
                                             </record>
                                             <record id="account_tax_report_line_oporezive_isporuke" model="account.report.line">

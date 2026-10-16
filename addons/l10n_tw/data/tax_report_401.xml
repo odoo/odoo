@@ -657,6 +657,12 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TW_401_101.tax - TW_401_110.balance</field>
                             </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_111_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_101.tax - TW_401_110.balance</field>
+                                <field name="subformula">if_below(TWD(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_tw_tax_report_401_tw_401_112" model="account.report.line">
@@ -716,6 +722,11 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TW_401_112.balance - TW_401_114.balance</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_401_tw_401_115_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_401_115.balance</field>
                             </record>
                         </field>
                     </record>
