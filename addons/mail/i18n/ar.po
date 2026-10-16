@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:36+0000\n"
-"PO-Revision-Date: 2026-08-18 08:20+0000\n"
+"PO-Revision-Date: 2026-10-12 11:08+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-2/mail/"
 "ar/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -470,14 +470,12 @@ msgstr "&amp;nbsp;&amp;nbsp;"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
-#, fuzzy
 msgid "(Keep formatting)"
 msgstr "(الاحتفاظ بالتنسيق)"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
-#, fuzzy
 msgid "(Remove formatting)"
 msgstr "(إزالة التنسيق)"
 
@@ -1402,6 +1400,10 @@ msgid ""
 "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
 "please replace it here with a Klipy GIF API key"
 msgstr ""
+"أضف مفتاح واجهة برمجة تطبيقات GIF من Klipy لتمكين دعم صور GIF. https://"
+"docs.klipy.com/getting-started\n"
+"إذا كنت تستخدم مفتاح واجهة برمجة تطبيقات GIF من Tenor (سيتم إيقاف الخدمة في "
+"30 يونيو 2026)، فيرجى استبداله هنا بمفتاح واجهة برمجة تطبيقات GIF من Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -2476,7 +2478,6 @@ msgstr "المتصفح"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.js:0
-#, fuzzy
 msgid "Browser Default"
 msgstr "الإعدادات الافتراضية للمتصفح"
 
@@ -3434,9 +3435,8 @@ msgstr "المحتويات"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
-#, fuzzy
 msgid "Continue with Full Composer?"
-msgstr "هل ترغب في المتابعة باستخدام أداة الإنشاء الكاملة؟ "
+msgstr "هل ترغب في المتابعة باستخدام أداة الإنشاء الكاملة؟"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_tree
@@ -5520,7 +5520,6 @@ msgstr "البريد الإلكتروني المنسق"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
-#, fuzzy
 msgid "Formatting can only be restored in Full Composer."
 msgstr "لا يمكن استعادة التنسيق إلا في أداة الإنشاء الكاملة."
 
@@ -6999,7 +6998,7 @@ msgstr "مع تحيات"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Klipy API key"
-msgstr ""
+msgstr "مفتاح الواجهة البرمجية لـ Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -7517,7 +7516,7 @@ msgstr "إعادة تعيين قالب البريد الإلكتروني"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "قالب البريد الإلكتروني: '%(name)s' (المعرف: %(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -7696,7 +7695,7 @@ msgstr "تم تعيينه كـ \"غير مقروء\""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "قالب المراسلات الجماعية: '%(name)s' (المُعرِّف: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -8475,7 +8474,7 @@ msgstr "لا سجل لرسائل سابقة"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "No language detected in context"
-msgstr ""
+msgstr "تعذر التعرف على اللغة في السياق"
 
 #. module: mail
 #. odoo-javascript
@@ -9632,7 +9631,6 @@ msgstr "هل تريد حذف هذه المحادثة نهائياً؟"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.js:0
-#, fuzzy
 msgid "Permission Needed"
 msgstr "بحاجة إلى إذن"
 
@@ -11057,7 +11055,7 @@ msgstr "البحث في خوادم البريد الوارد"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Search Klipy"
-msgstr ""
+msgstr "البحث في Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -12247,7 +12245,7 @@ msgstr "يتطلب إنشاء القالب من الملحن نموذجًا صا
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Template name not identified"
-msgstr ""
+msgstr "لم يتم تحديد اسم القالب"
 
 #. module: mail
 #. odoo-python
@@ -13486,13 +13484,13 @@ msgstr "%(record_model_name)s بلا اسم (%(record_id)s)"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "قالب بريد إلكتروني بدون اسم"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "بريد غير مسمى"
 
 #. module: mail
 #. odoo-javascript
@@ -14581,7 +14579,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "You cannot assign an empty domain name."
-msgstr ""
+msgstr "لا يمكنك تعيين اسم نطاق فارغ."
 
 #. module: mail
 #. odoo-python
@@ -14932,7 +14930,7 @@ msgstr "قام بإنشاء هذه القناة."
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
 msgid "d"
-msgstr ""
+msgstr "d"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -15500,7 +15498,7 @@ msgstr "“%(member_name)s” في “%(channel_name)s”"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
-msgstr ""
+msgstr "“%s”"
 
 #. module: mail
 #. odoo-python
