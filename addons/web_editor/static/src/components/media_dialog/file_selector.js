@@ -111,8 +111,8 @@ export class FileSelectorControlPanel extends Component {
         }
     }
 
-    onUrlInput(ev) {
-        const { isValidUrl, isValidFileFormat } = this.props.validateUrl(ev.target.value);
+    async onUrlInput(ev) {
+        const { isValidUrl, isValidFileFormat } = await this.props.validateUrl(ev.target.value);
         this.state.isValidFileFormat = isValidFileFormat;
         this.state.isValidUrl = isValidUrl;
     }
