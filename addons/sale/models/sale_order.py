@@ -5,6 +5,7 @@ import json
 import math
 from datetime import timedelta
 from itertools import groupby
+from uuid import uuid4
 
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -2720,6 +2721,21 @@ class SaleOrder(models.Model):
 
     def _has_sections(self) -> bool:
         return True
+
+    def _get_duplicated_section_lines_vals(self, section_lines, new_section_sequence):
+        vals_list = super()._get_duplicated_section_lines_vals(section_lines, new_section_sequence)
+        if not any(
+            line.virtual_id or line.linked_virtual_id or line.linked_line_id
+            for line in section_lines
+        ):
+            return vals_list
+        # Relink copied linked lines (e.g. combo items, event additional products) to their copied
+        # parent line, otherwise they would match both the original and the copied parent lines.
+        new_virtual_ids = {line: str(uuid4()) for line in section_lines}
+        for line, vals in zip(section_lines, vals_list):
+            vals["virtual_id"] = new_virtual_ids[line]
+            vals["linked_virtual_id"] = new_virtual_ids.get(line._get_linked_line(), False)
+        return vals_list
 
     # === Product Documents === #
 
