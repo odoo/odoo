@@ -121,7 +121,7 @@ class HrVersion(models.Model):
 
     def _get_leaves(self, extra_domain=None):
         domain = [
-            ('state', '!=', 'refuse'),
+            ('state', 'not in', ['refuse', 'cancel']),
             ('employee_id', 'in', self.mapped('employee_id.id')),
             ('date_from', '<=', max(end or date.max for end in self.sudo().mapped('contract_date_end'))),
             ('date_to', '>=', min(self.sudo().mapped('contract_date_start'))),
