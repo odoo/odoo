@@ -1,5 +1,6 @@
 import {
     SIZES,
+    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -8,7 +9,16 @@ import {
     patchUiSize,
     start,
     startServer,
+<<<<<<< 408f4749a95d0575a1a1b7621a964b5447484773
+||||||| d349c43cd8fbcf3bf3e245e26eac914a9f851481
+    triggerHotkey,
+=======
+    step,
+    triggerEvents,
+    triggerHotkey,
+>>>>>>> 4f338e606238b6e675ea99b02aa132ba1002f59f
 } from "@mail/../tests/mail_test_helpers";
+<<<<<<< 408f4749a95d0575a1a1b7621a964b5447484773
 import { describe, disableAnimations, expect, mockPermission, mockTouch, test } from "@odoo/hoot";
 import {
     Command,
@@ -19,6 +29,15 @@ import {
     swipeRight,
     withUser,
 } from "@web/../tests/web_test_helpers";
+||||||| d349c43cd8fbcf3bf3e245e26eac914a9f851481
+import { describe, expect, mockPermission, test } from "@odoo/hoot";
+import { disableAnimations } from "@odoo/hoot-mock";
+import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+=======
+import { describe, expect, mockPermission, test } from "@odoo/hoot";
+import { disableAnimations } from "@odoo/hoot-mock";
+import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+>>>>>>> 4f338e606238b6e675ea99b02aa132ba1002f59f
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -42,7 +61,39 @@ test("can make DM chat in mobile", async () => {
     await contains(".o-mail-ChatWindow", { text: "Gandalf" });
 });
 
+<<<<<<< 408f4749a95d0575a1a1b7621a964b5447484773
 test("can search channel in mobile", async () => {
+||||||| d349c43cd8fbcf3bf3e245e26eac914a9f851481
+test('"New channel" item selection opens channel (existing)', async () => {
+=======
+test('"Start a conversation" can be validated without keyboard on mobile', async () => {
+    patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Gandalf" },
+        { name: "Legolas" },
+    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
+    onRpc("discuss.channel", "create_group", ({ method }) => step(method));
+    await start();
+    await openDiscuss();
+    await contains("button.active:text('Inbox')");
+    await click("button:text('Chat')");
+    await click("button:text('Start a conversation')");
+    await insertText("input[placeholder='Start a conversation']", "Gandalf");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await contains(".o-discuss-ChannelSelector .o_tag:text('Gandalf')");
+    await insertText("input[placeholder='Start a conversation']", "Legolas");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await contains(".o-discuss-ChannelSelector .o_tag:text('Legolas')");
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
+    await triggerEvents(".o-discuss-ChannelSelector button:text('Start')", ["click", "click"]);
+    await contains(".o-mail-ChatWindow");
+    await assertSteps(["create_group"]);
+});
+
+test('"New channel" item selection opens channel (existing)', async () => {
+>>>>>>> 4f338e606238b6e675ea99b02aa132ba1002f59f
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Gryffindors" });
