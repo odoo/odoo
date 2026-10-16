@@ -126,3 +126,11 @@ class AccountMove(models.Model):
             if not float_is_zero(amount_currency, precision_rounding=from_currency.rounding):
                 return abs(first_product_line.balance / amount_currency)
         return 1.0
+
+    def _get_l10n_eg_eta_document_type(self):
+        self.ensure_one()
+        return {
+            'out_invoice': 'd' if self._fields.get('debit_origin_id') and self.debit_origin_id else 'i',
+            'out_refund': 'c',
+            'in_refund': 'd',
+        }.get(self.move_type, '')
