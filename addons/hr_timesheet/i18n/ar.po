@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-07-30 13:01+0000\n"
+"PO-Revision-Date: 2026-10-12 15:33+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_timesheet/ar/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -72,13 +72,13 @@ msgstr "%(project_name)s (%(days)sd)"
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "%(project_name)s (%(sign)s%(hours)sh%(minutes)s)"
-msgstr ""
+msgstr "%(project_name)s (%(sign)s%(hours)sساعة/ساعات %(minutes)s دقيقة/دقائق)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "%(project_name)s (%(sign)s%(hours)sh)"
-msgstr ""
+msgstr "%(project_name)s (%(sign)s%(hours)s ساعة/ساعات)"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -127,6 +127,17 @@ msgid ""
 "text-danger\" title=\"Over Due\" invisible=\"not stat_success_rate or "
 "stat_success_rate &lt;= 100\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-clock-o\" title=\"الجداول الزمنية\" "
+"invisible=\"stat_success_rate\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-clock-o "
+"text-success\" title=\"عند الاستحقاق\" invisible=\"not stat_success_rate or "
+"stat_success_rate &gt;= 80\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-clock-o "
+"text-warning\" title=\"تحذير\" invisible=\"not stat_success_rate or "
+"stat_success_rate &gt; 100 or stat_success_rate &lt; 80\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-clock-o "
+"text-danger\" title=\"متأخر\" invisible=\"not stat_success_rate or "
+"stat_success_rate &lt;= 100\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -301,7 +312,7 @@ msgstr "اتصل بالعميل وناقش العميل"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
 msgid "Choose an employee to create their timesheet."
-msgstr ""
+msgstr "اختر موظفًا لإنشاء الجدول الزمني."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
@@ -703,7 +714,7 @@ msgstr "الشريك"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line_calendar_employee
 msgid "Personal Filters on Employees for the Calendar view"
-msgstr ""
+msgstr "الفلاتر الشخصية للموظفين في عرض التقويم"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -1257,7 +1268,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets successfully created"
-msgstr ""
+msgstr "تم إنشاء الجداول الزمنية بنجاح"
 
 #. module: hr_timesheet
 #. odoo-python

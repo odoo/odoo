@@ -41,7 +41,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:36+0000\n"
-"PO-Revision-Date: 2026-10-02 14:17+0000\n"
+"PO-Revision-Date: 2026-10-14 09:10+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/sv/>\n"
@@ -787,6 +787,72 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-if=\"object.partner_id.name\">\n"
+"                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>,\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Här är din\n"
+"        <t t-if=\"object.name\">\n"
+"            faktura <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            faktura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (med referensnummer: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
+"        </t>\n"
+"        med totalbeloppet <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$143 "
+"750,00</span>\n"
+"        från <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Fakturan är redan betald.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Vänligen utfärda betalningen så snart som möjligt.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                Vänligen ange följande betalningsreferens: <strong t-"
+"out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    vid betalning till kontot <strong t-"
+"out=\"object.partner_bank_id.account_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            OBS: du kan granska dina tidrapporter <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">från portalen.</"
+"a>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Vänligen kontakta oss vid eventuella frågor eller funderingar.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.invoice_user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_self_billing_invoice
@@ -3562,7 +3628,7 @@ msgstr "Lägg till..."
 #: model:ir.model.fields,field_description:account.field_res_partner__additional_identifiers
 #: model:ir.model.fields,field_description:account.field_res_users__additional_identifiers
 msgid "Additional Identifiers"
-msgstr ""
+msgstr "Ytterligare identifierare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -4445,13 +4511,13 @@ msgstr "augusti"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Australian Company Number."
-msgstr ""
+msgstr "Australiensiskt organisationsnummer."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Austrian company registry number (UID)."
-msgstr ""
+msgstr "Österrikiskt organisationsnummer (UID)."
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_auto_insurance
@@ -4579,7 +4645,7 @@ msgstr "Tillgänglighet"
 #: model:ir.model.fields,field_description:account.field_res_partner__available_additional_identifiers_metadata
 #: model:ir.model.fields,field_description:account.field_res_users__available_additional_identifiers_metadata
 msgid "Available Additional Identifiers Metadata"
-msgstr ""
+msgstr "Metadata för övriga tillgängliga identifierare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_invoice_template_pdf_report_ids
@@ -4627,7 +4693,7 @@ msgstr "Snittpris"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "BCE/KBO"
-msgstr ""
+msgstr "BCE/KBO"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
@@ -5082,13 +5148,13 @@ msgstr "Före nästa betalningsdag"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Belgian Crossroads Bank for Enterprises number."
-msgstr ""
+msgstr "Belgiskt organisationsnummer från Crossroads Bank for Enterprises."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Belgian national identification number."
-msgstr ""
+msgstr "Belgiskt nationellt ID-nummer."
 
 #. module: account
 #. odoo-python
@@ -5223,13 +5289,13 @@ msgstr "Förgrening:"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Brazilian company identification number. 14 digits."
-msgstr ""
+msgstr "Brasilianskt organisationsnummer. 14 siffror."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Brazilian individual identification number."
-msgstr ""
+msgstr "Brasilianskt individuellt ID-nummer."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__include_initial_balance
@@ -5245,7 +5311,7 @@ msgstr "Bläddra bland tillgängliga länder."
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Brønnøysund nr"
-msgstr ""
+msgstr "Brønnøysund nr"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_budget
@@ -5266,13 +5332,13 @@ msgstr "Byggnader"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Business ID"
-msgstr ""
+msgstr "Organisationsnummer"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Business ID (Y-tunnus)."
-msgstr ""
+msgstr "Organisationsnummer (Y-tunnus)."
 
 #. module: account
 #: model:ir.model,name:account.model_account_document_import_mixin
@@ -5350,7 +5416,6 @@ msgstr "FRAKTKOSTNADER BETALDA TILL"
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
-#, fuzzy
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
 msgstr ""
 "CHE-123.456.788 TVA eller CHE-123.456.788 MWST eller CHE-123.456.788 IVA"
@@ -5382,7 +5447,7 @@ msgstr "KOSTNADER, FÖRSÄKRINGAR OCH FRAKT"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "CPF"
-msgstr ""
+msgstr "CPF"
 
 #. module: account
 #. odoo-python
@@ -5394,7 +5459,7 @@ msgstr "CUST"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "CVR"
-msgstr ""
+msgstr "CVR"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__can_be_proposed
@@ -5889,7 +5954,7 @@ msgstr "Välj en standard momssats för dina produkter."
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Citizen Identification"
-msgstr ""
+msgstr "Personnummer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__city
@@ -6162,7 +6227,7 @@ msgstr "Landskod för företagets skatterättsliga hemvist"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Company Registry"
-msgstr ""
+msgstr "Företagsregister"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -6189,7 +6254,7 @@ msgstr "Företaget som är kopplat till journalen"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Company registry"
-msgstr ""
+msgstr "Företagsregister"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__company_id
@@ -6959,7 +7024,7 @@ msgstr "Specifik kreditgräns för denna partner."
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Croatian company registry number."
-msgstr ""
+msgstr "Kroatiska organisationsnummer."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -7304,7 +7369,6 @@ msgstr "D"
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
-#, fuzzy
 msgid "DE123456788 or 12/345/67890"
 msgstr "DE123456788 eller 12/345/67890"
 
@@ -7327,19 +7391,19 @@ msgstr "LEVERERAT - TULL BETALD"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "DUNS"
-msgstr ""
+msgstr "DUNS"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Danish Central Business Register number."
-msgstr ""
+msgstr "Danskt centraliserat organisationsnummer."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Danish tax entity number (SE-nummer)."
-msgstr ""
+msgstr "Danskt SE-nummer."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
@@ -8510,7 +8574,7 @@ msgstr "Avgifter och prenumerationer"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Dun & Bradstreet unique 9-digit business identifier."
-msgstr ""
+msgstr "Unikt 9-siffrigt organisationsnummer hos Dun & Bradstreet."
 
 #. module: account
 #. odoo-javascript
@@ -8562,13 +8626,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Dutch Chamber of Commerce registration number."
-msgstr ""
+msgstr "Nederländskt organisationsnummer i Chamber of Commerce."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Dutch government Organisation Identification Number."
-msgstr ""
+msgstr "Nederländskt statligt organisationsnummer."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
@@ -8579,7 +8643,7 @@ msgstr "Dynamisk domän som används för den tagg som kan anges på en skatt"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "EAN/GLN"
-msgstr ""
+msgstr "EAN/GLN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_tree
@@ -8703,6 +8767,7 @@ msgstr "Digital fakturering"
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Electronic address for French e-invoicing platforms (PDP/PPF)."
 msgstr ""
+"Digital adress för Franska plattformar för digital fakturering (PDP/PPF)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -8997,7 +9062,7 @@ msgstr "Fel!"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Estonian business registry code."
-msgstr ""
+msgstr "Estonska organisationsnummer."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__euro
@@ -9751,34 +9816,32 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
-#, fuzzy
 msgid "France FRCTC Electronic Address"
-msgstr "Frankrike FRCTC Elektronisk adress"
+msgstr "Fransk FRCTC digital adress"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
-#, fuzzy
 msgid "France Register of legal persons"
-msgstr "Frankrike Register över juridiska personer"
+msgstr "Franskt register över juridiska personer"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "French 14-digit establishment identification number (SIREN + NIC)."
-msgstr ""
+msgstr "Franskt 14-siffrigt organisationsnummer (SIREN + NIC)."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "French 9-digit business identification number."
-msgstr ""
+msgstr "Franskt 9-siffrigt organisationsnummer."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "French national identification number (NIR)."
-msgstr ""
+msgstr "Franskt nationellt ID-nummer (NIR)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -9921,7 +9984,6 @@ msgstr "Daterad i framtiden"
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
-#, fuzzy
 msgid "GB123456782 or XI123456782"
 msgstr "GB123456782 eller XI123456782"
 
@@ -9929,7 +9991,7 @@ msgstr "GB123456782 eller XI123456782"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "GEBA"
-msgstr ""
+msgstr "GEBA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__global_location_number
@@ -9940,7 +10002,6 @@ msgstr "Lokaliseringsnummer"
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
-#, fuzzy
 msgid "GS1 identification keys"
 msgstr "GS1-identifieringsnycklar"
 
@@ -9948,7 +10009,7 @@ msgstr "GS1-identifieringsnycklar"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "GS1 identification keys for supply chain management."
-msgstr ""
+msgstr "GS1-identifieringsnycklar för hantering av leveranskedjan."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10008,7 +10069,7 @@ msgstr "Allmänn skatterapport"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "German Electronic Business Address."
-msgstr ""
+msgstr "Tysk digital företagsadress."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10031,6 +10092,8 @@ msgstr "Lokaliseringsnummer (GLN)"
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Global Location Number, used to identify parties and locations."
 msgstr ""
+"Lokaliseringsnummer (GLN), som används för att identifiera parter och "
+"platser."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__fiscalyear_lock_date
@@ -10369,7 +10432,7 @@ msgstr "Hur den totala momssatsen beräknas i ordrar och fakturor"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Hungarian company registry number."
-msgstr ""
+msgstr "Ungerskt organisationsnummer."
 
 #. module: account
 #. odoo-python
@@ -10383,7 +10446,7 @@ msgstr "IBAN"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "ICE"
-msgstr ""
+msgstr "ICE"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -10480,7 +10543,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "IIN"
-msgstr ""
+msgstr "IIN"
 
 #. module: account
 #. odoo-python
@@ -10512,7 +10575,7 @@ msgstr "INV001"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "IVA"
-msgstr ""
+msgstr "IVA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_exception_icon
@@ -11197,7 +11260,7 @@ msgstr "Intern länk"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "International Bank Account Number, used as an EDI identifier."
-msgstr ""
+msgstr "Internationella bankkontonummer, som används som en EDI-identifierare."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -11256,7 +11319,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Invalid identifier: %(identifier)s.%(example)s"
-msgstr ""
+msgstr "Ogiltig identifierare: %(identifier)s.%(example)s"
 
 #. module: account
 #. odoo-python
@@ -11882,7 +11945,7 @@ msgstr "januari"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Japanese corporate number (Specified Subject to Tax)."
-msgstr ""
+msgstr "Japanskt bolagsnummer (som anger skatteplikt)."
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal
@@ -12140,7 +12203,7 @@ msgstr "KPI-beräkning"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "KVK"
-msgstr ""
+msgstr "KVK"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -12190,9 +12253,8 @@ msgstr "Totala intäkter för KPI-konto"
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
-#, fuzzy
 msgid "LEI"
-msgstr "LEI (Global identifieringskod)"
+msgstr "LEI"
 
 #. module: account
 #. odoo-python
@@ -12388,7 +12450,7 @@ msgstr "Försenade aktiviteter"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Latvian unified registration number."
-msgstr ""
+msgstr "Lettiskt enhetligt organisationsnummer."
 
 #. module: account
 #. odoo-python
@@ -12442,9 +12504,8 @@ msgstr "Juridisk"
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
-#, fuzzy
 msgid "Legal Entity Identifier"
-msgstr "Global identifieringskod (LEI)"
+msgstr "Global identifieringskod"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_legal_notes
@@ -12463,7 +12524,7 @@ msgstr "Juridiska noteringar som måste skrivas ut på fakturorna."
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Leitweg-ID"
-msgstr ""
+msgstr "Leitweg-ID"
 
 #. module: account
 #. odoo-python
@@ -12581,7 +12642,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Lithuanian legal entity code (JAK)."
-msgstr ""
+msgstr "Litauskt juridiskt enhetsnummer (JAK)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__load_more_limit
@@ -12696,7 +12757,7 @@ msgstr "Aktivt konto för förluster från växelskillnader"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Luxembourg business registry number."
-msgstr ""
+msgstr "Luxemburgiskt organisationsnummer."
 
 #. module: account
 #. odoo-python
@@ -12761,7 +12822,7 @@ msgstr "Skapa periodiseringsposter"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Malaysian company registration number."
-msgstr ""
+msgstr "Malaysiska organisationsnummer."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_management_menu
@@ -13241,6 +13302,8 @@ msgstr "Ökad precision angående produktpriser"
 msgid ""
 "Moroccan joint business identifier (Identifiant Commun de l'Entreprise)."
 msgstr ""
+"Marockanskt gemensamt ID-nummer för företag (Identifiant Commun de "
+"l'Entreprise)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
@@ -13344,7 +13407,7 @@ msgstr "Mina fakturor"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "NZBN"
-msgstr ""
+msgstr "NZBN"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_autopost_bills_wizard__partner_name
@@ -13482,7 +13545,7 @@ msgstr "Nya värden"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "New Zealand Business Number."
-msgstr ""
+msgstr "Nya zeeländska organisationsnummer."
 
 #. module: account
 #: model:mail.template,name:account.mail_template_einvoice_notification
@@ -13720,6 +13783,7 @@ msgstr "Normal gäldenär"
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Norwegian Register of Legal Entities (Brønnøysund Register Center)"
 msgstr ""
+"Norskt register över juridiska enheter (Brønnøysund registreringscenter)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__not_contains
@@ -13922,7 +13986,7 @@ msgstr "Numeriskt värde"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "OIN"
-msgstr ""
+msgstr "OIN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15186,7 +15250,7 @@ msgstr "Periodiska avskrivningskostnader för fordonstillgångar."
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Peruvian unique taxpayer registry number (RUC)."
-msgstr ""
+msgstr "Peruanskt registreringsnummer för enskilda skattebetalare (RUC)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__phishing_warnings
@@ -15862,7 +15926,7 @@ msgstr "FoU-utgifter"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "RO1234567897 or 8001011234567 or 9000123456789"
-msgstr ""
+msgstr "RO1234567897 eller 8001011234567 eller 9000123456789"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__rating_ids
@@ -16123,7 +16187,7 @@ msgstr "Registrera en betalning"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Registrikood"
-msgstr ""
+msgstr "Registrikood"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16625,7 +16689,7 @@ msgstr "Avrundningsstrategi"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Routing ID for invoicing German public authorities."
-msgstr ""
+msgstr "Routing-ID för fakturering till tyska offentliga myndigheter."
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -16641,7 +16705,7 @@ msgstr "Löpande saldo"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "SE"
-msgstr ""
+msgstr "SE"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_iso20022
@@ -16657,13 +16721,13 @@ msgstr "Direktbetalningar med SEPA (SDD)"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "SIREN"
-msgstr ""
+msgstr "SIREN"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "SIRET"
-msgstr ""
+msgstr "SIRET"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_sms_error
@@ -16688,7 +16752,7 @@ msgstr "SO123"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "SST"
-msgstr ""
+msgstr "SST"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17627,13 +17691,13 @@ msgstr "Visa journal i dashboard"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Singapore Unique Entity Number."
-msgstr ""
+msgstr "Singaporeanskt unikt enhetsnummer."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Slovak company identification number (IČO)."
-msgstr ""
+msgstr "Slovakiskt organisationsnummer (IČO)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
@@ -18015,13 +18079,13 @@ msgstr "Aktivt interimskonto"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Swedish organization number (Organisationsnummer)."
-msgstr ""
+msgstr "Svenskt organisationsnummer."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "Swiss company identification number (UIDB)."
-msgstr ""
+msgstr "Schweiziskt organisationsnummer (UIDB)."
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
@@ -20913,13 +20977,13 @@ msgstr "Typ av undantagsaktivitet som har registrerats."
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "UEN"
-msgstr ""
+msgstr "UEN"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "UIDB"
-msgstr ""
+msgstr "UIDB"
 
 #. module: account
 #. odoo-python
@@ -21825,10 +21889,8 @@ msgstr "XML-format"
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
-#, fuzzy
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
-msgstr ""
-"XXXXXXXXX [9 siffror] och den bör respektera Luhn-algoritmens kontrollsumma"
+msgstr "XXXXXXXXX [9 siffror] och den bör följa Luhn-algoritmens kontrollsumma"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
@@ -22594,8 +22656,8 @@ msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
 msgstr ""
-"Det är inte möjligt att använda den här guiden med verifikationer som "
-"tillhör olika företag."
+"Det är inte möjligt att använda den här verktygsguiden med verifikationer "
+"som tillhör olika företag."
 
 #. module: account
 #. odoo-python
