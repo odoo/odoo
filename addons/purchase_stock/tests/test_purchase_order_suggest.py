@@ -8,7 +8,6 @@ from odoo.tests import tagged, freeze_time
 from odoo.tests.common import HttpCase
 
 
-@freeze_time("2021-01-14 09:12:15")
 @tagged('post_install', '-at_install')
 class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
 
@@ -101,6 +100,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             {'suggest_days': 12, 'suggest_based_on': 'last_year_m_plus_1', 'suggest_percent': 42}
         ])
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_purchase_order_suggest_quantities(self):
         """ Checks the suggest wizard adds right products with right quantities.
         Also checks some values, like the products' quantity demand or the
@@ -304,6 +304,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             {'product_id': product_4.id, 'product_qty': 3},
         ])
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_purchase_order_suggest_quantities_for_consu(self):
         """ Checks the suggest wizard works also with consumable products."""
         today = fields.Datetime.now()
@@ -378,6 +379,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             {'product_id': consu.id, 'product_qty': 25},
         ])
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_purchase_order_suggest_quantities_deduce_forecast_quantity(self):
         """ Ensures that when the forecast quantity is deduced from the suggested quantity"""
         today = fields.Datetime.now()
@@ -466,6 +468,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             {'product_id': product_ad.id, 'product_qty': 1},
         ])
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_purchase_order_suggest_quantities_multiwarehouse(self):
         """ Ensure the product's qty demand is correctly computed for the right warehouse."""
         date = fields.Datetime.now() - relativedelta(days=15)
@@ -575,6 +578,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         self.assertEstimatedPrice(po_2, 165, based_on='actual_demand', warehouse=self.warehouse)
         self.assertEstimatedPrice(po_2, 220, based_on='actual_demand', warehouse=self.other_warehouse)
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_purchase_order_suggest_pricelist_selection(self):
         """ Pricelist selection for suggestion total price estimation
             should follow:
@@ -612,6 +616,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         po_2 = self.env['purchase.order'].create({'partner_id': partner_2.id})
         self.assertEstimatedPrice(po_2, 20, based_on='one_week', days=7)  # No pricelist --> should use standard price
 
+    @freeze_time("2021-01-14 09:12:15")
     def test_purchase_order_suggest_search_panel_ux(self):
         """ Tests the purchase catalog suggest component, in particular:
         - Suggest component: Hidding, Estimated price, Add all, Changing warehouse, Saving defaults
