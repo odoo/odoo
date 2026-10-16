@@ -12,10 +12,12 @@ import {
     triggerHotkey,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
-import { Composer } from "@mail/core/common/composer";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { Thread } from "@mail/core/common/thread_model";
-import { beforeEach, describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
+import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, getService, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -24,15 +26,6 @@ import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
 defineMailModels();
-
-beforeEach(() => {
-    // Simulate real user interactions
-    patch(Composer.prototype, {
-        isEventTrusted() {
-            return true;
-        },
-    });
-});
 
 test('do not send typing notification on typing "/" command', async () => {
     const pyEnv = await startServer();
@@ -45,7 +38,7 @@ test('do not send typing notification on typing "/" command', async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/");
+    await insertTextInComposer(".o-mail-Composer", "/");
     await waitFor(".o-mail-Composer button[title='Send']:enabled:count(1)");
     await expect.waitForSteps([]); // No rpc done
     testEnded = true;
@@ -62,10 +55,10 @@ test('do not send typing notification on typing after selecting suggestion from 
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/");
+    await insertTextInComposer(".o-mail-Composer", "/");
     await contains(":nth-child(1 of .o-mail-Composer-suggestion)").click();
     await waitForNone(".o-mail-Composer-suggestion strong");
-    await insertText(".o-mail-Composer-input", " is user?");
+    await insertTextInComposer(".o-mail-Composer", " is user?");
     await expect.waitForSteps([]); // No rpc done"
     testEnded = true;
 });
@@ -96,13 +89,13 @@ test("add an emoji after a command", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await mailContains(".o-mail-Composer-input", { value: "" });
-    await insertText(".o-mail-Composer-input", "/");
+    await mailContains(".o-mail-Composer-html", { textContent: "" });
+    await insertTextInComposer(".o-mail-Composer", "/");
     await contains(":nth-child(2 of .o-mail-Composer-suggestion)").click();
-    await mailContains(".o-mail-Composer-input", { value: "/who " });
+    await containsTextInComposer(".o-mail-Composer", "/who\u00a0");
     await contains("button[title='Add Emojis']:count(1)").click();
     await contains(".o-Emoji:text('😊'):count(1)").click();
-    await mailContains(".o-mail-Composer-input", { value: "/who 😊" });
+    await containsTextInComposer(".o-mail-Composer", "/who\u00a0😊");
 });
 
 test.tags("html composer");
@@ -113,20 +106,15 @@ test("html composer: send a message in a channel", async () => {
         channel_type: "channel",
     });
     await start();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
-    await mailContains(".o-mail-Composer-input", { value: "" });
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
-    await focus(".o-mail-Composer-html.odoo-editor-editable");
-    const editor = {
-        document,
-        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
-    };
-    await htmlInsertText(editor, "Hello");
-    await waitFor(".o-mail-Composer-html.odoo-editor-editable:text('Hello'):count(1)");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await focus(".o-mail-Composer-html");
+    await insertTextInComposer(".o-mail-Composer", "Hello");
+    await containsTextInComposer(".o-mail-Composer", "Hello");
     await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await contains(".o-mail-Message[data-persistent]:contains(Hello):count(1)").click();
-    await mailContains(".o-mail-Composer-html.odoo-editor-editable", { textContent: "" });
+    await containsTextInComposer(".o-mail-Composer", "");
 });
 
 test("Show self-avatar in composer of Discuss App", async () => {
@@ -163,16 +151,11 @@ test("html composer: trim boundary empty formatting on send", async () => {
         body = args.post_data.body;
     });
     await start();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
-    await focus(".o-mail-Composer-html.odoo-editor-editable");
-    const editor = {
-        document,
-        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
-    };
+    await focus(".o-mail-Composer-html");
     triggerHotkey("Enter");
-    await htmlInsertText(editor, "Hello World");
+    await insertTextInComposer(".o-mail-Composer", "Hello World");
     triggerHotkey("shift+Enter");
     await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await expect.waitForSteps(["/mail/message/post"]);
@@ -203,9 +186,9 @@ test("keep mentions when channel post is deferred", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     await contains(".o-mail-Composer-suggestion strong:text('Mitchell Admin'):count(1)").click();
-    await mailContains(".o-mail-Composer-input", { value: "@Mitchell Admin " });
+    await containsTextInComposer(".o-mail-Composer", "\uFEFF@Mitchell Admin\uFEFF\u00a0");
     await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await animationFrame();
     resolve();

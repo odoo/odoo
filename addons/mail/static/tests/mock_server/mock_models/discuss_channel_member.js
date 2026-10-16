@@ -306,14 +306,16 @@ export class DiscussChannelMember extends models.ServerModel {
         const messages = this.env["mail.message"]._filter([
             ["model", "=", "discuss.channel"],
             ["res_id", "=", member.channel_id],
+            ["id", "<=", last_message_id],
         ]);
         if (!messages || messages.length === 0) {
             return;
         }
-        this._set_last_seen_message([member.id], last_message_id);
+        const lastMessageId = Math.max(...messages.map((message) => message.id));
+        this._set_last_seen_message([member.id], lastMessageId);
         this.env["discuss.channel.member"]._set_new_message_separator(
             [member.id],
-            Math.max(member.new_message_separator, last_message_id + 1)
+            Math.max(member.new_message_separator, lastMessageId + 1)
         );
     }
 

@@ -4,7 +4,6 @@ import {
     contains as mailContains,
     defineMailModels,
     hover,
-    insertText,
     listenStoreFetch,
     openDiscuss,
     openFormView,
@@ -17,6 +16,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { Thread } from "@mail/core/common/thread_model";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click as hootClick,
@@ -65,7 +65,9 @@ test("keep new message separator when message is deleted", async () => {
     await start();
     await openDiscuss(generalId);
     await waitFor(".o-mail-Message:count(2)");
-    queryFirst(".o-mail-Composer-input").blur();
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
+    await contains(".o_navbar").click(); // click away
+    await waitFor(".o-mail-Composer-html:not(:focus):count(1)");
     await hover(".o-mail-Message:has(:text('message 0'))");
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('message 0'))"],
@@ -180,7 +182,7 @@ test("keep new message separator until user goes back to the thread", async () =
     );
     await waitFor(".o-mail-Thread-newMessage:contains('New'):count(1)");
     await hootClick(document.body); // Force "focusin" back on the textarea
-    await hootClick(".o-mail-Composer-input");
+    await hootClick(".o-mail-Composer-html");
     await waitNotifications([
         "mail.record/insert",
         (n) => n["discuss.channel.member"][0].new_message_separator,
@@ -241,14 +243,14 @@ test("keep new message separator until current user sends a message", async () =
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "hello");
+    await insertTextInComposer(".o-mail-Composer", "hello");
     await triggerHotkey("Enter");
     await waitFor(".o-mail-Message:has(:text('hello')):count(1)");
     await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Mark as Unread')");
     await waitFor(".o-mail-Thread-newMessage:contains('New'):count(1)");
-    await insertText(".o-mail-Composer-input", "hey!");
+    await insertTextInComposer(".o-mail-Composer", "hey!");
     await press("Enter");
     await waitFor(".o-mail-Message:count(2)");
     await waitForNone(".o-mail-Thread-newMessage:contains('New')");
@@ -260,7 +262,7 @@ test("keep new message separator when switching between chat window and discuss 
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem-name:text('General')");
-    await insertText(".o-mail-Composer-input", "Very important message!");
+    await insertTextInComposer(".o-mail-Composer", "Very important message!");
     await triggerHotkey("Enter");
     await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
@@ -449,8 +451,8 @@ test("pending mark as read does not revert a later mark as unread", async () => 
     await waitFor(".o-mail-Message:has(:text('Hello everyone!')):count(1)");
     await expect.waitForSteps(["handle_mark_as_read", "mark_as_read_rpc"]);
     // Request a second mark as read, queued until the first one completes.
-    queryFirst(".o-mail-Composer-input").blur();
-    await contains(".o-mail-Composer-input:count(1)").click();
+    queryFirst(".o-mail-Composer-html").blur();
+    await contains(".o-mail-Composer-html:count(1)").click();
     await hover(".o-mail-Message:has(:text('Hello everyone!'))");
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('Hello everyone!'))"],

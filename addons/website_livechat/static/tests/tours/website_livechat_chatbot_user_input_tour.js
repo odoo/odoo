@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_user_input_sav
         waitForMessage("Enter your email address"),
         editComposer("test@example.com"),
         {
-            trigger: `${LIVECHAT_COMPOSER}:enabled`,
+            trigger: `${LIVECHAT_COMPOSER}[contenteditable='true']`,
             async run(helpers) {
                 // We wait for the request to complete to ensure the final user input is persisted in the database before moving forward.
                 let requestId;

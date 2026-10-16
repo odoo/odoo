@@ -27,7 +27,10 @@ import {
     getChannelCommandsForThread,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { Store } from "@mail/../tests/mock_server/store";
 
 import { describe, expect, test } from "@odoo/hoot";
@@ -107,7 +110,7 @@ test("can change the thread name of #general", async () => {
 
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-input:focus:count(1)");
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
     await waitFor("input.o-mail-DiscussContent-threadName:value(general):count(1)");
     await insertText("input.o-mail-DiscussContent-threadName:enabled", "special", {
         replace: true,
@@ -189,7 +192,7 @@ test("can change the thread description of #general", async () => {
 
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-input:focus:count(1)");
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
     await waitFor(
         "input.o-mail-DiscussContent-threadDescription:value(General announcements...):count(1)"
     );
@@ -243,7 +246,7 @@ test("Message following a notification should not be squashed", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
     await waitFor(".o-mail-Message-sidebar .o-mail-Message-avatarContainer:count(1)");
 });
@@ -256,7 +259,7 @@ test("Posting message should transform links.", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
+    await insertTextInComposer(".o-mail-Composer", "test https://www.odoo.com/");
     await press("Enter");
     await waitFor(".o-mail-Message a[href='https://www.odoo.com/']:count(1)");
 });
@@ -269,8 +272,9 @@ test("[text composer] Posting message should transform relevant data to emoji.",
     });
     await start();
     await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
     // Type a trailing space to close the emoji suggestion, which Enter would pick.
-    await insertText(".o-mail-Composer-input", "test :P :laughing: ");
+    await insertTextInComposer(".o-mail-Composer", "test :P :laughing: ");
     await press("Enter");
     await waitFor(".o-mail-Message-body:text('test 😛 😆'):count(1)");
 });
@@ -283,15 +287,10 @@ test("Posting message should transform relevant data to emoji.", async () => {
         channel_type: "channel",
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
-    await focus(".o-mail-Composer-html.odoo-editor-editable");
-    const editor = {
-        document,
-        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
-    };
-    await htmlInsertText(editor, "test :P :laughing:");
+    await focus(".o-mail-Composer-html");
+    await insertTextInComposer(".o-mail-Composer", "test :P :laughing:");
     await press("Enter");
     await waitFor(".o-mail-Message-body:text('test 😛 😆'):count(1)");
 });
@@ -304,10 +303,10 @@ test("posting a message immediately after another one is displayed in 'simple' m
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "abc");
+    await insertTextInComposer(".o-mail-Composer", "abc");
     await press("Enter");
     await waitFor(".o-mail-Message:count(1)");
-    await insertText(".o-mail-Composer-input", "def");
+    await insertTextInComposer(".o-mail-Composer", "def");
     await press("Enter");
     await waitFor(".o-mail-Message:count(2)");
     await waitFor(".o-mail-Message-header:count(1)"); // just 1, because 2nd message is squashed
@@ -362,7 +361,7 @@ test("guests are not allowed to use commands", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     await start({ authenticateAs: false });
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/who");
+    await insertTextInComposer(".o-mail-Composer", "/who");
     expect(getChannelCommandsForThread(channelId)).toHaveLength(0);
 });
 
@@ -1009,7 +1008,7 @@ test("post a simple message", async () => {
         expect.step("message_post");
         expect(args.thread_model).toBe("discuss.channel");
         expect(args.thread_id).toBe(channelId);
-        expect(args.post_data.body).toBe("Test");
+        expect(args.post_data.body).toBe("<div>Test</div>");
         expect(args.post_data.message_type).toBe("comment");
         expect(args.post_data.subtype_xmlid).toBe("mail.mt_comment");
         await messagePostPromise;
@@ -1018,11 +1017,11 @@ test("post a simple message", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Thread:has(:text('Welcome to #general!')):count(1)");
     await waitForNone(".o-mail-Message");
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-Composer", "Test");
     await press("Enter");
     await expect.waitForSteps(["message_post"]);
     // optimistically show posted message
-    await mailContains(".o-mail-Composer-input", { value: "" });
+    await containsTextInComposer(".o-mail-Composer", "");
     await waitFor(".o-mail-Message-author:text('Mitchell Admin'):count(1)");
     await waitFor(".o-mail-Message-content:text('Test'):count(1)");
     expect(".o-mail-Message-content").toHaveStyle({ opacity: "0.5" });
@@ -1044,22 +1043,23 @@ test("post several messages with failures", async () => {
         Promise.withResolvers(),
     ];
     onRpcBefore("/mail/message/post", async (args) => {
-        await messagePostPromWithResolvers[parseInt(args.post_data.body)].promise;
+        const index = ["<div>0</div>", "<div>1</div>", "<div>2</div>"].indexOf(args.post_data.body);
+        await messagePostPromWithResolvers[index].promise;
     });
     await start();
     await openDiscuss(channelId);
     // post 3 messages
     await waitFor(".o-mail-Thread:has(:text('Welcome to #general!')):count(1)");
     await waitForNone(".o-mail-Message");
-    await insertText(".o-mail-Composer-input", "0");
+    await insertTextInComposer(".o-mail-Composer", "0");
     await press("Enter");
-    await mailContains(".o-mail-Composer-input", { value: "" });
-    await insertText(".o-mail-Composer-input", "1");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await insertTextInComposer(".o-mail-Composer", "1");
     await press("Enter");
-    await mailContains(".o-mail-Composer-input", { value: "" });
-    await insertText(".o-mail-Composer-input", "2");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await insertTextInComposer(".o-mail-Composer", "2");
     await press("Enter");
-    await mailContains(".o-mail-Composer-input", { value: "" });
+    await containsTextInComposer(".o-mail-Composer", "");
     await waitFor(".o-mail-Message-author:text('Mitchell Admin'):count(1)");
     await mailContains(".o-mail-Thread", {
         contains: [
@@ -1111,7 +1111,7 @@ test("failed message tooltip includes the server error", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-Composer", "Test");
     await press("Enter");
     await waitFor(
         ".o-mail-Message button[title='Failed to post the message (Error message). Click to retry']:count(1)"
@@ -1153,11 +1153,11 @@ test("auto-focus composer on opening thread", async () => {
     await waitFor(".o-mail-Discuss:has(:text('No conversation selected.')):count(1)");
     await contains(".o-mail-NotificationItem:has(:text('General')):count(1)").click();
     await waitFor(".o-mail-NotificationItem.o-active:has(:text('General')):count(1)");
-    await waitFor(".o-mail-Composer-input:focus:count(1)");
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
     await contains(".o-mail-MessagingMenu-tab[data-id='chat']:count(1)").click();
     await contains(".o-mail-NotificationItem:has(:text('Demo User')):count(1)").click();
     await waitFor(".o-mail-NotificationItem.o-active:has(:text('Demo User')):count(1)");
-    await waitFor(".o-mail-Composer-input:focus:count(1)");
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
 });
 
 test("no out-of-focus notification on receiving self messages in chat", async () => {
@@ -1959,9 +1959,9 @@ test("composer should be focused automatically after clicking on the send button
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await press("Enter");
-    expect(".o-mail-Composer-input").toBeFocused();
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
 });
 
 test.tags("focus required");
@@ -2017,7 +2017,7 @@ test("warning on send with shortcut when attempting to post message with still-u
     await openDiscuss(channelId);
     await waitFor(".o-mail-Composer input[type=file]:count(1)");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
     await waitFor(
         ".o-mail-AttachmentContainer.o-isUploading:contains(text.txt) [data-icon='autorenew']:count(1)"
@@ -2051,8 +2051,7 @@ test("Can post message with only attachment", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     onRpcBefore("/mail/message/post", () => new Promise(() => {}));
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Composer input[type=file]:count(1)");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
@@ -2283,13 +2282,13 @@ test("composer state: attachments save and restore", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(
-        ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]:count(1)"
+        ".o-mail-Composer:has([o-we-hint-text='Message #General…']) input[type=file]:count(1)"
     );
     // Add attachment in a message for #general
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await editInput(
         document.body,
-        ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]",
+        ".o-mail-Composer:has([o-we-hint-text='Message #General…']) input[type=file]",
         [file]
     );
     await waitFor(
@@ -2305,11 +2304,11 @@ test("composer state: attachments save and restore", async () => {
         new File(["hello4, world"], "text4.txt", { type: "text/plain" }),
     ];
     await waitFor(
-        ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]:count(1)"
+        ".o-mail-Composer:has([o-we-hint-text='Message #Special…']) input[type=file]:count(1)"
     );
     await editInput(
         document.body,
-        ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]",
+        ".o-mail-Composer:has([o-we-hint-text='Message #Special…']) input[type=file]",
         files
     );
     await waitFor(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading):count(3)");
@@ -2483,7 +2482,7 @@ test("Escape key should focus the composer if it's not focused", async () => {
     await openDiscuss(channelId);
     await contains("button[title='Pinned Messages']:count(1)").click();
     triggerHotkey("escape");
-    await waitFor(".o-mail-Composer-input:focus:count(1)");
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
 });
 
 test("Notification settings: basic rendering", async () => {

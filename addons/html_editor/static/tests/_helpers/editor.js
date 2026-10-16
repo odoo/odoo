@@ -95,6 +95,7 @@ class TestEditor extends Component {
  * @property { Object } [props]
  * @property { boolean } [toolbar]
  * @property { Object } [env]
+ * @property { HTMLElement } [target] element in which to mount the editor
  */
 
 /**
@@ -135,6 +136,7 @@ export async function setupEditor(content, options = {}) {
     });
     const styleContent = options.styleContent || "";
     const editorComponent = await mountWithCleanup(TestEditor, {
+        target: options.target,
         props: {
             // TODO: Move the markup call up the chain and call markup at source.
             // markup: Not the correct place to call markup as content can be anything but would be okay for the tests.

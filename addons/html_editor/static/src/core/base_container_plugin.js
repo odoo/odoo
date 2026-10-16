@@ -19,7 +19,7 @@ import {
 import { withSequence } from "@html_editor/utils/resource";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
-import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { callbacksForCursorUpdate, getSelectionInTree } from "@html_editor/utils/selection";
 
 /**
  * @typedef { Object } BaseContainerShared
@@ -114,7 +114,7 @@ export class BaseContainerPlugin extends Plugin {
     }
 
     cleanEmptyStructuralContainers() {
-        const node = this.document.getSelection().anchorNode;
+        const node = getSelectionInTree(this.editable).anchorNode;
 
         if (!isElement(node) || !isEmpty(node)) {
             return;
