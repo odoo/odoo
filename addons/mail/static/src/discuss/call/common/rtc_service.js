@@ -409,25 +409,23 @@ export class Rtc extends Record {
      * unless you need to access actual connection data (connection stats, streams,...), which can only
      * be accessed from the tab that is hosting the call.
      */
-    selfSession = fields.One("discuss.channel.rtc.session", {
-        compute() {
-            return (
-                this.localSession ||
-                this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
-            );
-        },
-    });
+    selfSession = this.computed(
+        () =>
+            this.localSession ||
+            this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
+    );
     /**
      * The DiscussChannel of the current user for the call hosted by this tab.
      */
     localChannel = fields.One("discuss.channel");
-    channel = fields.One("discuss.channel", {
-        compute() {
-            if (this.localChannel) {
-                return this.localChannel;
-            }
-            return this._remotelyHostedChannelId;
-        },
+    channel = this.computed(() => {
+        if (this.localChannel) {
+            return this.localChannel;
+        }
+        if (this._remotelyHostedChannelId) {
+            return this.store["discuss.channel"].insert(this._remotelyHostedChannelId);
+        }
+        return undefined;
     });
     /**
      * Html element embedding the rtc service. Used to scope the dialog to the correct
@@ -1667,7 +1665,7 @@ export class Rtc extends Record {
         console.debug(
             `%c${new Date().toLocaleString()} - [${entry}]`,
             "color: #e36f17; font-weight: bold;",
-            toRaw(session)._raw,
+            session,
             param2
         );
         if (!this.logs) {

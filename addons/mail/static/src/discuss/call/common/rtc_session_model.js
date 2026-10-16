@@ -53,6 +53,12 @@ export class RtcSession extends Record {
 
     setup() {
         super.setup(...arguments);
+        this.assignComputed("partner_id", function computePartnerId() {
+            return this.channel_member_id?.partner_id;
+        });
+        this.assignComputed("guest_id", function computeGuestId() {
+            return this.channel_member_id?.guest_id;
+        });
         this.onChange(
             () => [this.channel_member_id],
             (channel_member_id) => {
@@ -135,16 +141,8 @@ export class RtcSession extends Record {
 
     // Server data
     channel_member_id = fields.One("discuss.channel.member", { inverse: "rtcSession" });
-    partner_id = fields.One("res.partner", {
-        compute() {
-            return this.channel_member_id?.partner_id;
-        },
-    });
-    guest_id = fields.One("mail.guest", {
-        compute() {
-            return this.channel_member_id?.guest_id;
-        },
-    });
+    partner_id = fields.One("res.partner");
+    guest_id = fields.One("mail.guest");
     get persona() {
         return this.partner_id || this.guest_id;
     }

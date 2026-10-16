@@ -48,7 +48,6 @@ export class RecordListInternal {
                         self.data().pop();
                         old?._.uses.delete(recordList);
                         self.data().push(record);
-                        self.syncLength();
                         record._.uses.add(recordList);
                     }
                 },
@@ -65,7 +64,6 @@ export class RecordListInternal {
                 function recordList_AddNoInvManyInsert(record) {
                     if (self.data().indexOf(record) === -1) {
                         self.data().push(record);
-                        self.syncLength();
                         record._.uses.add(recordList);
                     }
                 },
@@ -84,7 +82,7 @@ export class RecordListInternal {
             // data and collection could be same record list,
             // save before clear to not push mutated recordlist that is empty
             const vals = [...collection];
-            const oldRecords = [...recordList].map((recordProxy) => recordProxy._raw);
+            const oldRecords = [...recordList];
             const newRecords = vals.map((val) =>
                 self.insert(val, function recordListAssignInsert(record) {
                     if (record.notIn(oldRecords)) {
@@ -104,11 +102,7 @@ export class RecordListInternal {
                 }
             }
             self.data.set(newRecords);
-            self.syncLength();
         });
-    }
-    computeField() {
-        this.owner._.compute(this.name, { fromInNeed: true });
     }
     /**
      * Version of delete() that does not update the inverse.
@@ -127,7 +121,6 @@ export class RecordListInternal {
                     const index = self.data().indexOf(record);
                     if (index !== -1) {
                         recordList.splice(index, 1);
-                        self.syncLength();
                     }
                 },
                 { inv: false }
@@ -170,17 +163,15 @@ export class RecordListInternal {
         }
         if (inverse && inv) {
             // special command to call addNoinv/deleteNoInv, to prevent infinite loop
-            const target = isRecord(val) && val._raw === val ? val._proxy : val;
-            target[inverse] = [[mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", this.owner]];
+            val[inverse] = [[mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", this.owner]];
         }
         /** @type {R} */
-        let newRecordProxy;
+        let newRecord;
         if (!isRecord(val)) {
-            newRecordProxy = recordList._store[targetModel].preinsert(val);
+            newRecord = recordList._store[targetModel].preinsert(val);
         } else {
-            newRecordProxy = val;
+            newRecord = val;
         }
-        const newRecord = newRecordProxy._raw;
         fn?.(newRecord);
         if (!isRecord(val)) {
             // was preinserted, fully insert now
@@ -188,53 +179,44 @@ export class RecordListInternal {
         }
         return newRecord;
     }
-    isComputeField() {
-        return this.owner.Model._.fieldsCompute.get(this.name);
-    }
-    isComputeOnNeed() {
-        return this.owner._.fieldsComputeOnNeed.get(this.name);
-    }
-    isEager() {
-        return this.owner.Model._.fieldsEager.get(this.name);
-    }
     isOne() {
         return this.owner.Model._.fieldsOne.get(this.name);
     }
     /**
+     * @param {RecordList} rawRecordList
      * @param {string} name
-     * @param {RecordList} recordListProxy
      */
-    proxyGet(name, recordListProxy) {
+    proxyGet(rawRecordList, name) {
         const recordList = this.recordList;
         if (
             typeof name === "symbol" ||
-            (name !== "length" && Object.hasOwn(recordList, name)) ||
-            Object.prototype.hasOwnProperty.call(recordList.constructor.prototype, name)
+            (name !== "length" && Object.hasOwn(rawRecordList, name)) ||
+            Object.prototype.hasOwnProperty.call(rawRecordList.constructor.prototype, name)
         ) {
-            let res = Reflect.get(recordList, name, recordListProxy);
+            let res = Reflect.get(rawRecordList, name, recordList);
             if (typeof res === "function") {
-                res = res.bind(recordListProxy);
+                res = res.bind(recordList);
             }
             return res;
         }
         if (name === "length") {
-            return this.records().length;
+            return this.data().length;
         }
         const index = parseInt(name);
         if (!window.isNaN(index)) {
             // support for "array[index]" syntax
-            return this.records()[index]?._proxy;
+            return this.data()[index];
         }
         // Attempt an unimplemented array method call
-        const array = this.records().map((record) => record._proxy);
+        const array = [...this.data()];
         return array[name]?.bind(array);
     }
     /**
+     * @param {RecordList} rawRecordList
      * @param {string} name
      * @param {any} val
-     * @param {RecordList} recordListProxy
      */
-    proxySet(name, val, recordListProxy) {
+    proxySet(rawRecordList, name, val) {
         const self = this;
         const recordList = this.recordList;
         const store = recordList._store;
@@ -278,32 +260,12 @@ export class RecordListInternal {
                         list.length = newLength;
                         self.data.set(list);
                     }
-                    self.syncLength();
                 }
             } else {
-                return Reflect.set(recordList, name, val, recordListProxy);
+                return Reflect.set(rawRecordList, name, val, recordList);
             }
             return true;
         });
-    }
-    /** @returns {Record[]} */
-    records() {
-        if (this.isComputeField() && !this.isEager()) {
-            this.setComputeInNeed();
-            if (this.isComputeOnNeed()) {
-                this.computeField();
-            }
-        }
-        return this.data();
-    }
-    setComputeInNeed() {
-        this.owner._.fieldsComputeInNeed.set(this.name, true);
-    }
-    /**
-     * Sync the data length with the array length, as to not introduce confusion while debugging
-     */
-    syncLength() {
-        this.recordList.length = this.data().length;
     }
 }
 

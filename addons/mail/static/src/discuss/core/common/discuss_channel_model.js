@@ -15,6 +15,15 @@ const { DateTime } = luxon;
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
+
+    static preinsert() {
+        /** @type {import("models").DiscussChannel} */
+        const channel = super.preinsert(...arguments);
+        // the payload of a channel carries thread fields, so the thread is there
+        // before they are applied
+        channel.thread ??= { id: channel.id, model: "discuss.channel" };
+        return channel;
+    }
     static _inherits = { "mail.thread": "thread" };
 
     setup() {
@@ -47,6 +56,12 @@ export class DiscussChannel extends Record {
             },
             { immediate: true, initialRun: false }
         );
+        this.assignComputed("thread", function computeThread() {
+            return this.store["mail.thread"].insert({ id: this.id, model: "discuss.channel" });
+        });
+        this.assignComputed("storeAsFavoriteChannels", function computeStoreAsFavoriteChannels() {
+            return this.self_member_id?.is_favorite ? this.store : null;
+        });
         // Handles subscriptions for non-members. Subscriptions for channels
         // that the user is a member of are handled by
         // `ir_websocket@_build_bus_channel_list`.
@@ -563,18 +578,8 @@ export class DiscussChannel extends Record {
         )
     );
     self_member_id = fields.One("discuss.channel.member", { inverse: "channelAsSelf" });
-    storeAsFavoriteChannels = fields.One("Store", {
-        compute() {
-            return this.self_member_id?.is_favorite ? this.store : null;
-        },
-        inverse: "favoriteChannels",
-    });
-    thread = fields.One("mail.thread", {
-        compute() {
-            return { id: this.id, model: "discuss.channel" };
-        },
-        inverse: "channel",
-    });
+    storeAsFavoriteChannels = fields.One("Store", { inverse: "favoriteChannels" });
+    thread = fields.One("mail.thread", { inverse: "channel" });
     // Start with `not_member` not to trigger a subscription if the user is not a member
     // initially, only when switching from `member_xxx` to `not_member` following a leave.
     typingMembers = fields.Many("discuss.channel.member", { inverse: "channelAsTyping" });

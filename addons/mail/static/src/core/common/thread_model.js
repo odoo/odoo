@@ -86,8 +86,14 @@ export class Thread extends Record {
                     this._resolveIsLoaded = resolve;
                 }
             },
-            { immediate: true }
+            { immediate: true, initialRun: false }
         );
+        this.assignComputed("newestMessage", function computeNewestMessage() {
+            return this.messages.at(-1);
+        });
+        this.assignComputed("composer", function computeComposer() {
+            return this.store.Composer.insert({ thread: this });
+        });
     }
 
     /**
@@ -156,10 +162,7 @@ export class Thread extends Record {
     can_react = true;
     /** @type {boolean|undefined} */
     close_chat_window;
-    composer = fields.One("Composer", {
-        compute: () => ({}),
-        inverse: "thread",
-    });
+    composer = fields.One("Composer", { inverse: "thread" });
     counter = 0;
     /** @type {string} */
     defaultSubject;
@@ -369,12 +372,7 @@ export class Thread extends Record {
         return this.message_needaction_counter;
     }
 
-    newestMessage = fields.One("mail.message", {
-        inverse: "threadAsNewest",
-        compute() {
-            return this.messages.at(-1);
-        },
-    });
+    newestMessage = fields.One("mail.message", { inverse: "threadAsNewest" });
 
     get newestPersistentMessage() {
         return this.messages.findLast((msg) => msg.persistent);

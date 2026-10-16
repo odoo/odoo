@@ -1,6 +1,6 @@
 import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
-import { STORE_SYM, modelRegistry, untrackFunctions } from "./misc";
+import { STORE_SYM, untrackFunctions } from "./misc";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 
@@ -11,7 +11,20 @@ export class Store extends Record {
     get [STORE_SYM]() {
         return true;
     }
-    storeReady = false;
+    /**
+     * All the records of the store, by localId (raw own property of the store
+     * record, set by RecordInternal.prepareRecord).
+     *
+     * @type {Map<string, Record>}
+     */
+    recordByLocalId;
+    /**
+     * @param {string} localId
+     * @returns {Record}
+     */
+    get(localId) {
+        return this.recordByLocalId.get(localId);
+    }
 
     handleError(err) {
         this._.ERRORS.push(err);
@@ -25,17 +38,18 @@ export class Store extends Record {
      *
      * A write sets fields and relations one by one, so the data is only
      * consistent once the whole update is done. Until then:
-     * - A computed field keeps its last value rather than computing one from
-     *   half written data (`isUpdateInProgress`).
-     * - The computes and the record deletions that the writes ask for wait
-     *   in `FC_QUEUE` and `RD_QUEUE`, to run once at the end.
-     * - An immediate onChange waits for the update and its queues to be done
-     *   (`isDrainingQueues`), so it sees the final values.
+     * - The record deletions that the writes ask for wait in `RD_QUEUE`, to
+     *   run once at the end.
+     * - A `record.computed()` keeps its last value rather than computing one
+     *   from half deleted records (`deletingRecords`).
+     * - An immediate onChange waits for the update and its queue to be done
+     *   (`isUpdateInProgress`, `isDrainingQueues`), so it sees the final
+     *   values.
      * - An error does not leave the store in the middle of an update: it goes
      *   to `ERRORS`, the update still ends, and then the first error is thrown.
      *
      * An update started inside another update joins the outer one (`UPDATE`,
-     * `updateDepth`): only the outermost update runs the queues.
+     * `updateDepth`): only the outermost update runs the queue.
      *
      * @param {() => any} fn
      */
@@ -56,30 +70,21 @@ export class Store extends Record {
         if (this._.UPDATE === 0) {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             this._.UPDATE++;
-            while (this._.FC_QUEUE.size > 0 || this._.RD_QUEUE.size > 0) {
-                const FC_QUEUE = new Map(this._.FC_QUEUE);
+            while (this._.RD_QUEUE.size > 0) {
                 const RD_QUEUE = new Map(this._.RD_QUEUE);
-                this._.FC_QUEUE.clear();
                 this._.RD_QUEUE.clear();
-                while (FC_QUEUE.size > 0) {
-                    /** @type {[Record, Map<string, true>]} */
-                    const [record, recMap] = FC_QUEUE.entries().next().value;
-                    FC_QUEUE.delete(record);
-                    for (const fieldName of recMap.keys()) {
-                        record._.requestCompute(fieldName, { force: true });
-                    }
-                }
+                this._.deletingRecords.set(true);
                 while (RD_QUEUE.size > 0) {
                     /** @type {Record} */
                     const record = RD_QUEUE.keys().next().value;
                     RD_QUEUE.delete(record);
-                    record._.isDeleted.set(true);
                     record._.scope?.destroy();
-                    record.Model.records.delete(record.localId);
+                    record._.deletingSignal.set(true);
                     for (const [usingRecord, names] of record._.uses.data.entries()) {
                         for (const [name2, count] of names.entries()) {
+                            const usingList = usingRecord._.fieldsList.get(name2);
                             for (let c = 0; c < count; c++) {
-                                usingRecord[name2].delete(record);
+                                usingList.delete(record);
                             }
                         }
                     }
@@ -87,14 +92,20 @@ export class Store extends Record {
                         ...record.Model._.fieldsOne.keys(),
                         ...record.Model._.fieldsMany.keys(),
                     ]) {
-                        const recordList = record[name];
-                        for (const usedRecord of recordList._.data()) {
+                        const recordList = record._.fieldsList.get(name);
+                        if (!recordList) {
+                            continue;
+                        }
+                        for (const usedRecord of recordList) {
                             usedRecord._.uses.delete(recordList);
                         }
                         recordList._.data.set([]);
-                        recordList._.syncLength();
                     }
+                    this.recordByLocalId.delete(record.localId);
+                    record.Model.records.delete(record.localId);
+                    record._.isDeleted.set(true);
                 }
+                this._.deletingRecords.set(false);
             }
             this._.UPDATE--;
             this._.isDrainingQueues.set(false);
@@ -132,7 +143,7 @@ export class Store extends Record {
                 : null;
         }
         try {
-            Record.MAKE_UPDATE(function storeInsert() {
+            this.MAKE_UPDATE(function storeInsert() {
                 const recordsDataToDelete = [];
                 for (const [modelName, data] of Object.entries(dataByModelName)) {
                     if (!store[modelName]) {
@@ -164,15 +175,5 @@ export class Store extends Record {
             }
         }
     }
-    _cleanupData(data) {
-        super._cleanupData(data);
-        if (this.Model.getName() === "Store") {
-            delete data.Models;
-            for (const [name] of modelRegistry.getEntries()) {
-                delete data[name];
-            }
-        }
-    }
 }
-
-untrackFunctions(Store.prototype, ["handleError", "insert"]);
+untrackFunctions(Store.prototype, ["handleError", "insert", "onChange"]);
