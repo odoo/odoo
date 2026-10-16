@@ -376,6 +376,9 @@
     <template id="webclient_scoped_app">
         <t t-set="x_icon" t-value="'/scoped_app_icon_png?app_id=%s' % (app_id)" />
         <t t-set="head">
+            <script type="text/javascript">
+                odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
+            </script>
             <t t-call-assets="web.assets_frontend_minimal"/>
             <t t-call-assets="web.assets_frontend_lazy"/>
             <link rel="apple-touch-icon" t-att-href="x_icon"/>
