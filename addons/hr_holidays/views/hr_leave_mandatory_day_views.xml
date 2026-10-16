@@ -9,7 +9,7 @@
                         <group>
                             <field name="name"/>
                             <field name="start_date" string="Dates" widget="daterange" options="{'end_date_field': 'end_date'}" />
-                            <field name="end_date" invisible="1" />
+                            <field name="end_date" invisible="1" /> <!-- end date of the start_date daterange widget (end_date_field option) -->
                         </group>
                         <group>
                             <field name="color" widget="color_picker"/>
@@ -25,7 +25,7 @@
         <field name="model">hr.leave.mandatory.day</field>
         <field name="arch" type="xml">
             <list editable="bottom">
-                <field name="company_id" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/> <!-- duplicate hidden column kept to post the required company_id in this editable list for users without base.group_multi_company -->
                 <field name="name"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="department_ids" widget="many2many_tags" optional="hide"/>

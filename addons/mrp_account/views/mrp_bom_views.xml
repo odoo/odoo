@@ -8,7 +8,7 @@
             <xpath expr="//field[@name='continuous']" position="after">
                 <label for="extra_cost" invisible="type != 'normal'"/>
                 <div class="o_row" invisible="type != 'normal'">
-                    <field name="currency_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/> <!-- currency of the cost monetary fields added by this module -->
                     <field name="extra_cost" widget="monetary" string="Extra Cost"/>
                     <span groups="uom.group_uom">/</span>
                     <field name="uom_id" groups="uom.group_uom" widget="many2one_uom" options="{'no_open': True}" readonly="1" />

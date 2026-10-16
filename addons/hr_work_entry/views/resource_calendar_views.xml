@@ -38,10 +38,6 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="inherit_id" ref="resource.view_resource_calendar_multi_create_form"/>
         <field name="arch" type="xml">
-            <group position="before">
-                <field name="color" invisible="1"/>
-                <field name="display_code" invisible="1"/>
-            </group>
             <field name="recurrency" position="before">
                 <field name="work_entry_type_id" widget="many2one_work_entry_type" placeholder="Attendance" domain="[('resource_calendar_selectable', '=', True)]"/>
             </field>
