@@ -1,5 +1,6 @@
 import {
     SIZES,
+    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -8,11 +9,13 @@ import {
     patchUiSize,
     start,
     startServer,
+    step,
+    triggerEvents,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, mockPermission, test } from "@odoo/hoot";
 import { disableAnimations } from "@odoo/hoot-mock";
-import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -34,6 +37,32 @@ test('"Start a conversation" item selection opens chat', async () => {
     await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { text: "Gandalf" });
+});
+
+test('"Start a conversation" can be validated without keyboard on mobile', async () => {
+    patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Gandalf" },
+        { name: "Legolas" },
+    ]);
+    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
+    onRpc("discuss.channel", "create_group", ({ method }) => step(method));
+    await start();
+    await openDiscuss();
+    await contains("button.active:text('Inbox')");
+    await click("button:text('Chat')");
+    await click("button:text('Start a conversation')");
+    await insertText("input[placeholder='Start a conversation']", "Gandalf");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await contains(".o-discuss-ChannelSelector .o_tag:text('Gandalf')");
+    await insertText("input[placeholder='Start a conversation']", "Legolas");
+    await click(".o-discuss-ChannelSelector-suggestion");
+    await contains(".o-discuss-ChannelSelector .o_tag:text('Legolas')");
+    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
+    await triggerEvents(".o-discuss-ChannelSelector button:text('Start')", ["click", "click"]);
+    await contains(".o-mail-ChatWindow");
+    await assertSteps(["create_group"]);
 });
 
 test('"New channel" item selection opens channel (existing)', async () => {
