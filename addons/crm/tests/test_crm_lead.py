@@ -1004,6 +1004,53 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone, self.test_phone_data[1])
         self.assertFalse(lead.phone_sanitized)
 
+    def test_lead_probability_with_all_team_stages(self):
+        self.env['crm.lead'].with_context(active_test=False).search([]).unlink()
+        self.env['crm.lead.scoring.frequency'].search([]).unlink()
+        self.env['crm.stage'].with_context(active_test=False).search([]).unlink()
+
+        team_1, team_2 = self.env['crm.team'].create([
+            {'name': 'Test CRM Team 1'},
+            {'name': 'Test CRM Team 2'},
+        ])
+        stage_1, _, _, _ = self.env['crm.stage'].create([
+            {'name': 'Stage 1', 'sequence': 1, 'team_ids': [team_1.id]},
+            {'name': 'Stage 2', 'sequence': 2, 'team_ids': [team_2.id]},
+            {'name': 'Stage 3', 'sequence': 3, 'team_ids': [team_2.id]},
+            {'name': 'Won', 'sequence': 4, 'is_won': True},
+        ])
+        lead_1, lead_2, lead_3, lead_4 = self.env['crm.lead'].create([
+            {'name': 'Lead 1', 'team_id': False, 'stage_id': stage_1.id},
+            {'name': 'Lead 2', 'team_id': team_1.id},
+            {'name': 'Lead 3', 'team_id': team_2.id},
+            {'name': 'Lead 4', 'team_id': team_2.id},
+        ])
+        (lead_1 + lead_2 + lead_3).action_set_won()
+        lead_4.action_set_lost()
+
+        lead_5, lead_6 = self.env['crm.lead'].create([
+            {'name': 'Lead 5', 'team_id': False, 'stage_id': stage_1.id},
+            {'name': 'Lead 6', 'team_id': team_1.id},
+        ])
+
+        # Expected Probability Calculation:
+
+        # Lead 5 has no team; thus, it uses the sum of each team's frequency
+        # This includes leads that also had no team (Team 1 + Team 2 + No Team)
+        # Remember, 0.1 is added to each team's won/loss count to prevent zeros
+        # Won Total = 1.1 + 1.1 + 1.1 = 3.3
+        # Loss Total = 0.1 + 1.1 + 0.1 = 1.3
+        # Probability = Total Won / (Total Won + Lost) = 3.3 / (3.3 + 1.3)
+        # Probability = (3.3 / 4.6) * 100 ~= 71.74
+        self.assertEqual(lead_5.probability, 71.74)
+
+        # Lead 6 with Team 1 should only be affected by Team 1 leads
+        # Team 1 only has one prior lead (lead 2), which was won.
+        # Won Total = 1.1
+        # Loss Total = 0.1
+        # Probability: (1.1 / 1.2) * 100 ~= 91.67
+        self.assertEqual(lead_6.probability, 91.67)
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRMLeadRotting(TestCrmCommon):
