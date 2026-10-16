@@ -18,6 +18,7 @@ export class Follower extends Component {
         this.avatarCard = usePopover(AvatarCard, { position: "right" });
     }
 
+    /** @param {MouseEvent} ev */
     onClickDetails(ev) {
         if (this.avatarCard.isOpen) {
             return;
@@ -40,7 +41,13 @@ export class Follower extends Component {
         );
     }
 
-    async onClickRemove() {
+    /** @param {MouseEvent} ev */
+    async onClickRemove(ev) {
+        // The navigator refocuses the same index: don't leave it on the next row's Remove.
+        ev.currentTarget
+            .closest(".o-mail-Follower")
+            .querySelector(".o-mail-Follower-details")
+            .focus();
         const thread = this.props.follower.thread;
         await this.props.follower.remove();
         this.props.onFollowerChanged?.(thread);

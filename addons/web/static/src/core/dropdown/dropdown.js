@@ -116,7 +116,8 @@ export class Dropdown extends Component {
 
         this.navigation = useNavigation(this.menuRef, {
             shouldRegisterHotkeys: false,
-            isNavigationAvailable: () => this.state.isOpen,
+            isNavigationAvailable: () =>
+                this.state.isOpen && this.activeEl === this.uiService.activeElement,
             getItems: () => {
                 if (this.state.isOpen && this.menuRef()) {
                     return this.menuRef().querySelectorAll(

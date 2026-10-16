@@ -5,7 +5,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { tick, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { press, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { contains, onRpc, pagerNext, pagerPrevious } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -34,6 +34,19 @@ test("base rendering follow, edit subscription and unfollow button", async () =>
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");
     await waitFor("button[title='Show Followers']:count(1)");
     await waitFor(".o-mail-FollowerList-self :text('Not following'):count(1)");
+});
+
+test("Follow and Unfollow keep keyboard focus on the same button", async () => {
+    const pyEnv = await startServer();
+    const threadId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", threadId);
+    await contains("button[title='Show Followers']:enabled:count(1)").click();
+    await contains(".o-mail-FollowerList-self button[title='Follow']").focus();
+    await press("Enter");
+    await waitFor(".o-mail-FollowerList-self button[title='Unfollow']:focus:count(1)");
+    await press("Enter");
+    await waitFor(".o-mail-FollowerList-self button[title='Follow']:focus:count(1)");
 });
 
 test("following during a slow RPC should not reload another record opened via the pager", async () => {

@@ -24,7 +24,39 @@ import { SearchStatePlugin } from "@mail/utils/common/search_state_plugin";
 
 // Past this delay, open the dropdown with a loading indicator if followers are still loading.
 export const FOLLOWERS_OPEN_MAX_WAIT = 200;
-const LOAD_MORE_LIMIT = 20;
+export const LOAD_MORE_LIMIT = 20;
+
+/**
+ * Navigation of the followers dropdown, keeping the scroll of its list when the items change
+ * (e.g. Load more, a removed follower): the navigator would otherwise scroll back to its active
+ * item. Keyboard navigation still scrolls to the selected item.
+ *
+ * @param {DropdownState} dropdownState state of the followers dropdown
+ */
+export function useFollowerListNavigation(dropdownState) {
+    const menuRef = signal.ref();
+    let listScrollTop;
+    const getList = () => menuRef()?.querySelector(".o-mail-FollowerList-list");
+    return {
+        menuRef,
+        navigationOptions: {
+            getItems: () => {
+                // Called when the items change, before the navigator updates its active item.
+                listScrollTop = getList()?.scrollTop;
+                const menuEl = dropdownState.isOpen && menuRef();
+                return menuEl
+                    ? menuEl.querySelectorAll(":scope .o-navigable, :scope .o-dropdown")
+                    : [];
+            },
+            onUpdated: () => {
+                const list = getList();
+                if (list && listScrollTop !== undefined) {
+                    list.scrollTop = listScrollTop;
+                }
+            },
+        },
+    };
+}
 
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
