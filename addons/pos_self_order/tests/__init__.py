@@ -17,3 +17,4 @@ from . import test_takeaway_preset_mail
 from . import test_self_order_prices
 from . import test_self_order_data_loading
 from . import test_self_partner_validation
+from . import test_order_receipt
