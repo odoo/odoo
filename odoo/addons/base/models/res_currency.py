@@ -4,6 +4,7 @@ import logging
 import math
 from collections.abc import Iterable
 from datetime import date
+from decimal import Decimal, ROUND_HALF_UP
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
@@ -286,10 +287,14 @@ class ResCurrency(models.CachedModel):
     def round(self, amount):
         """Return ``amount`` rounded  according to ``self``'s rounding rules.
 
-           :param float amount: the amount to round
-           :return: rounded float
+           :param float or Decimal amount: the amount to round
+           :return: rounded float or Decimal amount
         """
         self.ensure_one()
+
+        if isinstance(amount, Decimal):
+            return Decimal(amount).quantize(Decimal(self.rounding), rounding=ROUND_HALF_UP)
+
         return tools.float_round(amount, precision_rounding=self.rounding)
 
     def compare_amounts(self, amount1, amount2):

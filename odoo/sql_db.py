@@ -67,17 +67,6 @@ except ImportError:
         warnings.warn("Pygments needs to be installed in order to highlight SQL")
         return sql_query
 
-
-def undecimalize(value, cr) -> float | None:
-    if value is None:
-        return None
-    return float(value)
-
-
-DECIMAL_TO_FLOAT_TYPE = psycopg2.extensions.new_type((1700,), 'float', undecimalize)
-psycopg2.extensions.register_type(DECIMAL_TO_FLOAT_TYPE)
-psycopg2.extensions.register_type(psycopg2.extensions.new_array_type((1231,), 'float[]', DECIMAL_TO_FLOAT_TYPE))
-
 _logger = logging.getLogger(__name__)
 _logger_conn = _logger.getChild("connection")
 
