@@ -11,7 +11,7 @@ class TestSnippets(HttpCase):
         self.start_tour("/", "snippet_newsletter_popup_edition", login='admin')
         self.start_tour("/", "snippet_newsletter_popup_use", login=None)
 
-        mailing_list = self.env['mailing.list'].search([], limit=1)
+        mailing_list = self.env['mailing.list'].search([('name', '=', 'Newsletter')], limit=1)
         emails = mailing_list.contact_ids.mapped('email')
         self.assertIn("hello@world.com", emails)
 
