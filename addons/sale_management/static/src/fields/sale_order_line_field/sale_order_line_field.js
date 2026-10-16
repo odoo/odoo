@@ -363,7 +363,10 @@ patch(SaleOrderLineListRenderer.prototype, {
 
             // Prevent the record from being abandoned when leaveEditMode or sortDrop is called
             record.dirty = true;
-            await this.props.list.leaveEditMode();
+            const left = await this.props.list.leaveEditMode();
+            if (!left) {
+                return;
+            }
             const recordMap = this._getRecordsToRecompute(
                 record,
                 previous ? previous.dataset.id : null
