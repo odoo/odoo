@@ -31,3 +31,9 @@ export async function clickBackButton() {
     await ensurePane("left");
     await contains(".actionpad .back-button").click();
 }
+
+export async function clickFastPaymentMethod(name) {
+    await ensurePane("right");
+    await contains(`.fast-pay-button:contains("${name}")`).click();
+    await animationFrame();
+}
