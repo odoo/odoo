@@ -767,6 +767,7 @@ class AccountJournal(models.Model):
                 # Should never happen, but put there just in case.
                 raise UserError(_("Could not compute any code for the copy automatically. Please create it manually."))
 
+            all_journal_codes.add(copy_code)
             vals.update(
                 code=copy_code,
             )
