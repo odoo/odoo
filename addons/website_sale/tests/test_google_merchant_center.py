@@ -14,12 +14,13 @@ from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'website.group_website_designer',  # product.feed / product.image / website / product.public.category
+        "base.group_user",
+        "product.group_product_manager",
+        # product.feed / product.image / website / product.public.category
+        "website.group_website_designer",
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = "Test Product Manager"
 
     def test_gmc_xml_accessible_if_gmc_setting_enabled(self):
         response = self.url_open(self.gmc_feed.url)
@@ -222,14 +223,8 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     def test_gmc_items_additional_images_exclude_videos(self):
         image = self._create_image("blue")
         self.blue_sofa.product_template_image_ids = [
-            Command.create({
-                "name": "image 0",
-                "image_1920": image,
-            }),
-            Command.create({
-                "name": "image 1",
-                "image_1920": image,
-            }),
+            Command.create({"name": "image 0", "image_1920": image}),
+            Command.create({"name": "image 1", "image_1920": image}),
             Command.create({
                 "name": "video",
                 "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
@@ -243,10 +238,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
     def test_gmc_items_additional_images_does_not_load_images_bytes(self):
         self.blue_sofa.product_template_image_ids = [
-            Command.create({
-                "name": "image",
-                "image_1920": self._create_image("blue"),
-            })
+            Command.create({"name": "image", "image_1920": self._create_image("blue")})
         ]
         self.blue_sofa.product_template_image_ids.invalidate_model()
 
@@ -331,6 +323,19 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         # no other variant
         self.assertNotIn("item_group_id", self.items[product_one_variant])
 
+    def test_gmc_feed_excludes_products_from_other_companies(self):
+        """The feed should only contain products available on the website's company, even though
+        the controller serves it in sudo, bypassing the multi-company record rules."""
+        other_company = self.env["res.company"].sudo().create({"name": "Other Company"})
+        other_company_product = self._create_product(
+            name="Other Company Product", company_id=other_company.id
+        )
+
+        feed_products = self.gmc_feed.sudo()._get_feed_products()
+
+        self.assertIn(self.blanket, feed_products)
+        self.assertNotIn(other_company_product, feed_products)
+
     def test_gmc_items_bundle_if_is_combo_product(self):
         self.update_items()
 
@@ -388,7 +393,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertNotIn("unit_pricing_measure", self.items[six_pack])
 
         # enable "Product Reference Price" setting
-        self.env = self.env(user=self.env.ref('base.user_root'))  # FIXME: remove this line
+        self.env = self.env(user=self.env.ref("base.user_root"))  # FIXME: remove this line
         self.website.show_product_reference_price = True
         self.update_items()
 
