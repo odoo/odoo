@@ -526,6 +526,7 @@ test(`basic list view and command palette`, async () => {
     expect(queryAllTexts(`.o_command_hotkey`)).toEqual([
         "New\nALT + C",
         "Actions\nALT + U",
+        "Search...\nALT + R",
         "Search...\nALT + Q",
         "Toggle search panel\nALT + SHIFT + Q",
     ]);
