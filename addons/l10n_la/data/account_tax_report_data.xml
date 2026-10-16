@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <!-- Form 01/ອມພ (TaxRIS). Amounts entered by hand on the form (lines 19, 20, 21, 25) are tax grids on journal entries. -->
+    <record id="l10n_la_tax_report" model="account.report">
+        <field name="name">VAT Return (01/ອມພ)</field>
+        <field name="name@lo_LA">ໃບແຈ້ງ-ມອບອາກອນມູນຄ່າເພີ່ມ (ແບບພິມ 01/ອມພ)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.la"/>
+        <field name="filter_multi_company">tax_units</field>
+        <field name="allow_foreign_vat" eval="1"/>
+        <field name="default_opening_date_filter">previous_return_period</field>
+        <field name="only_tax_exigible" eval="True"/>
+        <field name="column_ids">
+            <record id="l10n_la_tax_report_column_cell_base" model="account.report.column">
+                <field name="name">Line</field>
+                <field name="name@lo_LA">ແຖວ</field>
+                <field name="expression_label">cell_base</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_la_tax_report_column_base" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="name@lo_LA">ພື້ນຖານຄິດໄລ່</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="l10n_la_tax_report_column_cell_tax" model="account.report.column">
+                <field name="name">Line</field>
+                <field name="name@lo_LA">ແຖວ</field>
+                <field name="expression_label">cell_tax</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_la_tax_report_column_tax" model="account.report.column">
+                <field name="name">VAT</field>
+                <field name="name@lo_LA">ອມພ</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_la_tax_report_section_a" model="account.report.line">
+                <field name="name">A. Output (sales)</field>
+                <field name="name@lo_LA">ກ. ລາຍງານການເຄື່ອນໄຫວເບື້ອງສົ້ນອອກ (ຂາຍ)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_la_tax_report_la_01" model="account.report.line">
+                        <field name="name">Sales exempt from VAT (domestic and abroad)</field>
+                        <field name="name@lo_LA">ຍອດຂາຍ ທີ່ຖືກຍົກເວັ້ນ ອມພ (ທັງພາຍໃນ ແລະ ຕ່າງປະເທດ)</field>
+                        <field name="code">LA_01</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_01_cell_base" model="account.report.expression">
+                                <field name="label">cell_base</field>
+                                <field name="engine">text</field>
+                                <field name="formula">01</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_01_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-ຂາຍ ຍົກເວັ້ນ</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_02" model="account.report.line">
+                        <field name="name">Sales not subject to VAT collection (goods already VAT-paid, other)</field>
+                        <field name="name@lo_LA">ຍອດຂາຍ ທີ່ບໍ່ຖືກເກັບ ອມພ (ຂາຍທີ່ຖືກເສຍ ອມພ ແລ້ວ, ຂາຍທີ່ບໍ່ຖືກເສຍ ອມພ ອື່ນໆ)</field>
+                        <field name="code">LA_02</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_02_cell_base" model="account.report.expression">
+                                <field name="label">cell_base</field>
+                                <field name="engine">text</field>
+                                <field name="formula">02</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_02_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-ຂາຍ ບໍ່ຖືກເກັບ</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_03" model="account.report.line">
+                        <field name="name">Exports and sales at 0%, and sales abroad</field>
+                        <field name="name@lo_LA">ຍອດການສົ່ງອອກ ແລະການຂາຍພາຍໃນ ທີ່ຖືກ ອມພ 0% ແລະ ຍອດຂາຍຢູ່ຕ່າງປະເທດ</field>
+                        <field name="code">LA_03</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_03_cell_base" model="account.report.expression">
+                                <field name="label">cell_base</field>
+                                <field name="engine">text</field>
+                                <field name="formula">03</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_03_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-ຂາຍ 0%</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_04_07" model="account.report.line">
+                        <field name="name">Exports at 10%</field>
+                        <field name="name@lo_LA">ຍອດການສົ່ງອອກ ທີ່ຖືກ ອມພ 10%</field>
+                        <field name="code">LA_04_07</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_04_07_cell_base" model="account.report.expression">
+                                <field name="label">cell_base</field>
+                                <field name="engine">text</field>
+                                <field name="formula">04</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_04_07_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-ສົ່ງອອກ 10% ພື້ນຖານ</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_04_07_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">07</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_04_07_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-ສົ່ງອອກ 10% ອມພ</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_05_08" model="account.report.line">
+                        <field name="name">Domestic sales at 10%</field>
+                        <field name="name@lo_LA">ຍອດຂາຍຢູ່ພາຍໃນປະເທດ ທີ່ເກັບ ອມພ ໃນອັດຕາ 10%</field>
+                        <field name="code">LA_05_08</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_05_08_cell_base" model="account.report.expression">
+                                <field name="label">cell_base</field>
+                                <field name="engine">text</field>
+                                <field name="formula">05</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_05_08_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-ຂາຍ 10% ພື້ນຖານ</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_05_08_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">08</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_05_08_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-ຂາຍ 10% ອມພ</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_06_09" model="account.report.line">
+                        <field name="name">Total</field>
+                        <field name="name@lo_LA">ລວມ</field>
+                        <field name="code">LA_06_09</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_06_09_cell_base" model="account.report.expression">
+                                <field name="label">cell_base</field>
+                                <field name="engine">text</field>
+                                <field name="formula">06</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_06_09_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_01.base + LA_02.base + LA_03.base + LA_04_07.base + LA_05_08.base</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_06_09_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">09</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_06_09_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_04_07.tax + LA_05_08.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_la_tax_report_section_b" model="account.report.line">
+                <field name="name">B. Input (imports and purchases)</field>
+                <field name="name@lo_LA">ຂ. ລາຍງານການເຄື່ອນໄຫວເບື້ອງສົ້ນເຂົ້າ</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_la_tax_report_la_10" model="account.report.line">
+                        <field name="name">Imports and purchases exempt, not subject or at 0%</field>
+                        <field name="name@lo_LA">ການນໍາເຂົ້າ ແລະ ຊື້ ທີ່ຖືກຍົກເວັ້ນ ອມພ, ບໍ່ຖືກເສຍ ອມພ, ຖືກເສຍ ອມພ ໃນອັດຕາ 0%</field>
+                        <field name="code">LA_10</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_10_cell_base" model="account.report.expression">
+                                <field name="label">cell_base</field>
+                                <field name="engine">text</field>
+                                <field name="formula">10</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_10_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ຊື້ ບໍ່ມີ ອມພ</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_11_12" model="account.report.line">
+                        <field name="name">Imports and purchases at 10%, and related input VAT</field>
+                        <field name="name@lo_LA">ການນໍາເຂົ້າ ແລະ ຊື້ ທີ່ຖືກເສຍ ອມພ ໃນອັດຕາ 10% ແລະ ອມພ ເບື້ອງສົ້ນເຂົ້າທີ່ຕິດພັນ</field>
+                        <field name="code">LA_11_12</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_11_12_cell_base" model="account.report.expression">
+                                <field name="label">cell_base</field>
+                                <field name="engine">text</field>
+                                <field name="formula">11</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_11_12_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ຊື້ 10% ພື້ນຖານ</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_11_12_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">12</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_11_12_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ຊື້ 10% ອມພ</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_13" model="account.report.line">
+                        <field name="name">Input VAT not deductible</field>
+                        <field name="name@lo_LA">ອມພ ເບື້ອງສົ້ນເຂົ້າ ທີ່ບໍ່ອະນຸຍາດໃຫ້ຫັກ</field>
+                        <field name="code">LA_13</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_13_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">13</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_13_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ຊື້ ອມພ ບໍ່ໃຫ້ຫັກ</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_14" model="account.report.line">
+                        <field name="name">Deductible input VAT (12 - 13)</field>
+                        <field name="name@lo_LA">ອມພ ເບື້ອງສົ້ນເຂົ້າ ທີ່ອະນຸຍາດໃຫ້ຫັກ ( 12 - 13 )</field>
+                        <field name="code">LA_14</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_14_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">14</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_14_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_11_12.tax - LA_13.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_la_tax_report_section_c" model="account.report.line">
+                <field name="name">C. VAT payable, refundable and carried forward</field>
+                <field name="name@lo_LA">ຄ. ການຄິດໄລ່ອາກອນມູນຄ່າເພີ່ມທີ່ ຕ້ອງມອບ, ຂໍຄືນ ແລະ ຍົກໄປຫັກຕໍ່</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_la_tax_report_la_15" model="account.report.line">
+                        <field name="name">VAT payable (09 - 14), not below 0</field>
+                        <field name="name@lo_LA">ອມພ ຕ້ອງມອບ (09 - 14) ≥ 0</field>
+                        <field name="code">LA_15</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_15_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">15</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_15_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_06_09.tax - LA_14.tax</field>
+                                <field name="subformula">if_above(LAK(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_16" model="account.report.line">
+                        <field name="name">Excess input VAT to carry forward or refund (14 - 09), not below 0</field>
+                        <field name="name@lo_LA">ອມພ ເບື້ອງສົ້ນເຂົ້າຍົກໄປຫັກຕໍ່ ແລະສົ່ງຄືນ ທີ່ເກີດຂຶ້ນໃນໄລຍະການແຈ້ງ (14 - 09) ≥ 0</field>
+                        <field name="code">LA_16</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_16_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">16</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_14.tax - LA_06_09.tax</field>
+                                <field name="subformula">if_above(LAK(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_17" model="account.report.line">
+                        <field name="name">Refundable input VAT: 16 x 03 / (06 - 01 - 04)</field>
+                        <field name="name@lo_LA">ອມພ ເບື້ອງສົ້ນເຂົ້າ ທີ່ມີສິດຂໍຄືນ (16 x ຊັດສ່ວນທີ່ມີສິດຂໍຄືນ ຊຶ່ງເທົ່າກັບ 03*100/(06-01-04)</field>
+                        <field name="code">LA_17</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_17_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">17</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_17_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_16.tax * LA_03.base / (LA_06_09.base - LA_01.base - LA_04_07.base)</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_18" model="account.report.line">
+                        <field name="name">Input VAT to carry forward (16 - 17)</field>
+                        <field name="name@lo_LA">ອມພ ເບື້ອງສົ້ນເຂົ້າ ທີ່ຕ້ອງຍົກໄປຫັກຕໍ່ (16 - 17)</field>
+                        <field name="code">LA_18</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_18_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">18</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_18_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_16.tax - LA_17.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_la_tax_report_section_d" model="account.report.line">
+                <field name="name">D. Adjustments</field>
+                <field name="name@lo_LA">ງ. ການດັດແກ້ ອມພ ທີ່ຕ້ອງມອບ, ຂໍຄືນ ແລະ ຍົກໄປຫັກຕໍ່</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_la_tax_report_la_19" model="account.report.line">
+                        <field name="name">Additional deductible VAT (carried forward, paid in advance, other)</field>
+                        <field name="name@lo_LA">ອມພ ທີ່ຜູ້ມອບ ອມພ ມີສິດນໍາມາຫັກໄດ້ຕື່ມ (ຍອດຍົກມາຫັກຕໍ່, ມອບລ່ວງໜ້າ, ອື່ນໆ)</field>
+                        <field name="code">LA_19</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_19_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">19</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_19_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_19A.tax + LA_19B.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_la_tax_report_la_19a" model="account.report.line">
+                                <field name="name">Carried forward from the previous return (line 26)</field>
+                                <field name="name@lo_LA">ຍອດຍົກມາຫັກຕໍ່ ຈາກໃບແຈ້ງກ່ອນ (ແຖວ 26)</field>
+                                <field name="code">LA_19A</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_la_tax_report_la_19a_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LA_19A._applied_carryover_tax</field>
+                                    </record>
+                                    <record id="l10n_la_tax_report_la_19a_applied_carryover" model="account.report.expression">
+                                        <field name="label">_applied_carryover_tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_return_period</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_19b" model="account.report.line">
+                                <field name="name">Paid in advance and other</field>
+                                <field name="name@lo_LA">ມອບລ່ວງໜ້າ ແລະ ອື່ນໆ</field>
+                                <field name="code">LA_19B</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_la_tax_report_la_19b_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ດັດແກ້ ຫັກໄດ້ຕື່ມ</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_20" model="account.report.line">
+                        <field name="name">Additional refundable VAT (overpaid, other)</field>
+                        <field name="name@lo_LA">ອມພ ທີ່ຜູ້ມອບ ອມພ ມີສິດນໍາມາຂໍຄືນໄດ້ຕື່ມ (ມອບເກີນກົດໝາຍກຳນົດ, ອື່ນໆ)</field>
+                        <field name="code">LA_20</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_20_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">20</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_20_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ດັດແກ້ ຂໍຄືນໄດ້ຕື່ມ</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_21" model="account.report.line">
+                        <field name="name">Additional VAT payable (withheld for the State, over-collected, other)</field>
+                        <field name="name@lo_LA">ອມພ ທີ່ຜູ້ມອບ ອມພ ຕ້ອງໄດ້ນໍາມາມອບໃຫ້ລັດຕື່ມ (ຄິດໄລ່ຫັກໄວ້ໃຫ້ລັດ, ເກັບເກີນກົດໝາຍ, ກໍລະນີອື່ນໆ)</field>
+                        <field name="code">LA_21</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_21_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">21</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_21_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-ດັດແກ້ ມອບຕື່ມ</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_la_tax_report_section_e" model="account.report.line">
+                <field name="name">E. After adjustments</field>
+                <field name="name@lo_LA">ຈ. ການຄິດໄລ່ອາກອນມູນຄ່າເພີ່ມທີ່ ຕ້ອງມອບ, ຂໍຄືນ ແລະ ຍົກໄປຫັກຕໍ່ ພາຍຫຼັງການດັດແກ້</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_la_tax_report_la_22" model="account.report.line">
+                        <field name="name">Actual VAT payable (15 + 21) - (16 + 19 + 20), not below 0</field>
+                        <field name="name@lo_LA">ອມພ ທີ່ຕ້ອງມອບຕົວຈິງ (15 + 21) - (16 + 19 + 20) ≥ 0</field>
+                        <field name="code">LA_22</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_22_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">22</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_22_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_15.tax + LA_21.tax - LA_16.tax - LA_19.tax - LA_20.tax</field>
+                                <field name="subformula">if_above(LAK(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_23" model="account.report.line">
+                        <field name="name">Total refundable and carried forward (16 + 19 + 20) - (15 + 21), not below 0</field>
+                        <field name="name@lo_LA">ອມພ ທີ່ມີສິດຂໍຄືນ ແລະ ຍົກໄປຫັກຕໍ່ທັງໝົດ (16 + 19 + 20) - (15 + 21) ≥ 0</field>
+                        <field name="code">LA_23</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_23_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">23</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_23_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_16.tax + LA_19.tax + LA_20.tax - LA_15.tax - LA_21.tax</field>
+                                <field name="subformula">if_above(LAK(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_24" model="account.report.line">
+                        <field name="name">Total refundable (17 + 20), at most line 23</field>
+                        <field name="name@lo_LA">ອມພ ທີ່ມີສິດຂໍຄືນທັງໝົດ (17 + 20) ບໍ່ເກີນແຖວ 23</field>
+                        <field name="code">LA_24</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_24_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">24</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_24_uncapped" model="account.report.expression">
+                                <field name="label">uncapped</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_17.tax + LA_20.tax</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_24_excess" model="account.report.expression">
+                                <field name="label">excess</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_24.uncapped - LA_23.tax</field>
+                                <field name="subformula">if_above(LAK(0))</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_24_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_24.uncapped - LA_24.excess</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_25" model="account.report.line">
+                        <field name="name">Refund actually requested, at most line 24</field>
+                        <field name="name@lo_LA">ອມພ ທີ່ຂໍຄືນຕົວຈິງ ບໍ່ເກີນແຖວ 24</field>
+                        <field name="code">LA_25</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_25_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">25</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_25_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ອມພ ຂໍຄືນ</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_la_tax_report_la_26" model="account.report.line">
+                        <field name="name">Total carried forward to the next return (23 - 25)</field>
+                        <field name="name@lo_LA">ອມພ ທີ່ຍົກໄປຫັກຕໍ່ທັງໝົດ (23 - 25)</field>
+                        <field name="code">LA_26</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_la_tax_report_la_26_cell_tax" model="account.report.expression">
+                                <field name="label">cell_tax</field>
+                                <field name="engine">text</field>
+                                <field name="formula">26</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_26_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_23.tax - LA_25.tax</field>
+                            </record>
+                            <record id="l10n_la_tax_report_la_26_carryover" model="account.report.expression">
+                                <field name="label">_carryover_tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LA_26.tax</field>
+                                <field name="carryover_target">LA_19A._applied_carryover_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
