@@ -147,6 +147,9 @@ class TestL10nMMEmvQrCode(AccountTestInvoicingCommon):
             self.emv_qr_invoice._generate_qr_code()
 
     def test_mm_proxy_constraints(self):
+        # The QR settings of a trusted account are locked
+        self.acc_emv_mm.allow_out_payment = False
+
         with self.assertRaises(ValidationError, msg="The Merchant ID of an MMQR code must be 16 digits long."):
             self.acc_emv_mm.proxy_value = '123456789012345'
         self.acc_emv_mm.invalidate_recordset()
