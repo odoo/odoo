@@ -15,6 +15,23 @@ from unittest.mock import patch
 _logger = logging.getLogger(__name__)
 
 
+@odoo.tests.tagged('post_install', '-at_install')
+class TestFrontendAssets(odoo.tests.TransactionCase):
+
+    def test_frontend_lazy_excludes_minimal_js(self):
+        def js_files(bundle):
+            return {
+                path for path, *_ in self.env['ir.asset']._get_asset_paths(bundle, {})
+                if path.endswith('.js')
+            }
+
+        minimal = js_files('web.assets_frontend_minimal')
+        lazy = js_files('web.assets_frontend_lazy')
+        self.assertFalse(
+            minimal & lazy,
+            "These files are already included in web.assets_frontend_minimal. Remove them from web.assets_frontend_lazy.",
+        )
+
 class TestAssetsGenerateTimeCommon(odoo.tests.TransactionCase):
 
     def generate_bundles(self, unlink=True):

@@ -92,6 +92,9 @@ Ask questions, get answers, no distractions
         'web.assets_frontend_minimal': [
             'website_forum/static/src/interactions/loader_loading.js',
         ],
+        'web.assets_frontend_lazy': [
+            ('remove', 'website_forum/static/src/interactions/loader_loading.js'),
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
