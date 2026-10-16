@@ -74,10 +74,6 @@ export class RewardButton extends Component {
         return Object.keys(programRewards).length + Object.keys(promotions).length;
     }
 
-    get isDisabled() {
-        return this.selfOrder.currentOrder.getPartner() && this.availableRewardsLength === 0;
-    }
-
     get hasRewards() {
         return this.selfOrder.currentOrder.getPartner() && this.claimableRewardsLength > 0;
     }

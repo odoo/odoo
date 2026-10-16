@@ -2,8 +2,7 @@ import { SelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { patch } from "@web/core/utils/patch";
 import { InvalidDomainError } from "@web/core/domain";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { rpc, RPCError } from "@web/core/network/rpc";
-import { browser } from "@web/core/browser/browser";
+import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { SelectProductPopup } from "@pos_self_order_loyalty/app/components/popup/select_product_popup/select_product_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -11,11 +10,14 @@ import { SelectRewardPopup } from "@pos_self_order_loyalty/app/components/popup/
 import { UserInputPopup } from "@pos_self_order_loyalty/app/components/popup/user_input_popup/user_input_popup";
 import { SelectAttributePopup } from "@pos_self_order_loyalty/app/components/popup/select_attribute_popup/select_attribute_popup";
 import { isValidEmail } from "@point_of_sale/utils";
+import { scanBarcode } from "@web/core/barcode/barcode_dialog";
+import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 
 patch(SelfOrder.prototype, {
     createNewOrder() {
         const order = super.createNewOrder();
         if (this.config.self_ordering_mode == "mobile") {
+            this.deleteUnrelatedData();
             const partner = this.identifiedPartner;
             if (partner) {
                 order.setPartner(partner);
@@ -23,12 +25,12 @@ patch(SelfOrder.prototype, {
         }
         return order;
     },
-    async afterProcessServerData() {
+    initData() {
         // Remove reward lines that have no reward anymore (could happen if the program got archived)
         this.models["pos.order.line"]
-            .filter((order) => order.is_reward_line && !order.reward_id)
+            .filter((line) => line.is_reward_line && !line.reward_id)
             .forEach((line) => line.delete());
-        await super.afterProcessServerData(...arguments);
+        super.initData(...arguments);
         this._checkRewardDomains();
     },
     /**
@@ -85,21 +87,45 @@ patch(SelfOrder.prototype, {
         }
         return canProceed;
     },
+    /**
+     * Forget the code-based programs and cards (and, outside mobile, the customers) that
+     * the open orders don't use anymore: they can be found again by entering their code.
+     * Called when a new customer may take over: on the kiosk landing page, and in mobile
+     * when a new order starts or the customer logs out.
+     */
     deleteUnrelatedData() {
-        // Theses cards can either be found again by a request to the server, either be recreated if needed by the js.
-        const cardsToRemove = this.models["loyalty.card"].filter((card) =>
-            [
-                "coupons",
-                "promo_code",
-                "gift_card",
-                "promotion",
-                "buy_x_get_y",
-                "next_order_coupons",
-            ].includes(card.program_id.program_type)
+        // What the open orders use must stay, or their rewards would disappear: in mobile
+        // (pay after each order) an order sent to the counter stays open while a new one starts
+        const openOrders = this.models["pos.order"].filter((order) => order.state === "draft");
+        const usedCodes = new Set(openOrders.flatMap((order) => order.applied_codes || []));
+        const usedCardIds = new Set(
+            openOrders
+                .flatMap((order) => [
+                    ...order.lines.map((line) => line.card_id?.id),
+                    ...(order.active_payment_programs || []).map((entry) => entry.card_id),
+                ])
+                .filter(Boolean)
+        );
+        const isUsedCard = (card) => usedCardIds.has(card.id) || usedCodes.has(card.code);
+        const cardsToRemove = this.models["loyalty.card"].filter(
+            (card) =>
+                [
+                    "coupons",
+                    "promo_code",
+                    "gift_card",
+                    "promotion",
+                    "buy_x_get_y",
+                    "next_order_coupons",
+                ].includes(card.program_id?.program_type) && !isUsedCard(card)
         );
         // Remove all programs and related stuff linked to codes
-        const programToRemove = this.models["loyalty.program"].filter((program) =>
-            ["coupons", "promo_code", "next_order_coupons"].includes(program.program_type)
+        const programToRemove = this.models["loyalty.program"].filter(
+            (program) =>
+                ["coupons", "promo_code", "next_order_coupons"].includes(program.program_type) &&
+                !program.rule_ids.some((rule) => rule.code && usedCodes.has(rule.code)) &&
+                !this.models["loyalty.card"].some(
+                    (card) => card.program_id?.id === program.id && isUsedCard(card)
+                )
         );
         const programToRemoveIds = programToRemove.map((p) => p.id);
         const rulesToRemove = this.models["loyalty.rule"].filter((rule) =>
@@ -146,10 +172,7 @@ patch(SelfOrder.prototype, {
                 partner_barcode: code.code,
             });
             const result = this.models.connectNewData(data);
-            if (this.config.self_ordering_mode == "mobile") {
-                this.data.debouncedSynchronizeLocalDataInIndexedDB();
-            }
-            partner = result["res.partner"].length > 0 && result["res.partner"][0];
+            partner = result["res.partner"]?.[0]; // the server sends no partner for an unknown barcode
         } catch (error) {
             this.handleErrorNotification(error);
             return;
@@ -170,12 +193,62 @@ patch(SelfOrder.prototype, {
             this.dialog.closeAll();
         }
     },
+    /** Scan a code with the device's camera and handle it like a hardware scan. */
+    async openMobileScanner() {
+        // No reader when the company has no barcode nomenclature
+        const barcodeReader = this.env.services.barcode_reader;
+        if (!isBarcodeScannerSupported() || !barcodeReader) {
+            this.notification.add(_t("Scanning isn't available on this device."), {
+                type: "warning",
+            });
+            return;
+        }
+        let data;
+        try {
+            data = await scanBarcode(this.env);
+        } catch (error) {
+            // Here, we know the structure of the error raised by BarcodeScanner.
+            this.dialog.add(AlertDialog, {
+                title: _t("Unable to scan"),
+                body:
+                    error?.message ||
+                    error?.error?.message ||
+                    _t("Unable to find barcode scanner."),
+            });
+            return;
+        }
+        if (data) {
+            barcodeReader.scan(data);
+            if ("vibrate" in window.navigator) {
+                window.navigator.vibrate(100);
+            }
+        } else {
+            this.notification.add(_t("Please, Scan again!"), {
+                type: "warning",
+            });
+        }
+    },
     async _barcodeCouponCodeAction(code) {
         if (!this.ordering) {
             return;
         }
         this.dialog.closeAll();
-        await this.applyCode(code.code);
+        const applied = await this.applyCode(code.code);
+        if (applied && this.router.activeSlot === "payment") {
+            await this.syncCodeAppliedOnPaymentPage();
+        }
+        return applied;
+    },
+    /**
+     * The order was sent when the payment page opened: a code applied there (gift card,
+     * eWallet...) only exists locally, while the confirmation page or a new payment attempt
+     * reload the order from the server.
+     */
+    async syncCodeAppliedOnPaymentPage() {
+        const order = await this.sendDraftOrderToServer();
+        if (order && this.currency.isZero(order.priceIncl)) {
+            this.confirmationPage("pay", this.config.self_ordering_mode, order.access_token);
+        }
     },
     //#region Loyalty programs handling
     getLoyaltyCards() {
@@ -226,13 +299,14 @@ patch(SelfOrder.prototype, {
                 reward.reward.program_id.trigger === "auto" &&
                 reward.reward.reward_type === "product" &&
                 reward.reward.program_id.applies_on === "current" &&
-                !this.currentOrder.uiState.askedRewards.has(reward.reward.id)
+                !this.currentOrder.uiState.askedRewards.includes(reward.reward.id)
         );
         await this.askRewards(autoProductRewards);
     },
     async askRewards(rewards) {
         let remaining = rewards.map((reward) => reward.reward);
-        remaining.forEach((reward) => this.currentOrder.uiState.askedRewards.add(reward.id));
+        const askedRewards = this.currentOrder.uiState.askedRewards;
+        askedRewards.push(...remaining.map((reward) => reward.id).filter((id) => !askedRewards.includes(id)));
         while (remaining.length) {
             const reward = await makeAwaitable(this.dialog, SelectRewardPopup, {
                 rewards: remaining,
@@ -320,7 +394,6 @@ patch(SelfOrder.prototype, {
                 access_token: this.access_token,
                 code: code,
                 partner_id: this.currentOrder.getPartner()?.id || null,
-                partner_token: this.currentOrder.getPartner()?._self_order_token || null,
                 order_uuid: this.currentOrder.uuid,
             });
             if (!data["status"]) {
@@ -352,11 +425,7 @@ patch(SelfOrder.prototype, {
             }
             this.currentOrder.recomputeRewards();
             return result.success;
-        } catch (error) {
-            if (this.isIdentificationExpiredError(error)) {
-                this.expireIdentification();
-                return false;
-            }
+        } catch {
             this.notification.add(
                 _t("An error occurred while applying the code. Try again later."),
                 {
@@ -473,9 +542,9 @@ patch(SelfOrder.prototype, {
             this._identifiedPartnerId = null;
             if (this.config.self_ordering_mode === "mobile") {
                 try {
+                    // the signed partner id ("<id>-<hmac>"), see pos.order._get_signed_self_partner_id
                     this._identifiedPartnerId =
-                        parseInt(browser.localStorage.getItem(this.identifiedPartnerStorageKey)) ||
-                        null;
+                        localStorage.getItem(this.identifiedPartnerStorageKey) || null;
                 } catch {
                     // storage unavailable (private browsing...): identification isn't remembered
                 }
@@ -492,18 +561,19 @@ patch(SelfOrder.prototype, {
         }
         try {
             if (this._identifiedPartnerId) {
-                browser.localStorage.setItem(
+                localStorage.setItem(
                     this.identifiedPartnerStorageKey,
                     String(this._identifiedPartnerId)
                 );
             } else {
-                browser.localStorage.removeItem(this.identifiedPartnerStorageKey);
+                localStorage.removeItem(this.identifiedPartnerStorageKey);
             }
         } catch {
             // storage unavailable (private browsing...): identification isn't remembered
         }
     },
-    /** Renew the stored identification (sliding expiry), or ask to log in again if it expired. */
+    /** Refresh the identified partner's data (points...), or ask to log in again if the server
+     * doesn't recognize it anymore. */
     async refreshPartnerIdentification() {
         const partner = this.identifiedPartner;
         if (!partner) {
@@ -511,10 +581,9 @@ patch(SelfOrder.prototype, {
         }
         let data;
         try {
-            data = await rpc(`/pos-self-order/refresh-partner-token`, {
+            data = await rpc(`/pos-self-order/get-identified-partner`, {
                 access_token: this.access_token,
                 partner_id: partner.id,
-                partner_token: partner._self_order_token || null,
             });
         } catch {
             return; // offline or server error: keep the identification, the next order will tell
@@ -530,6 +599,9 @@ patch(SelfOrder.prototype, {
     logoutPartner() {
         const partner = this.identifiedPartner || this.currentOrder.getPartner();
         this.setIdentifiedPartner(false);
+        if (this.config.self_ordering_mode === "mobile") {
+            this.deleteUnrelatedData();
+        }
         if (!partner) {
             return;
         }
@@ -555,19 +627,5 @@ patch(SelfOrder.prototype, {
         this.identifyCustomer(
             _t("Your identification has expired, please identify yourself again.")
         );
-    },
-    isIdentificationExpiredError(error) {
-        return (
-            error instanceof RPCError &&
-            Boolean(error.data?.name?.endsWith(".SelfOrderIdentificationExpired"))
-        );
-    },
-    handleErrorNotification(error) {
-        if (this.isIdentificationExpiredError(error)) {
-            this.rpcLoading = false;
-            this.expireIdentification();
-            return;
-        }
-        return super.handleErrorNotification(...arguments);
     },
 });

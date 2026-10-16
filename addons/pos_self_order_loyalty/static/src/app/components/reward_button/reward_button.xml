@@ -6,7 +6,6 @@
             t-att-class="{
                 'btn-reward-glow': this.hasRewards and !this.showAvatarOnly,
             }"
-            t-att-disabled="this.isDisabled"
             t-on-click.stop="this.clickRewardButton"
             >
             <t t-if="this.router.activeSlot === 'cart'">

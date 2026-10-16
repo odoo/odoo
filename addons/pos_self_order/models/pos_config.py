@@ -118,7 +118,7 @@ class PosConfig(models.Model):
     def _update_access_token(self):
         self.access_token = uuid.uuid4().hex[:16]
         for table in self.floor_ids.table_ids:
-            table.identifier = self._get_identifier()
+            table.identifier = table._get_identifier()
 
     @api.model_create_multi
     def create(self, vals_list):

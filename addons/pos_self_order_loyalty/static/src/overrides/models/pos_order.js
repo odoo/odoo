@@ -6,17 +6,9 @@ patch(PosOrder.prototype, {
         super.initState();
         this.uiState = {
             ...this.uiState,
-            askedRewards: this.uiState.askedRewards || new Set(),
+            // reward ids; an array, as the uiState is saved as JSON (IndexedDB)
+            askedRewards: this.uiState.askedRewards || [],
         };
-    },
-    serializeForORM(opts = {}) {
-        const data = super.serializeForORM(...arguments);
-        // Proof that the client identified as the order's partner, see pos.order._check_pos_order
-        const token = this.partner_id?._self_order_token;
-        if (token) {
-            data.partner_token = token;
-        }
-        return data;
     },
     setPartner(partner) {
         let partnerToRemove = false;
@@ -26,7 +18,7 @@ patch(PosOrder.prototype, {
         super.setPartner(...arguments);
         if (partnerToRemove) {
             this.models["loyalty.card"]
-                .filter((card) => card.partner_id.id === partnerToRemove.id)
+                .filter((card) => card.partner_id?.id === partnerToRemove.id)
                 .forEach((card) => card.delete());
             this.models["res.partner"].delete(partnerToRemove);
         }

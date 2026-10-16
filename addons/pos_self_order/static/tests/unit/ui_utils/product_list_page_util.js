@@ -55,10 +55,8 @@ export function expectProductCardQty(productName, qty) {
     ).toBeVisible();
 }
 
-export async function checkOrderTotal(amount) {
-    await waitFor(
-        `.o_self_product_list_page .o_self_shadow_bottom .o-so-tabular-nums:contains('${amount}')`
-    );
+export async function checkOrderCount(count) {
+    await waitFor(`.o_self_product_list_page .to-order:contains('${count}')`);
 }
 
 export async function checkReferenceNotInProductName(productName, reference) {
