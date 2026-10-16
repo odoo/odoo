@@ -1,8 +1,15 @@
 import { useState } from "@web/owl2/utils";
 import { useService } from '@web/core/utils/hooks';
 import { formatMonetary } from "@web/views/fields/formatters";
+<<<<<<< 3c7ca86d1719187c6bfe60cefee85bfc59a751cb
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
+||||||| a5424bff9b477b1350456ddd91582399eeaa1fd6
+import { Component, onWillStart, useState, onWillUpdateProps } from "@odoo/owl";
+import { Domain } from "@web/core/domain";
+=======
+import { Component, onWillStart, useState, onWillUpdateProps } from "@odoo/owl";
+>>>>>>> 3c9ed13042232ce07bf40bfd94e8ee177618559e
 
 export class ExpenseDashboard extends Component {
     static template = "hr_expense.ExpenseDashboard";
@@ -40,36 +47,5 @@ export class ExpenseDashboard extends Component {
         );
 
         this.state.expenses = expense_states;
-    }
-
-    async applyFilter(filterName) {
-        const searchModel = this.env.searchModel;
-
-        // Search for active filters implying an expense state
-        const stateActiveFilters = searchModel.query.filter(item => {
-            const filters = searchModel.searchItems[item.searchItemId];
-
-            if (!filters || !filters.domain) {
-                return false;
-            }
-            try {
-                const domain = new Domain(filters.domain).toList();
-                return domain.some(tuple => tuple[0] === "state");
-            } catch {
-                return false;
-            }
-        });
-
-        // Deactivate the filters implying an expense state
-        if (stateActiveFilters) {
-            stateActiveFilters.forEach(item => {
-                searchModel.toggleSearchItem(item.searchItemId);
-            });
-        }
-        // Toggle the filter corresponding to the current state
-        const searchItem = Object.values(searchModel.searchItems).find(
-            (searchItem) => searchItem.name === filterName
-        );
-        searchModel.toggleSearchItem(searchItem.id);
     }
 }
