@@ -194,3 +194,26 @@ class TestVideoFromURL(slides_common.SlidesCase):
                     })
                     self.assertEqual('vimeo', slide.video_source_type)
                     self.assertEqual(vimeo_id, slide.vimeo_id)
+
+    def test_video_embed_code_title(self):
+        """ The slide name is used as the title of the embedded video. """
+        Slide = self.env['slide.slide'].with_context(website_slides_skip_fetch_metadata=True)
+        for url in [
+            'https://www.youtube.com/watch?v=W0JQcpGLSFw',
+            'https://drive.google.com/file/d/1qU5nHVNbz_r84P_IS5kDzoCuC1h5ZAZR',
+            'https://vimeo.com/545859999',
+            'https://vimeo.com/545859999/94dd03ddb0',
+        ]:
+            with self.subTest(url=url):
+                slide = Slide.create({
+                    'name': 'Wood "Bending" & Steam',
+                    'channel_id': self.channel.id,
+                    'url': url,
+                    'slide_category': 'video',
+                })
+                self.assertIn('title="Wood &#34;Bending&#34; &amp; Steam"', slide.embed_code)
+                self.assertNotIn('aria-label', slide.embed_code)
+                self.assertEqual(slide.embed_code, slide.embed_code_external)
+
+                slide.name = 'Steam Box'
+                self.assertIn('title="Steam Box"', slide.embed_code)

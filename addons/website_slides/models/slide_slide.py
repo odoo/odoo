@@ -396,7 +396,7 @@ class SlideSlide(models.Model):
             record.user_vote = record.user_membership_id.vote
             record.user_has_completed = record.user_membership_id.completed
 
-    @api.depends('slide_category', 'google_drive_id', 'video_source_type', 'youtube_id')
+    @api.depends('name', 'slide_category', 'google_drive_id', 'video_source_type', 'youtube_id')
     def _compute_embed_code(self):
         request_base_url = request.httprequest.url_root if request else False
         for slide in self:
@@ -410,9 +410,9 @@ class SlideSlide(models.Model):
                 if slide.video_source_type == 'youtube':
                     query_params = urls.url_parse(slide.video_url).query
                     query_params = query_params + '&theme=light' if query_params else 'theme=light'
-                    embed_code = Markup('<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0" aria-label="%s"></iframe>') % (slide.youtube_id, query_params, _('YouTube'))
+                    embed_code = Markup('<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0" title="%s"></iframe>') % (slide.youtube_id, query_params, slide.name)
                 elif slide.video_source_type == 'google_drive':
-                    embed_code = Markup('<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0" aria-label="%s"></iframe>') % (slide.google_drive_id, _('Google Drive'))
+                    embed_code = Markup('<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0" title="%s"></iframe>') % (slide.google_drive_id, slide.name)
                 elif slide.video_source_type == 'vimeo':
                     if '/' in slide.vimeo_id:
                         # in case of privacy 'with URL only', vimeo adds a token after the video ID
@@ -420,12 +420,12 @@ class SlideSlide(models.Model):
                         [vimeo_id, vimeo_token] = slide.vimeo_id.split('/')
                         embed_code = Markup("""
                             <iframe src="https://player.vimeo.com/video/%s?h=%s&badge=0&amp;autopause=0&amp;player_id=0"
-                                frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen aria-label="%s"></iframe>""") % (
-                                vimeo_id, vimeo_token, _('Vimeo'))
+                                frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="%s"></iframe>""") % (
+                                vimeo_id, vimeo_token, slide.name)
                     else:
                         embed_code = Markup("""
                             <iframe src="https://player.vimeo.com/video/%s?badge=0&amp;autopause=0&amp;player_id=0"
-                                frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen aria-label="%s"></iframe>""") % (slide.vimeo_id, _('Vimeo'))
+                                frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="%s"></iframe>""") % (slide.vimeo_id, slide.name)
             elif slide.slide_category in ['infographic', 'document'] and slide.source_type == 'external' and slide.google_drive_id:
                 embed_code = Markup('<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0" aria-label="%s"></iframe>') % (slide.google_drive_id, _('Google Drive'))
             elif slide.slide_category == 'document' and slide.source_type == 'local_file':
