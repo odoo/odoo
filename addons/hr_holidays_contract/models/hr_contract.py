@@ -15,7 +15,7 @@ class HrContract(models.Model):
 
     def _get_leaves(self):
         return self.env['hr.leave'].search([
-            ('state', '!=', 'refuse'),
+            ('state', 'not in', ['refuse', 'cancel']),
             ('employee_id', 'in', self.mapped('employee_id.id')),
             ('date_from', '<=', max([end or date.max for end in self.mapped('date_end')])),
             ('date_to', '>=', min(self.mapped('date_start'))),
