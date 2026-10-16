@@ -1016,7 +1016,11 @@ class AccountTax(models.Model):
         taxes, company = self.env['account.tax'], company_id
         while not taxes and company:
             taxes = self.filtered(lambda t: t.company_id == company)
-            company = company.parent_id
+            taxes_per_company = self.grouped('company_id')
+            for company in reversed(company_id.sudo().parent_ids):
+                if taxes := taxes_per_company.get(company):
+                    return taxes
+            return self.env['account.tax']
         return taxes
 
     @api.model
