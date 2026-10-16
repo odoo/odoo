@@ -1,5 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import io
+
+from werkzeug.datastructures import FileStorage
+
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
@@ -7,7 +12,7 @@ from odoo.tests.common import TransactionCase, tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.http_routing.tests.common import MockRequest
-from odoo.addons.website.controllers.form import WebsiteForm
+from odoo.addons.website.controllers.form import SIGNATURE_MAX_SIZE, WebsiteForm
 
 
 @tagged('post_install', '-at_install')
@@ -205,3 +210,28 @@ class TestWebsiteForm(TransactionCase):
             authorized_fields,
             "Reference fields must not be offered in the website form builder.",
         )
+
+    def test_website_form_signature_property(self):
+        self.env['properties.base.definition']._get_definition_for_property_field(
+            'res.partner', 'properties',
+        ).properties_definition = [{'name': 'signature', 'string': 'Signature', 'type': 'signature'}]
+        self.env['ir.model.fields'].formbuilder_whitelist('res.partner', ['name', 'properties'])
+        self.assertEqual(
+            self.partner_model._get_form_writable_fields({})['signature']['type'],
+            'signature',
+            "Signature properties should be offered in the website form builder.",
+        )
+
+        def extract_data(signature):
+            return WebsiteForm().extract_data(self.partner_model.sudo(), {
+                'name': 'Signer',
+                'signature[0][0]': FileStorage(io.BytesIO(signature), filename='Signature.png'),
+            })
+
+        with MockRequest(self.env):
+            partner = self.env['res.partner'].create(extract_data(b'png')['record'])
+            self.assertEqual(partner.properties['signature'], base64.b64encode(b'png').decode())
+
+            with self.assertRaises(ValidationError) as error:
+                extract_data(bytes(SIGNATURE_MAX_SIZE + 1))
+            self.assertEqual(error.exception.args[0], ['signature'])

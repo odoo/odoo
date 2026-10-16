@@ -1934,6 +1934,50 @@ test("Changing field type from date to datetime removes value property (and attr
     expect(":iframe input#field").toHaveProperty("value", "");
 });
 
+test("Switching between file upload and signature fields resets file settings", async () => {
+    onRpc("get_authorized_fields", () => ({
+        x_signature: {
+            name: "x_signature",
+            string: "Signature",
+            type: "signature",
+            _property: { field: "x_properties" },
+        },
+    }));
+    await setupWebsiteBuilder(
+        `<form class="s_website_form" data-model_name="mail.mail">
+            <div class="s_website_form_field s_website_form_custom" data-type="binary" data-error-message="Custom error">
+                <label class="s_website_form_label" for="field">
+                    <span class="s_website_form_label_content">File</span>
+                </label>
+                <input id="field" type="file" class="form-control s_website_form_input" name="File"
+                    data-max-files-number="3" data-max-file-size="10" accept="image/*" multiple=""/>
+            </div>
+        </form>`,
+        { loadIframeBuilderTemplates: true }
+    );
+    const fileOptionRows = ["Max # of Files", "Max File Size", "Restrict File Types"].map(
+        (label) => `.o_hb_options_container [data-label='${label}']:visible`
+    );
+
+    await contains(":iframe input#field").click();
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
+    await contains(".o_popover [data-action-value='x_signature']").click();
+    expect(":iframe .s_website_form_field").not.toHaveAttribute("data-error-message");
+    expect(":iframe input#field").toHaveClass("s_website_form_signature_input");
+    for (const row of fileOptionRows) {
+        expect(row).toHaveCount(0);
+    }
+
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
+    await contains(".o_popover [data-action-value='binary']").click();
+    expect(":iframe input#field").not.toHaveAttribute("accept");
+    expect(":iframe input#field").toHaveAttribute("data-max-files-number", "1");
+    expect(":iframe input#field").toHaveAttribute("data-max-file-size", "64");
+    for (const row of fileOptionRows) {
+        expect(row).toHaveCount(1);
+    }
+});
+
 test("Don't crash when current form model is not allowed", async () => {
     onRpc("get_authorized_fields", () => ({}));
 
