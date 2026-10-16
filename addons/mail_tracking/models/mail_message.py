@@ -1,3 +1,5 @@
+from markupsafe import Markup
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -60,3 +62,73 @@ class MailMessage(models.Model):
             self.has_field_access(self._fields["tracking_value_ids"], "read")
             and self.tracking_value_ids
         )
+
+    # ------------------------------------------------------
+    # LEGACY TRACKING FALLBACK (upgrade transition)
+    # ------------------------------------------------------
+    # Until the post-upgrade cron finishes, retrofit the tracking values from the
+    # mail.tracking.value table.
+
+    def _store_message_fields(self, res, **kwargs):
+        super()._store_message_fields(res, **kwargs)
+        bodies = self._legacy_tracking_bodies_by_id()
+        if not bodies:
+            return
+        # spoof message_type='tracking' so we get o_track layout class in UI too
+        for name in ("body", "message_type"):
+            if name in res.data:
+                res.data.remove(name)
+        res.attr("body", value=lambda m: bodies.get(m.id, m.body))
+        res.attr("message_type", value=lambda m: 'tracking' if m.id in bodies else m.message_type)
+
+    def _legacy_tracking_bodies_by_id(self):
+        # message_post()/message_log() always used 'notification' for tracking msgs
+        if not (candidates := self.filtered(lambda m: m.message_type == 'notification')):
+            return
+
+        # tracking values are system only: sudo + filter with _filter_has_field_access() below
+        candidates_sudo = candidates.sudo()
+        result = {}
+        for message, message_sudo in zip(candidates, candidates_sudo):
+            trackings = message_sudo.tracking_value_ids._filter_has_field_access(self.env)
+            if trackings:
+                result[message.id] = self._legacy_tracking_body(message.body, trackings)
+        return result
+
+    def _legacy_tracking_body(self, body, trackings):
+        parts = [self._legacy_tracking_line(t) for t in trackings]
+        return Markup('').join(parts) + Markup('<br>') + (body or Markup(''))
+
+    def _legacy_tracking_line(self, tracking):
+        """Return the HTML fragment for a single mail.tracking.value row."""
+        info = tracking.field_info or {}
+        # for a removed field, field_id is unlinked (ondelete='set null')
+        # and type/label live in field_info
+        ttype = (tracking.field_id and tracking.field_id.ttype) or info.get('type') or 'char'
+        label = (tracking.field_id and tracking.field_id.field_description) or info.get('desc') or ''
+
+        if ttype in ('char', 'text', 'selection', 'many2one', 'one2many', 'many2many'):
+            # we already stored resolved labels (display_name for
+            # m2o, joined display_names for x2m, selection label) in the
+            # *_char / *_text columns
+            old = tracking.old_value_char or tracking.old_value_text or 'None'
+            new = tracking.new_value_char or tracking.new_value_text or 'None'
+        elif ttype == 'integer':
+            old = str(tracking.old_value_integer or 0)
+            new = str(tracking.new_value_integer or 0)
+        elif ttype in ('float', 'monetary'):
+            old = f'{tracking.old_value_float or 0:.2f}'
+            new = f'{tracking.new_value_float or 0:.2f}'
+        elif ttype == 'boolean':
+            old = 'Yes' if tracking.old_value_integer else 'No'
+            new = 'Yes' if tracking.new_value_integer else 'No'
+        elif ttype == 'datetime':
+            old = str(tracking.old_value_datetime) if tracking.old_value_datetime else 'None'
+            new = str(tracking.new_value_datetime) if tracking.new_value_datetime else 'None'
+        elif ttype == 'date':
+            old = str(tracking.old_value_datetime.date()) if tracking.old_value_datetime else 'None'
+            new = str(tracking.new_value_datetime.date()) if tracking.new_value_datetime else 'None'
+        else:
+            old = tracking.old_value_char or ''
+            new = tracking.new_value_char or ''
+        return Markup('%s<b>%s</b><i>%s</i><br>') % (old, new, label)
