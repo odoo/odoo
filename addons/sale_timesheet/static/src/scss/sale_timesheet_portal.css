@@ -4,10 +4,12 @@
             text-decoration: none;
             &:after {
                 content: "arrow_drop_down";
+                /* eslint-disable-next-line css/font-family-fallbacks -- icon font */
                 font-family: 'Material Symbols Outlined';
             }
             &.collapsed:after {
                 content: "arrow_right";
+                /* eslint-disable-next-line css/font-family-fallbacks -- icon font */
                 font-family: 'Material Symbols Outlined';
             }
         }

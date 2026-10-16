@@ -63,7 +63,9 @@
         --o-wsale-wishlist-btn-offset-end-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.2);
 
         position: absolute;
+        /* eslint-disable-next-line css/no-invalid-properties -- false positive: unknown var() mixed with a resolved one */
         top: var(--o-wsale-card-offset-top, var(--o-wsale-wishlist-btn-offset-top-default));
+        /* eslint-disable-next-line css/no-invalid-properties -- false positive: unknown var() mixed with a resolved one */
         inset-inline-end: var(--o-wsale-card-offset-x, var(--o-wsale-wishlist-btn-offset-end-default));
     }
 }
