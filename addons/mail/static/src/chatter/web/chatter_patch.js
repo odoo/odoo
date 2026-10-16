@@ -352,6 +352,7 @@ const chatterPatch = {
         if (!thread?.id || !this.state.thread?.eq(thread)) {
             return;
         }
+        await thread.fetchThreadData(requestList.filter((r) => r !== "messages"));
         this.updateRecipients(this.webChatterProps.record);
     },
 
