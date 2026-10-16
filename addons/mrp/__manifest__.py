@@ -42,6 +42,7 @@
         'report/mrp_report_bom_structure.xml',
         'report/mrp_report_mo_overview.xml',
         'report/mrp_production_templates.xml',
+        'report/report_picking.xml',
         'report/report_stock_rule.xml',
         'report/mrp_zebra_production_templates.xml',
         'report/mrp_workorder_templates.xml',

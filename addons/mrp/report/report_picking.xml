@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_picking" inherit_id="stock.report_picking" primary="True">
+        <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="moves" t-value="o.move_raw_ids"/>
+            <t t-set="move_lines" t-value="moves.move_line_ids"/>
+        </xpath>
+        <xpath expr="//div[@name='div_outgoing_address']/.." position="replace"/>
+        <xpath expr="//div[hasclass('o_stock_report_header_row')]" position="replace" mode="inner">
+            <xpath expr="//div[@name='div_origin']" position="move"/>
+            <xpath expr="//div[@name='div_warehouse']" position="move"/>
+            <xpath expr="//div[@name='div_state']" position="move"/>
+            <xpath expr="//div[@name='div_operator']" position="move"/>
+            <div name="div_picking_date">
+                <t t-if="o.state == 'done' and o.date_finished">
+                    <strong>Done Date:</strong>
+                    <p t-field="o.date_finished" t-options="{'widget': 'date'}"/>
+                </t>
+                <t t-elif="o.state != 'done' and o.date_start">
+                    <strong>Scheduled Date:</strong>
+                    <p t-field="o.date_start" t-options="{'widget': 'date'}"/>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//table[hasclass('o_main_table')]" position="attributes">
+            <attribute name="t-if">move_lines</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='picking_has_barcode']" position="attributes">
+            <attribute name="t-value">any(ml.product_id.barcode for ml in move_lines)</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='picking_has_serial_number']" position="attributes">
+            <attribute name="t-value">any(ml.lot_id or ml.lot_name for ml in move_lines)</attribute>
+        </xpath>
+        <xpath expr="//t[@t-as='move']" position="attributes">
+            <attribute name="t-foreach">moves.filtered('quantity').sorted(key=lambda move: (
+                move.move_line_ids[0].location_id.complete_name,
+                move.move_line_ids[0].location_dest_id.complete_name))</attribute>
+        </xpath>
+        <xpath expr="//table[hasclass('o_main_table')]/following-sibling::div[1]" position="replace"/>
+        <xpath expr="//table[.//th[@name='th_package']]" position="replace"/>
+        <xpath expr="//t[@t-set='no_reserved_product']" position="attributes">
+            <attribute name="t-value">any(m.state not in ('done', 'cancel') and m.product_uom_qty &gt; m.quantity for m in moves)</attribute>
+        </xpath>
+        <xpath expr="//p[@t-if=&quot;o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product&quot;]" position="attributes">
+            <attribute name="t-if">o.state == 'draft' or no_reserved_product</attribute>
+        </xpath>
+    </template>
+</odoo>
