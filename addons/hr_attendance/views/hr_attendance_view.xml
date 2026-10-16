@@ -7,7 +7,7 @@
         <field name="name">hr.attendance.tree</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false">
+            <tree string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false" js_class="attendance_list_view">
                 <field name="employee_id" widget="many2one_avatar_user"/>
                 <field name="check_in"/>
                 <field name="check_out" options="{}"/>
@@ -212,6 +212,16 @@
                         context_today() + datetime.timedelta(days=-7)
                         )
                     )]"/>
+                <separator/>
+                <filter
+                    string="Active Employees"
+                    name="activeemployees"
+                    domain="[('employee_id.active', '=', True)]"/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
+                <separator invisible="1"/>
                 <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[(
                     'check_in','&gt;=', (
                         context_today() + datetime.timedelta(days=-90)
@@ -256,6 +266,7 @@
             {
                 "search_default_groupby_name" : 1,
                 "search_default_employee": 1,
+                "search_default_activeemployees": 1,
                 "search_default_last_three_months": 1
             }
         </field>
