@@ -309,6 +309,9 @@ export class ChatBotService {
         this.chatbot = _chatbot ? new Chatbot(_chatbot) : undefined;
         if (this.livechatService.state !== SESSION_STATE.PERSISTED) {
             // We need to repost the welcome steps as they were not saved.
+            if (this.livechatService.rule?.chatbot?.scriptId === this.chatbot.scriptId) {
+                this.chatbot = new Chatbot(this.livechatService.rule.chatbot);
+            }
             this.chatbot.welcomeStepIndex = 0;
             this.currentStep = null;
         }
