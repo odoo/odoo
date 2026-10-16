@@ -9,8 +9,9 @@ fi
 
 refreshInDir () {
     cd "$1" || exit
-    cp "$tooling/_eslintignore" .eslintignore
-    cp "$tooling/_eslintrc.json" .eslintrc.json
+    rm -f .eslintignore .eslintrc.json
+    cp "$tooling/_eslintignore" .eslint-ignore
+    cp "$tooling/_eslint.config.cjs" eslint.config.cjs
     cp "$tooling/_jsconfig.json" jsconfig.json
     cp "$tooling/_package.json" package.json
     cd - &> /dev/null
