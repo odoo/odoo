@@ -1093,6 +1093,23 @@ class TestRepair(TestRepairCommon):
 
         self.assertEqual(repair_order.repair_service_line_ids.sale_line_id.price_unit, 0.0)
 
+    def test_repair_order_from_sale_order_in_branch(self):
+        """ The RO created on SO confirmation must belong to the SO's company, even when confirming
+        from another company (e.g. a branch SO confirmed by the payment post-processing cron).
+        """
+        main_company = self.env.company
+        branch = self.env['res.company'].create({
+            'name': 'Branch Company',
+            'parent_id': main_company.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'company_id': branch.id,
+            'order_line': [Command.create({'product_id': self.product_order_repair.id})],
+        })
+        sale_order.with_company(main_company).action_confirm()
+        self.assertEqual(sale_order.repair_order_ids.company_id, branch)
+
 
 @tagged('post_install', '-at_install')
 class TestRepairHttp(HttpCase):
