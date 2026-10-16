@@ -20,7 +20,7 @@ patch(SelfOrder.prototype, {
     eventImageUrl(event) {
         return event.image_1024
             ? `/web/image/event.event/${event.id}/image_1024`
-            : `/pos_self_order_event/static/src/img/placeholder_thumbnail.png`;
+            : `/pos_self_order_event/static/src/img/event_placeholder.png`;
     },
 
     async addToCart(
