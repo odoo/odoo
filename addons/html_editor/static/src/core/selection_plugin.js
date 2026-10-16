@@ -340,7 +340,10 @@ export class SelectionPlugin extends Plugin {
         this.addGlobalDomListener("selectionchange", () => {
             this.updateActiveSelection();
             const selection = getSelection(this.editable);
-            if (this.isSelectionInEditable(selection)) {
+            if (
+                this.isSelectionInEditable(selection) &&
+                this.editable.contains(this.document.activeElement)
+            ) {
                 scrollToSelection(selection);
             }
         });
