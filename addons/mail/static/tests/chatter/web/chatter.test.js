@@ -17,7 +17,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, mockUserAgent, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -331,16 +331,33 @@ test("should not display user notification messages in chatter", async () => {
     await contains(".o-mail-Message", { count: 0 });
 });
 
-test('post message with "CTRL-Enter" keyboard shortcut in chatter', async () => {
+async function postMessageShortcutInChatter(hotkey, { isMacOS = false } = {}) {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
+    if (isMacOS) {
+        mockUserAgent("mac");
+    }
     await start();
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await contains(".o-mail-Message", { count: 0 });
     await insertText(".o-mail-Composer-input", "Test");
-    triggerHotkey("control+Enter");
+    triggerHotkey(hotkey);
     await contains(".o-mail-Message");
+}
+
+test('post message with "CTRL-Enter" keyboard shortcut in chatter', async () => {
+    await postMessageShortcutInChatter("control+Enter");
+});
+
+test('post message with "CMD-Enter" keyboard shortcut in chatter (macOS)', async () => {
+    // on macOS, the hotkey helper turns "control" into the CMD key
+    await postMessageShortcutInChatter("control+Enter", { isMacOS: true });
+});
+
+test('post message with "CTRL-Enter" keyboard shortcut in chatter (macOS)', async () => {
+    // on macOS, the hotkey helper turns "alt" into the CTRL key
+    await postMessageShortcutInChatter("alt+Enter", { isMacOS: true });
 });
 
 test("base rendering when chatter has no attachment", async () => {
