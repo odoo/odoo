@@ -320,16 +320,18 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         return False
 
-    def _get_qr_code_img_url(self):
+    def _get_qr_code_url(self):
+        """ The AEAT validation URL encoded in the Veri*Factu QR code, as documented in:
+        "Detalle de las especificaciones técnicas del código «QR» de la factura y de la «URL» del
+        servicio de cotejo o remisión de información por parte del receptor de la factura"
+        https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/DetalleEspecificacTecnCodigoQRfactura.pdf
+        """
         self.ensure_one()
         record_identifier = self._get_record_identifier()
         if not record_identifier or self.document_type != 'submission':
             # We take the values from the record identifier.
             # And only the 'submission' has all the necessary values ('ImporteTotal').
             return False
-        # Documentation: "Detalle de las especificaciones técnicas del código «QR» de la factura y de la «URL» del
-        # servicio de cotejo o remisión de información por parte del receptor de la factura"
-        # https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/DetalleEspecificacTecnCodigoQRfactura.pdf
         endpoint_url = self.company_id._l10n_es_edi_verifactu_get_endpoints()['QR']
         url_params = url_encode({
             'nif': record_identifier['IDEmisorFactura'],
@@ -337,8 +339,16 @@ class L10nEsEdiVerifactuDocument(models.Model):
             'fecha': record_identifier['FechaExpedicionFactura'],
             'importe': record_identifier['ImporteTotal'],
         })
-        url = url_quote_plus(f"{endpoint_url}?{url_params}")
-        return f'/report/barcode/?barcode_type=QR&value={url}&barLevel=M&width=180&height=180'
+        return f"{endpoint_url}?{url_params}"
+
+    def _get_qr_code_img_url(self):
+        """ URL to use as the `src` of an `<img>`: Odoo's own barcode controller renders the QR
+        image on the fly, encoding `_get_qr_code_url()` as its value. """
+        self.ensure_one()
+        url = self._get_qr_code_url()
+        if not url:
+            return False
+        return f'/report/barcode/?barcode_type=QR&value={url_quote_plus(url)}&barLevel=M&width=180&height=180'
 
     @api.model
     def _check_record_values(self, vals):
