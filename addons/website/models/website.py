@@ -2732,3 +2732,78 @@ class Website(models.CachedModel):
     def _get_settings_to_copy_onto_new_default_website(self):
         # This list is extended by other modules
         return []
+
+    # -------------------------------------------------------------------------
+    # Website Builder / Branding API
+    # -------------------------------------------------------------------------
+
+    def update_branding(self, values):
+        """Update website branding settings (name, favicon, logo) from the editor.
+
+        :param dict values: Supported keys: 'name' (str), 'favicon' (int|False), 'logo' (int).
+        :return: dict status payload for frontend state synchronization.
+        """
+        self.ensure_one()
+        self._check_branding_rights()
+
+        write_vals = self._prepare_branding_vals(values)
+        if write_vals:
+            self.write(write_vals)
+
+        return {
+            "name": self.name,
+            "has_favicon": write_vals.get("favicon") is not False if "favicon" in write_vals else bool(self.favicon),
+            "has_logo": True if "logo" in write_vals else bool(self.logo),
+        }
+
+    def _check_branding_rights(self):
+        """Ensure current user has designer rights and record write access."""
+        if not self.env.user.has_group("website.group_website_designer"):
+            raise AccessError(_("Only website designers can modify branding settings."))
+        self.check_access("write")
+
+    def _prepare_branding_vals(self, values):
+        """Sanitize incoming dictionary for write()."""
+        vals = {}
+
+        if "name" in values:
+            name = values["name"]
+            if not isinstance(name, str) or not name.strip():
+                raise ValidationError(_("The website name cannot be empty."))
+            cleaned_name = name.strip()
+            if cleaned_name != self.name:
+                vals["name"] = cleaned_name
+
+        if "favicon" in values:
+            vals["favicon"] = self._resolve_branding_media(
+                values["favicon"], field_name="favicon", allow_clear=True,
+            )
+
+        if "logo" in values:
+            vals["logo"] = self._resolve_branding_media(
+                values["logo"], field_name="logo", allow_clear=False,
+            )
+
+        return vals
+
+    def _resolve_branding_media(self, value, field_name, allow_clear=False):
+        """Resolve attachment ID to binary data, enforcing type and security checks."""
+        if value is False:
+            if allow_clear:
+                return False
+            raise ValidationError(_("Removing the %s is not permitted.") % field_name)
+
+        if isinstance(value, int) and value > 0:
+            attachment = self.env["ir.attachment"].browse(value).exists()
+            if not attachment:
+                raise ValidationError(_("The selected %s attachment does not exist.") % field_name)
+
+            attachment.check_access("read")
+
+            valid_mimetypes = ("image/", "application/ico", "application/x-ico")
+            if not (attachment.mimetype and any(attachment.mimetype.startswith(m) for m in valid_mimetypes)):
+                raise ValidationError(_("The attachment for %s must be a valid image file.") % field_name)
+
+            return attachment.raw
+
+        raise ValidationError(_("Invalid payload provided for %s.") % field_name)
