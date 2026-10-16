@@ -18,6 +18,7 @@ from . import test_ir_mail_server_smtpd
 from . import test_ir_model
 from . import test_ir_module
 from . import test_ir_qweb
+from . import test_ir_qweb_cache
 from . import test_ir_qweb_fields
 from . import test_ir_sequence
 from . import test_ir_ui_menu

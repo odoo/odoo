@@ -76,6 +76,8 @@ in the IrQweb class.
               ┣━► _compile_directives (loop)    Consume all remaining directives ◄━━━┓  ┃ ┃
               ┃  ┃                              (e.g.: to change the indentation)    ┃  ┃ ┃
               ┃  ┣━► _compile_directive                                              ┃  ┃ ┃
+              ┃  ┃    ┗━► t-nocache       ━━► _compile_directive_nocache            ━┫  ┃ ┃
+              ┃  ┃    ┗━► t-cache         ━━► _compile_directive_cache              ━┫  ┃ ┃
               ┃  ┃    ┗━► t-groups        ━━► _compile_directive_groups             ━┫  ┃ ┃
               ┃  ┃    ┗━► t-foreach       ━━► _compile_directive_foreach            ━┫  ┃ ┃
               ┃  ┃    ┗━► t-if            ━━► _compile_directive_if                 ━┛  ┃ ┃
@@ -489,6 +491,13 @@ SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title', 'id', 'name'} | se
 # The slot will be replaced by the `t-call` tag content of the caller.
 T_CALL_SLOT = '0'
 
+# opening/closing tags and comments, for the `show-t-cache` debug mode
+SHOW_T_CACHE_TAG_REGEXP = re.compile(r"""
+    <!--.*?-->
+    | <(?P<closing>/)?(?P<tag>[a-zA-Z][\w:.-]*)
+      (?:\s+[^\s=>/]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*(?P<self_closing>/)?>
+""", re.VERBOSE | re.DOTALL)
+
 ETREE_TEMPLATE_REF = count()
 
 # Only allow a javascript scheme if it is followed by [ ][window.]history.back()
@@ -599,6 +608,12 @@ class QwebCallParameters(NamedTuple):
         )
 
 
+class QwebNocacheRecords(NamedTuple):
+    """ Recordset of the `t-nocache` values kept in the cache of a `t-cache`. """
+    model: str
+    ids: tuple[int, ...]
+
+
 class QwebStackFrame(NamedTuple):
     params: QwebCallParameters | QwebContent
     irQweb: IrQweb
@@ -637,11 +652,15 @@ class QwebContent:
 
     def __str__(self):
         if self.html is None:
-            if self.irQweb is None:
+            irQweb = self.irQweb
+            if irQweb is None:
                 return ''
+            if irQweb.env.context.get('_qweb_t_cache_collect'):
+                # used as a string: the t-nocache parts can't be deferred
+                irQweb = irQweb.with_context(_qweb_t_cache_collect=False)
             params = self.params__
             process = self.process__
-            self.html = ''.join(self.irQweb._render_iterall(
+            self.html = ''.join(irQweb._render_iterall(
                params.view_ref, params.method, params.values, params.root_values, process, params.directive,
             ))
         return self.html
@@ -761,9 +780,10 @@ class IrQweb(models.AbstractModel):
         iterator = irQweb._render_iterall(template, None, values, root_values, process)
         return Markup(''.join(iterator))
 
-    def _render_iterall(self, view_ref, method, values, root_values, process, directive='render') -> Iterator[str]:
+    def _render_iterall(self, view_ref, method, values, root_values, process, directive='render') -> Iterator[str | QwebCallParameters]:
         """ Iterate over the generator method.
-            Generator elements are a str
+            Generator elements are a str, or the `QwebCallParameters` of the
+            `t-nocache` parts when rendering the content of a `t-cache`.
         """
 
         loaded_functions = process['qweb_loaded_functions']
@@ -808,6 +828,18 @@ class IrQweb(models.AbstractModel):
 
                     else:  # isinstance(item, QwebCallParameters)
                         params = item
+                        if params.directive == 't-nocache' and frame.irQweb.env.context.get('_qweb_t_cache_collect'):
+                            # rendering the content of a t-cache: the t-nocache
+                            # part bubbles up to be stored and rendered later
+                            yield params
+                            continue
+                        if params.directive == 't-nocache' and frame.irQweb.env.context.get('show_t_cache'):
+                            html = ''.join(frame.irQweb._render_iterall(
+                                params.view_ref, params.method, {**((params.root_values or root_values) if params.scope else frame.values), **frame.irQweb._load_nocache_values(params.values)},
+                                root_values, process, 't-nocache-show',
+                            ))
+                            yield from self._show_t_cache_zone(process, [html], 't-nocache', params.path_xml[2])
+                            continue
 
                     # add new QwebStackFrame from QwebCallParameters
                     values = frame.values
@@ -831,12 +863,16 @@ class IrQweb(models.AbstractModel):
                     # Apply a new scope if needed
                     if params.scope:
                         if params.scope == 'root':
-                            values = root_values
+                            # a replayed t-nocache uses the values of its t-cache call site
+                            values = params.root_values if params.directive == 't-nocache' and params.root_values is not None else root_values
                         values = values.copy()
 
                     # Update values with default values
                     if params.values:
-                        values.update(params.values)
+                        if params.directive == 't-nocache':
+                            values.update(irQweb._load_nocache_values(params.values))
+                        else:
+                            values.update(params.values)
 
                     iterator = iter([])
                     try:
@@ -1397,6 +1433,11 @@ class IrQweb(models.AbstractModel):
             )
 
         context = {'dev_mode': 'qweb' in tools.config['dev_mode']}
+        debug_modes = debug.split(',')
+        if 'xml' in tools.config['dev_mode'] or 'disable-t-cache' in debug_modes:
+            context['is_t_cache_disabled'] = True
+        if 'show-t-cache' in debug_modes:
+            context['show_t_cache'] = True
         return self.with_context(**context)
 
     def __prepare_globals(self):
@@ -1743,6 +1784,8 @@ class IrQweb(models.AbstractModel):
             'else', # Must be the first because compiled by the previous if.
             'debug',
             'log',
+            'nocache',
+            'cache',
             'groups',
             'as', 'foreach',
             'if',
@@ -1917,6 +1960,9 @@ class IrQweb(models.AbstractModel):
                 code.extend(self._compile_directive(el, compile_context, directive, level))
             elif directive == 'options':
                 if any(name.startswith('t-options-') for name in el.attrib):
+                    code.extend(self._compile_directive(el, compile_context, directive, level))
+            elif directive == 'nocache':
+                if any(name.startswith('t-nocache-') for name in el.attrib):
                     code.extend(self._compile_directive(el, compile_context, directive, level))
 
         # compile unordered directives still present on the element
@@ -2824,6 +2870,101 @@ class IrQweb(models.AbstractModel):
 
         return code
 
+    def _compile_directive_cache(self, el, compile_context, level):
+        """Compile the `t-cache` expression into a cached rendering.
+
+        The `t-cache` directive keeps the rendered result of a template part.
+        The expression gives the cache key (a value or a tuple of values);
+        a falsy key disables the cache. Recordsets in the key only use their
+        model and ids: the cache is not invalidated when the records are
+        modified. It is cleared when the templates are modified or with the
+        "Reset Cache" button of the website settings.
+        The values set inside the `t-cache` are not available outside.
+        see: `t-nocache`
+        """
+        expr = el.attrib.pop('t-cache')
+        code = self._flush_text(compile_context, level)
+        _ref, path, xml = compile_context['_qweb_error_path_xml']
+
+        def_name = compile_context['make_name']('t_cache')
+        def_code = [f"def {def_name}(self, values, root_values, process):"]
+        def_code.append(indent_code('attrs = None', 1))
+        def_code.append(indent_code('if False: yield ""', 1))
+        def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
+        def_code.extend(self._compile_directives(el, dict(compile_context, qweb_attrs_created=False), 1))
+        def_code.extend(self._flush_text(compile_context, 1))
+        compile_context['template_functions'][def_name] = def_code
+
+        ref = compile_context['ref']
+        if not isinstance(ref, int):
+            # templates without database reference (etree, files) can't be
+            # identified in the shared cache
+            code.append(indent_code(f"yield from {def_name}(self, values.copy(), root_values, process)", level))
+            return code
+
+        # the compiled code is specific to these keys (e.g. lang, website_id)
+        base_key = (ref, def_name, *(compile_context.get(k) or False for k in self._get_template_cache_keys()))
+        code.append(indent_code(f"""
+            t_cache_key = None if self.env.context.get('is_t_cache_disabled') else {self._compile_expr(expr, compile_context)}
+            yield from self._render_t_cache({base_key!r}, t_cache_key, {ref!r}, {def_name!r}, values.copy(), root_values, process)
+        """, level))
+        return code
+
+    def _compile_directive_nocache(self, el, compile_context, level):
+        """
+        The `t-nocache` directive forces the rendering of a part even if it
+        is in a `t-cache`. In a `t-cache`, the available values are the ones
+        at the call site of the `t-cache` (always up-to-date), updated with
+        the values set in the cached content and kept in the cache: the
+        primitive values and the recordsets (browsed again when rendering).
+        The other values set in the cached content (a dict for instance) are
+        ignored.
+        Without parent `t-cache`, the directive is ignored.
+
+        The optional `t-nocache-*` are values whose result of the expression
+        will be cached and added to the values when rendering the no cache
+        part. Only primitive types can be cached.
+
+        see: `t-cache`
+        """
+        if 't-nocache' not in el.attrib:
+            raise SyntaxError("t-nocache-* must be on the same node as t-nocache")
+
+        el.attrib.pop('t-nocache')
+        code = self._flush_text(compile_context, level)
+        _ref, path, xml = compile_context['_qweb_error_path_xml']
+
+        # t-nocache-* generate the values to keep in cache, they must be
+        # consumed before compiling the content.
+        code.append(indent_code("nocache_values = self._get_nocache_values(values, process) if self.env.context.get('_qweb_t_cache_collect') else {}", level))
+        for key in list(el.attrib):
+            if key.startswith('t-nocache-'):
+                expr = el.attrib.pop(key)
+                varname = key[10:]
+                if not VARNAME_REGEXP.match(varname):
+                    raise ValueError(f'The varname {varname!r} can only contain alphanumeric characters and underscores.')
+                code.append(indent_code(f"""
+                    nocache_value = {self._compile_expr(expr, compile_context)}
+                    if nocache_value is not None and not isinstance(nocache_value, (str, int, float, bool)):
+                        raise ValueError(f'''The value type of {key!r} cannot be cached: {{nocache_value!r}}''')
+                    nocache_values[{varname!r}] = nocache_value
+                """, level))
+
+        def_name = compile_context['make_name']('t_nocache')
+        def_code = [f"def {def_name}(self, values, root_values, process):"]
+        def_code.append(indent_code('attrs = None', 1))
+        def_code.append(indent_code('if False: yield ""', 1))
+        def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
+        def_code.extend(self._compile_directives(el, dict(compile_context, qweb_attrs_created=False), 1))
+        def_code.extend(self._flush_text(compile_context, 1))
+        compile_context['template_functions'][def_name] = def_code
+
+        # No context nor root values: the parameters can be kept in the cache
+        # and rendered in another request with the root values. Without
+        # parent t-cache, the content is rendered with the current values.
+        code.append(indent_code(f"yield QwebCallParameters({{}}, {compile_context['ref']!r}, {def_name!r}, nocache_values, None, 'root' if self.env.context.get('_qweb_t_cache_collect') else False, 't-nocache', (template_options['ref'], {path!r}, {xml!r}))", level))
+        return code
+
     # methods called by the compiled function at rendering time.
 
     def _debug_trace(self, debugger, values):
@@ -2939,6 +3080,178 @@ class IrQweb(models.AbstractModel):
             return self._generate_asset_links(bundle, css=css, js=js, binary=binary, debug_assets=True, assets_params=assets_params, rtl=rtl, autoprefix=autoprefix)
         else:
             return self._generate_asset_links_cache(bundle, css=css, js=js, binary=binary, assets_params=assets_params, rtl=rtl, autoprefix=autoprefix)
+
+    # qweb cache feature
+
+    def _render_t_cache(self, base_key, cache_key, ref, method, values, root_values, process):
+        """ Render the content of a `t-cache`, from the cache if possible. The
+        `t-nocache` parts are always rendered.
+        """
+        if not cache_key:
+            if self.env.context.get('show_t_cache') and not self.env.context.get('_qweb_t_cache_collect'):
+                html = ''.join(self._render_iterall(ref, method, values, root_values, process, 't-cache'))
+                yield from self._show_t_cache_zone(process, [html], 't-cache-disabled', f"key: {cache_key!r}")
+                return
+            yield from self._render_iterall(ref, method, values, root_values, process, 't-cache')
+            return
+
+        miss = []
+        # the values at the t-cache call site are always up-to-date, the
+        # t-nocache only keep in cache the values set in the cached content
+        site_values = dict(values)
+
+        def render():
+            miss.append(True)
+            result = []
+            text = []
+            irQweb = self.with_context(_qweb_t_cache_collect=True)
+            sites = process.setdefault('qweb_t_cache_site_values', [])
+            sites.append(site_values)
+            try:
+                for item in irQweb._render_iterall(ref, method, values, root_values, process, 't-cache'):
+                    if isinstance(item, str):
+                        text.append(item)
+                    else:
+                        if text:
+                            result.append(''.join(text))
+                            text = []
+                        result.append(item)
+            finally:
+                sites.pop()
+            if text:
+                result.append(''.join(text))
+            return tuple(result)
+
+        # the zones are marked in the content of a parent t-cache
+        key = (*base_key, bool(self.env.context.get('show_t_cache')), self._get_cache_key(cache_key))
+        items = self._get_cached_values(key, render)
+        if not self.env.context.get('_qweb_t_cache_collect'):
+            # in a parent t-cache, the values are completed by the parent
+            items = [
+                item._replace(root_values=site_values) if isinstance(item, QwebCallParameters) else item
+                for item in items
+            ]
+        if not self.env.context.get('show_t_cache'):
+            yield from items
+            return
+
+        # the t-nocache are marked when rendered
+        title = f"{'miss' if miss else 'hit'}, key: {key!r}"
+        yield from self._show_t_cache_zone(process, items, 't-cache', title)
+
+    def _show_t_cache_zone(self, process, items, zone, title):
+        """ Debug mode `show-t-cache`: outline the cached zones in green,
+        the not cached zones in red and the disabled t-cache in orange.
+        The title of the zone contains its cache key.
+
+        All the top-level elements of the zone are marked (the first one can be
+        empty or hidden), without changing the layout.
+
+        :param items: the content of the zone: html and `t-nocache` parameters
+        """
+        if not process.get('show_t_cache_style'):
+            process['show_t_cache_style'] = True
+            # An overlay is used because the outline of an element is hidden
+            # by its positioned children. The zero specificity `position`
+            # doesn't override the positioned elements.
+            yield (
+                '<style>'
+                '[data-oe-t-cache-zone="t-cache"] { --o-t-cache-zone-color: #00b300; --o-t-cache-zone-inset: 0; }'
+                '[data-oe-t-cache-zone="t-cache-disabled"] { --o-t-cache-zone-color: orange; --o-t-cache-zone-inset: 0; }'
+                '[data-oe-t-cache-zone="t-nocache"] { --o-t-cache-zone-color: red; --o-t-cache-zone-inset: 3px; }'
+                ':where([data-oe-t-cache-zone]) { position: relative; }'
+                # elements without ::after (void elements) use an outline
+                ':is(img, input, hr, br, select, textarea)[data-oe-t-cache-zone] { outline: 4px dashed var(--o-t-cache-zone-color) !important; }'
+                '[data-oe-t-cache-zone]::after { content: ""; position: absolute; inset: var(--o-t-cache-zone-inset);'
+                ' border: 4px dashed var(--o-t-cache-zone-color); pointer-events: none; z-index: 2000; }'
+                '</style>'
+            )
+        attrs = f' data-oe-t-cache-zone="{zone}" title="{escape(title)}"'
+        depth = 0
+        marked = False
+        raw_text_tag = None  # content of <script> and <style> is not parsed
+        for item in items:
+            if not isinstance(item, str):
+                yield item
+                continue
+            result = []
+            position = 0
+            for match in SHOW_T_CACHE_TAG_REGEXP.finditer(item):
+                closing, tag, self_closing = match.group('closing'), match.group('tag'), match.group('self_closing')
+                if tag is None:  # comment
+                    continue
+                tag = tag.lower()
+                if raw_text_tag:
+                    if closing and tag == raw_text_tag:
+                        raw_text_tag = None
+                        depth -= 1
+                    continue
+                if closing:
+                    depth = max(depth - 1, 0)
+                    continue
+                if depth == 0:
+                    result.append(item[position:match.end('tag')])
+                    result.append(attrs)
+                    position = match.end('tag')
+                    marked = True
+                if not self_closing and tag not in VOID_ELEMENTS:
+                    depth += 1
+                    if tag in ('script', 'style'):
+                        raw_text_tag = tag
+            result.append(item[position:])
+            yield ''.join(result)
+        if not marked:
+            yield f'<span{attrs}></span>'
+
+    def _get_nocache_values(self, values, process):
+        """ Return the values of the `t-nocache` scope to keep in the cache of
+        the parent `t-cache`: the values set in the cached content, if they
+        are primitive values or recordsets (kept as model and ids). The other
+        values come from the call site of the (outermost) `t-cache`.
+        """
+        site_values = process['qweb_t_cache_site_values'][0]
+        nocache_values = {}
+        for key, value in values.items():
+            if not isinstance(key, str) or key.startswith('__') or (key in site_values and site_values[key] is value):
+                continue
+            if value is None or isinstance(value, (str, int, float, bool)):
+                nocache_values[key] = value
+            elif isinstance(value, models.BaseModel):
+                nocache_values[key] = QwebNocacheRecords(value._name, tuple(value.ids))
+        return nocache_values
+
+    def _load_nocache_values(self, nocache_values):
+        """ Browse the recordsets of the values kept by `_get_nocache_values`. """
+        return {
+            key: self.env[value.model].browse(value.ids) if isinstance(value, QwebNocacheRecords) else value
+            for key, value in nocache_values.items()
+        }
+
+    def _get_cache_key(self, cache_key):
+        """ Convert the `t-cache` key into a hashable key. Recordsets only use
+        their model and ids, their modifications don't invalidate the cache.
+
+        :param cache_key: value or tuple of values
+        :returns: tuple of hashable items
+        """
+        if not isinstance(cache_key, (tuple, list)):
+            cache_key = (cache_key,)
+        keys = []
+        for item in cache_key:
+            try:
+                # use try catch instead of isinstance to detect lazy values
+                keys.append((item._name, tuple(item.ids)))
+            except AttributeError:
+                keys.append(repr(item))
+        return tuple(keys)
+
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        api.ormcache('cache_key', cache='templates.cached_values'),
+    )
+    def _get_cached_values(self, cache_key, get_value):
+        """ Generate the value from the function if the result is not cached. """
+        return get_value()
 
     # other methods used for the asset bundles
     @tools.conditional(
