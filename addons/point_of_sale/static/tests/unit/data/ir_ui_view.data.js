@@ -1,5 +1,5 @@
 import { models } from "@web/../tests/web_test_helpers";
-import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
+import { loadQwebTemplates } from "@point_of_sale/../tests/unit/utils";
 
 let receiptTemplatesPromise;
 
@@ -33,16 +33,7 @@ export class IrUiView extends models.ServerModel {
     }
 
     async _load_pos_data_read(records) {
-        if (!receiptTemplatesPromise) {
-            const xmlIds = this._get_xml_ids_to_load();
-            receiptTemplatesPromise = unmockedOrm(
-                "ir.ui.view",
-                "search_read",
-                [[["key", "in", xmlIds]], ["key", "arch"]],
-                {}
-            );
-        }
-        const templates = await receiptTemplatesPromise;
-        return [...records, ...templates.map(({ key, arch }) => ({ key, _template: arch }))];
+        receiptTemplatesPromise ||= loadQwebTemplates(this._get_xml_ids_to_load());
+        return [...records, ...(await receiptTemplatesPromise)];
     }
 }
