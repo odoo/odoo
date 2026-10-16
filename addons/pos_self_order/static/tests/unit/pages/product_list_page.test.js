@@ -30,6 +30,14 @@ test("selectProduct", async () => {
     expect(store.currentOrder.lines).toHaveLength(3);
 });
 
+test("kiosk without any available category", async () => {
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+    store.models["product.template"].getAll().forEach((p) => (p.self_order_available = false));
+    const comp = await mountWithCleanup(ProductListPage, {});
+    expect(comp.topCategories).toHaveLength(0);
+    expect(comp.productCategories).toHaveLength(0);
+});
+
 test("getSubCategories and selectCategory", async () => {
     const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     const models = store.models;
@@ -53,6 +61,13 @@ test("getSubCategories and selectCategory", async () => {
     expect(comp.state.selectedCategory.id).toBe(5);
     expect(comp.getSubCategories()).toHaveLength(2);
     expect(comp.getSubCategories().map((c) => c.id)).toEqual([4, 5]);
+
+    // Child category without any self order available product is hidden
+    // Burger (id=4) only contains the "Bacon burger"
+    models["product.template"].get(12).self_order_available = false;
+    store.computeAvailableCategories();
+    comp.selectCategory(foodCatg);
+    expect(comp.getSubCategories().map((c) => c.id)).toEqual([5]);
 
     // for mobile mode
     store.config.self_ordering_mode = "mobile";
