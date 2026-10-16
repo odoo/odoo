@@ -404,3 +404,61 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         company_a.invalidate_recordset()
         self.assertFalse(company_a.credit_to_invoice)
         self.assertEqual(company_a.credit, 1200.0)
+
+    def test_credit_limit_delivered_then_taken_back_and_refunded(self):
+        """ A line invoiced on delivered quantities whose delivered quantity was lowered after
+        being invoiced, then refunded, should not count in the partner's credit anymore.
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.company_data['product_service_delivery'].id,
+                'product_uom_qty': 10.0,
+                'price_unit': 100.0,
+                'tax_id': False,
+            })],
+        })
+        sale_order.action_confirm()
+        line = sale_order.order_line
+        self.assertEqual(sale_order.amount_to_invoice, 1000.0)
+
+        line.qty_delivered = 10.0
+        sale_order._create_invoices().action_post()
+        self.assertEqual(sale_order.amount_to_invoice, 0.0)
+
+        # Everything is taken back, the remaining quantity is still to invoice until refunded
+        line.qty_delivered = 0.0
+        self.assertEqual(sale_order.amount_to_invoice, 0.0)
+        sale_order._create_invoices(final=True).action_post()
+        self.assertEqual(sale_order.amount_to_invoice, 0.0)
+        self.assertEqual(sale_order.amount_invoiced, 0.0)
+        self.partner_a.invalidate_recordset(['credit_to_invoice'])
+        self.assertEqual(self.partner_a.credit_to_invoice, 0.0)
+
+        # Partially taken back and refunded
+        sale_order = sale_order.copy()
+        sale_order.action_confirm()
+        line = sale_order.order_line
+        line.qty_delivered = 10.0
+        sale_order._create_invoices().action_post()
+        line.qty_delivered = 4.0
+        sale_order._create_invoices(final=True).action_post()
+        self.assertEqual(sale_order.amount_to_invoice, 0.0)
+        self.assertEqual(sale_order.amount_invoiced, 400.0)
+
+    def test_credit_limit_undelivered_order(self):
+        """ The undelivered quantity of a line invoiced on delivered quantities still counts. """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.company_data['product_service_delivery'].id,
+                'product_uom_qty': 10.0,
+                'price_unit': 100.0,
+                'tax_id': False,
+            })],
+        })
+        sale_order.action_confirm()
+        sale_order.order_line.qty_delivered = 4.0
+        sale_order._create_invoices().action_post()
+        self.assertEqual(sale_order.amount_to_invoice, 600.0)
+        self.assertEqual(sale_order.amount_invoiced, 400.0)
