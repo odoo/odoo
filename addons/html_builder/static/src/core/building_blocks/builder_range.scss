@@ -143,6 +143,48 @@
                 background-color: var(--o-we-sidebar-content-field-progress-active-color);
             }
         }
+
+        @media screen and (forced-colors: active) {
+            @media (prefers-color-scheme: dark) {
+                &::-webkit-slider-runnable-track {
+                    background-color: Field !important;
+                }
+                &::-moz-range-track {
+                    background-color: Field !important;
+                }
+            }
+            @media (prefers-color-scheme: light) {
+                &::-webkit-slider-runnable-track {
+                    background-color: ButtonBorder !important;
+                }
+                &::-moz-range-track {
+                    background-color: ButtonBorder !important;
+                }
+                &::-webkit-slider-thumb {
+                    background-color: FieldText;
+                }
+                &::-moz-range-thumb {
+                    background-color: FieldText;
+                }
+                &::-ms-thumb {
+                    background-color: FieldText;
+                }
+            }
+
+            &:focus-visible {
+                outline: none !important;
+
+                &::-webkit-slider-thumb {
+                    outline: 2px solid AccentColor;
+                }
+                &::-moz-range-thumb {
+                    outline: 2px solid AccentColor;
+                }
+                &::-ms-thumb {
+                    outline: 2px solid AccentColor;
+                }
+            }
+        }
     }
 
     output {

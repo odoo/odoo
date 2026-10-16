@@ -160,6 +160,10 @@
     display: none;
 }
 
-.o_hb_select_dropdown_item:has(.o_hb_theme_tab_link) {
-    padding-right: 0;
+.o_hb_select_dropdown_item {
+    --o-forced-colors-active-outline-offset: -2px;
+
+    &:has(.o_hb_theme_tab_link) {
+        padding-right: 0;
+    }
 }

@@ -258,6 +258,10 @@ $o-mega-menu-btn-close-zindex: $o-mega-menu-zindex + 1 !default;
         */
         --o-focus-ring-outline-width: 2px;
         --o-focus-ring-outline: var(--o-focus-ring-outline-width) solid var(--o-focus-ring-inner-color, var(--o-color-4));
+
+        @media screen and (forced-colors: active) {
+            --o-focus-ring-outline: var(--o-focus-ring-outline-width) solid AccentColor;
+        }
     }
 }
 
@@ -280,6 +284,7 @@ body:not(.editor_enable) {
         }
 
         &#o_logout, &.dropdown-item {
+            --o-forced-colors-active-outline-offset: -2px;
             --o-focus-ring: var(--o-focus-ring-inset);
             --o-focus-ring-outline-width: 3px;
         }
@@ -1355,6 +1360,17 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 /* This style is shared by the new versions of carousels
    001 for s_carousel & 002 for s_quotes_carousel */
 %s_carousel_variants {
+    --o-forced-colors-active-outline-offset: -2px;
+
+    @media (forced-colors: active) {
+        --o-bs-carousel-dark-control-icon-filter: invert(0);
+        --o-bs-carousel-dark-indicator-active-bg: CanvasText;
+
+        @media (prefers-color-scheme: dark) {
+            --o-bs-carousel-dark-indicator-active-bg: Canvas;
+        }
+    }
+
     /* Before media-breakpoint-down so that it's overridden. */
     .o_carousel_pause {
         width: var(--o-bs-carousel-control-width);
@@ -1424,8 +1440,16 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
                     position: absolute;
                     inset: 0;
                     box-shadow: var(--o-focus-ring-inset);
+                    outline: var(--o-focus-ring-outline);
+                    outline-offset: -2px;
                     filter: invert(1);
                 }
+            }
+        }
+
+        &, .o_carousel_pause {
+            @media (forced-colors: active) {
+                background-color: ButtonFace !important;
             }
         }
     }
@@ -1467,6 +1491,15 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 
     .carousel-control-prev-icon, .carousel-control-next-icon {
         background-size: 50%;
+
+        @media (forced-colors: active) {
+            filter: invert(1) !important;
+
+            @media (prefers-color-scheme: dark) {
+                background-color: Canvas;
+                z-index: -1; /* For the outline on focus-visible */
+            }
+        }
     }
 
     &.carousel-dark:not(.s_carousel_controllers_indicators_outside),
@@ -1567,6 +1600,10 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             border-radius: var(--border-radius-pill);
             transform: scale(.5);
             transition: opacity .6s ease, transform .6s ease; /* Mirror '$carousel-indicator-transition' duration */
+
+            @media (forced-colors: active) {
+                background-color: ButtonText;
+            }
 
             /* Increases the click area for easier navigation. */
             &:before {
@@ -2826,6 +2863,10 @@ $ribbon-padding: 100px;
         .oe_search_box:focus-visible, .oe_search_button:focus-visible {
             box-shadow: var(--o-focus-ring-inset) !important;
             outline: none !important;
+
+            @media screen and (forced-colors: active) {
+                outline: var(--o-forced-colors-active-outline-width) solid AccentColor !important;
+            }
         }
     }
 
@@ -3786,6 +3827,12 @@ input[value*="data-oe-translation-source-sha"] {
     border-right-width: 0;
 }
 
+@media screen and (forced-colors: active) {
+    .form-select:focus-visible {
+        color: CanvasText !important;
+    }
+}
+
 /* The `nav-link` and `btn` classes do not induce the same padding and border
    radius. However, in some cases, we need to apply these properties of `btn`
    with the color of `nav-link` (e.g. for the "Sign In" button of the "sidebar"
@@ -3910,10 +3957,16 @@ in a huge font size since it isn’t redefined for the frontend.
 .stretched-link:focus-visible::after,
 .slide-link:focus-visible {
     --o-focus-ring: var(--o-focus-ring-inset);
+    --o-forced-colors-active-outline-offset: -2px;
 }
 
 .stretched-link:focus-visible::after {
     box-shadow: var(--o-focus-ring);
+
+    @media (forced-colors: active) {
+        outline: var(--o-forced-colors-active-outline-width) solid AccentColor !important;
+        outline-offset: var(--o-forced-colors-active-outline-offset) !important;
+    }
 }
 
 /* Specific styles for the BottomSheet component when it is used in the frontend */

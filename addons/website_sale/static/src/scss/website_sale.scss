@@ -386,6 +386,8 @@
                 position: absolute;
                 inset: 0;
                 box-shadow: var(--o-focus-ring-inset);
+                outline: var(--o-focus-ring-outline);
+                outline-offset: -2px;
             }
         }
         /* <- End filmstrip design variations */
@@ -494,6 +496,15 @@
 
                     .o_wsale_filmstrip_item {
                         box-shadow: var(--o-focus-ring-inset) !important;
+                    }
+
+                    @media screen and (forced-colors: active) {
+                        outline: none !important;
+
+                        .o_wsale_filmstrip_item {
+                            outline: var(--o-forced-colors-active-outline-width) solid AccentColor;
+                            outline-offset: -2px;
+                        }
                     }
                 }
             }

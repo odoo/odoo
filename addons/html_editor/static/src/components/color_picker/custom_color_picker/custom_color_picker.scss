@@ -13,6 +13,11 @@
     .o_opacity_slider, .o_color_preview {
         @extend %o-preview-alpha-background;
     }
+    @media screen and (forced-colors: active) {
+        .o_color_pick_area, .o_color_slider, .o_opacity_slider {
+            forced-color-adjust: none;
+        }
+    }
     .o_color_slider, .o_opacity_slider {
         width: 4%;
         margin-right: 2%;

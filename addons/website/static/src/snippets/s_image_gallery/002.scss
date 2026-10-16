@@ -90,6 +90,12 @@
     }
 
     &.o_slideshow {
+        --o-forced-colors-active-outline-offset: -2px;
+
+        @media (forced-colors: active) {
+            --o-bs-carousel-dark-control-icon-filter: invert(0);
+        }
+
         .carousel {
             &, .carousel-inner {
                 height: var(--snippet-preview-height, 100%);
@@ -179,6 +185,15 @@
 
         .carousel-control-prev-icon, .carousel-control-next-icon {
             background-size: 50%;
+
+            @media (forced-colors: active) {
+                filter: invert(1) !important;
+
+                @media (prefers-color-scheme: dark) {
+                    background-color: Canvas;
+                    z-index: -1; /* For the outline on focus-visible */
+                }
+            }
         }
         .carousel-control-prev-icon, .carousel-control-next-icon, .o_carousel_pause_icon {
             height: $-o-carousel-controllers-size;
@@ -345,6 +360,10 @@
                 border-radius: var(--border-radius-pill);
                 transform: scale(.5);
                 transition: opacity .6s ease, transform .6s ease; // $carousel-indicator-transition values
+
+                @media (forced-colors: active) {
+                    background-color: ButtonText;
+                }
 
                 img {
                     display: none;
@@ -563,6 +582,10 @@
     .modal-dialog {
         height: 100%;
         background-color: rgba(0,0,0,0.7);
+
+        @media (forced-colors: active) {
+            background-color: Canvas;
+        }
     }
 
     @media (min-width: 576px) { /* media-breakpoint-up(sm) */
@@ -615,6 +638,24 @@
                 background-size: 50%;
                 background-color: var(--o-bs-carousel-dark-indicator-active-bg);
                 border-radius: var(--o-bs-btn-border-radius);
+
+                @media (forced-colors: active) {
+                    background-color: ButtonText;
+
+                    @media (prefers-color-scheme: dark) {
+                        background-color: ButtonFace;
+                    }
+                }
+            }
+        }
+
+        @media (forced-colors: active) and (prefers-color-scheme: light) {
+            .btn-close {
+                filter: invert(0);
+
+                &:focus-visible {
+                    outline: 2px auto;
+                }
             }
         }
     }

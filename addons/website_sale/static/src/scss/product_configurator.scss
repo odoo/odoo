@@ -53,6 +53,10 @@
     &.transparent {
         background-image: url(/web/static/img/transparent.png);
     }
+
+    @media screen and (forced-colors: active) {
+        forced-color-adjust: none;
+    }
 }
 
 .css_attribute_image {

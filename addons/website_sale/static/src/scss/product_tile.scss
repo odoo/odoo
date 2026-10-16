@@ -102,6 +102,11 @@
             content: "";
             inset: 0;
             box-shadow: var(--o-focus-ring-inset);
+
+            @media screen and (forced-colors: active) {
+                outline: var(--o-forced-colors-active-outline-width) solid AccentColor;
+                outline-offset: -2px;
+            }
         }
     }
     .oe_product_image_link {
@@ -228,6 +233,15 @@
                 }
                 .css_attribute_preview_thumbnail {
                     box-shadow: var(--o-focus-ring-inset);
+                }
+
+                @media screen and (forced-colors: active) {
+                    outline: none !important;
+
+                    .css_attribute_preview_thumbnail {
+                        outline: var(--o-forced-colors-active-outline-width) solid AccentColor;
+                        outline-offset: -2px;
+                    }
                 }
             }
         }
