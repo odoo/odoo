@@ -36,7 +36,7 @@ class ReportPosOrder(models.Model):
     config_id = fields.Many2one('pos.config', string='Point of Sale', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', readonly=True)
     session_id = fields.Many2one('pos.session', string='Session', readonly=True)
-    margin = fields.Float(string='Margin', readonly=True)
+    margin = fields.Float(string='Margin', readonly=True, groups='point_of_sale.group_pos_manager')
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', readonly=True)
 
     def _select(self):
