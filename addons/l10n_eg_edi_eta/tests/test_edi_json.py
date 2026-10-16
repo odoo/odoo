@@ -872,3 +872,18 @@ class TestEdiJson(TestEGEdiCommon):
         )
         invoice.action_post()
         self.assertEqual(invoice.state, "posted")
+
+    def test_11_eta_codes_portal_url(self):
+        for mode, expected_url in (
+            ('production', 'https://invoicing.eta.gov.eg/codeusages'),
+            ('preproduction', 'https://preprod.invoicing.eta.gov.eg/codeusages'),
+        ):
+            with self.subTest(mode=mode):
+                self.env.company.l10n_eg_edi_api_mode = mode
+                expected_action = {
+                    'type': 'ir.actions.act_url',
+                    'url': expected_url,
+                    'target': 'new',
+                }
+                self.assertEqual(self.product_a.action_open_eta_codes_portal(), expected_action)
+                self.assertEqual(self.product_a.product_tmpl_id.action_open_eta_codes_portal(), expected_action)
