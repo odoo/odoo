@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-30 15:03+0000\n"
-"PO-Revision-Date: 2026-10-01 20:14+0000\n"
+"PO-Revision-Date: 2026-10-16 14:17+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/base/"
 "es/>\n"
@@ -7101,30 +7101,29 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Servicio de asistencia - Aplicación de gestión de tickets\n"
+"Aplicación Servicio de asistencia - Gestión de tickets\n"
 "================================\n"
 "\n"
-"Características:\n"
+"Funcionalidades:\n"
 "\n"
-"    - Procese tickets por diferentes etapas para resolverlos.\n"
-"    - Añada prioridades, tipos, descripciones y etiquetas para definir sus "
+"    - Gestiona los tickets a través de diferentes etapas para resolverlos.\n"
+"    - Añade prioridades, tipos, descripciones y etiquetas para definir tus "
 "tickets.\n"
-"    - Utilice el chatter para comunicar información adicional y etiquetar a "
+"    - Utiliza el chatter para comunicar información adicional y etiquetar a "
 "los compañeros de trabajo en los tickets.\n"
-"    - Disfrute del uso de un tablero adaptado y una vista kanban fácil de "
-"usar para gestionar sus tickets.\n"
-"    - Realice un análisis en profundidad de sus tickets a través de la vista "
+"    - Disfruta del uso de un tablero adaptado y una vista kanban fácil de "
+"usar para gestionar tus tickets.\n"
+"    - Realiza un análisis exhaustivo de los tickets a través de la vista "
 "dinámica en el menú de informes.\n"
-"    - Cree un equipo y define sus miembros, use un método de asignación "
-"automática si lo desea.\n"
-"    - Utilice un alias de correo para crear tickets automáticamente y "
-"comunicarse con sus clientes.\n"
-"    - Añada fechas límite del Acuerdo de nivel de servicio automáticamente a "
-"sus tickets.\n"
-"    - Obtenga comentarios de los clientes mediante el uso de "
-"calificaciones.\n"
-"    - Instale funciones adicionales fácilmente usando la vista de formulario "
-"de su equipo.\n"
+"    - Crea un equipo y define a sus miembros; utiliza un método de "
+"asignación automática, si quieres.\n"
+"    - Utiliza un alias de correo para crear tickets automáticamente y "
+"comunicarte con tus clientes.\n"
+"    - Añade fechas límite del Acuerdo de nivel de servicio automáticamente a "
+"los tickets.\n"
+"    - Obtén feedback de los clientes mediante el uso de valoraciones.\n"
+"    - Instala funcionalidades adicionales con facilidad desde la vista de "
+"formulario de tu equipo.\n"
 "\n"
 
 #. module: base
@@ -7620,16 +7619,15 @@ msgstr ""
 "\n"
 "Facturación y pagos\n"
 "=====================================================\n"
-"El sistema de facturación en Odoo, específico y fácil de usar, le permite "
-"llevar el control de su contabilidad, aún cuando usted no sea asesor fiscal. "
-"Le proporciona una manera fácil de seguir las operaciones con sus "
+"El sistema de facturación específico y fácil de usar de Odoo te permite "
+"llevar el control de tu contabilidad, incluso sin ser contable. Ofrece una "
+"forma sencilla de realizar el seguimiento de las operaciones con tus "
 "proveedores y clientes.\n"
 "\n"
-"Usted podría utilizar esta contabilidad simplificada en el caso de que "
-"trabaje con un asesor fiscal externo que lleve sus libros contables, pero "
-"desee hacer el seguimiento de los pagos usted mismo. Este módulo también le "
-"ofrece un método fácil de registrar los pagos, sin tener que codificar "
-"resúmenes de cuenta completos.\n"
+"Puedes utilizar esta contabilidad simplificada si trabajas con una asesoría "
+"externa que lleve tus libros contables, aunque desees hacer el seguimiento "
+"de los pagos tú mismo. Este módulo también te ofrece un método sencillo para "
+"registrar pagos, sin tener que codificar resúmenes de cuenta completos.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -8827,6 +8825,33 @@ msgid ""
 "reminders\n"
 "        to multiple customers at once using the 'Send Reminders' action.\n"
 msgstr ""
+"\n"
+"Módulo para automatizar la gestión de cobros y cartas de reclamación de "
+"facturas sin pagar, con diferentes niveles de recordatorios.\n"
+"=========================================================================\n"
+"\n"
+"Puedes definir varios niveles de aviso o recordatorio a través de los "
+"ajustes de facturación:\n"
+"-----------------------------------------------------------------------------"
+"\n"
+"    Configuración / Ajustes / Facturas de clientes / Recordatorios "
+"automáticos de facturas\n"
+"\n"
+"Funcionalidades:\n"
+"---------\n"
+"    - Recordatorios automáticos de varios niveles según la duración del "
+"vencimiento.\n"
+"    - Integración con «Enviar e imprimir»:\n"
+"        Si se vuelve a ejecutar «Enviar e imprimir» en una factura vencida, "
+"el sistema\n"
+"        cambia automáticamente a la plantilla de recordatorio adecuada y "
+"adjunta\n"
+"        el informe de seguimiento.\n"
+"    - Recordatorios masivos:\n"
+"       Los usuarios pueden seleccionar varias facturas de la vista de lista "
+"y enviar recordatorios\n"
+"        a varios clientes a la vez mediante la acción «Enviar recordatorios"
+"».\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -9911,7 +9936,7 @@ msgid ""
 "Repair Products from helpdesk tickets\n"
 msgstr ""
 "\n"
-"Reparación de productos de tickets del servicio de asistencia\n"
+"Productos a reparar desde tickets de servicio de asistencia\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bg_ledger
@@ -16387,6 +16412,9 @@ msgid ""
 "and is used by domestic money transfer protocols (from/to bank accounts in "
 "the same country)."
 msgstr ""
+"Un código de compensación (o número de ruta) identifica a un banco, sucursal "
+"o ubicación, y se utiliza en protocolos de transferencia nacional (entre "
+"cuentas bancarias del mismo país)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_frontdesk
@@ -16805,7 +16833,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_account
 msgid "AI Text Draft - Accounting"
-msgstr "Borrador de texto de AI - Contabilidad"
+msgstr "Borrador de texto con IA - Contabilidad"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_knowledge
@@ -17234,6 +17262,8 @@ msgstr "Impresión de cheques contables"
 msgid ""
 "Account holder name in case it is different than the name of the partner."
 msgstr ""
+"Nombre del titular de la cuenta en caso de que sea diferente del nombre del "
+"contacto."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -18692,11 +18722,15 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_planning_field_service_repair
 msgid "Allow user without repair right to access field serivce stock.picking"
 msgstr ""
+"Permitir que los usuarios sin permisos de reparación accedan a stock.picking "
+"de servicio de campo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_planning_field_service_repair
 msgid "Allow user without repair right to access field service stock.picking"
 msgstr ""
+"Permitir que los usuarios sin permisos de reparación accedan a stock.picking "
+"de servicio de campo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
@@ -21439,7 +21473,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_bic
 msgid "BIC/SWIFT"
-msgstr ""
+msgstr "BIC/SWIFT"
 
 #. module: base
 #. odoo-python
@@ -21616,6 +21650,8 @@ msgid ""
 "Bank account type: Normal, IBAN, CLABE, or other from localization. Inferred "
 "from the bank account number."
 msgstr ""
+"Tipo de cuenta bancaria: normal, IBAN, CLABE u otro según la localización. "
+"Se deduce a partir del número de cuenta bancaria."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__bank_ids
@@ -23616,7 +23652,7 @@ msgstr "Servicios de limpieza"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_label_id
 msgid "Clearing Label"
-msgstr ""
+msgstr "Etiqueta de compensación"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
@@ -29080,7 +29116,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_field_service_repair
 msgid "Field Service Repair"
-msgstr "Reparación Servicio de campo"
+msgstr "Reparación - Servicio de campo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_field_service_worksheet
@@ -30883,7 +30919,7 @@ msgstr "Acción de fusión del Servicio de asistencia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_repair
 msgid "Helpdesk Repair"
-msgstr "Servicio de asistencia Reparación"
+msgstr "Servicio de asistencia - Reparación"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_loyalty
@@ -31004,7 +31040,7 @@ msgstr "Historial"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__holder_name
 msgid "Holder Name"
-msgstr ""
+msgstr "Nombre del titular"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_holiday_house
@@ -32266,7 +32302,7 @@ msgstr "Seguimiento de pila inicial"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_payment
 msgid "Initiate online payments"
-msgstr "Inicie pagos en línea"
+msgstr "Inicia pagos en línea"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__address_view_id
@@ -33396,8 +33432,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_purchase_repair
 msgid "Keep track of linked purchase and repair orders"
 msgstr ""
-"Lleve seguimiento de los pedidos de compra y las órdenes de reparación "
-"vinculados"
+"Realiza un seguimiento de las compras y las órdenes de reparación vinculadas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_hr_recruitment
@@ -36615,7 +36650,7 @@ msgstr "Contabilidad del MRP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
 msgid "Mrp Repairs"
-msgstr "Reparaciones MRP"
+msgstr "Reparaciones - MRP"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
@@ -39560,7 +39595,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 #: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 msgid "Operations"
-msgstr ""
+msgstr "Operaciones"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
@@ -40262,7 +40297,7 @@ msgstr "TPV - RR. HH."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_repair
 msgid "POS - Repair"
-msgstr "TPV - Reparación"
+msgstr "Punto de venta - Reparaciones"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_loyalty
@@ -45789,7 +45824,7 @@ msgstr "Mostrar clave API"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__show_clearing_number
 msgid "Show Clearing Number"
-msgstr ""
+msgstr "Mostrar número de compensación"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__show_code_history
@@ -49963,7 +49998,7 @@ msgstr "Seguimiento al flujo de reclutamiento"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
 msgid "Track, prioritize, and solve customer tickets"
-msgstr "Dé seguimiento, priorice y resuelva los tickets de clientes"
+msgstr "Haz seguimiento, prioriza y resuelve tickets de clientes"
 
 #. module: base
 #. odoo-python
@@ -51712,7 +51747,7 @@ msgstr "Tipo de vista"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports
 msgid "View and create reports"
-msgstr "Vea y cree informes"
+msgstr "Consulta y crea informes"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form

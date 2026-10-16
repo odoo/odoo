@@ -29,7 +29,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-08-31 16:00+0000\n"
+"PO-Revision-Date: 2026-10-16 08:22+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-4/account/zh_Hans/>\n"
@@ -183,7 +183,7 @@ msgstr "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "%(failed_count)s out of %(total_count)s entries could not be reset to draft."
-msgstr ""
+msgstr "%(total_count)s 条分录中有 %(failed_count)s 条无法重置为草稿。"
 
 #. module: account
 #. odoo-python
@@ -8898,7 +8898,7 @@ msgstr "因子比"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor
 msgid ""
 "Factor to apply on the journal items generated from this distribution line"
-msgstr ""
+msgstr "应用于由此分配行生成的会计分录行的系数"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -9770,7 +9770,7 @@ msgstr "有负面因素"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_phishing_warnings
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_phishing_warnings
 msgid "Has Phishing Warnings"
-msgstr ""
+msgstr "存在钓鱼警告"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
@@ -12307,7 +12307,7 @@ msgstr "毛利分析"
 #. module: account
 #: model:ir.actions.server,name:account.action_mark_payment_as_reconciled
 msgid "Mark as Reconciled"
-msgstr ""
+msgstr "标记为已核销"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14494,7 +14494,7 @@ msgstr "网络钓鱼风险"
 msgid ""
 "Phishing risk: %(label1)s is in %(country1)s but %(label2)s is in %"
 "(country2)s"
-msgstr ""
+msgstr "钓鱼风险：%(label1)s 位于 %(country1)s，但 %(label2)s 位于 %(country2)s"
 
 #. module: account
 #. odoo-python
@@ -20345,7 +20345,7 @@ msgstr "以下项目有效"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Journal Entry"
-msgstr ""
+msgstr "验证日记账分录"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
@@ -22078,6 +22078,8 @@ msgid ""
 "{{ object.company_id.name }} - New invoice in "
 "{{ object.journal_id.display_name or 'Invoices' }} journal"
 msgstr ""
+"{{ object.company_id.name }} - {{ object.journal_id.display_name or "
+"'Invoices' }} 日记账中的新发票"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
