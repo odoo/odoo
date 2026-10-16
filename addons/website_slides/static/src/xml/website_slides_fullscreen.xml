@@ -15,13 +15,13 @@
 
     <t t-name="website.slides.fullscreen.video.google_drive">
         <div class="player ratio ratio-16x9 embed-responsive-item h-100">
-            <iframe t-att-src="slide.embedUrl" allowFullScreen="true" frameborder="0" autoplay="1" allow="autoplay"></iframe>
+            <iframe t-att-src="slide.embedUrl" t-att-title="slide.name" allowFullScreen="true" frameborder="0" autoplay="1" allow="autoplay"></iframe>
         </div>
     </t>
 
     <t t-name="website.slides.fullscreen.video.youtube">
         <div class="o_wslides_fs_youtube_player player ratio ratio-16x9 embed-responsive-item h-100">
-            <iframe t-att-id="'youtube-player' + slide.id" t-att-src="slide.embedUrl" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
+            <iframe t-att-id="'youtube-player' + slide.id" t-att-src="slide.embedUrl" t-att-title="slide.name" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
         </div>
     </t>
 
