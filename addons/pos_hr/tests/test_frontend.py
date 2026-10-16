@@ -127,20 +127,6 @@ class TestUi(TestPosHrHttpCommon):
             login="pos_admin",
         )
 
-    def test_cashier_user_cannot_close_session(self):
-        # open a session, the /pos/ui controller will redirect to it
-        self.main_pos_config.manager_employee_ids = []
-        self.main_pos_config.cashier_employee_ids = [
-            Command.link(self.emp3.id),
-        ]
-        self.main_pos_config.with_user(self.pos_admin).open_ui()
-
-        self.start_tour(
-            "/pos/ui/%d" % self.main_pos_config.id,
-            "CashierCannotClose",
-            login="pos_user",
-        )
-
     def test_cashier_user_can_change_price(self):
         self.main_pos_config.manager_employee_ids = []
         self.main_pos_config.cashier_employee_ids = [

@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { formatCurrency } from "@web/core/currency";
 import { getOnNotified, getColorScheme } from "@point_of_sale/utils";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { PosAccessRightPlugin } from "./access_right_plugin";
 
 export const CONSOLE_COLOR = "#F5B427";
 
@@ -22,6 +23,7 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
     connectedDevices = signal.Set(new Set());
 
     orm = usePlugin(ORM);
+    accessRight = usePlugin(PosAccessRightPlugin);
 
     setup() {
         // Everything the terminal is given through `init`: the bus, the device

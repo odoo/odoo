@@ -1,3 +1,6 @@
+import { signal } from "@odoo/owl";
+import { patch } from "@web/core/utils/patch";
+
 export const addProductLineToOrder = async (
     store,
     order,
@@ -25,3 +28,15 @@ export const deactivateAllProgramsExcept = (store, keepIds) => {
         .filter((id) => !keepIds.includes(id));
     store.models["loyalty.program"].deleteMany(store.models["loyalty.program"].readMany(to_delete));
 };
+
+export function mockAccessRight(store, getterName, initialValue = store.accessRight[getterName]) {
+    const value = signal(initialValue);
+
+    patch(store.accessRight, {
+        get [getterName]() {
+            return value();
+        },
+    });
+
+    return value;
+}
