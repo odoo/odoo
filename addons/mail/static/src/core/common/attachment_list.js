@@ -27,6 +27,7 @@ class Actions extends Component {
             t.object({
                 label: t.string(),
                 icon: t.string(),
+                iconClass: t.string().optional(),
                 onSelect: t.function([t.instanceOf(Event)]),
             })
         ),
@@ -192,7 +193,7 @@ export class AttachmentList extends Component {
      *
      * @param {import("models").Attachment} attachment - The representative attachment for the actions.
      * @param {import("models").Attachment[]} [duplicates] - Array of duplicate attachments the action may operate on.
-     * @returns {{label: TranslatedString, icon: string, icon_class?: string, onSelect: function}[]} Array of action descriptors.
+     * @returns {{label: TranslatedString, icon: string, iconClass?: string, onSelect: function}[]} Array of action descriptors.
      */
     getActions(attachment, duplicates = [attachment]) {
         const res = [];
@@ -204,7 +205,13 @@ export class AttachmentList extends Component {
                 onSelect: () => this.onClickUnlink(attachment, duplicates),
             });
         }
-        if (this.canDownload(attachment)) {
+        if (!attachment.isImage && attachment.type === "url") {
+            res.push({
+                label: _t("Open Link"),
+                icon: "open_in_new",
+                onSelect: () => window.open(attachment.url, "_blank"),
+            });
+        } else if (this.canDownload(attachment)) {
             res.push({
                 label: _t("Download"),
                 icon: "download",
