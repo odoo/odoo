@@ -223,7 +223,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
                 invoice.action_check_l10n_it_edi()
                 update_send_state.assert_called_once()
 
-                invoice.cron_l10n_it_edi_download_and_update()
+                invoice.cron_l10n_it_edi_download_and_update(companies=invoice.company_id)
                 self.assertEqual(update_send_state.call_count, 2)
 
     def test_l10n_it_edi_send_success_with_signed_data_update_attachment(self):
