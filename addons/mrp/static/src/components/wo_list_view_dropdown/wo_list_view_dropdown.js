@@ -24,7 +24,7 @@ export class MOListViewDropdown extends BadgeField {
         this.action = useService("action");
         this.colorIcons = {
             "blocked": "text-bg-warning",
-            "ready": "text-bg-secondary",
+            "ready": "text-bg-300",
             "progress": "text-bg-info",
             "cancel": "text-bg-danger",
             "done": "text-bg-success",
