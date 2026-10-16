@@ -44,4 +44,20 @@ export class IrAttachment extends webModels.IrAttachment {
         // sudo: discuss.voice.metadata - checking the existence of voice metadata is acceptable
         res.many("voice_ids", [], { sudo: true });
     }
+
+    _store_thread_message_fields(res) {
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+
+        res.many("message_ids", (r) => r.one("thread", [], { as_thread: true }), {
+            value: (a) =>
+                MailMessage.browse(
+                    MailMessage._filter([
+                        ["attachment_ids", "in", [a.id]],
+                        ["model", "=", a.res_model],
+                        ["res_id", "=", a.res_id],
+                    ]).map((message) => message.id)
+                ),
+        });
+    }
 }

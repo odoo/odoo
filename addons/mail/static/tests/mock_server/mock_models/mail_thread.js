@@ -637,17 +637,24 @@ export class MailThread extends models.ServerModel {
             });
         }
         if (request_list.includes("attachments")) {
-            res.many("attachments", "_store_attachment_fields", {
-                value: (t) =>
-                    IrAttachment.browse(
-                        IrAttachment._filter([
-                            ["res_id", "=", t.id],
-                            ["res_model", "=", this._name],
-                        ])
-                            .sort((a1, a2) => a1.id - a2.id)
-                            .map((attachment) => attachment.id)
-                    ),
-            });
+            res.many(
+                "attachments",
+                (r) => {
+                    r.from_method("_store_attachment_fields");
+                    r.from_method("_store_thread_message_fields");
+                },
+                {
+                    value: (t) =>
+                        IrAttachment.browse(
+                            IrAttachment._filter([
+                                ["res_id", "=", t.id],
+                                ["res_model", "=", this._name],
+                            ])
+                                .sort((a1, a2) => a1.id - a2.id)
+                                .map((attachment) => attachment.id)
+                        ),
+                }
+            );
             res.attr("areAttachmentsLoaded", true);
             res.attr("isLoadingAttachments", false);
             // Specific implementation of mail.thread.main.attachment
