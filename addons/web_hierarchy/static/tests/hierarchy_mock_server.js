@@ -1,8 +1,8 @@
 import { onRpc } from "@web/../tests/web_test_helpers";
 
 onRpc("hierarchy_read", function hierarchyRead({ model, args, kwargs }) {
-    const [domain, specification, parentFieldName, childFieldName, order] = args;
-    kwargs.order = order;
+    const [domain, specification, parentFieldName, childFieldName, offset, limit, order] = args;
+    Object.assign(kwargs, { offset: offset, limit: limit, order: order });
     if (!(parentFieldName in specification)) {
         specification[parentFieldName] = { fields: { display_name: {} } };
     }
