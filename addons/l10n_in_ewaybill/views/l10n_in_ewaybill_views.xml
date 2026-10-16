@@ -173,6 +173,18 @@
         </field>
     </record>
 
+    <record id="l10n_in_ewaybill_list_view" model="ir.ui.view">
+        <field name="name">l10n.in.ewaybill.list.view</field>
+        <field name="model">l10n.in.ewaybill</field>
+        <field name="arch" type="xml">
+            <list string="e-Waybill">
+                <field name="display_name" string="e-Waybill Number"/>
+                <field name="document_number"/>
+                <field name="document_date"/>
+            </list>
+        </field>
+    </record>
+
     <record id="l10n_in_ewaybill_form_action" model="ir.actions.act_window">
         <field name="name">e-Waybill</field>
         <field name="res_model">l10n.in.ewaybill</field>
