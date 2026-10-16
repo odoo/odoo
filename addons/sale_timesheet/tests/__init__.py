@@ -15,6 +15,7 @@ from . import test_so_line_determined_in_timesheet
 from . import test_sale_timesheet_ui
 from . import test_project_pricing_type
 from . import test_sale_timesheet_accrued_entries
+from . import test_sale_timesheet_portal
 from . import test_report_timesheet
 from . import test_sale_timesheet_report
 from . import test_sale_timesheet_product_product

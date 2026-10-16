@@ -2244,3 +2244,26 @@ class TestSaleProject(TestSaleProjectCommon):
             'product_uom_qty': 1,
         })
         self.assertFalse(sale_order.project_required, "Project should not be required on SO if product in orderline already has project")
+
+    def test_project_and_task_linked_to_draft_sol(self):
+        """
+        This test purpose is to ensure that the user is able to link a So/sol in draft state to projects and tasks.
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+        so_line_order_no_task = self.env['sale.order.line'].create({
+            'product_id': self.product_order_service1.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+        })
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': self.project_global.id,
+            'sale_line_id': so_line_order_no_task.id,
+        })
+        self.assertEqual(task.sale_line_id, so_line_order_no_task)
+        self.project_global.sale_line_id = so_line_order_no_task.id
+        self.assertEqual(self.project_global.sale_line_id, so_line_order_no_task)
