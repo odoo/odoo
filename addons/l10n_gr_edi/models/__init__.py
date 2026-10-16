@@ -5,6 +5,7 @@ from . import account_move_line
 from . import account_move_send
 from . import account_tax
 from . import l10n_gr_edi_document
+from . import l10n_gr_edi_reconciliation
 from . import preferred_classification
 from . import product_template
 from . import res_company
