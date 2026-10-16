@@ -33,7 +33,7 @@
                                 <field name="eta_document_uuid" optional="hide"/>
                                 <field name="eta_submission_id" optional="hide"/>
                                 <button name="action_retry" string="Retry" type="object" invisible="state != 'rejected' or not parent.l10n_eg_is_signed"/>
-                                <button name="action_resign" string="Re-Sign" type="object" invisible="state != 'rejected' or parent.l10n_eg_is_signed"/>
+                                <button name="action_resign" string="Re-Sign" type="object" invisible="parent.state == 'draft' or state != 'rejected' or parent.l10n_eg_is_signed"/>
                             </list>
                         </field>
                     </page>
@@ -56,8 +56,8 @@
                         optional="hide"
                         decoration-info="l10n_eg_edi_submission_state == 'to_send'"
                         decoration-success="l10n_eg_edi_submission_state in ['sent', 'test']"
-                        decoration-warning="l10n_eg_edi_submission_state == 'rejected'"
-                        decoration-danger="l10n_eg_edi_submission_state == 'cancelled'"
+                        decoration-danger="l10n_eg_edi_submission_state == 'rejected'"
+                        decoration-muted="l10n_eg_edi_submission_state == 'cancel'"
                     />
                 </field>
             </field>
@@ -78,8 +78,8 @@
                         optional="hide"
                         decoration-info="l10n_eg_edi_submission_state == 'to_send'"
                         decoration-success="l10n_eg_edi_submission_state in ['sent', 'test']"
-                        decoration-warning="l10n_eg_edi_submission_state == 'rejected'"
-                        decoration-danger="l10n_eg_edi_submission_state == 'cancelled'"
+                        decoration-danger="l10n_eg_edi_submission_state == 'rejected'"
+                        decoration-muted="l10n_eg_edi_submission_state == 'cancel'"
                     />
                 </field>
             </field>
