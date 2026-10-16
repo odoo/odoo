@@ -1,7 +1,10 @@
+/* global Sha1 */
+
 import { test, expect } from "@odoo/hoot";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { session } from "@web/session";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 
 definePosModels();
@@ -25,4 +28,14 @@ test("selectCashier", async () => {
     const value = store.accessRight.loggedCashier;
     expect(value.name).toBe("Employee1");
     expect(value.id).toBe(3);
+});
+test("scanning a badge switches the cashier", async () => {
+    patchWithCleanup(session, { nomenclature_id: 1 });
+    const store = await setupPosEnv();
+    const employee = store.models["hr.employee"].get(3);
+    employee._barcode = Sha1.hash("041123");
+    await mountWithCleanup(CashierName, {});
+
+    await store.barcodeReader.scan("041123");
+    expect(store.accessRight.loggedCashier.id).toBe(3);
 });
