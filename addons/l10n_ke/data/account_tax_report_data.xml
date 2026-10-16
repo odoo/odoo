@@ -371,6 +371,11 @@
                         <field name="carryover_target">box_19._applied_carryover_tax</field>
                         <field name="subformula">if_below(RON(0))</field>
                     </record>
+                    <record id="tax_report_net_vat_payable_or_credit_carried_forward_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">box_26.tax</field>
+                    </record>
                 </field>
             </record>
         </field>
