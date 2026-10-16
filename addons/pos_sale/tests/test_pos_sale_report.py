@@ -2,12 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPoSSaleReport(TestPoSCommon, TestPointOfSaleHttpCommon):
+class TestPoSSaleReport(TestPointOfSaleHttpCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
@@ -22,7 +21,7 @@ class TestPoSSaleReport(TestPoSCommon, TestPointOfSaleHttpCommon):
     def setUp(self):
         super(TestPoSSaleReport, self).setUp()
         self.config = self.basic_config
-        self.product0 = self.create_product('Product 0', self.categ_basic, 0.0, 0.0)
+        self.product0 = self.create_product('Product 0', self.categ_basic, 0.0)
         self.partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
         # Ensure that adding a uom to the product with a factor != 1
         # does not cause an error in weight and volume calculation
@@ -130,7 +129,7 @@ class TestPoSSaleReport(TestPoSCommon, TestPointOfSaleHttpCommon):
         self.assertEqual(report.weight, 6)
 
     def test_different_shipping_address(self):
-        product = self.create_product('Product', self.categ_basic, 1, 1)
+        product = self.create_product('Product', self.categ_basic, 1)
         sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.customer.id,
             'partner_shipping_id': self.other_customer.id,

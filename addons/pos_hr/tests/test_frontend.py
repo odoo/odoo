@@ -19,9 +19,9 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
             cls.env.user.group_ids |= payroll_user_group
 
         # Admin employee
-        cls.pos_admin.employee_id.name = "Mitchell Admin"
+        cls.admin = cls.pos_admin.employee_id or cls.pos_admin.action_create_employee()
+        cls.admin.name = "Mitchell Admin"
         cls.pos_admin.group_ids |= cls.env.ref('hr.group_hr_manager')
-        cls.admin = cls.pos_admin.employee_id
 
         cls.main_pos_config.write({"module_pos_hr": True})
 

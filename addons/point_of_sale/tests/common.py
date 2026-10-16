@@ -1,260 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import inspect
 from itertools import starmap
 from uuid import uuid4
 
 from odoo import Command, fields
+from odoo.tests import HttpCase
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.point_of_sale.tests.common_fixture import PosTestRecords
 
 
-class CommonPosTest(AccountTestInvoicingCommon):
-    _test_user_groups = None  # FIXME list needed groups
-
-    @classmethod
-    def _create_company(cls, company_xmlid=None, **create_values):
-        # Avoid the branch fixture, which may contain demo journal entries.
-        create_values.setdefault('candidate_xmlids', (
-            'base.test_company', 'base.test_company_template', 'base.test_company_template2',
-        ))
-        return super()._create_company(company_xmlid=company_xmlid, **create_values)
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        cls._archive_products()
-        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_manager')
-
-        # Currencies - USD, EUR
-        cls.company_currency = cls.company.currency_id
-        cls.other_currency = cls.setup_other_currency('EUR', rates=[('2000-01-01', 0.5)], rounding=0.001)
-
-        cls._setup_account_journals()
-        cls._setup_payment_methods()
-        cls._setup_pos_configs()
-
-        # TestPoSCommon setup
-        cls._setup_customers()
-        cls._setup_categories()
-        cls._setup_taxes()
-        cls._setup_pos_products()
-
-        # TODO-PARP:
-        # cls._setup_attribute_products()
-        # cls._setup_combo_product()  # will replace setup_product_combo_items
-
-    @classmethod
-    def _archive_products(cls):
-        # Preserve fixtures created by another test base with the independent test user.
-        cls.env['product.template'].search([
-            ('available_in_pos', '=', True),
-            ('create_uid', '!=', cls.env.uid),
-        ])._write({'active': False})
-
-    @classmethod
-    def _setup_categories(cls):
-        # PoS Categories
-        cls.cat_no_tax, cls.cat_tax_five_incl, cls.cat_tax_ten_incl, cls.cat_tax_fifteen_incl = cls.env['pos.category'].create([
-            {'name': 'No tax', 'sequence': 0},
-            {'name': 'Tax five incl', 'sequence': 1},
-            {'name': 'Tax ten incl', 'sequence': 2},
-            {'name': 'Tax fifteen incl', 'sequence': 3},
-        ])
-        # Product Categories
-        cls.categ_basic = cls.env.ref('product.product_category_services')
-
-    @classmethod
-    def _setup_pos_products(cls):
-        cls.ten_dollars_no_tax = cls.create_product_template('Ten dollars no tax', 10.0, [cls.cat_no_tax.id])
-        cls.twenty_dollars_no_tax = cls.create_product_template('Twenty dollars no tax', 20.0, [cls.cat_no_tax.id])
-        cls.ten_dollars_with_5_incl = cls.create_product_template('Ten dollars with 5 included', 10.0, [cls.cat_tax_five_incl.id], [cls.taxes['tax5_incl'].id])
-        cls.twenty_dollars_with_5_incl = cls.create_product_template('Twenty dollars with 5 included', 20.0, [cls.cat_tax_five_incl.id], [cls.taxes['tax5_incl'].id])
-        cls.ten_dollars_with_10_incl = cls.create_product_template('Ten dollars with 10 included', 10.0, [cls.cat_tax_ten_incl.id], [cls.taxes['tax10_incl'].id])
-        cls.twenty_dollars_with_10_incl = cls.create_product_template('Twenty dollars with 10 included', 20.0, [cls.cat_tax_ten_incl.id], [cls.taxes['tax10_incl'].id])
-        cls.ten_dollars_with_15_incl = cls.create_product_template('Ten dollars with 15 included', 10.0, [cls.cat_tax_fifteen_incl.id], [cls.taxes['tax15_incl'].id])
-        cls.twenty_dollars_with_15_incl = cls.create_product_template('Twenty dollars with 15 included', 20.0, [cls.cat_tax_fifteen_incl.id], [cls.taxes['tax15_incl'].id])
-
-    @classmethod
-    def _setup_customers(cls):
-        (
-            cls.partner_mobt, cls.partner_adgu, cls.partner_lowe, cls.partner_jcb,
-            cls.partner_moda, cls.partner_stva, cls.partner_manv, cls.partner_vlst,
-            cls.partner_parp,
-        ) = cls.env['res.partner'].create([
-            {'name': 'MOBT'}, {'name': 'ADGU'}, {'name': 'LOWE'}, {'name': 'JCB'},
-            {'name': 'MODA'}, {'name': 'STVA'}, {'name': 'MANV'}, {'name': 'VLST'},
-            {'name': 'PARP'},
-        ])
-        cls.customer = cls.env['res.partner'].create({
-            'name': 'Customer 1',
-            'property_account_receivable_id': cls.copy_account(cls.receivable_account, {'name': 'Customer 1 Receivable'}).id
-        })
-        cls.other_customer = cls.env['res.partner'].create({
-            'name': 'Other Customer',
-            'property_account_receivable_id': cls.env['account.account'].create({
-                'name': 'Other Receivable',
-                'code': 'RCV00',
-                'account_type': 'asset_receivable',
-                'internal_group': 'asset',
-            }).id
-        })
-
-    @classmethod
-    def _setup_taxes(cls):
-        def create_tax(percentage, price_include_override='tax_excluded'):
-            return cls.env['account.tax'].create({
-                'name': f"Tax {percentage}% {'incl' if price_include_override == 'tax_excluded' else 'excl'}",
-                'amount': percentage,
-                'price_include_override': price_include_override,
-            })
-        cls.taxes = {
-            'tax7': create_tax(7),
-            'tax10': create_tax(10),
-            'tax5_incl': create_tax(5, 'tax_included'),
-            'tax10_incl': create_tax(10, 'tax_included'),
-            'tax15_incl': create_tax(15, 'tax_included'),
-            'tax21_incl': create_tax(21, 'tax_included'),
-        }
-        cls.taxes['tax_group_7_10'] = cls.env['account.tax'].create({
-            'name': 'Tax 7+10 %',
-            'amount_type': 'group',
-            'children_tax_ids': [Command.set((cls.taxes['tax7'] + cls.taxes['tax10']).ids)]
-        })
-
-    @classmethod
-    def _setup_account_journals(cls):
-        cls.receivable_account = cls.company_data['default_account_receivable']
-
-        cls.pos_receivable_cash = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable Cash'})
-        cls.pos_receivable_bank = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable Bank'})
-        cls.outstanding_bank = cls.copy_account(cls.inbound_payment_method_line.payment_account_id, {'name': 'Outstanding Bank'})
-
-        cls.other_cash_journal = cls.env['account.journal'].create({
-            'name': 'Cash Other',
-            'type': 'cash',
-            'company_id': cls.company.id,
-            'code': 'CSHO',
-            'sequence': 10,
-            'currency_id': cls.other_currency.id,
-        })
-        cls.other_sales_journal = cls.env['account.journal'].create({
-            'name': 'PoS Sale Other',
-            'type': 'sale',
-            'code': 'POSO',
-            'company_id': cls.company.id,
-            'sequence': 12,
-            'currency_id': cls.other_currency.id,
-        })
-        cls.other_bank_journal = cls.env['account.journal'].create({
-            'name': 'Bank Other',
-            'type': 'bank',
-            'company_id': cls.company.id,
-            'code': 'BNKO',
-            'sequence': 13,
-            # TODO-PARP: Keep bank methods compatible with legacy tests selecting across configs.
-            'currency_id': False,
-        })
-
-    @classmethod
-    def _setup_payment_methods(cls):
-        # drop stray payment methods not tied to a config (e.g. leftover delivery-provider ones)
-        cls.env['pos.payment.method'].search([
-            ('company_id', '=', cls.company.id),
-            ('config_ids', '=', False),
-        ]).unlink()
-        cls.cash_pm = cls.env['pos.payment.method'].create({
-            'name': 'Cash',
-            'type': 'cash',
-            'receivable_account_id': cls.company_data['default_account_receivable'].id,
-            'journal_id': cls.company_data['default_journal_cash'].id,
-            'company_id': cls.env.company.id,
-        })
-        cls.bank_pm = cls.env['pos.payment.method'].create({
-            'name': 'Bank',
-            'type': 'bank',
-            'journal_id': cls.company_data['default_journal_bank'].id,
-            'receivable_account_id': cls.company_data['default_account_receivable'].id,
-        })
-        cls.credit_pm = cls.env['pos.payment.method'].create({
-            'name': 'Credit',
-            'receivable_account_id': cls.company_data['default_account_receivable'].id,
-            'type': 'pay_later',
-        })
-        # TODO-PARP: Remove these aliases after all modules are migrated.
-        cls.cash_payment_method = cls.cash_pm
-        cls.bank_payment_method = cls.bank_pm
-        cls.credit_payment_method = cls.credit_pm
-        cls.cash_pm1 = cls.cash_pm
-        cls.bank_pm1 = cls.bank_pm
-        cls.pay_later_pm = cls.credit_pm
-
-        cls.cash_pm2 = cls.env['pos.payment.method'].create({
-            'name': 'Cash Other',
-            'type': 'cash',
-            'journal_id': cls.other_cash_journal.id,
-            'receivable_account_id': cls.pos_receivable_cash.id,
-        })
-        cls.bank_pm2 = cls.env['pos.payment.method'].create({
-            'name': 'Bank Other',
-            'type': 'bank',
-            'journal_id': cls.other_bank_journal.id,
-            'receivable_account_id': cls.pos_receivable_bank.id,
-            'outstanding_account_id': cls.outstanding_bank.id,
-        })
-
-    @classmethod
-    def _setup_pos_configs(cls):
-        cls.pos_config_usd = cls.env['pos.config'].create({
-            'name': 'PoS Config USD',
-            'journal_id': cls.company_data['default_journal_sale'].id,
-            'payment_method_ids': [
-                (4, cls.credit_pm.id),
-                (4, cls.bank_pm.id),
-                (4, cls.cash_pm.id),
-            ],
-        })
-
-        cls.pricelist_eur = cls.env['product.pricelist'].create({
-            'name': 'Test EUR Pricelist',
-            'currency_id': cls.other_currency.id,
-        })
-
-        cls.pos_config_eur = cls.env['pos.config'].create({
-            'name': 'PoS Config EUR',
-            'journal_id': cls.other_sales_journal.id,
-            'use_pricelist': True,
-            'available_pricelist_ids': [(6, 0, cls.pricelist_eur.ids)],
-            'pricelist_id': cls.pricelist_eur.id,
-            'payment_method_ids': [Command.set((cls.bank_pm2 | cls.bank_pm).ids)],
-        })
-        # TODO-PARP: Remove this alias after all modules are migrated.
-        cls.basic_config = cls.pos_config_usd
-        cls.config = cls.pos_config_usd
-
-    @classmethod
-    def create_product_template(cls, name, list_price, pos_categ_ids=[], tax_ids=[], **kwargs):
-        return cls.env['product.template'].create({
-            'is_storable': True,
-            'available_in_pos': True,
-            'name': name,
-            'list_price': list_price,
-            'taxes_id': [Command.set(list(tax_ids))],
-            'pos_categ_ids': [Command.set(list(pos_categ_ids))],
-            **kwargs,
-        })
-
-    @classmethod
-    def create_product(cls, name, lst_price, tax_ids=[], **kwargs):
-        return cls.env['product.product'].create({
-            'is_storable': True,
-            'available_in_pos': True,
-            'taxes_id': [Command.set(list(tax_ids))],
-            'name': name,
-            'lst_price': lst_price,
-            'company_id': cls.env.company.id,
-            **kwargs,
-        })
+class CommonPosTest(PosTestRecords):
 
     def open_new_session(self, opening_cash=0, config=None):
         """ Used to open new pos session in each configuration.
@@ -491,6 +247,21 @@ class CommonPosTest(AccountTestInvoicingCommon):
                 if p['active'] and p['product_variant_ids'][0] not in special_product]
 
 
+class PosHttpCommon(CommonPosTest, HttpCase):
+
+    def start_pos_tour(self, tour_name, login='pos_user', **kwargs):
+        pos_config = kwargs.get('pos_config') or self.main_pos_config
+        url = f'/pos/ui/{pos_config.id}'
+        self.start_tour(url, tour_name, login=login, **kwargs)
+
+    def get_method_additional_tags(self, test_method):
+        additional_tags = super().get_method_additional_tags(test_method)
+        method_source = inspect.getsource(test_method)
+        if "self.start_pos_tour" in method_source:
+            additional_tags.append("is_tour")
+        return additional_tags
+
+
 # TODO-PARP: Replace usage of this with `CommonPosTest`
 class TestPoSCommon(CommonPosTest):
     """Temporary compatibility layer for existing POS test imports.
@@ -513,7 +284,6 @@ class TestPoSCommon(CommonPosTest):
         cls.account_tax_return_journal = cls.company_data['default_journal_misc']
         cls.tax_received_account = cls.company_data['default_account_tax_sale']
         cls.sales_account = cls.company_data['default_account_revenue']
-        cls.pos_receivable_account = cls.company.account_default_pos_receivable_account_id
         cls.sale_account = cls.company.income_account_id
 
         # TODO-PARP: Prepare the session journal before legacy POS users close sessions.
