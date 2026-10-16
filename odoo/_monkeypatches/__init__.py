@@ -23,6 +23,8 @@ def patch_all():
     patch_mimetypes()
     from .pytz import patch_pytz
     patch_pytz()
+    from .babel import patch_module as patch_babel
+    patch_babel()
     from .literal_eval import patch_literal_eval
     patch_literal_eval()
     from .lxml import patch_lxml
