@@ -679,7 +679,7 @@ test("tooltip on toggler", async () => {
 
     await hover(DROPDOWN_TOGGLE);
     await runAllTimers();
-    expect(".o-tooltip").toHaveText("My tooltip");
+    expect(".o_popover:not(.visually-hidden) .o-tooltip").toHaveText("My tooltip");
 });
 
 test("date picker inside does not close when a click occurs in date picker", async () => {

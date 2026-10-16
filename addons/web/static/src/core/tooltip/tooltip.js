@@ -7,5 +7,6 @@ export class Tooltip extends Component {
         tooltip: t.string().optional(),
         template: t.string().optional(),
         info: t.any().optional(),
+        tooltipId: t.string().optional(),
     });
 }
