@@ -9,6 +9,10 @@ button {
     transition: all 150ms linear;
 }
 
+.btn:focus:not(:focus-visible) {
+    --btn-focus-box-shadow: none;
+}
+
 select > option {
     background: var(--light);
 }
