@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+# PYTHON_ARGCOMPLETE_OK
+
+import os
+import sys
+
+if os.environ.get("_ARGCOMPLETE"):
+    try:
+        import argparse
+        import argcomplete
+    except ImportError:
+        sys.exit(1)
+
+    parser = argparse.ArgumentParser(prog="odoo-e")
+
+    def get_addons_path(parsed_args):
+        here = os.path.dirname(os.path.realpath(__file__))
+        addons_path = []
+        config_addons_path = getattr(parsed_args, "addons_path", None)
+        if config_addons_path:
+            addons_path += [os.path.realpath(p.strip()) for p in config_addons_path.split(",") if p.strip()]
+
+        addons_path.append(os.path.join(here, "odoo", "addons"))
+        addons_path.append(os.path.join(here, "addons"))
+        return addons_path
+
+    def comma_separted(callable):
+        def wrapper(prefix, **kwargs):
+            head, _, last = prefix.rpartition(",")
+            res = callable(last, **kwargs)
+            return [f"{head},{m}" if head else m for m in sorted(res)]
+        return wrapper
+
+    def databases(prefix, **kwargs):
+        import subprocess
+        try:
+            out = subprocess.run(
+                ["psql", "-lqtA"], capture_output=True, text=True, timeout=2
+            ).stdout
+        except Exception:
+            return []
+        names = []
+        for line in out.splitlines():
+            if not line:
+                continue
+            db_name = line.split("|")[0].strip()
+            if db_name and db_name.startswith(prefix) and db_name not in ("template0", "template1"):
+                names.append(db_name)
+        return names
+
+    def installed_modules(prefix, parsed_args, **kwargs):
+        db = getattr(parsed_args, "database", None)
+        if not db:
+            return available_modules(prefix, parsed_args, **kwargs)
+        try:
+            import subprocess
+            out = subprocess.run(
+                ["psql", "-d", db, "-tAc",
+                "SELECT name FROM ir_module_module WHERE state = 'installed'"],
+                capture_output=True, text=True, timeout=1.5,
+            )
+            if out.returncode:
+                return []
+            return [m for m in out.stdout.split() if m.startswith(prefix)]
+        except Exception:
+            return []
+
+    def available_modules(prefix, parsed_args, **kwargs):
+        names = set()
+        for addon_path in get_addons_path(parsed_args):
+            try:
+                with os.scandir(addon_path) as it:
+                    for e in it:
+                        if not e.is_dir(follow_symlinks=True) or e.name.startswith("."):
+                            continue
+                        if not e.name.startswith(prefix):
+                            continue
+                        d = e.path
+                        if os.path.exists(os.path.join(d, "__manifest__.py")):
+                            names.add(e.name)
+            except:
+                continue
+        return names
+
+    def addons_dirs(prefix, **kwargs):
+        base = os.path.dirname(prefix) or "."
+        partial = os.path.basename(prefix)
+        out = []
+        try:
+            with os.scandir(os.path.expanduser(base)) as it:
+                for e in it:
+                    if not e.is_dir(follow_symlinks=True) or e.name.startswith("."):
+                        continue
+                    if not e.name.startswith(partial):
+                        continue
+                    p = os.path.join(base, e.name) if base != "." else e.name
+                    out.append(p + "/")
+        except OSError:
+            return []
+        return out
+
+    def dev_mode(prefix, **kwargs):
+        return ['access', 'qweb', 'reload', 'replica', 'xml']
+
+    parser.add_argument("-d", "--database").completer = comma_separted(databases)        
+    parser.add_argument("-u", "--update").completer = comma_separted(installed_modules)
+    parser.add_argument("-i", "--init").completer = comma_separted(available_modules)
+    parser.add_argument("--addons-path").completer = comma_separted(addons_dirs)
+    parser.add_argument("--dev").completer = comma_separted(dev_mode)
+    parser.add_argument(
+        "command", nargs="?",
+        choices=["shell", "scaffold", "populate", "cloc", "deploy", "neutralize"],
+    )
+
+    argcomplete.autocomplete(parser)
+    sys.exit(0)
+
+import odoo.cli
+
+if __name__ == "__main__":
+    odoo.cli.main()
