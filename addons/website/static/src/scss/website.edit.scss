@@ -24,3 +24,10 @@ header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
         }
     }
 }
+
+// Keep completed fade animations visible while their elements are moved.
+// Do not override opacity while an animation is running, inside a dropdown, or
+// when the editor uses opacity to reveal an invisible snippet.
+.o_animate.o_animated:not(.o_animating, .o_animate_in_dropdown, .o_snippet_override_invisible) {
+    opacity: 1 !important;
+}
