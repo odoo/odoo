@@ -89,7 +89,7 @@ def load_addons_commands(command=None):
             load_script(fullpath, fq_name)
 
 
-def find_command(name: str) -> Command | None:
+def find_command(name: str) -> type[Command] | None:
     """ Get command by name. """
 
     # built-in commands
