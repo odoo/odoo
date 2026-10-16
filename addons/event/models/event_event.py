@@ -726,7 +726,8 @@ class EventEvent(models.Model):
             return _('in %d days', diff.days)
         if (diff.days < 14):
             return _('next week')
-        if event_date_tz.month == (today_tz + relativedelta(months=+1)).month:
+        next_month_tz = today_tz + relativedelta(months=+1)
+        if (event_date_tz.year, event_date_tz.month) == (next_month_tz.year, next_month_tz.month):
             return _('next month')
         return _('on %(date)s', date=format_date(self.env, self.date_begin, lang_code=lang_code, date_format='medium'))
 
