@@ -184,6 +184,11 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             cash_counted = session.closing_balance or 0
             related_moves = cash_moves_by_session.get(session.id, [])
             is_cash_method = False
+            moves_by_ref = {
+                move.ref: move
+                for move in session.correction_move_ids
+            }
+
             for p in payments:
                 if p['session'] != session.id:
                     continue
@@ -212,10 +217,11 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                     p['count'] = True
                     continue
 
-                move = session.correction_move_ids
+                pm = PosPaymentMethod.browse(p['id'])
+                ref = _('Bank difference for %(pm)s in %(session)s', pm=pm.name, session=session.name)
+                move = moves_by_ref.get(ref)
 
                 if move:
-                    pm = PosPaymentMethod.browse(p['id'])
                     loss = any(l.account_id == pm.journal_id.loss_account_id for l in move.line_ids)
                     profit = any(l.account_id == pm.journal_id.profit_account_id for l in move.line_ids)
 
