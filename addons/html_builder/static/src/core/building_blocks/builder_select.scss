@@ -71,6 +71,32 @@
     }
 }
 
+.o-hb-select-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.o-hb-select-item-edit {
+    border-width: 0;
+    padding: 10px;
+
+    &::before {
+        color: #{$o-we-color-global};
+    }
+
+    &:hover::before {
+        color: lighten($o-we-color-global, 50%);
+    }
+}
+
+.o-hb-select-dropdown-item:has(.o-hb-select-item-edit) {
+    padding-right: 0;
+}
+
+.hb-row-content .o-hb-select-item-edit {
+    display: none;
+}
+
 // These styles are common between BuilderSelect and Many2X builder components.
 // TODO: review the SelectMenu template to allow both light/dark backgrounds and
 // remove most '!important' needed here to override Bootstrap classes. See
