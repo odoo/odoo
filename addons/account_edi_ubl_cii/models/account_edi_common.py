@@ -1611,17 +1611,18 @@ class AccountEdiCommon(models.AbstractModel):
         ):
             invoice.write(to_write)
 
+    def _import_invoice_fix_taxes_amounts_tolerance(self, currency):
+        if currency.name == 'SEK':
+            return 0.5
+        return max(0.03, currency.rounding * 10)
+
     def _import_invoice_fix_taxes_amounts(self, collected_values):
         AccountTax = self.env['account.tax']
         invoice = collected_values['invoice']
         tax_total_values = collected_values['tax_total_values']
         total_tax_amount = sum(x['tax_amount_currency'] for x in tax_total_values.values())
         currency = collected_values['currency_values']['currency']
-        number_of_lines = len(collected_values['lines_collected_values'])
-        tolerance = min(
-            1.0,  # worst case possible
-            max(0.03, currency.rounding * number_of_lines / 2),
-        )
+        tolerance = self._import_invoice_fix_taxes_amounts_tolerance(currency)
 
         tax_to_taxes = {}
         taxes_to_tax_amount_currency = {}
