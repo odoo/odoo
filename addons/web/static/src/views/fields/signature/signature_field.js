@@ -102,6 +102,10 @@ export class SignatureField extends Component {
         }
     }
 
+    onClickRemoveSignature() {
+        return this.props.update(false);
+    }
+
     onLoadFailed() {
         this.state.isValid = false;
         this.notification.add(this.env._t("Could not display the selected image"), {
