@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.sale.tests.common import TestSaleCommon
@@ -123,3 +124,27 @@ class TestSaleFlow(TestSaleCommon):
         ])
 
         self.assertFalse(sale_order.show_deliver_button)
+
+    def test_outgoing_qty_after_overdelivered_so(self):
+        """Test that outgoing, forecasted and free-to-use quantities are computed correctly
+        when the delivered quantity exceeds the ordered quantity.
+        """
+        if self.env["ir.module.module"]._get("stock").state == "installed":
+            self.skipTest("This test won't work if stock is installed, as these "
+                "quantities are computed from stock moves and stock quants.")
+        product = self.product
+        product.is_storable = True
+        product.qty_available = 100
+        so = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [Command.create({"product_id": product.id, "product_uom_qty": 10})],
+        })
+        so.action_confirm()
+        self.assertEqual(product.outgoing_qty, 10)
+        self.assertEqual(product.free_qty, 90)
+        self.assertEqual(product.virtual_available, 90)
+        so.order_line.qty_delivered = 20
+        product.invalidate_recordset(["outgoing_qty"])
+        self.assertEqual(product.outgoing_qty, 0)
+        self.assertEqual(product.free_qty, 80)
+        self.assertEqual(product.virtual_available, 80)

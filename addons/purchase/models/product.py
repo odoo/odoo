@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, _
 from odoo.fields import Domain
-from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError
+from odoo.tools import SQL
 from dateutil.relativedelta import relativedelta
 
 
@@ -89,6 +89,7 @@ class ProductProduct(models.Model):
             Domain('order_id.state', '=', 'purchase'),
             Domain('product_id', 'in', self.ids),
             Domain("company_id", "in", self.env.companies.ids),
+            Domain.custom(to_sql=lambda table: SQL("%s > %s", table.product_uom_qty, table.qty_received)),
         ])
         if self.env.context.get("to_date"):
             domain = Domain.AND([
