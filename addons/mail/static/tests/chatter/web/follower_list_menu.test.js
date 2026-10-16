@@ -7,7 +7,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { FOLLOWERS_OPEN_MAX_WAIT } from "@mail/core/web/follower_list";
+import { FOLLOWERS_OPEN_MAX_WAIT, LOAD_MORE_LIMIT } from "@mail/core/web/follower_list";
 
 import { describe, expect, test } from "@odoo/hoot";
 import {
@@ -245,6 +245,38 @@ test("Load 20 followers at once", async () => {
     await waitForNone(".o-mail-Followers-dropdown:has(:text('Load more'))");
 });
 
+test("ArrowDown past Load more focuses the first new follower", async () => {
+    const pyEnv = await startServer();
+    const partnerIds = pyEnv["res.partner"].create(range(45).map((i) => ({ name: `Partner${i}` })));
+    pyEnv["mail.followers"].create(
+        partnerIds.map((partnerId) => ({
+            partner_id: partnerId,
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
+    );
+    const nextPage = Promise.withResolvers();
+    onRpc("/mail/thread/followers", async (request) => {
+        const { params } = await request.json();
+        if (params.offset === LOAD_MORE_LIMIT) {
+            expect.step("load next page");
+            await nextPage.promise;
+        }
+    });
+    await start();
+    await openFormView("res.partner", partnerIds[0]);
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
+    await contains(".o-mail-Follower:eq(19) .o-mail-Follower-details").focus();
+    await contains(".o-mail-Follower:eq(19) [title='Remove this follower']").press("ArrowDown");
+    await waitFor(".o-mail-Followers-dropdown button:text('Load more'):focus:count(1)");
+    await expect.waitForSteps(["load next page"]);
+    nextPage.resolve();
+    await waitFor(".o-mail-Follower:count(40)");
+    // Replacing the keyed Load more button transfers focus to its former position.
+    await waitFor(".o-mail-Follower:eq(20) .o-mail-Follower-details:focus:count(1)");
+});
+
 test("Search followers list by name or email", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
@@ -306,7 +338,10 @@ test("Followers list scrolls to top when searching or clearing search", async ()
     await mailContains(".o-mail-FollowerList-list", { scroll: 0 });
     await scroll(".o-mail-FollowerList-list", 150);
     await mailContains(".o-mail-FollowerList-list", { scroll: 150 });
-    await contains("[title='Clear']:count(1)").click();
+    // Clear is reachable by keyboard, and activating it restores focus to the search input.
+    await press("ArrowDown");
+    await waitFor("[title='Clear']:focus:count(1)");
+    await press("Enter");
     await waitFor("input[placeholder='Search by name or email']:focus:count(1)");
     await mailContains(".o-mail-FollowerList-list", { scroll: 0 });
 });

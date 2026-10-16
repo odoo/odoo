@@ -9,6 +9,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
+import { keyDown, keyUp, press } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -112,7 +113,7 @@ test("click on edit follower", async () => {
     await waitFor(".o-mail-FollowerSubtypeDialog:count(1)");
 });
 
-test("edit follower and close subtype dialog", async () => {
+test("edit follower and navigate with keyboard before and after closing subtype dialog", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
     pyEnv["mail.followers"].create({
@@ -127,13 +128,52 @@ test("edit follower and close subtype dialog", async () => {
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Follower:count(1)");
     await contains(".o-mail-Follower").hover();
-    await waitFor("[title='Edit Notification Preferences']:count(1)");
     await contains("[title='Edit Notification Preferences']:count(1)").click();
     await waitFor(".o-mail-FollowerSubtypeDialog:count(1)");
     await expect.waitForSteps(["fetch_subtypes"]);
+    // The dropdown must ignore navigation keys while the dialog is active.
+    await press("Tab");
+    await waitFor(".o-mail-FollowerSubtypeDialog input:focus:count(1)");
+    await waitFor(".o-mail-Followers-dropdown .o-mail-Follower:count(1)");
     await contains(".o-mail-FollowerSubtypeDialog button:text('Discard'):count(1)").click();
     await waitForNone(".o-mail-FollowerSubtypeDialog");
-    await waitFor(".o-mail-Followers-dropdown .o-mail-Follower:count(1)");
+    // Closing the dialog restores focus and keyboard navigation in the dropdown.
+    await waitFor(
+        ".o-mail-Followers-dropdown [title='Edit Notification Preferences']:focus:count(1)"
+    );
+    await press("Tab");
+    await waitFor(".o-mail-Followers-dropdown [title='Remove this follower']:focus:count(1)");
+});
+
+test("holding Enter key on Remove only removes one follower", async () => {
+    const pyEnv = await startServer();
+    const threadId = pyEnv["res.partner"].create({});
+    const partnerIds = pyEnv["res.partner"].create([{ name: "Alice" }, { name: "Bob" }]);
+    pyEnv["mail.followers"].create(
+        partnerIds.map((partnerId) => ({
+            is_active: true,
+            partner_id: partnerId,
+            res_id: threadId,
+            res_model: "res.partner",
+        }))
+    );
+    onRpc("/mail/thread/unsubscribe", () => expect.step("unsubscribe"));
+    await start();
+    await openFormView("res.partner", threadId);
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
+    await waitFor(".o-mail-Follower:count(2)");
+    await contains(".o-mail-Follower:eq(0) [title='Remove this follower']").focus();
+    await keyDown("Enter");
+    await waitFor(".o-mail-Follower:text('Bob') .o-mail-Follower-details:focus:count(1)");
+    await expect.waitForSteps(["unsubscribe"]);
+    // Repeated Enter events now activate follower details instead of removing the next follower.
+    await keyDown("Enter");
+    await waitFor(".o_avatar_card:has(:text('Bob')):count(1)");
+    await keyDown("Enter");
+    await keyUp("Enter");
+    await waitFor(".o-mail-Follower:text('Bob'):count(1)");
+    await waitFor(".o-mail-Followers-counter:text('1'):count(1)");
+    expect.verifySteps([]);
 });
 
 test("remove a follower in a dirty form view", async () => {

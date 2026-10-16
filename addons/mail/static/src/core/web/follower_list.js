@@ -20,7 +20,7 @@ import { useSearch, useVisible } from "@mail/utils/common/hooks";
 
 // Past this delay, open the dropdown with a loading indicator if followers are still loading.
 export const FOLLOWERS_OPEN_MAX_WAIT = 200;
-const LOAD_MORE_LIMIT = 20;
+export const LOAD_MORE_LIMIT = 20;
 
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
