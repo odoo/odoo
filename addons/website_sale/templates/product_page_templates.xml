@@ -46,7 +46,7 @@
                     t-att-data-name="combination_info['display_name']"
                 >
                     <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
-                        <div class="d-flex align-items-center flex-grow-1">
+                        <div class="d-flex align-items-center flex-grow-1" aria-label="Breadcrumb">
                             <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
                                 <li class="breadcrumb-item d-none d-lg-inline-block">
                                     <a t-att-href="keep(shop_path)">
@@ -69,7 +69,7 @@
                                         </a>
                                     </li>
                                 </t>
-                                <li class="breadcrumb-item d-none d-lg-inline-block active">
+                                <li class="breadcrumb-item d-none d-lg-inline-block active" aria-current="page">
                                     <span t-field="product.name" />
                                 </li>
                                 <li class="breadcrumb-item d-lg-none">
