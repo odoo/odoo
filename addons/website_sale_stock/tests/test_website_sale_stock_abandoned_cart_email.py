@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, UTC
 
 from dateutil.relativedelta import relativedelta
 
@@ -28,7 +28,7 @@ class TestWebsiteSaleStockAbandonedCartEmail(
         website.sudo().send_abandoned_cart_followup = True
         website.sudo().write({
             "send_abandoned_cart_email_activation_time": (
-                datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)
+                datetime.now(UTC).replace(tzinfo=None) - relativedelta(hours=website.cart_abandoned_delay)
             )
             - relativedelta(minutes=10)
         })
@@ -50,7 +50,7 @@ class TestWebsiteSaleStockAbandonedCartEmail(
             "partner_id": customer.id,
             "website_id": website.id,
             "state": "draft",
-            "date_order": (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            "date_order": (datetime.now(UTC).replace(tzinfo=None) - relativedelta(hours=website.cart_abandoned_delay))
             - relativedelta(minutes=1),
             "order_line": order_line,
         })
