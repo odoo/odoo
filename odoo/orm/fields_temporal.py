@@ -28,6 +28,7 @@ DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
 class BaseDate[T](Field[T | typing.Literal[False]]):
     """ Common field properties for Date and Datetime. """
+    _normalizable = True
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
@@ -194,7 +195,10 @@ class Date(BaseDate[date]):
         return value.strftime(DATE_FORMAT) if value else False
 
     def convert_to_cache(self, value, records, validate=True):
-        return self.to_date(value)
+        value = self.to_date(value)
+        if validate and self.normalize is not None:
+            value = self._normalize_cache_value(value, records)
+        return value
 
     def convert_to_export(self, value, record):
         return self.to_date(value) or ''
@@ -297,7 +301,10 @@ class Datetime(BaseDate[datetime]):
         return getter
 
     def convert_to_cache(self, value, records, validate=True):
-        return self.to_datetime(value)
+        value = self.to_datetime(value)
+        if validate and self.normalize is not None:
+            value = self._normalize_cache_value(value, records)
+        return value
 
     def convert_to_export(self, value, record):
         value = self.convert_to_display_name(value, record)

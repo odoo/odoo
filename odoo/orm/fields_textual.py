@@ -30,6 +30,7 @@ class BaseString(Field[str | typing.Literal[False]]):
     translate: bool | Callable[[Callable[[str], str | None], str], str] = False  # whether the field is translated
     is_text = True
     falsy_value = ''
+    _normalizable = True
 
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         # translate is either True, False, or a callable
@@ -73,7 +74,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         return self.convert_to_cache(value, record, validate)
 
     def convert_to_column_insert(self, value, record, values=None, validate=True):
-        if value is False or value is None or not self.translate:
+        if not self.translate:
             return super().convert_to_column_insert(value, record, values, validate)
         cache_value = self.convert_to_cache(value, record, validate)
         if cache_value is None:
@@ -115,9 +116,9 @@ class BaseString(Field[str | typing.Literal[False]]):
         - translate: ``None | str | dict[str, str] | StoredTranslations``
         """
         if value is None or value is False:
-            return None
+            value = None
 
-        if self.translate and isinstance(value, dict):
+        elif self.translate and isinstance(value, dict):
             if isinstance(value, StoredTranslations):
                 return value
 
@@ -134,9 +135,14 @@ class BaseString(Field[str | typing.Literal[False]]):
                 raise ValidationError(records.env._("Some of the translations are False: %s", value))
             return converted
 
-        value = value.decode() if isinstance(value, bytes) else str(value)
+        else:
+            value = value.decode() if isinstance(value, bytes) else str(value)
+
         if validate:
-            return self._validated_cache_value(value, records.env)
+            if self.normalize is not None:
+                value = self._normalize_cache_value(value, records)
+            if value is not None:
+                value = self._validated_cache_value(value, records.env)
         return value
 
     def _validated_cache_value(self, value: str, env) -> str:
@@ -318,6 +324,10 @@ class BaseString(Field[str | typing.Literal[False]]):
                 target[field.name] = record_value[record]
 
     def write(self, records, value):
+        if self.translate and (value is False or value is None) and self.normalize is not None:
+            # an empty value may be normalized to a translation, which must be
+            # written below as such
+            value = self.convert_to_cache(value, records)
         if not self.translate or value is False or value is None:
             super().write(records, value)
             return

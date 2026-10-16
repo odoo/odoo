@@ -61,6 +61,7 @@ class Json(Field):
     """
 
     type = 'json'
+    _normalizable = True
     _column_type = ('jsonb', 'jsonb')
 
     def convert_to_record(self, value, record):
@@ -68,9 +69,10 @@ class Json(Field):
         return False if value is None else copy.deepcopy(value)
 
     def convert_to_cache(self, value, records, validate=True):
-        if not value:
-            return None
-        return json.loads(json.dumps(value, ensure_ascii=False, default=json_default))
+        value = json.loads(json.dumps(value, ensure_ascii=False, default=json_default)) if value else None
+        if validate and self.normalize is not None:
+            value = self._normalize_cache_value(value, records)
+        return value
 
     def convert_to_column(self, value, record, values=None, validate=True):
         if validate:
