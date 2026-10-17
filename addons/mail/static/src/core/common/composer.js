@@ -820,6 +820,10 @@ export class Composer extends Component {
             const config = {
                 emailAddSignature,
                 text,
+                mentionedPartners: composer.mentionedPartners.map((partner) => ({
+                    id: partner.id,
+                    name: partner.name,
+                })),
             };
             browser.localStorage.setItem(composer.localId, JSON.stringify(config));
         };
@@ -839,6 +843,13 @@ export class Composer extends Component {
             if (config.text) {
                 composer.emailAddSignature = config.emailAddSignature;
                 composer.text = config.text;
+                for (const { id, name } of config.mentionedPartners ?? []) {
+                    const partner = this.store.Persona.insert({ id, type: "partner" });
+                    if (!partner.name) {
+                        partner.name = name;
+                    }
+                    composer.mentionedPartners.add(partner);
+                }
             }
         } catch {
             browser.localStorage.removeItem(composer.localId);
