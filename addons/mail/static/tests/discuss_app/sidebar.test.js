@@ -24,6 +24,7 @@ import {
     onRpc,
     serverState,
     waitForSteps,
+    withUser,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
@@ -393,6 +394,40 @@ test("mark channel as seen on last message visible", async () => {
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel.o-unread", { text: "test" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-unread)", { text: "test" });
+});
+
+test.tags("focus required");
+test("focused channel is not shown as unread on receiving a message", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        name: "General",
+    });
+    const markAsReadDef = new Deferred();
+    onRpc("/discuss/channel/mark_as_read", async () => {
+        asyncStep("mark_as_read");
+        await markAsReadDef;
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer.o-focused");
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Message", { text: "Hello" });
+    await waitForSteps(["mark_as_read"]);
+    await contains(".o-mail-DiscussSidebarChannel:not(.o-unread)", { text: "General" });
+    await contains(".o-mail-DiscussSidebarChannel-itemName:not(.fw-bolder)", { text: "General" });
+    markAsReadDef.resolve();
 });
 
 test("channel - counter: should not have a counter if the category is unfolded and without needaction messages", async () => {
