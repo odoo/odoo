@@ -108,10 +108,17 @@ patch(Thread.prototype, {
         return super.avatarUrl;
     },
     get displayName() {
-        if (this.channel_type === "livechat" && this.livechat_operator_id) {
-            return this.getPersonaName(this.livechat_operator_id);
+        if (this.channel_type !== "livechat" || !this.livechat_operator_id) {
+            return super.displayName;
         }
-        return super.displayName;
+        if (this.self_member_id?.notEq(this.livechatVisitorMember)) {
+            return (
+                this.self_member_id.custom_channel_name ||
+                this.livechatVisitorMember?.name ||
+                super.displayName
+            );
+        }
+        return this.getPersonaName(this.livechat_operator_id);
     },
     get hasWelcomeMessage() {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
