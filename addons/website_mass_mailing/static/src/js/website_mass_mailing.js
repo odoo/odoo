@@ -55,6 +55,15 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      */
     destroy() {
         this._updateView({is_subscriber: false});
+        // The turnstile nodes are inserted next to the widget, in the editable
+        // area, so they would be saved with the page.
+        while (this.el.nextElementSibling?.classList.contains('s_turnstile')) {
+            this.el.nextElementSibling.remove();
+        }
+        const subscribeBtnEl = this.el.querySelector('.js_subscribe_btn');
+        subscribeBtnEl.querySelectorAll('.turnstile-spinner').forEach(el => el.remove());
+        subscribeBtnEl.classList.remove('disabled');
+        subscribeBtnEl.disabled = false;
         this._super.apply(this, arguments);
     },
 
@@ -96,12 +105,12 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         const valueInputEl = this.el.querySelector('input.js_subscribe_value, input.js_subscribe_email');
         valueInputEl.disabled = isSubscriber;
 
-        // When the website is in edit mode, window.top != window. We don't want turnstile to render during edit mode
-        // and mess up the DOM and saving it.
-        if (!isSubscriber && this._turnstile && window.top === window) {
+        // We don't want turnstile to render during edit mode and mess up the
+        // DOM and saving it.
+        if (!isSubscriber && this._turnstile && !this.editableMode) {
             const el = this._turnstile.addTurnstile('website_mass_mailing_subscribe');
             if (el) {
-                this._turnstile.addSpinner(subscribeBtnEl);
+                this._turnstile.addSpinnerNoMangle(subscribeBtnEl);
                 el[0].classList.add('mt-3');
                 el.insertAfter(this.el);
                 this._turnstile.renderTurnstile(el);
