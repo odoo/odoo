@@ -79,10 +79,18 @@ export class PaymentScreen extends Component {
             "-": "o_colorlist_item_numpad_color_3",
         };
 
+        const disabled = this.isPaymentLineLocked(this.selectedPaymentLine);
         return enhancedButtons().map((button) => ({
             ...button,
             class: `${colorClassMap[button.value] || ""}`,
+            disabled,
         }));
+    }
+
+    isPaymentLineLocked(line) {
+        return Boolean(
+            line?.payment_interface && !["pending", "retry"].includes(line.getPaymentStatus())
+        );
     }
 
     showMaxValueError() {
@@ -188,8 +196,6 @@ export class PaymentScreen extends Component {
                 amount = this.numberBuffer.getFloat();
             }
         }
-        // disable changing amount on paymentlines with running or done payments on a payment interface
-        const payment_interface = this.selectedPaymentLine.payment_interface;
         const hasCashPaymentMethod = this.payment_methods_from_config.some(
             (method) => method.type === "cash"
         );
@@ -202,10 +208,7 @@ export class PaymentScreen extends Component {
             amount = this.currentOrder.remainingDue;
             this.showMaxValueError();
         }
-        if (
-            payment_interface &&
-            !["pending", "retry"].includes(this.selectedPaymentLine.getPaymentStatus())
-        ) {
+        if (this.isPaymentLineLocked(this.selectedPaymentLine)) {
             return;
         }
         if (amount === null) {

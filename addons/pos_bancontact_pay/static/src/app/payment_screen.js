@@ -1,0 +1,129 @@
+import { _t } from "@web/core/l10n/translation";
+import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { patch } from "@web/core/utils/patch";
+import { BancontactRefundPopup } from "@pos_bancontact_pay/app/bancontact_refund_popup/bancontact_refund_popup";
+
+patch(PaymentScreen.prototype, {
+    get bancontactPaymentMethod() {
+        return this.payment_methods_from_config.find(
+            (method) => method.payment_provider === "bancontact_pay"
+        );
+    },
+
+    get showBancontactRefund() {
+        return this.isRefundOrder && Boolean(this.bancontactPaymentMethod);
+    },
+
+    async getBancontactRefundableLines() {
+        const refundedOrder = this.currentOrder.lines[0]?.refunded_orderline_id?.order_id;
+        const payments = (refundedOrder?.payment_ids || []).filter(
+            (payment) =>
+                payment.payment_provider === "bancontact_pay" &&
+                payment.payment_method_id.bancontact_refund_enabled &&
+                payment.bancontact_id &&
+                payment.isDone()
+        );
+        await this.refreshBancontactRefundStatus(payments);
+
+        return payments.map((payment) => {
+            const amountRefunded = payment.bancontact_refund_ids
+                .filter((refund) => refund.isBancontactRefundSent)
+                .reduce((total, refund) => total + Math.abs(refund.amount), 0);
+            const amountLeft = this.pos.currency.round(payment.amount - amountRefunded);
+            return {
+                id: payment.id,
+                payment,
+                payment_method_name: payment.payment_method_id.name,
+                debtor_name: payment.bancontact_debtor_name,
+                debtor_iban: payment.bancontact_debtor_iban,
+                amount: payment.amount,
+                amount_left: amountLeft,
+                fully_refunded: !this.pos.currency.isPositive(amountLeft),
+            };
+        });
+    },
+
+    async refreshBancontactRefundStatus(payments) {
+        const refundsByMethod = Map.groupBy(
+            payments.flatMap((payment) => payment.bancontact_refund_ids),
+            (refund) => refund.payment_method_id
+        );
+        for (const [method, refunds] of refundsByMethod) {
+            try {
+                await method.payment_interface.checkRefundStatus(refunds);
+            } catch {
+                this.notification.add(
+                    _t("The status of the pending Bancontact refunds couldn't be refreshed."),
+                    { type: "warning" }
+                );
+            }
+        }
+    },
+
+    deletePaymentLine(uuid) {
+        const line = this.paymentLines.find((line) => line.uuid === uuid);
+        if (line?.isBancontactRefundPending) {
+            this.notification.add(
+                _t("The refund is pending: check its status or force it done before removing it."),
+                { type: "warning" }
+            );
+            return;
+        }
+        return super.deletePaymentLine(...arguments);
+    },
+
+    getBancontactRefundLine(payment) {
+        return this.paymentLines.find(
+            (line) =>
+                line.bancontact_refunded_payment_id?.id === payment.id &&
+                !line.isBancontactRefundSent
+        );
+    },
+
+    async onClickBancontactRefund() {
+        const lines = await this.getBancontactRefundableLines();
+        if (!lines.length) {
+            this.notification.add(_t("The refunded order has no Bancontact payment to refund."), {
+                type: "warning",
+            });
+            return;
+        }
+        if (lines.every((line) => line.fully_refunded)) {
+            this.notification.add(
+                _t("The Bancontact payments of the refunded order are already fully refunded."),
+                { type: "info" }
+            );
+            return;
+        }
+
+        const amounts = {};
+        for (const line of lines) {
+            const refundLine = this.getBancontactRefundLine(line.payment);
+            amounts[line.id] = refundLine ? Math.abs(refundLine.amount) : line.amount_left;
+        }
+        const refunds = await makeAwaitable(this.dialog, BancontactRefundPopup, {
+            lines,
+            amounts,
+        });
+        if (!refunds) {
+            return;
+        }
+
+        for (const { payment, amount } of refunds) {
+            const refundLine = this.getBancontactRefundLine(payment);
+            if (refundLine && amount > 0) {
+                refundLine.setAmount(-amount);
+            } else if (refundLine) {
+                this.currentOrder.removePaymentline(refundLine);
+            } else if (amount > 0) {
+                const result = this.currentOrder.addPaymentline(payment.payment_method_id);
+                if (result.status) {
+                    result.data.setAmount(-amount);
+                    result.data.bancontact_refunded_payment_id = payment;
+                }
+            }
+        }
+        this.numberBuffer.reset();
+    },
+});
