@@ -18,6 +18,11 @@ export class AttachmentUploadService {
         this.abortByAttachmentId = new Map();
         /** @type {Map<number, (value?: void) => void} */
         this.resolveUploadByAttachmentId = new Map();
+        /** @type {Map<number, Promise<import("models").Attachment|undefined>>} */
+        this.uploadPromiseByAttachmentId = new Map();
+        /** Number of messages whose post waits for their attachments to be uploaded. */
+        this.pendingPostCount = 0;
+        this.unsubscribeBeforeUnload = undefined;
         this.deletingAttachmentIds = new Set();
         this.uploadingAttachmentIds = new Set();
         this._fileUploadBus = new EventBus();
@@ -33,6 +38,9 @@ export class AttachmentUploadService {
                 const { thread, composer } = this.targetsByTmpId.get(tmpId);
                 const tmpUrl = upload.data.get("tmp_url");
                 this.abortByAttachmentId.set(tmpId, upload.xhr.abort.bind(upload.xhr));
+                upload.xhr.upload.addEventListener("progress", (ev) =>
+                    this._onUploadProgress(tmpId, ev)
+                );
                 const attachment = this.store["ir.attachment"].insert(
                     this._makeAttachmentData(upload, tmpId, composer ? undefined : thread, tmpUrl)
                 );
@@ -89,7 +97,13 @@ export class AttachmentUploadService {
         this.store.insert(store_data);
         /** @type {import("models").Attachment} */
         const attachment = this.store["ir.attachment"].get(attachment_id);
-        if (composer) {
+        const pendingMessage = this.store["ir.attachment"].get(tmpId)?.message;
+        if (pendingMessage) {
+            // The composer was cleared when the message was sent while the
+            // file was uploading: the attachment belongs to that message now.
+            const index = pendingMessage.attachment_ids.findIndex(({ id }) => id === tmpId);
+            pendingMessage.attachment_ids.splice(index, 1, attachment);
+        } else if (composer) {
             const index = composer.attachments.findIndex(({ id }) => id === tmpId);
             if (index >= 0) {
                 composer.attachments[index] = attachment;
@@ -105,9 +119,62 @@ export class AttachmentUploadService {
     _cleanupUploading(tmpId) {
         this.abortByAttachmentId.delete(tmpId);
         this.resolveUploadByAttachmentId.delete(tmpId);
+        this.uploadPromiseByAttachmentId.delete(tmpId);
         this.uploadingAttachmentIds.delete(tmpId);
         this.targetsByTmpId.delete(tmpId);
         this.store["ir.attachment"].get(tmpId)?.delete();
+    }
+
+    /**
+     * @param {number} tmpId
+     * @param {ProgressEvent} ev
+     */
+    _onUploadProgress(tmpId, { loaded, total }) {
+        const attachment = this.store["ir.attachment"].get(tmpId);
+        if (attachment && total) {
+            attachment.uploadProgress = Math.min(loaded / total, 1);
+        }
+    }
+
+    /**
+     * Wait for the given attachments to be uploaded, while warning the user
+     * that leaving the page would lose the message waiting for them. Must be
+     * called as soon as the message is sent, before the uploads complete: they
+     * are detached from their composer, which is cleared, and their promises
+     * are removed once completed.
+     *
+     * @param {import("models").Attachment[]} attachments
+     * @returns {Promise<import("models").Attachment[]>} the uploaded attachments,
+     *  in the same order, without the ones whose upload failed or was cancelled.
+     */
+    async waitForUploads(attachments) {
+        const uploadPromises = attachments.map((attachment) => {
+            if (!attachment.uploading) {
+                return attachment;
+            }
+            const { thread } = this.targetsByTmpId.get(attachment.id);
+            this.targetsByTmpId.set(attachment.id, { thread });
+            return this.uploadPromiseByAttachmentId.get(attachment.id);
+        });
+        this.pendingPostCount++;
+        if (this.pendingPostCount === 1) {
+            // Only listen while needed, as Firefox does not place pages with
+            // beforeunload listeners in the bfcache.
+            const onBeforeUnload = (ev) => ev.preventDefault();
+            window.addEventListener("beforeunload", onBeforeUnload);
+            this.unsubscribeBeforeUnload = () =>
+                window.removeEventListener("beforeunload", onBeforeUnload);
+        }
+        try {
+            const uploaded = await Promise.all(uploadPromises);
+            return uploaded.filter(Boolean);
+        } finally {
+            this.pendingPostCount--;
+            if (this.pendingPostCount === 0) {
+                this.unsubscribeBeforeUnload();
+                this.unsubscribeBeforeUnload = undefined;
+            }
+        }
     }
 
     getUploadURL(thread) {
@@ -162,6 +229,9 @@ export class AttachmentUploadService {
     async _upload(thread, composer, file, options, tmpId, tmpURL) {
         this.targetsByTmpId.set(tmpId, { composer, thread });
         this.uploadingAttachmentIds.add(tmpId);
+        const { promise: uploadPromise, resolve: resolveUpload } = Promise.withResolvers();
+        this.resolveUploadByAttachmentId.set(tmpId, resolveUpload);
+        this.uploadPromiseByAttachmentId.set(tmpId, uploadPromise);
         await this.fileUploadService
             .upload(this.getUploadURL(thread), [file], {
                 buildFormData: (formData) => {
@@ -173,8 +243,6 @@ export class AttachmentUploadService {
                     throw e;
                 }
             });
-        const { promise: uploadPromise, resolve: resolveUpload } = Promise.withResolvers();
-        this.resolveUploadByAttachmentId.set(tmpId, resolveUpload);
         return uploadPromise;
     }
 
@@ -209,6 +277,8 @@ export class AttachmentUploadService {
             name: upload.title,
             thread,
             extension: upload.title.split(".").pop(),
+            file_size: upload.data.get("ufile")?.size,
+            uploadProgress: 0,
             uploading: true,
             tmpUrl,
         };
