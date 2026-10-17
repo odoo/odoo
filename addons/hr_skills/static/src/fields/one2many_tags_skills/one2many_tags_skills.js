@@ -3,6 +3,9 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 import { useX2ManyCrud, useOpenX2ManyRecord } from "@web/views/fields/relational_utils";
 import { registry } from "@web/core/registry";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { useService } from '@web/core/utils/hooks';
+import { onWillStart } from "@odoo/owl";
+
 
 export class One2ManyTagsSkillsField extends X2ManyField {
     static components = {
@@ -14,7 +17,19 @@ export class One2ManyTagsSkillsField extends X2ManyField {
     setup() {
         super.setup();
         const { saveRecord, updateRecord } = useX2ManyCrud(() => this.list, this.isMany2Many);
+        this.actionService = useService("action");
+        this.orm = useService('orm');
 
+        onWillStart(async () => {
+            const company = this.env.model.root.data.company_id;
+            const companyId = company?.id ?? false;
+            const skillTypes = await this.orm.searchCount(
+                'hr.skill.type',
+                ['|', ['company_id', '=', false], ['company_id', '=', companyId]],
+            );
+            this.anySkills = skillTypes > 0;
+        });
+        
         const openRecord = useOpenX2ManyRecord({
             resModel: this.list.resModel,
             activeField: this.activeField,
@@ -29,6 +44,10 @@ export class One2ManyTagsSkillsField extends X2ManyField {
             params.title = _t("Select Skills");
             openRecord({ ...params });
         };
+    }
+
+    async skillTypesAction() {
+        return this.actionService.doAction("hr_skills.hr_skill_type_action");
     }
 
     getTagProps(record) {
@@ -50,6 +69,15 @@ export class One2ManyTagsSkillsField extends X2ManyField {
 
     onTagClick(ev, record) {
         this.openRecord(record);
+    }
+
+    async onAdd({ context, editable } = {}) {
+        return super.onAdd({
+            editable,
+            context: {
+                ...context,
+            }
+        });
     }
 }
 
