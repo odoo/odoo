@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_partner_arthur" model="res.partner">
+        <field name="name">Arthur</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="user_arthur" model="res.users">
+        <field name="partner_id" ref="res_partner_arthur"/>
+        <field name="login">Arthur</field>
+    </record>
+
+    <record id="player_jepsiko" model="eva.player">
+        <field name="user_id" ref="user_arthur"/>
+        <field name="name">Jepsiko</field>
+        <field name="tokens_per_month">4</field>
+        <field name="tokens_grant_day">1</field>
+        <field name="token_balance">4</field>
+    </record>
+
+    <record id="res_partner_simon" model="res.partner">
+        <field name="name">Simon</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="user_simon" model="res.users">
+        <field name="partner_id" ref="res_partner_simon"/>
+        <field name="login">Simon</field>
+    </record>
+
+    <record id="player_sicon" model="eva.player">
+        <field name="user_id" ref="user_simon"/>
+        <field name="name">Sicon</field>
+        <field name="tokens_per_month">8</field>
+        <field name="tokens_grant_day">1</field>
+        <field name="token_balance">8</field>
+    </record>
+</odoo>
