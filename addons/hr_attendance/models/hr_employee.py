@@ -357,7 +357,7 @@ class HrEmployee(models.Model):
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
-            "views": [[False, "list"], [False, "form"]],
+            "views": [[False, "list"], [False, "form"], [False, "calendar"]],
             "domain": [('employee_id', '=', self.id), ('check_in', '>=', month_start), ('check_in', '<', month_end)],
             "context": {"group_by": ["check_in:week"]},
         }
