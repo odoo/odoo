@@ -43,7 +43,8 @@ class HrEmployeeDeparture(models.Model):
         help="Date at which the departure process starts. Differs from the actual departure date in case of a notice period.")
     departure_date = fields.Date(string="Departure Date", compute="_compute_departure_date",
         store=True, readonly=False, help="Date at which the departure actually takes place.")
-    action_date = fields.Date(string="Archive Employee On", help="Date at which the employee is archived after the departure.")
+    action_date = fields.Date(string="Archive Employee On", compute="_compute_action_date",
+        store=True, readonly=False, help="Date at which the employee is archived after the departure.")
     is_user_employee = fields.Boolean(
         compute='_compute_is_user_employee',
         export_string_translation=False,
@@ -51,6 +52,9 @@ class HrEmployeeDeparture(models.Model):
     apply_immediately = fields.Boolean(compute="_compute_apply_immediately")
     apply_date = fields.Date(readonly=True)
     last_contract_date_end = fields.Date()
+    first_contract_id = fields.Many2one('hr.version', string="First Contract", compute="_compute_first_contract_id",
+        store=True, index='btree_not_null',
+        help="First contract of the employee's current employment, used to compute their seniority.")
     activity_plan_ids = fields.Many2many("mail.activity.plan", string="Activity Plans")
 
     @api.depends('dismissal_date')
@@ -58,6 +62,9 @@ class HrEmployeeDeparture(models.Model):
         # meant to be overriden in case of notice period
         for departure in self:
             departure.departure_date = departure.dismissal_date
+
+    def _compute_action_date(self):
+        """meant to be overridden to give an archive date, empty by default"""
 
     @api.depends('employee_id.user_id')
     def _compute_is_user_employee(self):
@@ -74,6 +81,11 @@ class HrEmployeeDeparture(models.Model):
                 departure.apply_immediately = departure.action_date <= today
             else:
                 departure.apply_immediately = departure.departure_date < today
+
+    @api.depends('employee_id')
+    def _compute_first_contract_id(self):
+        for departure in self:
+            departure.first_contract_id = departure.employee_id._get_first_contract() if departure.employee_id else False
 
     @api.constrains('employee_id')
     def _check_departure_validity(self):
@@ -98,6 +110,22 @@ class HrEmployeeDeparture(models.Model):
                 "There is no valid version starting before the departure date for %s.",
                 ', '.join(emps_with_version_conflict.mapped('name')),
             ))
+
+    @api.constrains('departure_date', 'dismissal_date', 'action_date')
+    def _check_dates(self):
+        for departure in self:
+            if departure.departure_date and departure.dismissal_date \
+                    and departure.departure_date < departure.dismissal_date:
+                raise ValidationError(self.env._(
+                    "The departure date cannot be earlier than the dismissal date for %s.",
+                    departure.employee_id.name,
+                ))
+            if departure.action_date and departure.departure_date \
+                    and departure.action_date < departure.departure_date:
+                raise ValidationError(self.env._(
+                    "The archive date must be no earlier than the departure date for %s.",
+                    departure.employee_id.name,
+                ))
 
     @api.model_create_multi
     def create(self, vals_list):
