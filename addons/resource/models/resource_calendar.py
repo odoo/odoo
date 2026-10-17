@@ -72,6 +72,7 @@ class ResourceCalendar(models.Model):
         string="Hours per Week",
         compute="_compute_hours_per_week", store=True, digits=(10, 5), readonly=False, copy=False)
     is_fulltime = fields.Boolean(compute='_compute_is_fulltime', string="Is Full Time")
+    is_halftime = fields.Boolean(compute='_compute_is_halftime', string="Is Half Time")
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', store=True,
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
@@ -241,6 +242,11 @@ class ResourceCalendar(models.Model):
     def _compute_is_fulltime(self):
         for calendar in self:
             calendar.is_fulltime = float_compare(calendar.full_time_required_hours, calendar.hours_per_week, 3) == 0
+
+    @api.depends('hours_per_week', 'full_time_required_hours')
+    def _compute_is_halftime(self):
+        for calendar in self:
+            calendar.is_halftime = float_compare(calendar.hours_per_week, calendar.full_time_required_hours / 2.0, 1) == 0
 
     @api.depends('hours_per_week', 'full_time_required_hours')
     def _compute_work_time_rate(self):
