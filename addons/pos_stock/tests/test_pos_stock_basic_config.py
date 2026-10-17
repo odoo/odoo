@@ -3,11 +3,10 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
-from odoo.addons.point_of_sale.tests.test_pos_basic_config import TestPoSBasicConfig
 from odoo.addons.pos_stock.tests.common import TestPosStockCommon
 
 
-class TestPoSStockBasicConfig(TestPoSBasicConfig, TestPosStockCommon):
+class TestPoSStockBasicConfig(TestPosStockCommon):
     """ Test PoS with basic configurations.
     """
 
