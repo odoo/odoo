@@ -705,9 +705,16 @@ export class Thread extends Component {
             } else {
                 // To remove when safari will support the "scrollend" event.
                 let lastScrollTop = this.scrollableRef.el.scrollTop;
+                let stillChecks = 0;
                 const checkSmoothScrollingEnd = () => {
                     const el = this.scrollableRef.el;
-                    if (!el || el.scrollTop === lastScrollTop) {
+                    if (!el) {
+                        onSmoothScrollingEnd();
+                        return;
+                    }
+                    const target = Math.min(value, el.scrollHeight - el.clientHeight);
+                    stillChecks = el.scrollTop === lastScrollTop ? stillChecks + 1 : 0;
+                    if (Math.abs(el.scrollTop - target) <= 1 || stillChecks === 4) {
                         onSmoothScrollingEnd();
                         return;
                     }
