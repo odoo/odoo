@@ -211,7 +211,7 @@
                         selected="this.state.attributes[attribute.id].selected" setSelected="this.setSelected(attribute)" 
                         customValue="this.state.attributes[attribute.id].custom_value" setCustomValue="this.setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
-                    <PillsProductAttribute t-elif="attribute.attribute_id.display_type === 'pills'" attribute="attribute" 
+                    <PillsProductAttribute t-elif="['pills', 'range'].includes(attribute.attribute_id.display_type)" attribute="attribute"
                         selected="this.state.attributes[attribute.id].selected" setSelected="this.setSelected(attribute)" 
                         customValue="this.state.attributes[attribute.id].custom_value" setCustomValue="this.setCustomValue(attribute)"
                         allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
