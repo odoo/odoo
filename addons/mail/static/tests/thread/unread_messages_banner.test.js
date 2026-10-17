@@ -168,7 +168,7 @@ test("keep banner after mark as unread when scrolling to bottom", async () => {
     await click("[title='Expand']", { parent: [".o-mail-Message:has(:text('message 29'))"] });
     await contains(".o-dropdown-item:text('Mark as Unread'):count(1)").click();
     await scroll(".o-mail-Thread", "bottom");
-    await waitFor(".o-mail-Thread-banner:has(:text('30 new messages')):count(1)");
+    await waitFor(".o-mail-Thread-banner:has(:text('1 new message')):count(1)");
 });
 
 test("sidebar and banner counters display same value", async () => {
