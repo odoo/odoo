@@ -97,3 +97,5 @@ class PosPayment(models.Model):
         for payment in self:
             if payment.payment_method_id not in payment.session_id.config_id.payment_method_ids:
                 raise ValidationError(_('The payment method selected is not allowed in the config of the POS session.'))
+            if payment.payment_method_id.type == "pay_later" and not payment.partner_id:
+                raise ValidationError(_("A customer must be set on the order to pay with a customer account."))
