@@ -88,7 +88,7 @@ class TestDeliveryPickingBatch(TestStockBatchCommon):
         """
         warehouse = self.picking_type_out.warehouse_id
         warehouse.delivery_steps = 'pick_ship'
-        warehouse.out_type_id.write({'auto_batch': True, 'batch_group_by_carrier': True})
+        warehouse.out_type_id.write({'batch_creation_type': 'auto', 'batch_group_by_carrier': True})
 
         partner_1, partner_2 = self.env['res.partner'].create([{
             'name': f'{partner}',

@@ -1831,7 +1831,7 @@ class TestPackagePropagation(TestPackingCommon):
         """If a picking completely moves the products of a package, you want to pass it as result_package_id.
         On the other hand, if the quantity of the same pack is split between several pickings, you want to leave the result_package_id empty.
         NOTE: this test uses internal transfers instead of outgoing ones, due to a dependency with `stock_picking_batch` module
-        (`auto_batch` being enabled for certain types of stock pickings).
+        (`batch_creation_type` being set to `auto` for certain types of stock pickings).
         """
         # Storable product : 30 qty in a package.
         package = self.env['stock.package'].create({'name': 'packtest'})
