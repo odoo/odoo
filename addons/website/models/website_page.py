@@ -57,7 +57,7 @@ class WebsitePage(models.Model):
 
     website_indexed = fields.Boolean('Is Indexed', default=True)
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
-    is_in_menu = fields.Boolean(compute='_compute_website_menu')
+    is_in_menu = fields.Boolean(compute='_compute_website_menu', compute_sql='_compute_sql_website_menu', compute_sudo=False)
     is_homepage = fields.Boolean(compute='_compute_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     is_new_page_template = fields.Boolean(string="New Page Template", help='Add this page to the "+New" page templates. It will be added to the "Custom" category.')
@@ -103,6 +103,12 @@ class WebsitePage(models.Model):
     def _compute_website_menu(self):
         for page in self:
             page.is_in_menu = bool(page.menu_ids)
+
+    def _compute_sql_website_menu(self, table):
+        return SQL(
+            "EXISTS(SELECT 1 FROM website_menu WHERE website_menu.page_id = %s)",
+            table.id,
+        )
 
     # This update was added to make sure the mixin calculations are correct
     # (page.website_url > page.url).
