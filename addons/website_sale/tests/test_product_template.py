@@ -212,3 +212,25 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.assertEqual(product_template.base_unit_count, 0.0001)
         self.assertEqual(product.base_unit_price, 10000.0)
         self.assertEqual(product_template.base_unit_price, 10000.0)
+
+    def test_product_page_pricelist_min_qty_includes_cart_qty(self):
+        pricelist = self._enable_pricelists()
+        pricelist.item_ids = [
+            Command.create({
+                "product_tmpl_id": self.product.product_tmpl_id.id,
+                "compute_price": "discount",
+                "price_discount": 50.0,
+                "min_quantity": 5.0,
+            }),
+        ]
+        with self.mock_request(
+            sale_order_id=self.cart.id, website_sale_current_pl=pricelist.id
+        ) as request:
+            template = request.env["product.template"].browse(self.product.product_tmpl_id.id)
+            product_page_info = template.with_context(
+                website_sale_product_page=True
+            )._get_combination_info(product_id=self.product.id, add_qty=1)
+            self.assertEqual(product_page_info["price"], self.product.list_price / 2)
+
+            info = template._get_combination_info(product_id=self.product.id, add_qty=1)
+            self.assertEqual(info["price"], self.product.list_price)
