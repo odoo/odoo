@@ -4,6 +4,7 @@ import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { redirect } from "@web/core/utils/urls";
+import { user } from "@web/core/user";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
 import {
     deleteConditionalVisibility,
@@ -92,6 +93,7 @@ export class FormOptionPlugin extends Plugin {
         "getVisibilityConditionCache",
         "applyFormModel",
         "addHiddenField",
+        "presetOldestRecords",
         "fetchAuthorizedFields",
         "fetchFieldRecords",
         "loadFieldOptionData",
@@ -291,7 +293,7 @@ export class FormOptionPlugin extends Plugin {
         // in qweb js to avoid duplicating this in the templates
         field.required = field.required ? 1 : null;
 
-        if (field.records) {
+        if (field.records?.length) {
             return field.records;
         }
         if (field._property && field.type === "tags") {
@@ -411,6 +413,37 @@ export class FormOptionPlugin extends Plugin {
         }
     }
     /**
+     * Preset the oldest record on the required many2one fields that have no
+     * value yet, so that the created records (e.g. tasks) are linked to it
+     * and show up in the backend.
+     *
+     * @param {HTMLElement} el
+     * @param {Object} formInfo obtained from prepareFormModel
+     */
+    presetOldestRecords(el, formInfo) {
+        const addActionField = this.dependencies.builderActions.getAction("addActionField");
+        for (const field of formInfo.fields || []) {
+            const params = { fieldName: field.name, isSelect: true };
+            // The record may also be left to the visitor, in a visible field.
+            const visibleFieldEl = el.querySelector(
+                `.s_website_form_field:not(.s_website_form_dnone) [name="${field.name}"]`
+            );
+            if (
+                field.required &&
+                field.type === "many2one" &&
+                field.records.length &&
+                !visibleFieldEl &&
+                addActionField.getValue({ editingElement: el, params }) === "0"
+            ) {
+                const oldestId = field.records.reduce(
+                    (minId, record) => Math.min(minId, record.id),
+                    Infinity
+                );
+                this.addHiddenField(el, oldestId, field.name);
+            }
+        }
+    }
+    /**
      * Apply the model on the form changing its fields
      *
      * @param {HTMLElement} el
@@ -478,6 +511,7 @@ export class FormOptionPlugin extends Plugin {
                     this.addHiddenField(el, defaultValue, field.name);
                 }
             }
+            this.presetOldestRecords(el, formInfo);
         }
         await this.applyDefaultValues(el);
     }
@@ -505,7 +539,12 @@ export class FormOptionPlugin extends Plugin {
      */
     async fetchFormInfoFields(formInfo) {
         if (formInfo.fields) {
-            const proms = formInfo.fields.map((field) => this.fetchFieldRecords(field));
+            const proms = formInfo.fields.map(async (field) => {
+                if (field.createAction) {
+                    field.hasCreateAccess = await user.checkAccessRight(field.relation, "create");
+                }
+                return this.fetchFieldRecords(field);
+            });
             await Promise.all(proms);
         }
     }
@@ -1256,22 +1295,35 @@ export class PromptSaveRedirectAction extends BuilderAction {
     static dependencies = ["savePlugin"];
     setup() {
         this.canTimeout = false;
+        this.preview = false;
     }
-    apply({ params: { mainParam } }) {
+    apply({
+        params: { createAction, checkWebsiteCompanyIsActive, dialogTitle, dialogDescription },
+    }) {
+        if (checkWebsiteCompanyIsActive && !checkWebsiteCompanyIsActive(this.services)) {
+            return;
+        }
         const redirectToAction = (action) => {
-            redirect(`/odoo/action-${encodeURIComponent(action)}`);
+            redirect(`/odoo/action-${encodeURIComponent(action)}/new`);
         };
         new Promise((resolve) => {
             const message = _t("You are about to be redirected. Your changes will be saved.");
             this.services.dialog.add(ConfirmationDialog, {
-                body: message,
+                title: dialogTitle,
+                body: dialogDescription || message,
                 confirmLabel: _t("Save and Redirect"),
                 confirm: async () => {
                     await this.dependencies.savePlugin.save();
                     await this.config.closeEditor();
-                    redirectToAction(mainParam);
+                    if (typeof createAction === "function") {
+                        const path = await createAction();
+                        this.services.website.goToWebsite({ path, edition: true });
+                    } else {
+                        redirectToAction(createAction);
+                    }
                     resolve();
                 },
+                cancelLabel: _t("Stay here"),
                 cancel: () => resolve(),
             });
         });
