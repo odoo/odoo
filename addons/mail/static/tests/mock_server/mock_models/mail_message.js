@@ -174,6 +174,7 @@ export class MailMessage extends models.ServerModel {
     }
 
     get _to_store_defaults() {
+        const hasPoll = (m) => m.started_poll_ids.length || m.ended_poll_ids.length;
         return [
             mailDataHelpers.Store.many(
                 "attachment_ids",
@@ -195,6 +196,14 @@ export class MailMessage extends models.ServerModel {
                 mailDataHelpers.Store.many(this.env["mail.message.reaction"].browse(m.reaction_ids))
             ),
             "res_id",
+            mailDataHelpers.Store.many(
+                "started_poll_ids",
+                makeKwArgs({
+                    fields: this.env["mail.poll"]._store_poll_fields(false),
+                    predicate: hasPoll,
+                })
+            ),
+            mailDataHelpers.Store.many("ended_poll_ids", makeKwArgs({ predicate: hasPoll })),
             "subject",
             "write_date",
             mailDataHelpers.Store.one(

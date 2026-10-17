@@ -10,7 +10,7 @@
                 </p>
                 <div class="o-mail-PollOption rounded" t-foreach="props.poll.option_ids" t-as="option" t-key="option.id" t-att-style="percentageAttStyle(option)" t-att-class="{'o-selected': state.selectedOptionIds.has(option.id), 'o-winningOption': option.eq(props.poll.winning_option_id), 'o-hasVotes': option.number_of_votes > 0 }">
                     <div t-if="isShowingResults" class="d-flex justify-content-between p-2">
-                        <span class="fw-bold me-1 text-truncate" t-esc="option.option_label"/>
+                        <span class="fw-bold me-1 text-truncate" t-esc="option.option_label" data-tooltip-touch-tap-to-show="true" t-on-pointerenter="onPointerenterOptionLabel"/>
                         <span class="flex-shrink-0">
                             <span class="me-2 smaller" t-esc="voteCountText(option.number_of_votes)"/>
                             <span class="o-fw-600"><t t-esc="option.vote_percentage"/>%</span>
@@ -18,7 +18,7 @@
                         </span>
                     </div>
                     <label t-else="" class="d-flex justify-content-between p-2 cursor-pointer">
-                        <span class="fw-bold me-1 text-truncate" t-esc="option.option_label"/>
+                        <span class="fw-bold me-1 text-truncate" t-esc="option.option_label" data-tooltip-touch-tap-to-show="true" t-on-pointerenter="onPointerenterOptionLabel"/>
                         <input class="form-check-input" t-att-disabled="state.voting" t-att-checked="state.selectedOptionIds.has(option.id)" t-on-change="(ev) => this.onOptionCheckboxToggle(option.id, ev.target.checked)" t-att-type="props.poll.allow_multiple_options ? 'checkbox' : 'radio'"/>
                     </label>
                 </div>

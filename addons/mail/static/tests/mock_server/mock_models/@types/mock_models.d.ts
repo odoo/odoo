@@ -16,6 +16,8 @@ declare module "mock_models" {
     import { MailMessageReaction as MailMessageReaction2 } from "@mail/../tests/mock_server/mock_models/mail_message_reaction";
     import { MailMessageSubtype as MailMessageSubtype2 } from "@mail/../tests/mock_server/mock_models/mail_message_subtype";
     import { MailNotification as MailNotification2 } from "@mail/../tests/mock_server/mock_models/mail_notification";
+    import { MailPoll as MailPoll2 } from "@mail/../tests/mock_server/mock_models/mail_poll";
+    import { MailPollOption as MailPollOption2 } from "@mail/../tests/mock_server/mock_models/mail_poll_option";
     import { MailScheduledMessage as MailScheduledMessage2 } from "@mail/.../tests/mock_server/mock_models/mail_scheduled_message";
     import { MailShortcode as MailShortcode2 } from "@mail/../tests/mock_server/mock_models/mail_shortcode";
     import { MailTemplate as MailTemplate2 } from "@mail/../tests/mock_server/mock_models/mail_template";
@@ -46,6 +48,8 @@ declare module "mock_models" {
     export interface MailMessageReaction extends MailMessageReaction2 {}
     export interface MailMessageSubtype extends MailMessageSubtype2 {}
     export interface MailNotification extends MailNotification2 {}
+    export interface MailPoll extends MailPoll2 {}
+    export interface MailPollOption extends MailPollOption2 {}
     export interface MailScheduledMessage extends MailScheduledMessage2 {}
     export interface MailShortcode extends MailShortcode2 {}
     export interface MailTemplate extends MailTemplate2 {}
@@ -77,6 +81,8 @@ declare module "mock_models" {
         "mail.message.reaction": MailMessageReaction,
         "mail.message.subtype": MailMessageSubtype,
         "mail.notification": MailNotification,
+        "mail.poll": MailPoll,
+        "mail.poll.option": MailPollOption,
         "mail.scheduled.message": MailScheduledMessage,
         "mail.shortcode": MailShortcode,
         "mail.template": MailTemplate,
