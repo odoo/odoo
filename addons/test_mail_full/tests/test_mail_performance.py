@@ -320,6 +320,17 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
 
         self.assertEqual(len(res), 1)
 
+    @users('employee')
+    @warmup
+    def test_portal_message_format_read_order(self):
+        messages_all = self.messages_all.with_user(self.env.user).sudo()
+
+        for fnames in (['author_id', 'is_bookmarked'], ['is_bookmarked', 'author_id']):
+            with self.subTest(fnames=fnames):
+                self.env.invalidate_all()
+                with self.assertQueryCount(employee=3):
+                    messages_all._read_format(fnames)
+
     @mute_logger("odoo.tests", "odoo.addons.mail.models.mail_mail", "odoo.models.unlink")
     @users("employee")
     @warmup
