@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, date
 
 from odoo import Command, fields
 from odoo.tests import common, Form
@@ -303,3 +303,116 @@ class TestHolidayContract(TransactionCase):
             'request_date_to': date_to or Datetime.today(),
             'request_date_from': date_from or Datetime.today(),
         })
+
+
+class TestFutureLeavesCommon(TransactionCase):
+    """ Common setup of the tests about the future leaves linked to an accrual plan.
+
+    Today is 2026-09-29 (freeze_time):
+    - accrual plan: 2 days (or 16 hours) on the 1st of each month, accrued at the start of the period
+    - allocation starting on 2026-01-01: 9 accruals (January to September), so 18 days accrued today
+      and then 20 days on 2026-10-01, 22 on 2026-11-01 and 24 on 2026-12-01
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env = cls.env(context=dict(cls.env.context, tracking_disable=True))
+        cls.employee = cls.env['hr.employee'].create({'name': 'Accrual Employee'})
+        cls.work_entry_type = cls._create_work_entry_type('Accrued Time Off', 'ACCR', allows_negative=False)
+        cls.accrual_plan = cls._create_accrual_plan(cls.work_entry_type)
+        # accrual with negative balance
+        cls.negative_work_entry_type = cls._create_work_entry_type(
+            'Accrued Time Off (negative allowed)', 'ACNEG', allows_negative=True, max_allowed_negative=1)
+        cls.negative_accrual_plan = cls._create_accrual_plan(cls.negative_work_entry_type)
+        # accrual in hours, 16 hours per month (2 days of 8 hours)
+        cls.hour_work_entry_type = cls._create_work_entry_type(
+            'Accrued Hours', 'ACHR', allows_negative=False, unit_of_measure='hour')
+        cls.hour_accrual_plan = cls._create_accrual_plan(
+            cls.hour_work_entry_type, added_value=16, added_value_type='hour')
+        # accrual that allows the requests to be made with custom hours instead of full days
+        cls.custom_hours_work_entry_type = cls._create_work_entry_type(
+            'Accrued Custom Hours', 'ACCH', allows_negative=False, unit_of_measure='hour', request_unit='hour')
+        cls.custom_hours_accrual_plan = cls._create_accrual_plan(
+            cls.custom_hours_work_entry_type, added_value=16, added_value_type='hour')
+
+    @classmethod
+    def _create_accrual_plan(cls, work_entry_type, added_value=2, added_value_type='day'):
+        return cls.env['hr.leave.accrual.plan'].create({
+            'name': 'Monthly accrual',
+            'work_entry_type_id': work_entry_type.id,
+            'accrued_gain_time': 'start',
+            'transition_mode': 'immediately',
+            'added_value_type': added_value_type,
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': added_value,
+                'added_value_type': added_value_type,
+                'frequency': 'monthly',
+                'first_day': '1',
+            })],
+        })
+
+    @classmethod
+    def _create_work_entry_type(
+            cls, name, code, allows_negative, max_allowed_negative=0, unit_of_measure='day', request_unit='day'):
+        # no validation, so that allocations and leaves are directly validated
+        return cls.env['hr.work.entry.type'].create({
+            'name': name,
+            'code': code,
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': request_unit,
+            'unit_of_measure': unit_of_measure,
+            'allows_negative': allows_negative,
+            'max_allowed_negative': max_allowed_negative,
+        })
+
+    def _create_allocation(self, work_entry_type=None, accrual_plan=None):
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Accrual allocation',
+            'employee_id': self.employee.id,
+            'work_entry_type_id': (work_entry_type or self.work_entry_type).id,
+            'accrual_plan_id': (accrual_plan or self.accrual_plan).id,
+            'date_from': date(2026, 1, 1),
+            'number_of_days': 0,
+        })
+        if allocation.state != 'validate':
+            allocation.action_approve()
+        # update number_of_days with the accruals until today
+        allocation._update_accrual()
+        return allocation
+
+    def _create_leave(self, request_date_from, request_date_to, work_entry_type=None, from_dashboard=False, **values):
+        return self.env['hr.leave'].with_context(from_dashboard=from_dashboard).create({
+            'employee_id': self.employee.id,
+            'work_entry_type_id': (work_entry_type or self.work_entry_type).id,
+            'request_date_from': request_date_from,
+            'request_date_to': request_date_to,
+            **values,
+        })
+
+    def _get_info(self, from_dashboard, target_date=None, work_entry_type=None):
+        """ Return the data of a time type as the dashboard requests it (`from_dashboard`),
+        or as any other caller (validation, cron, ...) gets it. """
+        work_entry_type = work_entry_type or self.work_entry_type
+        target_date = target_date or date.today()
+        if from_dashboard:
+            data = work_entry_type.with_context(
+                employee_id=self.employee.id, from_dashboard=True).get_allocation_data_request(target_date, False)
+        else:
+            data = work_entry_type.get_allocation_data(self.employee, target_date)[self.employee]
+        return next(info for _name, info, _requires_allocation, type_id in data if type_id == work_entry_type.id)
+
+    def _create_planned_leaves(self, work_entry_type):
+        """ Create 20 days (4 weeks) of future leaves. """
+        for date_from, date_to in (
+            (date(2026, 11, 16), date(2026, 11, 20)),
+            (date(2026, 11, 23), date(2026, 11, 27)),
+            (date(2026, 12, 7), date(2026, 12, 11)),
+            (date(2026, 12, 14), date(2026, 12, 18)),
+        ):
+            self._create_leave(date_from, date_to, work_entry_type=work_entry_type)
