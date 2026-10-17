@@ -891,3 +891,21 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(versions, v1)
         versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '>', '2026-06-01')])
         self.assertEqual(versions, v2)
+
+    def test_multi_version_changes_hr_officer(self):
+        # HR officer who edits the old version must get the summary of the changes to apply to the next versions (without access error)
+        job_developer, job_manager = self.env['hr.job'].create([{'name': 'Developer'}, {'name': 'Manager'}])
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'job_id': job_developer.id,
+            'job_title': 'Old Title',
+        })
+
+        changes = employee.with_user(self.res_users_hr_officer).get_multi_version_changes({
+            'job_id': job_manager.id,
+            'job_title': 'New Title',
+        })
+        self.assertEqual(changes, {
+            '(Job)': ('Developer', 'Manager'),
+            '(Job Title)': ('Old Title', 'New Title'),
+        })

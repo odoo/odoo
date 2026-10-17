@@ -2559,9 +2559,9 @@ class HrEmployee(models.Model):
         version_changes_to_display = {}
         for field_name in version_changes:
             new_value = version_changes[field_name]
-            field = self.env['ir.model.fields'].search([('model', '=', 'hr.version'), ('name', '=', field_name)])
-            if field['relation']:
-                new_value = self.env[field['relation']].search([('id', 'in', new_value)])
+            field = self.env['hr.version']._fields[field_name]
+            if field.relational:
+                new_value = self.env[field.comodel_name].search([('id', 'in', new_value)])
             tracking_values = self._create_mail_tracking_values(
                 self[field_name], new_value,
                 field_name, self._track_get_fields_info([field_name])[field_name],
