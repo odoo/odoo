@@ -17,6 +17,10 @@ const storeServicePatch = {
         this.fetchChannelPromiseByChannelId = new Map();
         /** @type {boolean|undefined} whether some channels are unpinned (hidden from the sidebar) */
         this.has_hidden_channels = undefined;
+        /** @type {string|undefined} */
+        this.guest_token = undefined;
+        /** @type {string|undefined} */
+        this.invitation_email_token = undefined;
         /** @type {boolean|undefined} */
         this.isChannelTokenSecret = undefined;
         /** @type {boolean|undefined} */
