@@ -225,6 +225,39 @@ class TestWorkEntry(TestWorkEntryBase):
         end = datetime(2024, 9, 2, 23, 59, 59)
         self.assertEqual(calendar.get_work_hours_count(start, end), 4.0)
 
+    def test_time_off_keeps_non_working_schedule_period(self):
+        """ Check that a time off over a day whose afternoon is unpaid in the working schedule
+        only replaces the working morning in the work entries. """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Calendar',
+            'tz': 'UTC',
+            'attendance_ids': [
+                Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon', 'work_entry_type_id': self.work_entry_type_unpaid.id}),
+            ],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Test',
+            'resource_calendar_id': calendar.id,
+            'date_version': datetime(2024, 9, 1),
+            'contract_date_start': datetime(2024, 9, 1),
+            'contract_date_end': datetime(2024, 9, 30),
+            'wage': 5000.0,
+        })
+        self.env['resource.calendar.leaves'].create({
+            'date_from': datetime(2024, 9, 2, 8, 0, 0),
+            'date_to': datetime(2024, 9, 2, 17, 0, 0),
+            'calendar_id': calendar.id,
+            'resource_id': employee.resource_id.id,
+            'work_entry_type_id': self.work_entry_type_leave.id,
+        })
+
+        work_entries = employee.generate_work_entries(datetime(2024, 9, 2), datetime(2024, 9, 2))
+        self.assertDictEqual(
+            {work_entry.work_entry_type_id: work_entry.duration for work_entry in work_entries},
+            {self.work_entry_type_leave: 4.0, self.work_entry_type_unpaid: 4.0},
+        )
+
     def test_work_entry_different_calendars(self):
         """ Test work entries are correctly created for employees with versions that have different calendar types. """
         flexible_calendar = self.env['resource.calendar'].create({
