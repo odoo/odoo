@@ -131,3 +131,16 @@ class TestWorkorder(TestMrpCommon):
             ],
             field_names=['operation_id'],
         )
+
+    def test_save_planned_mo_after_registering_workorder_qty(self):
+        """Registering a produced quantity on a work order of a planned MO
+        should not block saving the MO form.
+        """
+        mo = self.env['mrp.production'].create({'bom_id': self.bom_4.id})
+        mo.action_confirm()
+        mo.button_plan()
+
+        mo_form = Form(mo)
+        with mo_form.workorder_ids.edit(0) as wo_form:
+            wo_form.qty_produced = 1
+        mo_form.save()
