@@ -123,10 +123,10 @@ describe("Html Paste cleaning - whitelist", () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p>[]<br></p></td>
+                            <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table>[]
             `),
         });
     });
@@ -157,9 +157,9 @@ describe("Html Paste cleaning - whitelist", () => {
                     <tbody>
                         <tr><th class="o_table_header">Header 1</th></tr>
                         <tr><td>Header 2</td></tr>
-                        <tr><td>Cell[]</td></tr>
+                        <tr><td>Cell</td></tr>
                     </tbody>
-                </table>
+                </table>[]
             `),
         });
     });
@@ -1437,8 +1437,40 @@ describe("Unwrapping html element", () => {
 });
 
 describe("Complex html span", () => {
+    const spanStyle =
+        "font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, " +
+        "Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;" +
+        "Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;" +
+        "Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; " +
+        "letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; " +
+        "text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; " +
+        "-webkit-text-stroke-width: 0px; text-decoration-thickness: initial; " +
+        "text-decoration-style: initial; text-decoration-color: initial; " +
+        "display: inline !important; float: none;";
+    const bStyle =
+        "box-sizing: border-box; font-weight: bolder; font-family: -apple-system, " +
+        "BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, " +
+        "&quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, " +
+        "&quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; " +
+        "font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; " +
+        "orphans: 2; text-align: left; text-indent: 0px; text-transform: none; " +
+        "white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; " +
+        "text-decoration-thickness: initial; text-decoration-style: initial; " +
+        "text-decoration-color: initial";
+    const span2Style =
+        "font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, " +
+        "Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, " +
+        "&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, " +
+        "&quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; " +
+        "letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; " +
+        "text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; " +
+        "-webkit-text-stroke-width: 0px; text-decoration-thickness: initial; " +
+        "text-decoration-style: initial; text-decoration-color: initial; " +
+        "display: inline !important; float: none";
     const complexHtmlData =
-        '<span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">1</span><b style="box-sizing: border-box; font-weight: bolder; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">23</b><span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"><span> </span>4</span>';
+        `<span style="${spanStyle}">1</span>` +
+        `<b style="${bStyle}">23</b>` +
+        `<span style="${span2Style}"><span>\u00A0</span>4</span>`;
 
     describe("range collapsed", () => {
         test("should paste a text at the beginning of a p", async () => {
@@ -1913,7 +1945,7 @@ describe("Complex html 3 p", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c1<i>X</i>2</span><p>3<i>X</i>4</p><span class="a">5<i>X</i>6[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c1<i>X</i>2</span><p>3<i>X</i>4</p>5<i>X</i>6[]f</div>',
             });
         });
 
@@ -1968,7 +2000,7 @@ describe("Complex html 3 p", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div>2a<span class="a">b1<i>X</i>2</span><p>3<i>X</i>4</p><span class="a">5<i>X</i>6[]</span>e<br>f</div>',
+                    '<div>2a<span class="a">b1<i>X</i>2</span><p>3<i>X</i>4</p>5<i>X</i>6[]e<br>f</div>',
             });
         });
     });
@@ -2102,18 +2134,18 @@ describe("Complex html p+i", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c12<i><br>ii</i>[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c12<br><i>ii</i>[]</span>f</div>',
             });
         });
 
-        test("should paste a text when selection leave a spanunsplittable (2)", async () => {
+        test("should paste a text when selection leave a span unsplittable (2)", async () => {
             await testEditor({
                 contentBefore: '<div class="oe_unbreakable">2a[b<span class="a">c]d</span>ef</div>',
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">2a12<i><br>ii</i>[]<span class="a">d</span>ef</div>',
+                    '<div class="oe_unbreakable">2a12<br><i>ii</i>[]<span class="a">d</span>ef</div>',
             });
         });
 
@@ -2164,7 +2196,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: `<div class="oe_unbreakable">2a<span class="a">b12<i><br>ii</i>[]</span>e<br>f</div>`,
+                contentAfter: `<div class="oe_unbreakable">2a<span class="a">b12<br><i>ii</i>[]</span>e<br>f</div>`,
             });
         });
     });
@@ -2297,7 +2329,7 @@ describe("Complex html 3p+b", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c1<b>23</b></span><p>zzz</p><span class="a">45<b>6</b>7[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c1<b>23</b></span><p>zzz</p>45<b>6</b>7[]f</div>',
             });
         });
 
@@ -2330,7 +2362,7 @@ describe("Complex html 3p+b", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div>2a<span class="a">b1<b>23</b></span><p>zzz</p><span class="a">45<b>6</b>7[]</span>e<br>f</div>',
+                    '<div>2a<span class="a">b1<b>23</b></span><p>zzz</p>45<b>6</b>7[]e<br>f</div>',
             });
         });
     });
@@ -2583,6 +2615,53 @@ describe("Special cases", () => {
                                                 <li>abc</li>
                                             </ul>
                                         </li>
+                                        <li>def</li>
+                                    </ul>
+                                </li>
+                                <li>ghi</li>
+                            </ul>
+                        </li>
+                        <li>jkl[]</li>
+                    </ul>
+                `),
+            });
+        });
+
+        test("should paste a nested list into another list (3)", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>Alpha</li><li>Beta[]</li></ul>",
+                stepFunction: async (editor) => {
+                    pasteHtml(
+                        editor,
+                        unformat(`
+                            <ol>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li class="oe-nested">
+                                            <ol>
+                                                <li class="oe-nested">
+                                                    <ul class="o_checklist">
+                                                        <li>abc</li>
+                                                    </ul>
+                                                </li>
+                                                <li>def</li>
+                                            </ol>
+                                        </li>
+                                        <li>ghi</li>
+                                    </ul>
+                                </li>
+                                <li>jkl</li>
+                            </ol>
+                        `)
+                    );
+                },
+                contentAfter: unformat(`
+                    <ul>
+                        <li>Alpha</li>
+                        <li><p>Betaabc</p>
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
                                         <li>def</li>
                                     </ul>
                                 </li>
@@ -4187,9 +4266,9 @@ describe("Paste HTML tables", () => {
             </tr>
             <tr style="height: 20.25pt;">
                 <td colspan="2">14pt MONO TEXT
-                []</td>
+                </td>
             </tr>
-        </tbody></table>`,
+        </tbody></table>[]`,
         });
     });
 
@@ -4297,10 +4376,10 @@ describe("Paste HTML tables", () => {
                     text on color background</td>
             </tr>
             <tr style="height: 21px;">
-                <td rowspan="1" colspan="2">14pt MONO TEXT[]</td>
+                <td rowspan="1" colspan="2">14pt MONO TEXT</td>
             </tr>
         </tbody>
-    </table>`,
+    </table>[]`,
         });
     });
 
@@ -4426,10 +4505,10 @@ describe("Paste HTML tables", () => {
         </tr>
         <tr>
             <td colspan="2">
-                14pt MONO TEXT[]
+                14pt MONO TEXT
             </td>
         </tr>
-    </tbody></table>`,
+    </tbody></table>[]`,
         });
     });
     test("should apply default table classes (table, table-bordered, o_table) on paste", async () => {
@@ -4455,10 +4534,10 @@ describe("Paste HTML tables", () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p>[]<br></p></td>
+                            <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table>[]
             `),
         });
     });
@@ -4503,10 +4582,10 @@ describe("Paste HTML tables", () => {
                                 </tr>
                                 <tr>
                                     <td>1</td>
-                                    <td>2[]</td>
+                                    <td>2</td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table>[]
                     `),
         });
     });
@@ -4533,10 +4612,10 @@ describe("Paste HTML tables", () => {
                             <tbody>
                                 <tr>
                                     <th class="o_table_header">1</th>
-                                    <th class="o_table_header">2[]</th>
+                                    <th class="o_table_header">2</th>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table>[]
                     `),
         });
     });
@@ -4955,7 +5034,8 @@ describe("paste table cells into an existing table", () => {
                                     <tbody>
                                         <tr><td><p>x</p></td></tr>
                                     </tbody>
-                                </table>[]
+                                </table>
+                                []
                                 <p>a</p>
                             </td>
                             <td><p>b</p></td>

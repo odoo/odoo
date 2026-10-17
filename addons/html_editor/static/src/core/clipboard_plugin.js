@@ -214,7 +214,10 @@ export class ClipboardPlugin extends Plugin {
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
-        if (this.checkPredicates("should_paste_as_text_predicates", selection, ev.clipboardData) ?? false) {
+        if (
+            this.checkPredicates("should_paste_as_text_predicates", selection, ev.clipboardData) ??
+            false
+        ) {
             this.pasteText(ev.clipboardData.getData("text/plain"));
         } else {
             this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
@@ -282,9 +285,6 @@ export class ClipboardPlugin extends Plugin {
         }
         const fragment = parseHTML(this.document, clipboardHtml);
         this.dependencies.sanitize.sanitize(fragment);
-        if (this.delegateTo("paste_odoo_editor_html_overrides", selection, fragment)) {
-            return true;
-        }
         if (files.length || clipboardHtml) {
             const clipboardElem = this.prepareClipboardData(clipboardHtml);
             if (this.delegateTo("paste_html_overrides", selection, clipboardElem)) {
@@ -358,22 +358,22 @@ export class ClipboardPlugin extends Plugin {
                 ) {
                     this.dependencies.lineBreak.insertLineBreak();
                 } else {
-                    const [blockBefore] = this.dependencies.split.splitBlock();
+                    const { before } = this.dependencies.split.splitBlock();
                     if (
                         block &&
+                        before &&
                         block.matches(baseContainerGlobalSelector) &&
-                        blockBefore &&
-                        !blockBefore.matches(getBaseContainerSelector("DIV"))
+                        !before.matches(getBaseContainerSelector("DIV"))
                     ) {
                         // Do something only if blockBefore is not a DIV (which is the no-margin option)
                         // replace blockBefore by a DIV.
                         const div = this.dependencies.baseContainer.createBaseContainer({
                             nodeName: "DIV",
-                            children: [...childNodes(blockBefore)],
+                            children: [...childNodes(before)],
                         });
                         const cursors = this.dependencies.selection.preserveSelection();
-                        blockBefore.replaceWith(div);
-                        cursors.remapNode(blockBefore, div).restore();
+                        before.replaceWith(div);
+                        cursors.remapNode(before, div).restore();
                     }
                 }
             }

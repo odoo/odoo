@@ -88,7 +88,7 @@ export class ToggleBlockPlugin extends Plugin {
 
         should_show_power_buttons_predicates: this.showPowerButtons.bind(this),
 
-        before_insert_processors: this.handleInsert.bind(this),
+        fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
     };
 
     setup() {
@@ -406,10 +406,10 @@ export class ToggleBlockPlugin extends Plugin {
      * Generate new toggleBlockIds for every inserted toggle, to avoid duplicating
      * copies.
      */
-    handleInsert(insertContainer) {
-        const insertedToggles = insertContainer.querySelectorAll(toggleSelector);
+    processFragmentToInsert(fragment) {
+        const insertedToggles = fragment.querySelectorAll(toggleSelector);
         this.generateUniqueIds(insertedToggles);
-        return insertContainer;
+        return fragment;
     }
 
     /**
@@ -452,7 +452,7 @@ export class ToggleBlockPlugin extends Plugin {
      *      2. Cursor is at the start of the toggle title (create new toggle before)
      *      3. Cursor elsewhere in the toggle title (create new toggle after)
      * @param {Object} param @see SplitPlugin.splitElementBlock
-     * @returns true if indeed handled by the method
+     * @returns true or a split result if indeed handled by the method
      */
     handleSplitElementBlock({ targetNode, targetOffset, blockToSplit }) {
         const { toggle, title, content } = this.getClosestToggleTitleInfo(targetNode);
@@ -473,11 +473,12 @@ export class ToggleBlockPlugin extends Plugin {
                 return true;
             }
             const insertBefore = targetOffset === 0 && blockToSplit.parentElement === title;
-            const [beforeSplit, afterSplit] = this.dependencies.split.splitElementBlock({
+            const splitResult = this.dependencies.split.splitElementBlock({
                 targetNode,
                 targetOffset,
                 blockToSplit,
             });
+            const { before: beforeSplit, after: afterSplit } = splitResult;
             if (beforeSplit && afterSplit) {
                 if (content.parentElement.matches(".d-none") || insertBefore) {
                     const newToggle = this.renderToggleBlock();
@@ -504,7 +505,7 @@ export class ToggleBlockPlugin extends Plugin {
                 }
                 this.dependencies.selection.setCursorStart(afterSplit);
             }
-            return true;
+            return splitResult;
         }
     }
 
