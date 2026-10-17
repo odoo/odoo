@@ -10,11 +10,12 @@
                 <t t-foreach="range(len(docs))" t-as="index">
                     <t t-set="move" t-value="docs[index]"/>
                     <t t-set="qty" t-value="qtys[index]"/>
-                    <t t-set="source" t-value="move._get_source_document()"/>
+                    <t t-set="source" t-value="move.sudo()._get_source_document()"/>
+                    <t t-set="source" t-value="source and source.with_env(move.env)"/>
                     <t t-foreach="range(qty)" t-as="j">
                         <div class="o_label_page o_label_dymo">
                             <span t-out="move.product_id.display_name">Product Display Name</span> <br/>
-                            <span t-if="source" t-out="source.name">Source Name</span>
+                            <span t-if="source" t-out="source.sudo().name">Source Name</span>
                             <div class="address"
                                 t-if="move.picking_id and move.picking_id.partner_id"
                                 t-field="move.picking_id.partner_id"
@@ -72,7 +73,7 @@
                                 </a>
                                 <span t-if="len(source) > 1">
                                     (<a name="origin_link" href="#" t-att-res-model="source[1]._name" view-type="form" t-att-res-id="source[1].id">
-                                    <span t-out="source[1].display_name">DEMO_ORIGIN_DISPLAY_NAME</span></a>)
+                                    <span t-out="source[1].sudo().display_name">DEMO_ORIGIN_DISPLAY_NAME</span></a>)
                                 </span>
                                 <span t-if="source[0]._name == 'stock.picking' and source[0].partner_id">:
                                     <a name="source_link" href="#" t-att-res-model="source[0].partner_id._name" t-att-res-id="source[0].partner_id.id" view-type="form">
