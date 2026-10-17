@@ -128,6 +128,13 @@ class ResConfigSettings(models.TransientModel):
     module_website_livechat = fields.Boolean()
     module_website_address_autocomplete = fields.Boolean("Website Address Autocomplete")
 
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if self.env.context.get('host_id') and not self.env.context.get('default_website_id'):
+            res['website_id'] = self.env.context.get('host_id')
+        return res
+
     @api.depends('website_id')
     def _compute_shared_user_account(self):
         for config in self:
