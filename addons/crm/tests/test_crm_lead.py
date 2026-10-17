@@ -1184,3 +1184,48 @@ class TestLeadFormTools(FormatAddressCase):
     def test_address_view(self):
         self.env.company.country_id = self.env.ref('base.us')
         self.assertAddressView('crm.lead')
+
+    def test_action_send_email(self):
+        """ Test action_send_email on crm.lead for single and multiple records. """
+        partner = self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'email': 'test.partner@example.com',
+        })
+        lead_with_partner = self.env['crm.lead'].create({
+            'name': 'Lead With Partner',
+            'partner_id': partner.id,
+        })
+        lead_without_partner = self.env['crm.lead'].create({
+            'name': 'Lead Without Partner',
+            'email_from': 'nonexistent@example.com',
+        })
+        lead_matching_email = self.env['crm.lead'].create({
+            'name': 'Lead Matching Partner Email',
+            'email_from': partner.email,
+        })
+
+        # Single lead with partner -> comment mode with partner_ids populated
+        action = lead_with_partner.action_send_email()
+        self.assertEqual(action['res_model'], 'mail.compose.message')
+        self.assertEqual(action['context']['default_composition_mode'], 'comment')
+        self.assertEqual(action['context']['default_partner_ids'], [partner.id])
+        self.assertEqual(action['context']['default_model'], 'crm.lead')
+        self.assertEqual(action['context']['default_res_ids'], lead_with_partner.ids)
+
+        # Single lead matching partner by email -> partner found and populated
+        action = lead_matching_email.action_send_email()
+        self.assertEqual(action['context']['default_composition_mode'], 'comment')
+        self.assertEqual(action['context']['default_partner_ids'], [partner.id])
+
+        # Single lead without partner or match -> comment mode with empty partner_ids
+        action = lead_without_partner.action_send_email()
+        self.assertEqual(action['context']['default_composition_mode'], 'comment')
+        self.assertEqual(action['context']['default_partner_ids'], [])
+
+        # Multiple leads -> mass_mail mode
+        batch = lead_with_partner + lead_without_partner
+        action = batch.action_send_email()
+        self.assertEqual(action['res_model'], 'mail.compose.message')
+        self.assertEqual(action['context']['default_composition_mode'], 'mass_mail')
+        self.assertEqual(action['context']['default_model'], 'crm.lead')
+        self.assertEqual(action['context']['default_res_ids'], batch.ids)
