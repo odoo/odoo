@@ -295,9 +295,9 @@ class HrVersion(models.Model):
             return self._get_leave_work_entry_type_dates(rc_leave, interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
 
-    def _get_sub_leave_domain(self):
+    def _get_calendar_leave_domain(self):
         # see https://github.com/odoo/enterprise/pull/15091
-        return super()._get_sub_leave_domain() | Domain('holiday_id.employee_id', 'in', self.employee_id.ids)
+        return super()._get_calendar_leave_domain() | Domain('holiday_id.employee_id', 'in', self.employee_id.ids)
 
     @api.model
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
