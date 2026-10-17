@@ -1300,6 +1300,15 @@ class AccountEdiCii(models.AbstractModel):
         gross_subtotal = price_unit * quantity
         discount = (discount_amount * 100 / gross_subtotal) if gross_subtotal else 0.0
 
+        # Check the total of the line matches line_extension_amount
+        # This can happen if the xml doesn't follow the rule https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-peppol/PEPPOL-EN16931-R120/
+        # or if it's doing weird things
+        current_line_subtotal = (1 - discount / 100) * (quantity * price_unit)
+        if not currency.is_zero((line_total_amount or 0.0) - current_line_subtotal):
+            quantity = quantity or 1
+            discount = 0
+            price_unit = (line_total_amount or 0.0) / quantity
+
         to_write = collected_values['to_write']
         to_write['quantity'] = quantity
         to_write['price_unit'] = price_unit
