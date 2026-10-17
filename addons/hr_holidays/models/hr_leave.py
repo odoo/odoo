@@ -1790,7 +1790,13 @@ class HrLeave(models.Model):
             return vals_list
         if all(leave.state in ['cancel', 'refuse'] for leave in self):  # No overlap constraint in these cases
             return vals_list
-        raise UserError(_('A time off cannot be duplicated.'))
+        # Those fields have to be passed explictly, because otherwise they will take the default value of today().
+        # In that case, if there exist a leave for that employee that includes today, it will block the duplication.
+        for vals in vals_list:
+            vals["request_date_from"] = vals['request_date_hour_from'].split(" ")[0]
+            vals["request_date_to"] = vals['request_date_hour_to'].split(" ")[0]
+            vals['state'] = 'confirm'
+        return vals_list
 
 
     ####################################################
