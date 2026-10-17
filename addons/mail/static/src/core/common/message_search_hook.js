@@ -15,8 +15,12 @@ export function searchHighlight(searchTerm, target) {
     if (!searchTerm) {
         return target;
     }
+    const validTerms = searchTerm.split(" ").filter(Boolean);
+    if (!validTerms.length) {
+        return target;
+    }
     const htmlDoc = createDocumentFragmentFromContent(target);
-    for (const term of searchTerm.split(" ").filter(Boolean)) {
+    for (const term of validTerms) {
         const regexp = new RegExp(`(${escapeRegExp(term)})`, "gi");
         // Special handling for '
         // Note: browsers use XPath 1.0, so uses concat() rather than ||
@@ -96,6 +100,15 @@ export class MessageSearchState extends SearchState {
 
     /** @param {string} term */
     async fetchMessages(term) {
+        term = term.trim();
+        if (!term && this.search_filter === undefined) {
+            this.searching = false;
+            this.searched = false;
+            this.messages = [];
+            this.hasMore = false;
+            this.loadMoreBeforeMessageId = undefined;
+            return;
+        }
         const before = this.loadMoreBeforeMessageId;
         this.loadMoreBeforeMessageId = undefined;
         const currentSearchId = ++this.searchId;

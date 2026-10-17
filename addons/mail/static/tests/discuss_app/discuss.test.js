@@ -2980,3 +2980,23 @@ test("Prevent link interactions in message preview", async () => {
     expect(".o-mail-NotificationItem-text").toHaveStyle({ pointerEvents: "none" });
     await waitFor(".o-mail-Message:has(:text('https://www.odoo.com')):count(1)");
 });
+
+test("Blank search term in chatter should show the thread", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc" });
+    pyEnv["mail.message"].create({
+        body: "Test message",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("[title='Search Messages']");
+    await waitFor(".o-mail-SearchMessageInput .o-mail-SearchInput input:count(1)");
+    await editInput(document.body, ".o-mail-SearchInput input", "m");
+    await waitFor(".o-mail-SearchMessageResult .o-mail-Message:count(1)");
+    expect(".o-mail-Thread .o-mail-Message").toHaveCount(0);
+    await editInput(document.body, ".o-mail-SearchInput input", "   ");
+    await waitFor(".o-mail-Thread .o-mail-Message:count(1)");
+    expect(".o-mail-SearchMessageResult").toHaveCount(0);
+});
