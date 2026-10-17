@@ -190,4 +190,35 @@ describe("replicate changes", () => {
         expect(span3).not.toHaveClass("o_dirty");
         expect([span2, span3]).toHaveText(span1.textContent); // all the same text
     });
+    test("attribute changes should be replicated", async () => {
+        await setupHTMLBuilder(`
+            <div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <a class="btn btn-sm btn-primary test_1" role="button" data-oe-model="ir.ui.view" data-oe-id="2986" data-oe-field="arch" data-oe-xpath="/data/xpath[2]/td[2]/a[1]"><span class="d-none">Pay Now</span></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a class="btn btn-sm btn-primary test_2" role="button" data-oe-model="ir.ui.view" data-oe-id="2986" data-oe-field="arch" data-oe-xpath="/data/xpath[2]/td[2]/a[1]"><span class="d-none">Pay Now</span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>    
+        `);
+        const button1 = queryOne(":iframe .test_1");
+        const button2 = queryOne(":iframe .test_2");
+        expect(button1).not.toHaveClass("btn-secondary");
+        expect(button2).not.toHaveClass("btn-secondary");
+        await button1.click();
+        await contains(".o-hb-select-toggle").click();
+        await contains(".o-hb-select-dropdown-item[data-action-value='secondary']").click();
+        expect(button1).toHaveClass("btn-secondary");
+        expect(button2).toHaveClass("btn-secondary");
+        expect(button1).toHaveClass("o_dirty");
+        expect(button2).not.toHaveClass("o_dirty");
+    });
 });

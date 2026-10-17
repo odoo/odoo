@@ -51,6 +51,7 @@ export class WebsiteBuilder extends Component {
             this.translatedElements = this.props.translation
                 ? await rpc("/website/get_translated_elements")
                 : [];
+            this.allowedRootAttrs = await rpc("/website/get_allowed_root_attrs");
         });
         onMounted(() => {
             if (this.props.translation && !browser.localStorage.getItem(localStorageNoDialogKey)) {
@@ -241,6 +242,8 @@ export class WebsiteBuilder extends Component {
             };
         };
         builderProps.config.translatedElements = this.translatedElements;
+        builderProps.config.allowedRootAttrs = this.allowedRootAttrs;
+        builderProps.config.allowVideoFile = true;
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
         const installSnippetModule = builderProps.installSnippetModule;
         builderProps.installSnippetModule = (snippet) =>
