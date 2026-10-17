@@ -706,6 +706,11 @@ pre {
 .btn-custom:hover, .btn-fill-custom:hover {
     filter: invert(0.2);
 }
+.btn-custom.o_btn_custom_hover:hover, .btn-fill-custom.o_btn_custom_hover:hover {
+    filter: none;
+    color: var(--custom-hover-color) !important;
+    background-color: var(--custom-hover-bg) !important;
+}
 .btn-outline-custom:not(:hover) {
     // Custom buttons have their fill color or gradient specified in their
     // element style. They must only be shown on hover for outline buttons.
