@@ -12,7 +12,7 @@ from lxml import html
 from typing import Self
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError, MissingError, UserError, MaxSearchLimitError
 from odoo.fields import Domain
 from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.constants import PREFETCH_MAX
@@ -456,6 +456,19 @@ class MailMessage(models.Model):
             looping_offset += PREFETCH_MAX
         return self.browse(result[offset:limit])._as_query(ordered)
 
+    @api.model
+    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[tuple]:
+        try:
+            return super().formatted_read_group(
+                domain, groupby, aggregates, having, offset, limit, order
+            )
+        except MaxSearchLimitError:
+            raise UserError(_(
+                "Group By includes too many messages to be processed properly.\n"
+                "Please apply additional search filters to reduce the number of messages (< %(limit)s).",
+                limit=MAX_SEARCH_LIMIT,
+            )) from None
+
     def _compute_res_access(self, operation: str):
         assert self.env.su
         field_name = f'res_access_{operation}'
@@ -625,7 +638,7 @@ class MailMessage(models.Model):
             for values in self.env.cr.dictfetchall()
         }
         if len(messages_to_check) == MAX_SEARCH_LIMIT:  # avoid out of memory
-            raise ValueError(self.env._("Cannot search, too many messages"))
+            raise MaxSearchLimitError(self.env._("Cannot search, too many messages"))
         accessible = self.browse(messages_to_check)
         if not messages_to_check:
             return accessible

@@ -135,3 +135,6 @@ class ConcurrencyError(Exception):
     This exception is low-level and has very few use cases, it should
     only be used if all alternatives are deemed worse.
     """
+
+class MaxSearchLimitError(ValueError):
+    """Raised when a search exceeds the allowed limits."""
