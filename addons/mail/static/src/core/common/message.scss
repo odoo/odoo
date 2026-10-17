@@ -73,8 +73,8 @@
         margin-bottom: 0 !important;
     }
 
-    // overflow: auto can break rendering of next element of a frequent broken Outlook 365
-    // warning table. If detected, we prevent the issue by removing flotation.
+    /* overflow: auto can break rendering of next element of a frequent broken Outlook 365
+       warning table. If detected, we prevent the issue by removing flotation. */
     table[align="left"][width="100%"] {
         float: none;
     }
@@ -107,8 +107,8 @@
         color: var(--o-bs-text-muted);
     }
 
-    // Stable fix: new tracking bodies miss the last `<br>` element
-    // to be able to not add the arrow
+    /* Stable fix: new tracking bodies miss the last `<br>` element
+       to be able to not add the arrow */
     & > div:last-child:not(:has(br:last-child)) {
         b::before,
         i::before,
@@ -186,8 +186,8 @@
 }
 
 .o-mail-Message-moreAction {
-    // moreAction is circle dropdown. Margin makes it improperly aligned and makes btn-bg overlap with other actions.
-    // Solution: tweak slightly position, disable btn-bg, rely on true size's bg color.
+    /* moreAction is circle dropdown. Margin makes it improperly aligned and makes btn-bg overlap with other actions.
+       Solution: tweak slightly position, disable btn-bg, rely on true size's bg color. */
     transform: translate(2px, -1px);
     &.active {
         --btn-bg: transparent;

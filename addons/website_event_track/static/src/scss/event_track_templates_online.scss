@@ -16,11 +16,11 @@
 
     .o_wevent_online_page_container {
 
-        // Main panel: current track
+        /* Main panel: current track */
         .o_wesession_track_main {
 
-            // Force side panel min-width to account for potential Youtube chat
-            // And adapt main panel max-width accordingly.
+            /* Force side panel min-width to account for potential Youtube chat
+               And adapt main panel max-width accordingly. */
             &.o_youtube_chat {
                 @include media-breakpoint-up(md) {
                     max-width: calc(100% - 22rem);
@@ -29,7 +29,7 @@
 
             @media screen and (min-width: 1900px) {
 
-                // return to bootstrap value for col-lg-9 / 10 breakpoint if screen is big enough
+                /* return to bootstrap value for col-lg-9 / 10 breakpoint if screen is big enough */
                 &.col-lg-9 {
                     max-width: 75%;
                 }
@@ -40,10 +40,10 @@
             }
         }
 
-        // Left panel: other tracks
+        /* Left panel: other tracks */
         .o_wesession_track_aside {
 
-            // Force side panel min-width to account for potential Youtube chat
+            /* Force side panel min-width to account for potential Youtube chat */
             &.o_youtube_chat {
                 @include media-breakpoint-up(md) {
                     min-width: 22rem;
@@ -54,7 +54,7 @@
                 min-width: auto;
             }
 
-            // Navigation: keel layout simple
+            /* Navigation: keel layout simple */
             .o_wesession_track_aside_nav {
                 .nav-link {
                     background-color: transparent;

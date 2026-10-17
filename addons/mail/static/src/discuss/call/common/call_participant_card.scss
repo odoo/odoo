@@ -2,8 +2,8 @@
     position: relative;
     background-color: transparent;
     color: white;
-    // Sized by the layout engine, not here. `container-type` stays: the overlay scales its text
-    // and its talking glow off the card's own width (the `cq*` units below).
+    /* Sized by the layout engine, not here. `container-type` stays: the overlay scales its text
+       and its talking glow off the card's own width (the `cq*` units below). */
     container-type: inline-size;
 
     &.o-inset {
@@ -43,7 +43,7 @@
 }
 
 .o-discuss-CallParticipantCard-avatar img {
-    max-height: #{"min(100%, 80px)"}; // interpolated as not supported by Sass
+    max-height: #{"min(100%, 80px)"}; /* interpolated as not supported by Sass */
     max-width: #{"min(100%, 80px)"};
     aspect-ratio: 1;
     outline: 3px solid transparent;

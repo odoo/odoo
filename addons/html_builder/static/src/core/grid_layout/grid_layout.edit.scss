@@ -1,4 +1,4 @@
-// Background grid.
+/* Background grid. */
 .o_we_background_grid {
     padding: 0 !important;
 
@@ -12,13 +12,13 @@
     }
 
     &.o_we_grid_preview {
-        // TODO style error
-        // @include media-breakpoint-down(lg) {
-        //     // Hiding the preview in mobile view (-> no grid in mobile view). We
-        //     // cannot use `display: none` because it would prevent the animation
-        //     // to be played and so its listener would not remove the preview.
-        //     height: 0;
-        // }
+        /* TODO style error
+           @include media-breakpoint-down(lg) {
+           // Hiding the preview in mobile view (-> no grid in mobile view). We
+           // cannot use `display: none` because it would prevent the animation
+           // to be played and so its listener would not remove the preview.
+           height: 0;
+           } */
 
         pointer-events: none;
 
@@ -28,7 +28,7 @@
     }
 }
 
-// Grid preview.
+/* Grid preview. */
 @keyframes gridPreview {
     to {
         fill-opacity: 0;
@@ -44,7 +44,7 @@
     outline-offset: calc(var(--o-we-handle-border-width) * -1 * 2);
 }
 
-// Highlight of the grid items padding.
+/* Highlight of the grid items padding. */
 @keyframes highlightPadding {
     from {
         border: solid rgba($o-we-handles-accent-color, 0.2);

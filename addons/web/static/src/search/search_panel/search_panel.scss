@@ -1,4 +1,4 @@
-// ------- View with SearchPanel -------
+/* ------- View with SearchPanel ------- */
 
 .o_component_with_search_panel {
     @media screen and (min-width: 768px), print and (min-width: 188mm) {
@@ -11,8 +11,8 @@
     }
 }
 
-// ------- SearchPanel -------
-// SearchPanel + SearchPanel in bottomsheet
+/* ------- SearchPanel -------
+   SearchPanel + SearchPanel in bottomsheet */
 .o_search_panel_section {
     .o_search_panel_filter_value_checkbox:checked {
         background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$black}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>"));
@@ -41,7 +41,7 @@
     }
 }
 
-// The following styling is not applied inside the bottom sheet
+/* The following styling is not applied inside the bottom sheet */
 .o_search_panel {
     --treeEntry-padding-h: var(--o-bs-spacer-3);
     --treeEntry-padding-v: var(--o-bs-spacer-2);
@@ -61,8 +61,8 @@
         --list-group-item-padding-x: 0;
 
         &:where(:not(.list-group-item-action, .o_search_panel_filter_value)) {
-            // This acts as a margin, we use padding to avoid space between
-            // pseudo elements used to display the tree.
+            /* This acts as a margin, we use padding to avoid space between
+               pseudo elements used to display the tree. */
             --list-group-item-padding-y: var(--SearchPanelHeader-margin-y);
 
             + .list-group-item {

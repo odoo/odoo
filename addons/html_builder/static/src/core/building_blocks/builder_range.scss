@@ -4,10 +4,10 @@
     }
     &:has(output) {
         .o_hb_rangeInput {
-            // Needed because without it the output overflows to the right
-            // and makes a horizontal scrollbar appear on
-            // 'o_we_customize_panel' if 'o_we_customize_panel' already has
-            // a vertical scrollbar.
+            /* Needed because without it the output overflows to the right
+               and makes a horizontal scrollbar appear on
+               'o_we_customize_panel' if 'o_we_customize_panel' already has
+               a vertical scrollbar. */
             min-width: 0;
         }
     }
@@ -57,14 +57,14 @@
         &::-webkit-slider-runnable-track {
             width: 100%;
             height: var(--o-we-sidebar-content-field-progress-height);
-            // Unfortunately, Chrome does not support customizing the lower part of the track
+            /* Unfortunately, Chrome does not support customizing the lower part of the track */
             background-color: var(--o-we-sidebar-content-field-progress-color);
             border-color: transparent;
             border-radius: 10rem;
             box-shadow: none;
 
             position: relative;
-            // z-index: 1000;
+            /* z-index: 1000; */
         }
         &::-moz-range-thumb {
             width: var(--o-we-sidebar-content-field-progress-control-height);

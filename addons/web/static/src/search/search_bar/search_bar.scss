@@ -1,5 +1,5 @@
-// = Search Bar
-// ============================================================================
+/* = Search Bar
+   ============================================================================ */
 
 .o_searchview_facet {
     @keyframes animate {
@@ -16,8 +16,8 @@
     }
 
     .btn, .btn:focus {
-        // Boostrap plays around with the z-index of buttons, but this is not needed here
-        // It was causing issues with the hotkey overlay
+        /* Boostrap plays around with the z-index of buttons, but this is not needed here
+           It was causing issues with the hotkey overlay */
         z-index: 0;
     }
 
@@ -29,7 +29,7 @@
         }
     }
 
-    //TODO: probably extend $theme-colors, "bg-subtle", "text-*" and "text-emphasis" variables to use proper utility classes instead.
+    /* TODO: probably extend $theme-colors, "bg-subtle", "text-*" and "text-emphasis" variables to use proper utility classes instead. */
     .o_facet_groupby {
         background-color: color-mix(in srgb, var(--o-view-background-color) 75%, var(--o-enterprise-action-color));
         color: var(--o-enterprise-action-color);
@@ -74,8 +74,8 @@
 }
 
 .o_cp_searchview {
-    // The group owns the pill: children inherit its radius, input-group squares
-    // the inner corners, so whichever element ends the group closes the pill.
+    /* The group owns the pill: children inherit its radius, input-group squares
+       the inner corners, so whichever element ends the group closes the pill. */
     &.input-group.rounded-pill > * {
         border-radius: inherit;
         padding-inline: var(--o-bs-spacer);

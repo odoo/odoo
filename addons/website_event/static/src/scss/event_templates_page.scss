@@ -1,7 +1,7 @@
 .o_wevent_event {
     min-height: calc(95vh - 70px);
 
-    // Multi-line event title, even in mobile mode
+    /* Multi-line event title, even in mobile mode */
     nav > div > a.navbar-brand {
         text-overflow: revert;
         white-space: normal;
@@ -9,7 +9,7 @@
         max-width: calc(100% - 80px);
     }
 
-    // Ensure menu labels are not split
+    /* Ensure menu labels are not split */
     #o_wevent_submenu_desktop {
         .nav {
             column-gap: var(--o-bs-spacer-3);
@@ -33,8 +33,8 @@
         border-bottom: var(--o-bs-border-width) solid $border-color;
     }
 
-    // Custom utility classes to be applied on day numbers and to
-    // be used in conjunction with `small` side-content.
+    /* Custom utility classes to be applied on day numbers and to
+       be used in conjunction with `small` side-content. */
     .o_wevent_day_header_number {
         font-size: 2em + ($line-height-base - 1);
     }
@@ -96,7 +96,7 @@
 }
 
 #modal_ticket_registration {
-    // Handle overflow behaviors.
+    /* Handle overflow behaviors. */
     #registration_form, #o_wevent_tickets, #o_wevent_tickets_collapse {
         position: relative;
         flex: 1 1 auto;
@@ -120,7 +120,7 @@
     display: none !important;
 }
 
-// Used in wevent and wevent_sale
+/* Used in wevent and wevent_sale */
 .o_event_add_to_calendar_btns a {
     border: 1px solid #DEE2E6;
     &:hover {

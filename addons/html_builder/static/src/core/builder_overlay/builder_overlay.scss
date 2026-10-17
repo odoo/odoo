@@ -56,7 +56,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
             }
         }
 
-        // HANDLES
+        /* HANDLES */
         .o_handles {
             position: absolute;
             top: calc(var(--o-we-handles-offset-to-hide) * -1);
@@ -74,9 +74,9 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     width: var(--o-we-handle-edge-size);
 
                     &::before {
-                        // It’s needed for "pixel-perfect" overlay corners.
-                        // Otherwise, the colors can overlap and not look good
-                        // depending on the background color behind the overlay.
+                        /* It’s needed for "pixel-perfect" overlay corners.
+                           Otherwise, the colors can overlap and not look good
+                           depending on the background color behind the overlay. */
                         top: calc(var(--o-we-handle-border-width) / 2) !important;
                         bottom: calc(var(--o-we-handle-border-width) / 2) !important;
                     }
@@ -271,9 +271,9 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
             }
         }
 
-        // HANDLES - ACTIVE AND HOVER STATES
-        // By using `o_handlers_idle` class, we can avoid hovering another
-        // handle when we're already dragging another one.
+        /* HANDLES - ACTIVE AND HOVER STATES
+           By using `o_handlers_idle` class, we can avoid hovering another
+           handle when we're already dragging another one. */
         &.o_handlers_idle .o_handle:hover, .o_handle:active {
 
             .o_handle_indicator {

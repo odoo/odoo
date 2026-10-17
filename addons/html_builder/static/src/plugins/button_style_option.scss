@@ -9,12 +9,12 @@
     align-items: center;
     justify-content: center;
 
-    // Never preview border-width, because a big width could disrupt the look
-    // of the editor sidebar
+    /* Never preview border-width, because a big width could disrupt the look
+       of the editor sidebar */
     border-width: 2px !important;
 
-    // Mitigate a subpixel leakage of the preview-alpha background that
-    // happens on the rounded borders
+    /* Mitigate a subpixel leakage of the preview-alpha background that
+       happens on the rounded borders */
     overflow: hidden;
     &::before, &::after {
         border-radius: 0px;

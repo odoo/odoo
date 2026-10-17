@@ -6,7 +6,7 @@
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr auto;
 
-    // Text input vertical padding, used to derive the single-line pill radius below.
+    /* Text input vertical padding, used to derive the single-line pill radius below. */
     --o-mail-Composer-vPadding: 10px;
 
     &.o-chatWindow, &.o-isUiSmall {
@@ -22,7 +22,7 @@
     }
 
     .o-mail-Composer-sidebarMain {
-        padding-top: 0.3125rem; // avatar centered with composer text input: 32px (avatar) + 2*5px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
+        padding-top: 0.3125rem; /* avatar centered with composer text input: 32px (avatar) + 2*5px (this value) = 20px + 2 * { 10px (padding) + 1px (border) } */
         width: var(--o-mail-Message-sidebarWidth);
     }
 
@@ -134,7 +134,7 @@
     padding-bottom: var(--o-mail-Composer-vPadding);
     padding-left: var(--o-bs-spacer-1);
     padding-right: var(--o-bs-spacer-1);
-    border-radius: calc(var(--o-mail-Composer-vPadding) + var(--o-mail-Composer-pillRadiusBase)); // Matches the outer container's pill radius
+    border-radius: calc(var(--o-mail-Composer-vPadding) + var(--o-mail-Composer-pillRadiusBase)); /* Matches the outer container's pill radius */
     line-height: var(--o-mail-Composer-lineHeight) !important;
 
     .o-mail-Composer.o-editing & {
@@ -145,7 +145,7 @@
     .o-mail-Composer.o-extended & {
         padding-left: calc(var(--o-bs-spacer-2) + var(--o-bs-spacer-1));
         padding-right: var(--o-bs-spacer-2);
-        // Always multi-line: pill radius would look out of place, use rounded-3 instead.
+        /* Always multi-line: pill radius would look out of place, use rounded-3 instead. */
         border-radius: var(--o-bs-border-radius-lg);
     }
 
@@ -206,7 +206,7 @@
 
 .o-mail-Composer-inputContainer {
     --border-color: #{rgba($dark, var(--mail-Composer-inputContainerUnfocusedBorderOpacity, .2))};
-    border-radius: calc(var(--o-mail-Composer-vPadding) + var(--o-mail-Composer-pillRadiusBase)); // Keep the single-line pill radius when the composer grows.
+    border-radius: calc(var(--o-mail-Composer-vPadding) + var(--o-mail-Composer-pillRadiusBase)); /* Keep the single-line pill radius when the composer grows. */
 
     .o-mail-Composer.o-extended & {
         border-radius: var(--o-bs-border-radius-lg);

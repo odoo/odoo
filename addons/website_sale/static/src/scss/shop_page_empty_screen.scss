@@ -1,9 +1,9 @@
 
-// Empty screen when no products
+/* Empty screen when no products */
 .o_wsale_empty_screen_container {
     --o_wsale_empty_screen_light_color: #{darken($light, 1%)};
 
-    max-width: 650px; // Matches the max-width of .o_nocontent_help
+    max-width: 650px; /* Matches the max-width of .o_nocontent_help */
 
     .o_wsale_empty_screen {
         border: calc(var(--o-bs-border-width) * 4) solid darken($primary-bg-subtle, 10%);
@@ -23,37 +23,37 @@
             }
         }
 
-        // Fake Snippet
+        /* Fake Snippet */
         .o_wsale_empty_screen_content {
             height: 310px;
             background-color: var(--o_wsale_empty_screen_light_color);
 
-            // Snippet content
+            /* Snippet content */
             background-image:
-              linear-gradient(darken($primary-bg-subtle, 10%) 100%, transparent 0), // Title
-              linear-gradient(darken($primary-bg-subtle, 5%) 100%, transparent 0), // Subtitle
-              linear-gradient(darken($primary-bg-subtle, 10%) 100%, transparent 0), // Button 1
-              linear-gradient(darken($primary-bg-subtle, 10%) 100%, transparent 0); // Button 2
+              linear-gradient(darken($primary-bg-subtle, 10%) 100%, transparent 0), /* Title */
+              linear-gradient(darken($primary-bg-subtle, 5%) 100%, transparent 0), /* Subtitle */
+              linear-gradient(darken($primary-bg-subtle, 10%) 100%, transparent 0), /* Button 1 */
+              linear-gradient(darken($primary-bg-subtle, 10%) 100%, transparent 0); /* Button 2 */
 
             background-size:
-              60% 40px,  // Title
-              20% 10px,  // Subtitle
-              120px 32px, // Button 1
-              120px 32px; // Button 2
+              60% 40px,  /* Title */
+              20% 10px,  /* Subtitle */
+              120px 32px, /* Button 1 */
+              120px 32px; /* Button 2 */
 
             background-position:
-              40px 100px, // Title
-              40px 160px, // Subtitle
-              130px 250px, // Button 1
-              260px 250px; // Button 2
+              40px 100px, /* Title */
+              40px 160px, /* Subtitle */
+              130px 250px, /* Button 1 */
+              260px 250px; /* Button 2 */
 
             background-repeat: no-repeat;
         }
 
-        // Fake modal
+        /* Fake modal */
         .o_wsale_empty_screen_modal_wrapper {
             position: absolute;
-            top: 36px; // .o_wsale_empty_screen_header height + 4px
+            top: 36px; /* .o_wsale_empty_screen_header height + 4px */
             inset-inline-end: var(--o-bs-spacer-1);
             width: calc(100% - (2 * var(--o-bs-spacer-5)));
 
@@ -64,16 +64,16 @@
 
                 .o_wsale_skeleton_box {
                     background-image:
-                    linear-gradient(var(--o_wsale_empty_screen_light_color) 100%, transparent 0), // Title
-                    linear-gradient(var(--o_wsale_empty_screen_light_color) 100%, transparent 0); // Subtitle
+                    linear-gradient(var(--o_wsale_empty_screen_light_color) 100%, transparent 0), /* Title */
+                    linear-gradient(var(--o_wsale_empty_screen_light_color) 100%, transparent 0); /* Subtitle */
 
                     background-size:
-                      25% 12px, // Title
-                      50% 12px;  // Subtitle
+                      25% 12px, /* Title */
+                      50% 12px;  /* Subtitle */
 
                     background-position:
-                      40px 4px,   // Title
-                      40px 24px;  // Subtitle
+                      40px 4px,   /* Title */
+                      40px 24px;  /* Subtitle */
 
                     background-repeat: no-repeat;
 
@@ -124,11 +124,11 @@
             }
 
             40% {
-              transform: translate(240px, 20px) scale(0.9); // Click
+              transform: translate(240px, 20px) scale(0.9); /* Click */
             }
 
             45% {
-              transform: translate(240px, 20px) scale(1);   // Release
+              transform: translate(240px, 20px) scale(1);   /* Release */
             }
 
             85% {
@@ -144,7 +144,7 @@
 
         @keyframes itemHoverEffect {
             0%, 30% { background-color: transparent; }
-            35%, 85% { background-color: var(--o_wsale_empty_screen_light_color); } // Highlight item
+            35%, 85% { background-color: var(--o_wsale_empty_screen_light_color); } /* Highlight item */
             100% { background-color: transparent; }
         }
     }

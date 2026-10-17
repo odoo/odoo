@@ -1,11 +1,11 @@
-// ======= ANIMATIONS =======
-// Generic fade-in
+/* ======= ANIMATIONS =======
+   Generic fade-in */
 @keyframes o-wblog-fade-In {
     0%   { opacity: 0; }
     100% { opacity: 1; }
 }
 
-// ======= WEBSITE BLOG =======
+/* ======= WEBSITE BLOG ======= */
 .website_blog {
     --Avatar-size: 2.5rem;
 
@@ -15,14 +15,14 @@
 
     .o_wblog_post_author {
         span[itemprop="name"] {
-            // Override the field style.
+            /* Override the field style. */
             margin-bottom: 0;
             font-weight: var(--o-bs-font-weight-normal);
         }
     }
 
-    // Blog Index Pages
-    // ==============================================
+    /* Blog Index Pages
+       ============================================== */
 
     #o_wblog_posts_loop {
         .row:has(.o_wblog_bordered_grid_container) {
@@ -60,15 +60,15 @@
             @include media-breakpoint-up(xl) {
                 height: calc(100vh - var(--wblog-sticky-top, 0px));
 
-                // Prevent having a big space under the blog posts when there
-                // are no cover images and not a lot of blog posts.
+                /* Prevent having a big space under the blog posts when there
+                   are no cover images and not a lot of blog posts. */
                 &:not(:has(> .o_wblog_post_cover)) {
                     height: auto;
                 }
             }
 
-            // Consider text-muted as text-white, so the muted elements are
-            // visible on the sticky cover. 
+            /* Consider text-muted as text-white, so the muted elements are
+               visible on the sticky cover. */
             .text-muted {
                 opacity: 0.75;
                 color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
@@ -84,8 +84,8 @@
         }
     }
 
-    // When the blog banner is not full-width, hide the cover if there is no
-    // cover image (still show it on edit mode to add back a cover).
+    /* When the blog banner is not full-width, hide the cover if there is no
+       cover image (still show it on edit mode to add back a cover). */
     .o_wblog_category_cover_container:has(.o_record_cover_component[style*="background-image: ;"]) {
         display: none;
 
@@ -108,8 +108,8 @@
         }
     }
 
-    // Blog Post Pages
-    // ==============================================
+    /* Blog Post Pages
+       ============================================== */
 
     .o_wblog_post_page_cover:not(.o_wblog_post_page_cover_regular, .o_wblog_post_page_cover_split),
     .o_wblog_post_page_cover_footer {
@@ -120,12 +120,12 @@
         --aspect-ratio: 50%;
 
         @include media-breakpoint-down(lg) {
-            --aspect-ratio: 75%; // ratio: 3/4
+            --aspect-ratio: 75%; /* ratio: 3/4 */
         }
     }
 
     .o_wblog_post_page_cover_split {
-        --aspect-ratio: 62.5%; // ratio: 10/16
+        --aspect-ratio: 62.5%; /* ratio: 10/16 */
     }
 
     .breadcrumb-item {
@@ -139,8 +139,8 @@
             animation: o-wblog-fade-In 1s cubic-bezier(.02, .01, .47, 1);
         }
 
-        // Make sure the snippets container render correctly in the main post
-        // container.
+        /* Make sure the snippets container render correctly in the main post
+           container. */
         > div:is(.o_container_small) {
             .container-fluid > .o_grid_mode {
                 --gutter-x: 0px;
@@ -153,7 +153,7 @@
         }
     }
 
-    // Sidebar and table of contents
+    /* Sidebar and table of contents */
     #o_wblog_post_sidebar.o_wblog_post_sidebar_sticky {
         max-height: calc(100vh - var(--wblog-sticky-top, 0px));
         overflow-y: auto;
@@ -168,13 +168,13 @@
                     }
                 }
 
-                // Prevent long titles from making the sidebar scroll.
+                /* Prevent long titles from making the sidebar scroll. */
                 overflow-x: hidden;
                 text-overflow: ellipsis;
             }
 
             @include media-breakpoint-up(lg) {
-                // Inactive vertical bar
+                /* Inactive vertical bar */
                 &::before {
                     position: absolute;
                     inset-block: 0;
@@ -195,7 +195,7 @@
                     &.active {
                         padding-left: var(--o-bs-spacer);
                     
-                        // Active vertical bar
+                        /* Active vertical bar */
                         &::before {
                             content: "";
                             position: absolute;
@@ -211,10 +211,10 @@
         }
     }
 
-    // Edit mode behavior
-    // ==============================================
+    /* Edit mode behavior
+       ============================================== */
     body.editor_enable & {
-        // Disable breadcrumb links in edit mode.
+        /* Disable breadcrumb links in edit mode. */
         .breadcrumb-item, .o_wblog_single_breadcrumb_item {
             pointer-events: none;
         }

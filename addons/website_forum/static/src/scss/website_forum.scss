@@ -74,7 +74,7 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
             }
 
             tr {
-                transform: scale(1); // Hack for Safari not supporting `position-relative`
+                transform: scale(1); /* Hack for Safari not supporting `position-relative` */
 
                 &:hover {
                     @if ($body-bg and color-contrast($body-bg) != $color-contrast-dark) {
@@ -95,7 +95,7 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
         opacity: 1 !important;
     }
 
-    // Single Post
+    /* Single Post */
     .o_wforum_post, .note-editable {
         word-wrap: break-word;
 
@@ -180,7 +180,7 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
     }
 
     textarea.o_wysiwyg_loader {
-        // Prevent background display inside the wysiwyg loader
+        /* Prevent background display inside the wysiwyg loader */
         background: none !important;
         + .note-editor {
             border: 0;
@@ -204,8 +204,8 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
         transition: var(--o-bs-transition-base);
 
         &.o_wforum_answer_correct {
-            // This hack is to have either a light or dark success color
-            // depending on the background color's contrast
+            /* This hack is to have either a light or dark success color
+               depending on the background color's contrast */
             $-cc1-bg: o-color(map-get($o-color-palette, o-cc1-bg));
             $-isBright: color-contrast($-cc1-bg) == $color-contrast-dark;
 
@@ -280,7 +280,7 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
     }
 
     .o_wforum_bio_popover_info .css_editable_mode_hidden > div:last-child > .o_forum_tooltip_line {
-        margin-top: -0.5rem; // compensate parent 'mt-2' class
+        margin-top: -0.5rem; /* compensate parent 'mt-2' class */
     }
 }
 

@@ -19,7 +19,7 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
 .o-discuss-badge {
     &, & .o-innerBadge {
-        --o-discuss-badge-bg: var(--o-success); // sync with --o-navbar-badge-bg
+        --o-discuss-badge-bg: var(--o-success); /* sync with --o-navbar-badge-bg */
         color: white !important;
         background-color: var(--o-discuss-badge-bg) !important;
         align-items: center;
@@ -32,7 +32,7 @@ $o-discuss-talkingColor: lighten($success, 10%);
     }
 
     & .o-innerBadge {
-        min-width: var(--o-badge-min-width); // same as .badge, without using .badge to keep semantics of a single .badge
+        min-width: var(--o-badge-min-width); /* same as .badge, without using .badge to keep semantics of a single .badge */
     }
 }
 
@@ -134,9 +134,9 @@ $o-discuss-talkingColor: lighten($success, 10%);
     --btn-active-color: #{color-contrast($light)};
 
     &::before {
-        content: "more_horiz" / ""; // empty alt text: keeps the ligature out of the accessible name
-        font-size: map-get($icon-sizes, 'lg'); // .oi-lg
-        width: #{$oi-fw-ratio}em; // .oi-fw
+        content: "more_horiz" / ""; /* empty alt text: keeps the ligature out of the accessible name */
+        font-size: map-get($icon-sizes, 'lg'); /* .oi-lg */
+        width: #{$oi-fw-ratio}em; /* .oi-fw */
         text-align: center;
     }
 }
@@ -156,8 +156,8 @@ $o-discuss-talkingColor: lighten($success, 10%);
 .o-discuss-badge, .o-discuss-badgeShape {
     &, & .o-innerBadge {
         display: flex;
-        transform: translate(0, 0) !important; // cancel systray style on badge
-        font-size: calc(.78572 * var(--o-bs-font-size-base)) !important; // roughly 11px, small but readable
+        transform: translate(0, 0) !important; /* cancel systray style on badge */
+        font-size: calc(.78572 * var(--o-bs-font-size-base)) !important; /* roughly 11px, small but readable */
         user-select: none;
     }
 }
@@ -356,7 +356,7 @@ $o-mail-utilities: map-merge(
     background-color: color-mix(in srgb, color-mix(in srgb, var(--white) 15%, var(--gray-100)) 97.5%, var(--o-action)) !important;
 }
 
-// see `@mixin button-variant`, this is the implementation without requiring `.btn` classname
+/* see `@mixin button-variant`, this is the implementation without requiring `.btn` classname */
 @mixin o-mention-variant(
     $background,
     $outline,
@@ -415,7 +415,7 @@ a.o-discuss-mention {
 }
 
 .o-discuss-inCallIcon {
-    --o-mail-callBordered-opacity: .35; // not inherited from a bordered parent
+    --o-mail-callBordered-opacity: .35; /* not inherited from a bordered parent */
     color: var(--o-action);
     aspect-ratio: 1;
 
@@ -426,19 +426,19 @@ a.o-discuss-mention {
 }
 
 .o-mail-DiscussSystray {
-    --border-color: var(--o-gray-300) !important; // cancel custom border color of dropdown
+    --border-color: var(--o-gray-300) !important; /* cancel custom border color of dropdown */
 }
 
 .o-mail-systrayFullscreenDropdownMenu {
     top: var(--o-navbar-height) !important;
-    height: calc(100% - var(--o-navbar-height)); // no bottom-0 otherwise performance issue
+    height: calc(100% - var(--o-navbar-height)); /* no bottom-0 otherwise performance issue */
     border-radius: 0 !important;
 }
 
 .o-disable-safari-native-long-press {
-    // Prevent user selection so that this isn't accidentally triggered with long-press.
-    -webkit-touch-callout: none; // disable iOS Safari native selection UI
-    -webkit-user-select: none; // disable iOS Safari native selection UI
+    /* Prevent user selection so that this isn't accidentally triggered with long-press. */
+    -webkit-touch-callout: none; /* disable iOS Safari native selection UI */
+    -webkit-user-select: none; /* disable iOS Safari native selection UI */
     user-select: none;
 }
 
@@ -453,8 +453,8 @@ a.o-discuss-mention {
     }
 }
 
-// .o-opacity-hoberable class disable the opacity effect (see opacity-100-hover) on
-// device that dont support the hover effect (mainly touch device).
+/* .o-opacity-hoberable class disable the opacity effect (see opacity-100-hover) on
+   device that dont support the hover effect (mainly touch device). */
 @media (hover: none) {
     .o-opacity-hoverable {
         opacity: 100 !important;

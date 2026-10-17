@@ -15,7 +15,7 @@
 
 .o_hb_select_wrapper {
     flex: 1 0 0;
-    min-width: 7ch; // Approx 4 characters + caret
+    min-width: 7ch; /* Approx 4 characters + caret */
     max-width: 100%;
     display: flex;
 
@@ -42,7 +42,7 @@
             inset-inline-end: var(--o-hb-spacer-1);
             transform: translate(10%, -50%);
             font-size: 1.2em;
-            // Keep truncated-text tooltips anchored on the button.
+            /* Keep truncated-text tooltips anchored on the button. */
             pointer-events: none;
         }
     }
@@ -54,9 +54,9 @@
     }
 }
 
-// The following code handles the case where a select and a group of buttons are
-// on the same row. In this situation, we want to show as much of the buttons’
-// text as possible. (For Animation: "onScroll" or Layout: "Column")
+/* The following code handles the case where a select and a group of buttons are
+   on the same row. In this situation, we want to show as much of the buttons’
+   text as possible. (For Animation: "onScroll" or Layout: "Column") */
 .o_hb_row_content {
     &:has(.o_hb_button_group) > .o_hb_select_wrapper {
         flex: 1 0 auto;
@@ -68,7 +68,7 @@
     }
 }
 
-// Image format badge.
+/* Image format badge. */
 .o_hb_select_toggle.dropdown-toggle, .o_hb_select_dropdown_item {
     > div > .badge {
         color: var(--o-we-item-clickable-color);
@@ -76,10 +76,10 @@
     }
 }
 
-// These styles are common between BuilderSelect and Many2X builder components.
-// TODO: review the SelectMenu template to allow both light/dark backgrounds and
-// remove most '!important' needed here to override Bootstrap classes. See
-// implementations of Many2X builder components for examples.
+/* These styles are common between BuilderSelect and Many2X builder components.
+   TODO: review the SelectMenu template to allow both light/dark backgrounds and
+   remove most '!important' needed here to override Bootstrap classes. See
+   implementations of Many2X builder components for examples. */
 .o_hb_select_dropdown {
     --o-hb-select-bg: var(--o-we-item-clickable-bg);
     --o-hb-select-color: var(--o-we-fg-light);
@@ -131,8 +131,8 @@
         }
     }
 
-    // SelectMenu items never touch the menu's edges (searchbox on top) and
-    // the menu clips its own content.
+    /* SelectMenu items never touch the menu's edges (searchbox on top) and
+       the menu clips its own content. */
     &:not(.o_select_menu_menu) .dropdown-item {
         &:first-child {
             @include border-top-radius(var(--#{$prefix}popover-inner-border-radius));

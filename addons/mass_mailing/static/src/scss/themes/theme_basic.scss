@@ -1,10 +1,10 @@
 
-// TODO remove in master
-// Themes scss have to use bg-variant and text-emphasis-variant mixins of BS4
-// to properly work. That use was introduced as a fix in 12.0... but the BS4
-// mixins are unavailable in the mailing assets. As a stable fix cannot
-// introduce static code which requires an XML update to not crash, the mixins
-// were duplicated here instead.
+/* TODO remove in master
+   Themes scss have to use bg-variant and text-emphasis-variant mixins of BS4
+   to properly work. That use was introduced as a fix in 12.0... but the BS4
+   mixins are unavailable in the mailing assets. As a stable fix cannot
+   introduce static code which requires an XML update to not crash, the mixins
+   were duplicated here instead. */
 @mixin bg-variant($parent, $color) {
     #{$parent} {
         background-color: $color !important;
@@ -27,11 +27,11 @@
     }
 }
 
-// ============================
-// Mass Mailing "Theme Basic"
-// ============================
+/* ============================
+   Mass Mailing "Theme Basic"
+   ============================ */
 
-// ===== Layout =====
+/* ===== Layout ===== */
 .o_basic_theme {
     &.o_layout {
         margin: 0;

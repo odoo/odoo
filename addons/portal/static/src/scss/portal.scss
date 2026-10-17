@@ -1,33 +1,31 @@
-///
-/// This file regroups the frontend general design rules and portal design
-/// rules.
-///
+/* This file regroups the frontend general design rules and portal design
+   rules. */
 
-// ======  Variables =========
+/* ======  Variables ========= */
 $o-theme-navbar-logo-height: $nav-link-height !default;
 $o-theme-navbar-fixed-logo-height: $nav-link-height !default;
 
-// Portal toolbar (filters, search bar)
-$o-portal-mobile-toolbar: true; // Enable/Disable custom design
+/* Portal toolbar (filters, search bar) */
+$o-portal-mobile-toolbar: true; /* Enable/Disable custom design */
 $o-portal-mobile-toolbar-border: $border-color;
 $o-portal-mobile-toolbar-bg: $gray-200;
 
-// Portal Tables
+/* Portal Tables */
 $o-portal-table-th-pt: map-get($spacers, 1) !default;
 $o-portal-table-th-pb: map-get($spacers, 1) !default;
 $o-portal-table-td-pt: map-get($spacers, 2) !default;
 $o-portal-table-td-pb: map-get($spacers, 2) !default;
 
-// Frontend general
+/* Frontend general */
 body {
-    // Set frontend direction that will be flipped with
-    // rtlcss for right-to-left text direction.
+    /* Set frontend direction that will be flipped with
+       rtlcss for right-to-left text direction. */
     direction: ltr;
 }
 
 .o_skip_to_content {
-    // We require the z-index property to ensure that the "Skip to Content"
-    // button appears above the header.
+    /* We require the z-index property to ensure that the "Skip to Content"
+       button appears above the header. */
     z-index: calc(var(--o-bs-zindex-fixed) + 1);
 }
 
@@ -41,7 +39,7 @@ header {
             padding-bottom: 0;
 
             img {
-                // object-fit does not work on IE but is only used as a fallback
+                /* object-fit does not work on IE but is only used as a fallback */
                 object-fit: contain;
                 display: block;
                 width: auto;
@@ -74,24 +72,24 @@ ul.flex-column > li > a {
     padding: 2px 15px;
 }
 
-// Link without text but an icon
+/* Link without text but an icon */
 a, .btn-link {
     &.oi:hover {
         text-decoration: $o-theme-btn-icon-hover-decoration;
     }
 }
 
-// Odoo options classes
+/* Odoo options classes */
 .jumbotron {
     margin-bottom: 0;
 }
 
-// Typography
+/* Typography */
 li > p {
     margin: 0;
 }
 
-// Bootstrap hacks
+/* Bootstrap hacks */
 %o-double-container-no-padding {
     padding-right: 0;
     padding-left: 0;
@@ -106,10 +104,10 @@ li > p {
 }
 #wrap {
     .container, .container-fluid {
-        // BS3 used to do this on all containers so that margins and floats are
-        // cleared inside containers. As lots of current odoo layouts may rely
-        // on this for some alignments, this is restored (at least for a while)
-        // here only for main containers of the frontend.
+        /* BS3 used to do this on all containers so that margins and floats are
+           cleared inside containers. As lots of current odoo layouts may rely
+           on this for some alignments, this is restored (at least for a while)
+           here only for main containers of the frontend. */
         &::before, &::after {
             content: "";
             display: table;
@@ -117,8 +115,8 @@ li > p {
         }
     }
     .navbar %container-flex-properties {
-        // Bootstrap set-up flex alignment to "space-between" here. The hack
-        // made above to restore the BS3 protection has to be disabled.
+        /* Bootstrap set-up flex alignment to "space-between" here. The hack
+           made above to restore the BS3 protection has to be disabled. */
         &::before, &::after {
             display: none;
         }
@@ -127,9 +125,9 @@ li > p {
 [class^="col-lg-"] {
     min-height: 24px;
 }
-// TODO this was added a compatibility layer for old layouts when we switched
-// to Bootstrap 4. It should be removed at some point, to not have to support
-// invalid-feedback with that awful :where selector.
+/* TODO this was added a compatibility layer for old layouts when we switched
+   to Bootstrap 4. It should be removed at some point, to not have to support
+   invalid-feedback with that awful :where selector. */
 .input-group:where(:not(:has(.was-validated :invalid ~ .invalid-feedback, .is-invalid ~ .invalid-feedback))) {
     flex-flow: row nowrap;
 }
@@ -142,7 +140,7 @@ li > p {
     background-color: inherit;
 }
 
-// Replaces old BS3 page-header class
+/* Replaces old BS3 page-header class */
 %o-page-header {
     margin-bottom: calc(var(--o-bs-headings-margin-bottom) * 2);
     padding-bottom: var(--o-bs-headings-margin-bottom);
@@ -154,7 +152,7 @@ li > p {
     @extend %o-page-header;
 }
 
-// Images spacing
+/* Images spacing */
 img, .media_iframe_video, .o_image {
     &.float-end {
         margin-left: calc(var(--o-bs-grid-gutter-width) / 2);
@@ -164,7 +162,7 @@ img, .media_iframe_video, .o_image {
     }
 }
 
-// Others
+/* Others */
 ::-moz-selection {
     background: rgba(150, 150, 220, 0.3);
 }
@@ -175,7 +173,7 @@ img, .media_iframe_video, .o_image {
     text-overflow: ellipsis;
 }
 
-// Kept for (up to) saas-12 compatibility
+/* Kept for (up to) saas-12 compatibility */
 .para_large {
     font-size: 120%;
 }
@@ -195,7 +193,7 @@ img, .media_iframe_video, .o_image {
     }
 }
 
-//  Background (kept for 8.0 compatibility) (! some are still used by website_blog)
+/* Background (kept for 8.0 compatibility) (! some are still used by website_blog) */
 .oe_dark {
     background-color: rgba(200, 200, 200, 0.14);
 }
@@ -396,11 +394,11 @@ img, .media_iframe_video, .o_image {
     --Avatar-size: 2.5rem;
 }
 
-// ------------------------------------------------------------
-// Frontend Discuss widget
-// ------------------------------------------------------------
+/* ------------------------------------------------------------
+   Frontend Discuss widget
+   ------------------------------------------------------------ */
 
-// Readonly display
+/* Readonly display */
 .o_portal_chatter {
     padding: 10px;
 
@@ -443,7 +441,7 @@ img, .media_iframe_video, .o_image {
 
 }
 
-// Readonly / Composer mix display
+/* Readonly / Composer mix display */
 .o_portal_chatter,
 .o_portal_chatter_composer {
     .o_portal_chatter_attachment {
@@ -497,7 +495,7 @@ img, .media_iframe_video, .o_image {
     }
 }
 
-// Address
+/* Address */
 .o_portal .o_portal_addresses {
     max-width: map-get($grid-breakpoints, xxl) / 2;
 }
@@ -516,7 +514,7 @@ img, .media_iframe_video, .o_image {
     }
 }
 
-// Copyright
+/* Copyright */
 .o_footer_copyright {
     .o_footer_copyright_name {
         vertical-align: middle;

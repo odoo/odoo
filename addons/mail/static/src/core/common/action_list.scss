@@ -11,8 +11,8 @@
         }
     }
 
-    // Unlike the generic switcher, an action group may have no active action:
-    // hide the sliding background, which would otherwise sit on the first one.
+    /* Unlike the generic switcher, an action group may have no active action:
+       hide the sliding background, which would otherwise sit on the first one. */
     .o-mail-ActionList-group.o_switcher:not(:has(.btn.active))::before {
         display: none;
     }
@@ -35,7 +35,7 @@
             }
         }
 
-        // The call theme looks dark, which the dark theme already provides.
+        /* The call theme looks dark, which the dark theme already provides. */
         @if $o-webclient-color-scheme != dark {
             &.o-discussCallTheme {
                 --gradient: transparent;
@@ -169,14 +169,14 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
 
             &.active {
-                // Same colors as the dark theme.
+                /* Same colors as the dark theme. */
                 background-color: #17373b !important;
                 border-color: #03f9e3 !important;
             }
         }
     }
 
-    // Neutralize colorful SVG app icons in dropdown menus to match the monochrome style of other icons.
+    /* Neutralize colorful SVG app icons in dropdown menus to match the monochrome style of other icons. */
     button.o-dropdown-item .o_ui_app_icon {
         --oi-color: currentColor !important;
         opacity: var(--o-mail-ActionList-icon-opacity) !important;

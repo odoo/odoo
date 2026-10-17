@@ -13,8 +13,8 @@
 }
 
 :has(> .oe_drop_zone) {
-    // Make sure the drop zone stays fully visible, even if its container is
-    // smaller than it.
+    /* Make sure the drop zone stays fully visible, even if its container is
+       smaller than it. */
     overflow: visible !important;
 }
 
@@ -68,7 +68,7 @@
 }
 
 :not(.oe_structure):not([data-oe-type="html"]) {
-    // "Inner content" drop zones.
+    /* "Inner content" drop zones. */
     > .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone) {
         height: var(--o-we-inner-content-dropzone-size);
         min-height: var(--o-we-inner-content-dropzone-size);
@@ -76,8 +76,8 @@
         outline: unset;
         border: unset;
 
-        // Make sure no drop zone is on top of another when one is placed before
-        // a paragraph and the next is its first child.
+        /* Make sure no drop zone is on top of another when one is placed before
+           a paragraph and the next is its first child. */
         + p > .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone):first-child {
             margin-top: var(--o-we-inner-content-dropzone-size);
         }
@@ -94,10 +94,10 @@
         }
     }
 
-    // zero-width text nodes around inline buttons can create extra line boxes.
-    // Without this "line-height: 0", the editable area will become too tall if
-    // it contains buttons when the dropzones appear. (for example, a "Contact
-    // us" button in a website page header)
+    /* zero-width text nodes around inline buttons can create extra line boxes.
+       Without this "line-height: 0", the editable area will become too tall if
+       it contains buttons when the dropzones appear. (for example, a "Contact
+       us" button in a website page header) */
     &:has(> .btn) {
         &:has(> .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone)) {
             &:not(:has(> :not(.oe_drop_zone, .btn))) {
@@ -107,7 +107,7 @@
     }
 }
 
-// TODO for mass_mailing only ?
+/* TODO for mass_mailing only ? */
 body.oe_dropzone_active .note-editable {
     overflow: hidden;
 }
