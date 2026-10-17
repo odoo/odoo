@@ -19,6 +19,7 @@
         'google_recaptcha',
         'utm',
         'html_builder',
+        'base_import_module',
     ],
     'external_dependencies': {
         'python': ['geoip2'],
