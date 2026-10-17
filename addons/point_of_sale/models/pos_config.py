@@ -1482,13 +1482,10 @@ class PosConfig(models.Model):
         self.ensure_one()
         # Ensure rounding method record is set on the invoice if needed
         rounding_method = self.env['account.cash.rounding']
-        only_cash = self.only_round_cash_method
-        available_type = ['cash'] if only_cash else ['cash', 'bank']
-        use_rounding = orders.payment_ids.filtered_domain([
-            ('payment_method_id.type', 'in', available_type),
-            ('pos_order_id.amount_difference', '!=', 0),
-        ])
-        if self.cash_rounding and use_rounding:
+        domain = [('pos_order_id.amount_difference', '!=', 0)]
+        if self.only_round_cash_method:
+            domain += [('payment_method_id.type', 'in', ['cash'])]
+        if self.cash_rounding and orders.payment_ids.filtered_domain(domain):
             rounding_method = self.rounding_method
 
         return rounding_method
