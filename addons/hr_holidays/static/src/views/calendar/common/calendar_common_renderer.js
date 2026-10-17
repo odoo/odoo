@@ -1,16 +1,20 @@
-import { onWillStart } from "@odoo/owl";
+import { onMounted, onPatched, onWillStart } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 import { convertRecordToEvent } from "@web/views/calendar/utils";
-import { useMandatoryDays } from "../../hooks";
+import { useExpectedHours, useMandatoryDays } from "../../hooks";
 
 export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
     setup() {
         super.setup();
         this.mandatoryDays = useMandatoryDays(this.props);
+        this.expectedHours = useExpectedHours(this.props);
         onWillStart(async () => {
             this.isManager = await user.hasGroup("hr_holidays.group_hr_holidays_user");
         });
+        // a reload of the same range keeps the day cells, so the badges are redrawn on each render
+        onMounted(() => this.renderExpectedHours());
+        onPatched(() => this.renderExpectedHours());
     }
 
     /**
@@ -56,6 +60,22 @@ export class TimeOffCalendarCommonRenderer extends CalendarCommonRenderer {
             startEditable: movable,
             durationEditable: resizable,
         };
+    }
+
+    renderExpectedHours() {
+        const cells = this.ref().querySelectorAll(".o_calendar_fc_view_dayGridMonth .o_calendar_day[data-date]");
+        for (const cell of cells) {
+            cell.querySelector(".o_expected_hours")?.remove();
+            const hours = this.expectedHours(cell.dataset.date);
+            if (hours) {
+                cell.classList.add("position-relative");
+                const badge = document.createElement("span");
+                badge.className =
+                    "o_expected_hours position-absolute top-50 start-50 translate-middle w-75 h-50 d-flex align-items-center justify-content-center text-bg-success fs-3 fw-medium pe-none";
+                badge.textContent = hours;
+                cell.append(badge);
+            }
+        }
     }
 
     getDayCellClassNames(info) {

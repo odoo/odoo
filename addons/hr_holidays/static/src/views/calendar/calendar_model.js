@@ -159,6 +159,7 @@ export class TimeOffCalendarModel extends CalendarModel {
     async updateData(data) {
         const prom = super.updateData(data);
         data.mandatoryDays = await this._mandatoryDaysCache.read(data);
+        data.expectedHours = await this.fetchExpectedHours(data);
         return prom;
     }
 
@@ -187,8 +188,20 @@ export class TimeOffCalendarModel extends CalendarModel {
         ]);
     }
 
+    async fetchExpectedHours(data) {
+        return this.orm.call("hr.employee", "get_expected_hours", [
+            this.employeeId,
+            serializeDate(data.range.start),
+            serializeDate(data.range.end),
+        ]);
+    }
+
     get mandatoryDays() {
         return this.data.mandatoryDays;
+    }
+
+    get expectedHours() {
+        return this.data.expectedHours;
     }
 
     get employeeId() {
