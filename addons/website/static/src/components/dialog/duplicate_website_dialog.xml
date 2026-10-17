@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<t t-name="website.DuplicateWebsiteDialog">
+    <WebsiteDialog close="this.props.close" title.translate="Duplicate Website">
+        <div class="mb-3 row">
+            <label class="col-form-label col-md-3">
+                Website Name
+            </label>
+            <div class="col-md-9">
+                <input type="text" t-model.proxy="this.state.name" class="form-control" required="required" t-ref="this.autofocusRef"/>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="(ev) => this.duplicate(ev)" t-att-disabled="!this.state.name.trim()" data-hotkey="q">
+                Create
+            </button>
+            <button class="btn btn-secondary" t-on-click="() => this.props.close()" data-hotkey="x">
+                Discard
+            </button>
+        </t>
+    </WebsiteDialog>
+</t>
+
+</templates>
