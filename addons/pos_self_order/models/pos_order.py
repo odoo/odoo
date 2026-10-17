@@ -570,6 +570,7 @@ class PosOrder(models.Model):
             price_extra = sum(attr.price_extra for attr in selected_attributes)
             total_price = price_unit + price_extra + child.combo_item_id.extra_price
             child.price_unit = total_price
+            child.price_extra = price_extra
 
         extra_original_total = 0
         if remaining_total and child_line_extra:
@@ -596,6 +597,7 @@ class PosOrder(models.Model):
             price_extra = sum(attr.price_extra for attr in selected_attributes)
             total_price = price_unit + price_extra + child.combo_item_id.extra_price
             child.price_unit = total_price
+            child.price_extra = price_extra
 
         # The whole combo price is carried by the child lines, the parent line is always free.
         parent_line.price_unit = 0.0
