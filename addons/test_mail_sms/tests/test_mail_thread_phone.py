@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
+from odoo.exceptions import UserError
 from odoo.tests import tagged, users
 
 
@@ -114,6 +117,15 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
                 with self.subTest(source=source):
                     results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', source)])
                     self.assertEqual(results, expected)
+
+    @users('employee')
+    def test_search_phone_mobile_search_minimum_length(self):
+        Model = self.env['mail.test.sms.bl']
+        for minimum in (3, 4):
+            with self.subTest(minimum=minimum), patch.object(self.env.registry[Model._name], '_phone_search_min_length', minimum):
+                with self.assertRaisesRegex(UserError, f'Please enter at least {minimum} characters'):
+                    Model.search([('phone_mobile_search', 'ilike', '1' * (minimum - 1))])
+                Model.search([('phone_mobile_search', 'ilike', '1' * minimum)])
 
     @users('employee')
     def test_search_phone_mobile_search_ilike(self):
