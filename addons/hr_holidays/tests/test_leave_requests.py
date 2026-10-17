@@ -662,6 +662,32 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(leave5.number_of_hours, 10)
 
+    def test_full_day_leave_on_reduced_hours_day(self):
+        """ A leave covering all the scheduled hours of a day counts as a full
+            day, even when that day has fewer hours than the daily average.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Reduced Friday 40h/week',
+            'attendance_ids': [
+                Command.create({'dayofweek': dayofweek, 'hour_from': 8, 'hour_to': 16.5})
+                for dayofweek in ('0', '1', '2', '3')
+            ] + [Command.create({'dayofweek': '4', 'hour_from': 7, 'hour_to': 13})],
+        })
+        self.employee_emp.resource_calendar_id = calendar
+
+        # Friday only has 6 scheduled hours, below 3/4 of the 8h daily average
+        leave = self.env['hr.leave'].create({
+            'name': 'Full Friday',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.holidays_type_half.id,
+            'request_date_from': date(2026, 7, 17),
+            'request_date_to': date(2026, 7, 17),
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'pm',
+        })
+        self.assertEqual(leave.number_of_days, 1)
+        self.assertEqual(leave.number_of_hours, 6)
+
     def test_number_of_hours_display_global_leave(self):
         # Check that the field number_of_hours
         # takes the global leaves into account, even
