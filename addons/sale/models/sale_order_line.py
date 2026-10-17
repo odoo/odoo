@@ -1804,7 +1804,16 @@ class SaleOrderLine(models.Model):
                 "collapse_composition": self.collapse_composition,
                 **optional_values,
             }
+        product = self.product_id.with_context(
+            lang=self.order_id._get_lang(),
+            partner_id=self.order_id.partner_id.id,
+            company_id=self.company_id.id,
+        )
+        display_name = product.with_context(partner_id=False, seller_id=False).display_name
+        if not display_name or display_name not in self.name:
+            display_name = product.display_name
         res = {
+<<<<<<< e2b5147be398a8db00d8df45fcc421ef28743381
             "display_type": self.display_type or "product",
             "sequence": self.sequence,
             "name": self.env["account.move.line"]._get_journal_items_full_name(
@@ -1821,6 +1830,37 @@ class SaleOrderLine(models.Model):
             "extra_tax_data": self.extra_tax_data,
             "collapse_prices": self.collapse_prices,
             "collapse_composition": self.collapse_composition,
+||||||| 465d900fc44eb40d3c1e555ead7c99bb54ca61a2
+            'display_type': self.display_type or 'product',
+            'sequence': self.sequence,
+            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom_id.id,
+            'quantity': self.qty_to_invoice,
+            'discount': self.discount,
+            'price_unit': self.price_unit,
+            'tax_ids': [Command.set(self.tax_ids.ids)],
+            'sale_line_ids': [Command.link(self.id)],
+            'is_downpayment': self.is_downpayment,
+            'extra_tax_data': self.extra_tax_data,
+            'collapse_prices': self.collapse_prices,
+            'collapse_composition': self.collapse_composition,
+=======
+            'display_type': self.display_type or 'product',
+            'sequence': self.sequence,
+            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, display_name),
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom_id.id,
+            'quantity': self.qty_to_invoice,
+            'discount': self.discount,
+            'price_unit': self.price_unit,
+            'tax_ids': [Command.set(self.tax_ids.ids)],
+            'sale_line_ids': [Command.link(self.id)],
+            'is_downpayment': self.is_downpayment,
+            'extra_tax_data': self.extra_tax_data,
+            'collapse_prices': self.collapse_prices,
+            'collapse_composition': self.collapse_composition,
+>>>>>>> aa60beac7e66de0d8b2d7046f5df26191e0a4141
         }
         downpayment_lines = self.invoice_lines.filtered("is_downpayment")
         if self.is_downpayment and downpayment_lines:
