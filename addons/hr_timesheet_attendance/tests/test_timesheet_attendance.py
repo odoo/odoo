@@ -38,6 +38,7 @@ class TestTimesheetAttendance(TestCommonTimesheet):
             difference between both) multiplied by the hourly cost of the employee.
         """
         self.empl_employee.hourly_cost = 10.0
+        self.empl_employee.version_ids.write({'date_version': '2022-01-01'})
         self.env['account.analytic.line'].with_user(self.user_employee).create({
             'name': 'Test timesheet 1',
             'project_id': self.project_customer.id,
