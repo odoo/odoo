@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import urlsplit
+
 from odoo import http
 from odoo.http import request
 
@@ -18,6 +20,7 @@ class WebsiteUrl(http.Controller):
             "can_create_link_tracker": request.env['link.tracker'].has_access('create'),
             "can_create_link_tracker_code": request.env['link.tracker.code'].has_access('create'),
             **post,
+            "u": request.website.get_base_url() + urlsplit(post.get('u', '')).path,
         })
 
     @http.route('/website_links/add_code', type='json', auth='user')
