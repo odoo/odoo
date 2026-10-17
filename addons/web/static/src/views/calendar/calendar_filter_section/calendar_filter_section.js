@@ -89,7 +89,7 @@ export class CalendarFilterSection extends Component {
     }
 
     async loadSource(request) {
-        const resModel = this.props.model.fields[this.section.fieldName].relation;
+        const resModel = this.section.resModel;
         const activeIds = this.section.filters.map((f) => f.value);
         const domain = this.getFilterDomain(activeIds);
         const records = await this.orm.call(resModel, "name_search", [], {
@@ -127,11 +127,11 @@ export class CalendarFilterSection extends Component {
     }
 
     onFilterSelected(filterRecord) {
-        this.props.model.createFilter(this.section.fieldName, filterRecord[0])
+        this.props.model.createFilter(this.section.fieldName, filterRecord[0]);
     }
 
     getFilterDomain(activeIds) {
-        return [["id", "not in", activeIds]]
+        return [["id", "not in", activeIds]];
     }
 
     toggleSection() {
