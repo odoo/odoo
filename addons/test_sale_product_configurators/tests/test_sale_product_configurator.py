@@ -246,6 +246,17 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
             "/odoo", 'sale_product_configurator_recursive_optional_products_tour', login='salesman'
         )
 
+    def test_variant_selection_opens_configurator_with_locked_variant(self):
+        """The configurator must open to suggest optional products when a product variant is
+        directly selected on the order line, without allowing variant changes.
+        """
+        self.product_product_custo_desk.optional_product_ids = [
+            Command.link(self.product_product_conf_chair_floor_protect.id)
+        ]
+        self.start_tour(
+            "/odoo", 'sale_product_configurator_variant_selection_tour', login='salesman'
+        )
+
     def test_product_configurator_update_custom_values(self):
         self.start_tour(
             "/odoo", 'sale_product_configurator_custom_value_update_tour', login='salesman',
