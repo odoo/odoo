@@ -1,6 +1,6 @@
-from unittest.mock import patch
+from unittest.mock import ANY, patch
 
-from odoo.fields import Command, Domain
+from odoo.fields import Command
 from odoo.tests.common import TransactionCase, new_test_user
 
 
@@ -65,6 +65,11 @@ class Many2manyCase(TransactionCase):
         record = self.env['test_orm.attachment.host'].create({
             'm2m_attachment_ids': [Command.link(attachment.id)],
         }).with_user(user)
+        # an attachment not linked to record
+        self.env['test_orm.attachment'].create({
+            'res_model': self.ship._name,
+            'res_id': self.ship.id,
+        })
 
         self.assertFalse(record.env.su)
 
@@ -79,8 +84,10 @@ class Many2manyCase(TransactionCase):
         ):
             record.invalidate_model()
             record.m2m_attachment_ids
-            _search.assert_called_once_with(attachment.browse(), Domain.TRUE, order='id', bypass_access=True)
+            _search.assert_called_once_with(attachment.browse(), ANY, order='id', bypass_access=True)
             _check_access.assert_called_once_with(attachment, 'read')
+        # check that the search is restricted to the lines of record
+        self.assertEqual(attachment.sudo().search(_search.call_args.args[1]), attachment.sudo())
 
         # check that otherwise, attachments are searched without bypass_access
         self.patch(field, 'bypass_search_access', False)
@@ -90,5 +97,7 @@ class Many2manyCase(TransactionCase):
         ):
             record.invalidate_model()
             record.m2m_attachment_ids
-            _search.assert_called_once_with(attachment.browse(), Domain.TRUE, order='id', bypass_access=False)
+            _search.assert_called_once_with(attachment.browse(), ANY, order='id', bypass_access=False)
             _check_access.assert_called_once_with(attachment.browse(), 'read')
+        # check that the search is restricted to the lines of record
+        self.assertEqual(attachment.sudo().search(_search.call_args.args[1]), attachment.sudo())
