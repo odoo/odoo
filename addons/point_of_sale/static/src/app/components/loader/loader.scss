@@ -1,15 +1,26 @@
 .pos-loader {
-    background-color: #222;
+    --pos-loader-bg: #{$body-bg};
+    --pos-loader-text: #6b6470;
+    --pos-loader-track: rgba(152, 81, 132, 0.15);
+    background-color: var(--pos-loader-bg);
     position: absolute;
     left: 0px;
     top: 0px;
     width: 100%;
     height: 100%;
     z-index: 100001; // 1 more than the debug widget...
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     font-family: Lato;
-    color: $gray-700;
+    color: var(--pos-loader-text);
     transition: opacity 0.8s;
+
+    &.pos-loader-dark {
+        --pos-loader-text: #a8a0ad;
+        --pos-loader-track: rgba(152, 81, 132, 0.28);
+    }
 
     .pos-error {
       text-align: left;
@@ -20,14 +31,49 @@
       top: 20%;
     }
 
-    .loader-feedback {
-        width: 400px;
-        height: 160px;
-        margin: -60px -200px;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        text-align: center;
+    .pos-loader-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .pos-loader-logo {
+        width: 72px;
+        height: 72px;
+        animation: pos-loader-breathe 1.8s ease-in-out infinite;
+    }
+
+    .pos-loader-bar {
+        position: relative;
+        width: 140px;
+        height: 3px;
+        border-radius: 3px;
+        overflow: hidden;
+        background: var(--pos-loader-track);
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 40%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #985184, #f78613);
+            animation: pos-loader-slide 1.3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+    }
+
+    .pos-loader-message {
+        min-height: 1.5em;
+        max-width: 320px;
+        margin: 0;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.6s;
+
+        &.visible {
+            opacity: 1;
+        }
     }
 
     h1 {
@@ -46,65 +92,34 @@
         cursor: pointer;
 
         :active {
-            color: #222;
+            color: var(--pos-loader-bg);
             background: $gray-700;
         }
     }
 }
 
-// loader animation
-.lds-ellipsis {
-    display: inline-block;
-    position: relative;
-    width: 80px;
-    height: 60px;
-}
-.lds-ellipsis div {
-    position: absolute;
-    top: 33px;
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    background: #fff;
-    animation-timing-function: cubic-bezier(0, 1, 1, 0);
-}
-.lds-ellipsis div:nth-child(1) {
-    left: 8px;
-    animation: lds-ellipsis1 0.6s infinite;
-}
-.lds-ellipsis div:nth-child(2) {
-    left: 8px;
-    animation: lds-ellipsis2 0.6s infinite;
-}
-.lds-ellipsis div:nth-child(3) {
-    left: 32px;
-    animation: lds-ellipsis2 0.6s infinite;
-}
-.lds-ellipsis div:nth-child(4) {
-    left: 56px;
-    animation: lds-ellipsis3 0.6s infinite;
-}
-@keyframes lds-ellipsis1 {
-    0% {
-        transform: scale(0);
-    }
+@keyframes pos-loader-breathe {
+    0%,
     100% {
         transform: scale(1);
     }
-}
-@keyframes lds-ellipsis3 {
-    0% {
-        transform: scale(1);
-    }
-    100% {
-        transform: scale(0);
+    50% {
+        transform: scale(1.06);
     }
 }
-@keyframes lds-ellipsis2 {
+
+@keyframes pos-loader-slide {
     0% {
-        transform: translate(0, 0);
+        transform: translateX(-100%);
     }
     100% {
-        transform: translate(24px, 0);
+        transform: translateX(250%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pos-loader .pos-loader-logo,
+    .pos-loader .pos-loader-bar::after {
+        animation-duration: 3.6s;
     }
 }

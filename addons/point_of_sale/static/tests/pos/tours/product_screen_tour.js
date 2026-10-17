@@ -38,9 +38,11 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             ProductScreen.firstProductIsFavorite("Whiteboard Pen"),
             // Make sure we don't have any scroll bar on the product list
             {
-                trigger: ".product-list",
+                trigger: ".product-list:has(article.product)",
                 run: function () {
-                    const productList = document.querySelector(".product-list");
+                    const productList = document.querySelector(
+                        ".product-list:has(article.product)"
+                    );
                     if (productList.scrollWidth > document.documentElement.scrollWidth) {
                         throw new Error("Product list is overflowing");
                     }
