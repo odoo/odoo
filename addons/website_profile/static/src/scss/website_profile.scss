@@ -55,7 +55,11 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
             border-radius: 0;
             border-width: 0 1px;
             line-height: $line-height-base;
-            @include o-hover-text-color(rgba(white, 0.8), white);
+            color: rgba(255, 255, 255, 0.8);
+
+            &:hover, &:focus, &.focus {
+                color: white;
+            }
 
             & {
                 border-color: transparent;
@@ -167,10 +171,14 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 
     .o_wprofile_all_users_nav_btn {
         @include media-breakpoint-up(md) {
-            @include o-hover-text-color(white, $gray-800);
+            color: white;
             margin-top: -1px;
             border-radius: 0;
             min-height: 35px;
+
+            &:hover, &:focus, &.focus {
+                color: var(--gray-800);
+            }
 
             &:hover {
                 background-color: white;
@@ -185,9 +193,13 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
             }
 
             .o_wprofile_all_users_nav_btn {
-                @include o-hover-text-color(white, white);
+                color: white;
                 border-radius: var(--o-bs-btn-border-radius);
                 background-color: rgba(0, 0, 0, 0.25);
+
+                &:hover, &:focus, &.focus {
+                    color: white;
+                }
             }
         }
     }

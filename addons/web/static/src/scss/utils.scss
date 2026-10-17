@@ -107,22 +107,15 @@
 }
 
 // ------------------------------------------------------------------
-// Hovering effects
-// ------------------------------------------------------------------
-@mixin o-hover-text-color($default-color: $body-color, $hover-color: $link-color) {
-    color: $default-color;
-
-    &:hover, &:focus, &.focus {
-        color: $hover-color;
-    }
-}
-
-// ------------------------------------------------------------------
 // Mixin to define variations for btn-links and muted btn-links
 // ------------------------------------------------------------------
 @mixin o-btn-link-variant($color, $color-active) {
     text-transform: none;
-    @include o-hover-text-color($default-color: $color, $hover-color: $color-active);
+    color: $color;
+
+    &:hover, &:focus, &.focus {
+        color: $color-active;
+    }
 
     &, &:hover, &:focus, &:active, &.active {
         border-color: transparent !important;
@@ -135,7 +128,11 @@
     }
 
     &.text-muted, .text-muted {
-        @include o-hover-text-color($default-color: $text-muted, $hover-color: $color-active);
+        color: $text-muted;
+
+        &:hover, &:focus, &.focus {
+            color: $color-active;
+        }
     }
 }
 

@@ -10,8 +10,12 @@
 
         > div > a {
             background-color: rgba($o-wslides-color-dark3, 0.5);
-            @include o-hover-text-color(rgba(white, 0.8), white);
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none!important;
+
+            &:hover, &:focus, &.focus {
+                color: white;
+            }
 
             + a {
                 margin-left: 1px;
@@ -70,7 +74,11 @@
 
         a {
             text-decoration: none !important;
-            @include o-hover-text-color(rgba(white, 0.8), white);
+            color: rgba(255, 255, 255, 0.8);
+
+            &:hover, &:focus, &.focus {
+                color: white;
+            }
         }
 
         .o_wslides_fs_sidebar_section {
