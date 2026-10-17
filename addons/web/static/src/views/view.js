@@ -36,7 +36,7 @@ import { ViewPlugin } from "./view_plugin";
  * @property {() => []} breadcrumbs
  * @property {() => string} getDisplayName
  * @property {(string) => any} setDisplayName
- * @property {() => Record<string, any>} getPagerProps
+ * @property {() => Record<string, any>} [getPagerProps]
  * @property {Record<string, any>[]} viewSwitcherEntry
  * @property {typeof Component} Banner
  *
@@ -128,7 +128,6 @@ export function getDefaultConfig() {
         disableSearchBarAutofocus: false,
         getDisplayName: () => displayName,
         historyBack: () => {},
-        pagerProps: {},
         setDisplayName: (newDisplayName) => {
             displayName = newDisplayName;
             // This is a hack to force the reactivity when a new displayName is set
