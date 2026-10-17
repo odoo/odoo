@@ -4,7 +4,6 @@ from collections import OrderedDict
 from urllib.parse import urlencode, urlparse
 
 from odoo import Command, api, fields, models
-from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 
@@ -320,9 +319,7 @@ class ProductProduct(models.Model):
             if product.variant_image_ids:
                 first_product_image = product.variant_image_ids.sorted("sequence")[0]
                 if first_product_image.video_url:
-                    raise ValidationError(
-                        product.env._("You can't use a video as the product's main image.")
-                    )
+                    continue
                 if product.image_variant_1920.content == first_product_image.image_1920.content:
                     continue
                 product.with_context(
