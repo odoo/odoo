@@ -138,7 +138,7 @@ class DiscussChannel(models.Model):
     is_member = fields.Boolean("Is Member", compute="_compute_is_member", search="_search_is_member", compute_sudo=True)
     # sudo: discuss.channel - sudo for performance, self member can be accessed on accessible channel
     self_member_id = fields.Many2one("discuss.channel.member", compute="_compute_self_member_id", search="_search_self_member_id", compute_sudo=True)
-    can_self_edit_readonly_channel = fields.Boolean(compute="_compute_can_self_edit_readonly_channel")
+    self_has_admin_rights = fields.Boolean(compute="_compute_self_has_admin_rights")
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
     invited_member_ids = fields.One2many("discuss.channel.member", compute="_compute_invited_member_ids", compute_sudo=True)
     meeting_start_dt = fields.Datetime("Meeting Start", compute="_compute_meeting_dt")
@@ -432,12 +432,14 @@ class DiscussChannel(models.Model):
         return Domain("channel_member_ids", operator, [("is_self", "=", True), ("id", "in", operand)])
 
     @api.depends_context("uid", "guest")
-    @api.depends("is_readonly", "self_member_id.channel_role")
-    def _compute_can_self_edit_readonly_channel(self):
+    @api.depends("self_member_id.channel_role", "parent_channel_id.self_member_id.channel_role")
+    def _compute_self_has_admin_rights(self):
         for channel in self:
-            channel.can_self_edit_readonly_channel = (
+            channel.self_has_admin_rights = (
                 # sudo: discuss.channel.member - anyone can have access to their own role
                 channel.self_member_id.sudo().channel_role in ("admin", "owner")
+                # owners and admins of a channel also manage its sub-channels
+                or channel.parent_channel_id.self_member_id.sudo().channel_role in ("admin", "owner")
                 or self.env.user._is_admin()
             )
 
@@ -621,7 +623,7 @@ class DiscussChannel(models.Model):
                 failing_channels := self.filtered(
                     lambda channel: (
                         channel.is_readonly != vals["is_readonly"]
-                        and not channel.can_self_edit_readonly_channel
+                        and not channel.self_has_admin_rights
                     ),
                 )
             )
@@ -649,14 +651,15 @@ class DiscussChannel(models.Model):
             and (
                 failing_channels := self.filtered(
                     lambda channel: (
-                        channel.is_readonly and not channel.can_self_edit_readonly_channel
+                        channel.channel_type in ("channel", "group")
+                        and not channel.self_has_admin_rights
                     ),
                 )
             )
         ):
-            raise UserError(
+            raise AccessError(
                 self.env._(
-                    "You do not have the rights to change the name, description or avatar as a regular member of these read-only channels: %(channels)s.",
+                    "Only channel owners, channel administrators or database admins can change the name, description or avatar of: %(channels)s.",
                     channels=failing_channels.mapped("display_name"),
                 ),
             )
@@ -1529,7 +1532,7 @@ class DiscussChannel(models.Model):
             return [
                 (
                     Domain("is_readonly", "=", False)
-                    | Domain("can_self_edit_readonly_channel", "=", True),
+                    | Domain("self_has_admin_rights", "=", True),
                     "read",
                 ),
             ]
@@ -1595,7 +1598,7 @@ class DiscussChannel(models.Model):
     # ------------------------------------------------------------
 
     def set_message_pin(self, message_id, pinned):
-        if self.is_readonly and not self.can_self_edit_readonly_channel:
+        if self.is_readonly and not self.self_has_admin_rights:
             raise UserError(self.env._("You cannot pin messages in a read-only channel."))
         result = super().set_message_pin(message_id, pinned)
         if pinned and result:
@@ -1882,6 +1885,10 @@ class DiscussChannel(models.Model):
 
     def _lazy_load_members_channel_types(self):
         """ Return the channel types that load members lazily. """
+        return ["channel", "group"]
+
+    def _role_allowed_channel_types(self):
+        """ Return the channel types whose members can have a channel role. """
         return ["channel", "group"]
 
     def channel_rename(self, name):

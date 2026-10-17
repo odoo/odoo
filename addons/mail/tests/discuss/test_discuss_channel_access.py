@@ -549,7 +549,8 @@ class TestDiscussChannelAccess(MailCommon):
                 self.assertEqual(len(ChannelAsUser.search([("id", "=", channel.id)])), 1 if result else 0)
                 channel.read(["name"])
             elif operation == "write":
-                channel.write({"name": "new name"})
+                # name, description and avatar are further restricted to channel owners/admins
+                channel.write({"discuss_category_id": False})
             elif operation == "unlink":
                 channel.unlink()
 

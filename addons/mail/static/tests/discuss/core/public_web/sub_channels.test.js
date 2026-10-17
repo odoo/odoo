@@ -334,6 +334,46 @@ test("Renaming a thread should update the message notification in parent channel
     await waitFor(".o-mail-NotificationMessage a:text('Renamed Thread'):count(1)");
 });
 
+test("Thread name is editable by owners and admins of the parent channel", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Member User" });
+    pyEnv["res.users"].create({
+        partner_id: partnerId,
+        login: "test_member",
+        password: "test_member",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        group_public_id: false,
+        name: "General",
+    });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        group_public_id: false,
+        name: "Thread",
+        parent_channel_id: channelId,
+    });
+    await start({ authenticateAs: { login: "test_member", password: "test_member" } });
+    await openDiscuss(subChannelId);
+    await waitFor(".o-mail-DiscussContent-threadName:value(Thread):disabled:count(1)");
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", partnerId],
+    ]);
+    for (const channel_role of ["admin", "owner"]) {
+        pyEnv["discuss.channel.member"].write([memberId], { channel_role });
+        await waitFor(".o-mail-DiscussContent-threadName:value(Thread):enabled:count(1)");
+    }
+    pyEnv["discuss.channel.member"].write([memberId], { channel_role: false });
+    await waitFor(".o-mail-DiscussContent-threadName:value(Thread):disabled:count(1)");
+});
+
 test("Can delete channel thread as author of thread", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

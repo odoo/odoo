@@ -281,7 +281,7 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
             raise NotFound()
-        if channel.is_readonly and not channel.can_self_edit_readonly_channel:
+        if channel.is_readonly and not channel.self_has_admin_rights:
             raise AccessError(
                 self.env._(
                     "Only channel owners and admins can create threads in a read-only channel.",
