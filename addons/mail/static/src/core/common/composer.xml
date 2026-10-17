@@ -19,7 +19,9 @@
                     'o-editing': this.props.composer.message,
                     'o-chatWindow mx-2 my-1': this.ancestors.inChatWindow,
                     'mb-2': this.ancestors.inChatWindow and !this.props.composer.message,
-                    'o-discussApp pt-1 ps-2 pe-4': this.ancestors.inDiscussApp,
+                    'o-discussApp': this.ancestors.inDiscussApp,
+                    'pt-1 ps-2 pe-4': this.ancestors.inDiscussApp and this.props.composer.message,
+                    'pt-2 px-4 o-pb-3_5': this.ancestors.inDiscussApp and !this.props.composer.message,
                     'o-disabled': this.props.disabled,
                 }" t-attf-class="{{ this.props.className }}">
             <FileUploader t-if="this.allowUpload" multiUpload="this.isMultiUpload" onUploaded.bind="(data) => { this.attachmentUploader.uploadData(data) }">

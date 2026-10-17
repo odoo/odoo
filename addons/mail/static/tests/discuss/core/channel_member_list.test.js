@@ -265,7 +265,7 @@ test("Can search member", async () => {
     await openDiscuss(channelId);
     await waitFor(`${actionPanel("Members")}:count(1)`); // This is from auto-open of member list panel
     await waitFor(".o-discuss-ChannelMember:count(3)");
-    await insertText("input[placeholder='Search members']", "Alice");
+    await insertText(".o-discuss-ChannelMemberList-search input[placeholder='Search']", "Alice");
     await waitFor(".o-discuss-ChannelMember:count(1)");
     await waitFor(".o-discuss-ChannelMember:text('Alice'):count(1)");
 });
@@ -304,7 +304,7 @@ test("Search does not fetch when term is more specific after empty result", asyn
     await waitFor(".o-discuss-ChannelMember:text('Mitchell Admin'):count(1)");
     await waitFor(".o-discuss-ChannelMember:text('Alice'):count(1)");
     await waitFor(".o-discuss-ChannelMember:text('Bob'):count(1)");
-    await insertText("input[placeholder='Search members']", "a");
+    await insertText(".o-discuss-ChannelMemberList-search input[placeholder='Search']", "a");
     await waitStoreFetch(
         `/discuss/channel/members - ${JSON.stringify({
             channel_id: channelId,
@@ -315,7 +315,7 @@ test("Search does not fetch when term is more specific after empty result", asyn
     await waitFor(".o-discuss-ChannelMember:count(2)");
     await waitFor(".o-discuss-ChannelMember:text('Mitchell Admin'):count(1)");
     await waitFor(".o-discuss-ChannelMember:text('Alice'):count(1)");
-    await insertText("input[placeholder='Search members']", "z");
+    await insertText(".o-discuss-ChannelMemberList-search input[placeholder='Search']", "z");
     await waitStoreFetch(
         `/discuss/channel/members - ${JSON.stringify({
             channel_id: channelId,
@@ -325,10 +325,12 @@ test("Search does not fetch when term is more specific after empty result", asyn
     );
     await waitForNone(".o-discuss-ChannelMember");
     await waitFor(`${actionPanel("Members")} span:text('No members found.'):count(1)`);
-    await insertText("input[placeholder='Search members']", "z");
+    await insertText(".o-discuss-ChannelMemberList-search input[placeholder='Search']", "z");
     await animationFrame();
     expect.verifySteps([]); // no search 'azz'
-    await insertText("input[placeholder='Search members']", "b", { replace: true });
+    await insertText(".o-discuss-ChannelMemberList-search input[placeholder='Search']", "b", {
+        replace: true,
+    });
     await waitStoreFetch(
         `/discuss/channel/members - ${JSON.stringify({
             channel_id: channelId,
@@ -357,7 +359,7 @@ test("Shows a hint to narrow member search when there's more than 100 matches", 
     await waitFor(`${actionPanel("Members")}:count(1)`);
     await waitFor(`${actionPanel("Members")} button:text('Load more'):count(1)`);
     await waitFor(".o-discuss-ChannelMember:count(101)");
-    await insertText("input[placeholder='Search members']", "Alice");
+    await insertText(".o-discuss-ChannelMemberList-search input[placeholder='Search']", "Alice");
     await waitFor(".o-discuss-ChannelMember:count(100)");
     const narrowSearchText = "Showing first 100 members. Narrow your search to see more.";
     await waitFor(`${actionPanel("Members")} span:text('${narrowSearchText}'):count(1)`);

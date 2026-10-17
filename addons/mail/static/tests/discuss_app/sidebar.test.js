@@ -14,9 +14,10 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import { PEEK_DELAY } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
-import { animationFrame, press, rightClick, waitForNone } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
+import { animationFrame, hover, press, queryFirst, rightClick, waitForNone } from "@odoo/hoot-dom";
+import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import {
     Command,
     contains,
@@ -741,5 +742,108 @@ test("Muted group chats show notification counter from mentions-only", async () 
     await waitForNone(".o-mail-MessagingMenuItem:has(:text('Sales Team')) .badge");
     await waitFor(
         ".o-mail-MessagingMenuItem:has(:text('Development Team')) .badge:text('1'):count(1)"
+    );
+});
+
+test("sidebar list collapses to avatars and expands back", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        { name: "General", channel_type: "channel" },
+        { name: "Sales", channel_type: "channel" },
+    ]);
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await click("button[title='Collapse sidebar']");
+    await waitFor(
+        ".o-mail-DiscussApp-sidebar.o-collapsed .o-mail-MessagingMenu.o-compact:count(1)"
+    );
+    await waitFor(".o-mail-MessagingMenu.o-compact button[title='New channel']:count(1)");
+    await waitFor(
+        ".o-mail-MessagingMenu.o-compact .o-mail-NotificationItem:has(:text('General')):count(1)"
+    );
+    await waitFor(
+        ".o-mail-MessagingMenu.o-compact .o-mail-NotificationItem:has(:text('Sales')):count(1)"
+    );
+    await click("button[title='Expand sidebar']");
+    await waitFor(".o-mail-DiscussApp-sidebar:not(.o-collapsed) .o-mail-MessagingMenu:count(1)");
+    await waitFor(
+        ".o-mail-MessagingMenu:not(.o-compact) .o-mail-MessagingMenu-filter:text('All'):count(1)"
+    );
+});
+
+test("collapsed sidebar list filters through a menu", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await click("button[title='Collapse sidebar']");
+    await click("button[title='Filter: All']");
+    await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
+    await click("[role='menuitemcheckbox']:text('Unread')");
+    await waitFor("button[title='Filter: Unread']:count(1)");
+});
+
+test("hovering the collapsed sidebar list shows it in full until the pointer leaves", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await click("button[title='Collapse sidebar']");
+    await waitFor(".o-mail-MessagingMenu.o-compact:count(1)");
+    await hover(".o-mail-MessagingMenu.o-compact");
+    await advanceTime(PEEK_DELAY);
+    await waitFor(
+        ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu:not(.o-compact):count(1)"
+    );
+    await click(".o-mail-NotificationItem:has(:text('General'))");
+    await waitFor(".o-mail-DiscussContent-threadName:value(General):count(1)");
+    await waitFor(
+        ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu:not(.o-compact):count(1)"
+    );
+    await hover(".o-mail-DiscussContent");
+    await waitFor(
+        ".o-mail-MessagingMenu-container:not(.o-peek) .o-mail-MessagingMenu.o-compact:count(1)"
+    );
+});
+
+test("clicking an avatar of the collapsed sidebar list opens its conversation", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        { name: "General", channel_type: "channel" },
+        { name: "Sales", channel_type: "channel" },
+    ]);
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await click("button[title='Collapse sidebar']");
+    await click(".o-mail-MessagingMenu.o-compact .o-mail-NotificationItem:has(:text('Sales'))");
+    await waitFor(".o-mail-DiscussContent-threadName:value(Sales):count(1)");
+    await waitFor(".o-mail-NotificationItem.o-active:has(:text('Sales')):count(1)");
+});
+
+test("filters that do not fit in the sidebar row are offered in a menu", async () => {
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await waitFor(".o-mail-MessagingMenu-filter:text('Thread'):count(1)");
+    queryFirst(".o-mail-DiscussApp-sidebar").style.width = "170px";
+    await click(".o-mail-MessagingMenu-filterMore:not(.invisible)");
+    await waitFor(".o-dropdown-item:text('Unread'):count(1)");
+    await click(".o-dropdown-item:text('Thread')");
+    await waitFor(".o-mail-MessagingMenu-filter.o-active:text('Thread'):count(1)");
+    await click(".o-mail-MessagingMenu-filterMore");
+    await waitFor(".o-dropdown-item:text('All'):count(1)");
+});
+
+test("collapsed sidebar list shows the search in the strip when no action has an icon", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await click("button[title='Collapse sidebar']");
+    await waitFor(
+        ".o-mail-MessagingMenu.o-compact .o-mail-MessagingMenu-searchRow:not(.o-searchInStrip):count(1)"
+    );
+    await click(".o-mail-MessagingMenu-tab[data-id='notification']");
+    await waitFor(
+        ".o-mail-MessagingMenu.o-compact .o-mail-MessagingMenu-searchRow.o-searchInStrip:count(1)"
     );
 });

@@ -7,13 +7,17 @@ import { useOnBottomScrolled, useSearch } from "@mail/utils/common/hooks";
 import { computedShallowEqual, incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
-import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
+import { Component, computed, onWillUnmount, signal, types, useEffect, useProps } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
+import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
+
+export const PEEK_DELAY = 150;
 
 /** Never a submenu of an ancestor Dropdown it's embedded in, even visually/positionally. */
 class IsolatedDropdown extends Dropdown {
@@ -24,6 +28,7 @@ class IsolatedDropdown extends Dropdown {
 
 export class MessagingMenu extends Component {
     static components = {
+        CheckboxItem,
         DiscussSearch,
         IsolatedDropdown,
         MessagingMenuItem,
@@ -33,6 +38,18 @@ export class MessagingMenu extends Component {
     static template = "mail.MessagingMenu";
 
     isIosPwa = isIOS() && isDisplayStandalone();
+    isCollapsible = computed(() => this.ancestors.inDiscussApp && !this.ui.isSmall);
+    isCompact = computed(
+        () => this.isCollapsible() && this.store.discuss.isSidebarCollapsed && !this.isPeeking()
+    );
+    isPeeking = signal(false);
+    /**
+     * Filters that do not fit in the row of the discuss sidebar, offered in "More" instead;
+     * `undefined` stands for "All".
+     *
+     * @type {import("@odoo/owl").Signal<Array<import("models").MessagingMenuTabFilter|undefined>>}
+     */
+    overflowFilters = signal([]);
     filteredMessages = computedShallowEqual(() => {
         const filters = [...this.state().activePluginFilters];
         if (this.state().selectedFilter) {
@@ -49,6 +66,7 @@ export class MessagingMenu extends Component {
         }
         return this.filteredMessages();
     });
+    filtersRef = signal.ref();
     tabContentRef = signal.ref();
 
     setup() {
@@ -81,6 +99,7 @@ export class MessagingMenu extends Component {
             deps: () => [this.filteredMessages()],
         });
         this.close = useProps.static("close", types.function().optional());
+        this.onToggleSidebar = useProps.static("onToggleSidebar", types.function().optional());
         this.searchInputAutofocus = useProps.static(
             "searchInputAutofocus",
             types.signal(types.number()).optional(() => signal(0))
@@ -100,6 +119,34 @@ export class MessagingMenu extends Component {
             this.messageSearch.searchTerm = this.state().searchTerm;
         });
         this.hasTouch = hasTouch;
+        // Opening the filters from the strip of avatars shows the full list.
+        this.filterDropdownState = useDropdownState({
+            onOpen: () => {
+                clearTimeout(this.peekTimeout);
+                this.isPeeking.set(true);
+            },
+        });
+        onWillUnmount(() => clearTimeout(this.peekTimeout));
+        useEffect(() => {
+            const filtersEl = this.filtersRef();
+            if (!filtersEl || !this.isCollapsible()) {
+                return;
+            }
+            void [this.activeTab().sortedFilters, this.state().selectedFilter];
+            const observer = new ResizeObserver(() => this.updateOverflowFilters(filtersEl));
+            for (const el of [filtersEl, ...filtersEl.children]) {
+                observer.observe(el);
+            }
+            return () => observer.disconnect();
+        });
+    }
+
+    allFilterText() {
+        return _t("All");
+    }
+
+    filterToggleTitle() {
+        return _t("Filter: %s", this.state().selectedFilter?.text ?? this.allFilterText());
     }
 
     get isEmpty() {
@@ -146,6 +193,81 @@ export class MessagingMenu extends Component {
             displayName: _t("Turn on notifications"),
             partner: this.store.odoobot,
         };
+    }
+
+    toggleSidebarTitle() {
+        return this.store.discuss.isSidebarCollapsed
+            ? _t("Expand sidebar")
+            : _t("Collapse sidebar");
+    }
+
+    closePeek() {
+        clearTimeout(this.peekTimeout);
+        this.isPeeking.set(false);
+        this.filterDropdownState.close();
+    }
+
+    onClickToggleSidebar() {
+        this.closePeek();
+        this.onToggleSidebar();
+    }
+
+    onMouseenter() {
+        if (this.isCompact()) {
+            clearTimeout(this.peekTimeout);
+            this.peekTimeout = setTimeout(() => this.isPeeking.set(true), PEEK_DELAY);
+        }
+    }
+
+    /** @param {MouseEvent} ev */
+    onMouseleave(ev) {
+        // Keep the list while using one of its dropdowns.
+        if (!ev.relatedTarget?.closest?.(".o-overlay-container")) {
+            this.closePeek();
+        }
+    }
+
+    /**
+     * Keeps in the row the filters that fit, the selected one always among them.
+     *
+     * @param {HTMLElement} filtersEl
+     */
+    updateOverflowFilters(filtersEl) {
+        const filters = [undefined, ...this.activeTab().sortedFilters];
+        const chips = filtersEl.querySelectorAll(":scope > .o-mail-MessagingMenu-filter");
+        const gap = parseFloat(getComputedStyle(filtersEl).columnGap) || 0;
+        const widths = [...chips].map((chip) => chip.offsetWidth + gap);
+        /** @param {number} available */
+        const countFitting = (available) => {
+            let count = 0;
+            let used = 0;
+            for (const width of widths) {
+                used += width;
+                if (used > available + gap) {
+                    break;
+                }
+                count++;
+            }
+            return count;
+        };
+        let count = countFitting(filtersEl.clientWidth);
+        if (count < filters.length) {
+            const moreEl = filtersEl.querySelector(".o-mail-MessagingMenu-filterMore");
+            count = Math.max(countFitting(filtersEl.clientWidth - moreEl.offsetWidth - gap), 1);
+        }
+        const fitting = filters.slice(0, count);
+        const selected = this.state().selectedFilter;
+        if (!fitting.includes(selected)) {
+            fitting[count - 1] = selected;
+        }
+        const overflow = filters.filter((filter) => !fitting.includes(filter));
+        const previous = this.overflowFilters();
+        if (
+            overflow.length !== previous.length ||
+            overflow.some((filter, index) => filter !== previous[index])
+        ) {
+            this.overflowFilters.set(overflow);
+        }
     }
 
     /** @param {import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabAction} action */

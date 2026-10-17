@@ -65,6 +65,13 @@ export class NotificationItem extends Component {
         return this.props.datetime?.toLocaleString(DateTime.DATE_MED);
     }
 
+    hasBadge() {
+        return (
+            this.props.counter > 0 ||
+            (this.props.counter === 0 && !this.props.muted && !this.props.important)
+        );
+    }
+
     get message() {
         return this.props.thread?.newestPersistentOfAllMessage;
     }

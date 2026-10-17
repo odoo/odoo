@@ -39,6 +39,21 @@
     }
 }
 
+/* Unread marker on the avatar, shown when the text with the badge is not. */
+.o-mail-NotificationItem-avatarDot {
+    top: -2px;
+    inset-inline-end: -2px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--mail-Notification-badgeMutedBg, var(--gray-500));
+    outline: 2px solid var(--mail-DiscussApp-listBg, var(--o-view-background-color));
+    opacity: 0;
+
+    &.o-important {
+        background-color: var(--danger);
+    }
+}
+
 .o-mail-NotificationItem-country {
     width: 14px;
     bottom: -2px;
