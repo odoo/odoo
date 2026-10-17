@@ -14,6 +14,7 @@ import { mountPosApp } from "@point_of_sale/../tests/unit/ui_utils";
 import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ResCurrency } from "./data/res_currency.data";
+import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 
 const { DateTime } = luxon;
 
@@ -621,4 +622,28 @@ export function enableCashRounding(store, method = "UP", onlyCash = true) {
     store.config.cash_rounding = true;
     store.config.only_round_cash_method = onlyCash;
     return rounding;
+}
+
+/**
+ * Adds payment terminals sharing the same provider to the config, so that a
+ * default payment method can be selected for them.
+ */
+export function addTestTerminals(store, count = 2) {
+    const terminals = [];
+    for (let i = 1; i <= count; i++) {
+        const terminal = store.models["pos.payment.method"].create({
+            id: 1100 + i,
+            name: `Test Terminal ${i}`,
+            payment_provider: "test_terminal",
+            payment_method_type: "terminal",
+            type: "bank",
+            sequence: 10 + i,
+        });
+        terminal._payment_provider_name = "Test Provider";
+        terminal.payment_interface = new PaymentInterface(store, terminal);
+        terminals.push(terminal);
+    }
+    store.config.payment_method_ids = [...store.config.payment_method_ids, ...terminals];
+    store.paymentMethods.initDefaults();
+    return terminals;
 }
