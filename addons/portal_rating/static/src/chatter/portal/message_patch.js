@@ -83,12 +83,14 @@ patch(Message.prototype, {
     onClikEditComment() {
         this.state.editRating = !this.state.editRating;
         if (this.state.editRating) {
-            const messageContent = convertBrToLineBreak(
-                this.props.message.rating_id.publisher_comment
-            );
+            // reopened with its unsent comment: the composer saves it locally asynchronously,
+            // which can be too late for the reopened composer to restore it
+            const composerHtml =
+                this.publisherCommentDraft ?? this.props.message.rating_id.publisher_comment;
+            const messageContent = convertBrToLineBreak(composerHtml);
             this.props.message.composer = {
                 message: this.props.message,
-                composerHtml: this.props.message.rating_id.publisher_comment,
+                composerHtml,
                 portalComment: true,
                 selection: {
                     start: messageContent.length,
@@ -97,6 +99,10 @@ patch(Message.prototype, {
                 },
             };
         } else {
+            const composer = this.message.composer;
+            this.publisherCommentDraft = composer?.isComposerHtmlEmpty
+                ? undefined
+                : composer?.composerHtml;
             this.message.composer = null;
         }
     },
@@ -104,6 +110,7 @@ patch(Message.prototype, {
     exitEditCommentMode() {
         this.props.message.composer.clear();
         this.message.composer = null;
+        this.publisherCommentDraft = undefined;
         this.state.editRating = false;
     },
 
