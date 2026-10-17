@@ -101,9 +101,10 @@ export class CalendarArchParser {
                             };
                             const filterInfo = filtersInfo[fieldName];
                             filterInfo.avatarFieldName = node.getAttribute("avatar_field") || null;
-                            filterInfo.colorFieldName =
-                                (node.hasAttribute("filters") && node.getAttribute("color")) ||
-                                null;
+                            if (node.hasAttribute("filters")) {
+                                filterInfo.colorFieldName = node.getAttribute("color") || null;
+                                filterInfo.resModel = fieldInfo.options.relation || field.relation;
+                            }
                             filterInfo.filterFieldName = node.getAttribute("filter_field") || null;
                             filterInfo.writeFieldName = node.getAttribute("write_field") || null;
                             filterInfo.writeResModel = node.getAttribute("write_model") || null;

@@ -216,3 +216,19 @@ test("showUnusualDays", () => {
     expect(parseWith({ show_unusual_days: "False" }).showUnusualDays).toBe(false);
     expect(parseWith({ show_unusual_days: "0" }).showUnusualDays).toBe(false);
 });
+
+test("filters resModel parsing", () => {
+    const resultDefault = parseArch(`
+        <calendar date_start="start_date">
+            <field name="user_id" filters="1"/>
+        </calendar>
+    `);
+    expect(resultDefault.filtersInfo.user_id.resModel).toBe("user");
+
+    const resultCustom = parseArch(`
+        <calendar date_start="start_date">
+            <field name="user_id" filters="1" options="{'relation': 'custom.model'}"/>
+        </calendar>
+    `);
+    expect(resultCustom.filtersInfo.user_id.resModel).toBe("custom.model");
+});
