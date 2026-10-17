@@ -12,14 +12,15 @@ import {
 function useResizable({
     containerRef,
     handleRef,
-    initialWidth = 400,
+    getInitialWidth = () => 400,
     getMinWidth = () => 400,
     onResize = () => {},
     getResizeSide = () => "end",
 }) {
     containerRef = typeof containerRef == "string" ? useRef(containerRef) : containerRef;
     handleRef = typeof handleRef == "string" ? useRef(handleRef) : handleRef;
-    const props = useComponent().props;
+    const component = useComponent();
+    const props = component.props;
 
     let minWidth = getMinWidth(props);
     let resizeSide = getResizeSide(props);
@@ -47,10 +48,18 @@ function useResizable({
 
     onMounted(() => {
         if (handleRef.el) {
-            resize(initialWidth);
             handleRef.el.addEventListener("mousedown", onMouseDown);
         }
     });
+
+    useEffect(
+        (initialWidth) => {
+            if (handleRef.el && !isChangingSize) {
+                resize(initialWidth);
+            }
+        },
+        () => [getInitialWidth(component.props)]
+    );
 
     onWillUpdateProps((nextProps) => {
         minWidth = getMinWidth(nextProps);
@@ -148,7 +157,7 @@ export class ResizablePanel extends Component {
             containerRef: "containerRef",
             handleRef: "handleRef",
             onResize: this.props.onResize,
-            initialWidth: this.props.initialWidth,
+            getInitialWidth: (props) => props.initialWidth ?? 400,
             getMinWidth: (props) => props.minWidth,
             getResizeSide: (props) => props.handleSide,
         });

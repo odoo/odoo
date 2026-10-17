@@ -1312,6 +1312,28 @@ test("Sidebar compact is crosstab synced", async () => {
     );
     await contains(`${env1.selector} .o-mail-DiscussSidebar.o-compact`);
     await contains(`${env2.selector} .o-mail-DiscussSidebar.o-compact`);
+    await animationFrame();
+    expect(
+        queryFirst(`${env2.selector} .o-mail-DiscussSidebar`).getBoundingClientRect().width
+    ).toBeLessThan(101);
+    await (
+        await drag(
+            `.o-mail-Discuss-asTabContainer[data-as-tab-id='${env1.discussAsTabId}']
+            .o-mail-DiscussSidebar-resizablePanelContainer
+            .o_resizable_panel_handle`
+        )
+    ).drop(
+        `.o-mail-Discuss-asTabContainer[data-as-tab-id='${env1.discussAsTabId}']
+        .o-mail-DiscussSidebar-resizablePanelContainer
+        .o_resizable_panel_handle`,
+        { position: { x: 1000 } }
+    );
+    await contains(`${env1.selector} .o-mail-DiscussSidebar:not(.o-compact)`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebar:not(.o-compact)`);
+    await animationFrame();
+    expect(
+        queryFirst(`${env2.selector} .o-mail-DiscussSidebar`).getBoundingClientRect().width
+    ).toBeGreaterThan(100);
 });
 
 test("Redirect to the thread containing the starred message and highlight the message", async () => {
