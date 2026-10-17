@@ -200,7 +200,7 @@ class PosPaymentMethod(models.Model):
         response = requests.get(qr_url, params={
             'f': 'PNG',
             's': 'XL',
-            'c': f'https://payconiq.com/l/1/{self.bancontact_ppid}/pm{self.id}',
+            'c': f'https://pay.bancontact.net/l/1/{self.bancontact_ppid}/pm{self.id}',
         }, timeout=10)
         response.raise_for_status()
         return response.content

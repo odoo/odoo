@@ -26,10 +26,10 @@ class BancontactPayController(http.Controller):
         payment_method = request.env['pos.payment.method'].browse(payment_method_id)
 
         lang = request.env.context.get('lang')
-        frame_lang = lang.split('_')[0] if lang else 'fr'
-        supported_frames = ['fr', 'nl']
+        frame_lang = lang.split('_')[0] if lang else 'en'
+        supported_frames = ['en', 'fr', 'nl', 'de']
         if frame_lang not in supported_frames:
-            frame_lang = 'fr'
+            frame_lang = 'en'
 
         # load frame
         frame_path = file_path(f'pos_bancontact_pay/static/img/frames/frame_{frame_lang}.png')
@@ -90,9 +90,15 @@ class BancontactPayController(http.Controller):
             return http.Response(status=204)
 
         payment = self._get_bancontact_payment(bancontact_id, payment_method, pos_config)
-        if payment and self._is_bancontact_payment_finalized(payment):
-            _logger.info("%s webhook ignored: payment already finalized (paymentId=%s)", log_prefix, bancontact_id)
-            return http.Response(status=204)
+        if payment:
+            if self._is_bancontact_payment_finalized(payment):
+                _logger.info("%s webhook ignored: payment already finalized (paymentId=%s)", log_prefix, bancontact_id)
+                return http.Response(status=204)
+
+            if bancontact_status == "SUCCEEDED":
+                payment.write({"qr_code": False, "payment_status": "done"})
+            else:
+                payment.write({"qr_code": False, "payment_status": "retry", "bancontact_id": False})
 
         _logger.info("%s webhook processed: paymentId=%s, status=%s", log_prefix, bancontact_id, bancontact_status)
         self._notify_pos(pos_config, bancontact_id, bancontact_status)
