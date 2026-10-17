@@ -224,7 +224,7 @@ class PurchaseOrderLine(models.Model):
                     move.product_uom_qty *= -1
                     move.location_id = picking.location_id
                     move.location_dest_id = move.forecasted_location_id = picking.location_dest_id
-                move.with_context(move_picking_partner_id=line.partner_id)._action_confirm()._action_assign()
+                move._action_confirm()._action_assign()
 
     def _get_move_dests_initial_demand(self, move_dests):
         return self.product_id.uom_id._compute_quantity(
@@ -336,7 +336,7 @@ class PurchaseOrderLine(models.Model):
             'location_dest_id': location_dest.id,
             'forecasted_location_id': location_final.id,
             'picking_id': picking.id if picking else False,
-            'partner_id': self.order_id.dest_address_id.id or self.order_id.partner_id.id,
+            'partner_id': self.order_id.partner_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
             'state': 'draft',
             'purchase_line_id': self.id,
