@@ -66,20 +66,23 @@
         }
 
         .o_event_to_schedule_draggable {
-            /* This is necessary because it lets fullcalendar override the display */
-            /* style when needed (unlike with bootstrap's d-flex) */
-            display: flex;
-            max-width: fit-content;
-            .o_event_to_schedule_handle {
-                cursor: grab;
-                color: #adb5bd;
-                &:hover {
-                    color: #666666;
-                }
+            .o_card_record {
+                /* the card is draggable: override the pointer cursor set by
+                   cursor-pointer (a utility class, hence !important) */
+                cursor: grab !important;
+                background-color: var(--o-view-background-color);
             }
-            &.o_dragged .o_event_to_schedule_handle {
-                color: #666666;
-            }
+        }
+    }
+}
+
+/* this selector matches a dragged card (when it's cloned directly inside body */
+body > .o_event_to_schedule_draggable {
+    .o_card_record {
+        border-color: var(--gray-400);
+
+        * {
+            visibility: hidden;
         }
     }
 }
