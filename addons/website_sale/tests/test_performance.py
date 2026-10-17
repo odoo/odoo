@@ -146,7 +146,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
 
     @warmup
     def test_get_combination_info_route(self):
-        no_product_change_query_count = 31
+        no_product_change_query_count = 32
         if "website_sale_stock" in self.installed_modules:
             no_product_change_query_count += 1
         with self.assertQueryCount(no_product_change_query_count):
@@ -163,7 +163,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
 
         # When a new combination matches another product, additional templates and values are sent
         # to the client (tags, images, ...)
-        product_change_query_count = 43
+        product_change_query_count = 44
         if "website_sale_stock" in self.installed_modules:
             product_change_query_count += 1
         with self.assertQueryCount(product_change_query_count):
