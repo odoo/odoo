@@ -42,6 +42,10 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         # Use new helpers
         return self._export_invoice_new(invoice)
 
+    def _ubl_export_line_trade_references(self, vals):
+        # Order, delivery order and delivery address per line (multi-order / multi-delivery invoices).
+        return True
+
     def _export_invoice_constraints_new(self, invoice, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         constraints = super()._export_invoice_constraints_new(invoice, vals)

@@ -458,6 +458,12 @@ class AccountEdiCommon(models.AbstractModel):
     def _get_default_notes(self, vals):
         return {}
 
+    def _get_line_trade_references(self, vals, base_line):
+        """ References of an invoice line to what it comes from, for invoices grouping several orders / deliveries.
+        Optional keys: ship_to (res.partner), order_ref (the buyer's order), despatch_ref and despatch_line_ref.
+        """
+        return {}
+
     # -------------------------------------------------------------------------
     # Import invoice
     # -------------------------------------------------------------------------
@@ -1503,6 +1509,57 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _import_invoice_line_add_optional_fields(self, collected_values):
         return {}
+
+    def _import_format_address(self, address_values):
+        if not address_values:
+            return ''
+        zip_city = " ".join(filter(None, [address_values.get('zip'), address_values.get('city')]))
+        gln = address_values.get('gln') and f"GLN {address_values['gln']}"
+        return ", ".join(filter(None, [
+            address_values.get('name'),
+            gln,
+            address_values.get('street'),
+            address_values.get('street2'),
+            address_values.get('street3'),
+            zip_city,
+            address_values.get('state'),
+            address_values.get('country_code'),
+        ]))
+
+    def _import_invoice_line_add_trade_references(self, collected_values, line_id, trade_references, invoice_ship_to):
+        collected_values['trade_references'] = trade_references
+
+        details = []
+        if order_ref := trade_references.get('order_ref'):
+            details.append(self.env._("Order: %s", order_ref))
+        if despatch_ref := trade_references.get('despatch_ref'):
+            if despatch_line_ref := trade_references.get('despatch_line_ref'):
+                details.append(self.env._(
+                    "Delivery slip: %(slip)s (line %(line)s)", slip=despatch_ref, line=despatch_line_ref,
+                ))
+            else:
+                details.append(self.env._("Delivery slip: %s", despatch_ref))
+        address = self._import_format_address(trade_references.get('ship_to'))
+        if address and address != self._import_format_address(invoice_ship_to):
+            details.append(self.env._("Delivered to: %s", address))
+        if details:
+            line_name = collected_values.get('name')
+            line = self.env._("Line %s", f"{line_id} ({line_name})" if line_name else line_id)
+            collected_values['logs'].append(" - ".join([line, *details]))
+
+    def _import_invoice_add_lines_order_refs(self, collected_values):
+        # So that an invoice grouping several orders is matched with all of them.
+        to_write = collected_values['to_write']
+        origin = to_write.get('invoice_origin')
+        known_refs = {ref.strip() for ref in (origin or '').split(',')}
+        new_refs = []
+        for line_collected_values in collected_values['lines_collected_values']:
+            order_ref = line_collected_values.get('trade_references', {}).get('order_ref')
+            if order_ref and order_ref not in known_refs:
+                known_refs.add(order_ref)
+                new_refs.append(order_ref)
+        if new_refs:
+            to_write['invoice_origin'] = ",".join(filter(None, [origin, *new_refs]))
 
     def _import_invoice_add_base_lines(self, collected_values):
         AccountTax = self.env['account.tax']
