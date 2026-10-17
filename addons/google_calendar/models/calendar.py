@@ -45,7 +45,7 @@ class CalendarEvent(models.Model):
 
     @api.model
     def _get_google_synced_fields(self):
-        return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
+        return {'name', 'description', 'allday', 'start', 'date_end', 'stop', 'current_status',
                 'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as', 'videocall_location'}
 
     @api.model
