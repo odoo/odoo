@@ -1,10 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request
+from odoo.tools import OrderedSet
+from odoo.tools.date_utils import localized
 
+from odoo.addons.website_sale.models.delivery_carrier import UNAVAILABLE_DAYS_BUFFER
 from odoo.addons.website_sale_collect import utils
 
 
@@ -19,7 +24,9 @@ class DeliveryCarrier(models.Model):
     @api.depends("delivery_type")
     def _compute_support_test_environment(self):
         super()._compute_support_test_environment()
-        self.filtered(lambda carrier: carrier.delivery_type == "in_store").support_test_environment = False
+        self.filtered(
+            lambda carrier: carrier.delivery_type == "in_store"
+        ).support_test_environment = False
 
     def _compute_support_pickup_locations(self):
         in_store_dms = self.filtered(lambda dm: dm.delivery_type == "in_store")
@@ -86,6 +93,7 @@ class DeliveryCarrier(models.Model):
         return {
             "integration_level": "rate",
             "allow_cash_on_delivery": False,
+            "delivery_calendar_id": False,  # In-store estimates use the hours of the store.
             "country_ids": False,
             "state_ids": False,
             "zip_prefix_ids": False,
@@ -161,6 +169,41 @@ class DeliveryCarrier(models.Model):
             "country_data": country_values,
             "pickup_location_data": sorted(pickup_locations, key=lambda k: k["distance"]),
         }
+
+    def _get_calendar_available_days(self, order=None):
+        """Override of `website_sale` to deliver according to the opening hours of the store.
+
+        The store is the one that the customer selected, or the store of the delivery method when
+        it has only one. A store without opening hours is open every day.
+
+        :param sale.order order: The order to deliver, if any.
+        """
+        self.ensure_one()
+        if self.delivery_type != "in_store":
+            return super()._get_calendar_available_days(order=order)
+
+        if order and order.carrier_id == self and order.partner_shipping_id.pickup_location_data:
+            warehouse = order.warehouse_id
+        elif len(self.warehouse_ids) == 1:
+            warehouse = self.warehouse_ids
+        else:
+            return []
+
+        now = fields.Datetime.now()
+        if not warehouse.opening_hours:
+            return [
+                (now.date() + timedelta(days=day)).isoformat()
+                for day in range(self.delivery_estimate_max_days + 1)
+            ]
+
+        utc_now = localized(now)  # `_work_intervals_batch` requires a timezone
+        utc_end = utc_now + timedelta(
+            days=self.delivery_estimate_max_days + UNAVAILABLE_DAYS_BUFFER
+        )
+        availabilities = warehouse.opening_hours._work_intervals_batch(utc_now, utc_end)[False]
+        return list(
+            OrderedSet(availability[0].date().isoformat() for availability in availabilities)
+        )
 
     def in_store_rate_shipment(self, *_args):
         return {

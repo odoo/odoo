@@ -15,9 +15,9 @@ class TestDeliveryCarrier(WebsiteSaleCommon):
 
     def _enable_delivery_estimate(self, carrier):
         carrier.write({
-            "enable_delivery_estimate": True,
-            "delivery_estimate_lead_days": 1,
-            "delivery_estimate_range_days": 5,
+            "delivery_estimate_mode": "user_choice",
+            "delivery_estimate_min_days": 1,
+            "delivery_estimate_max_days": 5,
             "delivery_calendar_id": self.env["resource.calendar"].search([], limit=1).id,
         })
 
@@ -31,13 +31,31 @@ class TestDeliveryCarrier(WebsiteSaleCommon):
             self.carrier,
             [
                 {
-                    "enable_delivery_estimate": True,
-                    "delivery_estimate_lead_days": 1,
-                    "delivery_estimate_range_days": 5,
+                    "delivery_estimate_mode": "user_choice",
+                    "delivery_estimate_min_days": 1,
+                    "delivery_estimate_max_days": 5,
                     "delivery_calendar_id": self.env["resource.calendar"].search([], limit=1).id,
                 }
             ],
         )
+
+    def test_estimated_delivery_max_days_kept_valid_when_fixed(self):
+        """The fixed mode raises the maximum to the fixed day only when it is below it."""
+        self.carrier.write({"delivery_estimate_mode": "fixed", "delivery_estimate_min_days": 6})
+        self.assertEqual(self.carrier.delivery_estimate_max_days, 6)
+
+        self.carrier.write({
+            "delivery_estimate_mode": "user_choice",
+            "delivery_estimate_max_days": 10,
+        })
+        self.carrier.delivery_estimate_mode = "fixed"
+        self.carrier.delivery_estimate_mode = "user_choice"
+        self.assertRecordValues(
+            self.carrier, [{"delivery_estimate_min_days": 6, "delivery_estimate_max_days": 10}]
+        )
+
+        self.carrier.write({"delivery_estimate_mode": "fixed", "delivery_estimate_min_days": 12})
+        self.assertEqual(self.carrier.delivery_estimate_max_days, 12)
 
     def test_estimated_delivery_settings_reset_when_switching_to_unsupported_type(self):
         """Estimated delivery settings are reset when the new type does not support them."""
@@ -54,9 +72,9 @@ class TestDeliveryCarrier(WebsiteSaleCommon):
             self.carrier,
             [
                 {
-                    "enable_delivery_estimate": False,
-                    "delivery_estimate_lead_days": 0,
-                    "delivery_estimate_range_days": 0,
+                    "delivery_estimate_mode": "none",
+                    "delivery_estimate_min_days": 0,
+                    "delivery_estimate_max_days": 0,
                     "delivery_calendar_id": False,
                 }
             ],
