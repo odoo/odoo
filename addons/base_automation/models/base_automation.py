@@ -904,7 +904,7 @@ class BaseAutomation(models.Model):
                 write.origin(self.with_env(automations.env), vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for automation in automations.with_context(old_values=old_values):
-                    with _keep_to_compute(self.env, written_fields):
+                    with _keep_to_compute(self.env, self.env._protected):
                         _logger.debug(
                             "Processing automation rule %s (#%s) on %s records (write)",
                             automation.sudo().name, automation.sudo().id, len(records),
