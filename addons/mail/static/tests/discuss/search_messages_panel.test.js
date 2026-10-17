@@ -519,3 +519,41 @@ test("Search should trigger a single store fetch", async () => {
     await waitStoreFetch("/discuss/channel/messages");
     await waitStoreFetch();
 });
+
+test.tags("desktop");
+test("Empty search should not trigger rpc", async () => {
+    listenStoreFetch("/discuss/channel/messages", {
+        logParams: ["/discuss/channel/messages"]
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "This is a message",
+        attachment_ids: [],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await click("button[title='Search Messages']");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelId, fetch_params: { limit: 60, around: 0 } },
+        ],
+    ]);
+    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input");
+    await editInput(document.body, ".o-mail-SearchInput input", "          ");
+    await animationFrame();
+    await insertText(".o-mail-SearchInput input", "m", { replace: true });
+    await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelId, fetch_params: { search_term: "m", before: false } },
+        ],
+    ]);
+});
