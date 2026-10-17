@@ -177,18 +177,6 @@ class AccountEdiUBLPint(models.AbstractModel):
 
         super()._ubl_add_party_tax_scheme_nodes_vat_gst(vals)
 
-        partner = vals['party_vals']['partner']
-        commercial_partner = partner.commercial_partner_id
-        nodes = vals['party_node']['cac:PartyTaxScheme']
-        if not nodes and commercial_partner.peppol_endpoint and commercial_partner.peppol_eas:
-            # Fallback: TaxScheme based on partner's EAS/Endpoint (removed with multi-id)
-            nodes.append({
-                'cbc:CompanyID': {'_text': commercial_partner.peppol_endpoint},
-                'cac:TaxScheme': {
-                    'cbc:ID': {'_text': commercial_partner.peppol_eas},
-                },
-            })
-
     def _ubl_add_party_legal_entity_nodes(self, vals):
         super()._ubl_add_party_legal_entity_nodes(vals)
         self._ubl_add_party_legal_entity_nodes_iso_6523_icd(vals)
