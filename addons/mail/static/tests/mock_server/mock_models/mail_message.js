@@ -75,6 +75,8 @@ export class MailMessage extends models.ServerModel {
         for_current_user = kwargs.for_current_user ?? false;
         add_followers = kwargs.add_followers ?? false;
 
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailFollowers} */
@@ -181,6 +183,14 @@ export class MailMessage extends models.ServerModel {
                     makeKwArgs({ as_thread: true, only_id: true })
                 ),
             });
+            if (message.model === "discuss.channel") {
+                data.linkedSubChannel = mailDataHelpers.Store.one(
+                    DiscussChannel.browse(
+                        DiscussChannel.search([["from_message_id", "=", message.id]])
+                    ),
+                    makeKwArgs({ as_thread: true, only_id: true })
+                );
+            }
             if (message.subtype_id) {
                 const [subtype] = MailMessageSubtype.browse(message.subtype_id);
                 data.subtype_description = subtype.description;

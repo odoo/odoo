@@ -98,6 +98,58 @@ test("create sub thread from existing message", async () => {
     await contains(".o-mail-Discuss-threadName", { value: "Selling a training session and" });
 });
 
+test("view sub thread of a message when not a member of the sub thread", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        res_id: channelId,
+        body: "<p>Hello world</p>",
+    });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
+        from_message_id: messageId,
+        name: "Bob's thread",
+        parent_channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message-actions [title='Expand']");
+    await click("[title='View Thread']");
+    await contains(".o-mail-Discuss-threadName", { value: "Bob's thread" });
+});
+
+test("view sub thread created by another user from an open channel", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const userId = pyEnv["res.users"].create({ name: "Bob", partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "General",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        res_id: channelId,
+        body: "<p>Hello world</p>",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { text: "Hello world" });
+    await withUser(userId, () =>
+        rpc("/discuss/channel/sub_channel/create", {
+            from_message_id: messageId,
+            parent_channel_id: channelId,
+        })
+    );
+    await click(".o-mail-Message:contains('Hello world') .o-mail-Message-actions [title='Expand']");
+    await click("[title='View Thread']");
+    await contains(".o-mail-Discuss-threadName", { value: "Hello world" });
+});
+
 test("create sub thread from existing message (slow network)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

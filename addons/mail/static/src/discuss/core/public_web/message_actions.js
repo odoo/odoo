@@ -7,9 +7,12 @@ messageActionsRegistry.add("create-or-view-thread", {
         component.message.thread.hasSubChannelFeature &&
         component.store.self.isInternalUser,
     icon: "fa fa-comments-o",
-    onClick: (component) => {
+    onClick: async (component) => {
         if (component.message.linkedSubChannel) {
-            component.message.linkedSubChannel.open();
+            const subChannel = await component.store.Thread.getOrFetch(
+                component.message.linkedSubChannel
+            );
+            subChannel?.open();
         } else {
             component.message.thread.createSubChannel({ initialMessage: component.message });
         }
