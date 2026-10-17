@@ -1509,6 +1509,9 @@ class HrExpense(models.Model):
         approver_group = 'hr_expense.group_hr_expense_team_approver'
 
         employee = self.employee_id.sudo()
+        if employee.user_id and employee.user_id.has_groups(approver_group):
+            return employee.user_id.sudo(False)
+
         expense_manager = employee.expense_manager_id - employee.user_id
         if expense_manager:
             return expense_manager.sudo(False)
