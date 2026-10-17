@@ -438,7 +438,7 @@ class Website(models.Model):
                                 'id': cat.id,
                             }
                             for cat in ecommerce_categories
-                        ])
+                        ], ensure_ascii=False)
 
                 if footer_updated:
                     footer_view.write({'arch': etree.tostring(arch_tree)})
