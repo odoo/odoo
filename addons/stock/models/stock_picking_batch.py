@@ -334,7 +334,7 @@ class StockPickingBatch(models.Model):
 
         target_batch = self[:1]
         other_batches = self[1:]
-        earliest_batch = self.filtered(lambda b: b.scheduled_date).sorted(key=lambda b: b.scheduled_date)[0]
+        earliest_batch = self.filtered('scheduled_date').sorted('scheduled_date')[:1] or self[:1]
         merged_batch_vals = earliest_batch._get_merged_batch_vals()
         target_batch.move_line_ids |= other_batches.move_line_ids
         target_batch.picking_ids |= other_batches.picking_ids
