@@ -311,8 +311,8 @@ export class TicketScreen extends Component {
             }
             if (this.state.selectedOrderlineIds[order.id] == orderline.id) {
                 const toRefundDetail = this.getToRefundDetail(orderline);
-                if (Object.values(toRefundDetail).some((detail) => detail.destination_order_uuid)) {
-                    return;
+                if (this._isRefundInProgress(toRefundDetail)) {
+                    return this._showRefundInProgress();
                 }
                 if (toRefundDetail.qty >= toRefundDetail.refundableQty) {
                     toRefundDetail.qty = 0;
@@ -339,8 +339,9 @@ export class TicketScreen extends Component {
     }
     _setToRefundDetail(toRefundDetail, buffer) {
         // When already linked to an order, do not modify the to refund quantity.
-        if (toRefundDetail.destionation_order_id) {
-            return this.numberBuffer.reset();
+        if (this._isRefundInProgress(toRefundDetail)) {
+            this.numberBuffer.reset();
+            return this._showRefundInProgress();
         }
 
         if (toRefundDetail.refundableQty <= 0) {
@@ -368,6 +369,40 @@ export class TicketScreen extends Component {
             }
         }
     }
+    /**
+     * Whether the quantity of the detail sits in a refund order that is not paid yet.
+     * @param {PosOrderLineRefund} [toRefundDetail]
+     * @returns {boolean}
+     */
+    _isRefundInProgress(toRefundDetail) {
+        const destinationOrder = toRefundDetail?.destinationOrder;
+        return Boolean(destinationOrder && !destinationOrder.finalized);
+    }
+    _showRefundInProgress() {
+        // Every buffered keystroke is rejected on its own: alert only once.
+        if (this.isRefundInProgressShown) {
+            return;
+        }
+        this.isRefundInProgressShown = true;
+        this.dialog.add(
+            AlertDialog,
+            {
+                title: _t("Refund in process"),
+                body: _t(
+                    "A refund is already in progress for this order. Pay or delete it before refunding again."
+                ),
+            },
+            { onClose: () => (this.isRefundInProgressShown = false) }
+        );
+    }
+    /**
+     * The selected line of the order, or its combo parent: the line whose quantity
+     * to refund is edited.
+     */
+    _getSelectedRefundLine(order) {
+        const orderline = order.lines.find((line) => line.id == this.getSelectedOrderlineId());
+        return orderline?.combo_parent_id || orderline;
+    }
     _onUpdateSelectedOrderline({ key, buffer }) {
         const order = this.getSelectedOrder();
         if (!order) {
@@ -375,13 +410,9 @@ export class TicketScreen extends Component {
         }
 
         const selectedOrderlineId = this.getSelectedOrderlineId();
-        let orderline = order.lines.find((line) => line.id == selectedOrderlineId);
+        const orderline = this._getSelectedRefundLine(order);
         if (!orderline) {
             return this.numberBuffer.reset();
-        }
-
-        if (orderline.combo_parent_id) {
-            orderline = orderline.combo_parent_id;
         }
 
         const parentToRefundDetail = this.getToRefundDetail(orderline);
@@ -433,6 +464,26 @@ export class TicketScreen extends Component {
         }
 
         const partner = order.getPartner();
+        const refundableDetails = this._getRefundableDetails(partner, order);
+        if (!refundableDetails.length) {
+            return;
+        }
+        // The refunded order may use a fiscal position this POS does not load, even an
+        // archived one: fetch it, the refund must be taxed like the order it refunds.
+        const fiscalPositionId = order.raw.fiscal_position_id;
+        if (fiscalPositionId && !order.fiscal_position_id && !this.pos.data.network.offline) {
+            await this._loadFiscalPosition(fiscalPositionId);
+        }
+        if (fiscalPositionId && !order.fiscal_position_id) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Fiscal Position not found"),
+                body: _t(
+                    "The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration."
+                ),
+            });
+            return;
+        }
+
         // The order that will contain the refund orderlines.
         // We select the order if it is empty, else we create a new one.
         const destinationOrder = this._getEmptyOrder(partner);
@@ -441,7 +492,7 @@ export class TicketScreen extends Component {
         destinationOrder.pricelist_id = order.pricelist_id;
         // Add orderline for each toRefundDetail to the destinationOrder.
         const lines = [];
-        for (const refundDetail of this._getRefundableDetails(partner, order)) {
+        for (const refundDetail of refundableDetails) {
             const line = this.pos.models["pos.order.line"].create(
                 this.getRefundLinesDetails(refundDetail, destinationOrder)
             );
@@ -459,17 +510,6 @@ export class TicketScreen extends Component {
             refundComboParent.combo_line_ids = [["link", ...children]];
         }
 
-        //Add a check too see if the fiscal position exist in the pos
-        if (order.fiscal_position_not_found) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Fiscal Position not found"),
-                body: _t(
-                    "The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration."
-                ),
-            });
-            return;
-        }
-
         // A refund is taxed like the order it refunds, even when that order has no fiscal position.
         destinationOrder.fiscal_position_id = order.fiscal_position_id || false;
         // Set the partner to the destinationOrder.
@@ -484,6 +524,27 @@ export class TicketScreen extends Component {
         this.pos.navigate("PaymentScreen", { orderUuid: destinationOrder.uuid });
     }
 
+    async _loadFiscalPosition(fiscalPositionId) {
+        await this.pos.data.callRelated(
+            "pos.session",
+            "load_data",
+            [
+                this.pos.session.id,
+                {
+                    models: ["account.fiscal.position"],
+                    search_params: {
+                        "account.fiscal.position": {
+                            domain: [["id", "=", fiscalPositionId]],
+                            context: { active_test: false },
+                        },
+                    },
+                    only_records: true,
+                },
+            ],
+            {},
+            false
+        );
+    }
     getRefundLinesDetails(refundDetail, destinationOrder) {
         const refundLine = refundDetail.line;
         return {
@@ -736,12 +797,20 @@ export class TicketScreen extends Component {
         }
         // A just-typed quantity may still be waiting on useWithBarcode's delay: don't grey
         // out the action while it is, or a quick click right after typing would land on a
-        // disabled button instead of reaching onClickRefund's own capture().
+        // disabled button instead of reaching onClickRefund's own capture(). A line that
+        // rejects any input (already in a pending refund, nothing left to refund) does not.
         if (this.numberBuffer.hasPendingInput()) {
-            return true;
+            const line = this._getSelectedRefundLine(order);
+            if (
+                line &&
+                line.qty - line.refundedQty > 0 &&
+                !this._isRefundInProgress(order.uiState.lineToRefund[line.uuid])
+            ) {
+                return true;
+            }
         }
         const total = Object.values(order.uiState.lineToRefund).reduce((acc, val) => {
-            if (!val.destination_order_uuid) {
+            if (!val.destinationOrder) {
                 acc += val.qty;
             }
             return acc;
@@ -788,6 +857,9 @@ export class TicketScreen extends Component {
             return false;
         }
         const theOrderline = orderlines[0];
+        if (this._isRefundInProgress(order.uiState.lineToRefund[theOrderline.uuid])) {
+            return false;
+        }
         const refundableQty = theOrderline.getQuantity() - theOrderline.refundedQty;
         return this.pos.isProductQtyZero(refundableQty - 1);
     }
@@ -817,7 +889,12 @@ export class TicketScreen extends Component {
     getToRefundDetail(orderline) {
         const lineToRefund = orderline.order_id.uiState.lineToRefund;
 
-        if (orderline.uuid in lineToRefund) {
+        // Once its refund order is paid, the detail is only cleared when that order syncs:
+        // start a new one for the quantity still refundable.
+        if (
+            orderline.uuid in lineToRefund &&
+            !lineToRefund[orderline.uuid].destinationOrder?.finalized
+        ) {
             return lineToRefund[orderline.uuid];
         }
 
