@@ -769,7 +769,7 @@ class TestQWebBasic(TransactionCase):
 
         IrQweb = self.env['ir.qweb']
         for expr, q_values, result in tests:
-            compile_context = {}
+            compile_context = {'restricted_expr': False}
             expr_namespace = IrQweb._compile_expr(expr, compile_context)
 
             compiled = compile("""def test(values):\n  values['result'] = %s""" % expr_namespace, '<test>', 'exec')
@@ -855,6 +855,274 @@ class TestQWebBasic(TransactionCase):
         values = {'other': 'any value'}
         with self.assertRaises(Exception): # NotImplementedError for 'lambda a=open' and Undefined value 'open'.
             self.env['ir.qweb']._render(t.id, values)
+
+    def test_compile_expr_restricted(self):
+        view = self.env['ir.ui.view'].search([], limit=1)
+        ok_tests = [
+            # pylint: disable=C0326
+            # source,                   values,                 result
+            ("1",                       {},                     1),
+            ("'a'",                     {},                     "a"),
+            ("'abc'",                   {},                     "abc"),
+            ('"a"',                     {},                     "a"),
+            ('"abc"',                   {},                     "abc"),
+            ("{'a': True}",             {},                     {'a': True}),
+            ("('a', True)",             {},                     ('a', True)),
+            ('("a", True)',             {},                     ('a', True)),
+            ("'a', True",               {},                     ('a', True)),
+            ('"a", True',               {},                     ('a', True)),
+            ("record",                  {'record': view},     view),
+            ("record",                  {'record': 44},         44),
+            ("record.name",             {'record': view},     view.name),
+            ("record.id",               {'record': view},     view.id),
+        ]
+        IrQweb = self.env['ir.qweb']
+        for expr, q_values, result in ok_tests:
+
+            compile_context = {'restricted_expr': True}
+            expr_namespace = IrQweb._compile_expr(expr, compile_context)
+
+            compiled = compile("""def test(values):\n  values['result'] = %s""" % expr_namespace, '<test>', 'exec')
+            globals_dict = IrQweb._IrQweb__prepare_globals()
+            values = {}
+            unsafe_eval(compiled, globals_dict, values)
+            test = values['test']
+
+            test(q_values)
+            q_result = dict(q_values, result=result)
+            self.assertDictEqual(q_values, q_result, "Should compile: %s" % expr)
+
+        wrong_tests = [
+            # pylint: disable=C0326
+            'rec["name"]',
+            "rec['name']",
+            "rec()",
+            'rec.get("name")',
+            "rec.get('name')",
+            "rec.stuff.name",
+            "1 +2+ 3",
+            "(((1 +2+ 3)))",
+            "(1) +(2+ (3))",
+            "a == 5",
+            "object.count(1)",
+            "dict(a=True)",
+            "fn(a=11, b=22) or a",
+            "fn(a=11, b=22) or a",
+            "(lambda a: a)(5)",
+            "(lambda a: a[0])([5])",
+            "(lambda test: len(test))('aaa')",
+            "{'a': lambda a: a[0], 'b': 3}['a']([5])",
+            "list(map(lambda a: a[0], r))",
+            "z + (head or 'z')",
+            "z + (head or 'z')",
+            "{a:b for a, b in [(1,11), (2, 22)]}",
+            "any({x == 2 for x in [1,2,3]})",
+            "any({x == 5 for x in [1,2,3]})",
+            "{x:y for x,y in [('a', 11),('b', 22)]}",
+            "[(y,x) for x,y in [(1, 11),(2, 22)]]",
+            "(lambda a: a + 5)(x)",
+            "(lambda a: a + x)(5)",
+            "sum(x for x in range(4)) + ((x))",
+            "['test_' + x for x in ['a', 'b']]",
+            """1 and 2 and 0
+                or 9""",
+            '[x for x in (1,2)]',
+            'list(x for x in (1,2))',
+            'v if v is None else w',
+            'v if v is not None else w',
+            '{a for a in (1, 2)}',
+        ]
+        IrQweb = self.env['ir.qweb']
+        for expr in wrong_tests:
+            with self.assertRaises(SyntaxError):
+                IrQweb._compile_expr(expr, {'restricted_expr': True})
+
+        failed_tests = [
+            # pylint: disable=C0326
+            # source,                   values,                 result
+            ("record.model_data_id",    {'record': view},     view.name),
+        ]
+        IrQweb = self.env['ir.qweb']
+        for expr, q_values, result in failed_tests:
+            with self.assertRaises(SyntaxError):
+                compile_context = {'restricted_expr': True}
+                expr_namespace = IrQweb._compile_expr(expr, compile_context)
+
+                compiled = compile(f"def test(values):\n  return {expr_namespace}", '<test>', 'exec')
+                globals_dict = IrQweb._IrQweb__prepare_globals()
+                values = {}
+                test = unsafe_eval(compiled, globals_dict, values)
+                test = values['test']
+                test(q_values)
+
+    def test_compile_expr_restricted_allowed(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="abc">
+                <t t-set="code">&lt;t t-out="{'a': 1}"&gt;</t>
+                <t t-out="code" t-options-widget="'html'"/>
+                <t t-out="code" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        self.assertEqual(str(self.env['ir.qweb']._render(t.id, {'abc': 0}).strip()), """
+                <t t-out="{'a': 1}"></t>
+                {&#39;a&#39;: 1}
+        """.strip())
+
+        view_record = self.env['ir.ui.view'].search([], limit=1)
+
+        sub = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<div t-field="record.id" t-options-widget="'text'" t-options-decimal_precision="'2 digits'"/>'''
+        })
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="abc_view">
+                <section t-field="abc.arch" t-options-widget="'html'"/>
+                <section t-field="abc.arch" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        self.assertEqual(str(self.env['ir.qweb']._render(t.id, {'abc': sub, 'view_record': view_record}).strip()), f"""
+                <section><div t-field="record.id" t-options-widget="'text'" t-options-decimal_precision="'2 digits'"></div></section>
+                <section><div dir="auto">{sub.id}</div></section>
+        """.strip())
+
+        # Ensure escaping is not removed from text
+        sub = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<div x="&lt;"> &lt;t/&gt; <img> <span>&lt;a/&gt;</span> &lt;z/&gt; </div>'''
+        })
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="abc_view">
+                <section t-field="abc.arch" t-options-widget="'html'"/>
+                <section t-field="abc.arch" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        self.assertEqual(str(self.env['ir.qweb']._render(t.id, {'abc': sub, 'view_record': view_record}).strip()), """
+                <section><div x="&lt;"> &lt;t/&gt; <img> <span>&lt;a/&gt;</span> &lt;z/&gt; </div></section>
+                <section><div x="&lt;"> &lt;t/&gt; <img/> <span>&lt;a/&gt;</span> &lt;z/&gt; </div></section>
+        """.strip())
+
+        sub = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<div t-field="view.id" t-options-widget="'text'" t-options-decimal_precision="'2 digits'"/>'''
+        })
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': f'''<t t-name="abc">
+                <t t-set="code">&lt;t t-call="{sub.id}"/&gt;</t>
+                <t t-out="code" t-options-widget="'html'"/>
+                <t t-out="code" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        self.assertEqual(str(self.env['ir.qweb']._render(t.id, {'view': view_record}).strip()), f"""
+                <t t-call="{sub.id}"></t>
+                <div dir="auto">{view_record.id}</div>
+        """.strip())
+
+    def test_compile_expr_restricted_rejected(self):
+        # rejected content []
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="abc">
+                <t t-set="code">&lt;t t-out="abc['a'] + 22 + 11"&gt;</t>
+                <t t-out="code" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        with self.assertRaisesRegex(QWebError, "allowed in restricted mode"):
+            self.env['ir.qweb']._render(t.id, {'abc': {'a': 0}})
+
+        # rejected content ()
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="abc">
+                <t t-set="code">&lt;t t-out="abc.get('a') + 22 + 11"&gt;</t>
+                <t t-out="code" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        with self.assertRaisesRegex(QWebError, "allowed in restricted mode"):
+            self.env['ir.qweb']._render(t.id, {'abc': {'a': 0}})
+
+        view_record = self.env['ir.ui.view'].search([], limit=1)
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="abc">
+                <t t-set="code">&lt;div t-field="record.name"/&gt;</t>
+                <t t-out="code" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        with self.assertRaisesRegex(QWebError, "KeyError: 'record'"):
+            self.env['ir.qweb']._render(t.id, {'record': view_record})
+
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="abc">
+                <t t-set="code">&lt;div t-field="record.name"/&gt;</t>
+                <t t-out="code" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        with self.assertRaisesRegex(QWebError, "KeyError: 'record'"):
+            self.env['ir.qweb']._render(t.id, {'record': view_record})
+
+        view_record = self.env['ir.ui.view'].search([], limit=1)
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="abc">
+                <t t-set="code">&lt;div t-field="view.name"/&gt;</t>
+                <t t-out="code" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        with self.assertRaisesRegex(QWebError, "KeyError: 'view'"):
+            self.env['ir.qweb']._render(t.id, {'record': view_record})
+
+        sub = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<div t-field="view_record.id" t-options-widget="'float'" t-options-decimal_precision="'2 digits'"/>'''
+        })
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="abc_view">
+                <section t-field="abc.arch" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        with self.assertRaisesRegex(QWebError, "KeyError: 'view_record'"):
+            self.env['ir.qweb']._render(t.id, {'abc': sub, 'view_record': view_record})
+
+    def test_compile_expr_restricted_call(self):
+        # from value
+        r = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="abc"><t t-out="abc.get('a') + 22 + 11"/></t>'''
+        })
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': f'''<t t-name="abc">
+                <t t-set="code" t-value="'&lt;t t-call=\\'{r.id}\\'&gt;'"/>
+                <t t-out="code" t-options-widget="'html'"/>
+                <t t-out="code" t-options-widget="'qweb'"/>
+            </t>'''
+        })
+        self.assertEqual(str(self.env['ir.qweb']._render(t.id, {'abc': {'a': 0}}).strip()), f"""
+                <t t-call="{r.id}"></t>
+                33
+        """.strip())
 
     def test_foreach_iter_list(self):
         t = self.env['ir.ui.view'].create({

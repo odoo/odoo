@@ -466,7 +466,9 @@ class TestRegexRendering(common.MailCommon):
 
         # double check that we are able to catch the eval
         non_static_templates = (
-            ('''<p t-out=""/>''', '<p>()</p>'),
+            ('''<p t-out="None"/>''', ''),
+            ('''<p t-out=""/>''', ''),
+            ('''<p t-out="''"/>''', '<p></p>'),
             ('''<p t-out="1+1"/>''', '<p>2</p>'),
             ('''<p t-out="env.context.get('test')"/>''', ''),
             ('''<p t-out="object.name" title="Test"/>''', '<p title="Test">Alice</p>'),
