@@ -25,6 +25,7 @@ class BaseDocumentLayout(models.TransientModel):
     account_number = fields.Char(compute='_compute_account_number', inverse='_inverse_account_number',)
     country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
     can_configure_later = fields.Boolean(compute='_compute_can_configure_later')
+    account_fiscal_country_id = fields.Many2one(related='company_id.account_fiscal_country_id', readonly=True)
 
     def _check_company_access(self, companies):
         allowed_company_ids = self.env.companies.ids
