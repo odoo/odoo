@@ -171,6 +171,20 @@ class One2manyCase(TransactionExpressionCase):
 
     def test_cache_invalidation(self):
         """ Cache invalidation for one2many with integer inverse. """
+        Attachment = self.registry['test_orm.attachment']
+
+        def modified(self, fnames, *args, **kwargs):
+            if not self:
+                return None
+            comodel = self.env[self.res_model]
+            if 'res_id' in fnames and 'attachment_ids' in comodel:
+                record = comodel.browse(self.res_id)
+                record.invalidate_recordset(['attachment_ids'])
+                record.modified(['attachment_ids'])
+            return super(Attachment, self).modified(fnames, *args, **kwargs)
+
+        self.patch(Attachment, 'modified', modified)
+
         record0 = self.env['test_orm.attachment.host'].create({})
         with self.assertQueryCount(0):
             self.assertFalse(record0.attachment_ids, "inconsistent cache")
