@@ -51,5 +51,14 @@
                 </div>
             </td>
         </template>
+
+        <template id="package_type_barcode_zpl_label">
+^PW457
+^LL297
+^FO5,60^A0N,30,24^FB366,1,0,C^FH^FD<t t-out="name"/>\&amp;^FS
+            <t t-if="barcode_value">
+^FO5,100^BY2^BCN,110,Y,N,N^FH^FD<t t-out="barcode_value"/>^FS
+            </t>
+        </template>
     </data>
 </odoo>
