@@ -10,9 +10,14 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
+<<<<<<< e96057c605bf8ff12569673c2ea0548840cbd711
 import { preloadBundle } from "@web/../tests/web_test_helpers";
+||||||| 7a89116f1379ef4343adc11b7c389c6defaa6e6c
+=======
+import { cookie } from "@web/core/browser/cookie";
+>>>>>>> 1e66757056800813ccfaa0e0a559e5a438b8ef89
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
@@ -112,6 +117,7 @@ test("code block embedded in an email message's body should be ignored", async (
         { parent: [".o-mail-Message-shadowBody", { shadowRoot: true }] }
     );
 });
+<<<<<<< e96057c605bf8ff12569673c2ea0548840cbd711
 
 test("read more button of an email message shows its icon", async () => {
     const pyEnv = await startServer();
@@ -133,3 +139,26 @@ test("read more button of an email message shows its icon", async () => {
     await click(".o-mail-ellipsis", { parent: shadowBody });
     await contains("blockquote:text(Previous message)", { parent: shadowBody, visible: true });
 });
+||||||| 7a89116f1379ef4343adc11b7c389c6defaa6e6c
+=======
+
+test("read more button of an email message keeps its pill in dark theme", async () => {
+    cookie.set("color_scheme", "dark");
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Jeanne" });
+    pyEnv["mail.message"].create({
+        body: `<p>Thanks</p><blockquote data-o-mail-quote="1">Previous message</blockquote>`,
+        message_type: "email",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-ellipsis", {
+        parent: [".o-mail-Message-body > div", { shadowRoot: true }],
+    });
+    expect(".o-mail-Message-body > div:shadow .o-mail-ellipsis").toHaveStyle({
+        backgroundColor: "rgb(239, 239, 239)",
+    });
+});
+>>>>>>> 1e66757056800813ccfaa0e0a559e5a438b8ef89
