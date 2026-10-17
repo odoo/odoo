@@ -11,6 +11,22 @@ class StockMove(models.Model):
         landed_cost_group = self.env['stock.valuation.adjustment.lines']._read_group(domain, ['move_id'], ['id:recordset'])
         return dict(landed_cost_group)
 
+    def _get_value_from_std_price(self, quantity, std_price=False, at_date=None):
+        res = super()._get_value_from_std_price(quantity, std_price, at_date)
+        validating = self.env.context.get('landed_cost_in_progress')
+        if validating and not std_price and self.value and self.product_id.cost_method in ('fifo', 'average'):
+            # The product and lot costs have absorbed this move's landed costs and later receipts;
+            # keep the cost the move came in at.
+            valued_qty = self._get_valued_qty()
+            if valued_qty:
+                applied = sum(
+                    lc.additional_landed_cost
+                    for lc in self._get_landed_cost().get(self, [])
+                    if lc.cost_id.id != validating
+                )
+                res['value'] = (self.value - applied) / valued_qty * quantity
+        return res
+
     def _get_value_from_extra(self, quantity, at_date=None):
         self.ensure_one()
         accounting_data = super()._get_value_from_extra(quantity, at_date=at_date)
