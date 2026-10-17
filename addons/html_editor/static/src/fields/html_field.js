@@ -38,7 +38,24 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import "@web/views/fields/html/html_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+<<<<<<< 7b4275bd9ab5a387c3f2598938ad15c44f3e3420
 import { TranslationButton } from "@web/views/fields/translation/translation";
+||||||| 7999d6281e9bc55ee8788bca318f7dadab0320bb
+import { TranslationButton } from "@web/views/fields/translation_button";
+import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
+import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { canRenderAsHTML, fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+=======
+import { TranslationButton } from "@web/views/fields/translation_button";
+import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
+import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { canRenderAsHTML, fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { extractUnmappedAttachmentsIds } from "@html_editor/main/media/media_plugin";
+>>>>>>> d520fbb39f88c285fad0e44e5a27f7c30b29e3d2
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-commits"];
 
@@ -256,10 +273,11 @@ export class HtmlField extends Component {
                 await this.updateValue(this.editor.getContent());
             }
             const changeId = this.lastChangeId;
+            const editable = this.editor.editable;
             const el = await this.getEditorContent();
             this.pendingAttachmentsService.addPendingAttachments(
                 this.props.record?.resId,
-                this.editor?.shared?.media?.extractUnmappedAttachmentsIds(this.editor.editable)
+                extractUnmappedAttachmentsIds(editable)
             );
             const content = el.innerHTML;
             this.clearElementToCompare(el);
@@ -342,7 +360,7 @@ export class HtmlField extends Component {
             getPendingAttachmentsIds: () => {
                 this.pendingAttachmentsService.addPendingAttachments(
                     this.props.record?.resId,
-                    this.editor?.shared?.media?.extractUnmappedAttachmentsIds(this.editor.editable)
+                    extractUnmappedAttachmentsIds(this.editor.editable)
                 );
                 return this.pendingAttachmentsService.pendingAttachmentIds[
                     this.props.record?.resId
