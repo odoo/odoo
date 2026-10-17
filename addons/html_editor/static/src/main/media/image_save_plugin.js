@@ -169,8 +169,6 @@ export class ImageSavePlugin extends Plugin {
                 canvas.width = loadedImgEl.width * ratio;
                 canvas.height = loadedImgEl.height * ratio;
                 const ctx = canvas.getContext("2d");
-                ctx.fillStyle = "rgb(255, 255, 255)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(
                     loadedImgEl,
                     0,
@@ -182,12 +180,14 @@ export class ImageSavePlugin extends Plugin {
                     canvas.width,
                     canvas.height
                 );
-                altData[size] = {
-                    "image/jpeg": canvas.toDataURL("image/jpeg").split(",")[1],
-                };
+                altData[size] = {};
                 if (size !== originalSize) {
                     altData[size]["image/webp"] = canvas.toDataURL("image/webp").split(",")[1];
                 }
+                ctx.globalCompositeOperation = "destination-over";
+                ctx.fillStyle = "rgb(255, 255, 255)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                altData[size]["image/jpeg"] = canvas.toDataURL("image/jpeg").split(",")[1];
             }
         }
         if (
