@@ -15,19 +15,18 @@
                         <span class="text-truncate" t-out="this.state.file.name"/>
                     </div>
                     <div class="flex-grow-1"/>
-                    <div class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download" t-on-click.stop="this.onClickDownload">
-                        <div class="text-reset d-flex align-items-baseline">
-                            <i class="oi oi-fw me-1" data-icon="download" role="img"/>
+                    <button class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 border-0 cursor-pointer bg-transparent text-reset" title="Download" t-on-click.stop="this.onClickDownload">
+                        <span class="d-flex align-items-baseline">
+                            <i class="oi oi-fw me-1" data-icon="download" aria-hidden="true"/>
                             <span>Download</span>
-                        </div>
-                    </div>
-                    <div t-if="this.canUnlink" class="o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Remove" aria-label="Remove" t-on-click.stop="this.onClickUnlink">
-                        <i class="oi oi-fw oi-filled text-danger" data-icon="delete" role="img"/>
-                    </div>
-
-                    <div t-on-click.stop="this.close" class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
-                        <i class="oi oi-fw" data-icon="close" role="img"/>
-                    </div>
+                        </span>
+                    </button>
+                    <button t-if="this.canUnlink" class="o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" title="Remove" aria-label="Remove" t-on-click.stop="this.onClickUnlink">
+                        <i class="oi oi-fw oi-filled text-danger" data-icon="delete" aria-hidden="true"/>
+                    </button>
+                    <button t-on-click.stop="this.close" class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 border-0 h4 text-reset cursor-pointer bg-transparent" title="Close (Esc)" aria-label="Close">
+                        <i class="oi oi-fw" data-icon="close" aria-hidden="true"/>
+                    </button>
                 </div>
                 <div t-on-click.stop="this.close" t-on-mousemove="this.onMouseMoveImage" t-on-touchmove.prevent="this.onTouchMoveImage" class="o-FileViewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': this.state.file.isImage }">
                     <div t-if="this.state.file.isImage" class="o-FileViewer-zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="this.zoomerRef">
@@ -58,32 +57,32 @@
                     </div>
                 </div>
                 <div t-if="this.state.file.isImage" class="o-FileViewer-toolbar border position-absolute d-flex rounded-pill" t-ref="this.imageToolbarRef" role="toolbar">
-                    <div class="o-FileViewer-toolbarButton p-3 rounded-pill rounded-end-0" t-on-click.stop="this.zoomIn" title="Zoom In (+)" role="button">
+                    <button class="o-FileViewer-toolbarButton p-3 border-0 rounded-pill rounded-end-0" t-on-click.stop="this.zoomIn" title="Zoom In (+)">
                         <i class="oi oi-fw" data-icon="add" aria-hidden="true"/>
-                    </div>
-                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'pe-none text-muted': this.state.scale === 1 }" t-on-click.stop="this.resetZoom" role="button" title="Reset Zoom (0)">
+                    </button>
+                    <button class="o-FileViewer-toolbarButton p-3 border-0 rounded-0" t-att-class="{ 'pe-none text-muted': this.state.scale === 1 }" t-on-click.stop="this.resetZoom" title="Reset Zoom (0)">
                         <i class="oi oi-fw" data-icon="recenter" aria-hidden="true"/>
-                    </div>
-                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'pe-none text-muted': this.state.scale === this.minScale }" t-on-click.stop="this.zoomOut" title="Zoom Out (-)" role="button">
+                    </button>
+                    <button class="o-FileViewer-toolbarButton p-3 border-0 rounded-0" t-att-class="{ 'pe-none text-muted': this.state.scale === this.minScale }" t-on-click.stop="this.zoomOut" title="Zoom Out (-)">
                         <i class="oi oi-fw" data-icon="remove" aria-hidden="true"/>
-                    </div>
-                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="this.rotate" title="Rotate (r)" role="button">
+                    </button>
+                    <button class="o-FileViewer-toolbarButton p-3 border-0 rounded-0" t-on-click.stop="this.rotate" title="Rotate (r)">
                         <i class="oi oi-fw" data-icon="redo" aria-hidden="true"/>
-                    </div>
-                    <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="this.onClickPrint" title="Print" role="button">
+                    </button>
+                    <button class="o-FileViewer-toolbarButton p-3 border-0 rounded-0" t-on-click.stop="this.onClickPrint" title="Print">
                         <i class="oi oi-fw" data-icon="print" aria-hidden="true"/>
-                    </div>
-                    <div class="o-FileViewer-download o-FileViewer-toolbarButton p-3 rounded-pill rounded-start-0 cursor-pointer" title="Download" role="button" t-on-click.stop="this.onClickDownload">
+                    </button>
+                    <button class="o-FileViewer-download o-FileViewer-toolbarButton p-3 border-0 rounded-pill rounded-start-0 cursor-pointer" title="Download" t-on-click.stop="this.onClickDownload">
                         <i class="oi oi-fw" data-icon="download" aria-hidden="true"/>
-                    </div>
+                    </button>
                 </div>
                 <t t-if="this.props.files.length > 1">
-                    <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle bg-dark text-white" t-on-click.stop="this.previous" title="Previous (Left-Arrow)" aria-label="Previous" role="button">
-                        <span class="oi" data-icon="chevron_backward" role="img"/>
-                    </div>
-                    <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle bg-dark text-white" t-on-click.stop="this.next" title="Next (Right-Arrow)" aria-label="Next" role="button">
-                        <span class="oi" data-icon="chevron_forward" role="img"/>
-                    </div>
+                    <button class="o-FileViewer-navigation position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 border-0 rounded-circle bg-dark text-white" t-on-click.stop="this.previous" title="Previous (Left-Arrow)" aria-label="Previous">
+                        <span class="oi" data-icon="chevron_backward" aria-hidden="true"/>
+                    </button>
+                    <button class="o-FileViewer-navigation position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 border-0 rounded-circle bg-dark text-white" t-on-click.stop="this.next" title="Next (Right-Arrow)" aria-label="Next">
+                        <span class="oi" data-icon="chevron_forward" aria-hidden="true"/>
+                    </button>
                 </t>
             </div>
         </div>
