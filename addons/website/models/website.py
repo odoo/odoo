@@ -822,9 +822,17 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_skip(self):
+<<<<<<< 41a357d5bb7ea6c47f072bb83612334df4b13b8e
         self._check_configurator_access()
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         website.ensure_one()
+||||||| 4d5cbde1762be50288172b8cada06b86f788ca12
+        website = self.get_current_website()
+=======
+        website = self.get_current_website()
+        if website.configurator_done:
+            return website.button_go_website()
+>>>>>>> b2f4ae48b7419b33fceef62ddcb36fda68ddac35
         theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
         website.configurator_done = True
         return theme.with_context(website_id=website.id).button_choose_theme()
