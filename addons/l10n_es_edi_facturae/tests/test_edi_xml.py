@@ -725,3 +725,30 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             with file_open("l10n_es_edi_facturae/tests/data/expected_out_invoice_round_2.xml", "rt") as f:
                 expected_xml = lxml.etree.fromstring(f.read().encode())
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
+
+    def test_placeholder_mail_attachments_data_without_extra_edis(self):
+        """ The mail attachment placeholders must be computed even when no extra EDIs are given. """
+        invoice = self.create_invoice(
+            partner_id=self.partner_a.id,
+            move_type='out_invoice',
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
+        )
+        invoice.action_post()
+        expected_xml_filename = f'{invoice.name.replace("/", "_")}_facturae_signed.xml'
+
+        # Factura-e selected through the invoice EDI format only.
+        results = self.env['account.move.send']._get_placeholder_mail_attachments_data(
+            invoice,
+            invoice_edi_format='es_facturae',
+            extra_edis=None,
+        )
+        self.assertIn(expected_xml_filename, [result['name'] for result in results])
+        self.assertIn(invoice._get_invoice_report_filename(), [result['name'] for result in results])
+
+        # Neither the invoice EDI format nor the extra EDIs ask for Factura-e.
+        results = self.env['account.move.send']._get_placeholder_mail_attachments_data(
+            invoice,
+            invoice_edi_format=None,
+            extra_edis=None,
+        )
+        self.assertEqual([result['name'] for result in results], [invoice._get_invoice_report_filename()])
