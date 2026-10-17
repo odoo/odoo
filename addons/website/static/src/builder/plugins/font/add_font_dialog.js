@@ -1,5 +1,5 @@
 import { rpc } from "@web/core/network/rpc";
-import { Component, proxy, signal, useProps, t } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, signal, useProps, useScope, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -7,19 +7,109 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Switch } from "@html_editor/components/switch/switch";
 
+const FONT_PREVIEW_BATCH_SIZE = 8;
+
 class GoogleFontAutoComplete extends AutoComplete {
+    // Keep loaded options and scroll positions until the dialog is closed.
+    fontLists = new Map();
+
     get dropdownOptions() {
+        const options = super.dropdownOptions;
         return {
-            ...super.dropdownOptions,
+            ...options,
             position: "bottom-fit",
+            onPositioned: (listEl, solution) => {
+                options.onPositioned?.(listEl, solution);
+                // Restore scrolling once the reopened menu has its final size.
+                if (this.restoreScrollTop !== undefined) {
+                    listEl.scrollTop = this.restoreScrollTop;
+                    this.restoreScrollTop = undefined;
+                }
+                // Start loading one menu height before reaching the bottom.
+                const loadMore = () => {
+                    if (listEl.scrollTop + 2 * listEl.clientHeight >= listEl.scrollHeight) {
+                        this.loadMoreFonts();
+                    }
+                };
+                listEl.onscroll = loadMore;
+                // Also fill menus with too few options to scroll.
+                loadMore();
+            },
         };
     }
 
-    onInput(ev) {
-        super.onInput(ev);
-        if (this.listRef()) {
-            this.listRef().scrollTop = 0;
+    async loadSources(useInput) {
+        // Give each search a new ID. If another search starts before this one
+        // finishes, its results must not replace the new search's list.
+        const requestId = (this.fontRequestId || 0) + 1;
+        this.fontRequestId = requestId;
+        if (this.activeFontList && this.listRef()) {
+            this.activeFontList.scrollTop = this.listRef().scrollTop;
         }
+        // Reopen the previous search instead of filtering by the selected name.
+        const term = useInput
+            ? this.inputRef().value.trim()
+            : (this.props.value && this.selectedFontTerm) || "";
+        const cachedList = this.fontLists.get(term);
+        if (cachedList) {
+            const source = this.makeSource(this.props.sources[0]);
+            source.options = cachedList.options;
+            this.sources.splice(0, this.sources.length, source);
+            this.state.activeSourceOption = null;
+            this.activeFontList = cachedList;
+            this.restoreScrollTop = cachedList.scrollTop;
+            return;
+        }
+        // Pause pagination until the new search has loaded its first batch.
+        this.activeFontList = undefined;
+        await super.loadSources(useInput);
+        if (requestId === this.fontRequestId) {
+            const list = {
+                term,
+                options: this.sources[0].options,
+                nextOffset: FONT_PREVIEW_BATCH_SIZE,
+                hasMore: true,
+                isLoading: false,
+                scrollTop: 0,
+            };
+            this.fontLists.set(term, list);
+            this.activeFontList = list;
+            this.loadMoreFonts();
+        }
+    }
+
+    async loadMoreFonts() {
+        const list = this.activeFontList;
+        // Switching searches must not start the same batch twice for one list.
+        if (!list || list.isLoading || !list.hasMore || !this.isOpened) {
+            return;
+        }
+        list.isLoading = true;
+        try {
+            const options = await this.props.sources[0].options(list.term, list.nextOffset);
+            // The user may have changed searches or closed the menu meanwhile.
+            if (list !== this.activeFontList || !this.isOpened) {
+                return;
+            }
+            // Failed fonts still occupy a slot in the requested batch.
+            list.nextOffset += FONT_PREVIEW_BATCH_SIZE;
+            list.hasMore = options.hasMore;
+            list.options.push(...options.map((option) => this.makeOption(option)));
+        } finally {
+            list.isLoading = false;
+        }
+    }
+
+    selectOption(option) {
+        this.selectedFontTerm = this.activeFontList?.term;
+        super.selectOption(option);
+    }
+
+    close() {
+        if (this.activeFontList && this.listRef()) {
+            this.activeFontList.scrollTop = this.listRef().scrollTop;
+        }
+        super.close();
     }
 }
 
@@ -86,12 +176,50 @@ export class AddFontDialog extends Component {
         uploadedFontName: undefined,
         uploadedFonts: [],
         uploadedFontFaces: undefined,
-        previewText: _t("The quick brown fox jumps over the lazy dog."),
+        previewText: "",
+        previewFontSize: "20",
     });
+    defaultPreviewText = _t("The quick brown fox jumps over the lazy dog.");
+    previewFontSizes = ["14", "16", "20", "24", "32", "40", "56"];
     fileInput = signal.ref();
+    scope = useScope();
+    // Share pending and completed font loads between searches.
+    fontLoads = new Map();
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
+        // Open Google connections while the font metadata is being fetched.
+        for (const url of ["https://fonts.googleapis.com", "https://fonts.gstatic.com"]) {
+            const linkEl = document.createElement("link");
+            linkEl.rel = "preconnect";
+            linkEl.href = url;
+            if (url === "https://fonts.gstatic.com") {
+                // Font files use CORS, unlike the Google Fonts stylesheet.
+                linkEl.crossOrigin = "";
+            }
+            linkEl.dataset.fontPreview = true;
+            document.head.appendChild(linkEl);
+        }
+        this.googleFontListPromise = rpc("/website/google_font_metadata").then((data) => {
+            this.googleFontList = data.familyMetadataList.map(({ family, fonts }) => {
+                // Some families only provide a light, bold or italic variant.
+                const variant = fonts["400"] ? "400" : Object.keys(fonts)[0];
+                // Google marks italic variants with an "i" suffix, e.g. "400i".
+                return {
+                    family,
+                    weight: parseInt(variant),
+                    style: variant.endsWith("i") ? "italic" : "normal",
+                };
+            });
+        });
+        // Start the first batch when the dialog opens, before opening the list.
+        this.firstFontsPromise = this.googleFontListPromise.then(() => this.loadFontOptions("", 0));
+        // Clean up at destruction so late loaders cannot add styles afterwards.
+        onWillDestroy(() => {
+            for (const previewEl of document.head.querySelectorAll("[data-font-preview]")) {
+                previewEl.remove();
+            }
+        });
     }
 
     async onClickSave() {
@@ -112,55 +240,120 @@ export class AddFontDialog extends Component {
     get getGoogleFontList() {
         return [
             {
-                options: async (term) => {
-                    if (!this.googleFontList) {
-                        await rpc("/website/google_font_metadata").then((data) => {
-                            this.googleFontList = data.familyMetadataList.map(
-                                (font) => font.family
-                            );
-                        });
-                    }
-                    const lowerCaseTerm = term.toLowerCase();
-                    const filtered = this.googleFontList.filter((value) =>
-                        value.toLowerCase().includes(lowerCaseTerm)
-                    );
-                    return filtered.map((fontFamilyName) => ({
-                        label: fontFamilyName,
-                        onSelect: () => this.onGoogleFontSelect(fontFamilyName),
-                    }));
-                },
+                optionSlot: "font",
+                options: (term, offset = 0) =>
+                    term || offset ? this.loadFontOptions(term, offset) : this.firstFontsPromise,
             },
         ];
     }
-    async onGoogleFontSelect(fontFamily) {
+    async loadFontOptions(term, offset) {
+        await this.googleFontListPromise;
+        // The dialog may have closed while the metadata request was pending.
+        if (this.scope.isDestroyed()) {
+            return [];
+        }
+        const filtered = this.googleFontList.filter(({ family }) =>
+            family.toLowerCase().includes(term.toLowerCase())
+        );
+        const fonts = filtered.slice(offset, offset + FONT_PREVIEW_BATCH_SIZE);
+        const fontsToLoad = fonts.filter(({ family }) => !this.fontLoads.has(family));
+        if (fontsToLoad.length) {
+            const linkEl = document.createElement("link");
+            linkEl.rel = "stylesheet";
+            const families = fontsToLoad
+                .map(({ family, weight, style }) => {
+                    const italic = style === "italic" ? 1 : 0;
+                    return `family=${encodeURIComponent(family)}:ital,wght@${italic},${weight}`;
+                })
+                .join("&");
+            // Only download the glyphs needed by the names in this batch.
+            linkEl.href = `https://fonts.googleapis.com/css2?${families}&text=${encodeURIComponent(
+                fontsToLoad.map(({ family }) => family).join("")
+            )}&display=swap`;
+            linkEl.dataset.fontPreview = true;
+            const cssReady = new Promise((resolve) => {
+                linkEl.onload = () => resolve(true);
+                linkEl.onerror = () => resolve(false);
+                document.head.appendChild(linkEl);
+            });
+            for (const { family, weight, style } of fontsToLoad) {
+                this.fontLoads.set(
+                    family,
+                    cssReady.then(async (ready) => {
+                        if (!ready || this.scope.isDestroyed()) {
+                            return false;
+                        }
+                        try {
+                            const faces = await document.fonts.load(
+                                `${style} ${weight} 1rem ${JSON.stringify(family)}`,
+                                family
+                            );
+                            return !!faces.length;
+                        } catch {
+                            return false;
+                        }
+                    })
+                );
+            }
+        }
+        // The stylesheet can load before its font files, so wait for both.
+        const loaded = await Promise.all(fonts.map(({ family }) => this.fontLoads.get(family)));
+        const options = fonts
+            .filter((font, index) => loaded[index])
+            .map(({ family, weight, style }) => ({
+                label: family,
+                data: {
+                    style:
+                        `font-family: ${JSON.stringify(family)}; font-size: 1rem; ` +
+                        `font-weight: ${weight}; font-style: ${style}`,
+                },
+                onSelect: () => this.onGoogleFontSelect(family),
+            }));
+        options.hasMore = offset + FONT_PREVIEW_BATCH_SIZE < filtered.length;
+        return options;
+    }
+    onGoogleFontSelect(fontFamily) {
         this.fileInput().value = "";
         this.state.uploadedFonts = [];
         this.state.uploadedFontName = undefined;
         this.state.uploadedFontFaces = undefined;
-        try {
-            const result = await fetch(
-                `https://fonts.googleapis.com/css?family=${encodeURIComponent(
-                    fontFamily
-                )}:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i`,
-                { method: "HEAD" }
-            );
-            // Google fonts server returns a 400 status code if family is not valid.
-            if (result.ok) {
-                const linkId = `previewFont${fontFamily}`;
-                if (!document.querySelector(`link[id='${linkId}']`)) {
-                    const linkEl = document.createElement("link");
-                    linkEl.id = linkId;
-                    linkEl.setAttribute("href", result.url);
-                    linkEl.setAttribute("rel", "stylesheet");
-                    linkEl.dataset.fontPreview = true;
-                    document.head.appendChild(linkEl);
-                }
-                this.state.googleFontFamily = fontFamily;
-            } else {
+        const fontUrl = `https://fonts.googleapis.com/css?family=${encodeURIComponent(
+            fontFamily
+        )}:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i`;
+        const linkId = `previewFont${fontFamily}`;
+        let linkEl = document.getElementById(linkId);
+        if (!linkEl) {
+            linkEl = document.createElement("link");
+            linkEl.id = linkId;
+            linkEl.rel = "stylesheet";
+            linkEl.dataset.fontPreview = true;
+            document.head.appendChild(linkEl);
+        }
+        linkEl.onerror = () => {
+            // An earlier selection failing must not clear the current one.
+            if (this.state.googleFontFamily === fontFamily) {
                 this.state.googleFontFamily = undefined;
             }
-        } catch (error) {
-            console.error(error);
+        };
+        // Include the name: this stylesheet also applies to the dropdown entry.
+        linkEl.href = `${fontUrl}&text=${encodeURIComponent(
+            (this.state.previewText || this.defaultPreviewText) + fontFamily
+        )}`;
+        this.previewFontLinkEl = linkEl;
+        this.fullPreviewFontUrl = fontUrl;
+        this.previewFontIsSubset = true;
+        this.state.googleFontFamily = fontFamily;
+    }
+    onPreviewTextInput() {
+        if (this.state.googleFontFamily && this.previewFontIsSubset) {
+            // Remove the text subset once to avoid fetching CSS on every edit.
+            this.previewFontLinkEl.href = this.fullPreviewFontUrl;
+            this.previewFontIsSubset = false;
+        }
+    }
+    onGoogleFontInput({ inputValue }) {
+        if (!inputValue.trim()) {
+            this.state.googleFontFamily = undefined;
         }
     }
     async onUploadChange(e) {
@@ -357,23 +550,13 @@ export class AddFontDialog extends Component {
 }
 
 export function showAddFontDialog(dialog, fontsData, variable, customize, reloadEditor) {
-    dialog.add(
-        AddFontDialog,
-        {
-            allFonts: fontsData.allFonts,
-            googleFonts: fontsData.googleFonts,
-            googleLocalFonts: fontsData.googleLocalFonts,
-            uploadedLocalFonts: fontsData.uploadedLocalFonts,
-            variable,
-            customize,
-            reloadEditor,
-        },
-        {
-            onClose: () => {
-                for (const el of document.head.querySelectorAll("[data-font-preview]")) {
-                    el.remove();
-                }
-            },
-        }
-    );
+    dialog.add(AddFontDialog, {
+        allFonts: fontsData.allFonts,
+        googleFonts: fontsData.googleFonts,
+        googleLocalFonts: fontsData.googleLocalFonts,
+        uploadedLocalFonts: fontsData.uploadedLocalFonts,
+        variable,
+        customize,
+        reloadEditor,
+    });
 }
