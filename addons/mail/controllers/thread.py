@@ -160,6 +160,8 @@ class ThreadController(http.Controller):
                 for key, value in post_data.items()
                 if key in thread._get_allowed_message_post_params()
             }
+        if thread_model == "discuss.channel" and not thread.is_member and thread.channel_type != "chat":
+            thread._find_or_create_member_for_self()
         # sudo: mail.thread - users can post on accessible threads
         message = thread.sudo().message_post(**self._prepare_post_data(post_data, thread, **kwargs))
         return store.add(message, for_current_user=True).get_result()
