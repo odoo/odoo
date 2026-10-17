@@ -9,8 +9,16 @@ import { Builder } from "@html_builder/builder";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { describe } from "@odoo/hoot";
-import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
+import { describe, expect } from "@odoo/hoot";
+import {
+    advanceTime,
+    animationFrame,
+    click,
+    queryOne,
+    tick,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -56,6 +64,47 @@ export const setupWebsiteBuilderOeId = 539;
 
 export const invisibleEl =
     '<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element" data-invisible="1"></div>';
+
+export const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
+export const PALETTE_URL = "/website/static/src/scss/options/colors/user_color_palette.scss";
+
+/**
+ * Mocks the writes of the Theme tab's values and the preview CSS, as steps
+ * (`<file> <values as JSON>`, `preview <file name> <values as JSON>...`).
+ * The preview CSS prints the pending values on the root, as the compiled CSS
+ * prints most of them.
+ */
+export function mockThemeRpcs() {
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
+        make_scss_customization(location, changes) {
+            expect.step(`${location} ${JSON.stringify(changes)}`);
+        }
+    }
+    defineModels([WebsiteAssets]);
+    onRpc("/website/theme_preview_css", async (request) => {
+        const { params } = await request.json();
+        const files = Object.entries(params.values_by_url);
+        const previewed = files.map(([url, values]) => [
+            url.split("/").at(-1),
+            JSON.stringify(values),
+        ]);
+        expect.step(["preview", ...previewed.flat()].join(" "));
+        const declarations = files.flatMap(([, values]) =>
+            Object.entries(values).map(([name, value]) => `--${name}: ${value};`)
+        );
+        return `:root { ${declarations.join(" ")} }`;
+    });
+}
+
+/**
+ * Saves, as the builder's Save button does, and waits for the builder to
+ * close.
+ */
+export async function saveWebsite() {
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
+}
 
 export function defineWebsiteModels({ includeMailModels = true } = {}) {
     describe.current.tags("desktop");
