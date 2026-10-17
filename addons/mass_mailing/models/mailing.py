@@ -1099,6 +1099,15 @@ class MailingMailing(models.Model):
     def action_send_mail(self, res_ids=None):
         return self._action_send_mail(res_ids)
 
+    def _get_mailing_company(self):
+        """ Return the company owning the alias domain of the from address, or the environment company. """
+        self.ensure_one()
+        domain_name = tools.email_domain_extract(self.email_from)
+        if not domain_name:
+            return self.env.company
+        alias_domain = self.env['mail.alias.domain'].search([('name', '=', domain_name)], limit=1)
+        return alias_domain.company_ids[:1] or self.env.company
+
     def _action_send_mail(self, res_ids=None):
         odoobot = self.env.ref('base.partner_root')
         user_partner = self.env.user.partner_id
@@ -1108,6 +1117,9 @@ class MailingMailing(models.Model):
             mailing = mailing.with_context(
                 **self.env['res.users'].with_user(context_user).context_get()
             )
+            mailing_company = mailing._get_mailing_company()
+            if mailing_company != mailing.env.company:
+                mailing = mailing.with_company(mailing_company)
             mailing_res_ids = res_ids or mailing._get_remaining_recipients()
             if not mailing_res_ids:
                 raise UserError(_('There are no recipients selected.'))
@@ -1134,7 +1146,7 @@ class MailingMailing(models.Model):
             if mailing.reply_to_mode == 'new':
                 composer_values['reply_to'] = mailing.reply_to
 
-            composer = self.env['mail.compose.message'].with_context(
+            composer = mailing.env['mail.compose.message'].with_context(
                 active_ids=mailing_res_ids,
                 default_composition_mode='mass_mail',
                 **mailing._get_mass_mailing_context()
