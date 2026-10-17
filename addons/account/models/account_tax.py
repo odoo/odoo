@@ -4581,11 +4581,18 @@ class AccountTax(models.Model):
             [('company_id', '=', False)],
         ])
         for tax_values in tax_values_list:
+            predictive_country_id = None
+            if 'invoice_predictive' in tax_values:
+                fiscal_position = tax_values.get('fiscal_position')
+                if fiscal_position and fiscal_position.foreign_vat:
+                    predictive_country_id = fiscal_position.country_id.id
+                else:
+                    predictive_country_id = tax_values['invoice_predictive']['invoice'].tax_country_id.id
             tax_domain = [
                ('amount_type', '=', tax_values['amount_type']),
                ('type_tax_use', '=', tax_values['type_tax_use']),
                ('amount', '=', tax_values['amount']),
-               *([('country_id', '=', tax_values['invoice_predictive']['invoice'].tax_country_id.id)] if 'invoice_predictive' in tax_values else []),
+               *([('country_id', '=', predictive_country_id)] if predictive_country_id is not None else []),
             ]
             orders = ['sequence', 'id']
             if name := tax_values.get('name'):
