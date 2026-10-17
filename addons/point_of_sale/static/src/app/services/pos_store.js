@@ -2039,7 +2039,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
     // Used to override inside `l10n_be_pos_blackbox`
     async getSelfOrderToPrint(orderId) {
-        const result = await this.data.callRelated("pos.order", "get_order_to_print", [orderId]);
+        const result = await this.data.callRelated("pos.order", "get_order_to_print", [orderId], {}, true, true);
         return result["pos.order"][0];
     }
     // Now the printer should work in PoS without restaurant
