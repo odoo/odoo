@@ -791,7 +791,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertEqual(comp_po.order_line.mapped('product_id'), self.comp1 | self.comp2)
         # confirm the po should create stock moves linked to the resupply
         comp_po.button_confirm()
-        comp_receipt = comp_po.picking_ids
+        comp_receipt = comp_po.order_line.move_ids.picking_id
         self.assertEqual(comp_receipt.move_ids.move_dest_ids, ressuply_pick.move_ids)
 
         # validate the comp receipt should reserve the resupply
