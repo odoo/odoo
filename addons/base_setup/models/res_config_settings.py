@@ -42,6 +42,39 @@ class ResConfigSettings(models.TransientModel):
     company_country_group_codes = fields.Json(related="company_id.country_id.country_group_codes")
     profiling_enabled_until = fields.Datetime("Profiling enabled until", config_parameter='base.profiling_enabled_until')
 
+    calendar_weekend_days = fields.Json(related='company_id.calendar_weekend_days', readonly=False)
+    calendar_weekend_days_checkboxes = fields.Json(
+        string="Weekend Days",
+        compute='_compute_calendar_weekend_days_checkboxes',
+        inverse='_inverse_calendar_weekend_days_checkboxes',
+        readonly=False,
+    )
+
+    @api.depends('calendar_weekend_days')
+    @api.depends_context('lang')
+    def _compute_calendar_weekend_days_checkboxes(self):
+        weekdays = [
+            (1, self.env._("Monday")),
+            (2, self.env._("Tuesday")),
+            (3, self.env._("Wednesday")),
+            (4, self.env._("Thursday")),
+            (5, self.env._("Friday")),
+            (6, self.env._("Saturday")),
+            (0, self.env._("Sunday")),
+        ]
+        for settings in self:
+            settings.calendar_weekend_days_checkboxes = {
+                str(day): {'label': label, 'checked': day in (settings.calendar_weekend_days or [])}
+                for day, label in weekdays
+            }
+
+    def _inverse_calendar_weekend_days_checkboxes(self):
+        for settings in self:
+            settings.calendar_weekend_days = sorted(
+                int(day) for day, checkbox in settings.calendar_weekend_days_checkboxes.items()
+                if checkbox['checked']
+            )
+
     def open_company(self):
         return {
             'type': 'ir.actions.act_window',

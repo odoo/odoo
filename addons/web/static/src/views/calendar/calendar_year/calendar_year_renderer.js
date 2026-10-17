@@ -74,7 +74,6 @@ export class CalendarYearRenderer extends Component {
             selectable: this.props.model.canCreate,
             unselectAuto: false,
             backgroundEventContent: "",
-            weekends: this.props.isWeekendVisible,
         };
     }
 

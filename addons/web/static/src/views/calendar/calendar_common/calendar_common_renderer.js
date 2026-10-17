@@ -175,7 +175,6 @@ export class CalendarCommonRenderer extends Component {
                         ? "numeric"
                         : "long",
             },
-            weekends: this.props.isWeekendVisible,
             weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
             weekNumbers: true,
             // the week column replaces the week numbers rendered in the days

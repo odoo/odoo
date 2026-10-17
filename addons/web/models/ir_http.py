@@ -169,6 +169,7 @@ class IrHttp(models.AbstractModel):
                             'child_ids': (comp.child_ids & all_companies_in_hierarchy_sudo).ids,
                             'parent_id': comp.parent_id.id,
                             'currency_id': comp.currency_id.id,
+                            'calendar_weekend_days': comp.calendar_weekend_days or [],
                         } for comp in user_companies
                     },
                     'disallowed_ancestor_companies': {
