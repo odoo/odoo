@@ -2,6 +2,7 @@
 
 # mail
 from . import mail_message
+from . import update
 
 # discuss
 from . import bus
@@ -20,6 +21,7 @@ from . import res_users_settings_volumes
 # odoo models
 from . import bus_listener_mixin
 from . import ir_attachment
+from . import ir_cron
 from . import ir_websocket
 from . import res_groups
 from . import res_partner
