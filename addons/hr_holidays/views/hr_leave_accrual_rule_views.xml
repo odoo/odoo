@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_leave_accrual_rule_view_list" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.rule.view.list</field>
+        <field name="model">hr.leave.accrual.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="work_entry_type_id"/>
+                <field name="frequency_count"/>
+                <field name="frequency"/>
+                <field name="added_value"/>
+                <field name="unit_of_measure"/>
+                <field name="expiry_type" optional="show"/>
+                <field name="country_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_leave_accrual_rule_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.rule.view.form</field>
+        <field name="model">hr.leave.accrual.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_run" type="object" string="Run Rule" icon="play_arrow"
+                        class="oe_highlight" groups="hr_holidays.group_hr_holidays_manager"
+                        invisible="not id or not active"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. One day per month"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="work_entry_type_id"/>
+                            <field name="country_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <label for="frequency_count"/>
+                            <div class="o_row">
+                                <field name="frequency_count" class="oe_inline"/>
+                                <field name="frequency"/>
+                            </div>
+                            <field name="anchor" string="From" invisible="frequency not in ['week', 'month']"/>
+                            <field name="anchor_date"
+                                invisible="frequency not in ['week', 'month'] or anchor != 'fixed'"
+                                required="frequency in ['week', 'month'] and anchor == 'fixed'"/>
+                            <field name="accrued_gain_time"/>
+                            <label for="added_value"/>
+                            <div class="o_row">
+                                <field name="added_value" class="oe_inline"/>
+                                <field name="unit_of_measure"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Employees">
+                        <field name="employee_domain" widget="accrual_rule_domain" options="{'model': 'hr.employee'}" nolabel="1" colspan="2"/>
+                    </group>
+                    <group string="Validity">
+                        <group>
+                            <field name="expiry_type"/>
+                            <label for="validity_count" invisible="expiry_type != 'delay'"/>
+                            <div class="o_row" invisible="expiry_type != 'delay'">
+                                <field name="validity_count" class="oe_inline"/>
+                                <field name="validity_type"/>
+                            </div>
+                            <field name="validity_anchor" invisible="expiry_type != 'delay'"/>
+                            <field name="date_to" invisible="expiry_type != 'fixed'" required="expiry_type == 'fixed'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_leave_accrual_rule_view_search" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.rule.view.search</field>
+        <field name="model">hr.leave.accrual.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="work_entry_type_id"/>
+                <field name="country_id"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_time_type" string="Time Type" context="{'group_by': 'work_entry_type_id'}"/>
+                    <filter name="group_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_leave_accrual_rule_action" model="ir.actions.act_window">
+        <field name="name">Accrual Rules</field>
+        <field name="res_model">hr.leave.accrual.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hr_leave_accrual_rule_view_search"/>
+    </record>
+</odoo>

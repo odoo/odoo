@@ -101,7 +101,7 @@ class HrLeaveAllocation(models.Model):
         tracking=True, required=True)
     date_to = fields.Date('End Date', copy=False, tracking=True)
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, string="Time Type", required=True, index=True, readonly=False,
+        "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, precompute=True, string="Time Type", required=True, index=True, readonly=False,
         domain=_domain_work_entry_type_id)
     allowed_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
@@ -151,6 +151,9 @@ class HrLeaveAllocation(models.Model):
 
     # ============================== Accrual type allocation fields ==============================
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', index='btree_not_null', tracking=True)
+    accrual_rule_id = fields.Many2one(
+        'hr.leave.accrual.rule', string='Accrual Rule', index='btree_not_null',
+        ondelete='restrict', tracking=True, copy=False, readonly=True)
     hide_accrual_plan_id = fields.Boolean(compute='_compute_hide_accrual_plan_id')
     # `last_accrual`, `lastcall` and `nextcall` will be assigned a value when:
     # `date_from <= first_level_start <= today` AND `_process_accrual_plans` has been called
@@ -160,6 +163,11 @@ class HrLeaveAllocation(models.Model):
     yearly_accrued_days = fields.Float('Number of accrued days since the last carryover', export_string_translation=False)
     previous_carryover_number_of_days = fields.Float('The number of days on previous carryover date', export_string_translation=False)
     carried_over_days_expiration_date = fields.Date('Carried over days expiration date', export_string_translation=False)
+
+    _employee_accrual_rule_unique = models.Constraint(
+        'UNIQUE(employee_id, accrual_rule_id)',
+        'An employee can only have one allocation for each accrual rule.',
+    )
 
     @api.constrains('date_from', 'date_to')
     def _check_date_from_date_to(self):
@@ -175,6 +183,27 @@ class HrLeaveAllocation(models.Model):
     def _check_accrual_plan_work_entry_type(self):
         if any(allocation.accrual_plan_id and allocation.accrual_plan_id.work_entry_type_id != allocation.work_entry_type_id for allocation in self):
             raise UserError(_("Selected Time Type must be the same one set on accrual plan"))
+
+    @api.constrains('accrual_rule_id', 'accrual_plan_id', 'work_entry_type_id', 'employee_id')
+    def _check_accrual_rule(self):
+        for allocation in self:
+            rule = allocation.accrual_rule_id
+            if not rule:
+                continue
+            if rule.company_id and rule.company_id != allocation.employee_company_id:
+                raise ValidationError(self.env._('The allocation employee must belong to the accrual rule company.'))
+
+    def action_open_accrual_rule(self):
+        self.ensure_one()
+        self.check_access('read')
+        self.accrual_rule_id.check_access('read')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Accrual Rule'),
+            'res_model': 'hr.leave.accrual.rule',
+            'view_mode': 'form',
+            'res_id': self.accrual_rule_id.id,
+        }
 
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
@@ -321,10 +350,13 @@ class HrLeaveAllocation(models.Model):
             domain = Domain.AND([allocation._domain_work_entry_type_id(), domain])
             allocation.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
-    @api.depends('accrual_plan_id')
+    @api.depends('accrual_plan_id', 'accrual_rule_id')
     def _compute_work_entry_type_id(self):
         default_work_entry_type_id = None
         for allocation in self:
+            if allocation.accrual_rule_id:
+                allocation.work_entry_type_id = allocation.accrual_rule_id.work_entry_type_id
+                continue
             if not allocation.work_entry_type_id:
                 if not default_work_entry_type_id:  # fetch when we need it
                     default_work_entry_type_id = self._default_work_entry_type_id()
