@@ -36,6 +36,7 @@ from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.tools.sql import escape_like_value
 from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
+from odoo.tools.urls import idna_domain
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -44,7 +45,7 @@ from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
 from odoo.addons.html_editor.controllers.svg_utils import get_shape_svg, make_shaped_image
 from odoo.addons.html_editor.models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
-from odoo.addons.website.tools import adapt_dark_palette_content, get_base_domain
+from odoo.addons.website.tools import adapt_dark_palette_content
 
 _lt = LazyTranslate(__name__)
 logger = logging.getLogger(__name__)
@@ -271,9 +272,8 @@ class Website(Home):
         website = request.env['website'].browse(website_id)
 
         if not isredir and website.domain:
-            domain_from = request.httprequest.environ.get('HTTP_HOST', '')
-            domain_to = get_base_domain(website.domain)
-            if domain_from != domain_to:
+            domain_from = idna_domain(request.httprequest.environ.get('HTTP_HOST', ''))
+            if domain_from != website.domain_punycode:
                 # redirect to correct domain for a correct routing map
                 query_params = urllib.parse.urlencode({'isredir': 1, 'path': path})
                 url_to = tools.urls.urljoin(
