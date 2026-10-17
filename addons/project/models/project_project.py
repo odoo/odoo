@@ -30,10 +30,14 @@ class ProjectProject(models.Model):
         'mail.activity.mixin',
         'mail.tracking.duration.mixin',
         'analytic.plan.fields.mixin',
+        'html.field.history.mixin',
     ]
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
     _track_duration_field = 'stage_id'
+
+    def _get_versioned_fields(self):
+        return [ProjectProject.description.name]
 
     def __compute_task_count(self, count_field='task_count', additional_domain=None):
         count_fields = {fname for fname in self._fields if 'count' in fname}
