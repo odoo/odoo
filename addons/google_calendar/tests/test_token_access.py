@@ -50,12 +50,6 @@ class TestTokenAccess(TransactionCase):
             old_validity
         )
 
-    def test_normal_user_should_not_be_able_to_reset_other_user_tokens(self):
-        user1, user2 = self.users
-        # Skip test: the access error will not be raised anymore since the access rules were deleted.
-        # with self.assertRaises(AccessError):
-        #     user2.with_user(user1).res_users_settings_id._set_auth_tokens(False, False, 0)
-
     def test_system_user_should_be_able_to_reset_any_tokens(self):
         user = self.users[0]
         old_validity = user.res_users_settings_id.google_calendar_token_validity
