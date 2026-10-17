@@ -97,6 +97,8 @@ class ResPartnerBank(models.Model):
             country_code = account.clearing_label_id.country_code
             if country_code == 'AU' and (test_bsb := re.sub(r'( |-)', '', account.clearing_number)) and (len(test_bsb) != 6 or not test_bsb.isdigit()):
                 raise ValidationError(account.env._('BSB is not valid (expected format is "NNN-NNN"). Please rectify.'))
+            if country_code == 'CA' and not re.fullmatch(r'\d{9}', re.sub(r'\D', '', account.clearing_number)):
+                raise ValidationError(account.env._('The Routing Number (EFT) must be a 9 digit number: a 0, followed by a 3-digit institution number and a 5-digit transit number.'))
             if country_code == 'HK' and len(account.clearing_number) != 3:
                 raise ValidationError(account.env._("Bank Code length must be 3."))
             if country_code == 'JP' and (len(account.clearing_number) != 3 or not account.clearing_number.isdecimal()):
