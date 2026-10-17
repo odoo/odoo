@@ -98,8 +98,23 @@ import { Store } from "./mock_server/store";
 
 export * from "./mail_test_helpers_contains";
 
+<<<<<<< eed4c1118b1dc51cf5bab62dbdb41e050ce3e70b
 const { AudioContext } = window;
 
+||||||| 0e6672263a7c154e52ef4b9017bfc2f1cc863227
+=======
+const { AudioContext } = window;
+
+/**
+ * Audio context that processes audio without rendering it to any output device.
+ */
+class SilentAudioContext extends AudioContext {
+    constructor(options) {
+        super({ ...options, sinkId: { type: "none" } });
+    }
+}
+
+>>>>>>> c98d0a5adaf4f6d05ab581037ef015316feda427
 before(prepareRegistriesWithCleanup);
 export const registryNamesToCloneWithCleanup = [];
 registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
@@ -382,6 +397,7 @@ export async function start(options) {
         },
     });
     serverState.serverVersion = options?.serverVersion ?? [99, 9]; // so local storage entries upgrade to latest version. HOOT sets 1.0 otherwise, ignoring all upgrades...
+    preventActualMediaUsage();
     if (!MockServer.current) {
         await startServer();
     }
@@ -514,7 +530,13 @@ export async function patchUiSize({ height, size, width }) {
 }
 
 function createAudioStream() {
+<<<<<<< eed4c1118b1dc51cf5bab62dbdb41e050ce3e70b
     const ctx = new AudioContext();
+||||||| 0e6672263a7c154e52ef4b9017bfc2f1cc863227
+    const ctx = new window.AudioContext();
+=======
+    const ctx = new SilentAudioContext();
+>>>>>>> c98d0a5adaf4f6d05ab581037ef015316feda427
     const dest = ctx.createMediaStreamDestination();
     after(() => {
         closeStream(dest.stream);
@@ -661,6 +683,32 @@ export function mockPipWindow() {
         },
     });
     return { popoutWindow, popoutIframe };
+}
+
+/**
+ * Prevents tests from using the actual microphone, camera, screen and speakers:
+ * media requests that are not mocked by the test get synthetic streams, and
+ * audio is processed without being rendered to an output device.
+ *
+ * The prototype is patched so that the test's own mocks on `navigator.mediaDevices`
+ * (e.g. `mockGetMedia`, denied permissions) take precedence regardless of order.
+ */
+function preventActualMediaUsage() {
+    patchWithCleanup(MediaDevices.prototype, {
+        async getUserMedia(constraints) {
+            return constraints?.audio ? createAudioStream() : createVideoStream();
+        },
+        async getDisplayMedia() {
+            return createVideoStream();
+        },
+    });
+    if (window.AudioContext === AudioContext) {
+        patchWithCleanup(window, { AudioContext: SilentAudioContext });
+    }
+    if (browser.AudioContext === AudioContext) {
+        // not already mocked by the test, e.g. with `patchVoiceMessageAudio`
+        patchWithCleanup(browser, { AudioContext: SilentAudioContext });
+    }
 }
 
 /**
@@ -1076,11 +1124,175 @@ class MockAudioWorkletNode {
         postMessage(data) {
             this.onmessage({ data, timeStamp: new Date().getTime() });
         },
+<<<<<<< eed4c1118b1dc51cf5bab62dbdb41e050ce3e70b
     };
     constructor(audioContext, processorName) {
         currentAudioProcessor = this;
         after(() => {
             currentAudioProcessor = null;
+||||||| 0e6672263a7c154e52ef4b9017bfc2f1cc863227
+        AudioBufferSourceNode: class {
+            buffer;
+            constructor() {}
+            connect() {}
+            disconnect() {}
+            start() {}
+            stop() {}
+        },
+        AudioContext: class {
+            audioWorklet;
+            currentTime;
+            destination;
+            sampleRate;
+            state;
+            constructor() {
+                this.audioWorklet = {
+                    addModule(url) {},
+                };
+            }
+            async close() {}
+            /** @returns {AnalyserNode} */
+            createAnalyser() {
+                return new browser.AnalyserNode();
+            }
+            /** @returns {AudioBufferSourceNode} */
+            createBufferSource() {
+                return new browser.AudioBufferSourceNode();
+            }
+            /** @returns {GainNode} */
+            createGain() {
+                return new browser.GainNode();
+            }
+            /** @returns {MediaStreamAudioSourceNode} */
+            createMediaStreamSource(microphone) {
+                return new browser.MediaStreamAudioSourceNode();
+            }
+            /** @returns {AudioBuffer} */
+            decodeAudioData(...args) {
+                return new AudioContext().decodeAudioData(...args);
+            }
+        },
+        AudioWorkletNode: class {
+            port;
+            constructor(audioContext, processorName) {
+                this.port = {
+                    onmessage(e) {},
+                    postMessage(data) {
+                        this.onmessage({ data, timeStamp: new Date().getTime() });
+                    },
+                };
+                res.audioProcessor = this;
+            }
+            connect() {
+                this.port.postMessage();
+            }
+            disconnect() {}
+            process(allInputs) {
+                const inputs = allInputs[0][0];
+                this.port.postMessage(inputs);
+                return true;
+            }
+        },
+        GainNode: class {
+            connect() {}
+            close() {}
+            disconnect() {}
+        },
+        MediaStreamAudioSourceNode: class {
+            connect(processor) {}
+            disconnect() {}
+        },
+    });
+    after(() => {
+        Object.assign(browser, {
+            AnalyserNode,
+            AudioBufferSourceNode,
+            AudioContext,
+            AudioWorkletNode,
+            GainNode,
+            MediaStreamAudioSourceNode,
+=======
+        AudioBufferSourceNode: class {
+            buffer;
+            constructor() {}
+            connect() {}
+            disconnect() {}
+            start() {}
+            stop() {}
+        },
+        AudioContext: class {
+            audioWorklet;
+            currentTime;
+            destination;
+            sampleRate;
+            state;
+            constructor() {
+                this.audioWorklet = {
+                    addModule(url) {},
+                };
+            }
+            async close() {}
+            /** @returns {AnalyserNode} */
+            createAnalyser() {
+                return new browser.AnalyserNode();
+            }
+            /** @returns {AudioBufferSourceNode} */
+            createBufferSource() {
+                return new browser.AudioBufferSourceNode();
+            }
+            /** @returns {GainNode} */
+            createGain() {
+                return new browser.GainNode();
+            }
+            /** @returns {MediaStreamAudioSourceNode} */
+            createMediaStreamSource(microphone) {
+                return new browser.MediaStreamAudioSourceNode();
+            }
+            /** @returns {AudioBuffer} */
+            decodeAudioData(...args) {
+                return new SilentAudioContext().decodeAudioData(...args);
+            }
+        },
+        AudioWorkletNode: class {
+            port;
+            constructor(audioContext, processorName) {
+                this.port = {
+                    onmessage(e) {},
+                    postMessage(data) {
+                        this.onmessage({ data, timeStamp: new Date().getTime() });
+                    },
+                };
+                res.audioProcessor = this;
+            }
+            connect() {
+                this.port.postMessage();
+            }
+            disconnect() {}
+            process(allInputs) {
+                const inputs = allInputs[0][0];
+                this.port.postMessage(inputs);
+                return true;
+            }
+        },
+        GainNode: class {
+            connect() {}
+            close() {}
+            disconnect() {}
+        },
+        MediaStreamAudioSourceNode: class {
+            connect(processor) {}
+            disconnect() {}
+        },
+    });
+    after(() => {
+        Object.assign(browser, {
+            AnalyserNode,
+            AudioBufferSourceNode,
+            AudioContext,
+            AudioWorkletNode,
+            GainNode,
+            MediaStreamAudioSourceNode,
+>>>>>>> c98d0a5adaf4f6d05ab581037ef015316feda427
         });
     }
     connect() {
