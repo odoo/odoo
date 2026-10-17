@@ -44,7 +44,9 @@
                 display: none;
             }
             &:after {
-                @include o-position-absolute(50%, var(--o-hb-spacer-1));
+                position: absolute;
+                top: 50%;
+                inset-inline-end: var(--o-hb-spacer-1);
                 transform: translate(-50%, -50%);
                 font-size: .5rem;
                 content: "arrow_drop_down";

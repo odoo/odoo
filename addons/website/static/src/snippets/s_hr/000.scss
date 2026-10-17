@@ -17,7 +17,8 @@
 
     &::after {
         content: '';
-        @include o-position-absolute(50%, 0, 0, 0);
+        position: absolute;
+        inset: 50% 0 0;
         z-index: 1;
         transform: translateY(-50%);
         height: 6px;

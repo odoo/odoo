@@ -148,10 +148,9 @@
     --o-wsale-wishlist-btn-offset-top-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.1 + var(--btn-padding-y));
     --o-wsale-wishlist-btn-offset-end-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.2 + var(--btn-padding-x));
 
-    @include o-position-absolute(
-        $top: var(--o-wsale-wishlist-card-offset-top, var(--o-wsale-wishlist-btn-offset-top-default)),
-        $right: var(--o-wsale-wishlist-card-offset-x, var(--o-wsale-wishlist-btn-offset-end-default))
-    );
+    position: absolute;
+    top: var(--o-wsale-wishlist-card-offset-top, var(--o-wsale-wishlist-btn-offset-top-default));
+    inset-inline-end: var(--o-wsale-wishlist-card-offset-x, var(--o-wsale-wishlist-btn-offset-end-default));
 
     aspect-ratio: 1;
 
@@ -263,7 +262,8 @@
                     padding-left: var(--_line-gap);
 
                     &:before {
-                        @include o-position-absolute(0, auto, 0);
+                        position: absolute;
+                        inset-block: 0;
                         transform: translateX(calc(var(--_line-gap) * -1));
                         border-left: var(--o-bs-border-width) solid $border-color;
                         content: "";

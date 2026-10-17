@@ -76,7 +76,11 @@ $o-we-item-pressed-color: $o-we-fg-lighter !default;
         box-shadow: none;
         &:before {
             content: $icon;
-            @include o-position-absolute($top, $right, $bottom, $left);
+            position: absolute;
+            top: $top;
+            left: $left;
+            bottom: $bottom;
+            right: $right;
             width: 19px;
             height: 19px;
             background-color: $o-brand-primary;

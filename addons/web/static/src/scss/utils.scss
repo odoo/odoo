@@ -3,28 +3,6 @@
 ///
 
 // ------------------------------------------------------------------
-// Position absolute
-// ------------------------------------------------------------------
-@mixin o-position-absolute($top: auto, $right: auto, $bottom: auto, $left: auto) {
-    position: absolute;
-    top: $top;
-    left: $left;
-    bottom: $bottom;
-    right: $right;
-}
-
-// ------------------------------------------------------------------
-// Position sticky
-// ------------------------------------------------------------------
-@mixin o-position-sticky($top: auto, $right: auto, $bottom: auto, $left: auto) {
-    position: sticky;
-    top: $top;
-    left: $left;
-    bottom: $bottom;
-    right: $right;
-}
-
-// ------------------------------------------------------------------
 // Text overflow
 // ------------------------------------------------------------------
 @mixin o-text-overflow($display: inline-block, $max-width: 100%, $vertical-align: top) {
@@ -54,7 +32,11 @@
 
     &::before {
         content: "";
-        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
         z-index: -1;
         background-image: url('/web/static/img/transparent.png');
         background-size: var(--PreviewAlphaBg-background-size, 10px) auto;
@@ -62,7 +44,11 @@
     }
     &::after {
         content: "";
-        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
         z-index: -1;
         background: inherit; // Inherit all background properties
         border-radius: inherit;

@@ -52,7 +52,9 @@
 
         // Fake modal
         .o_wsale_empty_screen_modal_wrapper {
-            @include o-position-absolute($top: 36px, $right: var(--o-bs-spacer-1)); // .o_wsale_empty_screen_header height + 4px
+            position: absolute;
+            top: 36px; // .o_wsale_empty_screen_header height + 4px
+            inset-inline-end: var(--o-bs-spacer-1);
             width: calc(100% - (2 * var(--o-bs-spacer-5)));
 
             .o_wsale_skeleton_modal {
@@ -77,7 +79,9 @@
 
                     &:not(.o_wsale_app_box)::before {
                         content: "";
-                        @include o-position-absolute($top: 0, $left: 0);
+                        position: absolute;
+                        top: 0;
+                        inset-inline-start: 0;
 
                         width: calc(var(--o-bs-spacer) * 2);
                         aspect-ratio: 1;

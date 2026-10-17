@@ -52,7 +52,8 @@
         position: relative;
         &::before {
             content: "";
-            @include o-position-absolute(0, 0, 0, 0);
+            position: absolute;
+            inset: 0;
             z-index: 10;
             opacity: 0;
             animation: options-container-highlight-grey 2s ease;

@@ -34,7 +34,9 @@
     }
 
     &:has(input:focus-visible)::before {
-        @include o-position-absolute($top: 50%, $left: 50%);
+        position: absolute;
+        top: 50%;
+        inset-inline-start: 50%;
 
         content:" ";
         width: 140%;
@@ -216,7 +218,9 @@ select.form-select.css_attribute_select {
 label.css_attribute_color.css_not_available {
     &:after {
         content: "";
-        @include o-position-absolute($top: 50%, $left: 50%);
+        position: absolute;
+        top: 50%;
+        inset-inline-start: 50%;
         width: 2px;
         height: 110%;
         background-color: var(--body-bg);

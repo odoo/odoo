@@ -53,7 +53,8 @@
         $_y: var(--o-wsale-card-pseudobg-y, MIN(#{map-get($spacers, 3) * -0.5}, calc(var(--o-wsale-products-grid-gap-y) / 2)));
         $_x: var(--o-wsale-card-pseudobg-x, calc(var(--o-wsale-products-grid-gap) * -0.5));
 
-        @include o-position-absolute($_y, $_x, $_y, $_x);
+        position: absolute;
+        inset: $_y $_x;
 
         background-color: var(--o-wsale-card-pseudobg-color);
         border-radius: var(--o-wsale-card-pseudobg-radius, var(--o-wsale-card-border-radius, 0));
@@ -378,7 +379,8 @@
         padding: var(--o-wsale-card-btns-row-padding, var(--o-bs-spacer-2));
     }
     .o_product_link {
-        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute;
+        inset: 0;
         z-index: 1;
     }
     .btn:focus-visible {
@@ -397,10 +399,9 @@
         --o-wsale-wishlist-btn-offset-top-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.1 + var(--btn-padding-y));
         --o-wsale-wishlist-btn-offset-end-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.2 + var(--btn-padding-x));
 
-        @include o-position-absolute(
-            $top: var(--o-wsale-wishlist-card-offset-top, var(--o-wsale-wishlist-btn-offset-top-default)),
-            $right: var(--o-wsale-wishlist-card-offset-x, var(--o-wsale-wishlist-btn-offset-end-default))
-        );
+        position: absolute;
+        top: var(--o-wsale-wishlist-card-offset-top, var(--o-wsale-wishlist-btn-offset-top-default));
+        inset-inline-end: var(--o-wsale-wishlist-card-offset-x, var(--o-wsale-wishlist-btn-offset-end-default));
         @include o-wsale-card-btn-design-subtle($body-bg, $body-color);
 
         aspect-ratio: 1;
@@ -1122,7 +1123,8 @@
             }
         }
         .o_wsale_products_item_title a:after {
-            @include o-position-absolute(0,0,0,0);
+            position: absolute;
+            inset: 0;
             z-index: 1;
             content: "";
             cursor: pointer;
@@ -1511,7 +1513,9 @@ $_wsale_products_roundness_map: (
         .oe_product_image:has(.oe_product_image_link_has_secondary) {
             &:before, &:after {
                 content: "";
-                @include o-position-absolute($bottom: var(--o-wsale-card-img-wrapper-secondary-bottom, .5rem), $top: var(--o-wsale-card-img-wrapper-secondary-top, auto), $left: 50%);
+                position: absolute;
+                inset-block: var(--o-wsale-card-img-wrapper-secondary-top, auto) var(--o-wsale-card-img-wrapper-secondary-bottom, .5rem);
+                inset-inline-start: 50%;
                 display: var(--o-wsale-card-img-wrapper-secondary-display, block);
                 height: .5rem;
                 aspect-ratio: 1;

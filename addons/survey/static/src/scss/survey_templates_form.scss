@@ -88,7 +88,9 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
                 min-width: 130px;
 
                 .o_survey_choice_key {
-                    @include o-position-absolute($top: calc(50% - (var(--SurveyForm__choice-key-size) / 2)), $left: var(--o-bs-spacer-3));
+                    position: absolute;
+                    top: calc(50% - (var(--SurveyForm__choice-key-size) / 2));
+                    inset-inline-start: var(--o-bs-spacer-3);
                 }
 
                 &:hover .o_survey_choice_key span.o_survey_key {
@@ -105,7 +107,9 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
             }
 
             .o_survey_matrix_btn label {
-                @include o-position-absolute($top: var(--o-bs-spacer-2), $left: var(--o-bs-spacer-2));
+                position: absolute;
+                top: var(--o-bs-spacer-2);
+                inset-inline-start: var(--o-bs-spacer-2);
 
                 width: calc(100% - (var(--o-bs-spacer-2) * 2));
                 height: calc(100% - (var(--o-bs-spacer-2) * 2));
@@ -171,7 +175,8 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
 
 .o_survey_session_open {
     @include media-breakpoint-down(md) {
-        @include o-position-absolute($top:0, $bottom: 0);
+        position: absolute;
+        inset-block: 0;
     }
 
     .o_survey_session_open_header {

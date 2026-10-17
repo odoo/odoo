@@ -295,14 +295,14 @@ h1, h2, h3, h4, h5, h6,
     }
 
     &.o_header_overlay div.o_page_breadcrumb {
-        @include o-position-absolute(auto, auto, auto, auto);
+        position: absolute;
         z-index: 1 !important;
         width: 100%;
     }
 
     > main.o_breadcrumb_overlay {
         div.o_page_breadcrumb {
-            @include o-position-absolute(auto, auto, auto, auto);
+            position: absolute;
             z-index: 1 !important;
             width: 100%;
             a, .breadcrumb-item, li::before {
@@ -1010,14 +1010,16 @@ font[class*='bg-'] {
     pointer-events: none !important;
 }
 .o_bg_video_file {
-    @include o-position-absolute(0, 0, 0, 0);
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     pointer-events: none !important;
 }
 .o_bg_video_loading {
-    @include o-position-absolute(0, 0 ,0 ,0);
+    position: absolute;
+    inset: 0;
 }
 .o_background_video, .parallax {
     @extend %o-we-background-layer-parent;
@@ -1671,7 +1673,8 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         padding: 10px;
     }
     > .carousel-caption {
-        @include o-position-absolute($right: 50%, $left: 50%);
+        position: absolute;
+        inset-inline: 50%;
         bottom: 20px;
         > div {
             position: absolute;
@@ -1682,7 +1685,8 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         }
     }
     > .carousel-image {
-        @include o-position-absolute($top: 5%, $bottom: 5%);
+        position: absolute;
+        inset-block: 5%;
         max-height: 90%;
         margin: 0 auto;
     }
@@ -1821,7 +1825,8 @@ $-transition-duration: 200ms;
 // Affixed Header
 .o_header_affixed {
     display: block;
-    @include o-position-absolute(0, 0, auto, 0);
+    top: 0;
+    inset-inline: 0;
     position: fixed;
 
     &:not(.o_header_no_transition) {
@@ -2246,7 +2251,9 @@ header {
             .o_mega_menu_toggle.show {
                 &::before {
                     content: "";
-                    @include o-position-absolute($right: 0, $bottom: 0, $left: 0);
+                    position: absolute;
+                    bottom: 0;
+                    inset-inline: 0;
                     z-index: 1000; // Same as --bs-dropdown-zindex.
                     height: var(--o-mega-menu-bridge-height);
                     cursor: auto;
@@ -2263,7 +2270,9 @@ header {
     z-index: 1;
 
     &:before {
-        @include o-position-absolute($top: 0, $left: 0);
+        position: absolute;
+        top: 0;
+        inset-inline-start: 0;
         content: '';
         display: block;
         width: 100%;
@@ -2287,7 +2296,9 @@ header {
 
 #wrapwrap.o_header_overlay {
     > header:not(.o_header_affixed):not(.o_header_sidebar) {
-        @include o-position-absolute(0, 0, auto, 0);
+        position: absolute;
+        top: 0;
+        inset-inline: 0;
         z-index: 1000;
 
         > .navbar {
@@ -2487,7 +2498,9 @@ header {
                 }
             }
             > footer {
-                @include o-position-sticky(auto, 0, 0, 0);
+                position: sticky;
+                bottom: 0;
+                inset-inline: 0;
                 z-index: -1;
             }
         }
@@ -2560,7 +2573,9 @@ span.list-inline-item.o_add_language:last-child {
         margin-bottom: 0;
     }
     .figure-caption {
-        @include o-position-absolute(auto, 0, 0, 0);
+        position: absolute;
+        bottom: 0;
+        inset-inline: 0;
         @include o-bg-color(rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity));
         padding: var(--o-bs-tooltip-padding-y) var(--o-bs-tooltip-padding-x);
         font-weight: var(--o-bs-font-weight-bold);
@@ -2590,7 +2605,8 @@ span.list-inline-item.o_add_language:last-child {
     position: relative;
 
     .o_record_cover_component {
-        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute;
+        inset: 0;
 
         background-size: cover;
         background-position: center;
@@ -2600,7 +2616,9 @@ span.list-inline-item.o_add_language:last-child {
 
 // Scroll down button
 .o_scroll_button {
-    @include o-position-absolute(auto, 0, 0, 0);
+    position: absolute;
+    bottom: 0;
+    inset-inline: 0;
     display: flex;
     outline: none;
     box-shadow: none;

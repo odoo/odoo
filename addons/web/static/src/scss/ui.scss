@@ -17,7 +17,11 @@
     opacity: $btn-disabled-opacity;
 
     .o_btn_loading_spinner {
-        @include o-position-absolute(-1px, -1px, -1px, -1px);
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        bottom: -1px;
+        right: -1px;
         z-index: 1;
         display: grid;
         place-content: center;

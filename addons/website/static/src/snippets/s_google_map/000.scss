@@ -7,10 +7,13 @@ $s-google-map-desc-alpha: 0.80 !default;
     min-height: clamp(100px, var(--GoogleMap-height), 90svh);
 
     .map_container {
-        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute;
+        inset: 0;
     }
     .description {
-        @include o-position-absolute(auto, 0, 0, 0);
+        position: absolute;
+        bottom: 0;
+        inset-inline: 0;
         z-index: 99;
         padding: 0 1em;
         background: rgba($s-google-map-desc-bg, $s-google-map-desc-alpha);

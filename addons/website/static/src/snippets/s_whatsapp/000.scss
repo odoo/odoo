@@ -113,7 +113,9 @@
 
             &::before {
                 content: '';
-                @include o-position-absolute($bottom: -12px, $left: 4px);
+                position: absolute;
+                bottom: -12px;
+                inset-inline-start: 4px;
                 border: 8px solid transparent;
                 border-top-color: var(--s_whatsapp-message-bg);
                 border-right: 0;

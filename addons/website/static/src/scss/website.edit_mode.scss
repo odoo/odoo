@@ -49,7 +49,8 @@ $-editor-messages-margin-x: 2%;
             &:after {
                 content: "";
                 pointer-events: none;
-                @include o-position-absolute(0, 0, 0, 0);
+                position: absolute;
+                inset: 0;
                 z-index: 1;
                 outline: var(--o-we-handle-border-width) solid var(--o-we-handles-accent-color);
                 outline-offset: var(--o-we-handle-border-width);
@@ -238,7 +239,8 @@ body.editor_enable {
         &:after {
             content: "";
             pointer-events: none;
-            @include o-position-absolute(0, 0, 0, 0);
+            position: absolute;
+            inset: 0;
             z-index: 1;
             // This border is useful when there is a green background behind
             // the text.

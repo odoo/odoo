@@ -35,7 +35,8 @@
 
     &.s_popup_center {
         .s_popup_full {
-            @include o-position-absolute(0, 0, 0, 0);
+            position: absolute;
+            inset: 0;
             &.modal-dialog {
                 max-width: 100%;
                 padding: 0 !important;

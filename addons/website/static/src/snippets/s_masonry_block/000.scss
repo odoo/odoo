@@ -82,12 +82,15 @@ html[data-no-flex] .s_masonry_block:not([data-vcss]) {
             > div {
                 padding-top: 0;
                 padding-bottom:0;
-                @include o-position-absolute(0, 0, 0, 0);
+                position: absolute;
+                inset: 0;
             }
         }
 
         .content {
-            @include o-position-absolute($s-masonry-block-content-top, $s-masonry-block-content-right, $s-masonry-block-content-bottom, $s-masonry-block-content-left);
+            position: absolute;
+            inset-block: $s-masonry-block-content-top $s-masonry-block-content-bottom;
+            inset-inline: $s-masonry-block-content-left $s-masonry-block-content-right;
         }
     }
 }

@@ -23,7 +23,9 @@
                     content: '';
                     z-index: -1;
                     border-top: 1px solid map-get($grays, '500');
-                    @include o-position-absolute(50%, 0, 0, auto);
+                    position: absolute;
+                    inset-block: 50% 0;
+                    inset-inline-end: 0;
                 }
             }
             .s_process_step_icon {

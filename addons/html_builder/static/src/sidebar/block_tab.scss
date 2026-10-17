@@ -116,7 +116,9 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
             &.o_disabled {
                 .o_snippet_undroppable {
-                    @include o-position-absolute(var(--o-hb-spacer-2), var(--o-hb-spacer-2), auto, auto);
+                    position: absolute;
+                    top: var(--o-hb-spacer-2);
+                    inset-inline-end: var(--o-hb-spacer-2);
                 }
             }
 

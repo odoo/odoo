@@ -62,10 +62,9 @@
         --o-wsale-wishlist-btn-offset-top-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.1);
         --o-wsale-wishlist-btn-offset-end-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.2);
 
-        @include o-position-absolute(
-            var(--o-wsale-card-offset-top, var(--o-wsale-wishlist-btn-offset-top-default)),
-            var(--o-wsale-card-offset-x, var(--o-wsale-wishlist-btn-offset-end-default))
-        );
+        position: absolute;
+        top: var(--o-wsale-card-offset-top, var(--o-wsale-wishlist-btn-offset-top-default));
+        inset-inline-end: var(--o-wsale-card-offset-x, var(--o-wsale-wishlist-btn-offset-end-default));
     }
 }
 

@@ -7,7 +7,8 @@
             &:before {
                 content: " ";
                 display: block;
-                @include o-position-absolute($left: 50%);
+                position: absolute;
+                inset-inline-start: 50%;
                 height: 100%;
                 border-right: 1px solid map-get($grays, '200');
             }
