@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-inherit="sale.NewQuotationButton" t-inherit-mode="extension">
+        <button position="replace">
+            <SaleTemplateDropdown
+                newButtonClasses="'btn btn-primary oe_highlight'"
+                record="this.props.record"
+                action="this.props.action"
+                string="this.props.string"
+                hotkey="this.props.hotkey"
+            />
+        </button>
+    </t>
+</templates>
