@@ -6,7 +6,14 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
+<<<<<<< ccaaf975ec398bd5977d7665111ed38c4790a68e
 from odoo.tests.common import new_test_user
+||||||| dc2f9415c76505390739a062b96e8cb6b6f7e8a7
+from odoo.tests.common import new_test_user, tagged
+=======
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.tests.common import new_test_user, tagged
+>>>>>>> 8d162f40e0f1548bc52daf477bc65a969cecdc80
 
 
 class TestImLivechatReport(TestImLivechatCommon):
@@ -174,3 +181,65 @@ class TestImLivechatReport(TestImLivechatCommon):
             expected_order,
             f"Days should be ordered starting from Saturday. Got {actual_order}, expected {expected_order}"
         )
+<<<<<<< ccaaf975ec398bd5977d7665111ed38c4790a68e
+||||||| dc2f9415c76505390739a062b96e8cb6b6f7e8a7
+
+    def test_time_to_answer_does_not_count_messages_after_close(self):
+        with freeze_time("2025-05-20 06:00:00") as frozen_time:
+            data = self.make_jsonrpc_request(
+                    "/im_livechat/get_session",
+                    {"channel_id": self.livechat_channel.id},
+                )
+            chat = self.env["discuss.channel"].browse(data["channel_id"])
+            frozen_time.tick(delta=timedelta(minutes=1))
+            chat.message_post(body="Question", message_type="comment")
+            self._create_message(chat, self.env.user.partner_id, datetime.now())
+            frozen_time.tick(delta=timedelta(minutes=5))
+            self.make_jsonrpc_request("/im_livechat/visitor_leave_session", {"channel_id": chat.id})
+            frozen_time.tick(delta=timedelta(minutes=5))
+            self._create_message(chat, chat.livechat_operator_id, datetime.now())
+            report = self.env["im_livechat.report.channel"].search([("channel_id", "=", chat.id)])
+            self.assertEqual(report.time_to_answer, 0.0)
+=======
+
+    def test_hour_and_day_of_week_in_user_timezone(self):
+        alice_user = mail_new_test_user(
+            self.env,
+            login="alice",
+            groups="im_livechat.im_livechat_group_manager",
+            tz="Europe/Brussels",
+        )
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Test Support", "user_ids": [alice_user.id]},
+        )
+        # Simulate Friday 23:30 UTC: Saturday 00:30 (winter) and 01:30 (summer) in Brussels.
+        for date in ("2023-03-17 23:30:00", "2023-06-16 23:30:00"):
+            with freeze_time(date):
+                self.make_jsonrpc_request(
+                    "/im_livechat/get_session",
+                    {"channel_id": livechat_channel.id},
+                )
+        report_model = self.env["im_livechat.report.channel"].with_user(alice_user)
+        domain = [("livechat_channel_id", "=", livechat_channel.id)]
+        result = report_model.formatted_read_group(domain, groupby=["start_hour"])
+        self.assertEqual([group["start_hour"] for group in result], ["00", "01"])
+        result = report_model.formatted_read_group(domain, groupby=["day_number"])
+        self.assertEqual([group["day_number"] for group in result], ["6"])
+
+    def test_time_to_answer_does_not_count_messages_after_close(self):
+        with freeze_time("2025-05-20 06:00:00") as frozen_time:
+            data = self.make_jsonrpc_request(
+                    "/im_livechat/get_session",
+                    {"channel_id": self.livechat_channel.id},
+                )
+            chat = self.env["discuss.channel"].browse(data["channel_id"])
+            frozen_time.tick(delta=timedelta(minutes=1))
+            chat.message_post(body="Question", message_type="comment")
+            self._create_message(chat, self.env.user.partner_id, datetime.now())
+            frozen_time.tick(delta=timedelta(minutes=5))
+            self.make_jsonrpc_request("/im_livechat/visitor_leave_session", {"channel_id": chat.id})
+            frozen_time.tick(delta=timedelta(minutes=5))
+            self._create_message(chat, chat.livechat_operator_id, datetime.now())
+            report = self.env["im_livechat.report.channel"].search([("channel_id", "=", chat.id)])
+            self.assertEqual(report.time_to_answer, 0.0)
+>>>>>>> 8d162f40e0f1548bc52daf477bc65a969cecdc80
