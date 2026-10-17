@@ -250,11 +250,19 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
         }
 
         .vote_up {
-            @include o-hover-text-color(inherit, var(--success));
+            color: inherit;
+
+            &:hover, &:focus, &.focus {
+                color: var(--success);
+            }
         }
 
         .vote_down {
-            @include o-hover-text-color(inherit, var(--danger));
+            color: inherit;
+
+            &:hover, &:focus, &.focus {
+                color: var(--danger);
+            }
         }
     }
 }

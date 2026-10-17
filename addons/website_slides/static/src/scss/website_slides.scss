@@ -213,7 +213,11 @@ $o-wslides-fs-side-width: 300px;
         border-radius: 0;
         border-width: 0 1px;
         line-height: $line-height-base;
-        @include o-hover-text-color(rgba(white, 0.8), white);
+        color: rgba(255, 255, 255, 0.8);
+
+        &:hover, &:focus, &.focus {
+            color: white;
+        }
 
         & {
             border-color: transparent;
@@ -456,7 +460,11 @@ $o-wslides-fs-side-width: 300px;
 
         .o_wslides_lesson_aside_list {
             .o_wslides_lesson_aside_list_link {
-                @include o-hover-text-color(var(--gray-600), var(--o-bs-headings-color) );
+                color: var(--gray-600);
+
+                &:hover, &:focus, &.focus {
+                    color: var(--o-bs-headings-color);
+                }
 
                 &.active {
                     box-shadow:inset 2px 0 var(--primary);
@@ -646,11 +654,19 @@ li.o_wslides_fs_sidebar_list_item.active {
     .oe_slides_share_bar a {
         cursor: pointer;
         user-select: none;
-        @include o-hover-text-color(rgba(white, 0.7), white);
+        color: rgba(255, 255, 255, 0.7);
+
+        &:hover, &:focus, &.focus {
+            color: white;
+        }
 
         &.disabled {
-            @include o-hover-text-color(rgba(white, 0.2), rgba(white, 0.2));
+            color: rgba(255, 255, 255, 0.2);
             cursor: default;
+
+            &:hover, &:focus, &.focus {
+                color: rgba(255, 255, 255, 0.2);
+            }
         }
     }
 

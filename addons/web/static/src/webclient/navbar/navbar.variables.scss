@@ -41,10 +41,11 @@ $o-navbar-badge-text-shadow: 1px 1px 0 rgba($o-black, .3) !default;
     background-color: inherit;
     font-size: $o-navbar-entry-font-size;
 
-    @include o-hover-text-color(
-        var(--NavBar-entry-color, #{$o-navbar-entry-color}),
-        var(--NavBar-entry-color--hover, #{$o-navbar-entry-color--hover})
-    );
+    color: var(--NavBar-entry-color, #{$o-navbar-entry-color});
+
+    &:hover, &:focus, &.focus {
+        color: var(--NavBar-entry-color--hover, #{$o-navbar-entry-color--hover});
+    }
 }
 
 %-main-navbar-entry-spacing {
