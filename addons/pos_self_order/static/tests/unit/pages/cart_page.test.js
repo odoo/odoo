@@ -170,7 +170,7 @@ test("opens combo suggestion popup and applies a direct combo", async () => {
     const combo1 = store.models["product.combo"].get(1);
 
     combo1.is_upsell = false;
-    combo1.qty_free = combo1.qty_max = 1;
+    combo1.included_qty = combo1.qty_max = 1;
 
     await store.addToCart(store.models["product.template"].get(8), 1);
     await store.addToCart(store.models["product.template"].get(10), 1);
@@ -205,7 +205,7 @@ test("opens combo suggestion popup and applies repeated single-free combos", asy
     const combo1 = store.models["product.combo"].get(1);
 
     combo1.is_upsell = false;
-    combo1.qty_free = combo1.qty_max = 1;
+    combo1.included_qty = combo1.qty_max = 1;
 
     await store.addToCart(store.models["product.template"].get(8), 2);
     await store.addToCart(store.models["product.template"].get(10), 2);

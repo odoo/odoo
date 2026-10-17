@@ -176,7 +176,9 @@ export class ComboConfiguratorPopup extends Component {
     isConfirmButtonEnabled() {
         return Object.keys(this.state.qty).every((comboId) => {
             const combo = this.pos.models["product.combo"].get(comboId);
-            return combo.qty_free == 0 || this.totalQuantityForCombo(comboId) >= combo.qty_free;
+            return (
+                combo.included_qty == 0 || this.totalQuantityForCombo(comboId) >= combo.included_qty
+            );
         });
     }
 
@@ -205,7 +207,7 @@ export class ComboConfiguratorPopup extends Component {
                 .forEach(([itemId, qty]) => {
                     const comboItemId = this.pos.models["product.combo.item"].get(itemId);
                     const comboId = comboItemId.combo_id.id;
-                    const comboFreeQty = comboItemId.combo_id.qty_free;
+                    const comboFreeQty = comboItemId.combo_id.included_qty;
 
                     if (!comboFreeQtyTracker[comboId]) {
                         comboFreeQtyTracker[comboId] = 0;
@@ -355,7 +357,7 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     computeComboExtraPrice(combo) {
-        const extraQty = this.totalQuantityForCombo(combo.id) - combo.qty_free;
+        const extraQty = this.totalQuantityForCombo(combo.id) - combo.included_qty;
         const extraQtyPrice = extraQty > 0 ? extraQty * combo.base_price : 0;
 
         const comboChoicesExtraPrices = combo.combo_item_ids.reduce((acc, comboItem) => {
@@ -376,8 +378,10 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     getSelectedComboItemsText(combo) {
-        return combo.qty_free > 1
-            ? `${Math.min(this.totalQuantityForCombo(combo.id), combo.qty_free)}/${combo.qty_free}`
+        return combo.included_qty > 1
+            ? `${Math.min(this.totalQuantityForCombo(combo.id), combo.included_qty)}/${
+                  combo.included_qty
+              }`
             : "1";
     }
 }
