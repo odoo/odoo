@@ -6,6 +6,10 @@
                 <t t-if="this.rtc.microphonePermission !== 'granted'">
                     <i class="oi text-warning me-1" data-icon="warning"/> No microphone permissions
                 </t>
+                <t t-elif="this.rtc.showPttMutedWarning">
+                    <div class="fs-5 mb-1"><i class="oi text-warning me-1" data-icon="warning"/> You are currently muted!</div>
+                    <div>Please turn on the microphone to use push-to-talk.</div>
+                </t>
                 <t t-else="">
                     <div class="fs-5 mb-1"><i class="oi text-warning me-1" data-icon="warning"/> Microphone muted by system</div>
                     <div>Go to your computer's settings to unmute your mic and increase its level</div>
