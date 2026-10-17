@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    inputFiles,
     insertText,
     onRpcBefore,
     openDiscuss,
@@ -171,6 +172,37 @@ test('"reply to" composer should send message if message replied to is not a not
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Composer button[title='Send']", { count: 0 });
     await waitForSteps(["/mail/message/post"]);
+});
+
+test('"reply to" composer uploads attachments with the message replied to', async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        needaction: true,
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    onRpc("/mail/attachment/upload", async (request) => {
+        const body = await request.formData();
+        asyncStep(`upload with parent_id ${body.get("parent_id")}`);
+    });
+    await start();
+    await openDiscuss("mail.box_inbox");
+    await contains(".o-mail-Message");
+    await click("[title='Expand']");
+    await click(".o-dropdown-item:contains('Reply')");
+    await inputFiles(".o-mail-Composer .o_input_file", [
+        new File(["hello, world"], "text.txt", { type: "text/plain" }),
+    ]);
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)");
+    await waitForSteps([`upload with parent_id ${messageId}`]);
 });
 
 test("show subject of message in Inbox", async () => {

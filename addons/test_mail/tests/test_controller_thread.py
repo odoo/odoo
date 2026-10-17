@@ -1,8 +1,10 @@
 import json
 
+from requests.exceptions import HTTPError
+
 from odoo import http
 from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon
-from odoo.tests import tagged
+from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 
@@ -14,6 +16,48 @@ class TestMessageController(MailControllerThreadCommon):
         super().setUpClass()
 
         cls.test_public_record = cls.env["mail.test.access.public"].create({"name": "Public Channel", "email": "john@test.be", "mobile": "+32455001122"})
+        admin_records = cls.env["mail.test.access"].create(
+            [
+                {"access": "admin", "name": "Admin Record"},
+                {"access": "admin", "name": "Other Admin Record"},
+                {"access": "admin", "name": "Followed Admin Record"},
+            ],
+        )
+        cls.test_admin_record, test_admin_record_other, cls.test_followed_record = admin_records
+        cls.test_followed_record.message_subscribe(cls.user_employee.partner_id.ids)
+        cls.message_followed = cls.test_followed_record.message_post(
+            body="Hello",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        cls.message_notified = cls.test_admin_record.message_post(
+            body="Hello",
+            message_type="comment",
+            partner_ids=cls.user_employee.partner_id.ids,
+            subtype_xmlid="mail.mt_comment",
+        )
+        cls.message_not_notified = cls.test_admin_record.message_post(
+            body="Hello",
+            message_type="comment",
+        )
+        cls.message_note = cls.test_admin_record.message_post(
+            body="Hello",
+            message_type="comment",
+            partner_ids=cls.user_employee.partner_id.ids,
+            subtype_xmlid="mail.mt_note",
+        )
+        cls.message_other_record = test_admin_record_other.message_post(
+            body="Hello",
+            message_type="comment",
+            partner_ids=cls.user_employee.partner_id.ids,
+        )
+        cls.test_group = cls.env["discuss.channel"]._create_group(cls.user_employee.partner_id.ids)
+        cls.message_left_group = cls.test_group.message_post(
+            body="Hello",
+            message_type="comment",
+            partner_ids=cls.user_employee.partner_id.ids,
+        )
+        cls.test_group._action_unfollow(partner=cls.user_employee.partner_id)
 
     @mute_logger("odoo.http")
     def test_thread_attachment_hijack(self):
@@ -165,3 +209,61 @@ class TestMessageController(MailControllerThreadCommon):
             files={"ufile": b""},
         )
         self.assertEqual(response.status_code, 200)
+
+    @mute_logger("odoo.http")
+    def test_thread_post_reply_to_notified_message(self):
+        self.assertFalse(self.test_admin_record.with_user(self.user_employee).has_access("read"))
+        for message in (self.message_followed, self.message_left_group):
+            self.assertIn(self.user_employee.partner_id, message.notification_ids.res_partner_id)
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        post_data = {"body": "Reply", "message_type": "comment"}
+        for thread, parent, subtype_xmlid in (
+            (self.test_admin_record, self.message_notified, "mail.mt_comment"),
+            (self.test_admin_record, self.message_note, "mail.mt_note"),
+            (self.test_followed_record, self.message_followed, "mail.mt_comment"),
+        ):
+            with self.subTest(thread=thread, parent=parent):
+                attachment = self._upload_reply_attachment(thread, parent)
+                message = self._message_post(
+                    thread,
+                    {
+                        **post_data,
+                        "attachment_ids": attachment.ids,
+                        "attachment_tokens": [attachment._get_ownership_token()],
+                        "parent_id": parent.id,
+                        "subtype_xmlid": subtype_xmlid,
+                    },
+                    {},
+                )
+                self.assertEqual(message.attachment_ids, attachment)
+                self.assertEqual(message.author_id, self.user_employee.partner_id)
+                self.assertEqual(message.body, "<p>Reply</p>")
+                self.assertEqual(message.subtype_id, self.env.ref(subtype_xmlid))
+        with self.assertRaisesRegex(HTTPError, "404"):
+            self._upload_reply_attachment(self.test_admin_record, self.message_notified, "false")
+        self.assertNotIn(self.user_employee.partner_id, self.test_admin_record.message_partner_ids)
+        for thread, parent in (
+            (self.test_admin_record, self.message_not_notified),
+            (self.test_admin_record, self.message_other_record),
+            (self.test_group, self.message_left_group),
+        ):
+            with self.subTest(thread=thread, parent=parent):
+                with self.assertRaisesRegex(JsonRpcException, "werkzeug.exceptions.NotFound"):
+                    self._message_post(thread, {**post_data, "parent_id": parent.id}, {})
+                with self.assertRaisesRegex(HTTPError, "404"):
+                    self._upload_reply_attachment(thread, parent)
+
+    def _upload_reply_attachment(self, thread, parent, is_pending="true"):
+        response = self.url_open(
+            "/mail/attachment/upload",
+            {
+                "csrf_token": http.Request.csrf_token(self),
+                "is_pending": is_pending,
+                "parent_id": parent.id,
+                "thread_id": thread.id,
+                "thread_model": thread._name,
+            },
+            files={"ufile": b"Reply"},
+        )
+        response.raise_for_status()
+        return self.env["ir.attachment"].browse(response.json()["data"]["attachment_id"])

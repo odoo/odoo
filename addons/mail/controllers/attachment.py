@@ -48,8 +48,24 @@ class AttachmentController(ThreadController):
 
     @http.route("/mail/attachment/upload", methods=["POST"], type="http", auth="public")
     @add_guest_to_context
-    def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
+    def mail_attachment_upload(
+        self,
+        ufile,
+        thread_id,
+        thread_model,
+        is_pending=False,
+        parent_id=False,
+        **kwargs,
+    ):
+        is_pending = is_pending and is_pending != "false"
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
+        if (
+            not thread
+            and is_pending
+            and self._get_notified_message(thread_model, thread_id, parent_id)
+        ):
+            # sudo: mail.thread - can read the company of a notified thread to copy it to the file
+            thread = request.env[thread_model].sudo().browse(int(thread_id))
         if not thread:
             raise NotFound()
         vals = {
@@ -68,7 +84,7 @@ class AttachmentController(ThreadController):
                 else active_company_ids[0]
             )
             vals["company_id"] = company_id
-        if is_pending and is_pending != "false":
+        if is_pending:
             # Add this point, the message related to the uploaded file does
             # not exist yet, so we use those placeholder values instead.
             vals.update(
