@@ -1,9 +1,7 @@
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").DiscussChannel} */
-const discussChannelPatch = {
+export const discussChannelPatch = patchModel(DiscussChannel, {
     setup() {
         super.setup(...arguments);
         this.requested_by_operator = false;
@@ -12,5 +10,4 @@ const discussChannelPatch = {
         // the first message of the agent requesting the chat acts as the welcome message
         return super.hasWelcomeMessage && !this.requested_by_operator;
     },
-};
-patch(DiscussChannel.prototype, discussChannelPatch);
+});

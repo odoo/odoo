@@ -1,12 +1,9 @@
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import { Store } from "@mail/core/common/store_plugin";
-import { fields } from "@mail/model/export";
-
-import { patch } from "@web/core/utils/patch";
+import { fields, patchModel } from "@mail/model/export";
 
 export const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
-/** @type {import("models").Store} */
-const StorePatch = {
+export const StorePatch = patchModel(Store, {
     setup() {
         super.setup(...arguments);
         this.activeVisitorLivechats = fields.Many("discuss.channel", {
@@ -38,5 +35,4 @@ const StorePatch = {
             this.ensureInitialized();
         }
     },
-};
-patch(Store.prototype, StorePatch);
+});

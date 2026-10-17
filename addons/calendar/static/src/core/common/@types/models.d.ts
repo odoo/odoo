@@ -6,7 +6,6 @@ declare module "models" {
     export interface Store {
         "calendar.event": StaticMailRecord<CalendarEvent, typeof CalendarEventClass>;
     }
-
     export interface Models {
         "calendar.event": CalendarEvent;
     }

@@ -1,4 +1,4 @@
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 import { Store } from "@mail/core/common/store_plugin";
 import { router } from "@web/core/browser/router";
 
@@ -28,8 +28,7 @@ patch(router, {
     },
 });
 
-/** @type {import("models").Store} */
-const StorePatch = {
+export const StorePatch = patchModel(Store, {
     setup() {
         super.setup(...arguments);
         this.rtc = this.computed(() => this.Rtc.insert({}));
@@ -85,6 +84,7 @@ const StorePatch = {
         );
         this.meetingViewOpened = false;
     },
+    /** @returns {string|undefined} */
     get shareUrl() {
         return this.self_user && this.rtc?.isFullscreen
             ? this.rtc.localChannel?.invitationLink
@@ -119,5 +119,4 @@ const StorePatch = {
             return m2HasRtc - m1HasRtc;
         }
     },
-};
-patch(Store.prototype, StorePatch);
+});

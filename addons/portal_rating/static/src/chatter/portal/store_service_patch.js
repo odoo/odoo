@@ -1,8 +1,7 @@
 import { Store } from "@mail/core/common/store_plugin";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(Store.prototype, {
+export const storePatch = patchModel(Store, {
     async getMessagePostParams({ postData }) {
         const params = await super.getMessagePostParams(...arguments);
         if (postData.rating_value) {

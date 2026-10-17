@@ -1,6 +1,7 @@
 import { Record } from "@mail/model/export";
 
 export class ResCompany extends Record {
+    /** @type {"res.company"} */
     static _name = "res.company";
 
     /** @type {number} */

@@ -1,9 +1,8 @@
 import { Notification } from "@mail/core/common/notification_model";
-import { patch } from "@web/core/utils/patch";
+import { patchModel } from "@mail/model/export";
 import { _t } from "@web/core/l10n/translation";
 
-/** @type {import("models").Notification} */
-const notificationPatch = {
+export const notificationPatch = patchModel(Notification, {
     get icon() {
         if (this.notification_type === "snail") {
             return "send";
@@ -73,5 +72,4 @@ const notificationPatch = {
         }
         return super.statusTitle;
     },
-};
-patch(Notification.prototype, notificationPatch);
+});

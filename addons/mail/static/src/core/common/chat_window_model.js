@@ -3,6 +3,8 @@ import { fields, Record } from "@mail/model/export";
 /** @typedef {{ thread?: import("models").Thread }} ChatWindowData */
 
 export class ChatWindow extends Record {
+    /** @type {"ChatWindow"} */
+    static _name = "ChatWindow";
     static id = "channel";
 
     actionsDisabled = false;

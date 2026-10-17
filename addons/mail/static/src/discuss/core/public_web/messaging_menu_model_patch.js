@@ -5,18 +5,16 @@ import {
 } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
 import { MessagingMenuEmptyChannel } from "@mail/discuss/core/public_web/messaging_menu_empty_channel";
 import { compareChannels, compareMeetings } from "@mail/discuss/core/public_web/meeting_compare";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 import { markup } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { patch } from "@web/core/utils/patch";
 
 MENU_TABS.CHAT = "chat";
 MENU_TABS.CHANNEL = "channel";
 MENU_TABS.MEETING = "meeting";
 
-/** @type {import("models").MessagingMenu} */
-const messagingMenuPatch = {
+export const messagingMenuPatch = patchModel(MessagingMenu, {
     setup() {
         super.setup(...arguments);
         this.chatTab = fields.One("MessagingMenuTab", {
@@ -201,5 +199,4 @@ const messagingMenuPatch = {
     notificationMatchesExtra(message) {
         return super.notificationMatchesExtra(message) && !message.thread?.channel;
     },
-};
-patch(MessagingMenu.prototype, messagingMenuPatch);
+});

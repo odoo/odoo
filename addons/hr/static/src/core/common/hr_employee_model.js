@@ -1,6 +1,7 @@
 import { Record, fields } from "@mail/model/export";
 
 export class HrEmployee extends Record {
+    /** @type {"hr.employee"} */
     static _name = "hr.employee";
 
     /** @type {Boolean} */

@@ -1,11 +1,8 @@
 import { MessagingMenuTab } from "@mail/core/public_web/messaging_menu/messaging_menu_tab_model";
 import { compareChannels } from "@mail/discuss/core/public_web/meeting_compare";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").MessagingMenuTab} */
-const messagingMenuTabPatch = {
+export const messagingMenuTabPatch = patchModel(MessagingMenuTab, {
     setup() {
         super.setup(...arguments);
         this.channels = fields.Many("discuss.channel", { inverse: "messagingMenuTabs" });
@@ -66,5 +63,4 @@ const messagingMenuTabPatch = {
             )
             .map((c) => c.id);
     },
-};
-patch(MessagingMenuTab.prototype, messagingMenuTabPatch);
+});

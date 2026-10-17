@@ -1,9 +1,7 @@
 import { ResPartner } from "@mail/core/common/res_partner_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Persona} */
-const resPartnerPatch = {
+export const resPartnerPatch = patchModel(ResPartner, {
     setup() {
         super.setup();
         /** @type {number|undefined} */
@@ -20,5 +18,4 @@ const resPartnerPatch = {
     get displayName() {
         return super.displayName || this.user_livechat_username;
     },
-};
-patch(ResPartner.prototype, resPartnerPatch);
+});

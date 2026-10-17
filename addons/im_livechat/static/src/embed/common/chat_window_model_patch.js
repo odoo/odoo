@@ -1,10 +1,9 @@
 import { ChatWindow } from "@mail/core/common/chat_window_model";
+import { patchModel } from "@mail/model/export";
 
 import { rpc } from "@web/core/network/rpc";
-import { patch } from "@web/core/utils/patch";
 
-/** @type {import("models").ChatWindow} */
-const chatWindowModelPatch = {
+export const chatWindowModelPatch = patchModel(ChatWindow, {
     async _onBeforeClose() {
         const canClose = await super._onBeforeClose(...arguments);
         if (
@@ -23,5 +22,4 @@ const chatWindowModelPatch = {
             () => (this.feedbackDoneResolver = null)
         );
     },
-};
-patch(ChatWindow.prototype, chatWindowModelPatch);
+});

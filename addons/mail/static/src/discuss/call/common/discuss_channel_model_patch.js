@@ -1,9 +1,8 @@
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
 
 import { localeCompare } from "@web/core/l10n/utils";
-import { patch } from "@web/core/utils/patch";
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
 
@@ -13,8 +12,7 @@ import { patch } from "@web/core/utils/patch";
  */
 export const SPEAKER_WINDOW = 3000;
 
-/** @type {import("models").DiscussChannel} */
-const DiscussChannelPatch = {
+export const DiscussChannelPatch = patchModel(DiscussChannel, {
     setup() {
         super.setup(...arguments);
         this.activeRtcSession = fields.One("discuss.channel.rtc.session");
@@ -153,13 +151,19 @@ const DiscussChannelPatch = {
             this.store.env.services["mail.sound_effects"].play("member-leave");
         }
     },
-    /** ⚠️ {@link AwaitChatHubInit} */
+    /**
+     * ⚠️ {@link AwaitChatHubInit}
+     *
+     * @returns {boolean}
+     */
     get isCallDisplayedInChatWindow() {
         return this.chatWindow?.isOpen && !this.store.meetingViewOpened;
     },
+    /** @returns {boolean} */
     get isSelfInCall() {
         return this.store.rtc.selfSession && this.eq(this.store.rtc.channel);
     },
+    /** @returns {boolean} */
     get showCallView() {
         return !this.store.rtc.isFullscreen && this.hasRtcSessionActive;
     },
@@ -303,5 +307,4 @@ const DiscussChannelPatch = {
     get hasRtcSessionActive() {
         return this.rtc_session_ids.length > 0;
     },
-};
-patch(DiscussChannel.prototype, DiscussChannelPatch);
+});

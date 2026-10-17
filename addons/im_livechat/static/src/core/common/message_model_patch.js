@@ -1,10 +1,7 @@
 import { Message } from "@mail/core/common/message_model";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Message} */
-const messagePatch = {
+export const messagePatch = patchModel(Message, {
     setup() {
         super.setup(...arguments);
         this.chatbotStep = fields.One("ChatbotStep", { inverse: "message" });
@@ -27,5 +24,4 @@ const messagePatch = {
                 (this.store.self_user?.share === false || !this.isSelfAuthored))
         );
     },
-};
-patch(Message.prototype, messagePatch);
+});

@@ -1,6 +1,7 @@
 import { untrack } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
@@ -257,4 +258,20 @@ export function untrackFunctions(object, names) {
             writable: true,
         });
     }
+}
+
+/**
+ * Patches the prototype of a model and returns the extension, so that its type
+ * can be added to the model interface in "models" (see `@types/models.d.ts`).
+ * Inside the extension, `this` is the model as typed in "models".
+ *
+ * @template {{ _name: keyof import("models").Models }} M
+ * @template {Object} T
+ * @param {M} Model
+ * @param {T & ThisType<import("models").Models[M["_name"]]>} extension
+ * @returns {T}
+ */
+export function patchModel(Model, extension) {
+    patch(/** @type {any} */ (Model).prototype, extension);
+    return extension;
 }

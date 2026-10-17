@@ -1,6 +1,7 @@
 import { fields, Record } from "@mail/model/export";
 
 export class WebsiteVisitor extends Record {
+    /** @type {"website.visitor"} */
     static _name = "website.visitor";
 
     country = this.computed(() => this.partner_id?.country_id || this.country_id);

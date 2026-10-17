@@ -1,10 +1,8 @@
 import { Message } from "@mail/core/common/message_model";
+import { patchModel } from "@mail/model/export";
 import { fields } from "@mail/model/misc";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Message} */
-const messagePatch = {
+export const messagePatch = patchModel(Message, {
     setup() {
         super.setup(...arguments);
         this.messagingMenuTabsAsMessages = fields.Many("MessagingMenuTab", {
@@ -16,5 +14,4 @@ const messagePatch = {
             eager: true,
         });
     },
-};
-patch(Message.prototype, messagePatch);
+});

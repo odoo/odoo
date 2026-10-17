@@ -1,9 +1,7 @@
 import { Message } from "@mail/core/common/message_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Message} */
-const messagePatch = {
+export const messagePatch = patchModel(Message, {
     setup() {
         super.setup(...arguments);
         this.disableChatbotAnswers = false;
@@ -32,5 +30,4 @@ const messagePatch = {
     get canAddReaction() {
         return super.canAddReaction && !this.isWelcomeMessage;
     },
-};
-patch(Message.prototype, messagePatch);
+});

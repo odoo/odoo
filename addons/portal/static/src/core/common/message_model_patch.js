@@ -1,8 +1,7 @@
 import { Message } from "@mail/core/common/message_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(Message.prototype, {
+export const messagePatch = patchModel(Message, {
     setup() {
         super.setup(...arguments);
         /** @type {boolean|undefined} */

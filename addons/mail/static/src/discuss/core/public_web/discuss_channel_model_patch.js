@@ -1,11 +1,10 @@
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
+import { patchModel } from "@mail/model/export";
 import { fields } from "@mail/model/misc";
 
 import { rpc } from "@web/core/network/rpc";
-import { patch } from "@web/core/utils/patch";
 
-/** @type {import("models").DiscussChannel} */
-const discussChannelPatch = {
+export const discussChannelPatch = patchModel(DiscussChannel, {
     setup() {
         super.setup(...arguments);
         this.isLocallyPinned = false;
@@ -102,7 +101,7 @@ const discussChannelPatch = {
         return !this.store.discuss.isActive;
     },
     /**
-     * @param {*} param0
+     * @param {Object} [param0]
      * @param {string} [param0.searchTerm]
      */
     async loadMoreSubChannels({ searchTerm } = {}) {
@@ -223,5 +222,4 @@ const discussChannelPatch = {
             undos.push(() => (this.isLocallyPinned = true));
         }
     },
-};
-patch(DiscussChannel.prototype, discussChannelPatch);
+});

@@ -1,16 +1,11 @@
 import { Activity } from "@mail/core/common/activity_model";
-import { fields } from "@mail/model/export";
-import { patch } from "@web/core/utils/patch";
+import { fields, patchModel } from "@mail/model/export";
 
-patch(Activity.prototype, {
+export const activityPatch = patchModel(Activity, {
     setup() {
         super.setup();
         this.calendar_event_id = fields.One("calendar.event");
     },
-});
-
-/** @type {import("models").Activity} */
-const activityPatch = {
     async rescheduleMeeting() {
         const action = await this.store.env.services.orm.call(
             "mail.activity",
@@ -19,5 +14,4 @@ const activityPatch = {
         );
         this.store.env.services.action.doAction(action);
     },
-};
-patch(Activity.prototype, activityPatch);
+});

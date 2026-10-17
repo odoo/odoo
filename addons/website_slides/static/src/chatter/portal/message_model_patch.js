@@ -1,8 +1,7 @@
 import { Message } from "@mail/core/common/message_model";
-import { patch } from "@web/core/utils/patch";
+import { patchModel } from "@mail/model/export";
 
-/** @type {import("models").Message} */
-const messagePatch = {
+export const messagePatch = patchModel(Message, {
     async remove() {
         const data = await super.remove(...arguments);
         this.store.env.bus.trigger("reload_rating_popup_composer", data);
@@ -22,5 +21,4 @@ const messagePatch = {
         }
         return data;
     },
-};
-patch(Message.prototype, messagePatch);
+});

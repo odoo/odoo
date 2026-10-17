@@ -4,6 +4,8 @@ import { markRaw } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class Failure extends Record {
+    /** @type {"Failure"} */
+    static _name = "Failure";
     static nextId = markRaw({ value: 1 });
 
     setup() {

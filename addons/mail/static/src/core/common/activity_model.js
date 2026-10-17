@@ -2,6 +2,7 @@ import { fields, Record } from "@mail/model/export";
 import { assignDefined } from "@mail/utils/common/misc";
 
 export class Activity extends Record {
+    /** @type {"mail.activity"} */
     static _name = "mail.activity";
     /**
      * @param {Object} data

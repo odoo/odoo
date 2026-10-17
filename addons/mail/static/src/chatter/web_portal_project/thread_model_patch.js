@@ -1,7 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
-import { patch } from "@web/core/utils/patch";
+import { patchModel } from "@mail/model/export";
 
-patch(Thread.prototype, {
+export const threadPatch = patchModel(Thread, {
     /**
      * @param {string[]} requestList
      * @param {Object} [options]
@@ -19,6 +19,7 @@ patch(Thread.prototype, {
         });
     },
 
+    /** @returns {string[]} */
     get fullComposerCloseRequestList() {
         return ["messages"];
     },

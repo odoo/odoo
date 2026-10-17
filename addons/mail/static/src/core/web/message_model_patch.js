@@ -1,9 +1,7 @@
 import { Message } from "@mail/core/common/message_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Message} */
-const messagePatch = {
+export const messagePatch = patchModel(Message, {
     get canReplyAll() {
         return this.canForward && !this.isNote && !this.isEmpty;
     },
@@ -16,5 +14,4 @@ const messagePatch = {
             ["comment", "email", "email_outgoing"].includes(this.message_type)
         );
     },
-};
-patch(Message.prototype, messagePatch);
+});

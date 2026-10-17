@@ -1,10 +1,7 @@
 import { Message } from "@mail/core/common/message_model";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Message} */
-const messagePatch = {
+export const messagePatch = patchModel(Message, {
     setup() {
         super.setup();
         this.channel_id = this.computed(() => this.thread?.channel);
@@ -48,5 +45,4 @@ const messagePatch = {
             this.hasSomeoneSeen
         );
     },
-};
-patch(Message.prototype, messagePatch);
+});

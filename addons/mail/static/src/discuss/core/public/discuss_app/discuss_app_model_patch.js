@@ -1,9 +1,8 @@
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
+import { patchModel } from "@mail/model/export";
 import { location } from "@web/core/browser/browser";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(DiscussApp.prototype, {
+export const discussAppPatch = patchModel(DiscussApp, {
     /**
      * The public page has no backend router/action stack, so `activeId` can't be
      * persisted as a `router.pushState` query param the way the backend does (it

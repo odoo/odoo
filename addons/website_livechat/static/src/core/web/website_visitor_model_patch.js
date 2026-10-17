@@ -1,11 +1,9 @@
-import { patch } from "@web/core/utils/patch";
-
 import { WebsiteVisitor } from "@website/mail/core/common/website_visitor_model";
+import { patchModel } from "@mail/model/export";
 
 const { DateTime } = luxon;
 
-/** @type {import("models").WebsiteVisitor} */
-const websiteVisitorPatch = {
+export const websiteVisitorPatch = patchModel(WebsiteVisitor, {
     /** @returns {string} */
     get pageVisitHistoryText() {
         return this.last_track_ids
@@ -17,5 +15,4 @@ const websiteVisitorPatch = {
             )
             .join(" → ");
     },
-};
-patch(WebsiteVisitor.prototype, websiteVisitorPatch);
+});
