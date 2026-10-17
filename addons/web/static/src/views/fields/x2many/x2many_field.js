@@ -57,10 +57,13 @@ export class X2ManyField extends Component {
             : ["o_field_x2many"];
         this.className = computeViewClassName(this.props.viewMode, this.archInfo.xmlDoc, classes);
 
-        const { activeActions, controls } = this.archInfo;
+        const { activeActions, controls, headerButtons } = this.archInfo;
         if (this.props.viewMode === "kanban") {
             this.controls = controls || [];
         }
+        this.uploadButtons = (headerButtons || []).filter(
+            (button) => button.clickParams.type === "upload"
+        );
         const subViewActiveActions = activeActions;
         this.activeActions = useActiveActions({
             crudOptions: Object.assign({}, this.props.crudOptions, {
@@ -136,6 +139,24 @@ export class X2ManyField extends Component {
 
     get displayControlPanelButtons() {
         return this.props.viewMode === "kanban" && this.canCreate && this.controls.length > 0;
+    }
+
+    get displayUploadButtons() {
+        return this.uploadButtons.length > 0 && !this.props.readonly;
+    }
+
+    get uploadRecord() {
+        const { list } = this;
+        const parent = this.props.record;
+        return {
+            resModel: list.resModel,
+            get context() {
+                return { ...list.context, active_model: parent.resModel, active_id: parent.resId };
+            },
+            get evalContext() {
+                return list.evalContext;
+            },
+        };
     }
 
     get canCreate() {

@@ -396,7 +396,7 @@ test("new record has no download button", async () => {
 
 test("filename doesn't exceed 255 bytes", async () => {
     const data = "A".repeat(MAX_FILENAME_SIZE_BYTES + 1);
-    const LARGE_BINARY_FILE = {filename: data, content: data, size: data.length};
+    const LARGE_BINARY_FILE = { filename: data, content: data, size: data.length };
 
     Partner._fields.document.default = LARGE_BINARY_FILE;
     await mountView({
@@ -404,12 +404,9 @@ test("filename doesn't exceed 255 bytes", async () => {
         type: "form",
         arch: `<form><field name="document"/></form>`,
     });
-    expect(queryValue(`.o_field_binary input[type=text]`)).toHaveLength(
-        MAX_FILENAME_SIZE_BYTES,
-        {
-            message: "The filename shouldn't exceed the maximum size in bytes",
-        }
-    );
+    expect(queryValue(`.o_field_binary input[type=text]`)).toHaveLength(MAX_FILENAME_SIZE_BYTES, {
+        message: "The filename shouldn't exceed the maximum size in bytes",
+    });
 });
 
 test("filename is updated when using the pager", async () => {
@@ -560,4 +557,57 @@ test("Binary field in list view doesn't open the record when clicked", async () 
 
     await contains(`.o_data_row .o_data_cell:eq(1)`).click();
     expect.verifySteps(["selectRecord"]);
+});
+
+test("a file dropped on a binary field with the dropzone option is set as its value", async () => {
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="document" filename="foo" options="{'dropzone': True}"/>
+                <field name="foo"/>
+            </form>`,
+    });
+    const dragEvent = (type, files = []) => {
+        const ev = new Event(type, { bubbles: true, cancelable: true });
+        Object.defineProperty(ev, "dataTransfer", { value: { types: ["Files"], files } });
+        return ev;
+    };
+    document.dispatchEvent(dragEvent("dragenter"));
+    await animationFrame();
+    expect(".o-Dropzone").toHaveCount(1);
+
+    const file = new File(["test"], "dropped.txt", { type: "text/plain" });
+    queryOne(".o-Dropzone").dispatchEvent(dragEvent("drop", [file]));
+    await waitFor(`.o_field_widget[name="document"] input.o_select_file_button`);
+    expect(".o-Dropzone").toHaveCount(0);
+    expect(queryValue(`.o_field_widget[name="document"] input.o_select_file_button`)).toBe(
+        "dropped.txt"
+    );
+    expect(queryValue(`.o_field_widget[name="foo"] input`)).toBe("dropped.txt");
+});
+
+test("a file dropped on a binary field is refused if its type is not allowed", async () => {
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="document" filename="foo" options="{'dropzone': True, 'allowed_mime_type': 'application/pdf'}"/>
+                <field name="foo"/>
+            </form>`,
+    });
+    const dragEvent = (type, files = []) => {
+        const ev = new Event(type, { bubbles: true, cancelable: true });
+        Object.defineProperty(ev, "dataTransfer", { value: { types: ["Files"], files } });
+        return ev;
+    };
+    document.dispatchEvent(dragEvent("dragenter"));
+    await animationFrame();
+    const file = new File(["test"], "dropped.txt", { type: "text/plain" });
+    queryOne(".o-Dropzone").dispatchEvent(dragEvent("drop", [file]));
+    await animationFrame();
+    expect(".o_notification").toHaveCount(1);
+    expect(queryValue(`.o_field_widget[name="foo"] input`)).toBe("My little Foo Value");
 });

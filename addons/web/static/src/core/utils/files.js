@@ -1,4 +1,5 @@
 import { humanNumber } from "@web/core/utils/numbers";
+import { trackedUpload } from "@web/core/file_upload/tracked_upload";
 import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
@@ -6,13 +7,16 @@ import { _t } from "@web/core/l10n/translation";
 export const DEFAULT_MAX_FILE_SIZE = 128 * 1024 * 1024;
 
 /**
+ * @param {Number} fileSize
  * @param {Services["notification"]} notificationService
- * @param {File} file
- * @param {Number} maxUploadSize
+ * @param {Number} [maxUploadSize] default: the upload limit of the server
  * @returns {boolean}
  */
-export function checkFileSize(fileSize, notificationService) {
-    const maxUploadSize = session.max_file_upload_size || DEFAULT_MAX_FILE_SIZE;
+export function checkFileSize(
+    fileSize,
+    notificationService,
+    maxUploadSize = session.max_file_upload_size || DEFAULT_MAX_FILE_SIZE
+) {
     if (fileSize > maxUploadSize) {
         notificationService.add(
             _t(
@@ -33,25 +37,36 @@ export function checkFileSize(fileSize, notificationService) {
  * @returns {function}
  */
 export function useFileUploader() {
-    const http = useService("http");
+    const fileUpload = useService("file_upload");
     const notification = useService("notification");
     /**
      * @param {string} route
-     * @param {Object} params
+     * @param {Object} params `ufile` (the files) and the other fields of the request
      */
     return async (route, params) => {
-        if ((params.ufile && params.ufile.length) || params.file) {
-            const fileSize = (params.ufile && params.ufile[0].size) || params.file.size;
-            if (!checkFileSize(fileSize, notification)) {
-                return null;
-            }
+        const { ufile = [], ...fields } = params;
+        delete fields.csrf_token; // added by the service
+        if (ufile.some((file) => !checkFileSize(file.size, notification))) {
+            return null;
         }
-        const fileData = await http.post(route, params, "text");
-        const parsedFileData = JSON.parse(fileData);
-        if (parsedFileData.error) {
-            throw new Error(parsedFileData.error);
+        const upload = await trackedUpload(fileUpload, route, ufile, {
+            buildFormData(formData) {
+                for (const [name, value] of Object.entries(fields)) {
+                    if (value !== undefined) {
+                        formData.append(name, value);
+                    }
+                }
+            },
+            displayErrorNotification: false,
+        });
+        if (upload.state === "abort") {
+            return null;
         }
-        return parsedFileData;
+        if (upload.state !== "loaded") {
+            const error = upload.response?.error;
+            throw new Error(error?.message || error || _t("An error occurred while uploading."));
+        }
+        return upload.response;
     };
 }
 

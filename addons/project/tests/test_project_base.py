@@ -557,3 +557,13 @@ class TestProjectBase(TestProjectCommon):
         projects._create_analytic_account()
         projects.write({'name': 'sheeps'})
         self.assertEqual(projects.account_id.mapped('name'), ['sheeps', 'sheeps'])
+
+    def test_create_task_from_uploads(self):
+        attachment = self.env['ir.attachment'].create({'name': 'specs.pdf', 'raw': b'specs'})
+        action = self.env['project.task'].with_context(
+            default_project_id=self.project_pigs.id,
+        ).action_create_from_uploads(attachment.ids)
+        task = self.env['project.task'].browse(action['res_id'])
+        self.assertEqual(task.name, 'specs.pdf')
+        self.assertEqual(task.project_id, self.project_pigs)
+        self.assertEqual((attachment.res_model, attachment.res_id), ('project.task', task.id))

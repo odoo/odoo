@@ -1491,17 +1491,14 @@ class HrExpense(models.Model):
 
         return action
 
-    def attach_document(self, **kwargs):
+    def attach_document(self, attachment_ids):
         """When an attachment is uploaded as a receipt, set it as the main attachment."""
+        self.ensure_one()
         if not self.has_access('write') and self.employee_id.user_id != self.env.user:
             raise AccessError(self.env._("You don't have the access rights to modify this expense."))
-        attachment_ids = [attachment_id for attachment_id in kwargs.get('attachment_ids', []) if attachment_id]  # Filter out falsy values
-        if not attachment_ids:
-            # If uploading the document fails due to the checks in the create method of ir.attachment, the
-            # attachment_ids will contains [None], so we need to check here to raise the UserError.
-            raise UserError(self.env._("You can't add an attachment to an expense once it has been approved."))
-
-        attachment = self.env['ir.attachment'].browse(attachment_ids[-1:])
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        attachments.write({'res_model': self._name, 'res_id': self.id})
+        attachment = attachments[-1:]
         user_expenses = self.filtered(lambda expense: expense.employee_id.user_id == self.env.user)
         user_expenses.sudo()._message_set_main_attachment_id(attachment, force=True)
         (self - user_expenses)._message_set_main_attachment_id(attachment, force=True)
@@ -1530,6 +1527,22 @@ class HrExpense(models.Model):
             expense._message_set_main_attachment_id(attachment, force=True)
             expenses += expense
         return expenses.ids
+
+    @api.model
+    def action_create_from_uploads(self, attachment_ids):
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        if attachments.filtered(lambda a: a.create_uid != self.env.user or a.res_model or a.res_id):
+            raise UserError(_("Invalid attachments!"))
+        attachments.write({'res_model': 'hr.expense', 'res_id': 0})
+        expenses = self.browse(self.create_expense_from_attachments(attachment_ids))
+        return {
+            'name': _("Generate Expenses"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.expense',
+            'views': [(False, 'list'), (False, 'kanban'), (False, 'form')],
+            'domain': [('id', 'in', expenses.ids)],
+            'context': self.env.context,
+        }
 
     def action_show_same_receipt_expense_ids(self):
         self.ensure_one()

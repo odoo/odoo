@@ -564,6 +564,8 @@
                       multi_edit="1"
                       sample="1">
                     <header>
+                        <button type="upload" name="create_document_from_attachment" string="Upload" data-hotkey="shift+i"
+                            invisible="context.get('default_move_type') == 'entry' and not context.get('active_id')"/>
                         <button name="action_force_register_payment" type="object" string="Pay"
                             groups="account.group_account_invoice"
                             invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund','in_receipt')"/>
@@ -723,6 +725,10 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1" js_class="account_documents_kanban">
+                    <header>
+                        <button type="upload" name="create_document_from_attachment" string="Upload" data-hotkey="shift+i"
+                            invisible="context.get('default_move_type') == 'entry' and not context.get('active_id')"/>
+                    </header>
                     <field name="currency_id"/>
                     <field name="review_state"/>
                     <templates>

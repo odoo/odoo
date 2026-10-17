@@ -1,0 +1,14 @@
+.o-UploadDropzone {
+    z-index: 1000; /* above chat window */
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    background-color: color-mix(in srgb, var(--primary) 8%, transparent);
+
+    .o-UploadDropzone-hint {
+        pointer-events: none; /* the whole area is the drop target */
+        border-radius: 2rem;
+        background-color: color-mix(in srgb, var(--primary) 28%, white);
+        color: color-mix(in srgb, var(--primary) 75%, black);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+}
