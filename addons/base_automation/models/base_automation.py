@@ -943,6 +943,10 @@ class BaseAutomation(models.Model):
                     }
                 # call original method
                 _compute_field_value.origin(self, field)
+                if any(a.sudo().filter_pre_domain for a in automations):
+                    # Refresh dependents read or created by the pre-filter,
+                    # including those not covered by _keep_to_compute.
+                    records.modified(stored_fnames)
                 # check postconditions, and execute automations on the records that satisfy them
                 for automation in automations.with_context(old_values=old_values):
                     with _keep_to_compute(self.env, changed_fields):
