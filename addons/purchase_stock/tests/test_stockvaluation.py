@@ -916,8 +916,9 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
         before being billed above the purchase-order price. Billing above the
         order price only revalues the goods still tracked to that receipt; the
         goods that were returned and received again keep the order price.
-        Further returns and credit notes then unwind the value as the goods
-        leave stock.
+        Further returns remove their goods at the FIFO value, and a credit
+        note that refunds a physical return does not revalue the units still
+        on hand.
         """
         product = self.product1  # fifo, real_time
         po = self._create_purchase(product, quantity=10, price_unit=10.0)
@@ -950,17 +951,19 @@ class TestStockValuationWithCOA(PurchaseTestCommon):
 
         refund = self._create_bill(purchase_order=po, price_unit=12.0)
         self.assertEqual(refund.move_type, 'in_refund')
-        self.assertAlmostEqual(product.total_value, 100.8)
+        # The credit note refunds the returned unit; the units still on hand
+        # keep their value.
+        self.assertAlmostEqual(product.total_value, 102.0)
 
         self._make_return(receipt, 5)
         self.assertEqual(product.qty_available, 4.0)
-        self.assertAlmostEqual(product.total_value, 41.8)
+        self.assertAlmostEqual(product.total_value, 42.0)
 
         self._refund(bill, quantity=5)
         # The 4 units left on hand keep the value they were billed at.
         self.assertEqual(product.qty_available, 4.0)
-        self.assertAlmostEqual(product.total_value, 40.8)
-        self.assertAlmostEqual(product.standard_price, 10.2)
+        self.assertAlmostEqual(product.total_value, 42.0)
+        self.assertAlmostEqual(product.standard_price, 10.5)
 
     def test_pdiff_multi_curr_and_rates(self):
         """
