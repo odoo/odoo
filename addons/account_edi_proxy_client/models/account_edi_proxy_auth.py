@@ -17,27 +17,35 @@ class OdooEdiProxyAuth(requests.auth.AuthBase):
         3) to avoid that multiple database use the same credentials, via a refresh_token that expire after 24h.
     """
 
-    def __init__(self, user=False, auth_type: Literal['hmac', 'asymmetric'] = 'hmac'):
+    def __init__(self, user=False, auth_type: Literal['hmac', 'asymmetric'] = 'hmac', routing_type: Literal['json', 'http'] = 'json'):
         self.id_client = user and user.id_client or False
         self.auth_type = auth_type
         self.refresh_token = user and user.sudo().refresh_token or False
         self.private_key = user and user.sudo().private_key_id or False
+        self.routing_type = routing_type
 
     def __get_payload(self, request, msg_timestamp):
         # craft the message (timestamp|url path|id_client|query params|body content)
         parsed_url = werkzeug.urls.url_parse(request.path_url)
 
         body = request.body
-        if isinstance(body, bytes):
-            body = body.decode()
-        body = json.loads(body)
+        if self.routing_type == 'http':
+            if body is None:
+                body = b''
+            elif isinstance(body, str):
+                body = body.encode()
+            body_segment = hashlib.sha256(body).hexdigest()
+        else:
+            if isinstance(body, bytes):
+                body = body.decode()
+            body_segment = json.dumps(json.loads(body), sort_keys=True)
 
         return '%s|%s|%s|%s|%s' % (
             msg_timestamp,  # timestamp
             parsed_url.path,  # url path
             self.id_client,
             json.dumps(werkzeug.urls.url_decode(parsed_url.query), sort_keys=True),  # url query params sorted by key
-            json.dumps(body, sort_keys=True))  # http request body
+            body_segment)
 
     def __sign_request_with_token(self, message):
         h = hmac.new(base64.b64decode(self.refresh_token), message.encode(), digestmod=hashlib.sha256)
