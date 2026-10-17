@@ -906,6 +906,7 @@ export class CalendarModel extends Model {
 
         return {
             label: filterInfo.label,
+            resModel: filterInfo.resModel,
             fieldName,
             filters,
             avatar: {
