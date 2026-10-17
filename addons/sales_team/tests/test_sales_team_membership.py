@@ -27,6 +27,17 @@ class TestMembership(TestSalesCommon):
         self.user_sales_leads.action_archive()
         self.assertFalse(self.sales_team_1_m1.active)
 
+    def test_search_crm_team_ids_archived_member(self):
+        """Test that searching crm_team_ids ignores archived team members."""
+        self.assertIn(self.user_sales_leads, self.env['res.users'].search([('crm_team_ids', '=', self.sales_team_1.id)]))
+        self.sales_team_1_m1.write({'active': False})
+        self.assertEqual(self.user_sales_leads.crm_team_ids, self.env['crm.team'])
+        self.assertNotIn(self.user_sales_leads, self.env['res.users'].search([('crm_team_ids', '=', self.sales_team_1.id)]))
+        self.assertNotIn(
+            self.user_sales_leads,
+            self.env['res.users'].with_context(active_test=False).search([('crm_team_ids', '=', self.sales_team_1.id)]),
+        )
+
     @users('user_sales_manager')
     def test_fields(self):
         self.assertTrue(self.sales_team_1.with_user(self.env.user).is_membership_multi)
@@ -301,13 +312,17 @@ class TestMembership(TestSalesCommon):
         self.sales_team_1_m1.write({'active': False})
         self.assertEqual(self.user_sales_leads.crm_team_ids, self.new_team)
         self.assertEqual(self.user_sales_leads.sale_team_id, self.new_team)
+        self.assertNotIn(self.user_sales_leads, self.env['res.users'].search([('crm_team_ids', 'in', self.sales_team_1.ids)]))
+        self.assertIn(self.user_sales_leads, self.env['res.users'].search([('crm_team_ids', 'in', self.new_team.ids)]))
 
         # activate membership to first team -> first one becomes default again
         self.sales_team_1_m1.write({'active': True})
         self.assertEqual(self.user_sales_leads.crm_team_ids, self.sales_team_1 | self.new_team)
         self.assertEqual(self.user_sales_leads.sale_team_id, self.sales_team_1)
+        self.assertIn(self.user_sales_leads, self.env['res.users'].search([('crm_team_ids', 'in', self.sales_team_1.ids)]))
 
         # keep only one membership -> default team
         self.sales_team_1_m1.unlink()
         self.assertEqual(self.user_sales_leads.crm_team_ids, self.new_team)
         self.assertEqual(self.user_sales_leads.sale_team_id, self.new_team)
+        self.assertNotIn(self.user_sales_leads, self.env['res.users'].search([('crm_team_ids', 'in', self.sales_team_1.ids)]))
