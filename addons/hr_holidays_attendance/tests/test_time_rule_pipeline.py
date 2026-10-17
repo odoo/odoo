@@ -14,6 +14,7 @@ class TestTimeRulePipeline(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
 
         cls.calendar = cls.env['resource.calendar'].create({
             'name': '40h/week',
@@ -31,7 +32,7 @@ class TestTimeRulePipeline(TransactionCase):
         })
         cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
         cls.env.company.attendance_work_entry_type_id = cls.att_type
-        cls.overtime_type = cls.env.ref('hr_work_entry.generic_work_entry_type_overtime')
+        cls.overtime_type = cls.env.ref('hr_work_entry.l10n_us_work_entry_type_overtime')
 
         # Disable all data-file time rules so tests are self-contained.
         cls.env['hr.time.rule'].search([]).write({'active': False})
@@ -2724,6 +2725,7 @@ class TestTimeRuleCronBehavior(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.calendar = cls.env['resource.calendar'].create({
             'name': '40h/week (cron tests)',
             'attendance_ids': [
@@ -2882,6 +2884,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.env['hr.time.rule'].search([]).write({'active': False})
 
         cls.src_type = cls.env['hr.work.entry.type'].create({
