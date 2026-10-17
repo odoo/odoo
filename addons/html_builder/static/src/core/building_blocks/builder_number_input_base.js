@@ -53,6 +53,38 @@ export class BuilderNumberInputBase extends BuilderInputBase {
         }
     }
 
+    onInput(e) {
+        this.isEditing = true;
+        if (this.props.composable) {
+            super.onInput(e);
+            return;
+        }
+
+        if (this.shouldKeepEditingBuffer(e)) {
+            return;
+        }
+
+        if (!e.target.validity?.badInput) {
+            this.state.value = e.target.value;
+        }
+        this.props.onInput?.(e);
+        if (!e.target.validity?.badInput) {
+            this.props.preview(e.target.value);
+        }
+    }
+
+    shouldKeepEditingBuffer(e) {
+        const decimalSeparators = [".", ","];
+        return (
+            decimalSeparators.includes(e.data) ||
+            (e.inputType?.startsWith("delete") &&
+                decimalSeparators.some(
+                    (separator) =>
+                        this.state.value?.includes(separator) && !e.target.value.includes(separator)
+                ))
+        );
+    }
+
     onBeforeInput(e) {
         if (!this.props.composable) {
             return;
