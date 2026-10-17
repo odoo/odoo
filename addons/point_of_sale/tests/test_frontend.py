@@ -2229,6 +2229,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_pos_ui_round_globally(self):
         self.main_pos_config.company_id.tax_calculation_rounding_method = 'round_globally'
+        self.test_partner = self.env["res.partner"].create({"name": "AAA Partner"})
         tax_16 = self.env['account.tax'].create({
             'name': 'Tax 16%',
             'amount': 16,
@@ -2255,12 +2256,14 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         lines = pos_session.move_id.line_ids.sorted('balance')
 
-        self.assertEqual(len(lines), 5, "There should be 5 lines in the session journal entry")
-        self.assertAlmostEqual(lines[0].balance, -7051.73)
-        self.assertAlmostEqual(lines[1].balance, -1128.28)
-        self.assertAlmostEqual(lines[2].balance, 56.41)
-        self.assertAlmostEqual(lines[3].balance, 352.59)
-        self.assertAlmostEqual(lines[4].balance, 7771.01)
+        self.assertAlmostEqual(lines[0].balance, -7771.01)
+        self.assertAlmostEqual(lines[1].balance, 7771.01)
+
+        invoice = pos_session.order_ids[0].account_move
+        self.assertRecordValues(invoice, [{
+            'amount_total': 7771.01,
+            'amount_tax': 1071.87,
+        }])
 
     def test_ctrl_number_ignored(self):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_ctrl_number_ignored', login="pos_user")
