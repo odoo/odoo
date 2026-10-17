@@ -564,6 +564,41 @@ describe("initProducts", () => {
         expect(store.availableCategories).toHaveLength(13);
         expect(store.isCategoryAvailable(unAvailableCatg)).toBeEmpty();
     });
+
+    test("availableCategories hides categories without self order available products", async () => {
+        const store = await setupSelfPosEnv();
+        const productTemplates = store.models["product.template"];
+        store.computeAvailableCategories();
+        let categoryIds = store.availableCategories.map((c) => c.id);
+        expect(categoryIds).toInclude(4);
+
+        // Burger (id=4) only contains the "Bacon burger"
+        productTemplates.get(12).self_order_available = false;
+        store.computeAvailableCategories();
+        categoryIds = store.availableCategories.map((c) => c.id);
+        expect(categoryIds).not.toInclude(4);
+        expect(categoryIds).toInclude(3);
+        expect(categoryIds).toInclude(5);
+
+        // Food (id=3) and its children "Burger" (4) and "Pizza" (5) have no available product left
+        productTemplates.get(13).self_order_available = false;
+        productTemplates.get(14).self_order_available = false;
+        store.computeAvailableCategories();
+        categoryIds = store.availableCategories.map((c) => c.id);
+        expect(categoryIds).not.toInclude(3);
+        expect(categoryIds).not.toInclude(4);
+        expect(categoryIds).not.toInclude(5);
+
+        expect(categoryIds).toInclude(0);
+
+        // Uncategorised (id=0) has no available product left
+        productTemplates
+            .filter((p) => !p.pos_categ_ids.length)
+            .forEach((p) => (p.self_order_available = false));
+        store.computeAvailableCategories();
+        categoryIds = store.availableCategories.map((c) => c.id);
+        expect(categoryIds).not.toInclude(0);
+    });
 });
 
 describe("initHardware", () => {
