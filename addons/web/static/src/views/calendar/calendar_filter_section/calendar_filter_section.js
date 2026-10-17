@@ -87,7 +87,7 @@ export class CalendarFilterSection extends Component {
     }
 
     async loadSource(request) {
-        const resModel = this.props.model.fields[this.section.fieldName].relation;
+        const resModel = this.section.resModel;
         const activeIds = this.section.filters.map((f) => f.value);
         const domain = [["id", "not in", activeIds]];
         const records = await this.orm.call(resModel, "name_search", [], {
