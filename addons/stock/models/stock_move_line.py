@@ -401,7 +401,7 @@ class StockMoveLine(models.Model):
                 reservation = not move._should_bypass_reservation()
             else:
                 reservation = product.is_storable and not location.should_bypass_reservation()
-            if move_line.quantity_product_uom and reservation:
+            if move_line.quantity_product_uom and reservation and not self.env.context.get('bypass_reservation_update'):
                 self.env.context.get('reserved_quant', self.env['stock.quant'])._update_reserved_quantity(
                     product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
 
@@ -468,7 +468,9 @@ class StockMoveLine(models.Model):
         # move lines `reserved_uom_qty` should always be equal to the sum of `reserved_quantity` on
         # the quants). If the new charateristics are not available on the quants, we chose to
         # reserve the maximum possible.
-        if (updates and {'result_package_id'}.difference(updates.keys())) or 'quantity' in vals:
+        if not self.env.context.get('bypass_reservation_update') and (
+            (updates and {'result_package_id'}.difference(updates.keys())) or 'quantity' in vals
+        ):
             for ml in self:
                 if not ml.product_id.is_storable or ml.state == 'done':
                     continue
@@ -1321,19 +1323,31 @@ class StockMoveLine(models.Model):
         """ Split the move line and return the generated line (or False if no line was split.)"""
         self.ensure_one()
         remaining_quantity = self.quantity - quantity_to_split
+        move_line = self
+        product_uom = self.product_id.uom_id
+        split_product_qty = sum(
+            self.uom_id._compute_quantity(self.uom_id.round(qty), product_uom, rounding_method='HALF-UP')
+            for qty in (quantity_to_split, remaining_quantity)
+        )
+        if remaining_quantity >= 0 and not product_uom.compare(split_product_qty, self.quantity_product_uom):
+            # The quantity is only shared between this line and its copy, which
+            # keep the same reservation characteristics, so the quants keep the
+            # same reserved quantity and don't need to be updated. Unless the
+            # conversion to the product UoM rounds the parts to another total.
+            move_line = self.with_context(bypass_reservation_update=True)
 
         # Package the move line and set its quantity to the needed amount.
-        self.write({
+        move_line.write({
             'quantity': quantity_to_split,
             'result_package_id': package_id,
         })
 
         if remaining_quantity > 0:
             # Create a unpacked copy of the move line if there is an excess quantity.
-            return self.copy({
+            return move_line.copy({
                 'quantity': remaining_quantity,
                 'result_package_id': None,
-            })
+            }).with_env(self.env)
         return False
 
     def _split_in_chunk(self, chunk_capacity, package_type_id=None, package_id=None):
