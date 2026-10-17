@@ -909,7 +909,6 @@ class AccountMove(models.Model):
                 'aliquota_iva': grouping_key['vat_tax_amount_field'],
                 'ritenuta': 'SI' if grouping_key['has_withholding'] else None,
                 'natura': grouping_key['l10n_it_exempt_reason'],
-                'riferimento_amministrazione': html2plaintext(grouping_key['description']),
             })
 
         # Enasarco values.
