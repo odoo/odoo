@@ -36,7 +36,15 @@ import { escapeRegExp } from "@web/core/utils/strings";
 
 export class ShortCutPlugin extends Plugin {
     static id = "shortcut";
-    static dependencies = ["userCommand", "selection", "split", "dom", "history", "delete"];
+    static dependencies = [
+        "userCommand",
+        "selection",
+        "split",
+        "dom",
+        "history",
+        "delete",
+        "region",
+    ];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -156,7 +164,7 @@ export class ShortCutPlugin extends Plugin {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
-        if (!(this.checkPredicates("are_shorthands_available_predicates", selection.anchorNode) ?? true)) {
+        if (!(this.dependencies.region.getProperty(selection.anchorNode, "shorthands") ?? true)) {
             return;
         }
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);

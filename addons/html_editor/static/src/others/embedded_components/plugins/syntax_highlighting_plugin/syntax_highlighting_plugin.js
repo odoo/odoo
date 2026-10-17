@@ -10,7 +10,6 @@ import { removeInvisibleWhitespace } from "@html_editor/utils/dom";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const CODE_BLOCK_CLASS = "o_syntax_highlighting";
 const CODE_BLOCK_SELECTOR = `div.${CODE_BLOCK_CLASS}`;
@@ -34,12 +33,6 @@ export class SyntaxHighlightingPlugin extends Plugin {
     };
     /** @type {import("plugins").EditorResources} */
     resources = {
-        // Ensure focus can be preserved within the textarea:
-        is_node_editable_predicates: (node) => {
-            if (node?.classList?.contains("o_prism_source")) {
-                return true;
-            }
-        },
         system_attributes: "data-syntax-highlighting-autofocus",
 
         /** Handlers */
@@ -47,11 +40,6 @@ export class SyntaxHighlightingPlugin extends Plugin {
         on_history_commit_undone_handlers: () => this.addCodeBlocks(this.editable, true),
         on_history_commit_redone_handlers: () => this.addCodeBlocks(this.editable, true),
 
-        is_retagging_safe_predicates: (block) => {
-            if (isTextareaOfSyntaxHighlight(block)) {
-                return true;
-            }
-        },
         on_will_set_tag_handlers: (params) => {
             const { block, tagName, cursors } = params;
             if (tagName.toLowerCase() === "pre") {
@@ -62,14 +50,14 @@ export class SyntaxHighlightingPlugin extends Plugin {
                 params.block = this.convertToParagraph(block);
             }
         },
-        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
-            if (
-                targetedNodes.length &&
-                targetedNodes.every((node) => closestElement(node, ".o_syntax_highlighting"))
-            ) {
-                return DISABLED_NAMESPACE;
-            }
-        }),
+
+        /** Regions */
+        region_properties: [
+            { within: ".o_syntax_highlighting", toolbar: DISABLED_NAMESPACE },
+            // Ensure focus can be preserved within the textarea:
+            { is: ".o_prism_source", editable: true },
+            { is: isTextareaOfSyntaxHighlight, retaggable: true },
+        ],
 
         /** Processors */
         clean_for_save_processors: withSequence(0, (root) => this.cleanForSave(root)),

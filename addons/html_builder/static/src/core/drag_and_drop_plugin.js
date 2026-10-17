@@ -74,13 +74,11 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
  *      dragState: DragState,
  * }) => void)[]} on_element_over_dropzone_handlers
  * @typedef {(() => (() => void))[]} on_prepare_drag_handlers
- *
- * @typedef {((el: HTMLElement) => boolean | undefined)[]} is_draggable_predicates
  */
 
 export class DragAndDropPlugin extends Plugin {
     static id = "dragAndDrop";
-    static dependencies = ["dropzone", "history", "operation", "builderOptions"];
+    static dependencies = ["dropzone", "history", "operation", "builderOptions", "region"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         has_overlay_options: { hasOption: (el) => this.isDraggable(el) },
@@ -121,7 +119,7 @@ export class DragAndDropPlugin extends Plugin {
             return false;
         }
 
-        if (!(this.checkPredicates("is_draggable_predicates", el) ?? true)) {
+        if (this.dependencies.region.getProperty(el, "draggable") === false) {
             return false;
         }
         return true;

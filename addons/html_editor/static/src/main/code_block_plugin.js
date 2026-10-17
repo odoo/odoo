@@ -48,7 +48,7 @@ export class CodeBlockPlugin extends Plugin {
                 commandId: "setTagPre",
             },
         ],
-        hints: [{ selector: "PRE", text: _t("Code") }],
+        region_properties: [{ is: "PRE", hintText: _t("Code") }],
         split_element_block_overrides: this.handleSplitBlockPRE.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),

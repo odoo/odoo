@@ -10,7 +10,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class SearchPowerboxPlugin extends Plugin {
     static id = "searchPowerbox";
-    static dependencies = ["powerbox", "selection", "history", "input"];
+    static dependencies = ["powerbox", "selection", "history", "input", "region"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_beforeinput_handlers: this.onBeforeInput.bind(this),
@@ -119,12 +119,8 @@ export class SearchPowerboxPlugin extends Plugin {
     }
     openSearchPowerbox() {
         const selection = this.dependencies.selection.getEditableSelection();
-        if (
-            !(
-                this.checkPredicates("is_powerbox_available_predicates", selection.anchorNode) ??
-                true
-            )
-        ) {
+        const anchorElement = closestElement(selection.anchorNode);
+        if (!(this.dependencies.region.getProperty(anchorElement, "powerbox") ?? true)) {
             return;
         }
         this.offset = selection.startOffset - 1;

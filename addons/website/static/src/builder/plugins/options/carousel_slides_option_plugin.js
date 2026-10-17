@@ -5,11 +5,7 @@ export class CarouselSlidesOptionPlugin extends Plugin {
     static id = "carouselSlidesOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        should_show_overlay_buttons_of_ancestor_predicates: (el) => {
-            if (el.matches("div.carousel-item")) {
-                return true;
-            }
-        },
+        region_properties: { is: "div.carousel-item", overlayButtons: false },
         anchor_excluded_selectors: ".carousel *",
     };
 }

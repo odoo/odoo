@@ -56,11 +56,6 @@ export class MenuDataPlugin extends Plugin {
                 }),
             }),
         ],
-        is_link_editable_predicates: (linkElement) => {
-            if (this.isMenuLink(linkElement)) {
-                return true;
-            }
-        },
     };
 
     setup() {

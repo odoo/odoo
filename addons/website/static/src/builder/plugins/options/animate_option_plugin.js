@@ -29,13 +29,12 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 
 /**
  * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_hover_effect_predicates
- * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_scroll_effect_predicates
  * @typedef {((el: HTMLElement) => Promise<boolean>)[]} hover_effect_allowed_predicates
  */
 
 export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
-    static dependencies = ["history", "selection", "split"];
+    static dependencies = ["history", "selection", "split", "region"];
     static shared = [
         "forceAnimation",
         "getDirectionsItems",
@@ -62,12 +61,9 @@ export class AnimateOptionPlugin extends Plugin {
                 isDisabled: this.isAnimatedTextDisabled.bind(this),
             },
         ],
-        toolbar_namespace_providers: [
-            withSequence(90, (targetedNodes, editableSelection) =>
-                closestElement(editableSelection.commonAncestorContainer, ".o_animated_text")
-                    ? "compact"
-                    : undefined
-            ),
+        region_properties: [
+            withSequence(20, { within: ".o_animated_text", toolbar: "compact" }),
+            { is: ".o_animated_text", splittable: false },
         ],
         system_classes: ["o_animating"],
         builder_actions: {
@@ -78,11 +74,6 @@ export class AnimateOptionPlugin extends Plugin {
         },
         normalize_processors: this.normalize.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
-        is_node_splittable_predicates: (node) => {
-            if (node.classList?.contains("o_animated_text")) {
-                return false;
-            }
-        },
         lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
         // This is done to clean the dataset of the images saved in the db.
         on_will_save_handlers: () =>
@@ -105,7 +96,7 @@ export class AnimateOptionPlugin extends Plugin {
     }
 
     canHaveScrollEffect(el) {
-        return this.checkPredicates("can_have_scroll_effect_predicates", el) ?? true;
+        return this.dependencies.region.getProperty(el, "scrollEffect") ?? true;
     }
 
     async canHaveHoverEffect(el) {

@@ -1,20 +1,13 @@
 import { Plugin } from "@html_editor/plugin";
 import { isEditorTab, isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
-import {
-    closestElement,
-    descendants,
-    firstLeaf,
-    selectElements,
-} from "@html_editor/utils/dom_traversal";
+import { descendants, firstLeaf, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
 import { debounce } from "@web/core/utils/timing";
 
 /**
  * @typedef {import("@html_editor/editor").EditorContext} EditorContext
  * @typedef {import("@html_editor/core/selection_plugin").SelectionData} SelectionData
- * @typedef {import("plugins").CSSSelector} CSSSelector
- * @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString
  */
 
 /**
@@ -22,12 +15,11 @@ import { debounce } from "@web/core/utils/timing";
  *   selectionData: SelectionData,
  *   editable: EditorContext["editable"]
  * ) => HTMLElement[] | NodeList)[]} hint_targets_providers
- * @typedef {{ selector: CSSSelector; text: LazyTranslatedString; }[]} hints
  */
 
 export class HintPlugin extends Plugin {
     static id = "hint";
-    static dependencies = ["history", "selection"];
+    static dependencies = ["history", "selection", "region"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
@@ -39,11 +31,10 @@ export class HintPlugin extends Plugin {
         on_pending_mutations_staged_handlers: this.updateHints.bind(this),
         on_content_updated_handlers: this.updateHints.bind(this),
 
-        /** Predicates */
-        should_show_power_buttons_predicates: ({ anchorNode }) => {
-            if (!closestElement(anchorNode, ".o-we-hint")) {
-                return false;
-            }
+        /** Regions */
+        region_properties: {
+            within: ".o-we-hint",
+            powerButtons: true,
         },
 
         /** Processors */
@@ -109,10 +100,9 @@ export class HintPlugin extends Plugin {
         const editableSelection = selectionData.editableSelection;
         this.clearHints();
         if (editableSelection.isCollapsed) {
-            const hints = this.getResource("hints");
             for (const provideTargets of this.getResource("hint_targets_providers")) {
                 for (const target of provideTargets(selectionData, this.editable)) {
-                    const nodeHint = hints.find((h) => target.matches(h.selector))?.text;
+                    const nodeHint = this.dependencies.region.getProperty(target, "hintText");
                     if (target && nodeHint && this.shouldDisplayHint(target)) {
                         this.makeHint(target, nodeHint);
                     }

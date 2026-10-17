@@ -11,6 +11,7 @@ import { getContent } from "../_helpers/selection";
 import { parseHTML } from "@html_editor/utils/html";
 import { unformat } from "../_helpers/format";
 import { queryOne } from "@odoo/hoot-dom";
+import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 describe("splitAroundUntil", () => {
     test("should split a slice of text from its inline ancestry (1)", async () => {
@@ -467,6 +468,13 @@ describe("wrapInlinesInBlocks", () => {
         div.innerHTML = "text<span></span>more";
         editor.shared.dom.wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p>textmore</p>");
+    });
+    test("should keep t-set descendants of removed invisible nodes", async () => {
+        const { editor } = await setupEditor("", { config: { includePlugins: [QWebPlugin] } });
+        const div = document.createElement("div");
+        div.innerHTML = 'text<span><t t-set="x" t-value="1"></t></span>more';
+        editor.shared.dom.wrapInlinesInBlocks(div);
+        expect(div.innerHTML).toBe('<div>text<t t-set="x" t-value="1"></t>more</div>');
     });
 });
 

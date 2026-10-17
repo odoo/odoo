@@ -6,7 +6,6 @@ import { Powerbox } from "./powerbox";
 import { withSequence } from "@html_editor/utils/resource";
 import { deepEqual, omit, pick } from "@web/core/utils/objects";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
@@ -53,8 +52,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /** @typedef {PowerboxCategory[]} powerbox_categories */
 /**
- * @typedef {import("plugins").CSSSelector[]} powerbox_blacklist_selectors
- *
  * @see UserCommand
  * @typedef {PowerboxItem[]} powerbox_items
  *
@@ -107,9 +104,9 @@ export class PowerboxPlugin extends Plugin {
             withSequence(60, { id: "widget", name: _t("Widget") }),
             withSequence(100, { id: "modules", name: _t("Modules") }),
         ],
-        hints: withSequence(30, {
-            selector: baseContainerGlobalSelector,
-            text: _t('Type "/" for commands'),
+        region_properties: withSequence(30, {
+            is: baseContainerGlobalSelector,
+            hintText: _t('Type "/" for commands'),
         }),
     };
 
@@ -138,10 +135,6 @@ export class PowerboxPlugin extends Plugin {
      */
     getAvailablePowerboxCommands() {
         const selection = this.dependencies.selection.getEditableSelection();
-        const blacklistSelector = this.getResource("powerbox_blacklist_selectors").join(", ");
-        if (blacklistSelector && closestElement(selection.anchorNode).matches(blacklistSelector)) {
-            return [];
-        }
         return this.powerboxCommands.filter((cmd) => cmd.isAvailable(selection));
     }
 

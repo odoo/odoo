@@ -58,26 +58,6 @@ export class QWebPlugin extends Plugin {
         clipboard_content_processors: this.clearDataAttributes.bind(this),
 
         /** Predicates */
-        is_node_removable_predicates: (node) => {
-            if (isUnremovableQWebElement(node)) {
-                return false;
-            }
-        },
-        is_node_splittable_predicates: (node) => {
-            if (isUnsplittableQWebElement(node)) {
-                return false;
-            }
-        },
-        is_empty_link_legit_predicates: (linkEl) => {
-            if (linkEl.getAttributeNames().some((name) => name.startsWith("t-"))) {
-                return true;
-            }
-        },
-        is_formattable_node_predicates: (node) => {
-            if (node.matches?.(PROTECTED_QWEB_SELECTOR)) {
-                return true;
-            }
-        },
         can_format_content_predicates: (selection) => {
             const targetedNodes = new Set(
                 this.dependencies.selection.getTargetedNodes().map((n) => closestElement(n))
@@ -94,6 +74,17 @@ export class QWebPlugin extends Plugin {
                 return true;
             }
         },
+
+        /** Regions */
+        region_properties: [
+            { is: PROTECTED_QWEB_SELECTOR, formattable: true },
+            { is: isUnremovableQWebElement, removable: false },
+            { is: isUnsplittableQWebElement, splittable: false },
+            {
+                is: (node) => node.getAttributeNames?.().some((name) => name.startsWith("t-")),
+                emptyLinkLegit: true,
+            },
+        ],
 
         /** Providers */
         color_target_providers: (node) => closestElement(node, PROTECTED_QWEB_SELECTOR),

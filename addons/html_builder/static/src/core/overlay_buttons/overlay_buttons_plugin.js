@@ -17,12 +17,18 @@ import { withSequence } from "@html_editor/utils/resource";
  * @typedef {{
  *      getButtons: (target: HTMLElement) => BuilderButtonDescriptor;
  * }[]} get_overlay_buttons
- * @typedef {((target: HTMLElement) => bool | undefined)[]} should_show_overlay_buttons_of_ancestor_predicates
  */
 
 export class OverlayButtonsPlugin extends Plugin {
     static id = "overlayButtons";
-    static dependencies = ["builderOptions", "overlay", "history", "operation", "toolbar"];
+    static dependencies = [
+        "builderOptions",
+        "overlay",
+        "history",
+        "operation",
+        "toolbar",
+        "region",
+    ];
     static shared = [
         "hideOverlayButtons",
         "showOverlayButtons",
@@ -178,12 +184,7 @@ export class OverlayButtonsPlugin extends Plugin {
         const optionWithOverlayButtons = optionsContainer.findLast(
             (option) =>
                 option.hasOverlayOptions &&
-                !(
-                    this.checkPredicates(
-                        "should_show_overlay_buttons_of_ancestor_predicates",
-                        option.element
-                    ) ?? false
-                )
+                (this.dependencies.region.getProperty(option.element, "overlayButtons") ?? true)
         );
         if (optionWithOverlayButtons) {
             this.target = optionWithOverlayButtons.element;

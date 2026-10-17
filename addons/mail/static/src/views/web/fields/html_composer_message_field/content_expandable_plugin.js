@@ -10,7 +10,7 @@ export class ContentExpandablePlugin extends Plugin {
     resources = {
         clean_for_save_processors: (root) => this.cleanForSave(root),
         delete_backward_overrides: this.deleteBackward.bind(this),
-        move_node_blacklist_selectors: ".o_mail_reply_container, .o_mail_reply_container *",
+        region_properties: { within: ".o_mail_reply_container", movable: false },
     };
 
     setup() {

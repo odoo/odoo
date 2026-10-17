@@ -236,7 +236,7 @@ export class FormOptionPlugin extends Plugin {
             this.clearEmptyWrappersAfterDrag(dragState),
         on_cloned_handlers: this.onCloned.bind(this),
         is_unremovable_selectors: ".s_website_form_send, .s_website_form_submit",
-        immutable_link_selectors: [".s_website_form_send"],
+        region_properties: { is: ".s_website_form_send", immutableLink: true },
         normalize_processors: this.normalizeFieldName.bind(this),
     };
     setup() {

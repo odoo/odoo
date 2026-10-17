@@ -98,7 +98,7 @@ describe("visibility", () => {
         class TestPowerboxPlugin extends PowerboxPlugin {
             setup() {
                 super.setup();
-                this.resources.hints.object.text = placeholder;
+                this.resources.region_properties.object.hintText = placeholder;
             }
         }
         const tempP = document.createElement("p");

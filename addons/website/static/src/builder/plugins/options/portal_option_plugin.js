@@ -15,7 +15,7 @@ export class PortalOptionPlugin extends Plugin {
             UpdatePortalCardListAction,
         },
         anchor_excluded_selectors: ".o_portal_index_card",
-        immutable_link_selectors: [".o_portal_index_card > *"],
+        region_properties: { is: ".o_portal_index_card > *", immutableLink: true },
         on_will_save_handlers: this.savePortalOptions.bind(this),
     };
 

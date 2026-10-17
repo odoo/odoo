@@ -9,7 +9,6 @@ import { removeStyle } from "@html_editor/utils/dom";
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 
 /**
- * @typedef {CSSSelector[]} move_node_blacklist_selectors
  * @typedef {CSSSelector[]} move_node_whitelist_selectors
  * @typedef {((position: {top:number, left:number}, movableElement: HTMLElement)
  *   => {top:number, left:number})[]} move_widget_position_processors
@@ -24,7 +23,14 @@ const ALLOWED_ELEMENTS = "h1, h2, h3, p, hr, pre, blockquote, li";
 
 export class MoveNodePlugin extends Plugin {
     static id = "movenode";
-    static dependencies = ["baseContainer", "selection", "history", "position", "localOverlay"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "position",
+        "localOverlay",
+        "region",
+    ];
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_layout_geometry_change_handlers: () => {
@@ -603,8 +609,7 @@ export class MoveNodePlugin extends Plugin {
         }
     }
     isNodeMovable(node) {
-        const blacklistSelectors = this.getResource("move_node_blacklist_selectors").join(", ");
-        if (blacklistSelectors && node.matches(blacklistSelectors)) {
+        if (this.dependencies.region.getProperty(node, "movable") === false) {
             return false;
         }
         return (

@@ -14,14 +14,14 @@ class AnimatedNumberOptionPlugin extends Plugin {
     resources = {
         so_content_addition_selectors: [ANIMATED_NUMBER_SELECTOR],
         is_unremovable_selectors: `${DISPLAY_SELECTOR}, ${VALUE_SELECTOR}`,
-        is_node_removable_predicates: (node) => (this.getValueElement(node) ? false : undefined),
         apply_color_overrides: this.applyColorToAnimatedNumberValues.bind(this),
         can_format_content_predicates: this.canFormatContent.bind(this),
         color_target_providers: this.getStyleTargetElement.bind(this),
         formattable_node_providers: this.getStyleTargetElement.bind(this),
-        is_formattable_node_predicates: (node) => (this.getValueElement(node) ? true : undefined),
-        is_node_editable_predicates: (node) => (this.getValueElement(node) ? true : undefined),
-        can_have_scroll_effect_predicates: (el) => !el.matches(ANIMATED_NUMBER_SELECTOR),
+        region_properties: [
+            { within: VALUE_SELECTOR, formattable: true, editable: true, removable: false },
+            { is: ANIMATED_NUMBER_SELECTOR, scrollEffect: false },
+        ],
     };
 
     getValueElement(node) {
