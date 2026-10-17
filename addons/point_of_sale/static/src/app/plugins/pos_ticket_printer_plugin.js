@@ -201,7 +201,7 @@ export class PosTicketPrinterPlugin extends Plugin {
         printer = this.defaultPrinter,
         fallbacks = this.config.receipt_printer_ids,
     } = {}) {
-        if (this.hasReceiptPrinters && this.config.other_devices && !printer) {
+        if (this.hasReceiptPrinters && !printer) {
             printer = await this.selectPrinter();
         }
 
