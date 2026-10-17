@@ -401,10 +401,10 @@ class TestHrEmployee(TestHrCommon):
         with Form(test_employee) as employee_form:
             employee_form.user_id = test_user
 
-    def test_change_user_on_employee_keep_partner(self):
+    def test_change_user_on_employee_clear_partner(self):
         """
-            Check that removing user from employee keeps the link in
-            work_contact_id until the user is assigned to another employee.
+            Check that removing user from employee also clears
+            work_contact_id.
         """
         user = self.env['res.users'].create({
             'name': 'Test User',
@@ -416,13 +416,13 @@ class TestHrEmployee(TestHrCommon):
         })
         # remove user
         employee.user_id = None
-        self.assertEqual(employee.work_contact_id, user.partner_id)
+        self.assertFalse(employee.work_contact_id)
         self.assertFalse(employee.user_id)
         # create new employee from user
         user._compute_company_employee()
         user.action_create_employee()
         self.assertTrue(len(user.employee_ids) == 1, "Test user should have exactly one employee associated with it")
-        # previous employee shouldn't have a work_contact_id anymore, as the partner is reassigned
+        # previous employee still doesn't have a work_contact_id
         self.assertFalse(employee.work_contact_id)
         # the new employee should be associated to both the user and its partner
         new_employee = user.employee_ids
@@ -431,10 +431,10 @@ class TestHrEmployee(TestHrCommon):
 
     def test_change_user_on_employee_multi_company(self):
         """
-            Removing user from employee keeps the link in work_contact_id in the correct company until the user
-            is assigned to another employee, and does not affect employees in other companies. When the unique
+            Removing user from employee removes work_contact_id in that company,
+            and does not affect employees in other companies. When the unique
             constraint of one employee per user in one company is triggered, the work_contact_id for the
-            existing employee is nor removed, and employees in other companies are not affected.
+            existing employee is not removed, and employees in other companies are not affected.
         """
         company_A = self.env['res.company'].create({'name': 'company_A'})
         company_B = self.env['res.company'].create({'name': 'company_B'})
@@ -463,9 +463,9 @@ class TestHrEmployee(TestHrCommon):
         employee_A.user_id = None
         self.assertEqual(user.with_company(company_A).employee_id.ids, [])
         self.assertEqual(user.with_company(company_B).employee_id, employee_B)
-        # Partner still linked to both employees
+        # Partner is now only linked to employee in company B
         partner.with_company(company_A).with_company(company_B)._compute_employees_count()
-        self.assertEqual(partner.employees_count, 2)
+        self.assertEqual(partner.employees_count, 1)
         # Creating a new employee for a user in company A does not affect link user-employee in the other company
         new_employee_A = self.env['hr.employee'].create({
             'name': 'new_employee_A',
