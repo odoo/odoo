@@ -1365,10 +1365,28 @@ export class Record extends DataPoint {
         this.dirty = false;
     }
 
+    /**
+     * For a new record, _getChanges also returns the values coming from the initial onchange.
+     * Offline, the falsy ones (false, 0, []) that the user did not touch are only
+     * placeholders: they are removed so that the server defaults apply when the save is replayed.
+     */
+    _getOfflineChanges() {
+        const changes = this._getChanges(this._offlineChanges);
+        delete changes.id; // id never changes, and should not be written
+        if (!this.resId) {
+            for (const [fieldName, value] of Object.entries(changes)) {
+                const isFalsy = Array.isArray(value) ? !value.length : !value;
+                if (isFalsy && !(fieldName in this._offlineChanges)) {
+                    delete changes[fieldName];
+                }
+            }
+        }
+        return changes;
+    }
+
     _offlineSave() {
         this._offlineChanges = markRaw({ ...(this._offlineChanges || {}), ...this._changes });
-        const offlineChanges = this._getChanges(this._offlineChanges);
-        delete offlineChanges.id; // id never changes, and should not be written
+        const offlineChanges = this._getOfflineChanges();
 
         this._offlineTimeStamp = this._offlineTimeStamp || Date.now();
         this._offlineId = this.model.offline.scheduleORM(
