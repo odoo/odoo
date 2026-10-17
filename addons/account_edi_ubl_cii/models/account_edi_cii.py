@@ -478,8 +478,12 @@ class AccountEdiCii(models.AbstractModel):
         scheme_id = None
         siret = commercial_partner.company_registry
         if 'siret' in commercial_partner._fields and commercial_partner.siret:
-            siret = commercial_partner.siret[:9]
-            scheme_id = "0002"
+            siret = commercial_partner.siret
+        if siret:
+            if len(siret) == 14:
+                scheme_id = '0009'
+            elif len(siret) == 9:
+                scheme_id = '0002'
         supplier_vat = invoice.fiscal_position_id.foreign_vat or commercial_partner.vat
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': False,
@@ -561,8 +565,12 @@ class AccountEdiCii(models.AbstractModel):
         scheme_id = None
         siret = commercial_partner.company_registry
         if 'siret' in commercial_partner._fields and commercial_partner.siret:
-            siret = commercial_partner.siret[:9]
-            scheme_id = "0002"
+            siret = commercial_partner.siret
+        if siret:
+            if len(siret) == 14:
+                scheme_id = '0009'
+            elif len(siret) == 9:
+                scheme_id = '0002'
         return self._cii_get_partner_trade_party_node(vals, {
             'gln': False,
             'name': name,
