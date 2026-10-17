@@ -20,6 +20,19 @@
             </field>
         </record>
 
+    <record id="hr_contract_type_view_search" model="ir.ui.view">
+        <field name="name">hr.employee.type.view.search</field>
+        <field name="model">hr.employee.type</field>
+        <field name="arch" type="xml">
+            <search>
+                <group>
+                    <filter string="Country" name="groupby_country" context="{'group_by':'country_id'}" />
+                    <filter string="Company" name="groupby_company" context="{'group_by':'company_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
         <record id="hr_contract_type_view_form" model="ir.ui.view">
             <field name="model">hr.employee.type</field>
             <field name="arch" type="xml">

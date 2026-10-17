@@ -7,9 +7,14 @@ class HrEmployeeType(models.Model):
     _description = 'Employee Type'
     _order = 'sequence, name'
 
+    def _get_company_country_domain(self):
+        # Fetch all countries currently linked to a company
+        country_ids = self.env['res.company'].sudo().search([]).mapped('country_id.id')
+        return [('id', 'in', country_ids)]
+
     name = fields.Char(required=True, translate=True)
     code = fields.Char(compute='_compute_code', store=True, readonly=False)
-    country_id = fields.Many2one('res.country', domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)])
+    country_id = fields.Many2one('res.country', domain=_get_company_country_domain)
     country_code = fields.Char(related='country_id.code')
     company_id = fields.Many2one('res.company', string='Company')
     employees_count = fields.Integer(compute='_compute_employee_count', string='Employees')
