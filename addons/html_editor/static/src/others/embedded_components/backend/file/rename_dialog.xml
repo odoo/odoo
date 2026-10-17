@@ -1,0 +1,17 @@
+<templates id="template" xml:space="preserve">
+<t t-name="html_editor.RenameDialog">
+    <Dialog
+        size="'sm'"
+        title.translate="Rename file"
+        modalRef="this.modalRef"
+    >
+        <label for="filename">Name</label>
+        <input name="filename" type="text" t-att-value="this.props.filename" t-ref="this.nameInputRef"/>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="() => this.rename()" data-hotkey="r">Rename</button>
+            <button class="btn btn-secondary" t-on-click="() => this.props.close()" data-hotkey="x">Discard</button>
+        </t>
+    </Dialog>
+</t>
+</templates>
+

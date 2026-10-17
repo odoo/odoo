@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="html_editor.FileSettings">
+        <Dropdown state="this.props.dropdown" navigationOptions="{ 'shouldFocusChildInput': false }">
+            <button t-ref="this.menuRef"
+                title="More options"
+                class="btn btn-light py-1 px-1 ms-1 file-options-button"
+                t-att-class="{ 'shadow': this.props.isOverlay, 'border': this.props.isOverlay }"
+            >
+                <i class="oi oi-fw" data-icon="more_vert"/>
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem class="'file-download-button'" onSelected="this.props.download">
+                    <i class="oi oi-fw me-1" data-icon="download"></i>Download
+                </DropdownItem>
+                <DropdownItem t-if="this.props.rename"
+                    class="'file-rename-button'" onSelected="this.props.rename"
+                >
+                    <i class="oi oi-fw me-1" data-icon="edit"></i>Rename
+                </DropdownItem>
+                <CheckboxItem t-if="this.props.fileModel.isViewable and this.props.toggleInlinePreview"
+                    class="'file-inline-preview-button d-inline-flex'"
+                    onSelected="this.props.toggleInlinePreview"
+                    checked="this.props.isPreviewInline"
+                >
+                    <div>
+                        <i class="oi oi-fw me-1" data-icon="visibility"/>Toggle preview
+                    </div>
+                    <div class="form-check form-switch ms-3">
+                        <input class="form-check-input" type="checkbox" t-att-checked="this.props.isPreviewInline" tabindex="-1" aria-hidden="true"/>
+                    </div>
+                </CheckboxItem>
+                <DropdownItem t-if="this.props.remove"
+                    onSelected="this.props.remove" class="'file-delete-button text-danger'"
+                >
+                    <i class="oi oi-fw oi-filled me-1" data-icon="delete"></i>Remove
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>
+
