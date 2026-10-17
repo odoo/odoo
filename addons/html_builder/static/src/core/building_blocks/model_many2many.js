@@ -4,9 +4,9 @@ import {
     getAllActionsAndOperations,
     useDomState,
 } from "@html_builder/core/utils";
-import { Component, onWillStart, proxy, t, useEffect, useProps, useScope } from "@odoo/owl";
+import { Component, onWillStart, usePlugin, proxy, t, useEffect, useProps, useScope } from "@odoo/owl";
+import { FieldPlugin } from "@web/core/field_plugin";
 import { uniqueId } from "@web/core/utils/functions";
-import { useService } from "@web/core/utils/hooks";
 import { BasicMany2Many } from "./basic_many2many";
 import { BuilderComponent } from "./builder_component";
 
@@ -29,7 +29,7 @@ export class ModelMany2Many extends Component {
     scope = useScope();
 
     setup() {
-        this.fields = useService("field");
+        this.fields = usePlugin(FieldPlugin);
         this.cachedModel = useCachedModel();
         this.state = proxy({
             searchModel: undefined,

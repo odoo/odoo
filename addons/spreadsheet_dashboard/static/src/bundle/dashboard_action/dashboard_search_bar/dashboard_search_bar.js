@@ -1,4 +1,5 @@
-import { Component, signal, proxy, t, useProps } from "@odoo/owl";
+import { Component, usePlugin, signal, proxy, t, useProps } from "@odoo/owl";
+import { FieldPlugin } from "@web/core/field_plugin";
 import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
 import { DashboardSearchBarMenu } from "../dashboard_search_bar_menu/dashboard_search_bar_menu";
@@ -36,7 +37,7 @@ export class DashboardSearchBar extends Component {
         this.uiService = useService("ui");
         this.orm = useService("orm");
         this.keepLast = new KeepLast();
-        this.fields = useService("field");
+        this.fields = usePlugin(FieldPlugin);
         this.loader = useService("spreadsheet_dashboard_loader");
         this.searchModel = this.loader.getDashboard(this.loader.activeDashboardId).searchModel;
 
