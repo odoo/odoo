@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 import odoo
 from odoo.http.session import session_store
-from odoo.tests.common import HttpCase, new_test_user, tagged
+from odoo.modules.registry import Registry
+from odoo.tests.common import HOST, HttpCase, new_test_user, tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
@@ -47,6 +50,17 @@ class TestWebLogin(TestWebLoginCommon):
         res_post = self.login('portal_user', 'portal_user')
         # ensure we end up on the right page for external users. Valid without portal installed.
         self.assertEqual(res_post.request.path_url, '/web/login_successful')
+
+    def test_web_login_does_not_invalidate_cache(self):
+        self.internal_user.tz = 'Europe/Brussels'
+        self.assertFalse(self.internal_user.login_date)
+        with patch.object(Registry, 'clear_cache') as clear_cache:
+            for _ in range(2):  # first login, then a regular one
+                self.authenticate(None, None)
+                self.opener.cookies.set('tz', 'Europe/Brussels', domain=HOST)
+                self.login('internal_user', 'internal_user')
+                self.assertTrue(self.internal_user.login_date)
+        clear_cache.assert_not_called()
 
     def test_web_login_bad_xhr(self):
         # simulate the user downloaded the login form
