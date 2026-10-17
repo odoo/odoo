@@ -299,3 +299,35 @@ class TestCarrierPropagation(TransactionCase):
         # both pickings should be validated but and activity should have been created for the invalid picking
         self.assertEqual(pickings.mapped('state'), ['done', 'done'])
         self.assertTrue(self.env['mail.activity'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', pickings[1].id), ('user_id', '=', alien.id)], limit=1))
+
+    def test_carrier_propagation_with_auto_printed_report(self):
+        """
+            Set the carrier propagation to True on stock.rule
+            Set the PACK operation type to automatically print the delivery slip
+            Create a Sale Order without carrier, confirm it and validate the PICK
+            Set the carrier on the PACK, validate it
+            Check that the carrier is set on the SHIP
+        """
+        self.warehouse.delivery_route_id.rule_ids.propagate_carrier = True
+        self.warehouse.pack_type_id.auto_print_delivery_slip = True
+
+        so = self.SaleOrder.create({
+            'partner_id': self.partner_propagation.id,
+            'order_line': [Command.create({'product_id': self.super_product.id})],
+        })
+        so.action_confirm()
+        self.assertFalse(so.carrier_id)
+
+        pick = so.picking_ids
+        pick.button_validate()
+
+        # The carrier is set on the transfer itself, not on the sale order.
+        pack = pick.move_ids.move_dest_ids.picking_id
+        pack.carrier_id = self.normal_delivery
+        action = pack.button_validate()
+        # The report printed on validation makes `button_validate` return an action.
+        self.assertEqual(action['type'], 'ir.actions.client')
+        self.assertEqual(action['tag'], 'do_multi_print')
+
+        ship = pack.move_ids.move_dest_ids.picking_id
+        self.assertEqual(self.normal_delivery, ship.carrier_id)
