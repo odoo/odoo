@@ -7,7 +7,7 @@ class EfakturProductCode(models.Model):
     _name = "l10n_id_efaktur_coretax.product.code"
     _description = "Product categorization according to E-Faktur"
     _rec_name = "code"
-    _rec_names_search = ['code', 'description']
+    _rec_names_search = ('code', 'description')
 
     code = fields.Char()
     description = fields.Text()

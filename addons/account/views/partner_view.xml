@@ -307,7 +307,7 @@
                    <separator/>
                    <filter string="Overdue Invoices"
                         name="overdue"
-                        domain="[('invoice_ids.invoice_date_due', '&lt;', context_today().strftime('%Y-%m-%d'))]" />
+                        domain="[('invoice_ids.invoice_date_due', '&lt;', 'today')]" />
                    <separator/>
                 </xpath>
             </field>

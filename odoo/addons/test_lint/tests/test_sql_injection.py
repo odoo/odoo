@@ -192,8 +192,7 @@ class SQLInjectionLinter(ast.NodeVisitor):
         typ = self.result_type
         if typ is None:
             if node.attr in ('cr', '_cr'):
-                # env.cr
-                # self._cr
+                # resolving a cursor (stypically on `env` or `self`)
                 rt = Tag.CURSOR
             elif node.attr in ('select', 'subselect'):
                 # query.select(...)
