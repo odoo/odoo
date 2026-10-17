@@ -505,7 +505,13 @@ class Event(models.Model):
         # be localized and then converted in UTC, as it is the timezone used to record dates and
         # times in db.
         tz = timezone(self.env.user.tz or self.env.context.get('tz') or 'UTC')
-        localized_today_begin = tz.localize(fields.Datetime.today())
+        # `fields.Datetime.today()` truncates to midnight of the *UTC* date, not the
+        # user's local date. Localizing that value as if it were local midnight shifts
+        # the boundary by the UTC offset, wrongly excluding events near local midnight
+        # for timezones behind UTC. Convert the actual current instant to the user's
+        # timezone first, then truncate to its local midnight.
+        localized_today_begin = utc.localize(fields.Datetime.now()).astimezone(tz).replace(
+            hour=0, minute=0, second=0, microsecond=0)
         utc_today_begin = localized_today_begin.astimezone(utc)
         utc_today_end = localized_today_begin.replace(hour=23, minute=59, second=59).astimezone(utc)
 
