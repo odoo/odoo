@@ -17,7 +17,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.fields import Domain
 from odoo.modules.module import MANIFEST_NAMES, Manifest
-from odoo.release import major_version
+from odoo.release import FINAL, major_version, version, version_info
 from odoo.tools import BinaryBytes, SQL, convert_file
 from odoo.tools import file_open, file_path, file_open_temporary_directory
 from odoo.tools.misc import OrderedSet, topological_sort
@@ -531,9 +531,21 @@ class IrModuleModule(models.Model):
             return []
 
     def button_immediate_install_app(self):
-        if not self.env.is_admin():
-            raise AccessDenied()
         module_name = self.env.context.get('module_name')
+        import_module = self._prepare_data_module_import(module_name)
+        return {
+            'name': _("Install an Industry"),
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': import_module.id,
+            'res_model': 'base.import.module',
+            'type': 'ir.actions.act_window',
+            'context': {'data_module': True}
+        }
+
+    @api.model
+    def _download_data_module_zip(self, module_name):
+        """Download the zip of the given industry module from the Odoo appstore."""
         import requests  # noqa: PLC0415
         try:
             resp = requests.get(
@@ -541,27 +553,58 @@ class IrModuleModule(models.Model):
                 timeout=5.0,
             )
             resp.raise_for_status()
-            missing_dependencies_description, unavailable_modules = self._get_missing_dependencies(resp.content)
-            if unavailable_modules:
-                raise UserError(missing_dependencies_description)
-            import_module = self.env['base.import.module'].create({
-                'module_file': BinaryBytes(resp.content),
-                'state': 'init',
-                'modules_dependencies': missing_dependencies_description,
-            })
-            return {
-                'name': _("Install an Industry"),
-                'view_mode': 'form',
-                'target': 'new',
-                'res_id': import_module.id,
-                'res_model': 'base.import.module',
-                'type': 'ir.actions.act_window',
-                'context': {'data_module': True}
-            }
+            return resp.content
         except requests.exceptions.HTTPError:
             raise UserError(_('The module %s cannot be downloaded') % module_name)
         except requests.exceptions.ConnectionError:
             raise UserError(_('Connection to %(url)s failed, the module %(module)s cannot be downloaded.', url=APPS_URL, module=module_name))
+
+    @api.model
+    def _check_is_odoo_industry(self, module_name):
+        """Only allow installing genuine Odoo-developed industries from the Apps
+        store this way, not arbitrary or third-party modules: `module_name` must
+        actually be published there under `module_type='industries'`, approved
+        and authored by Odoo itself."""
+        modules = self._get_modules_from_apps(['author', 'approved'], 'industries', module_name)
+        if not modules or not modules[0]['approved'] or modules[0]['author'] != 'Odoo S.A.':
+            raise UserError(_(
+                "%(module)s is not an Odoo industry module available on the Apps store.",
+                module=module_name,
+            ))
+
+    @api.model
+    def _prepare_data_module_import(self, module_name):
+        """Download the given data (industry) module from the Odoo appstore,
+        check its dependencies, and create the (not yet run) import wizard for it."""
+        if not self.env.is_admin():
+            raise AccessDenied()
+        if version_info[3] != FINAL:
+            raise UserError(_(
+                "Industry modules can only be downloaded from the Odoo appstore for a "
+                "released version of Odoo. This database runs %(version)s, a pre-release "
+                "version for which the store has nothing published yet.",
+                version=version,
+            ))
+        self._check_is_odoo_industry(module_name)
+        zip_data = self._download_data_module_zip(module_name)
+        missing_dependencies_description, unavailable_modules = self._get_missing_dependencies(zip_data)
+        if unavailable_modules:
+            raise UserError(missing_dependencies_description)
+        return self.env['base.import.module'].create({
+            'module_file': BinaryBytes(zip_data),
+            'state': 'init',
+            'modules_dependencies': missing_dependencies_description,
+        })
+
+    @api.model
+    def _install_data_module(self, module_name):
+        """ Download and install the given data (industry) module from the Odoo
+        appstore directly, without going through the confirmation wizard. Used by
+        `res.config.settings` `x_module_` fields, which install silently like
+        regular `module_` fields do.
+        """
+        import_module = self._prepare_data_module_import(module_name)
+        return import_module.with_context(data_module=True).import_module()
 
     @api.model
     def _get_missing_dependencies(self, zip_data):
