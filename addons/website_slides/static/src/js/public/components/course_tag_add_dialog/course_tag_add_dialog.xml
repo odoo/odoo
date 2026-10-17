@@ -13,7 +13,7 @@
         </t>
         <div class="mb-3">
             <div t-if="this.state.alertMsg" t-out="this.state.alertMsg" class="alert alert-warning"/>
-            <div class="mb-3" t-att-class="{'form-control is-valid': this.validation.tagIsValid, 'form-control is-invalid': this.validation.tagIsValid === false}">
+            <div class="mb-3" data-label="Tag" t-att-class="{'form-control is-valid': this.validation.tagIsValid, 'form-control is-invalid': this.validation.tagIsValid === false}">
                 <label class="col-form-label">Tag</label>
                 <SelectMenu
                     togglerClass="'form-control'"
@@ -34,7 +34,7 @@
                     </t>
                 </SelectMenu>
             </div>
-            <div t-if="this.state.showTagGroup" class="mb-3" t-att-class="{'form-control is-valid': this.validation.tagGroupIsValid, 'form-control is-invalid': this.validation.tagGroupIsValid === false}">
+            <div t-if="this.state.showTagGroup" class="mb-3" data-label="Tag Group" t-att-class="{'form-control is-valid': this.validation.tagGroupIsValid, 'form-control is-invalid': this.validation.tagGroupIsValid === false}">
                 <label class="col-form-label">Tag Group</label>
                 <SelectMenu
                     togglerClass="'form-control'"
