@@ -28,7 +28,7 @@ class TestProjectTagsSecurity(TestProjectCommon):
 
         _logger.info("Testing access for portal")
         # Can read any tag
-        (self.tag_project | self.tag_admin).with_user(self.user_portal).read(["name"])
+        (self.tag_project | self.tag_admin).with_user(self.user_portal).fetch(["name"])
 
         # Cannot create/write/unlink tags
         with self.assertRaises(AccessError):
@@ -45,7 +45,7 @@ class TestProjectTagsSecurity(TestProjectCommon):
 
         _logger.info("Testing access for employee")
         # Can read any tag
-        (self.tag_project | self.tag_admin).with_user(self.user_employee).read(["name"])
+        (self.tag_project | self.tag_admin).with_user(self.user_employee).fetch(["name"])
 
         # Cannot create/write/unlink tags
         with self.assertRaises(AccessError):
@@ -62,7 +62,7 @@ class TestProjectTagsSecurity(TestProjectCommon):
 
         _logger.info("Testing access for project user")
         # Can read any tag
-        (self.tag_project | self.tag_admin).with_user(self.user_projectuser).read(["name"])
+        (self.tag_project | self.tag_admin).with_user(self.user_projectuser).fetch(["name"])
 
         # Cannot create/write/unlink tags
         with self.assertRaises(AccessError):
@@ -85,7 +85,7 @@ class TestProjectTagsSecurity(TestProjectCommon):
 
         _logger.info("Testing access for project manager")
         # Can read any tag
-        (self.tag_project | self.tag_admin).with_user(self.user_projectmanager).read(["name"])
+        (self.tag_project | self.tag_admin).with_user(self.user_projectmanager).fetch(["name"])
 
         # Can create/write/unlink tags, whether associated to projects or not
         self.env["project.tags"].with_user(self.user_projectmanager).create(

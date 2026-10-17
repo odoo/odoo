@@ -111,14 +111,14 @@ class TestProjectTaskTypeSecurity(TestProjectCommon):
 
         _logger.info("Testing access for portal")
         # Can read a project stage
-        self.stage_project.with_user(self.user_portal).read(["name"])
+        self.stage_project.with_user(self.user_portal).fetch(["name"])
 
         # Can read own stage
-        self.stage_portal.with_user(self.user_portal).read(["name"])
+        self.stage_portal.with_user(self.user_portal).fetch(["name"])
 
         # Cannot read another people's stage
         with self.assertRaises(AccessError):
-            self.stage_user.with_user(self.user_portal).read(["name"])
+            self.stage_user.with_user(self.user_portal).fetch(["name"])
 
         # Cannot create/write/unlink project stage
         with self.assertRaises(AccessError):
@@ -146,14 +146,14 @@ class TestProjectTaskTypeSecurity(TestProjectCommon):
 
         _logger.info("Testing access for employee")
         # Can read a project stage
-        self.stage_project.with_user(self.user_employee).read(["name"])
+        self.stage_project.with_user(self.user_employee).fetch(["name"])
 
         # Can read own stage
-        self.stage_employee.with_user(self.user_employee).read(["name"])
+        self.stage_employee.with_user(self.user_employee).fetch(["name"])
 
         # Cannot read another people's stage
         with self.assertRaises(AccessError):
-            self.stage_user.with_user(self.user_employee).read(["name"])
+            self.stage_user.with_user(self.user_employee).fetch(["name"])
 
         # Cannot create/write/unlink project stage
         with self.assertRaises(AccessError):
@@ -181,7 +181,7 @@ class TestProjectTaskTypeSecurity(TestProjectCommon):
 
         _logger.info("Testing access for project user")
         # Can read a project stage
-        self.stage_project.with_user(self.user_projectuser).read(["name"])
+        self.stage_project.with_user(self.user_projectuser).fetch(["name"])
         # but not create/write/unlink a project stage
         with self.assertRaises(AccessError):
             self.env["project.task.type"].with_user(self.user_projectuser).create(
@@ -197,7 +197,7 @@ class TestProjectTaskTypeSecurity(TestProjectCommon):
 
         # Cannot do anything on a stage from another user
         with self.assertRaises(AccessError):
-            self.stage_manager.with_user(self.user_projectuser).read(["name"])
+            self.stage_manager.with_user(self.user_projectuser).fetch(["name"])
         with self.assertRaises(AccessError):
             self.env["project.task.type"].with_user(self.user_projectuser).create(
                 {
@@ -211,7 +211,7 @@ class TestProjectTaskTypeSecurity(TestProjectCommon):
             self.stage_manager.with_user(self.user_projectuser).unlink()
 
         # Can do everything on his own stage
-        self.stage_user.with_user(self.user_projectuser).read(["name"])
+        self.stage_user.with_user(self.user_projectuser).fetch(["name"])
         stage_user_new = (
             self.env["project.task.type"]
             .with_user(self.user_projectuser)
@@ -225,7 +225,7 @@ class TestProjectTaskTypeSecurity(TestProjectCommon):
 
         _logger.info("Testing access for project manager")
         # Can do everything on project stages
-        self.stage_project.with_user(self.user_projectmanager).read(["name"])
+        self.stage_project.with_user(self.user_projectmanager).fetch(["name"])
         self.env["project.task.type"].with_user(self.user_projectmanager).create(
             {
                 "name": "foo",
@@ -237,7 +237,7 @@ class TestProjectTaskTypeSecurity(TestProjectCommon):
 
         # Cannot do anything on a stage from another user
         with self.assertRaises(AccessError):
-            self.stage_user.with_user(self.user_projectmanager).read(["name"])
+            self.stage_user.with_user(self.user_projectmanager).fetch(["name"])
         with self.assertRaises(AccessError):
             self.env["project.task.type"].with_user(self.user_projectmanager).create(
                 {
@@ -251,7 +251,7 @@ class TestProjectTaskTypeSecurity(TestProjectCommon):
             self.stage_user.with_user(self.user_projectmanager).unlink()
 
         # Can do everything on his own stage
-        self.stage_manager.with_user(self.user_projectmanager).read(["name"])
+        self.stage_manager.with_user(self.user_projectmanager).fetch(["name"])
         self.env["project.task.type"].with_user(self.user_projectmanager).create(
             {"name": "foo", "user_id": self.user_projectmanager.id}
         )

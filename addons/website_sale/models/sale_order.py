@@ -155,24 +155,24 @@ class SaleOrder(models.Model):
     def _search_abandoned_cart(self, operator, _value):
         if operator != "in":
             return NotImplemented
-        website_ids = self.env["website"].search_read(
-            fields=["id", "cart_abandoned_delay", "partner_id"]
+        website_ids = self.env["website"].search_fetch(
+            [], field_names=["cart_abandoned_delay", "partner_id"]
         )
         return Domain.AND((
             Domain("state", "=", "draft"),
             Domain("order_line", "!=", False),
             Domain.OR(
                 [
-                    ("website_id", "=", website_id["id"]),
+                    ("website_id", "=", website_id.id),
                     (
                         "date_order",
                         "<=",
                         fields.Datetime.to_string(
                             fields.Datetime.now()
-                            - relativedelta(hours=website_id["cart_abandoned_delay"] or 1.0)
+                            - relativedelta(hours=website_id.cart_abandoned_delay or 1.0)
                         ),
                     ),
-                    ("partner_id", "!=", website_id["partner_id"][0]),
+                    ("partner_id", "!=", website_id.partner_id.id),
                 ]
                 for website_id in website_ids
             ),

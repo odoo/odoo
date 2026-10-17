@@ -85,7 +85,7 @@ class TestORM(TransactionCase):
 
         # read as unprivileged user
         with self.assertRaises(AccessError):
-            p1.with_user(user).read(['name'])
+            p1.with_user(user).fetch(['name'])
         # write as unprivileged user
         with self.assertRaises(AccessError):
             p1.with_user(user).write({'name': 'foo'})
@@ -97,7 +97,7 @@ class TestORM(TransactionCase):
         p2.unlink()
         # read mixed records: some deleted and some filtered
         with self.assertRaises(AccessError):
-            (p1 + p2).with_user(user).read(['name'])
+            (p1 + p2).with_user(user).fetch(['name'])
         # delete mixed records: some deleted and some filtered
         with self.assertRaises(AccessError):
             (p1 + p2).with_user(user).unlink()

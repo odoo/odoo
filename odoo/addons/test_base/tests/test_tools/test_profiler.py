@@ -24,14 +24,14 @@ class TestProfileAccess(TransactionCase):
 
     def test_admin_has_access(self):
         self.assertEqual(self.env['ir.profile'].search([('id', '=', self.test_profile.id)]), self.test_profile)
-        self.test_profile.read(['name'])
+        self.test_profile.fetch(['name'])
 
     def test_user_no_access(self):
         user = new_test_user(self.env, login='noProfile', groups='base.group_user')
         with self.with_user('noProfile'), self.assertRaises(AccessError):
             self.env['ir.profile'].search([])
         with self.assertRaises(AccessError):
-            self.test_profile.with_user(user).read(['name'])
+            self.test_profile.with_user(user).fetch(['name'])
 
 
 @tagged('post_install', '-at_install', 'profiling')

@@ -779,8 +779,8 @@ class IrModuleModule(models.Model):
                     'arch': f'<div id="wrap">\n    {calls}\n</div>',
                 })
         keys = [values['key'] for values in create_values]
-        existing_primary_templates = View.search_read([('mode', '=', 'primary'), ('key', 'in', keys)], ['key'])
-        existing_primary_template_keys = {data['key']: data['id'] for data in existing_primary_templates}
+        existing_primary_templates = View.search_fetch([('mode', '=', 'primary'), ('key', 'in', keys)], ['key'])
+        existing_primary_template_keys = {data.key: data.id for data in existing_primary_templates}
         missing_create_values = []
         update_count = 0
         for create_value in create_values:

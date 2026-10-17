@@ -642,11 +642,11 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         move = self.env['account.move'].create({})
         self.user.group_ids = self.env.ref('base.group_user')
         with self.assertRaises(AccessError):
-            move.with_user(self.user).read(['l10n_es_edi_verifactu_document_ids'])
+            move.with_user(self.user).fetch(['l10n_es_edi_verifactu_document_ids'])
         for group in ('account.group_account_invoice', 'account.group_account_readonly'):
             self.user.group_ids = self.env.ref(group)
             # Should not raise an error for accounting users
-            move.with_user(self.user).read(['l10n_es_edi_verifactu_document_ids'])
+            move.with_user(self.user).fetch(['l10n_es_edi_verifactu_document_ids'])
 
     def test_verifactu_sequence_with_prefix(self):
         """Ensure a non-numeric sequence value surfaces a user-friendly error."""

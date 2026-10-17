@@ -249,21 +249,19 @@ class ProductTemplate(models.Model):
             self
             .env["ir.model.fields"]
             .sudo()
-            .search_read(
+            .search_fetch(
                 [("model", "=", "product.template"), ("name", "in", incompatible_types)],
                 ["name", "field_description"],
             )
         )
-        field_descriptions = {v["name"]: v["field_description"] for v in fields}
-        field_list = incompatible_types + ["name"]
-        values = self.read(field_list)
-        for val in values:
-            incompatible_fields = [f for f in incompatible_types if val[f]]
+        field_descriptions = {v.name: v.field_description for v in fields}
+        for record in self:
+            incompatible_fields = [f for f in incompatible_types if record[f]]
             if len(incompatible_fields) > 1:
                 raise ValidationError(
                     self.env._(
                         "The product (%(product)s) has incompatible values: %(value_list)s",
-                        product=val["name"],
+                        product=record.name,
                         value_list=[field_descriptions[v] for v in incompatible_fields],
                     )
                 )

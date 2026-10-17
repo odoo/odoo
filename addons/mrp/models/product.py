@@ -41,8 +41,8 @@ class ProductTemplate(models.Model):
     @api.depends_context('company')
     def _compute_is_kits(self):
         domain = [('product_tmpl_id', 'in', self.ids), ('type', '=', 'phantom'), '|', ('company_id', '=', False), ('company_id', '=', self.env.company.id)]
-        bom_mapping = self.env['mrp.bom'].sudo().search_read(domain, ['product_tmpl_id'])
-        kits_ids = set(b['product_tmpl_id'][0] for b in bom_mapping)
+        bom_mapping = self.env['mrp.bom'].sudo().search_fetch(domain, ['product_tmpl_id'])
+        kits_ids = set(bom_mapping.product_tmpl_id.ids)
         for template in self:
             template.is_kits = (template.id in kits_ids)
 

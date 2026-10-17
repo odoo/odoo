@@ -49,17 +49,17 @@ class EventTrack(models.Model):
                 else:
                     domain = [('partner_id', '=', self.env.user.partner_id.id)]
 
-                event_track_visitors = self.env['event.track.visitor'].sudo().search_read(
+                event_track_visitors = self.env['event.track.visitor'].sudo().search_fetch(
                     Domain.AND([
                         domain,
                         [('track_id', 'in', tracks_quiz.ids)]
-                    ]), fields=['track_id', 'quiz_completed', 'quiz_points']
+                    ]), field_names=['track_id', 'quiz_completed', 'quiz_points']
                 )
 
                 quiz_visitor_map = {
-                    track_visitor['track_id'][0]: {
-                        'quiz_completed': track_visitor['quiz_completed'],
-                        'quiz_points': track_visitor['quiz_points']
+                    track_visitor.track_id.id: {
+                        'quiz_completed': track_visitor.quiz_completed,
+                        'quiz_points': track_visitor.quiz_points
                     } for track_visitor in event_track_visitors
                 }
                 for track in tracks_quiz:

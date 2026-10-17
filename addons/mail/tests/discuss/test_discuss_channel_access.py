@@ -547,7 +547,7 @@ class TestDiscussChannelAccess(MailCommon):
             self.assertEqual(len(channel), 1, "should find the channel")
             if operation == "read":
                 self.assertEqual(len(ChannelAsUser.search([("id", "=", channel.id)])), 1 if result else 0)
-                channel.read(["name"])
+                channel.fetch(["name"])
             elif operation == "write":
                 channel.write({"name": "new name"})
             elif operation == "unlink":
@@ -581,7 +581,7 @@ class TestDiscussChannelAccess(MailCommon):
             self.assertEqual(len(member), 1, "should find the target member")
             if operation == "read":
                 self.assertEqual(len(ChannelMemberAsUser.search(domain)), 1 if result else 0)
-                member.read(["custom_notifications"])
+                member.fetch(["custom_notifications"])
             elif operation == "write":
                 member.write({"custom_notifications": "mentions"})
             elif operation == "unlink":
