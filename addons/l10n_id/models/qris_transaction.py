@@ -65,7 +65,8 @@ class L10n_IdQrisTransaction(models.Model):
                 transaction.paid = True
                 return {
                     'paid': True,
-                    'qr_statuses': [status_response['data']]
+                    'qr_statuses': [status_response['data']],
+                    'transaction': transaction,
                 }
             else:
                 unpaid_status_data.append(status_response['data'])
