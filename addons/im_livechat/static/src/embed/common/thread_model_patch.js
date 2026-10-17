@@ -55,10 +55,16 @@ patch(Thread.prototype, {
     },
 
     get avatarUrl() {
-        if (this.channel_type === "livechat") {
-            return this.operator.avatarUrl;
+        if (this.channel_type !== "livechat") {
+            return super.avatarUrl;
         }
-        return super.avatarUrl;
+        const visitorMember = [...this.channelMembers]
+            .sort((a, b) => a.id - b.id)
+            .find((member) => member.persona.notEq(this.operator));
+        if (this.selfMember?.notEq(visitorMember)) {
+            return visitorMember?.persona.avatarUrl ?? super.avatarUrl;
+        }
+        return this.operator.avatarUrl;
     },
     get displayName() {
         if (this.channel_type === "livechat" && this.operator) {
