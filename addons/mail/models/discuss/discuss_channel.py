@@ -542,6 +542,7 @@ class DiscussChannel(models.Model):
                 members,
                 [
                     Store.One("channel_id", [], as_thread=True),
+                    "create_date",
                     *self.env["discuss.channel.member"]._to_store_persona(),
                     "unpin_dt",
                 ],
