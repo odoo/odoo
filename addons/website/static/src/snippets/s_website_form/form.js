@@ -9,6 +9,7 @@ import { post } from "@web/core/network/http_service";
 import { user } from "@web/core/user";
 import { delay } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
+import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import {
     formatDate,
     formatDateTime,
@@ -33,6 +34,14 @@ export class Form extends Interaction {
         }, // !compatibility
         _root: {
             "t-on-submit.prevent": this.locked(this.send, true),
+            "t-on-reset": async () => {
+                // The reset event fires before the browser clears the file inputs.
+                await this.waitFor();
+                for (const inputEl of this.el.querySelectorAll(".s_website_form_signature_input")) {
+                    delete inputEl.signatureImage;
+                }
+                this.onFieldInput();
+            },
             "t-att-class": () => ({
                 "d-none": this.isHidden,
             }),
@@ -42,7 +51,9 @@ export class Form extends Interaction {
                 "d-none": !this.isHidden,
             }),
         },
-        "input[type=file]": { "t-on-change": this.changeFile },
+        "input[type=file]:not(.s_website_form_signature_input)": {
+            "t-on-change": this.changeFile,
+        },
         "input.o_add_files_button": { "t-on-click": this.clickAddFilesButton },
         ".s_website_form_field[data-type=binary]": { "t-on-click": this.clickFileDelete }, // delegate on ".o_file_delete"
         ".s_website_form_field": {
@@ -62,6 +73,42 @@ export class Form extends Interaction {
 
                 this.disabledInputEls.delete(el);
             },
+        },
+        ".s_website_form_signature_sign": {
+            "t-on-click": this.openSignatureDialog,
+            "t-att-disabled": (el) => this.getSignatureInput(el).disabled,
+            "t-att-aria-invalid": (el) =>
+                el.classList.contains("is-invalid") ? "true" : undefined,
+        },
+        ".s_website_form_signature_input": {
+            "t-on-invalid.prevent": (ev) => {
+                const fieldEl = ev.target.closest(".s_website_form_field");
+                const buttonEl = fieldEl.querySelector(".s_website_form_signature_sign");
+                fieldEl.classList.add("o_has_error");
+                buttonEl.classList.add("is-invalid");
+                // Announce the error when focus moves to the visible control.
+                buttonEl.setAttribute("aria-invalid", "true");
+                buttonEl.focus();
+            },
+        },
+        ".s_website_form_signature_preview": {
+            "t-att-src": (el) => this.getSignatureInput(el).signatureImage,
+            "t-att-class": (el) => ({
+                "d-none": !this.getSignatureInput(el).signatureImage,
+            }),
+        },
+        ".s_website_form_signature_label": {
+            "t-out": (el) =>
+                this.getSignatureInput(el).signatureImage
+                    ? _t("Click to replace signature")
+                    : _t("Click to Sign"),
+        },
+        ".s_website_form_signature_clear": {
+            "t-on-click": (ev) => this.setSignature(this.getSignatureInput(ev.currentTarget)),
+            "t-att-class": (el) => ({
+                "d-none": !this.getSignatureInput(el).signatureImage,
+            }),
+            "t-att-disabled": (el) => this.getSignatureInput(el).disabled,
         },
         ".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date":
             {
@@ -148,11 +195,13 @@ export class Form extends Interaction {
         }
 
         // Add the files zones where the file blocks will be displayed.
-        this.el.querySelectorAll("input[type=file]").forEach((inputEl) => {
-            const filesZoneEl = document.createElement("DIV");
-            filesZoneEl.classList.add("o_files_zone", "row", "gx-1");
-            inputEl.parentNode.insertBefore(filesZoneEl, inputEl);
-        });
+        this.el
+            .querySelectorAll("input[type=file]:not(.s_website_form_signature_input)")
+            .forEach((inputEl) => {
+                const filesZoneEl = document.createElement("DIV");
+                filesZoneEl.classList.add("o_files_zone", "row", "gx-1");
+                inputEl.parentNode.insertBefore(filesZoneEl, inputEl);
+            });
     }
 
     destroy() {
@@ -540,7 +589,45 @@ export class Form extends Interaction {
             fieldEl.querySelectorAll(".o_add_files_button").forEach((el) => el.remove());
             inputEl.classList.remove("d-none");
             delete inputEl.fileList;
+            delete inputEl.signatureImage;
         });
+    }
+
+    getSignatureInput(el) {
+        return el.closest(".s_website_form_field").querySelector(".s_website_form_signature_input");
+    }
+
+    openSignatureDialog(ev) {
+        const inputEl = this.getSignatureInput(ev.currentTarget);
+        const close = this.services.dialog.add(SignatureDialog, {
+            nameAndSignatureProps: { noInputName: true, fontColor: "black" },
+            uploadSignature: ({ signatureImage }) => this.setSignature(inputEl, signatureImage),
+        });
+        this.registerCleanup(close);
+    }
+
+    setSignature(inputEl, signatureImage = "") {
+        // Use the regular file transport so custom signatures also become email attachments.
+        const dataTransfer = new DataTransfer();
+        if (signatureImage) {
+            const bytes = Uint8Array.from(atob(signatureImage.split(",")[1]), (char) =>
+                char.charCodeAt(0)
+            );
+            const label = inputEl
+                .closest(".s_website_form_field")
+                .querySelector(".s_website_form_label_content")
+                .textContent.trim();
+            dataTransfer.items.add(
+                new File([bytes], `${label || _t("Signature")}.png`, {
+                    type: "image/png",
+                })
+            );
+        }
+        inputEl.files = dataTransfer.files;
+        inputEl.signatureImage = signatureImage;
+        this.onFieldInput();
+        // The dialog callback runs outside this interaction's event handlers.
+        this.updateContent();
     }
 
     checkErrorFields(errorFields) {
@@ -548,10 +635,13 @@ export class Form extends Interaction {
         // Loop on all fields
         for (const fieldEl of this.el.querySelectorAll(".form-field, .s_website_form_field")) {
             // !compatibility
-            // FIXME that seems broken, "for" does not contain the field
-            // but this is used to retrieve errors sent from the server...
-            // need more investigation.
-            const fieldName = fieldEl.querySelector(".col-form-label")?.getAttribute("for");
+            // The controller returns input names, while labels refer to DOM ids.
+            const fieldName = fieldEl.querySelector(
+                ".s_website_form_input, .o_website_form_input"
+            )?.name;
+            const fieldError = Array.isArray(errorFields)
+                ? errorFields.includes(fieldName)
+                : errorFields[fieldName];
 
             // Validate inputs for this field
             const inputEls = [
@@ -560,6 +650,9 @@ export class Form extends Interaction {
                 ),
             ]; // !compatibility
             const invalidInputs = inputEls.filter((inputEl) => {
+                if (inputEl.disabled) {
+                    return false;
+                }
                 // Special check for multiple required checkbox for same
                 // field as it seems checkValidity forces every required
                 // checkbox to be checked, instead of looking at other
@@ -624,15 +717,15 @@ export class Form extends Interaction {
             for (const controlEl of controlEls) {
                 controlEl.classList.remove("is-invalid");
             }
-            if (invalidInputs.length || errorFields[fieldName]) {
+            if (invalidInputs.length || fieldError) {
                 fieldEl.classList.add("o_has_error");
                 for (const controlEl of controlEls) {
                     controlEl.classList.add("is-invalid");
                 }
-                if (typeof errorFields[fieldName] === "string") {
+                if (typeof fieldError === "string") {
                     // update error message and show it.
                     const popover = Popover.getOrCreateInstance(fieldEl, {
-                        content: errorFields[fieldName],
+                        content: fieldError,
                         trigger: "hover",
                         container: "body",
                         placement: "top",
@@ -930,7 +1023,12 @@ export class Form extends Interaction {
     }
 
     isInputVisible(inputEl) {
-        return this.isFieldVisible(inputEl.closest(".s_website_form_field"));
+        const fieldEl = inputEl.closest(".s_website_form_field");
+        // Unlike text defaults, a hidden signature cannot be filled in by the visitor.
+        if (fieldEl.matches(".s_website_form_field_hidden[data-type=signature]")) {
+            return false;
+        }
+        return this.isFieldVisible(fieldEl);
     }
 
     /**

@@ -521,6 +521,11 @@ export class FormOptionPlugin extends Plugin {
         if (activeField.type !== field.type) {
             field.value = "";
             field.propertyValue = "";
+            if (field.type === "signature") {
+                // Validation rules from the previous field type do not apply to a signature.
+                this.clearValidationDataset(oldFieldEl);
+                delete oldFieldEl.dataset.requirementComparator;
+            }
         }
         const targetEl = oldFieldEl.querySelector(".s_website_form_input");
         if (targetEl) {
