@@ -3,11 +3,10 @@ from zoneinfo import ZoneInfo
 
 import babel
 
-from odoo.tests import tagged, common, new_test_user
+from odoo.tests import tagged, common
 from odoo import Command, fields
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFormattedReadGroup(common.TransactionCase):
     ''' Test formatted_read_group, similar tests are done in test_private_read_group
     for _read_group.'''
@@ -17,7 +16,7 @@ class TestFormattedReadGroup(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.base_user = new_test_user(cls.env, login='Base User', groups='base.group_user')
+        cls.base_user = cls.env.ref('base.test_user')
 
     def test_simple_formatted_read_group(self):
         Model = self.env['test_read_group.aggregate']

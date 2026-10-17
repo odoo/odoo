@@ -10,12 +10,11 @@ from pathlib import Path
 
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
 from odoo.cli.i18n import I18n
-from odoo.tests import BaseCase, TransactionCase, tagged
+from odoo.tests import BaseCase, TransactionCase
 from odoo.tests.common import Like
 from odoo.tools import config, file_path
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCommand(BaseCase):
 
     @classmethod
@@ -138,7 +137,6 @@ class TestCommand(BaseCase):
         self.assertEqual(lines, [">>> Hello from Python!", '>>> '])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCommandUsingDb(TestCommand, TransactionCase):
 
     def test_i18n_export(self):

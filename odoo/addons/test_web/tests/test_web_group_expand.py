@@ -1,9 +1,8 @@
 from unittest.mock import patch
 
-from odoo.tests import tagged, common
+from odoo.tests import common
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGroupExpand(common.TransactionCase):
     maxDiff = None
 

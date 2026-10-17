@@ -3,11 +3,10 @@
 from datetime import timedelta
 
 from odoo import fields, Command
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPurchaseOldRules(PurchaseTestCommon):
 
     _test_user_groups = None  # FIXME list needed groups

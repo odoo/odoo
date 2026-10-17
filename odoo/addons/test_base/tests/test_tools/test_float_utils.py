@@ -2,7 +2,7 @@
 
 from math import log10
 
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase
 from odoo.tools import (
     float_compare,
     float_div,
@@ -14,7 +14,6 @@ from odoo.tools import (
 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFloatPrecision(TransactionCase):
     """ Tests on float precision. """
 

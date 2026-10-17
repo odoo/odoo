@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
 from odoo.addons.mail_plugin.tests.common import TestMailPluginControllerCommon, mock_auth_method_outlook
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCrmMailPlugin(TestMailPluginControllerCommon):
     @mock_auth_method_outlook('employee')
     def test_get_contact_data(self):
@@ -44,10 +42,8 @@ class TestCrmMailPlugin(TestMailPluginControllerCommon):
         """ Test that creating a record using the mail plugin for a contact belonging to a different company than the
             default company of the user does not result in any issues.
         """
-        company_a, company_b = self.env['res.company'].create([
-            {'name': 'Company_A'},
-            {'name': 'Company_B'},
-        ])
+        company_a = self.add_company('base.test_company_template')
+        company_b = self.add_company('base.test_company_template2')
 
         # create contact belonging to Company_B
         contact = self.env['res.partner'].create({

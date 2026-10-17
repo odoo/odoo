@@ -2,10 +2,8 @@
 
 from odoo.addons.calendar.tests.test_access_rights import TestAccessRights
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGoogleAccessRoles(TestAccessRights):
 
     def test_members_only_google_roles(self):

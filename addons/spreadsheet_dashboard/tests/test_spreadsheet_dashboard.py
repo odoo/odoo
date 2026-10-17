@@ -3,12 +3,9 @@ import json
 from odoo import Command
 from odoo.exceptions import UserError
 
-from odoo.tests import tagged
-
 from .common import DashboardTestCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSpreadsheetDashboard(DashboardTestCommon):
     def test_create_with_default_values(self):
         group = self.env["spreadsheet.dashboard.group"].create(

@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests.common import tagged, new_test_user, users
+from odoo.tests.common import new_test_user, users
 from odoo.exceptions import ValidationError
 from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
@@ -15,12 +15,11 @@ from odoo import Command, tools
 
 
 @patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSyncGoogle2Odoo(TestSyncGoogle):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.other_company = cls.env['res.company'].create({'name': 'Other Company'})
+        cls.other_company = cls.add_class_company('base.test_company_template')
         cls.public_partner = cls.env['res.partner'].create({
             'name': 'Public Contact',
             'email': 'public_email@example.com',
@@ -226,7 +225,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     @patch_api
     def test_valid_owner_property(self):
-        user = new_test_user(self.env, login='calendar-user')
+        user = self.env.ref('base.test_user')
         values = {
             'id': 'oj44nep1ldf8a3ll02uip0c9aa',
             'description': 'Small mini desc',
@@ -276,7 +275,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
     @patch_api
     def test_attendee_cancelled(self):
         """ Cancel event when the current user is not the organizer """
-        user = new_test_user(self.env, login='calendar-user')
+        user = self.env.ref('base.test_user')
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         event = self.env['calendar.event'].create({
             'name': 'coucou',
@@ -370,7 +369,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     @patch_api
     def test_attendee_removed(self):
-        user = new_test_user(self.env, login='calendar-user')
+        user = self.env.ref('base.test_user')
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         event = self.env['calendar.event'].with_user(user).create({
             'name': 'coucou',
@@ -410,7 +409,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
     @patch_api
     def test_attendee_removed_multiple(self):
 
-        user = new_test_user(self.env, login='calendar-user')
+        user = self.env.ref('base.test_user')
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         base_event = self.env['calendar.event'].create({
             'name': 'coucou',

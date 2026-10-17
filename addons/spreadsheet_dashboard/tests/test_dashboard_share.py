@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import DashboardTestCommon
-from odoo.tests import tagged
-from odoo.tests.common import new_test_user
 
 from odoo.exceptions import AccessError
 
@@ -14,7 +12,6 @@ EXCEL_FILES = [
 ]
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class DashboardSharing(DashboardTestCommon):
     def test_share_url(self):
         dashboard = self.create_dashboard()
@@ -47,7 +44,7 @@ class DashboardSharing(DashboardTestCommon):
             share.with_user(self.user).access_token
 
     def test_dashboard_manager_sees_all_shares(self):
-        second_user = new_test_user(self.env, login='Jeanne')
+        second_user = self.env.ref('base.test_user')
         second_user.group_ids |= self.group
         dashboard = self.create_dashboard()
         with self.with_user(self.user.login):

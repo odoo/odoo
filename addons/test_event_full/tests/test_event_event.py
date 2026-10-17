@@ -6,10 +6,9 @@ from freezegun import freeze_time
 
 from odoo import Command, exceptions
 from odoo.addons.test_event_full.tests.common import TestEventFullCommon
-from odoo.tests.common import tagged, users
+from odoo.tests.common import users
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventEvent(TestEventFullCommon):
 
     @users('event_user')

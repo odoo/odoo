@@ -105,7 +105,6 @@ class TestSearch(TestOrmPartnerCommon, TransactionCase):
         self.assertNotIn(credit_communal, cc_search, "Search for inactive record with x_active set to True has failed")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubqueries(TransactionCase):
     """ Test the subqueries made by search() with relational fields. """
     maxDiff = None
@@ -515,7 +514,6 @@ class TestSubqueries(TransactionCase):
             Head.search([('node_id', 'parent_of', nodes.ids)])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSearchRelated(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1490,7 +1488,6 @@ class TestSearchRelated(TransactionCase):
             model.search([('foo_bar_name', '=', 'a')])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSearchAccessOperator(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1548,7 +1545,6 @@ class TestSearchAccessOperator(TransactionCase):
             messages.search([])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSearchAny(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1834,7 +1830,6 @@ class TestAnyDomainSearchContext(TransactionCase):
             link.with_user(restricted_user).attachment_id  # just read it
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFlushSearch(TransactionCase):
 
     @classmethod
@@ -2274,7 +2269,6 @@ class TestBinarySearch(TransactionExpressionCase):
                     self._search(record, [(field_name, 'like', 't%')])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNonIntId(TransactionCase):
     def test_query_non_int(self):
         records = self.env['test_orm.view.str.id'].search([('name', '=', 'test')])

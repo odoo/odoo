@@ -3,12 +3,11 @@
 
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import tagged, users
+from odoo.tests import users
 
 from .common import PurchaseTestCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDeleteOrder(PurchaseTestCommon):
 
     _test_user_groups = None  # FIXME list needed groups

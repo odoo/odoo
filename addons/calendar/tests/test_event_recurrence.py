@@ -896,7 +896,6 @@ class TestUpdateMultiDayWeeklyRecurrentEvents(TestRecurrentEvents):
         self.assertEqual(event.recurrence_id.count, 2)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUpdateMonthlyByDay(TestRecurrentEvents):
 
     @classmethod

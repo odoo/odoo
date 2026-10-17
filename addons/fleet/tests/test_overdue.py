@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import tagged, common, new_test_user
+from odoo.tests import common
 from odoo import fields
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFleet(common.TransactionCase):
 
     def test_search_renewal(self):
         """
             Should find the car with overdue contract or renewal due soon
         """
-        user = new_test_user(self.env, "test base user", groups="base.group_user")
+        user = self.env.ref('base.test_user')
         brand = self.env["fleet.vehicle.model.brand"].create({
             "name": "Audi",
         })
@@ -50,7 +49,7 @@ class TestFleet(common.TransactionCase):
             if there is an expired contract for the car, but it also has an open contract
             it should not be considered overdue
         """
-        user = new_test_user(self.env, "test base user", groups="base.group_user")
+        user = self.env.ref('base.test_user')
         brand = self.env["fleet.vehicle.model.brand"].create({
             "name": "Audi",
         })
@@ -79,7 +78,7 @@ class TestFleet(common.TransactionCase):
 
     def test_done_contract_not_overdue(self):
         """ Ensure that a contract marked as done stops flagging its vehicle as overdue. """
-        user = new_test_user(self.env, "test done user", groups="base.group_user")
+        user = self.env.ref('base.test_user')
         brand = self.env["fleet.vehicle.model.brand"].create({"name": "Audi"})
         model = self.env["fleet.vehicle.model"].create({"brand_id": brand.id, "name": "A3"})
         car_1 = self.env["fleet.vehicle"].create({

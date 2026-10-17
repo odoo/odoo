@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSurveyRandomize(TransactionCase):
     def test_01_generate_randomized_questions(self):
         """ Use random generate for a survey and verify that questions within the page are selected accordingly """

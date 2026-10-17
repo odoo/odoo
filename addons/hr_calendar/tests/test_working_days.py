@@ -8,7 +8,6 @@ from odoo.addons.hr_calendar.tests.common import TestHrContractCalendarCommon
 
 
 @tagged("work_days")
-@tagged("at_install", "-post_install")  # LEGACY at_install
 class TestWorkingDaysWithVersion(TestHrContractCalendarCommon):
     @classmethod
     def setUpClass(cls):

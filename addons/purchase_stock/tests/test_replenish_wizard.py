@@ -4,11 +4,10 @@ from freezegun import freeze_time
 
 from odoo import fields
 from odoo.fields import Command
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from .common import PurchaseTestCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReplenishWizard(PurchaseTestCommon):
     _test_user_groups = None  # FIXME list needed groups
 

@@ -9,12 +9,10 @@ from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.onboarding.tests.common import TestOnboardingCommon
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
 
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestOnboarding(TestOnboardingCommon):
     def test_onboarding_completion_global(self):
         # Completing onboarding as company_1
@@ -68,10 +66,7 @@ class TestOnboarding(TestOnboardingCommon):
         self.assert_onboarding_is_done(self.onboarding_1)
 
         # If a company is added, onboarding is 'done'
-        company_3 = self.env.company.create({
-            'currency_id': self.env.ref('base.EUR').id,
-            'name': 'Another Test Company',
-        })
+        company_3 = self.add_company('base.test_company_template2', {'currency_id': self.env.ref('base.EUR').id})
         self.assert_onboarding_is_done(self.onboarding_1.with_company(company_3))
 
         # Adding new step resets onboarding state to 'not_done'

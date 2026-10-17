@@ -2,7 +2,7 @@
 
 
 from odoo.fields import Command
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 
 from odoo.addons.sale.tests.common import SaleCommon
 
@@ -33,7 +33,6 @@ TAX_INCL_DISCOUNT_VALUES = [
 ]
 
 
-@tagged("at_install", "-post_install")  # LEGACY at_install
 class TestSaleMargin(SaleCommon):
     _test_user_groups = (
         'product.group_product_manager',

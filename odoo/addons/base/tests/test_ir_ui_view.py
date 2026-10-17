@@ -21,7 +21,6 @@ from odoo.addons.base.models import ir_ui_view
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class ViewXMLID(common.TransactionCase):
     def test_model_data_id(self):
         """ Check whether views know their xmlid record. """
@@ -75,7 +74,6 @@ class ViewCase(TransactionCaseWithUserDemo):
             self.assertIn(expected_message, message)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNodeLocator(common.TransactionCase):
     """
     The node locator returns None when it can not find a node, and the first
@@ -623,7 +621,6 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(not_broken.invalid_locators, [{"broken_hierarchy": True}])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
     architecture. IO state parameters (cr, uid, model, context) are used for
@@ -809,7 +806,6 @@ class TestApplyInheritanceSpecs(ViewCase):
             self.View.apply_inheritance_specs(self.base_arch, spec)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestApplyInheritanceWrapSpecs(ViewCase):
     def setUp(self):
         super(TestApplyInheritanceWrapSpecs, self).setUp()
@@ -832,7 +828,6 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestApplyInheritanceMoveSpecs(ViewCase):
     def setUp(self):
         super(TestApplyInheritanceMoveSpecs, self).setUp()
@@ -1035,7 +1030,6 @@ class TestApplyInheritanceMoveSpecs(ViewCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNoModel(ViewCase):
     def test_create_view_nomodel(self):
         view = self.View.create({
@@ -1087,7 +1081,6 @@ class TestNoModel(ViewCase):
         self.assertEqual(view.arch, ARCH % TEXT_FR)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTemplating(ViewCase):
     def setUp(self):
         super(TestTemplating, self).setUp()
@@ -3923,7 +3916,6 @@ class TestDebugger(common.TransactionCase):
         self.assertEqual([v.xml_id for v in views_with_t_debug], [])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestViewTranslations(common.TransactionCase):
     # these tests are essentially the same as in test_translate.py, but they use
     # the computed field 'arch' instead of the translated field 'arch_db'
@@ -4089,7 +4081,6 @@ class TestViewTranslations(common.TransactionCase):
             view.write({'mode': 'extension'})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class ViewModeField(ViewCase):
     """
     This should probably, eventually, be folded back into other test case
@@ -4206,7 +4197,6 @@ class ViewModeField(ViewCase):
         self.assertEqual(view.mode, 'primary')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDefaultView(ViewCase):
     def testDefaultViewBase(self):
         self.View.create({
@@ -4257,7 +4247,6 @@ class TestDefaultView(ViewCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestViewCombined(ViewCase):
     """
     * When asked for a view, instead of looking for the closest parent with
@@ -4693,7 +4682,6 @@ class TestViewCombined(ViewCase):
             {'a4': arch_a4, 'c2': arch_c2})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestOptionalViews(ViewCase):
     """
     Tests ability to enable/disable inherited views, formerly known as
@@ -4783,7 +4771,6 @@ class TestOptionalViews(ViewCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestXPathExtentions(common.BaseCase):
     def test_hasclass(self):
         tree = E.node(
@@ -4808,7 +4795,6 @@ class TestXPathExtentions(common.BaseCase):
             1)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestQWebRender(ViewCase):
 
     def test_render(self):
@@ -4876,7 +4862,6 @@ class TestQWebRender(ViewCase):
         self.assertNotEqual(content1, content3)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestValidationTools(common.BaseCase):
 
     def test_get_expression_identities(self):
@@ -5274,7 +5259,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             _logger.error('Please remove this module names from the white list of this current test: %r', sorted(modules_without_error))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class CompRegexTest(common.TransactionCase):
     def test_comp_regex(self):
         self.assertIsNone(re.search(ir_ui_view.COMP_REGEX, ""))

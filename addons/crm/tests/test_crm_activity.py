@@ -8,7 +8,6 @@ from odoo.tests.common import tagged, users
 
 
 @tagged('mail_activity')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCrmMailActivity(TestCrmCommon):
 
     @classmethod

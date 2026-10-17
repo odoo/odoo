@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import new_test_user, tagged, TransactionCase
+from odoo.tests.common import new_test_user, TransactionCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResPartner(TransactionCase):
 
     def test_meeting_count(self):
@@ -82,7 +81,7 @@ class TestResPartner(TransactionCase):
         """Check the partner's meeting accesses in a multi-company environment."""
 
         company1 = self.env.ref('base.main_company')
-        company2 = self.env['res.company'].create({'name': 'OtherCompany'})
+        company2 = self.add_company('base.test_company_template')
 
         company1.partner_id.company_id = company1
 

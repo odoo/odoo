@@ -1,11 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
-
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAnalyticLine(TestStockCommon):
 
     _test_user_groups = None  # FIXME list needed groups

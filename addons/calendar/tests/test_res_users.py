@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResUsers(TransactionCase):
 
     def test_same_calendar_default_privacy_as_user_template(self):

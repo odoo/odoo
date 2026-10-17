@@ -4,11 +4,10 @@ from unittest.mock import patch
 from odoo.exceptions import UserError
 from odoo.addons.mail.models.mail_mail import MailDeliveryException
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests.common import tagged, HttpCase
+from odoo.tests.common import HttpCase
 from werkzeug.urls import url_parse
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResetPassword(HttpCase, MailCommon):
 
     @classmethod

@@ -1,11 +1,8 @@
 from odoo import fields
 
-from odoo.tests import tagged
-
 from .common import TestHrCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPlanningGanttResourceEmployeeWorkingPeriods(TestHrCommon):
     """
         Currently _get_working_periods_by_field method supplies contract data.

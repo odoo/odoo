@@ -1,24 +1,17 @@
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import common, patch, tagged
+from odoo.tests import common, patch
 from odoo.tools import frozendict
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCompanyCheck(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_a = cls.env['res.company'].create({
-            'name': 'Company A',
-        })
-        cls.company_b = cls.env['res.company'].create({
-            'name': 'Company B',
-        })
-        cls.company_c = cls.env['res.company'].create({
-            'name': 'Company C',
-        })
+        cls.company_a = cls.add_class_company('base.test_company')
+        cls.company_b = cls.add_class_company('base.test_company_template')
+        cls.company_c = cls.add_class_company('base.test_company_template2')
         cls.parent_0 = cls.env['test_orm.model_parent'].create({
             'name': 'M0',
             'company_id': False,
@@ -190,10 +183,7 @@ class TestCompanyCheck(common.TransactionCase):
     def test_company_companies_order(self):
         """ Check consistency bewteen company and the order of companies in the environment. """
         user = self.test_user.with_user(self.test_user)
-        not_first_company = self.env['res.company'].create({
-            'name': 'Last but not least!',
-            'sequence': 10000,
-        })
+        not_first_company = self.add_company('base.test_company_with_branch', {'sequence': 10000})
         user.sudo().company_ids += not_first_company
         user.sudo().company_id = not_first_company
         self.assertNotEqual(user.env['res.company'].search([])[0], not_first_company)  # just mare sure it is not the first one

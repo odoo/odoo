@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 
 from datetime import date
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class SpreadsheetFiscalYearTest(TransactionCase):
     def test_fiscal_year_reference(self):
         self.env.company.fiscalyear_last_day = 3
@@ -47,12 +46,12 @@ class SpreadsheetFiscalYearTest(TransactionCase):
     def test_fiscal_year_with_company_id(self):
         self.env.company.fiscalyear_last_day = 7
         self.env.company.fiscalyear_last_month = "6"
-        company = self.env["res.company"].create(
+        company = self.add_company(
+            "base.test_company_template",
             {
-                "name": "test company",
                 "fiscalyear_last_day": 3,
                 "fiscalyear_last_month": "2",
-            }
+            },
         )
         self.assertEqual(
             self.env["res.company"].get_fiscal_dates(
@@ -68,12 +67,12 @@ class SpreadsheetFiscalYearTest(TransactionCase):
         )
 
     def test_result_order(self):
-        company = self.env["res.company"].create(
+        company = self.add_company(
+            "base.test_company_template",
             {
-                "name": "test company",
                 "fiscalyear_last_day": 3,
                 "fiscalyear_last_month": "2",
-            }
+            },
         )
         request1 = {"company_id": company.id, "date": "2020-02-04"}
         request2 = {"company_id": None, "date": "2020-02-04"}

@@ -7,7 +7,6 @@ from odoo.tests import common, tagged
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_inherits(common.TransactionCase):
 
     def test_ir_model_inherit(self):

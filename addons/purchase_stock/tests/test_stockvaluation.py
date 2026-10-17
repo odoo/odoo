@@ -9,14 +9,12 @@ from unittest.mock import patch
 import odoo
 from odoo import fields, Command
 from odoo.tests import Form
-from odoo.tests.common import TransactionCase, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
 @skip('Temporary to fast merge new valuation')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups

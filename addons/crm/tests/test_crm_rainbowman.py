@@ -6,7 +6,6 @@ from odoo.tests import tagged, users
 
 
 @tagged('lead_internals')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCrmLeadRainbowmanMessages(TestCrmCommon):
     @classmethod
     def setUpClass(cls):
@@ -17,9 +16,7 @@ class TestCrmLeadRainbowmanMessages(TestCrmCommon):
             ('team_id', '=', cls.sales_team_1.id),
         ]).unlink()
 
-        cls.company_casey = cls.env['res.company'].create({
-            'name': 'company_casey',
-        })
+        cls.company_casey = cls.add_class_company('base.test_company_template2')
         cls.sales_manager_casey = mail_new_test_user(
             cls.env,
             login='sales_manager_casey',

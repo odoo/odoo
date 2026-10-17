@@ -3,10 +3,9 @@
 
 from odoo import Command
 
-from odoo.tests.common import tagged, TransactionCase, new_test_user
+from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestNestedTaskUpdate(TransactionCase):
 
     @classmethod
@@ -34,7 +33,7 @@ class TestNestedTaskUpdate(TransactionCase):
         cls.project = cls.order_line.project_id
         cls.project.reinvoiced_sale_order_id = False
         cls.project.sale_line_id = False
-        cls.user = new_test_user(cls.env, login='mla')
+        cls.user = cls.env.ref('base.test_user')
 
     #----------------------------------
     #

@@ -360,7 +360,6 @@ class TestHttpSession(TestHttpBase):
         self.assertEqual(res.status_code, 400, res.text)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSessionStore(HttpCaseWithUserDemo):
     def setUp(self):
         super().setUp()
@@ -438,7 +437,6 @@ class TestSessionStore(HttpCaseWithUserDemo):
 
 
 # HttpCase because session rotation needs to be tested on the file store instead of memory store
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSessionRotation(HttpCase):
     def test_session_rotation(self):
         def get_amount_sessions(session):

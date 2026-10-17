@@ -1,11 +1,10 @@
 from lxml import etree
 
-from odoo.tests import common, tagged
+from odoo.tests import common
 
 from odoo.addons.base.tests.test_ir_ui_view import ViewCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDefaultView(common.TransactionCase):
 
     def test_default_form_view(self):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase
 from odoo.tools import mute_logger
 from odoo.exceptions import UserError
 from unittest.mock import patch
@@ -12,7 +12,6 @@ from odoo.addons.base_geolocalize.models.base_geocoder import GeoCodingError
 
 
 @odoo.tests.tagged('external', '-standard')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGeoLocalize(TransactionCase):
 
     def test_default_openstreetmap(self):

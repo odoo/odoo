@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import tagged
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 
-@tagged("at_install", "-post_install")  # LEGACY at_install
 class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
     # Test some basic operation (create, write, unlink) on an immediate coupon program on which we
     # should apply or remove the reward automatically, as there's no program code.

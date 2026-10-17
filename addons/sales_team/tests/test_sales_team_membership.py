@@ -2,13 +2,12 @@
 
 from psycopg2.errors import UniqueViolation
 
-from odoo.tests.common import tagged, users
+from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMembership(TestSalesCommon):
     """Tests to ensure membership behavior """
 

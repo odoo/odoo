@@ -1,8 +1,6 @@
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests import tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReplenishment(TestStockCommon):
     _test_user_groups = None  # FIXME list needed groups
 

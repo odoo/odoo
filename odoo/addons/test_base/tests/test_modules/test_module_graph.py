@@ -4,11 +4,10 @@ from unittest.mock import patch
 
 from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.modules.module_graph import ModuleGraph
-from odoo.tests.common import BaseCase, tagged
+from odoo.tests.common import BaseCase
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestGraph(BaseCase):
     @mute_logger('odoo.modules.module_graph')
     def _test_graph_order(

@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
-
 from odoo.addons.uom.tests.common import UomCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUom(UomCommon):
 
     _test_user_groups = (
