@@ -63,33 +63,25 @@
                         )"/>
                         <t t-if="not hide_price">
                             <span
-                                class="mb-0 fw-bold"
+                                class="fw-bold"
                                 aria-label="Sale price"
                                 t-out="template_price_vals['price_reduce']"
                                 t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                             />
-                            <t
+                            <del
+                                name="product_base_price"
                                 t-if="(
                                     'base_price' in template_price_vals
                                     and template_price_vals['base_price'] &gt; template_price_vals['price_reduce']
                                 )"
-                                name="product_base_price"
-                            >
-                                <del
-                                    aria-label="Original price"
-                                    t-attf-class="text-muted me-1 mb-0"
-                                    style="white-space: nowrap;"
-                                >
-                                    <small
-                                        t-out="template_price_vals['base_price']"
-                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                                    />
-                                </del>
-                            </t>
+                                t-attf-class="bidi-isolate text-nowrap text-muted small"
+                                aria-label="Original price"
+                                t-out="template_price_vals['base_price']"
+                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                            />
                             <t
-                                t-if="template_price_vals.get('base_unit_price')"
                                 t-call="website_sale.base_unit_price"
-                                base_unit_price="template_price_vals['base_unit_price']"
+                                price_info="{**template_price_vals, 'hide_price': False}"
                             />
                         </t>
                     </div>

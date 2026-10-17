@@ -46,12 +46,14 @@ class ProductTemplate(models.Model):
             and website.tax_display == 'tax_included'
         ):
             # Store the tax-excluded price in the res for use in showing both prices
-            combination_info['l10n_ar_price_tax_excluded'] = self._apply_taxes_to_price(
-                combination_info['raw_pricelist_price'],
-                website.currency_id,
-                product_taxes=combination_info['product_taxes'],
-                taxes=combination_info['taxes'],
-                tax_display='total_excluded',
+            combination_info['l10n_ar_price_tax_excluded'] = (
+                product_or_template._apply_taxes_to_price(
+                    combination_info['untaxed_price'],
+                    website.currency_id,
+                    product_taxes=combination_info['product_taxes'],
+                    taxes=combination_info['taxes'],
+                    tax_display='total_excluded',
+                )
             )
 
         return combination_info

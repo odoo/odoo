@@ -139,16 +139,7 @@ class WebsiteSnippetFilter(models.Model):
                         # Still display a product.product if the template is not configurable
                         res_product["_record"] = product = product.product_variant_id
 
-                    # TODO VFE combination_info is only called to get the price here
-                    # factorize and avoid computing the rest
-                    if product.is_product_variant:
-                        res_product.update(product._get_combination_info_variant())
-                    elif hide_variants:
-                        res_product.update(product._get_combination_info(only_template=True))
-                        # Re-add product_id since it is set to false and required by some tests
-                        res_product["product_id"] = product.product_variant_id.id
-                    else:
-                        res_product.update(product._get_combination_info())
+                    res_product.update(product._get_default_price_info())
                     res_product["hide_variants"] = hide_variants
 
                     if self.env.website.google_analytics_key:
@@ -188,7 +179,9 @@ class WebsiteSnippetFilter(models.Model):
                 "name": cat.name,
                 "unpublished": not cat.has_published_products,
                 "cover_image": (
-                    self.env.website.image_url(cat, "cover_image") if cat.cover_image else default_img_url
+                    self.env.website.image_url(cat, "cover_image")
+                    if cat.cover_image
+                    else default_img_url
                 ),
             }
             for cat in categories
@@ -197,7 +190,9 @@ class WebsiteSnippetFilter(models.Model):
     @api.model
     def _get_products(self, mode, **kwargs):
         dynamic_filter = self.env.context.get("dynamic_filter")
-        handler = getattr(self.sudo(False), "_get_products_%s" % mode, self.sudo(False)._get_products_latest_sold)
+        handler = getattr(
+            self.sudo(False), "_get_products_%s" % mode, self.sudo(False)._get_products_latest_sold
+        )
         website = self.env.website
         search_domain = self.env.context.get("search_domain")
         limit = self.env.context.get("limit")

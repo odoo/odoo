@@ -66,7 +66,9 @@ class ProductRibbon(models.Model):
                     raise ValidationError(
                         ribbon.env._(
                             "Only one ribbon with the assign %s is allowed.",
-                            dict(self._fields["assign"]._description_selection(self.env)).get(ribbon.assign),
+                            dict(self._fields["assign"]._description_selection(self.env)).get(
+                                ribbon.assign
+                            ),
                         )
                     )
 
@@ -115,11 +117,7 @@ class ProductRibbon(models.Model):
                     and (price_data["base_price"] > price_data["price_reduce"])
                 )
                 # for /product page
-                or (
-                    "compare_list_price" in price_data
-                    and price_data["compare_list_price"] > price_data["price"]
-                )
-                or price_data.get("has_discounted_price")
+                or price_data.get("list_price")
             )
         ):
             return True
@@ -132,9 +130,7 @@ class ProductRibbon(models.Model):
             return True
         # Check if the product is out of stock
         if (  # noqa: SIM103
-            product
-            and self.assign == "out_of_stock"
-            and product._is_sold_out()
+            product and self.assign == "out_of_stock" and product._is_sold_out()
         ):
             return True
         return False

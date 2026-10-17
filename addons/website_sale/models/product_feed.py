@@ -10,10 +10,9 @@ from werkzeug.urls import url_encode, url_parse
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.http import request
 from odoo.tools import BinaryBytes, float_is_zero, float_round, urls
 
-from odoo.addons.website_sale import const, utils
+from odoo.addons.website_sale import const
 
 
 class ProductFeed(models.Model):
@@ -149,11 +148,6 @@ class ProductFeed(models.Model):
         # Ensures all links, product names, descriptions, etc., are localized.
         self = self.with_context(lang=self.lang_id.code)  # noqa: PLW0642
 
-        # Override the pricelist of the request to localize the currency and prices, otherwise, uses
-        # the website default pricelist.
-        if self.pricelist_id:
-            request.pricelist = self.pricelist_id
-
         homepage_url = self.website_id.homepage_url or "/"
         website_homepage = self.website_id._get_website_pages(
             Domain([("url", "=", homepage_url), ("website_id", "!=", False)]), limit=1
@@ -287,36 +281,26 @@ class ProductFeed(models.Model):
             - Comparison prices (e.g., $100 / ml) if "Product Reference Price" is enabled.
         :rtype: dict
         """
-        price_context = product._get_product_price_context(
-            product.product_template_attribute_value_ids
+        price_info = product._get_default_price_info(
+            website=self.website_id, pricelist=self.pricelist_id or None
         )
-        combination_info = product.with_context(
-            **price_context
-        ).product_tmpl_id._get_additional_combination_info(
-            product,
-            quantity=1.0,
-            uom=product.uom_id,
-            website=self.website_id,
-            pricelist=request.pricelist,
-            fiscal_position=request.fiscal_position,
-        )
-        if combination_info["prevent_sale"]:
+        if price_info["hide_price"]:
             return {}
 
-        price_info = {
-            "price": utils.gmc_format_price(
-                combination_info["list_price"], combination_info["currency"]
-            )
+        def format_price(price):
+            return f"{price_info['currency'].round(price)} {price_info['currency'].name}"
+
+        gmc_price_info = {
+            "price": format_price(price_info.get("list_price") or price_info["price"])
         }
 
-        if combination_info["has_discounted_price"]:
-            price_info["sale_price"] = utils.gmc_format_price(
-                combination_info["price"], combination_info["currency"]
-            )
-            start_date = combination_info["discount_start_date"]
-            end_date = combination_info["discount_end_date"]
-            if start_date and end_date:
-                price_info["sale_price_effective_date"] = (
+        if price_info.get("list_price"):
+            gmc_price_info["sale_price"] = format_price(price_info["price"])
+            pricelist_rule = price_info["pricelist_rule"]
+            start_date = pricelist_rule.date_start or fields.Datetime.now()
+            end_date = pricelist_rule.date_end
+            if end_date:
+                gmc_price_info["sale_price_effective_date"] = (
                     start_date.replace(tzinfo=UTC).isoformat(timespec="minutes")
                     + "/"
                     + end_date.replace(tzinfo=UTC).isoformat(timespec="minutes")
@@ -330,12 +314,10 @@ class ProductFeed(models.Model):
         #   - in google: unit_pricing_measure="4500ml", unit_pricing_base_measure="750ml"
         #       => displayed: "$10.83 / 750ml"
         if (
-            combination_info.get("base_unit_name")
+            price_info.get("base_unit_name")
             and product.base_unit_count
             and (
-                match := const.GMC_BASE_MEASURE.match(
-                    combination_info["base_unit_name"].strip().lower()
-                )
+                match := const.GMC_BASE_MEASURE.match(price_info["base_unit_name"].strip().lower())
             )
         ):
             base_count, base_unit = match["base_count"] or "1", match["base_unit"]
@@ -343,12 +325,12 @@ class ProductFeed(models.Model):
             if base_unit in const.GMC_SUPPORTED_UOM and not float_is_zero(
                 count, precision_digits=2
             ):
-                price_info["unit_pricing_measure"] = (
+                gmc_price_info["unit_pricing_measure"] = (
                     f"{float_round(count, precision_digits=2)}{base_unit}"
                 )
-                price_info["unit_pricing_base_measure"] = f"{base_count}{base_unit}"
+                gmc_price_info["unit_pricing_base_measure"] = f"{base_count}{base_unit}"
 
-        return price_info
+        return gmc_price_info
 
     def _prepare_gmc_weight_info(self, product):
         """Prepare weight-related information for Google Merchant Center.
