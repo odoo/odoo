@@ -8,8 +8,9 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
+import { cookie } from "@web/core/browser/cookie";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
@@ -106,4 +107,24 @@ test("code block embedded in an email message's body should be ignored", async (
         "pre[data-embedded='readonlySyntaxHighlighting']:not([data-embedded-mounted]):text(print('hello'))",
         { parent: [".o-mail-Message-shadowBody", { shadowRoot: true }] }
     );
+});
+
+test("read more button of an email message keeps its pill in dark theme", async () => {
+    cookie.set("color_scheme", "dark");
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Jeanne" });
+    pyEnv["mail.message"].create({
+        body: `<p>Thanks</p><blockquote data-o-mail-quote="1">Previous message</blockquote>`,
+        message_type: "email",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-ellipsis", {
+        parent: [".o-mail-Message-body > div", { shadowRoot: true }],
+    });
+    expect(".o-mail-Message-body > div:shadow .o-mail-ellipsis").toHaveStyle({
+        backgroundColor: "rgb(239, 239, 239)",
+    });
 });
