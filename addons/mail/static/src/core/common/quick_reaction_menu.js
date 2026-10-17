@@ -29,10 +29,10 @@ export class QuickReactionMenu extends Component {
         this.loadEmoji = useLoadEmoji();
         this.picker = useEmojiPicker(
             null,
-            { onSelect: this.toggleReaction.bind(this), class: "overflow-hidden rounded-2" },
+            { onSelect: this.toggleReaction.bind(this), class: "overflow-hidden" },
             {
                 position: "bottom-middle",
-                popoverClass: "o-mail-QuickReactionMenu-pickerPopover border",
+                popoverClass: "o-mail-QuickReactionMenu-pickerPopover",
             }
         );
         this.dropdown = useDropdownState({
