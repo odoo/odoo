@@ -25,10 +25,11 @@ export class CharField extends Component {
     };
     props = useProps(charFieldProps);
     input = signal.ref();
+    button = signal.ref();
 
     setup() {
         if (this.props.dynamicPlaceholder) {
-            this.dynamicPlaceholder = useDynamicPlaceholder(this.input);
+            this.dynamicPlaceholder = useDynamicPlaceholder(this.button);
             useListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
             const updateModel = () =>
                 this.dynamicPlaceholder.updateModel(
