@@ -16,8 +16,12 @@ export function searchHighlight(searchTerm, target) {
     if (!searchTerm) {
         return target;
     }
+    const validTerms = searchTerm.split(" ").filter(Boolean);
+    if (!validTerms.length) {
+        return target;
+    }
     const htmlDoc = createDocumentFragmentFromContent(target);
-    for (const term of searchTerm.split(" ").filter(Boolean)) {
+    for (const term of validTerms) {
         const regexp = new RegExp(`(${escapeRegExp(term)})`, "gi");
         // Special handling for '
         // Note: browsers use XPath 1.0, so uses concat() rather than ||
@@ -72,7 +76,7 @@ export function useMessageSearch(thread) {
     const state = useState({
         thread,
         async search(before = false) {
-            if (this.searchTerm || this.is_notification !== undefined) {
+            if (this.searchTerm?.trim() || this.is_notification !== undefined) {
                 this.searching = true;
                 const currentSearchId = ++searchId;
                 const data = await sequential(() =>
