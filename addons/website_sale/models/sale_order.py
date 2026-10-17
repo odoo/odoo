@@ -723,10 +723,8 @@ class SaleOrder(models.Model):
             available_qty = float_round(available_qty, precision_digits=0, rounding_method="DOWN")
 
             if product.minimum_quantity:
-                min_qty = float_round(
-                    product_uom._compute_quantity(product.minimum_quantity, uom, round=False),
-                    precision_digits=0,
-                    rounding_method="UP",
+                min_qty = self._get_remaining_minimum_qty(
+                    product, exclude_line=self._get_common_product_lines(product.id), uom=uom
                 )
                 if available_qty < min_qty:
                     if order_line:
