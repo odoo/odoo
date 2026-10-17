@@ -75,7 +75,7 @@ class ResUsers(models.Model):
             else:
                 # user does not exist: sign up invited user
                 values.update({
-                    'name': partner.name,
+                    'name': values.get('name') or partner.name,
                     'partner_id': partner.id,
                     'email': values.get('email') or values.get('login'),
                 })
