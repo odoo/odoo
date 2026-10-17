@@ -937,7 +937,7 @@ class IrAttachment(models.Model):
             mimetype=self.mimetype,
             download_name=self.name,
             etag=self.checksum,
-            public=self.public,
+            public=self.public or self.env.user._is_public(),
         )
 
         if self.store_fname:
