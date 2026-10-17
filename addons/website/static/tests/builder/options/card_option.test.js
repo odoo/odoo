@@ -106,6 +106,7 @@ test("cover image options only appear on the right card when two of them are nes
     expect("[data-action-id='removeCoverImage']").toHaveCount(0);
 
     await contains(":iframe .inner_card").click();
+    await waitFor("[data-action-id='removeCoverImage']");
     // Cover image options are displayed for the inner card
     expect("[data-action-id='setCoverImagePosition']").toHaveCount(4);
     expect("[data-action-id='removeCoverImage']").toHaveCount(1);
