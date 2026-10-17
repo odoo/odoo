@@ -2895,6 +2895,8 @@ class AccountEdiUBL(models.AbstractModel):
 
         total_allowances = sum(allowance['amount'] for allowance in collected_values['allowances'])
         total_charges = sum(charge['amount'] for charge in collected_values['charges'])
+        if self._is_line_total_without_allowances_charges(currency, line_extension_amount, price_amount, invoiced_quantity, base_quantity):
+            total_allowances = total_charges = 0.0
         price_allowance_values = collected_values['price_allowance_values']
         price_allowance_base_amount = price_allowance_values.get('base_amount')
         price_allowance_amount = price_allowance_values.get('amount')

@@ -143,3 +143,46 @@ class CiiImportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
                 },
             ],
         )
+
+    def test_import_invoice_line_total_without_allowances_charges(self):
+        # Both lines report a line total (BT-131) that leaves the line allowances and charges out,
+        # and the document totals are the sum of those line totals:
+        # line 1: 3 x 23.52 = 70.56, the 30.24 allowance repeats the discount taken on the price
+        # line 2: 1 x 39.32 = 39.32, the 0.13 eco-participation charge is in no total of the document
+        tax_20 = self.percent_tax(20.0, type_tax_use='purchase')
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_invoice_line_total_without_allowances_charges',
+        )
+
+        # Two lines, no extra 'Rounding' line to compensate the untaxed total.
+        self.assertRecordValues(
+            invoice.invoice_line_ids,
+            [
+                {
+                    'quantity': 3.0,
+                    'price_unit': 33.60,
+                    'discount': 30.0,
+                    'price_subtotal': 70.56,
+                    'tax_ids': tax_20.ids,
+                },
+                {
+                    'quantity': 1.0,
+                    'price_unit': 39.32,
+                    'discount': 0.0,
+                    'price_subtotal': 39.32,
+                    'tax_ids': tax_20.ids,
+                },
+            ],
+        )
+
+        self.assertRecordValues(
+            invoice,
+            [
+                {
+                    'amount_untaxed': 109.88,
+                    'amount_tax': 21.98,
+                    'amount_total': 131.86,
+                },
+            ],
+        )
