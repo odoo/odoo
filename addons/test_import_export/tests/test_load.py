@@ -878,6 +878,17 @@ class test_m2o(ImporterCase):
             "records from their name alone. Please create those records manually and try importing again.",
         )
 
+    def test_name_create_enabled_m2o_ignores_defaults(self):
+        context = {
+            'name_create_enabled_fields': {'value': True},
+            'default_const': 99,
+        }
+        result = self.import_(['value'], [[101]], context=context)
+        self.assertFalse(result['messages'])
+        record = self.browse()
+        self.assertEqual(record.const, 99)
+        self.assertEqual(record.value.const, 4)
+
 
 class TestInvalidStrings(ImporterCase):
     model_name = 'export.m2o.str'
