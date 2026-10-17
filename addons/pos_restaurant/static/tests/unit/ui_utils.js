@@ -1,6 +1,13 @@
 import { animationFrame, waitFor, press } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { clickControlButton, ensurePane } from "@point_of_sale/../tests/unit/ui_utils";
+import {
+    clickControlButton,
+    ensurePane,
+    clickPaymentMethod,
+    enterNumpadValue,
+    isMobile,
+    clickPaymentline,
+} from "@point_of_sale/../tests/unit/ui_utils";
 
 export async function clickTable(name) {
     await contains(`.o_fp_canvas .o_fp_table:has(.o_fp_table_number:contains("${name}"))`).click();
@@ -48,4 +55,28 @@ export async function setGuestCount(count) {
     }
     await press("Enter");
     await animationFrame();
+}
+
+export async function clickSplitAndPay() {
+    await contains(".o_split_and_pay_button").click();
+    await animationFrame();
+}
+
+export async function splitAndPay(paymentMethod, amount) {
+    await clickPaymentMethod(paymentMethod);
+    await animationFrame();
+    if (isMobile()) {
+        await clickPaymentline();
+        await animationFrame();
+    }
+    await enterNumpadValue(amount);
+    if (isMobile()) {
+        await press("Enter");
+    }
+    await animationFrame();
+    await clickSplitAndPay();
+}
+
+export function isSplitAndPayButtonShown() {
+    return Boolean(document.querySelector(".o_split_and_pay_button"));
 }
