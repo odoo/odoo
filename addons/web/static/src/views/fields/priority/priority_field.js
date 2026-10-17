@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
+import { ANIMATION_DURATION, useAnimationMark } from "@web/core/utils/animation";
 import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export class PriorityField extends Component {
@@ -16,6 +17,7 @@ export class PriorityField extends Component {
         this.state = proxy({
             index: -1,
         });
+        this.justSet = useAnimationMark(ANIMATION_DURATION.star);
         if (this.props.withCommand) {
             for (const command of this.commands) {
                 useCommand(...command);
@@ -81,6 +83,7 @@ export class PriorityField extends Component {
             this.state.index = -1;
             this.updateRecord(this.options[0][0]);
         } else {
+            this.justSet.mark(value);
             this.updateRecord(value);
         }
     }
