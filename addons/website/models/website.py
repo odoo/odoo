@@ -2323,6 +2323,8 @@ class Website(models.CachedModel):
         :param options: search options from the submitted form containing:
 
             - allowFuzzy: boolean indicating whether the fuzzy matching must be done
+            - sortByRelevance: boolean indicating whether the results of all the involved models
+              must be ranked together by relevance, see `_search_by_relevance()`
             - other options used by `_search_get_details()`
 
         :return: tuple containing:
@@ -2334,16 +2336,17 @@ class Website(models.CachedModel):
         """
         fuzzy_term = False
         search_details = self._search_get_details(search_type, order, options)
+        search_method = self._search_by_relevance if search and options.get('sortByRelevance') else self._search_exact
         if search and options.get('allowFuzzy', True):
-            count, results = self._search_exact(search_details, search, offset, limit, order)
+            count, results = search_method(search_details, search, offset, limit, order)
             if not count:
                 fuzzy_term = self._search_find_fuzzy_term(search_details, search)
                 if fuzzy_term and fuzzy_term.lower() != search.lower():
-                    count, results = self._search_exact(search_details, fuzzy_term, offset, limit, order)
+                    count, results = search_method(search_details, fuzzy_term, offset, limit, order)
                 else:
                     fuzzy_term = False
         else:
-            count, results = self._search_exact(search_details, search, offset, limit, order)
+            count, results = search_method(search_details, search, offset, limit, order)
         return count, results, fuzzy_term
 
     def _search_exact(self, search_details, search, offset, limit, order):
@@ -2374,6 +2377,44 @@ class Website(models.CachedModel):
             search_detail['count'] = count
             all_results.append(search_detail)
         return total_count, all_results
+
+    def _search_by_relevance(self, search_details, search, offset, limit, order):
+        """
+        Performs a search with a search text, ranking the results of all the involved models together
+        by relevance (see `website.searchable.mixin`'s `_search_rank()`)
+
+        :param search_details: see :meth:`_search_get_details`
+        :param search: text against which to match results
+        :param offset: number of results to skip across all involved models
+        :param limit: maximum number of results across all involved models
+        :param order: order on which to sort results of equal relevance within a model type
+
+        :return: tuple containing:
+
+            - total number of results across all involved models
+            - list of results per model made of:
+                - initial search_detail for the model
+                - count: number of results for the model
+                - results: model list equivalent to a `model.search()`, most relevant first
+                - ranks: position of each of the results among the results of all the models
+        """
+        ranked = []  # (relevance, search_detail, record)
+        total_count = 0
+        for search_detail in search_details:
+            model = self.env[search_detail['model']]
+            results, relevances, count = model._search_fetch_ranked(search_detail, search, offset + limit, order)
+            ranked += [(relevance, search_detail, record) for relevance, record in zip(relevances, results)]
+            # some models (e.g. products) read the search term when rendering their results
+            search_detail['results'] = results.browse().with_context(search_term=search)
+            search_detail['count'] = count
+            search_detail['ranks'] = []
+            total_count += count
+        # the sort is stable: results of equal relevance keep the order of the models
+        ranked.sort(key=lambda item: item[0], reverse=True)
+        for rank, (_relevance, search_detail, record) in enumerate(ranked[offset:offset + limit], offset):
+            search_detail['results'] |= record
+            search_detail['ranks'].append(rank)
+        return total_count, search_details
 
     def _search_render_results(self, search_details, limit):
         """
