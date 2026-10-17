@@ -3381,3 +3381,45 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             self.pos_config.notify_synchronisation(session.id, 1, {'product.product': [product.id]})
         static_products = mock_send.call_args[0][2]['static_records']['product.product']
         self.assertEqual(static_products[0]['display_name'], 'Synced Tube')
+
+    def test_no_delivery_confirmation_for_counter_sales(self):
+        """ 
+        No delivery confirmation is sent for orders picked up over the counter
+        """
+        self.env.company.stock_move_email_validation = True
+        self.pos_config.picking_type_id = self.pos_config.picking_type_id.copy()
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, []]],
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'amount_paid': 450.0,
+            'amount_total': 450.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'last_order_preparation_change': '{}'
+        })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.bank_payment_method.id,
+        })
+        order_payment.with_context(payment_context).check()
+
+        self.assertEqual(order.picking_ids.state, 'done')
+        self.assertFalse(order.picking_ids.message_ids.filtered(lambda m: m.subtype_id == self.env.ref('mail.mt_comment')))
