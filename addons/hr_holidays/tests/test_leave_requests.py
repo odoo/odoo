@@ -602,15 +602,16 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'hours_per_day': 8.0,
         })
 
+        # an hourly request cannot span several days without a working schedule
         leave1 = self.env['hr.leave'].create({
-            'name': 'Holiday 1 week',
+            'name': 'Holiday 1 day',
             'employee_id': employee.id,
             'work_entry_type_id': work_entry_type.id,
             'request_date_from': fields.Date.from_string('2019-12-16'),
-            'request_date_to': fields.Date.from_string('2019-12-20'),
+            'request_date_to': fields.Date.from_string('2019-12-16'),
         })
 
-        self.assertEqual(leave1.number_of_hours, 5 * 8)
+        self.assertEqual(leave1.number_of_hours, 8)
 
         leave2 = self.env['hr.leave'].create({
             'name': 'Holiday 1 Day',
