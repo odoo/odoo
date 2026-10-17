@@ -13,6 +13,7 @@ patch(PosOrderline.prototype, {
     },
     /**
      * Get the total price on the order line, taking qty, combos and taxes into account
+     * mirror of *models/pos_order_line.py* PosOrderLine._get_loyalty_price
      * @returns {number}
      */
     get linePriceTaxIncluded() {
@@ -24,6 +25,7 @@ patch(PosOrderline.prototype, {
     },
     /**
      * Get the total price on the order line, taking into account combos and qty, excluding taxes
+     * mirror of *models/pos_order_line.py* PosOrderLine._get_loyalty_price
      * @returns {number}
      */
     get linePriceTaxExcluded() {
