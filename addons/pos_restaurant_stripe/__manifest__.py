@@ -11,7 +11,10 @@
     'auto_install': True,
     'assets': {
         'point_of_sale._assets_pos': [
-            'pos_restaurant_stripe/static/**/*',
+            'pos_restaurant_stripe/static/src/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'pos_restaurant_stripe/static/tests/unit/**/*',
         ],
     },
     'author': 'Odoo S.A.',
