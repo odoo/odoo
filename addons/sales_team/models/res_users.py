@@ -22,13 +22,16 @@ class ResUsers(models.Model):
             user.crm_team_ids = user.crm_team_member_ids.crm_team_id
 
     def _search_crm_team_ids(self, operator, value):
-        # Equivalent to `[('crm_team_member_ids.crm_team_id', operator, value)]`,
+        # Equivalent to `[('crm_team_member_ids', 'any', [('crm_team_id', operator, value), ('active', '=', True)])]`,
         # but we inline the ids directly to simplify final queries and improve performance,
         # as it's part of a few ir.rules.
         # If we're going to inject too many `ids`, we fall back on the default behavior
         # to avoid a performance regression.
         IN_MAX = 10_000
-        domain = [('crm_team_member_ids.crm_team_id', operator, value)]
+        domain = [('crm_team_member_ids', 'any', [
+            ('crm_team_id', operator, value),
+            ('active', '=', True),
+        ])]
         user_ids = self.env['res.users'].with_context(active_test=False)._search(domain, limit=IN_MAX).get_result_ids()
         if len(user_ids) < IN_MAX:
             return [('id', 'in', user_ids)]
