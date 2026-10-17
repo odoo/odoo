@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import Command, models
 
 
 class ResUsers(models.Model):
@@ -35,3 +35,29 @@ class ResUsers(models.Model):
         self.env['res.users'].browse(users_to_remove).sudo().write({
             'group_ids': [(3, interviewer_group.id)]
         })
+
+    def write(self, vals):
+        officer_group = self.env.ref("hr_recruitment.group_hr_recruitment_user")
+        interviewer_group = self.env.ref("hr_recruitment.group_hr_recruitment_interviewer")
+        officers_before = self.filtered(lambda u: officer_group in u.group_ids)
+        interviewers_before = self.filtered(lambda u: interviewer_group in u.group_ids)
+
+        result = super().write(vals)
+
+        lost_officers = officers_before.filtered(lambda u: officer_group not in u.group_ids)
+        lost_interviewers = interviewers_before.filtered(lambda u: interviewer_group not in u.group_ids)
+
+        if lost_officers:
+            employees = self.env["hr.employee"].search([("user_id", "in", self.ids)])
+            self.env["hr.job"].sudo().search(
+                [("recruiter_id", "in", employees.ids)],
+            ).write({"recruiter_id": False})
+
+        if lost_interviewers:
+            commands = [Command.unlink(uid) for uid in self.ids]
+            for model in ("hr.job", "hr.applicant"):
+                self.env[model].sudo().search(
+                    [("interviewer_ids", "in", self.ids)],
+                ).write({"interviewer_ids": commands})
+
+        return result
