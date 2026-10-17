@@ -80,6 +80,7 @@
             <xpath expr="//field[@name='message_id']" position="after">
                 <field name="sms_id_int" string="SMS ID"
                     invisible="trace_type != 'sms'"
+                    widget="many2one_reference_integer"
                     groups="base.group_no_one"/>
                 <field name="sms_code" invisible="trace_type != 'sms'"
                     groups="base.group_no_one"/>
@@ -130,7 +131,7 @@
                             <field name="trace_type" invisible="1"/>
                             <field name="sms_number"/>
                             <field name="mass_mailing_id"/>
-                            <field name="sms_id_int" string="SMS ID" groups="base.group_no_one"/>
+                            <field name="sms_id_int" string="SMS ID" widget="many2one_reference_integer" groups="base.group_no_one"/>
                             <field name="sms_code" groups="base.group_no_one"/>
                         </group>
                         <group string="Marketing">
