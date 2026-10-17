@@ -11,8 +11,8 @@ function createTemplate({ labelClass, descriptionInnerHTML }) {
     return /* html */ `
         <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required s_website_form_description_top" data-type="boolean">
             <label class="s_website_form_label ${labelClass}" for="odeosp06g4g4" style="width: 200px;">
-                <span class="s_website_form_label_content">Custom Text</span>
-                <span class="s_website_form_mark"> *</span>
+                <span class="s_website_form_label_content o_not_translate_inline">Custom Text</span>
+                <span class="s_website_form_mark o_not_translate_inline"> *</span>
             </label>
             <div class="form-check">
                 <input type="checkbox" value="Yes" class="s_website_form_input form-check-input" name="Custom Text" required="" id="odeosp06g4g4" data-fill-with="undefined">
