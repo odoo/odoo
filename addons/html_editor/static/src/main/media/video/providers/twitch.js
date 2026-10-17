@@ -6,13 +6,15 @@ export class Twitch extends AbstractThirdPartyVideo {
     static name = "Twitch";
 
     static urlMatcher =
-        /^(?:https?:\/\/)?(?:www\.|player\.|clips\.)?twitch\.tv\/(?:(?:(?:videos\/|embed\?clip=)|\?(?:([0-9a-z]+)=([0-9a-z_\-.]+)&)*video=)|[0-9a-z_]{4,25}\/clip\/)(?<id>[0-9a-zA-Z_-]+)(?:[?&=]([0-9a-z_\-.]+))*$/i;
+        /^(?:https?:\/\/)?(?:www\.|player\.|clips\.)?twitch\.tv\/(?:(?:(?:videos\/|collections\/|embed\?clip=)|\?(?:([0-9a-z]+)=([0-9a-z_\-.]+)&)*video=|\?(?:[0-9a-z]+=[0-9a-z_\-.]+&)*collection=)|[0-9a-z_]{4,25}\/clip\/)(?<id>[0-9a-zA-Z_-]+)(?:[?&=]([0-9a-z_\-.]+))*$/i;
 
     static optionsConfig = {
         startFrom: { default: 0, type: Number, params: ["time"] },
         autoplay: { default: true, type: Boolean, params: ["autoplay"] },
         muted: { default: false, type: Boolean, params: ["muted"] },
         isClip: { default: false, type: Boolean },
+        isVertical: { default: false, type: Boolean },
+        collection: { default: "", type: String, params: ["collection"] },
     };
 
     /**
@@ -29,6 +31,8 @@ export class Twitch extends AbstractThirdPartyVideo {
         let embedUrl = "";
         if (isClip) {
             embedUrl = `https://clips.twitch.tv/embed?clip=`;
+        } else if (options.isCollection) {
+            embedUrl = `https://player.twitch.tv/?collection=`;
         } else {
             embedUrl = `https://player.twitch.tv/?video=`;
         }
@@ -39,9 +43,19 @@ export class Twitch extends AbstractThirdPartyVideo {
     /**
      * @override
      * @param {URL} url
+     * @param {RegExpExecArray} urlMatch
      */
-    static getCustomUrlOptions(url) {
-        return { isClip: url.hostname.includes("clip") };
+    static getCustomUrlOptions(url, urlMatch) {
+        const isCollection =
+            url.pathname.startsWith("/collections/") ||
+            urlMatch.groups.id === url.searchParams.get("collection");
+        return {
+            // e.g. "clips.twitch.tv/EmbedId" or "twitch.tv/channel/clip/ClipId"
+            isClip: url.hostname.includes("clip") || url.pathname.includes("/clip/"),
+            isCollection,
+            // The id of a pure collection is already the collection.
+            ...(isCollection && { collection: "" }),
+        };
     }
 
     /**
@@ -57,6 +71,9 @@ export class Twitch extends AbstractThirdPartyVideo {
         base: "https://www.twitch.tv/videos/1064007405",
         clip: "https://www.twitch.tv/monstercat/clip/UnrulyShySalamanderPogChamp?filter=clips&range=7d&sort=time",
         embed: "https://player.twitch.tv/?video=1064007405&parent=example.com",
+        collection: "https://www.twitch.tv/collections/collectionId",
+        videoInCollection: "https://www.twitch.tv/videos/1064007405?collection=collectionId",
+        embedCollection: "https://player.twitch.tv/?collection=collectionId&parent=example.com",
         embedClip:
             "https://clips.twitch.tv/embed?clip=UnrulyShySalamanderPogChamp&parent=example.com",
         params: "twitch.tv/videos/1064007405?time=62&autoplay=true&muted=true",
