@@ -3,7 +3,6 @@
 import json
 
 from datetime import datetime, timedelta
-from freezegun import freeze_time
 
 from odoo.tests import HttpCase, new_test_user
 from ..models.mail_presence import PRESENCE_OUTDATED_TIMER
@@ -15,7 +14,7 @@ class TestMailPresence(HttpCase):
         user = new_test_user(self.env, login="bob_user")
         more_than_away_timer_ago = datetime.now() - timedelta(seconds=PRESENCE_OUTDATED_TIMER + 1)
         more_than_away_timer_ago = more_than_away_timer_ago.replace(microsecond=0)
-        with freeze_time(more_than_away_timer_ago):
+        with self.mock_datetime_and_now(more_than_away_timer_ago):
             self.env["mail.presence"]._update_presence(user)
         self.assertEqual(user.presence_ids.last_poll, more_than_away_timer_ago)
         self.env["mail.presence"]._gc_bus_presence()
@@ -48,3 +47,37 @@ class TestMailPresence(HttpCase):
             json.loads(user_bus_notif.message)["payload"]["res.users"][0]["presence_status"],
             "offline",
         )
+
+    def test_im_status_version_never_goes_backwards(self):
+        bob = new_test_user(self.env, login="bob_userv", groups="base.group_user")
+        t0 = datetime(2026, 1, 1, 10, 0, 0)
+        with self.mock_datetime_and_now(t0):
+            self.env["mail.presence"]._update_presence(bob)
+        with self.mock_datetime_and_now(t0 + timedelta(minutes=5)):
+            bob.manual_im_status = "busy"
+        busy_version = bob._get_im_status_version()
+        self.assertEqual(busy_version, t0 + timedelta(minutes=5))
+        with self.mock_datetime_and_now(t0 + timedelta(minutes=10)):
+            bob.manual_im_status = False
+        self.assertEqual(bob.im_status, "online")
+        self.assertGreater(bob._get_im_status_version(), busy_version)
+
+    def test_websocket_close_sends_offline_newer_than_manual_status(self):
+        bob = new_test_user(self.env, login="bob_userw", groups="base.group_user")
+        t0 = datetime(2026, 1, 1, 10, 0, 0)
+        with self.mock_datetime_and_now(t0):
+            self.env["mail.presence"]._update_presence(bob)
+        with self.mock_datetime_and_now(t0 + timedelta(minutes=5)):
+            bob.manual_im_status = "busy"
+        busy_version = bob._get_im_status_version()
+        with self.mock_datetime_and_now(t0 + timedelta(minutes=10)):
+            bob.presence_ids.status = "offline"
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        presence_channel = json_dump(channel_with_db(self.env.cr.dbname, (bob, "presence")))
+        notif = self.env["bus.bus"].sudo().search(
+            [("channel", "=", presence_channel)], order="id desc", limit=1,
+        )
+        record = json.loads(notif.message)["payload"]["res.users"][0]
+        self.assertEqual(record["im_status"], "offline")
+        version = record.get("__field_versions__", {}).get("im_status", record.get("__version__"))
+        self.assertGreaterEqual(version, busy_version.isoformat(timespec="microseconds"))
