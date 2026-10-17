@@ -147,7 +147,7 @@
                             </group>
                             <group col="2" name="group_worked_hours">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
-                                <field name="work_entry_type_id" groups="hr.group_hr_user"/>
+                                <field name="work_entry_type_id" groups="hr.group_hr_user,hr_attendance.group_hr_attendance_own"/>
                                 <field name="break_duration" widget="float_time" readonly="not can_edit"/>
                             </group>
                         </group>
