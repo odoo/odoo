@@ -35,15 +35,28 @@ patch(LoginScreen.prototype, {
             this.pos.login = false;
         });
     },
-    async barcodeCashierAction(code) {
+    barcodeCashierAction(code) {
+        return this.loginWithBadge(code.code);
+    },
+    async loginWithBadge(badge, needsPin = () => true) {
         if (!this.pos.config.module_pos_hr) {
             return;
         }
-        const employee = this.pos.accessRight.getEmployeeByBarcode(code.code);
+        const employee = this.pos.accessRight.getEmployeeByBarcode(badge);
         if (
             employee &&
             employee !== this.loggedCashier &&
+<<<<<<< c6b576cd416c36053f67ac3be5410c22176d22f4
             (!employee._pin || (await this.pos.accessRight.checkPin(employee)))
+||||||| a6102d3cf5e945347cab4b6652771799310be5f6
+            (!employee._pin || (await this.pos.accessRight.checkPin(employee))) &&
+            this.pos.canLoginCashier(employee)
+=======
+            (!employee._pin ||
+                !needsPin(employee) ||
+                (await this.pos.accessRight.checkPin(employee))) &&
+            this.pos.canLoginCashier(employee)
+>>>>>>> 84a1d7f6fb654c9d4faefe75fa38b84c44c342a9
         ) {
             this.pos.setCashier(employee);
             this.cashierLogIn();
