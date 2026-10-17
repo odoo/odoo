@@ -114,11 +114,23 @@ export class NavigableList extends Component {
     }
 
     close() {
+<<<<<<< 20f5882e87e818e94a79ad07ac00530842d7045b
         if (this.props.closeOnSelect) {
             this.state.open = false;
             this.state.activeIndex = null;
             this.props.onClose?.();
         }
+||||||| 4ea65e6c252d1f10aa9df314b8225c623099cf92
+        this.state.open = false;
+        this.state.activeIndex = null;
+        this.props.onClose?.();
+=======
+        this.state.open = false;
+        this.state.activeIndex = null;
+        if (this.props.options.length) {
+            this.props.onClose?.();
+        }
+>>>>>>> ed0e3d9610e5dafc78738f3ea1e66e4d1f7232f2
     }
 
     /**

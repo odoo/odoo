@@ -103,6 +103,7 @@ test("suggestion list closed by Escape stays closed when a member starts typing"
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
+<<<<<<< 20f5882e87e818e94a79ad07ac00530842d7045b
 test.tags("html composer");
 test("display partner mention suggestions on typing '@'", async () => {
     const pyEnv = await startServer();
@@ -167,6 +168,29 @@ test("[text composer] can @user in restricted (group_public_id) channels", async
 });
 
 test.tags("html composer");
+||||||| 4ea65e6c252d1f10aa9df314b8225c623099cf92
+=======
+test("click away from the empty suggestion list keeps the fetched suggestions", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({ name: "Bob" });
+    const fetchHeld = new Deferred();
+    onRpc("res.partner", "get_mention_suggestions", async () => {
+        step("get_mention_suggestions");
+        await fetchHeld;
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "@Bob");
+    await assertSteps(["get_mention_suggestions"]);
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await click(".o_form_view");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    fetchHeld.resolve();
+    await contains(".o-mail-Composer-suggestion", { text: "Bob" });
+});
+
+>>>>>>> ed0e3d9610e5dafc78738f3ea1e66e4d1f7232f2
 test("can @user in restricted (group_public_id) channels", async () => {
     const pyEnv = await startServer();
     const groupId = pyEnv["res.groups"].create({
