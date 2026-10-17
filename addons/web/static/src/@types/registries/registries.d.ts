@@ -2,7 +2,7 @@ declare module "registries" {
     import { Component } from "@odoo/owl";
     import { Interaction } from "@web/public/interaction";
     import { Compiler } from "@web/views/view_compiler";
-    import { ActionDescription, ActionOptions } from "@web/webclient/actions/action_plugin";
+    import { ActionDescription, ActionOptions, ActionMode, ActionRequest } from "@web/webclient/actions/action_plugin";
 
     export type ActionHandlersRegistryItemShape = (action: ActionDescription, options: ActionOptions) => (void | Promise<void>);
 
