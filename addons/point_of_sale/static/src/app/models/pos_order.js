@@ -324,17 +324,46 @@ export class PosOrder extends Base {
      * so that if one of them returns an error, it is possible to send the information back to it
      * without impacting the other tools.
      */
-    updateLastOrderChange() {
+    updateLastOrderChange(orderChange = {}) {
+        let lines = this.lines;
+        const changes =
+            Object.keys(orderChange).length > 0 &&
+            (orderChange.new.length > 0 || orderChange.cancelled.length > 0)
+                ? [
+                      ...orderChange.new,
+                      ...orderChange.cancelled.map((line) => ({
+                          ...line,
+                          quantity: -line.quantity,
+                      })),
+                  ]
+                : [];
+
+        if (changes.length > 0) {
+            const uuids = changes.map((line) => line.uuid);
+            lines = lines.filter((line) => uuids.includes(line.uuid));
+        }
+        const changedLines = lines.map((line) => ({
+            line: line,
+            change: changes.find((changeLine) => changeLine.uuid === line.uuid) || false,
+        }));
+
         const orderlineIdx = [];
-        this.lines.forEach((line) => {
+        changedLines.forEach((changedLine) => {
+            const line = changedLine.line;
+            const change = changedLine.change;
+
             if (!line.skip_change) {
                 orderlineIdx.push(line.preparationKey);
 
+                const note = change ? change.note : line.getNote();
                 if (this.last_order_preparation_change.lines[line.preparationKey]) {
                     this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
-                        line.get_quantity();
-                    this.last_order_preparation_change.lines[line.preparationKey]["note"] =
-                        line.getNote();
+                        change
+                            ? this.last_order_preparation_change.lines[line.preparationKey][
+                                  "quantity"
+                              ] + change.quantity
+                            : line.get_quantity();
+                    this.last_order_preparation_change.lines[line.preparationKey]["note"] = note;
                 } else {
                     this.last_order_preparation_change.lines[line.preparationKey] = {
                         attribute_value_ids: line.attribute_value_ids.map((a) => ({
@@ -347,8 +376,8 @@ export class PosOrder extends Base {
                         name: line.get_full_product_name(),
                         basic_name: line.get_product().name,
                         display_name: line.get_product().display_name,
-                        note: line.getNote(),
-                        quantity: line.get_quantity(),
+                        note: note,
+                        quantity: change ? change.quantity : line.get_quantity(),
                     };
                 }
                 line.setHasChange(false);
