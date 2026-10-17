@@ -7,7 +7,7 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { useSelection } from "@mail/utils/common/hooks";
-import { trimEmptyBlocksAround } from "@mail/utils/common/format";
+import { getPartnerMentionName, trimEmptyBlocksAround } from "@mail/utils/common/format";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 
 import { Wysiwyg } from "@html_editor/wysiwyg";
@@ -363,6 +363,7 @@ export class Composer extends Component {
                 onFocusout: this.onFocusout.bind(this),
                 onInput: this.onInput.bind(this),
                 onKeydown: this.onKeydown.bind(this),
+                handleValidPartnerMention: this.handleValidPartnerMention.bind(this),
             },
             classList: ["o-mail-Composer-html"],
             onChange: () => this.onChangeWysiwygContent(),
@@ -678,6 +679,15 @@ export class Composer extends Component {
         return markup`<div>${defaultBody}</div>`; // as to not wrap in <p> by html_sanitize
     }
 
+    async handleValidPartnerMention(partnerLinks) {
+        this.props.composer.mentionedPartners = [];
+        for (const partnerLink of partnerLinks) {
+            this.props.composer.mentionedPartners.push(
+                this.store["res.partner"].get(Number(partnerLink.dataset.oeId))
+            );
+        }
+    }
+
     clear() {
         this.props.composer.clear();
         browser.localStorage.removeItem(this.props.composer.localId);
@@ -909,6 +919,7 @@ export class Composer extends Component {
         const saveContentToLocalStorage = ({
             composerHtml,
             emailAddSignature,
+            mentionedPartners,
             replyToMessageId,
             fromFullComposer = composer.restoredFromFullComposer,
         }) => {
@@ -920,6 +931,9 @@ export class Composer extends Component {
                     JSON.stringify({
                         emailAddSignature,
                         replyToMessageId,
+                        mentionedPartners: mentionedPartners?.length
+                            ? mentionedPartners
+                            : undefined,
                         composerHtml: isMarkup(composerHtml)
                             ? ["markup", composerHtml]
                             : composerHtml,
@@ -937,13 +951,19 @@ export class Composer extends Component {
             saveContentToLocalStorage({
                 composerHtml: composer.composerHtml,
                 emailAddSignature: true,
+                // last known mention name to validate the mention if the partner is unknown on restore
+                mentionedPartners: composer.mentionedPartners.map((partner) => ({
+                    id: partner.id,
+                    mention_token: partner.mention_token,
+                    name: getPartnerMentionName(partner, composer.targetThread),
+                })),
                 replyToMessageId: composer.replyToMessage?.id,
                 fromFullComposer: false,
             });
         }
     }
 
-    restoreContent() {
+    async restoreContent() {
         const composer = toRaw(this.props.composer);
         let config;
         try {
@@ -963,6 +983,31 @@ export class Composer extends Component {
         }
         if (Number.isInteger(config.replyToMessageId)) {
             composer.replyToMessage = this.store["mail.message"].insert(config.replyToMessageId);
+        }
+        if (Array.isArray(config.mentionedPartners)) {
+            const missingPartners = config.mentionedPartners.filter(
+                ({ id }) => !this.store["res.partner"].get(id)
+            );
+            if (missingPartners.length) {
+                await this.store.fetchStoreData("partners_no_fields", {
+                    partner_ids: missingPartners.map(({ id }) => id),
+                    partner_ids_mention_token: Object.fromEntries(
+                        missingPartners.map(({ id, mention_token }) => [id, mention_token])
+                    ),
+                });
+            }
+            const mentionedPartners = [];
+            for (const { id, mention_token, name } of config.mentionedPartners) {
+                const partner = this.store["res.partner"].get(id);
+                if (!partner) {
+                    continue;
+                }
+                // existing values are more up-to-date than the saved ones
+                partner.mention_token ??= mention_token;
+                partner.name ??= name;
+                mentionedPartners.push(partner);
+            }
+            composer.mentionedPartners = mentionedPartners;
         }
     }
 

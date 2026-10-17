@@ -39,7 +39,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
-import { edit, press, queryFirst } from "@odoo/hoot-dom";
+import { edit, press, queryFirst, waitUntil } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
 import { useSubEnv } from "@odoo/owl";
@@ -1636,6 +1636,32 @@ test("composer reply-to message is restored page reload", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer:contains('Replying to')");
+});
+
+test("composer mention of unknown partner is restored on page reload", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Zara" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    // simulate composer was mentioning a partner that is not in the store before page reload
+    browser.localStorage.setItem(
+        `Composer,(Thread,discuss.channel AND ${channelId}) OR (undefined)`,
+        JSON.stringify({
+            composerHtml: [
+                "markup",
+                `Hello <a class="o_mail_redirect" data-oe-id="${partnerId}" data-oe-model="res.partner">@Zara</a>`,
+            ],
+            mentionedPartners: [{ id: partnerId, name: "Zara" }],
+        })
+    );
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input", { value: "Hello @Zara" });
+    await waitUntil(() => getService("mail.store")["res.partner"].get(partnerId)?.name);
+    await press("Enter");
+    await contains(".o-mail-Message a.o_mail_redirect", { text: "@Zara" });
 });
 
 test.tags("html composer");
