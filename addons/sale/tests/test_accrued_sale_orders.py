@@ -197,10 +197,10 @@ class TestAccruedSaleOrders(TestSaleCommon):
         invoice = downpayment._create_invoices(self.sale_order)
         invoice.invoice_date = self.wizard.date
         invoice.action_post()
-        self.wizard.create_entries()
+        moves = self.env["account.move"].search(self.wizard.create_entries()["domain"])
         self.assertFalse(self.wizard.display_amount)
         self.assertRecordValues(
-            self.env["account.move"].search(self.wizard.create_entries()["domain"]).line_ids,
+            moves.line_ids,
             [
                 # reverse move lines
                 {"account_id": self.account_revenue.id, "debit": 5000, "credit": 0},

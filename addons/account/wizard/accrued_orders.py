@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 from dateutil.relativedelta import relativedelta
+from collections import defaultdict
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
@@ -97,10 +98,25 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     @api.depends('date', 'journal_id', 'account_id', 'amount', 'accrual_type')
     def _compute_preview_data(self):
         for record in self:
-            preview_vals = [self.env['account.move']._move_dict_to_preview_vals(
-                record._compute_move_vals()[0],
-                record.company_id.currency_id,
-            )]
+            if duplicate_entries := record._get_duplicate_lines_by_entry():
+                # compute preview_data for duplicated entries if exist to make them clickable by the widget
+                preview_vals = [{
+                    **self.env['account.move']._move_dict_to_preview_vals({
+                        'date': entry.date,
+                        'ref': entry.ref,
+                        'line_ids': [
+                            Command.create({'account_id': aml.account_id.id, 'name': aml.name, 'debit': aml.debit, 'credit': aml.credit})
+                            for aml in entry.line_ids
+                        ],
+                    }, record.company_id.currency_id),
+                    'res_model': entry._name,
+                    'res_id': entry.id,
+                } for entry in duplicate_entries]
+            else:
+                preview_vals = [self.env['account.move']._move_dict_to_preview_vals(
+                    record._compute_move_vals()[0],
+                    record.company_id.currency_id,
+                )]
             preview_columns = [
                 {'field': 'account_id', 'label': _('Account')},
                 {'field': 'name', 'label': _('Label')},
@@ -114,21 +130,33 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 },
             })
 
-    @api.depends('date', 'journal_id', 'preview_data')
+    @api.depends('date')
     def _compute_duplicate_entry(self):
         for record in self:
-            if not record.preview_data:
-                record.duplicate_entry_id = False
-                continue
+            # TODO: remove duplicate_entry_id in master, it acts as a boolean now
+            record.duplicate_entry_id = next(iter(record._get_duplicate_lines_by_entry()), False)
 
-            data = json.loads(record.preview_data)
-            ref = data['groups_vals'][0]['group_name'].split(', ')[1]
-            record.duplicate_entry_id = self.env['account.move'].search([
-                ('date', '=', record.date),
-                ('journal_id', '=', record.journal_id.id),
-                ('ref', '=', ref),
-                ('state', 'in', ('draft', 'posted')),
-            ], order='id desc', limit=1)
+    def _get_duplicate_lines_by_entry(self):
+        """ get the selected order lines already accrued by an entry still active at the wizard's date.
+        """
+        self.ensure_one()
+        active_model = self.env.context['active_model']
+        records = self.env[active_model].browse(self.env.context['active_ids'])
+        if active_model in ['purchase.order.line', 'sale.order.line']:
+            lines = records
+        else:
+            lines = records.order_line
+        entries = self.env['account.move'].search([
+            ('id', 'in', lines.accrual_move_ids.ids),
+            ('state', 'in', ('draft', 'posted')),
+            ('date', '<=', self.date),
+            ('reversal_move_ids', 'not any', [('state', '!=', 'cancel'), ('date', '<=', self.date)]),
+        ])
+        line_ids_by_entry = defaultdict(list)
+        for line in lines:
+            for entry in (line.accrual_move_ids & entries):
+                line_ids_by_entry[entry].append(line.id)
+        return {entry: lines.browse(ids) for entry, ids in line_ids_by_entry.items()}
 
     def _get_aml_vals(self, is_purchase, order, balance, amount_currency, account_id, label="", analytic_distribution=None):
         # `balance`/`amount_currency` use the expense/income account's sign
@@ -199,7 +227,8 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         need an accrual as of `accrual_entry_date`. The amount check can't be
         a domain since it depends on the `accrual_entry_date` context.
         """
-        candidate_lines = (lines & order.order_line).filtered_domain(lines._get_accrual_domain())
+        candidate_lines = (lines & order.order_line).filtered_domain(
+            lines.with_context(accrual_entry_date=accrual_entry_date)._get_accrual_domain())
         dated_lines = candidate_lines.with_context(accrual_entry_date=accrual_entry_date)
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
         return dated_lines.filtered(
@@ -292,21 +321,9 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         self.ensure_one()
         if self.reversal_date <= self.date:
             raise UserError(_('Reversal date must be posterior to date.'))
-
-        # Try to unlink the duplicate entry and its reversal
+        # TODO: remove in master, button to create entry should be invisible in this case and warning message on the wizard will be updated
         if self.duplicate_entry_id:
-            original_reverse_entry = self.env['account.move'].search([
-                ('reversed_entry_id', '=', self.duplicate_entry_id.id),
-            ])
-
-            moves_to_delete = self.duplicate_entry_id | original_reverse_entry
-            moves_to_delete._unlink_or_reverse(default_values_list=[
-                {
-                    'ref': _("Reversal of: %s", move.ref),
-                    'date': self.date if move == self.duplicate_entry_id else self.reversal_date,
-                }
-                for move in moves_to_delete
-            ])
+            raise UserError(_("Some selected lines already have an accrual entry for this period. Cancel or delete it to generate a new one."))
 
         move_vals, orders_with_entries, order_lines_with_entries = self._compute_move_vals()
         moves = self.env['account.move'].create([move_vals])
@@ -334,17 +351,27 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             'domain': [('id', 'in', (moves | reverse_moves).ids)],
         }
 
+    def _get_duplicate_action(self):
+        """ Reopen this wizard in a dialog, where the duplicate entries and their lines are listed. """
+        self.ensure_one()
+        return {
+            'name': _("Duplicate Entries"),
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'views': [(False, 'form')],
+            'target': 'new',
+            'context': {
+                **self.env.context,
+                'default_company_id': self.company_id.id,
+                'default_accrual_type': self.accrual_type,
+                'default_date': fields.Date.to_string(self.date),
+            },
+        }
+
     def open_duplicate(self):
         self.ensure_one()
-        if self.duplicate_entry_id:
-            return {
-                'type': 'ir.actions.act_window',
-                'name': 'Duplicate Entry',
-                'res_model': 'account.move',
-                'res_id': self.duplicate_entry_id.id,
-                'view_mode': 'form',
-                'target': 'current',
-            }
+        entries = self.env['account.move'].union(self._get_duplicate_lines_by_entry())
+        return entries._get_records_action(name=_("Duplicate Entries"), context={})
 
     def _get_accrual_main_line_vals(self, order_lines, accrual_entry_date):
         """ Hook overridden by purchase/sale.

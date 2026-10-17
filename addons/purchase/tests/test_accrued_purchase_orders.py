@@ -140,7 +140,8 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             self.wizard.create_entries()
 
         self.purchase_order.order_line.qty_received = 5
-        res = self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids
+        moves = self.env['account.move'].search(self.wizard.create_entries()['domain'])
+        res = moves.line_ids
         self.assertRecordValues(res, [
             # reverse move lines
             {'account_id': self.account_expense.id, 'debit': 5000.0, 'credit': 0.0},
@@ -152,8 +153,11 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'account_id': self.account_revenue.id, 'debit': 6000.0, 'credit': 0.0},
         ])
 
+        # Cancel the standing accrual to generate a new one as of the same date
+        moves.filtered(lambda m: m.state == 'posted').button_draft()
+        moves.button_cancel()
         self.purchase_order.order_line.qty_received = 0
-        res = self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids
+        res = self.env['account.move'].search(self.create_wizard().create_entries()['domain']).line_ids
         self.assertRecordValues(res, [
             # reverse move lines
             {'account_id': self.account_expense.id, 'debit': 10000.0, 'credit': 0.0},
@@ -276,14 +280,3 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
 
         self.assertTrue(duplicate)
         self.assertIn(duplicate.id, accrual_entries.ids)
-
-    def test_duplicate_entries_are_deleted(self):
-        self.purchase_order.order_line.qty_received = 5
-        accrual_entries = self.env['account.move'].search(self.create_wizard().create_entries()['domain'])
-
-        self.assertTrue(accrual_entries.exists())
-
-        new_accrual_entries = self.env['account.move'].search(self.create_wizard().create_entries()['domain'])
-
-        self.assertTrue(new_accrual_entries.exists())
-        self.assertFalse(accrual_entries.exists())

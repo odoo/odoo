@@ -119,7 +119,8 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         # Receive 1 qty to have something to accrual.
         po.order_line.qty_received = 1
 
-        self.assertRecordValues(self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids, [
+        moves = self.env['account.move'].search(accrued_wizard.create_entries()['domain'])
+        self.assertRecordValues(moves.line_ids, [
             # reverse move lines
             {'account_id': account_expense.id, 'debit': 0, 'credit': 235.0},
             {'account_id': accrued_wizard.account_id.id, 'debit': 235.0, 'credit': 0},
@@ -127,7 +128,7 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
             {'account_id': account_expense.id, 'debit': 235.0, 'credit': 0},
             {'account_id': accrued_wizard.account_id.id, 'debit': 0, 'credit': 235.0},
         ])
-        self.assertFalse(self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids.filtered(lambda l: l.is_downpayment))
+        self.assertFalse(moves.line_ids.filtered(lambda l: l.is_downpayment))
 
     def test_downpayment_exchange_rate(self):
         self.env['res.currency.rate'].create({'currency_id': self.other_currency.id, 'rate': 1.5, 'name': fields.Date.subtract(fields.Date.today(), days=1)})
