@@ -211,9 +211,10 @@ class AnalyticMixin(models.AbstractModel):
         non_changing_values = defaultdict(float)
         non_changing_amount = 0
         for old_key, old_val in old_distribution.items():
+            analytic_account_ids = [int(aid) for aid in old_key.split(',')]
             remaining_key = tuple(sorted(
                 account.id
-                for account in self.env['account.analytic.account'].browse(int(aid) for aid in old_key.split(','))
+                for account in self.env['account.analytic.account'].browse(analytic_account_ids).exists()
                 if account.plan_id.root_id in non_changing_plans
             ))
             if remaining_key:
