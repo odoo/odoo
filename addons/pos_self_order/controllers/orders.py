@@ -4,7 +4,7 @@ from odoo import Command, http, _
 from odoo.http import request
 from odoo.osv import expression
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
-from odoo.exceptions import MissingError
+from odoo.exceptions import MissingError, UserError
 from odoo.tools import consteq
 
 class PosSelfOrderController(http.Controller):
@@ -38,6 +38,12 @@ class PosSelfOrderController(http.Controller):
         # Recompute all prices from newly created lines to ensure price correctness and
         # avoid potential manipulation from the frontend
         order_ids.recompute_prices()
+
+        # A negative line (e.g. a negative price_extra) could offset another line
+        # down to a zero total, which is auto-paid and fulfilled below.
+        currency = pos_config.currency_id
+        if any(currency.compare_amounts(line.price_subtotal_incl, 0) < 0 for line in order_ids.lines):
+            raise UserError(_("Invalid product configuration"))
 
         amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
         order_ids.write({

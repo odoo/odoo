@@ -14,3 +14,4 @@ from . import test_webmanifest
 from . import test_self_order_sequence
 from . import test_self_order_prices
 from . import test_self_partner_validation
+from . import test_self_order_sibling_ptav
