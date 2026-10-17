@@ -128,7 +128,7 @@ class SlideSlide(models.Model):
         ('google_drive_video', 'Google Drive Video'),
         ('vimeo_video', 'Vimeo Video')],
         string="Slide Type", compute='_compute_slide_type', store=True, readonly=False,
-        help="Subtype of the slide category, allows more precision on the actual file type / source type.")
+        help="Subtype of the slide category, allowing more precision on the specific file type or source type.")
     document_google_url = fields.Char('Document Link', related='url', readonly=False,
         help="Link of the document (we currently only support Google Drive as source)")
     document_binary_content = fields.Binary('PDF Content', related='binary_content', readonly=False) # Used to filter file input to PDF only

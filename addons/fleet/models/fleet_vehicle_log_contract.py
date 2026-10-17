@@ -37,8 +37,8 @@ class FleetVehicleLogContract(models.Model):
         'Contract Expiration Date', default=lambda self:
         self.compute_next_year_date(fields.Date.context_today(self)),
         tracking=True,
-        help='Date when the coverage of the contract expirates (by default, one year after begin date)')
-    days_left = fields.Integer(compute='_compute_days_left', string='Warning Date')
+        help='Date when the coverage of the contract expires (by default, one year after begin date)')
+    days_left = fields.Integer(compute='_compute_days_left', string='Notification Date')
     expires_today = fields.Boolean(compute='_compute_days_left')
     has_open_contract = fields.Boolean(compute='_compute_has_open_contract')
     insurer_id = fields.Many2one('res.partner', 'Vendor')

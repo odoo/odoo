@@ -5,7 +5,7 @@
             <field name="name">Barcode Nomenclatures</field>
             <field name="model">barcode.nomenclature</field>
             <field name="arch" type="xml">
-                <form string="Barcode Nomenclature">
+                <form string="Barcode Format">
                     <sheet>
                         <group name="general_attributes" col="4">
                             <field name="name" />
@@ -44,21 +44,21 @@
             <field name="name">Barcode Nomenclatures</field>
             <field name="model">barcode.nomenclature</field>
             <field name="arch" type="xml">
-                <list string="Barcode Nomenclatures">
+                <list string="Barcode Formats">
                     <field name="name" />
                 </list>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_barcode_nomenclature_form">
-            <field name="name">Barcode Nomenclatures</field>
+            <field name="name">Barcode Formats</field>
             <field name="res_model">barcode.nomenclature</field>
             <field name="view_mode">list,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Add a new barcode nomenclature
+                Add a new barcode format
               </p><p>
-                A barcode nomenclature defines how the point of sale identify and interprets barcodes
+                A barcode format defines how the point of sale identify and interprets barcodes
               </p>
             </field>
         </record>

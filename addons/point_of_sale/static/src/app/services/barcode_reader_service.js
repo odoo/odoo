@@ -159,7 +159,7 @@ export const barcodeReaderService = {
                 dialog.add(AlertDialog, {
                     title: _t("Unable to parse barcode"),
                     body: _t(
-                        "It seems that no barcode nomenclature is set in your point of sale. You can add it in the settings of your shop."
+                        "It seems that no barcode format is set in your point of sale. You can add it in the settings of your shop."
                     ),
                 });
             }

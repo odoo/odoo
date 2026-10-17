@@ -39,7 +39,7 @@
     <record id="project_embedded_action_all_pickings" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">92</field>
-        <field name="name">Stock Moves</field>
+        <field name="name">Inventory Moves</field>
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
         <field name="python_method">action_open_all_pickings</field>
         <field name="groups_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
@@ -48,7 +48,7 @@
     <record id="project_embedded_action_all_pickings_dashboard" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">92</field>
-        <field name="name">Stock Moves</field>
+        <field name="name">Inventory Moves</field>
         <field name="parent_action_id" ref="project.project_update_all_action"/>
         <field name="python_method">action_open_all_pickings</field>
         <field name="groups_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
