@@ -1,5 +1,5 @@
 from odoo import _, api, models
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, str2bool
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
@@ -39,6 +39,11 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         return f"{invoice.name.replace('/', '_')}_ubl_21_fr.xml"
 
     def _export_invoice(self, invoice, convert_fixed_taxes=True):
+        if str2bool(
+            self.env['ir.config_parameter'].sudo().get_param('l10n_fr_pdp.use_ubl_export', True),
+            default=True,
+        ):
+            return self.env['account.edi.xml.ubl_21_fr_new']._export_invoice(invoice, convert_fixed_taxes)
         # Use new helpers
         return self._export_invoice_new(invoice)
 
