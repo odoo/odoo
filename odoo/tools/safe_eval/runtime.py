@@ -296,7 +296,7 @@ class _SafeChecker:
     SEQUENCES = frozenset((list, tuple, set, frozenset, OrderedSet))
     ITERATORS = frozenset((
         enumerate, filter, map, range, reversed, zip,
-        type(iter('')), type(iter(b'')), type(iter(bytearray())),
+        type(iter('')), type(iter('\xFF')), type(iter(b'')), type(iter(bytearray())),
         type(iter([])), type(iter(())), type(iter(set())),
         type(iter(reversed([]))),
         type(iter({}.keys())), type(iter({}.values())), type(iter({}.items())),
