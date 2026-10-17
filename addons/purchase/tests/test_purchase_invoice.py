@@ -1503,3 +1503,21 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po_matches.action_match_lines()
         self.assertEqual(po.invoice_ids, bill)
         self.assertEqual(po.order_line.product_id, bill.invoice_line_ids.product_id)
+
+    def test_match_invoice_line_without_name(self):
+        """Purchase matching should handle invoice lines without a description."""
+        po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
+        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+
+        # Simulate a document-level charge imported without a reason.
+        bill.invoice_line_ids.create({
+            'move_id': bill.id,
+            'name': False,
+            'quantity': 1,
+            'price_unit': po.order_line[1].price_unit,
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+        bill._find_and_set_purchase_orders(
+            ['my_match_reference'], bill.partner_id.id, bill.amount_total)
+
+        self.assertIn(bill, po.invoice_ids)
