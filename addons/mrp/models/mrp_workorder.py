@@ -6,10 +6,11 @@ from collections import defaultdict
 
 from odoo import Command, _, api, fields, models
 from odoo.fields import Domain
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools import float_is_zero, float_round
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
+from odoo.http import request
 
 
 class MrpWorkorder(models.Model):
@@ -154,6 +155,26 @@ class MrpWorkorder(models.Model):
     qty_to_produce = fields.Float('Quantity To Produce', digits='Product Unit', compute='_compute_qty_to_produce',
         help="The quantity to produce in this workorder in the backorders chain.")
     backorder_count = fields.Integer("Count of linked backorders", compute='_compute_backorder')
+
+    # used to display the connected employee that will start a workorder on the tablet view
+    employee_id = fields.Many2one('hr.employee', string="Employee", compute='_compute_employee_id')
+    employee_name = fields.Char(compute='_compute_employee_id')
+
+    # employees that started working on the wo
+    employee_ids = fields.Many2many('hr.employee', bypass_search_access=True, string='Working employees', copy=False)
+    # employees assigned to the wo
+    employee_assigned_ids = fields.Many2many('hr.employee', 'mrp_workorder_employee_assigned',
+                                             'workorder_id', 'employee_id', string='Assigned', tracking=True, falsy_value_label='Unassigned Work Orders',
+                                             bypass_search_access=True,
+                                             domain="[('company_id', 'in', allowed_company_ids)]")
+
+    # list of employees allowed to work on the workcenter
+    allowed_employees = fields.Many2many(related='workcenter_id.employee_ids', bypass_search_access=True)
+    # True if all employees are allowed on that workcenter
+    all_employees_allowed = fields.Boolean(compute='_all_employees_allowed')
+
+    # Technical field to store the estimated hourly cost of employee at time of work order completion (i.e. to keep a consistent cost).
+    employee_costs_hour = fields.Float(string='Employee Cost per hour', default=0.0)
 
     def _compute_sequence(self):
         for workorder in self:
@@ -337,7 +358,7 @@ class MrpWorkorder(models.Model):
             else:
                 order.duration_percent = 0
 
-    @api.depends('duration', 'costs_hour', 'workcenter_id.costs_hour')
+    @api.depends('duration', 'costs_hour', 'workcenter_id.costs_hour', 'time_ids.total_cost')
     def _compute_cost(self):
         for order in self:
             order.cost = order._compute_current_operation_cost()
@@ -435,6 +456,17 @@ class MrpWorkorder(models.Model):
     def _compute_is_planned(self):
         for wo in self:
             wo.is_planned = bool(wo.date_start and wo.date_finished)
+
+    @api.depends('employee_ids')
+    def _compute_employee_id(self):
+        main_employee_connected = self.env['hr.employee'].get_session_owner()
+        self.employee_id = main_employee_connected
+        self.employee_name = self.env['hr.employee'].browse(main_employee_connected).name
+
+    @api.depends('all_employees_allowed')
+    def _all_employees_allowed(self):
+        for wo in self:
+            wo.all_employees_allowed = len(wo.allowed_employees) == 0
 
     def _search_is_planned(self, operator, value):
         if (operator == '=' and value) or (operator == '!=' and not value):
@@ -678,19 +710,52 @@ class MrpWorkorder(models.Model):
         :param datetime date: Only calculate for time_ids that ended before this date
         """
         total = 0
-        for workorder in self:
-            if workorder._should_estimate_cost():
-                duration = workorder.duration_expected / 60
+        for wo in self:
+            if wo._should_estimate_cost():
+                duration = wo.duration_expected / 60
+                workcenter_cost = duration * (wo.costs_hour or wo.workcenter_id.costs_hour)
+                employee_cost = duration * (wo.employee_costs_hour or wo.workcenter_id.employee_costs_hour)
+                total += workcenter_cost + employee_cost
             else:
                 intervals = Intervals([
                     [t.date_start, t.date_end, t]
-                    for t in workorder.time_ids if t.date_end and (not date or t.date_end < date)
+                    for t in wo.time_ids if t.date_end and (not date or t.date_end < date)
                 ])
                 duration = sum_intervals(intervals)
-            total += duration * (workorder.costs_hour or workorder.workcenter_id.costs_hour)
+                workcenter_cost = duration * (wo.costs_hour or wo.workcenter_id.costs_hour)
+                times = wo.time_ids.filtered(lambda t: t.date_end and (not date or t.date_end <= date))
+                employee_cost = sum(times.mapped('total_cost'))
+                total += workcenter_cost + employee_cost
         return total
 
-    def button_start(self, raise_on_invalid_state=False):
+    def _get_starting_employee(self):
+        """ Hook to determine which employee is starting the workorder. """
+        employee = self.env.user.employee_id
+        if not employee:
+            if self.env.user.has_group('hr.group_hr_user'):
+                raise RedirectWarning(
+                    message=_("You need to link this user to an employee of this company to process the work order."),
+                    action={
+                        'name': _("Create Employee"),
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'hr.employee',
+                        'views': [[False, 'form']],
+                        'target': 'new',
+                        'context': {'default_user_id': self.env.user.id},
+                    },
+                    button_text=_("Create Employee"),
+                )
+            else:
+                raise UserError(_("You need to link this user to an employee of this company to process the work order."))
+        return employee
+
+    def button_start(self, raise_on_invalid_state=False, bypass=False):
+        skip_employee_check = bypass or (not request and not self.env.user.employee_id)
+        main_employee = self.env['hr.employee']
+        if not skip_employee_check:
+            main_employee = self._get_starting_employee()
+            if any(main_employee not in wo.allowed_employees and not wo.all_employees_allowed for wo in self):
+                raise UserError(_("You are not allowed to work on the workorder"))
         for wo in self:
             if any(not time.date_end for time in wo.time_ids.filtered(lambda t: t.user_id.id == self.env.user.id)):
                 continue
@@ -701,11 +766,6 @@ class MrpWorkorder(models.Model):
 
             if wo.qty_producing == 0 and not wo.production_bom_id.continuous:
                 wo.qty_producing = wo.qty_remaining
-
-            if wo._should_start_timer():
-                self.env['mrp.workcenter.productivity'].create(
-                    wo._prepare_timeline_vals(wo.duration, fields.Datetime.now())
-                )
 
             if wo.production_id.state != 'progress':
                 wo.production_id.with_context(force_date=True).write({
@@ -734,6 +794,13 @@ class MrpWorkorder(models.Model):
                 vals['date_finished'] = wo._calculate_date_finished(date_start)
                 wo.with_context(bypass_duration_calculation=True).write(vals)
 
+        if main_employee:
+            for wo in self:
+                if (not wo.allowed_employees or main_employee in wo.allowed_employees) and wo.state not in ('done', 'cancel'):
+                    wo.start_employee(main_employee.id)
+                    wo.employee_ids |= main_employee
+                    wo.employee_assigned_ids |= main_employee
+
     def button_finish(self):
         date_finished = fields.Datetime.now()
         all_vals_dict = defaultdict(lambda: self.env['mrp.workorder'])
@@ -758,13 +825,16 @@ class MrpWorkorder(models.Model):
                 'qty_produced': workorder.qty_produced or workorder.qty_producing or workorder.qty_production,
                 'state': 'done',
                 'date_finished': date_finished,
-                'costs_hour': workorder.workcenter_id.costs_hour
+                'costs_hour': workorder.workcenter_id.costs_hour,
+                'employee_costs_hour': workorder.workcenter_id.employee_costs_hour,
             }
             if not workorder.date_start or date_finished < workorder.date_start:
                 vals['date_start'] = date_finished
             all_vals_dict[frozenset(vals.items())] |= workorder
+
         for frozen_vals, workorders in all_vals_dict.items():
             workorders.with_context(bypass_duration_calculation=True, bypass_change_producing=True).write(dict(frozen_vals))
+
         return True
 
     def end_previous(self, doall=False):
@@ -780,10 +850,45 @@ class MrpWorkorder(models.Model):
         return True
 
     def end_all(self):
+        self.employee_ids = [Command.clear()]
         return self.end_previous(doall=True)
 
     def button_pending(self):
+        employee_id = self._get_employee_id()
+        if employee_id:
+            # Stop productivity only for the current employee
+            self.stop_employee([employee_id])
         self.end_previous()
+
+    def _get_employee_id(self):
+        return self.env.user.employee_id.id
+
+    def start_employee(self, employee_id):
+        self.ensure_one()
+        if employee_id in self.employee_ids.ids and any(not t.date_end for t in self.time_ids if t.employee_id.id == employee_id):
+            return
+        self.employee_ids = [Command.link(employee_id)]
+        time_data = self._prepare_timeline_vals(self.duration, fields.Datetime.now(), employee_id=employee_id)
+        self.env['mrp.workcenter.productivity'].create(time_data)
+        self.state = "progress"
+
+    def stop_employee(self, employee_ids):
+        self.employee_ids = [Command.unlink(emp) for emp in employee_ids]
+        self.env['mrp.workcenter.productivity'].search([
+            ('employee_id', 'in', employee_ids),
+            ('workorder_id', 'in', self.ids),
+            ('date_end', '=', False)
+        ])._close()
+
+    def get_employee_duration(self, employee_id):
+        self.ensure_one()
+        now = self.env.cr.now()
+        closed_duration = sum(self.time_ids.filtered(lambda t: t.employee_id.id == employee_id).mapped('duration'))
+        opened_duration = sum(self.time_ids.filtered(lambda t: t.employee_id.id == employee_id and not t.date_end).mapped(lambda t: t and max((now - t.date_start).total_seconds() / 60, 0)), False)
+        return closed_duration, opened_duration
+
+    def set_employee_duration(self, employee_id, duration):
+        return self._set_duration(employee_id, duration)
 
     def button_unblock(self):
         for order in self:
@@ -940,19 +1045,18 @@ class MrpWorkorder(models.Model):
             loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
             if not len(loss_id):
                 raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        employee = self.env['hr.employee'].browse(employee_id) if employee_id is not None else self._get_connected_employee()
         return {
             'workorder_id': self.id,
             'workcenter_id': self.workcenter_id.id,
-            'description': _('Time Tracking: %(user)s', user=self.env.user.name),
             'loss_id': loss_id[0].id,
             'date_start': date_start.replace(microsecond=0),
             'date_end': date_end.replace(microsecond=0) if date_end else date_end,
             'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id
             'company_id': self.company_id.id,
+            'employee_id': employee.id,
+            'description': self.env._('Time Tracking: %(user)s', user=employee.name),
         }
-
-    def _should_start_timer(self):
-        return True
 
     def _should_estimate_cost(self):
         self.ensure_one()
@@ -992,13 +1096,34 @@ class MrpWorkorder(models.Model):
         return duration
 
     def action_mark_as_done(self):
+        main_employee_connected = self.env.user.employee_id.id
+        if not main_employee_connected:
+            if self.env.user.has_group('hr.group_hr_user'):
+                raise RedirectWarning(
+                    message=_("You need to link this user to an employee of this company to process these work orders."),
+                    action={
+                        'name': _("Create Employee"),
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'hr.employee',
+                        'views': [[False, 'form']],
+                        'target': 'new',
+                        'context': {'default_user_id': self.env.user.id},
+                    },
+                    button_text=_("Create Employee"),
+                )
+            else:
+                raise UserError(_("You need to link this user to an employee of this company to process these work orders."))
         for wo in self:
-            res = wo.button_finish()
-            if res is not True:
-                return res
-            if wo.duration == 0.0:
-                wo.duration = wo.duration_expected
-                wo.duration_percent = 100
+            if len(wo.allowed_employees) != 0 and main_employee_connected not in [wo.id for wo in wo.allowed_employees]:
+                raise UserError(_('You are not allow to work on some of these work orders.'))
+        res = self.button_finish()
+        if isinstance(res, dict) and res.get('res_model') == 'mrp.production.backorder':
+            return res
+        loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'productive')], limit=1)
+        if len(loss_id) < 1:
+            raise UserError(_("You need to define at least one productivity loss in the category 'Productive'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        self.state = 'done'
+        self._set_default_time_log(loss_id)
 
     def action_plan(self):
         date_to_plan_on = max((wo.leave_id.date_to for wo in self.blocked_by_workorder_ids if wo.leave_id), default=datetime.now())
@@ -1018,10 +1143,16 @@ class MrpWorkorder(models.Model):
         return self.production_id.action_scrap()
 
     def _compute_expected_operation_cost(self, without_employee_cost=False):
-        return (self.duration_expected / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
+        expected_machine_cost = (self.duration_expected / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
+        if without_employee_cost:
+            return expected_machine_cost
+        expected_labour_cost = (self.duration_expected / 60.0) * self.workcenter_id.employee_costs_hour * (self.operation_id.employee_ratio or 1.0)
+        return expected_machine_cost + expected_labour_cost
 
     def _compute_current_operation_cost(self):
-        return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
+        current_machine_cost = (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
+        current_labour_cost = sum(self.time_ids.mapped('total_cost'))
+        return current_machine_cost + current_labour_cost
 
     def _compute_decoration_dates(self):
         self.decoration_dates = ''
@@ -1133,6 +1264,32 @@ class MrpWorkorder(models.Model):
         """ This should only be called once when the MO is confirmed. """
         for workorder in self:
             workorder.cost_mode = workorder.operation_id.cost_mode or 'actual'
+
+    def _set_default_time_log(self, loss_id):
+        productivity = []
+        for wo in self:
+            if not wo.time_ids:
+                now = fields.Datetime.now()
+                date_start = datetime.fromtimestamp(now.timestamp() - ((wo.duration_expected * 60) // 1))
+                date_end = now
+                connected_employee = wo._get_connected_employee()
+                productivity.append({
+                    'workorder_id': wo.id,
+                    'workcenter_id': wo.workcenter_id.id,
+                    'description': _('Time Tracking: %(user)s', user=connected_employee.name),
+                    'date_start': date_start,
+                    'date_end': date_end,
+                    'loss_id': loss_id[0].id,
+                    'user_id': self.env.user.id,
+                    'company_id': wo.company_id.id,
+                    'employee_id': connected_employee.id,
+                })
+        self.env['mrp.workcenter.productivity'].create(productivity)
+
+    def _get_connected_employee(self):
+        if self.employee_assigned_ids:
+            return self.employee_assigned_ids[0]
+        return self.env.user.employee_id
 
     # -------------------------------------------------------------------------
     # CATALOG

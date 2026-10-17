@@ -281,6 +281,17 @@
                         <filter string='BoM Type' name="group_by_type" domain="[]" context="{'group_by' : 'type'}"/>
                         <filter string='Unit' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'uom_id'}"/>
                    </group>
+                   <separator invisible="1"/>
+                    <filter string="My Activities" name="filter_activities_my"
+                        domain="[('activity_user_id', '=', uid)]" invisible="1"/>
+                    <separator invisible="1"/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('my_activity_date_deadline', '&lt;', 'today')]"
+                        help="Show all records whose next activity date is past" invisible="1"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('my_activity_date_deadline', '=', 'today')]" invisible="1"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('my_activity_date_deadline', '&gt;', 'today')]" invisible="1"/>
                 </search>
             </field>
         </record>
