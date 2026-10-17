@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--    Employee Records (hr.version list view export)                 -->
+    <record id="hr_version_export_template" model="ir.exports">
+        <field name="name">Employee Records</field>
+        <field name="resource">hr.version</field>
+    </record>
+
+    <record id="hr_version_export_template_line_employee" model="ir.exports.line">
+        <field name="sequence">20</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">employee_id</field>
+    </record>
+    <record id="hr_version_export_template_line_active" model="ir.exports.line">
+        <field name="sequence">30</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">active</field>
+    </record>
+    <record id="hr_version_export_template_line_date_version" model="ir.exports.line">
+        <field name="sequence">40</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">date_version</field>
+    </record>
+    <record id="hr_version_export_template_line_contract_date_start" model="ir.exports.line">
+        <field name="sequence">50</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">contract_date_start</field>
+    </record>
+    <record id="hr_version_export_template_line_contract_date_end" model="ir.exports.line">
+        <field name="sequence">60</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">contract_date_end</field>
+    </record>
+    <record id="hr_version_export_template_line_fixed_term" model="ir.exports.line">
+        <field name="sequence">70</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">fixed_term</field>
+    </record>
+    <record id="hr_version_export_template_line_trial_date_end" model="ir.exports.line">
+        <field name="sequence">80</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">trial_date_end</field>
+    </record>
+    <record id="hr_version_export_template_line_job_id" model="ir.exports.line">
+        <field name="sequence">90</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">job_id</field>
+    </record>
+    <record id="hr_version_export_template_line_job_title" model="ir.exports.line">
+        <field name="sequence">100</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">job_title</field>
+    </record>
+    <record id="hr_version_export_template_line_department_id" model="ir.exports.line">
+        <field name="sequence">110</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">department_id</field>
+    </record>
+    <record id="hr_version_export_template_line_company_id" model="ir.exports.line">
+        <field name="sequence">120</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">company_id/id</field>
+    </record>
+    <record id="hr_version_export_template_line_address_id" model="ir.exports.line">
+        <field name="sequence">130</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">address_id</field>
+    </record>
+    <record id="hr_version_export_template_line_work_location_id" model="ir.exports.line">
+        <field name="sequence">140</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">work_location_id</field>
+    </record>
+    <record id="hr_version_export_template_line_resource_calendar_id" model="ir.exports.line">
+        <field name="sequence">150</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">resource_calendar_id</field>
+    </record>
+    <record id="hr_version_export_template_line_tz" model="ir.exports.line">
+        <field name="sequence">160</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">tz</field>
+    </record>
+    <record id="hr_version_export_template_line_hr_responsible_id" model="ir.exports.line">
+        <field name="sequence">170</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">hr_responsible_id/id</field>
+    </record>
+    <record id="hr_version_export_template_line_wage" model="ir.exports.line">
+        <field name="sequence">180</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">wage</field>
+    </record>
+    <record id="hr_version_export_template_line_employee_type_id" model="ir.exports.line">
+        <field name="sequence">190</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">employee_type_id</field>
+    </record>
+    <record id="hr_version_export_template_line_structure_type_id" model="ir.exports.line">
+        <field name="sequence">200</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">structure_type_id</field>
+    </record>
+    <record id="hr_version_export_template_line_contract_template_id" model="ir.exports.line">
+        <field name="sequence">210</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">contract_template_id</field>
+    </record>
+    <record id="hr_version_export_template_line_country_id" model="ir.exports.line">
+        <field name="sequence">220</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">country_id</field>
+    </record>
+    <record id="hr_version_export_template_line_identification_id" model="ir.exports.line">
+        <field name="sequence">230</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">identification_id</field>
+    </record>
+    <record id="hr_version_export_template_line_passport_id" model="ir.exports.line">
+        <field name="sequence">240</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">passport_id</field>
+    </record>
+    <record id="hr_version_export_template_line_passport_expiration_date" model="ir.exports.line">
+        <field name="sequence">250</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">passport_expiration_date</field>
+    </record>
+    <record id="hr_version_export_template_line_sex" model="ir.exports.line">
+        <field name="sequence">260</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">sex</field>
+    </record>
+    <record id="hr_version_export_template_line_marital" model="ir.exports.line">
+        <field name="sequence">270</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">marital</field>
+    </record>
+    <record id="hr_version_export_template_line_spouse_complete_name" model="ir.exports.line">
+        <field name="sequence">280</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">spouse_complete_name</field>
+    </record>
+    <record id="hr_version_export_template_line_spouse_birthdate" model="ir.exports.line">
+        <field name="sequence">290</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">spouse_birthdate</field>
+    </record>
+    <record id="hr_version_export_template_line_children" model="ir.exports.line">
+        <field name="sequence">300</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">children</field>
+    </record>
+    <record id="hr_version_export_template_line_distance_home_work" model="ir.exports.line">
+        <field name="sequence">310</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">distance_home_work</field>
+    </record>
+    <record id="hr_version_export_template_line_distance_home_work_unit" model="ir.exports.line">
+        <field name="sequence">320</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">distance_home_work_unit</field>
+    </record>
+    <record id="hr_version_export_template_line_km_home_work" model="ir.exports.line">
+        <field name="sequence">330</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">km_home_work</field>
+    </record>
+    <record id="hr_version_export_template_line_private_street" model="ir.exports.line">
+        <field name="sequence">340</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">private_street</field>
+    </record>
+    <record id="hr_version_export_template_line_private_street2" model="ir.exports.line">
+        <field name="sequence">350</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">private_street2</field>
+    </record>
+    <record id="hr_version_export_template_line_private_city" model="ir.exports.line">
+        <field name="sequence">360</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">private_city</field>
+    </record>
+    <record id="hr_version_export_template_line_private_state_id" model="ir.exports.line">
+        <field name="sequence">370</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">private_state_id</field>
+    </record>
+    <record id="hr_version_export_template_line_private_zip" model="ir.exports.line">
+        <field name="sequence">380</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">private_zip</field>
+    </record>
+    <record id="hr_version_export_template_line_private_country_id" model="ir.exports.line">
+        <field name="sequence">390</field>
+        <field name="export_id" ref="hr_version_export_template"/>
+        <field name="name">private_country_id</field>
+    </record>
+
+    <!--    Employees: All Records (Full export with all versions)         -->
+    <record id="hr_employee_all_versions_export_template" model="ir.exports">
+        <field name="name">Employees: All Records</field>
+        <field name="resource">hr.employee</field>
+    </record>
+
+    <record id="hr_emp_all_line_name" model="ir.exports.line">
+        <field name="sequence">20</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">name</field>
+    </record>
+    <record id="hr_emp_all_line_image_1920" model="ir.exports.line">
+        <field name="sequence">25</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">image_1920</field>
+    </record>
+    <record id="hr_emp_all_line_active" model="ir.exports.line">
+        <field name="sequence">30</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">active</field>
+    </record>
+    <record id="hr_emp_all_line_company_id" model="ir.exports.line">
+        <field name="sequence">40</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">company_id/id</field>
+    </record>
+    <record id="hr_emp_all_line_work_email" model="ir.exports.line">
+        <field name="sequence">60</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">work_email</field>
+    </record>
+    <record id="hr_emp_all_line_work_phone" model="ir.exports.line">
+        <field name="sequence">70</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">work_phone</field>
+    </record>
+    <record id="hr_emp_all_line_mobile_phone" model="ir.exports.line">
+        <field name="sequence">80</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">mobile_phone</field>
+    </record>
+    <record id="hr_emp_all_line_work_contact_id" model="ir.exports.line">
+        <field name="sequence">90</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">work_contact_id</field>
+    </record>
+    <record id="hr_emp_all_line_parent_id" model="ir.exports.line">
+        <field name="sequence">100</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">parent_id</field>
+    </record>
+    <record id="hr_emp_all_line_coach_id" model="ir.exports.line">
+        <field name="sequence">110</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">coach_id</field>
+    </record>
+    <record id="hr_emp_all_line_category_ids" model="ir.exports.line">
+        <field name="sequence">120</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">category_ids</field>
+    </record>
+    <record id="hr_emp_all_line_private_email" model="ir.exports.line">
+        <field name="sequence">124</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">private_email</field>
+    </record>
+    <record id="hr_emp_all_line_private_phone" model="ir.exports.line">
+        <field name="sequence">126</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">private_phone</field>
+    </record>
+    <record id="hr_emp_all_line_birthday" model="ir.exports.line">
+        <field name="sequence">130</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">birthday</field>
+    </record>
+    <record id="hr_emp_all_line_place_of_birth" model="ir.exports.line">
+        <field name="sequence">140</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">place_of_birth</field>
+    </record>
+    <record id="hr_emp_all_line_country_of_birth" model="ir.exports.line">
+        <field name="sequence">150</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">country_of_birth</field>
+    </record>
+    <record id="hr_emp_all_line_emergency_contact" model="ir.exports.line">
+        <field name="sequence">160</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">emergency_contact</field>
+    </record>
+    <record id="hr_emp_all_line_emergency_phone" model="ir.exports.line">
+        <field name="sequence">170</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">emergency_phone</field>
+    </record>
+    <record id="hr_emp_all_line_permit_no" model="ir.exports.line">
+        <field name="sequence">180</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">permit_no</field>
+    </record>
+    <record id="hr_emp_all_line_visa_no" model="ir.exports.line">
+        <field name="sequence">190</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">visa_no</field>
+    </record>
+    <record id="hr_emp_all_line_visa_expire" model="ir.exports.line">
+        <field name="sequence">200</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">visa_expire</field>
+    </record>
+    <record id="hr_emp_all_line_work_permit_expiration_date" model="ir.exports.line">
+        <field name="sequence">210</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">work_permit_expiration_date</field>
+    </record>
+    <record id="hr_emp_all_line_certificate" model="ir.exports.line">
+        <field name="sequence">220</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">certificate</field>
+    </record>
+    <record id="hr_emp_all_line_study_field" model="ir.exports.line">
+        <field name="sequence">230</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">study_field</field>
+    </record>
+    <record id="hr_emp_all_line_barcode" model="ir.exports.line">
+        <field name="sequence">240</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">barcode</field>
+    </record>
+    <record id="hr_emp_all_line_pin" model="ir.exports.line">
+        <field name="sequence">250</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">pin</field>
+    </record>
+    <record id="hr_emp_all_line_version_id" model="ir.exports.line">
+        <field name="sequence">300</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/id</field>
+    </record>
+    <record id="hr_emp_all_line_version_active" model="ir.exports.line">
+        <field name="sequence">310</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/active</field>
+    </record>
+    <record id="hr_emp_all_line_version_date_version" model="ir.exports.line">
+        <field name="sequence">320</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/date_version</field>
+    </record>
+    <record id="hr_emp_all_line_version_contract_date_start" model="ir.exports.line">
+        <field name="sequence">330</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/contract_date_start</field>
+    </record>
+    <record id="hr_emp_all_line_version_contract_date_end" model="ir.exports.line">
+        <field name="sequence">340</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/contract_date_end</field>
+    </record>
+    <record id="hr_emp_all_line_version_fixed_term" model="ir.exports.line">
+        <field name="sequence">350</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/fixed_term</field>
+    </record>
+    <record id="hr_emp_all_line_version_trial_date_end" model="ir.exports.line">
+        <field name="sequence">360</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/trial_date_end</field>
+    </record>
+    <record id="hr_emp_all_line_version_job_id" model="ir.exports.line">
+        <field name="sequence">370</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/job_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_job_title" model="ir.exports.line">
+        <field name="sequence">380</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/job_title</field>
+    </record>
+    <record id="hr_emp_all_line_version_department_id" model="ir.exports.line">
+        <field name="sequence">390</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/department_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_address_id" model="ir.exports.line">
+        <field name="sequence">410</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/address_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_work_location_id" model="ir.exports.line">
+        <field name="sequence">420</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/work_location_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_resource_calendar_id" model="ir.exports.line">
+        <field name="sequence">430</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/resource_calendar_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_tz" model="ir.exports.line">
+        <field name="sequence">440</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/tz</field>
+    </record>
+    <record id="hr_emp_all_line_version_hr_responsible_id" model="ir.exports.line">
+        <field name="sequence">450</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/hr_responsible_id/id</field>
+    </record>
+    <record id="hr_emp_all_line_version_wage" model="ir.exports.line">
+        <field name="sequence">460</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/wage</field>
+    </record>
+    <record id="hr_emp_all_line_version_employee_type_id" model="ir.exports.line">
+        <field name="sequence">470</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/employee_type_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_structure_type_id" model="ir.exports.line">
+        <field name="sequence">480</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/structure_type_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_contract_template_id" model="ir.exports.line">
+        <field name="sequence">490</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/contract_template_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_country_id" model="ir.exports.line">
+        <field name="sequence">500</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/country_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_identification_id" model="ir.exports.line">
+        <field name="sequence">510</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/identification_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_passport_id" model="ir.exports.line">
+        <field name="sequence">520</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/passport_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_passport_expiration_date" model="ir.exports.line">
+        <field name="sequence">530</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/passport_expiration_date</field>
+    </record>
+    <record id="hr_emp_all_line_version_sex" model="ir.exports.line">
+        <field name="sequence">540</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/sex</field>
+    </record>
+    <record id="hr_emp_all_line_version_marital" model="ir.exports.line">
+        <field name="sequence">550</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/marital</field>
+    </record>
+    <record id="hr_emp_all_line_version_spouse_complete_name" model="ir.exports.line">
+        <field name="sequence">560</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/spouse_complete_name</field>
+    </record>
+    <record id="hr_emp_all_line_version_spouse_birthdate" model="ir.exports.line">
+        <field name="sequence">570</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/spouse_birthdate</field>
+    </record>
+    <record id="hr_emp_all_line_version_children" model="ir.exports.line">
+        <field name="sequence">580</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/children</field>
+    </record>
+    <record id="hr_emp_all_line_version_distance_home_work" model="ir.exports.line">
+        <field name="sequence">590</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/distance_home_work</field>
+    </record>
+    <record id="hr_emp_all_line_version_distance_home_work_unit" model="ir.exports.line">
+        <field name="sequence">600</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/distance_home_work_unit</field>
+    </record>
+    <record id="hr_emp_all_line_version_km_home_work" model="ir.exports.line">
+        <field name="sequence">610</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/km_home_work</field>
+    </record>
+    <record id="hr_emp_all_line_version_private_street" model="ir.exports.line">
+        <field name="sequence">620</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/private_street</field>
+    </record>
+    <record id="hr_emp_all_line_version_private_street2" model="ir.exports.line">
+        <field name="sequence">630</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/private_street2</field>
+    </record>
+    <record id="hr_emp_all_line_version_private_city" model="ir.exports.line">
+        <field name="sequence">640</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/private_city</field>
+    </record>
+    <record id="hr_emp_all_line_version_private_state_id" model="ir.exports.line">
+        <field name="sequence">650</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/private_state_id</field>
+    </record>
+    <record id="hr_emp_all_line_version_private_zip" model="ir.exports.line">
+        <field name="sequence">660</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/private_zip</field>
+    </record>
+    <record id="hr_emp_all_line_version_private_country_id" model="ir.exports.line">
+        <field name="sequence">670</field>
+        <field name="export_id" ref="hr_employee_all_versions_export_template"/>
+        <field name="name">version_ids/private_country_id</field>
+    </record>
+
+</odoo>

@@ -304,6 +304,47 @@ class HrVersion(models.Model):
                 contract_vals = Version.get_values_from_contract_template(Version.browse(vals['contract_template_id']))
                 # take vals from template, but priority given to the original vals
                 vals.update({**contract_vals, **vals})
+
+        if not self.env.context.get('import_file'):
+            return super().create(vals_list)
+
+        new_vals_list = []
+        existing_records_by_idx = {}
+        for idx, vals in enumerate(vals_list):
+            emp_id = vals.get('employee_id')
+            date_ver = vals.get('date_version')
+            if emp_id and date_ver and vals.get('active', True):
+                existing = self.search([
+                    ('employee_id', '=', emp_id),
+                    ('date_version', '=', fields.Date.to_date(date_ver)),
+                    ('active', '=', True),
+                ], limit=1)
+                if existing:
+                    update_vals = {k: v for k, v in vals.items() if k not in ('employee_id', 'date_version', 'id')}
+                    if update_vals:
+                        existing.write(update_vals)
+                    if vals.get('id'):
+                        xml_id = vals['id']
+                        current_module = self.env.context.get('_import_current_module', '__import__')
+                        if '.' not in xml_id:
+                            xml_id = f"{current_module}.{xml_id}"
+                        self.env['ir.model.data']._update_xmlids([{
+                            'xml_id': xml_id,
+                            'record': existing,
+                            'noupdate': False,
+                        }])
+                    existing_records_by_idx[idx] = existing
+                    continue
+            new_vals_list.append((idx, vals))
+
+        if existing_records_by_idx:
+            created = super().create([v for i, v in new_vals_list]) if new_vals_list else self.browse()
+            created_map = {idx: rec for (idx, _), rec in zip(new_vals_list, created)}
+            return self.browse([
+                existing_records_by_idx[i].id if i in existing_records_by_idx else created_map[i].id
+                for i in range(len(vals_list))
+            ])
+
         return super().create(vals_list)
 
     @api.ondelete(at_uninstall=False)
@@ -315,6 +356,23 @@ class HrVersion(models.Model):
                 )
 
     def write(self, vals):
+        records = self
+        if self.env.context.get('import_file') and vals.get('date_version'):
+            target_date = fields.Date.to_date(vals['date_version'])
+            to_exclude = self.env['hr.version']
+            for v in records:
+                if v.date_version != target_date and v.employee_id:
+                    existing = v.employee_id.version_ids.filtered(lambda x: x != v and x.active and x.date_version == target_date)
+                    if existing:
+                        existing[:1].write({k: val for k, val in vals.items() if k != 'date_version'})
+                        imds = self.env['ir.model.data'].sudo().search([('model', '=', 'hr.version'), ('res_id', '=', v.id)])
+                        if imds:
+                            imds.write({'res_id': existing[0].id})
+                        to_exclude |= v
+            records = records - to_exclude
+            if not records:
+                return True
+
         if 'hr_responsible_id' in vals:
             new_responsible = self.env['res.users'].browse(vals['hr_responsible_id'])
             for version in self:
