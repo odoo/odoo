@@ -234,41 +234,66 @@
                 <field name="date_begin"/>
                 <field name="date_end"/>
                 <templates>
-                    <t t-name="card" class="p-0 row">
-                        <aside class="col-4 text-bg-primary p-2 text-center d-flex flex-column justify-content-center">
-                            <div t-out="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('d')" class="fs-1"/>
-                            <div>
-                                <t t-out="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
+                    <t t-name="card">
+                        <t t-set="date_begin" t-value="luxon.DateTime.fromISO(record.date_begin.raw_value)"/>
+                        <t t-set="date_end" t-value="luxon.DateTime.fromISO(record.date_end.raw_value)"/>
+                        <t t-set="datetime_format" t-value="date_end.hasSame(date_begin, 'year')
+                            ? {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'}
+                            : {year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'}"/>
+                        <t t-set="date_parts_order" t-value="date_begin.toLocaleParts({year: 'numeric', month: 'short', day: 'numeric'}).map(part => part.type).filter(type => type !== 'literal')"/>
+                        <div class="o_event_card_main d-flex gap-2 align-items-start">
+                            <div class="o_event_card_inner flex-grow-1 min-w-0">
+                                <field name="name" class="d-block h5 text-truncate"/>
+                                <div class="d-flex gap-2 align-items-baseline">
+                                    <i class="oi" data-icon="calendar_clock" title="Date"/>
+                                    <span t-if="date_end.hasSame(date_begin, 'day')" t-out="date_begin.toFormat('t') + ' - ' + date_end.toFormat('t')"/>
+                                    <span t-else="">
+                                        <span class="text-nowrap" t-out="date_begin.toLocaleString(datetime_format)"/>
+                                        -
+                                        <span class="text-nowrap" t-out="date_end.toLocaleString(datetime_format)"/>
+                                    </span>
+                                </div>
+                                <div class="d-flex gap-2 align-items-baseline">
+                                    <i class="oi oi-filled" data-icon="location_on" title="Location"/>
+                                    <field t-if="record.address_id.value" name="address_id"/>
+                                    <span t-else="">Online Event</span>
+                                </div>
+                                <div t-if="record.seats_taken.raw_value" class="d-flex gap-2 align-items-baseline">
+                                    <i class="oi oi-filled" data-icon="group" title="Attendees"/>
+                                    <field name="seats_taken"/> Attendees
+                                </div>
                             </div>
-                            <div><t t-out="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('t')"/></div>
-                                <div t-if="record.date_begin.raw_value !== record.date_end.raw_value">
-                                    <i class="oi me-2" data-icon="east" title="End date"/>
-                                    <t t-out="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
+                            <div class="o_event_card_calendar flex-shrink-0 d-flex flex-column p-1 rounded border shadow-sm text-center justify-content-center">
+                                <div class="d-flex justify-content-center text-uppercase text-danger smaller" t-att-class="'order-' + date_parts_order.indexOf('month')">
+                                    <span t-out="date_begin.toFormat('MMM')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    <t t-if="!date_end.hasSame(date_begin, 'month')">
+                                        -
+                                        <span t-out="date_end.toFormat('MMM')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    </t>
                                 </div>
-                        </aside>
-                        <main class="col pt-3 pb-2 px-3 justify-content-between">
-                            <div>
-                                <div class="fw-bold fs-5 text-truncate" t-att-title="record.name.value">
-                                    <field name="name"/>
+                                <div class="d-flex justify-content-center fs-3 fw-bold" t-att-class="'order-' + date_parts_order.indexOf('day')">
+                                    <span t-out="date_begin.toFormat('d')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    <t t-if="!date_end.hasSame(date_begin, 'day')">
+                                        -
+                                        <span t-out="date_end.toFormat('d')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    </t>
                                 </div>
-                                <div class="d-flex ps-1">
-                                    <i class="oi oi-filled mt-1 me-2 text-center" data-icon="location_on" title="Location"/>
-                                    <field t-if="record.address_id.value" name="address_id" class="ms-1"/>
-                                    <span t-else="" class="ms-1">Online Event</span>
-                                </div>
-                                <div t-if="record.seats_taken.raw_value" class="d-flex ps-1">
-                                    <i class="oi oi-filled mt-1 me-2 text-center" data-icon="group" title="Attendees"/>
-                                    <field name="seats_taken" class="me-1"/> Attendees
+                                <div class="d-flex justify-content-center smaller text-muted" t-att-class="'order-' + date_parts_order.indexOf('year')">
+                                    <span t-out="date_begin.toFormat('yyyy')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    <t t-if="!date_end.hasSame(date_begin, 'year')">
+                                        -
+                                        <span t-out="date_end.toFormat('yyyy')" t-att-class="{'flex-grow-1': !date_end.hasSame(date_begin, 'month')}"/>
+                                    </t>
                                 </div>
                             </div>
-                            <footer class="pt-1 p-0 m-0">
-                                <field name="activity_ids" widget="kanban_activity"/>
-                                <div class="d-flex ms-auto">
-                                    <field name="user_id" widget="many2one_avatar_user"/>
-                                    <field class="ms-1 my-auto" name="kanban_state" widget="event_state_selection"/>
-                                </div>
-                            </footer>
-                        </main>
+                        </div>
+                        <footer>
+                            <field name="activity_ids" widget="kanban_activity"/>
+                            <div class="d-flex align-items-center gap-1 ms-auto">
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                                <field name="kanban_state" widget="event_state_selection"/>
+                            </div>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
