@@ -4,16 +4,12 @@ import { registry } from "@web/core/registry";
 
 export class TitlePlugin extends Plugin {
     prefix = signal("");
-
-    /** @private */
-    titleParts = signal.Object({});
-
-    /** @private */
-    defaultTitle = document.title || "Odoo";
+    #titleParts = signal.Object({});
+    #defaultTitle = document.title || "Odoo";
 
     title = computed(() => {
         const prefix = this.prefix() ? this.prefix() + " " : "";
-        const name = Object.values(this.titleParts()).join(" - ") || this.defaultTitle;
+        const name = Object.values(this.#titleParts()).join(" - ") || this.#defaultTitle;
         return prefix + name;
     });
 
@@ -24,6 +20,14 @@ export class TitlePlugin extends Plugin {
     }
 
     /**
+     * @returns {Object<string, string>} a copy of the parts that compose the
+     *  document title
+     */
+    getParts() {
+        return Object.assign({}, this.#titleParts());
+    }
+
+    /**
      * Update the parts that compose the document title. Each entry's value
      * replaces (or, if falsy, removes) the part stored under its key.
      *
@@ -31,7 +35,7 @@ export class TitlePlugin extends Plugin {
      *  string values
      */
     setParts(parts) {
-        const titleParts = this.titleParts();
+        const titleParts = this.#titleParts();
         for (const key in parts) {
             const val = parts[key];
             if (!val) {
@@ -70,9 +74,8 @@ registry.category("services").add("title", {
                 }
             }
         };
-        titleService.getParts = function () {
-            return Object.assign({}, titlePlugin.titleParts());
-        };
+        titleService.getParts = titlePlugin.getParts.bind(titlePlugin);
+        titleService.setParts = titlePlugin.setParts.bind(titlePlugin);
         return titleService;
     },
 });

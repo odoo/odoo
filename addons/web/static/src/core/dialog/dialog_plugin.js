@@ -33,12 +33,9 @@ export const DialogOptionSchema = t.object({
 });
 
 export class DialogPlugin extends Plugin {
-    /** @private */
-    overlay = usePlugin(OverlayPlugin);
-    /** @private */
-    nextId = 0;
-    /** @private */
-    stack = [];
+    #overlay = usePlugin(OverlayPlugin);
+    #nextId = 0;
+    #stack = [];
 
     /**
      * @param {typeof import("@odoo/owl").Component} dialogClass
@@ -48,7 +45,7 @@ export class DialogPlugin extends Plugin {
      */
     add(dialogClass, props, options = {}) {
         assertType(options, DialogOptionSchema);
-        const id = this.nextId++;
+        const id = this.#nextId++;
         const close = (params) => remove(params);
         const subEnv = proxy({
             id,
@@ -56,19 +53,19 @@ export class DialogPlugin extends Plugin {
             isActive: true,
         });
 
-        this.deactivate();
-        this.stack.push(subEnv);
+        this.#deactivate();
+        this.#stack.push(subEnv);
         document.body.classList.add("modal-open");
         let isBeingClosed = false;
 
         const scrollOrigin = { top: window.scrollY, left: window.scrollX };
         subEnv.scrollToOrigin = () => {
-            if (!this.stack.length) {
+            if (!this.#stack.length) {
                 window.scrollTo(scrollOrigin);
             }
         };
 
-        const remove = this.overlay.add(
+        const remove = this.#overlay.add(
             DialogWrapper,
             {
                 subComponent: dialogClass,
@@ -82,13 +79,13 @@ export class DialogPlugin extends Plugin {
                     }
                     isBeingClosed = true;
                     await options.onClose?.(closeParams);
-                    this.stack.splice(
-                        this.stack.findIndex((d) => d.id === id),
+                    this.#stack.splice(
+                        this.#stack.findIndex((d) => d.id === id),
                         1
                     );
-                    this.deactivate();
-                    if (this.stack.length) {
-                        this.stack.at(-1).isActive = true;
+                    this.#deactivate();
+                    if (this.#stack.length) {
+                        this.#stack.at(-1).isActive = true;
                     } else {
                         document.body.classList.remove("modal-open");
                     }
@@ -102,18 +99,17 @@ export class DialogPlugin extends Plugin {
     }
 
     get hasOpenDialogs() {
-        return this.stack.length > 0;
+        return this.#stack.length > 0;
     }
 
     closeAll(params) {
-        for (const dialog of [...this.stack].reverse()) {
+        for (const dialog of [...this.#stack].reverse()) {
             dialog.close(params);
         }
     }
 
-    /** @private */
-    deactivate() {
-        for (const subEnv of this.stack) {
+    #deactivate() {
+        for (const subEnv of this.#stack) {
             subEnv.isActive = false;
         }
     }
