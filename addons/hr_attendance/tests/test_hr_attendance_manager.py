@@ -126,3 +126,42 @@ class TestAttendanceManager(TransactionCase):
             self.env[action_res_model].with_user(officer).search_read([], kanban_fields)
         except AccessError:
             self.fail("Attendance officer without Employees app access could not open the Employees menu")
+
+    def test_read_attendances_without_hr_work_entry_type_access(self):
+        """
+        Ensure that an attendance user without read access to "Time Type"
+        (hr.work.entry.type) can read attendances and overview data without AccessError.
+        """
+        att_manager = self.luisa
+        employee = self.marc_employee
+        self.assertTrue(att_manager.has_group('hr_attendance.group_hr_attendance_manager'))
+        self.assertFalse(self.env['hr.work.entry.type'].with_user(att_manager).has_access('read'))
+
+        att = self.env['hr.attendance'].create({
+            'employee_id': employee.id,
+            'check_in': '2026-10-16 08:00:00',
+            'check_out': '2026-10-16 12:00:00',
+        })
+        # Clear the ORM cache so fields are re-evaluated under att_manager
+        self.env.invalidate_all()
+
+        # Case 1: Read attendance records as an attendance administrator.
+        attendance = self.env['hr.attendance'].with_user(att_manager).search_read(
+            [('id', '=', att.id)],
+            ['display_name', 'check_in', 'check_out', 'work_entry_type_id'],
+        )
+        self.assertEqual(attendance[0]['display_name'], 'A - 4h')
+
+        # Case 2: Read attendance overview data as an attendance administrator.
+        data = employee.with_user(att_manager).get_attendance_data_by_employee("2026-10-15", "2026-10-17")
+        self.assertEqual(data, {
+            employee.id: {
+                'worked_hours': 4.0,
+                'overtime_hours': 0,
+                'entries': [{
+                    'name': 'Work',
+                    'worked_hours': 4.0,
+                    'color': 0,
+                }],
+            },
+        })
