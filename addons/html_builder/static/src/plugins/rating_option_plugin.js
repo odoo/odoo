@@ -17,6 +17,39 @@ export class RatingOptionPlugin extends Plugin {
             TotalIconsNumberAction,
         },
     };
+
+    setup() {
+        this.addDomListener(this.document, "click", (ev) => {
+            setTimeout(() => this.onRatingClick(ev));
+        });
+    }
+
+    onRatingClick(ev) {
+        const clickedIcon = ev.target.closest(".s_rating_icons i");
+        const ratingElement = clickedIcon?.closest(".s_rating");
+
+        if (!ratingElement) {
+            return;
+        }
+
+        const allIcons = Array.from(getAllIcons(ratingElement));
+        const clickedIndex = allIcons.indexOf(clickedIcon);
+
+        const newActiveCount = clickedIndex + 1;
+        const nbTotalIcons = allIcons.length;
+
+        createIcons({
+            editingElement: ratingElement,
+            nbActiveIcons: newActiveCount,
+            nbTotalIcons: nbTotalIcons,
+        });
+        updateAriaLabel({
+            editingElement: ratingElement,
+            nbActiveIcons: newActiveCount,
+            nbTotalIcons: nbTotalIcons,
+        });
+        this.dependencies.history.commit();
+    }
 }
 
 export class SetIconsAction extends BuilderAction {
@@ -153,14 +186,17 @@ function getInactiveIcons(editingElement) {
 }
 function renderIcons(editingElement) {
     const iconType = getIconType(editingElement);
+    const activeIcon = getActiveCustomIcons(editingElement) || iconType;
+    const inactiveIcon = getInactiveCustomIcons(editingElement) || iconType;
+
     const activeIconEls = getActiveIcons(editingElement);
     const inactiveIconEls = getInactiveIcons(editingElement);
     activeIconEls.forEach((activeIconEl) => {
         activeIconEl.className = "oi oi-filled";
-        activeIconEl.dataset.icon = iconType;
+        activeIconEl.dataset.icon = activeIcon;
     });
     inactiveIconEls.forEach((inactiveIconEl) => {
         inactiveIconEl.className = "oi";
-        inactiveIconEl.dataset.icon = iconType;
+        inactiveIconEl.dataset.icon = inactiveIcon;
     });
 }
