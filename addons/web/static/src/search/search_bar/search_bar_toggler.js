@@ -9,6 +9,8 @@ import {
     useProps,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { useSetupAction } from "@web/search/action_hook";
+import { useEnv } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
@@ -36,11 +38,20 @@ export class OfflineSearchBarToggler extends SearchBarToggler {
 
 export function useSearchBarToggler() {
     const ui = useService("ui");
+    const env = useEnv();
+    const props = useProps();
 
-    let isToggled = false;
+    // keep the toggle state when switching between views of the same action,
+    // otherwise display the search bar by default when there are active search
+    // items (default filters, search values, ...), even on small screens
+    let isToggled = props.globalState?.searchBarToggled ?? Boolean(env.searchModel?.query?.length);
+    useSetupAction({
+        getGlobalState: () => ({ searchBarToggled: isToggled }),
+    });
     const state = proxy({
         isSmall: ui.isSmall,
         showSearchBar: false,
+        manuallyToggled: false,
     });
     const updateState = () => {
         state.isSmall = ui.isSmall;
@@ -50,6 +61,7 @@ export function useSearchBarToggler() {
 
     function toggleSearchBar() {
         isToggled = !isToggled;
+        state.manuallyToggled = true;
         updateState();
     }
 
