@@ -20,7 +20,7 @@ declare module "services" {
     import { publicInteractionService } from "@web/public/interaction_service";
     import { viewService } from "@web/views/view_plugin";
     import { actionService } from "@web/webclient/actions/action_plugin";
-    import { profilingService } from "@web/webclient/debug/profiling/profiling_service";
+    import { profilingService } from "@web/webclient/debug/profiling/profiling_plugin";
     import { menuService } from "@web/webclient/menus/menu_service";
     import { lazySessionService } from "@web/webclient/lazy_session_plugin";
     import { shareTargetService } from "@web/webclient/share_target/share_target_service";
