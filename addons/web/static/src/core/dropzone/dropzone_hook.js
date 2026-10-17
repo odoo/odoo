@@ -62,7 +62,12 @@ export function useCustomDropzone(targetRef, dropzoneComponent, dropzoneComponen
         }
     }
 
-    function onDragLeave() {
+    function onDragLeave(ev) {
+        if (!ev.relatedTarget) {
+            dragCount = 0;
+            updateDropzone();
+            return;
+        }
         if (dragCount) {
             dragCount--;
             updateDropzone();
