@@ -465,3 +465,39 @@ test("Close message search panel when navigating back on mobile", async () => {
     history.back();
     await contains(".o-mail-SearchMessagesPanel", { count: 0 });
 });
+
+test.tags("desktop");
+test("Empty search should not trigger rpc", async () => {
+    listenStoreFetch("/discuss/channel/messages", {
+        logParams: ["/discuss/channel/messages"]
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "This is a message",
+        attachment_ids: [],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await click("button[title='Search Messages']");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelId, fetch_params: { limit: 60, around: 0 } },
+        ],
+    ]);
+    await insertText(".o_searchview_input", "          ");
+    await insertText(".o_searchview_input", "m", { replace: true });
+    await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelId, fetch_params: { search_term: "m", before: false } },
+        ],
+    ]);
+});
