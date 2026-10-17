@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, tools
 from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, TransactionCase, Form
@@ -28,7 +28,7 @@ class TestRecruitment(MailCase, TransactionCase):
         self.env['ir.default'].set('res.partner', 'lang', 'en_US')
 
         # Creating an applicant will create a partner (email_from inverse)
-        applicant = self.env['hr.applicant'].sudo().with_context(lang='pl_PL').create({
+        applicant = self.env['hr.applicant'].sudo().with_context(lang='pl_PL', auto_create_partner=True).create({
             'partner_name': 'Test Applicant',
             'email_from': "test_aplicant@example.com"
         })
@@ -262,7 +262,7 @@ class TestRecruitment(MailCase, TransactionCase):
             'email_from': 'test@thisisatest.com',
         }
         # First application, a partner should be created
-        self.env['hr.applicant'].create(applicant_data)
+        self.env['hr.applicant'].with_context(auto_create_partner=True).create(applicant_data)
         partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
         self.assertEqual(partner_count, 1)
         # Second application, no partner should be created
@@ -515,11 +515,18 @@ class TestRecruitment(MailCase, TransactionCase):
         self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")
 
     def test_applicant_modify_email_number(self):
-        applicant = self.env['hr.applicant'].create({
+        applicant = self.env['hr.applicant'].with_context(auto_create_partner=True).create({
             'partner_name': 'Mary Applicant',
             'email_from': 'applicant@example.com',
             'partner_phone': '123456789',
         })
+        email_normalized = tools.email_normalize(applicant.email_from or '')
+        applicant.partner_id = applicant._partner_find_from_emails_single(
+            [applicant.email_from], no_create=False,
+            additional_values={
+                email_normalized: {'lang': self.env.lang}
+            },
+        )
         self.assertEqual(applicant.partner_id.email, 'applicant@example.com', "Email should have been set on the partner.")
         self.assertEqual(applicant.partner_id.phone, '123456789', "Phone should have been set on the partner.")
 
