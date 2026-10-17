@@ -36,7 +36,6 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         this.currentDateTime = luxon.DateTime.now();
 
         this.specialDays = asyncComputed(() => this.getSpecialDays());
-        this.holidays = asyncComputed(() => this.getHolidayData(), { initial: [] });
         this.bankHolidays = computed(() =>
             this._mapIsoToDatetimes(this.specialDays().bankHolidays || [])
         );
@@ -45,7 +44,7 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         );
 
         onWillStart(async () => {
-            await Promise.all([this.specialDays.currentPromise(), this.holidays.currentPromise()]);
+            await this.specialDays.currentPromise();
         });
     }
 
@@ -69,32 +68,6 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
                 context: context,
             }
         );
-    }
-
-    async getHolidayData() {
-        if (!this.uiService.isSmall) {
-            return [];
-        }
-        const promises = [];
-        for (const section of this.props.model.filterSections) {
-            if (section.fieldName !== "work_entry_type_id") {
-                continue;
-            }
-            promises.push(
-                this.orm.call("hr.work.entry.type", "get_allocation_data_request", [], {
-                    context: { from_dashboard: true },
-                })
-            );
-        }
-        const filterData = {};
-        const [data] = await Promise.all(promises);
-        if (!Array.isArray(data)) {
-            return [];
-        }
-        data.forEach((leave) => {
-            filterData[leave[3]] = leave;
-        });
-        return Object.values(filterData);
     }
 
     async getSpecialDays() {
