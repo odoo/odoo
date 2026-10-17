@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, useProps, proxy, t } from "@odoo/owl";
+import { Component, onMounted, signal, useProps, proxy, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class SelectionPopup extends Component {
@@ -13,6 +13,9 @@ export class SelectionPopup extends Component {
         size: t.string().optional("lg"),
         bodyClass: t.string().optional(""),
     });
+
+    selectedItemRef = signal.ref();
+    unselectedItemRef = signal.ref();
 
     /**
      * Value of the `item` key of the selected element in the Selection
@@ -30,6 +33,11 @@ export class SelectionPopup extends Component {
      */
     setup() {
         this.state = proxy({ selectedId: this.props.list.find((item) => item.isSelected) });
+        // Dialog focuses its first tabbable element when it is mounted. Defer this
+        // focus so that the currently selected option is focused instead.
+        onMounted(() => {
+            queueMicrotask(() => this.selectedItemRef()?.focus());
+        });
     }
     selectItem(itemId) {
         this.state.selectedId = itemId;
