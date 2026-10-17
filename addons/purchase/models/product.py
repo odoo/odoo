@@ -263,14 +263,22 @@ class ProductProduct(models.Model):
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
         seller_info = super()._select_seller(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, ordered_by=ordered_by, params=params)
-        if not seller_info and self._is_last_po_fallback_applicable(params):
-            company = self.env.company
-            if params and params.get('order_id') and params['order_id'].company_id:
-                company = params['order_id'].company_id
-            if not self._has_vendor_pricelist(partner_id, company):
+        company = self.env.company
+        if params and params.get("order_id") and params["order_id"].company_id:
+            company = params["order_id"].company_id
+        if not self._has_vendor_pricelist(partner_id, company):
+            if not seller_info and params and params.get("order_line"):
+                # The current company doesn't have a vendor for the product
+                seller_info = self._get_seller_info_from_partner_company(
+                    partner_id, quantity, date, uom_id, params
+                )
+            if not seller_info and self._is_last_po_fallback_applicable(params):
                 # No pricelist defined for this vendor: the last confirmed po line acts as one
                 seller_info = self._get_last_po_seller_info(partner_id, company)
         return seller_info
+
+    def _get_seller_info_from_partner_company(self, partner_id, quantity, date, uom_id, params):
+        return {}
 
 
 class ProductSupplierinfo(models.Model):

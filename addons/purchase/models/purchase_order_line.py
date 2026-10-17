@@ -918,6 +918,7 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         return {
             "order_id": self.order_id,
+            "order_line": self,
             "force_uom": True,
         }
 
