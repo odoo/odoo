@@ -262,7 +262,7 @@ class HrEmployee(models.Model):
             employee.current_leave_state = emp_holidays[0].state
             employee.is_absent = any(e_h.work_entry_type_id.count_as == 'absence' for e_h in emp_holidays)
 
-    @api.depends('parent_id')
+    @api.depends('version_id.parent_id')
     def _compute_leave_manager(self):
         for employee in self:
             previous_manager = employee._origin.parent_id.user_id

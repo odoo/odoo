@@ -123,6 +123,9 @@ class HrVersion(models.Model):
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
     job_id = fields.Many2one('hr.job', check_company=True, tracking=1, index=True)
+    parent_id = fields.Many2one(
+        'hr.employee', 'Manager', tracking=1, index='btree_not_null',
+        domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     job_title = fields.Char(compute="_compute_job_title", inverse="_inverse_job_title", store=True, readonly=False,
         string="Job Title", tracking=True)
     is_custom_job_title = fields.Boolean(compute='_compute_is_custom_job_title', store=True, default=False, groups="hr.group_hr_user")
@@ -304,7 +307,15 @@ class HrVersion(models.Model):
                 contract_vals = Version.get_values_from_contract_template(Version.browse(vals['contract_template_id']))
                 # take vals from template, but priority given to the original vals
                 vals.update({**contract_vals, **vals})
-        return super().create(vals_list)
+        versions = super().create(vals_list)
+        if any(vals.get('parent_id') for vals in vals_list):
+            versions._invalidate_hierarchy_cache()
+        return versions
+
+    def _invalidate_hierarchy_cache(self):
+        self.env['hr.employee'].invalidate_model([
+            'child_ids', 'child_count', 'subordinate_ids', 'child_all_count', 'is_subordinate',
+        ])
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_version(self):
@@ -315,6 +326,8 @@ class HrVersion(models.Model):
                 )
 
     def write(self, vals):
+        if 'parent_id' in vals:
+            self._invalidate_hierarchy_cache()
         if 'hr_responsible_id' in vals:
             new_responsible = self.env['res.users'].browse(vals['hr_responsible_id'])
             for version in self:
