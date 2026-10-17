@@ -409,27 +409,46 @@ class Website(models.Model):
         cta_data["shop_btn_href"] = "/shop"
         return cta_data
 
+    def _get_configurator_preview_urls(self):
+        return super()._get_configurator_preview_urls() | {
+            style['preview_url']
+            for mapping in (const.SHOP_PAGE_STYLE_MAPPING, const.PRODUCT_PAGE_STYLE_MAPPING)
+            for style in mapping.values()
+        }
+
     @api.model
-    def get_configurator_shop_page_styles(self):  # noqa: PLR6301
-        """Format and return the ids and images of each shop page style for website onboarding.
+    def get_configurator_shop_page_styles(self):
+        """Format and return the ids and previews of each shop page style for website onboarding.
 
         :return: The shop page style information.
         :rtype: list[dict]
         """
+        self._check_configurator_access()
         return [
-            {"option": option, "img_src": config["img_src"], "title": config["title"]}
+            {
+                "option": option,
+                "preview_url": config["preview_url"],
+                "img_src": config["img_src"],
+                "title": config["title"],
+            }
             for option, config in const.SHOP_PAGE_STYLE_MAPPING.items()
         ]
 
     @api.model
-    def get_configurator_product_page_styles(self):  # noqa: PLR6301
-        """Format and return ids and images of each product page style for website onboarding.
+    def get_configurator_product_page_styles(self):
+        """Format and return ids and previews of each product page style for website onboarding.
 
         :return: The product page style information.
         :rtype: list[dict]
         """
+        self._check_configurator_access()
         return [
-            {"option": option, "img_src": config["img_src"], "title": config["title"]}
+            {
+                "option": option,
+                "preview_url": config["preview_url"],
+                "img_src": config["img_src"],
+                "title": config["title"],
+            }
             for option, config in const.PRODUCT_PAGE_STYLE_MAPPING.items()
         ]
 
