@@ -113,6 +113,10 @@ class AccountPartialReconcile(models.Model):
 
         # Get the payments without journal entry to reset once the amount residual is reset
         to_update_payments = self._get_to_update_payments(from_state='paid')
+        # Remove payment and invoice link
+        payments_moves = self.credit_move_id.move_id.filtered(lambda m: m.payment_ids)
+        invoices = self.debit_move_id.move_id.filtered(lambda m: m.is_invoice())
+        payments_moves.payment_ids.invoice_ids -= invoices
         # Retrieve the CABA entries to reverse.
         moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
         # Same for the exchange difference entries.
