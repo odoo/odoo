@@ -13,12 +13,21 @@
                             <div class="fs-5">
                                 <span t-out="ticket.name"/>
                             </div>
+                            <t t-set="remainingTicketQty" t-value="this.getTicketRemainingQty(ticket)"/>
                             <span t-attf-class="{{ this.ticketIsAvailable(ticket) ? 'text-success' : 'text-danger'}} fs-6">
-                                <t t-if="this.getTicketMaxQty(ticket) === 'unlimited'">
+                                <t t-if="remainingTicketQty === 'unlimited'">
                                     Unlimited
                                 </t>
+<<<<<<< e8fb0586fdaa6ad51ef6ea7bd7db61e98f648fe7
                                 <t t-elif="this.getTicketMaxQty(ticket) > 0">
                                     <t t-out="this.getTicketMaxQty(ticket)"/> left
+||||||| 8b469dea31757bdbc228df7daf77c4e424453f0b
+                                <t t-elif="this.getTicketMaxQty(ticket) > 0">
+                                    <t t-esc="this.getTicketMaxQty(ticket)"/> left
+=======
+                                <t t-elif="remainingTicketQty > 0">
+                                    <t t-esc="remainingTicketQty"/> left
+>>>>>>> 7c14f93d8a397c5000b980b27c49ec4c9f651207
                                 </t>
                                 <t t-else="">
                                     Sold out
