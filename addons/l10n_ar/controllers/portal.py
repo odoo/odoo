@@ -2,10 +2,10 @@
 
 from odoo.http import request
 
-from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.addons.account.controllers.portal import PortalAccount
 
 
-class L10nARPortalAccount(CustomerPortal):
+class L10nARPortalAccount(PortalAccount):
 
     def _is_argentinean_company(self):
         return request.env.company.account_fiscal_country_id.code == 'AR'
