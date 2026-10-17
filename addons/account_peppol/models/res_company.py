@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
+import phonenumbers
 import requests
 from lxml import etree
 
@@ -8,10 +9,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 
-try:
-    import phonenumbers
-except ImportError:
-    phonenumbers = None
 
 TIMEOUT = 10
 
@@ -103,19 +100,12 @@ class ResCompany(models.Model):
             self._compute_account_peppol_phone_number()
         self.partner_id._compute_routing_scheme_endpoint()
 
-    @api.model
-    def _check_phonenumbers_import(self):
-        if not phonenumbers:
-            raise ValidationError(_("Please install the phonenumbers library."))
-
     def _sanitize_peppol_phone_number(self, phone_number=None):
         self.ensure_one()
 
         error_message = _(
             "Please enter the mobile number in the correct international format.\n"
             "For example: +32123456789, where +32 is the country code.")
-
-        self._check_phonenumbers_import()
 
         phone_number = phone_number or self.account_peppol_phone_number
         if not phone_number:

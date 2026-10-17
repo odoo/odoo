@@ -14,4 +14,8 @@ The `pdfminer.six` Python library has to be installed in order to index PDF file
     'depends': ['web'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'external_dependencies': [
+        {'pypi': 'pdfminer.six', 'modules': ['pdfminer'], 'optional': True, 'apt': 'python3-pdfminer'},
+        {'pypi': 'openpyxl', 'optional': True, 'apt': 'python3-openpyxl'},
+    ],
 }

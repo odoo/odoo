@@ -37,10 +37,7 @@ Integrates with the ETA portal to automatically send and sign the Invoices to th
             'l10n_eg_edi_eta/static/src/**/*.js',
         ],
     },
-    'external_dependencies': {
-        'python': ['asn1crypto'],
-        'apt': {
-            'asn1crypto': 'python3-asn1crypto',
-        },
-    },
+    'external_dependencies': [
+        {'pypi': 'asn1crypto', 'apt': 'python3-asn1crypto'},
+    ],
 }
