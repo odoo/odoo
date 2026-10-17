@@ -13,7 +13,6 @@ export class Checkout extends Interaction {
         '.card': { 't-on-click': this.changeAddress },
         // Cancel the address change to allow the redirect to the edit page to take place.
         '.js_edit_address': { 't-on-click.stop': () => {} },
-        '#use_delivery_as_billing': { 't-on-change': this.toggleBillingAddressRow },
         // Delivery methods
         '[name="o_delivery_radio"]': { 't-on-click': this.selectDeliveryMethod },
     };
@@ -23,10 +22,7 @@ export class Checkout extends Interaction {
         // We need to get the one that's actually displayed.
         this.mainButton = Array.from(document.getElementsByName('website_sale_main_button'))
             .find(button => button.offsetParent !== null);
-        this.useDeliveryAsBillingToggle = document.querySelector('#use_delivery_as_billing');
-        this.billingContainer = this.el.querySelector('#billing_container');
         this.vatDiv = this.el.querySelector(".o_address_card_vat");
-        this.addBillingAddressBtn = this.el.querySelector('.o_add_billing_address_btn');
     }
 
     async willStart() {
@@ -53,7 +49,7 @@ export class Checkout extends Interaction {
     }
 
     /**
-     * Set the billing or delivery address on the order and update the corresponding card.
+     * Set the delivery address on the order and update the corresponding card.
      *
      * @param {Event} ev
      * @return {void}
@@ -63,73 +59,24 @@ export class Checkout extends Interaction {
         if (newAddress.classList.contains('bg-400')) { // If the card is already selected.
             return;
         }
-        const addressType = newAddress.dataset.addressType;
 
         // Remove the highlighting from the previously selected address card.
-        const previousAddress = this._getSelectedAddress(addressType);
+        const previousAddress = this._getSelectedAddress();
         this._tuneDownAddressCard(previousAddress);
 
         // Highlight the newly selected address card.
         this._highlightAddressCard(newAddress);
         const selectedPartnerId = newAddress.dataset.partnerId;
-        await this.waitFor(this.updateAddress(addressType, selectedPartnerId));
+        await this.waitFor(this.updateAddress(selectedPartnerId));
         // A delivery address is changed.
-        if (addressType === 'delivery') {
-            if (this.useDeliveryAsBillingToggle?.checked) {
-                this._selectMatchingBillingAddressCard(selectedPartnerId);
-            }
-            const deliveryFormHtml = markup(await this.waitFor(rpc('/shop/delivery_methods')));
-            // The delivery methods are regenerated below, so we need to stop and start interactions
-            // to make sure the regenerated delivery methods are properly handled.
-            this.services['public.interactions'].stopInteractions(this.el);
-            // Update the available delivery methods.
-            setElementContent(document.getElementById('o_delivery_form'), deliveryFormHtml);
-            this.services['public.interactions'].startInteractions(this.el);
-            await this.waitFor(this._prepareDeliveryMethods());
-        }
-        this._enableMainButton();  // Try to enable the main button.
-    }
-
-    /**
-     * Show/hide the billing address row when the user toggles the 'use delivery as billing' input.
-     *
-     * The URLs of the "create address" buttons are updated to propagate the value of the input.
-     *
-     * @param ev
-     * @return {void}
-     */
-    async toggleBillingAddressRow(ev) {
-        const useDeliveryAsBilling = ev.target.checked;
-
-        const addDeliveryAddressButton = this.el.querySelector(
-            '.o_address_card_add_new[data-address-type="delivery"]'
-        );
-        if (addDeliveryAddressButton) {  // If `Add` button for delivery.
-            // Update the `use_delivery_as_billing` query param for a new delivery address URL.
-            const addDeliveryUrl = new URL(addDeliveryAddressButton.href);
-            addDeliveryUrl.searchParams.set(
-                'use_delivery_as_billing', encodeURIComponent(useDeliveryAsBilling)
-            );
-            addDeliveryAddressButton.href = addDeliveryUrl.toString();
-        }
-
-        // Toggle the billing address row.
-        if (useDeliveryAsBilling) {
-            this.billingContainer.classList.add('d-none');  // Hide the billing address row.
-            this.vatDiv?.classList.remove("d-none");  // Show the VAT field in address cards.
-            const selectedDeliveryAddress = this._getSelectedAddress('delivery');
-            this._selectMatchingBillingAddressCard(selectedDeliveryAddress.dataset.partnerId)
-            await this.waitFor(
-                this.updateAddress('billing', selectedDeliveryAddress.dataset.partnerId)
-            );
-        } else {
-            this._disableMainButton();
-            this.billingContainer.classList.remove('d-none'); // Show the billing address row.
-            this.vatDiv?.classList.add("d-none");  // Hide the VAT field in address cards.
-
-        }
-        this.addBillingAddressBtn.classList.toggle('d-none', useDeliveryAsBilling);
-
+        const deliveryFormHtml = markup(await this.waitFor(rpc('/shop/delivery_methods')));
+        // The delivery methods are regenerated below, so we need to stop and start interactions
+        // to make sure the regenerated delivery methods are properly handled.
+        this.services['public.interactions'].stopInteractions(this.el);
+        // Update the available delivery methods.
+        setElementContent(document.getElementById('o_delivery_form'), deliveryFormHtml);
+        this.services['public.interactions'].startInteractions(this.el);
+        await this.waitFor(this._prepareDeliveryMethods());
         this._enableMainButton();  // Try to enable the main button.
     }
 
@@ -204,13 +151,13 @@ export class Checkout extends Interaction {
     }
 
     /**
-     * Return whether a delivery method and a billing address are selected.
+     * Return whether a delivery method is selected.
      *
      * @private
      * @return {boolean}
      */
     _canEnableMainButton(){
-        return this._isDeliveryMethodReady() && this._isBillingAddressSelected();
+        return this._isDeliveryMethodReady();
     }
 
     /**
@@ -361,33 +308,15 @@ export class Checkout extends Interaction {
     // #=== ADDRESS FLOW ===#
 
     /**
-     * Select the billing address matching the currently selected delivery address.
+     * Set the delivery address on the order.
      *
-     * @private
-     * @param selectedPartnerId - The partner id of the selected delivery address.
-     * @return {void}
-     */
-    _selectMatchingBillingAddressCard(selectedPartnerId) {
-        const previousAddress = this._getSelectedAddress('billing');
-        this._tuneDownAddressCard(previousAddress);
-        const billingAddress = this.el.querySelector(
-            `.card[data-partner-id="${selectedPartnerId}"][data-address-type="billing"]`
-        );
-        this._highlightAddressCard(billingAddress);
-    }
-
-    /**
-     * Set the billing or delivery address on the order.
-     *
-     * @param addressType - The type of the address to set: 'delivery' or 'billing'.
      * @param partnerId - The partner id of the address to set.
      * @return {void}
      */
-    async updateAddress(addressType, partnerId) {
+    async updateAddress(partnerId) {
         await rpc('/shop/update_address', {
-            address_type: addressType,
+            address_type: 'delivery',
             partner_id: partnerId,
-            use_delivery_as_billing: this.useDeliveryAsBillingToggle?.checked
         });
     }
 
@@ -486,25 +415,10 @@ export class Checkout extends Interaction {
     /** Determine and return the selected address who card has the class rowAddrClass.
      *
      * @private
-     * @param addressType - The type of the address: 'billing' or 'delivery'.
      * @return {Element}
      */
-    _getSelectedAddress(addressType) {
-        return this.el.querySelector(`.card.bg-400[data-address-type="${addressType}"]`);
-    }
-
-    /**
-     * Return whether the "use delivery as billing" toggle is checked or a billing address is
-     * selected.
-     *
-     * @private
-     * @return {boolean} - Whether a billing address is selected.
-     */
-    _isBillingAddressSelected() {
-        const billingAddressSelected = Boolean(
-            this.el.querySelector('.card.bg-400[data-address-type="billing"]')
-        );
-        return billingAddressSelected || this.useDeliveryAsBillingToggle?.checked;
+    _getSelectedAddress() {
+        return this.el.querySelector(`.card.bg-400[data-address-type="delivery"]`);
     }
 
     /**
