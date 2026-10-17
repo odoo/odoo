@@ -380,7 +380,7 @@ export class ResPartner extends webModels.ResPartner {
         const [partner] = this.browse(id);
         return MailNotification._filter([
             ["res_partner_id", "=", partner.id],
-            ["is_read", "=", false],
+            ["read_date", "=", false],
         ]).length;
     }
 

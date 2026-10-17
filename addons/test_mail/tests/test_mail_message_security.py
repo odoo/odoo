@@ -980,14 +980,14 @@ class TestMessageSubModelAccess(MessageAccessCommon):
         )
         notifications = message.with_user(self.user_employee).notification_ids
         self.assertEqual(len(notifications), 2)
-        self.assertTrue(bool(notifications.read(['is_read'])), 'Internal can read')
+        self.assertTrue(bool(notifications.read(['read_date'])), 'Internal can read')
 
         notif_other = notifications.filtered(lambda n: n.res_partner_id == self.user_portal.partner_id)
         with self.assertRaises(AccessError):
-            notif_other.write({'is_read': True})
+            notif_other.write({'read_date': self.env.cr.now()})
 
         notif_own = notifications.filtered(lambda n: n.res_partner_id == self.user_employee.partner_id)
-        notif_own.write({'is_read': True})
+        notif_own.write({'read_date': self.env.cr.now()})
         # with self.assertRaises(AccessError):
         #     notif_own.write({'author_id': self.user_portal.partner_id.id})
         with self.assertRaises(AccessError):
@@ -1009,7 +1009,7 @@ class TestMessageSubModelAccess(MessageAccessCommon):
         )
         notifications = message.notification_ids
         self.assertEqual(len(notifications), 2)
-        self.assertTrue(bool(notifications.read(['is_read'])), 'Portal can read')
+        self.assertTrue(bool(notifications.read(['read_date'])), 'Portal can read')
         self.assertEqual(notifications.res_partner_id, self.user_portal_2.partner_id + self.user_employee.partner_id)
 
         internal_record = self.record_internal.with_user(self.user_admin)
@@ -1024,4 +1024,4 @@ class TestMessageSubModelAccess(MessageAccessCommon):
             AccessError,
             msg="Portal cannot read notifications unless they are the recipient or the author"
         ):
-            notifications.read(['is_read'])
+            notifications.read(['read_date'])

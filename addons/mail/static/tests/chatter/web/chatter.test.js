@@ -933,7 +933,7 @@ test("can mark message as unread from chatter", async () => {
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
-        is_read: true,
+        read_date: "2019-01-01 10:30:00",
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "inbox",
