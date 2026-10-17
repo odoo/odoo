@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useLongPress } from "@point_of_sale/app/hooks/long_press_hook";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
+import { BarcodeReader } from "@point_of_sale/app/services/barcode_reader_service";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import {
@@ -119,6 +120,7 @@ export class ProductScreen extends Component {
             client: this._barcodePartnerAction.bind(this),
             discount: this._barcodeDiscountAction.bind(this),
             gs1: this._barcodeGS1Action.bind(this),
+            order: this._barcodeOrderAction.bind(this),
         });
 
         this.numberBuffer.use({
@@ -392,6 +394,22 @@ export class ProductScreen extends Component {
             partner = partner.length > 0 && partner[0];
         }
         return partner;
+    }
+    async _barcodeOrderAction(code) {
+        const uuid = BarcodeReader.getOrderUuidFromQrCode(code.code);
+        const [order] = await this.pos.data.loadServerOrders([["uuid", "=", uuid]]);
+        if (!order) {
+            this.sound.play("scan-error");
+            this.barcodeReader.showNotFoundNotification(code);
+            return;
+        }
+        this.sound.play("beep");
+        if (order.finalized) {
+            this.pos.navigate("TicketScreen", { scannedOrderUuid: order.uuid });
+        } else {
+            this.pos.setOrder(order);
+            this.pos.navigateToOrderScreen(order);
+        }
     }
     async _barcodePartnerAction(code) {
         const partner = await this._getPartnerByBarcode(code);

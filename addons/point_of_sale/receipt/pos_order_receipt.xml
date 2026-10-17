@@ -108,6 +108,21 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="w-100" t-if="image.get('order_qr_code') and not conditions['basic_receipt']">
+                        <table class="w-100">
+                            <tbody>
+                                <tr>
+                                    <td class="w-25">
+                                        <img class="order-qr-code" t-att-src="image['order_qr_code']" />
+                                    </td>
+                                    <td class="text-start top w-75 ps-1">
+                                        <div class="text-bold text-normal">Keep this receipt</div>
+                                        <div class="text-small">Show this QR code at the counter to retrieve your order.</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <div t-if="extra_data.get('tips_configuration')" class="w-100 text-center mt-3 mb-3 ">
                         <span class="mb-2">For convenience, we are providing the following gratuity calculations:</span>
                         <table class="w-100 mt-2 mb-1">

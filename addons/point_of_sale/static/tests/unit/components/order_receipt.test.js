@@ -3,6 +3,7 @@ import { setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { prepareRoundingVals, getSingleProductOrder } from "../accounting/utils";
 import { imageDataUri } from "@point_of_sale/utils";
+import { renderToElement } from "@web/core/utils/render";
 import {
     renameProduct,
     setProductPrice,
@@ -755,4 +756,29 @@ test("test_printed_receipt_tour: basic receipt hides totals and prices", async (
     expect(Boolean(ticket.querySelector('div[name="prices"]'))).toBe(false);
     expect(Boolean(ticket.querySelector(".price-incl"))).toBe(false);
     expect(Boolean(ticket.querySelector(".price-unit"))).toBe(false);
+});
+
+test("early receipt (bill) renders an order qr code only for unpaid orders", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(5);
+    await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+
+    const render = (bill) => {
+        const data = store.ticketPrinter.getOrderReceiptData(order, { bill });
+        return { data, ticket: renderToElement("point_of_sale.pos_order_receipt", data) };
+    };
+
+    let { data, ticket } = render(true);
+    expect(Boolean(data.image.order_qr_code)).toBe(true);
+    expect(Boolean(ticket.querySelector(".order-qr-code"))).toBe(true);
+
+    ({ data, ticket } = render(false));
+    expect(data.image.order_qr_code).toBe(false);
+    expect(Boolean(ticket.querySelector(".order-qr-code"))).toBe(false);
+
+    order.state = "paid";
+    ({ data, ticket } = render(true));
+    expect(data.image.order_qr_code).toBe(false);
+    expect(Boolean(ticket.querySelector(".order-qr-code"))).toBe(false);
 });

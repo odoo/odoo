@@ -92,11 +92,12 @@ export class PosTicketPrinterPlugin extends Plugin {
         return new GeneratePrinterData(...arguments);
     }
 
-    getOrderReceiptData(order, { basic = false, simplified = false } = {}) {
+    getOrderReceiptData(order, { basic = false, simplified = false, bill = false } = {}) {
         const generator = this.getGenerator({
             models: this.data.models,
             basicReceipt: basic,
             simplified: simplified,
+            bill,
             order,
         });
         return generator.generateReceiptData();
@@ -299,7 +300,11 @@ export class PosTicketPrinterPlugin extends Plugin {
         webFallback = true,
         simplified = false,
     } = {}) {
-        const data = this.getOrderReceiptData(order, { basic, simplified });
+        const data = this.getOrderReceiptData(order, {
+            basic,
+            simplified,
+            bill: printBillActionTriggered,
+        });
         const iframe = await this.generateIframe("point_of_sale.pos_order_receipt", data);
         const result = await this.printWithFallback({ iframe, webFallback });
 
