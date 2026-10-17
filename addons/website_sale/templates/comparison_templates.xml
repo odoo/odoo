@@ -86,11 +86,24 @@
                                         t-set="combination_info"
                                         t-value="product._get_combination_info_variant()"
                                     />
-                                    <a t-att-href="product.website_url">
+                                    <t
+                                        t-set="ribbon"
+                                        t-value="product.product_tmpl_id._get_ribbon(
+                                            price_vals=combination_info, variant=product
+                                        )"
+                                    />
+                                    <t t-set="bg_color" t-value="ribbon.bg_color"/>
+                                    <t t-set="text_color" t-value="ribbon.text_color"/>
+                                    <a t-att-href="product.website_url" class="d-block position-relative overflow-hidden rounded">
                                         <img
                                             t-att-src="product._get_image_1024_url()"
                                             class="img img-fluid w-100 h-100 object-fit-cover border rounded"
                                             alt="Product image"
+                                        />
+                                        <t
+                                            t-call="website_sale.product_ribbon"
+                                            product="product.product_tmpl_id"
+                                            ribbon_price_vals="combination_info"
                                         />
                                     </a>
                                     <button

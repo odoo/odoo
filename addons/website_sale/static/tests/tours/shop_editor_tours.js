@@ -60,13 +60,13 @@ registerWebsitePreviewTour(
         },
         {
             content: "Select a ribbon",
-            trigger: ".o_popover div.o-dropdown-item:contains('Sale')",
+            trigger: ".o_popover div.o-dropdown-item:contains('New!')",
             run: "click",
         },
         ...clickOnSave(),
         {
             content: "Check that the ribbon was properly saved",
-            trigger: ':iframe .oe_product:first .o_ribbons:contains("Sale")',
+            trigger: ':iframe .oe_product:first .o_ribbons:contains("New!")',
         },
     ]
 );
