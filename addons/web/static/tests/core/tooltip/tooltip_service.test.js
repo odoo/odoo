@@ -334,6 +334,24 @@ test("touch rendering - hold-to-show", async () => {
 });
 
 test.tags("mobile");
+test("touch rendering - do no show if moved", async () => {
+    class MyComponent extends Component {
+        static template = xml`<button data-tooltip="hello">Action</button><div>Elsewhere</div>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+    await pointerDown("button");
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+
+    await hover("div");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
+});
+
+test.tags("mobile");
 test("touch rendering - tap-to-show", async () => {
     class MyComponent extends Component {
         static template = xml`<button data-tooltip="hello" data-tooltip-touch-tap-to-show="true">Action</button>`;

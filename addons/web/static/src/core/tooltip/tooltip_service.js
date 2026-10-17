@@ -340,6 +340,10 @@ export const tooltipService = {
             }, timeoutDelay);
         }
 
+        function onTouchMove() {
+            window.clearTimeout(showTimer);
+        }
+
         function onTouchCancelEnd(ev) {
             if (isHelpNode(ev.target)) {
                 ev.preventDefault();
@@ -365,6 +369,7 @@ export const tooltipService = {
 
             if (hasTouch()) {
                 document.body.addEventListener("touchstart", onTouchStart);
+                document.body.addEventListener("touchmove", onTouchMove);
                 document.body.addEventListener("touchend", onTouchCancelEnd);
                 document.body.addEventListener("touchcancel", onTouchCancelEnd);
             }
