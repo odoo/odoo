@@ -193,7 +193,8 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     "body": [
                         "markup",
                         (
-                            '<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="'
+                            '<div class="o_mail_notification" data-oe-type="channel-joined">invited '
+                            f'<a href="/odoo/res.partner/{self.partner_employee.id}" data-oe-model="res.partner" data-oe-id="'
                             f'{self.partner_employee.id}" class="o_mail_redirect">@Ernest Employee</a> to the conversation</div>'
                         ),
                     ],

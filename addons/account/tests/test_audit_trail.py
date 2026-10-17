@@ -172,7 +172,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         for msg, check_values in zip(self._new_msgs, [
             # update 1
             {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> updated</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[0].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> updated</p>',
                 'model': 'account.move',
                 'res_id': move.id,
                 'subtype_id': self.env.ref('mail.mt_note'),
@@ -180,7 +180,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             },
             # update 2
             {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> updated</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[1].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> updated</p>',
                 'model': 'account.move',
                 'res_id': move.id,
                 'subtype_id': self.env.ref('mail.mt_note'),
@@ -188,7 +188,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             },
             # new line
             {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> created</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[2].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> created</p>',
                 'model': 'account.move',
                 'res_id': move.id,
                 'subtype_id': self.env.ref('mail.mt_note'),
@@ -213,12 +213,12 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         for msg, check_values in zip(self._new_msgs, [
             # update 1
             {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> updated</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[0].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> updated</p>',
                 'tracking_values': [('tax_ids', 'many2many', '', '15%', {'html_string': 'Taxes'})],
             },
             # new line
             {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> created</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[3].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> created</p>',
                 'tracking_values': [
                     ('name', 'text', False, '15%', {'html_string': 'Description'}),
                     ('balance', 'monetary', 0, 45, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
@@ -227,7 +227,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             },
             # new line
             {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> created</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[4].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> created</p>',
                 'tracking_values': [
                     ('name', 'text', False, "Automatic Balancing Line", {'html_string': 'Description'}),
                     ('balance', 'monetary', 0, -45, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
@@ -244,33 +244,33 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
 
         exp_results = [
             {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> deleted</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[0].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> deleted</p>',
                 'tracking_values': [
                     ('account_id', 'many2one', self.company_data['default_account_revenue'], False, {'html_string': 'Account'}),
                     ('balance', 'monetary', 300, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
                     ('tax_ids', 'many2many', '15%', '', {'html_string': 'Taxes'}),
                 ],
             }, {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> deleted</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[1].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> deleted</p>',
                 'tracking_values': [
                     ('account_id', 'many2one', self.company_data['default_account_revenue'], False, {'html_string': 'Account'}),
                     ('balance', 'monetary', -200, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
                 ],
             }, {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> deleted</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[2].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> deleted</p>',
                 'tracking_values': [
                     ('account_id', 'many2one', self.company_data['default_account_revenue'], False, {'html_string': 'Account'}),
                     ('balance', 'monetary', -100, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
                 ],
             }, {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> deleted</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[3].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> deleted</p>',
                 'tracking_values': [
                     ('account_id', 'many2one', self.company_data['default_account_tax_purchase'], False, {'html_string': 'Account'}),
                     ('balance', 'monetary', 45, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
                     ('name', 'text', '15%', False, {'html_string': 'Description'}),
                 ],
             }, {
-                'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> deleted</p>',
+                'body': f'<p>Journal Item <a href="/odoo/account.move.line/{move.line_ids[4].id}" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> deleted</p>',
                 'tracking_values': [
                     ('account_id', 'many2one', suspense_account, False, {'html_string': 'Account'}),
                     ('balance', 'monetary', -45, -0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
