@@ -146,7 +146,11 @@
             <div name="no_shipping"/>
         </xpath>
 
-        <xpath expr="//t[@t-set='layout_document_title']" position="replace"/>
+        <!-- remove default document title. Header element necessary for wkhtmltopdf to split-->
+        <!-- PDFs generated in batch. Unnecessary once papermuncher is fully integrated.-->
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <h3 style="line-height: 0px; margin: 0; padding: 0; color: transparent;">Dummy</h3>
+        </xpath>
 
         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="before">
             <t t-set="line_amounts" t-value="line._l10n_cl_get_line_amounts()"/>
