@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add('website_sale.dynamic_variants', {
     steps: () => [
         {
             content: "click on the second variant",
-            trigger: 'input[data-attribute-name="Dynamic Attribute"][data-value-name="Dynamic Value 2"]',
+            trigger: 'li.o_variant_pills label:contains("Dynamic Value 2")',
             run: "click",
         },
         {

@@ -288,13 +288,13 @@ registry.category("web_tour.tours").add("test_loyalty_reward_with_variant", {
             ProductScreen.clickDisplayedProduct("Test Product"),
             Dialog.discard(),
             ProductScreen.clickDisplayedProduct("Test Product"),
-            ProductConfiguratorPopup.pickRadio("Value 1"),
+            ProductConfiguratorPopup.pickPills("Value 1"),
             Dialog.confirm(),
             ProductScreen.clickDisplayedProduct("Test Product"),
-            ProductConfiguratorPopup.pickRadio("Value 1"),
+            ProductConfiguratorPopup.pickPills("Value 1"),
             Dialog.confirm(),
             ProductScreen.clickDisplayedProduct("Test Product"),
-            ProductConfiguratorPopup.pickRadio("Value 1"),
+            ProductConfiguratorPopup.pickPills("Value 1"),
             Dialog.confirm(),
             PosLoyalty.claimReward(
                 'Add "Free Product - [Test Product (Value 1), Test Product (Value 2)]"'
