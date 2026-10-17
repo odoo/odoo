@@ -879,6 +879,17 @@
         <field name="time_off_selectable">False</field>
     </record>
 
+<!-- IN : India -->
+    <record id="hr_work_entry.in_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_validation_type">both</field>
+        <field name="requires_allocation" eval="True"/>
+        <field name="employee_requests" eval="True"/>
+        <field name="allocation_validation_type">both</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+
 <!-- IQ : Iraq -->
     <record id="hr_work_entry.iq_work_entry_type_day_overtime" model="hr.work.entry.type">
         <field name="count_days_as">calendar</field>
