@@ -29,3 +29,4 @@ from . import resource_calendar
 from . import resource_calendar_leaves
 from . import ir_ui_menu
 from . import update
+from . import hr_headcount
