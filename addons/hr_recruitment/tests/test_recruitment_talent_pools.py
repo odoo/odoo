@@ -364,6 +364,30 @@ class TestRecruitmentTalentPool(TransactionCase):
         self.assertEqual(len(self.t_applicant_1.attachment_ids), 2)
         self.assertEqual(self.t_applicant_1.attachment_ids[0].res_id, self.t_applicant_1.id)
 
+    def test_attachment_not_shared_between_new_applicants(self):
+        """
+        Each new application gets its own copy of the CV.
+        """
+        self.env['ir.attachment'].create({
+            'name': 'CV Applicant 1',
+            'res_model': self.t_applicant_1._name,
+            'res_id': self.t_applicant_1.id,
+        })
+        wizard = self.env["job.add.applicants"].create({
+            "applicant_ids": [Command.set((self.t_applicant_1 | self.t_applicant_2).ids)],
+            "job_ids": [Command.set((self.t_job_2 | self.t_job_3).ids)],
+        })
+        new_applicants = wizard._add_applicants_to_job()
+
+        applicant_1_copies = new_applicants.filtered(lambda a: a.partner_name == self.t_applicant_1.partner_name)
+        applicant_2_copies = new_applicants - applicant_1_copies
+        for new_applicant in applicant_1_copies:
+            self.assertEqual(new_applicant.attachment_ids.mapped('name'), ['CV Applicant 1'])
+            self.assertEqual(new_applicant.attachment_ids.res_id, new_applicant.id)
+        self.assertNotEqual(applicant_1_copies[0].attachment_ids, applicant_1_copies[1].attachment_ids)
+        self.assertFalse(applicant_2_copies.attachment_ids)
+        self.assertEqual(self.t_applicant_1.attachment_ids.mapped('name'), ['CV Applicant 1'])
+
     def flush_tracking(self):
         """ Force the creation of tracking values. """
         self.env.flush_all()
