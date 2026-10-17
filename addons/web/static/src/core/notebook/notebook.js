@@ -1,6 +1,7 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, computed, proxy, signal, t, useOnChange, useProps } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { useTabsKeyboardNavigation } from "@web/core/utils/hooks";
 
 /**
  * A notebook component that will render only the current page and allow
@@ -68,12 +69,26 @@ export class Notebook extends Component {
     props = useProps(notebookProps);
 
     activePane = signal.ref();
+    tabListRef = signal.ref();
 
     setup() {
         this.pages = computed(() => this.computePages(this.props));
         this.state = proxy({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
         this.keepLastPageTransition = new KeepLast();
+        useTabsKeyboardNavigation({
+            ref: this.tabListRef,
+            isTabActive: (el) => {
+                const currentPage = this.pages().find((page) => page[0] === this.state.currentPage);
+                return currentPage?.[1].name === el.getAttribute("name");
+            },
+            getTabEls: (el) =>
+                [...el.querySelectorAll("[role=tab]")].filter((tabEl) =>
+                    this.navItems.some(
+                        (i) => !i[1].isDisabled && i[1].name === tabEl.getAttribute("name")
+                    )
+                ),
+        });
         useLayoutEffect(
             () => {
                 this.props.onPageUpdate(this.state.currentPage);
