@@ -446,6 +446,19 @@ class DeliveryCarrier(models.Model):
                     "The shipping is free since the order amount exceeds %.2f.", self.amount
                 )
                 res["price"] = 0.0
+            if self.delivery_type != "fixed" and (
+                productless_lines := order.order_line._get_productless_order_lines()
+            ):
+                warning = self.env._(
+                    "The shipping cost does not take into account the lines without a product"
+                    " (%(lines)s). Select a product on them to consider them properly.",
+                    lines=", ".join(
+                        productless_lines.mapped(lambda line: line.name.splitlines()[0])
+                    ),
+                )
+                res["warning_message"] = "\n".join(
+                    filter(None, [res.get("warning_message"), warning])
+                )
             return res
         return {
             "success": False,

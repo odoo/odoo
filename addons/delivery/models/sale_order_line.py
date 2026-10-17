@@ -43,6 +43,18 @@ class SaleOrderLine(models.Model):
             )
         )
 
+    def _get_productless_order_lines(self):
+        """Retrieve lines representing inexisting products."""
+        return self.filtered(
+            lambda line: (
+                not line.product_id
+                and not line.display_type
+                and not line.is_downpayment
+                and not line.is_delivery
+                and line.state != "cancel"
+            )
+        )
+
     # override to allow deletion of delivery line in a confirmed order
     def _check_line_unlink(self):
         """
