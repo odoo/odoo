@@ -44,6 +44,7 @@ class ResPartner(models.Model):
         help="Number of days to send reminder email before the promised receipt date")
     buyer_id = fields.Many2one('res.users', string='Buyer')
 
+<<<<<<< dd1ab94ed5b43eb8e4347f38d7267cc0a18e3069
     def _compute_application_statistics_hook(self):
         data_list = super()._compute_application_statistics_hook()
         if not self.env.user.has_group('purchase.group_purchase_user'):
@@ -52,6 +53,15 @@ class ResPartner(models.Model):
             stat_info = {'iconClass': 'fa-credit-card', 'value': partner.purchase_order_count, 'label': _('Purchases')}
             data_list[partner.id].append(stat_info)
         return data_list
+||||||| cc149fd4388d124d53403610e823b5180d3d0a79
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_partner_in_account_move(self):
+        """ Prevent the deletion of a partner if it is used in a PO dropship address"""
+=======
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_partner_in_purchase_order(self):
+        """ Prevent the deletion of a partner if it is used in a PO dropship address"""
+>>>>>>> 775f310d5a20cf8c6b2c36981479731f285232dd
 
     def write(self, vals):
         res = super().write(vals)
