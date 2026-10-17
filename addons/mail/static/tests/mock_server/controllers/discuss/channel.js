@@ -196,6 +196,9 @@ registerStoreHandler(
                 post_joined_message: params.post_joined_message,
             })
         );
+        if (params.emails?.length) {
+            DiscussChannel.invite_by_email([params.channel_id], params.emails);
+        }
     },
     { audience: "logged_in", readonly: false }
 );
