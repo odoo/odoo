@@ -899,6 +899,26 @@ function enforceImagesResponsivity(element) {
     }
 }
 /**
+ * Strip the editor-only metadata of dynamic placeholders, which the restricted
+ * QWeb check rejects. The demo label is kept as the placeholder's fallback text.
+ *
+ * @param {HTMLElement} element
+ */
+function cleanDynamicPlaceholders(element) {
+    const selector = "[data-oe-demo], [data-oe-expression-readable]";
+    for (const el of element.querySelectorAll(selector)) {
+        if (!["t-out", "t-esc", "t-field"].some((attr) => el.hasAttribute(attr))) {
+            continue;
+        }
+        const demo = el.getAttribute("data-oe-demo");
+        if (demo && !el.textContent.trim()) {
+            el.textContent = demo;
+        }
+        el.removeAttribute("data-oe-demo");
+        el.removeAttribute("data-oe-expression-readable");
+    }
+}
+/**
  * Convert the contents of an element area into content
  * that is widely compatible with email clients.
  *
@@ -995,6 +1015,8 @@ export async function toInline(element, cssRules) {
     [element, ...element.querySelectorAll("[contenteditable]")].forEach((node) =>
         node.removeAttribute("contenteditable")
     );
+
+    cleanDynamicPlaceholders(element);
 
     // Hide replaced cells on Outlook
     element.querySelectorAll(".mso-hide").forEach(_hideForOutlook);
