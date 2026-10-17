@@ -3,13 +3,6 @@
 from odoo import fields, models
 from odoo.tools import SQL
 
-python_to_sql_types = {
-    'int': 'INTEGER',
-    'float': 'REAL',
-    'string': 'TEXT',
-    'datetime': 'TIMESTAMP',
-}
-
 
 class HrLeaveEmployeeReport(models.Model):
     _name = 'hr.leave.employee.report'
@@ -20,8 +13,8 @@ class HrLeaveEmployeeReport(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     leave_id = fields.Many2one('hr.leave', string="Time Off Request", readonly=True)
     working_schedule_aligned_date_from = fields.Datetime('Date From', readonly=True, store=True)
-    number_of_days = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
-    number_of_hours = fields.Float(compute='_compute_leave_duration', readonly=True, store=True)
+    number_of_days = fields.Float(readonly=True, store=True)
+    number_of_hours = fields.Float(readonly=True, store=True)
     description = fields.Char()
     holiday_status_id = fields.Many2one("hr.leave.type", string="Time Off Type")
     state = fields.Selection([
@@ -35,98 +28,111 @@ class HrLeaveEmployeeReport(models.Model):
 
     @property
     def _table_query(self):
-        fetched_leave_field_names, leave_records = self._fetch_leave_data()
-        report_records = self._create_report_records_from_leave_records(leave_records, fetched_leave_field_names)
-        self._compute_leave_duration(report_records)
-        return self._generate_report_query(report_records)
-
-    def _fetch_leave_data(self):
-        self.env.cr.execute(SQL(
-            """
-            WITH leave_data AS (
-                SELECT
-                    ROW_NUMBER() OVER(ORDER BY employee_id, days_included_in_request) AS id,
-                    id AS leave_id, employee_id, date_from, date_to,
-                    holiday_status_id, state, private_name AS description,
-                    DATE_TRUNC('day', days_included_in_request) AS day_start
-                FROM hr_leave hl
-                CROSS JOIN LATERAL GENERATE_SERIES(
-                    DATE_TRUNC('day', date_from),
-                    DATE_TRUNC('day', date_to),
-                    INTERVAL '1 day'
-                ) AS days_included_in_request
-                WHERE hl.employee_company_id IN %(company_ids)s
-            )
-            SELECT
-                id, leave_id, employee_id,
-                holiday_status_id, state, description,
-                GREATEST(date_from, day_start) AS working_schedule_aligned_date_from,
-                LEAST(date_to, (day_start + INTERVAL '1 day' - INTERVAL '1 second')) AS day_aligned_date_to
-            FROM leave_data;
-            """,
-            company_ids=tuple(self.env.companies.ids),
-        ))
-        fetched_leave_field_names = [desc[0] for desc in self.env.cr.description]
-        leave_records = self.env.cr.fetchall()
-        return fetched_leave_field_names, leave_records
-
-    def _create_report_records_from_leave_records(self, leave_records, leave_field_names):
-        report_records = []
-        for leave_record in leave_records:
-            report_records.append({field_name: leave_record[index] for index, field_name in enumerate(leave_field_names)})
-        return report_records
-
-    def _compute_leave_duration(self, report_records):
-        if not report_records:
-            return
-        leave_ids = [report_record['leave_id'] for report_record in report_records]
-        leaves = self.env['hr.leave'].browse(leave_ids)
-        holiday_status_id_by_leave_id = {leave.id: leave.holiday_status_id.id for leave in leaves}
-        virtual_leaves_data = [{
-            'date_from': report_record['working_schedule_aligned_date_from'],
-            'date_to': report_record.pop('day_aligned_date_to'),
-            'employee_id': report_record['employee_id'],
-            'holiday_status_id': holiday_status_id_by_leave_id[report_record['leave_id']],
-        } for report_record in report_records]
-        virtual_leaves = self.env['hr.leave']
-        for virtual_leave_data in virtual_leaves_data:
-            virtual_leaves |= self.env['hr.leave'].new(virtual_leave_data)
-        leaves_durations = virtual_leaves._get_durations(additional_domain=[('holiday_id', 'not in', leave_ids)])
-        for report_record, virtual_leave in zip(report_records, virtual_leaves):
-            duration = leaves_durations.get(virtual_leave.id, (0, 0))
-            report_record['number_of_days'] = duration[0]
-            report_record['number_of_hours'] = duration[1]
-
-    def _generate_report_query(self, report_records):
-        report_records = [report_record for report_record in report_records if report_record.get('number_of_days', 0) > 0]
-        if not report_records:
-            return SQL("""
-                SELECT
-                    NULL::INTEGER as id,
-                    NULL::INTEGER as leave_id,
-                    NULL::INTEGER as employee_id,
-                    NULL::TIMESTAMP as working_schedule_aligned_date_from,
-                    NULL::REAL as number_of_days,
-                    NULL::REAL as number_of_hours,
-                    NULL::TEXT as description,
-                    NULL::INTEGER as holiday_status_id,
-                    NULL::VARCHAR as state,
-                    NULL::INTEGER as color
-                WHERE FALSE
-            """)
-
-        column_names = list(report_records[0].keys())
-        report_records_tuples = []
-        for report_record in report_records:
-            report_records_tuples.append(tuple(report_record[column_name] for column_name in column_names))
-
         return SQL(
             """
-                WITH report_records (%(columns)s) AS (
-                    VALUES %(values)s
-                )
-                SELECT * FROM report_records
+            -- Step 1: Gather validated leave facts, calendar metadata and leave type options.
+            WITH leave_base AS (
+                SELECT
+                    hl.id AS leave_id,
+                    hl.employee_id,
+                    hl.date_from,
+                    hl.date_to,
+                    hl.number_of_days,
+                    hl.number_of_hours,
+                    hl.holiday_status_id,
+                    hl.state,
+                    hl.private_name AS description,
+                    hl.resource_calendar_id,
+                    hl.employee_company_id,
+                    COALESCE(rc.tz, 'UTC') AS tz,
+                    COALESCE(rc.two_weeks_calendar, FALSE) AS two_weeks_calendar,
+                    hlt.include_public_holidays_in_duration
+                FROM hr_leave AS hl
+                JOIN hr_leave_type AS hlt
+                  ON hlt.id = hl.holiday_status_id
+                LEFT JOIN resource_calendar AS rc
+                  ON rc.id = hl.resource_calendar_id
+                WHERE hl.employee_company_id IN %(company_ids)s
+                  AND hl.employee_id IS NOT NULL
+                  AND hl.date_from IS NOT NULL
+                  AND hl.date_to IS NOT NULL
+
+            -- Step 2: Pre-aggregate planned working hours per calendar/day/week bucket.
+            ), cal_day_hours AS (
+                SELECT
+                    rca.calendar_id,
+                    rca.dayofweek::INTEGER AS dayofweek,
+                    rca.week_type,
+                    SUM(rca.hour_to - rca.hour_from) AS day_work_hours
+                FROM resource_calendar_attendance AS rca
+                WHERE rca.display_type IS NULL
+                  AND rca.day_period != 'lunch'
+                GROUP BY rca.calendar_id, rca.dayofweek, rca.week_type
+
+            -- Step 3: Expand each leave into local days, keep only working days, and optionally exclude public holidays.
+            ), leave_days AS (
+                SELECT
+                    lb.leave_id,
+                    lb.employee_id,
+                    lb.date_from,
+                    lb.date_to,
+                    lb.number_of_days,
+                    lb.number_of_hours,
+                    lb.holiday_status_id,
+                    lb.state,
+                    lb.description,
+                    day_hours.day_work_hours,
+                    ((gs.day::TIMESTAMP AT TIME ZONE lb.tz) AT TIME ZONE 'UTC') AS day_start_utc
+                FROM leave_base AS lb
+                CROSS JOIN LATERAL GENERATE_SERIES(
+                    (lb.date_from AT TIME ZONE 'UTC' AT TIME ZONE lb.tz)::DATE,
+                    (lb.date_to AT TIME ZONE 'UTC' AT TIME ZONE lb.tz)::DATE,
+                    INTERVAL '1 day'
+                ) AS gs(day)
+                JOIN cal_day_hours AS day_hours
+                  ON day_hours.calendar_id = lb.resource_calendar_id
+                 AND day_hours.dayofweek = EXTRACT(ISODOW FROM gs.day)::INTEGER - 1
+                 AND (
+                     (NOT lb.two_weeks_calendar AND day_hours.week_type IS NULL)
+                     OR (lb.two_weeks_calendar AND day_hours.week_type = ((((gs.day::DATE - DATE '0001-01-01')::INTEGER / 7) %% 2))::TEXT)
+                 )
+                 AND day_hours.day_work_hours > 0
+                LEFT JOIN LATERAL (
+                    SELECT 1
+                    FROM resource_calendar_leaves AS rcl
+                    WHERE rcl.resource_id IS NULL
+                      AND rcl.company_id = lb.employee_company_id
+                      AND (rcl.calendar_id = lb.resource_calendar_id OR rcl.calendar_id IS NULL)
+                      AND gs.day::DATE BETWEEN
+                          (rcl.date_from AT TIME ZONE 'UTC' AT TIME ZONE lb.tz)::DATE
+                          AND
+                          (rcl.date_to AT TIME ZONE 'UTC' AT TIME ZONE lb.tz)::DATE
+                    LIMIT 1
+                ) AS public_holiday ON TRUE
+                WHERE lb.include_public_holidays_in_duration OR public_holiday IS NULL
+
+            -- Step 4: Compute per-leave denominators for day split and hour weighting.
+            ), leave_days_numbered AS (
+                SELECT
+                    ld.*,
+                    COUNT(*) OVER (PARTITION BY ld.leave_id) AS workday_count,
+                    SUM(ld.day_work_hours) OVER (PARTITION BY ld.leave_id) AS leave_work_hours_total
+                FROM leave_days AS ld
+            )
+
+            -- Step 5: At the end we want 1 row per day containing hours and days.
+            SELECT
+                ROW_NUMBER() OVER(ORDER BY leave_id, day_start_utc) AS id,
+                leave_id,
+                employee_id,
+                GREATEST(date_from, day_start_utc) AS working_schedule_aligned_date_from,
+                number_of_days / workday_count::FLOAT AS number_of_days,
+                number_of_hours * day_work_hours / leave_work_hours_total AS number_of_hours,
+                description,
+                holiday_status_id,
+                state
+            FROM leave_days_numbered
+            WHERE workday_count > 0
             """,
-            columns=SQL(', ').join(map(SQL.identifier, column_names)),
-            values=SQL(', ').join(report_records_tuples),
+            company_ids=tuple(self.env.companies.ids),
         )
