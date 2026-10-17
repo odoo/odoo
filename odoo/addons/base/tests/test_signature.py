@@ -13,7 +13,7 @@ from odoo.addons.base.models.res_company import ResCompany
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 from odoo.tools.misc import file_open
-from odoo.tools.pdf.signature import PdfSigner
+from odoo.tools.pdf.signature import SIGNATURE_PLACEHOLDER_SIZE, PdfSigner
 
 
 class TestSignature(TransactionCase):
@@ -61,7 +61,7 @@ class TestSignature(TransactionCase):
         fixed_time = datetime.datetime.now(datetime.timezone.utc)
         with file_open(self.pdf_path, "rb") as stream:
             out_stream = io.BytesIO()
-            with patch.object(PdfSigner, "_load_key_and_certificate", return_value=(self.private_key, self.certificate)):
+            with patch.object(PdfSigner, "_load_key_and_certificates", return_value=(self.private_key, self.certificate, None)):
                 signer = PdfSigner(stream, self.env, signing_time=fixed_time)
                 out_stream = signer.sign_pdf()
                 if not out_stream:
@@ -162,7 +162,7 @@ class TestSignature(TransactionCase):
 
             
             signature_hex = content_info.dump().hex()
-            signature_hex = signature_hex.ljust(8192 * 2, "0")
+            signature_hex = signature_hex.ljust(SIGNATURE_PLACEHOLDER_SIZE * 2, "0")
 
             self.assertEqual(signature_hex.encode(), content)
 
