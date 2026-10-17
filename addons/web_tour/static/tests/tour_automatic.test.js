@@ -19,6 +19,7 @@ import {
 import { location, browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Macro } from "@web/core/macro";
+import { config as transitionConfig } from "@web/core/transition";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -290,7 +291,6 @@ test("a failing tour with disabled element", async () => {
 
     await mountWithCleanup(Root);
     tourRegistry.add("tour3", {
-        timeout: 500,
         steps: () => [
             {
                 trigger: ".button0",
@@ -299,6 +299,7 @@ test("a failing tour with disabled element", async () => {
             {
                 trigger: ".button1",
                 run: "click",
+                timeout: 500,
             },
             {
                 trigger: ".button2",
@@ -477,7 +478,6 @@ test("automatic tour with invisible element", async () => {
 
     await mountWithCleanup(Root);
     registry.category("web_tour.tours").add("tour_de_wallonie", {
-        timeout: 777,
         steps: () => [
             {
                 trigger: ".button0",
@@ -486,6 +486,7 @@ test("automatic tour with invisible element", async () => {
             {
                 trigger: ".button1",
                 run: "click",
+                timeout: 777,
             },
             {
                 trigger: ".button2",
@@ -643,7 +644,6 @@ test("check not possible to click below modal", async () => {
     await mountWithCleanup(Root);
 
     registry.category("web_tour.tours").add("tour_check_modal", {
-        timeout: 888,
         steps: () => [
             {
                 trigger: ".button0",
@@ -655,6 +655,7 @@ test("check not possible to click below modal", async () => {
             {
                 trigger: ".button1",
                 run: "click",
+                timeout: 888,
             },
         ],
     });
@@ -742,4 +743,85 @@ test("Tour redirect to given url", async () => {
     await odoo.startTour("tour_redirect", { mode: "auto", url: "/odoo" });
     await waitForMacro();
     expect(location.pathname).toBe("/odoo");
+});
+
+test("automatic tour doesn't wait for the event a human would trigger", async () => {
+    patchWithCleanup(browser.console, {
+        log: (s) => {
+            if (typeof s === "string" && s.includes("TOUR tour_hover SUCCEEDED")) {
+                expect.step("succeeded");
+            }
+        },
+    });
+    tourRegistry.add("tour_hover", {
+        steps: () => [
+            { trigger: ".card", run: "click" },
+            { trigger: ".card", run: "hover" },
+            { trigger: ".card" },
+        ],
+    });
+    class Root extends Component {
+        static template = xml`<div class="card">Card</div>`;
+    }
+
+    await mountWithCleanup(Root);
+    await odoo.startTour("tour_hover", { mode: "auto" });
+    await waitForMacro();
+    expect.verifySteps(["succeeded"]);
+});
+
+test("stopping an automatic tour undoes the setup of its robot", async () => {
+    tourRegistry.add("tour_stopped", {
+        steps: () => [{ trigger: ".missing", run: "click" }],
+    });
+    class Root extends Component {
+        static template = xml`<div class="card">Card</div>`;
+    }
+
+    await mountWithCleanup(Root);
+    await odoo.startTour("tour_stopped", { mode: "auto" });
+    const { hootNameSpace } = macro;
+    expect(transitionConfig.disabled).toBe(true);
+    expect(window[hootNameSpace]).not.toBe(undefined);
+    macro.stop();
+    expect(transitionConfig.disabled).toBe(false);
+    expect(window[hootNameSpace]).toBe(undefined);
+});
+
+test("automatic tour doesn't show the rainbow man of its database record", async () => {
+    onRpc("web_tour.tour", "get_tour_json_by_name", () => ({
+        name: "custom_tour_rainbow",
+        rainbowManMessage: "Congratulations !",
+        steps: [{ trigger: ".button0", run: "click" }],
+    }));
+    class Root extends Component {
+        static template = xml`<button class="button0">Button 0</button>`;
+    }
+
+    await mountWithCleanup(Root);
+    await odoo.startTour("custom_tour_rainbow", { mode: "auto", fromDB: true });
+    await waitForMacro();
+    expect(".o_reward_rainbow_man").toHaveCount(0);
+});
+
+test("step delay isn't counted in the timeout of the step", async () => {
+    patchWithCleanup(browser.console, {
+        log: (s) => {
+            if (typeof s === "string" && s.includes("TOUR tour_step_delay SUCCEEDED")) {
+                expect.step("succeeded");
+            }
+        },
+        error: (s) => expect.step(`error: ${s}`),
+    });
+    tourRegistry.add("tour_step_delay", {
+        steps: () => [{ trigger: ".button0", run: "click", timeout: 300 }],
+    });
+    class Root extends Component {
+        static template = xml`<button class="button0">Button 0</button>`;
+    }
+
+    await mountWithCleanup(Root);
+    await odoo.startTour("tour_step_delay", { mode: "auto", stepDelay: 500 });
+    await waitForMacro();
+    expect.verifySteps(["succeeded"]);
 });

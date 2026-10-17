@@ -13,6 +13,21 @@ import { TourRecorderPlugin } from "@web_tour/tour_recorder/tour_recorder_plugin
 import { tourState } from "@web_tour/tour_state";
 import { OnboardingItem } from "@web_tour/widgets/onboarding_item";
 
+/**
+ * @typedef TourStep
+ * @property {HootSelector} trigger The node on which the action will be executed.
+ * @property {string} [id]
+ * @property {string[]} [isActive] Keywords ("enterprise", "community", "mobile", "desktop",
+ * "auto", "manual", "robot") and selectors that must all match for the step to be active,
+ * otherwise it is skipped.
+ * @property {string|Function} [run] The action to perform when trigger conditions are verified.
+ * @property {string|Object} [content] Description of the step.
+ * @property {boolean} [expectUnloadPage] The action of the step is expected to unload the page.
+ * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
+ * You can change this value to lengthen or shorten the time before the error occurs [ms].
+ * @property {"top" | "bottom" | "left" | "right"} [tooltipPosition] The position where the UI helper is shown.
+ */
+
 const stepSchema = {
     trigger: t.string(),
     id: t.string().optional(),
@@ -24,11 +39,7 @@ const stepSchema = {
             "run must be a string or a non-empty function"
         )
         .optional(),
-};
-
-const stepSchemaAuto = {
-    ...stepSchema,
-    content: t.string().optional(),
+    content: t.or([t.string(), t.object()]).optional(), //allow object(_t && markup)
     expectUnloadPage: t.boolean().optional(),
     timeout: t.customValidator(t.number(), (value) => value >= 0 && value <= 60000).optional(),
     tooltipPosition: t
@@ -36,17 +47,8 @@ const stepSchemaAuto = {
         .optional(),
 };
 
-const stepSchemaOnboarding = {
-    ...stepSchema,
-    content: t.or([t.string(), t.object()]).optional(), //allow object(_t && markup)
-    tooltipPosition: t
-        .customValidator(t.string(), (value) => ["top", "bottom", "left", "right"].includes(value))
-        .optional(),
-};
-
 const stepSchemaDebug = {
-    ...stepSchemaAuto,
-    ...stepSchemaOnboarding,
+    ...stepSchema,
     pause: t.boolean().optional(),
     break: t.boolean().optional(),
 };
@@ -98,7 +100,6 @@ export class TourPlugin extends Plugin {
                 mode: "manual",
                 fromDB: true,
                 redirect: false,
-                rainbowManMessage: session.current_tour.rainbowManMessage,
             });
         }
     }
@@ -226,32 +227,21 @@ export class TourPlugin extends Plugin {
 
         tour.steps.forEach((step) => this.validateStep(step));
 
-        if (tourConfig.mode === "auto") {
-            if (!odoo.loader.modules.get("@web_tour/tour_automatic/tour_automatic")) {
-                await loadBundle("web_tour.automatic", { css: false });
-            }
-            const { TourAutomatic } = odoo.loader.modules.get(
-                "@web_tour/tour_automatic/tour_automatic"
-            );
-            new TourAutomatic(tour).start();
-        } else {
-            await loadBundle("web_tour.interactive");
-            const { TourInteractive } = odoo.loader.modules.get(
-                "@web_tour/tour_interactive/tour_interactive"
-            );
-            new TourInteractive(tour, {
-                orm: this.orm,
-                effect: this.effect,
-                overlay: this.overlay,
-                onChainNextTour: (nextTour) =>
-                    this.startTour(nextTour.name, {
-                        mode: "manual",
-                        fromDB: true,
-                        redirect: false,
-                        rainbowManMessage: nextTour.rainbowManMessage,
-                    }),
-            }).start(this.env);
+        if (!odoo.loader.modules.get("@web_tour/tour_engine/tour_engine")) {
+            await loadBundle("web_tour.engine", { css: false });
         }
+        const { TourEngine } = odoo.loader.modules.get("@web_tour/tour_engine/tour_engine");
+        new TourEngine(tour, {
+            orm: this.orm,
+            effect: this.effect,
+            overlay: this.overlay,
+            onChainNextTour: (nextTour) =>
+                this.startTour(nextTour.name, {
+                    mode: "manual",
+                    fromDB: true,
+                    redirect: false,
+                }),
+        }).start(this.env);
     }
 
     /**
@@ -306,21 +296,11 @@ export class TourPlugin extends Plugin {
 
     /**
      * Validate a step according to {@link stepSchema}.
-     * @param {Object} step - The step object to validate.
+     * @param {TourStep} step - The step object to validate.
      */
     validateStep(step) {
         const tourConfig = tourState.getCurrentConfig();
-        const isActiveArray = Array.isArray(step.isActive) ? step.isActive : [];
-        const mode = isActiveArray.includes("auto")
-            ? "auto"
-            : isActiveArray.includes("manual")
-            ? "manual"
-            : tourConfig.mode;
-        const schema = tourConfig.debug
-            ? t.strictObject(stepSchemaDebug)
-            : mode === "auto"
-            ? t.strictObject(stepSchemaAuto)
-            : t.strictObject(stepSchemaOnboarding);
+        const schema = t.strictObject(tourConfig.debug ? stepSchemaDebug : stepSchema);
         try {
             assertType(step, schema, "Error in schema for TourStep");
         } catch (error) {
