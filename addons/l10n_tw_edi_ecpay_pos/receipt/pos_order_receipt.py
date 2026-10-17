@@ -62,8 +62,8 @@ class PosOrderReceipt(models.AbstractModel):
             data['image']['qrcode_right'] = qrcode_right_data
         return data
 
-    def order_receipt_generate_html(self, basic_receipt=False):
-        content = super().order_receipt_generate_html(basic_receipt)
+    def order_receipt_generate_html(self, basic_receipt=False, printer_style=False):
+        content = super().order_receipt_generate_html(basic_receipt, printer_style)
         if any((
             self.company_id.account_fiscal_country_id.code != 'TW',
             not self.config_id.is_ecpay_enabled,
