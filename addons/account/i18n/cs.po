@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-09-09 14:05+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-master/"
@@ -127,6 +127,11 @@ msgid " valid until %s"
 msgstr " platné do %s"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
+msgid "# Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
 msgstr "# Spárovaných přijatých faktur"
@@ -135,11 +140,6 @@ msgstr "# Spárovaných přijatých faktur"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
 msgstr "# Spárovaných vydaných faktur"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
-msgid "# Reconciled Statement Lines"
-msgstr "# Spárovaných řádek výpisu z účtu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
@@ -240,12 +240,10 @@ msgstr "%(label)s v %(currency_amount)s (Návrh)"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"%(move)s reached an invalid state regarding its related statement line.\n"
+"%(move)s reached an invalid state regarding its related bank transaction.\n"
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
-"%(move)s má neplatný stav vzhledem k související položce výpisu.\n"
-"Účetní záznam vždy musí mít přesně jednu položku pro peníze na cestě."
 
 #. module: account
 #. odoo-python
@@ -3614,8 +3612,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
-msgid "All unreconciled bank statement lines before the selected date."
-msgstr "Všechny řádky nespárovaných bankovních výpisů před vybraným datem."
+msgid "All unreconciled bank transactions before the selected date."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
@@ -4201,8 +4199,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid ""
-"At least one transaction in the statement is prior the last posted statement "
-"line (%s)"
+"At least one transaction in the statement is prior the last posted "
+"transaction (%s)"
 msgstr ""
 
 #. module: account
@@ -4517,8 +4515,20 @@ msgstr "Zpět na fakturu"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Credit Note"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
 msgstr "Zpět na fakturu"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Refund"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4725,11 +4735,6 @@ msgid "Bank Statement Digitization"
 msgstr "Digitalizace bankovního výpisu"
 
 #. module: account
-#: model:ir.model,name:account.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "Položka bankovního výpisu"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 msgid "Bank Statements"
 msgstr "Výpisy z účtu"
@@ -4755,6 +4760,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.model,name:account.model_account_bank_statement_line
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
+#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
 msgid "Bank Transaction"
 msgstr "Bankovní transakce"
 
@@ -4826,6 +4834,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
 msgstr "Bankovní transakce a platby:"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
+msgid "Bank transactions matched to this payment"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -8923,17 +8936,6 @@ msgstr "Základní kapitál"
 #, fuzzy
 msgid "Error importing attachment %(filename)s:"
 msgstr "Chyba pří importování přílohy %(filename)s:"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/controllers/download_docs.py:0
-#, fuzzy
-msgid ""
-"Error while creating XML:\n"
-"- %s"
-msgstr ""
-"Chyba při vytváření XML:\n"
-"- %s"
 
 #. module: account
 #. odoo-python
@@ -13994,11 +13996,9 @@ msgstr "Odoo doména"
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
 msgid ""
-"Odoo allows you to reconcile a statement line directly with\n"
+"Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
-"Odoo vám umožňuje spárovat položku výpisu přímo se\n"
-"                související prodejní nebo nákupní fakturou."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -14362,6 +14362,12 @@ msgid "Original Lock Date"
 msgstr "Původní datum uzamčení"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Originator Bank Transaction"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
 msgid "Originator Group of Taxes"
 msgstr "Zdrojová skupina daní"
@@ -14370,12 +14376,6 @@ msgstr "Zdrojová skupina daní"
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Zdrojová platba"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
-#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-msgid "Originator Statement Line"
-msgstr "Zdrojová položka bankovního výpisu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
@@ -15241,8 +15241,8 @@ msgstr "Procento každého řádku, na kterém se má akce provést."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
-msgid "Percentage of statement line"
-msgstr "Procento z položky výpisu z účtu"
+msgid "Percentage of transaction"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16172,6 +16172,11 @@ msgid "Reconciled"
 msgstr "Spárované"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
+msgid "Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
 msgstr "Spárované přijaté faktury"
@@ -16204,11 +16209,6 @@ msgstr "Odsouhlasené řádky kromě kurzových rozdílů"
 #, fuzzy
 msgid "Reconciled Payments"
 msgstr "Odsouhlasené platby"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
-msgid "Reconciled Statement Lines"
-msgstr "Spárované položky bankovního výpisu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -17904,8 +17904,8 @@ msgstr "Zobrazit DUZP"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Show Unreconciled Bank Statement Line"
-msgstr "Zobrazit řádek nevyřízeného bankovního výpisu"
+msgid "Show Unreconciled Bank Transactions"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -18126,12 +18126,6 @@ msgid "Statement %(date)s"
 msgstr "Prohlášení %(date)s"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
-#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
-msgid "Statement Line"
-msgstr "Položka výpisu"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_name
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Statement Name"
@@ -18143,17 +18137,6 @@ msgid "Statement Reports"
 msgstr "Výkazy"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_reconcile_model.py:0
-msgid "Statement line percentage can't be 0"
-msgstr "Procento položky z výpisu nemůže být 0"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
-msgid "Statement lines"
-msgstr "Položky výpisu"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__statement_line_ids
@@ -18161,11 +18144,6 @@ msgstr "Položky výpisu"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_tree
 msgid "Statements"
 msgstr "Výpisy"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
-msgid "Statements lines matched to this payment"
-msgstr "Položky výpisu, spárované s toutou platbou"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__states_count
@@ -19452,6 +19430,11 @@ msgid "The bank statement used for bank reconciliation"
 msgstr "Bankovní výpis použitý pro párování plateb"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
+msgid "The bank transaction that created this entry"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
@@ -19846,15 +19829,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"The journal entry %s reached an invalid state regarding its related "
-"statement line.\n"
+"The journal entry %s reached an invalid state regarding its related bank "
+"transaction.\n"
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"Účetní záznam %s dosáhl neplatného stavu, v souvislosti se svou položkou "
-"výpisu.\n"
-"Pro zajištění konzistence musí mít účetní záznam vždy pouze jednu účetní "
-"položku na bankovním/hotovostním účtu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -20013,19 +19992,13 @@ msgstr "Párovací model bude aplikován pouze na vybrané zákazníky/dodavatel
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
 msgid ""
-"The reconciliation model will only be applied when either the statement line "
+"The reconciliation model will only be applied when either the transaction "
 "label, the transaction details or the note matches the following:\n"
-"        * Contains: The statement line must contains this string (case "
+"        * Contains: The transaction must contain this string (case "
 "insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Model odsouhlasení se použije pouze v případě, že název řádku výpisu, "
-"podrobnosti transakce nebo poznámka odpovídají následujícímu:\n"
-"        * Obsahuje: Řádek výpisu musí obsahovat tento řetězec (bez rozlišení "
-"velkých a malých písmen).\n"
-"        * Neobsahuje: Negace „Obsahuje“.\n"
-"        *  Shoda s regulárním výrazem: Definujte vlastní regulární výraz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -20290,11 +20263,6 @@ msgid "The smallest value used to round the total amount (e.g., 0.05 or 100)."
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
-msgid "The statement line that created this entry"
-msgstr "Položka výpisu z účtu, která vytvořila tento záznam"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
@@ -20369,24 +20337,19 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
-#, fuzzy
 msgid ""
-"There are still unreconciled bank statement lines before the selected date. "
-"The entries from journal prefixes containing them will not be secured: %"
+"There are still unreconciled bank transactions before the selected date. The "
+"entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
-"Před vybraným datem stále existují nesouhlasné řádky výpisu z účtu. Záznamy "
-"z předpon deníku, které je obsahují, nebudou zabezpečeny: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
-"There are still unreconciled bank statement lines in the period you want to "
-"lock.You should either reconcile or delete them."
+"There are still unreconciled bank transactions in the period you want to "
+"lock. You should either reconcile or delete them."
 msgstr ""
-"V období, které chcete uzamknout, stále existují nespárované položky "
-"bankovních výpisů. Měli byste je buď spárovat, nebo smazat."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -20848,8 +20811,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_matching_rules
 msgid ""
-"Those can be used to automatically match journal items with your statement "
-"lines."
+"Those can be used to automatically match journal items with your "
+"transactions."
 msgstr ""
 
 #. module: account
@@ -21210,6 +21173,13 @@ msgid "Transaction Type"
 msgstr "Typ transakce"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+msgid "Transaction percentage can't be 0"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
 #: model:ir.ui.menu,name:account.account_transactions_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
@@ -21850,10 +21820,8 @@ msgstr "Potvrdit bankovní účet"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__trigger
 msgid ""
-"Validate the statement line automatically (reconciliation based on your "
-"rule)."
+"Validate the transaction automatically (reconciliation based on your rule)."
 msgstr ""
-"Potvrdit položku výpisu automaticky (spárování na základě vašeho pravidla)."
 
 #. module: account
 #. odoo-javascript
@@ -22483,6 +22451,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+msgid ""
+"You can't create a new bank transaction without a suspense account set on "
+"the %s journal."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
@@ -22491,16 +22467,6 @@ msgid ""
 msgstr ""
 "Nemůžete vytvořit novou platbu bez účtu čekajících plateb, nastaveného buďto "
 "na společnosti nebo %(payment_method)s platební metody v deníku %(journal)s."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement_line.py:0
-msgid ""
-"You can't create a new statement line without a suspense account set on the "
-"%s journal."
-msgstr ""
-"Nemůžete vytvořit novou položku výpisu bez nastaveného přechodného účtu "
-"nastaveného na deníku %s."
 
 #. module: account
 #. odoo-python
@@ -23820,6 +23786,122 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "# Reconciled Statement Lines"
+#~ msgstr "# Spárovaných řádek výpisu z účtu"
+
+#~ msgid ""
+#~ "%(move)s reached an invalid state regarding its related statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one suspense "
+#~ "line."
+#~ msgstr ""
+#~ "%(move)s má neplatný stav vzhledem k související položce výpisu.\n"
+#~ "Účetní záznam vždy musí mít přesně jednu položku pro peníze na cestě."
+
+#~ msgid "All unreconciled bank statement lines before the selected date."
+#~ msgstr "Všechny řádky nespárovaných bankovních výpisů před vybraným datem."
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "Položka bankovního výpisu"
+
+#, fuzzy
+#~ msgid ""
+#~ "Error while creating XML:\n"
+#~ "- %s"
+#~ msgstr ""
+#~ "Chyba při vytváření XML:\n"
+#~ "- %s"
+
+#~ msgid ""
+#~ "Odoo allows you to reconcile a statement line directly with\n"
+#~ "                the related sale or purchase invoices."
+#~ msgstr ""
+#~ "Odoo vám umožňuje spárovat položku výpisu přímo se\n"
+#~ "                související prodejní nebo nákupní fakturou."
+
+#~ msgid "Originator Statement Line"
+#~ msgstr "Zdrojová položka bankovního výpisu"
+
+#~ msgid "Percentage of statement line"
+#~ msgstr "Procento z položky výpisu z účtu"
+
+#~ msgid "Reconciled Statement Lines"
+#~ msgstr "Spárované položky bankovního výpisu"
+
+#~ msgid "Show Unreconciled Bank Statement Line"
+#~ msgstr "Zobrazit řádek nevyřízeného bankovního výpisu"
+
+#~ msgid "Statement Line"
+#~ msgstr "Položka výpisu"
+
+#~ msgid "Statement line percentage can't be 0"
+#~ msgstr "Procento položky z výpisu nemůže být 0"
+
+#~ msgid "Statement lines"
+#~ msgstr "Položky výpisu"
+
+#~ msgid "Statements lines matched to this payment"
+#~ msgstr "Položky výpisu, spárované s toutou platbou"
+
+#~ msgid ""
+#~ "The journal entry %s reached an invalid state regarding its related "
+#~ "statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one journal "
+#~ "item involving the bank/cash account."
+#~ msgstr ""
+#~ "Účetní záznam %s dosáhl neplatného stavu, v souvislosti se svou položkou "
+#~ "výpisu.\n"
+#~ "Pro zajištění konzistence musí mít účetní záznam vždy pouze jednu účetní "
+#~ "položku na bankovním/hotovostním účtu."
+
+#~ msgid ""
+#~ "The reconciliation model will only be applied when either the statement "
+#~ "line label, the transaction details or the note matches the following:\n"
+#~ "        * Contains: The statement line must contains this string (case "
+#~ "insensitive).\n"
+#~ "        * Not Contains: Negation of \"Contains\".\n"
+#~ "        * Match Regex: Define your own regular expression."
+#~ msgstr ""
+#~ "Model odsouhlasení se použije pouze v případě, že název řádku výpisu, "
+#~ "podrobnosti transakce nebo poznámka odpovídají následujícímu:\n"
+#~ "        * Obsahuje: Řádek výpisu musí obsahovat tento řetězec (bez "
+#~ "rozlišení velkých a malých písmen).\n"
+#~ "        * Neobsahuje: Negace „Obsahuje“.\n"
+#~ "        *  Shoda s regulárním výrazem: Definujte vlastní regulární výraz."
+
+#~ msgid "The statement line that created this entry"
+#~ msgstr "Položka výpisu z účtu, která vytvořila tento záznam"
+
+#, fuzzy
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines before the selected "
+#~ "date. The entries from journal prefixes containing them will not be "
+#~ "secured: %(prefix_info)s"
+#~ msgstr ""
+#~ "Před vybraným datem stále existují nesouhlasné řádky výpisu z účtu. "
+#~ "Záznamy z předpon deníku, které je obsahují, nebudou zabezpečeny: %"
+#~ "(prefix_info)s"
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines in the period you want "
+#~ "to lock.You should either reconcile or delete them."
+#~ msgstr ""
+#~ "V období, které chcete uzamknout, stále existují nespárované položky "
+#~ "bankovních výpisů. Měli byste je buď spárovat, nebo smazat."
+
+#~ msgid ""
+#~ "Validate the statement line automatically (reconciliation based on your "
+#~ "rule)."
+#~ msgstr ""
+#~ "Potvrdit položku výpisu automaticky (spárování na základě vašeho "
+#~ "pravidla)."
+
+#~ msgid ""
+#~ "You can't create a new statement line without a suspense account set on "
+#~ "the %s journal."
+#~ msgstr ""
+#~ "Nemůžete vytvořit novou položku výpisu bez nastaveného přechodného účtu "
+#~ "nastaveného na deníku %s."
 
 #, fuzzy
 #~ msgid "Accumulated Depreciation"

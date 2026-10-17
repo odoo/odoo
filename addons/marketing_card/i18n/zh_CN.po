@@ -5,15 +5,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 20:25+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 06:34+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/marketing_card/zh_Hans/>\n"
+"projects/odoo-20/marketing_card/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +53,8 @@ msgid ""
 "                    <span>We were not able to get an authorization to post "
 "in your stead.</span>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"warning\"/>\n"
+"                    <span>我们未能获得代您发布的授权。</span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -155,7 +158,7 @@ msgstr "活动类型图标"
 msgid ""
 "An error occurred while rendering a card for %(record_name)s. Try again or "
 "check the server logs for more details."
-msgstr ""
+msgstr "为 %(record_name)s 渲染卡片时发生错误。请重试，或查看服务器日志以了解详情。"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -242,7 +245,7 @@ msgstr "海报数目"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__card_lang
 msgid "Card Language"
-msgstr ""
+msgstr "卡片语言"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -253,7 +256,7 @@ msgstr "卡片布局"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Card Preview"
-msgstr ""
+msgstr "卡片预览"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__card_requires_sync_count
@@ -276,7 +279,7 @@ msgstr "海报模板"
 #: code:addons/marketing_card/models/card_campaign.py:0
 #: model:card.campaign,content_header:marketing_card.card_campaign_campaign_1
 msgid "Card Title"
-msgstr ""
+msgstr "卡片标题"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.mailing_mailing_view_form_inherit_marketing_card
@@ -291,7 +294,7 @@ msgstr "居中"
 #. module: marketing_card
 #: model_terms:card.campaign,reward_message:marketing_card.card_campaign_campaign_1
 msgid "Check out odoo.com for more!"
-msgstr ""
+msgstr "更多内容请访问 odoo.com！"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_circles
@@ -311,7 +314,7 @@ msgstr "颜色"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.mailing_mailing_view_form_inherit_marketing_card
 msgid "Confirm Cards Update"
-msgstr ""
+msgstr "确认卡片更新"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.cards_card_action
@@ -358,7 +361,7 @@ msgstr "默认背景"
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__post_suggestion
 msgid ""
 "Description below the card and default text when sharing on X and LinkedIn"
-msgstr ""
+msgstr "卡片下方的说明，也是分享到 X 和领英时的默认文本"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_template_id
@@ -369,7 +372,7 @@ msgstr "设计"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Details"
-msgstr ""
+msgstr "详情"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__display_name
@@ -406,7 +409,7 @@ msgstr "动态图片 2"
 #. module: marketing_card
 #: model:ir.model.constraint,message:marketing_card.constraint_card_card_campaign_record_lang_unique
 msgid "Each record should be unique for a campaign and language"
-msgstr ""
+msgstr "在同一个营销活动和语言下，每条记录都必须唯一"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_mail_compose_message
@@ -417,19 +420,19 @@ msgstr "EMail撰写向导"
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "Error on generating an authorization url: %(iap_error_string)s"
-msgstr ""
+msgstr "生成授权 URL 时出错：%(iap_error_string)s"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "Error when fetching user info"
-msgstr ""
+msgstr "获取用户信息时出错"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "Error when posting an image"
-msgstr ""
+msgstr "发布图片时出错"
 
 #. module: marketing_card
 #. odoo-python
@@ -441,7 +444,7 @@ msgstr "注册图片上传时出错"
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "Error when uploading an image"
-msgstr ""
+msgstr "上传图片时出错"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
@@ -456,7 +459,7 @@ msgstr "关注者（合作伙伴）"
 #. module: marketing_card
 #: model:ir.module.module,summary:base.module_marketing_card
 msgid "Generate dynamic shareable cards"
-msgstr ""
+msgstr "生成可动态分享的卡片"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_geometric
@@ -493,7 +496,7 @@ msgstr "帮助我们分享新闻"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Hi everyone!"
-msgstr ""
+msgstr "大家好！"
 
 #. module: marketing_card
 #. odoo-python
@@ -589,7 +592,7 @@ msgstr "语言"
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_mailing_mailing__card_lang
 msgid "Language in which the cards will be rendered"
-msgstr ""
+msgstr "渲染卡片所使用的语言"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__write_uid
@@ -679,7 +682,7 @@ msgstr "群发邮件"
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols 图标，例如 checklist"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_has_error
@@ -704,6 +707,8 @@ msgid ""
 "Missing target language for card campaign mailings:\n"
 "\t- %(mailing_names)s"
 msgstr ""
+"卡片营销活动邮件缺少目标语言：\n"
+"\t- %(mailing_names)s"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_ir_model
@@ -763,7 +768,7 @@ msgstr "下一活动类型"
 #. module: marketing_card
 #: model:res.groups.privilege,placeholder:marketing_card.res_groups_privilege_marketing_card
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -808,6 +813,8 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"发送邮件时可选的翻译语言（ISO 代码）。未设置时，将使用主联系人语言。这通常应"
+"是一个能提供相应语言的占位符表达式，例如 {{ object.partner_id.lang }}。"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_organic
@@ -827,12 +834,12 @@ msgstr "发帖建议"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_linkedin_share_composer
 msgid "Post Text"
-msgstr ""
+msgstr "发布文本"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_linkedin_share_composer
 msgid "Post on LinkedIn"
-msgstr ""
+msgstr "发布到领英"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -904,7 +911,7 @@ msgstr "记录ID"
 msgid ""
 "Redirection link for clicks on the cards, defaults to the relevant record or "
 "the home page."
-msgstr ""
+msgstr "点击卡片时的跳转链接，默认为相关记录或主页。"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__render_model
@@ -1106,13 +1113,13 @@ msgstr "标签名称不可以重复。"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__target_url_placeholder
 msgid "Target Url Placeholder"
-msgstr ""
+msgstr "目标 URL 占位符"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Target record (if published) or Home page"
-msgstr ""
+msgstr "目标记录（若已发布）或主页"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_message
@@ -1123,12 +1130,12 @@ msgstr "感谢信息"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Thanks for your support."
-msgstr ""
+msgstr "感谢您的支持。"
 
 #. module: marketing_card
 #: model:card.campaign,request_description:marketing_card.card_campaign_campaign_1
 msgid "That will help us"
-msgstr ""
+msgstr "这会帮助我们"
 
 #. module: marketing_card
 #. odoo-python
@@ -1142,7 +1149,7 @@ msgstr "不能删除 UTM 来源 “%s”，因为它用于推广营销卡活动�
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "The image is too large: %(image_size_human_readable)s"
-msgstr ""
+msgstr "图片过大：%(image_size_human_readable)s"
 
 #. module: marketing_card
 #: model:card.campaign,content_section:marketing_card.card_campaign_campaign_1
@@ -1186,7 +1193,7 @@ msgstr "波次"
 msgid ""
 "We'd love your help in getting the word out. Feel free to post these on your "
 "social channels!"
-msgstr ""
+msgstr "我们非常希望您能帮忙宣传。欢迎把这些内容发布到您的社交渠道！"
 
 #. module: marketing_card
 #. odoo-python
@@ -1194,12 +1201,12 @@ msgstr ""
 msgid ""
 "We've created these personalized cards to make it easy for you to share your "
 "involvement with your network."
-msgstr ""
+msgstr "我们制作了这些个性化卡片，方便您向自己的人脉分享您的参与。"
 
 #. module: marketing_card
 #: model:card.campaign,content_sub_header:marketing_card.card_campaign_campaign_1
 msgid "Welcome to Odoo"
-msgstr ""
+msgstr "欢迎使用 Odoo"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_card__requires_sync
@@ -1214,13 +1221,13 @@ msgstr "地界地图"
 #. module: marketing_card
 #: model_terms:card.campaign,reward_message:marketing_card.card_campaign_campaign_1
 msgid "You just leveled up your exposure!"
-msgstr ""
+msgstr "您的曝光度又提升了一级！"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "You must be authentified with LinkedIn to do this."
-msgstr ""
+msgstr "您必须通过领英完成身份验证才能执行此操作。"
 
 #. module: marketing_card
 #. odoo-python

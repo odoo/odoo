@@ -9,15 +9,16 @@
 # Emily Jia <eji@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:43+0000\n"
-"PO-Revision-Date: 2026-09-09 14:05+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/snailmail/zh_Hans/>\n"
+"projects/odoo-20/snailmail/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,9 @@ msgid ""
 "Allows users to send documents by post\n"
 "=====================================================\n"
 msgstr ""
+"\n"
+"允许用户通过邮寄方式发送单据\n"
+"==============================\n"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
@@ -99,7 +103,7 @@ msgstr "双面"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Bounced"
-msgstr ""
+msgstr "被退回"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
@@ -179,7 +183,7 @@ msgstr "创建日期"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Dispatched"
-msgstr ""
+msgstr "已寄出"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__display_name
@@ -292,13 +296,13 @@ msgstr "信"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Letter Undeliverable"
-msgstr ""
+msgstr "信件无法投递"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/controller/snailmail_webhook.py:0
 msgid "Letter is delivered successfully"
-msgstr ""
+msgstr "信件已成功送达"
 
 #. module: snailmail
 #. odoo-python
@@ -310,7 +314,7 @@ msgstr "通过蜗牛邮件递送的信件"
 #. odoo-python
 #: code:addons/snailmail/controller/snailmail_webhook.py:0
 msgid "Letter was unable to be delivered"
-msgstr ""
+msgstr "信件无法送达"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
@@ -330,13 +334,13 @@ msgstr "消息"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_notification
 msgid "Message Notification"
-msgstr ""
+msgstr "消息通知"
 
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Missing Required Fields"
-msgstr ""
+msgstr "缺少必填字段"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -352,7 +356,7 @@ msgstr "NO_PRICE_AVAILABLE"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "No IAP Credits"
-msgstr ""
+msgstr "无 IAP 积分"
 
 #. module: snailmail
 #. odoo-python
@@ -400,7 +404,7 @@ msgstr "彩色打印"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__process
 msgid "Processing"
-msgstr ""
+msgstr "处理中"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -443,7 +447,7 @@ msgstr "发送者"
 #: model:iap.service,name:snailmail.iap_service_snailmail
 #: model:ir.module.module,shortdesc:base.module_snailmail
 msgid "Snail Mail"
-msgstr ""
+msgstr "传统邮件"
 
 #. module: snailmail
 #. odoo-python
@@ -519,7 +523,7 @@ msgstr "蜗牛邮件试用错误"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_undeliverable
 msgid "Snailmail Undeliverable"
-msgstr ""
+msgstr "传统邮件无法投递"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
@@ -529,7 +533,7 @@ msgstr "蜗牛邮件未知错误"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__letter_uid
 msgid "Snailmail letter ID"
-msgstr ""
+msgstr "传统邮件信件 ID"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
@@ -598,13 +602,13 @@ msgstr "Snailmail不包含合作伙伴所在的国家或地区。"
 msgid ""
 "The document has been accepted by postal service provider and is being "
 "processed.<br>The tracking id is %s"
-msgstr ""
+msgstr "单据已被邮政服务提供商接收并正在处理中。<br>追踪编号为 %s"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
-msgstr ""
+msgstr "待发送的单据超过最多允许的 8 页限制。"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -654,6 +658,10 @@ msgid ""
 "If not sent or delivered, it will got in state 'Error' and the error message "
 "will be displayed in the field 'Error Message'."
 msgstr ""
+"创建信件时，状态为「排队」。\n"
+"如果信件成功发送给服务提供商，状态变为「处理中」，\n"
+"如果提供商确认信件已送达，状态变为「已发送」。\n"
+"如果未发送或未送达，状态将变为「错误」，错误消息会显示在「错误消息」字段中。"
 
 #. module: snailmail
 #. odoo-python

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 17:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -36,6 +36,14 @@ msgid ""
 "* Quick payments by swiping, scanning, or tapping your credit/debit card or "
 "Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, American Express etc.\n"
+msgstr ""
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"%s. Please ensure the device is online and confirm that the Merchant ID "
+"(MID) and Terminal ID (TID) are correct."
 msgstr ""
 
 #. module: pos_dpopay
@@ -229,16 +237,6 @@ msgid "Payment is unsuccessful."
 msgstr "Le paiement a échoué."
 
 #. module: pos_dpopay
-#. odoo-python
-#: code:addons/pos_dpopay/models/pos_payment_method.py:0
-msgid ""
-"Please ensure the device is online and confirm that the Merchant ID (MID) "
-"and Terminal ID (TID) are correct. %s"
-msgstr ""
-"Veuillez vous assurer que l'appareil est en ligne et confirmer que l'ID "
-"marchand (MID) et l'ID terminal (TID) sont corrects. %s"
-
-#. module: pos_dpopay
 #: model:ir.module.module,shortdesc:base.module_pos_dpopay
 msgid "PoS DPO Pay"
 msgstr ""
@@ -315,3 +313,10 @@ msgid ""
 msgstr ""
 "Impossible de récupérer le jeton Bearer DPO Pay : vérifiez l'ID client et le "
 "Secret client."
+
+#~ msgid ""
+#~ "Please ensure the device is online and confirm that the Merchant ID (MID) "
+#~ "and Terminal ID (TID) are correct. %s"
+#~ msgstr ""
+#~ "Veuillez vous assurer que l'appareil est en ligne et confirmer que l'ID "
+#~ "marchand (MID) et l'ID terminal (TID) sont corrects. %s"

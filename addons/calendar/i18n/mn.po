@@ -15,7 +15,7 @@
 # Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
 # Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2022
 # Martin Trigaux, 2023
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
@@ -23,8 +23,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-08 13:33+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-10-14 15:33+0000\n"
+"Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-20/"
 "calendar/mn/>\n"
 "Language: mn\n"
@@ -48,6 +48,16 @@ msgid ""
 "\n"
 "If you need to manage your meetings, you should install the CRM module.\n"
 msgstr ""
+"\n"
+"Энэ бол бүрэн боломжтой календарийн систем.\n"
+"========================================\n"
+"\n"
+"Дэмжих боломжууд:\n"
+"------------\n"
+"    - Арга хэмжээний календар\n"
+"    - Давтагдах арга хэмжээ\n"
+"\n"
+"Уулзалтаа удирдах шаардлагатай бол CRM модулийг суулгана уу.\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -62,48 +72,50 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"%(date_start)s %(time_start)s-аас\n"
+" %(date_end)s %(time_end)s хүртэл (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 msgid "%(date_start)s, %(time_start)s - %(date_stop)s, %(time_stop)s"
-msgstr ""
+msgstr "%(date_start)s, %(time_start)s - %(date_stop)s, %(time_stop)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 msgid "%(date_start)s, %(time_start)s - %(time_stop)s"
-msgstr ""
+msgstr "%(date_start)s, %(time_start)s - %(time_stop)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)s (%(start)s-аас %(end)s хүртэл) (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 msgid "%(time_start)s - %(date_stop)s, %(time_stop)s"
-msgstr ""
+msgstr "%(time_start)s - %(date_stop)s, %(time_stop)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 msgid "%(time_start)s - %(time_stop)s"
-msgstr ""
+msgstr "%(time_start)s - %(time_stop)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "%s has accepted the invitation"
-msgstr ""
+msgstr "%s урилгыг хүлээн авлаа"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "%s has declined the invitation"
-msgstr ""
+msgstr "%s урилгаас татгалзлаа"
 
 #. module: calendar
 #. odoo-javascript
@@ -111,31 +123,31 @@ msgstr ""
 #: code:addons/calendar/models/mail_activity.py:0
 #: code:addons/calendar/static/src/core/web/activity_patch.js:0
 msgid "%s others"
-msgstr ""
+msgstr "бусад %s"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_model.js:0
 msgid "%s pending activities"
-msgstr ""
+msgstr "%s хүлээгдэж буй ажилбар"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
 msgid "(No Title)"
-msgstr ""
+msgstr "(Гарчиггүй)"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_filter_section.js:0
 msgid "+ Add guests"
-msgstr ""
+msgstr "+ Зочин нэмэх"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
 msgid "...and"
-msgstr ""
+msgstr "...болон"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -363,6 +375,228 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
+"\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
+"object.event_id and object.event_id.appointment_type_id\"/>\n"
+"    <t t-set=\"customer\" t-value=\"object.event_id.find_partner_customer()"
+"\"/>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
+"object.event_id.partner_id\"/>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"/>"
+"\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get"
+"('calendar_template_ignore_recurrence')\"/>\n"
+"    <t t-set=\"organizer\" t-value=\"object.event_id.user_id\"/>\n"
+"\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Огноо шинэчлэгдсэн\n"
+"        <img src=\"/calendar/static/src/img/sync.png\" style=\"border:0; "
+"width: 20px; height: 20px; margin-left: 10px; text-decoration:none; vertical-"
+"align: middle; padding-bottom: 2px;\"/>\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        <span style=\"display: block; margin-bottom: 8px;\">Сайн байна уу <t "
+"t-out=\"object.common_name or ''\">Ready Mat</t>,</span>\n"
+"        <t t-if=\"is_online and target_responsible\">\n"
+"            <t t-if=\"customer\">\n"
+"                Таны <t t-out=\"customer.name or ''\">Jesse Brown</t> -тэй "
+"хийх уулзалт шинэчлэгдлээ:\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Таны уулзалт шинэчлэгдлээ:\n"
+"            </t>\n"
+"            <strong t-out=\"object.event_id.appointment_type_id.name or ''\">"
+"Schedule a Demo</strong> одоо дараах цагт товлогдлоо:\n"
+"            <t t-out=\"object.event_id.get_display_time_tz"
+"(tz=object.partner_id.tz) or ''\">05/04/2021 at (11:00:00 To 11:30:00) "
+"(Europe/Brussels)</t>.\n"
+"        </t>\n"
+"        <t t-elif=\"is_online and target_customer\">\n"
+"            Таны уулзалт <strong t-"
+"out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</"
+"strong> <t t-if=\"organizer\">- </t><t t-out=\"organizer.partner_id.name or "
+"''\">Colleen Diaz</t>\n"
+"            одоо дараах цагт товлогдлоо: <t t-"
+"out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">"
+"05/04/2021 at (11:00:00 To 11:30:00) (Europe/Brussels)</t>.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Уулзалтын огноо <strong t-out=\"object.event_id.name or ''\">"
+"Follow-up for Project proposal</strong> <t t-if=\"organizer\">үүсгэсэн: </t>"
+"<t t-out=\"organizer.partner_id.name or ''\">Colleen Diaz</t> одоо дараах "
+"цагт товлогдлоо:\n"
+"            <t t-out=\"object.event_id.get_display_time_tz"
+"(tz=object.partner_id.tz) or ''\">05/04/2021 at (11:00:00 To 11:30:00) "
+"(Europe/Brussels)</t>.\n"
+"        </t>\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{ object.sudo()"
+".access_token }}&amp;id={{ object.event_id.id }}\" style=\"display: inline-"
+"block; margin-left: 12px; padding: 7px 14px; color: #111827; text-"
+"decoration: none; background-color: #E7E9ED; border-radius: 3px;\">\n"
+"            Харах</a>\n"
+"    </div>\n"
+"    <div style=\"margin: 16px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Дэлгэрэнгүй</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"\t\t    <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Огноо &amp; Цаг</"
+"td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', "
+"lang_code=object.env.lang) or ''\">Tuesday</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', "
+"lang_code=object.env.lang) or ''\">4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM "
+"y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
+"                    <t t-if=\"not object.event_id.allday\">\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, "
+"tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''\">"
+"11:00 AM</t>\n"
+"                        <t t-if=\"object.mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"object.mail_tz or ''\">Europe/"
+"Brussels</t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"recurrent\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Хэзээ</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-"
+"out=\"object.recurrence_id.get_recurrence_name() or ''\">Every 1 Weeks, for "
+"3 events</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.event_id.allday and "
+"object.event_id.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Үргэлжлэх хугацаа</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+"(object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">"
+"0H30</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B; "
+"vertical-align: top;\">Байршил</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"object.event_id.location or ''\">Bruxelles</t>"
+"\n"
+"                    <a target=\"_blank\" t-if=\"not is_online or is_online "
+"and object.event_id.location != "
+"object.event_id.appointment_type_id.location_id.name\" t-attf-href=\"http://"
+"maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\" "
+"style=\"margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: "
+"underline;\">Газрын зураг харах</a>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.videocall_location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">\n"
+"                    <t t-if=\"object.event_id.videocall_source == "
+"'discuss'\">Нэгдэх:</t>\n"
+"                    <t t-else=\"\">Нэгдэх</t>\n"
+"                </td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <a t-att-href=\"object.event_id.videocall_location\" "
+"target=\"_blank\" style=\"color: #008f8c;\">\n"
+"                        <t t-if=\"object.event_id.videocall_source == "
+"'discuss'\">Odoo Discuss</t>\n"
+"                        <t t-else=\"\">Видео уулзалт</t>\n"
+"                    </a>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Оролцогчид</h2>\n"
+"        <div t-"
+"foreach=\"object.event_id.attendee_ids[:max_shown_attendees]\" t-"
+"as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
+"            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
+"img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
+"15px; vertical-align: text-bottom;\"/>\n"
+"            <t t-if=\"attendee != object\">\n"
+"                <span style=\"margin-left: 5px;\" t-"
+"out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"margin-left: 5px;\">Та</span>\n"
+"            </t>\n"
+"        </div>\n"
+"        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
+"max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
+"            ... болон <t t-out=\"len(object.event_id.attendee_ids) - "
+"max_shown_attendees\">2</t> бусад\n"
+"        </div>\n"
+"    </div>\n"
+"    <div t-if=\"not is_html_empty(object.event_id.description)\" "
+"style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Арга хэмжээний тайлбар</h2>\n"
+"        <t t-out=\"object.event_id.description\">Internal meeting for "
+"discussion for new pricing for product and services.</t>\n"
+"    </div>\n"
+"    <br/>\n"
+"    <strong>Календарт нэмэх</strong>\n"
+"    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
+"        <tr>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/{{ "
+"object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; border-"
+"radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/apple-calendar-"
+"128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: "
+"baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/{{ "
+"object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-"
+"left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/outlook-calendar-"
+"128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-"
+"align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-att-href=\"object.event_id.google_calendar_url\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right: 8px; padding-"
+"bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/google-calendar-"
+"128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-"
+"align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        Баярлалаа!\n"
+"        <t t-if=\"organizer.signature\">\n"
+"            <span style=\"display: block; margin-top: 8px;\"><t t-"
+"out=\"organizer.signature or ''\">Mitchell Admin</t></span>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -570,6 +804,206 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
+"    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()"
+"\"/>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == "
+"object.event_id.partner_id\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get"
+"('calendar_template_ignore_recurrence')\"/>\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
+"object.event_id and object.event_id.appointment_type_id\"/>\n"
+"\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Урилга\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        <span style=\"display: block; margin-bottom: 8px;\">Сайн байна уу <t "
+"t-out=\"object.common_name or ''\">Wood Corner</t>,</span>\n"
+"\n"
+"        <t t-if=\"not target_responsible\">\n"
+"            <t t-if=\"not object.event_id.user_id.active\">\n"
+"                Таныг Customer дараах <strong t-out=\"object.event_id.name "
+"or ''\">Follow-up for Project proposal</strong> уулзалтад урьсан байна.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.event_id.user_id.partner_id.name or ''\">"
+"Colleen Diaz</t> таныг дараах <strong t-out=\"object.event_id.name or ''\">"
+"Follow-up for Project proposal</strong> уулзалтад урьсан байна.\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Таны <strong t-out=\"object.event_id.name or ''\">Follow-up for "
+"Project proposal</strong> уулзалт захиалагдлаа.\n"
+"        </t>\n"
+"\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{object.sudo()"
+".access_token}}&amp;id={{object.event_id.id}}\" style=\"display: inline-"
+"block; margin-left: 12px; padding: 7px 14px; color: #111827; text-"
+"decoration: none; background-color: #E7E9ED; border-radius: 3px;\">\n"
+"            Харах</a>\n"
+"    </div>\n"
+"    <div style=\"margin: 16px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Дэлгэрэнгүй</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"            <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Огноо &amp; Цаг</"
+"td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', "
+"lang_code=object.env.lang) or ''\">Tuesday</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', "
+"lang_code=object.env.lang) or ''\">4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM "
+"y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
+"                    <t t-if=\"not object.event_id.allday\">\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, "
+"tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''\">"
+"11:00 AM</t>\n"
+"                        <t t-if=\"object.mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"object.mail_tz or ''\">Europe/"
+"Brussels</t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"recurrent\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Хэзээ</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-"
+"out=\"object.recurrence_id.get_recurrence_name() or ''\">Every 1 Weeks, for "
+"3 events</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.event_id.allday and "
+"object.event_id.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Үргэлжлэх хугацаа</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+"(object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">"
+"0H30</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B; "
+"vertical-align: top;\">Байршил</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"object.event_id.location or ''\">Bruxelles</t>"
+"\n"
+"                    <a target=\"_blank\" t-if=\"not is_online or is_online "
+"and object.event_id.location != "
+"object.event_id.appointment_type_id.location_id.name\" t-attf-href=\"http://"
+"maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\" "
+"style=\"margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: "
+"underline;\">Газрын зураг харах</a>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.videocall_location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px;color: #676F7B;\">"
+"\n"
+"                    <t t-if=\"object.get_base_url() in "
+"object.event_id.videocall_location\">Нэгдэх:</t>\n"
+"                    <t t-else=\"\">Нэгдэх</t>\n"
+"                </td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <a t-att-href=\"object.event_id.videocall_location\" "
+"target=\"_blank\" style=\"color: #008f8c;\">\n"
+"                        <t t-if=\"object.get_base_url() in "
+"object.event_id.videocall_location\">Odoo Discuss</t>\n"
+"                        <t t-else=\"\">Видео уулзалт</t>\n"
+"                    </a>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Оролцогчид</h2>\n"
+"        <div t-"
+"foreach=\"object.event_id.attendee_ids[:max_shown_attendees]\" t-"
+"as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
+"            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
+"img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
+"15px; vertical-align: text-bottom;\"/>\n"
+"            <t t-if=\"attendee != object\">\n"
+"                <span style=\"margin-left: 5px;\" t-"
+"out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"margin-left: 5px;\">Та</span>\n"
+"            </t>\n"
+"        </div>\n"
+"        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
+"max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
+"            ... болон <t t-out=\"len(object.event_id.attendee_ids) - "
+"max_shown_attendees\">2</t> бусад\n"
+"        </div>\n"
+"    </div>\n"
+"    <div t-if=\"not is_html_empty(object.event_id.description)\" "
+"style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Арга хэмжээний тайлбар</h2>\n"
+"        <t t-out=\"object.event_id.description\">Internal meeting for "
+"discussion for new pricing for product and services.</t>\n"
+"    </div>\n"
+"    <br/>\n"
+"    <strong>Календарт нэмэх</strong>\n"
+"    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
+"        <tr>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/{{ "
+"object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; border-"
+"radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/apple-calendar-"
+"128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: "
+"baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/{{ "
+"object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-"
+"left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/outlook-calendar-"
+"128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-"
+"align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-att-href=\"object.event_id.google_calendar_url\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right: 8px; padding-"
+"bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/google-calendar-"
+"128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-"
+"align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        Баярлалаа!\n"
+"        <t t-if=\"object.event_id.user_id.signature\">\n"
+"            <span style=\"display: block; margin-top: 8px;\"><t t-"
+"out=\"object.event_id.user_id.signature or ''\">Mitchell Admin</t></span>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_update
@@ -745,6 +1179,177 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object and "
+"object.appointment_type_id\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get"
+"('calendar_template_ignore_recurrence')\"/>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get"
+"('mail_tz')\"/>\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Арга хэмжээ шинэчлэгдсэн\n"
+"        <img src=\"/calendar/static/src/img/sync.png\" style=\"border:0; "
+"width: 20px; height: 20px; margin-left: 10px; text-decoration:none; vertical-"
+"align: middle; padding-bottom: 2px;\"/>\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        <span style=\"display: block; margin-bottom: 8px;\">Сайн байна уу,</"
+"span>\n"
+"        Энэ уулзалт шинэчлэгдлээ.\n"
+"    </p>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Дэлгэрэнгүй</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"            <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Огноо &amp; Цаг</"
+"td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)"
+"\">Tuesday</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='d', lang_code=object.env.lang)\">"
+"4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='MMMM y', "
+"lang_code=object.env.lang)\">May 2021</t>\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <t t-out=\"format_time(time=object.start, "
+"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</t>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"mail_tz or ''\">Europe/Brussels</"
+"t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"recurrent\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Хэзээ</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-"
+"out=\"object.recurrence_id.get_recurrence_name() or ''\">Every 1 Weeks, for "
+"3 events</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.allday and object.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Үргэлжлэх хугацаа</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+"(object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Байршил</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                    <a target=\"_blank\" t-if=\"not is_online or is_online "
+"and object.location != object.appointment_type_id.location_id.name\" t-attf-"
+"href=\"http://maps.google.com/maps?oi=map&amp;q={{object.location}}\" "
+"style=\"margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: "
+"underline;\">Газрын зураг харах</a>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.videocall_location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">\n"
+"                    <t t-if=\"object.videocall_source == 'discuss'\">"
+"Нэгдэх:</t>\n"
+"                    <t t-else=\"\">Нэгдэх</t>\n"
+"                </td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <a t-att-href=\"object.videocall_location\" "
+"target=\"_blank\" style=\"color: #008f8c;\">\n"
+"                        <t t-if=\"object.videocall_source == 'discuss'\">"
+"Odoo Discuss</t>\n"
+"                        <t t-else=\"\">Видео уулзалт</t>\n"
+"                    </a>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Оролцогчид</h2>\n"
+"        <div t-foreach=\"object.attendee_ids[:max_shown_attendees]\" t-"
+"as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
+"            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
+"img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
+"15px; vertical-align: text-bottom;\"/>\n"
+"            <t t-if=\"attendee.common_name\">\n"
+"                <span style=\"margin-left: 5px\" t-"
+"out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"margin-left: 5px;\">Та</span>\n"
+"            </t>\n"
+"        </div>\n"
+"        <div t-if=\"len(object.attendee_ids) &gt; max_shown_attendees\" "
+"style=\"margin-bottom: 5px;\">\n"
+"            ... болон <t t-out=\"len(object.attendee_ids) - "
+"max_shown_attendees\">2</t> бусад\n"
+"        </div>\n"
+"    </div>\n"
+"    <div t-if=\"not is_html_empty(object.description)\" style=\"margin: 32px "
+"0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Арга хэмжээний тайлбар</h2>\n"
+"        <t t-out=\"object.description\">Internal meeting for discussion for "
+"new pricing for product and services.</t>\n"
+"    </div>\n"
+"    <br/>\n"
+"    <strong>Календарт нэмэх</strong>\n"
+"    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
+"        <tr>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.id }}/{{ "
+"object._calendar_event_ensure_token() }}\" style=\"padding-top: 10px; "
+"padding-right: 8px; padding-bottom: 2px; padding-left: 8px; border-radius: "
+"3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/apple-calendar-"
+"128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: "
+"baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.id }}/{{ "
+"object._calendar_event_ensure_token() }}\" style=\"padding-top: 10px; "
+"padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: "
+"8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/outlook-calendar-"
+"128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-"
+"align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-att-href=\"object.google_calendar_url\" target=\"new\" "
+"style=\"padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-"
+"left: 8px; margin-left: 8px; border-radius: 3px; background-color: "
+"#E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/google-calendar-"
+"128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-"
+"align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        Баярлалаа!\n"
+"        <t t-if=\"object.user_id.signature\">\n"
+"            <span style=\"display: block; margin-top: 8px;\"><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></span>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
@@ -936,6 +1541,191 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in "
+"object.event_id and object.event_id.appointment_type_id\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get"
+"('calendar_template_ignore_recurrence')\"/>\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Сануулга\n"
+"        <img src=\"/calendar/static/src/img/bell.png\" style=\"border:0; "
+"width: 16px; height: 20px; margin-left: 10px; text-decoration:none; vertical-"
+"align: middle; padding-bottom: 2px;\"/>\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        Сайн байна уу <t t-out=\"object.common_name or ''\">Gemini "
+"Furniture</t>,<br/>\n"
+"        <span style=\"display: block; margin-top: 8px;\">Энэ бол доорх арга "
+"хэмжээний сануулга юм.</span>\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{ object.sudo()"
+".access_token }}&amp;id={{ object.event_id.id }}\" style=\"display: inline-"
+"block; margin-left: 12px; padding: 7px 14px; color: #111827; text-"
+"decoration: none; background-color: #E7E9ED; border-radius: 3px;\">\n"
+"            Харах</a>\n"
+"    </div>\n"
+"    <div style=\"margin: 16px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Дэлгэрэнгүй</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"            <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Огноо &amp; Цаг</"
+"td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', "
+"lang_code=object.env.lang) or ''\">Tuesday</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', "
+"lang_code=object.env.lang) or ''\">4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.event_id.start, "
+"tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM "
+"y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
+"                    <t t-if=\"not object.event_id.allday\">\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, "
+"tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''\">"
+"11:00 AM</t>\n"
+"                        <t t-if=\"object.mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"object.mail_tz or ''\">Europe/"
+"Brussels</t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"recurrent\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Хэзээ</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"object.recurrence_id.get_recurrence_name() or "
+"''\">Every 1 Weeks, for 3 events</t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.event_id.allday and "
+"object.event_id.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Үргэлжлэх хугацаа</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"('%dH%02d' % (object.event_id.duration,round"
+"(object.event_id.duration*60)%60)) or ''\">0H30</t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B; "
+"vertical-align: top;\">Байршил</td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <t t-out=\"object.event_id.location or ''\">Bruxelles</t>"
+"\n"
+"                    <a target=\"_blank\" t-if=\"not is_online or is_online "
+"and object.event_id.location != "
+"object.event_id.appointment_type_id.location_id.name\" t-attf-href=\"http://"
+"maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\" "
+"style=\"margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: "
+"underline;\">Газрын зураг харах</a>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.event_id.videocall_location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">\n"
+"                    <t t-if=\"object.get_base_url() in "
+"object.event_id.videocall_location\">Нэгдэх:</t>\n"
+"                    <t t-else=\"\">Нэгдэх</t>\n"
+"                </td>\n"
+"                <td style=\"padding-top: 6px;\">\n"
+"                    <a t-att-href=\"object.event_id.videocall_location\" "
+"target=\"_blank\" style=\"color: #008f8c;\">\n"
+"                        <t t-if=\"object.get_base_url() in "
+"object.event_id.videocall_location\">Odoo Discuss</t>\n"
+"                        <t t-else=\"\">Видео уулзалт</t>\n"
+"                    </a>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Оролцогчид</h2>\n"
+"        <div t-"
+"foreach=\"object.event_id.attendee_ids[:max_shown_attendees]\" t-"
+"as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
+"            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/"
+"img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: "
+"15px; vertical-align: text-bottom;\"/>\n"
+"            <t t-if=\"attendee != object\">\n"
+"                <span style=\"margin-left: 5px;\" t-"
+"out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <span style=\"margin-left: 5px;\">Та</span>\n"
+"            </t>\n"
+"        </div>\n"
+"        <div t-if=\"len(object.event_id.attendee_ids) &gt; "
+"max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
+"            ... болон <t t-out=\"len(object.event_id.attendee_ids) - "
+"max_shown_attendees\">2</t> бусад\n"
+"        </div>\n"
+"    </div>\n"
+"    <div t-if=\"not is_html_empty(object.event_id.description)\" "
+"style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Арга хэмжээний тайлбар</h2>\n"
+"        <t t-out=\"object.event_id.description\">Internal meeting for "
+"discussion for new pricing for product and services.</t>\n"
+"    </div>\n"
+"    <br/>\n"
+"    <strong>Календарт нэмэх</strong>\n"
+"    <table style=\"width: auto; margin-top: 8px; border-spacing: 0;\">\n"
+"        <tr>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/{{ "
+"object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; border-"
+"radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/apple-calendar-"
+"128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: "
+"baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-attf-href=\"/calendar/ics/{{ object.event_id.id }}/{{ "
+"object.event_id._calendar_event_ensure_token() }}\" style=\"padding-top: "
+"10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-"
+"left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/outlook-calendar-"
+"128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-"
+"align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"            <td>\n"
+"                <a t-att-href=\"object.event_id.google_calendar_url\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right: 8px; padding-"
+"bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                    <img src=\"/calendar/static/src/img/google-calendar-"
+"128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-"
+"align: baseline;\"/>\n"
+"                </a>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        Баярлалаа!\n"
+"        <t t-if=\"object.event_id.user_id.signature\">\n"
+"            <span style=\"display: block; margin-top: 8px;\"><t t-"
+"out=\"object.event_id.user_id.signature or ''\">Mitchell Admin</t></span>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_delete_event
@@ -1017,17 +1807,93 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"font-size: 13px; color: #374151; background-color: white;\">\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get"
+"('mail_tz')\"/>\n"
+"    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
+"    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
+"    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
+"bottom: 28px;\">\n"
+"        Арга хэмжээ цуцлагдсан\n"
+"        <img src=\"/calendar/static/src/img/times-circle.png\" "
+"style=\"border:0; width: 20px; height: 20px; margin-left: 10px; text-"
+"decoration:none; vertical-align: middle; padding-bottom: 2px;\"/>\n"
+"    </h1>\n"
+"    <p style=\"margin: 0;\">\n"
+"        Сайн байна уу,<br/>\n"
+"        <span style=\"display: block; margin-top: 8px;\">\n"
+"            Дараах арга хэмжээ <strong t-out=\"event_name or ''\">Follow-up "
+"for Project proposal</strong> <t t-if=\"event_organizer\">, зохион "
+"байгуулагч </t><t t-out=\"event_organizer or ''\">Colleen Diaz</t> "
+"цуцлагдаж, таны календараас хасагдсаныг мэдэгдье.\n"
+"        </span>\n"
+"    </p>\n"
+"    <div style=\"margin: 32px 0 0;\">\n"
+"        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">Дэлгэрэнгүй</h2>\n"
+"        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
+"size: 13px; color: #374151;\">\n"
+"            <tr>\n"
+"                <td style=\"width: 100px; color: #676F7B;\">Огноо &amp; Цаг</"
+"td>\n"
+"                <td style=\"font-weight: bold;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)"
+"\">Tuesday</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='d', lang_code=object.env.lang)\">"
+"4</t>\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz "
+"if not object.allday else None, dt_format='MMMM y', "
+"lang_code=object.env.lang)\">May 2021</t>\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <t t-out=\"format_time(time=object.start, "
+"tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 AM</t>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <span style=\"font-size: 11px; font-weight: "
+"normal;\">\n"
+"                                (<t t-out=\"mail_tz or ''\">Europe/Brussels</"
+"t>)\n"
+"                            </span>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr t-if=\"not object.allday and object.duration\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Үргэлжлэх хугацаа</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
+"(object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
+"            </tr>\n"
+"            <tr t-if=\"object.location\">\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">Байршил</td>\n"
+"                <td style=\"padding-top: 6px;\"><t t-out=\"object.location "
+"or ''\">Bruxelles</t></td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <p style=\"margin: 32px 0 0;\">\n"
+"        Асуулт, санал байвал бидэнтэй холбогдоорой. <br/>\n"
+"        Хүндэтгэсэн,\n"
+"        <span style=\"display: block; margin-top: 8px;\">Календарийн баг</"
+"span>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
 msgid "<i class=\"me-2 oi\" data-icon=\"arrow_forward\"/>Manage my calendars"
 msgstr ""
+"<i class=\"me-2 oi\" data-icon=\"arrow_forward\"/>Миний календаруудыг удирдах"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled mt-1\" data-icon=\"schedule\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled mt-1\" data-icon=\"schedule\" title=\"Огноо\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
@@ -1036,52 +1902,59 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Calendar\"/>\n"
 "                    <span class=\"text-muted\">Pick a date and time</span>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Календар\"/>\n"
+"                    <span class=\"text-muted\">Огноо, цаг сонгох</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"circle\" title=\"Show as\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"circle\" title=\"Харагдах байдал\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"label\" title=\"Booking Name\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"label\" title=\"Захиалгын нэр\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"lock\" title=\"Visibility\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"lock\" title=\"Харагдах түвшин\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"map\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"map\" title=\"Байршил\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Participants\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Оролцогчид\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi oi-filled\" data-icon=\"sticky_note_2\" title=\"Notes\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"sticky_note_2\" title=\"Тэмдэглэл\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"videocam\" title=\"Videocall URL\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"videocam\" title=\"Видео дуудлагын "
+"URL\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi\" data-icon=\"calendar_today\" title=\"Calendar\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"calendar_today\" title=\"Календар\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"oi\" data-icon=\"close\" title=\"Remove\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"close\" title=\"Хасах\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1089,6 +1962,8 @@ msgid ""
 "<i title=\"Clear meeting\" data-tooltip=\"Clear meeting\" class=\"oi\" data-"
 "icon=\"close\"/>"
 msgstr ""
+"<i title=\"Уулзалтыг цэвэрлэх\" data-tooltip=\"Уулзалтыг цэвэрлэх\" "
+"class=\"oi\" data-icon=\"close\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1096,6 +1971,8 @@ msgid ""
 "<i title=\"Join Video Call\" data-tooltip=\"Join video call\" class=\"oi\" "
 "data-icon=\"login\"/>"
 msgstr ""
+"<i title=\"Видео дуудлагад нэгдэх\" data-tooltip=\"Видео дуудлагад нэгдэх\" "
+"class=\"oi\" data-icon=\"login\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1104,11 +1981,14 @@ msgid ""
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Давтах өдөр</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"me-1\">Not available at the selected time:</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">Сонгосон цагт боломжгүй:</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1116,6 +1996,8 @@ msgid ""
 "<span class=\"mx-1\"><i class=\"oi me-1\" data-icon=\"add\"/>Video "
 "conference</span>"
 msgstr ""
+"<span class=\"mx-1\"><i class=\"oi me-1\" data-icon=\"add\"/>Видео хурал</"
+"span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
@@ -1123,6 +2005,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold text-900\" invisible=\"share or id != "
 "uid\">Calendar</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share or id != "
+"uid\">Календар</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendars
@@ -1130,11 +2014,13 @@ msgid ""
 "<span class=\"o_form_label fw-bold text-900\" invisible=\"share\">Calendar</"
 "span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold text-900\" invisible=\"share\">Календар</"
+"span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"oi me-1\" data-icon=\"add\"/>Video conference"
-msgstr ""
+msgstr "<span class=\"oi me-1\" data-icon=\"add\"/>Видео хурал"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -1142,11 +2028,13 @@ msgid ""
 "<span class=\"w-100 mb-1\">The following attendees do not have an email "
 "address set. They will not be invited to the event.</span>"
 msgstr ""
+"<span class=\"w-100 mb-1\">Дараах оролцогчид имэйл хаяггүй байна. Тэднийг "
+"арга хэмжээнд урихгүй.</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span invisible=\"allday\"> or </span>"
-msgstr ""
+msgstr "<span invisible=\"allday\"> эсвэл </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
@@ -1154,6 +2042,8 @@ msgid ""
 "<span invisible=\"block_mail\">Notify attendees of confirmed events that the "
 "event was canceled?</span>"
 msgstr ""
+"<span invisible=\"block_mail\">Батлагдсан арга хэмжээний оролцогчдод арга "
+"хэмжээ цуцлагдсаныг мэдэгдэх үү?</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
@@ -1173,6 +2063,20 @@ msgid ""
 "this occurrence will be archived.\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"requested_action != 'unlink'\">Эдгээр арга хэмжээг "
+"устгахдаа итгэлтэй байна уу ?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">Эдгээр "
+"арга хэмжээг архивлахдаа итгэлтэй байна уу ?</span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'unlink'\">\n"
+"                        Давталттай арга хэмжээ сонгогдсон тул зөвхөн энэ "
+"тохиолдлыг устгана.\n"
+"                    </span>\n"
+"                    <span invisible=\"not has_recurrent_events or "
+"requested_action != 'archive'\">\n"
+"                        Давталттай арга хэмжээ сонгогдсон тул зөвхөн энэ "
+"тохиолдлыг архивлана.\n"
+"                    </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
@@ -1182,6 +2086,10 @@ msgid ""
 "                    <span invisible=\"requested_action != 'archive'\">Are "
 "you sure you want to archive this event ?</span>"
 msgstr ""
+"<span invisible=\"requested_action != 'unlink'\">Энэ арга хэмжээг устгахдаа "
+"итгэлтэй байна уу ?</span>\n"
+"                    <span invisible=\"requested_action != 'archive'\">Энэ "
+"арга хэмжээг архивлахдаа итгэлтэй байна уу ?</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1189,6 +2097,8 @@ msgid ""
 "<span>The following attendees do not have an email address set. They will "
 "not be invited to the event.</span>"
 msgstr ""
+"<span>Дараах оролцогчид имэйл хаяггүй байна. Тэднийг арга хэмжээнд урихгүй.</"
+"span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -1202,17 +2112,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/calendar/models/calendar_calendar.py:0
 msgid "A primary calendar cannot be deleted."
-msgstr ""
+msgstr "Үндсэн календарийг устгах боломжгүй."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_check_no_recurrent_draft
 msgid "A recurring event cannot be a draft."
-msgstr ""
+msgstr "Давтагдах арга хэмжээ ноорог байж болохгүй."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
 msgid "A user cannot have the same contact twice."
-msgstr ""
+msgstr "Хэрэглэгч нэг харилцах хаягийг хоёр удаа агуулж болохгүй."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1223,18 +2133,18 @@ msgstr "Зөвшөөрөх"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
 msgid "Accepted Count"
-msgstr ""
+msgstr "Хүлээн авсан тоо"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__user_access_role
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__access_role
 msgid "Access Role"
-msgstr ""
+msgstr "Хандалтын үүрэг"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_access_token_unique
 msgid "Access token should be unique"
-msgstr ""
+msgstr "Хандах токен давхардахгүй байх ёстой"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -1248,7 +2158,6 @@ msgstr "Үйлдэл шаардсан"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
-#, fuzzy
 msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
@@ -1277,24 +2186,21 @@ msgstr "Ажилбар"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_exception_decoration
-#, fuzzy
 msgid "Activity Exception Decoration"
 msgstr "Ажилбарын тайлбар"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "Ажилбарын Mixin"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_plans_ids
-#, fuzzy
 msgid "Activity Plans"
 msgstr "Ажилбарын Төлөвлөгөөнүүд"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_state
-#, fuzzy
 msgid "Activity State"
 msgstr "Ажилбарын төлөв"
 
@@ -1305,46 +2211,44 @@ msgstr "Ажилбарын төрөл"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_type_icon
-#, fuzzy
 msgid "Activity Type Icon"
 msgstr "Ажилбарын төрлийн зураг"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_schedule
-#, fuzzy
 msgid "Activity schedule plan Wizard"
 msgstr "Ажилбар төлөвлөлтийн цонх"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Add Title"
-msgstr ""
+msgstr "Гарчиг нэмэх"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Add attendees..."
-msgstr ""
+msgstr "Оролцогч нэмэх..."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Add description"
-msgstr ""
+msgstr "Тайлбар нэмэх"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Add notes about this meeting..."
-msgstr ""
+msgstr "Энэ уулзалтын талаар тэмдэглэл нэмэх..."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
 msgid "Additional Message"
-msgstr ""
+msgstr "Нэмэлт зурвас"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
 msgid ""
 "Additional message that would be sent with the notification for the reminder"
-msgstr ""
+msgstr "Сануулгын мэдэгдэлтэй хамт илгээгдэх нэмэлт зурвас"
 
 #. module: calendar
 #. odoo-javascript
@@ -1356,23 +2260,22 @@ msgstr "Өдөржин"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
 msgid "All Day Duration"
-msgstr ""
+msgstr "Бүтэн өдрийн үргэлжлэх хугацаа"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "All Day, %(day)s"
-msgstr ""
+msgstr "Бүтэн өдөр, %(day)s"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "All calendars"
-msgstr ""
+msgstr "Бүх календар"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "All day"
 msgstr "Өдөржин"
 
@@ -1381,40 +2284,40 @@ msgstr "Өдөржин"
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
 msgid "All events"
-msgstr ""
+msgstr "Бүх арга хэмжээ"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__all_events
 msgid "All the events"
-msgstr ""
+msgstr "Бүх арга хэмжээ"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Archive"
-msgstr ""
+msgstr "Архивлах"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Archive event"
-msgstr ""
+msgstr "Арга хэмжээг архивлах"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Archive events"
-msgstr ""
+msgstr "Арга хэмжээнүүдийг архивлах"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 msgid "Archive or Delete Event"
-msgstr ""
+msgstr "Арга хэмжээг архивлах эсвэл устгах"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Archive or Delete Events"
-msgstr ""
+msgstr "Арга хэмжээнүүдийг архивлах эсвэл устгах"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1426,7 +2329,7 @@ msgstr "Архивласан"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Are you sure you want to unsubscribe from this calendar?"
-msgstr ""
+msgstr "Энэ календараас бүртгэлээ цуцлахдаа итгэлтэй байна уу?"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
@@ -1447,17 +2350,17 @@ msgstr "Оролцогчид"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
 msgid "Attendees Count"
-msgstr ""
+msgstr "Оролцогчдын тоо"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Attendees will be notified upon confirmation."
-msgstr ""
+msgstr "Батлагдсаны дараа оролцогчдод мэдэгдэнэ."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
 msgid "Attending?"
-msgstr ""
+msgstr "Оролцох уу?"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
@@ -1468,32 +2371,31 @@ msgstr "Бэлэн"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Available/Busy"
-msgstr ""
+msgstr "Чөлөөтэй/Завгүй"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Awaiting"
-msgstr ""
+msgstr "Хүлээгдэж буй"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__awaiting_count
 msgid "Awaiting Count"
-msgstr ""
+msgstr "Хүлээгдэж буй тоо"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
 msgid "Base Event"
-msgstr ""
+msgstr "Үндсэн арга хэмжээ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__block_mail
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__block_mail
 msgid "Block Mail"
-msgstr ""
+msgstr "Мэйл хориглох"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__body_has_template_value
-#, fuzzy
 msgid "Body content is the same as the template"
 msgstr "Үндсэн агуулга нь загвартайгаа ижил"
 
@@ -1543,7 +2445,7 @@ msgstr "Календарийн оролцогчийн мэдээлэл"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_default_privacy
 msgid "Calendar Default Privacy"
-msgstr ""
+msgstr "Календарийн үндсэн нууцлал"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -1557,17 +2459,17 @@ msgstr "Календарийн арга хэмжээ"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_archive_or_unlink_wizard
 msgid "Calendar Event Archive Or Unlink Wizard"
-msgstr ""
+msgstr "Календарийн арга хэмжээг архивлах эсвэл устгах хөтөч"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_multi_archive_or_unlink_wizard
 msgid "Calendar Event Multi Archive Or Unlink Wizard"
-msgstr ""
+msgstr "Календарийн олон арга хэмжээг архивлах эсвэл устгах хөтөч"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
 msgid "Calendar Filter"
-msgstr ""
+msgstr "Календарийн шүүлтүүр"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1582,42 +2484,42 @@ msgstr "Уулзалт"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__members_only
 msgid "Calendar Members Only"
-msgstr ""
+msgstr "Зөвхөн календарийн гишүүд"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Calendar Settings"
-msgstr ""
+msgstr "Календарийн тохиргоо"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_user_ids
 msgid "Calendar User"
-msgstr ""
+msgstr "Календарийн хэрэглэгч"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_user
 msgid "Calendar User Manager"
-msgstr ""
+msgstr "Календарийн хэрэглэгчийн менежер"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Calendar description"
-msgstr ""
+msgstr "Календарийн тайлбар"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
 msgid "Calendar name"
-msgstr ""
+msgstr "Календарийн нэр"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
 msgid "Calendar: Date Updated"
-msgstr ""
+msgstr "Календар: Огноо шинэчлэгдсэн"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
 msgid "Calendar: Event Canceled"
-msgstr ""
+msgstr "Календар: Арга хэмжээ цуцлагдсан"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -1627,24 +2529,24 @@ msgstr "Календарь: Арга хэмжээ сануулга"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
 msgid "Calendar: Event Update"
-msgstr ""
+msgstr "Календар: Арга хэмжээ шинэчлэгдсэн"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr ""
+msgstr "Календар: Уулзалтын урилга"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
 msgid "Calendar: Reminder"
-msgstr ""
+msgstr "Календар: Сануулга"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_calendars
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
 msgid "Calendars"
-msgstr ""
+msgstr "Календарууд"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__can_edit_body
@@ -1654,7 +2556,7 @@ msgstr "Засвар хийх боломжтой Эх бие"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_delete_event
 msgid "Canceled event: {{ object.name }}"
-msgstr ""
+msgstr "Цуцлагдсан арга хэмжээ: {{ object.name }}"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone
@@ -1663,6 +2565,9 @@ msgid ""
 "only one that hasn't declined\n"
 "        the event (only if the organizer is not the only attendee)"
 msgstr ""
+"Зохион байгуулагч арга хэмжээнд ганцаараа эсэхийг шалгана, өөрөөр хэлбэл "
+"зохион байгуулагч арга хэмжээнээс татгалзаагүй цорын ганц хүн эсэх\n"
+"        (зөвхөн зохион байгуулагч цорын ганц оролцогч биш үед)"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
@@ -1670,6 +2575,8 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
+"Давталт дахь бусад арга хэмжээг яах сонгоно уу. Огноо эсвэл цаг өөрчлөгдсөн "
+"үед бүх арга хэмжээг шинэчлэхийг зөвшөөрөхгүй"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__color
@@ -1687,7 +2594,7 @@ msgstr "Ерөнхий нэр"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "Company"
-msgstr ""
+msgstr "Компани"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_menu_config
@@ -1698,7 +2605,6 @@ msgstr "Тохиргоо"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "Confirm"
 msgstr "Батлах"
 
@@ -1712,7 +2618,7 @@ msgstr "Харилцах хаяг"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Contact Attendees"
-msgstr ""
+msgstr "Оролцогчидтой холбогдох"
 
 #. module: calendar
 #. odoo-python
@@ -1724,7 +2630,7 @@ msgstr "Холбоо барих мэдээлэл"
 #. odoo-python
 #: code:addons/calendar/models/res_partner.py:0
 msgid "Contact created through Calendar sync."
-msgstr ""
+msgstr "Календарийн ижилсүүлэлтээр үүсгэсэн харилцах хаяг."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__body
@@ -1740,12 +2646,12 @@ msgstr "Тоолох"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Create Calendar"
-msgstr ""
+msgstr "Календар үүсгэх"
 
 #. module: calendar
 #: model:ir.model,website_form_label:calendar.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Захиалагч үүсгэх"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
@@ -1778,12 +2684,12 @@ msgstr "Үүсгэсэн огноо"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_attendee
 msgid "Current Attendee"
-msgstr ""
+msgstr "Одоогийн оролцогч"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_id
 msgid "Current Membership Record"
-msgstr ""
+msgstr "Одоогийн гишүүнчлэлийн бичлэг"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
@@ -1846,17 +2752,17 @@ msgstr "Татгалзах"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__declined_count
 msgid "Declined Count"
-msgstr ""
+msgstr "Татгалзсан тоо"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Default Privacy"
-msgstr ""
+msgstr "Үндсэн нууцлал"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_form
 msgid "Default visibility"
-msgstr ""
+msgstr "Үндсэн харагдах түвшин"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
@@ -1868,13 +2774,13 @@ msgstr "Устгах"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Delete event"
-msgstr ""
+msgstr "Арга хэмжээг устгах"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Delete events"
-msgstr ""
+msgstr "Арга хэмжээнүүдийг устгах"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1896,7 +2802,7 @@ msgstr "Хөөрөлдөх"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_channel_id
 msgid "Discuss Channel"
-msgstr ""
+msgstr "Discuss суваг"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_discuss_channel
@@ -1906,7 +2812,7 @@ msgstr "Хөөрөлдөөний суваг"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
 msgid "Display Description"
-msgstr ""
+msgstr "Тайлбар харуулах"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
@@ -1951,12 +2857,12 @@ msgstr "Баримтын моделийн нэр"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Draft"
-msgstr ""
+msgstr "Ноорог"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
 msgid "Dtstart"
-msgstr ""
+msgstr "Dtstart"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
@@ -1973,35 +2879,35 @@ msgstr "Үргэлжлэх хугацаа минутаар"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "EMAIL"
-msgstr ""
+msgstr "ИМЭЙЛ"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Edit Calendar"
-msgstr ""
+msgstr "Календар засах"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 msgid "Edit Recurrent event"
-msgstr ""
+msgstr "Давтагдах арга хэмжээг засах"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.xml:0
 msgid "Edit filter"
-msgstr ""
+msgstr "Шүүлтүүр засах"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Edit recurring event"
-msgstr ""
+msgstr "Давтагдах арга хэмжээг засах"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__effective_privacy
 msgid "Effective Privacy"
-msgstr ""
+msgstr "Бодит нууцлал"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
@@ -2012,17 +2918,17 @@ msgstr "Имэйл"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1_day
 msgid "Email - 1 day"
-msgstr ""
+msgstr "Имэйл - 1 өдөр"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "Email - 3 Hours"
-msgstr ""
+msgstr "Имэйл - 3 цаг"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "Email - 6 Hours"
-msgstr ""
+msgstr "Имэйл - 6 цаг"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__mail_template_id
@@ -2043,7 +2949,7 @@ msgstr "Дуусах огноо"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
 msgid "End Type"
-msgstr ""
+msgstr "Дуусгах төрөл"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -2069,12 +2975,12 @@ msgstr "Арга хэмжээ төрөлтэй уулзалт"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
-msgstr ""
+msgstr "Арга хэмжээний давталтын дүрэм"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Event Tag"
-msgstr ""
+msgstr "Арга хэмжээний пайз"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -2084,59 +2990,59 @@ msgstr "Арга хэмжээний цаг"
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.mt_calendar_event_updated
 msgid "Event Updates"
-msgstr ""
+msgstr "Арга хэмжээний шинэчлэлүүд"
 
 #. module: calendar
 #: model:mail.message.subtype,description:calendar.mt_calendar_event_updated
 msgid "Event updated"
-msgstr ""
+msgstr "Арга хэмжээ шинэчлэгдсэн"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__event_ids
 msgid "Events"
-msgstr ""
+msgstr "Арга хэмжээнүүд"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days"
-msgstr ""
+msgstr "%(interval)s өдөр тутам"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days for %(count)s events"
-msgstr ""
+msgstr "%(interval)s өдөр тутам, %(count)s удаа"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days until %(until)s"
-msgstr ""
+msgstr "%(interval)s өдөр тутам, %(until)s хүртэл"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s"
-msgstr ""
+msgstr "%(interval)s сар тутам, %(day)s-ны өдөр"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s for %(count)s events"
-msgstr ""
+msgstr "%(interval)s сар тутам, %(day)s-ны өдөр, %(count)s удаа"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s until %(until)s"
-msgstr ""
+msgstr "%(interval)s сар тутам, %(day)s-ны өдөр, %(until)s хүртэл"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "%(interval)s сар тутам, %(position)s %(weekday)s"
 
 #. module: calendar
 #. odoo-python
@@ -2144,61 +3050,61 @@ msgstr ""
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
-msgstr ""
+msgstr "%(interval)s сар тутам, %(position)s %(weekday)s, %(count)s удаа"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
-msgstr ""
+msgstr "%(interval)s сар тутам, %(position)s %(weekday)s, %(until)s хүртэл"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s"
-msgstr ""
+msgstr "%(interval)s долоо хоног тутам, %(days)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
-msgstr ""
+msgstr "%(interval)s долоо хоног тутам, %(days)s, %(count)s удаа"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
-msgstr ""
+msgstr "%(interval)s долоо хоног тутам, %(days)s, %(until)s хүртэл"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years"
-msgstr ""
+msgstr "%(interval)s жил тутам"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years for %(count)s events"
-msgstr ""
+msgstr "%(interval)s жил тутам, %(count)s удаа"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years until %(until)s"
-msgstr ""
+msgstr "%(interval)s жил тутам, %(until)s хүртэл"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/mail_activity.py:0
 msgid "Feedback: %s"
-msgstr ""
+msgstr "Санал хүсэлт: %s"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_checked
 msgid "Filter Enabled"
-msgstr ""
+msgstr "Шүүлтүүр идэвхтэй"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
@@ -2215,7 +3121,7 @@ msgstr "Эхлээд урилгын огноог зааж өгөх хэрэгт�
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
 msgid "Follow Recurrence"
-msgstr ""
+msgstr "Давталтыг дагах"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
@@ -2258,14 +3164,13 @@ msgstr "Баасан"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#, fuzzy
 msgid "Future Activities"
 msgstr "Ирээдүйн үйл ажиллагаанууд"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Going?"
-msgstr ""
+msgstr "Очих уу?"
 
 #. module: calendar
 #. odoo-javascript
@@ -2281,7 +3186,7 @@ msgstr "Google Цаглабар"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__google_calendar_url
 msgid "Google Calendar URL"
-msgstr ""
+msgstr "Google Calendar URL"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -2296,7 +3201,7 @@ msgstr "Мессежтэй"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__has_recurrent_events
 msgid "Has Recurrent Events"
-msgstr ""
+msgstr "Давтагдах арга хэмжээтэй"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -2329,13 +3234,11 @@ msgstr "ID"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_exception_icon
-#, fuzzy
 msgid "Icon"
 msgstr "Дүрс"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_icon
-#, fuzzy
 msgid "Icon to indicate an exception activity."
 msgstr "Ажилбар дээр сануулга гарсныг илэрхийлэх зураг."
 
@@ -2368,6 +3271,12 @@ msgid ""
 " If the event is shown as 'free', other users know         that you are "
 "available during that period of time."
 msgstr ""
+"Хэрэв цагийг 'завгүй' гэж харуулбал энэ арга хэмжээ бусад хүмүүст "
+"нууцлалаасаа хамааран бүрэн         мэдээлэлтэйгээр эсвэл зөвхөн 'завгүй' "
+"гэж харагдана. Энэ хугацаанд боломжгүй гэдгээ бусдад мэдэгдэхийн тулд"
+"         энэ сонголтыг ашиглана уу. \n"
+" Хэрэв арга хэмжээг 'чөлөөтэй' гэж харуулбал бусад хэрэглэгчид         таныг "
+"энэ хугацаанд боломжтой гэдгийг мэднэ."
 
 #. module: calendar
 #. odoo-javascript
@@ -2378,11 +3287,15 @@ msgid ""
 "\n"
 "This action cannot be reversed."
 msgstr ""
+"Хэрэв та энэ календарийг ашигладаг цорын ганц хүн бол түүний бүх арга хэмжээ "
+"устгагдана. Үргэлжлүүлэхдээ итгэлтэй байна уу?\n"
+"\n"
+"Энэ үйлдлийг буцаах боломжгүй."
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__confidential
 msgid "Internal users only"
-msgstr ""
+msgstr "Зөвхөн дотоод хэрэглэгчид"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -2392,12 +3305,12 @@ msgstr "Завсар"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
 msgid "Invalid Email Partner"
-msgstr ""
+msgstr "Буруу имэйлтэй харилцагч"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation Status"
-msgstr ""
+msgstr "Урилгын төлөв"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
@@ -2413,7 +3326,7 @@ msgstr "Урилгын мэдээлэл"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_invitation
 msgid "Invitation email to new attendees"
-msgstr ""
+msgstr "Шинэ оролцогчдод урилгын имэйл"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -2423,7 +3336,7 @@ msgstr "Урилга"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "Invitation to {{ object.event_id.name }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}-д урилга"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2432,7 +3345,6 @@ msgstr "Урилга"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__is_mail_template_editor
-#, fuzzy
 msgid "Is Editor"
 msgstr "Засварлагч эсэх"
 
@@ -2444,34 +3356,34 @@ msgstr "Дагагч эсэх"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_draft
 msgid "Is draft"
-msgstr ""
+msgstr "Ноорог эсэх"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
 msgid "Is the Event Highlighted"
-msgstr ""
+msgstr "Арга хэмжээ тодруулагдсан эсэх"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
 msgid "Is the Organizer Alone"
-msgstr ""
+msgstr "Зохион байгуулагч ганцаараа эсэх"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 msgid "Join Meeting"
-msgstr ""
+msgstr "Уулзалтад нэгдэх"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Keep this calendar"
-msgstr ""
+msgstr "Энэ календарийг үлдээх"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__name
 msgid "Label"
-msgstr ""
+msgstr "Шошго"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__lang
@@ -2520,7 +3432,6 @@ msgstr "Суурь цаглабараас сүүлийн мэдэгдэл унш
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#, fuzzy
 msgid "Late Activities"
 msgstr "Хоцорсон ажилбар"
 
@@ -2533,11 +3444,10 @@ msgstr "Энэ интервалд арга хэмжээг автоматаар �
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__google_calendar_url
 msgid "Link to manually add the meeting to Google Calendar"
-msgstr ""
+msgstr "Уулзалтыг Google Calendar-т гараар нэмэх холбоос"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_record
-#, fuzzy
 msgid "Linked to"
 msgstr "Дараахтай холбогдсон"
 
@@ -2560,12 +3470,12 @@ msgstr "Мэйл Загвар"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
 msgid "Mail Tz"
-msgstr ""
+msgstr "Мэйлийн цагийн бүс"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols дүрс, жишээ нь checklist"
 
 #. module: calendar
 #. odoo-javascript
@@ -2573,7 +3483,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Maybe"
-msgstr ""
+msgstr "Магадгүй"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
@@ -2583,7 +3493,7 @@ msgstr "Би"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 msgid "Meet with"
-msgstr ""
+msgstr "Уулзах"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__mail_activity_type__category__meeting
@@ -2594,13 +3504,13 @@ msgstr "Уулзалт"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__meeting_activity_ids
 msgid "Meeting Activities"
-msgstr ""
+msgstr "Уулзалтын ажилбарууд"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_display_label
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_display_label
 msgid "Meeting Display Label"
-msgstr ""
+msgstr "Уулзалтын харагдах шошго"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__name
@@ -2610,7 +3520,7 @@ msgstr "Уулзалтын сэдэв"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
 msgid "Meeting URL"
-msgstr ""
+msgstr "Уулзалтын URL"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
@@ -2633,7 +3543,7 @@ msgstr "Уулзалтууд"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 msgid "Message"
-msgstr ""
+msgstr "Зурвас"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
@@ -2670,7 +3580,7 @@ msgstr "Даваа"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__month_by
 msgid "Month By"
-msgstr ""
+msgstr "Сарын сонголт"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__monthly
@@ -2687,19 +3597,17 @@ msgstr "Сар"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/calendar_form/calendar_event_quick_create.xml:0
 msgid "More Options"
-msgstr ""
+msgstr "Бусад сонголт"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#, fuzzy
 msgid "My Activities"
 msgstr "Миний ажилбарууд"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__my_activity_date_deadline
-#, fuzzy
 msgid "My Activity Deadline"
 msgstr "Миний ажилбарын эцсийн огноо"
 
@@ -2732,7 +3640,7 @@ msgstr "Шинэ"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "New Calendar"
-msgstr ""
+msgstr "Шинэ календар"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_calendar_event_id
@@ -2746,19 +3654,16 @@ msgstr "Календар дээрх дараагийн Үйл ажиллагаа
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_date_deadline
-#, fuzzy
 msgid "Next Activity Deadline"
 msgstr "Дараагийн ажилбарын эцсийн огноо"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_summary
-#, fuzzy
 msgid "Next Activity Summary"
 msgstr "Дараагийн ажилбарын гарчиг"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_type_id
-#, fuzzy
 msgid "Next Activity Type"
 msgstr "Дараагийн ажилбарын төрөл"
 
@@ -2768,12 +3673,11 @@ msgstr "Дараагийн ажилбарын төрөл"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_next_date
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_next_date
 msgid "Next Meeting"
-msgstr ""
+msgstr "Дараагийн уулзалт"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
-#, fuzzy
 msgid "Next Week"
 msgstr "Дараагийн долоо хоног"
 
@@ -2794,28 +3698,28 @@ msgstr "Үгүй би явахгүй."
 #. odoo-python
 #: code:addons/calendar/models/res_partner.py:0
 msgid "No Meetings"
-msgstr ""
+msgstr "Уулзалт алга"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "No calendar"
-msgstr ""
+msgstr "Календар алга"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "No email"
-msgstr ""
+msgstr "Имэйлгүй"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No feedback yet"
-msgstr ""
+msgstr "Санал хүсэлт хараахан алга"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "No meetings found. Let's schedule one!"
-msgstr ""
+msgstr "Уулзалт олдсонгүй. Нэгийг товлоё!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__notes
@@ -2832,39 +3736,39 @@ msgstr "Мэдэгдэл"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "Notification - 1 Days"
-msgstr ""
+msgstr "Мэдэгдэл - 1 өдөр"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "Notification - 1 Hours"
-msgstr ""
+msgstr "Мэдэгдэл - 1 цаг"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "Notification - 15 Minutes"
-msgstr ""
+msgstr "Мэдэгдэл - 15 минут"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "Notification - 2 Hours"
-msgstr ""
+msgstr "Мэдэгдэл - 2 цаг"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "Notification - 30 Minutes"
-msgstr ""
+msgstr "Мэдэгдэл - 30 минут"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
 msgid "Notifications sent to all attendees to remind of the meeting."
-msgstr ""
+msgstr "Уулзалтыг сануулахын тулд бүх оролцогчдод илгээх мэдэгдэл."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm.py:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__notify_responsible
 msgid "Notify Responsible"
-msgstr ""
+msgstr "Хариуцагчид мэдэгдэх"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -2874,7 +3778,7 @@ msgstr "Үйлдлийн тоо"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__count
 msgid "Number of Repetitions"
-msgstr ""
+msgstr "Давталтын тоо"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
@@ -2908,19 +3812,18 @@ msgstr "OK"
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
-#, fuzzy
 msgid "Online"
 msgstr "Онлайн"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Online Meeting"
-msgstr ""
+msgstr "Онлайн уулзалт"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Only Internal Users"
-msgstr ""
+msgstr "Зөвхөн дотоод хэрэглэгчид"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__confidential
@@ -2933,6 +3836,7 @@ msgstr "Зөвхөн дотоод хэрэглэгчид"
 #: code:addons/calendar/models/calendar_calendar.py:0
 msgid "Only the calendar owner can modify these fields: %(fields)s"
 msgstr ""
+"Зөвхөн календарийн эзэмшигч эдгээр талбарыг өөрчлөх боломжтой: %(fields)s"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -2942,7 +3846,7 @@ msgstr "Сонгох зүйл"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 msgid "Optional message"
-msgstr ""
+msgstr "Заавал биш зурвас"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_archive_or_unlink_wizard__lang
@@ -2952,6 +3856,9 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Имэйл илгээх үед сонгох орчуулгын хэл (ISO код), заавал биш. Хоосон бол "
+"үндсэн харилцагчийн хэлийг ашиглана. Энэ нь ихэвчлэн тохирох хэлийг өгөх "
+"placeholder илэрхийлэл байна, жишээ нь {{ object.partner_id.lang }}."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2962,7 +3869,7 @@ msgstr "Сонголтууд"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Organized by"
-msgstr ""
+msgstr "Зохион байгуулсан"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
@@ -2974,24 +3881,24 @@ msgstr "Зохион байгуулагч"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Outlook"
-msgstr ""
+msgstr "Outlook"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook календар"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__owned_calendar_ids
 msgid "Owned Calendar"
-msgstr ""
+msgstr "Эзэмшдэг календар"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__owner_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_owner_id
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__owner
 msgid "Owner"
-msgstr ""
+msgstr "Эзэмшигч"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -3011,7 +3918,7 @@ msgstr "Хэрэглэгчийн харилцагчтай холбоотой ө�
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
 msgid "People to whom this event will be visible."
-msgstr ""
+msgstr "Энэ арга хэмжээ харагдах хүмүүс."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -3022,12 +3929,12 @@ msgstr "Утас"
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__is_primary
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__is_primary
 msgid "Primary"
-msgstr ""
+msgstr "Үндсэн"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__primary_calendar_id
 msgid "Primary Calendar"
-msgstr ""
+msgstr "Үндсэн календар"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
@@ -3037,7 +3944,7 @@ msgstr "Хувийн нууц"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy_placeholder
 msgid "Privacy Placeholder"
-msgstr ""
+msgstr "Нууцлалын placeholder"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__private
@@ -3049,7 +3956,7 @@ msgstr "Хувийн"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__private
 msgid "Private by default"
-msgstr ""
+msgstr "Анхдагчаар хувийн"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__public
@@ -3061,7 +3968,7 @@ msgstr "Нийтийн"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__public
 msgid "Public by default"
-msgstr ""
+msgstr "Анхдагчаар нийтийн"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recipient_ids
@@ -3076,13 +3983,13 @@ msgstr "Дахин эргэлт"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__recurrence_choice
 msgid "Recurrence Choice"
-msgstr ""
+msgstr "Давталтын сонголт"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
 msgid "Recurrence Rule"
-msgstr ""
+msgstr "Давталтын дүрэм"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
@@ -3092,12 +3999,12 @@ msgstr "Дахин давталтын дуусгавар"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
 msgid "Recurrence Update"
-msgstr ""
+msgstr "Давталтын шинэчлэл"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__recurrence_ids
 msgid "Recurrences"
-msgstr ""
+msgstr "Давталтууд"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
@@ -3119,7 +4026,7 @@ msgstr "Өмнө сануулах"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 msgid "Reminder"
-msgstr ""
+msgstr "Сануулга"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
@@ -3132,7 +4039,7 @@ msgstr "Сануулгууд"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Дүрслэх модел"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type_ui
@@ -3142,7 +4049,7 @@ msgstr "Давтах"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat On"
-msgstr ""
+msgstr "Давтах өдөр"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
@@ -3168,13 +4075,13 @@ msgstr "x удаа давтах"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_archive_or_unlink_wizard__requested_action
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_multi_archive_or_unlink_wizard__requested_action
 msgid "Requested Action"
-msgstr ""
+msgstr "Хүссэн үйлдэл"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 msgid "Reschedule"
-msgstr ""
+msgstr "Дахин товлох"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -3183,24 +4090,23 @@ msgstr "Хариуцагч"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_user_id
-#, fuzzy
 msgid "Responsible User"
 msgstr "Эд хариуцагч"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Room or Location"
-msgstr ""
+msgstr "Өрөө эсвэл байршил"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule
 msgid "Rrule"
-msgstr ""
+msgstr "Rrule"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule_type
 msgid "Rrule Type"
-msgstr ""
+msgstr "Rrule төрөл"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sat
@@ -3218,23 +4124,23 @@ msgstr "Бямба"
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Schedule Meeting"
-msgstr ""
+msgstr "Уулзалт товлох"
 
 #. module: calendar
 #: model:ir.module.module,summary:base.module_calendar
 msgid "Schedule employees' meetings"
-msgstr ""
+msgstr "Ажилтнуудын уулзалтыг товлох"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/messaging_menu_model_patch.js:0
 msgid "Schedule for later"
-msgstr ""
+msgstr "Дараа товлох"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Scheduled by"
-msgstr ""
+msgstr "Товлосон"
 
 #. module: calendar
 #. odoo-python
@@ -3242,7 +4148,7 @@ msgstr ""
 msgid ""
 "Scheduling an activity using the calendar is not possible on more than one "
 "record."
-msgstr ""
+msgstr "Календар ашиглан нэгээс олон бичлэгт ажилбар товлох боломжгүй."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -3258,12 +4164,12 @@ msgstr "2 дахь"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr ""
+msgstr "Оролцогчдод имэйл илгээх"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Invitations"
-msgstr ""
+msgstr "Урилга илгээх"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -3274,29 +4180,28 @@ msgstr "Шуудан илгээх"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Send and archive"
-msgstr ""
+msgstr "Илгээж архивлах"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_archive_or_unlink_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_event_multi_archive_or_unlink_wizard_view_form
 msgid "Send and delete"
-msgstr ""
+msgstr "Илгээж устгах"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "Send email"
 msgstr "Имэйл илгээх"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
 msgid "Sent to all attendees if a reminder is set"
-msgstr ""
+msgstr "Сануулга тохируулсан бол бүх оролцогчдод илгээнэ"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_changedate
 msgid "Sent to all attendees if the schedule change"
-msgstr ""
+msgstr "Хуваарь өөрчлөгдвөл бүх оролцогчдод илгээнэ"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3305,6 +4210,9 @@ msgid ""
 "of this event to others. Manage your default privacy in your user "
 "preferences."
 msgstr ""
+"Бусад зэрэгцээ арга хэмжээнд боломжтой эсэх болон энэ арга хэмжээний бусдад "
+"харагдах нууцлалыг тохируулна уу. Үндсэн нууцлалаа хэрэглэгчийн тохиргоондоо "
+"удирдана уу."
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.calendar_settings_action
@@ -3316,39 +4224,38 @@ msgstr "Тохиргоо"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_calendar__calendar_default_privacy__members_only
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__members_only
 msgid "Shared Calendar Members Only"
-msgstr ""
+msgstr "Зөвхөн хуваалцсан календарийн гишүүд"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__share_user_ids
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__calendar_share_user_ids
 msgid "Shared with"
-msgstr ""
+msgstr "Хуваалцсан"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 msgid "Should Show Status"
-msgstr ""
+msgstr "Төлөв харуулах эсэх"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_show_activities
 msgid "Show Activities in Calendar"
-msgstr ""
+msgstr "Ажилбарыг календарт харуулах"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#, fuzzy
 msgid "Show all opportunities for which the next action date is before today"
 msgstr "Өнөөдрөөс өмнө дараагийн арга хэмжээг товлосон бүх боломжийг харуулах"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show as"
-msgstr ""
+msgstr "Дараахаар харуулах"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_user__is_filter_active
 msgid "Shown in Filters List"
-msgstr ""
+msgstr "Шүүлтүүрийн жагсаалтад харагдана"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
@@ -3375,7 +4282,6 @@ msgstr "Төлөв"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_state
-#, fuzzy
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -3390,7 +4296,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Status:"
-msgstr ""
+msgstr "Төлөв:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
@@ -3401,7 +4307,7 @@ msgstr "Зогс"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Stop Sync"
-msgstr ""
+msgstr "Ижилсүүлэлтийг зогсоох"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
@@ -3432,19 +4338,19 @@ msgstr "Ням"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Sync is paused"
-msgstr ""
+msgstr "Ижилсүүлэлт түр зогссон"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Sync unsuccessful"
-msgstr ""
+msgstr "Ижилсүүлэлт амжилтгүй"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Sync with"
-msgstr ""
+msgstr "Дараахтай ижилсүүлэх:"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -3454,13 +4360,13 @@ msgstr "Өөрийн цаглабарыг Google Calendar-тай ижилсүү�
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Synchronize your calendar with Outlook"
-msgstr ""
+msgstr "Календараа Outlook-тэй ижилсүүлэх"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Syncing"
-msgstr ""
+msgstr "Ижилсүүлж байна"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
@@ -3479,17 +4385,17 @@ msgstr "Пайз"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
-msgstr ""
+msgstr "Мэйл сануулгын агуулгыг дүрслэхэд ашиглах загвар."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Tentative"
-msgstr ""
+msgstr "Урьдчилсан"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
 msgid "Tentative Count"
-msgstr ""
+msgstr "Урьдчилсан хариултын тоо"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3500,7 +4406,7 @@ msgstr "Энэ"
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
 msgid "The %s reminder was sent"
-msgstr ""
+msgstr "%s сануулга илгээгдлээ"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -3517,7 +4423,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr ""
+msgstr "Өдөр 1-31-ийн хооронд байх ёстой"
 
 #. module: calendar
 #. odoo-python
@@ -3526,6 +4432,8 @@ msgid ""
 "The ending date and time cannot be earlier than the starting date and time.\n"
 "Meeting “%(name)s” starts at %(start_time)s and ends at %(end_time)s"
 msgstr ""
+"Дуусах огноо, цаг нь эхлэх огноо, цагаас өмнө байж болохгүй.\n"
+"“%(name)s” уулзалт %(start_time)s-д эхэлж, %(end_time)s-д дуусна"
 
 #. module: calendar
 #. odoo-python
@@ -3534,30 +4442,32 @@ msgid ""
 "The ending date cannot be earlier than the starting date.\n"
 "Meeting “%(name)s” starts on %(start_date)s and ends on %(end_date)s"
 msgstr ""
+"Дуусах огноо эхлэх огнооноос өмнө байж болохгүй.\n"
+"“%(name)s” уулзалт %(start_date)s-нд эхэлж, %(end_date)s-нд дуусна"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "The interval cannot be negative."
-msgstr ""
+msgstr "Интервал сөрөг байж болохгүй."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "The number of repetitions cannot be negative."
-msgstr ""
+msgstr "Давталтын тоо сөрөг байж болохгүй."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "Эдгээр арга хэмжээнд оролцогч алга"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_user.py:0
 msgid "These fields cannot be modified: %(fields)s"
-msgstr ""
+msgstr "Эдгээр талбарыг өөрчлөх боломжгүй: %(fields)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -3571,7 +4481,7 @@ msgstr "3 дахь"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__future_events
 msgid "This and following events"
-msgstr ""
+msgstr "Энэ болон дараагийн арга хэмжээнүүд"
 
 #. module: calendar
 #. odoo-javascript
@@ -3579,7 +4489,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__recurrence_choice__self_only
 msgid "This event"
-msgstr ""
+msgstr "Энэ арга хэмжээ"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_archive_or_unlink_wizard__recurrence_choice
@@ -3587,6 +4497,8 @@ msgid ""
 "This field allows to perform the archiving or deletion on several events "
 "belonging to the         selected event's recurrence."
 msgstr ""
+"Энэ талбар нь сонгосон арга хэмжээний давталтад хамаарах хэд хэдэн арга "
+"хэмжээг         архивлах эсвэл устгах боломж олгоно."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -3609,26 +4521,23 @@ msgstr "Цагийн бүс"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
 msgid "Timezone used for displaying time in the mail template"
-msgstr ""
+msgstr "Мэйлийн загварт цагийг харуулахад ашиглах цагийн бүс"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
-#, fuzzy
 msgid "Today"
 msgstr "Өнөөдөр"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#, fuzzy
 msgid "Today Activities"
 msgstr "Өнөөдрийн ажилбар"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
-#, fuzzy
 msgid "Tomorrow"
 msgstr "Маргааш"
 
@@ -3641,7 +4550,7 @@ msgstr "Ажиллуулах арга"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Try again"
-msgstr ""
+msgstr "Дахин оролдох"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
@@ -3663,7 +4572,6 @@ msgstr "Төрөл"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_decoration
-#, fuzzy
 msgid "Type of the exception activity on record."
 msgstr "Бичлэг дээрх асуудал бүхий ажилбарын төрөл"
 
@@ -3671,18 +4579,18 @@ msgstr "Бичлэг дээрх асуудал бүхий ажилбарын т�
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Unable to save the recurrence with \"This Event\""
-msgstr ""
+msgstr "\"Энэ арга хэмжээ\" сонголтоор давталтыг хадгалах боломжгүй"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "Unavailable"
-msgstr ""
+msgstr "Боломжгүй"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids
 msgid "Unavailable Attendees"
-msgstr ""
+msgstr "Боломжгүй оролцогчид"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3698,7 +4606,7 @@ msgstr "Ширхэг"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Unsubscribe from calendar"
-msgstr ""
+msgstr "Календараас бүртгэл цуцлах"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
@@ -3710,13 +4618,13 @@ msgstr "Хүртэл"
 #. odoo-python
 #: code:addons/calendar/models/res_users.py:0
 msgid "Upcoming Meetings"
-msgstr ""
+msgstr "Удахгүй болох уулзалтууд"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_delete_event
 #: model:mail.template,description:calendar.calendar_template_meeting_update
 msgid "Used to manually notify attendees"
-msgstr ""
+msgstr "Оролцогчдод гараар мэдэгдэхэд ашиглана"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -3727,28 +4635,28 @@ msgstr "Хэрэглэгч"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_calendar
 msgid "User Calendar"
-msgstr ""
+msgstr "Хэрэглэгчийн календар"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
 msgid "User Can Edit"
-msgstr ""
+msgstr "Хэрэглэгч засах боломжтой"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Хэрэглэгчийн тохиргоо"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "User default"
-msgstr ""
+msgstr "Хэрэглэгчийн үндсэн"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_calendar__calendar_user_ids
 msgid "Users"
-msgstr ""
+msgstr "Хэрэглэгчид"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3758,12 +4666,11 @@ msgstr "Видео холбоос"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
 msgid "Videocall Source"
-msgstr ""
+msgstr "Видео дуудлагын эх сурвалж"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
-#, fuzzy
 msgid "View"
 msgstr "Харах"
 
@@ -3772,18 +4679,18 @@ msgstr "Харах"
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.message_meeting_activity_done
 msgid "View Meeting"
-msgstr ""
+msgstr "Уулзалт харах"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_calendar_view_list
 msgid "Visibility"
-msgstr ""
+msgstr "Харагдах түвшин"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Warning"
-msgstr ""
+msgstr "Анхааруулга"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
@@ -3824,11 +4731,19 @@ msgid ""
 "should be set at the creation         of the event and never reset once it "
 "is removed."
 msgstr ""
+"Үнэн үед энэ талбар арга хэмжээний мэдэгдлийг хаана. Энэ нь арга хэмжээг "
+"батлалгүйгээр хадгалах боломж олгож,         арга хэмжээг үүсгэх үед зарим "
+"мэдээлэл тодорхойгүй байсны улмаас оролцогчдод шинэчлэлийн мэдэгдэл "
+"илгээхээс сэргийлнэ.         Арга хэмжээний урсгалд асуудал гарахаас "
+"сэргийлэхийн тулд ноорог төлөвийг арга хэмжээ үүсгэх үед тохируулах         "
+"бөгөөд хасагдсаны дараа дахин тохируулахгүй байх ёстой."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__notify_responsible
 msgid "When activated, the event organizer will also receive this reminder."
 msgstr ""
+"Идэвхжүүлсэн бол арга хэмжээний зохион байгуулагч мөн энэ сануулгыг хүлээн "
+"авна."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__description
@@ -3838,21 +4753,24 @@ msgid ""
 "external calendar. Any update will be propagated there         and vice "
 "versa."
 msgstr ""
+"Гадаад календартай ижилсүүлэлт идэвхтэй үед энэ тайлбар нь тухайн гадаад "
+"календар дахь холбогдох         уулзалтын тайлбартай ижилсүүлэгдэнэ. Аливаа "
+"шинэчлэл тийш дамжих         ба эсрэгээрээ."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__effective_privacy
 msgid "Whether the event is private, considering the user privacy"
-msgstr ""
+msgstr "Хэрэглэгчийн нууцлалыг харгалзан арга хэмжээ хувийн эсэх"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__writable_calendar_ids
 msgid "Writable Calendar"
-msgstr ""
+msgstr "Бичих боломжтой календар"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_user__access_role__writer
 msgid "Writer"
-msgstr ""
+msgstr "Бичигч"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
@@ -3882,13 +4800,13 @@ msgstr "Тиймээ би явна."
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Yes, delete this calendar"
-msgstr ""
+msgstr "Тийм, энэ календарийг устгах"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/filter_section/attendee_calendar_calendar_filter_section.js:0
 msgid "Yes, unsubscribe"
-msgstr ""
+msgstr "Тийм, бүртгэлээс гарах"
 
 #. module: calendar
 #. odoo-python
@@ -3896,13 +4814,13 @@ msgstr ""
 msgid ""
 "You are not allowed to change the default privacy of a calendar you do not "
 "own."
-msgstr ""
+msgstr "Өөрийн эзэмшдэггүй календарийн үндсэн нууцлалыг өөрчлөх эрхгүй."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "You can't update a recurrence without base event."
-msgstr ""
+msgstr "Үндсэн арга хэмжээгүйгээр давталтыг шинэчлэх боломжгүй."
 
 #. module: calendar
 #. odoo-python
@@ -3914,19 +4832,19 @@ msgstr "Цаглабарын ирцыг хувилж болохгүй"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "You have to choose at least one day in the week"
-msgstr ""
+msgstr "Долоо хоногийн дор хаяж нэг өдрийг сонгох шаардлагатай"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.xml:0
 msgid "You're alone in this meeting"
-msgstr ""
+msgstr "Та энэ уулзалтад ганцаараа байна"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "[Draft]"
-msgstr ""
+msgstr "[Ноорог]"
 
 #. module: calendar
 #. odoo-javascript
@@ -3934,47 +4852,47 @@ msgstr ""
 #: code:addons/calendar/models/calendar_event.py:0
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "[Draft] %s"
-msgstr ""
+msgstr "[Ноорог] %s"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
-msgstr ""
+msgstr "хүлээн авсан"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__requested_action__archive
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_multi_archive_or_unlink_wizard__requested_action__archive
 msgid "archive"
-msgstr ""
+msgstr "архивлах"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "attendees"
-msgstr ""
+msgstr "оролцогчид"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "declined"
-msgstr ""
+msgstr "татгалзсан"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_archive_or_unlink_wizard__requested_action__unlink
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event_multi_archive_or_unlink_wizard__requested_action__unlink
 msgid "delete"
-msgstr ""
+msgstr "устгах"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "e.g. (555) 555-0199"
-msgstr ""
+msgstr "жишээ нь (555) 555-0199"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "e.g. Acme Corporation"
-msgstr ""
+msgstr "жишээ нь Acme Corporation"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3984,32 +4902,31 @@ msgstr "ж: Бизнес үдийн хоол"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "e.g. Lumber Inc or Brandon Freeman"
-msgstr ""
+msgstr "жишээ нь Lumber Inc эсвэл Brandon Freeman"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "e.g. Sales Director"
-msgstr ""
+msgstr "жишээ нь Борлуулалтын захирал"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_view_form_simplified
 msgid "e.g. john.doe@email.com"
-msgstr ""
+msgstr "жишээ нь john.doe@email.com"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g: 12/31/2030"
-msgstr ""
+msgstr "жишээ нь: 12/31/2030"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "guests"
-msgstr ""
+msgstr "зочид"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
-#, fuzzy
 msgid "more"
 msgstr "илүү"
 
@@ -4017,28 +4934,28 @@ msgstr "илүү"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "this.props.placeholder"
-msgstr ""
+msgstr "this.props.placeholder"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "uncertain"
-msgstr ""
+msgstr "тодорхойгүй"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "{{ object.event_id.name }} - Reminder"
-msgstr ""
+msgstr "{{ object.event_id.name }} - Сануулга"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "{{ object.event_id.name }}: Date updated"
-msgstr ""
+msgstr "{{ object.event_id.name }}: Огноо шинэчлэгдсэн"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
-msgstr ""
+msgstr "{{object.name}}: Арга хэмжээ шинэчлэгдсэн"
 
 #~ msgid "Client ID"
 #~ msgstr "Клиент ID"

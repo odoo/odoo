@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-10-08 09:46+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -53,6 +53,14 @@ msgstr ""
 "* Pagos rápidos al deslizar, escanear o acercar tu tarjeta de crédito o "
 "débito o dinero móvil (Airtel Money / M-Pesa) en la terminal de pago.\n"
 "* Tarjetas compatibles: Visa, MasterCard, American Express, etc.\n"
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"%s. Please ensure the device is online and confirm that the Merchant ID "
+"(MID) and Terminal ID (TID) are correct."
+msgstr ""
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
@@ -248,17 +256,6 @@ msgid "Payment is unsuccessful."
 msgstr "No fue posible realizar el pago."
 
 #. module: pos_dpopay
-#. odoo-python
-#: code:addons/pos_dpopay/models/pos_payment_method.py:0
-msgid ""
-"Please ensure the device is online and confirm that the Merchant ID (MID) "
-"and Terminal ID (TID) are correct. %s"
-msgstr ""
-"Asegúrate de que el dispositivo esté conectado y confirma que el ID del "
-"comerciante (MID, por sus siglas en inglés) y el ID de la terminal (TID, por "
-"sus siglas en inglés) sean correctos. %s"
-
-#. module: pos_dpopay
 #: model:ir.module.module,shortdesc:base.module_pos_dpopay
 msgid "PoS DPO Pay"
 msgstr "PdV - DPO Pay"
@@ -337,3 +334,11 @@ msgid ""
 msgstr ""
 "No fue posible obtener el token de portador de DPO Pay: Revisa el ID y el "
 "secreto del cliente."
+
+#~ msgid ""
+#~ "Please ensure the device is online and confirm that the Merchant ID (MID) "
+#~ "and Terminal ID (TID) are correct. %s"
+#~ msgstr ""
+#~ "Asegúrate de que el dispositivo esté conectado y confirma que el ID del "
+#~ "comerciante (MID, por sus siglas en inglés) y el ID de la terminal (TID, "
+#~ "por sus siglas en inglés) sean correctos. %s"

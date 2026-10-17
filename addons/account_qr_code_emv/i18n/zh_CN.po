@@ -5,15 +5,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-09 14:00+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-11 13:33+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/account_qr_code_emv/zh_Hans/>\n"
+"projects/odoo-20/account_qr_code_emv/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,8 @@ msgid ""
 "Bridge module addings support for EMV Merchant-Presented QR-code generation "
 "for Payment System.\n"
 msgstr ""
+"\n"
+"桥接模块，为支付系统新增对 EMV 商户展示二维码生成的支持。\n"
 
 #. module: account_qr_code_emv
 #. odoo-python
@@ -39,12 +42,18 @@ msgstr "生成 EMV 二维码需要银行账户。"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
 msgid "Account Identifier Type"
-msgstr ""
+msgstr "账户标识类型"
 
 #. module: account_qr_code_emv
 #: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
 msgid "Bank Account"
 msgstr "银行账户"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__company_qr_code
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__company_qr_code
+msgid "Company Qr Code"
+msgstr ""
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__country_proxy_keys
@@ -56,12 +65,6 @@ msgstr "国家/地区代理密钥"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_name
 msgid "Display Name"
 msgstr "显示名称"
-
-#. module: account_qr_code_emv
-#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__company_qr_code
-#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__company_qr_code
-msgid "Display QR-code on invoices"
-msgstr ""
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
@@ -84,7 +87,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
 msgid "Identifier Value"
-msgstr ""
+msgstr "标识值"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
@@ -102,13 +105,13 @@ msgstr "在二维码中包括参考资料。"
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid "Missing Account Identifier Type."
-msgstr ""
+msgstr "缺少账户标识类型。"
 
 #. module: account_qr_code_emv
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid "Missing Identifier Value."
-msgstr ""
+msgstr "缺少标识值。"
 
 #. module: account_qr_code_emv
 #. odoo-python
@@ -138,7 +141,7 @@ msgstr "无"
 #. module: account_qr_code_emv
 #: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
 msgid "Payment QR Settings"
-msgstr ""
+msgstr "付款二维码设置"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
@@ -147,6 +150,8 @@ msgid ""
 "The identification method linked to this bank account (e.g., Mobile Number, "
 "Company ID) used to route QR payments to this account."
 msgstr ""
+"与此银行账户关联的识别方式（例如手机号码、公司 ID），用于将二维码付款路由到该"
+"账户。"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
@@ -154,9 +159,12 @@ msgstr ""
 msgid ""
 "The specific number or ID linked to this bank account that matches the "
 "chosen Identifier Type."
-msgstr ""
+msgstr "与此银行账户关联、与所选标识类型相匹配的具体号码或 ID。"
 
 #. module: account_qr_code_emv
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_emv
 msgid "account_qr_code_emv"
-msgstr ""
+msgstr "EMV 二维码账户"
+
+#~ msgid "Display QR-code on invoices"
+#~ msgstr "显示发票二维码"

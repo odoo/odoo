@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-09-23 13:33+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-11 23:36+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-20/account/pt_BR/>\n"
@@ -135,6 +135,11 @@ msgid " valid until %s"
 msgstr " válido até %s"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
+msgid "# Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
 msgstr "Nº de contas de fornecedor reconciliadas"
@@ -143,11 +148,6 @@ msgstr "Nº de contas de fornecedor reconciliadas"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
 msgstr "Nº de faturas reconciliadas"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
-msgid "# Reconciled Statement Lines"
-msgstr "Nº de linhas de extrato reconciliadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
@@ -248,14 +248,10 @@ msgstr "%(label)s em %(currency_amount)s (Rascunho)"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"%(move)s reached an invalid state regarding its related statement line.\n"
+"%(move)s reached an invalid state regarding its related bank transaction.\n"
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
-"%(move)s alcançou um estado inválido em relação à sua linha de extrato "
-"relacionada.\n"
-"Para ser consistente, o lançamento do diário deve sempre ter exatamente uma "
-"linha transitória."
 
 #. module: account
 #. odoo-python
@@ -3269,37 +3265,37 @@ msgstr "Total provisionado"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
 msgid "Accumulated Depreciation - Buildings"
-msgstr ""
+msgstr "Depreciação acumulada - Edifícios"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
 msgid "Accumulated Depreciation - Furniture & Fixtures"
-msgstr ""
+msgstr "Depreciação acumulada – Móveis e utensílios"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
 msgid "Accumulated Depreciation - Improvements"
-msgstr ""
+msgstr "Depreciação acumulada - Melhorias"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
 msgid "Accumulated Depreciation - Machines & Tools"
-msgstr ""
+msgstr "Depreciação acumulada - Máquinas e ferramentas"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
 msgid "Accumulated Depreciation - Other Property"
-msgstr ""
+msgstr "Depreciação acumulada – Outros bens"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
 msgid "Accumulated Depreciation - Technology"
-msgstr ""
+msgstr "Depreciação acumulada - Tecnologia"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
 msgid "Accumulated Depreciation - Vehicles"
-msgstr ""
+msgstr "Depreciação acumulada - Veículos"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
@@ -3819,10 +3815,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
-msgid "All unreconciled bank statement lines before the selected date."
+msgid "All unreconciled bank transactions before the selected date."
 msgstr ""
-"Todas as linhas de extrato bancário não reconciliadas antes da data "
-"selecionada."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
@@ -4411,11 +4405,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid ""
-"At least one transaction in the statement is prior the last posted statement "
-"line (%s)"
+"At least one transaction in the statement is prior the last posted "
+"transaction (%s)"
 msgstr ""
-"Pelo menos uma transação no extrato é anterior à última linha lançada no "
-"extrato (%s)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -4719,8 +4711,20 @@ msgstr "Voltar para a conta"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Credit Note"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
 msgstr "Voltar para a fatura"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Refund"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4928,11 +4932,6 @@ msgid "Bank Statement Digitization"
 msgstr "Digitalização de extratos bancários"
 
 #. module: account
-#: model:ir.model,name:account.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "Linha de extrato bancário"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 msgid "Bank Statements"
 msgstr "Extratos bancários"
@@ -4958,6 +4957,9 @@ msgstr "Conta de suspense bancária ativa"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.model,name:account.model_account_bank_statement_line
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
+#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
 msgid "Bank Transaction"
 msgstr "Transação bancária"
 
@@ -5031,6 +5033,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
 msgstr "Transações bancárias e pagamentos:"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
+msgid "Bank transactions matched to this payment"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -9097,16 +9104,6 @@ msgstr "Patrimônio"
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Error importing attachment %(filename)s:"
 msgstr "Erro ao importar anexo %(filename)s:"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/controllers/download_docs.py:0
-msgid ""
-"Error while creating XML:\n"
-"- %s"
-msgstr ""
-"Erro ao criar XML:\n"
-"- %s"
 
 #. module: account
 #. odoo-python
@@ -14069,11 +14066,9 @@ msgstr "Domínio do Odoo"
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
 msgid ""
-"Odoo allows you to reconcile a statement line directly with\n"
+"Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
-"O Odoo permite que você reconcilie uma linha de extrato diretamente com\n"
-"                as faturas de venda ou compra relacionadas."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -14439,6 +14434,12 @@ msgid "Original Lock Date"
 msgstr "Data de travamento original"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Originator Bank Transaction"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
 msgid "Originator Group of Taxes"
 msgstr "Grupo de impostos originário"
@@ -14447,12 +14448,6 @@ msgstr "Grupo de impostos originário"
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Pagamento originário"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
-#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-msgid "Originator Statement Line"
-msgstr "Linha de extrato originária"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
@@ -15304,8 +15299,8 @@ msgstr "Porcentagem de cada linha para executar a ação."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
-msgid "Percentage of statement line"
-msgstr "Porcentagem da linha do demonstrativo"
+msgid "Percentage of transaction"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16217,6 +16212,11 @@ msgid "Reconciled"
 msgstr "Reconciliado"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
+msgid "Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
 msgstr "Contas reconciliadas"
@@ -16246,11 +16246,6 @@ msgstr "Linhas reconciliadas, excluindo diferenças cambiais"
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
 msgstr "Pagamentos reconciliados"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
-msgid "Reconciled Statement Lines"
-msgstr "Linhas reconciliadas do demonstrativo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -17887,8 +17882,8 @@ msgstr "Mostrar data de fornecimento tributável"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Show Unreconciled Bank Statement Line"
-msgstr "Exibir linhas do extrato bancário não reconciliadas"
+msgid "Show Unreconciled Bank Transactions"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -18106,12 +18101,6 @@ msgid "Statement %(date)s"
 msgstr "Extrato %(date)s"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
-#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
-msgid "Statement Line"
-msgstr "Linha do extrato"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_name
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Statement Name"
@@ -18123,17 +18112,6 @@ msgid "Statement Reports"
 msgstr "Relatórios demonstrativos"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_reconcile_model.py:0
-msgid "Statement line percentage can't be 0"
-msgstr "A porcentagem da linha do demonstrativo não pode ser 0"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
-msgid "Statement lines"
-msgstr "Linhas do demonstrativo"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__statement_line_ids
@@ -18141,11 +18119,6 @@ msgstr "Linhas do demonstrativo"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_tree
 msgid "Statements"
 msgstr "Extratos"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
-msgid "Statements lines matched to this payment"
-msgstr "Linhas do demonstrativo que correspondem a esse pagamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__states_count
@@ -19395,6 +19368,11 @@ msgid "The bank statement used for bank reconciliation"
 msgstr "O extrato bancário utilizado para a reconciliação bancária"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
+msgid "The bank transaction that created this entry"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
@@ -19794,15 +19772,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"The journal entry %s reached an invalid state regarding its related "
-"statement line.\n"
+"The journal entry %s reached an invalid state regarding its related bank "
+"transaction.\n"
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"O lançamento de diário %s atingiu um estado inválido em relação à linha de "
-"extrato relacionada. \n"
-"Para ser consistente, o lançamento de diário deve sempre ter exatamente um "
-"item do diário envolvendo a conta de banco/caixa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -19970,22 +19944,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
 msgid ""
-"The reconciliation model will only be applied when either the statement line "
+"The reconciliation model will only be applied when either the transaction "
 "label, the transaction details or the note matches the following:\n"
-"        * Contains: The statement line must contains this string (case "
+"        * Contains: The transaction must contain this string (case "
 "insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"O modelo de reconciliação só será aplicado quando o rótulo da linha do "
-"extrato, os detalhes da transação ou a nota corresponderem ao seguinte:\n"
-"\n"
-"* Contém: A linha de declaração deve conter essa string (não diferencia "
-"maiúsculas de minúsculas).\n"
-"\n"
-"* Não contém: Negação de \"Contém\".\n"
-"\n"
-"* Corresponder à Regex: Defina sua própria expressão regular."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -20255,11 +20220,6 @@ msgstr ""
 "100)."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
-msgid "The statement line that created this entry"
-msgstr "A linha de extrato que criou este lançamento"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
@@ -20335,23 +20295,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
-"There are still unreconciled bank statement lines before the selected date. "
-"The entries from journal prefixes containing them will not be secured: %"
+"There are still unreconciled bank transactions before the selected date. The "
+"entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
-"Ainda existem linhas de extrato bancário não reconciliadas antes da data "
-"selecionada. Os lançamentos de prefixos de diário que as contêm não serão "
-"protegidos: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
-"There are still unreconciled bank statement lines in the period you want to "
-"lock.You should either reconcile or delete them."
+"There are still unreconciled bank transactions in the period you want to "
+"lock. You should either reconcile or delete them."
 msgstr ""
-"Ainda há linhas de extrato bancário não reconciliadas no período que você "
-"deseja bloquear. Você deve reconciliá-las ou excluí-las."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -20805,11 +20760,9 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_matching_rules
 msgid ""
-"Those can be used to automatically match journal items with your statement "
-"lines."
+"Those can be used to automatically match journal items with your "
+"transactions."
 msgstr ""
-"Esses parâmetros podem ser usados para mapear automaticamente os itens do "
-"diário com as linhas do seu extrato."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -21159,6 +21112,13 @@ msgid "Transaction Type"
 msgstr "Tipo de transação"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+msgid "Transaction percentage can't be 0"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
 #: model:ir.ui.menu,name:account.account_transactions_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
@@ -21781,11 +21741,8 @@ msgstr "Validar conta bancária"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__trigger
 msgid ""
-"Validate the statement line automatically (reconciliation based on your "
-"rule)."
+"Validate the transaction automatically (reconciliation based on your rule)."
 msgstr ""
-"Validar a linha de extrato automaticamente (reconciliação com base na sua "
-"regra)."
 
 #. module: account
 #. odoo-javascript
@@ -22424,6 +22381,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+msgid ""
+"You can't create a new bank transaction without a suspense account set on "
+"the %s journal."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
@@ -22433,16 +22398,6 @@ msgstr ""
 "Não é possível criar um novo pagamento sem uma conta de pagamentos/"
 "recebimentos pendentes definida na empresa ou na forma de pagamento %"
 "(payment_method)s do diário %(journal)s."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement_line.py:0
-msgid ""
-"You can't create a new statement line without a suspense account set on the "
-"%s journal."
-msgstr ""
-"Não é possível criar uma nova linha de demonstrativo sem uma conta "
-"transitória definida no diário %s."
 
 #. module: account
 #. odoo-python
@@ -23781,6 +23736,141 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref. "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid "# Reconciled Statement Lines"
+#~ msgstr "Nº de linhas de extrato reconciliadas"
+
+#~ msgid ""
+#~ "%(move)s reached an invalid state regarding its related statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one suspense "
+#~ "line."
+#~ msgstr ""
+#~ "%(move)s alcançou um estado inválido em relação à sua linha de extrato "
+#~ "relacionada.\n"
+#~ "Para ser consistente, o lançamento do diário deve sempre ter exatamente "
+#~ "uma linha transitória."
+
+#~ msgid "All unreconciled bank statement lines before the selected date."
+#~ msgstr ""
+#~ "Todas as linhas de extrato bancário não reconciliadas antes da data "
+#~ "selecionada."
+
+#~ msgid ""
+#~ "At least one transaction in the statement is prior the last posted "
+#~ "statement line (%s)"
+#~ msgstr ""
+#~ "Pelo menos uma transação no extrato é anterior à última linha lançada no "
+#~ "extrato (%s)"
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "Linha de extrato bancário"
+
+#~ msgid ""
+#~ "Error while creating XML:\n"
+#~ "- %s"
+#~ msgstr ""
+#~ "Erro ao criar XML:\n"
+#~ "- %s"
+
+#~ msgid ""
+#~ "Odoo allows you to reconcile a statement line directly with\n"
+#~ "                the related sale or purchase invoices."
+#~ msgstr ""
+#~ "O Odoo permite que você reconcilie uma linha de extrato diretamente com\n"
+#~ "                as faturas de venda ou compra relacionadas."
+
+#~ msgid "Originator Statement Line"
+#~ msgstr "Linha de extrato originária"
+
+#~ msgid "Percentage of statement line"
+#~ msgstr "Porcentagem da linha do demonstrativo"
+
+#~ msgid "Reconciled Statement Lines"
+#~ msgstr "Linhas reconciliadas do demonstrativo"
+
+#~ msgid "Show Unreconciled Bank Statement Line"
+#~ msgstr "Exibir linhas do extrato bancário não reconciliadas"
+
+#~ msgid "Statement Line"
+#~ msgstr "Linha do extrato"
+
+#~ msgid "Statement line percentage can't be 0"
+#~ msgstr "A porcentagem da linha do demonstrativo não pode ser 0"
+
+#~ msgid "Statement lines"
+#~ msgstr "Linhas do demonstrativo"
+
+#~ msgid "Statements lines matched to this payment"
+#~ msgstr "Linhas do demonstrativo que correspondem a esse pagamento"
+
+#~ msgid ""
+#~ "The journal entry %s reached an invalid state regarding its related "
+#~ "statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one journal "
+#~ "item involving the bank/cash account."
+#~ msgstr ""
+#~ "O lançamento de diário %s atingiu um estado inválido em relação à linha "
+#~ "de extrato relacionada. \n"
+#~ "Para ser consistente, o lançamento de diário deve sempre ter exatamente "
+#~ "um item do diário envolvendo a conta de banco/caixa."
+
+#~ msgid ""
+#~ "The reconciliation model will only be applied when either the statement "
+#~ "line label, the transaction details or the note matches the following:\n"
+#~ "        * Contains: The statement line must contains this string (case "
+#~ "insensitive).\n"
+#~ "        * Not Contains: Negation of \"Contains\".\n"
+#~ "        * Match Regex: Define your own regular expression."
+#~ msgstr ""
+#~ "O modelo de reconciliação só será aplicado quando o rótulo da linha do "
+#~ "extrato, os detalhes da transação ou a nota corresponderem ao seguinte:\n"
+#~ "\n"
+#~ "* Contém: A linha de declaração deve conter essa string (não diferencia "
+#~ "maiúsculas de minúsculas).\n"
+#~ "\n"
+#~ "* Não contém: Negação de \"Contém\".\n"
+#~ "\n"
+#~ "* Corresponder à Regex: Defina sua própria expressão regular."
+
+#~ msgid "The statement line that created this entry"
+#~ msgstr "A linha de extrato que criou este lançamento"
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines before the selected "
+#~ "date. The entries from journal prefixes containing them will not be "
+#~ "secured: %(prefix_info)s"
+#~ msgstr ""
+#~ "Ainda existem linhas de extrato bancário não reconciliadas antes da data "
+#~ "selecionada. Os lançamentos de prefixos de diário que as contêm não serão "
+#~ "protegidos: %(prefix_info)s"
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines in the period you want "
+#~ "to lock.You should either reconcile or delete them."
+#~ msgstr ""
+#~ "Ainda há linhas de extrato bancário não reconciliadas no período que você "
+#~ "deseja bloquear. Você deve reconciliá-las ou excluí-las."
+
+#~ msgid ""
+#~ "Those can be used to automatically match journal items with your "
+#~ "statement lines."
+#~ msgstr ""
+#~ "Esses parâmetros podem ser usados para mapear automaticamente os itens do "
+#~ "diário com as linhas do seu extrato."
+
+#~ msgid ""
+#~ "Validate the statement line automatically (reconciliation based on your "
+#~ "rule)."
+#~ msgstr ""
+#~ "Validar a linha de extrato automaticamente (reconciliação com base na sua "
+#~ "regra)."
+
+#~ msgid ""
+#~ "You can't create a new statement line without a suspense account set on "
+#~ "the %s journal."
+#~ msgstr ""
+#~ "Não é possível criar uma nova linha de demonstrativo sem uma conta "
+#~ "transitória definida no diário %s."
 
 #~ msgid "Accumulated Amortization - Buildings"
 #~ msgstr "Amortização acumulada - Edifícios"

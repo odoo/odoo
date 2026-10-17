@@ -3,15 +3,16 @@
 # * populate
 #
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 16:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 11:47+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/populate/zh_Hans/>\n"
+"projects/odoo-20/populate/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr "%(count)s 个并行任务执行失败"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "%(operation)s blocks cannot define 'arg'."
-msgstr ""
+msgstr "%(operation)s 块不能定义 'arg'。"
 
 #. module: populate
 #. odoo-python
@@ -47,25 +48,25 @@ msgstr "%(groupby)s 不是模型 %(comodel_name)s 的有效字段。"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "'%(import_ref)s' refers to '%(model)s', not a populate blueprint."
-msgstr ""
+msgstr "'%(import_ref)s' 指向的是 '%(model)s'，而不是填充蓝图。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'comodel_name' needs to be provided for generated values."
-msgstr ""
+msgstr "为生成值必须提供 'comodel_name'。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "<import> may only contain inheritance specifications."
-msgstr ""
+msgstr "<import> 只能包含继承说明。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "<import> requires a fully qualified XML ID in 'ref'."
-msgstr ""
+msgstr "<import> 的 'ref' 必须是完整的 XML ID。"
 
 #. module: populate
 #. odoo-python
@@ -79,6 +80,8 @@ msgid ""
 "A job with this reference already exists in this session. References must be "
 "unique for create operations within a session."
 msgstr ""
+"此会话中已存在使用该引用标识的任务。在同一会话内，创建操作的引用标识必须唯一"
+"。"
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_record_count_invariant
@@ -87,6 +90,8 @@ msgid ""
 "function jobs are allowed to have no record_count, whose cardinality is "
 "unknown at creation time."
 msgstr ""
+"任务的记录数必须为非零正整数。只有写入和函数任务可以不设置记录数，因为其基数"
+"在创建时未知。"
 
 #. module: populate
 #. odoo-python
@@ -98,12 +103,12 @@ msgstr "调整生成器参数，使生成值符合约束条件"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "An import namespace cannot be empty."
-msgstr ""
+msgstr "导入命名空间不能为空。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__batched
 msgid "Batched"
-msgstr ""
+msgstr "批处理"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__blueprint_id
@@ -120,6 +125,9 @@ msgid ""
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
+"蓝图 '%(blueprint)s'：%(reason)s\n"
+"失败的定义：\n"
+"%(definition)s"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__name
@@ -166,7 +174,7 @@ msgstr "`values` 中不允许存在重复条目。"
 msgid ""
 "Cannot infer valid targets for a generated value. The 'valid_targets' "
 "parameter must be explicitly provided."
-msgstr ""
+msgstr "无法为生成值推断有效目标。必须显式提供 'valid_targets' 参数。"
 
 #. module: populate
 #. odoo-python
@@ -222,7 +230,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid "Couldn't find a unique value for target %(target)s."
-msgstr ""
+msgstr "无法为目标 %(target)s 找到唯一值。"
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__create
@@ -233,13 +241,13 @@ msgstr "创建"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create blocks cannot define 'batched'."
-msgstr ""
+msgstr "创建块不能定义 'batched'。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create blocks use 'id', not 'ref'."
-msgstr ""
+msgstr "创建块使用 'id'，而不是 'ref'。"
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_create_job_without_domain
@@ -250,7 +258,7 @@ msgstr "创建类任务不允许设置筛选域。"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create reference '%(ref)s' is declared more than once."
-msgstr ""
+msgstr "创建引用标识 '%(ref)s' 被声明了多次。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__create_uid
@@ -310,7 +318,7 @@ msgstr "必须提供 XML 或 JSON 格式的定义内容"
 msgid ""
 "Error applying blueprint inheritance from '%(parent)s' to '%(child)s': %"
 "(error)s"
-msgstr ""
+msgstr "将蓝图继承从 '%(parent)s' 应用到 '%(child)s' 时出错：%(error)s"
 
 #. module: populate
 #. odoo-python
@@ -326,42 +334,42 @@ msgstr ""
 msgid ""
 "For write/function jobs: generate one value set and perform one call per "
 "executable job."
-msgstr ""
+msgstr "对于写入/函数任务：生成一组值，并为每个可执行任务执行一次调用。"
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__function
 msgid "Function"
-msgstr ""
+msgstr "函数"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks require 'name'."
-msgstr ""
+msgstr "函数块必须提供 'name'。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks use 'arg', not 'field'."
-msgstr ""
+msgstr "函数块使用 'arg'，而不是 'field'。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks use 'ref', not 'id'."
-msgstr ""
+msgstr "函数块使用 'ref'，而不是 'id'。"
 
 #. module: populate
 #: model:ir.module.module,summary:base.module_populate
 msgid "Generate synthetic data for an Odoo database"
-msgstr ""
+msgstr "为 Odoo 数据库生成合成数据"
 
 #. module: populate
 #: model:ir.module.module,description:base.module_populate
 msgid ""
 "Generate synthetic data for an Odoo database, following a predefined "
 "blueprint. Used for performance testing."
-msgstr ""
+msgstr "按预定义的蓝图，为 Odoo 数据库生成合成数据。用于性能测试。"
 
 #. module: populate
 #. odoo-python
@@ -397,13 +405,13 @@ msgstr "图片尺寸必须为正整数，当前取值%(width)sx%(height)s。"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Imported blueprint '%(import_ref)s' must use XML."
-msgstr ""
+msgstr "导入的蓝图 '%(import_ref)s' 必须使用 XML。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Imported blueprint '%(import_ref)s' was not found."
-msgstr ""
+msgstr "未找到导入的蓝图 '%(import_ref)s'。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__inherit_id
@@ -419,7 +427,7 @@ msgstr "说明"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Invalid import namespace '%(namespace)s'."
-msgstr ""
+msgstr "无效的导入命名空间 '%(namespace)s'。"
 
 #. module: populate
 #. odoo-python
@@ -437,7 +445,7 @@ msgstr ""
 msgid ""
 "Invalid target dependencies: %(invalid_targets)s. These targets do not exist "
 "in the operation block."
-msgstr ""
+msgstr "无效的目标依赖：%(invalid_targets)s。这些目标在操作块中不存在。"
 
 #. module: populate
 #. odoo-python
@@ -454,6 +462,8 @@ msgid ""
 "Invalid values %(invalid_values)s for %(target_type)s target. Allowed values "
 "are: %(possible_values)s."
 msgstr ""
+"%(target_type)s 目标的取值 %(invalid_values)s 无效。允许的取值为：%"
+"(possible_values)s。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__is_done
@@ -500,24 +510,24 @@ msgstr "最后更新时间"
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__method_name
 msgid "Method Name"
-msgstr ""
+msgstr "方法名称"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__method_name
 msgid "Method called by function jobs."
-msgstr ""
+msgstr "由函数任务调用的方法。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Missing 'model'."
-msgstr ""
+msgstr "缺少 'model'。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Missing 'operation'."
-msgstr ""
+msgstr "缺少 'operation'。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__res_model
@@ -543,7 +553,7 @@ msgstr "模型名称"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Names used for multiple generated targets: %(names)s."
-msgstr ""
+msgstr "多个生成目标使用了相同名称：%(names)s。"
 
 #. module: populate
 #. odoo-python
@@ -552,6 +562,8 @@ msgid ""
 "No generator specified for target '%(target)s' of type '%(type)s', and no "
 "default generator is registered for that target type."
 msgstr ""
+"未为目标 '%(target)s'（类型 '%(type)s'）指定生成器，且该目标类型也未注册默认"
+"生成器。"
 
 #. module: populate
 #. odoo-python
@@ -568,7 +580,7 @@ msgstr "同时运行任务的并行工作进程数量"
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__operation
 msgid "Operation"
-msgstr ""
+msgstr "操作"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parallel
@@ -588,13 +600,13 @@ msgstr "Parent Path"
 #. module: populate
 #: model:ir.module.module,shortdesc:base.module_populate
 msgid "Populate"
-msgstr ""
+msgstr "填充"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Positional arg names must be contiguous indexes from '0'."
-msgstr ""
+msgstr "位置参数名称必须是从 '0' 开始的连续索引。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition_json
@@ -620,7 +632,7 @@ msgstr "记录数"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Recursive blueprint composition detected for '%(blueprint)s'."
-msgstr ""
+msgstr "检测到 '%(blueprint)s' 存在递归蓝图组合。"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__ref
@@ -645,6 +657,10 @@ msgid ""
 "said reference.\n"
 "    "
 msgstr ""
+"引用任务所使用的记录批次。\n"
+"    若任务操作为 'create' -> 会为这些记录标注引用标识。\n"
+"    若任务操作为 'write' 或 'function' -> 指代带有该引用标识的记录。\n"
+"    "
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_model_data
@@ -684,7 +700,7 @@ msgstr "大小必须为正整数，当前取值：%(size)s。"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Some blueprint definition(s) are invalid."
-msgstr ""
+msgstr "部分蓝图定义无效。"
 
 #. module: populate
 #. odoo-python
@@ -706,7 +722,7 @@ msgstr "子任务不允许再嵌套子任务，仅支持一层层级结构。"
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Target: '%s'"
-msgstr ""
+msgstr "目标：'%s'"
 
 #. module: populate
 #. odoo-python
@@ -714,7 +730,7 @@ msgstr ""
 msgid ""
 "The blueprint '%(parent)s' does not have an XML definition, but '%(child)s' "
 "inherits from it."
-msgstr ""
+msgstr "蓝图 '%(parent)s' 没有 XML 定义，但 '%(child)s' 继承了它。"
 
 #. module: populate
 #. odoo-python
@@ -774,32 +790,32 @@ msgstr "unique不可与选择项生成器搭配使用。"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown <import> attribute(s): %(attributes)s."
-msgstr ""
+msgstr "未知的 <import> 属性：%(attributes)s。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown field(s) on '%(model)s': %(fields)s."
-msgstr ""
+msgstr "在 '%(model)s' 上存在未知字段：%(fields)s。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown model '%(model)s'."
-msgstr ""
+msgstr "未知模型 '%(model)s'。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown operation '%(operation)s'."
-msgstr ""
+msgstr "未知操作 '%(operation)s'。"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 #: code:addons/populate/models/job.py:0
 msgid "Unknown or non-callable method '%(method)s' on '%(model)s'."
-msgstr ""
+msgstr "'%(model)s' 上存在未知或不可调用的方法 '%(method)s'。"
 
 #. module: populate
 #. odoo-python
@@ -842,7 +858,7 @@ msgstr "写入"
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Write blocks use 'ref', not 'id'."
-msgstr ""
+msgstr "写入块使用 'ref'，而不是 'id'。"
 
 #. module: populate
 #. odoo-python
@@ -885,4 +901,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "in Job %s"
-msgstr ""
+msgstr "在任务 %s 中"

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-10-08 09:46+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/stock/"
@@ -136,8 +136,8 @@ msgstr ""
 " *ドラフト:移動はまだ確認されていません。引当は適用されません。 \n"
 "*別の操作を待機中:この移動は、準備が整う前に別の操作を待機しています。 \n"
 "*待機中:移動は一部のプロダクトの利用可能在庫を待っています。 \n"
-"(a)配送ポリシーは'できるだけ早く'です。プロダクトを引当てすることはできません"
-"。 \n"
+"(a)配送ポリシーは'できるだけ早く'です。プロダクトを引当てすることはできませ"
+"ん。 \n"
 "(b)配送ポリシーは'すべてのプロダクトの準備ができたら'です。すべてのプロダクト"
 "を引当てできるわけではありません。 \n"
 "*準備完了:移動を処理する準備ができています。 \n"
@@ -519,23 +519,28 @@ msgstr ""
 "(operation)s</b>移動先から定義された通り。"
 
 #. module: stock
-#: model:mail.template,body_html:stock.mail_template_data_stock_move_line_recall
+#: model:mail.template,body_html:stock.mail_template_data_stock_picking_recall
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.picking_partner_id.display_name or ''\"/><br/"
-"><br/>\n"
-"        We would like to issue a product recall regarding the following "
-"product:<br/><br/>\n"
-"        Product:<br/>\n"
-"        <t t-out=\"object.product_id.display_name or ''\"/><br/><br/>\n"
-"        Lot / Serial Number:<br/>\n"
-"        <t t-out=\"object.lot_id.name or object.lot_name or ''\"/><br/><br/"
-">\n"
-"        We apologize for the inconvenience caused.<br/><br/>\n"
-"        Best wishes,\n"
-"    </p>\n"
-"</div>\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Dear <t t-out=\"object.partner_id.display_name or "
+"''\">Marc Demo</t><br/><br/>\n"
+"                    We would like to issue a product recall regarding the "
+"following items from your delivery\n"
+"                    <strong><t t-out=\"object.name\">WH/OUT/EXAMPLE</t></"
+"strong>:<br/><br/>\n"
+"\n"
+"                    <strong>Product(s):</strong><br/>\n"
+"                    <t t-out=\"ctx.get('recalled_products_dict', "
+"{}).get(str(object.id))\">[EXAMPLE] Drawer</t><br/><br/>\n"
+"                    <strong>Lot / Serial Number(s):</strong><br/>\n"
+"                    <t t-out=\"ctx.get('recalled_lots_dict', "
+"{}).get(str(object.id))\">0000000000029</t><br/><br/>\n"
+"\n"
+"                    We apologize for the inconvenience caused.<br/><br/>\n"
+"                    Best wishes,\n"
+"                </p>\n"
+"            </div>\n"
 "        "
 msgstr ""
 
@@ -1153,8 +1158,8 @@ msgid ""
 "number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"この明細数を超えるバッチに移動が追加されても、移動は自動的に追加されません"
-"。\n"
+"この明細数を超えるバッチに移動が追加されても、移動は自動的に追加されませ"
+"ん。\n"
 "明細数制限がない場合は、この値を '0' のままにしておきます。"
 
 #. module: stock
@@ -3298,8 +3303,8 @@ msgid ""
 msgstr ""
 "移動後にプロダクトの移動を削除しますか?\n"
 "\n"
-"これは、すでに実行された処理を過去にさかのぼってすべて取り消すようなものです"
-"。何が起こるか予測できないため、おすすめできません。\n"
+"これは、すでに実行された処理を過去にさかのぼってすべて取り消すようなもので"
+"す。何が起こるか予測できないため、おすすめできません。\n"
 "\n"
 "削除の代わりに、「完了数量」を 0 に変更してみてください。"
 
@@ -5588,8 +5593,8 @@ msgid ""
 "Launch picking orders by aisle or area and regroup at packing zone. Ideal "
 "for large warehouses."
 msgstr ""
-"通路またはエリアごとにピッキングオーダを出し、梱包ゾーンで再グループ化します"
-"。大規模な倉庫に適しています。"
+"通路またはエリアごとにピッキングオーダを出し、梱包ゾーンで再グループ化しま"
+"す。大規模な倉庫に適しています。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days
@@ -7566,7 +7571,8 @@ msgstr "このドキュメントを返却用の小包に入れてください。
 #. odoo-python
 #: code:addons/stock/models/stock_picking_batch.py:0
 msgid "Please select at least two batch/wave transfers to merge."
-msgstr "マージ対象の少なくとも 2 件以上のバッチ/ウェーブ移動を選択してください。"
+msgstr ""
+"マージ対象の少なくとも 2 件以上のバッチ/ウェーブ移動を選択してください。"
 
 #. module: stock
 #. odoo-javascript
@@ -7915,13 +7921,13 @@ msgid "Product barcode"
 msgstr "プロダクトバーコード"
 
 #. module: stock
-#: model:mail.template,description:stock.mail_template_data_stock_move_line_recall
-msgid "Product recall from lot/serial number"
+#: model:mail.template,subject:stock.mail_template_data_stock_picking_recall
+msgid "Product recall for Delivery {{ object.name }}"
 msgstr ""
 
 #. module: stock
-#: model:mail.template,subject:stock.mail_template_data_stock_move_line_recall
-msgid "Product recall: {{ object.product_id.display_name or 'n/a' }}"
+#: model:mail.template,description:stock.mail_template_data_stock_picking_recall
+msgid "Product recall from lot/serial number"
 msgstr ""
 
 #. module: stock
@@ -8908,9 +8914,9 @@ msgid ""
 "        Disposable boxes aren't reused, when scanning a disposable box in "
 "the barcode application, the contained products are added to the transfer."
 msgstr ""
-"再利用可能箱はバッチピッキングに使用され、その後空にして再利用されます。"
-"バーコードアプリケーションで、再利用可能箱をスキャンすると、この箱内の"
-"プロダクトが追加されます。\n"
+"再利用可能箱はバッチピッキングに使用され、その後空にして再利用されます。バー"
+"コードアプリケーションで、再利用可能箱をスキャンすると、この箱内のプロダクト"
+"が追加されます。\n"
 "使い捨て箱は再利用されず、バーコードアプリケーションで使い捨て箱をスキャンす"
 "ると、含まれている製品が移動に追加されます。"
 
@@ -9960,11 +9966,6 @@ msgid "Stock Move"
 msgstr "在庫移動"
 
 #. module: stock
-#: model:mail.template,name:stock.mail_template_data_stock_move_line_recall
-msgid "Stock Move Line: Product Recall"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_reference__move_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -10882,8 +10883,8 @@ msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
-"このメモは内部移動オーダに追加されます（倉庫内のピッキング場所を指定する等）"
-"。"
+"このメモは内部移動オーダに追加されます（倉庫内のピッキング場所を指定する"
+"等）。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
@@ -11304,6 +11305,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Transfer:"
+msgstr ""
+
+#. module: stock
+#: model:mail.template,name:stock.mail_template_data_stock_picking_recall
+msgid "Transfer: Product Recall"
 msgstr ""
 
 #. module: stock
@@ -12397,7 +12403,8 @@ msgstr ""
 msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
-msgstr "空の移動は確認できません。先に進む前に移動するプロダクトを追加して下さい。"
+msgstr ""
+"空の移動は確認できません。先に進む前に移動するプロダクトを追加して下さい。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation

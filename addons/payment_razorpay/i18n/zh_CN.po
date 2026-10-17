@@ -5,15 +5,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 13:42+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/payment_razorpay/zh_Hans/>\n"
+"projects/odoo-20/payment_razorpay/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #. module: payment_razorpay
 #: model:ir.module.module,summary:base.module_payment_razorpay
 msgid "A payment provider covering India."
-msgstr ""
+msgstr "覆盖印度的支付提供商。"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
@@ -34,7 +35,7 @@ msgstr "账户识别码"
 #. module: payment_razorpay
 #: model:payment.method,name:payment_razorpay.payment_method_amex
 msgid "American Express"
-msgstr ""
+msgstr "美国运通"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.authorization_error
@@ -59,7 +60,7 @@ msgstr "返回 Razorpay 服务商"
 #. module: payment_razorpay
 #: model:payment.method,name:payment_razorpay.payment_method_card
 msgid "Card"
-msgstr ""
+msgstr "银行卡"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__code
@@ -80,7 +81,7 @@ msgstr "找不到 Razorpay 服务商符合识别码 %s"
 #. module: payment_razorpay
 #: model:payment.method,name:payment_razorpay.payment_method_diners
 msgid "Diners Club International"
-msgstr ""
+msgstr "大来国际卡"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
@@ -90,7 +91,7 @@ msgstr "中断连接"
 #. module: payment_razorpay
 #: model:payment.method,name:payment_razorpay.payment_method_discover
 msgid "Discover"
-msgstr ""
+msgstr "发现卡"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__display_name
@@ -144,12 +145,12 @@ msgstr ""
 #. module: payment_razorpay
 #: model:payment.method,name:payment_razorpay.payment_method_mastercard
 msgid "MasterCard"
-msgstr ""
+msgstr "万事达卡"
 
 #. module: payment_razorpay
 #: model:payment.method,name:payment_razorpay.payment_method_netbanking
 msgid "Netbanking"
-msgstr ""
+msgstr "网银"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -160,7 +161,7 @@ msgstr "其他支付提供商"
 #. module: payment_razorpay
 #: model:payment.method,name:payment_razorpay.payment_method_paylater_india
 msgid "Pay Later"
-msgstr ""
+msgstr "先买后付"
 
 #. module: payment_razorpay
 #: model:payment.method,name:payment_razorpay.payment_method_paynow
@@ -175,7 +176,7 @@ msgstr "支付提供商"
 #. module: payment_razorpay
 #: model:ir.module.module,shortdesc:base.module_payment_razorpay
 msgid "Payment Provider: Razorpay"
-msgstr ""
+msgstr "支付提供商：Razorpay"
 
 #. module: payment_razorpay
 #: model:ir.model,name:payment_razorpay.model_payment_token
@@ -216,7 +217,7 @@ msgstr "Razorpay 账户识别码"
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_is_oauth_supported
 msgid "Razorpay Is Oauth Supported"
-msgstr ""
+msgstr "Razorpay 是否支持 OAuth"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
@@ -358,6 +359,9 @@ msgid ""
 "the recommended OAuth\n"
 "                    method."
 msgstr ""
+"您当前通过凭据方式连接到 Razorpay，该方式\n"
+"                    已弃用。请点击上方的“连接”按钮，改用推荐的 OAuth\n"
+"                    方式。"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -379,4 +383,4 @@ msgstr "您的 Razorpay 网络钩子已成功设置！"
 msgid ""
 "Your last payment %s will soon be processed. Please wait up to 24 hours "
 "before trying again, or use another payment method."
-msgstr ""
+msgstr "您上一次付款 %s 即将处理。请等待最多 24 小时后再试，或改用其他付款方式。"

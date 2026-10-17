@@ -17,10 +17,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 14:03+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-12 08:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "hr_holidays/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -404,6 +404,29 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Guten Tag <t t-out=\"object.employee_id.name or "
+"'liebe(e) Mitarbeiter(in)'\"/>,<br/><br/>\n"
+"                    Ihr Urlaubsanspruch wurde bestätigt.<br/><br/>\n"
+"                    Details:<br/>\n"
+"                    <ul>\n"
+"                       <li> Zeitart: <t t-"
+"out=\"object.work_entry_type_id.name or ''\"/></li>\n"
+"                       <li> Anspruch: <t t-out=\"object.duration_display or "
+"''\"/></li>\n"
+"                       <li> Gültig ab: <t t-out=\"object.date_from or ''\"/> "
+"<t t-if=\"not object.date_to\">(kein Ablaufdatum)</t><t t-else=\"\"> bis <t "
+"t-out=\"object.date_to or ''\"/></t></li>\n"
+"                        <li t-if=\"object.accrual_plan_id\"> Anspruchsplan: "
+"<t t-out=\"object.accrual_plan_id.name or ''\"/></li>\n"
+"                   </ul>\n"
+"                    <br/> \n"
+"                    Bei Fragen wenden Sie sich bitte an den zuständigen "
+"Personalverantwortlichen.<br/><br/>\n"
+"                    Mit freundlichen Grüßen<br/>\n"
+"                    <t t-out=\"object.env.user.name or ''\"/>\n"
+"               </div> \n"
+"            "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -570,6 +593,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
 msgstr "<span class=\"o_stat_text\">Abwesenheit</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard
+msgid ""
+"<span class=\"text-danger\" invisible=\"not work_entry_type_support_document "
+"or supported_attachment_ids\">Required</span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
@@ -1510,17 +1540,8 @@ msgstr "Kann validieren"
 
 #. module: hr_holidays
 #: model:res.groups,comment:hr_holidays.group_hr_holidays_manager
-msgid ""
-"Can manage and configure all holidays and leave requests.\n"
-"\n"
-"A user without any rights on Time Off will be able to see the application, "
-"create his own holidays and manage the requests of the users he's manager of."
+msgid "Can manage and configure all holidays and leave requests."
 msgstr ""
-"Kann alle Urlaube und Urlaubsanträge verwalten und konfigurieren.\n"
-"\n"
-"Ein Benutzer, der keine Rechte für Abwesenheiten hat, kann die Anwendung "
-"sehen, seinen eigenen Urlaub erstellen und die Anträge der Benutzer "
-"verwalten, deren Manager er ist."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4052,6 +4073,7 @@ msgstr ""
 #: model:mail.template,description:hr_holidays.mail_template_allocation_confirmed
 msgid "Sent to employee when their time off allocation is confirmed"
 msgstr ""
+"Wird an Mitarbeiter gesendet, sobald ihr Urlaubsanspruch bestätigt wird"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__9
@@ -4640,7 +4662,7 @@ msgstr "Urlaubsansprüche"
 #. module: hr_holidays
 #: model:mail.template,name:hr_holidays.mail_template_allocation_confirmed
 msgid "Time Off Allocation Confirmed"
-msgstr ""
+msgstr "Urlaubsanspruch bestätigt"
 
 #. module: hr_holidays
 #: model:mail.template,subject:hr_holidays.mail_template_allocation_confirmed
@@ -4648,6 +4670,8 @@ msgid ""
 "Time Off Allocation Confirmed: {{ object.work_entry_type_id.name }} "
 "({{ object.duration_display }})"
 msgstr ""
+"Urlaubsanspruch bestätigt: {{ object.work_entry_type_id.name }} "
+"({{ object.duration_display }})"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_report_action
@@ -6111,6 +6135,19 @@ msgstr "Jahr(e)"
 #: code:addons/hr_holidays/models/hr_time_rule.py:0
 msgid "your HR manager"
 msgstr ""
+
+#~ msgid ""
+#~ "Can manage and configure all holidays and leave requests.\n"
+#~ "\n"
+#~ "A user without any rights on Time Off will be able to see the "
+#~ "application, create his own holidays and manage the requests of the users "
+#~ "he's manager of."
+#~ msgstr ""
+#~ "Kann alle Urlaube und Urlaubsanträge verwalten und konfigurieren.\n"
+#~ "\n"
+#~ "Ein Benutzer, der keine Rechte für Abwesenheiten hat, kann die Anwendung "
+#~ "sehen, seinen eigenen Urlaub erstellen und die Anträge der Benutzer "
+#~ "verwalten, deren Manager er ist."
 
 #~ msgid "Back on"
 #~ msgstr "Zurück am"

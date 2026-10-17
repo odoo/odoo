@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 13:54+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -594,6 +594,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Нажмите \"Подтвердить\", чтобы подтвердить платеж."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "A customer is required to use the payment method %s."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -1625,12 +1631,12 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "Строка банковской выписки"
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_line_ids
-msgid "Bank Statement Lines"
+msgid "Bank Transactions"
 msgstr ""
 
 #. module: point_of_sale
@@ -2817,12 +2823,6 @@ msgstr "Коэффициент конверсии"
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
 msgstr "Курс конвертации из валюты компании в валюту заказа."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Convert POS Order to Invoice"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__correction_move_ids
@@ -5124,19 +5124,11 @@ msgid ""
 "Defines the journal where to book the accumulated payments (or individual "
 "payment if Identify Customer is true) after closing the session.\n"
 "For cash journal, we directly write to the default account in the journal "
-"via statement lines.\n"
+"via bank transactions.\n"
 "For bank journal, we write to the outstanding account specified in this "
 "payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
-"Оставьте пустым, чтобы использовать счет дебиторской задолженности клиента.\n"
-"Определяет журнал, в который следует записывать накопленные платежи (или "
-"отдельные платежи, если Identify Customer - true) после закрытия сессии.\n"
-"Для кассового журнала мы напрямую записываем на счет по умолчанию в журнале "
-"через строки выписки.\n"
-"Для банковского журнала мы записываем на счет, указанный в данном методе "
-"оплаты.\n"
-"Допускаются только кассовые и банковские журналы."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -6926,6 +6918,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
 msgid "Parent Category"
 msgstr "Родительская категория"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Partial reversal of %s for PoS Order invoicing"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -9411,6 +9409,12 @@ msgstr ""
 "По некоторым заказам уже выставляются счета. Пожалуйста, попробуйте позже."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Some orders are not globally invoiced."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -11243,6 +11247,11 @@ msgid "VAT"
 msgstr "НДС"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "VAT:"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Validate"
@@ -12123,9 +12132,21 @@ msgid "open orders planned for later."
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "order"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "order(s) for the next few days:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "orders"
 msgstr ""
 
 #. module: point_of_sale
@@ -12203,6 +12224,29 @@ msgstr "со значением"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "Строка банковской выписки"
+
+#~ msgid ""
+#~ "Leave empty to use the receivable account of customer.\n"
+#~ "Defines the journal where to book the accumulated payments (or individual "
+#~ "payment if Identify Customer is true) after closing the session.\n"
+#~ "For cash journal, we directly write to the default account in the journal "
+#~ "via statement lines.\n"
+#~ "For bank journal, we write to the outstanding account specified in this "
+#~ "payment method.\n"
+#~ "Only cash and bank journals are allowed."
+#~ msgstr ""
+#~ "Оставьте пустым, чтобы использовать счет дебиторской задолженности "
+#~ "клиента.\n"
+#~ "Определяет журнал, в который следует записывать накопленные платежи (или "
+#~ "отдельные платежи, если Identify Customer - true) после закрытия сессии.\n"
+#~ "Для кассового журнала мы напрямую записываем на счет по умолчанию в "
+#~ "журнале через строки выписки.\n"
+#~ "Для банковского журнала мы записываем на счет, указанный в данном методе "
+#~ "оплаты.\n"
+#~ "Допускаются только кассовые и банковские журналы."
 
 #~ msgid ""
 #~ "Whenever you close a session, one entry is generated in the following "

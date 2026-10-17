@@ -5,15 +5,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:44+0000\n"
-"PO-Revision-Date: 2026-09-09 13:56+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 11:47+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/website_sale_collect/zh_Hans/>\n"
+"projects/odoo-20/website_sale_collect/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,17 +29,19 @@ msgid ""
 "Allows customers to check in-store stock, pay on site, and pick up their "
 "orders at the shop.\n"
 msgstr ""
+"\n"
+"允许客户查询门店库存、现场付款并在门店自提订单。\n"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/sale_order_line.py:0
 msgid "%(available_quantity)g/%(desired_quantity)g available at this location."
-msgstr ""
+msgstr "该门店仅可提供 %(available_quantity)g/%(desired_quantity)g。"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "<i class=\"oi oi-fw oi-filled\" data-icon=\"favorite\"/> In wishlist"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-filled\" data-icon=\"favorite\"/> 已在愿望清单"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -47,6 +50,9 @@ msgid ""
 "label=\"Add to wishlist\"/>\n"
 "                                    Wishlist"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"favorite\" role=\"presentation\" aria-"
+"label=\"添加到愿望清单\"/>\n"
+"                                    愿望清单"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -63,7 +69,7 @@ msgstr "可用"
 #. module: website_sale_collect
 #: model:ir.module.module,shortdesc:base.module_website_sale_collect
 msgid "Click & Collect"
-msgstr ""
+msgstr "线上下单 & 线下取货"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_res_config_settings
@@ -108,7 +114,7 @@ msgstr "交货方式"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Delivery available"
-msgstr ""
+msgstr "可送货"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.in_store_delivery_method
@@ -133,13 +139,13 @@ msgstr "显示名称"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "Exceptional closing from"
-msgstr ""
+msgstr "临时歇业，自"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "Exceptional closing on"
-msgstr ""
+msgstr "临时歇业："
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__id
@@ -164,19 +170,19 @@ msgstr "店内配送方式"
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "In-store is only allowed if a sales order exists"
-msgstr ""
+msgstr "只有在存在销售订单时才允许门店付款"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "In-store not allowed to pay less than the order remaining balance"
-msgstr ""
+msgstr "门店付款金额不得低于订单的剩余应付金额"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "No in-store delivery methods available"
-msgstr ""
+msgstr "没有可用的门店自提送货方式"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -212,7 +218,7 @@ msgstr "亲身付款"
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "付款方式"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_provider
@@ -235,13 +241,13 @@ msgstr "店内取货"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Pickup"
-msgstr ""
+msgstr "自提"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Pickup available"
-msgstr ""
+msgstr "可自提"
 
 #. module: website_sale_collect
 #. odoo-python
@@ -279,19 +285,19 @@ msgstr "销售订单"
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "销售订单明细"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/interactions/checkout.js:0
 msgid "Same as contact details"
-msgstr ""
+msgstr "与联系方式相同"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Select a Store"
-msgstr ""
+msgstr "选择门店"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -303,13 +309,13 @@ msgstr "所选国家/地区："
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Shipping"
-msgstr ""
+msgstr "送货"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 msgid "Shipping method"
-msgstr ""
+msgstr "送货方式"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -344,7 +350,7 @@ msgstr "送货方式必须至少有一个仓库可以发布。"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "This address may require to recompute taxes."
-msgstr ""
+msgstr "此地址可能需要重新计算税款。"
 
 #. module: website_sale_collect
 #. odoo-python
@@ -352,17 +358,17 @@ msgstr ""
 msgid ""
 "Unfortunately, we can not deliver this order with the selected delivery "
 "method. Please update your choice and try again."
-msgstr ""
+msgstr "很遗憾，我们无法使用所选的送货方式配送此订单。请更改您的选择后重试。"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Update cart quantities"
-msgstr ""
+msgstr "更新购物车数量"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Update cart with available stock"
-msgstr ""
+msgstr "按可用库存更新购物车"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_stock_warehouse
@@ -385,12 +391,12 @@ msgstr "选择店内取货方式时，只可现场付款。"
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_transaction.py:0
 msgid "Your order will be ready on %s."
-msgstr ""
+msgstr "您的订单将于 %s 准备就绪。"
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid "Your order will be ready soon."
-msgstr ""
+msgstr "您的订单很快就能准备好。"
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
@@ -411,20 +417,20 @@ msgstr "您的付款已被处理。"
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.js:0
 msgid "from %(date)s"
-msgstr ""
+msgstr "%(date)s 起"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "in stock"
-msgstr ""
+msgstr "有货"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "to"
-msgstr ""
+msgstr "到"
 
 #~ msgid "Change store"
 #~ msgstr "变更商店"

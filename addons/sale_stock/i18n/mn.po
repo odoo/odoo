@@ -14,16 +14,16 @@
 # hish, 2022
 # Bayarkhuu Bataa, 2022
 # Martin Trigaux, 2022
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 19:47+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-14 15:58+0000\n"
+"Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-20/"
 "sale_stock/mn/>\n"
 "Language: mn\n"
 "MIME-Version: 1.0\n"
@@ -49,23 +49,35 @@ msgid ""
 "* Incoterms: International Commercial terms\n"
 "\n"
 msgstr ""
+"\n"
+"Борлуулалтын үнийн санал, захиалга удирдах\n"
+"==================================\n"
+"\n"
+"Энэ модуль борлуулалт болон агуулахын удирдлагын аппликейшнүүдийг холбоно.\n"
+"\n"
+"Тохиргоо\n"
+"-----------\n"
+"* Хүргэлт: Нэг дор эсвэл хэсэгчлэн хүргэх сонголт\n"
+"* Нэхэмжлэл: нэхэмжлэлийг хэрхэн төлөхийг сонгох\n"
+"* Худалдааны нөхцөл: Олон улсын худалдааны нөхцөл\n"
+"\n"
 
 #. module: sale_stock
 #: model:ir.actions.report,print_report_name:sale_stock.action_report_return_label
 msgid "\"Return - %s\" % (object.name)"
-msgstr ""
+msgstr "\"Буцаалт - %s\" % (object.name)"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "%(quantity)s x %(product_name)s"
-msgstr ""
+msgstr "%(quantity)s x %(product_name)s"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "%s:"
-msgstr ""
+msgstr "%s:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -80,7 +92,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
 msgid "1 Quotation"
-msgstr ""
+msgstr "1 үнийн санал"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
@@ -88,6 +100,8 @@ msgid ""
 "<br/>\n"
 "                                    Quantity:"
 msgstr ""
+"<br/>\n"
+"                                    Тоо хэмжээ:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -95,46 +109,48 @@ msgid ""
 "<i class=\"oi me-1\" data-icon=\"calendar_today\"/>\n"
 "                            Expected delivery:"
 msgstr ""
+"<i class=\"oi me-1\" data-icon=\"calendar_today\"/>\n"
+"                            Төлөвлөсөн хүргэлт:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_template
 msgid "<i class=\"oi me-1\" data-icon=\"reply\"/>Return"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"reply\"/>Буцаах"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_template
 msgid "<i class=\"oi me-2\" data-icon=\"reply\"/>Return"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"reply\"/>Буцаах"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/> Cancelled"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/> Цуцлагдсан"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> Received"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> Хүлээн авсан"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> Shipped"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> Илгээсэн"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Awaiting arrival"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Ирэхийг хүлээж буй"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Preparation"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Бэлтгэл"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "<span class=\"ms-2\">days after delivery</span>"
-msgstr ""
+msgstr "<span class=\"ms-2\">хүргэснээс хойш хоног</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -144,7 +160,7 @@ msgstr "<span class=\"o_stat_text\">Борлуулалт</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference</strong>"
-msgstr ""
+msgstr "<strong>Захиалагчийн лавлах дугаар</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -154,18 +170,18 @@ msgstr "<strong>Худалдааны нөхцөл</strong>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
 msgid "<strong>Return reason</strong>"
-msgstr ""
+msgstr "<strong>Буцаах шалтгаан</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
 msgid "<strong>Returned products</strong>"
-msgstr ""
+msgstr "<strong>Буцаасан бараа</strong>"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "A return label has been downloaded for the following products:"
-msgstr ""
+msgstr "Дараах бараанд буцаалтын шошго татагдлаа:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -179,6 +195,13 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Барааны тохиргооноос хамааран хүргэсэн тоо хэмжээг дараах аргаар автоматаар "
+"тооцоолж болно:\n"
+"  - Гараар: тоо хэмжээг мөрөнд гараар оруулна\n"
+"  - Зардлаас шинжилгээ: тоо хэмжээ нь батлагдсан зардлуудын тооны нийлбэр\n"
+"  - Цагийн хуудас: тоо хэмжээ нь энэ мөртэй холбоотой даалгаварт бүртгэсэн "
+"цагийн нийлбэр\n"
+"  - Барааны хөдөлгөөн: тоо хэмжээ нь батлагдсан хөдөлгөөнөөс ирнэ\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -191,12 +214,12 @@ msgstr "Бүх төлөвлөгдсөн орлого зарлагууд багт
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__allow_spontaneous_returns
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__allow_spontaneous_returns
 msgid "Allow Spontaneous Returns"
-msgstr ""
+msgstr "Сайн дураар буцаахыг зөвшөөрөх"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Allow users to return products"
-msgstr ""
+msgstr "Хэрэглэгчдэд бараа буцаахыг зөвшөөрөх"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
@@ -206,7 +229,7 @@ msgstr "Тусгайлан дамжлага тохируулах"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "Аль болох хурдан, дутуу захиалгатай"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -217,7 +240,7 @@ msgstr "Бэлэн байдал"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_replenishment_info__sale_delay
 msgid "Availability Time"
-msgstr ""
+msgstr "Бэлэн болох хугацаа"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -228,7 +251,6 @@ msgstr "Бэлэн"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-#, fuzzy
 msgid "Available in stock"
 msgstr "Нөөцөд боломжтой"
 
@@ -238,6 +260,8 @@ msgid ""
 "Choose the maximum number of days within which the product should be "
 "available for delivery to a customer or for use in other situations."
 msgstr ""
+"Бараа захиалагчид хүргэх эсвэл бусад зорилгоор ашиглахад бэлэн болох ёстой "
+"хамгийн их хоногийн тоог сонгоно уу."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -246,7 +270,6 @@ msgstr "Борлуулалтын захиалгын мөрүүдэд тусга�
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
-#, fuzzy
 msgid "Company"
 msgstr "Компани"
 
@@ -264,27 +287,27 @@ msgstr "Тохиргооны тохируулга"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Continue"
-msgstr ""
+msgstr "Үргэлжлүүлэх"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэсэн этгээд"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн огноо"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Customer reference"
-msgstr ""
+msgstr "Захиалагчийн лавлах дугаар"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
 msgid "Default Warehouse"
-msgstr "Агуулах"
+msgstr "Анхдагч агуулах"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -314,7 +337,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Delivery:"
-msgstr ""
+msgstr "Хүргэлт:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
@@ -357,7 +380,7 @@ msgstr "Дараах хүргэлтийн баримт дээрх харилца
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.js:0
 msgid "Download Return Label"
-msgstr ""
+msgstr "Буцаалтын шошго татах"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -394,12 +417,12 @@ msgstr "Товлосон хүргэлт"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Expected delivery"
-msgstr ""
+msgstr "Төлөвлөсөн хүргэлт"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
 msgid "Forecast Expected Date"
-msgstr ""
+msgstr "Таамагласан хүлээгдэж буй огноо"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -410,12 +433,12 @@ msgstr "Таамагласан нөөц"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
-msgstr "Өнөөдрийн үнэгүй тоо"
+msgstr "Өнөөдрийн чөлөөт тоо"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr ""
+msgstr "Хоцорсон бэлтгэлтэй"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
@@ -450,17 +473,17 @@ msgstr "Холбогдох баримт(ууд):"
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_incorrect_specs
 msgid "Incorrect specifications or compatibility issues"
-msgstr ""
+msgstr "Буруу үзүүлэлт эсвэл нийцлийн асуудал"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Incoterm details"
-msgstr ""
+msgstr "Худалдааны нөхцөлийн дэлгэрэнгүй"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Агуулахын дамжлага"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -469,7 +492,6 @@ msgstr "MTO эсэх"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
-#, fuzzy
 msgid "It specifies goods to be deliver partially or all at once"
 msgstr ""
 "Энд барааг хэсэгчилж хүргэх боломжтой байх эсвэл бүгдийг нэг дор хүргэдэг "
@@ -478,12 +500,12 @@ msgstr ""
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_damaged_product
 msgid "Item arrived damaged or defective"
-msgstr ""
+msgstr "Бараа гэмтэлтэй эсвэл согогтой ирсэн"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
 msgid "JSON data for the popover widget"
-msgstr ""
+msgstr "Popover виджетийн JSON өгөгдөл"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
@@ -498,17 +520,16 @@ msgstr "Журналын бичилт"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлд зассан этгээд"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлд зассан огноо"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__late_availability
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_sale_order_view_search_inherit
-#, fuzzy
 msgid "Late Availability"
 msgstr "Бэлэн байдал нь хоцорсон"
 
@@ -527,12 +548,12 @@ msgstr "Серийн дугаар"
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
 msgid "Lot/Serial Number:"
-msgstr ""
+msgstr "Серийн дугаар:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Manage Return Reasons"
-msgstr ""
+msgstr "Буцаах шалтгаануудыг удирдах"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -571,49 +592,48 @@ msgstr "Хүргэгдсэн тоог хөтлөх арга"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by <br/>"
-msgstr ""
+msgstr "Төлөвлөсөн хүргэлтийн огноог урагшлуулах хоног <br/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "No delivery yet! Automate them with sales orders."
-msgstr ""
+msgstr "Хүргэлт хараахан алга! Борлуулалтын захиалгаар автоматжуулаарай."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "No future availability"
-msgstr ""
+msgstr "Ирээдүйд бэлэн болох нөөц алга"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "No products are available to return."
-msgstr ""
+msgstr "Буцаах боломжтой бараа алга."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Not enough future availability"
-msgstr ""
+msgstr "Ирээдүйд бэлэн болох нөөц хүрэлцэхгүй"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
-msgstr ""
+msgstr "Захиалга батлагдсанаас бараа илгээх хүртэлх хоногийн тоо"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-#, fuzzy
 msgid "On"
 msgstr "Асаах"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_order_by_mistake
 msgid "Ordered by mistake"
-msgstr ""
+msgstr "Андуурч захиалсан"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -621,13 +641,13 @@ msgstr ""
 msgid ""
 "Please download and print the label, attach it to your package, and send the "
 "package to the address below:"
-msgstr ""
+msgstr "Шошгыг татаж хэвлээд, илгээмждээ хавсаргаж, доорх хаяг руу илгээнэ үү:"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.js:0
 msgid "Print the return request label."
-msgstr ""
+msgstr "Буцаалтын хүсэлтийн шошгыг хэвлэнэ үү."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -642,7 +662,7 @@ msgstr "Барааны хөдөлгөөн (Дэлгэрэнгүй)"
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_not_meeting_expectations
 msgid "Product does not meet expectations"
-msgstr ""
+msgstr "Бараа хүлээлтэд нийцээгүй"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
@@ -652,24 +672,23 @@ msgstr "Хүргэх тоо"
 #. module: sale_stock
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr ""
+msgstr "Үнийн санал, борлуулалтын захиалга, хүргэлт ба нэхэмжлэлийн хяналт"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
-#, fuzzy
 msgid "Quotations"
 msgstr "Үнийн саналууд"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__name
 msgid "Reason"
-msgstr ""
+msgstr "Шалтгаан"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_wrong_item
 msgid "Received the wrong item"
-msgstr ""
+msgstr "Буруу бараа хүлээн авсан"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
@@ -678,22 +697,25 @@ msgid ""
 "                replenishment propositions, shipping connectors, barcode "
 "scanner, etc."
 msgstr ""
+"Нөөцлөлт, байрлалын удирдлага, ухаалаг нөхөн дүүргэлтийн санал,\n"
+"                хүргэлтийн холбогч, баркод уншигч гэх мэтээр дутуу захиалгыг "
+"бууруулаарай."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Агуулахын баримтуудын хоорондын холбоос"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__stock_reference_ids
 msgid "References"
-msgstr "Өмнөх түүх"
+msgstr "Лавлахууд"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "Үлдсэн эрэлт бэлэн болох огноо"
 
 #. module: sale_stock
 #. odoo-python
@@ -705,7 +727,7 @@ msgstr "Захиалгын дагуу нөөц бүрдүүлэх (MTO)"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Request a return"
-msgstr ""
+msgstr "Буцаалт хүсэх"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -716,36 +738,36 @@ msgstr "Нөөцлөгдсөн"
 #. module: sale_stock
 #: model:ir.actions.report,name:sale_stock.action_report_return_label
 msgid "Return Label"
-msgstr ""
+msgstr "Буцаалтын шошго"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_return_reason
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__return_reason_id
 msgid "Return Reason"
-msgstr ""
+msgstr "Буцаах шалтгаан"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.action_open_return_reasons
 msgid "Return Reasons"
-msgstr ""
+msgstr "Буцаах шалтгаанууд"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__return_validity_days
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__return_validity_days
 msgid "Return Validity Days"
-msgstr ""
+msgstr "Буцаалт хүчинтэй хоног"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Return reason"
-msgstr ""
+msgstr "Буцаах шалтгаан"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "Return reason: %s"
-msgstr ""
+msgstr "Буцаах шалтгаан: %s"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.action_stock_picking_return_report
@@ -787,7 +809,7 @@ msgstr "Борлуулалтын шинжилгээ тайлан"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_stock_replenishment_info_sale_stock_inherit
 msgid "Sales Availability Time"
-msgstr ""
+msgstr "Борлуулалтад бэлэн болох хугацаа"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -819,7 +841,7 @@ msgstr "Борлуулалтын аюулгүй хоног"
 #. module: sale_stock
 #: model:ir.module.module,shortdesc:base.module_sale_stock
 msgid "Sales and Warehouse Management"
-msgstr ""
+msgstr "Борлуулалт ба агуулахын удирдлага"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -840,13 +862,13 @@ msgstr "Борлуулалтын аюулгүйн урьтал хугацаа"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Select a reason..."
-msgstr ""
+msgstr "Шалтгаан сонгоно уу..."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Select at least one product and a return reason."
-msgstr ""
+msgstr "Дор хаяж нэг бараа болон буцаах шалтгаан сонгоно уу."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
@@ -856,7 +878,7 @@ msgstr "Борлуулалтын захиалгын мөрүүд дээр сон
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Дугаарлалт"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -892,7 +914,7 @@ msgstr "Агуулахын дүрмийн тайлан"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_replenishment_info
 msgid "Stock delivery time information"
-msgstr ""
+msgstr "Агуулахын хүргэлтийн хугацааны мэдээлэл"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -903,7 +925,7 @@ msgstr "Агуулахын дүрмийн тайлан"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "The delivery"
-msgstr ""
+msgstr "Хүргэлт"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -912,6 +934,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered. "
 "Instead, create a return in your inventory."
 msgstr ""
+"Захиалсан тоо хэмжээг аль хэдийн хүргэсэн хэмжээнээс бага болгох боломжгүй. "
+"Оронд нь агуулахдаа буцаалт үүсгэнэ үү."
 
 #. module: sale_stock
 #. odoo-python
@@ -920,6 +944,8 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
+"Борлуулалтын захиалгын мөрийн захиалсан тоо хэмжээг аль хэдийн хүргэсэн "
+"хэмжээнээс бага болгох боломжгүй. Оронд нь агуулахдаа буцаалт үүсгэнэ үү."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -935,12 +961,12 @@ msgstr "Шилжүүлэг"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Transfers"
-msgstr "Гүйлгээ"
+msgstr "Шилжүүлгүүд"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__late_availability
 msgid "True if any related picking has late availability"
-msgstr ""
+msgstr "Холбогдох бэлтгэлийн аль нэг нь хоцорч бэлэн болох бол үнэн"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users
@@ -950,7 +976,6 @@ msgstr "Хэрэглэгч"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-#, fuzzy
 msgid "View Forecast"
 msgstr "Урьдчилсан таамгийг харах"
 
@@ -978,12 +1003,15 @@ msgstr "Бүх бараа бэлэн үед"
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
 msgstr ""
+"Өөр компанийн хүргэлт ашиглаж буй мөрөнд агуулах тохируулсан байх ёстой."
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid "You must set a warehouse on your sale order to proceed."
 msgstr ""
+"Үргэлжлүүлэхийн тулд борлуулалтын захиалгадаа агуулах тохируулах "
+"шаардлагатай."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -1000,7 +1028,7 @@ msgstr "өдөр"
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "of"
-msgstr "ын"
+msgstr "-ийн"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -1010,13 +1038,13 @@ msgstr "оронд нь захиалагдсан"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr "бэлтгэв, Бэлтгэх ёстой нь:"
+msgstr "-ийн оронд боловсруулсан"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
-msgstr ""
+msgstr "хоцорно."
 
 #, fuzzy
 #~ msgid "Accrued Orders Wizard"

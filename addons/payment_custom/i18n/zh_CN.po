@@ -6,15 +6,16 @@
 # Martin Trigaux, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 15:19+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 13:33+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/payment_custom/zh_Hans/>\n"
+"projects/odoo-20/payment_custom/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,22 +26,22 @@ msgstr ""
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>金额：</b>"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
 msgid "<b>Bank Account:</b>"
-msgstr ""
+msgstr "<b>银行账户：</b>"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
 msgid "<b>Beneficiary:</b>"
-msgstr ""
+msgstr "<b>收款人：</b>"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
 msgid "<b>Communication:</b>"
-msgstr ""
+msgstr "<b>付款附言：</b>"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
@@ -49,11 +50,14 @@ msgid ""
 "                            Scan me in your banking app\n"
 "                        </small>"
 msgstr ""
+"<small class=\"text-center text-wrap lh-sm\">\n"
+"                            在您的银行 App 中扫描我\n"
+"                        </small>"
 
 #. module: payment_custom
 #: model:ir.module.module,summary:base.module_payment_custom
 msgid "A payment provider for custom flows like wire transfers."
-msgstr ""
+msgstr "适用于电汇等自定义流程的支付提供商。"
 
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__partner_bank_id
@@ -116,18 +120,18 @@ msgstr "只有自定义提供商才应有自定义模式。"
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
 msgid "Others"
-msgstr ""
+msgstr "其它"
 
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__company_partner_id
 msgid "Partner"
-msgstr ""
+msgstr "合作伙伴"
 
 #. module: payment_custom
 #: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__pay_on_invoice
 #: model:payment.method,name:payment_custom.payment_method_pay_on_invoice
 msgid "Pay on Invoice"
-msgstr ""
+msgstr "发票付款"
 
 #. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_provider
@@ -137,7 +141,7 @@ msgstr "支付提供商"
 #. module: payment_custom
 #: model:ir.module.module,shortdesc:base.module_payment_custom
 msgid "Payment Provider: Custom Payment Modes"
-msgstr ""
+msgstr "支付提供商：自定义支付方式"
 
 #. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_transaction

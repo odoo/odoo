@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-10-08 09:46+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
@@ -1086,7 +1086,8 @@ msgid ""
 "                                <td width=\"19%\" align=\"right\" "
 "style=\"max-width: 100%; vertical-align: top;\">\n"
 "                                    <t t-"
-"out=\"format_amount(object.list_price, object.currency_id)\">$ 450</t>\n"
+"out=\"format_amount(ctx.get('product_price') or 0, object.currency_id)\">$ "
+"450</t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -3608,12 +3609,6 @@ msgstr "Donasi"
 #: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "Donation product not found."
 msgstr "Produk donasi tidak ditemukan."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/product_template.py:0
-msgid "Donation products cannot be archived."
-msgstr "Produk donasi tidak dapat diarsipkan."
 
 #. module: website_sale
 #. odoo-python
@@ -9215,6 +9210,9 @@ msgstr "youremail@gmail.com"
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr "{{ object.name or 'Product' }} kembali tersedia"
+
+#~ msgid "Donation products cannot be archived."
+#~ msgstr "Produk donasi tidak dapat diarsipkan."
 
 #~ msgid ""
 #~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" "

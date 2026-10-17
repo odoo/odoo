@@ -10,15 +10,16 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 19:54+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 06:34+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/survey/zh_Hans/>\n"
+"projects/odoo-20/survey/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +42,14 @@ msgid ""
 "answers of question and according to that survey is done. Partners are also\n"
 "sent mails with personal token for the invitation of the survey.\n"
 msgstr ""
+"\n"
+"创建精美的调查并直观呈现答案\n"
+"==============================================\n"
+"\n"
+"调查结果取决于不同用户对一些问题的回答或评价。一个调查可以包含多个\n"
+"页面。每个页面可以包含多个问题，每个问题可以有多个答案。不同用户可能\n"
+"对问题给出不同的答案，调查据此完成。此外，还会向合作伙伴发送带有\n"
+"个人令牌的邮件，以邀请其参与调查。\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -144,7 +153,7 @@ msgstr "99年"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "<br/>for successfully completing this certification."
-msgstr ""
+msgstr "<br/>圆满完成本认证。"
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
@@ -314,7 +323,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<i class=\"oi oi-filled me-2\" data-icon=\"delete\"/>Remove filters"
-msgstr ""
+msgstr "<i class=\"oi oi-filled me-2\" data-icon=\"delete\"/>移除筛选条件"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -322,12 +331,15 @@ msgid ""
 "<i class=\"oi oi-filled me-2\" data-icon=\"edit\" aria-hidden=\"true\"/>Edit "
 "the survey"
 msgstr ""
+"<i class=\"oi oi-filled me-2\" data-icon=\"edit\" aria-hidden=\"true\"/>编辑"
+"调查"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"share\" role=\"img\" title=\"Share\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"share\" role=\"img\" title=\"分享\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -335,6 +347,8 @@ msgid ""
 "<i class=\"oi oi-fw me-2\" data-icon=\"bar_chart\" aria-hidden=\"true\"/"
 ">Review answers"
 msgstr ""
+"<i class=\"oi oi-fw me-2\" data-icon=\"bar_chart\" aria-hidden=\"true\"/>查看"
+"答案"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_multiple_choice
@@ -342,6 +356,8 @@ msgid ""
 "<i class=\"oi oi-fw ms-auto text-danger\" data-icon=\"close\" aria-"
 "label=\"Incorrect\" role=\"img\"/>"
 msgstr ""
+"<i class=\"oi oi-fw ms-auto text-danger\" data-icon=\"close\" aria-label=\"错"
+"误\" role=\"img\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_multiple_choice
@@ -349,6 +365,8 @@ msgid ""
 "<i class=\"oi oi-fw ms-auto text-success\" data-icon=\"check\" aria-"
 "label=\"Correct\" role=\"img\"/>"
 msgstr ""
+"<i class=\"oi oi-fw ms-auto text-success\" data-icon=\"check\" aria-"
+"label=\"正确\" role=\"img\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -356,6 +374,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/"
 "><span class=\"d-none d-lg-inline ms-2\">Stats</span>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/>"
+"<span class=\"d-none d-lg-inline ms-2\">统计</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -363,6 +383,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/"
 ">Download certification"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"trophy\" aria-hidden=\"true\"/>下"
+"载认证"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -375,11 +397,13 @@ msgid ""
 "<i class=\"oi oi-fw\" data-icon=\"menu\" aria-hidden=\"true\"/><span "
 "class=\"d-none d-lg-inline ms-2\">Answers</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"menu\" aria-hidden=\"true\"/><span "
+"class=\"d-none d-lg-inline ms-2\">答案</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "<i class=\"oi\" data-icon=\"bar_chart\" aria-hidden=\"true\"/> Results"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"bar_chart\" aria-hidden=\"true\"/> 结果"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -396,6 +420,8 @@ msgid ""
 "<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\"> or "
 "press CTRL+Enter</small>"
 msgstr ""
+"<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\"> 或"
+"按 CTRL+Enter</small>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -403,6 +429,8 @@ msgid ""
 "<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\">or "
 "press CTRL+Enter</small>"
 msgstr ""
+"<small class=\"d-none d-md-inline ms-1 text-muted\" id=\"enter-tooltip\">或"
+"按 CTRL+Enter</small>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -410,6 +438,8 @@ msgid ""
 "<small class=\"d-none d-md-inline ms-2 text-muted\" id=\"enter-tooltip\">or "
 "press Enter</small>"
 msgstr ""
+"<small class=\"d-none d-md-inline ms-2 text-muted\" id=\"enter-tooltip\">或"
+"按 Enter</small>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -417,31 +447,33 @@ msgid ""
 "<small class=\"o_survey_enter d-none d-md-inline-block text-muted\">or press "
 "Enter</small>"
 msgstr ""
+"<small class=\"o_survey_enter d-none d-md-inline-block text-muted\">或按 "
+"Enter</small>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"d-none d-lg-inline ms-2\">Charts</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-lg-inline ms-2\">图表</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"list-group-item py-1 px-2\">Avg</span>"
-msgstr ""
+msgstr "<span class=\"list-group-item py-1 px-2\">平均</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"list-group-item py-1 px-2\">Max</span>"
-msgstr ""
+msgstr "<span class=\"list-group-item py-1 px-2\">最大值</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"list-group-item py-1 px-2\">Min</span>"
-msgstr ""
+msgstr "<span class=\"list-group-item py-1 px-2\">最小值</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<span class=\"mx-2 o_form_label\">to</span>"
-msgstr ""
+msgstr "<span class=\"mx-2 o_form_label\">至</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -481,11 +513,14 @@ msgid ""
 "                        <i class=\"oi\" data-icon=\"chevron_forward\" aria-"
 "hidden=\"true\"/>"
 msgstr ""
+"<span class=\"o_survey_session_navigation_next_label\">开始</span>\n"
+"                        <i class=\"oi\" data-icon=\"chevron_forward\" aria-"
+"hidden=\"true\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_print
 msgid "<span class=\"text-muted\">Answer:</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">答案：</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -495,22 +530,22 @@ msgstr "<span class=\"text-muted\">平均持续时间</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "<span class=\"text-muted\">Avg. Duration</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">平均时长</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "<span class=\"text-muted\">Avg. Score</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">平均得分</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "<span class=\"text-muted\">Completed</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">已完成</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 msgid "<span class=\"text-muted\">Page</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">页</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
@@ -521,7 +556,7 @@ msgstr "<span class=\"text-muted\">问题</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "<span class=\"text-muted\">Registered</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">已注册</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -531,7 +566,7 @@ msgstr "</span>已回应</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "<span class=\"text-muted\">Success rate</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">成功率</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -548,11 +583,16 @@ msgid ""
 "starts.\n"
 "                    </span>"
 msgstr ""
+"<span>\n"
+"                        <i class=\"oi oi-filled me-2\" data-icon=\"info\" "
+"aria-hidden=\"true\"/>\n"
+"                        主持人开始后，会话将自动开始。\n"
+"                    </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span> Correct</span>"
-msgstr ""
+msgstr "<span> 正确</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
@@ -577,7 +617,7 @@ msgstr "<span>已完成的调查</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span>Completed</span>"
-msgstr ""
+msgstr "<span>已完成</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -602,7 +642,7 @@ msgstr "<span>仅限通过</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span>Registered</span>"
-msgstr ""
+msgstr "<span>已注册</span>"
 
 #. module: survey
 #. odoo-python
@@ -850,7 +890,7 @@ msgstr "答案标签，如果不为空，则为数值本身，否则为代表答
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Answered:"
-msgstr ""
+msgstr "已作答："
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
@@ -942,7 +982,7 @@ msgstr "尝试计数"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "Attempts left:"
-msgstr ""
+msgstr "剩余尝试次数："
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__nickname
@@ -1002,12 +1042,12 @@ msgstr "阿维奇"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Background"
-msgstr ""
+msgstr "背景"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__background_image_filename
 msgid "Background Filename"
-msgstr ""
+msgstr "背景文件名"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__background_image
@@ -1066,7 +1106,7 @@ msgstr "橱柜含门"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_can_answer
 msgid "Can Answer Current Question"
-msgstr ""
+msgstr "可以回答当前问题"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__can_edit_body
@@ -1097,12 +1137,12 @@ msgstr "无法停用语言，当前有调查问卷仅支持这些语言。"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Certificate of achievement"
-msgstr ""
+msgstr "成就证书"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Certificate of achievement for"
-msgstr ""
+msgstr "成就证书授予"
 
 #. module: survey
 #. odoo-python
@@ -1132,7 +1172,7 @@ msgstr "认证徽标没有被配置到调查中%(survey_name)s"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Certification failed"
-msgstr ""
+msgstr "认证未通过"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_report_layout
@@ -1142,12 +1182,12 @@ msgstr "认证模板"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Certification:"
-msgstr ""
+msgstr "认证："
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Certification: n°"
-msgstr ""
+msgstr "认证：n°"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
@@ -1245,23 +1285,23 @@ msgstr "经典 #1"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic-1_black
 msgid "Classic #1 Black"
-msgstr ""
+msgstr "经典 #1 黑色"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic-2_company
 msgid "Classic #2"
-msgstr ""
+msgstr "经典 #2"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic-2_black
 msgid "Classic #2 Black"
-msgstr ""
+msgstr "经典 #2 黑色"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 msgid "Click to copy link"
-msgstr ""
+msgstr "点击复制链接"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug4
@@ -1419,7 +1459,7 @@ msgstr "已复制！"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
 msgid "Copy session link"
-msgstr ""
+msgstr "复制会话链接"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_1
@@ -1597,7 +1637,7 @@ msgstr "回复日期"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Date:"
-msgstr ""
+msgstr "日期："
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__datetime
@@ -1640,7 +1680,7 @@ msgstr "删除"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Demo certified name"
-msgstr ""
+msgstr "认证姓名示例"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
@@ -1662,7 +1702,7 @@ msgstr "详细解答"
 #. module: survey
 #: model:ir.model,name:survey.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "摘要"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col2
@@ -1762,7 +1802,7 @@ msgstr "调查结束"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "End the Session"
-msgstr ""
+msgstr "结束会话"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -1832,7 +1872,7 @@ msgstr "最终排行榜"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Final Scoreboard"
-msgstr ""
+msgstr "最终计分板"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug2
@@ -1860,12 +1900,12 @@ msgstr "食物偏好"
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 msgid "For this question, you can only select one answer."
-msgstr ""
+msgstr "对于此问题，您只能选择一个答案。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Free Navigation"
-msgstr ""
+msgstr "自由导航"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
@@ -1917,7 +1957,7 @@ msgstr "赠送徽标"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_navigation
 msgid "Go to previous question"
-msgstr ""
+msgstr "转到上一个问题"
 
 #. module: survey
 #. odoo-python
@@ -1950,7 +1990,7 @@ msgstr "处理现有的"
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "Handle quiz & certifications"
-msgstr ""
+msgstr "处理测验与认证"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__has_message
@@ -1977,7 +2017,7 @@ msgstr "Hemiunu"
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Here, you can view the participants."
-msgstr ""
+msgstr "在这里，您可以查看参与者。"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug1
@@ -2170,7 +2210,7 @@ msgstr "如果勾选了，用户能够返回上页。"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "If checked, users can navigate back and forth between questions."
-msgstr ""
+msgstr "如果勾选，用户可以在问题之间前后导航。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__survey_users_login_required
@@ -2275,7 +2315,7 @@ msgstr "整数更新比较标志"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Intro Message"
-msgstr ""
+msgstr "介绍消息"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__invite_token
@@ -2413,12 +2453,12 @@ msgstr "金钟铉"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_digest_digest__kpi_nbr_of_answers_value
 msgid "Kpi Nbr Of Answers Value"
-msgstr ""
+msgstr "KPI 答案数量值"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_digest_digest__kpi_nbr_of_certified_participants_value
 msgid "Kpi Nbr Of Certified Participants Value"
-msgstr ""
+msgstr "KPI 认证参与者数量值"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug1
@@ -2434,12 +2474,12 @@ msgstr "标签序列顺序"
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 msgid "Label for %s"
-msgstr ""
+msgstr "%s 的标签"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Labels"
-msgstr ""
+msgstr "标签"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__matrix_row_ids
@@ -2611,7 +2651,7 @@ msgstr "需要登录"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__text_box
 msgid "Long Text"
-msgstr ""
+msgstr "长文本"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__template_id
@@ -2634,7 +2674,7 @@ msgstr "必答问题"
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_type_icon
 #: model:ir.model.fields,help:survey.field_survey_user_input__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols 图标，例如 checklist"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__matrix
@@ -2654,7 +2694,7 @@ msgstr "表格类型"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_max_label_placeholder
 msgid "Max Label Placeholder"
-msgstr ""
+msgstr "最大标签占位符"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_validation_date
@@ -2728,7 +2768,7 @@ msgstr "消息"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_min_label_placeholder
 msgid "Min Label Placeholder"
-msgstr ""
+msgstr "最小标签占位符"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2738,12 +2778,12 @@ msgstr "最小/最大限值"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__minimal_company
 msgid "Minimal"
-msgstr ""
+msgstr "极简"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__minimal_black
 msgid "Minimal Black"
-msgstr ""
+msgstr "极简黑色"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -2774,12 +2814,12 @@ msgstr "最小值"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__modern_company
 msgid "Modern"
-msgstr ""
+msgstr "现代"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__modern_black
 msgid "Modern Black"
-msgstr ""
+msgstr "现代黑色"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q3_sug4
@@ -2799,7 +2839,7 @@ msgstr "泰德山（西班牙-特内里费岛）"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__multiple_choice
 msgid "Multi-Select"
-msgstr ""
+msgstr "多选"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__matrix_subtype__multiple
@@ -2895,7 +2935,7 @@ msgstr "下一活动类型"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Next Question"
-msgstr ""
+msgstr "下一个问题"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__nickname
@@ -2936,7 +2976,7 @@ msgstr "没有尝试机会。"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.survey_user_input_action_certified
 msgid "No certified participant yet!"
-msgstr ""
+msgstr "尚无通过认证的参与者！"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -2967,7 +3007,7 @@ msgstr "不，它对人眼来说太小了。"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "No, wait a minute"
-msgstr ""
+msgstr "不，请稍等"
 
 #. module: survey
 #. odoo-javascript
@@ -3170,7 +3210,7 @@ msgstr "打开部分"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Option Name"
-msgstr ""
+msgstr "选项名称"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3185,13 +3225,15 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"发送邮件时可选的翻译语言（ISO代码）。未设置时默认采用主联系人语言。推荐使用动"
+"态占位符如 {{ object.partner_id.lang }} 自动匹配语言。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "Optional: provide extra guidelines, instructions, pictures... here, to help "
 "attendees answer"
-msgstr ""
+msgstr "可选：在此提供额外的指南、说明、图片……以帮助参与者作答"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3351,7 +3393,7 @@ msgstr "挑选一个模板……"
 #. odoo-javascript
 #: code:addons/survey/static/src/views/components/survey_survey_action_helper/survey_survey_action_helper.xml:0
 msgid "Pick a sample or"
-msgstr ""
+msgstr "挑选一个示例，或"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p1_q1
@@ -3396,7 +3438,7 @@ msgstr "请告诉我们您对本次活动晚餐的偏好！"
 msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section to use the \"Page per section\" layout."
-msgstr ""
+msgstr "请确保您的调查中至少有一个问题。要使用“每节一页”布局，您还需要至少一个小节。"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3
@@ -3427,7 +3469,7 @@ msgstr "预览"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Previous Question"
-msgstr ""
+msgstr "上一个问题"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2
@@ -3535,12 +3577,12 @@ msgstr "包含触发答案的问题，以显示当前问题。"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_success
 msgid "Quiz Passed"
-msgstr ""
+msgstr "测验通过"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Quiz passed"
-msgstr ""
+msgstr "测验通过"
 
 #. module: survey
 #. odoo-javascript
@@ -3650,7 +3692,7 @@ msgstr "仅限于"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Results"
-msgstr ""
+msgstr "结果"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
@@ -3687,7 +3729,7 @@ msgstr "短信发送错误"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_nickname
 msgid "Save as nickname"
-msgstr ""
+msgstr "保存为昵称"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_email
@@ -3702,7 +3744,7 @@ msgstr "刻度"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Scale Maximim Value (0 to 10)"
-msgstr ""
+msgstr "刻度最大值（0 至 10）"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_max_label
@@ -3732,7 +3774,7 @@ msgstr "刻度最小值（0 至 10）"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Scale Range"
-msgstr ""
+msgstr "刻度范围"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_scale
@@ -3742,7 +3784,7 @@ msgstr "刻度数值"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "安排的日期"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4
@@ -3773,7 +3815,7 @@ msgstr "正确回答此问题的得分。"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Scoreboard"
-msgstr ""
+msgstr "计分板"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_scored_question
@@ -3887,7 +3929,7 @@ msgstr "通过EMail发送"
 #. module: survey
 #: model:ir.module.module,summary:base.module_survey
 msgid "Send your surveys or share them live."
-msgstr ""
+msgstr "发送调查，或实时分享。"
 
 #. module: survey
 #: model:mail.template,description:survey.mail_template_certification
@@ -3946,12 +3988,12 @@ msgstr "分享调查"
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Shared with"
-msgstr ""
+msgstr "已分享给"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__char_box
 msgid "Short Text"
-msgstr ""
+msgstr "短文"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_table_pagination
@@ -3979,7 +4021,7 @@ msgstr "显示最终排行榜"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 msgid "Show Final Scoreboard"
-msgstr ""
+msgstr "显示最终计分板"
 
 #. module: survey
 #. odoo-javascript
@@ -3997,7 +4039,7 @@ msgstr "显示结果"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 msgid "Show Scoreboard"
-msgstr ""
+msgstr "显示计分板"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_show_leaderboard
@@ -4018,7 +4060,7 @@ msgstr "向他们展示幻灯片，其中包含他们需要快速阅读的大量
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__simple_choice
 msgid "Single-Select"
-msgstr ""
+msgstr "单选"
 
 #. module: survey
 #. odoo-python
@@ -4098,7 +4140,7 @@ msgstr "从零开始"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "Stats"
-msgstr ""
+msgstr "统计"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__state
@@ -4146,7 +4188,7 @@ msgstr "提交"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "Submit survey"
-msgstr ""
+msgstr "提交调查"
 
 #. module: survey
 #. odoo-javascript
@@ -4154,7 +4196,7 @@ msgstr ""
 msgid ""
 "Submit your survey? Once it's out, it is like a letter in the mail: it "
 "cannot be recalled."
-msgstr ""
+msgstr "要提交您的调查吗？一旦发出，它就像寄出的信件一样无法收回。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__success_count
@@ -4420,7 +4462,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 msgid "The answer deadline should be after the email schedule date."
-msgstr ""
+msgstr "回答截止日期应晚于邮件计划发送日期。"
 
 #. module: survey
 #. odoo-python
@@ -4492,7 +4534,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "The interview link will expire after the deadline."
-msgstr ""
+msgstr "访谈链接将在截止日期后失效。"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row1
@@ -4602,7 +4644,7 @@ msgstr "此答案必须是电子邮件地址。"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "This certificate is presented to"
-msgstr ""
+msgstr "本证书授予"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_code
@@ -4719,13 +4761,13 @@ msgstr "标题"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "To"
-msgstr ""
+msgstr "至"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "To take this survey, please close all other tabs on %(hostname)s"
-msgstr ""
+msgstr "要参加此调查，请关闭 %(hostname)s 上的所有其他标签页"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -4961,7 +5003,7 @@ msgstr "正在等待参与者⋯"
 #. odoo-python
 #: code:addons/survey/controllers/main.py:0
 msgid "We do not accept submissions for this question anymore."
-msgstr ""
+msgstr "我们不再接受此问题的提交。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -5139,7 +5181,7 @@ msgstr "是"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "Yes, submit"
-msgstr ""
+msgstr "是，提交"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q3_sug1
@@ -5251,7 +5293,7 @@ msgstr "第一次尝试的点"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "by"
-msgstr ""
+msgstr "由"
 
 #. module: survey
 #. odoo-javascript
@@ -5299,12 +5341,12 @@ msgstr "例如: 满意度调查"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "for successfully completing"
-msgstr ""
+msgstr "圆满完成"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "for successfully completing this certification."
-msgstr ""
+msgstr "圆满完成本认证。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -5314,7 +5356,7 @@ msgstr "登录"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "n°"
-msgstr ""
+msgstr "n°"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
@@ -5347,14 +5389,14 @@ msgstr "页"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "presented to"
-msgstr ""
+msgstr "授予"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_invite__scheduled_date
 msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."
-msgstr ""
+msgstr "在此日期之后发送电邮。此日期会视为使用 UTC 时区。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired

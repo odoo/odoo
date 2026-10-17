@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-05 23:37+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-16 21:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/hr_work_entry/es_419/>\n"
@@ -64,7 +64,7 @@ msgstr "%(duration)s horas %(work_entry_type)s"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "%(from)s-%(to)s"
-msgstr ""
+msgstr "%(from)s-%(to)s"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -76,7 +76,7 @@ msgstr "%(hour_from)s - %(hour_to)s (%(duration)s) %(work_entry_type)s"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "%(op)s %(hours)gh/%(period)s"
-msgstr ""
+msgstr "%(op)s %(hours)g h/%(period)s"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -88,7 +88,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (copia)"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -108,6 +108,15 @@ msgid ""
 "time type that will be created to count the amount of time missing to "
 "fullfill the condition.\">?</sup></span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"threshold_operator == "
+"'less_than'\">¿Establecer exceso en <sup class=\"d-print-none text-info p-1 "
+"ms-1\" data-tooltip=\"Puedes definir un tipo de tiempo que se creará para "
+"contabilizar el tiempo excedente.\">?</sup></span>\n"
+"                                <span class=\"o_form_label\" "
+"invisible=\"threshold_operator != 'less_than'\">¿Establecer déficit en <sup "
+"class=\"d-print-none text-info p-1 ms-1\" data-tooltip=\"Puedes definir un "
+"tipo de tiempo que se creará para contabilizar el tiempo que falta para "
+"cumplir la condición.\">?</sup></span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
@@ -222,17 +231,17 @@ msgstr "AFU"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_additional_hours
 msgid "AH"
-msgstr ""
+msgstr "AH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_additional_hours_50
 msgid "AH1"
-msgstr ""
+msgstr "AH1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_additional_hours_100
 msgid "AH2"
-msgstr ""
+msgstr "AH2"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_common_law_illness_ami
@@ -479,6 +488,7 @@ msgid "Availability time not considered as working time"
 msgstr "Tiempo de disponibilidad que no se considera como horario laboral"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_death_close_family
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_bereavement_leave
 msgid "BER"
 msgstr "BER"
@@ -529,7 +539,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_thematic_leave_informal_carer
 msgid "CAR"
-msgstr ""
+msgstr "CAR"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_non_provided_service_childminders
@@ -767,12 +777,12 @@ msgstr "Cálculo"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__condition_label
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_list
 msgid "Condition"
-msgstr ""
+msgstr "Condición"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Conditions"
-msgstr ""
+msgstr "Condiciones"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_res_config_settings
@@ -847,7 +857,7 @@ msgstr "Fecha"
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_time_rule__quantity_period__day
 msgid "Day"
-msgstr ""
+msgstr "Día"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_day_overtime
@@ -909,7 +919,7 @@ msgstr "Descripción"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Details"
-msgstr ""
+msgstr "Detalles"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__count_as
@@ -1033,7 +1043,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "Effect"
-msgstr ""
+msgstr "Efecto"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__eligible_employee_line_ids
@@ -1084,7 +1094,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_list
 msgid "Employees"
-msgstr ""
+msgstr "Empleados"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_time_rule__employer_tolerance
@@ -1506,7 +1516,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_second_week_short_term_employee
 msgid "I2W"
-msgstr ""
+msgstr "I2W"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
@@ -2062,6 +2072,11 @@ msgid "NDI"
 msgstr "NDI"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss_horeca
+msgid "NOH"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_non_taxable_political_service
 msgid "NTS"
 msgstr "NTS"
@@ -2279,7 +2294,7 @@ msgstr "HE"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_overtime_recoverable
 msgid "OT5"
-msgstr ""
+msgstr "OT5"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__10
@@ -2567,7 +2582,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_leave_palliative_care
 msgid "PAL"
-msgstr ""
+msgstr "PAL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_parental_time_off
@@ -2664,7 +2679,7 @@ msgstr "PN2"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_political_leave
 msgid "POL"
-msgstr ""
+msgstr "POL"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_uz_work_entry_type_partially_paid_leave
@@ -3058,7 +3073,7 @@ msgstr "SCT"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.mx_work_entry_type_seventh_day
 msgid "SD"
-msgstr ""
+msgstr "SD"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_schooldays
@@ -3434,7 +3449,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_time_credit_not_equated
 msgid "TCN"
-msgstr ""
+msgstr "TCN"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_environmental_protection
@@ -3876,6 +3891,11 @@ msgid "V20"
 msgstr "V20"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss
+msgid "VNH"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_net
 msgid "VNO"
 msgstr "VNO"
@@ -3908,7 +3928,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_second_week_short_term_employee
 msgid "W2A"
-msgstr ""
+msgstr "W2A"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_first_week
@@ -4176,7 +4196,7 @@ msgstr "XSH"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_youth_time_off
 msgid "YTO"
-msgstr ""
+msgstr "YTO"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__reference_year
@@ -4201,7 +4221,7 @@ msgstr "No puede tener el mismo empleado dos veces."
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.za_work_entry_type_public_holiday
 msgid "ZA"
-msgstr ""
+msgstr "ZA"
 
 #. module: hr_work_entry
 #. odoo-javascript

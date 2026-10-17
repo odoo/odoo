@@ -4,15 +4,16 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-09-09 14:11+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/pos_online_payment/zh_Hans/>\n"
+"projects/odoo-20/pos_online_payment/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,17 +26,17 @@ msgstr ""
 msgid ""
 "<i class=\"oi me-2\" data-icon=\"lock\"/>Payment secured · Don't close this "
 "window"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"lock\"/>付款已受保护 · 请勿关闭此窗口"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "<span class=\"text-500\">Order</span>"
-msgstr ""
+msgstr "<span class=\"text-500\">订单</span>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "<span class=\"text-500\">Total</span>"
-msgstr ""
+msgstr "<span class=\"text-500\">合计</span>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -84,7 +85,7 @@ msgstr "允许的产品"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "Almost there!"
-msgstr ""
+msgstr "马上就好！"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -177,6 +178,8 @@ msgid ""
 "from this device, maybe from another. If you continue, you risk to pay the "
 "order twice. Only continue if you're sure the earlier attempt was abandoned."
 msgstr ""
+"此订单似乎已有一笔付款正在处理——可能来自本设备，也可能来自其他设备。如果继续"
+"，您可能会重复支付该订单。仅在您确定先前的尝试已放弃时才继续。"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
@@ -203,7 +206,7 @@ msgstr "在线支付方式"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "Online Payment Transfer"
-msgstr ""
+msgstr "在线付款转账"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -258,7 +261,7 @@ msgstr "POS单"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "POS Receivable Transfer"
-msgstr ""
+msgstr "POS 应收转账"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
@@ -280,13 +283,13 @@ msgstr "付款交易"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Payment provider requirement"
-msgstr ""
+msgstr "支付提供商要求"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
 msgid "Please ensure you have a customer with an email address on this order."
-msgstr ""
+msgstr "请确保此订单的客户具有电子邮件地址。"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_config
@@ -296,22 +299,22 @@ msgstr "POS配置"
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "POS 订单"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "POS 支付"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "POS 销售点付款方式"
 
 #. module: pos_online_payment
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment
 msgid "Point of Sale online payment"
-msgstr ""
+msgstr "POS 在线支付"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -327,13 +330,13 @@ msgstr "服务器错误"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "Skip <i class=\"oi ms-1\" data-icon=\"east\"/>"
-msgstr ""
+msgstr "跳过 <i class=\"oi ms-1\" data-icon=\"east\"/>"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "The %s already has one online payment."
-msgstr ""
+msgstr "%s 已有一笔在线付款。"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -522,7 +525,7 @@ msgstr "交易参考"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "Transfer Online payment %(account_name)s => %(pos_receivable_name)s"
-msgstr ""
+msgstr "在线付款转账 %(account_name)s => %(pos_receivable_name)s"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -563,6 +566,8 @@ msgid ""
 ">\n"
 "                        Don't hesitate to contact us if you don't receive it."
 msgstr ""
+"您应在几分钟内收到确认付款的电子邮件。<br/>\n"
+"                        如果未收到，请随时联系我们。"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status

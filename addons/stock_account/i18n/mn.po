@@ -12,7 +12,7 @@
 # Minj P <pminj322@gmail.com>, 2022
 # Насан-Очир <nasaaskii@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
@@ -21,9 +21,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 20:29+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-14 15:58+0000\n"
+"Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/mn/>\n"
 "Language: mn\n"
 "MIME-Version: 1.0\n"
@@ -50,12 +50,26 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"Агуулахын санхүүгийн модуль\n"
+"======================\n"
+"Энэ модуль 'stock' болон 'account' модулиудыг холбож, барааны хөдөлгөөнийг "
+"үнэлэх санхүүгийн бичилт үүсгэх боломж олгоно\n"
+"\n"
+"Гол боломжууд\n"
+"------------\n"
+"* Бараа материалын үнэлгээ (үечилсэн эсвэл автомат)\n"
+"* Барааны баримтаас нэхэмжлэх\n"
+"\n"
+"Агуулахын удирдлагын хяналтын самбар / тайлан:\n"
+"------------------------------------------------------\n"
+"* Тухайн огноон дахь бараа материалын үнэ цэнэ (өнгөрсөн огноог дэмжинэ)\n"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [%s-нд бүртгэсэн]"
 
 #. module: stock_account
 #. odoo-python
@@ -64,6 +78,8 @@ msgid ""
 "%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
 msgstr ""
+"%(lot)s-ийн өртгийг %(old_value)s-ээс %(new_value)s болгож %(quantity)s-д %"
+"(user)s шинэчилсэн"
 
 #. module: stock_account
 #. odoo-python
@@ -72,17 +88,19 @@ msgid ""
 "%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
 "%(user)s"
 msgstr ""
+"%(move)s-ийн өртгийг %(old_value)s-ээс %(new_value)s болгож %(quantity)s-д %"
+"(user)s шинэчилсэн"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "%(quantity)s %(uom)s at product's cost"
-msgstr ""
+msgstr "Барааны өртгөөр %(quantity)s %(uom)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
 msgid "<span class=\"o_stat_text\">Product Value</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Барааны үнэ цэнэ</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -106,26 +124,29 @@ msgid ""
 "A lot/serial number is required for product '%s' as it has lot valuation "
 "enabled."
 msgstr ""
+"'%s' бараанд сериэр үнэлэх тохиргоо идэвхтэй тул серийн дугаар шаардлагатай."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
 msgid "AVCO Value"
-msgstr ""
+msgstr "AVCO үнэ цэнэ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Хандалтын бүлгүүд"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
 msgid "Account Move"
-msgstr ""
+msgstr "Ажил гүйлгээ"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
 msgid "Account move lines using this move in order to compute their COGS"
 msgstr ""
+"Өөрсдийн борлуулсан барааны өртгийг тооцоолохдоо энэ хөдөлгөөнийг ашигладаг "
+"журналын мөрүүд"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -142,12 +163,12 @@ msgstr "Санхүүгийн мэдээлэл"
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
-msgstr ""
+msgstr "Барааны үнэ цэнэд нэмэлт зардал (тээвэр, гааль, ...) нэмэх."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__quantity
 msgid "Added Quantity"
-msgstr ""
+msgstr "Нэмэгдсэн тоо хэмжээ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__added_value
@@ -165,23 +186,23 @@ msgstr "Өртөг өөрчлөлт"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjust Valuation: %(product)s"
-msgstr ""
+msgstr "Үнэлгээ тохируулах: %(product)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjusted on %(date)s by %(user)s"
-msgstr ""
+msgstr "%(date)s-нд %(user)s тохируулсан"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
 msgid "Adjustment"
-msgstr ""
+msgstr "Тохируулга"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Adjustments"
-msgstr ""
+msgstr "Тохируулгууд"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -206,7 +227,7 @@ msgstr "Шинжилгээний дансны мөр"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plan"
-msgstr ""
+msgstr "Шинжилгээний төлөвлөгөө"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -222,34 +243,34 @@ msgstr "Дундаж өртөг (AVCO)"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "BC46282798"
-msgstr ""
+msgstr "BC46282798"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "Bacon"
-msgstr ""
+msgstr "Бэкон"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__cogs_aml_ids
 msgid "COGS lines"
-msgstr ""
+msgstr "Борлуулсан барааны өртгийн мөрүүд"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_move_ids
 msgid "COGS stock moves"
-msgstr ""
+msgstr "Борлуулсан барааны өртгийн барааны хөдөлгөөн"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
 #: model:ir.model.fields,field_description:stock_account.field_account_move__closing_datetime
 msgid "Closing Date"
-msgstr ""
+msgstr "Хаалтын огноо"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Location Reclassification - [%(account)s]"
-msgstr ""
+msgstr "Хаалт: Байрлалын дахин ангилал - [%(account)s]"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
@@ -267,7 +288,7 @@ msgstr "Компанийн валют"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__computed_value_description
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_computed_justification
 msgid "Computed Value Description"
-msgstr ""
+msgstr "Тооцоолсон утгын тайлбар"
 
 #. module: stock_account
 #. odoo-python
@@ -276,6 +297,8 @@ msgid ""
 "Computed value: %(value)s\n"
 "%(description)s"
 msgstr ""
+"Тооцоолсон утга: %(value)s\n"
+"%(description)s"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
@@ -293,7 +316,7 @@ msgstr "Өртөг"
 #: model:ir.model.fields,field_description:stock_account.field_res_company__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Cost Method"
-msgstr ""
+msgstr "Өртгийн арга"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -306,6 +329,8 @@ msgstr "Үйлдвэрлэлийн өртөг"
 msgid ""
 "Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s"
 msgstr ""
+"Өртгийг %(old_value)s-ээс %(new_value)s болгож %(quantity)s-д %(user)s "
+"шинэчилсэн"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -343,12 +368,12 @@ msgstr "Одоогийн утга"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value_description
 msgid "Current Value Description"
-msgstr ""
+msgstr "Одоогийн утгын тайлбар"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value_details
 msgid "Current Value Details"
-msgstr ""
+msgstr "Одоогийн утгын дэлгэрэнгүй"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__date
@@ -411,7 +436,7 @@ msgstr "Нэхэмжлэл дээр серийн дугаар харуулах"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "Done By"
-msgstr ""
+msgstr "Гүйцэтгэсэн"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -419,6 +444,8 @@ msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
 "this location"
 msgstr ""
+"Нөөцөөс хасагдаж энэ байрлал руу илгээгдсэн барааг дахин ангилахад ашиглах "
+"зардлын данс"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -432,7 +459,7 @@ msgstr "Эхэнд орсон нь эхэнд гарах (FIFO)"
 #. odoo-python
 #: code:addons/stock_account/models/product_value.py:0
 msgid "For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
-msgstr ""
+msgstr "%(quantity)s %(uom)s-д (%(uom)s тутамд %(price_unit)s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_analytic_account__id
@@ -466,6 +493,7 @@ msgid ""
 "If checked, the product will be valued using the Anglo-Saxon accounting "
 "method."
 msgstr ""
+"Сонгосон бол бараа англо-саксон нягтлан бодох бүртгэлийн аргаар үнэлэгдэнэ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
@@ -480,12 +508,14 @@ msgid ""
 "If the move originates from a document from another company, contains that "
 "company's partner, otherwise the move's partner."
 msgstr ""
+"Хөдөлгөөн өөр компанийн баримтаас үүссэн бол тэр компанийн харилцагчийг, "
+"үгүй бол хөдөлгөөний харилцагчийг агуулна."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
-msgstr ""
+msgstr "Буруу хайлтын оператор эсвэл утга"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory_adjustment_name
@@ -495,7 +525,7 @@ msgstr "Тооллогын тайлбар / шалтгаан"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Location"
-msgstr ""
+msgstr "Агуулахын байрлал"
 
 #. module: stock_account
 #. odoo-javascript
@@ -508,42 +538,42 @@ msgstr "Тооллогын дутагдал"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
 msgid "Inventory moves used to compute COGS values."
-msgstr ""
+msgstr "Борлуулсан барааны өртгийг тооцоолоход ашигласан барааны хөдөлгөөнүүд."
 
 #. module: stock_account
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr ""
+msgstr "Агуулах, логистик, үнэлгээ, санхүү"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
 msgid "Invoice Line"
-msgstr ""
+msgstr "Нэхэмжлэлийн мөр"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
 msgid "Is Dropship"
-msgstr ""
+msgstr "Шууд хүргэлт эсэх"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_in
 msgid "Is Incoming (valued)"
-msgstr ""
+msgstr "Орлого эсэх (үнэлэгдсэн)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_out
 msgid "Is Outgoing (valued)"
-msgstr ""
+msgstr "Зарлага эсэх (үнэлэгдсэн)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_valued
 msgid "Is Valued"
-msgstr ""
+msgstr "Үнэлэгдсэн эсэх"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued
 msgid "Is valued inside the company"
-msgstr ""
+msgstr "Компани дотор үнэлэгддэг эсэх"
 
 #. module: stock_account
 #. odoo-python
@@ -560,7 +590,7 @@ msgstr "Журналын бичилт"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
 msgid "Justification"
-msgstr ""
+msgstr "Үндэслэл"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -595,44 +625,44 @@ msgstr "Серийн дугаар"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Сери болон серийн дугаар нэхэмжлэл дээр харагдана"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_manual
 msgid "Manual Value"
-msgstr ""
+msgstr "Гараар оруулсан утга"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
 msgid "Move"
-msgstr "Гүйлгээ"
+msgstr "Хөдөлгөөн"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_cost
 msgid "New Unit Cost"
-msgstr ""
+msgstr "Шинэ нэгжийн өртөг"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_value
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "New Value"
-msgstr ""
+msgstr "Шинэ утга"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_cost
 msgid "Old Unit Cost"
-msgstr ""
+msgstr "Хуучин нэгжийн өртөг"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_value
 msgid "Old Value"
-msgstr ""
+msgstr "Хуучин утга"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Only is set (= True) is supported in search for remaining_qty."
-msgstr ""
+msgstr "remaining_qty-ийн хайлтад зөвхөн is set (= True)-г дэмжинэ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__origin_company_id
@@ -640,16 +670,17 @@ msgid ""
 "Only set if the move is generated from a document belonging to another "
 "company"
 msgstr ""
+"Хөдөлгөөн өөр компанид харьяалагдах баримтаас үүссэн үед л тохируулагдана"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
 msgid "Order Partner"
-msgstr ""
+msgstr "Захиалгын харилцагч"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__origin_company_id
 msgid "Origin Company"
-msgstr ""
+msgstr "Эх компани"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -683,13 +714,13 @@ msgstr "Барааны хөдөлгөөн (Дэлгэрэнгүй)"
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid "Product Quantity Confirmed"
-msgstr ""
+msgstr "Барааны тоо хэмжээ баталгаажсан"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid "Product Quantity Updated"
-msgstr "Барааны тоо хэмжээ шинэлэгдсэн"
+msgstr "Барааны тоо хэмжээ шинэчлэгдсэн"
 
 #. module: stock_account
 #. odoo-python
@@ -700,7 +731,7 @@ msgstr "Барааны тоо хэмжээ шинэлэгдсэн"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__product_value_ids
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__product_value
 msgid "Product Value"
-msgstr ""
+msgstr "Барааны үнэ цэнэ"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
@@ -714,26 +745,28 @@ msgid ""
 "Product should be passed as an argument in order to get the unit price for "
 "moves in a kit."
 msgstr ""
+"Иж бүрдлийн хөдөлгөөний нэгжийн үнийг авахын тулд барааг аргумент болгон "
+"дамжуулах шаардлагатай."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr ""
+msgstr "Үйлдвэрлэлийн дуусаагүй үйлдвэрлэлийн данс"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
 msgid "Production WIP Overhead Account"
-msgstr ""
+msgstr "Үйлдвэрлэлийн дуусаагүй үйлдвэрлэлийн нэмэгдэл зардлын данс"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "Нөөцийн үлдэгдэл"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "Тоо хэмжээ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -743,12 +776,12 @@ msgstr "Холбогдол"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
 msgid "Remaining"
-msgstr ""
+msgstr "Үлдэгдэл"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
 msgid "Remaining Quantity"
-msgstr ""
+msgstr "Үлдэгдэл тоо хэмжээ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_value
@@ -758,12 +791,12 @@ msgstr "Үлдэгдэл өртөг"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__res_model_name
 msgid "Resource Model Name"
-msgstr ""
+msgstr "Нөөцийн моделийн нэр"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__should_show_accounting_date
 msgid "Should Show Accounting Date"
-msgstr ""
+msgstr "Санхүүгийн огноо харуулах эсэх"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__standard_price
@@ -780,11 +813,15 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"Стандарт өртөг: Бараа нь бараан дээр тодорхойлсон стандарт өртгөөр "
+"үнэлэгдэнэ.\n"
+"        Дундаж өртөг (AVCO): Бараа нь жинлэсэн дундаж өртгөөр үнэлэгдэнэ.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
 msgid "Stock AVCO Justifier"
-msgstr ""
+msgstr "Агуулахын AVCO үндэслэл"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -805,7 +842,7 @@ msgstr "Нөөц дүүргэлтийн тайлан"
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
 #: model:ir.model,name:stock_account.model_account_stock_valuation_report
 msgid "Stock Valuation"
-msgstr "Журналын бичилт"
+msgstr "Бараа материалын үнэлгээ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_account_id
@@ -818,6 +855,8 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"Мөшгих аргыг хадгалах техникийн талбар. Нөөцлөх бараанд False бол зөвхөн тоо "
+"хэмжээгээр мөшгинө гэсэн үг."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -825,6 +864,8 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"Барааны үнэлгээний давхаргуудын нийт утгад харгалзах одоо сонгогдсон "
+"компанийн валютыг зөв харуулах техникийн талбар"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -840,7 +881,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_product_value__current_value
 #: model:ir.model.fields,help:stock_account.field_stock_move__value
 msgid "The current value of the move. It's zero if the move is not valued."
-msgstr ""
+msgstr "Хөдөлгөөний одоогийн утга. Хөдөлгөөн үнэлэгдээгүй бол тэг байна."
 
 #. module: stock_account
 #. odoo-javascript
@@ -849,11 +890,13 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for "
 "all lots/SN. Do you want to proceed ? "
 msgstr ""
+"Энэ үйлдэл өгөгдөл алдагдахад хүргэж болзошгүй. Бүх сери/серийн дугаарын "
+"үнэлгээ ижил болно. Үргэлжлүүлэх үү? "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list
 msgid "Total"
-msgstr ""
+msgstr "Нийт"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_quantity
@@ -863,7 +906,7 @@ msgstr "Нийт тоо хэмжээ"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 msgid "Total Remaining Qty"
-msgstr ""
+msgstr "Нийт үлдэгдэл тоо"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
@@ -877,12 +920,12 @@ msgstr "Үлдэж буй нийт дүн"
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 msgid "Total Value"
-msgstr "Нийт Өртөг Үнэ"
+msgstr "Нийт үнэ цэнэ"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__product_tracking
 msgid "Tracking Method"
-msgstr ""
+msgstr "Мөшгих арга"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
@@ -908,17 +951,17 @@ msgstr "Нэгж өртөг"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_avco_report_action
 msgid "Unit Cost History"
-msgstr ""
+msgstr "Нэгжийн өртгийн түүх"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "Борлуулалт/Худалдан авалтын захиалга дээрх тоо хэмжээг шинэчлэх"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__anglo_saxon_accounting
 msgid "Use Anglo-Saxon Accounting"
-msgstr ""
+msgstr "Англо-саксон нягтлан бодох бүртгэл ашиглах"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__user_id
@@ -936,7 +979,7 @@ msgstr "Өртөгийн дүн"
 #: model:ir.actions.act_window,name:stock_account.product_value_list_action
 #: model:ir.ui.menu,name:stock_account.valuation_adjustments_menu
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "Үнэлгээний тохируулгууд"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
@@ -949,7 +992,7 @@ msgstr "Өртөгийн валютын төрөл"
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__lot_valuated
 msgid "Valuation by Lot/Serial"
-msgstr ""
+msgstr "Сери/серийн дугаараар үнэлэх"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__value
@@ -963,25 +1006,25 @@ msgstr "Утга"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_justification
 msgid "Value Description"
-msgstr ""
+msgstr "Утгын тайлбар"
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr ""
+msgstr "Гарт байгаа үнэ цэнэ:"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value based on original move %(reference)s"
-msgstr ""
+msgstr "%(reference)s анхны хөдөлгөөнд үндэслэсэн утга"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value from previous move %(references)s"
-msgstr ""
+msgstr "%(references)s өмнөх хөдөлгөөнөөс авсан утга"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
@@ -991,22 +1034,26 @@ msgid ""
 "inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Серийн үнэ цэнэ (AVCO-д автоматаар тооцоологдоно).\n"
+"        Худалдан авалтын өртөг тодорхойгүй үед (жишээ нь тооллогын "
+"тохируулга) барааг үнэлэхэд ашиглана.\n"
+"        Борлуулалтын захиалгын ашгийн хэмжээг тооцоолоход ашиглана."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "View Account Move"
-msgstr ""
+msgstr "Ажил гүйлгээ харах"
 
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
+msgstr "Агуулахын санхүү"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
-msgstr ""
+msgstr "Нэг удаад зөвхөн нэг хөдөлгөөний үнэлгээг тохируулах боломжтой."
 
 #. module: stock_account
 #. odoo-python
@@ -1016,6 +1063,9 @@ msgid ""
 "quantities without a lot/serial number:\n"
 "%s"
 msgstr ""
+"Дараах бараанууд серийн дугааргүй гарт байгаа тоо хэмжээтэй тул сериэр "
+"үнэлэхийг идэвхжүүлэх боломжгүй:\n"
+"%s"
 
 #. module: stock_account
 #. odoo-python
@@ -1024,16 +1074,18 @@ msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
 "a locked fiscal period."
 msgstr ""
+"%s ажилбарын товлосон огноо түгжигдсэн санхүүгийн үед хамаарч байгаа тул "
+"өөрчлөх боломжгүй."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
 msgid "stock_move_id"
-msgstr ""
+msgstr "stock_move_id"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "нэгж"
 
 #~ msgid "Account"
 #~ msgstr "Данс"

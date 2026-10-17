@@ -12,15 +12,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 18:21+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 06:33+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/website_event/zh_Hans/>\n"
+"projects/odoo-20/website_event/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,6 +102,7 @@ msgid ""
 "<i class=\"oi me-2 text-muted\" data-icon=\"location_on\" title=\"Location\"/"
 ">"
 msgstr ""
+"<i class=\"oi me-2 text-muted\" data-icon=\"location_on\" title=\"地点\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
@@ -110,7 +112,7 @@ msgstr "<i class=\"oi me-2\" data-icon=\"arrow_left\"/><small>上一页</small>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "<i class=\"oi me-2\" data-icon=\"block\"/>Sold Out"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"block\"/>已售完"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -120,7 +122,7 @@ msgstr "<i class=\"oi me-2\" data-icon=\"check\" role=\"img\"/>已登记"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "<i class=\"oi me-2\" data-icon=\"check\"/>Registered"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"check\"/>已注册"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -150,6 +152,8 @@ msgid ""
 "label=\"Configure\" title=\"Configure event tickets\"/><em>Configure "
 "Tickets</em>"
 msgstr ""
+"<i class=\"oi oi-filled me-1\" data-icon=\"settings\" role=\"img\" aria-"
+"label=\"配置\" title=\"配置活动门票\"/><em>配置门票</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
@@ -274,6 +278,10 @@ msgid ""
 "icon=\"block\"/>Sold Out\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"text-danger\">\n"
+"                                        <i class=\"oi me-2\" data-"
+"icon=\"block\"/>已售完\n"
+"                                    </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_badge
@@ -281,6 +289,8 @@ msgid ""
 "<span class=\"text-primary text-nowrap\">Register Now <i class=\"oi\" data-"
 "icon=\"east\"/></span>"
 msgstr ""
+"<span class=\"text-primary text-nowrap\">立即注册 <i class=\"oi\" data-"
+"icon=\"east\"/></span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
@@ -477,7 +487,7 @@ msgstr "所有活动"
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/event_page_option_plugin.js:0
 msgid "All events"
-msgstr ""
+msgstr "所有活动"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_allergies
@@ -514,14 +524,14 @@ msgstr "编写者"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__publish_on
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "自动发布于"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__publish_on
 #: model:ir.model.fields,help:website_event.field_event_tag__publish_on
 #: model:ir.model.fields,help:website_event.field_event_tag_category__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "在选定的日期和时间自动发布页面。"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.navbar
@@ -542,7 +552,7 @@ msgstr "博文"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__breadcrumb_visible
 msgid "Breadcrumb Visible"
-msgstr ""
+msgstr "显示面包屑导航"
 
 #. module: website_event
 #. odoo-python
@@ -578,13 +588,13 @@ msgstr "卡片设计"
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 msgid "Click on the <b>Content</b> category."
-msgstr ""
+msgstr "点击 <b>内容</b> 分类。"
 
 #. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 msgid "Click on the <b>Image - Text</b> building block."
-msgstr ""
+msgstr "点击 <b>图片 - 文本</b> 构建区块。"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -710,7 +720,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Discard"
-msgstr ""
+msgstr "丢弃"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
@@ -744,7 +754,7 @@ msgstr "在网站上显示社区标签"
 msgid ""
 "Displayed on website and used as description when the event is added to a "
 "third-party calendar."
-msgstr ""
+msgstr "显示在网站上，并在活动被添加到第三方日历时用作说明。"
 
 #. module: website_event
 #. odoo-javascript
@@ -765,12 +775,12 @@ msgstr "下载门票"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.layout
 msgid "Drag blocks here to add them on all events"
-msgstr ""
+msgstr "将区块拖到此处，即可添加到所有活动页面"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippets
 msgid "Dynamic Carousel"
-msgstr ""
+msgstr "动态轮播"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
@@ -839,7 +849,7 @@ msgstr "活动登记"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_slot
 msgid "Event Slot"
-msgstr ""
+msgstr "活动时段"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -878,12 +888,12 @@ msgstr "活动标题"
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__visitor_event_count
 #: model_terms:ir.ui.view,arch_db:website_event.website_visitor_view_form
 msgid "Event Views"
-msgstr ""
+msgstr "活动浏览量"
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.website_event_visitor_event_action
 msgid "Event Views History"
-msgstr ""
+msgstr "活动浏览历史"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_published
@@ -895,7 +905,7 @@ msgstr "发布的活动"
 #: model:mail.message.subtype,description:website_event.mt_event_scheduled
 #: model:mail.message.subtype,name:website_event.mt_event_scheduled
 msgid "Event scheduled"
-msgstr ""
+msgstr "活动已安排"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
@@ -907,7 +917,7 @@ msgstr "未发布的活动"
 #: model:mail.message.subtype,description:website_event.mt_event_unscheduled
 #: model:mail.message.subtype,name:website_event.mt_event_unscheduled
 msgid "Event unscheduled"
-msgstr ""
+msgstr "活动已取消安排"
 
 #. module: website_event
 #. odoo-javascript
@@ -995,7 +1005,7 @@ msgstr "页脚可见"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Get Tickets <i class=\"oi\" data-icon=\"chevron_right\"/>"
-msgstr ""
+msgstr "获取门票 <i class=\"oi\" data-icon=\"chevron_right\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -1057,7 +1067,7 @@ msgstr "主页"
 msgid ""
 "Honoring outstanding accomplishments, dedication, and impact across all "
 "fields."
-msgstr ""
+msgstr "表彰各领域中卓越的成就、奉献与影响力。"
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_about_us
@@ -1092,13 +1102,13 @@ msgstr "ID"
 #: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
 msgid ""
 "If enabled, online events will be included when user filters by country."
-msgstr ""
+msgstr "启用后，用户按国家筛选时将包含线上活动。"
 
 #. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/events_list_page_option.xml:0
 msgid "Include online"
-msgstr ""
+msgstr "包含线上活动"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
@@ -1264,7 +1274,7 @@ msgstr "下一页"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "Next Dates"
-msgstr ""
+msgstr "后续日期"
 
 #. module: website_event
 #. odoo-python
@@ -1290,7 +1300,7 @@ msgstr "未找到符合您搜索条件的活动。"
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.website_event_visitor_event_action
 msgid "No event views yet for this visitor"
-msgstr ""
+msgstr "该访客尚无活动浏览记录"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -1464,6 +1474,13 @@ msgid ""
 "\n"
 "Create a great \"About us\" page by presenting your team efficiently.\n"
 msgstr ""
+"组织活动、培训与网络研讨会\n"
+"-------------------------------------\n"
+"\n"
+"### 排期、推广、售票、组织\n"
+"\n"
+"在线组织、推广并销售活动。无论您组织的是会议、大会、培训还是网络研讨会，\n"
+"Odoo 都能帮您完成。\n"
 
 #. module: website_event
 #. odoo-javascript
@@ -1536,12 +1553,12 @@ msgstr "发布"
 #. module: website_event
 #: model:ir.module.module,summary:base.module_website_event
 msgid "Publish events, sell tickets"
-msgstr ""
+msgstr "发布活动、销售门票"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Publish on"
-msgstr ""
+msgstr "发布于"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -1555,7 +1572,7 @@ msgstr "已发布"
 #: model:ir.model.fields,field_description:website_event.field_event_tag__published_date
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__published_date
 msgid "Published date"
-msgstr ""
+msgstr "发布日期"
 
 #. module: website_event
 #. odoo-javascript
@@ -1598,22 +1615,22 @@ msgstr "现在注册"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_aside
 msgid "Register Now <i class=\"oi\" data-icon=\"east\" role=\"presentation\"/>"
-msgstr ""
+msgstr "立即注册 <i class=\"oi\" data-icon=\"east\" role=\"presentation\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_card
 msgid "Register<i class=\"oi ms-2\" data-icon=\"east\" role=\"img\"/>"
-msgstr ""
+msgstr "注册<i class=\"oi ms-2\" data-icon=\"east\" role=\"img\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid "Register<i class=\"oi ms-2\" data-icon=\"east\" role=\"presentation\"/>"
-msgstr ""
+msgstr "注册<i class=\"oi ms-2\" data-icon=\"east\" role=\"presentation\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_aside_preview_data
 msgid "Register<i class=\"oi\" data-icon=\"east\" role=\"presentation\"/>"
-msgstr ""
+msgstr "注册<i class=\"oi\" data-icon=\"east\" role=\"presentation\"/>"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
@@ -1660,7 +1677,7 @@ msgstr "结束登记"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Registrations not open"
-msgstr ""
+msgstr "报名尚未开放"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
@@ -1736,24 +1753,24 @@ msgstr "示例"
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_tree_view
 msgid "Scheduled"
-msgstr ""
+msgstr "已安排"
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
 msgid "Scheduled Events"
-msgstr ""
+msgstr "已安排的活动"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Scheduled for"
-msgstr ""
+msgstr "安排于"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
 msgid "Search an event..."
-msgstr ""
+msgstr "搜索活动..."
 
 #. module: website_event
 #. odoo-javascript
@@ -1772,7 +1789,7 @@ msgstr "精选答案"
 #. odoo-javascript
 #: code:addons/website_event/static/src/interactions/website_event_slot_details.js:0
 msgid "Selected Date:"
-msgstr ""
+msgstr "选定日期："
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
@@ -1785,7 +1802,7 @@ msgstr "Seo 名称"
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
 msgid "Shaping tomorrow through ideas that transform how we live today."
-msgstr ""
+msgstr "以创意塑造明天，改变我们当下的生活方式。"
 
 #. module: website_event
 #. odoo-javascript
@@ -1797,13 +1814,13 @@ msgstr "分享"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Short description for website and calendars."
-msgstr ""
+msgstr "用于网站和日历的简短说明。"
 
 #. module: website_event
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/dynamic_snippet_events_shared_option.xml:0
 msgid "Show location"
-msgstr ""
+msgstr "显示地点"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1950,12 +1967,12 @@ msgstr "顶栏筛选"
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_visitor__visitor_event_count
 msgid "Total number of views on events"
-msgstr ""
+msgstr "活动的总浏览量"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Unschedule"
-msgstr ""
+msgstr "取消安排"
 
 #. module: website_event
 #. odoo-python
@@ -1988,7 +2005,7 @@ msgstr "使用此段落撰写有关您的活动或公司的简短文本。"
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 msgid "Use this shortcut to easily access your event web page."
-msgstr ""
+msgstr "使用此快捷方式可轻松访问您的活动网页。"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
@@ -2035,7 +2052,7 @@ msgstr "在当前网站显示"
 #. module: website_event
 #: model:ir.model,name:website_event.model_website_track
 msgid "Visited Page"
-msgstr ""
+msgstr "已访问页面"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__visitor_id
@@ -2045,7 +2062,7 @@ msgstr "访问者"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_visitor_page_view_tree
 msgid "Visitor Event Views History"
-msgstr ""
+msgstr "访客活动浏览历史"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -2171,7 +2188,7 @@ msgstr "如果仍未进行，活动是否会在今天开始"
 #. module: website_event
 #: model:event.question,title:website_event.event_question_working_field
 msgid "Which field are you working in?"
-msgstr ""
+msgstr "您正在哪个字段中操作？"
 
 #. module: website_event
 #. odoo-javascript
@@ -2201,7 +2218,7 @@ msgstr "date_end"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
 msgid "events"
-msgstr ""
+msgstr "活动"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates

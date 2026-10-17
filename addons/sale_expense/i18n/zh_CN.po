@@ -8,15 +8,16 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 14:12+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/sale_expense/zh_Hans/>\n"
+"projects/odoo-20/sale_expense/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +36,12 @@ msgid ""
 "This module allow to reinvoice employee expense, by setting the SO directly "
 "on the expense.\n"
 msgstr ""
+"\n"
+"员工费用重新开票\n"
+"================\n"
+"\n"
+"创建一些可对其成本重新开票的产品。\n"
+"此模块允许通过直接在费用上设置销售订单，来对员工费用重新开票。\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
@@ -44,27 +51,27 @@ msgstr "# 费用"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__attach_receipts_to_invoice
 msgid "Attach receipts to future customer invoices"
-msgstr ""
+msgstr "将收据附加到未来的客户发票"
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__attach_receipts_to_invoice
 msgid ""
 "Attach the expense receipts to customer invoices generated later from the "
 "related sales order"
-msgstr ""
+msgstr "将费用收据附加到以后根据相关销售订单生成的客户发票"
 
 #. module: sale_expense
 #. odoo-javascript
 #: code:addons/sale_expense/static/src/views/attachment_selector.js:0
 #: model:ir.model,name:sale_expense.model_expense_attachment_selection_wizard
 msgid "Attachment Selection"
-msgstr ""
+msgstr "附件选择"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/sale_order.py:0
 msgid "Attachments Selection"
-msgstr ""
+msgstr "附件选择"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
@@ -75,12 +82,12 @@ msgstr "可重开结算单"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__create_date
 msgid "Created on"
-msgstr ""
+msgstr "创建日期"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_account_move__display_name
@@ -161,12 +168,12 @@ msgstr "如果该类别有费用政策，则将在此销售订单上重新开具
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.expense_attachment_selection_wizard_view
 msgid "Import Attachments"
-msgstr ""
+msgstr "导入附件"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Import Expense Attachments"
-msgstr ""
+msgstr "导入费用附件"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -176,7 +183,7 @@ msgstr "发票"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__is_linked_to_expense_with_attachment
 msgid "Is Linked To Expense With Attachment"
-msgstr ""
+msgstr "已关联到带附件的费用"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move
@@ -191,24 +198,24 @@ msgstr "日记账项目"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新人"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "上次更新日期"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/sale_order.py:0
 msgid "No attachment found to import from linked expense(s)"
-msgstr ""
+msgstr "未找到可从关联费用导入的附件"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
 msgid "Please select at least one attachment to import."
-msgstr ""
+msgstr "请至少选择一个要导入的附件。"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_product_template
@@ -218,18 +225,18 @@ msgstr "产品"
 #. module: sale_expense
 #: model:ir.module.module,summary:base.module_sale_expense
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr ""
+msgstr "报价单、销售订单、送货与开票控制"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
 msgid "Reinvoice to"
-msgstr ""
+msgstr "重新开票至"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__sale_order_id
 msgid "Sale Order"
-msgstr ""
+msgstr "销售订单"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_line_id
@@ -239,7 +246,7 @@ msgstr "销售订单明细"
 #. module: sale_expense
 #: model:ir.module.module,shortdesc:base.module_sale_expense
 msgid "Sales Expense"
-msgstr ""
+msgstr "销售费用"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
@@ -255,10 +262,10 @@ msgstr "销售订单明细"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__selected_attachments
 msgid "Selected Attachments"
-msgstr ""
+msgstr "已选附件"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
 msgid "The following expense receipts were attached from reinvoiced expenses."
-msgstr ""
+msgstr "以下费用收据已从重新开票的费用中附加。"

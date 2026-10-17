@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 18:20+0000\n"
-"PO-Revision-Date: 2026-09-29 08:01+0000\n"
+"PO-Revision-Date: 2026-10-14 07:33+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "l10n_id_efaktur_coretax/id/>\n"
@@ -35,30 +35,41 @@ msgid ""
 "tax of 12% which\n"
 "is resulting to 11%.\n"
 msgstr ""
+"\n"
+"Fitur faktur elektronik yang disediakan oleh DJP (Direktorat Jenderal Pajak "
+"Indonesia). Mulai 1 Januari 2025,\n"
+"Indonesia menggunakan sistem CoreTax, yang mengubah format file dan isi E-"
+"Faktur.\n"
+"Kami beralih dari file CSV ke XML.\n"
+"Di sisi lain, karena peraturan perpajakan yang terus berubah, untuk E-Faktur "
+"umum saat ini,\n"
+"TaxBase (DPP) harus dikalikan dengan faktor 11/12 sekaligus dikalikan dengan "
+"tarif pajak 12% yang\n"
+"menghasilkan 11%.\n"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_kode_transaksi__01
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__res_partner__l10n_id_kode_transaksi__01
 msgid "01 To the Parties that is not VAT Collector (Regular Customers)"
-msgstr "01 Kepada Pihak yang Bukan Pemungut PPN (Customer Biasa)"
+msgstr "01 Kepada selain Pemungut PPN"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_kode_transaksi__02
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__res_partner__l10n_id_kode_transaksi__02
 msgid "02 To the Treasurer"
-msgstr "02 Kepada Pemungut Bendaharawan (Dinas Kepemerintahan)"
+msgstr "02 Kepada Pemungut PPN Instansi Pemerintah"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_kode_transaksi__03
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__res_partner__l10n_id_kode_transaksi__03
 msgid "03 To other VAT Collectors other than the Treasurer"
-msgstr "03 Kepada Pemungut Selain Bendaharawan (BUMN)"
+msgstr "03 Kepada Pemungut PPN selain Instansi Pemerintah"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_kode_transaksi__04
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__res_partner__l10n_id_kode_transaksi__04
 msgid "04 Other Value of VAT Imposition Base"
-msgstr "04 DPP Nilai Lain (PPN 1%)"
+msgstr "04 DPP Nilai Lain"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_kode_transaksi__05
@@ -70,26 +81,29 @@ msgstr "05 Besaran Tertentu"
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_kode_transaksi__06
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__res_partner__l10n_id_kode_transaksi__06
 msgid "06 to individuals holding foreign passports"
-msgstr "06 Penyerahan Lainnya (Turis Asing)"
+msgstr "06 Kepada orang pribadi pemegang paspor luar negeri (16E UU PPN)"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_kode_transaksi__07
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__res_partner__l10n_id_kode_transaksi__07
 msgid "07 Deliveries that the VAT is not Collected"
 msgstr ""
-"07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)"
+"07 Penyerahan dengan fasilitas PPN atau PPN dan PPnBM tidak dipungut/"
+"ditanggung pemerintah"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_kode_transaksi__08
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__res_partner__l10n_id_kode_transaksi__08
 msgid "08 Deliveries that the VAT is Exempted"
-msgstr "08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)"
+msgstr "08 Penyerahan dengan fasilitas dibebaskan PPN atau PPN dan PPnBM"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_kode_transaksi__09
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__res_partner__l10n_id_kode_transaksi__09
 msgid "09 Deliveries of Assets (Article 16D of VAT Law)"
-msgstr "09 Penyerahan Aktiva ( Pasal 16D UU PPN )"
+msgstr ""
+"09 Penyerahan aktiva yang menurut tujuan semula tidak diperjualbelikan (16D "
+"UU PPN)"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_08__td_01101
@@ -110,7 +124,7 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_08__td_00501
 msgid "1 - untuk BKP dan JKP Tertentu"
-msgstr ""
+msgstr "1 - untuk BKP dan JKP Tertentu"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00501
@@ -120,7 +134,7 @@ msgstr "1 - untuk Kawasan Bebas"
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_08__td_00510
 msgid "10 - BKP dan JKP tertentu"
-msgstr ""
+msgstr "10 - BKP dan JKP tertentu"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_08__td_01110
@@ -178,7 +192,7 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_07__td_01113
 msgid "13 - PPN DITANGGUNG PEMERINTAH EKSEKUSI PMK NOMOR 13 TAHUN 2025"
-msgstr ""
+msgstr "13 - PPN DITANGGUNG PEMERINTAH EKSEKUSI PMK NOMOR 13 TAHUN 2025"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00513
@@ -186,6 +200,8 @@ msgid ""
 "13 - Penyerahan Rumah Tapak dan Satuan Rumah Susun Rumah Susun Ditanggung "
 "Pemerintah Tahun Anggaran 2025"
 msgstr ""
+"13 - Penyerahan Rumah Tapak dan Satuan Rumah Susun Rumah Susun Ditanggung "
+"Pemerintah Tahun Anggaran 2025"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_07__td_01114
@@ -294,7 +310,7 @@ msgstr ""
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_08__td_00502
 msgid "2 - untuk BKP Tertentu yang Bersifat Strategis"
-msgstr ""
+msgstr "2 - untuk BKP Tertentu yang Bersifat Strategis"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00502
@@ -359,7 +375,7 @@ msgstr "24 - (Tidak ada Cap)"
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00524
 msgid "24 - PPN Ditanggung Pemerintah"
-msgstr ""
+msgstr "24 - PPN Ditanggung Pemerintah"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00525
@@ -384,7 +400,7 @@ msgstr "26 - Penyerahan BKP dan JKP di Ibu Kota Negara baru"
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_07__td_01127
 msgid "27 - PPN Ditanggung Pemerintah berdasarkan PMK Nomor 12 Tahun 2025"
-msgstr ""
+msgstr "27 - PPN Ditanggung Pemerintah berdasarkan PMK Nomor 12 Tahun 2025"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00527
@@ -397,16 +413,18 @@ msgid ""
 "28 - Insentif Tambahan Penyerahan Rumah Tapak dan Satuan Rumah Susun Rumah "
 "Susun Ditanggung Pemerintah Tahun Anggaran 2025"
 msgstr ""
+"28 - Insentif Tambahan Penyerahan Rumah Tapak dan Satuan Rumah Susun Rumah "
+"Susun Ditanggung Pemerintah Tahun Anggaran 2025"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_07__td_01128
 msgid "28 - PPN DITANGGUNG PEMERINTAH EKSEKUSI PMK NOMOR 60 TAHUN 2025"
-msgstr ""
+msgstr "28 - PPN DITANGGUNG PEMERINTAH EKSEKUSI PMK NOMOR 60 TAHUN 2025"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_07__td_01129
 msgid "29 - PPN DITANGGUNG PEMERINTAH BERDASARKAN PMK NOMOR 61 TAHUN 2025"
-msgstr ""
+msgstr "29 - PPN DITANGGUNG PEMERINTAH BERDASARKAN PMK NOMOR 61 TAHUN 2025"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00529
@@ -414,6 +432,8 @@ msgid ""
 "29 - PPN atas Penyerahan Hewan Khusus Tertentu Berupa Kuda serta "
 "Perlengkapan Pendukungnya Pemerintah Tahun Anggaran 2025"
 msgstr ""
+"29 - PPN atas Penyerahan Hewan Khusus Tertentu Berupa Kuda serta "
+"Perlengkapan Pendukungnya Pemerintah Tahun Anggaran 2025"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_08__td_01103
@@ -438,12 +458,12 @@ msgstr "3 - untuk Hibah dan Bantuan Luar Negeri"
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_08__td_00503
 msgid "3 - untuk Jasa Kebandarudaraan"
-msgstr ""
+msgstr "3 - untuk Jasa Kebandarudaraan"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_07__td_01130
 msgid "30 - PPN DITANGGUNG PEMERINTAH BERDASARKAN PMK NOMOR 44 TAHUN 2025"
-msgstr ""
+msgstr "30 - PPN DITANGGUNG PEMERINTAH BERDASARKAN PMK NOMOR 44 TAHUN 2025"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00530
@@ -451,11 +471,13 @@ msgid ""
 "30 - PPN atas Penyerahan Bekal Khusus Operasi Tertentu Yang Ditanggung "
 "Pemerintah Tahun Anggaran 2025"
 msgstr ""
+"30 - PPN atas Penyerahan Bekal Khusus Operasi Tertentu Yang Ditanggung "
+"Pemerintah Tahun Anggaran 2025"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_07__td_01131
 msgid "31 - PPN DITANGGUNG PEMERINTAH BERDASARKAN PMK NOMOR 90 TAHUN 2025"
-msgstr ""
+msgstr "31 - PPN DITANGGUNG PEMERINTAH BERDASARKAN PMK NOMOR 90 TAHUN 2025"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00531
@@ -463,6 +485,8 @@ msgid ""
 "31 - Penyerahan Rumah Tapak dan Satuan Rumah Susun Rumah Susun Ditanggung "
 "Pemerintah Tahun Anggaran 2026"
 msgstr ""
+"31 - Penyerahan Rumah Tapak dan Satuan Rumah Susun Rumah Susun Ditanggung "
+"Pemerintah Tahun Anggaran 2026"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_08__td_01104
@@ -484,7 +508,7 @@ msgstr "4 - untuk Avtur"
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_08__td_00504
 msgid "4 - untuk Lainnya"
-msgstr ""
+msgstr "4 - untuk Lainnya"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_07__td_01105
@@ -501,6 +525,7 @@ msgstr "5 - PPN Dibebaskan Sesuai Dengan PP Nomor 81 Tahun 2015"
 msgid ""
 "5 - untuk BKP Tertentu yang Bersifat Strategis sesuai PP Nomor 81 Tahun 2015"
 msgstr ""
+"5 - untuk BKP Tertentu yang Bersifat Strategis sesuai PP Nomor 81 Tahun 2015"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00505
@@ -534,6 +559,8 @@ msgid ""
 "6 - untuk Penyerahan Jasa Kepelabuhan Tertentu untuk kegiatan angkutan laut "
 "Luar Negeri"
 msgstr ""
+"6 - untuk Penyerahan Jasa Kepelabuhan Tertentu untuk kegiatan angkutan laut "
+"Luar Negeri"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_facility_info_08__td_01107
@@ -548,7 +575,7 @@ msgstr "7 - PPN Tidak Dipungut Berdasarkan PP Nomor 15 Tahun 2015"
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_08__td_00507
 msgid "7 - untuk Penyerahan Air Bersih"
-msgstr ""
+msgstr "7 - untuk Penyerahan Air Bersih"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00507
@@ -577,6 +604,8 @@ msgid ""
 "8 - Penyerahan BKP tertentu yang bersifat strategis berdasarkan PP 48 Tahun "
 "2020"
 msgstr ""
+"8 - Penyerahan BKP tertentu yang bersifat strategis berdasarkan PP 48 Tahun "
+"2020"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00508
@@ -599,6 +628,8 @@ msgid ""
 "9 - Penyerahan kepada Perwakilan Negara Asing dan Badan Internasional serta "
 "Pejabatnya"
 msgstr ""
+"9 - Penyerahan kepada Perwakilan Negara Asing dan Badan Internasional serta "
+"Pejabatnya"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields.selection,name:l10n_id_efaktur_coretax.selection__account_move__l10n_id_coretax_add_info_07__td_00509
@@ -676,13 +707,13 @@ msgstr "Kode"
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields,help:l10n_id_efaktur_coretax.field_uom_uom__l10n_id_uom_code
 msgid "Code used to specify the UoM on the E-faktur"
-msgstr ""
+msgstr "Kode yang digunakan untuk menentukan satuan ukuran (UoM) pada E-faktur"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields,help:l10n_id_efaktur_coretax.field_product_product__l10n_id_product_code
 #: model:ir.model.fields,help:l10n_id_efaktur_coretax.field_product_template__l10n_id_product_code
 msgid "Code used to specify the product or service on the E-faktur"
-msgstr ""
+msgstr "Kode yang digunakan untuk menentukan produk atau layanan pada E-faktur"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_document__company_id
@@ -697,7 +728,7 @@ msgstr "Kontak"
 #. module: l10n_id_efaktur_coretax
 #: model_terms:ir.ui.view,arch_db:l10n_id_efaktur_coretax.res_partner_tax_form_view
 msgid "Coretax Information"
-msgstr ""
+msgstr "Informasi Coretax"
 
 #. module: l10n_id_efaktur_coretax
 #. odoo-python
@@ -707,11 +738,13 @@ msgid ""
 "down payments. Please enter these transactions manually into the Coretax "
 "system"
 msgstr ""
+"Coretax e-Faktur tidak mendukung pengunggahan XML untuk transaksi yang "
+"melibatkan uang muka. Masukkan transaksi ini secara manual ke sistem Coretax"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model,website_form_label:l10n_id_efaktur_coretax.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Buat Pelanggan"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_document__create_uid
@@ -809,7 +842,7 @@ msgstr "Draft"
 #. module: l10n_id_efaktur_coretax
 #: model_terms:ir.ui.view,arch_db:l10n_id_efaktur_coretax.product_template_inherit
 msgid "E-Faktur"
-msgstr ""
+msgstr "E-Faktur"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model,name:l10n_id_efaktur_coretax.model_l10n_id_efaktur_coretax_document
@@ -899,7 +932,7 @@ msgstr "Tidak Aktif"
 #. module: l10n_id_efaktur_coretax
 #: model:ir.module.module,shortdesc:base.module_l10n_id_efaktur_coretax
 msgid "Indonesia E-faktur (Coretax)"
-msgstr ""
+msgstr "Indonesia E-faktur (Coretax)"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_document__invoice_ids
@@ -963,6 +996,10 @@ msgid ""
 "exceeds their total. Please align the taxes or enter this transaction "
 "manually into the Coretax system"
 msgstr ""
+"Faktur %s berisi baris negatif yang tidak dapat didistribusikan ke baris "
+"lain, karena tidak ada baris lain yang memuat pajak yang sama atau karena "
+"jumlahnya melebihi total pajak pada baris lain. Sesuaikan pajak atau "
+"masukkan transaksi ini secara manual ke sistem Coretax"
 
 #. module: l10n_id_efaktur_coretax
 #. odoo-python
@@ -1106,7 +1143,7 @@ msgstr "Lampiran Utama"
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields,help:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_document__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Ikon Material Symbols, misalnya checklist"
 
 #. module: l10n_id_efaktur_coretax
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_l10n_id_efaktur_coretax_document__message_has_error
@@ -1205,7 +1242,7 @@ msgstr "Produk"
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_product_product__l10n_id_product_code
 #: model:ir.model.fields,field_description:l10n_id_efaktur_coretax.field_product_template__l10n_id_product_code
 msgid "Product Code"
-msgstr ""
+msgstr "Kode Produk"
 
 #. module: l10n_id_efaktur_coretax
 #: model_terms:ir.ui.view,arch_db:l10n_id_efaktur_coretax.produc_code_list
@@ -1377,12 +1414,12 @@ msgstr "cth: 0123456"
 #. module: l10n_id_efaktur_coretax
 #: model_terms:ir.ui.view,arch_db:l10n_id_efaktur_coretax.res_partner_tax_form_view
 msgid "e.g. A1234567"
-msgstr ""
+msgstr "cth: A1234567"
 
 #. module: l10n_id_efaktur_coretax
 #: model_terms:ir.ui.view,arch_db:l10n_id_efaktur_coretax.res_partner_tax_form_view
 msgid "e.g. Document ID Number"
-msgstr ""
+msgstr "cth: Nomor ID Dokumen"
 
 #. module: l10n_id_efaktur_coretax
 #. odoo-python

@@ -12,15 +12,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 17:27+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 11:47+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/purchase_stock/zh_Hans/>\n"
+"projects/odoo-20/purchase_stock/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On Time"
-msgstr ""
+msgstr "% 准时交货"
 
 #. module: purchase_stock
 #. odoo-python
@@ -49,19 +50,19 @@ msgstr "%(value)s 对应 %(quantity)s %(unit)s，源自 %(bills)s"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid "%(value)s for %(quantity)s %(unit)s from %(quotation)s (not billed)"
-msgstr ""
+msgstr "来自 %(quotation)s 的 %(value)s，对应 %(quantity)s %(unit)s（未开票）"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %d days"
-msgstr ""
+msgstr "+ %d 天"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %s days"
-msgstr ""
+msgstr "+ %s 天"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
@@ -256,7 +257,7 @@ msgstr "每天"
 msgid ""
 "Date promised by the vendor for at least 1 or more products to be delivered "
 "by."
-msgstr ""
+msgstr "供应商承诺至少交付 1 个或多个产品的日期。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__days_to_arrive
@@ -318,6 +319,8 @@ msgid ""
 "Delivery Date promised by the vendor. If the vendor delivers products after "
 "this date, their On-Time rate will be negatively impacted."
 msgstr ""
+"供应商承诺的交付日期。如果供应商在此日期之后交付产品，其准时交货率将受到负面"
+"影响。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -426,7 +429,7 @@ msgstr "预估报表"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Forecasted"
-msgstr ""
+msgstr "预测"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
@@ -436,7 +439,7 @@ msgstr "预测的问题"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_location_id
 msgid "Forecasted Location"
-msgstr ""
+msgstr "预测位置"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__5
@@ -518,7 +521,7 @@ msgstr "进货"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "库存路线"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -539,13 +542,13 @@ msgstr "日记账项目"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 12 months"
-msgstr ""
+msgstr "过去 12 个月"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 3 months"
-msgstr ""
+msgstr "最近3个月"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -557,7 +560,7 @@ msgstr "最近30天"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 7 days"
-msgstr ""
+msgstr "最近7天"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
@@ -568,12 +571,12 @@ msgstr "最后一次采购"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last year quarter"
-msgstr ""
+msgstr "去年季度"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__forecasted_location_id
 msgid "Location used in the computation of the forecast."
-msgstr ""
+msgstr "用于计算预测值的位置。"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -599,7 +602,7 @@ msgstr "最小库存规则"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 msgid "Missing products in receipt"
-msgstr ""
+msgstr "收货时缺少产品"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__1
@@ -615,7 +618,7 @@ msgstr "每月需求"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Next month last year"
-msgstr ""
+msgstr "去年下个月"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -653,7 +656,7 @@ msgstr "开"
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_rfq__default
 msgid "On Order"
-msgstr ""
+msgstr "按订单"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -687,7 +690,7 @@ msgstr "准时率"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
 msgid "Only"
-msgstr ""
+msgstr "仅"
 
 #. module: purchase_stock
 #. odoo-python
@@ -788,7 +791,7 @@ msgstr "采购订单"
 #. module: purchase_stock
 #: model:ir.module.module,summary:base.module_purchase_stock
 msgid "Purchase Orders, Receipts, Vendor Bills for Stock"
-msgstr ""
+msgstr "库存的采购订单、收货单和供应商账单"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
@@ -798,7 +801,7 @@ msgstr "采购报表"
 #. module: purchase_stock
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
-msgstr ""
+msgstr "采购 - 库存"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
@@ -881,7 +884,7 @@ msgstr "请求您的供应商交付给您的客户"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
 msgid "Requests for quotation :"
-msgstr ""
+msgstr "询价单："
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -928,7 +931,7 @@ msgstr "显示供应商栏"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_allocation_report
 msgid "Stock Allocation Report"
-msgstr ""
+msgstr "库存分配报表"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
@@ -954,7 +957,7 @@ msgstr "库存规则"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_info
 msgid "Stock delivery time information"
-msgstr ""
+msgstr "库存交货时间信息"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
@@ -976,13 +979,13 @@ msgstr "建议"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__suggest_based_on
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__suggest_based_on
 msgid "Suggest Based On"
-msgstr ""
+msgstr "建议依据"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__suggest_days
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__suggest_days
 msgid "Suggest Days"
-msgstr ""
+msgstr "建议天数"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__suggest_estimated_price
@@ -1075,6 +1078,8 @@ msgid ""
 "company receiving the purchased products. Please ensure the company is the "
 "same or that the Contact has no company restriction set."
 msgstr ""
+"供应商所限定的公司与接收所购产品的公司不一致。请确保两者为同一公司，或该联系"
+"人未设置公司限制。"
 
 #. module: purchase_stock
 #. odoo-python
@@ -1225,7 +1230,7 @@ msgstr "供应商"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_product_tree_view_stock
 msgid "View Forecast"
-msgstr ""
+msgstr "查看预测"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
@@ -1275,12 +1280,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 msgid "You must set a Vendor Location for partner %(partner_name)s"
-msgstr ""
+msgstr "您必须为合作伙伴 %(partner_name)s 设置供应商位置"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
 msgid "and no backorder is planned. Manual action may be needed."
-msgstr ""
+msgstr "，且未计划欠单，可能需要人工处理。"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -1302,7 +1307,7 @@ msgstr "已订购，替换"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
 msgid "received in contrast to the expected"
-msgstr ""
+msgstr "，而预期为"
 
 #. module: purchase_stock
 #. odoo-python
@@ -1313,7 +1318,7 @@ msgstr "该产品应手动补货。"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "units"
-msgstr ""
+msgstr "单位"
 
 #. module: purchase_stock
 #. odoo-javascript

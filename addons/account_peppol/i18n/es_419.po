@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-05 23:37+0000\n"
+"PO-Revision-Date: 2026-10-12 16:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/account_peppol/es_419/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Customer not on %(network_name)s)"
-msgstr ""
+msgstr " (El cliente no está en %(network_name)s)"
 
 #. module: account_peppol
 #. odoo-python
@@ -768,6 +768,7 @@ msgstr "Cancelar Peppol"
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent via %(network_name)s"
 msgstr ""
+"No puedes cancelar un asiento que ya se envió a través de %(network_name)s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1156,6 +1157,8 @@ msgid ""
 "If you want to be invoiced via %(network_name)s, your configuration must be "
 "valid."
 msgstr ""
+"Si quieres recibir facturas a través de %(network_name)s, tu configuración "
+"debe ser válida."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ip
@@ -1174,6 +1177,8 @@ msgid ""
 "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %"
 "(network_name)s."
 msgstr ""
+"La factura %(invoice_name)s supera el límite de tamaño de 64 MB para "
+"enviarla a través de %(network_name)s."
 
 #. module: account_peppol
 #. odoo-python
@@ -1452,7 +1457,7 @@ msgstr "El contacto no puede recibir este formato"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "Partner doesn't have a valid configuration for %(network_name)s."
-msgstr ""
+msgstr "El contacto no tiene una configuración válida para %(network_name)s."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
@@ -1532,7 +1537,7 @@ msgstr "Documentos de Peppol: No es posible eliminar la factura"
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Peppol EAS and/or Endpoint identifier"
-msgstr ""
+msgstr "EAS de Peppol o identificador de punto de conexión"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
@@ -1808,6 +1813,7 @@ msgstr "Instale la biblioteca phonenumbers de Python."
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Please make sure the Contact email is a valid email address."
 msgstr ""
+"Asegúrate de que el correo electrónico del contacto sea una dirección válida."
 
 #. module: account_peppol
 #. odoo-python
@@ -2080,7 +2086,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid "That country is not available with %(network_name)s."
-msgstr ""
+msgstr "Ese país no está disponible en %(network_name)s."
 
 #. module: account_peppol
 #. odoo-python
@@ -2916,7 +2922,7 @@ msgstr "por Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "could not be sent via"
-msgstr ""
+msgstr "no se pudo enviar a través de"
 
 #. module: account_peppol
 #. odoo-python
@@ -2939,7 +2945,7 @@ msgstr "rechazado"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "sent via"
-msgstr ""
+msgstr "enviado a través de"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form

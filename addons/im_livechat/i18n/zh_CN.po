@@ -12,15 +12,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 15:03+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-11 06:34+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/im_livechat/zh_Hans/>\n"
+"projects/odoo-20/im_livechat/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,14 @@ msgid ""
 "Help your customers with this chat, and analyse their feedback.\n"
 "\n"
 msgstr ""
+"\n"
+"在线聊天支持\n"
+"==========================\n"
+"\n"
+"允许在任何网页上放置即时通讯小部件，这些部件将与当前服务器通信，\n"
+"并在多位在线聊天操作员之间分配访客请求。\n"
+"通过此聊天帮助您的客户，并分析他们的反馈。\n"
+"\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -102,7 +111,7 @@ msgstr "% 开心"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(days)sd"
-msgstr ""
+msgstr "%(days)s天"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -114,25 +123,25 @@ msgstr "%(hours)s小时"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "%(minutes)sm"
-msgstr ""
+msgstr "%(minutes)s分钟"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_service.js:0
 msgid "%(name)s left a rating:"
-msgstr ""
+msgstr "%(name)s 给出了评分："
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/chatbot_script_step.py:0
 msgid "%(title)s - Step %(sequence)d"
-msgstr ""
+msgstr "%(title)s - 步骤 %(sequence)d"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/res_users.py:0
 msgid "%(visitor)s authenticated as %(user)s."
-msgstr ""
+msgstr "%(visitor)s 已认证为 %(user)s。"
 
 #. module: im_livechat
 #. odoo-python
@@ -147,7 +156,7 @@ msgstr "%(input_email)s看起来不像是有效的电子邮件。你能再试一
 msgid ""
 "'%(input_phone)s' does not look like a valid phone number. Can you please "
 "try again?"
-msgstr ""
+msgstr "“%(input_phone)s” 似乎不是有效的电话号码。您能再试一次吗？"
 
 #. module: im_livechat
 #. odoo-python
@@ -166,22 +175,27 @@ msgid ""
 "'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
+"* “显示”会在页面上显示聊天按钮。\n"
+"* “带通知显示”在“显示”的基础上，还会在按钮旁边显示一段浮动文字。\n"
+"* “自动打开”会显示按钮，并在较大屏幕上自动打开对话面板。在较小屏幕上，其行为"
+"与“显示”相同。\n"
+"* “隐藏”会隐藏页面上的聊天按钮。\n"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "< 1m"
-msgstr ""
+msgstr "＜1分钟"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"oi o-me-1_5\" data-icon=\"login\" role=\"img\"/>Join"
-msgstr ""
+msgstr "<i class=\"oi o-me-1_5\" data-icon=\"login\" role=\"img\"/>加入"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"oi o-me-1_5\" data-icon=\"logout\" role=\"img\"/>Leave"
-msgstr ""
+msgstr "<i class=\"oi o-me-1_5\" data-icon=\"logout\" role=\"img\"/>离开"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -194,6 +208,8 @@ msgid ""
 "<i class=\"oi text-success\" data-icon=\"sentiment_satisfied\" role=\"img\" "
 "aria-label=\"Happy face\"/>"
 msgstr ""
+"<i class=\"oi text-success\" data-icon=\"sentiment_satisfied\" role=\"img\" "
+"aria-label=\"笑脸\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -210,17 +226,17 @@ msgstr "<span class=\"fw-bold\">国家/地区：</span>"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span class=\"o_stat_text\">Happy</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">满意</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span class=\"o_stat_text\">Sessions</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">会话</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "<span>Ongoing Sessions:</span>"
-msgstr ""
+msgstr "<span>进行中的会话：</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -285,7 +301,7 @@ msgstr "有效"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/expertise_tags_autocomplete.js:0
 msgid "Add expertise"
-msgstr ""
+msgstr "添加专业知识"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -336,20 +352,20 @@ msgstr "代理（历史）"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__available_operator_ids_count
 msgid "Agents Connected"
-msgstr ""
+msgstr "已连接的代理"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_agent_history_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_agent
 msgid "Agents Performance"
-msgstr ""
+msgstr "代理绩效"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Agents who are inactive in Odoo for more than 30 minutes will be considered "
 "disconnected."
-msgstr ""
+msgstr "在 Odoo 中处于非活动状态超过 30 分钟的代理将被视为已断开连接。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
@@ -371,7 +387,7 @@ msgstr "总是"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_patch.js:0
 msgid "An error occurred while processing your answer."
-msgstr ""
+msgstr "处理您的答案时出错。"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -444,7 +460,7 @@ msgstr "按钮背景颜色"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Button Colors"
-msgstr ""
+msgstr "按钮颜色"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text_color
@@ -466,7 +482,7 @@ msgstr "通话记录"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/livechat_command_dialog.xml:0
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.canned_responses
@@ -528,12 +544,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/livechat_button.xml:0
 msgid "Chat with us"
-msgstr ""
+msgstr "与我们聊天"
 
 #. module: im_livechat
 #: model:ir.module.module,summary:base.module_im_livechat
 msgid "Chat with your website visitors"
-msgstr ""
+msgstr "与您的网站访客聊天"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -541,7 +557,7 @@ msgstr ""
 msgid ""
 "Chat with your website visitors in real time by creating a\n"
 "                channel for each website where you want live chat enabled."
-msgstr ""
+msgstr "通过为每个需要启用在线聊天的网站创建一个频道，实时与您的网站访客聊天。"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.chatbot_script_action
@@ -648,7 +664,7 @@ msgstr "关闭"
 #: code:addons/im_livechat/static/src/core/common/thread_actions_patch.js:0
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Close Conversation"
-msgstr ""
+msgstr "关闭对话"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_end_dt_status_constraint
@@ -661,12 +677,12 @@ msgstr "已关闭的即时聊天对话时段，不应仍有状态。"
 msgid ""
 "Closing this will end the live chat with %(channel_name)s. Are you sure you "
 "want to proceed?"
-msgstr ""
+msgstr "关闭后将结束与 %(channel_name)s 的在线聊天。您确定要继续吗？"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__color
 msgid "Color"
-msgstr ""
+msgstr "颜色"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_max_sessions_mode_greater_than_zero
@@ -681,13 +697,13 @@ msgstr "配置"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Configure Channel"
-msgstr ""
+msgstr "配置频道"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Connect"
-msgstr ""
+msgstr "连接"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
@@ -708,13 +724,13 @@ msgstr "对话"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__channel_type
 msgid "Conversation Type"
-msgstr ""
+msgstr "对话类型"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/discuss_channel_model_patch.js:0
 msgid "Conversation has ended"
-msgstr ""
+msgstr "对话已结束"
 
 #. module: im_livechat
 #. odoo-python
@@ -748,7 +764,7 @@ msgstr "国家/地区"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Country & Language"
-msgstr ""
+msgstr "国家/地区与语言"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__country_id
@@ -839,7 +855,7 @@ msgstr "日期：上周"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_looking_for_help_since_dt
 msgid "Datetime when the chat entered the 'Looking for help' status."
-msgstr ""
+msgstr "聊天进入“正在寻求帮助”状态的日期时间。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_agent_history_view_search
@@ -899,7 +915,7 @@ msgstr "摘要"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "丢弃"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_demo
@@ -954,20 +970,20 @@ msgstr "不要将访客重新导向"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Download"
-msgstr ""
+msgstr "下载"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Download Conversation"
-msgstr ""
+msgstr "下载对话"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Download a copy of this conversation"
-msgstr ""
+msgstr "下载此对话的副本"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__duration
@@ -1014,7 +1030,7 @@ msgstr "启用 ChatBot"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Engage with visitors to convert leads or offer services."
-msgstr ""
+msgstr "与访客互动，以转化潜在客户或提供服务。"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1079,7 +1095,7 @@ msgstr "使用 Odoo 制作的网站"
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "File"
-msgstr ""
+msgstr "文件"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_troubleshooting_answer_firefox_demo
@@ -1141,17 +1157,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
-"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
-"<strong>Marketing.</strong>"
+"<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
-"前往<strong>网站制作</strong> &gt; <strong>配置</strong> &gt; <strong>设置</"
-"strong> &gt; <strong>电邮</strong> &amp; <strong>市场推广</strong>。"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/views/discuss_template.xml:0
 msgid "Go to Sessions"
-msgstr ""
+msgstr "前往会话"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__guest_id
@@ -1161,7 +1174,7 @@ msgstr "访客"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP 路由"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__handled_by_agent
@@ -1236,12 +1249,12 @@ msgstr "帮助状态"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Help needed"
-msgstr ""
+msgstr "需要帮助"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Here's a copy of your conversation with"
-msgstr ""
+msgstr "以下是您与此人的对话副本："
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1392,7 +1405,7 @@ msgstr "通话中"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/views/boolean_phone/boolean_phone.xml:0
 msgid "In a Call"
-msgstr ""
+msgstr "通话中"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1498,7 +1511,7 @@ msgstr "语言"
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Languages you can speak for live chat conversations."
-msgstr ""
+msgstr "您可用于在线聊天对话的语言。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -1568,18 +1581,18 @@ msgstr "离开频道"
 msgid ""
 "Leaving will end the live chat with %(channel_name)s. Are you sure you want "
 "to continue?"
-msgstr ""
+msgstr "离开将结束与 %(channel_name)s 的在线聊天。您确定要继续吗？"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/close_confirmation.js:0
 msgid "Leaving will end the live chat. Do you want to proceed?"
-msgstr ""
+msgstr "离开将结束在线聊天。您要继续吗？"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_module_info_expert_text_step_demo
 msgid "Let me check if I can connect you with the right expert..."
-msgstr ""
+msgstr "让我看看能否为您联系合适的专家……"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
@@ -1605,7 +1618,7 @@ msgstr "在线聊天按钮"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
 msgid "Live Chat Channel Search"
-msgstr ""
+msgstr "在线聊天频道搜索"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
@@ -1613,14 +1626,14 @@ msgstr ""
 #: model:ir.ui.menu,name:im_livechat.livechat_channels_config
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_list
 msgid "Live Chat Channels"
-msgstr ""
+msgstr "在线聊天频道"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 #: model:ir.actions.report,name:im_livechat.action_report_livechat_conversation
 msgid "Live Chat Conversation"
-msgstr ""
+msgstr "在线聊天对话"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_expertise
@@ -1633,12 +1646,12 @@ msgstr "在线客服/即时聊天专业知识"
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Live Chat Name"
-msgstr ""
+msgstr "在线聊天名称"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_note
 msgid "Live Chat Note"
-msgstr ""
+msgstr "在线聊天备注"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_failure
@@ -1651,19 +1664,19 @@ msgstr "在线聊天会话失败"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
 msgid "Live Chat Support Statistics"
-msgstr ""
+msgstr "在线聊天支持统计"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Live Chat Window"
-msgstr ""
+msgstr "在线聊天窗口"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.view_partner_form
 msgid "Live Chats"
-msgstr ""
+msgstr "在线聊天"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__session_livechat_channel_id
@@ -1697,12 +1710,12 @@ msgstr "在线客服频道成员历史记录"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 msgid "Livechat Channel Rule"
-msgstr ""
+msgstr "在线聊天频道规则"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_expertise_ids
 msgid "Livechat Expertise"
-msgstr ""
+msgstr "在线聊天专业知识"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.unit_embed_suite
@@ -1722,12 +1735,12 @@ msgstr "Livechat 语言"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_matches_self_expertise
 msgid "Livechat Matches Self Expertise"
-msgstr ""
+msgstr "在线聊天与自身专业知识匹配"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_matches_self_lang
 msgid "Livechat Matches Self Lang"
-msgstr ""
+msgstr "在线聊天与自身语言匹配"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel_member__livechat_member_history_ids
@@ -1754,7 +1767,7 @@ msgstr "聊天参与方历史记录"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_rating
 msgid "Livechat Rating Text"
-msgstr ""
+msgstr "在线聊天评分文本"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_status
@@ -1790,13 +1803,13 @@ msgstr "正在寻求帮助"
 msgid ""
 "Looking for help date should only be set if the channel is looking for help "
 "and must be empty otherwise."
-msgstr ""
+msgstr "只有在频道正在寻求帮助时才能设置寻求帮助日期，否则必须留空。"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.js:0
 msgid "Looking for help for: %(duration)s"
-msgstr ""
+msgstr "寻求帮助时长：%(duration)s"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_discuss_channel_rtc_session
@@ -1889,7 +1902,7 @@ msgstr "名称"
 #: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
 #: model:im_livechat.channel,button_text:im_livechat.support_bot_channel_demo
 msgid "Need help? Chat with us."
-msgstr ""
+msgstr "需要帮助？与我们聊天。"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__livechat_rating__3
@@ -1922,12 +1935,12 @@ msgstr "新会话"
 msgid ""
 "Nickname used in live chat conversations to protect your real name from "
 "visitors."
-msgstr ""
+msgstr "在线聊天对话中使用的昵称，用于向访客隐藏您的真实姓名。"
 
 #. module: im_livechat
 #: model:res.groups.privilege,placeholder:im_livechat.res_groups_privilege_live_chat
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__block_assignment_during_call
@@ -1943,7 +1956,7 @@ msgstr "没有失败"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "No Livechat Session!"
-msgstr ""
+msgstr "没有在线聊天会话！"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1954,7 +1967,7 @@ msgstr "没有可用的合作者，请稍后再试。"
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
 msgid "No chatbots found. Let's create one!"
-msgstr ""
+msgstr "未找到聊天机器人。让我们创建一个吧！"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1981,7 +1994,7 @@ msgstr "未找到历史记录"
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_config_action
 msgid "No live chat channel found. Let's create one!"
-msgstr ""
+msgstr "未找到在线聊天频道。让我们创建一个吧！"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2037,12 +2050,12 @@ msgstr "进行中会话数量"
 msgid ""
 "Number of conversations and percentage of positive ratings in the last 30 "
 "days"
-msgstr ""
+msgstr "过去 30 天的对话数量及好评百分比"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
 msgid "Number of conversations in the past 30 days"
-msgstr ""
+msgstr "过去 30 天的对话数量"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
@@ -2072,7 +2085,7 @@ msgstr "持续"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Ongoing Conversations"
-msgstr ""
+msgstr "进行中的对话"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2094,7 +2107,7 @@ msgstr "只限在线客服操作员才可加入在线客服频道"
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Only customers can rate a live chat conversation."
-msgstr ""
+msgstr "仅客户可以评价在线聊天对话。"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__only_if_operator
@@ -2153,7 +2166,7 @@ msgstr "合作伙伴"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Percentage of positive ratings in the last 30 days"
-msgstr ""
+msgstr "过去 30 天的好评百分比"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_phone
@@ -2215,7 +2228,7 @@ msgstr "评分文本"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Receive a copy of this conversation"
-msgstr ""
+msgstr "接收此对话的副本"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
@@ -2237,7 +2250,7 @@ msgstr "相关邮件消息"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_item_patch.xml:0
 msgid "Relevant to your expertise"
-msgstr ""
+msgstr "与您的专业知识相关"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__remaining_session_capacity
@@ -2252,7 +2265,7 @@ msgstr "报表"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_looking_for_help_since_dt
 msgid "Requested At"
-msgstr ""
+msgstr "请求时间"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2333,7 +2346,7 @@ msgstr "脚本（外部）"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external_text
 msgid "Script (external) Text"
-msgstr ""
+msgstr "脚本（外部）文本"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__script_step_id
@@ -2381,7 +2394,7 @@ msgstr "发送"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "Send conversation"
-msgstr ""
+msgstr "发送对话"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__sequence
@@ -2455,7 +2468,7 @@ msgstr "会话"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
 msgid "Sessions Analysis"
-msgstr ""
+msgstr "会话分析"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions_mode
@@ -2470,6 +2483,10 @@ msgid ""
 "and generate leads or\n"
 "                support tickets automatically."
 msgstr ""
+"为聊天机器人设置既定脚本，与您的网站访客聊天。\n"
+"                对对话进行资格筛选并转发给您的在线聊天代理，并自动生成潜在客"
+"户或\n"
+"                支持工单。"
 
 #. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_setup_demo
@@ -2495,13 +2512,13 @@ msgstr "显示通知"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/thread_actions.js:0
 msgid "Someone has already joined this conversation"
-msgstr ""
+msgstr "已有人加入此对话"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Spoken Languages"
-msgstr ""
+msgstr "口语语言"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date
@@ -2572,7 +2589,7 @@ msgstr "支持机器人"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/composer_patch.js:0
 msgid "Tab to next live chat"
-msgstr ""
+msgstr "Tab 切换到下一个在线聊天"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__text
@@ -2594,7 +2611,7 @@ msgstr "感谢您的反馈意见"
 #. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 msgid "The URL Regex '%(regex)s' is not valid."
-msgstr ""
+msgstr "URL 正则表达式“%(regex)s”无效。"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -2656,12 +2673,12 @@ msgstr "这是一个自动的 '欢迎' 信息，当访客开始新的会话时�
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/discuss_channel_model_patch.js:0
 msgid "This live chat conversation has ended."
-msgstr ""
+msgstr "此在线聊天对话已结束。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "This message has been removed"
-msgstr ""
+msgstr "此信息已被删除"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
@@ -2682,7 +2699,7 @@ msgstr "用户会话时长（小时）"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Time to Open"
-msgstr ""
+msgstr "打开时间"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response
@@ -2715,6 +2732,11 @@ msgid ""
 "installed on your server to geolocate visitors. Without it, rules that "
 "include country restrictions will be ignored."
 msgstr ""
+"若要将规则仅应用于网站的某些页面，请输入类似 /shop 的 URL 正则表达式。这将匹"
+"配任何以 /shop 开头的页面，例如 /shop/product。将该字段留空可将规则应用于所有"
+"页面。<br/>\n"
+"                                    对于本地部署数据库，必须在服务器上安装 "
+"GeoIP 才能定位访客所在地区。否则，包含国家/地区限制的规则将被忽略。"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_agent_history_action
@@ -2790,7 +2812,7 @@ msgstr "无限"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/messaging_menu_model_patch.js:0
 msgid "Unread"
-msgstr ""
+msgstr "未读"
 
 #. module: im_livechat
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
@@ -2799,6 +2821,8 @@ msgid ""
 "To load a canned response, start your sentence with '::' and select the "
 "template."
 msgstr ""
+"使用预设回复在在线聊天应用中定义消息模板。要加载预设回复，请以“::”开头书写句"
+"子，然后选择模板。"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -2836,19 +2860,19 @@ msgstr "用户的原始答案"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "View Channel"
-msgstr ""
+msgstr "查看频道"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_message.xml:0
 msgid "View Chat"
-msgstr ""
+msgstr "查看聊天"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "View Contact"
-msgstr ""
+msgstr "查看联系人"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2974,7 +2998,7 @@ msgstr "小工具"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Window Colors"
-msgstr ""
+msgstr "窗口颜色"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
@@ -2987,7 +3011,7 @@ msgstr "您是否介意留下您的电子邮件地址，以便我们可以与您
 #. odoo-python
 #: code:addons/im_livechat/controllers/channel.py:0
 msgid "Write expertises: Only LINK and UNLINK commands are allowed."
-msgstr ""
+msgstr "写入专业知识：仅允许 LINK 和 UNLINK 命令。"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3052,7 +3076,7 @@ msgstr "例如：您好！请问有什么可以帮您的吗？"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Need help? Chat with us."
-msgstr ""
+msgstr "例如：需要帮助？与我们聊天。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -3069,13 +3093,13 @@ msgstr "通话中"
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "invited %s to the conversation"
-msgstr ""
+msgstr "邀请 %s 加入对话"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "joined the conversation"
-msgstr ""
+msgstr "加入了对话"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3102,3 +3126,11 @@ msgstr "websocket消息处理"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr ""
+
+#~ msgid ""
+#~ "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+#~ "<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+#~ "<strong>Marketing.</strong>"
+#~ msgstr ""
+#~ "前往<strong>网站制作</strong> &gt; <strong>配置</strong> &gt; <strong>设置"
+#~ "</strong> &gt; <strong>电邮</strong> &amp; <strong>市场推广</strong>。"

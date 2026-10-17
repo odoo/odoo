@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 15:50+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-4/account/"
@@ -102,6 +102,11 @@ msgid " valid until %s"
 msgstr " %s तक मान्य"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
+msgid "# Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
 msgstr "# मिलाए जा चुके बिल"
@@ -110,11 +115,6 @@ msgstr "# मिलाए जा चुके बिल"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
 msgstr "# मिलाए जा चुके इनवॉइस"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
-msgid "# Reconciled Statement Lines"
-msgstr "# मिलाए जा चुके स्टेटमेंट की लाइन"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
@@ -210,12 +210,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"%(move)s reached an invalid state regarding its related statement line.\n"
+"%(move)s reached an invalid state regarding its related bank transaction.\n"
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
-"%(move)s नाम का लेन-देन अपनी जुड़ी हुई स्टेटमेंट लाइन के साथ सही स्थिति में नहीं है.\n"
-"इसे ठीक करने के लिए, हर जर्नल एंट्री में हमेशा सिर्फ एक 'सस्पेंस' लाइन होनी चाहिए।"
 
 #. module: account
 #. odoo-python
@@ -3187,8 +3185,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
-msgid "All unreconciled bank statement lines before the selected date."
-msgstr "चुनी हुई तारीख से पहले की सभी बैंक स्टेटमेंट एंट्रीज़ जिनका अभी तक मिलान नहीं हुआ है।"
+msgid "All unreconciled bank transactions before the selected date."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
@@ -3765,8 +3763,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid ""
-"At least one transaction in the statement is prior the last posted statement "
-"line (%s)"
+"At least one transaction in the statement is prior the last posted "
+"transaction (%s)"
 msgstr ""
 
 #. module: account
@@ -4072,8 +4070,20 @@ msgstr "बिल पर वापस जाएं"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Credit Note"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
 msgstr "इनवॉइस पर जाएं"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Refund"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4277,11 +4287,6 @@ msgid "Bank Statement Digitization"
 msgstr "बैंक स्टेटमेंट डिजिटाइजे़शन"
 
 #. module: account
-#: model:ir.model,name:account.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "बैंक स्टेटमेंट लाइन"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 msgid "Bank Statements"
 msgstr "बैंक स्टेटमेंट"
@@ -4307,6 +4312,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.model,name:account.model_account_bank_statement_line
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
+#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
 msgid "Bank Transaction"
 msgstr "बैंक ट्रांज़ैक्शन"
 
@@ -4376,6 +4384,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
 msgstr "बैंक ट्रांज़ैक्शन और पेमेंट:"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
+msgid "Bank transactions matched to this payment"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -8378,16 +8391,6 @@ msgstr "इक्विटी"
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Error importing attachment %(filename)s:"
 msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/controllers/download_docs.py:0
-msgid ""
-"Error while creating XML:\n"
-"- %s"
-msgstr ""
-"XML बनाने में कोई गड़बड़ी हुई:\n"
-"- %s"
 
 #. module: account
 #. odoo-python
@@ -13286,11 +13289,9 @@ msgstr "Odoo डोमेन"
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
 msgid ""
-"Odoo allows you to reconcile a statement line directly with\n"
+"Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
-"Odoo से आप बैंक स्टेटमेंट की एंट्री \n"
-"को सीधे बेचने या खरीदने वाले बिल से मिला सकते हैं।"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -13636,6 +13637,12 @@ msgid "Original Lock Date"
 msgstr "ओरिजिनल लॉक डेट"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Originator Bank Transaction"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
 msgid "Originator Group of Taxes"
 msgstr "टैक्स का ओरिजिनेटर ग्रुप"
@@ -13644,12 +13651,6 @@ msgstr "टैक्स का ओरिजिनेटर ग्रुप"
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "ओरिजनेटर पेमेंट"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
-#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-msgid "Originator Statement Line"
-msgstr "ओरिजिनेटर स्टेटमेंट लाइन"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
@@ -14494,8 +14495,8 @@ msgstr "कार्रवाई करने करने के लिए ह�
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
-msgid "Percentage of statement line"
-msgstr "स्टेटमेंट लाइन का प्रतिश"
+msgid "Percentage of transaction"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15373,6 +15374,11 @@ msgid "Reconciled"
 msgstr "मिलाया जा चुका"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
+msgid "Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
 msgstr "मिलाए जा चुके बिल"
@@ -15402,11 +15408,6 @@ msgstr "मिलाई गई लाइनें, जिसमें विद�
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
-msgid "Reconciled Statement Lines"
-msgstr "मिलाई गई स्टेटमेंट लाइन"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -17016,8 +17017,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Show Unreconciled Bank Statement Line"
-msgstr "बैंक स्टेटमेंट की ऐसी लाइन दिखाएं जिसका अभी तक हिसाब नहीं मिलाया गया है"
+msgid "Show Unreconciled Bank Transactions"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -17224,12 +17225,6 @@ msgid "Statement %(date)s"
 msgstr "स्टेटमेंट %(date)s"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
-#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
-msgid "Statement Line"
-msgstr "स्टेटमेंट लाइन"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_name
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Statement Name"
@@ -17241,17 +17236,6 @@ msgid "Statement Reports"
 msgstr "स्टेटमेंट रिपोर्ट"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_reconcile_model.py:0
-msgid "Statement line percentage can't be 0"
-msgstr "स्टेटमेंट लाइन प्रतिशत शून्य नहीं हो सकता"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
-msgid "Statement lines"
-msgstr "स्टेटमेंट लाइन"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__statement_line_ids
@@ -17259,11 +17243,6 @@ msgstr "स्टेटमेंट लाइन"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_tree
 msgid "Statements"
 msgstr "स्टेटमेंट"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
-msgid "Statements lines matched to this payment"
-msgstr "स्टेटमेंट लाइन इस पेमेंट से मैच कर"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__states_count
@@ -18495,6 +18474,11 @@ msgid "The bank statement used for bank reconciliation"
 msgstr "वह बैंक स्टेटमेंट जिससे बैंक का हिसाब मिलाया गया है"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
+msgid "The bank transaction that created this entry"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
@@ -18874,15 +18858,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"The journal entry %s reached an invalid state regarding its related "
-"statement line.\n"
+"The journal entry %s reached an invalid state regarding its related bank "
+"transaction.\n"
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"जर्नल एंट्री %s की स्थिति गलत हो गई है, क्योंकि यह बैंक स्टेटमेंट की लाइन से मेल नहीं खा "
-"रही. \n"
-"इसे ठीक करने के लिए, इस जर्नल एंट्री में बैंक या नकद खाते से जुड़ा सिर्फ़ एक ही आइटम होना "
-"चाहिए।"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -19036,19 +19016,13 @@ msgstr "मिलान का तरीका सिर्फ़ चुने ह�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
 msgid ""
-"The reconciliation model will only be applied when either the statement line "
+"The reconciliation model will only be applied when either the transaction "
 "label, the transaction details or the note matches the following:\n"
-"        * Contains: The statement line must contains this string (case "
+"        * Contains: The transaction must contain this string (case "
 "insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"मिलान का मॉडल तभी चलेगा जब बैंक स्टेटमेंट की एंट्री का नाम, लेन-देन का विवरण या कोई नोट "
-"नीचे दिए गए तरीकों से मेल खाए:\n"
-"* 'शामिल है': जब बैंक स्टेटमेंट की एंट्री में दी गई चीज़ हो (छोटे-बड़े अक्षरों का फर्क नहीं "
-"पड़ेगा).\n"
-"* 'शामिल नहीं है': जब दी गई चीज़ बैंक स्टेटमेंट की एंट्री में न हो.\n"
-"* 'रीगेक्स से मिलान करें': जब आप अपने बनाए गए नियम से मिलान करवाएं।"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -19300,11 +19274,6 @@ msgid "The smallest value used to round the total amount (e.g., 0.05 or 100)."
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
-msgid "The statement line that created this entry"
-msgstr "वह स्टेटमेंट जिससे यह एंट्री बनी"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
@@ -19379,22 +19348,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
-"There are still unreconciled bank statement lines before the selected date. "
-"The entries from journal prefixes containing them will not be secured: %"
+"There are still unreconciled bank transactions before the selected date. The "
+"entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
-"चुनी हुई तारीख से पहले की कुछ बैंक स्टेटमेंट एंट्रीज़ अभी भी मैच नहीं हुई हैं. जिन जर्नल के नामों "
-"में वे हैं, उनकी एंट्रीज़ सुरक्षित नहीं हो पाएंगी: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
-"There are still unreconciled bank statement lines in the period you want to "
-"lock.You should either reconcile or delete them."
+"There are still unreconciled bank transactions in the period you want to "
+"lock. You should either reconcile or delete them."
 msgstr ""
-"जिस समय-सीमा को आप बंद करना चाहते हैं, उसमें कुछ बैंक स्टेटमेंट एंट्रीज़ अभी भी मैच नहीं हुई हैं. "
-"आपको उन्हें या तो मिलाना चाहिए या मिटा देना चाहिए।"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -19825,8 +19790,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_matching_rules
 msgid ""
-"Those can be used to automatically match journal items with your statement "
-"lines."
+"Those can be used to automatically match journal items with your "
+"transactions."
 msgstr ""
 
 #. module: account
@@ -20176,6 +20141,13 @@ msgid "Transaction Type"
 msgstr "ट्रांज़ैक्शन टाइ"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+msgid "Transaction percentage can't be 0"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
 #: model:ir.ui.menu,name:account.account_transactions_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
@@ -20789,9 +20761,8 @@ msgstr "बैंक खाते की पुष्टि केरं"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__trigger
 msgid ""
-"Validate the statement line automatically (reconciliation based on your "
-"rule)."
-msgstr "स्टेटमेंट लाइन को आपके नियम के अनुसार अपने-आप मिलान करके सही करें।"
+"Validate the transaction automatically (reconciliation based on your rule)."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -21372,6 +21343,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+msgid ""
+"You can't create a new bank transaction without a suspense account set on "
+"the %s journal."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
@@ -21380,14 +21359,6 @@ msgid ""
 msgstr ""
 "आप तब तक नया पेमेंट नहीं कर सकते जब तक कंपनी में या %(journal)s जर्नल के %"
 "(payment_method)s पेमेंट मेथड में 'बकाया पेमेंट/रसीद' खाता सेट न हो"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement_line.py:0
-msgid ""
-"You can't create a new statement line without a suspense account set on the "
-"%s journal."
-msgstr "आप नई स्टेटमेंट लाइन नहीं बना सकते, अगर %s जर्नल में 'सस्पेंस अकाउंट' सेट नहीं है।"
 
 #. module: account
 #. odoo-python
@@ -22666,6 +22637,116 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "# Reconciled Statement Lines"
+#~ msgstr "# मिलाए जा चुके स्टेटमेंट की लाइन"
+
+#~ msgid ""
+#~ "%(move)s reached an invalid state regarding its related statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one suspense "
+#~ "line."
+#~ msgstr ""
+#~ "%(move)s नाम का लेन-देन अपनी जुड़ी हुई स्टेटमेंट लाइन के साथ सही स्थिति में नहीं है.\n"
+#~ "इसे ठीक करने के लिए, हर जर्नल एंट्री में हमेशा सिर्फ एक 'सस्पेंस' लाइन होनी चाहिए।"
+
+#~ msgid "All unreconciled bank statement lines before the selected date."
+#~ msgstr ""
+#~ "चुनी हुई तारीख से पहले की सभी बैंक स्टेटमेंट एंट्रीज़ जिनका अभी तक मिलान नहीं हुआ है।"
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "बैंक स्टेटमेंट लाइन"
+
+#~ msgid ""
+#~ "Error while creating XML:\n"
+#~ "- %s"
+#~ msgstr ""
+#~ "XML बनाने में कोई गड़बड़ी हुई:\n"
+#~ "- %s"
+
+#~ msgid ""
+#~ "Odoo allows you to reconcile a statement line directly with\n"
+#~ "                the related sale or purchase invoices."
+#~ msgstr ""
+#~ "Odoo से आप बैंक स्टेटमेंट की एंट्री \n"
+#~ "को सीधे बेचने या खरीदने वाले बिल से मिला सकते हैं।"
+
+#~ msgid "Originator Statement Line"
+#~ msgstr "ओरिजिनेटर स्टेटमेंट लाइन"
+
+#~ msgid "Percentage of statement line"
+#~ msgstr "स्टेटमेंट लाइन का प्रतिश"
+
+#~ msgid "Reconciled Statement Lines"
+#~ msgstr "मिलाई गई स्टेटमेंट लाइन"
+
+#~ msgid "Show Unreconciled Bank Statement Line"
+#~ msgstr "बैंक स्टेटमेंट की ऐसी लाइन दिखाएं जिसका अभी तक हिसाब नहीं मिलाया गया है"
+
+#~ msgid "Statement Line"
+#~ msgstr "स्टेटमेंट लाइन"
+
+#~ msgid "Statement line percentage can't be 0"
+#~ msgstr "स्टेटमेंट लाइन प्रतिशत शून्य नहीं हो सकता"
+
+#~ msgid "Statement lines"
+#~ msgstr "स्टेटमेंट लाइन"
+
+#~ msgid "Statements lines matched to this payment"
+#~ msgstr "स्टेटमेंट लाइन इस पेमेंट से मैच कर"
+
+#~ msgid ""
+#~ "The journal entry %s reached an invalid state regarding its related "
+#~ "statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one journal "
+#~ "item involving the bank/cash account."
+#~ msgstr ""
+#~ "जर्नल एंट्री %s की स्थिति गलत हो गई है, क्योंकि यह बैंक स्टेटमेंट की लाइन से मेल नहीं खा "
+#~ "रही. \n"
+#~ "इसे ठीक करने के लिए, इस जर्नल एंट्री में बैंक या नकद खाते से जुड़ा सिर्फ़ एक ही आइटम होना "
+#~ "चाहिए।"
+
+#~ msgid ""
+#~ "The reconciliation model will only be applied when either the statement "
+#~ "line label, the transaction details or the note matches the following:\n"
+#~ "        * Contains: The statement line must contains this string (case "
+#~ "insensitive).\n"
+#~ "        * Not Contains: Negation of \"Contains\".\n"
+#~ "        * Match Regex: Define your own regular expression."
+#~ msgstr ""
+#~ "मिलान का मॉडल तभी चलेगा जब बैंक स्टेटमेंट की एंट्री का नाम, लेन-देन का विवरण या कोई "
+#~ "नोट नीचे दिए गए तरीकों से मेल खाए:\n"
+#~ "* 'शामिल है': जब बैंक स्टेटमेंट की एंट्री में दी गई चीज़ हो (छोटे-बड़े अक्षरों का फर्क नहीं "
+#~ "पड़ेगा).\n"
+#~ "* 'शामिल नहीं है': जब दी गई चीज़ बैंक स्टेटमेंट की एंट्री में न हो.\n"
+#~ "* 'रीगेक्स से मिलान करें': जब आप अपने बनाए गए नियम से मिलान करवाएं।"
+
+#~ msgid "The statement line that created this entry"
+#~ msgstr "वह स्टेटमेंट जिससे यह एंट्री बनी"
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines before the selected "
+#~ "date. The entries from journal prefixes containing them will not be "
+#~ "secured: %(prefix_info)s"
+#~ msgstr ""
+#~ "चुनी हुई तारीख से पहले की कुछ बैंक स्टेटमेंट एंट्रीज़ अभी भी मैच नहीं हुई हैं. जिन जर्नल के "
+#~ "नामों में वे हैं, उनकी एंट्रीज़ सुरक्षित नहीं हो पाएंगी: %(prefix_info)s"
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines in the period you want "
+#~ "to lock.You should either reconcile or delete them."
+#~ msgstr ""
+#~ "जिस समय-सीमा को आप बंद करना चाहते हैं, उसमें कुछ बैंक स्टेटमेंट एंट्रीज़ अभी भी मैच नहीं हुई "
+#~ "हैं. आपको उन्हें या तो मिलाना चाहिए या मिटा देना चाहिए।"
+
+#~ msgid ""
+#~ "Validate the statement line automatically (reconciliation based on your "
+#~ "rule)."
+#~ msgstr "स्टेटमेंट लाइन को आपके नियम के अनुसार अपने-आप मिलान करके सही करें।"
+
+#~ msgid ""
+#~ "You can't create a new statement line without a suspense account set on "
+#~ "the %s journal."
+#~ msgstr "आप नई स्टेटमेंट लाइन नहीं बना सकते, अगर %s जर्नल में 'सस्पेंस अकाउंट' सेट नहीं है।"
 
 #~ msgid ""
 #~ "Downpayments posted on this account will be considered by the Tax Closing "

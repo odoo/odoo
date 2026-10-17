@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-10-09 11:23+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-15 08:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "website_sale/de/>\n"
@@ -574,7 +574,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "<i class=\"oi me-1\" data-icon=\"add\"/>Add"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"add\"/>Hinzufügen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -638,6 +638,8 @@ msgid ""
 "<i class=\"oi me-2\" data-icon=\"mail\"/>\n"
 "                    Notify me"
 msgstr ""
+"<i class=\"oi me-2\" data-icon=\"mail\"/>\n"
+"                    Benachrichtigung erhalten"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -706,6 +708,9 @@ msgid ""
 "hidden=\"true\"/>\n"
 "                                            Out of stock"
 msgstr ""
+"<i class=\"oi oi-filled me-2 text-danger\" data-icon=\"circle\" aria-"
+"hidden=\"true\"/>\n"
+"                                            Nicht vorrätig"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
@@ -713,6 +718,8 @@ msgid ""
 "<i class=\"oi oi-filled me-2\" data-icon=\"notifications\"/>\n"
 "                    Subscribed"
 msgstr ""
+"<i class=\"oi oi-filled me-2\" data-icon=\"notifications\"/>\n"
+"                    Abonniert"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
@@ -811,7 +818,7 @@ msgid ""
 msgstr ""
 "<p>\n"
 "Für die Bestellung <t t-out=\"object.order_reference\">S00001</t> wurde ein "
-"Stornierungsantrag gestellt.\n"
+"Widerrufsantrag gestellt.\n"
 "</p>\n"
 "<div style=\"margin: 16px 0; text-align: center;\">\n"
 "   <a t-att-href=\"ctx.get('order_access_link')\" target=\"_blank\" "
@@ -1168,7 +1175,8 @@ msgid ""
 "                                <td width=\"19%\" align=\"right\" "
 "style=\"max-width: 100%; vertical-align: top;\">\n"
 "                                    <t t-"
-"out=\"format_amount(object.list_price, object.currency_id)\">$ 450</t>\n"
+"out=\"format_amount(ctx.get('product_price') or 0, object.currency_id)\">$ "
+"450</t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -1176,75 +1184,6 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
-"<t t-set=\"website\" t-value=\"object.website_id or object.env.website or "
-"object.env.website.browse(env.context.get('host_id'))\"/>\n"
-"                <div style=\"margin: 0px; padding: 0px;\">\n"
-"                   <t t-if=\"website\" t-set=\"logo_src\" t-"
-"value=\"website.image_url(website, 'logo')\"/>\n"
-"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/logo.png?"
-"company=#{object.company_id.id}\"/> \n"
-"                   <img t-att-src=\"logo_src\" style=\"display:block; "
-"height:50px; margin:0 0 16px;\" alt=\"Logo\"/>\n"
-"                    <p> \n"
-"                        Guten Tag <t t-out=\"ctx.get('customer_name')"
-"\">Kunde</t>,\n"
-"                   </p>\n"
-"                    <p> das Produkt, auf das Sie gewartet haben, ist jetzt "
-"wieder vorrätig!</p>\n"
-"                    <div t-if=\"not is_html_empty(user.signature)\" "
-"style=\"font-size: 14px; margin: 0 0 16px;\">\n"
-"                       <t t-out=\"user.signature or ''\"> Mitchell Admin</"
-"t>\n"
-"                    </div>\n"
-"                   <div t-attf-style=\"margin-bottom: 22px; font-size: 14px;"
-"\">\n"
-"                        <a t-att-href=\"website.get_base_url() + "
-"object.website_url\" t-attf-style=\"background-color: "
-"{{website.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
-"8px 16px; text-decoration: none; color: "
-"{{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; "
-"font-size:14px;\"> \n"
-"                            Jetzt bestellen\n"
-"                       </a>\n"
-"                    </div> \n"
-"                   <div style=\"margin-bottom: 12px;\">\n"
-"                        <table role=\"presentation\" width=\"100%\" "
-"style=\"max-width: 590px; border-collapse: collapse; font-size: 14px;\"> \n"
-"                           <tr>\n"
-"                                <td width=\"24%\" style=\"max-width: 120px; "
-"padding: 0 10px 10px 0; vertical-align: top;\"> \n"
-"                                   <img t-att-"
-"src=\"website.image_url(object, 'image_1920')\" style=\"width: 100px; "
-"height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
-"                                </td> \n"
-"                               <td style=\"padding-bottom: 8px; vertical-"
-"align: top;\">\n"
-"                                    <h2 t-att-style=\"'margin:0; font-"
-"size:14px; color:%s;' % ((website and "
-"website.company_id.email_secondary_color) or '#875A7B')\"> \n"
-"                                       <strong t-out=\"object.name or ''\"> "
-"Schreibtischkombination</strong>\n"
-"                                    </h2>\n"
-"                                   <p t-"
-"if=\"object.product_template_attribute_value_ids\" style=\"margin: 4px "
-"0;\"> \n"
-"                                        ( <t t-out=\"', "
-"'.join(object.product_template_attribute_value_ids.mapped('name'))\">Holz</"
-"t> )\n"
-"                                   </p>\n"
-"                                    <t t-out=\"object.description_ecommerce "
-"or ''\"> Schreibtischbeschreibung</t>\n"
-"                                </td>\n"
-"                               <td width=\"19%\" align=\"right\" style=\"max-"
-"width: 100%; vertical-align: top;\">\n"
-"                                    <t t-"
-"out=\"format_amount(object.list_price, object.currency_id)\"> 450 €</t>\n"
-"                                </td>\n"
-"                           </tr>\n"
-"                        </table> \n"
-"                   </div>\n"
-"                </div> \n"
-"            "
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_withdrawal_request_confirmation
@@ -1620,16 +1559,16 @@ msgstr ""
 "                    <t t-if=\"'website_id' in object and object.website_id\" "
 "t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
 "'logo')\"/>\n"
-"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/"
-"logo.png?company=#{object.company_id.id}\"/>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/logo.png?"
+"company=#{object.company_id.id}\"/>\n"
 "                    <img t-att-src=\"logo_src\" style=\"display: block; "
 "height: 50px; margin: 0 0 16px;\" alt=\"Logo\"/>\n"
 "                    <p style=\"margin: 0 0 12px; line-height: 18px;\">\n"
 "                        Guten Tag <t t-out=\"object.partner_id.display_name "
 "or ''\">Johnny Tester</t>,\n"
 "                        <br/><br/>\n"
-"                        Sie haben Ihre Online-Bestellung nicht "
-"abgeschlossen.<br/>\n"
+"                        Sie haben Ihre Online-Bestellung nicht abgeschlossen."
+"<br/>\n"
 "                        Haben Sie Fragen zu unseren Produkten?<br/>\n"
 "                        Antworten Sie einfach auf diese E-Mail!<br/>\n"
 "                    </p>\n"
@@ -1642,19 +1581,19 @@ msgstr ""
 "14px;\">\n"
 "                            <a t-attf-href=\"{{ object.get_base_url() }}/"
 "shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
-"target=\"_blank\" t-attf-style=\"background-color: {"
-"{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
-"8px 16px; text-decoration: none; color: {"
-"{object.company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-"
-"size:14px;\">\n"
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#fff'}}; border-radius: 5px; "
+"font-size:14px;\">\n"
 "                                Bestellung fortsetzen\n"
 "                            </a>\n"
 "                        </div>\n"
 "                    </t>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <!-- The following loop is also used in the addons > "
-"sale > data > mail_template_data.xml file because we want the same "
-"layout. -->\n"
+"sale > data > mail_template_data.xml file because we want the same layout. --"
+">\n"
 "                        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
 "                            <t t-if=\"(not hasattr(line, 'is_delivery') or "
 "not line.is_delivery) and not line.combo_item_id\">\n"
@@ -1678,8 +1617,9 @@ msgstr ""
 "                                                <span t-"
 "if=\"line.product_id.product_template_attribute_value_ids\" style=\"color: "
 "#6c757d;\">\n"
-"                                                    <t t-out=\"', '.join"
-"(line.product_id.product_template_attribute_value_ids.mapped('name'))\"/>\n"
+"                                                    <t t-out=\"', "
+"'.join(line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
 "                                                </span>\n"
 "                                            </h3>\n"
 "                                            <t t-set=\"combo_line_idx\" t-"
@@ -1714,8 +1654,8 @@ msgstr ""
 "set=\"borderBottomStyle\" t-value=\"''\"/>\n"
 "\n"
 "                                                        <t t-"
-"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != line.id\">"
-"\n"
+"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != "
+"line.id\">\n"
 "                                                            <t t-"
 "set=\"combo_line_idx\" t-value=\"combo_line_idx + 1\"/>\n"
 "                                                        </t>\n"
@@ -1749,16 +1689,16 @@ msgstr ""
 "                                                            </t>\n"
 "                                                        </t>\n"
 "                                                        <div t-attf-"
-"style=\"width: 100%; border: 1px solid #dee2e6; padding: 5px 8px; {{ "
-"borderRadiusStyle }} {{ borderBottomStyle }} {{ borderTopStyle }}\">\n"
+"style=\"width: 100%; border: 1px solid #dee2e6; padding: 5px 8px; "
+"{{ borderRadiusStyle }} {{ borderBottomStyle }} {{ borderTopStyle }}\">\n"
 "                                                                    <t t-"
 "out=\"combo_line.product_id.name or ''\">Baumpflegekurs</t>\n"
 "                                                                    <span t-"
 "if=\"combo_line.product_id.product_template_attribute_value_ids\" "
 "style=\"color: #6c757d;\">\n"
 "                                                                        <t t-"
-"out=\"', '.join"
-"(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"out=\"', "
+"'.join(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
 "\"/>\n"
 "                                                                    </span>\n"
 "                                                                    -\n"
@@ -1776,38 +1716,40 @@ msgstr ""
 "out=\"combo_line._get_rental_pricing_description() or ''\"/><br/>\n"
 "                                                                    </p>\n"
 "                                                                    <t t-"
-"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or (hasattr"
-"(combo_line, 'event_id') and combo_line.event_id) or (hasattr(combo_line, "
-"'calendar_event_id') and combo_line.calendar_event_id)\">\n"
+"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
+"(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
 "                                                                        <t t-"
 "set=\"description_lines\" t-"
 "value=\"combo_line.get_description_following_lines()\"/>\n"
 "                                                                        <div "
 "t-if=\"description_lines\" style=\"color: #6c757d;\">\n"
-"                                                                            "
-"<t t-foreach=\"description_lines\" t-as=\"description_line\">\n"
-"                                                                                "
-"<p t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px "
-"0 0;\"/>\n"
-"                                                                            "
-"</t>\n"
+"                                                                            <t "
+"t-foreach=\"description_lines\" t-as=\"description_line\">\n"
+"                                                                                <p "
+"t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px 0 "
+"0;\"/>\n"
+"                                                                            </"
+"t>\n"
 "                                                                        </"
 "div>\n"
 "                                                                    </t>\n"
 "                                                        </div>\n"
 "                                                    </t>\n"
-"                                                <t t-elif=\"not"
-"(combo_line.linked_line_id) and combo_line.id == line.id\">\n"
+"                                                <t t-"
+"elif=\"not(combo_line.linked_line_id) and combo_line.id == line.id\">\n"
 "                                                    <p t-if=\"hasattr(line, "
-"'is_rental') and line.is_rental\" style=\"margin: 4px 0 0; color: #6c757d;\">"
-"\n"
+"'is_rental') and line.is_rental\" style=\"margin: 4px 0 0; color: #6c757d;"
+"\">\n"
 "                                                        <t t-"
 "out=\"line._get_rental_pricing_description() or ''\"/><br/>\n"
 "                                                    </p>\n"
-"                                                    <t t-if=\"(hasattr"
-"(combo_line, 'is_rental') and combo_line.is_rental) or (hasattr(combo_line, "
-"'event_id') and combo_line.event_id) or (hasattr(combo_line, "
-"'calendar_event_id') and combo_line.calendar_event_id)\">\n"
+"                                                    <t t-"
+"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
+"(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
 "                                                        <t t-"
 "set=\"product_description_lines\" t-"
 "value=\"line.get_description_following_lines()\"/>\n"
@@ -1826,8 +1768,8 @@ msgstr ""
 "                                            <span style=\"display: inline-"
 "block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-"
 "color: #e9ecef; color: #454748; font-size: 12px;\">\n"
-"                                                <t t-out=\"int"
-"(line.product_uom_qty) or ''\">10000</t>\n"
+"                                                <t t-"
+"out=\"int(line.product_uom_qty) or ''\">10000</t>\n"
 "                                                <t t-"
 "out=\"line.product_uom_id.name or ''\" t-"
 "if=\"line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
@@ -1837,8 +1779,9 @@ msgstr ""
 "style=\"max-width: 100px; vertical-align: top;\">\n"
 "                                            <t t-if=\"line.product_type == "
 "'combo'\">\n"
-"                                                <span t-out=\"format_amount"
-"(line._get_cart_display_price(), object.currency_id) or ''\">10,00 €</span>\n"
+"                                                <span t-"
+"out=\"format_amount(line._get_cart_display_price(), object.currency_id) or "
+"''\">10,00 €</span>\n"
 "                                            </t>\n"
 "                                            <t t-else=\"\">\n"
 "                                                <span style=\"white-space: "
@@ -1851,8 +1794,8 @@ msgstr ""
 "                                                    </t>\n"
 "                                                    <t t-else=\"\">\n"
 "                                                        <t t-"
-"out=\"format_amount(line.price_total, object.currency_id) or ''\">10,00 €</t>"
-"\n"
+"out=\"format_amount(line.price_total, object.currency_id) or ''\">10,00 €</"
+"t>\n"
 "                                                    </t>\n"
 "                                                </span>\n"
 "                                            </t>\n"
@@ -1875,8 +1818,9 @@ msgstr ""
 "                                <td style=\"padding-top: 8px;  border-top: "
 "1px solid #dee2e6; text-align: right; color: #495057;\" width=\"100px\" "
 "align=\"right\">\n"
-"                                    <t t-out=\"format_amount"
-"(object.amount_delivery, object.currency_id) or ''\">-</t>\n"
+"                                    <t t-"
+"out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">-</"
+"t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
@@ -1884,8 +1828,8 @@ msgstr ""
 "#495057;\">Zwischensumme</td>\n"
 "                                <td style=\"padding-top: 4px; text-align: "
 "right; color: #495057;\" width=\"100px\" align=\"right\"><t t-"
-"out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">-</t>"
-"</td>\n"
+"out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">-</"
+"t></td>\n"
 "                            </tr>\n"
 "                        </table>\n"
 "                        <t t-if=\"object.tax_totals and "
@@ -1912,8 +1856,9 @@ msgstr ""
 "1px solid #343a40;\"><strong>Gesamt</strong></td>\n"
 "                                <td style=\"padding-top: 8px; border-top: "
 "1px solid #343a40; text-align: right\" width=\"100px\" align=\"right\">\n"
-"                                    <strong t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">-</strong>\n"
+"                                    <strong t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">-</"
+"strong>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -2029,12 +1974,12 @@ msgstr "Bedingungen akzeptieren"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
 msgid "Access Code"
-msgstr ""
+msgstr "Zugriffscode"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Zugriffsgruppen"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__access_token
@@ -3450,7 +3395,7 @@ msgstr "Ein neues Band erstellen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Defined on website"
-msgstr ""
+msgstr "Auf der Website definiert"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_ribbon__assign
@@ -3789,12 +3734,6 @@ msgstr "Spende"
 #: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "Donation product not found."
 msgstr "Spendenprodukt nicht gefunden."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/product_template.py:0
-msgid "Donation products cannot be archived."
-msgstr "Spendenprodukte können nicht archiviert werden."
 
 #. module: website_sale
 #. odoo-python
@@ -5247,7 +5186,7 @@ msgstr "Neu!"
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_arrivals
 msgid "Newest"
-msgstr ""
+msgstr "Neueste"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6066,7 +6005,7 @@ msgstr "Seitenbreite"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Paid"
-msgstr ""
+msgstr "Bezahlt"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -6248,7 +6187,7 @@ msgstr "Preis - Aufsteigend"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Price Display"
-msgstr ""
+msgstr "Preisangabe"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
@@ -6296,7 +6235,7 @@ msgstr "Preislistenregel"
 #: code:addons/website_sale/static/src/website_builder/footer_copyright_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/header_elements_option.xml:0
 msgid "Pricelist Selector"
-msgstr ""
+msgstr "Preislistenauswahl"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_wishlist__pricelist_id
@@ -6306,7 +6245,7 @@ msgstr "Preisliste beim Hinzufügen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.pricelist_selector
 msgid "Pricelist: {{0}}"
-msgstr ""
+msgstr "Preisliste: {{0}}"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
@@ -6323,7 +6262,7 @@ msgstr "Die Preise haben sich geändert. Bitte überprüfen Sie Ihren Warenkorb.
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_image__type__primary
 msgid "Primary"
-msgstr ""
+msgstr "Primär"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -6611,7 +6550,7 @@ msgstr "Produkte"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Products Carousel"
-msgstr ""
+msgstr "Produktkarussell"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6623,7 +6562,7 @@ msgstr "Produktdesign"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Products Grid"
-msgstr ""
+msgstr "Produktraster"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6649,7 +6588,7 @@ msgstr "Produktansichten"
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_b2b
 msgid "Professional Prices"
-msgstr ""
+msgstr "Professionelle Preise"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6823,13 +6762,13 @@ msgstr "Neuordnung"
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold"
-msgstr ""
+msgstr "Kürzlich verkauft"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed (per user)"
-msgstr ""
+msgstr "Zuletzt angesehen (pro Benutzer)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7218,7 +7157,7 @@ msgstr "Global nach {{0}} suchen"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_image__type__secondary
 msgid "Secondary"
-msgstr ""
+msgstr "Sekundär"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7761,7 +7700,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 msgid "Split variants"
-msgstr ""
+msgstr "Varianten aufteilen"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_stackable
@@ -7801,7 +7740,7 @@ msgstr "Stil"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
 msgid "Subscribe"
-msgstr ""
+msgstr "Abonnieren"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7882,7 +7821,7 @@ msgstr "Ziel"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__tax_display
 msgid "Tax Display"
-msgstr ""
+msgstr "Steuerangabe"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
@@ -7915,12 +7854,12 @@ msgstr "Je nach Konfiguration der Website mit oder ohne Steuer."
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_excluded
 msgid "Taxes Excluded"
-msgstr ""
+msgstr "exkl. Steuern"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_pricelist__tax_display__tax_included
 msgid "Taxes Included"
-msgstr ""
+msgstr "inkl. Steuern"
 
 #. module: website_sale
 #. odoo-python
@@ -8130,6 +8069,8 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
+"Die Anzahl der ausgewählten Kombi-Artikel muss mit der Anzahl der "
+"verfügbaren Kombimöglichkeiten übereinstimmen."
 
 #. module: website_sale
 #. odoo-python
@@ -8440,7 +8381,7 @@ msgstr "Twitter"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__type
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
@@ -8450,7 +8391,7 @@ msgstr "URL eines Videos, in dem Ihr Produkt vorgestellt wird."
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_default
 msgid "USD"
-msgstr ""
+msgstr "USD"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -8977,7 +8918,7 @@ msgstr "Bestätigung des Widerrufsantrags"
 #. odoo-python
 #: code:addons/website_sale/models/withdrawal_request.py:0
 msgid "Withdrawal Requested"
-msgstr "Widerruf angefordert"
+msgstr "Widerruf beantragt"
 
 #. module: website_sale
 #. odoo-python
@@ -9143,6 +9084,8 @@ msgid ""
 "Your payment of %(formatted_amount)s has been processed. Pay the remaining "
 "amount to confirm your order."
 msgstr ""
+"Ihre Zahlung in Höhe von %(formatted_amount)s wurde bearbeitet. Begleichen "
+"Sie den Restbetrag, um Ihre Bestellung zu bestätigen."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -9248,7 +9191,7 @@ msgstr "Filter-Sichtbarkeit im E-Commerce"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__tax_display
 msgid "eCommerce Price Display"
-msgstr ""
+msgstr "Preisangaben im E-Commerce"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -9454,6 +9397,151 @@ msgstr "youremail@gmail.com"
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr "{{ object.name or 'Product' }} ist wieder vorrätig"
+
+#~ msgid ""
+#~ "<t t-set=\"website\" t-value=\"object.website_id or object.env.website or "
+#~ "object.env.website.browse(env.context.get('host_id'))\"/>\n"
+#~ "                <div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "                    <t t-if=\"website\" t-set=\"logo_src\" t-"
+#~ "value=\"website.image_url(website, 'logo')\"/>\n"
+#~ "                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/"
+#~ "logo.png?company=#{object.company_id.id}\"/>\n"
+#~ "                    <img t-att-src=\"logo_src\" style=\"display:block; "
+#~ "height:50px; margin:0 0 16px;\" alt=\"Logo\"/>\n"
+#~ "                    <p>\n"
+#~ "                        Hello <t t-out=\"ctx.get('customer_name')"
+#~ "\">Customer</t>,\n"
+#~ "                    </p>\n"
+#~ "                    <p>The product you were waiting for is now back in "
+#~ "stock!</p>\n"
+#~ "                    <div t-if=\"not is_html_empty(user.signature)\" "
+#~ "style=\"font-size: 14px; margin: 0 0 16px;\">\n"
+#~ "                        <t t-out=\"user.signature or ''\">Mitchell Admin</"
+#~ "t>\n"
+#~ "                    </div>\n"
+#~ "                    <div t-attf-style=\"margin-bottom: 22px; font-size: "
+#~ "14px;\">\n"
+#~ "                        <a t-att-href=\"website.get_base_url() + "
+#~ "object.website_url\" t-attf-style=\"background-color: "
+#~ "{{website.company_id.email_secondary_color or '#875A7B'}}; padding: 8px "
+#~ "16px 8px 16px; text-decoration: none; color: "
+#~ "{{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; "
+#~ "font-size:14px;\">\n"
+#~ "                            Order Now\n"
+#~ "                        </a>\n"
+#~ "                    </div>\n"
+#~ "                    <div style=\"margin-bottom: 12px;\">\n"
+#~ "                        <table role=\"presentation\" width=\"100%\" "
+#~ "style=\"max-width: 590px; border-collapse: collapse; font-size: 14px;\">\n"
+#~ "                            <tr>\n"
+#~ "                                <td width=\"24%\" style=\"max-width: "
+#~ "120px; padding: 0 10px 10px 0; vertical-align: top;\">\n"
+#~ "                                    <img t-att-"
+#~ "src=\"website.image_url(object, 'image_1920')\" style=\"width: 100px; "
+#~ "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+#~ "                                </td>\n"
+#~ "                                <td style=\"padding-bottom: 8px; vertical-"
+#~ "align: top;\">\n"
+#~ "                                    <h2 t-att-style=\"'margin:0; font-"
+#~ "size:14px; color:%s;' % ((website and "
+#~ "website.company_id.email_secondary_color) or '#875A7B')\">\n"
+#~ "                                        <strong t-out=\"object.name or "
+#~ "''\">Desk Combination</strong>\n"
+#~ "                                    </h2>\n"
+#~ "                                    <p t-"
+#~ "if=\"object.product_template_attribute_value_ids\" style=\"margin: 4px "
+#~ "0;\">\n"
+#~ "                                        ( <t t-out=\"', "
+#~ "'.join(object.product_template_attribute_value_ids.mapped('name'))"
+#~ "\">Wood</t> )\n"
+#~ "                                    </p>\n"
+#~ "                                    <t t-"
+#~ "out=\"object.description_ecommerce or ''\">Desk Description</t>\n"
+#~ "                                </td>\n"
+#~ "                                <td width=\"19%\" align=\"right\" "
+#~ "style=\"max-width: 100%; vertical-align: top;\">\n"
+#~ "                                    <t t-"
+#~ "out=\"format_amount(object.list_price, object.currency_id)\">$ 450</t>\n"
+#~ "                                </td>\n"
+#~ "                            </tr>\n"
+#~ "                        </table>\n"
+#~ "                    </div>\n"
+#~ "                </div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<t t-set=\"website\" t-value=\"object.website_id or object.env.website or "
+#~ "object.env.website.browse(env.context.get('host_id'))\"/>\n"
+#~ "                <div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "                   <t t-if=\"website\" t-set=\"logo_src\" t-"
+#~ "value=\"website.image_url(website, 'logo')\"/>\n"
+#~ "                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/"
+#~ "logo.png?company=#{object.company_id.id}\"/> \n"
+#~ "                   <img t-att-src=\"logo_src\" style=\"display:block; "
+#~ "height:50px; margin:0 0 16px;\" alt=\"Logo\"/>\n"
+#~ "                    <p> \n"
+#~ "                        Guten Tag <t t-out=\"ctx.get('customer_name')"
+#~ "\">Kunde</t>,\n"
+#~ "                   </p>\n"
+#~ "                    <p> das Produkt, auf das Sie gewartet haben, ist "
+#~ "jetzt wieder vorrätig!</p>\n"
+#~ "                    <div t-if=\"not is_html_empty(user.signature)\" "
+#~ "style=\"font-size: 14px; margin: 0 0 16px;\">\n"
+#~ "                       <t t-out=\"user.signature or ''\"> Mitchell Admin</"
+#~ "t>\n"
+#~ "                    </div>\n"
+#~ "                   <div t-attf-style=\"margin-bottom: 22px; font-size: "
+#~ "14px;\">\n"
+#~ "                        <a t-att-href=\"website.get_base_url() + "
+#~ "object.website_url\" t-attf-style=\"background-color: "
+#~ "{{website.company_id.email_secondary_color or '#875A7B'}}; padding: 8px "
+#~ "16px 8px 16px; text-decoration: none; color: "
+#~ "{{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; "
+#~ "font-size:14px;\"> \n"
+#~ "                            Jetzt bestellen\n"
+#~ "                       </a>\n"
+#~ "                    </div> \n"
+#~ "                   <div style=\"margin-bottom: 12px;\">\n"
+#~ "                        <table role=\"presentation\" width=\"100%\" "
+#~ "style=\"max-width: 590px; border-collapse: collapse; font-size: 14px;"
+#~ "\"> \n"
+#~ "                           <tr>\n"
+#~ "                                <td width=\"24%\" style=\"max-width: "
+#~ "120px; padding: 0 10px 10px 0; vertical-align: top;\"> \n"
+#~ "                                   <img t-att-"
+#~ "src=\"website.image_url(object, 'image_1920')\" style=\"width: 100px; "
+#~ "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+#~ "                                </td> \n"
+#~ "                               <td style=\"padding-bottom: 8px; vertical-"
+#~ "align: top;\">\n"
+#~ "                                    <h2 t-att-style=\"'margin:0; font-"
+#~ "size:14px; color:%s;' % ((website and "
+#~ "website.company_id.email_secondary_color) or '#875A7B')\"> \n"
+#~ "                                       <strong t-out=\"object.name or "
+#~ "''\"> Schreibtischkombination</strong>\n"
+#~ "                                    </h2>\n"
+#~ "                                   <p t-"
+#~ "if=\"object.product_template_attribute_value_ids\" style=\"margin: 4px "
+#~ "0;\"> \n"
+#~ "                                        ( <t t-out=\"', "
+#~ "'.join(object.product_template_attribute_value_ids.mapped('name'))"
+#~ "\">Holz</t> )\n"
+#~ "                                   </p>\n"
+#~ "                                    <t t-"
+#~ "out=\"object.description_ecommerce or ''\"> Schreibtischbeschreibung</t>\n"
+#~ "                                </td>\n"
+#~ "                               <td width=\"19%\" align=\"right\" "
+#~ "style=\"max-width: 100%; vertical-align: top;\">\n"
+#~ "                                    <t t-"
+#~ "out=\"format_amount(object.list_price, object.currency_id)\"> 450 €</t>\n"
+#~ "                                </td>\n"
+#~ "                           </tr>\n"
+#~ "                        </table> \n"
+#~ "                   </div>\n"
+#~ "                </div> \n"
+#~ "            "
+
+#~ msgid "Donation products cannot be archived."
+#~ msgstr "Spendenprodukte können nicht archiviert werden."
 
 #~ msgid ""
 #~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" "

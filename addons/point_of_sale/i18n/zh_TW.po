@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-09-11 09:33+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -563,6 +563,12 @@ msgstr "<sup title=\"只適用於線上及自助訂購\">?</sup>"
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? 點選 \"確認\"  將驗證付款。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "A customer is required to use the payment method %s."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -1569,12 +1575,12 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "銀行結單資料行"
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_line_ids
-msgid "Bank Statement Lines"
+msgid "Bank Transactions"
 msgstr ""
 
 #. module: point_of_sale
@@ -2747,12 +2753,6 @@ msgstr "轉換率"
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
 msgstr "從公司貨幣到訂單貨幣的轉換率。"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Convert POS Order to Invoice"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__correction_move_ids
@@ -5010,17 +5010,11 @@ msgid ""
 "Defines the journal where to book the accumulated payments (or individual "
 "payment if Identify Customer is true) after closing the session.\n"
 "For cash journal, we directly write to the default account in the journal "
-"via statement lines.\n"
+"via bank transactions.\n"
 "For bank journal, we write to the outstanding account specified in this "
 "payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
-"留空使用客戶的應收賬款。\n"
-"定義在結束營業點後在何處記錄累計付款（或個人付款，如果識別客戶為真）的日記"
-"帳。\n"
-"對於現金日記帳，我們通過報表行直接寫入日記帳中的默認帳戶。\n"
-"對於銀行日記帳，我們會寫入此付款方式中指定的未結帳戶。\n"
-"只允許使用現金和銀行日記帳。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -6771,6 +6765,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
 msgid "Parent Category"
 msgstr "上級類別"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Partial reversal of %s for PoS Order invoicing"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -9236,6 +9236,12 @@ msgid "Some orders are already being invoiced. Please try again later."
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Some orders are not globally invoiced."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -10986,6 +10992,11 @@ msgid "VAT"
 msgstr "增值稅"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "VAT:"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Validate"
@@ -11831,9 +11842,21 @@ msgid "open orders planned for later."
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "order"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "order(s) for the next few days:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "orders"
 msgstr ""
 
 #. module: point_of_sale
@@ -11911,6 +11934,26 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "銀行結單資料行"
+
+#~ msgid ""
+#~ "Leave empty to use the receivable account of customer.\n"
+#~ "Defines the journal where to book the accumulated payments (or individual "
+#~ "payment if Identify Customer is true) after closing the session.\n"
+#~ "For cash journal, we directly write to the default account in the journal "
+#~ "via statement lines.\n"
+#~ "For bank journal, we write to the outstanding account specified in this "
+#~ "payment method.\n"
+#~ "Only cash and bank journals are allowed."
+#~ msgstr ""
+#~ "留空使用客戶的應收賬款。\n"
+#~ "定義在結束營業點後在何處記錄累計付款（或個人付款，如果識別客戶為真）的日記"
+#~ "帳。\n"
+#~ "對於現金日記帳，我們通過報表行直接寫入日記帳中的默認帳戶。\n"
+#~ "對於銀行日記帳，我們會寫入此付款方式中指定的未結帳戶。\n"
+#~ "只允許使用現金和銀行日記帳。"
 
 #~ msgid ""
 #~ "Whenever you close a session, one entry is generated in the following "

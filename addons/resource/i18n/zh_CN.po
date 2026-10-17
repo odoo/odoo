@@ -9,15 +9,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 19:45+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/resource/zh_Hans/>\n"
+"projects/odoo-20/resource/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +39,13 @@ msgid ""
 "it wants, optionally up to an hours target.\n"
 "        "
 msgstr ""
+"\n"
+"    - 固定：每周完全相同、循环重复的出勤模式。\n"
+"    - 可变：按具体日期设置出勤，而不是按每周循环模式重复，例如一次性排班或跨"
+"多周的轮班。\n"
+"    - 未定义：完全没有预设时段。资源可以随时工作，可选地以上限工时数为目标"
+"。\n"
+"        "
 
 #. module: resource
 #: model:ir.module.module,description:base.module_resource
@@ -52,6 +60,13 @@ msgid ""
 "calendar\n"
 "associated to every resource. It also manages the leaves of every resource.\n"
 msgstr ""
+"\n"
+"资源管理模块。\n"
+"===============================\n"
+"\n"
+"资源是指可以被排程的对象（例如任务上的开发人员，或\n"
+"制造订单上的工作中心）。本模块管理每个资源关联的资源日历，\n"
+"同时也管理每个资源的休假。\n"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -62,7 +77,7 @@ msgstr "# 工作资源"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "%(duration)s hours A"
-msgstr ""
+msgstr "%(duration)s 小时 A"
 
 #. module: resource
 #. odoo-python
@@ -76,7 +91,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "%(hour_from)s - %(hour_to)s (%(duration)s) A"
-msgstr ""
+msgstr "%(hour_from)s - %(hour_to)s（%(duration)s） A"
 
 #. module: resource
 #. odoo-python
@@ -87,7 +102,7 @@ msgstr "每周 40 小时"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
 msgid "<i class=\"oi\" data-icon=\"east\" title=\"to\"/>"
-msgstr ""
+msgstr "<i class=\"oi\" data-icon=\"east\" title=\"至\"/>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -97,17 +112,17 @@ msgstr "<span class=\"o_stat_text\">休息时间</span>"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"text-muted ms-2\">(</span>"
-msgstr ""
+msgstr "<span class=\"text-muted ms-2\">（</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"text-muted\">/d</span><span class=\"text-muted\">)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">/天</span><span class=\"text-muted\">）</span>"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_recurrency_until
 msgid "A recurrency should finish after the first occurence"
-msgstr ""
+msgstr "重复的结束时间应晚于首次发生时间"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__count_as__absence
@@ -129,7 +144,7 @@ msgstr "下午"
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "All events"
-msgstr ""
+msgstr "所有出勤记录"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -146,6 +161,8 @@ msgid ""
 "Are you sure? This calendar is already used.\n"
 "All the attendances will be deleted for this calendar"
 msgstr ""
+"确定吗？此日历已被使用。\n"
+"此日历的所有出勤记录都将被删除"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__avatar_128
@@ -168,19 +185,19 @@ msgstr "资产应该与此日历一起使用的平均每天小时数。"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Average hours per day must be between 0 and 24."
-msgstr ""
+msgstr "每日平均工时必须在 0 到 24 之间。"
 
 #. module: resource
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/resource_calendar_attendance_calendar_one2many/resource_calendar_attendance_calendar_one2many_field.js:0
 msgid "Calendar One2Many"
-msgstr ""
+msgstr "日历 One2Many"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__calendar_type
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_type
 msgid "Calendar Type"
-msgstr ""
+msgstr "日历类型"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -190,7 +207,7 @@ msgstr "休息日"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__color
 msgid "Color"
-msgstr ""
+msgstr "颜色"
 
 #. module: resource
 #: model:ir.model,name:resource.model_res_company
@@ -207,23 +224,23 @@ msgstr "公司"
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/calendar_type_confirm_radio/calendar_type_confirm_radio_field.js:0
 msgid "Confirm the calendar type change"
-msgstr ""
+msgstr "确认日历类型变更"
 
 #. module: resource
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/calendar_type_confirm_radio/calendar_type_confirm_radio_field.js:0
 msgid "Continue"
-msgstr ""
+msgstr "继续"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__count_as
 msgid "Count As"
-msgstr ""
+msgstr "计算方式"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__country_id
 msgid "Country"
-msgstr ""
+msgstr "国家/地区"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__country_code
@@ -265,12 +282,12 @@ msgstr "星期"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_type__days
 msgid "Days"
-msgstr ""
+msgstr "天"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__days_per_week
 msgid "Days per Week"
-msgstr ""
+msgstr "每周天数"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
@@ -285,7 +302,7 @@ msgstr "默认工作时间"
 msgid ""
 "Define the working schedule of the resource. Assign a flexible calendar for "
 "fully flexible working hours."
-msgstr ""
+msgstr "定义资源的工作时间表。若要完全弹性安排工作时间，请分配弹性日历。"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -298,7 +315,7 @@ msgstr "定义您的项目成员可计划的工时和时间表"
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "Delete"
-msgstr ""
+msgstr "删除"
 
 #. module: resource
 #. odoo-javascript
@@ -320,12 +337,12 @@ msgstr "显示名称"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
 msgid "Duration"
-msgstr ""
+msgstr "时长"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_based
 msgid "Duration Based"
-msgstr ""
+msgstr "按时长"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
@@ -352,12 +369,12 @@ msgstr "访问权限有限的外部用户，仅为共享数据而创建。"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__fixed
 msgid "Fixed"
-msgstr ""
+msgstr "固定"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__forever
 msgid "Forever"
-msgstr ""
+msgstr "永远"
 
 #. module: resource
 #. odoo-javascript
@@ -374,7 +391,7 @@ msgstr "全天"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__full_time_required_hours
 msgid "Full Time Equivalent"
-msgstr ""
+msgstr "全时当量"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
@@ -400,7 +417,7 @@ msgstr "小时"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__hours_per_day
 msgid "Hours per Day"
-msgstr ""
+msgstr "每日工时"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
@@ -413,7 +430,7 @@ msgstr "周小时／周"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Hours per week must be between 0 and 168."
-msgstr ""
+msgstr "每周工时必须在 0 到 168 之间。"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
@@ -457,7 +474,7 @@ msgstr "如果有效字段设置为无效，它将允许您隐藏工作时间而
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_interval
 msgid "Interval"
-msgstr ""
+msgstr "间隔"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__is_fulltime
@@ -468,19 +485,19 @@ msgstr "是全职的"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Issue on %(date)s:"
-msgstr ""
+msgstr "%(date)s 出现问题："
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Issue on %(dayofweek)s:"
-msgstr ""
+msgstr "%(dayofweek)s 出现问题："
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Issue:"
-msgstr ""
+msgstr "问题："
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -507,7 +524,7 @@ msgstr "物料"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_material_from_calendar
 msgid "Material Resources"
-msgstr ""
+msgstr "物料资源"
 
 #. module: resource
 #. odoo-javascript
@@ -530,12 +547,12 @@ msgstr "名称"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_count
 msgid "Number of Repetitions"
-msgstr ""
+msgstr "重复次数"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__recurrency_interval
 msgid "Number of days or weeks between each occurrence."
-msgstr ""
+msgstr "每次发生之间相隔的天数或周数。"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__full_time_required_hours
@@ -546,13 +563,13 @@ msgstr "按公司时间表工作的小时数被视为全职。"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__times
 msgid "Occurrences"
-msgstr ""
+msgstr "发生次数"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Overlap of attendances"
-msgstr ""
+msgstr "出勤记录重叠"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
@@ -572,13 +589,13 @@ msgstr "电话"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Preview"
-msgstr ""
+msgstr "预览"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Provided datetimes needs to be timezoned"
-msgstr ""
+msgstr "提供的日期时间需要设置时区"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
@@ -600,27 +617,27 @@ msgstr "重复结束日期"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency
 msgid "Recurrency"
-msgstr ""
+msgstr "重复"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_excluded_occurences
 msgid "Recurrency Excluded Occurences"
-msgstr ""
+msgstr "排除的重复发生日期"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__recurrency_type
 msgid "Recurrency Type"
-msgstr ""
+msgstr "重复类型"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__reference_calendar_id
 msgid "Reference Calendar"
-msgstr ""
+msgstr "参考日历"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__reference_calendar_id
 msgid "Reference working hours used to compute the full-time equivalent."
-msgstr ""
+msgstr "用于计算全时当量的参考工作时间。"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
@@ -630,7 +647,7 @@ msgstr "管理资源访问权限的相关用户名."
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_multi_create_form
 msgid "Repeat every"
-msgstr ""
+msgstr "重复间隔"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -674,7 +691,7 @@ msgstr "资源的日历"
 #. module: resource
 #: model:ir.actions.server,name:resource.ir_cron_calendar_clean_up_ir_actions_server
 msgid "Resource: Clean up calendar attendances"
-msgstr ""
+msgstr "资源：清理日历出勤记录"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -712,7 +729,7 @@ msgstr "周六"
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -776,21 +793,23 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO国家/地区代码包含两个字符。\n"
+"可以使用该字段进行快速搜索。"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_duration_hours
 msgid "The attendance should have a duration between 0 and 24 hours"
-msgstr ""
+msgstr "出勤时长应介于 0 到 24 小时之间"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_count
 msgid "The recurrency count should be greater than 0"
-msgstr ""
+msgstr "重复次数应大于 0"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_calendar_attendance_check_interval
 msgid "The recurrency interval should be greater than 0"
-msgstr ""
+msgstr "重复间隔应大于 0"
 
 #. module: resource
 #. odoo-python
@@ -802,7 +821,7 @@ msgstr "休假的开始日期必须早于结束日期."
 #. odoo-javascript
 #: code:addons/resource/static/src/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover.xml:0
 msgid "This and following events"
-msgstr ""
+msgstr "此出勤记录及后续记录"
 
 #. module: resource
 #. odoo-python
@@ -810,7 +829,7 @@ msgstr ""
 msgid ""
 "This date is excluded of the recurrency, to start a new one on this date you "
 "should create it from scratch"
-msgstr ""
+msgstr "该日期已被排除在重复之外；若要在该日期开始新的重复，请重新创建"
 
 #. module: resource
 #. odoo-javascript
@@ -877,7 +896,7 @@ msgstr "时区"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "Too Complex Calendar"
-msgstr ""
+msgstr "日历过于复杂"
 
 #. module: resource
 #. odoo-python
@@ -901,12 +920,12 @@ msgstr "类型"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__undefined
 msgid "Undefined"
-msgstr ""
+msgstr "未定义"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__recurrency_end_type__date
 msgid "Until"
-msgstr ""
+msgstr "直到"
 
 #. module: resource
 #: model:ir.model,name:resource.model_res_users
@@ -918,14 +937,14 @@ msgstr "用户"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar__calendar_type__variable
 msgid "Variable"
-msgstr ""
+msgstr "可变"
 
 #. module: resource
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 #: code:addons/resource/static/src/views/fields/resource_calendar_many2one/resource_calendar_many2one.js:0
 msgid "Variable (%(hours)sh on %(days)s days / week)"
-msgstr ""
+msgstr "可变（每周 %(days)s 天，每天 %(hours)s 小时）"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -1000,7 +1019,7 @@ msgstr "工作时间"
 #. odoo-javascript
 #: code:addons/resource/static/src/views/fields/resource_calendar_hours_by_day/resource_calendar_hours_by_day.js:0
 msgid "Working Hours by Day"
-msgstr ""
+msgstr "每日工作时间"
 
 #. module: resource
 #. odoo-python
@@ -1044,7 +1063,7 @@ msgstr "如果没有日历，就无法计算时间间隔。"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "from company"
-msgstr ""
+msgstr "来自公司"
 
 #~ msgid ""
 #~ "Define the working schedule of the resource. If not set, the resource "

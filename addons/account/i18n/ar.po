@@ -21,11 +21,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 13:54+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-16 13:46+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
-"account/ar/>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/account/"
+"ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -117,6 +117,11 @@ msgid " valid until %s"
 msgstr " صالح حتى %s"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
+msgid "# Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
 msgstr "عدد فواتير المشتريات التي تمت تسويتها"
@@ -125,11 +130,6 @@ msgstr "عدد فواتير المشتريات التي تمت تسويتها"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
 msgstr "عدد فواتير المبيعات التي تمت تسويتها"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
-msgid "# Reconciled Statement Lines"
-msgstr "عدد بنود كشف الحساب المسواة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
@@ -215,14 +215,12 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%(label)s at %(currency_amount)s"
 msgstr "%(label)s بـ %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid "%(label)s at %(currency_amount)s (Draft)"
 msgstr "%(label)s بـ %(currency_amount)s (مسودة)"
 
@@ -230,12 +228,10 @@ msgstr "%(label)s بـ %(currency_amount)s (مسودة)"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"%(move)s reached an invalid state regarding its related statement line.\n"
+"%(move)s reached an invalid state regarding its related bank transaction.\n"
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
-"لقد وصل %(move)s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي الصلة.\n"
-"حتى تكون منتظماً، يجب أن يحتوي قيد اليومية على بند تعليق واحد فقط."
 
 #. module: account
 #. odoo-python
@@ -2860,7 +2856,6 @@ msgstr "حساب لفرق المبلغ بعد منح تخفيض الدخل"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__holder_name
 #: model:ir.model.fields,help:account.field_res_partner_bank__holder_name
-#, fuzzy
 msgid ""
 "Account holder name in case it is different than the name of the partner."
 msgstr "اسم مالك الحساب، في حال كان مختلفاً عن اسم الشريك."
@@ -3328,7 +3323,6 @@ msgstr "إضافة"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/mail_attachments/account_move_send_attachments_selector.xml:0
-#, fuzzy
 msgid "Add Attachment"
 msgstr "إضافة مرفق"
 
@@ -3680,9 +3674,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
-msgid "All unreconciled bank statement lines before the selected date."
+msgid "All unreconciled bank transactions before the selected date."
 msgstr ""
-"كافة بنود كشوف الحسابات البنكية التي لم تتم تسويتها قبل التاريخ المحدد."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
@@ -4183,9 +4176,8 @@ msgstr "أبريل"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
-#, fuzzy
 msgid "Archive"
-msgstr "الأرشيف "
+msgstr "الأرشيف"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_incoterms_form
@@ -4262,8 +4254,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid ""
-"At least one transaction in the statement is prior the last posted statement "
-"line (%s)"
+"At least one transaction in the statement is prior the last posted "
+"transaction (%s)"
 msgstr ""
 
 #. module: account
@@ -4356,14 +4348,12 @@ msgstr "تأمين السيارات"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Auto-Complete"
 msgstr "الإكمال التلقائي"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
-#, fuzzy
 msgid "Auto-complete from a previous bill or refund."
 msgstr "الإكمال التلقائي من فاتورة أو استرداد سابق."
 
@@ -4546,7 +4536,6 @@ msgstr "BE71096123456769"
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_bic
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__bank_bic
-#, fuzzy
 msgid "BIC/SWIFT"
 msgstr "BIC/SWIFT"
 
@@ -4570,8 +4559,20 @@ msgstr "العودة إلى فاتورة المورّد"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Credit Note"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
 msgstr "العودة إلى فاتورة العميل"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Refund"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4719,7 +4720,6 @@ msgstr "رمز مُعرِف البنك"
 #: model:ir.model.fields,help:account.field_account_journal__bank_bic
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
 #: model:ir.model.fields,help:account.field_res_partner_bank__bank_bic
-#, fuzzy
 msgid ""
 "Bank Identifier Code for international wires in the format Bank Code (4 "
 "letters) + Country Code (2 letters) + Location Code (2 letters/numbers) + "
@@ -4736,7 +4736,6 @@ msgstr "اليوميات البنكية"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_name
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_name
-#, fuzzy
 msgid "Bank Name"
 msgstr "اسم البنك"
 
@@ -4778,11 +4777,6 @@ msgid "Bank Statement Digitization"
 msgstr "رقمنة كشوف الحسابات البنكية"
 
 #. module: account
-#: model:ir.model,name:account.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "بند كشف الحساب البنكي"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 msgid "Bank Statements"
 msgstr "كشوفات الحساب البنكية"
@@ -4808,6 +4802,9 @@ msgstr "حساب التعليق البنكي نشط"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.model,name:account.model_account_bank_statement_line
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
+#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
 msgid "Bank Transaction"
 msgstr "معاملة بنكية"
 
@@ -4879,6 +4876,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
 msgstr "المعاملات البنكية والمدفوعات"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
+msgid "Bank transactions matched to this payment"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -5218,7 +5220,6 @@ msgstr "عند إلغاء تحديد حقل نشط، يمكنك إخفاء شر�
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, fuzzy
 msgid "C"
 msgstr "C"
 
@@ -5267,7 +5268,6 @@ msgstr "يتم دفع التكلفة لـ"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner_bank__account_type__clabe
-#, fuzzy
 msgid "CLABE"
 msgstr "CLABE"
 
@@ -6211,7 +6211,6 @@ msgstr "يمكنك دفع المبلغ مع خصم الدفع المبكر (btn_
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__consolidation
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
-#, fuzzy
 msgid "Consolidation"
 msgstr "التجميع"
 
@@ -6329,7 +6328,6 @@ msgstr "تكلفة أثاث المكاتب والتجهيزات والمعدات
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
-#, fuzzy
 msgid "Cost of revenue"
 msgstr "تكلفة الإيرادات"
 
@@ -6503,7 +6501,6 @@ msgstr "إنشاء قالب بريد"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-#, fuzzy
 msgid "Create a bill manually"
 msgstr "إنشاء فاتورة مورّد يدوياً"
 
@@ -6651,7 +6648,6 @@ msgstr "قم بإنشاء الفواتير، وتسجيل المدفوعات و�
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-#, fuzzy
 msgid "Create manually"
 msgstr "الإنشاء يدوياً"
 
@@ -8896,16 +8892,6 @@ msgstr "حدث خطأ أثناء استيراد المرفق %(filename)s:"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/controllers/download_docs.py:0
-msgid ""
-"Error while creating XML:\n"
-"- %s"
-msgstr ""
-"حدث خطأ أثناء إنشاء XML:\n"
-"- %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid ""
 "Error while loading the localization: missing tax tag %(tag_name)s for "
@@ -9214,9 +9200,8 @@ msgstr "فبراير"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__state_id
-#, fuzzy
 msgid "Fed. State"
-msgstr "ولاية فيدرالية"
+msgstr "الولاية الفيدرالية"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_federal_income_tax
@@ -9787,7 +9772,6 @@ msgstr "مؤرخ في المستقبل"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__global_location_number
 #: model:ir.model.fields,field_description:account.field_res_users__global_location_number
-#, fuzzy
 msgid "GLN"
 msgstr "GLN"
 
@@ -10195,7 +10179,6 @@ msgstr "كيفية احتساب مبلغ الضريبة في أوامر البي
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner_bank__account_type__iban
-#, fuzzy
 msgid "IBAN"
 msgstr "IBAN"
 
@@ -12270,9 +12253,8 @@ msgstr "الأنشطة المتأخرة"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
-#, fuzzy
 msgid "Learn more"
-msgstr "اعرف المزيد "
+msgstr "اعرف المزيد"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -12733,9 +12715,8 @@ msgstr "يدويًا"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__many2one
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__many2one
-#, fuzzy
 msgid "Many2One"
-msgstr "علاقة متعدد لواحد"
+msgstr "Many2One"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__mapped_partner_id
@@ -13095,7 +13076,6 @@ msgstr "شهرياً"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
-#, fuzzy
 msgid "More precision on Product Prices"
 msgstr "المزيد من الدقة في أسعار المنتجات"
 
@@ -13804,11 +13784,9 @@ msgstr "نطاق أودو"
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
 msgid ""
-"Odoo allows you to reconcile a statement line directly with\n"
+"Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
-"يتيح لك أودو تسوية بند كشف الحساب مباشرة مع فواتير\n"
-"البيع أو الشراء ذات الصلة."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -14159,6 +14137,12 @@ msgid "Original Lock Date"
 msgstr "تاريخ الإقفال الأصلي"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Originator Bank Transaction"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
 msgid "Originator Group of Taxes"
 msgstr "مجموعات ضرائب المنشئ"
@@ -14167,12 +14151,6 @@ msgstr "مجموعات ضرائب المنشئ"
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "سداد المُنشئ"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
-#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-msgid "Originator Statement Line"
-msgstr "بند كشف حساب المُنشئ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
@@ -14468,9 +14446,8 @@ msgstr "البند الرئيسي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__parent_path
-#, fuzzy
 msgid "Parent Path"
-msgstr "المسار الرئيسي "
+msgstr "المسار الرئيسي"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__report_id
@@ -15017,8 +14994,8 @@ msgstr "نسبة كل بند لتنفيذ الإجراء عليه"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
-msgid "Percentage of statement line"
-msgstr "نسبة بند الكشف"
+msgid "Percentage of transaction"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15535,7 +15512,6 @@ msgstr "المنتجات لاستلامها"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Professional"
 msgstr "احترافي"
 
@@ -15907,6 +15883,11 @@ msgid "Reconciled"
 msgstr "تمت التسوية"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
+msgid "Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
 msgstr "فواتير المورّد المسوّاة"
@@ -15936,11 +15917,6 @@ msgstr "البنود المسواة باستثناء فرق صرف العملة"
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
 msgstr "المدفوعات التي تمت تسويتها"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
-msgid "Reconciled Statement Lines"
-msgstr "بنود كشف الحساب المسواة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -16997,7 +16973,6 @@ msgstr "حدد نوعاً"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
-#, fuzzy
 msgid "Select an old purchase document"
 msgstr "اختر مستند شراء قديم"
 
@@ -17079,13 +17054,11 @@ msgstr "إرسال نسخة إلى"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
-#, fuzzy
 msgid "Send Invoice Batch Wizard"
 msgstr "معالج إرسال دفعة الفواتير"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_wizard
-#, fuzzy
 msgid "Send Invoice Wizard"
 msgstr "معالج إرسال الفاتورة"
 
@@ -17437,7 +17410,6 @@ msgstr "مشاركة"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
-#, fuzzy
 msgid "Shared Send Invoice Wizard Functions"
 msgstr "وظائف معالج إرسال الفواتير المشتركة"
 
@@ -17560,8 +17532,8 @@ msgstr "عرض تاريخ التوريد الخاضع للضريبة"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Show Unreconciled Bank Statement Line"
-msgstr "إظهار بند كشف الحساب البنكي غير المسوى"
+msgid "Show Unreconciled Bank Transactions"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -17771,12 +17743,6 @@ msgid "Statement %(date)s"
 msgstr "كشف الحساب %(date)s"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
-#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
-msgid "Statement Line"
-msgstr "بند كشف الحساب"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_name
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Statement Name"
@@ -17788,17 +17754,6 @@ msgid "Statement Reports"
 msgstr "تقارير كشف الحساب"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_reconcile_model.py:0
-msgid "Statement line percentage can't be 0"
-msgstr "لا يمكن أن تكون نسبة بند الكشف 0"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
-msgid "Statement lines"
-msgstr "بنود كشف الحساب"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__statement_line_ids
@@ -17806,11 +17761,6 @@ msgstr "بنود كشف الحساب"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_tree
 msgid "Statements"
 msgstr "كشوفات الحسابات"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
-msgid "Statements lines matched to this payment"
-msgstr "بنود كشوفات الحساب المطابقة لعملية الدفع هذه"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__states_count
@@ -17893,7 +17843,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_stock_valuation_report
 msgid "Stock Valuation"
-msgstr ""
+msgstr "تقييم المخزون"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_stock_valuation_account_id
@@ -17913,7 +17863,7 @@ msgstr ""
 #: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.js:0
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Stock Variation"
-msgstr ""
+msgstr "تباين المخزون"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__account_stock_variation_id
@@ -17943,7 +17893,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__street
-#, fuzzy
 msgid "Street"
 msgstr "الشارع"
 
@@ -17959,7 +17908,6 @@ msgstr "الشارع..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__street2
-#, fuzzy
 msgid "Street2"
 msgstr "الشارع 2"
 
@@ -19028,7 +18976,6 @@ msgstr "يجب أن ينتمي الحساب البنكي لدفتر يومية �
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
@@ -19040,6 +18987,11 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
 msgstr "كشف الحساب البنكي المستخدم للتسوية"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
+msgid "The bank transaction that created this entry"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19106,7 +19058,6 @@ msgstr "لقد قام الشريك التجاري بتحديث كافة القي
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid ""
 "The company bank account (%(account_number)s) linked to this invoice is not "
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
@@ -19295,7 +19246,6 @@ msgstr "تم تأمين هذا القيد باستخدام تجزئة غير ق�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#, fuzzy
 msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
@@ -19421,15 +19371,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"The journal entry %s reached an invalid state regarding its related "
-"statement line.\n"
+"The journal entry %s reached an invalid state regarding its related bank "
+"transaction.\n"
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"لقد وصل قيد اليومية %s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي "
-"الصلة.\n"
-"حتى تكون منتظماً، يجب أن يحتوي قيد اليومية على عنصر يومية واحد فقط دائماً "
-"متعلق بحساب البنك/حساب النقد."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -19584,19 +19530,13 @@ msgstr "سوف يتم تطبيق نموذج التسوية على العملاء
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
 msgid ""
-"The reconciliation model will only be applied when either the statement line "
+"The reconciliation model will only be applied when either the transaction "
 "label, the transaction details or the note matches the following:\n"
-"        * Contains: The statement line must contains this string (case "
+"        * Contains: The transaction must contain this string (case "
 "insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"The reconciliation model will only be applied when either the statement line "
-"label, the transaction details or the note matches the following:\n"
-"        * Contains: The statement line must contains this string (case "
-"insensitive).\n"
-"        * Not Contains: Negation of \"Contains\".\n"
-"        * Match Regex: Define your own regular expression."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -19853,11 +19793,6 @@ msgid "The smallest value used to round the total amount (e.g., 0.05 or 100)."
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
-msgid "The statement line that created this entry"
-msgstr "بند اليومية الذي قام بإنشاء هذا القيد"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
@@ -19927,22 +19862,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
-"There are still unreconciled bank statement lines before the selected date. "
-"The entries from journal prefixes containing them will not be secured: %"
+"There are still unreconciled bank transactions before the selected date. The "
+"entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
-"لا تزال هناك بنود كشف حساب بنكي لم تتم تسويتها قبل التاريخ المحدد. لن يتم "
-"تأمين القيود من بادئات دفتر اليومية التي تحتوي عليها: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
-"There are still unreconciled bank statement lines in the period you want to "
-"lock.You should either reconcile or delete them."
+"There are still unreconciled bank transactions in the period you want to "
+"lock. You should either reconcile or delete them."
 msgstr ""
-"لا تزال هناك بنود كشف حساب بنكي غير مسواة في الفترة التي ترغب في إقفالها. "
-"عليك إما القيام بتسويتها أو حذفها."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -20378,8 +20309,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_matching_rules
 msgid ""
-"Those can be used to automatically match journal items with your statement "
-"lines."
+"Those can be used to automatically match journal items with your "
+"transactions."
 msgstr ""
 
 #. module: account
@@ -20725,6 +20656,13 @@ msgid "Transaction Type"
 msgstr "نوع المعاملة"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+msgid "Transaction percentage can't be 0"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
 #: model:ir.ui.menu,name:account.account_transactions_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
@@ -21340,9 +21278,8 @@ msgstr "تصديق الحساب البنكي"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__trigger
 msgid ""
-"Validate the statement line automatically (reconciliation based on your "
-"rule)."
-msgstr "تصديق بند كشف الحساب تلقائيًا (التسوية بناء على قواعدك)."
+"Validate the transaction automatically (reconciliation based on your rule)."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -21369,7 +21306,6 @@ msgstr "القيمة"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount_string
-#, fuzzy
 msgid ""
 "Value for the amount of the writeoff line\n"
 "    * Percentage: Percentage of the balance, between 0 and 100.\n"
@@ -21948,6 +21884,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+msgid ""
+"You can't create a new bank transaction without a suspense account set on "
+"the %s journal."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
@@ -21957,16 +21901,6 @@ msgstr ""
 "لا يمكنك إنشاء دفعة جديدة دون أن يكون هناك حساب للدفعات المستحقة/الإيصالات "
 "المستحقة مضبوط إما في الشركة أو طريقة دفع %(payment_method)s في يومية %"
 "(journal)s."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement_line.py:0
-msgid ""
-"You can't create a new statement line without a suspense account set on the "
-"%s journal."
-msgstr ""
-"لا يمكنك إنشاء بند كشف حساب جديد دون أن يكون هناك حساب معلق معين في اليومية "
-"%s."
 
 #. module: account
 #. odoo-python
@@ -22055,6 +21989,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
+"لا يمكنك إعادة تعيين قيود دفتر اليومية تلك إلى حالة المسودة. عليك طلب "
+"الإلغاء عوضاً عن ذلك."
 
 #. module: account
 #. odoo-python
@@ -22622,7 +22558,6 @@ msgstr "ZIP"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__zip
-#, fuzzy
 msgid "Zip"
 msgstr "الرمز البريدي"
 
@@ -22719,7 +22654,6 @@ msgstr "ولن يتم ترحيلها تلقائياً."
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/grouped_view_widget/grouped_view_widget.xml:0
-#, fuzzy
 msgid "are not shown in the preview"
 msgstr "غير معروضين في المعاينة"
 
@@ -22947,7 +22881,6 @@ msgstr "in_invoice"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
-#, fuzzy
 msgid "invoice(s)"
 msgstr "الفواتير"
 
@@ -23119,7 +23052,6 @@ msgstr "لإنشاء الضرائب لهذه الدولة"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-#, fuzzy
 msgid "try our sample"
 msgstr "جرب فاتورتنا التجريبية"
 
@@ -23239,6 +23171,118 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "# Reconciled Statement Lines"
+#~ msgstr "عدد بنود كشف الحساب المسواة"
+
+#~ msgid ""
+#~ "%(move)s reached an invalid state regarding its related statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one suspense "
+#~ "line."
+#~ msgstr ""
+#~ "لقد وصل %(move)s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي الصلة.\n"
+#~ "حتى تكون منتظماً، يجب أن يحتوي قيد اليومية على بند تعليق واحد فقط."
+
+#~ msgid "All unreconciled bank statement lines before the selected date."
+#~ msgstr ""
+#~ "كافة بنود كشوف الحسابات البنكية التي لم تتم تسويتها قبل التاريخ المحدد."
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "بند كشف الحساب البنكي"
+
+#~ msgid ""
+#~ "Error while creating XML:\n"
+#~ "- %s"
+#~ msgstr ""
+#~ "حدث خطأ أثناء إنشاء XML:\n"
+#~ "- %s"
+
+#~ msgid ""
+#~ "Odoo allows you to reconcile a statement line directly with\n"
+#~ "                the related sale or purchase invoices."
+#~ msgstr ""
+#~ "يتيح لك أودو تسوية بند كشف الحساب مباشرة مع فواتير\n"
+#~ "البيع أو الشراء ذات الصلة."
+
+#~ msgid "Originator Statement Line"
+#~ msgstr "بند كشف حساب المُنشئ"
+
+#~ msgid "Percentage of statement line"
+#~ msgstr "نسبة بند الكشف"
+
+#~ msgid "Reconciled Statement Lines"
+#~ msgstr "بنود كشف الحساب المسواة"
+
+#~ msgid "Show Unreconciled Bank Statement Line"
+#~ msgstr "إظهار بند كشف الحساب البنكي غير المسوى"
+
+#~ msgid "Statement Line"
+#~ msgstr "بند كشف الحساب"
+
+#~ msgid "Statement line percentage can't be 0"
+#~ msgstr "لا يمكن أن تكون نسبة بند الكشف 0"
+
+#~ msgid "Statement lines"
+#~ msgstr "بنود كشف الحساب"
+
+#~ msgid "Statements lines matched to this payment"
+#~ msgstr "بنود كشوفات الحساب المطابقة لعملية الدفع هذه"
+
+#~ msgid ""
+#~ "The journal entry %s reached an invalid state regarding its related "
+#~ "statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one journal "
+#~ "item involving the bank/cash account."
+#~ msgstr ""
+#~ "لقد وصل قيد اليومية %s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي "
+#~ "الصلة.\n"
+#~ "حتى تكون منتظماً، يجب أن يحتوي قيد اليومية على عنصر يومية واحد فقط دائماً "
+#~ "متعلق بحساب البنك/حساب النقد."
+
+#~ msgid ""
+#~ "The reconciliation model will only be applied when either the statement "
+#~ "line label, the transaction details or the note matches the following:\n"
+#~ "        * Contains: The statement line must contains this string (case "
+#~ "insensitive).\n"
+#~ "        * Not Contains: Negation of \"Contains\".\n"
+#~ "        * Match Regex: Define your own regular expression."
+#~ msgstr ""
+#~ "The reconciliation model will only be applied when either the statement "
+#~ "line label, the transaction details or the note matches the following:\n"
+#~ "        * Contains: The statement line must contains this string (case "
+#~ "insensitive).\n"
+#~ "        * Not Contains: Negation of \"Contains\".\n"
+#~ "        * Match Regex: Define your own regular expression."
+
+#~ msgid "The statement line that created this entry"
+#~ msgstr "بند اليومية الذي قام بإنشاء هذا القيد"
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines before the selected "
+#~ "date. The entries from journal prefixes containing them will not be "
+#~ "secured: %(prefix_info)s"
+#~ msgstr ""
+#~ "لا تزال هناك بنود كشف حساب بنكي لم تتم تسويتها قبل التاريخ المحدد. لن يتم "
+#~ "تأمين القيود من بادئات دفتر اليومية التي تحتوي عليها: %(prefix_info)s"
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines in the period you want "
+#~ "to lock.You should either reconcile or delete them."
+#~ msgstr ""
+#~ "لا تزال هناك بنود كشف حساب بنكي غير مسواة في الفترة التي ترغب في إقفالها. "
+#~ "عليك إما القيام بتسويتها أو حذفها."
+
+#~ msgid ""
+#~ "Validate the statement line automatically (reconciliation based on your "
+#~ "rule)."
+#~ msgstr "تصديق بند كشف الحساب تلقائيًا (التسوية بناء على قواعدك)."
+
+#~ msgid ""
+#~ "You can't create a new statement line without a suspense account set on "
+#~ "the %s journal."
+#~ msgstr ""
+#~ "لا يمكنك إنشاء بند كشف حساب جديد دون أن يكون هناك حساب معلق معين في "
+#~ "اليومية %s."
 
 #~ msgid "Accumulated Amortization - Buildings"
 #~ msgstr "الإهلاك المتراكم - المباني"

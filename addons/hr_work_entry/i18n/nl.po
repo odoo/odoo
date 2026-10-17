@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-09-29 12:11+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-14 13:35+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "hr_work_entry/nl/>\n"
@@ -66,7 +66,7 @@ msgstr "%(duration)s uur %(work_entry_type)s"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "%(from)s-%(to)s"
-msgstr ""
+msgstr "%(from)s-%(to)s"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -78,7 +78,7 @@ msgstr "%(hour_from)s - %(hour_to)s (%(duration)s) %(work_entry_type)s"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "%(op)s %(hours)gh/%(period)s"
-msgstr ""
+msgstr "%(op)s %(hours)gu/%(period)s"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -90,12 +90,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_time_rule.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (Kopie)"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "<span class=\"fw-bold\">Availability</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Beschikbaarheid</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
@@ -134,6 +134,8 @@ msgid ""
 "<span class=\"text-muted me-2\" invisible=\"not calendar_source\">based on</"
 "span>"
 msgstr ""
+"<span class=\"text-muted me-2\" invisible=\"not calendar_source\">gebaseerd "
+"op</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
@@ -159,7 +161,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_time_rule_view_form
 msgid "<span class=\"text-muted ms-2\">hours</span>"
-msgstr ""
+msgstr "<span class=\"text-muted ms-2\">uur</span>"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_attendance
@@ -261,7 +263,7 @@ msgstr "Afwezigheidstijd"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_solicitation_time_off
 msgid "Absence during notice"
-msgstr ""
+msgstr "Afwezigheid tijdens opzegtermijn"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_foster_care
@@ -483,6 +485,7 @@ msgid "Availability time not considered as working time"
 msgstr "Beschikbaarheidstijd wordt niet als werktijd beschouwd"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_death_close_family
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_tr_work_entry_type_bereavement_leave
 msgid "BER"
 msgstr "BER"
@@ -2061,6 +2064,11 @@ msgstr "Mijn activiteit deadline"
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_normal_inactivity
 msgid "NDI"
 msgstr "NDI"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss_horeca
+msgid "NOH"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_non_taxable_political_service
@@ -3873,6 +3881,11 @@ msgstr "V15"
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_200
 msgid "V20"
 msgstr "V20"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss
+msgid "VNH"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_net

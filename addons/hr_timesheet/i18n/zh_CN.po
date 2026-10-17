@@ -11,15 +11,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 14:06+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 11:47+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/hr_timesheet/zh_Hans/>\n"
+"projects/odoo-20/hr_timesheet/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +44,15 @@ msgid ""
 "to set\n"
 "up a management by affair.\n"
 msgstr ""
+"\n"
+"本模块实现工时表系统。\n"
+"==========================\n"
+"\n"
+"每位员工都可以记录并跟踪他们在不同项目上花费的时间。\n"
+"\n"
+"系统提供大量时间与员工跟踪报表。\n"
+"\n"
+"它与成本会计模块完全集成，让您可以按项目/事务进行管理。\n"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -117,7 +127,7 @@ msgstr "(%s 剩余天数)"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_tasks_list_inherit
 msgid "0h"
-msgstr ""
+msgstr "0 小时"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -144,6 +154,17 @@ msgid ""
 "data-icon=\"schedule\" title=\"Over Due\" invisible=\"not stat_success_rate "
 "or stat_success_rate &lt;= 100\"/>"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon\" data-icon=\"schedule\" title=\"工时单\" "
+"invisible=\"stat_success_rate\"/>\n"
+"                            <i class=\"oi oi-fw o_button_icon text-success\" "
+"data-icon=\"schedule\" title=\"按期\" invisible=\"not stat_success_rate or "
+"stat_success_rate &gt;= 80\"/>\n"
+"                            <i class=\"oi oi-fw o_button_icon text-warning\" "
+"data-icon=\"schedule\" title=\"警告\" invisible=\"not stat_success_rate or "
+"stat_success_rate &gt; 100 or stat_success_rate &lt; 80\"/>\n"
+"                            <i class=\"oi oi-fw o_button_icon text-danger\" "
+"data-icon=\"schedule\" title=\"逾期\" invisible=\"not stat_success_rate or "
+"stat_success_rate &lt;= 100\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -160,17 +181,17 @@ msgstr "<span class=\"o_stat_text\">工时表</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_kanban_inherit
 msgid "<span class=\"oi oi-fw me-1\" data-icon=\"schedule\" title=\"Time\"/>"
-msgstr ""
+msgstr "<span class=\"oi oi-fw me-1\" data-icon=\"schedule\" title=\"时间\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span class=\"pe-1\">Total (Days)</span>"
-msgstr ""
+msgstr "<span class=\"pe-1\">总计（天）</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span class=\"pe-1\">Total</span>"
-msgstr ""
+msgstr "<span class=\"pe-1\">总计</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -179,6 +200,9 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"has_timesheet\">\n"
+"                        您确定要删除这些员工吗？\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -300,7 +324,7 @@ msgstr "批准人提醒"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Archive Employees"
-msgstr ""
+msgstr "存档员工"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -337,7 +361,7 @@ msgstr "致电客户并讨论项目"
 msgid ""
 "Can manage and approve all timesheets, with access to reporting and "
 "configuration."
-msgstr ""
+msgstr "可以管理并审批所有工时单，并可访问报表和配置。"
 
 #. module: hr_timesheet
 #: model:res.groups,comment:hr_timesheet.group_hr_timesheet_approver
@@ -345,11 +369,13 @@ msgid ""
 "Can manage timesheets for all employees, but can only approve timesheets and "
 "billing targets for their team members. Has access to reporting."
 msgstr ""
+"可以管理所有员工的工时单，但只能审批其团队成员的工时单和计费目标。可访问报表"
+"。"
 
 #. module: hr_timesheet
 #: model:res.groups,comment:hr_timesheet.group_hr_timesheet_user
 msgid "Can only manage their own timesheets."
-msgstr ""
+msgstr "只能管理自己的工时单。"
 
 #. module: hr_timesheet
 #. odoo-javascript
@@ -365,7 +391,7 @@ msgstr "项目中的合作者共享"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__color
 msgid "Color Index"
-msgstr ""
+msgstr "颜色指标"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
@@ -387,7 +413,7 @@ msgstr "配置"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "Confirmation"
-msgstr ""
+msgstr "确认"
 
 #. module: hr_timesheet
 #: model:ir.model,website_form_label:hr_timesheet.model_project_task
@@ -440,7 +466,7 @@ msgstr "禁用账户。"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time type."
-msgstr ""
+msgstr "根据工时类型生成的工时单的默认项目值。"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
@@ -451,12 +477,12 @@ msgstr "给员工定义一个 \"每小时成本\"，以跟踪他们的时间成�
 #. module: hr_timesheet
 #: model:ir.actions.server,name:hr_timesheet.unlink_employee_action
 msgid "Delete"
-msgstr ""
+msgstr "删除"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Delete Employee"
-msgstr ""
+msgstr "删除员工"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__milestone_id
@@ -480,7 +506,7 @@ msgstr "说明你的活动"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.quick_create_account_analytic_line_form
 msgid "Describe your activity..."
-msgstr ""
+msgstr "描述您的活动……"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -541,12 +567,12 @@ msgstr "员工"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_delete_wizard
 msgid "Employee Delete Wizard"
-msgstr ""
+msgstr "员工删除向导"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_departure
 msgid "Employee Departure"
-msgstr ""
+msgstr "员工离职"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_user_allow
@@ -557,7 +583,7 @@ msgstr "员工提醒"
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 msgid "Employees' Timesheets"
-msgstr ""
+msgstr "员工的工时单"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
@@ -706,7 +732,7 @@ msgstr "我部门的最新情况"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "My Projects/Tasks"
-msgstr ""
+msgstr "我的项目/任务"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
@@ -730,7 +756,7 @@ msgstr "最新"
 #. module: hr_timesheet
 #: model:res.groups.privilege,placeholder:hr_timesheet.res_groups_privilege_timesheets
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -775,12 +801,12 @@ msgstr "分配的小时数减去花费的小时数。"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Ok"
-msgstr ""
+msgstr "确定"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Overrun Hours"
-msgstr ""
+msgstr "超时工时"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
@@ -810,7 +836,7 @@ msgstr "日历检视画面中筛选员工的个人筛选器"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Please first delete all of their timesheets."
-msgstr ""
+msgstr "请先删除他们的所有工时单。"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -863,7 +889,7 @@ msgstr "项目工时表"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_project_task_page
 msgid "Project:"
-msgstr ""
+msgstr "项目："
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_public
@@ -935,7 +961,7 @@ msgstr "在任务中搜索"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "See Timesheets"
-msgstr ""
+msgstr "查看工时单"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -966,7 +992,7 @@ msgstr "设置"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__show_portal_timesheets
 msgid "Show Portal Timesheets"
-msgstr ""
+msgstr "显示门户工时单"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -982,7 +1008,7 @@ msgstr "有一些工时表记项阻碍此作。 请先移除它们，然后便�
 msgid ""
 "Some timesheets were not created: employees aren’t working on the selected "
 "days"
-msgstr ""
+msgstr "部分工时单未创建：员工在所选日期不工作"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1010,7 +1036,7 @@ msgstr "任务"
 #. module: hr_timesheet
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "任务日志"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
@@ -1026,7 +1052,7 @@ msgstr "任务分析"
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "Template for Timesheets"
-msgstr ""
+msgstr "工时单模板"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1046,13 +1072,13 @@ msgstr "工时单的项目、任务和分析账户必须属于同一公司。"
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "There are no timesheets to print for this project"
-msgstr ""
+msgstr "该项目没有可打印的工时单"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid "There are no timesheets to print for this task"
-msgstr ""
+msgstr "该任务没有可打印的工时单"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1201,7 +1227,7 @@ msgstr "子任务所用时间"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Time Spent on Sub-tasks:"
-msgstr ""
+msgstr "子任务耗时："
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1380,13 +1406,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 msgid "Timesheets of %(name)s"
-msgstr ""
+msgstr "%(name)s 的工时单"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets successfully created"
-msgstr ""
+msgstr "工时单创建成功"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1428,7 +1454,7 @@ msgstr "花费总天数"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Hours Spent"
-msgstr ""
+msgstr "总耗时"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1447,7 +1473,7 @@ msgstr "总计："
 #. module: hr_timesheet
 #: model:ir.module.module,summary:base.module_hr_timesheet
 msgid "Track employee time on tasks"
-msgstr ""
+msgstr "跟踪员工在任务上的工时"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -1474,6 +1500,11 @@ msgid ""
 "those timesheets or consider archiving the employee instead.\n"
 "                        </span>"
 msgstr ""
+"哎呀！您要删除的员工还有一些工时单未处理，无法删除。\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            因此您有两个选择：要么删除这些工时单，要么考虑改"
+"为存档该员工。\n"
+"                        </span>"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
@@ -1545,7 +1576,7 @@ msgstr "您不能访问不属于您的工时表。"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "You cannot delete employees who have timesheets."
-msgstr ""
+msgstr "您无法删除有工时单的员工。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -1600,7 +1631,7 @@ msgstr "对于"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "incl."
-msgstr ""
+msgstr "含"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1608,6 +1639,8 @@ msgid ""
 "on\n"
 "                            <span class=\"fw-bold ms-1\">Sub-tasks</span>"
 msgstr ""
+"在\n"
+"                            <span class=\"fw-bold ms-1\">子任务</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1615,3 +1648,5 @@ msgid ""
 "on\n"
 "                        <span class=\"fw-bold ms-1\">Sub-tasks</span>"
 msgstr ""
+"在\n"
+"                        <span class=\"fw-bold ms-1\">子任务</span>"

@@ -10,15 +10,16 @@
 # Emily Jia <eji@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 18:04+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 11:47+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/purchase_requisition/zh_Hans/>\n"
+"projects/odoo-20/purchase_requisition/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +41,13 @@ msgid ""
 "are agreements you have with vendors to benefit from a predetermined "
 "pricing.\n"
 msgstr ""
+"\n"
+"本模块用于管理您的采购协议。\n"
+"===========================================================\n"
+"\n"
+"管理招标和一揽子订单。招标用于获取不同供应商的竞争性报价，并从中\n"
+"选出最优方案。一揽子订单是您与供应商达成的协议，可享受预先约定的\n"
+"价格。\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
@@ -69,19 +77,19 @@ msgstr "<strong>参考：</strong><br/>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "A note"
-msgstr ""
+msgstr "备注"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "A product is required on purchase agreement lines."
-msgstr ""
+msgstr "采购协议明细必须填写产品。"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "A section or note line cannot have a product."
-msgstr ""
+msgstr "小节行或备注行不能包含产品。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
@@ -121,17 +129,17 @@ msgstr "活动类型图标"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a note"
-msgstr ""
+msgstr "添加备注"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a product"
-msgstr ""
+msgstr "添加产品"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a section"
-msgstr ""
+msgstr "添加小节"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
@@ -162,7 +170,7 @@ msgstr "协议有效期："
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Amount"
-msgstr ""
+msgstr "金额"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -305,7 +313,7 @@ msgstr "显示名称"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "显示类型"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__distribution_analytic_account_ids
@@ -429,12 +437,12 @@ msgstr "最近活动"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__name
 msgid "Line Description"
-msgstr ""
+msgstr "明细行描述"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols 图标，例如 checklist"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
@@ -511,7 +519,7 @@ msgstr "下一活动类型"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Note"
-msgstr ""
+msgstr "备注"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -557,7 +565,7 @@ msgstr "订单"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "父级章节行"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
@@ -710,22 +718,22 @@ msgstr "搜索采购协议"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_section
 msgid "Section"
-msgstr ""
+msgstr "小节"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Section Name"
-msgstr ""
+msgstr "小节名称"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Section title"
-msgstr ""
+msgstr "小节标题"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "序列"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -765,17 +773,17 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "子小节"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "子小节名称"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Subsection title"
-msgstr ""
+msgstr "子小节标题"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
@@ -790,7 +798,7 @@ msgstr "供应商价格表"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "仅供界面用途的技术字段。"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -879,7 +887,7 @@ msgstr "您不能更改非草稿采购协议的协议类型或公司。"
 msgid ""
 "You cannot change the type of a purchase agreement line. Instead you should "
 "delete the current line and create a new line of the proper type."
-msgstr ""
+msgstr "无法更改采购协议明细的类型。请删除当前明细行，并新建一条类型正确的明细行。"
 
 #. module: purchase_requisition
 #. odoo-python

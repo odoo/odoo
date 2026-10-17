@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-10-08 09:46+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-16 21:33+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/stock/es_419/>\n"
 "Language: es_419\n"
@@ -526,41 +526,30 @@ msgstr ""
 "especificó en el destino <b>%(operation)s</b>."
 
 #. module: stock
-#: model:mail.template,body_html:stock.mail_template_data_stock_move_line_recall
+#: model:mail.template,body_html:stock.mail_template_data_stock_picking_recall
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.picking_partner_id.display_name or ''\"/><br/"
-"><br/>\n"
-"        We would like to issue a product recall regarding the following "
-"product:<br/><br/>\n"
-"        Product:<br/>\n"
-"        <t t-out=\"object.product_id.display_name or ''\"/><br/><br/>\n"
-"        Lot / Serial Number:<br/>\n"
-"        <t t-out=\"object.lot_id.name or object.lot_name or ''\"/><br/><br/"
-">\n"
-"        We apologize for the inconvenience caused.<br/><br/>\n"
-"        Best wishes,\n"
-"    </p>\n"
-"</div>\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Dear <t t-out=\"object.partner_id.display_name or "
+"''\">Marc Demo</t><br/><br/>\n"
+"                    We would like to issue a product recall regarding the "
+"following items from your delivery\n"
+"                    <strong><t t-out=\"object.name\">WH/OUT/EXAMPLE</t></"
+"strong>:<br/><br/>\n"
+"\n"
+"                    <strong>Product(s):</strong><br/>\n"
+"                    <t t-out=\"ctx.get('recalled_products_dict', "
+"{}).get(str(object.id))\">[EXAMPLE] Drawer</t><br/><br/>\n"
+"                    <strong>Lot / Serial Number(s):</strong><br/>\n"
+"                    <t t-out=\"ctx.get('recalled_lots_dict', "
+"{}).get(str(object.id))\">0000000000029</t><br/><br/>\n"
+"\n"
+"                    We apologize for the inconvenience caused.<br/><br/>\n"
+"                    Best wishes,\n"
+"                </p>\n"
+"            </div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Apreciable <t t-out=\"object.picking_partner_id.display_name or "
-"''\"/><br/><br/>\n"
-"        Nos ponemos en contacto contigo para informarte de la retirada del "
-"mercado del siguiente producto:<br/><br/>\n"
-"        Producto:<br/>\n"
-"        <t t-out=\"object.product_id.display_name or ''\"/><br/><br/>\n"
-"        Número de serie / lote:<br/>\n"
-"        <t t-out=\"object.lot_id.name or object.lot_name or ''\"/><br/><br/>"
-"\n"
-"        Lamentamos los inconvenientes que esto pueda causar.<br/><br/>\n"
-"        Saludos,\n"
-"    </p>\n"
-"</div>\n"
-"        "
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -3167,6 +3156,15 @@ msgid ""
 "Orange if = Replenishment Time - Sales Availability Time\n"
 "Red if < Replenishment Time - Sales Availability Time"
 msgstr ""
+"Días de demanda cubiertos por el nivel mínimo:\n"
+"Debe ser ≥ Tiempo de reabastecimiento - Tiempo de disponibilidad de ventas "
+"para evitar que haya faltantes durante el tiempo de reabastecimiento.\n"
+"Incluye días adicionales de seguridad para cubrir situaciones inusuales.\n"
+"\n"
+"Verde si > Tiempo de reabastecimiento - Tiempo de disponibilidad de ventas\n"
+"Naranja si = Tiempo de reabastecimiento - Tiempo de disponibilidad de "
+"ventas\n"
+"Rojo si < Tiempo de reabastecimiento - Tiempo de disponibilidad de ventas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before_priority
@@ -8000,13 +7998,13 @@ msgid "Product barcode"
 msgstr "Código de barras del producto"
 
 #. module: stock
-#: model:mail.template,description:stock.mail_template_data_stock_move_line_recall
-msgid "Product recall from lot/serial number"
+#: model:mail.template,subject:stock.mail_template_data_stock_picking_recall
+msgid "Product recall for Delivery {{ object.name }}"
 msgstr ""
 
 #. module: stock
-#: model:mail.template,subject:stock.mail_template_data_stock_move_line_recall
-msgid "Product recall: {{ object.product_id.display_name or 'n/a' }}"
+#: model:mail.template,description:stock.mail_template_data_stock_picking_recall
+msgid "Product recall from lot/serial number"
 msgstr ""
 
 #. module: stock
@@ -9227,6 +9225,14 @@ msgid ""
 "                but this scheduled date will not be set for all transfers in "
 "batch."
 msgstr ""
+"Fecha programada para procesar los traslados.\n"
+"              - Al definir una fecha de forma manual, la fecha programada de "
+"todos los traslados del lote se actualizará de forma automática a esa "
+"fecha.\n"
+"              - Si no cambias la fecha de forma manual y agregas, eliminas o "
+"actualizas traslados, esta será la fecha programada más próxima,\n"
+"                pero no se establecerá como fecha programada para todos los "
+"traslados del lote."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
@@ -10068,11 +10074,6 @@ msgstr "Ubicaciones de existencias"
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_move_ids
 msgid "Stock Move"
 msgstr "Movimiento de stock"
-
-#. module: stock
-#: model:mail.template,name:stock.mail_template_data_stock_move_line_recall
-msgid "Stock Move Line: Product Recall"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids
@@ -11458,6 +11459,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Transfer:"
+msgstr ""
+
+#. module: stock
+#: model:mail.template,name:stock.mail_template_data_stock_picking_recall
+msgid "Transfer: Product Recall"
 msgstr ""
 
 #. module: stock
@@ -13096,6 +13102,41 @@ msgid ""
 msgstr ""
 "Orden de entrega de {{ object.company_id.name }} (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        Dear <t t-out=\"object.picking_partner_id.display_name or ''\"/"
+#~ "><br/><br/>\n"
+#~ "        We would like to issue a product recall regarding the following "
+#~ "product:<br/><br/>\n"
+#~ "        Product:<br/>\n"
+#~ "        <t t-out=\"object.product_id.display_name or ''\"/><br/><br/>\n"
+#~ "        Lot / Serial Number:<br/>\n"
+#~ "        <t t-out=\"object.lot_id.name or object.lot_name or ''\"/><br/"
+#~ "><br/>\n"
+#~ "        We apologize for the inconvenience caused.<br/><br/>\n"
+#~ "        Best wishes,\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "        "
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        Apreciable <t t-out=\"object.picking_partner_id.display_name or "
+#~ "''\"/><br/><br/>\n"
+#~ "        Nos ponemos en contacto contigo para informarte de la retirada "
+#~ "del mercado del siguiente producto:<br/><br/>\n"
+#~ "        Producto:<br/>\n"
+#~ "        <t t-out=\"object.product_id.display_name or ''\"/><br/><br/>\n"
+#~ "        Número de serie / lote:<br/>\n"
+#~ "        <t t-out=\"object.lot_id.name or object.lot_name or ''\"/><br/"
+#~ "><br/>\n"
+#~ "        Lamentamos los inconvenientes que esto pueda causar.<br/><br/>\n"
+#~ "        Saludos,\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "        "
 
 #~ msgid "'Location - %s' % object.name"
 #~ msgstr "'Ubicación - %s' % object.name"

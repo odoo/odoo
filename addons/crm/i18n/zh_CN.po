@@ -11,15 +11,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-09-09 14:05+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 06:34+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/crm/zh_Hans/>\n"
+"projects/odoo-20/crm/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +65,7 @@ msgstr "%(attach_name)s（来自%(lead_name)s）"
 #. odoo-python
 #: code:addons/crm/wizard/crm_lead_to_opportunity_mass.py:0
 msgid "%(converted_count)s leads have been converted"
-msgstr ""
+msgstr "%(converted_count)s 条线索已转化"
 
 #. module: crm
 #. odoo-python
@@ -101,7 +102,7 @@ msgstr "（示例数据）"
 #. odoo-python
 #: code:addons/crm/wizard/crm_lead_to_opportunity_mass.py:0
 msgid "1 lead has been converted"
-msgstr ""
+msgstr "1 条线索已转化"
 
 #. module: crm
 #. odoo-javascript
@@ -156,6 +157,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"warning\" title=\"Exceeded\" invisible=\"not "
 "lead_all_assigned_month_exceeded\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"warning\" title=\"已超出上限\" invisible=\"not "
+"lead_all_assigned_month_exceeded\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
@@ -174,12 +177,12 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span class=\"me-1\"> of </span>"
-msgstr ""
+msgstr "<span class=\"me-1\">，最多 </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\"> at</span>"
-msgstr ""
+msgstr "<span class=\"mx-3 mb-1\" invisible=\"type == 'lead'\">，</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -249,6 +252,14 @@ msgid ""
 "merge all duplicates listed below.\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"name != 'convert'\">\n"
+"                        发现潜在重复项。请在转换前使用“转换并合并重复项”清理"
+"数据。\n"
+"                    </span>\n"
+"                    <span invisible=\"name != 'convert_and_merge'\">\n"
+"                        将选中的线索转换为商机，并合并下方列出的所有重复项"
+"。\n"
+"                    </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -258,7 +269,7 @@ msgstr "<span> %</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span> leads per 30 days </span>"
-msgstr ""
+msgstr "<span> 条线索/30 天 </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -291,11 +302,16 @@ msgid ""
 "default.\n"
 "                                </span>"
 msgstr ""
+"<span>根据优先级和筛选条件定期分配线索。</span><br/>\n"
+"                                <span invisible=\"not "
+"crm_use_auto_assignment\">\n"
+"                                    所有销售团队将默认使用此设置。\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span> 天</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -410,13 +426,13 @@ msgstr "接收邮件来自"
 #. module: crm
 #: model:ir.model,name:crm.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "访问组"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Access request for \"%s\""
-msgstr ""
+msgstr "申请访问“%s”"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction
@@ -602,7 +618,7 @@ msgstr "别名模型"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/team_switcher/team_switcher.js:0
 msgid "All Teams"
-msgstr ""
+msgstr "所有团队"
 
 #. module: crm
 #. odoo-javascript
@@ -613,7 +629,7 @@ msgstr "全部已设置。立即<b>计划</b>。"
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_team_member__assignment_rules__unlimited
 msgid "Always in rotation"
-msgstr ""
+msgstr "始终参与轮转分配"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -632,7 +648,7 @@ msgstr "已归档"
 msgid ""
 "As you are a member of no Sales Team, you are showed the entire Pipeline.<br/"
 ">"
-msgstr ""
+msgstr "由于您不属于任何销售团队，因此将显示整个渠道。<br/>"
 
 #. module: crm
 #. odoo-javascript
@@ -754,7 +770,7 @@ msgstr "退回"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Bring Odoo into your inbox:"
-msgstr ""
+msgstr "将 Odoo 带入您的收件箱："
 
 #. module: crm
 #: model:ir.module.module,shortdesc:base.module_crm
@@ -956,7 +972,7 @@ msgstr "恭喜， 祝您钓到大鱼！：)"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Connect to Gmail or Outlook accounts."
-msgstr ""
+msgstr "连接 Gmail 或 Outlook 账户。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -1089,7 +1105,7 @@ msgstr "国家/地区"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Create Contacts, Leads, Tickets, Projects and Tasks."
-msgstr ""
+msgstr "创建联系人、线索、工单、项目和任务。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
@@ -1150,7 +1166,7 @@ msgstr "从你的线索中创建一个商机"
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Create your new contact."
-msgstr ""
+msgstr "创建您的新联系人。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__create_uid
@@ -1234,7 +1250,7 @@ msgstr "天"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "停滞天数"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
@@ -1249,7 +1265,7 @@ msgstr "待关闭天数"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "停滞天数"
 
 #. module: crm
 #. odoo-python
@@ -1317,7 +1333,7 @@ msgstr "摘要"
 #. module: crm
 #: model:ir.model,name:crm.model_discuss_channel
 msgid "Discussion Channel"
-msgstr ""
+msgstr "讨论群组"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_calendar_event__display_name
@@ -1349,7 +1365,7 @@ msgstr "显示名称"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Display your partners on a dedicated website page."
-msgstr ""
+msgstr "在专用网站页面上展示您的合作伙伴。"
 
 #. module: crm
 #. odoo-python
@@ -1361,7 +1377,7 @@ msgstr "确定要更新此阶段？"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Do you want to install the \"%(module_name)s\" App?"
-msgstr ""
+msgstr "是否要安装“%(module_name)s”应用？"
 
 #. module: crm
 #. odoo-javascript
@@ -1389,12 +1405,12 @@ msgstr "达成交易后，将商机拖至<b>赢得</b>。恭喜您！"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__duplicated_lead_ids
 msgid "Duplicated Lead"
-msgstr ""
+msgstr "重复的线索"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__duplicated_lead_ids_domain
 msgid "Duplicated Lead Ids Domain"
-msgstr ""
+msgstr "重复线索 ID 域"
 
 #. module: crm
 #. odoo-python
@@ -1434,7 +1450,7 @@ msgstr "电子邮箱域名标准"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Email Marketing"
-msgstr ""
+msgstr "邮件营销"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
@@ -1495,12 +1511,12 @@ msgstr "预估赢得商机的日期。"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignment
 msgid "Even if assigned"
-msgstr ""
+msgstr "即使已分配"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Every"
-msgstr ""
+msgstr "每"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -1554,7 +1570,7 @@ msgstr "额外字段......"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Failed to install \"%(module_name)s\""
-msgstr ""
+msgstr "“%(module_name)s”安装失败"
 
 #. module: crm
 #. odoo-javascript
@@ -1584,12 +1600,12 @@ msgstr "可用于计算预测线索评分的字段"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Find any Odoo record without leaving your inbox."
-msgstr ""
+msgstr "无需离开收件箱即可查找任意 Odoo 记录。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Fold by Default"
-msgstr ""
+msgstr "默认折叠"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1651,13 +1667,13 @@ msgstr "未来活动"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.xml:0
 msgid "Generate"
-msgstr ""
+msgstr "生成"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Generate leads from Outlook & Gmail"
-msgstr ""
+msgstr "从 Outlook 和 Gmail 生成线索"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
@@ -1678,30 +1694,30 @@ msgstr "获取丢失原因"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Get it for Gmail"
-msgstr ""
+msgstr "获取 Gmail 版"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Get it for Outlook"
-msgstr ""
+msgstr "获取 Outlook 版"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Get our Mail Plugins!"
-msgstr ""
+msgstr "获取我们的邮件插件！"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Give priority if"
-msgstr ""
+msgstr "优先分配条件"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Gmail"
-msgstr ""
+msgstr "Gmail 邮箱"
 
 #. module: crm
 #. odoo-python
@@ -1834,24 +1850,24 @@ msgstr "导入和同步"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Import leads from CSV"
-msgstr ""
+msgstr "从 CSV 导入线索"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Import leads from a CSV or Excel file"
-msgstr ""
+msgstr "从 CSV 或 Excel 文件导入线索"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_team_member__assignment_rules__limited
 msgid "In rotation, with a limit"
-msgstr ""
+msgstr "参与轮转分配，但有上限"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/webclient/share_target/crm_share_target_item.xml:0
 msgid "In sales team"
-msgstr ""
+msgstr "所属销售团队"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1878,13 +1894,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Install request for \"%s\""
-msgstr ""
+msgstr "申请安装“%s”"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Installing \"%(module_name)s\""
-msgstr ""
+msgstr "正在安装“%(module_name)s”"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
@@ -1937,22 +1953,22 @@ msgstr "工作岗位："
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Keep current team"
-msgstr ""
+msgstr "保留当前团队"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Keep current teams"
-msgstr ""
+msgstr "保留当前团队"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Keep current user"
-msgstr ""
+msgstr "保留当前用户"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Keep current users"
-msgstr ""
+msgstr "保留当前用户"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
@@ -2127,7 +2143,7 @@ msgstr "字符串中的线索评分开始日期"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Lead Sourcing"
-msgstr ""
+msgstr "线索挖掘"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2157,7 +2173,7 @@ msgstr "已创建的线索/商机"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_creation_message
 msgid "Lead/Opportunity created<br/>"
-msgstr ""
+msgstr "已创建线索/商机<br/>"
 
 #. module: crm
 #. odoo-python
@@ -2231,7 +2247,7 @@ msgstr "线索是创建商机前的资格认证步骤。"
 #. odoo-python
 #: code:addons/crm/wizard/crm_merge_opportunities.py:0
 msgid "Leads merged"
-msgstr ""
+msgstr "线索已合并"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
@@ -2261,14 +2277,14 @@ msgstr "线索/商机数量"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Leads/Opportunities to merge"
-msgstr ""
+msgstr "要合并的线索/商机"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Learn More"
-msgstr ""
+msgstr "了解更多"
 
 #. module: crm
 #. odoo-javascript
@@ -2293,7 +2309,7 @@ msgstr "让我们来查看商机。"
 msgid ""
 "Link these opportunities to customers by either finding a match or creating "
 "a new one."
-msgstr ""
+msgstr "通过匹配现有客户或新建客户，将这些商机关联到客户。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__link_to_matching_customer
@@ -2402,7 +2418,7 @@ msgstr "MRR"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Mail plugins"
-msgstr ""
+msgstr "邮件插件"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2413,7 +2429,7 @@ msgstr "管理定期计划"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/team_switcher/team_switcher.xml:0
 msgid "Manage Teams"
-msgstr ""
+msgstr "管理团队"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2464,12 +2480,12 @@ msgstr "市场营销："
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols 图标，例如 checklist"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
 msgid "Maximum Leads To Assign"
-msgstr ""
+msgstr "可指派线索上限"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__medium_id
@@ -2600,7 +2616,7 @@ msgstr "我的线索"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Opportunities"
-msgstr ""
+msgstr "我的商机"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
@@ -2958,6 +2974,96 @@ msgid ""
 "Compare revenues with forecasts and budgets in real time.\n"
 "\n"
 msgstr ""
+"Odoo CRM\n"
+"--------\n"
+"\n"
+"借助 Odoo\n"
+"<a href=\"https://www.odoo.com/app/crm\">开源 CRM</a> 提高销售效率、提升赢单"
+"率、增加收入。\n"
+"\n"
+"轻松管理您的销售漏斗。吸引线索，跟进电话和会议。分析线索质量，做出明智\n"
+"决策，并将电子邮件直接集成到应用中，从而节省时间。\n"
+"\n"
+"您的销售漏斗，由您做主\n"
+"--------------------------------------\n"
+"\n"
+"通过革命性的看板视图跟踪您的商机管道。在销售漏斗中工作，即时获取有关后续\n"
+"行动、新消息、重点商机和预期收入的直观信息。\n"
+"\n"
+"线索管理，轻松搞定\n"
+"-------------------------\n"
+"\n"
+"根据收到的邮件自动创建线索。分析线索效率，并按营销活动、渠道或销售团队\n"
+"比较绩效。\n"
+"\n"
+"一次性完成重复项查找、线索合并，并将其分配给合适的销售人员。减少行政事务\n"
+"时间，把更多时间用于筛选线索。\n"
+"\n"
+"整理您的商机\n"
+"---------------------------\n"
+"\n"
+"整理商机，专注于最优质的交易。在商机中管理所有客户互动，例如电子邮件、\n"
+"电话、内部备注、会议和报价单。\n"
+"\n"
+"关注您感兴趣的商机，以便在特定事件发生时收到通知：赢单或丢单、阶段变更、\n"
+"客户新需求等。\n"
+"\n"
+"电子邮件集成与自动化\n"
+"--------------------------------\n"
+"\n"
+"使用您每天都在用的电子邮件应用。无论贵公司使用 Microsoft Outlook 还是 Gmail"
+"，\n"
+"任何人都无需改变工作方式，所有人始终保持高效。\n"
+"\n"
+"自动路由、分类和筛选收到的邮件。Odoo CRM 会处理收到的邮件，并将其路由到\n"
+"正确的商机或销售团队。新线索即时创建，相关销售人员会自动收到通知。\n"
+"\n"
+"协作日程\n"
+"--------------------\n"
+"\n"
+"使用集成的日历安排会议和电话。您可以在一个视图中查看自己及同事的日程。\n"
+"作为经理，您可以轻松了解团队正在忙什么。\n"
+"\n"
+"线索自动化与营销活动\n"
+"---------------------------------------\n"
+"\n"
+"使用 Odoo <a href=\"https://www.odoo.com/app/crm\">CRM</a> 自动执行任务，提升"
+"业绩。\n"
+"\n"
+"利用我们的营销活动自动完成线索获取、跟进和促销。根据触发条件（例如 20 天\n"
+"无活动、回复了促销邮件等）定义自动化规则（例如让销售人员打电话、发送\n"
+"邮件……）。\n"
+"\n"
+"在从线索到成交的每个渠道上优化营销活动。更明智地决定投资方向，并展示营销\n"
+"活动对公司盈利的影响。\n"
+"\n"
+"自定义您的销售周期\n"
+"--------------------------\n"
+"\n"
+"通过配置完全契合您销售方式的销售阶段来自定义销售周期。掌控统计数据以获取\n"
+"准确的预测，在客户关系的每个阶段提升销售业绩。\n"
+"\n"
+"借助游戏化提升参与度\n"
+"----------------------------------\n"
+"\n"
+"### 激发团队与生俱来的竞争意识\n"
+"\n"
+"通过受[游戏机制](http://en.wikipedia.org/wiki/Gamification)启发的实时表彰和奖"
+"励，\n"
+"强化良好习惯并提高赢单率。通过挑战、个人目标和团队排行榜，让销售团队围绕\n"
+"明确的业务目标齐心协力。\n"
+"\n"
+"### 排行榜\n"
+"\n"
+"通过绩效比率在销售团队中推举领先者并促进竞争。\n"
+"\n"
+"### 个人目标\n"
+"\n"
+"为用户分配明确的目标，使其与公司目标保持一致。\n"
+"\n"
+"### 团队目标\n"
+"\n"
+"实时比较收入与预测和预算。\n"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -2988,7 +3094,7 @@ msgstr "正在进行"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Only assign if"
-msgstr ""
+msgstr "分配限制条件"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3133,13 +3239,13 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_team_member__assignment_rules__opt-out
 msgid "Out of rotation"
-msgstr ""
+msgstr "不参与轮转分配"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Outlook"
-msgstr ""
+msgstr "Outlook 邮箱"
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_3_years
@@ -3200,12 +3306,12 @@ msgstr "合作伙伴已被列入黑名单"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_partnership
 msgid "Partners Website Page"
-msgstr ""
+msgstr "合作伙伴网站页面"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_optout
 msgid "Pause auto assignment"
-msgstr ""
+msgstr "暂停自动分配"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__won_status__pending
@@ -3331,7 +3437,7 @@ msgstr "偏好分配域名"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Preview records and open their forms in one click."
-msgstr ""
+msgstr "预览记录并一键打开其表单。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3401,7 +3507,7 @@ msgstr "已评估"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Qualify leads with a Survey"
-msgstr ""
+msgstr "通过问卷调查筛选线索"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rating_ids
@@ -3417,7 +3523,7 @@ msgstr "准备好提高销售额了吗？让我们来看看您的<b>渠道</b>�
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Reassign To"
-msgstr ""
+msgstr "重新分配给"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
@@ -3449,7 +3555,7 @@ msgstr "经常性收入"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Reference"
-msgstr ""
+msgstr "参考"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
@@ -3502,12 +3608,12 @@ msgstr "恢复"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_rotting
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Rotting"
-msgstr ""
+msgstr "停滞中"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Rotting in"
-msgstr ""
+msgstr "停滞时长"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3589,7 +3695,7 @@ msgstr "已净化号码"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Save emails and attachments directly to Odoo."
-msgstr ""
+msgstr "直接将电子邮件和附件保存到 Odoo。"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
@@ -3611,7 +3717,7 @@ msgstr "搜索商机"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Search in our directory of 580M+ entities"
-msgstr ""
+msgstr "在我们的 5.8 亿+ 实体目录中搜索"
 
 #. module: crm
 #. odoo-javascript
@@ -3633,13 +3739,13 @@ msgstr "要进行合并，请从列表中至少选择两个潜在客户/销售�
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Select or create a contact..."
-msgstr ""
+msgstr "选择或创建联系人..."
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Send an email and get leads from replies"
-msgstr ""
+msgstr "发送电子邮件并从回复中获取线索"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3674,7 +3780,7 @@ msgstr "设置"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__show_assignment_max
 msgid "Show Assignment Max"
-msgstr ""
+msgstr "显示分配上限"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -3854,7 +3960,7 @@ msgstr "子类型"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Survey"
-msgstr ""
+msgstr "调查"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3894,7 +4000,7 @@ msgstr "标签："
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_search_model.js:0
 msgid "Team"
-msgstr ""
+msgstr "团队"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
@@ -3910,7 +4016,7 @@ msgstr "团队成员"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Template for Leads & Opportunities"
-msgstr ""
+msgstr "线索和商机模板"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -4124,7 +4230,7 @@ msgstr "提示：将所选商机转换为地图"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 msgid "Tired of copy-pasting emails?"
-msgstr ""
+msgstr "厌倦了复制粘贴电子邮件？"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_list_simplified
@@ -4148,12 +4254,14 @@ msgid ""
 "To work with the CRM, you should <a name=\"%d\" type=\"action\" "
 "tabindex=\"-1\">join a Team.</a>"
 msgstr ""
+"要使用 CRM，您应该<a name=\"%d\" type=\"action\" tabindex=\"-1\">加入一个团队"
+"。</a>"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "To work with the CRM, you should be added to a Team."
-msgstr ""
+msgstr "要使用 CRM，您需要被添加到一个团队中。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4181,7 +4289,7 @@ msgstr "最大盈余"
 #. module: crm
 #: model:ir.module.module,summary:base.module_crm
 msgid "Track leads and close opportunities"
-msgstr ""
+msgstr "跟踪线索并关闭商机"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -4567,12 +4675,12 @@ msgstr "别名"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "assigned)"
-msgstr ""
+msgstr "已分配）"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "at"
-msgstr ""
+msgstr "，"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4641,7 +4749,7 @@ msgstr "有资料值"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "incoming email"
-msgstr ""
+msgstr "收到的邮件"
 
 #. module: crm
 #. odoo-python

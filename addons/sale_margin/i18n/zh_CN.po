@@ -7,15 +7,16 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:38+0000\n"
-"PO-Revision-Date: 2026-09-09 13:54+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/sale_margin/zh_Hans/>\n"
+"projects/odoo-20/sale_margin/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,11 +34,16 @@ msgid ""
 "This gives the profitability by calculating the difference between the Unit\n"
 "Price and Cost Price.\n"
 msgstr ""
+"\n"
+"此模块为销售订单添加「毛利」。\n"
+"==============================\n"
+"\n"
+"它通过计算单价与成本价之间的差额来体现盈利能力。\n"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Delivered"
-msgstr ""
+msgstr "已交付"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
@@ -60,7 +66,7 @@ msgstr "预计成本"
 #. module: sale_margin
 #: model:ir.actions.act_window,name:sale_margin.action_order_report_projected_margins
 msgid "Forecast Margins"
-msgstr ""
+msgstr "预测毛利"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__id
@@ -74,7 +80,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/sale_margin/models/sale_order_line.py:0
 msgid "If the cost is not 0, it is not possible to set the margin to 100%"
-msgstr ""
+msgstr "如果成本不为 0，则无法将毛利率设为 100%"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
@@ -109,7 +115,7 @@ msgstr "毛利"
 #. odoo-python
 #: code:addons/sale_margin/models/sale_order.py:0
 msgid "Margin (%(percent).0f%%)"
-msgstr ""
+msgstr "毛利（%(percent).0f%%）"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin_percent
@@ -121,7 +127,7 @@ msgstr "毛利率（%）"
 #. module: sale_margin
 #: model:ir.module.module,shortdesc:base.module_sale_margin
 msgid "Margins in Sales Orders"
-msgstr ""
+msgstr "销售订单中的毛利"
 
 #. module: sale_margin
 #: model_terms:ir.actions.act_window,help:sale_margin.action_order_report_projected_margins
@@ -131,12 +137,12 @@ msgstr "无可显示数据"
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Product"
-msgstr ""
+msgstr "产品"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "报价模板行"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
@@ -168,12 +174,12 @@ msgstr "已售"
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Sold Qty"
-msgstr ""
+msgstr "销售数量"
 
 #. module: sale_margin
 #: model_terms:ir.actions.act_window,help:sale_margin.action_order_report_projected_margins
 msgid "This report performs analysis on forecast margins of sales orders."
-msgstr ""
+msgstr "此报表用于分析销售订单的预测毛利。"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
@@ -183,7 +189,7 @@ msgstr "总成本"
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Delivered"
-msgstr ""
+msgstr "已交付总计"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
@@ -193,17 +199,17 @@ msgstr "已交付总数量"
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Invoiced"
-msgstr ""
+msgstr "已开票总计"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Invoiced Qty"
-msgstr ""
+msgstr "已开票数量总计"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Margin"
-msgstr ""
+msgstr "毛利总计"
 
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
@@ -213,10 +219,10 @@ msgstr "总销量"
 #. module: sale_margin
 #: model_terms:ir.ui.view,arch_db:sale_margin.sale_report_projected_margins_list
 msgid "Total Sold Qty"
-msgstr ""
+msgstr "销售数量总计"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__purchase_price
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order_template_line__purchase_price
 msgid "Unit Cost"
-msgstr ""
+msgstr "单位成本"

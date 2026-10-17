@@ -3,15 +3,16 @@
 # * pos_bancontact_pay
 #
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-09-09 14:12+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/pos_bancontact_pay/zh_Hans/>\n"
+"projects/odoo-20/pos_bancontact_pay/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s has expired."
-msgstr ""
+msgstr "订单 %s 的付款已过期。"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -48,12 +49,12 @@ msgstr "订单%s 的付款失败。"
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s was cancelled."
-msgstr ""
+msgstr "订单 %s 的付款已取消。"
 
 #. module: pos_bancontact_pay
 #: model:ir.module.module,summary:base.module_pos_bancontact_pay
 msgid "Accept Bancontact Pay and Wero QR code payments in POS (Payconiq)."
-msgstr ""
+msgstr "在 POS 中接受 Bancontact Pay 和 Wero 二维码付款（Payconiq）。"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -109,19 +110,21 @@ msgid ""
 "Bancontact Pro Portal > Admin Centre > Shops and products > Select a product "
 "> Manage API keys > View API key"
 msgstr ""
+"Bancontact Pro 门户 > 管理中心 > 商店和产品 > 选择产品 > 管理 API 密钥 > 查"
+"看 API 密钥"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
 msgid ""
 "Bancontact Pro Portal > Admin Centre > Shops and products > Select a shop > "
 "Read the product ID from the card"
-msgstr ""
+msgstr "Bancontact Pro 门户 > 管理中心 > 商店和产品 > 选择商店 > 从卡片上读取产品 ID"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Bancontact is currently unavailable. Please try again later."
-msgstr ""
+msgstr "Bancontact 当前不可用，请稍后重试。"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -213,7 +216,7 @@ msgstr "ID"
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "日记账"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -227,7 +230,7 @@ msgstr "在 Bancontact 中未找到商户资料，请检查你的支付配置文
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "出错了！"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__display
@@ -245,7 +248,7 @@ msgstr "一种 Bancontact Pay 贴纸支付方式只能关联一个 POS 配置。
 #. module: pos_bancontact_pay
 #: model:ir.module.module,shortdesc:base.module_pos_bancontact_pay
 msgid "POS Bancontact Pay & Wero"
-msgstr ""
+msgstr "POS Bancontact Pay 与 Wero"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -254,6 +257,8 @@ msgid ""
 "Payment at %s\n"
 "POS %s"
 msgstr ""
+"付款于 %s\n"
+"POS %s"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -297,7 +302,7 @@ msgstr "销售点付款方式"
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
 msgid "Preprod"
-msgstr ""
+msgstr "预生产环境"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -320,7 +325,7 @@ msgstr "Bancontact 已达到请求限制。请稍后重试。"
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
 msgid "Run transactions in Bancontact's preprod environment."
-msgstr ""
+msgstr "在 Bancontact 的预生产环境中运行交易。"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__sticker
@@ -335,6 +340,9 @@ msgid ""
 "to another POS configuration (%(config_names)s).\n"
 "A sticker can only be linked to one POS configuration at a time."
 msgstr ""
+"Bancontact 贴纸付款方式“%(method_name)s”已分配给另一个 POS 配置（%"
+"(config_names)s）。\n"
+"一个贴纸一次只能关联一个 POS 配置。"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -376,6 +384,9 @@ msgid ""
 "This payment method does not support the journal's currency.\n"
 "Supported currencies: %(currencies)s."
 msgstr ""
+"日记账“%(journal)s”被一个 Bancontact Pay 付款方式使用。\n"
+"该付款方式不支持此日记账的货币。\n"
+"支持的货币：%(currencies)s。"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript

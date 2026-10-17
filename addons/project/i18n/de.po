@@ -18,10 +18,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-09-09 13:52+0000\n"
+"PO-Revision-Date: 2026-10-15 11:55+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
-"project/de/>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/project/"
+"de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +87,7 @@ msgstr "Aufgabenanalyse von %(name)s"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Time by Stage"
-msgstr ""
+msgstr "%(name)s: Zeit nach Phase"
 
 #. module: project
 #. odoo-python
@@ -99,19 +99,19 @@ msgstr "Aufgaben von %(partner_name)s"
 #. odoo-python
 #: code:addons/project/models/account_analytic_line.py:0
 msgid "%(sign)s%(hours)sh"
-msgstr ""
+msgstr "%(sign)s%(hours)sSt."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/account_analytic_line.py:0
 msgid "%(sign)s%(hours)sh %(minutes)sm"
-msgstr ""
+msgstr "%(sign)s%(hours)sSt. %(minutes)sMin."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/account_analytic_line.py:0
 msgid "%(sign)s%(minutes)sm"
-msgstr ""
+msgstr "%(sign)s%(minutes)s Min."
 
 #. module: project
 #. odoo-python
@@ -180,52 +180,54 @@ msgstr ""
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_9
 msgid "<b>Tip: Access your project easily</b>"
-msgstr ""
+msgstr "<b>Tipp: Einfacher Zugriff auf Ihr Projekt</b>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "<b>Tip: Create tasks from incoming emails</b>"
-msgstr ""
+msgstr "<b>Tipp: Erstellen Sie Aufgaben aus eingehenden E-Mails</b>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_5
 msgid "<b>Tip: Create your tasks in an instant</b>"
-msgstr ""
+msgstr "<b>Tipp: Erstellen Sie Ihre Aufgaben im Handumdrehen</b>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_7
 msgid "<b>Tip: Don't let stalled tasks slip under the radar</b>"
 msgstr ""
+"<b>Tipp: Lassen Sie liegengebliebene Tickets nicht aus dem Blick geraten.</b>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_6
 msgid "<b>Tip: Filter your tasks with one click</b>"
-msgstr ""
+msgstr "<b>Tipp: Filtern Sie Ihre Aufgaben mit einem Klick.</b>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_4
 msgid "<b>Tip: Identify bottlenecks at a glance</b>"
-msgstr ""
+msgstr "<b>Tipp: Erkennen Sie Engpässe auf einen Blick.</b>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid "<b>Tip: Project-Specific Fields</b>"
-msgstr ""
+msgstr "<b>Tipp: Projektspezifische Felder</b>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_8
 msgid "<b>Tip: Save time with task templates</b>"
-msgstr ""
+msgstr "<b>Tipp: Sparen Sie Zeit mit Aufgabenvorlagen.</b>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "<b>Tip: Use task states to track progress</b>"
 msgstr ""
+"<b>Tipp: Verwenden Sie Aufgabenstatus, um den Fortschritt zu verfolgen.</b>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_2
 msgid "<b>Tip: Your personal kanban</b>"
-msgstr ""
+msgstr "<b>Tipp: Ihre persönliche Kanban-Ansicht</b>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_5
@@ -581,6 +583,8 @@ msgid ""
 "<i class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\" data-"
 "tooltip=\"Planned Date\"/>"
 msgstr ""
+"<i class=\"oi me-2\" data-icon=\"schedule\" title=\"Dates\" data-"
+"tooltip=\"Geplantes Datum\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -611,6 +615,8 @@ msgid ""
 "<i class=\"oi oi-filled me-2\" data-icon=\"person\" aria-label=\"Project "
 "Manager\" title=\"Project Manager\" data-tooltip=\"Project Manager\"/>"
 msgstr ""
+"<i class=\"oi oi-filled me-2\" data-icon=\"person\" aria-label=\"Project "
+"Manager\" title=\"Projektmanager\" data-tooltip=\"Projektmanager\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_kanban
@@ -618,6 +624,8 @@ msgid ""
 "<i class=\"oi oi-filled px-1 mt-1\" data-icon=\"calendar_today\" "
 "role=\"img\" aria-label=\"Deadline\"/>"
 msgstr ""
+"<i class=\"oi oi-filled px-1 mt-1\" data-icon=\"calendar_today\" "
+"role=\"img\" aria-label=\"Frist\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_card
@@ -625,6 +633,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"flag\" title=\"Miltstone\" data-"
 "tooltip=\"Milestone\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"flag\" title=\"Miltstone\" data-"
+"tooltip=\"Meilenstein\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_card
@@ -632,6 +642,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Customer\" data-"
 "tooltip=\"Customer\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"person\" title=\"Kunde\" data-"
+"tooltip=\"Kunde\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
@@ -639,6 +651,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"task\" title=\"Tasks\" data-"
 "tooltip=\"Name of Tasks\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"task\" title=\"Aufgaben\" data-"
+"tooltip=\"Name der Aufgaben\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -675,6 +689,14 @@ msgid ""
 "icon=\"sentiment_sad\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/"
 ">"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon\" data-icon=\"sentiment_satisfied\" "
+"invisible=\"rating_avg &lt; 3.66\" title=\"Zufrieden\"/>\n"
+"                            <i class=\"oi oi-fw o_button_icon\" data-"
+"icon=\"sentiment_neutral\" invisible=\"rating_avg &lt; 2.33 or rating_avg "
+"&gt;= 3.66\" title=\"Neutral\"/>\n"
+"                            <i class=\"oi oi-fw o_button_icon\" data-"
+"icon=\"sentiment_sad\" invisible=\"rating_avg &gt;= 2.33\" "
+"title=\"Unzufrieden\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -688,6 +710,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"assignment_turned_in\" title=\"Project\" data-"
 "tooltip=\"Project\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"assignment_turned_in\" title=\"Projekt\" data-"
+"tooltip=\"Projekt\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_card
@@ -695,6 +719,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"calendar_clock\" data-tooltip=\"Deadline\" "
 "title=\"Deadline\"/>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"calendar_clock\" data-tooltip=\"Frist\" "
+"title=\"Frist\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -821,7 +847,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 msgid "<span class=\"oi oi-fw me-1\" data-icon=\"check\" title=\"Tasks\"/>"
-msgstr ""
+msgstr "<span class=\"oi oi-fw me-1\" data-icon=\"check\" title=\"Aufgaben\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
@@ -829,6 +855,8 @@ msgid ""
 "<span class=\"oi oi-fw oi-filled me-1\" data-icon=\"calendar_today\" "
 "title=\"Date\"/>"
 msgstr ""
+"<span class=\"oi oi-fw oi-filled me-1\" data-icon=\"calendar_today\" "
+"title=\"Datum\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -930,12 +958,12 @@ msgstr "E-Mails annehmen von"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__access_mode
 msgid "Access"
-msgstr ""
+msgstr "Zugriff"
 
 #. module: project
 #: model:ir.model,name:project.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Zugriffsgruppen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__access_mode
@@ -1036,7 +1064,7 @@ msgstr "Aktivitätstyp"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 #. module: project
 #. odoo-javascript
@@ -1080,6 +1108,9 @@ msgid ""
 "Add internal users as team members and invite portal users as collaborators "
 "to give them access to the project. They can also access tasks they follow."
 msgstr ""
+"Fügen Sie interne Benutzer als Teammitglieder hinzu und laden Sie "
+"Portalbenutzer als Mitwirkende ein, um ihnen Zugriff auf das Projekt zu "
+"gewähren. Sie können auch auf Aufgaben zugreifen, denen sie folgen."
 
 #. module: project
 #. odoo-python
@@ -1088,6 +1119,9 @@ msgid ""
 "Add internal users as team members to give them access to the project. They "
 "can also access tasks they follow."
 msgstr ""
+"Fügen Sie interne Benutzer als Teammitglieder hinzu, um ihnen Zugriff auf "
+"das Projekt zu gewähren. Sie können auch auf Aufgaben zugreifen, denen sie "
+"folgen."
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
@@ -1095,6 +1129,8 @@ msgid ""
 "Add project-specific property fields to tasks to better customize your "
 "project management process."
 msgstr ""
+"Fügen Sie Aufgaben projektspezifische Eigenschaftsfelder hinzu, um Ihren "
+"Projektmanagementprozess besser anzupassen."
 
 #. module: project
 #. odoo-javascript
@@ -1125,7 +1161,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_collaborator__access_mode__advanced_edit
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__advanced_edit
 msgid "Advanced Edit"
-msgstr ""
+msgstr "Erweiterte Bearbeitung"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -1133,6 +1169,8 @@ msgid ""
 "Advanced Edit: create and update tasks, change their priority, and move them "
 "between stages."
 msgstr ""
+"Erweiterte Bearbeitung: Aufgaben erstellen und aktualisieren, deren "
+"Priorität ändern und sie zwischen Phasen verschieben."
 
 #. module: project
 #. odoo-javascript
@@ -1214,7 +1252,7 @@ msgstr "Alle internen Benutzer"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "All internal users and invited portal users"
-msgstr ""
+msgstr "Alle internen Benutzer und eingeladenen Portalbenutzer"
 
 #. module: project
 #. odoo-python
@@ -1223,6 +1261,9 @@ msgid ""
 "All internal users have access to the project. Invite portal users as "
 "collaborators to give them access. They can also access tasks they follow."
 msgstr ""
+"Alle internen Benutzer haben Zugriff auf das Projekt. Laden Sie Portal-"
+"Benutzer als Mitwirkende ein, um ihnen Zugriff zu gewähren. Sie können auch "
+"auf Aufgaben zugreifen, denen sie folgen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
@@ -1245,7 +1286,7 @@ msgstr "Kostenstelle"
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Kostenstellenbuchung"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
@@ -1371,12 +1412,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "Assign to Me"
-msgstr ""
+msgstr "Mir zuweisen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_sharing_portal_user_ids
 msgid "Assignable Portal Users"
-msgstr ""
+msgstr "Zuweisbare Portalbenutzer"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1618,6 +1659,8 @@ msgid ""
 "Check the stage tracker on tasks to quickly spot bottlenecks in your project "
 "workflow."
 msgstr ""
+"Überprüfen Sie den Status-Tracker der Aufgaben, um Engpässe in Ihrem "
+"Projektablauf schnell zu erkennen."
 
 #. module: project
 #. odoo-javascript
@@ -1641,7 +1684,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose the appropriate access level for your collaborators:"
-msgstr ""
+msgstr "Wählen Sie die geeignete Zugriffsebene für Ihre Mitwirkenden aus:"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_6
@@ -1649,6 +1692,8 @@ msgid ""
 "Click the Kanban progress bar to quickly filter tasks by status within the "
 "current stage."
 msgstr ""
+"Klicken Sie auf den Kanban-Fortschrittsbalken, um Aufgaben innerhalb der "
+"aktuellen Phase schnell nach Status zu filtern."
 
 #. module: project
 #. odoo-javascript
@@ -1771,7 +1816,7 @@ msgstr "Konfiguration"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_configure_project_cog_menu/project_configure_project_cog_menu.xml:0
 msgid "Configure Project"
-msgstr ""
+msgstr "Projekt konfigurieren"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
@@ -1920,6 +1965,8 @@ msgid ""
 "Create a personal workflow to organize your assigned tasks and private to-"
 "dos."
 msgstr ""
+"Erstellen Sie einen persönlichen Arbeitsablauf, um Ihre zugewiesenen "
+"Aufgaben und privaten To-dos zu organisieren."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -1951,6 +1998,8 @@ msgid ""
 "Create reusable task templates to quickly set up tasks and standardize your "
 "workflows."
 msgstr ""
+"Erstellen Sie wiederverwendbare Aufgabenvorlagen, um Aufgaben schnell "
+"einzurichten und Ihre Arbeitsabläufe zu standardisieren."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -2434,7 +2483,7 @@ msgstr "Bearbeiten"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Edit: can create and update tasks."
-msgstr ""
+msgstr "Bearbeiten: Kann Aufgaben erstellen und aktualisieren."
 
 #. module: project
 #. odoo-javascript
@@ -2473,6 +2522,8 @@ msgstr "E-Mail-Domain z. B. 'beispiel.com' in 'odoo@beispiel.com'"
 msgid ""
 "Emails sent to your project's email address automatically create tasks in it."
 msgstr ""
+"E-Mails, die an die E-Mail-Adresse Ihres Projekts gesendet werden, erstellen "
+"automatisch Aufgaben darin."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_until
@@ -2600,6 +2651,10 @@ msgid ""
 "items like timesheets and invoices. Customize actions with your favorite "
 "filters and views to suit your needs."
 msgstr ""
+"Von der Kanban-Ansicht der Aufgabe aus können Sie über das obere Menü "
+"schnell auf alle Projektelemente wie Zeiterfassung und Rechnungen zugreifen. "
+"Passen Sie Aktionen mit Ihren bevorzugten Filtern und Ansichten an Ihre "
+"Bedürfnisse an."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -2694,7 +2749,7 @@ msgstr "Abgeschlossene Aufgaben ausblenden"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "High"
-msgstr ""
+msgstr "Hoch"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__2
@@ -2870,7 +2925,7 @@ msgstr ""
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_5
 msgid "Improve the configuration screen 5h #feature #v20 @"
-msgstr ""
+msgstr "Konfigurationsbildschirm verbessern 5St. #Funktion #v20 @"
 
 #. module: project
 #. odoo-javascript
@@ -2936,7 +2991,7 @@ msgstr "Ungültiger Anzeigename"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Invite Portal Users"
-msgstr ""
+msgstr "Portalbenutzer einladen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -3191,7 +3246,7 @@ msgstr "Suchen Sie das Symbol"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Low"
-msgstr ""
+msgstr "Niedrig"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -3203,7 +3258,7 @@ msgstr "Niedrige Priorität"
 #. module: project
 #: model:ir.module.module,summary:base.module_project
 msgid "Manage tasks and collaborate on projects"
-msgstr ""
+msgstr "Aufgaben verwalten und bei Projekten zusammenarbeiten"
 
 #. module: project
 #. odoo-javascript
@@ -3252,7 +3307,7 @@ msgstr "Materialeinkauf"
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material-Symbols-Icon, z. B. Checkliste"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3266,7 +3321,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Medium"
-msgstr ""
+msgstr "Mittel"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
@@ -3951,7 +4006,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Private Task"
-msgstr ""
+msgstr "Private Aufgabe"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -3961,7 +4016,7 @@ msgstr "Private Aufgaben"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_card
 msgid "Private task"
-msgstr ""
+msgstr "Private Aufgabe"
 
 #. module: project
 #: model:project.project,name:project.project_template_1
@@ -4092,6 +4147,90 @@ msgid ""
 "accurate reports on your team's performance.\n"
 "\n"
 msgstr ""
+"Projekt-Management\n"
+"------------------\n"
+"\n"
+"### Unglaublich flexibel und benutzerfreundlich\n"
+"\n"
+"\n"
+"Odoos kollaboratives und echtzeitbasiertes <a href=\"https://www.odoo.com/"
+"app/project\">Open-Source-Projektmanagement</a>\n"
+"hilft Ihrem Team bei der Arbeit. Behalten Sie den Überblick über alles, vom "
+"Gesamtbild\n"
+"bis hin zum kleinsten Detail, vom Vertragsabschluss bis zur "
+"Rechnungsstellung.\n"
+"\n"
+"Maßgeschneidert für Ihre Arbeitsabläufe\n"
+"--------------------------------\n"
+"\n"
+"Organisieren Sie Projekte rund um Ihre eigenen Prozesse. Bearbeiten Sie "
+"Aufgaben und Probleme in der\n"
+"Kanban-Ansicht, planen Sie Tätigkeiten mit dem Gantt-Diagramm und "
+"kontrollieren Sie Fristen in der\n"
+"Kalenderansicht. Jedes Projekt kann aus individuellen Phasen bestehen, um "
+"den Teams zu helfen,\n"
+"Arbeitsabläufe zu optimieren.\n"
+"\n"
+"Benutzerfreundlichkeit\n"
+"-----------\n"
+"\n"
+"Blitzschnelle Organisation. Die benutzerfreundliche Oberfläche ist leicht "
+"verständlich und jede Aktion erfolgt sofort, sodass ihrem produktiven Fluss "
+"nichts mehr im Weg steht.\n"
+"\n"
+"Zusammenarbeiten\n"
+"-------------\n"
+"\n"
+"### Echtzeit-Chat, Dokumentenaustausch, E-Mail-Integration\n"
+"\n"
+"Nutzen Sie den Chat, um mit Ihrem Team oder Ihren Kunden zu kommunizieren "
+"sowie Kommentare\n"
+"und Dokumente zu Aufgaben und Probleme zu teilen. Integrieren Sie "
+"Diskussionen schnell mit der E-Mail-Integration.\n"
+"\n"
+"Sprechen Sie mit anderen Benutzern oder Kunden über die Livechat-Funktion "
+"der Website-Anwendung.\n"
+"\n"
+"Kollaboratives Schreiben\n"
+"---------------------\n"
+"\n"
+"### Die Kraft von Etherpad, für Ihre Aufgaben\n"
+"\n"
+"Bearbeiten Sie gemeinsam dieselben Daten oder Sitzungsprotokolle direkt in "
+"der\n"
+"Anwendung. Mit der integrierten Etherpad-Funktion können mehrere Personen\n"
+"gleichzeitig an denselben Aufgaben arbeiten.\n"
+"\n"
+"Dies ist sehr effizient für Scrum-Meetings, Sitzungsprotokolle oder "
+"komplexe\n"
+"Beschreibungen. Jeder Benutzer hat seine eigene Farbe und Sie können die "
+"gesamte\n"
+"Erstellung des Inhalts nachverfolgen.\n"
+"\n"
+"Effizientes Arbeiten\n"
+"-------------\n"
+"\n"
+"Erhalten Sie Benachrichtigungen zu verfolgten Veranstaltungen, um über das, "
+"was Sie interessiert, auf dem Laufenden zu bleiben. Verwenden Sie\n"
+"grüne/rote visuelle Indikatoren, um zu sehen, was erledigt ist und was\n"
+"Ihre Aufmerksamkeit erfordert.\n"
+"\n"
+"Zeiterfassung, Verträge & Abrechnung\n"
+"---------------------------------\n"
+"\n"
+"Projekte werden automatisch mit Kundenverträgen integriert, sodass Sie ganz "
+"einfach\n"
+"basierend auf Zeit- und Materialaufwand abrechnen und Ihre Tätigkeit "
+"erfassen können.\n"
+"\n"
+"Probleme nachverfolgen\n"
+"------------\n"
+"\n"
+"Filtern Sie die Probleme, die in einem Projekt auftreten, heraus, um schnell "
+"eine Lösung zu finden.\n"
+"Verknüpfen Sie Probleme mit Kundeninteraktionen und\n"
+"erhalten Sie genaue Berichte über die Leistung Ihres Teams.\n"
+"\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
@@ -4252,6 +4391,27 @@ msgid ""
 "• Project admins have access to private projects, even if they are not team "
 "members."
 msgstr ""
+"Sichtbarkeit von Projekten und Aufgaben\n"
+"Legen Sie fest, wer auf dieses Projekt zugreifen darf:\n"
+"\n"
+"• Interne Benutzer: Wählen Sie aus, ob der Zugriff auf Teammitglieder "
+"beschränkt ist oder allen in Ihrer Organisation zur Verfügung steht.\n"
+"• Portalbenutzer: Wählen Sie aus, ob eingeladene Mitwirkende auf das Projekt "
+"zugreifen dürfen.\n"
+"\n"
+"Zugriffsebenen für Portalbenutzer\n"
+"\n"
+"• Anzeigen: Kann auf Aufgaben zugreifen und Nachrichten senden.\n"
+"• Bearbeiten: Kann Aufgaben erstellen und aktualisieren.\n"
+"• Erweiterte Bearbeitung: Kann Aufgaben erstellen und aktualisieren, deren "
+"Priorität ändern sowie zwischen Phasen verschieben.\n"
+"\n"
+"Weitere Regeln\n"
+"\n"
+"• Interne Benutzer können eine Aufgabe über einen direkten Link öffnen, auch "
+"wenn sie keinen Zugriff auf die Projektanwendung haben.\n"
+"• Projektadministratoren haben Zugriff auf private Projekte, auch wenn sie "
+"keine Teammitglieder sind."
 
 #. module: project
 #. odoo-javascript
@@ -4410,12 +4570,17 @@ msgid ""
 "Quickly identify tasks awaiting approval or change requests, and spot those "
 "on hold due to unresolved dependencies."
 msgstr ""
+"Identifizieren Sie schnell Aufgaben, die auf Genehmigungen oder "
+"Änderungsanfragen warten, und erkennen Sie diejenigen, die aufgrund "
+"ungelöster Abhängigkeiten zurückgestellt wurden."
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_7
 msgid ""
 "Quickly identify tasks that have been stuck in the same stage for too long."
 msgstr ""
+"Identifizieren Sie schnell Aufgaben, die schon zu lange in derselben Phase "
+"verweilen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -4577,7 +4742,7 @@ msgstr "Mitwirkenden entfernen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "Remove Me"
-msgstr ""
+msgstr "Mich entfernen"
 
 #. module: project
 #. odoo-javascript
@@ -5066,7 +5231,7 @@ msgstr "Phase"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_pivot
 msgid "Stage Analysis"
-msgstr ""
+msgstr "Phasenanalyse"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -5076,7 +5241,7 @@ msgstr "Phase geändert"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_time_by_stage_report_view_graph
 msgid "Stage Chart"
-msgstr ""
+msgstr "Phasendiagramm"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__name
@@ -6245,7 +6410,7 @@ msgstr "Aufgaben ansehen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "View: can access tasks and send messages."
-msgstr ""
+msgstr "Anzeigen: Kann auf Aufgaben zugreifen und Nachrichten senden."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode

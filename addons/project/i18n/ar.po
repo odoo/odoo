@@ -20,10 +20,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-09-09 13:57+0000\n"
+"PO-Revision-Date: 2026-10-12 10:34+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
-"project/ar/>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/project/"
+"ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,7 +147,7 @@ msgstr "(تاريخ الاستحقاق"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "(other) tasks to which you do not have access."
-msgstr ""
+msgstr "المهام (الأخرى) التي لا تملك صلاحية الوصول إليها."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
@@ -1005,7 +1005,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
-msgstr ""
+msgstr "أضف مهمة فرعية"
 
 #. module: project
 #. odoo-javascript
@@ -1173,7 +1173,7 @@ msgstr "جميع المستخدمين الداخليين"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "All internal users and invited portal users"
-msgstr ""
+msgstr "كل المستخدمين الداخليين ومستخدمو البوابة المدعوون"
 
 #. module: project
 #. odoo-python
@@ -1310,7 +1310,7 @@ msgstr "تعيين مسؤول لمهمتك"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign at project creation"
-msgstr ""
+msgstr "تعيين عند إنشاء المشروع"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_roles_action
@@ -1319,6 +1319,8 @@ msgid ""
 "                When creating a new project from the template, choose who "
 "will take on each role."
 msgstr ""
+"قم بتعيين الأدوار للمهام في قوالب مشروعك.\n"
+"                عند إنشاء مشروع جديد من القالب، اختر من سيتولى كل دور."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -1382,6 +1384,8 @@ msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
 msgstr ""
+"قم بربط كافة المستندات أو الروابط إلى المهام مباشرة، حتى تكون كافة معلومات "
+"البحث في مكان واحد."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1678,6 +1682,9 @@ msgid ""
 "designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
+"تواصل مع العملاء حول المهمة باستخدام بوابة العملاء. قم بإرفاق تصاميم الشعار "
+"بالمهمة حتى تنتقل المعلومات من\n"
+"      المصممين إلى العمال طابعي القمصان."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1998,6 +2005,9 @@ msgid ""
 "you can\n"
 "      communicate on the task directly."
 msgstr ""
+"يقدم العملاء ملاحظاتهم عبر البريد الإلكتروني؛ ويقوم أودو بإنشاء المهام تلقائياً، "
+"ويمكنك\n"
+"      التواصل بشأن المهمة مباشرةً."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__daily
@@ -2056,12 +2066,15 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"عدد الأيام قبل أن تصبح المهام في هذه المرحلة قديمة. قم بتعيين القيمة كـ 0 "
+"لتعطيلها.          لن يؤثر تغيير هذا المعامل على حالة/تاريخ تقادم الموارد "
+"التي تم تحديثها آخر مرة قبل هذا التغيير."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
 #: model:ir.model.fields,help:project.field_project_task__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "عدد الأيام منذ آخر مرة تم فيها تحديث هذا المورد"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -2074,7 +2087,7 @@ msgstr "الأيام"
 #: model:ir.model.fields,field_description:project.field_project_project__rotting_days
 #: model:ir.model.fields,field_description:project.field_project_task__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "أيام الانتظار دون إجراء تغيير"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -2085,7 +2098,7 @@ msgstr "الأيام حتى الموعد النهائي"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__rotting_threshold_days
 #: model:ir.model.fields,field_description:project.field_project_task_type__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "عدد الأيام حتى تصل إلى مرحلة الركود "
 
 #. module: project
 #. odoo-python
@@ -2409,7 +2422,7 @@ msgstr "خطأ! لا يمكنك إنشاء تدرج هرمي متداخل للم
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
-msgstr ""
+msgstr "يمكن لأي شخص أن يقوم باقتراح أفكار، وسيقوم المحرر بتحديد أفضلها كـ"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_02
@@ -2470,7 +2483,7 @@ msgstr "مطوي"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 msgid "Follow"
-msgstr ""
+msgstr "متابعة"
 
 #. module: project
 #: model:portal.entry,description:project.portal_tasks
@@ -2562,6 +2575,7 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them "
 "in the chatter of the tasks."
 msgstr ""
+"تمكن من تجميع أفكارك ضمن مهام مشروعك الجديد وقم بمناقشتها في دردشة المهام."
 
 #. module: project
 #. odoo-javascript
@@ -2585,7 +2599,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
 msgid "Has Template Ancestor"
-msgstr ""
+msgstr "يحتوي على قالب "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
@@ -2743,6 +2757,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"إذا تم تمكين هذه المرحلة، فسيتم عرضها على أنها مطوية في عرضي Kanban والقائمة "
+"لمشاريعك. تعتبر المشاريع في المرحلة المطوية مغلقة."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -3009,7 +3025,7 @@ msgstr "لاحقاً"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create a regular <b>project</b>."
-msgstr ""
+msgstr "فلنقم بإنشاء <b>مشروع عادي</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3086,7 +3102,7 @@ msgstr "تصميم الشعار"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Look for the"
-msgstr ""
+msgstr "ابحث عن"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -3113,6 +3129,9 @@ msgid ""
 "acquired projects,\n"
 "      assign them and use the"
 msgstr ""
+"قم بإدارة دورة حياة مشروعك في طريقة عرض كانبان. أضف المشاريع التي تم الحصول "
+"عليها حديثاً،\n"
+"      ثم عينها واستخدم"
 
 #. module: project
 #. odoo-javascript
@@ -3462,7 +3481,7 @@ msgstr "لم يتم العثور على أي مؤشرات تقدم. فلنقم �
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_roles_action
 msgid "No project role found. Let's create one!"
-msgstr ""
+msgstr "لم يتم العثور على دور في المشروع. فلنقم بإنشاء واحد!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_template
@@ -3640,7 +3659,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "قم بتنظيم الأولويات من بين الطلبات باستخدام"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3805,7 +3824,7 @@ msgstr "مشاركة البوابة"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Prioritize your tasks by marking important ones using the"
-msgstr ""
+msgstr "قم بتحديد أولويات مهامك عن طريق تحديد المهم منها باستخدام"
 
 #. module: project
 #. odoo-python
@@ -3853,7 +3872,7 @@ msgstr ""
 #. module: project
 #: model:project.project,name:project.project_template_1
 msgid "Product Launch Campaign"
-msgstr ""
+msgstr "حملة إطلاق المنتج"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__progress
@@ -4058,7 +4077,7 @@ msgstr "معالج حذف مرحلة المشروع"
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 msgid "Project Stage: Send rating"
-msgstr ""
+msgstr "مرحلة المشروع: إرسال التقييم"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
@@ -4085,7 +4104,7 @@ msgstr "مهام المشروع"
 #. module: project
 #: model:ir.model,name:project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
-msgstr ""
+msgstr "معالج إنشاء قوالب المشاريع"
 
 #. module: project
 #. odoo-javascript
@@ -4144,13 +4163,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/actions/client_actions.js:0
 msgid "Project converted to template."
-msgstr ""
+msgstr "تم تحويل المشروع إلى قالب."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Project created from template %(name)s."
-msgstr ""
+msgstr "تم إنشاء المشروع من القالب %(name)s."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4165,7 +4184,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_template_role_to_users_map
 msgid "Project role to users mapping"
-msgstr ""
+msgstr "تعيين أدوار المشروع للمستخدمين"
 
 #. module: project
 #. odoo-python
@@ -4548,7 +4567,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/actions/client_actions.js:0
 msgid "Revert to Project"
-msgstr ""
+msgstr "العودة إلى المشروع"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
@@ -4558,7 +4577,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__role_to_users_ids
 msgid "Role To Users"
-msgstr ""
+msgstr "الدور بالنسبة للمستخدمين"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_rotting
@@ -4567,7 +4586,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
-msgstr ""
+msgstr "قيد الانتظار لفترة طويلة"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
@@ -4810,7 +4829,7 @@ msgstr "مشاركة المهمة"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Show Sub-Tasks"
-msgstr ""
+msgstr "إظهار المهام الفرعية"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
@@ -4835,7 +4854,7 @@ msgstr "إظهار المهام الفرعية"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.js:0
 msgid "Show sub-tasks & top menu"
-msgstr ""
+msgstr "إظهار المهام الفرعية والقائمة العلوية"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
@@ -4888,6 +4907,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"قم بفرز مهامك عن طريق سبرينت (sprint) باستخدام مؤشرات التقدم أو العلامات أو "
+"خاصية مخصصة. في نهاية كل سبرينت، ما عليك سوى اختيار المهام المتبقية في "
+"قائمتك ونقلها كلها مرة واحدة إلى السبرينت التالي عن طريق تحرير مؤشر التقدم "
+"أو العلامة أو الخاصية."
 
 #. module: project
 #. odoo-javascript
@@ -4958,7 +4981,7 @@ msgstr "مالك المرحلة"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Stage Rating Status"
-msgstr ""
+msgstr "حالة تصنيف المرحلة"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -5167,7 +5190,7 @@ msgstr "تكرار المهمة"
 #. module: project
 #: model:ir.model,name:project.model_task_share_wizard
 msgid "Task Sharing"
-msgstr ""
+msgstr "مشاركة المهام"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -5355,13 +5378,13 @@ msgstr "قالب"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
 msgid "Template Has Dates"
-msgstr ""
+msgstr "القالب يحتوي على تواريخ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Template converted back to regular project."
-msgstr ""
+msgstr "تمت إعادة القالب إلى مشروع عادي."
 
 #. module: project
 #. odoo-python
@@ -5373,7 +5396,7 @@ msgstr "تم تحويل القالب إلى مهمة عادية"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Template created from %s."
-msgstr ""
+msgstr "تم إنشاء القالب من %s."
 
 #. module: project
 #. odoo-python
@@ -5671,7 +5694,7 @@ msgstr "هذه المهمة هي مجرد قالب حاليًا. هل ترغب �
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "This task is currently blocked by"
-msgstr ""
+msgstr "تم حجب هذه المهمة حالياً بواسطة"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -5820,7 +5843,7 @@ msgstr "أنشطة اليوم"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Top Menu"
-msgstr ""
+msgstr "القائمة العلوية"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5896,7 +5919,7 @@ msgstr "تراجع"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 msgid "Unfollow"
-msgstr ""
+msgstr "إلغاء المتابعة"
 
 #. module: project
 #. odoo-python
@@ -5997,7 +6020,7 @@ msgstr "استخدم علامات التصنيف لوضع مهامك في فئا
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Use the"
-msgstr ""
+msgstr "استخدم"
 
 #. module: project
 #. odoo-javascript
@@ -6153,6 +6176,8 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"عند إنشاء مشروع من قالب، يمكنك اختيار الموظف الذي سيتولى كل دور. ستتم إضافة "
+"هؤلاء الموظفين إلى المهام، إلى جانب أي شخص قم تم إسناد المهام إليه بالفعل."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -6363,14 +6388,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "يقرر مدراؤك أي الملاحظات تكون مقبولة"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
 #: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
 msgid "\\t- ${"
-msgstr ""
+msgstr "\\t- ${"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -6386,7 +6411,7 @@ msgstr "تحليلي"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "and"
-msgstr ""
+msgstr "و"
 
 #. module: project
 #. odoo-javascript
@@ -6395,6 +6420,8 @@ msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
 msgstr ""
+"وأي الملاحظات يتم\n"
+"      نقله إلى عمود \"مرفوض\"."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_card
@@ -6405,7 +6432,7 @@ msgstr "المسند إليهم"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "button."
-msgstr ""
+msgstr "."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_list
@@ -6477,7 +6504,7 @@ msgstr "مثال: إطلاق المنتج"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "icon to organize your daily activities."
-msgstr ""
+msgstr "لتنظيم أنشطتك اليومية"
 
 #. module: project
 #. odoo-javascript
@@ -6486,12 +6513,14 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
 msgstr ""
+"أيقونة لرؤية المهام التي تنتظر مهاماً أخرى. بمجرد أن يتم تحديد مهمة كمنتهية "
+"أو ملغية، سيتم إلغاء حجب كافة تبعياتها."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "icon."
-msgstr ""
+msgstr "."
 
 #. module: project
 #. odoo-python
@@ -6509,32 +6538,32 @@ msgstr "جاهزة ليتم تحديدها كتم الوصول إليها"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
-msgstr ""
+msgstr "للإشارة إلى طلب تغيير أو الحاجة إلى المناقشة حول مهمة ما."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
-msgstr ""
+msgstr "لإخطار زملائك في العمل بأن المهمة جاهزة للمرحلة التالية."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as cancelled."
-msgstr ""
+msgstr "لتعيين المهمة كملغية."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as complete."
-msgstr ""
+msgstr "لتعيين المهمة كمنتهية."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 msgid "sub-tasks)"
-msgstr ""
+msgstr "المهام الفرعية)"
 
 #. module: project
 #. odoo-python
@@ -6549,12 +6578,14 @@ msgid ""
 "to define if the project is\n"
 "      ready for the next step."
 msgstr ""
+"لتحديد ما إذا كان المشروع\n"
+"      جاهزاً للخطوة التالية."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "to signalize what is the current status of your Idea."
-msgstr ""
+msgstr "للإشارة إلى الحالة الحالية لفكرتك."
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template

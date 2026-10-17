@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-08-31 15:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-15 13:35+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "sale_edi_ubl/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,15 @@ msgid ""
 "File with embedded xml data will allow seller to retrieve Order data from "
 "Files.\n"
 msgstr ""
+"\n"
+"Sähköinen tilausmoduuli\n"
+"===========================\n"
+"\n"
+"Mahdollistaa formaattien tuonnin: UBL Bis 3.\n"
+"Kun lataat tai liität tiedostoja tilausluettelonäkymään, jossa on tilaukseen "
+"liittyviä tietoja XML- tai PDF-tiedostossa,\n"
+"jossa on upotettuja XML-tietoja, antaa myyjän hakea tilaustiedot "
+"tiedostoista.\n"
 
 #. module: sale_edi_ubl
 #. odoo-python
@@ -43,18 +52,18 @@ msgstr "Tuotteen haku epäonnistui: %(name)s"
 #. module: sale_edi_ubl
 #: model:ir.model.fields,field_description:sale_edi_ubl.field_customer_product_reference__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Luonut"
 
 #. module: sale_edi_ubl
 #: model:ir.model.fields,field_description:sale_edi_ubl.field_customer_product_reference__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Luotu"
 
 #. module: sale_edi_ubl
 #: model:ir.model,name:sale_edi_ubl.model_customer_product_reference
 #: model:ir.model.fields,field_description:sale_edi_ubl.field_customer_product_reference__customer_product_reference
 msgid "Customer Product Reference"
-msgstr ""
+msgstr "Asiakkaan tuoteviite"
 
 #. module: sale_edi_ubl
 #: model:ir.model.fields,field_description:sale_edi_ubl.field_customer_product_reference__display_name
@@ -68,7 +77,7 @@ msgstr "Näyttönimi"
 #. module: sale_edi_ubl
 #: model:ir.model.fields,field_description:sale_edi_ubl.field_sale_order_line__edi_customer_product_ref
 msgid "Edi Customer Product Ref"
-msgstr ""
+msgstr "Edi asiakkaan tuoteviite"
 
 #. module: sale_edi_ubl
 #: model:ir.model.fields,field_description:sale_edi_ubl.field_customer_product_reference__id
@@ -82,27 +91,27 @@ msgstr "Tunnus"
 #. module: sale_edi_ubl
 #: model:ir.module.module,shortdesc:base.module_sale_edi_ubl
 msgid "Import electronic orders with UBL"
-msgstr ""
+msgstr "Tuo sähköisiä tilauksia UBL:llä"
 
 #. module: sale_edi_ubl
 #: model:ir.model.fields,field_description:sale_edi_ubl.field_customer_product_reference__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimeksi päivittänyt"
 
 #. module: sale_edi_ubl
 #: model:ir.model.fields,field_description:sale_edi_ubl.field_customer_product_reference__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Viimeksi päivitetty"
 
 #. module: sale_edi_ubl
 #: model:ir.model.fields,field_description:sale_edi_ubl.field_customer_product_reference__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Kumppani"
 
 #. module: sale_edi_ubl
 #: model:ir.model.fields,field_description:sale_edi_ubl.field_customer_product_reference__product_id
 msgid "Product"
-msgstr ""
+msgstr "Tuote"
 
 #. module: sale_edi_ubl
 #: model:ir.model,name:sale_edi_ubl.model_product_product
@@ -122,7 +131,7 @@ msgstr "Myyntitilaus"
 #. module: sale_edi_ubl
 #: model:ir.model,name:sale_edi_ubl.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Myyntitilausrivi"
 
 #. module: sale_edi_ubl
 #. odoo-python
@@ -134,4 +143,4 @@ msgstr "Joidenkin tietojen tuominen ei onnistunut:"
 #: model:ir.model.constraint,message:sale_edi_ubl.constraint_customer_product_reference_product_partner_unique
 msgid ""
 "The customer reference with the same product and partner already exists!"
-msgstr ""
+msgstr "Asiakasviite samalla tuotteella ja kumppanilla on jo olemassa!"

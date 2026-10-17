@@ -13,10 +13,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-09-09 13:53+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-16 11:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "website_hr_recruitment/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -58,7 +58,7 @@ msgstr "“. Es werden Ergebnisse angezeigt für „"
 #. module: website_hr_recruitment
 #: model:website.page,url:website_hr_recruitment.thankyou
 msgid "/job-thank-you"
-msgstr ""
+msgstr "/job-thank-you"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -80,6 +80,8 @@ msgid ""
 "<i class=\"oi oi-fw\" data-icon=\"account_tree\" title=\"Department\" "
 "role=\"img\" aria-label=\"Department\"/>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"account_tree\" title=\"Department\" "
+"role=\"img\" aria-label=\"Abteilung\"/>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.dynamic_filter_template_hr_job_card
@@ -87,6 +89,8 @@ msgid ""
 "<i class=\"oi oi-fw\" data-icon=\"location_on\" title=\"Address\" "
 "role=\"img\" aria-label=\"Address\"/>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"location_on\" title=\"Address\" "
+"role=\"img\" aria-label=\"Adresse\"/>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.dynamic_filter_template_hr_job_card
@@ -118,6 +122,11 @@ msgstr ""
 "<span class=\"h5 fw-light\">Währendessen</span><br/>\n"
 "                                            <span class=\"h3 mt8 mb32 fw-"
 "bold\">können Sie sich auf unserer Website umsehen:</span>"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "<span class=\"s_website_form_label_content\">Company</span>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -266,7 +275,7 @@ msgstr "Alle"
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_floating_snippets_plugin.js:0
 msgid "All jobs"
-msgstr ""
+msgstr "Alle Stellenangebote"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_website_published_button
@@ -335,7 +344,7 @@ msgstr "Schließen"
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/systray_items/new_content.js:0
 msgid "Company Mismatch"
-msgstr ""
+msgstr "Unstimmigkeit beim Unternehmen"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__job_details
@@ -621,7 +630,7 @@ msgstr "Stellenseite"
 #. module: website_hr_recruitment
 #: model:website.snippet.filter,name:website_hr_recruitment.dynamic_filter_latest_job_positions
 msgid "Latest Job Positions"
-msgstr ""
+msgstr "Neueste Stellenangebote"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -637,7 +646,7 @@ msgstr "LinkedIn-Profil"
 #. module: website_hr_recruitment
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
 msgid "Manage your online hiring process"
-msgstr ""
+msgstr "Verwaltung Ihres Online-Einstellungsverfahrens"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -704,7 +713,7 @@ msgstr "Bürofilter"
 #. module: website_hr_recruitment
 #: model:ir.module.module,shortdesc:base.module_website_hr_recruitment
 msgid "Online Jobs"
-msgstr ""
+msgstr "Online-Stellenangebote"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -802,6 +811,8 @@ msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_card
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "Remote"
 msgstr "Aus der Ferne"
@@ -945,7 +956,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_floating_snippets_plugin.js:0
 msgid "This job"
-msgstr ""
+msgstr "Diese Stelle"
 
 #. module: website_hr_recruitment
 #: model:ir.module.module,description:base.module_website_hr_recruitment
@@ -953,12 +964,14 @@ msgid ""
 "This module allows to publish your available job positions on your website "
 "and keep track of application submissions easily."
 msgstr ""
+"Mit diesem Modul können Sie Ihre offenen Stellen auf Ihrer Website "
+"veröffentlichen und Bewerbungen einfach verfolgen."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/website_builder/website_hr_recruitment_floating_snippets_plugin.js:0
 msgid "This page"
-msgstr ""
+msgstr "Diese Seite"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -967,6 +980,9 @@ msgid ""
 "This website belongs to %(company)s, which isn't one of your active "
 "companies. Switch to it first, then try again."
 msgstr ""
+"Diese Website gehört zu %(company)s, das nicht zu Ihren aktiven Unternehmen "
+"gehört. Wechseln Sie zunächst dorthin und versuchen Sie es anschließend "
+"erneut."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -975,6 +991,9 @@ msgid ""
 "This website belongs to a company you don't have access to. Ask your "
 "administrator for access before creating a Job Position here."
 msgstr ""
+"Diese Website gehört zu einem Unternehmen, auf das Sie keinen Zugriff haben. "
+"Bitten Sie Ihren Administrator um Zugriff, bevor Sie hier eine "
+"Stellenanzeige erstellen."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
@@ -1010,7 +1029,7 @@ msgstr "Gültige Arbeitserlaubnis für Belgien"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.dynamic_filter_template_hr_job_card
 msgid "View {{0}}"
-msgstr ""
+msgstr "{{0}} anzeigen"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_published

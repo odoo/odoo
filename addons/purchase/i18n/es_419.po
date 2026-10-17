@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-10-08 13:34+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-10-16 21:33+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/purchase/es_419/>\n"
 "Language: es_419\n"
@@ -69,12 +69,14 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s facturado, %"
+"(quantity_received)s recibido a %(unit_price)s cada uno"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; diferencia de precio para %(product)s"
 
 #. module: purchase
 #. odoo-python
@@ -639,7 +641,7 @@ msgstr "Puede establecer una advertencia en un producto o cliente (Compra)"
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Grupos de acceso"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
@@ -672,6 +674,9 @@ msgid ""
 "With perpetual valuation, it counterbalances the stock valuation account at "
 "closing."
 msgstr ""
+"Cuenta que registra el valor devengado de los bienes facturados, pero que "
+"aún no han sido recibidos. Con la valuación perpetua, compensa la cuenta de "
+"valuación de existencias al cierre."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_bills_to_receive_id
@@ -680,11 +685,14 @@ msgid ""
 "With perpetual valuation, it counterbalances the stock valuation account at "
 "closing."
 msgstr ""
+"Cuenta que registra el valor devengado de los bienes recibidos, pero aún no "
+"han sido facturados. Con la valuación perpetua, compensa la cuenta de "
+"valuación de existencias al cierre."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__accrual_move_ids
 msgid "Accrual Entries"
-msgstr ""
+msgstr "Asientos de devengo"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__accrual_move_ids
@@ -692,6 +700,9 @@ msgid ""
 "Accrual entries generated for this line, so it isn't accrued again while one "
 "is still standing (posted, not yet reversed or cancelled)."
 msgstr ""
+"Asientos de devengo generados para esta línea, para evitar que se vuelva a "
+"devengar mientras haya uno vigente (registrado, pero aún no revertido ni "
+"cancelado)."
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_accrued_expense_entry_purchase_order_line
@@ -701,13 +712,13 @@ msgstr "Asiento de gastos devengados"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr ""
+msgstr "Asistente de órdenes devengadas"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/wizard/accrued_orders.py:0
 msgid "Accrued total"
-msgstr ""
+msgstr "Total devengado"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1073,7 +1084,7 @@ msgstr "Facturar a la orden de compra"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__bill_to_receive
 msgid "Bill to Receive"
-msgstr ""
+msgstr "Facturas de proveedor por recibir"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
@@ -1091,12 +1102,12 @@ msgstr "Subtotal facturado"
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_id
 #: model:ir.model.fields,field_description:purchase.field_res_company__account_billed_not_received_id
 msgid "Billed Not Received Account"
-msgstr ""
+msgstr "Cuenta de facturado pero no recibido"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_active
 msgid "Billed Not Received Account Active"
-msgstr ""
+msgstr "Cuenta de facturado pero no recibido activa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -1133,12 +1144,12 @@ msgstr "Facturas recibidas"
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_id
 #: model:ir.model.fields,field_description:purchase.field_res_company__account_bills_to_receive_id
 msgid "Bills to Receive Account"
-msgstr ""
+msgstr "Cuenta de facturas por cobrar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_active
 msgid "Bills to Receive Account Active"
-msgstr ""
+msgstr "Cuenta de facturas por cobrar activa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
@@ -1257,7 +1268,7 @@ msgstr "Confirmar órdenes de compra en un solo paso"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Confirm the price."
-msgstr ""
+msgstr "Confirma el precio."
 
 #. module: purchase
 #. odoo-javascript
@@ -1596,7 +1607,7 @@ msgstr "Orden duplicada"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Enter a Description..."
-msgstr ""
+msgstr "Escribe una descripción..."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1653,7 +1664,7 @@ msgstr "Valores prohibidos en una línea de orden de compra no contable"
 #: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
 msgid "Forecasted"
-msgstr ""
+msgstr "Pronosticado"
 
 #. module: purchase
 #. odoo-python
@@ -1899,7 +1910,7 @@ msgstr "Apunte contable"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__label
 msgid "Label"
-msgstr ""
+msgstr "Etiqueta"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__write_uid
@@ -2235,7 +2246,7 @@ msgstr "Siguiente tipo de actividad"
 #. module: purchase
 #: model:res.groups.privilege,placeholder:purchase.res_groups_privilege_purchase
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #. module: purchase
 #. odoo-javascript
@@ -2710,7 +2721,7 @@ msgstr "URL de acceso al portal"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__prepaid_expense
 msgid "Prepaid Expense"
-msgstr ""
+msgstr "Gasto prepagado"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3041,7 +3052,7 @@ msgstr "Órdenes de compra que incluyen líneas sin facturar."
 #. module: purchase
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase orders, tenders and agreements"
-msgstr ""
+msgstr "Órdenes de compra, licitaciones y contratos"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -3166,6 +3177,8 @@ msgid ""
 "Quantity on hand minus outgoing quantity from Sales Orders plus incoming "
 "quantity from Purchase Orders"
 msgstr ""
+"Cantidad a la mano menos la cantidad saliente de las órdenes de venta más la "
+"cantidad entrante de las órdenes de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3404,7 +3417,7 @@ msgstr "Error en el envío del SMS"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Save the line."
-msgstr ""
+msgstr "Guarda la línea."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3448,7 +3461,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Select a Product"
-msgstr ""
+msgstr "Selecciona un producto"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -3459,7 +3472,7 @@ msgstr "Selecciona un documento de compra"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Select price"
-msgstr ""
+msgstr "Selecciona el precio"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__selected_seller_id
@@ -3939,7 +3952,7 @@ msgstr "Total facturado"
 #: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
 msgid "Total Forecasted"
-msgstr ""
+msgstr "Total pronosticado"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree

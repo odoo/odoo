@@ -8,15 +8,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-09 13:59+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 06:34+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/base_import/zh_Hans/>\n"
+"projects/odoo-20/base_import/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +49,22 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Odoo 全新的可扩展文件导入\n"
+"======================================\n"
+"\n"
+"重新实现 Odoo 的文件导入系统：\n"
+"\n"
+"* 服务器端：旧系统将大部分逻辑强加在客户端，造成重复劳动（各客户端之间），没"
+"有客户端（直接 RPC 或其他自动化方式）时导入系统极难使用，也让导入/导出系统的"
+"知识分散在 3 个以上不同项目中，难以汇集。\n"
+"\n"
+"* 更具可扩展性：用户和合作伙伴可以构建自己的前端，从其他文件格式（如 "
+"OpenDocument 文件）导入数据，这些格式在其工作流程或数据生产环境中可能更便于处"
+"理。\n"
+"\n"
+"* 以模块形式提供：不需要或不想使用在线导入的 Odoo 管理员和用户，可以避免该功"
+"能对用户开放。\n"
 
 #. module: base_import
 #. odoo-javascript
@@ -123,14 +140,13 @@ msgstr "基础导入对照"
 #. module: base_import
 #: model:ir.module.module,shortdesc:base.module_base_import
 msgid "Base import"
-msgstr ""
+msgstr "基础导入"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
-#, fuzzy
 msgid "Batch"
-msgstr "批"
+msgstr "批次"
 
 #. module: base_import
 #. odoo-javascript
@@ -215,7 +231,6 @@ msgstr "数据库 ID"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#, fuzzy
 msgid "Date Format"
 msgstr "日期格式"
 
@@ -235,7 +250,7 @@ msgstr "小数点分隔符"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Defines how many megabytes can be imported in each batch"
-msgstr ""
+msgstr "定义每批可导入的数据量（兆字节）"
 
 #. module: base_import
 #. odoo-javascript
@@ -268,7 +283,6 @@ msgstr "显示名称"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-#, fuzzy
 msgid "Documentation"
 msgstr "文档"
 
@@ -288,7 +302,6 @@ msgstr "下载"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#, fuzzy
 msgid "Encoding"
 msgstr "编码"
 
@@ -380,9 +393,8 @@ msgstr "待检查和/或导入的文件"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
-#, fuzzy
 msgid "Finalizing current batch before interrupting..."
-msgstr "在中断前完成当前批次的工作..."
+msgstr "正在完成当前批次，随后中断……"
 
 #. module: base_import
 #. odoo-javascript
@@ -442,17 +454,16 @@ msgstr "若勾选此选项，工作表的第一行将不会被导入"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
-#, fuzzy
 msgid ""
 "If the file contains\n"
 "                    the column names, Odoo can try auto-detecting the\n"
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
-"如果该文件包含\n"
-"                    列名，Odoo可以尝试自动检测列所对应的\n"
-"                    与该列对应的字段。这使得导入\n"
-"                    更加简单，特别是当文件有很多列时。"
+"如果文件中包含\n"
+"                    列名，Odoo 可以尝试自动检测\n"
+"                    与该列对应的字段。这让导入\n"
+"                    更加简单，尤其是在文件有很多列时。"
 
 #. module: base_import
 #. odoo-javascript
@@ -477,7 +488,6 @@ msgstr "导入文件没有内容或已损坏"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
-#, fuzzy
 msgid "Import preview failed due to: \""
 msgstr "导入预览失败，原因：“"
 
@@ -559,7 +569,6 @@ msgstr "模型"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "Multiple errors occurred"
 msgstr "发生多个错误"
 
@@ -590,9 +599,8 @@ msgstr "未选择文件"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "No matching records found for the following name"
-msgstr "找不到以下名称的匹配记录"
+msgstr "找不到与以下名称匹配的记录"
 
 #. module: base_import
 #. odoo-javascript
@@ -603,7 +611,6 @@ msgstr "字段"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#, fuzzy
 msgid "Other"
 msgstr "其他"
 
@@ -681,9 +688,8 @@ msgstr "搜索一种语言..."
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "See possible values"
-msgstr "查看可能的值"
+msgstr "查看可选值"
 
 #. module: base_import
 #. odoo-javascript
@@ -700,7 +706,6 @@ msgstr "分号"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#, fuzzy
 msgid "Separator"
 msgstr "分隔符"
 
@@ -811,7 +816,6 @@ msgstr "这一栏将在字段中串联起"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-#, fuzzy
 msgid "Thousands Separator"
 msgstr "千位分隔符"
 
@@ -939,23 +943,20 @@ msgstr "您必须配置至少一个要导入的字段"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "at multiple rows"
-msgstr "在多行处的匹配"
+msgstr "，出现在多个行"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "at row"
-msgstr "在行"
+msgstr "，所在行："
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "in field"
-msgstr "与字段"
+msgstr "，字段："
 
 #. module: base_import
 #. odoo-javascript
@@ -966,9 +967,8 @@ msgstr "分钟"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
-#, fuzzy
 msgid "more"
-msgstr "更多"
+msgstr "个其他错误"
 
 #. module: base_import
 #. odoo-javascript
@@ -979,9 +979,8 @@ msgstr "或拖拽文件"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
-#, fuzzy
 msgid "out of"
-msgstr "之外"
+msgstr "/"
 
 #. module: base_import
 #. odoo-javascript

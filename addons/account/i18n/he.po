@@ -42,7 +42,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-10-04 15:33+0000\n"
 "Last-Translator: Shanit Kurtser <shanit@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-20/account/"
@@ -136,6 +136,11 @@ msgid " valid until %s"
 msgstr " זמין עד %s"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
+msgid "# Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
 msgstr "# חשבונות מותאמים"
@@ -144,11 +149,6 @@ msgstr "# חשבונות מותאמים"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
 msgstr "# חשבוניות מותאמות"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
-msgid "# Reconciled Statement Lines"
-msgstr "מספר שורות שהותאמו"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
@@ -247,13 +247,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"%(move)s reached an invalid state regarding its related statement line.\n"
+"%(move)s reached an invalid state regarding its related bank transaction.\n"
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
-"%(move)s נמצאת במצב שגוי ביחס לשורת הפקודה המשויכת אליה..\n"
-"כדי לשמור על תקינות חשבונאית, על פקודת היומן להכיל שורת חשבון ביניים אחת "
-"בלבד."
 
 #. module: account
 #. odoo-python
@@ -3215,8 +3212,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
-msgid "All unreconciled bank statement lines before the selected date."
-msgstr "כל שורות דפי הבנק שלא התואמו לפני התאריך שנבחר."
+msgid "All unreconciled bank transactions before the selected date."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
@@ -3787,8 +3784,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid ""
-"At least one transaction in the statement is prior the last posted statement "
-"line (%s)"
+"At least one transaction in the statement is prior the last posted "
+"transaction (%s)"
 msgstr ""
 
 #. module: account
@@ -4093,8 +4090,20 @@ msgstr "בחזרה לחשבון"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Credit Note"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
 msgstr "בחזרה לחשבוניות"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Refund"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4297,11 +4306,6 @@ msgid "Bank Statement Digitization"
 msgstr "דיגיטליזציה של דפי בנק"
 
 #. module: account
-#: model:ir.model,name:account.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "שורת דף בנק"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 msgid "Bank Statements"
 msgstr "דפי בנק"
@@ -4327,6 +4331,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.model,name:account.model_account_bank_statement_line
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
+#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
 msgid "Bank Transaction"
 msgstr "העברה בנקאית"
 
@@ -4396,6 +4403,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
 msgstr "עסקאות ותשלומים בנקאיים :"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
+msgid "Bank transactions matched to this payment"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -8372,14 +8384,6 @@ msgstr "הון עצמי"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Error importing attachment %(filename)s:"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/controllers/download_docs.py:0
-msgid ""
-"Error while creating XML:\n"
-"- %s"
 msgstr ""
 
 #. module: account
@@ -13197,11 +13201,9 @@ msgstr "שרת Odoo"
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
 msgid ""
-"Odoo allows you to reconcile a statement line directly with\n"
+"Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
-"Odoo מאפשר לך ליישב שורת הצהרה ישירות עם\n"
-"הרכישות הקשורות או חשבוניות המכירה."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -13542,6 +13544,12 @@ msgid "Original Lock Date"
 msgstr "תאריך נעילה מקורי"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Originator Bank Transaction"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
 msgid "Originator Group of Taxes"
 msgstr "מקור קבוצת המיסים"
@@ -13550,12 +13558,6 @@ msgstr "מקור קבוצת המיסים"
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "תשלום מקור"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
-#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-msgid "Originator Statement Line"
-msgstr "שורת דף בנק מקור"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
@@ -14399,8 +14401,8 @@ msgstr "אחוז מכל שורה לביצוע הפעולה."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
-msgid "Percentage of statement line"
-msgstr "אחוז שורת דפי בנק"
+msgid "Percentage of transaction"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15275,6 +15277,11 @@ msgid "Reconciled"
 msgstr "עבר התאמה חשבונאית"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
+msgid "Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
 msgstr "חשבוניות ספק שהותאמו"
@@ -15304,11 +15311,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
-msgid "Reconciled Statement Lines"
-msgstr "שורות דפי בנק שהותאמו"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -16901,8 +16903,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Show Unreconciled Bank Statement Line"
-msgstr "הצג שורת דוח בנק לא מתואמת"
+msgid "Show Unreconciled Bank Transactions"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -17107,12 +17109,6 @@ msgid "Statement %(date)s"
 msgstr "דף בנק %(date)s"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
-#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
-msgid "Statement Line"
-msgstr "שורת דף הבנק"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_name
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Statement Name"
@@ -17124,17 +17120,6 @@ msgid "Statement Reports"
 msgstr "דוחות כספיים"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_reconcile_model.py:0
-msgid "Statement line percentage can't be 0"
-msgstr "אחוז שורת ההצהרה לא יכול להיות 0"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
-msgid "Statement lines"
-msgstr "שורות דף בנק"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__statement_line_ids
@@ -17142,11 +17127,6 @@ msgstr "שורות דף בנק"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_tree
 msgid "Statements"
 msgstr "דפי בנק"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
-msgid "Statements lines matched to this payment"
-msgstr "שורות מדפי בנק שמתאימים לתשלום זה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__states_count
@@ -18348,6 +18328,11 @@ msgid "The bank statement used for bank reconciliation"
 msgstr "דפי הבנק לשימוש עבור התאמות בנק"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
+msgid "The bank transaction that created this entry"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
@@ -18701,14 +18686,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"The journal entry %s reached an invalid state regarding its related "
-"statement line.\n"
+"The journal entry %s reached an invalid state regarding its related bank "
+"transaction.\n"
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"פקודת היומן %s הגיעה למצב למצב לא תקין כתוצאה מהפעולה.\n"
-"בכדי לאפשר את הפעולה, פקודת היומן חייבת תמיד להכיל חשבון בנק/מזומן אחד.\n"
-"אנא בדוק את פקודת היומן"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -18859,9 +18841,9 @@ msgstr "מודל ההתאמה יחול רק על הלקוחות / הספקים �
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
 msgid ""
-"The reconciliation model will only be applied when either the statement line "
+"The reconciliation model will only be applied when either the transaction "
 "label, the transaction details or the note matches the following:\n"
-"        * Contains: The statement line must contains this string (case "
+"        * Contains: The transaction must contain this string (case "
 "insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
@@ -19111,11 +19093,6 @@ msgid "The smallest value used to round the total amount (e.g., 0.05 or 100)."
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
-msgid "The statement line that created this entry"
-msgstr "השורה בדפי הבנק שיצרה פקודת יומן זו."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
@@ -19183,22 +19160,18 @@ msgstr "יש עדיין פקודות טיוטה בתקופה שאתה רוצה �
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
-"There are still unreconciled bank statement lines before the selected date. "
-"The entries from journal prefixes containing them will not be secured: %"
+"There are still unreconciled bank transactions before the selected date. The "
+"entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
-"עדיין קיימות שורות דף בנק שלא הותאמו לפני התאריך שנבחר. הרשומות מפקודות "
-"היומן עם הקידומות המכילות אותן לא יאובטחו: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
-"There are still unreconciled bank statement lines in the period you want to "
-"lock.You should either reconcile or delete them."
+"There are still unreconciled bank transactions in the period you want to "
+"lock. You should either reconcile or delete them."
 msgstr ""
-"בתקופה שבחרת לסגור עדיין יש שורות פתוחות שטרם הותאמו עם דפי הבנק. יש להתאים "
-"שורות אלו או למחוק אותן."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -19620,8 +19593,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_matching_rules
 msgid ""
-"Those can be used to automatically match journal items with your statement "
-"lines."
+"Those can be used to automatically match journal items with your "
+"transactions."
 msgstr ""
 
 #. module: account
@@ -19961,6 +19934,13 @@ msgid "Transaction Type"
 msgstr "סוג עסקה"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+msgid "Transaction percentage can't be 0"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
 #: model:ir.ui.menu,name:account.account_transactions_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
@@ -20559,9 +20539,8 @@ msgstr "אמת חשבון בנק"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__trigger
 msgid ""
-"Validate the statement line automatically (reconciliation based on your "
-"rule)."
-msgstr "אשר את שורת דף הבנק אוטומטית (התאמה על פי הכלל שלך)."
+"Validate the transaction automatically (reconciliation based on your rule)."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -21124,6 +21103,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+msgid ""
+"You can't create a new bank transaction without a suspense account set on "
+"the %s journal."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
@@ -21132,14 +21119,6 @@ msgid ""
 msgstr ""
 "אינך יכול ליצור תשלום חדש ללא חשבון תשלומים\\תקבולים שטרם נפרעו המוגדר בחברה "
 "או ב%(payment_method)s אמצעי התשלום של היומן %(journal)s."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement_line.py:0
-msgid ""
-"You can't create a new statement line without a suspense account set on the "
-"%s journal."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22365,6 +22344,88 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "# Reconciled Statement Lines"
+#~ msgstr "מספר שורות שהותאמו"
+
+#~ msgid ""
+#~ "%(move)s reached an invalid state regarding its related statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one suspense "
+#~ "line."
+#~ msgstr ""
+#~ "%(move)s נמצאת במצב שגוי ביחס לשורת הפקודה המשויכת אליה..\n"
+#~ "כדי לשמור על תקינות חשבונאית, על פקודת היומן להכיל שורת חשבון ביניים אחת "
+#~ "בלבד."
+
+#~ msgid "All unreconciled bank statement lines before the selected date."
+#~ msgstr "כל שורות דפי הבנק שלא התואמו לפני התאריך שנבחר."
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "שורת דף בנק"
+
+#~ msgid ""
+#~ "Odoo allows you to reconcile a statement line directly with\n"
+#~ "                the related sale or purchase invoices."
+#~ msgstr ""
+#~ "Odoo מאפשר לך ליישב שורת הצהרה ישירות עם\n"
+#~ "הרכישות הקשורות או חשבוניות המכירה."
+
+#~ msgid "Originator Statement Line"
+#~ msgstr "שורת דף בנק מקור"
+
+#~ msgid "Percentage of statement line"
+#~ msgstr "אחוז שורת דפי בנק"
+
+#~ msgid "Reconciled Statement Lines"
+#~ msgstr "שורות דפי בנק שהותאמו"
+
+#~ msgid "Show Unreconciled Bank Statement Line"
+#~ msgstr "הצג שורת דוח בנק לא מתואמת"
+
+#~ msgid "Statement Line"
+#~ msgstr "שורת דף הבנק"
+
+#~ msgid "Statement line percentage can't be 0"
+#~ msgstr "אחוז שורת ההצהרה לא יכול להיות 0"
+
+#~ msgid "Statement lines"
+#~ msgstr "שורות דף בנק"
+
+#~ msgid "Statements lines matched to this payment"
+#~ msgstr "שורות מדפי בנק שמתאימים לתשלום זה"
+
+#~ msgid ""
+#~ "The journal entry %s reached an invalid state regarding its related "
+#~ "statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one journal "
+#~ "item involving the bank/cash account."
+#~ msgstr ""
+#~ "פקודת היומן %s הגיעה למצב למצב לא תקין כתוצאה מהפעולה.\n"
+#~ "בכדי לאפשר את הפעולה, פקודת היומן חייבת תמיד להכיל חשבון בנק/מזומן אחד.\n"
+#~ "אנא בדוק את פקודת היומן"
+
+#~ msgid "The statement line that created this entry"
+#~ msgstr "השורה בדפי הבנק שיצרה פקודת יומן זו."
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines before the selected "
+#~ "date. The entries from journal prefixes containing them will not be "
+#~ "secured: %(prefix_info)s"
+#~ msgstr ""
+#~ "עדיין קיימות שורות דף בנק שלא הותאמו לפני התאריך שנבחר. הרשומות מפקודות "
+#~ "היומן עם הקידומות המכילות אותן לא יאובטחו: %(prefix_info)s"
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines in the period you want "
+#~ "to lock.You should either reconcile or delete them."
+#~ msgstr ""
+#~ "בתקופה שבחרת לסגור עדיין יש שורות פתוחות שטרם הותאמו עם דפי הבנק. יש "
+#~ "להתאים שורות אלו או למחוק אותן."
+
+#~ msgid ""
+#~ "Validate the statement line automatically (reconciliation based on your "
+#~ "rule)."
+#~ msgstr "אשר את שורת דף הבנק אוטומטית (התאמה על פי הכלל שלך)."
 
 #~ msgid ""
 #~ "Downpayments posted on this account will be considered by the Tax Closing "

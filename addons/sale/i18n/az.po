@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:40+0000\n"
+"POT-Creation-Date: 2026-10-16 17:42+0000\n"
 "PO-Revision-Date: 2026-08-31 17:29+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -3259,6 +3259,11 @@ msgid "Line"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__line_number_offset
+msgid "Line Number Offset"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__show_sol_numbers
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__show_sol_numbers
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_sol_numbers
@@ -6034,17 +6039,6 @@ msgstr "Siz təsdiqlənmiş sifarişin qiymət siyahısını dəyişə bilməzsi
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/product_product.py:0
-#: code:addons/sale/models/product_template.py:0
-msgid ""
-"You cannot change the product's type because it is already used in sales "
-"orders."
-msgstr ""
-"Siz məhsulun növünü dəyişə bilməzsiniz, çünki o, artıq satış sifarişlərində "
-"istifadə olunur."
-
-#. module: sale
-#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
@@ -6089,6 +6083,16 @@ msgstr ""
 "Satdığınız və ya satın aldığınız hər şey üçün bir məhsul "
 "müəyyənləşdirməlisiniz,\n"
 "saxlana bilən məhsul, istehlak materialı və ya xidmət olsun."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"You should not change the product type because this product is already used "
+"in sales orders. Changing it may affect how the related order lines are "
+"delivered."
+msgstr ""
 
 #. module: sale
 #: model:portal.entry,name:sale.portal_your_orders
@@ -6253,6 +6257,13 @@ msgid ""
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+
+#~ msgid ""
+#~ "You cannot change the product's type because it is already used in sales "
+#~ "orders."
+#~ msgstr ""
+#~ "Siz məhsulun növünü dəyişə bilməzsiniz, çünki o, artıq satış "
+#~ "sifarişlərində istifadə olunur."
 
 #~ msgid ""
 #~ "Activity plans are used to assign a list of activities in just a few "

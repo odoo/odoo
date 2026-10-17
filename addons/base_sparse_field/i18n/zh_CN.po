@@ -7,15 +7,16 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-09 14:03+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 06:34+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/base_sparse_field/zh_Hans/>\n"
+"projects/odoo-20/base_sparse_field/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,10 @@ msgid ""
 "limitation on the number of columns in a table. The values of all sparse\n"
 "fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 msgstr ""
+"\n"
+"本模块旨在实现“稀疏”字段，即大多数值为空的字段。\n"
+"该实现规避了 PostgreSQL 对表中列数的限制。所有稀疏字段的值\n"
+"以 JSON 映射的形式存储在一个“序列化”字段中。\n"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_base
@@ -109,7 +114,7 @@ msgstr ""
 #. module: base_sparse_field
 #: model:ir.module.module,summary:base.module_base_sparse_field
 msgid "Implementation of sparse fields."
-msgstr ""
+msgstr "稀疏字段的实现。"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
@@ -163,7 +168,7 @@ msgstr "未找到稀疏字段%(serialization_field)s的序列化字段 %(sparse_
 #. module: base_sparse_field
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
 msgid "Sparse Fields"
-msgstr ""
+msgstr "稀疏字段"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test

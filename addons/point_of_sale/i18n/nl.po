@@ -16,9 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-08 09:46+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-12 08:33+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/nl/>\n"
 "Language: nl\n"
@@ -616,6 +616,12 @@ msgstr "<sup title=\"Werkt alleen online en voor zelfbediening\">?</sup>"
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Klikken op *Bevestigen* bevestigd de betaling."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "A customer is required to use the payment method %s."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -1670,13 +1676,13 @@ msgstr "Bankafschrift"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "Rekeningafschriftregel"
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_line_ids
-msgid "Bank Statement Lines"
-msgstr "Bankafschriftregels"
+msgid "Bank Transactions"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -2867,12 +2873,6 @@ msgstr "Conversieratio"
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
 msgstr "Conversieratio van bedrijfsvaluta naar order valuta."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Convert POS Order to Invoice"
-msgstr "Kassaorder omzetten naar factuur"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__correction_move_ids
@@ -5198,20 +5198,11 @@ msgid ""
 "Defines the journal where to book the accumulated payments (or individual "
 "payment if Identify Customer is true) after closing the session.\n"
 "For cash journal, we directly write to the default account in the journal "
-"via statement lines.\n"
+"via bank transactions.\n"
 "For bank journal, we write to the outstanding account specified in this "
 "payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
-"Laat leeg om de debiteurenrekening van de klant te gebruiken.\n"
-"Definieert het dagboek waar de geaccumuleerde betalingen (of individuele "
-"betaling als Identificeer klant waar is) moeten worden geboekt na het "
-"sluiten van de sessie.\n"
-"Voor kasboek schrijven we rechtstreeks via afschriftregels naar de "
-"standaardrekening in het dagboek.\n"
-"Voor bankboek schrijven we naar de Rekening betalingen onderweg die is "
-"opgegeven in deze betaalmethode.\n"
-"Alleen kas- en bankdagboeken zijn toegestaan."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -6485,6 +6476,7 @@ msgstr "Online reservering voor Kassa"
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Only Point of Sale managers can modify a Point of Sale configuration."
 msgstr ""
+"Alleen Kassamanagers kunnen een configuratie van het kassasysteem wijzigen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7137,6 +7129,12 @@ msgstr "Papierformaten"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
 msgid "Parent Category"
 msgstr "Hoofdcategorie"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Partial reversal of %s for PoS Order invoicing"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -9640,6 +9638,12 @@ msgid "Some orders are already being invoiced. Please try again later."
 msgstr "Sommige orders worden reeds gefactureerd. Probeer later opnieuw."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Some orders are not globally invoiced."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -10087,7 +10091,7 @@ msgstr "Testen"
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
 msgid "The %s must be filled in your details."
-msgstr ""
+msgstr "De %s moet ingevuld zijn in je gegevens."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10523,6 +10527,8 @@ msgstr "De kassabon wordt automatisch afgedrukt aan het einde van elke order."
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.js:0
 msgid "The register cannot be opened while offline. Please try again."
 msgstr ""
+"De kassa kan niet worden geopend terwijl je offline bent. Probeer het "
+"opnieuw."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11538,6 +11544,11 @@ msgid "VAT"
 msgstr "Btw"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "VAT:"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Validate"
@@ -12462,10 +12473,22 @@ msgid "open orders planned for later."
 msgstr "openstaande orders gepland voor later."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "order"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "order(s) for the next few days:"
 msgstr "order(s) voor de komende dagen:"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "orders"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -12542,6 +12565,35 @@ msgstr "met een waarde van"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "Rekeningafschriftregel"
+
+#~ msgid "Bank Statement Lines"
+#~ msgstr "Bankafschriftregels"
+
+#~ msgid "Convert POS Order to Invoice"
+#~ msgstr "Kassaorder omzetten naar factuur"
+
+#~ msgid ""
+#~ "Leave empty to use the receivable account of customer.\n"
+#~ "Defines the journal where to book the accumulated payments (or individual "
+#~ "payment if Identify Customer is true) after closing the session.\n"
+#~ "For cash journal, we directly write to the default account in the journal "
+#~ "via statement lines.\n"
+#~ "For bank journal, we write to the outstanding account specified in this "
+#~ "payment method.\n"
+#~ "Only cash and bank journals are allowed."
+#~ msgstr ""
+#~ "Laat leeg om de debiteurenrekening van de klant te gebruiken.\n"
+#~ "Definieert het dagboek waar de geaccumuleerde betalingen (of individuele "
+#~ "betaling als Identificeer klant waar is) moeten worden geboekt na het "
+#~ "sluiten van de sessie.\n"
+#~ "Voor kasboek schrijven we rechtstreeks via afschriftregels naar de "
+#~ "standaardrekening in het dagboek.\n"
+#~ "Voor bankboek schrijven we naar de Rekening betalingen onderweg die is "
+#~ "opgegeven in deze betaalmethode.\n"
+#~ "Alleen kas- en bankdagboeken zijn toegestaan."
 
 #~ msgid "Create Product"
 #~ msgstr "Product aanmaken"

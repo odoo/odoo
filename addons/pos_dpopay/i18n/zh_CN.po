@@ -3,15 +3,16 @@
 # * pos_dpopay
 #
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-09 14:11+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-11 11:47+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/pos_dpopay/zh_Hans/>\n"
+"projects/odoo-20/pos_dpopay/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,26 @@ msgid ""
 "* Quick payments by swiping, scanning, or tapping your credit/debit card or "
 "Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, American Express etc.\n"
+msgstr ""
+"\n"
+"允许 DPO POS 支付\n"
+"==============================\n"
+"\n"
+"它支持终端设备支持的所有货币——主要用于**非洲地区**。\n"
+"它让客户能够通过 DPO POS 终端使用借记卡/信用卡和移动货币为其订单付款。\n"
+"处理交易需要 DPO 商户账户。\n"
+"功能包括：\n"
+"\n"
+"* 在支付终端上通过刷卡、扫码或轻触您的借记卡/信用卡或移动货币（Airtel "
+"Money / M-Pesa）快速付款。\n"
+"* 支持的卡：Visa、MasterCard、American Express 等。\n"
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"%s. Please ensure the device is online and confirm that the Merchant ID "
+"(MID) and Terminal ID (TID) are correct."
 msgstr ""
 
 #. module: pos_dpopay
@@ -79,7 +100,7 @@ msgstr "DPO 支付"
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_chain_id
 msgid "DPO Pay Chain-ID"
-msgstr ""
+msgstr "DPO Pay 链 ID"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_id
@@ -117,7 +138,7 @@ msgstr "显示名称"
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Dpo Pay Error"
-msgstr ""
+msgstr "DPO Pay 错误"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
@@ -132,7 +153,7 @@ msgstr "Dpopay 支付模式"
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_test_mode
 msgid "Enable Test Mode"
-msgstr ""
+msgstr "启用测试模式"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_chain_id
@@ -149,7 +170,8 @@ msgstr "输入 DPO Pay 分配的商户 ID（例如：123456789012）。"
 msgid ""
 "Enter the unique Terminal ID (TID) of your DPO Pay POS terminal (e.g., "
 "XXXXXXXX)."
-msgstr "输入你的 DPO Pay POS 收银终端唯一终端编号（TID）（格式示例：XXXXXXXX）。"
+msgstr ""
+"输入你的 DPO Pay POS 收银终端唯一终端编号（TID）（格式示例：XXXXXXXX）。"
 
 #. module: pos_dpopay
 #. odoo-javascript
@@ -184,13 +206,13 @@ msgstr "ID"
 #. module: pos_dpopay
 #: model:ir.module.module,summary:base.module_pos_dpopay
 msgid "Integrate your POS with DPO payment terminal."
-msgstr ""
+msgstr "将您的 POS 与 DPO 支付终端集成。"
 
 #. module: pos_dpopay
 #. odoo-python
 #: code:addons/pos_dpopay/models/pos_payment_method.py:0
 msgid "Invalid Chain ID. Please verify the configuration. %s"
-msgstr ""
+msgstr "无效的链 ID。请检查配置。%s"
 
 #. module: pos_dpopay
 #. odoo-python
@@ -201,7 +223,7 @@ msgstr "无效端点"
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__momo
 msgid "Mobile Money"
-msgstr ""
+msgstr "移动货币"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
@@ -221,18 +243,9 @@ msgid "Payment is unsuccessful."
 msgstr "付款未成功。"
 
 #. module: pos_dpopay
-#. odoo-python
-#: code:addons/pos_dpopay/models/pos_payment_method.py:0
-#, fuzzy
-msgid ""
-"Please ensure the device is online and confirm that the Merchant ID (MID) "
-"and Terminal ID (TID) are correct. %s"
-msgstr "请确保设备已联网，并确认商户 ID (MID) 和终端 ID (TID) 是否正确。%s"
-
-#. module: pos_dpopay
 #: model:ir.module.module,shortdesc:base.module_pos_dpopay
 msgid "PoS DPO Pay"
-msgstr ""
+msgstr "POS DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment
@@ -252,12 +265,12 @@ msgstr "RRN"
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_transaction_ref
 msgid "Reference number required for Mobile Money refund transactions."
-msgstr ""
+msgstr "移动货币退款交易需要参考号。"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_rrn
 msgid "Retrieval Reference Number generated for the DPO Pay transaction."
-msgstr ""
+msgstr "DPO Pay 交易生成的检索参考号。"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_id
@@ -300,3 +313,8 @@ msgstr "无法连接到 DPO Pay 终端。"
 msgid ""
 "Unable to retrieve DPO Pay bearer token: check Client ID and Client Secret."
 msgstr "无法检索 DPO Pay 持有人令牌：请检查客户端 ID 和客户端密钥。"
+
+#~ msgid ""
+#~ "Please ensure the device is online and confirm that the Merchant ID (MID) "
+#~ "and Terminal ID (TID) are correct. %s"
+#~ msgstr "请确保设备已联网，并确认商户 ID (MID) 和终端 ID (TID) 是否正确。%s"

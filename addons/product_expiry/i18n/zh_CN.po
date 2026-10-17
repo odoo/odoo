@@ -10,15 +10,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 14:10+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 11:47+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/product_expiry/zh_Hans/>\n"
+"projects/odoo-20/product_expiry/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +56,18 @@ msgid ""
 "Also implements the removal strategy First Expiry First Out (FEFO) widely "
 "used, for example, in food industries.\n"
 msgstr ""
+"\n"
+"跟踪产品和生产批次上的不同日期。\n"
+"======================================================\n"
+"\n"
+"可以跟踪以下日期：\n"
+"-------------------------------\n"
+"    - 有效期结束\n"
+"    - 最佳食用日期\n"
+"    - 下架日期\n"
+"    - 警报日期\n"
+"\n"
+"还实现了先到期先出（FEFO）下架策略，例如在食品行业中被广泛使用。\n"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -95,7 +108,7 @@ msgstr "<span>到期日期前的天数</span>"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "访问组"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
@@ -113,12 +126,12 @@ msgstr "已到警报日期"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 msgid "Alert Lots"
-msgstr ""
+msgstr "预警批次"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Alert from"
-msgstr ""
+msgstr "警报起始"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__available_quantity
@@ -167,7 +180,7 @@ msgstr "在此日期前食用"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
-msgstr ""
+msgstr "请选择纸张布局格式用于打印批次标签"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
@@ -436,7 +449,7 @@ msgstr "拣货"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Proceed except expired"
-msgstr ""
+msgstr "继续（已过期除外）"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
@@ -462,12 +475,12 @@ msgstr "产品变体"
 #. module: product_expiry
 #: model:ir.module.module,shortdesc:base.module_product_expiry
 msgid "Products Expiration Date"
-msgstr ""
+msgstr "产品有效期"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "量化"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
@@ -566,12 +579,12 @@ msgstr "立即删除"
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove on"
-msgstr ""
+msgstr "下架日期"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_traceability_report
 msgid "Traceability Report"
-msgstr ""
+msgstr "可追溯性报表"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking

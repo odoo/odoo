@@ -6,14 +6,15 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# Burkay Yıldızhan <seyil@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-08-31 19:37+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-14 15:34+0000\n"
+"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "account_edi_ubl_cii/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +45,24 @@ msgid ""
 "present in the `EAS list\n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 msgstr ""
+"\n"
+"Elektronik faturalama modülü\n"
+"===========================\n"
+"\n"
+"Aşağıdaki formatları dışa ve içe aktarmaya izin verir: E-FFF, UBL Bis 3, "
+"EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"Faturada PDF oluşturulurken, tüm UBL formatları için PDF, xml dosyasının "
+"içine gömülür. Bu,\n"
+"alıcının yalnızca xml dosyasıyla PDF'yi alabilmesini sağlar. **EHF3'ün UBL "
+"Bis 3 tarafından tam olarak uygulandığını** unutmayın (`referans\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
+"#_implementation>`_).\n"
+"\n"
+"E-FFF, NLCIUS ve XRechnung (UBL) formatlarının sırasıyla yalnızca Belçika, "
+"Hollanda ve Almanya’daki şirketler tarafından kullanılabileceğini\n"
+"lütfen unutmayın. UBL Bis 3 ise yalnızca ülkesi `EAS listesinde\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_ yer alan "
+"şirketler tarafından kullanılabilir.\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -617,7 +636,6 @@ msgstr "Belgeyi içe aktarmak için kullanılan biçim: %s"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, fuzzy
 msgid "Format used to import the invoice: %s"
 msgstr "Fatura içe aktarmada kullanılan format: %s"
 
@@ -1107,6 +1125,11 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Tersine faturalandırma: Faturanın alınmasından itibaren bir ay içinde yazılı "
+"bir itirazda bulunulmaması halinde, müşterinin, periyodik beyanname verme "
+"yükümlülüğü bulunan bir vergi mükellefi olduğunu kabul ettiği varsayılır. Bu "
+"koşul yerine getirilmezse, müşteri bu koşulla ilgili olarak ödenmesi gereken "
+"vergi, faiz ve cezaların ödenmesinden sorumlu olacaktır."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9947
@@ -1314,6 +1337,9 @@ msgid ""
 "Taxes of category 'Service outside scope of tax' shall not be mixed with tax "
 "from other categories. You should split your invoice in two"
 msgstr ""
+"\"Vergi kapsamı dışındaki hizmet\" kategorisindeki vergiler, diğer "
+"kategorilerdeki vergilerle karıştırılmamalıdır. Faturanızı ikiye "
+"ayırmalısınız"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.constraint,message:account_edi_ubl_cii.constraint_uom_uom_unece_code_unique

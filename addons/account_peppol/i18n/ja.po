@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-08 08:42+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-10-16 02:03+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/"
 "account_peppol/ja/>\n"
 "Language: ja\n"
@@ -38,7 +38,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Customer not on %(network_name)s)"
-msgstr ""
+msgstr " (%(network_name)s を利用していない顧客)"
 
 #. module: account_peppol
 #. odoo-python
@@ -56,7 +56,7 @@ msgstr " (%(eas)sが未設定です)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Previously sent)"
-msgstr ""
+msgstr " (以前送信済)"
 
 #. module: account_peppol
 #. odoo-python
@@ -96,7 +96,7 @@ msgstr ""
 #: code:addons/account_peppol/exceptions.py:0
 #: code:addons/account_peppol/tools/peppol_errors.py:0
 msgid "%s"
-msgstr ""
+msgstr "%s"
 
 #. module: account_peppol
 #. odoo-python
@@ -323,6 +323,8 @@ msgid ""
 "A 0% tax cannot use Tax Category 'S' (Standard). Please update the Tax "
 "Category in the Advanced Options of the tax configuration."
 msgstr ""
+"% tの税は、税カテゴリ「S」(標準)を使用できません。税設定の「詳細オプション」"
+"で税カテゴリを更新してください。"
 
 #. module: account_peppol
 #. odoo-python
@@ -755,7 +757,7 @@ msgstr "Peppolをキャンセル"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent via %(network_name)s"
-msgstr ""
+msgstr "%(network_name)s 経由で送信済みの仕訳は送信取消できません"
 
 #. module: account_peppol
 #. odoo-python
@@ -838,7 +840,7 @@ msgstr "顧客を作成"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Create, send, and receive e-invoices for free."
-msgstr ""
+msgstr "無料で電子請求書の作成、送受信が可能です。"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__create_uid
@@ -1058,6 +1060,8 @@ msgid ""
 "reason code is 'VATEX-EU-O'. You can change this in the Advanced Options of "
 "the tax configuration."
 msgstr ""
+"税 %(taxes)s: 免税理由コードが 'VATEX-EU-O' の場合、税区分には 'O' を使用する"
+"必要があります。この設定は税設定の「詳細オプション」で変更できます。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1125,6 +1129,8 @@ msgid ""
 "If you are not subject to VAT, you should not have a VAT number on your "
 "company/contacts and your clients should not have one either."
 msgstr ""
+"VAT(付加価値税)の課税対象外である場合、自社や取引先の連絡先にVAT登録番号を登"
+"録しないでください。同様に、顧客側にも番号が登録されていない必要があります。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1138,6 +1144,8 @@ msgid ""
 "If you want to be invoiced via %(network_name)s, your configuration must be "
 "valid."
 msgstr ""
+"%(network_name)s 経由での請求書送付を希望される場合、設定が有効である必要があ"
+"ります。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ip
@@ -1156,6 +1164,8 @@ msgid ""
 "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %"
 "(network_name)s."
 msgstr ""
+"請求書 %(invoice_name)s はファイルサイズが64MBを超えているため、%"
+"(network_name)s 経由で送信できません。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1164,6 +1174,8 @@ msgid ""
 "Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
 "Please update the tax type in Advanced Options."
 msgstr ""
+"税区分 'O' を使用する明細行では、パーセンテージベースの税金を適用できません。"
+"「詳細オプション」で税タイプを更新してください。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1172,6 +1184,8 @@ msgid ""
 "Invoice lines with Tax Category 'Exempt from VAT' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"税区分が「免税」の明細行は、税率が 0 である必要があります。この設定は税金設定"
+"の「詳細オプション」で変更できます。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1180,6 +1194,8 @@ msgid ""
 "Invoice lines with Tax Category 'Reverse charge' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"税区分が「リバースチャージ」の明細行は、税率が 0 である必要があります。この設"
+"定は税金設定の「詳細オプション」で変更できます。"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1251,7 +1267,7 @@ msgstr "その他："
 msgid ""
 "Missing Buyer Country. Please add the Country Code to the client's contact "
 "information."
-msgstr ""
+msgstr "購入者の国が未設定です。顧客の連絡先情報に国コードを追加してください。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1260,6 +1276,8 @@ msgid ""
 "Missing Invoiced Item VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"請求明細行のVAT(付加価値税)区分コードが不足しています。対応手順: モジュール "
+"'account_edi_ubl_cii_tax_extension' をインストールしてください。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1268,6 +1286,8 @@ msgid ""
 "Missing Reverse Charge details. Please set the Exemption Reason to 'Reverse "
 "charge' in the Advanced Options of the tax configuration."
 msgstr ""
+"リバースチャージの詳細情報が不足しています。税設定の「詳細オプション」で免税"
+"理由を「リバースチャージ」に設定してください。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1276,6 +1296,8 @@ msgid ""
 "Missing VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"VAT(付加価値税)区分コードが不足しています。対応手順: モジュール "
+"'account_edi_ubl_cii_tax_extension' をインストールしてください。"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -1378,7 +1400,7 @@ msgstr "Odoo Peppol プロキシから無効な応答が返されました。"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Odoo keeps you up to date with new regulations."
-msgstr ""
+msgstr "Odooなら、最新の法規制や運用ルールに常に追従できます。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1413,7 +1435,7 @@ msgstr "パートナーはフォーマットを受信できません"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "Partner doesn't have a valid configuration for %(network_name)s."
-msgstr ""
+msgstr "取引先に %(network_name)s の有効な設定がありません。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
@@ -1493,7 +1515,7 @@ msgstr "Peppolドキュメント：請求書を削除できません"
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Peppol EAS and/or Endpoint identifier"
-msgstr ""
+msgstr "Peppol EAS および/またはエンドポイント識別子"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
@@ -1510,7 +1532,7 @@ msgstr "Peppolエンドポイント"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Peppol Error"
-msgstr ""
+msgstr "Peppolエラー"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_external_provider
@@ -1612,7 +1634,7 @@ msgstr "Peppol応答"
 #. odoo-python
 #: code:addons/account_peppol/models/account_journal.py:0
 msgid "Peppol Settings"
-msgstr ""
+msgstr "Peppol設定"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__peppol_message_uuid
@@ -1765,7 +1787,7 @@ msgstr "電話番号ライブラリをインストールして下さい。"
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Please make sure the Contact email is a valid email address."
-msgstr ""
+msgstr "連絡先メールアドレスが有効なメールアドレスであることを確認してください。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2035,7 +2057,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid "That country is not available with %(network_name)s."
-msgstr ""
+msgstr "その国は、%(network_name)s では利用不可です。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2097,6 +2119,9 @@ msgid ""
 "The Peppol endpoint is missing in the XML file. Action Required: Update the "
 "account and account_edi_ubl_cii modules to resolve this."
 msgstr ""
+"XMLファイル内にPeppolエンドポイントが見つかりません。対応手順: この問題を解決"
+"するには 'account' および 'account_edi_ubl_cii' モジュールを更新してください"
+"。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2144,6 +2169,8 @@ msgid ""
 "The Tax Category must be 'AE' when using Exemption Reason code 'VATEX-EU-"
 "AE'. You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"免税理由コードが 'VATEX-EU-AE' の場合、税区分は 'AE' である必要があります。こ"
+"の設定は税設定の「詳細オプション」で変更できます。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2267,6 +2294,8 @@ msgid ""
 "The exemption reason code is invalid. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"免税理由コードが無効です。対応手順: モジュール "
+"'account_edi_ubl_cii_tax_extension' をインストールしてください。"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2609,7 +2638,7 @@ msgstr "Peppolへようこそ"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why is it great?"
-msgstr ""
+msgstr "Peppleとは?なぜ優れているのか?"
 
 #. module: account_peppol
 #. odoo-python
@@ -2621,13 +2650,13 @@ msgstr "フランスの電子請求を使うべき理由は?"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use Peppol?"
-msgstr ""
+msgstr "Peppolを使うべき理由は?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should you use it?"
-msgstr ""
+msgstr "使用するべき理由は?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2844,7 +2873,7 @@ msgstr "Peppolによる"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "could not be sent via"
-msgstr ""
+msgstr "以下経由で送信できませんでした:"
 
 #. module: account_peppol
 #. odoo-python
@@ -2867,7 +2896,7 @@ msgstr "拒否済"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "sent via"
-msgstr ""
+msgstr "送信元："
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form

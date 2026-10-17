@@ -21,14 +21,15 @@
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
+# Burkay Yıldızhan <seyil@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 20:30+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-14 15:33+0000\n"
+"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -55,6 +56,21 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"WMS Muhasebe modülü\n"
+"======================\n"
+"Bu modül, 'stok' ve 'muhasebe' modülleri arasında bağlantı kurar ve stok "
+"hareketlerinizi değerlemek için muhasebe kayıtları oluşturmanıza olanak "
+"tanır\n"
+"\n"
+"Öne Çıkan Özellikler\n"
+"------------\n"
+"* Stok Değerleme (dönemsel veya otomatik)\n"
+"* Sevkiyattan Fatura\n"
+"\n"
+"Depo Yönetimi için Pano / Raporlar şunları içerir:\n"
+"------------------------------------------------------\n"
+"* Belirli bir tarihte stok envanter değeri (geçmiş tarihleri destekler)\n"
 
 #. module: stock_account
 #. odoo-python
@@ -791,6 +807,11 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"Standart Fiyat: Ürünler, ürün üzerinde belirtilen standart maliyet üzerinden "
+"değerlenir.\n"
+"        Ortalama Maliyet (AVCO): Ürünler, ağırlıklı ortalama maliyet "
+"üzerinden değerlenir.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
@@ -984,7 +1005,7 @@ msgstr "Değer Açıklaması"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr ""
+msgstr "Eldeki Değer:"
 
 #. module: stock_account
 #. odoo-python

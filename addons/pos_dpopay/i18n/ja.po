@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-10-08 15:34+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/"
@@ -37,6 +37,14 @@ msgid ""
 "* Quick payments by swiping, scanning, or tapping your credit/debit card or "
 "Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, American Express etc.\n"
+msgstr ""
+
+#. module: pos_dpopay
+#. odoo-python
+#: code:addons/pos_dpopay/models/pos_payment_method.py:0
+msgid ""
+"%s. Please ensure the device is online and confirm that the Merchant ID "
+"(MID) and Terminal ID (TID) are correct."
 msgstr ""
 
 #. module: pos_dpopay
@@ -147,8 +155,8 @@ msgstr "チェーンIDヘッダーの値を入力してください（例：DPO-
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_mid
 msgid "Enter the Merchant ID assigned by DPO Pay (e.g., 123456789012)."
 msgstr ""
-"DPO Payから割り当てられたマーチャントIDを入力してください（例：123456789012）"
-"。"
+"DPO Payから割り当てられたマーチャントIDを入力してください（例："
+"123456789012）。"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_tid
@@ -227,16 +235,6 @@ msgid "Payment is unsuccessful."
 msgstr "支払いに失敗しました。"
 
 #. module: pos_dpopay
-#. odoo-python
-#: code:addons/pos_dpopay/models/pos_payment_method.py:0
-msgid ""
-"Please ensure the device is online and confirm that the Merchant ID (MID) "
-"and Terminal ID (TID) are correct. %s"
-msgstr ""
-"デバイスがオンライン状態であることを確認し、マーチャントID（MID）と端末ID（"
-"TID）が正しいことをご確認ください。%s"
-
-#. module: pos_dpopay
 #: model:ir.module.module,shortdesc:base.module_pos_dpopay
 msgid "PoS DPO Pay"
 msgstr ""
@@ -311,3 +309,10 @@ msgid ""
 msgstr ""
 "DPO Pay ペーベアータークンの取得に失敗しました: Client ID と Client Secret を"
 "要確認してください。"
+
+#~ msgid ""
+#~ "Please ensure the device is online and confirm that the Merchant ID (MID) "
+#~ "and Terminal ID (TID) are correct. %s"
+#~ msgstr ""
+#~ "デバイスがオンライン状態であることを確認し、マーチャントID（MID）と端末ID"
+#~ "（TID）が正しいことをご確認ください。%s"

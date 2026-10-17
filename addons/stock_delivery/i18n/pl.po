@@ -4,14 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 17:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-15 13:56+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-20/"
 "stock_delivery/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +37,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_delivery/models/sale_order.py:0
 msgid "%(name)s (Estimated Cost: %(cost)s)"
-msgstr ""
+msgstr "%(name)s (Szacowany koszt: %(cost)s)"
 
 #. module: stock_delivery
 #. odoo-python
@@ -47,12 +48,12 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_docs
 msgid "'Shipping-Document-%s' % object.name"
-msgstr ""
+msgstr "'Shipping-Document-%s' % object.name"
 
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_labels
 msgid "'Shipping-Label-%s' % object.name"
-msgstr ""
+msgstr "'Shipping-Label-%s' % object.name"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_package_view_form
@@ -63,13 +64,13 @@ msgstr "(obliczono:"
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
 msgid "1. Download and print the Return label and place it in your package."
-msgstr ""
+msgstr "1. Pobierz i wydrukuj etykietę zwrotną, a następnie umieść ją w paczce."
 
 #. module: stock_delivery
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
 msgid "2. Download and print the Shipping label and place it on your package."
-msgstr ""
+msgstr "2. Pobierz i wydrukuj etykietę wysyłkową i umieść ją na swojej paczce."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
@@ -97,12 +98,12 @@ msgstr "<span> - Waga: </span>"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr "<strong>Kariera: </strong>"
+msgstr "<strong>Przewoźnik: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>Przewoźnik</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -121,12 +122,12 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Total Weight</strong>"
-msgstr ""
+msgstr "<strong>Waga całkowita</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Numer śledzenia</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -158,7 +159,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
 msgid "Action while validating Delivery Orders."
-msgstr ""
+msgstr "Akcja podczas zatwierdzania zamówień dostawy."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
@@ -168,7 +169,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
 msgid "Allowed Carrier"
-msgstr ""
+msgstr "Dozwolony przewoźnik"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__amount_to_collect
@@ -178,17 +179,17 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Delivery Methods"
-msgstr ""
+msgstr "Dotyczy metod dostawy"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
 msgid "Auto Print Carrier Labels"
-msgstr ""
+msgstr "Automatycznie drukuj etykiety przewoźników"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__auto_print_export_documents
 msgid "Auto Print Export Documents"
-msgstr ""
+msgstr "Automatycznie drukuj dokumenty eksportowe"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_group_by_carrier
@@ -200,6 +201,7 @@ msgstr ""
 msgid ""
 "Automatically print the carrier labels of the picking when they are created."
 msgstr ""
+"Automatycznie drukuj etykiety przewoźnika dla kompletacji po ich utworzeniu."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_export_documents
@@ -208,6 +210,9 @@ msgid ""
 "created. Availability of export documents depends on the carrier and the "
 "destination."
 msgstr ""
+"Automatycznie drukuj dokumenty eksportowe dotyczące kompletacji po ich "
+"utworzeniu. Dostępność dokumentów eksportowych zależy od przewoźnika i "
+"miejsca przeznaczenia."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_batch
@@ -234,7 +239,7 @@ msgstr "Anulowanie dostawy może być niewykonalne. Czy chcesz kontynuować?"
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__batch_group_by_carrier
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier"
-msgstr "Nośnik"
+msgstr "Przewoźnik"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
@@ -244,12 +249,12 @@ msgstr "Kod Przewoźnika"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Carrier Labels"
-msgstr ""
+msgstr "Etykiety przewoźników"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__package_carrier_type
 msgid "Carrier Type"
-msgstr ""
+msgstr "Typ przewoźnika"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
@@ -271,7 +276,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_delivery/models/ir_actions_report.py:0
 msgid "Configure a printer to print this report: '%s'"
-msgstr ""
+msgstr "Skonfiguruj drukarkę do wydrukowania tego raportu: \"%s\""
 
 #. module: stock_delivery
 #. odoo-python
@@ -280,6 +285,8 @@ msgid ""
 "Configure the carrier to generate labels in PDF format, or use a ZPL/ePOS "
 "printer to print %s from the chatter."
 msgstr ""
+"Skonfiguruj przewoźnika, aby generował etykiety w formacie PDF lub "
+"skorzystaj z drukarki ZPL/ePOS, aby wydrukować %s z czatu."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
@@ -289,18 +296,18 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Cost: %(price).2f %(currency)s"
-msgstr ""
+msgstr "Koszt: %(price).2f %(currency)s"
 
 #. module: stock_delivery
 #: model:ir.model,website_form_label:stock_delivery.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Utwórz klienta"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_uid
@@ -325,12 +332,12 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
 msgid "Delivery Method"
-msgstr ""
+msgstr "Metoda dostawy"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Method Selection Wizard"
-msgstr ""
+msgstr "Kreator wyboru metody dostawy"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
@@ -382,7 +389,7 @@ msgstr "Wyświetl hiperłącza do śledzenia przesyłek"
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_order_dialog.js:0
 msgid "Download Shipping Label"
-msgstr ""
+msgstr "Pobierz etykietę wysyłkową"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
@@ -401,7 +408,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Exception occurred with respect to carrier on the transfer"
-msgstr ""
+msgstr "Wystąpił błąd dotyczący dostawcy"
 
 #. module: stock_delivery
 #. odoo-python
@@ -412,12 +419,12 @@ msgstr "Wyjątek:"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Export Documents"
-msgstr ""
+msgstr "Eksportuj dokumenty"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Export documents"
-msgstr ""
+msgstr "Eksportuj dokumenty"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -453,12 +460,12 @@ msgstr "ID"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Poziom integracji"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Trasa magazynowa"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
@@ -483,7 +490,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.manage_printers_action
 msgid "Manage Printers"
-msgstr ""
+msgstr "Zarządzaj drukarkami"
 
 #. module: stock_delivery
 #. odoo-python
@@ -537,13 +544,13 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "Typ kompletacji"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__pickup_location_data
 #: model:ir.model.fields,field_description:stock_delivery.field_res_users__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "Dane lokacji odbioru"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_label_layout
@@ -568,7 +575,7 @@ msgstr "Przesunięcia produktu (pozycja przesunięcia zasobów)"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "Wariant produktu"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -578,7 +585,7 @@ msgstr "Dostawca"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_put_in_pack
 msgid "Put In Pack Wizard"
-msgstr ""
+msgstr "Kreator umieszczania w paczkach"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
@@ -588,17 +595,17 @@ msgstr "Realny koszt"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Zgłoś akcję"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.cached_printers_section
 msgid "Reporting"
-msgstr ""
+msgstr "Raportowanie"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.cached_printers_action
 msgid "Reset Linked Printers"
-msgstr ""
+msgstr "Zresetuj powiązane drukarki"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
@@ -652,6 +659,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
 "(ref)s"
 msgstr ""
+"Przesyłka została przekazana przewoźnikowi %(carrier_name)s w celu wysyłki "
+"wraz z numerem śledzenia %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -661,12 +670,12 @@ msgstr "Koszt wysyłki"
 #. module: stock_delivery
 #: model:ir.actions.report,name:stock_delivery.action_report_shipping_docs
 msgid "Shipping Documents"
-msgstr ""
+msgstr "Dokumenty przewozowe"
 
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.open_export_docs_report
 msgid "Shipping Documents Report"
-msgstr ""
+msgstr "Raport dokumentów przewozowych"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -676,12 +685,12 @@ msgstr "Informacje o przesyłce"
 #. module: stock_delivery
 #: model:ir.actions.report,name:stock_delivery.action_report_shipping_labels
 msgid "Shipping Labels"
-msgstr ""
+msgstr "Etykiety wysyłkowe"
 
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.open_shipping_labels_report
 msgid "Shipping Labels Report"
-msgstr ""
+msgstr "Raport etykiet wysyłkowych"
 
 #. module: stock_delivery
 #. odoo-python
@@ -695,6 +704,7 @@ msgstr "Waga dostawy"
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
 msgid "Standardized code for international shipping and goods declaration."
 msgstr ""
+"Standardowy kod do celów wysyłki międzynarodowej i deklaracji towarowej."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -723,6 +733,8 @@ msgid ""
 "Technical field: information needed by delivery providers in case of pickup "
 "point addresses."
 msgstr ""
+"Dziedzina techniczna: informacje potrzebne dostawcom w przypadku adresów "
+"punktów odbioru."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -755,6 +767,8 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "its package type. Please choose another package."
 msgstr ""
+"Waga Twojej paczki jest większa niż maksymalna waga dozwolona dla tego typu "
+"paczki. Wybierz inny typ paczki."
 
 #. module: stock_delivery
 #. odoo-python
@@ -788,6 +802,8 @@ msgid ""
 "This action is meant to print %s attachments from the chatter: none was "
 "found."
 msgstr ""
+"Ta akcja ma na celu wydrukowanie %s załączników z czatu: nie znaleziono "
+"żadnych."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_package__weight
@@ -823,7 +839,7 @@ msgstr "link do śledzenia"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Tracking links for shipment:"
-msgstr ""
+msgstr "Linki do śledzenia przesyłki:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -866,6 +882,9 @@ msgid ""
 "carriers (i.e. check that all of their transfers have a carrier assigned and "
 "are using the same carrier)."
 msgstr ""
+"Nie można umieszczać produktów w tej samej paczce, jeśli mają różnych "
+"przewoźników (tj. należy sprawdzić, czy do wszystkich przesyłek przypisano "
+"przewoźnika i czy wszystkie korzystają z usług tego samego przewoźnika)."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -912,7 +931,7 @@ msgstr "^FS"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "and"
-msgstr ""
+msgstr "oraz"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
@@ -922,6 +941,10 @@ msgid ""
 "configure a printer on the\n"
 "                    report form.<br/>"
 msgstr ""
+"są przesyłane do czatu po zatwierdzeniu kompletacji. Jeśli chcesz\n"
+"                    wydrukować je automatycznie po zatwierdzeniu, musisz "
+"skonfigurować drukarkę w\n"
+"                    formularzu raportu.<br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form

@@ -14,10 +14,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 17:49+0000\n"
-"PO-Revision-Date: 2026-09-09 14:05+0000\n"
+"PO-Revision-Date: 2026-10-12 10:33+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/base/"
-"ar/>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/base/ar/>"
+"\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,6 +73,9 @@ msgid ""
 "User: %(user)s\n"
 "Groups: %(allowed_groups_msg)s"
 msgstr ""
+"\n"
+"المستخدم: %(user)s\n"
+"المجموعات: %(allowed_groups_msg)s"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
@@ -147,6 +150,9 @@ msgid ""
 "\n"
 "Implicitly accessed through '%(document_kind)s' (%(document_model)s)."
 msgstr ""
+"%(previous_message)s\n"
+"\n"
+"يتم الوصول إليه ضمنياً من خلال '%(document_kind)s' (%(document_model)s)."
 
 #. module: base
 #. odoo-python
@@ -283,7 +289,7 @@ msgstr "'new' محفوظة ولا يمكن استخدامها كمسار."
 #. odoo-python
 #: code:addons/fields.py:0
 msgid "(Record: %(record)s, User: %(user)s)"
-msgstr ""
+msgstr "(السجل: %(record)s، المستخدم: %(user)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -318,6 +324,7 @@ msgid ""
 "- Only a root company can be set on “%(record)s”. Currently set to “%"
 "(company)s”"
 msgstr ""
+"- يمكن فقط تعيين الشركة الأصل في \"%(record)s\". معدة حالياً كـ \"%(company)s\""
 
 #. module: base
 #. odoo-python
@@ -326,6 +333,8 @@ msgid ""
 "- Record is company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- السجل هو شركة \"%(company)s\" بينما \"%(field)s\" (%(fname)s: %(values)s) "
+"تنتمي إلى شركة أخرى."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -387,6 +396,8 @@ msgid ""
 "- “%(record)s” belongs to company “%(company)s” while “%(field)s” (%"
 "(fname)s: %(values)s) belongs to another company."
 msgstr ""
+"- ينتمي\"%(record)s\" إلى شركة \"%(company)s\"، بينما \"%(field)s\" (%(fname)"
+"s: %(values)s) تابعة لشركة أخرى."
 
 #. module: base
 #: model:website,contact_us_link_url:base.default_website
@@ -513,6 +524,7 @@ msgstr ""
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Discover more</a>"
 msgstr ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">اكتشف المزيد</a>"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ir_mail_server_list
@@ -1052,7 +1064,7 @@ msgstr "<span>الاسم</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
 msgid "<span>No diff available</span>"
-msgstr ""
+msgstr "<span>لا يوجد فرق متاح</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -1252,6 +1264,10 @@ msgid ""
 "and\n"
 "                    turbomachinery and propulsion)."
 msgstr ""
+"منظمة عالمية تعليمية وعلمية غير ربحية \n"
+"                    تضم ثلاث أقسام (علم الطيران وعلم الفضاء،\n"
+"                    البيئة وديناميكية الموائع التطبيقية، المعدات\n"
+"                    الطوربينية والدفع)."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_3
@@ -1260,6 +1276,8 @@ msgid ""
 "three departments (aeronautics and aerospace, environmental and applied "
 "fluid dynamics, and turbomachinery and propulsion)."
 msgstr ""
+"منظمة عالمية تعليمية وعلمية غير ربحية تضم ثلاث أقسام (علم الطيران وعلم الفضاء"
+"، البيئة وديناميكية الموائع التطبيقية، المعدات الطوربينية والدفع)."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
@@ -1527,7 +1545,7 @@ msgstr "الوصول إلى الإعدادات لتهيئة التطبيقات"
 #. odoo-python
 #: code:addons/environments.py:0
 msgid "Access to unauthorized or invalid companies."
-msgstr ""
+msgstr "الوصول إلى الشركات غير المصرح لها أو غير الصالحة. "
 
 #. module: base
 #. odoo-python
@@ -1571,6 +1589,10 @@ msgid ""
 "productive,\n"
 "                responsive and profitable."
 msgstr ""
+"تقوم شركة Acme Corporation بتصميم وتطوير ودمج ودعم عمليات الموارد البشرية "
+"وإدارة سلاسل\n"
+"                التوريد لمساعدة عملائنا على تحقيق أكبر قدر ممكن من الإنتاجية\n"
+"                وسرعة الاستجابة والربحية."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_2
@@ -1580,6 +1602,9 @@ msgid ""
 "Chain processes in order to make our customers more productive, responsive "
 "and profitable."
 msgstr ""
+"تقوم شركة Acme Corporation بتصميم وتطوير ودمج ودعم عمليات الموارد البشرية "
+"وإدارة سلاسل التوريد لمساعدة عملائنا على تحقيق أكبر قدر ممكن من الإنتاجية وسرعة "
+"الاستجابة والربحية."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -1589,6 +1614,10 @@ msgid ""
 "                with Open Sources software to manage their businesses. Our\n"
 "                consultants are experts in the following areas:"
 msgstr ""
+"تقوم شركة Acme Corporation بدمج نظام تخطيط موارد المؤسسات (ERP) للشركات "
+"العالمية وتدعم الشركات الصغيرة والمتوسطة\n"
+"                ببرامج مفتوحة المصدر لإدارة أعمالها. يتمتع مستشارونا\n"
+"                بخبرة واسعة في المجالات التالية:"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_actions
@@ -1810,7 +1839,7 @@ msgstr "جاري إضافة"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
 msgid "Addison Olson is a mighty sales representative at Acme Corporation."
-msgstr ""
+msgstr "أديسون أولسون هو مندوب مبيعات خبير في شركة Acme Corporation."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_31
@@ -1819,6 +1848,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"يعمل أديسون أولسن في مجال تقنية المعلومات <b>منذ 10 سنوات</b>. يُعرَف\n"
+"    بشكل كبير لبيعه مصائد الفئران. باستخدامه لتلك التقنية، تمكن من تقليل\n"
+"    ميزانية تقنية المعلومات بما يقارب النصف، خلال العامين الماضيين."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__additional_identifiers
@@ -2257,7 +2289,7 @@ msgstr ""
 msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
-msgstr ""
+msgstr "ستخضع كافة علاقاتنا التعاقدية لقانون الولايات المتحدة بشكل حصري."
 
 #. module: base
 #. odoo-python
@@ -3173,6 +3205,8 @@ msgid ""
 "An error occurred while evaluating the domain:\n"
 "%(error)s"
 msgstr ""
+"حدث خطأ أثناء تقييم النطاق:\n"
+"%(error)s"
 
 #. module: base
 #. odoo-python
@@ -3209,6 +3243,11 @@ msgid ""
 "Thanks to the following constraint: %(field_display)s\n"
 "How about archiving the record instead?"
 msgstr ""
+"هناك نموذج آخر يستخدم السجل الذي تحاول حذفه.\n"
+"\n"
+"النموذج الذي تسبب بالمشكلة: %(model_display)s\n"
+"بسبب القيد التالي: %(field_display)s\n"
+"ما رأيك في أرشفة السجل عوضاً عن ذلك؟"
 
 #. module: base
 #. odoo-python
@@ -3447,7 +3486,7 @@ msgstr "جزيرة أروبا"
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "As a team, we are happy to contribute to this event."
-msgstr ""
+msgstr "كفريق، يسعدنا أن نساهم في هذه الفعالية."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__asia/aden
@@ -4251,6 +4290,8 @@ msgid ""
 "Azure Interior brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"تضمن Azure Interior الأمانة والجدية إلى مجال الأخشاب، بينما تساعد العملاء في "
+"التعامل مع الأشجار والأزهار والفطريات."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -4774,6 +4815,11 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"يعمل براندن في مجال تقنية المعلومات <b>منذ 10 سنوات</b>. يُعرف\n"
+"                بشكل كبير لبيعه مصائد الفئران. باستخدامه لتلك التقنية، تمكن "
+"من تقليل\n"
+"                ميزانية تقنية المعلومات بما يقارب النصف، خلال العامين "
+"الماضيين."
 
 #. module: base
 #: model:res.country,name:base.br
@@ -5053,7 +5099,7 @@ msgstr "لا يمكن استنساخ التهيئة!"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Cannot grab a lock on records"
-msgstr ""
+msgstr "لا يمكن الحصول على قفل على السجلات"
 
 #. module: base
 #. odoo-python
@@ -5077,7 +5123,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Cannot update a record without specifying its id or xml_id"
-msgstr ""
+msgstr "لا يمكن تحديث سجل دون تحديد معرفه أو xml_id"
 
 #. module: base
 #. odoo-python
@@ -5576,6 +5622,11 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"يعمل كولين دياز في مجال تقنية المعلومات <b>منذ 10 سنوات</b>. يُعرف\n"
+"                بشكل كبير لبيعه مصائد الفئران. باستخدامه لتلك التقنية، تمكن "
+"من تقليل\n"
+"                ميزانية تقنية المعلومات بما يقارب النصف، خلال العامين "
+"الماضيين."
 
 #. module: base
 #: model:res.country,name:base.co
@@ -5637,7 +5688,7 @@ msgstr "عمود يشير إلى السجل في جدول النموذج"
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "Come see us live, we hope to meet you!"
-msgstr ""
+msgstr "تعالوا لملاقاتنا، فنحن نتوق لرؤيتكم!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -6075,7 +6126,7 @@ msgstr "البناء"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_8
 msgid "Consulting Services"
-msgstr ""
+msgstr "الخدمات الاستشارية"
 
 #. module: base
 #. odoo-python
@@ -6201,6 +6252,8 @@ msgid ""
 "have a 'company_id' or 'company_ids' field, and isn't company-dependent "
 "either."
 msgstr ""
+"تعذر إنشاء نطاق يعتمد على الشركة لحقل %s. لا يحتوي النموذج على حقل "
+"\"company_id\" أو \"company_ids\"، كما أنه لا يعتمد على الشركة."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__count
@@ -6869,7 +6922,7 @@ msgstr "موضع اسم العميل"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Customer Relationship Management"
-msgstr ""
+msgstr "إدارة علاقات العملاء"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -7025,7 +7078,7 @@ msgstr "هيكل قاعدة البيانات"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_databases
 msgid "Databases"
-msgstr ""
+msgstr "قواعد البيانات"
 
 #. module: base
 #. odoo-python
@@ -7256,6 +7309,8 @@ msgid ""
 "Deleting the public user is not allowed. Deleting this profile will "
 "compromise critical functionalities."
 msgstr ""
+"لا يُسمح بحذف المستخدم العام. سيؤدي حذف هذا الملف الشخصي إلى الإضرار بوظائف "
+"مهمة."
 
 #. module: base
 #. odoo-python
@@ -7372,7 +7427,7 @@ msgstr "HTML الوصف"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
 msgid "Desk Manufacturers"
-msgstr ""
+msgstr "مُصنّعي المكتب"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
@@ -7817,7 +7872,7 @@ msgstr "Dong"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_3
 msgid "Douglas Fletcher is a mighty functional consultant at Acme Corporation"
-msgstr ""
+msgstr "دوغلاس فليتشر هو مستشار وظيفي متمرس في شركة Acme Corporation"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_3
@@ -7826,6 +7881,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"يعمل دوغلاس فليتشر في مجال تقنية المعلومات <b>منذ 10 سنوات</b>. يُعرَف\n"
+"    بشكل كبير لبيعه مصائد الفئران. باستخدامه لتلك التقنية، تمكن من تقليل\n"
+"    ميزانية تقنية المعلومات بما يقارب النصف، خلال العامين الماضيين."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__target__download
@@ -8996,7 +9054,7 @@ msgstr "تعذر تثبيت البيانات التجريبية لبعض الت�
 #. odoo-python
 #: code:addons/fields_relational.py:0
 msgid "Failed to write field %s"
-msgstr ""
+msgstr "تعذر كتابة الحقل %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__failure_count
@@ -9425,7 +9483,7 @@ msgstr "الأسطول"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
 msgid "Floyd Steward is a mighty analyst at Acme Corporation."
-msgstr ""
+msgstr "فلويد ستيوارد هو محلل خبير في شركة Acme Corporation."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_4
@@ -9434,6 +9492,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"يعمل فلويد ستيوارد في مجال تقنية المعلومات <b>منذ 10 سنوات</b>. يُعرَف\n"
+"    بشكل كبير لبيعه مصائد الفئران. باستخدامه لتلك التقنية، تمكن من تقليل\n"
+"    ميزانية تقنية المعلومات بما يقارب النصف، خلال العامين الماضيين."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__fold_name
@@ -9604,6 +9665,8 @@ msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
+"تم العثور على أكثر من 10 أخطاء وأكثر من خطأ واحد لكل 10 سجلات، تمت المقاطعة "
+"لتجنب عرض الكثير من الأخطاء. "
 
 #. module: base
 #. odoo-python
@@ -9913,6 +9976,11 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Senior Consultant."
 msgstr ""
+"يعمل غوردون أوينز في مجال تقنية المعلومات <b>منذ 10 سنوات</b>. يُعرف\n"
+"                بشكل كبير لبيعه مصائد الفئران. باستخدامه لتلك التقنية، تمكن "
+"من تقليل\n"
+"                ميزانية تقنية المعلومات بما يقارب النصف، خلال العامين "
+"الماضيين."
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.HTG
@@ -9978,7 +10046,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/fields_properties.py:0
 msgid "Grouping by HTML properties is not supported."
-msgstr ""
+msgstr "خاصية التجميع حسب خصائص HTML غير مدعومة."
 
 #. module: base
 #. odoo-python
@@ -10150,7 +10218,7 @@ msgstr "Halers"
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "سعيد بالرعاية"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__has_diff
@@ -10624,6 +10692,9 @@ msgid ""
 "services of a debt recovery company. All legal expenses will be payable by "
 "the client."
 msgstr ""
+"إذا كان الدفع لا يزال مستحقاً بعد مرور أكثر من ستين (60) يوم بعد تاريخ استحقاق "
+"الدفع، يحق لشركتي (شيكاغو) استدعاء خدمات تحصيل الديون. يتحمل العميل كافة "
+"التكاليف القانونية."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__group_expand
@@ -10941,6 +11012,9 @@ msgid ""
 "registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
+"حتى تكون مقبولة، يجب أن يتم إخطار شركتي (سان فرانسيسكو) بوجود أي دعوى عن "
+"طريق رسالة مُرسلة عبر التسليم المُسجَّل إلى المكتب المسجَّل خلال 8 أيام من تاريخ "
+"تسليم البضاعة أو أحكام الخدمات."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -11219,6 +11293,8 @@ msgid ""
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
 msgstr ""
+"\"الطلب\" المحدد غير صحيح (%s). مواصفات \"الطلب\" الصحيح هي قائمة مفصولة "
+"بفواصل لأسماء حقول صحيحة (يمكن أن تكون متبوعة بتصاعدي/تنازلي للاتجاه) "
 
 #. module: base
 #. odoo-python
@@ -11432,6 +11508,8 @@ msgid ""
 "Invalid value in Default Value field. Expected type '%(field_type)s' for '%"
 "(model_name)s.%(field_name)s'."
 msgstr ""
+"توجد قيمة غير صالحة في حقل القيمة الافتراضية. النوع المتوقع '%(field_type)s' "
+"لـ '%(model_name)s.%(field_name)s'."
 
 #. module: base
 #. odoo-python
@@ -11466,7 +11544,7 @@ msgstr "المخزون"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Inventory and Warehouse management"
-msgstr ""
+msgstr "إدارة المخازن والمستودعات"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__inverse_company_rate
@@ -11611,6 +11689,12 @@ msgid ""
 "                    series) and encourages \"training in research through\n"
 "                    research\"."
 msgstr ""
+"تمنحك فرصة التعليم العالي عن ديناميكية الموائع\n"
+"                    (ماجستير بحثي عن ديناميكية الموائع، \"دورة دبلوم\" سابقة"
+"،\n"
+"                    برنامج دكتوراه، برنامج المتدربين وسلسلة المحاضرات)\n"
+"                    وتشجع على \"التدريب على البحث من خلال\n"
+"                    البحث\"."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_3
@@ -11631,6 +11715,15 @@ msgid ""
 "well\n"
 "                    as industries."
 msgstr ""
+"تتولى أمر البحوث وتقوم بالترويج لها في مجال\n"
+"                    ديناميكية الموائع. تحتوي على قرابة الخمسين نفقاً هوائياً،\n"
+"                    والمعدات التوربينية ومنشآت الاختبار المتخصصة الأخرى، \n"
+"                    والتي يُعد بعضها فريداً من نوعه أو الأكبر في العالم. تُجرى\n"
+"                    أيضاً بحوثات مكثفة حول الخواص التجريبية والحسابية\n"
+"                    والفرضية لكيفية تدفق الغازات والسوائل، تحت إشراف\n"
+"                    موظفينا ومهندسي البحوث، وتتم رعايتها بشكل أساسي\n"
+"                    من قِبَل الحكومة والوكالات العالمية، إضافة إلى\n"
+"                    مجالات العمل."
 
 #. module: base
 #: model:res.country,name:base.it
@@ -12361,6 +12454,8 @@ msgstr "الحد"
 #: code:addons/base/models/res_users.py:0
 msgid "Limit of %s API keys is reached for programmatic creation"
 msgstr ""
+"لقد وصلت إلى الحد الأقصى المسموح به لمفاتيح الواجهة البرمجية (%s) للإنشاء "
+"البرمجي"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__line
@@ -12480,7 +12575,7 @@ msgstr "الأقلمة"
 #: model:ir.module.category,name:base.module_category_point_of_sale_localizations
 #: model:ir.module.category,name:base.module_category_website_sale_localizations
 msgid "Localizations"
-msgstr ""
+msgstr "الأقلمات"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -12796,7 +12891,7 @@ msgstr "البيانات الرئيسية"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Materials Management"
-msgstr ""
+msgstr "إدارة المواد"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -12957,7 +13052,7 @@ msgstr "متنوعات"
 #. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Missing 'expr' attribute in xpath specification"
-msgstr ""
+msgstr "يوجد \"expr\" مفقود في مواصفات xpath"
 
 #. module: base
 #. odoo-python
@@ -13327,6 +13422,11 @@ msgid ""
 "required by the client to appear as a third party in the context of any "
 "claim for damages filed against the client by an end consumer."
 msgstr ""
+"تتطلع شركتي (سان فرانسيسكو) إلى بذل قصارى جهدها للتزويد خدمات ذات أداءٍ عالٍ "
+"في الوقت المطلوب، وفقاً للإطار الزمني المتفق عليه. وعلى الرغم من ذلك، فلا يمكن "
+"اعتبار أي من التزاماتها كتكليف ملزم لتحقيق النتائج. لا يمكن لشركتي (سان "
+"فرانسيسكو) تحت ظل أي من الظروف أن تمثل طرفاً ثالثاً تلبية لطلب العميل في حال "
+"حدوث أي أضرار تم التقرير عنها ضد العميل من قِبَل المستهلك."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -13605,6 +13705,8 @@ msgid ""
 "Nicole is <b>author of several books</b>, including Amazon best seller\n"
 "                \"How Azure and Odoo will change the business world!\"."
 msgstr ""
+"نيكول <b>كاتبة لعدة كتب</b>، من ضمنها أحد أكثر الكتب مبيعاً على أمازون\n"
+"                \"كيف سيتمكن Azure وأودو من هز عالم الأعمال!\"."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_16
@@ -13616,6 +13718,11 @@ msgid ""
 "                from 1 to 55 employees mostly by reselling services on\n"
 "                Odoo."
 msgstr ""
+"تعمل نيكول في مجال تقنية المعلومات <b>منذ 20 سنة</b>. تقوم\n"
+"                بتطوير برنامج يساعدك على تطوير المواقع الإلكترونية.  باعت\n"
+"                شركتها الأولى بعمر 30 وتمكنت من النهوض بشركة Azure Interior\n"
+"                من موظف 1 إلى 55 موظفاً، معظم ذلك عن طريق بيع الخدمات على\n"
+"                أودو."
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -13686,7 +13793,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/fields_relational.py:0
 msgid "No inverse field \"%(inverse_field)s\" found for \"%(comodel)s\""
-msgstr ""
+msgstr "لم يتم العثور على نطاق عكسي \"%(inverse_field)s\" لـ \"%(comodel)s\""
 
 #. module: base
 #. odoo-python
@@ -14037,7 +14144,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
 msgid "Office Supplies"
-msgstr ""
+msgstr "اللوازم المكتبية"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -14117,7 +14224,7 @@ msgstr "وحدهم المشرفون باستطاعتهم تنفيذ هذا ال�
 #. odoo-python
 #: code:addons/fields_binary.py:0
 msgid "Only admins can upload SVG files."
-msgstr ""
+msgstr "يُسمح للمدراء فقط رفع ملفات SVG. "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__mode
@@ -14236,6 +14343,8 @@ msgid ""
 "OpenWood brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"تجلب OpenWood الصدق والأمانة والجدية لمجال الأخشاب، بينما تساعد العملاء في "
+"التعامل مع الأشجار والأزهار والفطريات."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_access__operation
@@ -14406,6 +14515,11 @@ msgid ""
 "                installed IT software into account. That is why Idealis\n"
 "                Consulting delivers excellence in HR and SC Management."
 msgstr ""
+"يقوم خبراؤنا باختراع وتخيل وتطوير حلول تستوفي\n"
+"                متطلبات عملك. يمكنهم بناء بيئة تقنية \n"
+"                جديدة لشركتك، ولكنهم يأخذون بعين الاعتبار\n"
+"                برنامج الحاسوب المثبت بالفعل دائماً. ولذلك،\n"
+"                Idealis Consulting هي الأمثل لإدارة الموارد البشرية وإدارة SC."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.demo_company_id
@@ -15050,7 +15164,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Personnel Administration"
-msgstr ""
+msgstr "إدارة شؤون الموظفين"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -15424,7 +15538,7 @@ msgstr "خاصية التحليل غير ممكّنة في قاعدة البيا
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Programmatic API keys are not enabled"
-msgstr ""
+msgstr "مفاتيح الواجهة البرمجية غير ممكّنة"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_progress
@@ -15457,7 +15571,7 @@ msgstr "تعريف قاعدة الخصائص"
 #. module: base
 #: model:ir.model,name:base.model_properties_base_definition_mixin
 msgid "Properties Base Definition Mixin"
-msgstr ""
+msgstr "Mixin تعريف قاعدة الخصائص"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_properties_base_definition__properties_definition
@@ -15494,7 +15608,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "Prospects"
-msgstr ""
+msgstr "العملاء المحتملون"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -15720,7 +15834,7 @@ msgstr "حقل Qweb متعدد لمتعدد"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_one2many
 msgid "Qweb field one2many"
-msgstr ""
+msgstr "حقل Qweb one2many"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
@@ -15863,7 +15977,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/fields.py:0
 msgid "Record does not exist or has been deleted."
-msgstr ""
+msgstr "السجل غير موجود أو تم حذفه. "
 
 #. module: base
 #. odoo-python
@@ -16002,7 +16116,7 @@ msgstr "متبقي"
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_remote_work
 msgid "Remote Work"
-msgstr ""
+msgstr "العمل عن بُعد"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__remove
@@ -16185,7 +16299,7 @@ msgstr "إعادة تعيين إلى نسخة الملف (إعادة الضبط 
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Resolve other errors first"
-msgstr ""
+msgstr "قم بتصحيح الأخطاء الأخرى أولاً "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports__resource
@@ -16627,7 +16741,7 @@ msgstr "المبيعات والمشتريات"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Sales and Distribution"
-msgstr ""
+msgstr "المبيعات والتوزيع"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__user_id
@@ -17373,7 +17487,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__show_code_history
 #: model:ir.model.fields,field_description:base.field_ir_cron__show_code_history
 msgid "Show Code History"
-msgstr ""
+msgstr "عرض سجل الرموز"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_view_currency_rates
@@ -17459,6 +17573,9 @@ msgid ""
 "(field_names)s are set as company-dependent, but the model doesn't have a "
 "`company_id` or `company_ids` field!"
 msgstr ""
+"تخطي فحص الشركة للنموذج %(model_name)s. تم تعيين حقولها %(field_names)s على "
+"أنها تابعة للشركة، ولكن النموذج لا يحتوي على حقل `company_id` أو "
+"`company_ids`!"
 
 #. module: base
 #. odoo-python
@@ -17548,6 +17665,11 @@ msgid ""
 "\n"
 "Records: %(records)s, User: %(user)s"
 msgstr ""
+"عذراً، لا يُسمح لك بالوصول إلى هذا المستند. يرجى التواصل مع مسؤول النظام.\n"
+"\n"
+"(العملية: %(operation)s)\n"
+"\n"
+"السجلات: %(records)s ، المستخدم: %(user)s"
 
 #. module: base
 #. odoo-python
@@ -18054,7 +18176,7 @@ msgstr "Tala"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Talent Management"
-msgstr ""
+msgstr "إدارة المواهب"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MWK
@@ -18339,6 +18461,8 @@ msgid ""
 "The International Grouping will represent 123456789 to be 123,456,789.00; "
 "The Indian Grouping will represent 123456789 to be 12,34,56,789.00"
 msgstr ""
+"ستمثل خاصية التجميع الدولي الرقم 123456789 على أنه 123,456,789.00؛ وستمثل "
+"خاصية التجميع الهندي الرقم 123456789 على أنه 12,34,56,789.00"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_10
@@ -18346,6 +18470,8 @@ msgid ""
 "The Jackson Group brings honesty and seriousness to wood industry while "
 "helping customers deal with trees, flowers and fungi."
 msgstr ""
+"تُمثل شركة The Jackson Group الصدق والأمانة والجدية لمجال الأخشاب بينما تساعد "
+"العملاء على التعامل من الأشجار والزهور والفطريات."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -18489,7 +18615,7 @@ msgstr "الشركة الافتراضية لهذا المستخدم."
 msgid ""
 "The definition needs to be linked to a properties field. Those fields are "
 "not: %s."
-msgstr ""
+msgstr "يجب ربط التعريف بحقل الخصائص. هذه الحقول ليست: %s."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -18606,7 +18732,7 @@ msgstr "المرة الأولى التي يتعطل فيها cron. يتم إعا
 #. odoo-python
 #: code:addons/models.py:0
 msgid "The following languages are not activated: %(missing_names)s"
-msgstr ""
+msgstr "اللغات التالية غير مفعلة: %(missing_names)s"
 
 #. module: base
 #. odoo-python
@@ -18918,13 +19044,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "The provided API key is invalid or does not belong to the current user."
-msgstr ""
+msgstr "مفتاح الواجهة البرمجية المقدم غير صالح أو لا ينتمي إلى المستخدم الحالي."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "The provided API key is invalid."
-msgstr ""
+msgstr "مفتاح الواجهة البرمجية المقدم غير صالح."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -18942,6 +19068,11 @@ msgid ""
 "For example, __import__, resulting in the external id __import__.%"
 "(record_id)s."
 msgstr ""
+"السجل %(xml_id)s به بادئة التطبيق %(module_name)s. هذا هو الجزء قبل '.' في "
+"المعرف الخارجي. لأن البادئة تشير إلى تطبيق موجود بالفعل، فإن السجل سيتم حذفه "
+"عند تحديث التطبيق. عليك إما عدم استخدام بادئة أو نقطة أو بادئة هي ليست "
+"تطبيقاً موجوداً بالفعل. على سبيل المثال، __import__، تؤدي إلى المعرف الخارجي "
+"__import__.%(record_id)s."
 
 #. module: base
 #. odoo-python
@@ -19056,6 +19187,9 @@ msgid ""
 "\n"
 "Detail: %(detail)s\n"
 msgstr ""
+"القيمة الخاصة بـ %(field_display)s موجودة بالفعل.\n"
+"\n"
+"التفاصيل: %(detail)s\n"
 
 #. module: base
 #. odoo-python
@@ -19396,7 +19530,7 @@ msgstr "المهام المراد تنفيذها"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "To avoid a mess, no company crossover is allowed!"
-msgstr ""
+msgstr "لتجنب الفوضى، لا يُسمح بأي تداخل بين الشركات!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__to_install
@@ -19479,6 +19613,11 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Managing Partner."
 msgstr ""
+"يعمل توني رودز في مجال تقنية المعلومات <b>منذ 10 سنوات</b>. يُعرف\n"
+"                بشكل كبير لبيعه مصائد الفئران. باستخدامه لتلك التقنية، تمكن "
+"من تقليل\n"
+"                ميزانية تقنية المعلومات بما يقارب النصف، خلال العامين "
+"الماضيين."
 
 #. module: base
 #. odoo-python
@@ -19567,17 +19706,17 @@ msgstr "ترجِم"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__translate__html_translate
 msgid "Translate HTML terms"
-msgstr ""
+msgstr "ترجمة مصطلحات HTML"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__translate__xml_translate
 msgid "Translate XML terms"
-msgstr ""
+msgstr "ترجمة مصطلحات XML"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__translate__standard
 msgid "Translate as a whole"
-msgstr ""
+msgstr "الترجمة ككل"
 
 #. module: base
 #. odoo-python
@@ -19632,7 +19771,7 @@ msgstr ""
 #: code:addons/models.py:0
 msgid ""
 "Translations for model translated fields only accept falsy values and str"
-msgstr ""
+msgstr "الترجمات للحقول المترجمة في النموذج تقبل فقط قيم falsy و str"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -19815,7 +19954,7 @@ msgstr "كود URL"
 #. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 msgid "URL attachment (%s) shouldn't be migrated to local."
-msgstr ""
+msgstr "لا ينبغي نقل مرفق URL (%s) إلى الموقع المحلي."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__webhook_url
@@ -19859,7 +19998,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Uh-oh! You’ve got some company inconsistencies here:"
-msgstr ""
+msgstr "أوه، وجدنا بعض التناقضات في الشركة:"
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -19872,7 +20011,7 @@ msgstr "أوكرانيا"
 msgid ""
 "Unable to delete %(record)s because it is used as the default value of %"
 "(field)s"
-msgstr ""
+msgstr "لا يمكن حذف %(record)s لأنه مستخدم كقيمة افتراضية لـ %(field)s"
 
 #. module: base
 #. odoo-python
@@ -19942,6 +20081,8 @@ msgid ""
 "Unicode strings with encoding declaration are not supported in XML.\n"
 "Remove the encoding declaration."
 msgstr ""
+"لا يدعم XML سلاسل Unicode التي تحتوي على تعليمات الترميز.\n"
+"قم بإزالة تعليمات الترميز."
 
 #. module: base
 #. odoo-python
@@ -20025,19 +20166,19 @@ msgstr "غير معروف"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Unknown database error: '%s'"
-msgstr ""
+msgstr "خطأ غير معروف في قاعدة البيانات: '%s' "
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Unknown database identifier '%s'"
-msgstr ""
+msgstr "مُعرف قاعدة البيانات غير معروف '%s'"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Unknown error during import: %(error_type)s: %(error_message)s"
-msgstr ""
+msgstr "حدث خطأ غير معروف أثناء الاستيراد: %(error_type)s: %(error_message)s"
 
 #. module: base
 #. odoo-python
@@ -20121,7 +20262,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/domains.py:0
 msgid "Unsupported operator on %(field_label)s %(model_label)s in %(domain)s"
-msgstr ""
+msgstr "المشغل غير مدعوم على %(field_label)s %(model_label)s في %(domain)s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_data_search
@@ -20163,7 +20304,7 @@ msgstr "تحديث قائمة التطبيقات"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Update Preferences"
-msgstr ""
+msgstr "تحديث التفضيلات"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_write
@@ -20188,6 +20329,8 @@ msgid ""
 "Updating records with different property fields definitions is not "
 "supported. Update by separate definition instead."
 msgstr ""
+"خاصية التحديث باستخدام معرّفات مختلفة لحقول الخصائص غير مدعومة. قم بالتحديث "
+"باستخدام معرّف منفصل عوضاً عن ذلك."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -20619,7 +20762,7 @@ msgstr "Vatu"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_0
 msgid "Vendor"
-msgstr ""
+msgstr "المورّد "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -20720,7 +20863,7 @@ msgstr "نوع واجهة العرض"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "View code history and restore a previous version"
-msgstr ""
+msgstr "عرض سجل الكود واستعادة نسخة سابقة"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_list
@@ -20845,6 +20988,9 @@ msgid ""
 "enhancing solutions through the use of advanced software for our clients "
 "worldwide. At Lumber Inc we bring operational experience combined..."
 msgstr ""
+"نحن منشأة استشارة تقنية وإرشاد استراتيجي تنشئ حلولاً تحسينية عالية الجودة، من "
+"خلال استخدام البرنامج المتطور لعملائنا في كافة أنحاء العالم. في شركة Lumber "
+"المحدودة، نسعى إلى تقديم الخبرة العملية بجانب..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_18
@@ -20931,7 +21077,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale
 msgid "Website Sale"
-msgstr ""
+msgstr "مبيعات الموقع الإلكتروني"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
@@ -21141,6 +21287,8 @@ msgid ""
 "Wood Corner brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"تُمثل شركة Wood Corner الصدق والأمانة والجدية لمجال الأخشاب بينما تساعد العملاء "
+"على التعامل من الأشجار والزهور والفطريات."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
@@ -21273,7 +21421,7 @@ msgstr "يمكنك أن ترفع ملفًا من جهازك أو تنسخ وتل
 #. odoo-python
 #: code:addons/base/models/properties_base_definition.py:0
 msgid "You can not change the field of a base definition"
-msgstr ""
+msgstr "لا يمكنك تغيير حقل تعريف قاعدة"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
@@ -21430,6 +21578,7 @@ msgid ""
 "You cannot delete %(to_delete_record)s, as it is used by %"
 "(on_restrict_record)s"
 msgstr ""
+"لا يمكنك حذف %(to_delete_record)s, لأنه مستخدَم بواسطة %(on_restrict_record)s"
 
 #. module: base
 #. odoo-python
@@ -21541,6 +21690,8 @@ msgid ""
 "You cannot use “%(property_name)s” because the linked “%(model_name)s” model "
 "doesn't exist or is invalid"
 msgstr ""
+"لا يمكنك استخدام “%(property_name)s” لأن نموذج “%(model_name)s” المرتبط غير "
+"موجود أو غير صالح"
 
 #. module: base
 #. odoo-python
@@ -21552,6 +21703,10 @@ msgid ""
 "\n"
 "Operation: %(operation)s"
 msgstr ""
+"لا تملك الصلاحيات الكافية للوصول إلى الحقول \"%(field)s\" في %(document_kind)s "
+"(%(document_model)s). يرجى التواصل مع مدير النظام.\n"
+"\n"
+"العملية: %(operation)s"
 
 #. module: base
 #. odoo-python
@@ -21564,7 +21719,7 @@ msgstr ""
 #: code:addons/models.py:0
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
-msgstr ""
+msgstr "لا تملك صلاحيات تصدير البيانات. يرجى التواصل مع أحد المدراء."
 
 #. module: base
 #. odoo-python
@@ -21721,13 +21876,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/models.py:0
 msgid "allowed for groups %s"
-msgstr ""
+msgstr "مسموح في المجموعات %s "
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 msgid "always forbidden"
-msgstr ""
+msgstr "ممنوع دائماً "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_assets
@@ -21775,7 +21930,7 @@ msgstr "إنشاء"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "custom field access rules"
-msgstr ""
+msgstr "قواعد الوصول إلى الحقول المخصصة"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.STN
@@ -21813,7 +21968,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "do not contain translatable terms.<br/>"
-msgstr ""
+msgstr "عدم تضمين أي مصطلحات قابلة للترجمة.<br/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -21823,7 +21978,7 @@ msgstr "التوثيق"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "does not contain translatable terms.<br/>"
-msgstr ""
+msgstr "لا يحتوي على مصطلحات قابلة للترجمة.<br/>"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_module_update__state__done

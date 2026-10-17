@@ -15,11 +15,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-09-09 14:04+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
+"PO-Revision-Date: 2026-10-16 13:46+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/stock/"
-"ar/>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/stock/ar/"
+">\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -442,7 +442,6 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-#, fuzzy
 msgid "/day"
 msgstr "/يوم"
 
@@ -513,23 +512,28 @@ msgstr ""
 "(operation)s</b> الوجهة."
 
 #. module: stock
-#: model:mail.template,body_html:stock.mail_template_data_stock_move_line_recall
+#: model:mail.template,body_html:stock.mail_template_data_stock_picking_recall
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.picking_partner_id.display_name or ''\"/><br/"
-"><br/>\n"
-"        We would like to issue a product recall regarding the following "
-"product:<br/><br/>\n"
-"        Product:<br/>\n"
-"        <t t-out=\"object.product_id.display_name or ''\"/><br/><br/>\n"
-"        Lot / Serial Number:<br/>\n"
-"        <t t-out=\"object.lot_id.name or object.lot_name or ''\"/><br/><br/"
-">\n"
-"        We apologize for the inconvenience caused.<br/><br/>\n"
-"        Best wishes,\n"
-"    </p>\n"
-"</div>\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Dear <t t-out=\"object.partner_id.display_name or "
+"''\">Marc Demo</t><br/><br/>\n"
+"                    We would like to issue a product recall regarding the "
+"following items from your delivery\n"
+"                    <strong><t t-out=\"object.name\">WH/OUT/EXAMPLE</t></"
+"strong>:<br/><br/>\n"
+"\n"
+"                    <strong>Product(s):</strong><br/>\n"
+"                    <t t-out=\"ctx.get('recalled_products_dict', "
+"{}).get(str(object.id))\">[EXAMPLE] Drawer</t><br/><br/>\n"
+"                    <strong>Lot / Serial Number(s):</strong><br/>\n"
+"                    <t t-out=\"ctx.get('recalled_lots_dict', "
+"{}).get(str(object.id))\">0000000000029</t><br/><br/>\n"
+"\n"
+"                    We apologize for the inconvenience caused.<br/><br/>\n"
+"                    Best wishes,\n"
+"                </p>\n"
+"            </div>\n"
 "        "
 msgstr ""
 
@@ -665,7 +669,7 @@ msgstr "<span class=\"col-6\">قيد الانتظار</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span class=\"ms-1\">Products with no package assigned</span>"
-msgstr ""
+msgstr "<span class=\"ms-1\">المنتجات التي لم يتم تعيين حزمة لها</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -760,7 +764,6 @@ msgstr "<span class=\"o_stat_text\">الخارج:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Packages</span>"
 msgstr "<span class=\"o_stat_text\">الطرود</span>"
 
@@ -777,7 +780,6 @@ msgstr "<span class=\"o_stat_text\">المسارات</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Scraps</span>"
 msgstr "<span class=\"o_stat_text\">مخلفات التصنيع</span>"
 
@@ -889,7 +891,6 @@ msgstr "<strong>جهة الاتصال</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#, fuzzy
 msgid "<strong>Customer</strong>"
 msgstr "<strong>العميل</strong>"
 
@@ -906,7 +907,7 @@ msgstr "<strong>عنوان التوصيل:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Delivery Address</strong>"
-msgstr ""
+msgstr "<strong>عنوان التوصيل</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1103,7 +1104,7 @@ msgstr "يمكن تعيين الباركود لنوع طرد واحد فقط!"
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
 "A package can't have one of its contained packages as destination container."
-msgstr ""
+msgstr "لا يمكن أن تحتوي الحزمة على إحدى الحزم الموجودة بداخلها كحاوية وجهة."
 
 #. module: stock
 #. odoo-python
@@ -1204,7 +1205,6 @@ msgstr "زخرفة استثناء النشاط"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__activity_plans_ids
-#, fuzzy
 msgid "Activity Plans"
 msgstr "خطط النشاط"
 
@@ -1420,7 +1420,7 @@ msgstr "كافة الفئات"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
-msgstr ""
+msgstr "جميع الطرود التابعة"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
@@ -1563,7 +1563,6 @@ msgstr "أي فئة"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_request_count_form_view
-#, fuzzy
 msgid "Anyone"
 msgstr "أي شخص"
 
@@ -1667,7 +1666,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__res_company__picking_policy__direct
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__move_type__direct
-#, fuzzy
 msgid "As soon as possible, with back orders"
 msgstr "في أقرب وقت ممكن، مع الطلبات المتأخرة"
 
@@ -1680,7 +1678,7 @@ msgstr "اسأل"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Assign"
-msgstr ""
+msgstr "تعيين"
 
 #. module: stock
 #. odoo-javascript
@@ -1707,7 +1705,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_dest_ids
 msgid "Assigned Contained Packages"
-msgstr ""
+msgstr "الطرود المضمنة المحددة "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2195,7 +2193,6 @@ msgstr "لم نتمكن من إيجاد أي مسار عام %s."
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
-#, fuzzy
 msgid ""
 "Can't move a container having packages in another location (%"
 "(old_location)s) to a different location (%(new_location)s)."
@@ -2500,13 +2497,11 @@ msgstr "تأكيد"
 
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
-#, fuzzy
 msgid "Confirm Order"
 msgstr "تأكيد الطلب"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
 msgid "Confirmation Email"
 msgstr "البريد الإلكتروني للتأكيد "
 
@@ -2551,18 +2546,17 @@ msgstr "جهة الاتصال"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_ids
 msgid "Contained Packages"
-msgstr ""
+msgstr "العبوات المضمنة"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__contained_quant_ids
 msgid "Contained Quant"
-msgstr ""
+msgstr "الكميات المضمنة"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__parent_package_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list
-#, fuzzy
 msgid "Container"
 msgstr "حاوية"
 
@@ -2653,7 +2647,7 @@ msgstr "المواقع المتقابلة"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__counting_date
 msgid "Counting Date"
-msgstr ""
+msgstr "تاريخ التعداد"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__partner_country_id
@@ -3006,6 +3000,8 @@ msgstr "التاريخ الذي ينبغي أن يتم فيه التجديد."
 #: model:ir.model.fields,help:stock.field_stock_inventory_adjustment_name__counting_date
 msgid "Date at which the resulting moves will be dated."
 msgstr ""
+"تحديد التاريخ الفعلي الذي سيتم تسجيل وتأريخ حركات المخزون / القيود المالية "
+"الناتجة فيه."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -3014,7 +3010,6 @@ msgstr "التاريخ الذي تمت معالجة الشحنة فيه أو إ�
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__deadline_date
-#, fuzzy
 msgid ""
 "Date before which you should order to avoid falling below the minimum. If "
 "you have nothing to order while a deadline is found, it may be because a "
@@ -3415,12 +3410,12 @@ msgstr "الوصف"
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
 msgid "Description Of Picking"
-msgstr ""
+msgstr "وصف عملية الانتقاء"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking_manual
 msgid "Description Picking Manual"
-msgstr ""
+msgstr "دليل وصف عملية الانتقاء"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
@@ -3491,12 +3486,12 @@ msgstr "عنوان الوجهة "
 #: model:ir.model.fields,field_description:stock.field_stock_package__package_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_dest_id
 msgid "Destination Container"
-msgstr ""
+msgstr "حاوية الوجهة"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_dest_name
 msgid "Destination Container Name"
-msgstr ""
+msgstr "اسم حاوية الوجهة"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__batch_group_by_destination
@@ -3545,7 +3540,7 @@ msgstr "طرد الوجهة"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__result_package_dest_name
 msgid "Destination Package Name"
-msgstr ""
+msgstr "اسم حزمة الوجهة"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -3602,7 +3597,6 @@ msgstr "الفرق"
 
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
-#, fuzzy
 msgid "Digest"
 msgstr "الموجز "
 
@@ -3791,6 +3785,8 @@ msgstr ""
 msgid ""
 "Dummy field to store procurement values to propagate them to later steps"
 msgstr ""
+"حقل مؤقت (Dummy) يستُخدم لتخزين بيانات وقيم المشتريات/التوريد لضمان نقلها "
+"وتطبيقها في الخطوات اللاحقة لسلسلة الإمداد"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
@@ -3801,7 +3797,7 @@ msgstr "الرقم التسلسلي المتكرر"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
-msgstr ""
+msgstr "أقرب موعد وصول ممكن"
 
 #. module: stock
 #. odoo-python
@@ -3828,7 +3824,7 @@ msgstr "تاريخ التوصيل الفعلي"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__effective_route_id
 msgid "Effective Route"
-msgstr ""
+msgstr "المسار الفعلي"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__effective_route_id
@@ -3836,6 +3832,8 @@ msgid ""
 "Either the route set directly or the one computed to be used by this "
 "replenishment"
 msgstr ""
+"يعرض المسار الذي تم تعيينه يدويًا أو المسار التلقائي الذي احتسبه النظام "
+"لتنفيذ أمر إعادة التزويد الحالي"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
@@ -3924,14 +3922,12 @@ msgstr "الاستثناء (الاستثناءات):"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#, fuzzy
 msgid "Exchange"
 msgstr "تبادل"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
-#, fuzzy
 msgid "Exp"
 msgstr "المتوقع"
 
@@ -4228,7 +4224,7 @@ msgstr "اسم الموقع بالكامل"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__complete_name
 msgid "Full Package Name"
-msgstr ""
+msgstr "اسم الطرد كاملاً"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -4363,12 +4359,12 @@ msgstr "جهاز"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__has_quants
 msgid "Has Contents"
-msgstr ""
+msgstr "يحتوي على محتويات"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_lines_without_result_package
 msgid "Has Lines Without Result Package"
-msgstr ""
+msgstr "يتضمن بنوداً أو حركات لم يتم تعيين حزمة/طرد ناتج لها في الشحنة"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__has_message
@@ -4626,7 +4622,7 @@ msgstr "إذا كان الرقم التسلسلي نفسه في كمية أخر�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_request_count__show_expected_quantity
 msgid "If the user can see the expected quantity or not"
-msgstr ""
+msgstr "ما إذا كان المستخدم يمكنه رؤية الكمية المتوقعة أم لا"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -4757,10 +4753,11 @@ msgid ""
 "If ticked, packages to move will be directly displayed in Barcode instead of "
 "the products they contain"
 msgstr ""
+"عند تفعيل هذا الخيار، سيعرض تطبيق الباركود الطرود المطلوب نقلها مباشرة "
+"ببياناتها الخاصة بدلاً من إدراج المنتجات الفردية المعبأة داخلها"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__set_package_type
-#, fuzzy
 msgid ""
 "If ticked, you will be able to select which package or package type to use "
 "in a put in pack"
@@ -5090,7 +5087,7 @@ msgstr "خسارة المخزون"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Inventory Loss Locations"
-msgstr ""
+msgstr "مواقع فقدان المخزون"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name
@@ -5115,7 +5112,7 @@ msgstr "سبب الجرد"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
 msgid "Inventory Request"
-msgstr ""
+msgstr "طلب جرد للمخزون"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
@@ -5141,7 +5138,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
 msgid "Is Date Editable"
-msgstr ""
+msgstr "التاريخ قابل للتعديل"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
@@ -5175,7 +5172,7 @@ msgstr "طرد جزئي"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
 msgid "Is Scheduled Date Editable"
-msgstr ""
+msgstr "التاريخ المحدد قابل للتعديل"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_scrap
@@ -5196,7 +5193,7 @@ msgstr "موقّع عليه"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_entire_pack
 msgid "Is added through entire package"
-msgstr ""
+msgstr "تم إضافته تلقائياً من خلال مناولة أو إدراج طرد بكامل محتوياته"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -5238,7 +5235,7 @@ msgstr "تحدد البضائع التى يتم نقلها جزئياً أو د�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__json_popover
 msgid "JSON data for popover widget"
-msgstr ""
+msgstr "بيانات JSON لأداة النافذة المنبثقة (Popover Widget)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
@@ -5275,7 +5272,7 @@ msgstr "نافذة Json المنبثقة"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_graph
 msgid "Json Replenishment Graph"
-msgstr ""
+msgstr "رسم بياني لتجديد المخزون بتنسيق JSON"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__7
@@ -5566,7 +5563,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days
 msgid "Lead Days"
-msgstr ""
+msgstr "مهلة التسليم"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_horizon_date
@@ -5583,7 +5580,7 @@ msgstr "مهلة التسليم"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Lead Time Information"
-msgstr ""
+msgstr "معلومات حول مهلة التسليم"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
@@ -5866,7 +5863,6 @@ msgstr "تم تغيير موقع رقم المجموعة/الرقم التسلس
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
-#, fuzzy
 msgid "Lot/Serial Numbers"
 msgstr "أرقام الدفعات/الأرقام التسلسلية"
 
@@ -5930,7 +5926,7 @@ msgstr "قاعدة الإنتاج حسب الطلب"
 #: model_terms:ir.ui.view,arch_db:stock.package_history_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_search
 msgid "Main Packages"
-msgstr ""
+msgstr "الطرود الرئيسية"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -6229,12 +6225,12 @@ msgstr "عدد بنود الحركة"
 #. odoo-javascript
 #: code:addons/stock/static/src/views/picking_form/stock_move_one2many.xml:0
 msgid "Move a Pack"
-msgstr ""
+msgstr "نقل طرد "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__move_line_ids
 msgid "Move lines"
-msgstr ""
+msgstr "بنود الحركة"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
@@ -6267,7 +6263,6 @@ msgstr "المسارات متعددة الخطوات"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
-#, fuzzy
 msgid "Multiple"
 msgstr "متعدد"
 
@@ -6285,7 +6280,7 @@ msgstr "قواعد سعة متعددة لمنتج واحد."
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
 msgid "Multiple destinations"
-msgstr ""
+msgstr "وجهات متعددة"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -6464,7 +6459,7 @@ msgstr "لا توجد طلبات متأخرة"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_package_m2m.js:0
 msgid "No Package"
-msgstr ""
+msgstr "لا يوجد طرد"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_quant_action
@@ -6573,7 +6568,6 @@ msgstr "لم يتم العثور على شحنة. فلنقم بإنشاء واح
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__store_by__untracked
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
-#, fuzzy
 msgid "None"
 msgstr "لا شيء"
 
@@ -6676,7 +6670,6 @@ msgstr "أكتوبر"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
-#, fuzzy
 msgid ""
 "Odoo opens a PDF preview by default. If you (Enterprise users only) want to "
 "print instantly,\n"
@@ -6926,17 +6919,17 @@ msgstr "الأصل"
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_orig_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list_editable
 msgid "Origin Container"
-msgstr ""
+msgstr "حاوية المصدر"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_orig_name
 msgid "Origin Container Name"
-msgstr ""
+msgstr "اسم حاوية المنشأ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__location_id
 msgid "Origin Location"
-msgstr ""
+msgstr "موقع المنشأ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -6946,7 +6939,7 @@ msgstr "حركات المصدر"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__origin_package_ids
 msgid "Origin Package"
-msgstr ""
+msgstr "الطرد الأساسي"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__origin_returned_move_id
@@ -6993,7 +6986,7 @@ msgstr "نوع الخارج"
 #: model:ir.model.fields,field_description:stock.field_stock_package__outermost_package_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__outermost_dest_id
 msgid "Outermost Destination Container"
-msgstr ""
+msgstr "حاوية الوجهة الخارجية"
 
 #. module: stock
 #. odoo-javascript
@@ -7159,7 +7152,7 @@ msgstr "محتوى الطرد"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_history_id
 msgid "Package History"
-msgstr ""
+msgstr "سجل الطرود"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking_batch
@@ -7186,7 +7179,7 @@ msgstr "اسم الطرد"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__dest_complete_name
 msgid "Package Name At Destination"
-msgstr ""
+msgstr "اسم الطرد في الوجهة"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__name
@@ -7224,7 +7217,7 @@ msgstr "نوع الطرد"
 #. odoo-python
 #: code:addons/stock/models/stock_package_type.py:0
 msgid "Package Type Sequence %(code)s"
-msgstr ""
+msgstr "الرقم التسلسلي نوع الطرد %(code)s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_pdf_label
@@ -7290,11 +7283,13 @@ msgid ""
 "Packages %(duplicate_names)s are moved to different locations while being in "
 "the same container %(container_name)s."
 msgstr ""
+"تنبيه: يتم نقل الطرود %(duplicate_names)s إلى مواقع استلام مختلفة، مع أنها "
+"تابعة حالياً لنفس الحاوية %(container_name)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__packages_count
 msgid "Packages Count"
-msgstr ""
+msgstr "عدد الطرود"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
@@ -7400,7 +7395,6 @@ msgstr "الإرشادات الخاصة بالشركاء"
 
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
-#, fuzzy
 msgid "Pay now"
 msgstr "ادفع الآن"
 
@@ -7484,7 +7478,6 @@ msgstr "عمليات الانتقاء"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__picking_policy
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__picking_policy
-#, fuzzy
 msgid "Picking Policy"
 msgstr "سياسة الاستلام"
 
@@ -7540,7 +7533,6 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
-#, fuzzy
 msgid "Preceding operations"
 msgstr "العمليات السابقة"
 
@@ -7562,7 +7554,6 @@ msgstr "المسار المفضل"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
-#, fuzzy
 msgid "Prefix value of the record for the sequence"
 msgstr "القيمة السابقة لسجل للتسلسل"
 
@@ -7695,7 +7686,7 @@ msgstr "الشراء"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__procurement_values
 msgid "Procurement Values"
-msgstr ""
+msgstr "قيم الشراء"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.ir_cron_scheduler_action_ir_actions_server
@@ -7885,13 +7876,13 @@ msgid "Product barcode"
 msgstr "باركود المنتج"
 
 #. module: stock
-#: model:mail.template,description:stock.mail_template_data_stock_move_line_recall
-msgid "Product recall from lot/serial number"
+#: model:mail.template,subject:stock.mail_template_data_stock_picking_recall
+msgid "Product recall for Delivery {{ object.name }}"
 msgstr ""
 
 #. module: stock
-#: model:mail.template,subject:stock.mail_template_data_stock_move_line_recall
-msgid "Product recall: {{ object.product_id.display_name or 'n/a' }}"
+#: model:mail.template,description:stock.mail_template_data_stock_picking_recall
+msgid "Product recall from lot/serial number"
 msgstr ""
 
 #. module: stock
@@ -7997,7 +7988,7 @@ msgstr "قاعدة السحب"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__push_domain
 msgid "Push Applicability"
-msgstr ""
+msgstr "قابلية التطبيق"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -8012,7 +8003,7 @@ msgstr "الدفع إلى"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_put_in_pack
 msgid "Put In Pack Wizard"
-msgstr ""
+msgstr "معالج \"إضافة العناصر إلى طرد\""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_put_in_pack_wizard
@@ -8459,7 +8450,6 @@ msgstr "مرجع التسلسل"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_reference
-#, fuzzy
 msgid "Reference between stock documents"
 msgstr "المرجع بين مستندات المخزون"
 
@@ -8672,7 +8662,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id_placeholder
 msgid "Replenishment Uom Id Placeholder"
-msgstr ""
+msgstr "نص موقت لمعرّف وحدة قياس تجديد المخزون"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__replenish_location
@@ -8723,7 +8713,6 @@ msgstr "طريقة الحجز"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
-#, fuzzy
 msgid "Reserve"
 msgstr "حجز"
 
@@ -8868,7 +8857,7 @@ msgstr "نوع عمليات الإرجاع"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_type__package_use__reusable
 msgid "Reusable Box (totes)"
-msgstr ""
+msgstr "صندوق قابل لإعادة الاستخدام (حقائب)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__package_use
@@ -8887,7 +8876,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_move_line
-#, fuzzy
 msgid "Revert"
 msgstr "العودة"
 
@@ -8917,7 +8905,7 @@ msgstr "شركة المسار"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id_placeholder
 msgid "Route Id Placeholder"
-msgstr ""
+msgstr "معرف المسار (مكان احتياطي)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
@@ -9058,7 +9046,6 @@ msgstr "البيانات التجريبية"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
-#, fuzzy
 msgid "Save"
 msgstr "حفظ"
 
@@ -9087,7 +9074,7 @@ msgstr "التاريخ المجدول"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__inventory_date
 msgid "Scheduled at"
-msgstr ""
+msgstr "الموعد المحدد في"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_batch__scheduled_date
@@ -9174,7 +9161,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
-#, fuzzy
 msgid "Scrapped"
 msgstr "مخلفات التصنيع "
 
@@ -9208,7 +9194,7 @@ msgstr "البحث في عمليات الشراء"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reference_search_view
 msgid "Search Reference"
-msgstr ""
+msgstr "مرجع البحث"
 
 #. module: stock
 #. odoo-python
@@ -9229,7 +9215,7 @@ msgstr ""
 #: code:addons/stock/static/src/views/list/stock_add_package_list_view.js:0
 #: code:addons/stock/static/src/views/picking_form/stock_move_one2many.js:0
 msgid "Select Packages to Move"
-msgstr ""
+msgstr "اختر الطرود المراد نقلها"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
@@ -9239,7 +9225,7 @@ msgstr "تحديد المسار"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_put_in_pack_form
 msgid "Select a Package Type"
-msgstr ""
+msgstr "اختر نوع الطرد"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -9299,6 +9285,8 @@ msgstr ""
 msgid ""
 "Send an automatic confirmation Text Message when Delivery Orders are done"
 msgstr ""
+"قم بتفعيل الإرسال التلقائي للرسائل النصية القصيرة التأكيدية إلى العملاء فور "
+"اعتماد وإنهاء أوامر التوصيل"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9412,7 +9400,7 @@ msgstr "تسلسل أرقام المجموعات/الأرقام التسلسلي
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__set_package_type
 msgid "Set Package Type"
-msgstr ""
+msgstr "تعيين نوع الطرد"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9558,7 +9546,7 @@ msgstr "إظهار التحقق من التوافر"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__show_expected_quantity
 msgid "Show Expected Quantity"
-msgstr ""
+msgstr "إظهار الكمية المتوقعة"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_forecasted_qty_status_button
@@ -9621,7 +9609,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__show_supply_warning
 msgid "Show Supply Warning"
-msgstr ""
+msgstr "إظهار تحذير المخزون"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
@@ -9834,7 +9822,7 @@ msgstr "معلم بنجمة"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
 msgid "Start transferring goods to see references"
-msgstr ""
+msgstr "ابدأ بنقل البضائع لعرض المراجع"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -9904,7 +9892,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_confirmation_type
 msgid "Stock Confirmation Type"
-msgstr ""
+msgstr "نوع تأكيد المخزون"
 
 #. module: stock
 #. odoo-javascript
@@ -9928,11 +9916,6 @@ msgstr "مواقع المخزون"
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_move_ids
 msgid "Stock Move"
 msgstr "حركة المخزون"
-
-#. module: stock
-#: model:mail.template,name:stock.mail_template_data_stock_move_line_recall
-msgid "Stock Move Line: Product Recall"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids
@@ -9979,7 +9962,7 @@ msgstr "وجهة طرد المخزون"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_history
 msgid "Stock Package History"
-msgstr ""
+msgstr "سجل الطرود في المخزون"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
@@ -10000,7 +9983,7 @@ msgstr "تقرير كمية المخزون"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
 msgid "Stock Reference"
-msgstr ""
+msgstr "مرجع المخزون"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_forecasted_product_product
@@ -10032,23 +10015,23 @@ msgstr "تقرير قواعد المخزون"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_text_confirmation
 msgid "Stock Text Confirmation"
-msgstr ""
+msgstr "نص رسالة SMS للتأكيد التلقائي على عمليات وحركات المخزون"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_confirmation_type
 msgid "Stock Text Validation type"
-msgstr ""
+msgstr "نوع تصديق المخزون عبر الرسائل النصية القصيرة"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_text_confirmation
 msgid "Stock Text Validation with stock move"
-msgstr ""
+msgstr "تصديق المخزون عبر الرسائل النصية القصيرة مع حركة المخزون"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Stock To Reserve:"
-msgstr ""
+msgstr "المخزون المراد حجزه:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_quant_action
@@ -10306,7 +10289,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Text Confirmation"
-msgstr ""
+msgstr "التأكيد عبر رسالة نصية"
 
 #. module: stock
 #. odoo-python
@@ -10356,7 +10339,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "The actual date when the transfer was processed."
-msgstr ""
+msgstr "التاريخ الفعلي الذي تم فيه معالجة نقل المخزون."
 
 #. module: stock
 #. odoo-python
@@ -10857,6 +10840,8 @@ msgstr ""
 #: code:addons/stock/models/stock_package.py:0
 msgid "This package is currently set to be sent in %(location_names_list)s."
 msgstr ""
+"تم إعداد هذا الطرد وتعيينه حالياً ليتم شحنه/توجيهه إلى %"
+"(location_names_list)s."
 
 #. module: stock
 #. odoo-python
@@ -10892,7 +10877,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_model.js:0
 msgid "This record already exists"
-msgstr ""
+msgstr "هذا السجل موجود بالفعل"
 
 #. module: stock
 #. odoo-python
@@ -10940,7 +10925,7 @@ msgstr "الأفق الزمني"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Time to replenish:"
-msgstr ""
+msgstr "وقت تجديد المخزون:"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -11200,7 +11185,7 @@ msgstr "تتبع كميات مخزونك عن طريق إنشاء منتجات �
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_view_inherit_stock
 msgid "Tracked Stock"
-msgstr ""
+msgstr "المخزون المتتبع"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__store_by
@@ -11267,9 +11252,14 @@ msgid "Transfer:"
 msgstr ""
 
 #. module: stock
+#: model:mail.template,name:stock.mail_template_data_stock_picking_recall
+msgid "Transfer: Product Recall"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__package_history_ids
 msgid "Transfered Packages"
-msgstr ""
+msgstr "الطرود المنقولة"
 
 #. module: stock
 #. odoo-python
@@ -11311,11 +11301,10 @@ msgstr "تتيح لك الشحنات نقل البضائع من موقع إلى 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package__picking_ids
 msgid "Transfers in which the Package is set as Destination Package"
-msgstr ""
+msgstr "عمليات النقل التي تم تحديد الطرد فيها كطرد وجهة"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
-#, fuzzy
 msgid "Transit"
 msgstr "العبور"
 
@@ -11349,7 +11338,7 @@ msgstr "تشغيل قاعدة أخرى إذا لم يكن هناك مخزون"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__replenish_location
 msgid "Trigger replenishment suggestions for this location when required"
-msgstr ""
+msgstr "تشغيل مقترحات إعادة التزويد لهذا الموقع عند الحاجة"
 
 #. module: stock
 #. odoo-javascript
@@ -11370,7 +11359,7 @@ msgstr "النوع"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr ""
+msgstr "نوع العملية"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
@@ -11383,7 +11372,7 @@ msgstr "نوع النشاط المستثنى في السجل."
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Unassign"
-msgstr ""
+msgstr "إلغاء التعيين"
 
 #. module: stock
 #. odoo-python
@@ -11586,7 +11575,6 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
-#, fuzzy
 msgid "Validate Inventory"
 msgstr "تصديق المخزون"
 
@@ -11642,7 +11630,7 @@ msgstr "افتراضي"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Virtual Locations"
-msgstr ""
+msgstr "المواقع الافتراضية"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -11771,7 +11759,6 @@ msgstr "مسارات المستودع"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
-#, fuzzy
 msgid "Warehouse:"
 msgstr "المستودع:"
 
@@ -11991,7 +11978,6 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#, fuzzy
 msgid "When to start shipping"
 msgstr "موعد بدء الشحن"
 
@@ -12235,6 +12221,7 @@ msgstr "لا يمكنك تغيير حركة مخزون ملغاة. قم بإنش
 #: code:addons/stock/models/stock_picking.py:0
 msgid "You cannot change the Scheduled Date on a cancelled transfer."
 msgstr ""
+"يتعذر تعديل التاريخ المجدول لشحنة أو حركة نقل تم إغلاقها وإلغاؤها بالفعل."
 
 #. module: stock
 #. odoo-python
@@ -12394,7 +12381,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You need a transfer to add these packages to."
-msgstr ""
+msgstr "يجب تحديد أو إنشاء أمر نقل أولاً لتتمكن من إدراج هذه الطرود تحته."
 
 #. module: stock
 #. odoo-python
@@ -12444,7 +12431,6 @@ msgstr "لقد حاولت إنشاء سجل موجود بالفعل. تم تعد
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
-#, fuzzy
 msgid ""
 "You'll find here smart replenishment propositions based on inventory "
 "forecasts.\n"
@@ -12479,6 +12465,8 @@ msgid ""
 "Your product is missing a way to be replenished (Route, Vendor, Bill of "
 "Materials)."
 msgstr ""
+"تنبيه: لم يتم تحديد أي طريقة لإعادة تزويد هذا المنتج؛ يرجى تكوين مسار توريد "
+"أو تعيين مَورّد أو إنشاء قائمة مواد."
 
 #. module: stock
 #. odoo-python
@@ -12566,7 +12554,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.picking_type_barcode_zpl_label
 msgid "^FS"
-msgstr ""
+msgstr "^FS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_zpl_label
@@ -12655,7 +12643,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Aisle 1"
-msgstr ""
+msgstr "على سبيل المثال: الممر 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -12706,7 +12694,7 @@ msgstr "مثال: SN000001"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Shelf 1"
-msgstr ""
+msgstr "على سبيل المثال: الرف 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
@@ -12722,7 +12710,7 @@ msgstr "مثال: الاستلام على خطوتين"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "expected on"
-msgstr ""
+msgstr "متوقع في"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
@@ -12774,7 +12762,6 @@ msgstr "من"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
-#, fuzzy
 msgid "planned on"
 msgstr "مخطط في"
 
@@ -12850,7 +12837,7 @@ msgstr "وحدات"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation

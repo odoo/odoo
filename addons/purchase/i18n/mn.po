@@ -21,7 +21,7 @@
 # Minj P <pminj322@gmail.com>, 2022
 # Martin Trigaux, 2022
 # hish, 2022
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Bayarkhuu Bataa <bbayarkhuu@gmail.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
@@ -31,9 +31,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 20:20+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-14 15:33+0000\n"
+"Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-20/"
 "purchase/mn/>\n"
 "Language: mn\n"
 "MIME-Version: 1.0\n"
@@ -70,6 +70,7 @@ msgstr "# мөрийн тоо"
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "%(added_lines_count)s PO lines added to the bill."
 msgstr ""
+"Худалдан авалтын захиалгын %(added_lines_count)s мөрийг нэхэмжлэлд нэмлээ."
 
 #. module: purchase
 #. odoo-python
@@ -78,6 +79,8 @@ msgid ""
 "%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
 "unmatched remaining."
 msgstr ""
+"Нэхэмжлэлийн %(matched_lines_count)s мөр тулгагдсан, %(unmatched_lines_count)"
+"s тулгагдаагүй мөр үлдсэн."
 
 #. module: purchase
 #. odoo-python
@@ -86,12 +89,14 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s нэхэмжилсэн, %"
+"(quantity_received)s хүлээн авсан, нэгжийн үнэ %(unit_price)s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; %(product)s-ийн үнийн зөрүү"
 
 #. module: purchase
 #. odoo-python
@@ -103,7 +108,7 @@ msgstr "%(product)s %(original_receipt_date)s-с %(new_receipt_date)sхүртэ�
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "%s modified receipt dates for the following products:"
-msgstr ""
+msgstr "%s дараах барааны хүлээн авах огноог өөрчиллөө:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -122,6 +127,8 @@ msgid ""
 ", it's 100% free! You'll save time creating beautiful quotations and track "
 "sales."
 msgstr ""
+", энэ нь 100% үнэгүй! Гоё үнийн санал үүсгэх, борлуулалтаа хянахад цаг "
+"хэмнэнэ."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
@@ -133,7 +140,7 @@ msgstr "-&gt;"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "0 bill lines matched with this PO."
-msgstr ""
+msgstr "Энэ худалдан авалтын захиалгатай нэхэмжлэлийн 0 мөр тулгагдсан."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -186,6 +193,46 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Эрхэм хүндэт <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">REF_XXX</t>)</span>\n"
+"        </t>\n"
+"        худалдан авалтын захиалгын хүргэлт \n"
+"        <t t-if=\"object.date_planned\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date"
+"(object.date_planned) or ''\">05/05/2021</span>-нд хийгдэхээр "
+"төлөвлөгдсөнийг сануулж байна.\n"
+"        </t>\n"
+"         <t t-else=\"\">\n"
+"            <span style=\"font-weight:bold;\">тодорхойгүй</span> хугацаанд "
+"хийгдэхээр төлөвлөгдсөнийг сануулж байна.\n"
+"        </t>\n"
+"        Хугацаандаа хүргэгдэх эсэхийг баталгаажуулна уу?\n"
+"        <br/><br/>\n"
+"        <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
+"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
+"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Батлах</a>\n"
+"        <br/><br/>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -229,6 +276,45 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Эрхэм хүндэт <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        <t t-out=\"object.company_id.name or ''\">YourCompany</t>-ийн \n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10.00</span> дүнтэй\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            (лавлах дугаар: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>)\n"
+"        </t>\n"
+"        худалдан авалтын захиалгыг хавсралтаар илгээж байна.\n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.date_planned\">\n"
+"            Хүлээн авах огноо: <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <br/><br/>\n"
+"            Энэ захиалгыг хүлээн авснаа баталгаажуулна уу?\n"
+"            <br/><br/>\n"
+"            <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
+"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
+"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Батлах</a>\n"
+"        </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -260,11 +346,39 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Эрхэм хүндэт <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        <t t-out=\"object.company_id.name or ''\">YourCompany</t>-ийн \n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            (лавлах дугаар: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>)\n"
+"        </t>\n"
+"        үнийн саналын хүсэлтийг хавсралтаар илгээж байна.\n"
+"        <br/><br/>\n"
+"        Асуух зүйл байвал бидэнтэй холбогдоно уу.\n"
+"        <br/><br/>\n"
+"        Хүндэтгэсэн,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<i class=\"oi me-1\" data-icon=\"print\"/>Download / Print"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"print\"/>Татах / Хэвлэх"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -273,16 +387,19 @@ msgid ""
 "label=\"Waiting for Bill\" title=\"Waiting for Bill\"/><span class=\"d-none "
 "d-md-inline\"> Waiting for Bill</span>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled\" data-icon=\"article\" role=\"img\" aria-"
+"label=\"Нэхэмжлэл хүлээж буй\" title=\"Нэхэмжлэл хүлээж буй\"/><span "
+"class=\"d-none d-md-inline\"> Нэхэмжлэл хүлээж буй</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/>Paid"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/>Төлөгдсөн"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/>Reversed"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/>Буцаагдсан"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -291,11 +408,14 @@ msgid ""
 "label=\"Cancelled\" title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> "
 "Cancelled</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"close\" role=\"img\" aria-"
+"label=\"Цуцлагдсан\" title=\"Цуцлагдсан\"/><span class=\"d-none d-md-"
+"inline\"> Цуцлагдсан</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Waiting Payment"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Төлбөр хүлээж буй"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -303,6 +423,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"lock\"/>\n"
 "                        Locked"
 msgstr ""
+"<i class=\"oi\" data-icon=\"lock\"/>\n"
+"                        Түгжигдсэн"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -311,6 +433,9 @@ msgid ""
 "                          <span class=\"d-block d-md-none\">Confirmation</"
 "span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Баталсан огноо</span>\n"
+"                          <span class=\"d-block d-md-none\">Баталгаажуулалт</"
+"span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -318,6 +443,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Purchase Order #</span>\n"
 "                          <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Худалдан авалтын захиалга #</span>\n"
+"                          <span class=\"d-block d-md-none\">Дугаар</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
@@ -325,6 +452,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Request for Quotation #</span>\n"
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Үнийн санал #</span>\n"
+"                        <span class=\"d-block d-md-none\">Дугаар</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -334,11 +463,15 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order</span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
+"Үнийн санал</span>\n"
+"                        <span class=\"o_form_label\" invisible=\"state in "
+"('draft', 'sent')\">Худалдан авалтын захиалга</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span class=\"o_stat_text\">Price Comparison</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Үнийн харьцуулалт</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -354,11 +487,14 @@ msgid ""
 "                                    Incoming\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                    Ирж буй\n"
+"                                </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span invisible=\"not receipt_reminder_email\">day(s) before</span>"
-msgstr ""
+msgstr "<span invisible=\"not receipt_reminder_email\">хоногийн өмнө</span>"
 
 #. module: purchase
 #: model_terms:web_tour.tour,rainbow_man_message:purchase.purchase_tour
@@ -380,12 +516,12 @@ msgstr "<span>Татвар</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Анхааруулга: энэ захиалга дараахын давхардал байж магадгүй</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong class=\"d-block mb-1\">From:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Хэнээс:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -395,13 +531,13 @@ msgstr "<strong class=\"d-block mb-1\">Нэхэмжлэл</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Хүргэлтийн хаяг:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Хүргэлтийн хаяг</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -411,12 +547,12 @@ msgstr "<strong>Дүн</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Buyer</strong>"
-msgstr ""
+msgstr "<strong>Худалдан авагч</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Confirmation Date:</strong>"
-msgstr ""
+msgstr "<strong>Баталсан огноо:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -427,12 +563,12 @@ msgstr "<strong>Тодорхойлолт</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Disc.</strong>"
-msgstr ""
+msgstr "<strong>Хөн.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Expected Arrival:</strong>"
-msgstr ""
+msgstr "<strong>Ирэх огноо:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -443,7 +579,7 @@ msgstr "<strong>Зорилтот огноо</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>Худалдааны нөхцөл:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -454,12 +590,12 @@ msgstr "<strong>Захиалгын огноо:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Deadline:</strong>"
-msgstr ""
+msgstr "<strong>Захиалгын эцсийн огноо:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Payment Terms: </strong>"
-msgstr ""
+msgstr "<strong>Төлбөрийн нөхцөл: </strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -475,12 +611,12 @@ msgstr "<strong>Хүлээн авсан огноо\\:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Request For Quotation Date:</strong>"
-msgstr ""
+msgstr "<strong>Үнийн саналын огноо:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
-msgstr ""
+msgstr "<strong>Хүсэж буй хүргэлтийн огноо:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -500,7 +636,7 @@ msgstr "<strong>Нэгж үнэ</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference</strong>"
-msgstr ""
+msgstr "<strong>Таны захиалгын дугаар</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -509,12 +645,15 @@ msgid ""
 "supplier to deliver goods or services to the buyer at a preset price for a "
 "period of time."
 msgstr ""
+"Ерөнхий худалдан авалтын захиалга нь худалдан авагч болон нийлүүлэгчийн "
+"хооронд тодорхой хугацаанд урьдчилан тохирсон үнээр бараа, үйлчилгээ "
+"нийлүүлэх худалдан авалтын гэрээ юм."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "A sample email has been sent to %s."
-msgstr ""
+msgstr "Жишээ имэйлийг %s руу илгээлээ."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -524,7 +663,7 @@ msgstr "(Худалдан авалт) дээр бараа ба харилцаг�
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Хандалтын бүлгүүд"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
@@ -539,6 +678,10 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Барааны тохиргооноос хамааран хүлээн авсан тоо хэмжээг дараах аргаар "
+"автоматаар тооцоолж болно:\n"
+"  - Гараар: тоо хэмжээг мөрөнд гараар оруулна\n"
+"  - Барааны хөдөлгөөн: тоо хэмжээ нь батлагдсан хөдөлгөөнөөс ирнэ\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__account_move_id
@@ -552,6 +695,9 @@ msgid ""
 "With perpetual valuation, it counterbalances the stock valuation account at "
 "closing."
 msgstr ""
+"Нэхэмжилсэн боловч хүлээн аваагүй барааны хуримтлагдсан үнэ дүнг агуулах "
+"данс. Байнгын үнэлгээтэй үед хаалтын үеэр барааны үнэлгээний дансыг "
+"тэнцүүлнэ."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_bills_to_receive_id
@@ -560,11 +706,14 @@ msgid ""
 "With perpetual valuation, it counterbalances the stock valuation account at "
 "closing."
 msgstr ""
+"Хүлээн авсан боловч нэхэмжлээгүй барааны хуримтлагдсан үнэ дүнг агуулах "
+"данс. Байнгын үнэлгээтэй үед хаалтын үеэр барааны үнэлгээний дансыг "
+"тэнцүүлнэ."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__accrual_move_ids
 msgid "Accrual Entries"
-msgstr ""
+msgstr "Хуримтлалын бичилтүүд"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__accrual_move_ids
@@ -572,22 +721,24 @@ msgid ""
 "Accrual entries generated for this line, so it isn't accrued again while one "
 "is still standing (posted, not yet reversed or cancelled)."
 msgstr ""
+"Энэ мөрөнд үүсгэсэн хуримтлалын бичилтүүд; аль нэг нь хүчинтэй (батлагдсан, "
+"буцаагдаагүй эсвэл цуцлагдаагүй) байх үед дахин хуримтлуулахгүй."
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_accrued_expense_entry_purchase_order_line
 msgid "Accrued Expense Entry"
-msgstr ""
+msgstr "Хуримтлагдсан зардлын бичилт"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr ""
+msgstr "Хуримтлагдсан захиалгын хөтөч"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/wizard/accrued_orders.py:0
 msgid "Accrued total"
-msgstr ""
+msgstr "Хуримтлагдсан нийт дүн"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -612,7 +763,7 @@ msgstr "Ажилбар"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Activities of"
-msgstr ""
+msgstr "Ажилбарууд:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
@@ -622,7 +773,7 @@ msgstr "Ажилбарын тайлбар"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Ажилбарын төлөвлөгөө"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
@@ -642,12 +793,12 @@ msgstr "Ажилбарын төрөл"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "Add Down Payment"
-msgstr ""
+msgstr "Урьдчилгаа төлбөр нэмэх"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "Add Products"
-msgstr ""
+msgstr "Бараа нэмэх"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -667,17 +818,17 @@ msgstr "Бүлэг нэмэх"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add note"
-msgstr ""
+msgstr "Тэмдэглэл нэмэх"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add product"
-msgstr ""
+msgstr "Бараа нэмэх"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add section"
-msgstr ""
+msgstr "Бүлэг нэмэх"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -690,24 +841,24 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Add some products or services to your quotation."
-msgstr ""
+msgstr "Үнийн саналдаа бараа эсвэл үйлчилгээ нэмнэ үү."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Add to PO"
-msgstr ""
+msgstr "Худалдан авалтын захиалгад нэмэх"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Add to Purchase Order"
-msgstr ""
+msgstr "Худалдан авалтын захиалгад нэмэх"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.mail_followers_edit_action_from_purchase
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Дагагч нэмэх/хасах"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -726,7 +877,7 @@ msgstr "Бүх"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Days to Order"
-msgstr ""
+msgstr "Захиалах бүх хоног"
 
 #. module: purchase
 #. odoo-javascript
@@ -744,29 +895,31 @@ msgstr "Хоцорсон захиалгууд"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Late Receipt POs"
-msgstr ""
+msgstr "Хүлээн авалт хоцорсон бүх захиалга"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Not Acknowledged POs"
-msgstr ""
+msgstr "Батлагдаагүй бүх захиалга"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Sent RFQs"
-msgstr ""
+msgstr "Илгээсэн бүх үнийн санал"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_supplierinfo_tree_view2
 msgid "All variants"
-msgstr ""
+msgstr "Бүх хувилбар"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
 msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr ""
+"Нийлүүлэгчдэд хүлээн авах огноог сануулах имэйлийг автоматаар илгээхийг "
+"зөвшөөрөх"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -776,12 +929,12 @@ msgstr "Худалдан авалтын захиалга засахыг зөвш
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Зөвшөөрөгдсөн хэмжих нэгж"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
 msgid "Aml"
-msgstr ""
+msgstr "Журналын мөр"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
@@ -796,11 +949,13 @@ msgid ""
 "Amount of time between date planned and order by date for each purchase "
 "order line."
 msgstr ""
+"Худалдан авалтын захиалгын мөр бүрийн төлөвлөсөн огноо болон захиалах "
+"огнооны хоорондох хугацаа."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
-msgstr ""
+msgstr "Худалдан авалт батлагдсанаас захиалах огноо хүртэлх хугацаа."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -831,12 +986,12 @@ msgstr "Захиалга батлах"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Are you sure you want to cancel the selected RFQs/Orders?"
-msgstr ""
+msgstr "Сонгосон үнийн санал/захиалгуудыг цуцлахдаа итгэлтэй байна уу?"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Arrival Confirmation"
-msgstr ""
+msgstr "Ирэлтийн баталгаажуулалт"
 
 #. module: purchase
 #. odoo-python
@@ -846,6 +1001,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"Энэ бараанд %(uom)s-ээс өөр хэмжих нэгж (жишээ нь: %(problem_uom)s) аль "
+"хэдийн ашиглагдсан тул хэмжих нэгжийг өөрчлөх боломжгүй.Өөрчлөхийг хүсвэл "
+"барааг архивлаад шинээр үүсгэнэ үү."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -879,16 +1037,17 @@ msgstr "Өмнөх захиалгаас автоматаар бөглөх"
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Auto-complete from a previous bill, refund, or purchase order."
 msgstr ""
+"Өмнөх нэхэмжлэл, буцаалт эсвэл худалдан авалтын захиалгаас автоматаар бөглөх."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent editing"
-msgstr ""
+msgstr "Батлагдсан захиалгыг засварлахаас сэргийлж автоматаар түгжих"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically remind the receipt date to your vendors"
-msgstr ""
+msgstr "Нийлүүлэгчдэд хүлээн авах огноог автоматаар сануулах"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__receipt_reminder_email
@@ -898,6 +1057,8 @@ msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
 msgstr ""
+"Хүлээн авах огнооноос X хоногийн өмнө нийлүүлэгчид баталгаажуулах имэйлийг "
+"автоматаар илгээж, яг огноог батлахыг хүснэ."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -917,29 +1078,29 @@ msgstr "Нэхэмжлэлийн мөр"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__bill_matched_ratio
 msgid "Bill Matched Ratio"
-msgstr ""
+msgstr "Нэхэмжлэл тулгалтын хувь"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Bill Matching"
-msgstr ""
+msgstr "Нэхэмжлэл тулгалт"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Bill Qty"
-msgstr ""
+msgstr "Нэхэмжлэлийн тоо"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
 msgid "Bill to Purchase Order"
-msgstr ""
+msgstr "Нэхэмжлэлээс худалдан авалтын захиалга"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__bill_to_receive
 msgid "Bill to Receive"
-msgstr ""
+msgstr "Хүлээн авах нэхэмжлэл"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
@@ -951,18 +1112,18 @@ msgstr "Нэхэмжилсэн"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
 msgid "Billed Amount Untaxed"
-msgstr ""
+msgstr "Нэхэмжилсэн татваргүй дүн"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_id
 #: model:ir.model.fields,field_description:purchase.field_res_company__account_billed_not_received_id
 msgid "Billed Not Received Account"
-msgstr ""
+msgstr "Нэхэмжилсэн, хүлээн аваагүй данс"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_active
 msgid "Billed Not Received Account Active"
-msgstr ""
+msgstr "Нэхэмжилсэн, хүлээн аваагүй данс идэвхтэй"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -999,12 +1160,12 @@ msgstr "Хүлээн авсан нэхэмжлэл"
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_id
 #: model:ir.model.fields,field_description:purchase.field_res_company__account_bills_to_receive_id
 msgid "Bills to Receive Account"
-msgstr ""
+msgstr "Хүлээн авах нэхэмжлэлийн данс"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_active
 msgid "Bills to Receive Account Active"
-msgstr ""
+msgstr "Хүлээн авах нэхэмжлэлийн данс идэвхтэй"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
@@ -1016,7 +1177,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Buyer"
-msgstr ""
+msgstr "Худалдан авагч"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -1047,7 +1208,7 @@ msgstr "Цуцлагдсан худалдан авалтын #"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Cannot delete a purchase order line which is in state “%s”."
-msgstr ""
+msgstr "“%s” төлөвтэй худалдан авалтын захиалгын мөрийг устгах боломжгүй."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1110,7 +1271,7 @@ msgstr "Захиалга батлах"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_confirm_rfqs
 msgid "Confirm RFQ"
-msgstr ""
+msgstr "Үнийн санал батлах"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__one_step
@@ -1121,7 +1282,7 @@ msgstr "Худалдан авалтын захиалгыг нэг алхамаа
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Confirm the price."
-msgstr ""
+msgstr "Үнийг баталгаажуулна уу."
 
 #. module: purchase
 #. odoo-javascript
@@ -1144,18 +1305,18 @@ msgstr "Батлагдсан худалдан авалтын захиалгыг 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Connect with your software!"
-msgstr ""
+msgstr "Програм хангамжтайгаа холбогдоорой!"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "Connect your software"
-msgstr ""
+msgstr "Програм хангамжаа холбох"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_currency_id
 msgid "Consolidation Currency"
-msgstr ""
+msgstr "Нэгтгэлийн валют"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1181,18 +1342,18 @@ msgstr "Улсын код"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Create Bills"
-msgstr ""
+msgstr "Нэхэмжлэл үүсгэх"
 
 #. module: purchase
 #: model:ir.model,website_form_label:purchase.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Захиалагч үүсгэх"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Create a product"
-msgstr ""
+msgstr "Бараа үүсгэх"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__create_uid
@@ -1233,18 +1394,18 @@ msgstr "Захиалагчийн хандах URL"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Date"
-msgstr ""
+msgstr "Огноо"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
 msgid "Date Calendar Start"
-msgstr ""
+msgstr "Календарийн эхлэх огноо"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Date Updated"
-msgstr ""
+msgstr "Шинэчилсэн огноо"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -1256,7 +1417,7 @@ msgstr "Огноо:"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,field_description:purchase.field_res_users__reminder_date_before_receipt
 msgid "Days Before Receipt"
-msgstr ""
+msgstr "Хүлээн авахаас өмнөх хоног"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
@@ -1267,7 +1428,7 @@ msgstr "Захиалга баталсан хугацаа"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Days to Order"
-msgstr ""
+msgstr "Захиалах хоног"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
@@ -1277,7 +1438,7 @@ msgstr "Хүлээн авах хоног"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__company_price_include
 msgid "Default Sales Price Include"
-msgstr ""
+msgstr "Борлуулалтын үнэд анхдагчаар багтсан"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__company_price_include
@@ -1304,6 +1465,9 @@ msgid ""
 "Delivery date expected from vendor. This date respectively defaults to "
 "vendor pricelist lead time then today's date."
 msgstr ""
+"Нийлүүлэгчээс хүлээгдэж буй хүргэлтийн огноо. Энэ огноо анхдагчаар "
+"нийлүүлэгчийн үнийн хүснэгтийн нийлүүлэх хугацаа, үгүй бол өнөөдрийн огноо "
+"байна."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -1328,7 +1492,7 @@ msgstr "Тайлбар"
 #: model:ir.model.fields,help:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
 msgid ""
 "Difference between demand and quantity but not affected by invoice policy"
-msgstr ""
+msgstr "Эрэлт болон тоо хэмжээний зөрүү, нэхэмжлэлийн бодлогоос хамаарахгүй"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
@@ -1351,12 +1515,12 @@ msgstr "Хөнгөлөлт:"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__display_auto_complete_field
 #: model:ir.model.fields,field_description:purchase.field_account_move__display_auto_complete_field
 msgid "Display Auto Complete Field"
-msgstr ""
+msgstr "Автоматаар бөглөх талбар харуулах"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_matching_tag
 msgid "Display Matching Tag"
-msgstr ""
+msgstr "Тулгалтын шошго харуулах"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_accrued_orders_wizard__display_name
@@ -1397,7 +1561,7 @@ msgstr "Шинжилгээний данс хуваарилалт"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__document_tax_mode
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__document_tax_mode
 msgid "Document Tax Mode"
-msgstr ""
+msgstr "Баримтын татварын горим"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -1413,7 +1577,7 @@ msgstr "Давхар хяналт шаардах дүн"
 #. odoo-python
 #: code:addons/purchase/wizard/bill_to_po_wizard.py:0
 msgid "Down Payment (ref: %(ref)s)"
-msgstr ""
+msgstr "Урьдчилгаа төлбөр (лавлах: %(ref)s)"
 
 #. module: purchase
 #. odoo-python
@@ -1432,38 +1596,42 @@ msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
 msgstr ""
+"Үнийн саналын хүсэлтийн PDF файлыг Odoo дахь үнийн саналын жагсаалт руугаа "
+"чирж оруулаарай. Автоматжуулалтыг мэдрээрэй!"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
 msgid "Dropship Address"
-msgstr ""
+msgstr "Шууд хүргэлтийн хаяг"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Duplicated Documents"
-msgstr ""
+msgstr "Давхардсан баримтууд"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "Давхардсан захиалга"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Enter a Description..."
-msgstr ""
+msgstr "Тайлбар оруулна уу..."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_planned
 msgid "Expected Arrival"
-msgstr ""
+msgstr "Ирэх огноо"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
 msgid ""
 "Expected delivery date of goods by the vendor based on the latest information"
 msgstr ""
+"Хамгийн сүүлийн мэдээлэлд үндэслэн нийлүүлэгчийн бараа хүргэх төлөвлөсөн "
+"огноо"
 
 #. module: purchase
 #. odoo-python
@@ -1480,12 +1648,12 @@ msgstr "Татварын тайлангийн тохируулга"
 #. module: purchase
 #: model:portal.entry,description:purchase.portal_purchase_orders
 msgid "Follow orders you have to fulfill"
-msgstr ""
+msgstr "Биелүүлэх ёстой захиалгуудаа хянах"
 
 #. module: purchase
 #: model:portal.entry,description:purchase.portal_rfq
 msgid "Follow your Requests for Quotation"
-msgstr ""
+msgstr "Үнийн саналуудаа хянах"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
@@ -1500,25 +1668,25 @@ msgstr "Дагагчид (Харилцагчид)"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr ""
+msgstr "Санхүүгийн бус худалдан авалтын захиалгын мөрөнд хориотой утгууд"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
 msgid "Forecasted"
-msgstr ""
+msgstr "Таамагласан"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "From %s"
-msgstr ""
+msgstr "%s-ээс"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "From Electronic Document"
-msgstr ""
+msgstr "Цахим баримтаас"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -1528,7 +1696,7 @@ msgstr "Бүрэн нэхэмжилсэн"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__full
 msgid "Fully Received"
-msgstr ""
+msgstr "Бүрэн хүлээн авсан"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1540,7 +1708,7 @@ msgstr "Ирээдүйн үйл ажиллагаанууд"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Generated Orders"
-msgstr ""
+msgstr "Үүсгэсэн захиалгууд"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
@@ -1560,6 +1728,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Бараа гэдэг нь таны нийлүүлдэг биет материал, бүтээгдэхүүн юм.\n"
+"Үйлчилгээ гэдэг нь таны үзүүлдэг биет бус бүтээгдэхүүн юм."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
@@ -1654,11 +1824,14 @@ msgid ""
 "In selected purchase order to merge these details must be same\n"
 "Vendor, currency, destination, dropship address and agreement"
 msgstr ""
+"Нэгтгэхээр сонгосон худалдан авалтын захиалгуудын дараах мэдээлэл ижил байх "
+"ёстой\n"
+"Нийлүүлэгч, валют, хүлээн авах байрлал, шууд хүргэлтийн хаяг болон гэрээ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
 msgid "In the Order"
-msgstr ""
+msgstr "Захиалгад"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
@@ -1670,20 +1843,20 @@ msgstr "Худалдааны нөхцөл"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_location
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Худалдааны нөхцөлийн байршил"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Indicate the product quantity you want to order."
-msgstr ""
+msgstr "Захиалах барааны тоо хэмжээг оруулна уу."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_warning_text
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,help:purchase.field_purchase_order__purchase_warning_text
 msgid "Internal warning for the partner or the products as set by the user."
-msgstr ""
+msgstr "Хэрэглэгчийн тохируулсан харилцагч эсвэл барааны дотоод анхааруулга."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
@@ -1726,7 +1899,7 @@ msgstr "Хоцролт"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__is_purchase_matched
 #: model:ir.model.fields,field_description:purchase.field_account_move__is_purchase_matched
 msgid "Is Purchase Matched"
-msgstr ""
+msgstr "Худалдан авалттай тулгагдсан эсэх"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__acknowledged
@@ -1734,6 +1907,7 @@ msgid ""
 "It indicates that the vendor has acknowledged the receipt of the purchase "
 "order."
 msgstr ""
+"Нийлүүлэгч худалдан авалтын захиалгыг хүлээн авснаа баталсныг илэрхийлнэ."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1748,7 +1922,7 @@ msgstr "Журналын бичилт"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__label
 msgid "Label"
-msgstr ""
+msgstr "Шошго"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__write_uid
@@ -1779,24 +1953,24 @@ msgstr "Хоцорсон ажилбар"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late RFQ"
-msgstr ""
+msgstr "Хоцорсон үнийн санал"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late Receipt"
-msgstr ""
+msgstr "Хоцорсон хүлээн авалт"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Receipts"
-msgstr ""
+msgstr "Хоцорсон хүлээн авалтууд"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Let's create your first request for quotation."
-msgstr ""
+msgstr "Анхны үнийн саналаа үүсгэцгээе."
 
 #. module: purchase
 #. odoo-javascript
@@ -1805,6 +1979,8 @@ msgid ""
 "Let's try the Purchase app to manage the flow from purchase to reception and "
 "invoice control."
 msgstr ""
+"Худалдан авалтаас хүлээн авалт, нэхэмжлэлийн хяналт хүртэлх урсгалыг "
+"удирдахын тулд Худалдан авалт аппыг туршаад үзээрэй."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
@@ -1819,22 +1995,22 @@ msgstr "Батлах шат дамжлага *"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_amount_untaxed
 msgid "Line Amount Untaxed"
-msgstr ""
+msgstr "Мөрийн татваргүй дүн"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_qty
 msgid "Line Qty"
-msgstr ""
+msgstr "Мөрийн тоо хэмжээ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_uom_id
 msgid "Line Uom"
-msgstr ""
+msgstr "Мөрийн хэмжих нэгж"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Link RFQs together and compare them."
-msgstr ""
+msgstr "Үнийн саналуудыг хооронд нь холбож, харьцуулах."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1854,7 +2030,7 @@ msgstr "Түгжигдсэн"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__locked
 msgid "Locked Purchase Orders cannot be modified."
-msgstr ""
+msgstr "Түгжигдсэн худалдан авалтын захиалгыг өөрчлөх боломжгүй."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1867,7 +2043,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage blanket orders and purchase templates"
-msgstr ""
+msgstr "Ерөнхий захиалга болон худалдан авалтын загваруудыг удирдах"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1892,41 +2068,41 @@ msgstr "Тулгах"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Matched"
-msgstr ""
+msgstr "Тулгагдсан"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__matched_invoice_count
 msgid "Matched Invoices Count"
-msgstr ""
+msgstr "Тулгагдсан нэхэмжлэлийн тоо"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__matching_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Matching"
-msgstr ""
+msgstr "Тулгалт"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Matching Invoices"
-msgstr ""
+msgstr "Тулгах нэхэмжлэлүүд"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols дүрс, ж: checklist"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_merger
 msgid "Merge RFQs"
-msgstr ""
+msgstr "Үнийн санал нэгтгэх"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Merged RFQs"
-msgstr ""
+msgstr "Нэгтгэсэн үнийн саналууд"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1965,12 +2141,14 @@ msgstr "Давхар хяналт шаардагдах хамгийн бага �
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
 msgstr ""
+"Санхүүгийн худалдан авалтын захиалгын мөрөнд заавал бөглөх талбарууд дутуу "
+"байна."
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My"
-msgstr ""
+msgstr "Миний"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1987,7 +2165,7 @@ msgstr "Миний ажилбарын эцсийн огноо"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Days to Order"
-msgstr ""
+msgstr "Миний захиалах хоног"
 
 #. module: purchase
 #. odoo-javascript
@@ -2005,13 +2183,13 @@ msgstr "Миний хоцорсон захиалгууд"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Late Receipt POs"
-msgstr ""
+msgstr "Миний хүлээн авалт хоцорсон захиалгууд"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Not Acknowledged POs"
-msgstr ""
+msgstr "Миний батлагдаагүй захиалгууд"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2083,18 +2261,18 @@ msgstr "Дараагийн ажилбарын төрөл"
 #. module: purchase
 #: model:res.groups.privilege,placeholder:purchase.res_groups_privilege_purchase
 msgid "No"
-msgstr ""
+msgstr "Үгүй"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No Products for the selected Vendor."
-msgstr ""
+msgstr "Сонгосон нийлүүлэгчид бараа алга."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
 msgid "No Purchase Analysis"
-msgstr ""
+msgstr "Худалдан авалтын шинжилгээ алга"
 
 #. module: purchase
 #. odoo-python
@@ -2110,22 +2288,22 @@ msgstr "Барааны бүртгэл алга. Шинийг үүсгээрэй!
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
 msgid "No purchase order found. Let's create one!"
-msgstr ""
+msgstr "Худалдан авалтын захиалга олдсонгүй. Шинээр үүсгэцгээе!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_history
 msgid "No purchase order were made for this product yet!"
-msgstr ""
+msgstr "Энэ бараанд одоогоор худалдан авалтын захиалга хийгдээгүй байна!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "No request for quotation found. Let's create one!"
-msgstr ""
+msgstr "Үнийн санал олдсонгүй. Шинээр үүсгэцгээе!"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__non_deductible_tax
 msgid "Non Deductible Tax"
-msgstr ""
+msgstr "Хасагдахгүй татвар"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__0
@@ -2137,22 +2315,22 @@ msgstr "Хэвийн"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Not Acknowledged"
-msgstr ""
+msgstr "Батлагдаагүй"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice_raw
 msgid "Not Invoiced Quantity"
-msgstr ""
+msgstr "Нэхэмжлээгүй тоо хэмжээ"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
 msgid "Not Received"
-msgstr ""
+msgstr "Хүлээн аваагүй"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Not using Odoo?"
-msgstr ""
+msgstr "Odoo ашигладаггүй юу?"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_note
@@ -2179,7 +2357,7 @@ msgstr "Үйлдлийн тоо"
 #: model:ir.model.fields,help:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
-msgstr ""
+msgstr "Амласан хүлээн авах огнооноос өмнө сануулах имэйл илгээх хоногийн тоо"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
@@ -2279,6 +2457,85 @@ msgid ""
 "etc.\n"
 "\n"
 msgstr ""
+"Odoo нийлүүлэлтийн сүлжээ\n"
+"-----------------\n"
+"\n"
+"Хэрэгцээнээс төлбөр хүртэлх процессыг автоматжуулж, нэхэмжлэлийг Odoo-ийн\n"
+"<a href=\"https://www.odoo.com/app/purchase\">Нээлттэй эхийн нийлүүлэлтийн "
+"сүлжээ</a>-гээр хянаарай.\n"
+"\n"
+"Хангамжийн саналыг автоматжуулж, үнийн саналын хүсэлт илгээж, худалдан "
+"авалтын\n"
+"захиалгыг хянаж, нийлүүлэгчийн мэдээллийг удирдаж, барааны хүлээн авалтыг "
+"хянаж,\n"
+"нийлүүлэгчийн нэхэмжлэлийг шалгаарай.\n"
+"\n"
+"Автомат хангамжийн санал\n"
+"----------------------------------\n"
+"\n"
+"Хангамжийн дүрмээр нөөцийн түвшнээ бууруулаарай. Нөөцийн түвшнээ бууруулахын "
+"тулд\n"
+"зөв цагт зөв худалдан авалтын санал аваарай. Нөөцийн түвшин, логистикийн "
+"дүрэм,\n"
+"борлуулалтын захиалга, таамагласан үйлдвэрлэлийн захиалга гэх мэтээс "
+"хамаарах\n"
+"хангамжийн дүрмээр худалдан авалт, нөөцийн гүйцэтгэлээ сайжруулаарай.\n"
+"\n"
+"Үнийн саналын хүсэлт эсвэл худалдан авалтын захиалгыг нийлүүлэгч рүүгээ нэг "
+"товшилтоор илгээгээрэй.\n"
+"Худалдан авалтын захиалгаасаа барааны хүлээн авалт, нэхэмжлэлд хандаарай.\n"
+"\n"
+"Худалдан авалтын тендер\n"
+"----------------\n"
+"\n"
+"Худалдан авалтын тендер зарлаж, нийлүүлэгчийн хариултыг процесст нэгтгэж,\n"
+"саналуудыг харьцуулаарай. Хамгийн сайн саналыг сонгож, худалдан авалтын "
+"захиалгыг хялбархан илгээгээрэй.\n"
+"Дараа нь тайлангаар нийлүүлэгчдийнхээ чанарыг шинжлээрэй.\n"
+"\n"
+"\n"
+"Имэйлийн нэгтгэл\n"
+"------------------\n"
+"\n"
+"Хэлэлцээр болон борлуулалтын дараах үйлчилгээний асуудлыг сайтар мөшгихийн "
+"тулд\n"
+"нийлүүлэгчтэй хийсэн бүх харилцаагаа худалдан авалтын захиалга (эсвэл үнийн "
+"санал) дээр нэгтгээрэй.\n"
+"Нийлүүлэгчтэй холбоотой асуудлыг хянахын тулд гомдлын удирдлагын модулийг "
+"ашиглаарай.\n"
+"\n"
+"Стандарт үнэ, дундаж үнэ, FIFO\n"
+"-----------------------------------\n"
+"\n"
+"Бизнестээ тохирсон өртгийн аргыг ашиглаарай: стандарт үнэ, дундаж\n"
+"үнэ, fifo эсвэл lifo. Санхүүгийн бичилт болон нөөцийн зөв үнэлгээг бодит\n"
+"цаг хугацаанд аваарай; Odoo бүгдийг танд ил тод удирдана.\n"
+"\n"
+"Нийлүүлэгчийн үнийн хүснэгт импортлох\n"
+"--------------------------\n"
+"\n"
+"Хамгийн сайн үнийг ашиглан ухаалаг худалдан авалтын шийдвэр гаргаарай. "
+"Урамшуулал, тоо хэмжээнээс\n"
+"хамаарах үнэ, гэрээний тусгай нөхцөлд үндэслэн илүү ухаалаг шийдвэр гаргахын "
+"тулд\n"
+"нийлүүлэгчийн үнийн хүснэгтийг хялбархан импортлоорой. Борлуулалтын үнээ ч\n"
+"нийлүүлэгчийнхээ үнэд үндэслэн тогтоож болно.\n"
+"\n"
+"Бараа болон нэхэмжлэлийн хяналт\n"
+"-----------------------------\n"
+"\n"
+"Нэг ч бараа, захиалга орхигдохгүй; нөөцийн хяналтаар дутуу захиалга,\n"
+"буцаалт, барааны хүлээн авалт, чанарын хяналтыг удирдах боломжтой. "
+"Хэрэгцээндээ\n"
+"тохирсон хяналтын аргыг сонгоорой.\n"
+"\n"
+"Нийлүүлэгчийн нэхэмжлэлийг хүч хөдөлмөргүйгээр хянаарай. Хэрэгцээндээ "
+"тохирсон аргыг сонгоорой:\n"
+"худалдан авалтын захиалга эсвэл барааны хүлээн авалтад үндэслэн нэхэмжлэлийн "
+"ноорог урьдчилан үүсгэх,\n"
+"нэхэмжлэлийг гараар үүсгэж худалдан авалтын захиалгаас мөр импортлох\n"
+"гэх мэт.\n"
+"\n"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__purchase
@@ -2309,6 +2566,8 @@ msgid ""
 "Once you get the price from the vendor, you can complete the purchase order "
 "with the right price."
 msgstr ""
+"Нийлүүлэгчийн үнийг авсны дараа худалдан авалтын захиалгыг зөв үнээр бөглөж "
+"болно."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
@@ -2316,6 +2575,8 @@ msgid ""
 "Once you ordered your products to your supplier, confirm your request for "
 "quotation and it will turn into a purchase order."
 msgstr ""
+"Нийлүүлэгчдээ бараа захиалсны дараа үнийн саналаа батлахад энэ нь худалдан "
+"авалтын захиалга болно."
 
 #. module: purchase
 #. odoo-python
@@ -2334,7 +2595,7 @@ msgstr "Захиалгын огноо"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Order DeadLine: Last 365 Days"
-msgstr ""
+msgstr "Захиалгын эцсийн огноо: Сүүлийн 365 хоног"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
@@ -2347,7 +2608,7 @@ msgstr "Захиалгын эцсийн огноо"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Deadline: Last 365 Days"
-msgstr ""
+msgstr "Захиалгын эцсийн огноо: Сүүлийн 365 хоног"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
@@ -2372,6 +2633,8 @@ msgid ""
 "Ordered quantity not invoiced. This may or may not include quantities that "
 "won't be invoiced, depending on the product's Control Policy."
 msgstr ""
+"Нэхэмжлээгүй захиалсан тоо хэмжээ. Барааны хяналтын бодлогоос хамааран "
+"нэхэмжлэгдэхгүй тоо хэмжээг агуулж болно, эсвэл үгүй."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -2384,37 +2647,37 @@ msgstr "Захиалгууд"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Order due %(date)s"
-msgstr ""
+msgstr "Захиалгын хугацаа %(date)s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Other Info"
-msgstr ""
+msgstr "Бусад мэдээлэл"
 
 #. module: purchase
 #: model:portal.entry,name:purchase.portal_purchase_orders
 msgid "Our Orders"
-msgstr ""
+msgstr "Бидний захиалгууд"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "PO Matching"
-msgstr ""
+msgstr "Худалдан авалтын тулгалт"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "PO Qty"
-msgstr ""
+msgstr "Захиалгын тоо"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Эцэг бүлгийн мөр"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__partial
 msgid "Partially Received"
-msgstr ""
+msgstr "Хэсэгчлэн хүлээн авсан"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
@@ -2445,17 +2708,19 @@ msgid ""
 "Please select at least two purchase orders with state RFQ and RFQ sent to "
 "merge."
 msgstr ""
+"Нэгтгэхийн тулд Үнийн санал болон Илгээсэн үнийн санал төлөвтэй дор хаяж "
+"хоёр худалдан авалтын захиалга сонгоно уу."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Please select bill lines with the same vendor."
-msgstr ""
+msgstr "Ижил нийлүүлэгчтэй нэхэмжлэлийн мөрүүдийг сонгоно уу."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
 msgid "Pol"
-msgstr ""
+msgstr "Худалдан авалтын мөр"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
@@ -2465,12 +2730,12 @@ msgstr "Гаднаас хандах URL"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__prepaid_expense
 msgid "Prepaid Expense"
-msgstr ""
+msgstr "Урьдчилж төлсөн зардал"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
-msgstr ""
+msgstr "Сануулах имэйлийг өөртөө илгээж урьдчилан харах."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
@@ -2525,17 +2790,17 @@ msgstr "Барааны төрөл"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_price
 msgid "Product Uom Price"
-msgstr ""
+msgstr "Барааны хэмжих нэгжийн үнэ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty
 msgid "Product Uom Qty"
-msgstr ""
+msgstr "Барааны хэмжих нэгжийн тоо"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty_to_invoice
 msgid "Product Uom Qty To Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх барааны хэмжих нэгжийн тоо"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -2581,12 +2846,12 @@ msgstr "Худалдан авалтын гэрээ"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_alternative
 msgid "Purchase Alternative"
-msgstr ""
+msgstr "Худалдан авалтын хувилбар"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
 msgid "Purchase Amount Untaxed"
-msgstr ""
+msgstr "Худалдан авалтын татваргүй дүн"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2599,13 +2864,13 @@ msgstr "Худалдан авалтын шинжилгээ"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Purchase Bill Lines"
-msgstr ""
+msgstr "Худалдан авалтын нэхэмжлэлийн мөрүүд"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Purchase Comparison for %s"
-msgstr ""
+msgstr "%s-ийн худалдан авалтын харьцуулалт"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2621,35 +2886,37 @@ msgstr "Худалдан авалтын хүснэгтэн бүртгэл"
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Purchase History for %s"
-msgstr ""
+msgstr "%s-ийн худалдан авалтын түүх"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__purchase_line_warn_msg
 msgid "Purchase Line Warn Msg"
-msgstr ""
+msgstr "Худалдан авалтын мөрийн анхааруулга"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
 msgid "Purchase Line and Vendor Bill line matching view"
 msgstr ""
+"Худалдан авалтын мөр болон нийлүүлэгчийн нэхэмжлэлийн мөрийн тулгалтын "
+"харагдац"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_matched_ratio
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_matched_ratio
 msgid "Purchase Matched Ratio"
-msgstr ""
+msgstr "Худалдан авалтын тулгалтын хувь"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Purchase Matching"
-msgstr ""
+msgstr "Худалдан авалтын тулгалт"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_matching_issue_msg
 msgid "Purchase Matching Issue Msg"
-msgstr ""
+msgstr "Худалдан авалтын тулгалтын асуудлын мессеж"
 
 #. module: purchase
 #. odoo-python
@@ -2741,7 +3008,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_order_name
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_order_name
 msgid "Purchase Order Name"
-msgstr ""
+msgstr "Худалдан авалтын захиалгын нэр"
 
 #. module: purchase
 #. odoo-python
@@ -2766,14 +3033,14 @@ msgstr "Худалдан авалтын тайлан"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Purchase Vendor Bill"
-msgstr ""
+msgstr "Худалдан авалтын нийлүүлэгчийн нэхэмжлэл"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_warning_text
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__purchase_warning_text
 msgid "Purchase Warning"
-msgstr ""
+msgstr "Худалдан авалтын анхааруулга"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2793,32 +3060,33 @@ msgstr "Нэхэмжлэгдээгүй мөр агуулж байгаа худа
 #. module: purchase
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase orders, tenders and agreements"
-msgstr ""
+msgstr "Худалдан авалтын захиалга, тендер, гэрээ"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
 msgid "Purchase reminder"
-msgstr ""
+msgstr "Худалдан авалтын сануулга"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase variants of a product using attributes (size, color, etc.)"
 msgstr ""
+"Шинж чанар (хэмжээ, өнгө гэх мэт) ашиглан барааны хувилбаруудыг худалдан авах"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
 msgid "Purchase: Purchase Order"
-msgstr ""
+msgstr "Худалдан авалт: Худалдан авалтын захиалга"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase
 msgid "Purchase: Request For Quotation"
-msgstr ""
+msgstr "Худалдан авалт: Үнийн санал"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_reminder
 msgid "Purchase: Vendor Reminder"
-msgstr ""
+msgstr "Худалдан авалт: Нийлүүлэгчийн сануулга"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
@@ -2836,6 +3104,8 @@ msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
 "orders not received, or partially received"
 msgstr ""
+"Сүүлийн 365 хоногт худалдан авсан. Ирж буй нь хүлээн аваагүй эсвэл хэсэгчлэн "
+"хүлээн авсан батлагдсан худалдан авалтын захиалгыг илэрхийлнэ"
 
 #. module: purchase
 #. odoo-python
@@ -2849,7 +3119,7 @@ msgstr "Худалдан авалт"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "Худалдан авалт ба нэхэмжлэлийн нэгдэл"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -2883,12 +3153,12 @@ msgstr "Хүлээн авсан тоо"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
 msgid "Qty not invoiced"
-msgstr ""
+msgstr "Нэхэмжлээгүй тоо"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Qty to Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх тоо"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
@@ -2899,7 +3169,7 @@ msgstr "Нэхэмжлэх ёстой тоо"
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Qty to invoice"
-msgstr ""
+msgstr "Нэхэмжлэх тоо"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -2915,6 +3185,8 @@ msgid ""
 "Quantity on hand minus outgoing quantity from Sales Orders plus incoming "
 "quantity from Purchase Orders"
 msgstr ""
+"Гарт байгаа тоо хэмжээнээс борлуулалтын захиалгын гарах тоог хасаж, худалдан "
+"авалтын захиалгын ирэх тоог нэмсэн"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2949,13 +3221,13 @@ msgstr "Захиалга илгээгдсэн"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s"
-msgstr ""
+msgstr "Үнийн саналыг %(oldest_rfq_name)s болон %(cancelled_rfq)s-тэй нэгтгэлээ"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %s"
-msgstr ""
+msgstr "Үнийн саналыг %s-тэй нэгтгэлээ"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -2965,7 +3237,7 @@ msgstr "Үнийн санал болон захиалгууд"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "Хувь"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
@@ -2975,7 +3247,7 @@ msgstr "Үнэлгээнүүд"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Read the documentation"
-msgstr ""
+msgstr "Баримт бичгийг уншина уу"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
@@ -2983,18 +3255,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_users__receipt_reminder_email
 msgid "Receipt Reminder"
-msgstr ""
+msgstr "Хүлээн авах сануулга"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_status
 msgid "Receipt Status"
-msgstr ""
+msgstr "Хүлээн авалтын төлөв"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Receive"
-msgstr ""
+msgstr "Хүлээн авах"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_at_date
@@ -3035,13 +3307,13 @@ msgstr "Нийлүүлэгчийн нэхэмжлэл шинээр бүртгэ�
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Reference"
-msgstr "Холбогдол"
+msgstr "Дугаар"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
 msgid "Reference Document"
-msgstr ""
+msgstr "Лавлах баримт"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__uom_id
@@ -3102,7 +3374,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "Requests For Quotation"
-msgstr ""
+msgstr "Үнийн санал"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_rfq_form
@@ -3122,6 +3394,10 @@ msgid ""
 "                Once an agreement has been found with the supplier, they "
 "will be confirmed and turned into purchase orders."
 msgstr ""
+"Үнийн санал нь худалдан авахаар төлөвлөж буй төрөл бүрийн барааны үнийг "
+"асуухаар нийлүүлэгчдэд илгээх баримт юм.\n"
+"                Нийлүүлэгчтэй тохиролцсоны дараа эдгээрийг баталж, худалдан "
+"авалтын захиалга болгоно."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3130,6 +3406,8 @@ msgid ""
 "time                                     and previous information from the "
 "RFQ."
 msgstr ""
+"Боломжит нийлүүлэх хугацаа болон үнийн саналын өмнөх мэдээлэлд үндэслэн ирэх "
+"огноог дахин тооцоолохын тулд өнөөдрийн огноо руу шинэчлэх."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -3145,7 +3423,7 @@ msgstr "SMS илгээлтийн алдаа"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Save the line."
-msgstr ""
+msgstr "Мөрийг хадгална уу."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3162,7 +3440,7 @@ msgstr "Худалдан авалт хайх"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Search Reference Document"
-msgstr ""
+msgstr "Лавлах баримт хайх"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
@@ -3184,63 +3462,64 @@ msgstr "Аюулгүй байдлын токен"
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Select Vendor Bill lines to add to a Purchase Order"
 msgstr ""
+"Худалдан авалтын захиалгад нэмэх нийлүүлэгчийн нэхэмжлэлийн мөрүүдийг сонгох"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Select a Product"
-msgstr ""
+msgstr "Бараа сонгох"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Select a purchase document"
-msgstr ""
+msgstr "Худалдан авалтын баримт сонгох"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Select price"
-msgstr ""
+msgstr "Үнэ сонгох"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__selected_seller_id
 msgid "Selected Seller"
-msgstr ""
+msgstr "Сонгосон нийлүүлэгч"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "Барааг өөр өөр хэмжих нэгж эсвэл савлагаагаар зарж, худалдан авах"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO"
-msgstr ""
+msgstr "Захиалга илгээх"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send RFQ"
-msgstr ""
+msgstr "Үнийн санал илгээх"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
 msgid "Send Reminder"
-msgstr ""
+msgstr "Сануулга илгээх"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_send_reminder
 msgid "Send an automatic reminder email to confirm delivery"
-msgstr ""
+msgstr "Хүргэлтийг баталгаажуулах автомат сануулах имэйл илгээх"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_mass_mail
 msgid "Send by mail"
-msgstr ""
+msgstr "Имэйлээр илгээх"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Send the request for quotation to your vendor."
-msgstr ""
+msgstr "Үнийн саналаа нийлүүлэгч рүүгээ илгээнэ үү."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -3250,18 +3529,20 @@ msgstr "Илгээгдсэн"
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase
 msgid "Sent manually to vendor to request a quotation"
-msgstr ""
+msgstr "Үнийн санал хүсэхээр нийлүүлэгч рүү гараар илгээсэн"
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase_done
 msgid "Sent to vendor with the purchase order in attachment"
-msgstr ""
+msgstr "Худалдан авалтын захиалгыг хавсралтаар нийлүүлэгч рүү илгээсэн"
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase_reminder
 msgid ""
 "Sent to vendors before expected arrival, based on the purchase order setting"
 msgstr ""
+"Худалдан авалтын захиалгын тохиргооны дагуу ирэх огнооноос өмнө "
+"нийлүүлэгчдэд илгээнэ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -3287,18 +3568,18 @@ msgstr "Хуваалцах"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_comparison
 msgid "Show Comparison"
-msgstr ""
+msgstr "Харьцуулалт харуулах"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_receive_button
 msgid "Show Receive Button"
-msgstr ""
+msgstr "Хүлээн авах товч харуулах"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Дараагийн ажилбарын огноо нь өнгөрсөн бүх бичлэгийг харуулах"
 
 #. module: purchase
 #. odoo-python
@@ -3307,6 +3588,7 @@ msgid ""
 "Some order lines are missing a product, you need to correct them before "
 "going further."
 msgstr ""
+"Зарим захиалгын мөрөнд бараа дутуу байна, үргэлжлүүлэхээс өмнө засна уу."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
@@ -3323,7 +3605,7 @@ msgstr "Одоор тэмдэглэсэн"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Start on Odoo"
-msgstr ""
+msgstr "Odoo-г эхлүүлэх"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__state
@@ -3355,12 +3637,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "Дэд бүлэг"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "Дэд бүлгийн нэр"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -3370,27 +3652,27 @@ msgstr "Дэд дүн"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Qty Billed"
-msgstr ""
+msgstr "Нэхэмжилсэн тооны нийлбэр"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Qty Ordered"
-msgstr ""
+msgstr "Захиалсан тооны нийлбэр"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Qty Received"
-msgstr ""
+msgstr "Хүлээн авсан тооны нийлбэр"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Total"
-msgstr ""
+msgstr "Нийт дүнгийн нийлбэр"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr ""
+msgstr "Татваргүй нийт дүнгийн нийлбэр"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__property_purchase_currency_id
@@ -3417,17 +3699,17 @@ msgstr "Татварын улс"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_excluded
 msgid "Tax Excl."
-msgstr ""
+msgstr "Татваргүй"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_included
 msgid "Tax Incl."
-msgstr ""
+msgstr "Татвартай"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "Татварын нийлбэр"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_calculation_rounding_method
@@ -3438,12 +3720,12 @@ msgstr "Татвар тооцооллын тоймлох арга"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Tax excl.:"
-msgstr ""
+msgstr "Татваргүй:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Tax incl.:"
-msgstr ""
+msgstr "Татвартай:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
@@ -3454,7 +3736,7 @@ msgstr "Татвар"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "Техникийн нэгжийн үнэ"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
@@ -3464,7 +3746,7 @@ msgstr "UX зорилготой техникийн талбар"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__technical_price_unit
 msgid "Technical field for price computation"
-msgstr ""
+msgstr "Үнэ тооцоолох техникийн талбар"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
@@ -3472,23 +3754,27 @@ msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
 msgstr ""
+"Санхүүгийн улс болон санхүүгийн байрлалаас хамааран боломжит татваруудыг "
+"шүүх техникийн талбар."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__selected_seller_id
 msgid "Technical field to get the vendor pricelist used to generate this line"
 msgstr ""
+"Энэ мөрийг үүсгэхэд ашигласан нийлүүлэгчийн үнийн хүснэгтийг авах техникийн "
+"талбар"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Template for Products"
-msgstr ""
+msgstr "Барааны загвар"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Template for Requests for Quotation"
-msgstr ""
+msgstr "Үнийн саналын загвар"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3512,7 +3798,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "The Price of one unit of the product's Unit of Measure"
-msgstr ""
+msgstr "Барааны хэмжих нэгжийн нэг нэгжийн үнэ"
 
 #. module: purchase
 #. odoo-python
@@ -3521,16 +3807,18 @@ msgid ""
 "The following purchase orders %(invalid_orders)s can't be received. "
 "Cancelled all receptions."
 msgstr ""
+"Дараах худалдан авалтын захиалгуудыг %(invalid_orders)s хүлээн авах "
+"боломжгүй. Бүх хүлээн авалтыг цуцаллаа."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity and unit price have been updated."
-msgstr ""
+msgstr "Захиалсан тоо хэмжээ болон нэгжийн үнийг шинэчиллээ."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "Захиалсан тоо хэмжээг шинэчиллээ."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3548,17 +3836,17 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The unit price has been updated."
-msgstr ""
+msgstr "Нэгжийн үнийг шинэчиллээ."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid "There are currently no purchase orders for your account."
-msgstr ""
+msgstr "Таны бүртгэлд одоогоор худалдан авалтын захиалга алга."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "There are currently no requests for quotation for your account."
-msgstr ""
+msgstr "Таны бүртгэлд одоогоор үнийн санал алга."
 
 #. module: purchase
 #. odoo-python
@@ -3566,6 +3854,7 @@ msgstr ""
 msgid ""
 "There are no products to add to the Purchase Order. Are these Down Payments?"
 msgstr ""
+"Худалдан авалтын захиалгад нэмэх бараа алга. Эдгээр нь урьдчилгаа төлбөр үү?"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3575,12 +3864,16 @@ msgid ""
 "                You can track your negotiation performance, the delivery "
 "performance of your vendors, etc"
 msgstr ""
+"Энэ шинжилгээгээр компанийнхаа худалдан авалтын түүх, гүйцэтгэлийг хялбархан "
+"шалгаж, шинжлэх боломжтой.\n"
+"                Хэлэлцээрийн гүйцэтгэл, нийлүүлэгчдийн хүргэлтийн гүйцэтгэл "
+"гэх мэтийг хянах боломжтой"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
 #: model:ir.model.fields,help:purchase.field_res_users__property_purchase_currency_id
 msgid "This currency will be used for purchases from the current partner"
-msgstr ""
+msgstr "Энэ валютыг одоогийн харилцагчаас хийх худалдан авалтад ашиглана"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -3591,13 +3884,13 @@ msgstr "Энэ тэмдэглэлийг худалдан авалтын захи
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "This vendor bill has been created from: "
-msgstr ""
+msgstr "Энэ нийлүүлэгчийн нэхэмжлэлийг дараахаас үүсгэсэн: "
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "This vendor bill has been modified from: "
-msgstr ""
+msgstr "Энэ нийлүүлэгчийн нэхэмжлэлийг дараахаас өөрчилсөн: "
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3608,13 +3901,13 @@ msgstr "Энэ нийлүүлэгч одоогоор захиалгагүй ба
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
 msgid "Tip: How to keep late receipts under control?"
-msgstr ""
+msgstr "Зөвлөгөө: Хоцорсон хүлээн авалтыг хэрхэн хяналтад байлгах вэ?"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_1
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
 msgid "Tip: Never miss a purchase order"
-msgstr ""
+msgstr "Зөвлөгөө: Худалдан авалтын захиалгыг хэзээ ч бүү алдаарай"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__to_approve
@@ -3627,7 +3920,7 @@ msgstr "Зөвшөөрөл хүлээж буй"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal_to_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "To Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
@@ -3653,13 +3946,13 @@ msgstr "Нийт дүн"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Total Billed"
-msgstr ""
+msgstr "Нийт нэхэмжилсэн"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
 msgid "Total Forecasted"
-msgstr ""
+msgstr "Нийт таамагласан"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
@@ -3669,7 +3962,7 @@ msgstr "Нийт худалдан авсан дүн"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total Qty purchased"
-msgstr ""
+msgstr "Нийт худалдан авсан тоо"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
@@ -3680,7 +3973,7 @@ msgstr "Нийт тоо хэмжээ"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Total Untaxed"
-msgstr ""
+msgstr "Татваргүй нийт дүн"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3699,18 +3992,18 @@ msgstr "Нийт дүн"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total_cc
 msgid "Total in currency"
-msgstr ""
+msgstr "Валютаарх нийт дүн"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
 msgid "Total purchased amount"
-msgstr ""
+msgstr "Нийт худалдан авсан дүн"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
-msgstr ""
+msgstr "Хайлтаа өргөжүүлэхийн тулд дээд шүүлтүүрийг хасаж үзнэ үү"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
@@ -3724,18 +4017,22 @@ msgid ""
 "Unable to cancel purchase order(s): %s. You must first cancel their related "
 "vendor bills."
 msgstr ""
+"Худалдан авалтын захиалга(ууд)-ыг цуцлах боломжгүй: %s. Эхлээд холбогдох "
+"нийлүүлэгчийн нэхэмжлэлүүдийг цуцлах шаардлагатай."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unable to cancel purchase order(s): %s. You must first unlock them."
 msgstr ""
+"Худалдан авалтын захиалга(ууд)-ыг цуцлах боломжгүй: %s. Эхлээд түгжээг "
+"тайлах шаардлагатай."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__uom_id
 msgid "Unit"
-msgstr "Ширхэг"
+msgstr "Нэгж"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -3749,12 +4046,12 @@ msgstr "Нэгж үнэ"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_discounted
 msgid "Unit Price (Discounted)"
-msgstr ""
+msgstr "Нэгжийн үнэ (хөнгөлөлттэй)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "Unit Price Product UoM"
-msgstr ""
+msgstr "Барааны хэмжих нэгжийн нэгжийн үнэ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3766,7 +4063,7 @@ msgstr "Нэгж үнэ"
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Хэмжих нэгж ба савлагаа"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3776,18 +4073,18 @@ msgstr "Түгжээг нээх"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_unmatch_lines
 msgid "Unmatch"
-msgstr ""
+msgstr "Тулгалт цуцлах"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Unmatched"
-msgstr ""
+msgstr "Тулгагдаагүй"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unsupported operator"
-msgstr ""
+msgstr "Дэмжигдээгүй оператор"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3810,13 +4107,13 @@ msgstr "Татваргүй нийт"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Update"
-msgstr ""
+msgstr "Шинэчлэх"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.xml:0
 msgid "Upload Bill"
-msgstr ""
+msgstr "Нэхэмжлэл байршуулах"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3829,6 +4126,8 @@ msgid ""
 "Use the above REST URL to get structured data of the purchase order in UBL "
 "format."
 msgstr ""
+"Худалдан авалтын захиалгын бүтэцтэй өгөгдлийг UBL форматаар авахын тулд "
+"дээрх REST URL-ийг ашиглана уу."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -3868,13 +4167,15 @@ msgstr "Нийлүүлэгч"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Нийлүүлэгчийн нэхэмжлэл"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Vendor Bill lines can only be added to one Purchase Order."
 msgstr ""
+"Нийлүүлэгчийн нэхэмжлэлийн мөрүүдийг зөвхөн нэг худалдан авалтын захиалгад "
+"нэмэх боломжтой."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -3893,13 +4194,13 @@ msgstr "Нийлүүлэгч улс"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_id
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_id
 msgid "Vendor Incoterm"
-msgstr ""
+msgstr "Нийлүүлэгчийн худалдааны нөхцөл"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_location
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_location
 msgid "Vendor Incoterm Location"
-msgstr ""
+msgstr "Нийлүүлэгчийн худалдааны нөхцөлийн байршил"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -3940,19 +4241,19 @@ msgstr "Харах"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "View Details"
-msgstr ""
+msgstr "Дэлгэрэнгүй харах"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "View Order"
-msgstr ""
+msgstr "Захиалга харах"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "View Quotation"
-msgstr ""
+msgstr "Үнийн санал харах"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
@@ -3968,17 +4269,17 @@ msgstr "Нэхэмжлэл хүлээж буй"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Want to import this document in Odoo?"
-msgstr ""
+msgstr "Энэ баримтыг Odoo руу импортлох уу?"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning on Purchase Orders"
-msgstr ""
+msgstr "Худалдан авалтын захиалгын анхааруулга"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on Purchase Orders and Bills"
-msgstr ""
+msgstr "Худалдан авалтын захиалга болон нэхэмжлэлийн анхааруулга"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3997,6 +4298,12 @@ msgid ""
 "dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
+"Худалдан авалтын захиалга үүсгэхдээ нийлүүлэгчийн <i>Хугацаандаа хүргэлтийн</"
+"i> хувийг харна уу: хугацаандаа хүргэсэн барааны хувь. Хэт бага бол <i>"
+"автомат сануулга</i>-ыг идэвхжүүлнэ үү. Хүргэлтээс хэдэн өдрийн өмнө Odoo "
+"нийлүүлэгчид имэйл илгээж хүргэлтийн огноог баталгаажуулахыг хүсэх бөгөөд "
+"хоцрогдол гарвал танд мэдэгдэнэ. Нийлүүлэгчийн гүйцэтгэлийн статистикийг "
+"харахын тулд OTD хувь дээр дарна уу."
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -4006,6 +4313,10 @@ msgid ""
 "clicking on a button in the email, the information is added on the purchase "
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
+"Худалдан авалтын захиалгыг имэйлээр илгээх үед Odoo нийлүүлэгчээс захиалгыг "
+"хүлээн авснаа батлахыг хүснэ. Нийлүүлэгч имэйл дэх товч дээр дарж захиалгыг "
+"батлахад энэ мэдээлэл худалдан авалтын захиалгад нэмэгдэнэ. Батлагдаагүй "
+"захиалгуудыг хянахын тулд шүүлтүүр ашиглана уу."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
@@ -4020,7 +4331,7 @@ msgstr ""
 #: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.js:0
 msgid "You can only upload a bill for a single vendor at a time."
-msgstr ""
+msgstr "Нэг удаад зөвхөн нэг нийлүүлэгчийн нэхэмжлэл байршуулах боломжтой."
 
 #. module: purchase
 #. odoo-python
@@ -4035,7 +4346,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "You don't use a good CRM software?"
-msgstr ""
+msgstr "Сайн CRM програм ашигладаггүй юу?"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -4052,6 +4363,8 @@ msgstr ""
 msgid ""
 "You must select at least one Purchase Order line to match or create bill."
 msgstr ""
+"Тулгах эсвэл нэхэмжлэл үүсгэхийн тулд дор хаяж нэг худалдан авалтын "
+"захиалгын мөр сонгох шаардлагатай."
 
 #. module: purchase
 #. odoo-python
@@ -4062,83 +4375,88 @@ msgid ""
 " Please change the company of your RFQ or remove the products from other "
 "companies (%(bad_products)s)."
 msgstr ""
+"Таны үнийн санал %(product_company)s компанийн бараа агуулж байгаа бол үнийн "
+"санал өөрөө %(quote_company)s компанид харьяалагдана. \n"
+" Үнийн саналын компанийг өөрчлөх эсвэл бусад компанийн барааг (%"
+"(bad_products)s) хасна уу."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "billing"
-msgstr ""
+msgstr "нэхэмжлэл"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "e.g. There is a newer version of this product."
-msgstr ""
+msgstr "ж: Энэ барааны шинэ хувилбар гарсан."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "e.g. This vendor is on vacation until the end of August."
-msgstr ""
+msgstr "ж: Энэ нийлүүлэгч 8-р сарын эцэс хүртэл амралттай."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "or create new"
-msgstr ""
+msgstr "эсвэл шинээр үүсгэх"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "purchase"
-msgstr ""
+msgstr "худалдан авалт"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "res_id"
-msgstr ""
+msgstr "res_id"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "res_model_id"
-msgstr ""
+msgstr "res_model_id"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 msgid "state"
-msgstr ""
+msgstr "state"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "to create quotes automatically."
-msgstr ""
+msgstr "-тай холбож үнийн саналыг автоматаар үүсгээрэй."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "to learn all the ways to connect your software with"
-msgstr ""
+msgstr "– програм хангамжаа дараахтай холбох бүх аргыг эндээс үзнэ үү:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "tracking"
-msgstr ""
+msgstr "мөшгилт"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "with"
-msgstr ""
+msgstr "-"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Захиалга (Дугаар {{ object.name or 'n/a' }})"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
@@ -4146,6 +4464,7 @@ msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+"{{ object.company_id.name }} Үнийн санал (Дугаар {{ object.name or 'n/a' }})"
 
 #~ msgid "<strong class=\"mr16\">Subtotal</strong>"
 #~ msgstr "<strong class=\"mr16\">Дэд дүн</strong>"

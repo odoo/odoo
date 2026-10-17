@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 15:48+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -132,6 +132,11 @@ msgid " valid until %s"
 msgstr " معتبر تا %s"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
+msgid "# Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
 msgstr "# صورتحساب‌های تطبیق‌شده"
@@ -140,11 +145,6 @@ msgstr "# صورتحساب‌های تطبیق‌شده"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
 msgstr "# فاکتورها تطبیق شده"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
-msgid "# Reconciled Statement Lines"
-msgstr "# سطرهای صورت‌حساب تطبیق‌شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
@@ -244,12 +244,10 @@ msgstr "%(label)s در %(currency_amount)s (پیش نویس)"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"%(move)s reached an invalid state regarding its related statement line.\n"
+"%(move)s reached an invalid state regarding its related bank transaction.\n"
 "To be consistent, the journal entry must always have exactly one suspense "
 "line."
 msgstr ""
-"%(move)s به وضعیت نامعتبر در ارتباط با سطر صورت‌حساب مربوطه رسید.\n"
-"برای هماهنگی، سند حسابداری باید همیشه دقیقاً یک سطر معلق داشته باشد."
 
 #. module: account
 #. odoo-python
@@ -3229,8 +3227,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
-msgid "All unreconciled bank statement lines before the selected date."
-msgstr "تمام سطرهای صورتحساب بانکی تطبیق‌نشده قبل از تاریخ انتخاب‌شده."
+msgid "All unreconciled bank transactions before the selected date."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
@@ -3805,8 +3803,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid ""
-"At least one transaction in the statement is prior the last posted statement "
-"line (%s)"
+"At least one transaction in the statement is prior the last posted "
+"transaction (%s)"
 msgstr ""
 
 #. module: account
@@ -4111,8 +4109,20 @@ msgstr "بازگشت به صورتحساب"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Credit Note"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Invoice"
 msgstr "برگشت به فاکتور"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Refund"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4316,11 +4326,6 @@ msgid "Bank Statement Digitization"
 msgstr "دیجیتالی کردن صورت حساب بانکی"
 
 #. module: account
-#: model:ir.model,name:account.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "سطر صورتحساب بانک"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 msgid "Bank Statements"
 msgstr "صورتحسابهای بانک"
@@ -4346,6 +4351,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.model,name:account.model_account_bank_statement_line
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
+#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
 msgid "Bank Transaction"
 msgstr "تراکنش بانک"
 
@@ -4415,6 +4423,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
 msgstr "تراکنش‌ها و پرداخت‌های بانکی:"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
+msgid "Bank transactions matched to this payment"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -8418,14 +8431,6 @@ msgstr "حقوق صاحبان سهام"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Error importing attachment %(filename)s:"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/controllers/download_docs.py:0
-msgid ""
-"Error while creating XML:\n"
-"- %s"
 msgstr ""
 
 #. module: account
@@ -13302,11 +13307,9 @@ msgstr "دامنه‌ی اودوو"
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
 msgid ""
-"Odoo allows you to reconcile a statement line directly with\n"
+"Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
-"اودوو به شما اجازه میدهد یک سطر صورتحساب را مستقیم با فاکتورهای خرید یا فروش "
-"تطبیق دهید."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -13654,6 +13657,12 @@ msgid "Original Lock Date"
 msgstr "تاریخ قفل اصلی"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
+msgid "Originator Bank Transaction"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
 msgid "Originator Group of Taxes"
 msgstr "اولین گروه مالیات‌ها"
@@ -13662,12 +13671,6 @@ msgstr "اولین گروه مالیات‌ها"
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "موسس پرداخت"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
-#: model_terms:ir.ui.view,arch_db:account.view_move_line_form
-msgid "Originator Statement Line"
-msgstr "سطر صورت‌حساب‌ مبدا"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
@@ -14513,8 +14516,8 @@ msgstr "درصد هر سطر برای اجرای اقدام."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
-msgid "Percentage of statement line"
-msgstr "درصد سطر صورت وضعیت"
+msgid "Percentage of transaction"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15394,6 +15397,11 @@ msgid "Reconciled"
 msgstr "تسویه شد"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
+msgid "Reconciled Bank Transactions"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
 msgstr "قبض‌های تطبیق‌داده‌شده‌"
@@ -15423,11 +15431,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
-msgid "Reconciled Statement Lines"
-msgstr "سطرهای صورت وضعیت تطبیق داده شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -17038,8 +17041,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Show Unreconciled Bank Statement Line"
-msgstr "نشان دادن سطر صورت وضعیت بانکی تطبیق نیافته"
+msgid "Show Unreconciled Bank Transactions"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -17246,12 +17249,6 @@ msgid "Statement %(date)s"
 msgstr "صورت‌حساب %(date)s"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
-#: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
-msgid "Statement Line"
-msgstr "سطر صورتحساب"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_name
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Statement Name"
@@ -17263,17 +17260,6 @@ msgid "Statement Reports"
 msgstr "گزارشات مربوط به صورت وضعیت"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_reconcile_model.py:0
-msgid "Statement line percentage can't be 0"
-msgstr "درصد سطر صورت وضعیت نمی‌تواند 0 باشد"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
-msgid "Statement lines"
-msgstr "سطرهای صورتحساب"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__statement_line_ids
@@ -17281,11 +17267,6 @@ msgstr "سطرهای صورتحساب"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_tree
 msgid "Statements"
 msgstr "صورتحسابها"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
-msgid "Statements lines matched to this payment"
-msgstr "سطرهای صورت وضعیت که با این پرداخت همخوانی دارند"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__states_count
@@ -18497,6 +18478,11 @@ msgid "The bank statement used for bank reconciliation"
 msgstr "صورت وضعیت بانک مورد استفاده برای نطبیق حساب بانک"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
+msgid "The bank transaction that created this entry"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
@@ -18853,15 +18839,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
-"The journal entry %s reached an invalid state regarding its related "
-"statement line.\n"
+"The journal entry %s reached an invalid state regarding its related bank "
+"transaction.\n"
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"ورودی روزنامه %s در رابطه با خط عبارت مربوط به آن به وضعیت نامعتبر رسیده "
-"است.\n"
-"برای سازگاری، ورودی روزنامه باید همیشه دقیقا یک مورد دفتری داشته باشد که "
-"شامل بانک/حساب نقدی باشد."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -19012,9 +18994,9 @@ msgstr "مدل تطبیق فقط برای مشتریان/فروشندگان من
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
 msgid ""
-"The reconciliation model will only be applied when either the statement line "
+"The reconciliation model will only be applied when either the transaction "
 "label, the transaction details or the note matches the following:\n"
-"        * Contains: The statement line must contains this string (case "
+"        * Contains: The transaction must contain this string (case "
 "insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
@@ -19267,11 +19249,6 @@ msgid "The smallest value used to round the total amount (e.g., 0.05 or 100)."
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
-msgid "The statement line that created this entry"
-msgstr "سطر صورتحساب بانکی که این ورودی را ایجاد کرده است"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
@@ -19342,24 +19319,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
-"There are still unreconciled bank statement lines before the selected date. "
-"The entries from journal prefixes containing them will not be secured: %"
+"There are still unreconciled bank transactions before the selected date. The "
+"entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
-"همچنان ردیف‌های صورت‌حساب بانکی تسویه‌نشده قبل از تاریخ انتخاب شده وجود دارد. "
-"اسناد مربوط به پیش‌شماره‌های دفتر روزنامه‌ای که این ردیف‌ها را شامل می‌شوند، قطعی "
-"نخواهند شد:\n"
-"%(prefix_info)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
-"There are still unreconciled bank statement lines in the period you want to "
-"lock.You should either reconcile or delete them."
+"There are still unreconciled bank transactions in the period you want to "
+"lock. You should either reconcile or delete them."
 msgstr ""
-"هنوز سطرهای صورت وضعیت بانکی تطبیق نیافته در دوره ای که می خواهید قفل کنید "
-"وجود دارد. شما یا باید آنها را تطبیق دهید یاحذف کنید."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -19781,8 +19752,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_matching_rules
 msgid ""
-"Those can be used to automatically match journal items with your statement "
-"lines."
+"Those can be used to automatically match journal items with your "
+"transactions."
 msgstr ""
 
 #. module: account
@@ -20120,6 +20091,13 @@ msgid "Transaction Type"
 msgstr "نوع تراکنش"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+msgid "Transaction percentage can't be 0"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
 #: model:ir.ui.menu,name:account.account_transactions_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
@@ -20730,10 +20708,8 @@ msgstr "تأیید اعتبار حساب بانکی"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__trigger
 msgid ""
-"Validate the statement line automatically (reconciliation based on your "
-"rule)."
+"Validate the transaction automatically (reconciliation based on your rule)."
 msgstr ""
-"سطر صورتحساب را به طور خودکار اعتبار سنجی کنید (تطبیق بر اساس قانون شما)."
 
 #. module: account
 #. odoo-javascript
@@ -21318,6 +21294,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement_line.py:0
+msgid ""
+"You can't create a new bank transaction without a suspense account set on "
+"the %s journal."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
@@ -21327,16 +21311,6 @@ msgstr ""
 "نمی‌توانید بدون تنظیم حساب پرداخت‌ها/رسیدهای معوقه در بخش شرکت یا %"
 "(payment_method)s روش پرداخت در دفتر روزنامه‌ی %(journal)s، پرداخت جدیدی را "
 "ایجاد کنید."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement_line.py:0
-msgid ""
-"You can't create a new statement line without a suspense account set on the "
-"%s journal."
-msgstr ""
-"شما نمی توانید یک سطر صورتحساب جدید بدون یک حساب تعلیق تنظیم شده در روزنامه "
-"%s ایجاد کنید."
 
 #. module: account
 #. odoo-python
@@ -22607,6 +22581,98 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "# Reconciled Statement Lines"
+#~ msgstr "# سطرهای صورت‌حساب تطبیق‌شده"
+
+#~ msgid ""
+#~ "%(move)s reached an invalid state regarding its related statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one suspense "
+#~ "line."
+#~ msgstr ""
+#~ "%(move)s به وضعیت نامعتبر در ارتباط با سطر صورت‌حساب مربوطه رسید.\n"
+#~ "برای هماهنگی، سند حسابداری باید همیشه دقیقاً یک سطر معلق داشته باشد."
+
+#~ msgid "All unreconciled bank statement lines before the selected date."
+#~ msgstr "تمام سطرهای صورتحساب بانکی تطبیق‌نشده قبل از تاریخ انتخاب‌شده."
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "سطر صورتحساب بانک"
+
+#~ msgid ""
+#~ "Odoo allows you to reconcile a statement line directly with\n"
+#~ "                the related sale or purchase invoices."
+#~ msgstr ""
+#~ "اودوو به شما اجازه میدهد یک سطر صورتحساب را مستقیم با فاکتورهای خرید یا "
+#~ "فروش تطبیق دهید."
+
+#~ msgid "Originator Statement Line"
+#~ msgstr "سطر صورت‌حساب‌ مبدا"
+
+#~ msgid "Percentage of statement line"
+#~ msgstr "درصد سطر صورت وضعیت"
+
+#~ msgid "Reconciled Statement Lines"
+#~ msgstr "سطرهای صورت وضعیت تطبیق داده شده"
+
+#~ msgid "Show Unreconciled Bank Statement Line"
+#~ msgstr "نشان دادن سطر صورت وضعیت بانکی تطبیق نیافته"
+
+#~ msgid "Statement Line"
+#~ msgstr "سطر صورتحساب"
+
+#~ msgid "Statement line percentage can't be 0"
+#~ msgstr "درصد سطر صورت وضعیت نمی‌تواند 0 باشد"
+
+#~ msgid "Statement lines"
+#~ msgstr "سطرهای صورتحساب"
+
+#~ msgid "Statements lines matched to this payment"
+#~ msgstr "سطرهای صورت وضعیت که با این پرداخت همخوانی دارند"
+
+#~ msgid ""
+#~ "The journal entry %s reached an invalid state regarding its related "
+#~ "statement line.\n"
+#~ "To be consistent, the journal entry must always have exactly one journal "
+#~ "item involving the bank/cash account."
+#~ msgstr ""
+#~ "ورودی روزنامه %s در رابطه با خط عبارت مربوط به آن به وضعیت نامعتبر رسیده "
+#~ "است.\n"
+#~ "برای سازگاری، ورودی روزنامه باید همیشه دقیقا یک مورد دفتری داشته باشد که "
+#~ "شامل بانک/حساب نقدی باشد."
+
+#~ msgid "The statement line that created this entry"
+#~ msgstr "سطر صورتحساب بانکی که این ورودی را ایجاد کرده است"
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines before the selected "
+#~ "date. The entries from journal prefixes containing them will not be "
+#~ "secured: %(prefix_info)s"
+#~ msgstr ""
+#~ "همچنان ردیف‌های صورت‌حساب بانکی تسویه‌نشده قبل از تاریخ انتخاب شده وجود "
+#~ "دارد. اسناد مربوط به پیش‌شماره‌های دفتر روزنامه‌ای که این ردیف‌ها را شامل "
+#~ "می‌شوند، قطعی نخواهند شد:\n"
+#~ "%(prefix_info)s"
+
+#~ msgid ""
+#~ "There are still unreconciled bank statement lines in the period you want "
+#~ "to lock.You should either reconcile or delete them."
+#~ msgstr ""
+#~ "هنوز سطرهای صورت وضعیت بانکی تطبیق نیافته در دوره ای که می خواهید قفل "
+#~ "کنید وجود دارد. شما یا باید آنها را تطبیق دهید یاحذف کنید."
+
+#~ msgid ""
+#~ "Validate the statement line automatically (reconciliation based on your "
+#~ "rule)."
+#~ msgstr ""
+#~ "سطر صورتحساب را به طور خودکار اعتبار سنجی کنید (تطبیق بر اساس قانون شما)."
+
+#~ msgid ""
+#~ "You can't create a new statement line without a suspense account set on "
+#~ "the %s journal."
+#~ msgstr ""
+#~ "شما نمی توانید یک سطر صورتحساب جدید بدون یک حساب تعلیق تنظیم شده در "
+#~ "روزنامه %s ایجاد کنید."
 
 #~ msgid ""
 #~ "Downpayments posted on this account will be considered by the Tax Closing "

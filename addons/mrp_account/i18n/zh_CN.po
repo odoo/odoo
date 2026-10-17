@@ -8,15 +8,16 @@
 # Emily Jia <eji@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 15:16+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-10-16 17:42+0000\n"
+"PO-Revision-Date: 2026-10-11 11:47+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/mrp_account/zh_Hans/>\n"
+"projects/odoo-20/mrp_account/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,12 +42,23 @@ msgid ""
 "entries will be created.\n"
 "\n"
 msgstr ""
+"\n"
+"制造中的分析会计\n"
+"==========================\n"
+"\n"
+"* 成本结构报表\n"
+"\n"
+"此外，它还允许根据产品的物料清单（BoM），使用其组件和工作中心工序的成本来计算"
+"产品成本。\n"
+"它在产品本身添加了一个按钮，也在产品列表视图中添加了一个操作。\n"
+"如果启用了自动库存计价，将创建必要的会计分录。\n"
+"\n"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/stock_move.py:0
 msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
-msgstr ""
+msgstr "来自 %(production)s 的 %(quantity)s %(unit)s，金额 %(value)s"
 
 #. module: mrp_account
 #. odoo-python
@@ -117,7 +129,7 @@ msgstr "会计分录资料行"
 #. module: mrp_account
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
-msgstr ""
+msgstr "会计 - 制造"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
@@ -147,17 +159,17 @@ msgstr "分析精度"
 #. module: mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account
 msgid "Analytic accounting in Manufacturing"
-msgstr ""
+msgstr "制造中的分析会计"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "物料清单（BOM）概述报表"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "物料清单"
 
 #. module: mrp_account
 #. odoo-python
@@ -184,7 +196,7 @@ msgstr "类别"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
@@ -205,7 +217,7 @@ msgstr "使用物料清单的产品和作业计算价格，仅限已制造产品
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_currency_id
 msgid "Consolidation Currency"
-msgstr ""
+msgstr "合并币别"
 
 #. module: mrp_account
 #. odoo-javascript
@@ -296,7 +308,7 @@ msgstr "费用科目"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mo_overview_components
 msgid "Extra BoM Cost"
-msgstr ""
+msgstr "物料清单额外成本"
 
 #. module: mrp_account
 #. odoo-javascript
@@ -305,7 +317,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__extra_cost
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_account_inherits_mrp_bom_form_view
 msgid "Extra Cost"
-msgstr ""
+msgstr "额外成本"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
@@ -354,7 +366,7 @@ msgstr "日记账项目"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Journal item to be created when posting WIP journal entry"
-msgstr ""
+msgstr "过账在制品日记账分录时要创建的日记账项目"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__label
@@ -471,7 +483,7 @@ msgstr "生产科目"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "汇率"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
@@ -505,7 +517,7 @@ msgstr "撤销：%s"
 #: model:ir.model.fields,help:mrp_account.field_mrp_bom__extra_cost
 msgid ""
 "Set an additional cost per manufactured unit (e.g. labour, energy, packaging)"
-msgstr ""
+msgstr "为每件制造单位设置额外成本（例如人工、能源、包装）"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
@@ -622,7 +634,7 @@ msgstr "WIP 移动"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP journal entry"
-msgstr ""
+msgstr "过账制造在制品日记账分录的向导"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
@@ -654,6 +666,14 @@ msgstr "工作中心"
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
 msgstr "工作中心生产力日志"
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+msgid ""
+"You cannot change the end date of a manufacturing order with associated "
+"journal entries."
+msgstr ""
 
 #. module: mrp_account
 #. odoo-python

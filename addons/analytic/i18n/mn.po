@@ -13,7 +13,7 @@
 # Mandalbayar Batbayar <bat.mandalbayar@gmail.com>, 2022
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2022
 # Baasansuren Sharavsuren <baasansuren@bumanit.mn>, 2022
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022, 2026.
 # Martin Trigaux, 2023
 # Батболд <batbold.ts@gmail.com>, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
@@ -22,9 +22,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 16:14+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-14 15:33+0000\n"
+"Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-20/"
 "analytic/mn/>\n"
 "Language: mn\n"
 "MIME-Version: 1.0\n"
@@ -45,17 +45,24 @@ msgid ""
 "operations\n"
 "that have no counterpart in the general financial accounts.\n"
 msgstr ""
+"\n"
+"Шинжилгээний санхүүгийн объектыг тодорхойлох модуль.\n"
+"===============================================\n"
+"\n"
+"Odoo-д шинжилгээний данснууд ерөнхий данстай холбогддог боловч\n"
+"бүрэн бие даасан байдлаар ажилладаг. Тиймээс ерөнхий санхүүгийн дансанд\n"
+"харьцах тал байхгүй олон төрлийн шинжилгээний гүйлгээ бүртгэж болно.\n"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 msgid "%s analytic lines created"
-msgstr ""
+msgstr "%s шинжилгээний мөр үүсгэлээ"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "<span class=\"o_stat_text\">Analytic Accounts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Шинжилгээний данс</span>"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
@@ -69,17 +76,19 @@ msgid ""
 "A 'Project' plan needs to exist and its id needs to be set as "
 "`analytic.project_plan` in the system variables"
 msgstr ""
+"'Төсөл' төлөвлөгөө байх ёстой бөгөөд түүний id-г системийн хувьсагчид "
+"`analytic.project_plan` болгон тохируулсан байх ёстой"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Хандалтын бүлгүүд"
 
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Account field"
-msgstr ""
+msgstr "Дансны талбар"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
@@ -89,7 +98,7 @@ msgstr "Бүртгэлүүд"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_agrolait
 msgid "Acme Corporation"
-msgstr ""
+msgstr "Acme Corporation"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -104,7 +113,7 @@ msgstr "Идэвхтэй"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_active_account
 msgid "Active account"
-msgstr ""
+msgstr "Идэвхтэй данс"
 
 #. module: analytic
 #. odoo-javascript
@@ -121,12 +130,12 @@ msgstr "Шинжилгээний данс шинээр үүсгэх"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_administratif
 msgid "Administrative"
-msgstr ""
+msgstr "Захиргаа"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
 msgid "All Analytic Accounts Count"
-msgstr ""
+msgstr "Бүх шинжилгээний дансны тоо"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
@@ -138,13 +147,13 @@ msgstr "Дүн"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Amount field"
-msgstr ""
+msgstr "Дүнгийн талбар"
 
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "Analytic"
-msgstr ""
+msgstr "Шинжилгээ"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
@@ -172,7 +181,7 @@ msgstr "Шинжилгээний данс"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
 msgid "Analytic Accounts Count"
-msgstr ""
+msgstr "Шинжилгээний дансны тоо"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
@@ -198,7 +207,7 @@ msgstr "Аналитик: Хуваарилалтын загвар"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Item"
-msgstr ""
+msgstr "Шинжилгээний бичилт"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -221,18 +230,18 @@ msgstr "Шинжилгээний мөр"
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_mixin
 msgid "Analytic Mixin"
-msgstr ""
+msgstr "Шинжилгээний Mixin"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_plan
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
 msgid "Analytic Plan"
-msgstr ""
+msgstr "Шинжилгээний төлөвлөгөө"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_plan_fields_mixin
 msgid "Analytic Plan Fields"
-msgstr ""
+msgstr "Шинжилгээний төлөвлөгөөний талбарууд"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
@@ -257,13 +266,13 @@ msgstr "Аналитик нарийвчлал"
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 msgid "Analytical Accounts"
-msgstr ""
+msgstr "Шинжилгээний данснууд"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 msgid "Analytical Plans"
-msgstr ""
+msgstr "Шинжилгээний төлөвлөгөөнүүд"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__applicability
@@ -286,13 +295,13 @@ msgstr "Холбогдсон харилцагч"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_asustek
 msgid "Asustek"
-msgstr ""
+msgstr "Asustek"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 msgid "At least one analytic account must be set"
-msgstr ""
+msgstr "Дор хаяж нэг шинжилгээний данс тохируулсан байх ёстой"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
@@ -314,17 +323,17 @@ msgstr "Үлдэгдэл:"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Business domain"
-msgstr ""
+msgstr "Бизнесийн домэйн"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_partners_camp_to_camp
 msgid "Camp to Camp"
-msgstr ""
+msgstr "Camp to Camp"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_integration_c2c
 msgid "CampToCamp"
-msgstr ""
+msgstr "CampToCamp"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
@@ -339,7 +348,7 @@ msgstr "Шинжилгээний дансны мод"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
 msgid "Children Plans Count"
-msgstr ""
+msgstr "Дэд төлөвлөгөөний тоо"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
@@ -349,7 +358,7 @@ msgstr "Дэд бүлэг"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr ""
+msgstr "Шинжилгээний дансны шинэ төлөвлөгөө нэмэхийн тулд дарна уу."
 
 #. module: analytic
 #. odoo-javascript
@@ -370,7 +379,7 @@ msgstr "Өнгөний индекс"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_commercial_marketing
 msgid "Commercial & Marketing"
-msgstr ""
+msgstr "Худалдаа ба маркетинг"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
@@ -388,7 +397,7 @@ msgstr "Бүтэн нэр"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Conditions to meet"
-msgstr ""
+msgstr "Хангах нөхцөлүүд"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_config_settings
@@ -449,7 +458,7 @@ msgstr "Огноо"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid "Deactivate the account."
-msgstr ""
+msgstr "Дансыг идэвхгүй болгох."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -460,12 +469,12 @@ msgstr "Дебит"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
-msgstr ""
+msgstr "Анхдагч хамрах хүрээ"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_deltapc
 msgid "Delta PC"
-msgstr ""
+msgstr "Delta PC"
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_departments
@@ -481,13 +490,13 @@ msgstr "Тайлбар"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
 msgid "Desertic - Hispafuentes"
-msgstr ""
+msgstr "Desertic - Hispafuentes"
 
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Disable save"
-msgstr ""
+msgstr "Хадгалахыг идэвхгүй болгох"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
@@ -512,7 +521,7 @@ msgstr "Шинжилгээний данс хуваарилалт"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Distribution to apply"
-msgstr ""
+msgstr "Хэрэглэх хуваарилалт"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
@@ -523,13 +532,13 @@ msgstr "Домэйн"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "Don't update"
-msgstr ""
+msgstr "Шинэчлэхгүй"
 
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Dynamic Placeholder"
-msgstr ""
+msgstr "Динамик орлуулагч"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_finance
@@ -550,7 +559,7 @@ msgstr "Дагагчид (Харилцагчид)"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Force applicability"
-msgstr ""
+msgstr "Хамрах хүрээг хүчээр тогтоох"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
@@ -635,23 +644,23 @@ msgstr "Сүүлд зассан огноо"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_legal
 msgid "Legal"
-msgstr ""
+msgstr "Хууль эрх зүй"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_think_big_systems
 msgid "Lumber Inc"
-msgstr ""
+msgstr "Lumber Inc"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_luminous_technologies
 msgid "Luminous Technologies"
-msgstr ""
+msgstr "Luminous Technologies"
 
 #. module: analytic
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__mandatory
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "Заавал"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
@@ -666,7 +675,7 @@ msgstr "Зурвасууд"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_millennium_industries
 msgid "Millennium Industries"
-msgstr ""
+msgstr "Millennium Industries"
 
 #. module: analytic
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
@@ -677,7 +686,7 @@ msgstr "Бусад"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Multi edit"
-msgstr ""
+msgstr "Олноор засах"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
@@ -688,13 +697,13 @@ msgstr "Нэр"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_nebula
 msgid "Nebula"
-msgstr ""
+msgstr "Nebula"
 
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "New Model"
-msgstr ""
+msgstr "Шинэ загвар"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -710,7 +719,7 @@ msgstr "Энэ дансанд одоогоор ажилбар алга"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "No analytic plans found"
-msgstr ""
+msgstr "Шинжилгээний төлөвлөгөө олдсонгүй"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -736,7 +745,7 @@ msgstr "Алдааны мэдэгдэл бүхий зурвасын тоо"
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
+msgstr "Нэг буюу хэд хэдэн мөрөнд 100% шинжилгээний хуваарилалт шаардлагатай."
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -763,7 +772,7 @@ msgstr "Бусад"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_our_super_product
 msgid "Our Super Product"
-msgstr ""
+msgstr "Манай супер бүтээгдэхүүн"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
@@ -784,7 +793,7 @@ msgstr "Харилцагч"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
 msgid "Partner Category"
-msgstr ""
+msgstr "Харилцагчийн ангилал"
 
 #. module: analytic
 #. odoo-javascript
@@ -802,7 +811,7 @@ msgstr "Төлөвлөх"
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Product field"
-msgstr ""
+msgstr "Барааны талбар"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_production
@@ -813,12 +822,12 @@ msgstr "Үйлдвэрлэл"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
 #: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__account_id
 msgid "Project Account"
-msgstr ""
+msgstr "Төслийн данс"
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_projects
 msgid "Project Plan"
-msgstr ""
+msgstr "Төслийн төлөвлөгөө"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
@@ -834,7 +843,7 @@ msgstr "Холбогдол"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_department
 msgid "Research & Development"
-msgstr ""
+msgstr "Судалгаа, хөгжүүлэлт"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -860,18 +869,18 @@ msgstr "Үндэс"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
-msgstr ""
+msgstr "Үндсэн төлөвлөгөө"
 
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 msgid "Save as new analytic distribution model"
-msgstr ""
+msgstr "Шинжилгээний хуваарилалтын шинэ загвар болгон хадгалах"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
 msgid "Seagate P2"
-msgstr ""
+msgstr "Seagate P2"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -882,7 +891,7 @@ msgstr "Шинжилгээний бичилт хайх"
 #. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 msgid "See them"
-msgstr ""
+msgstr "Харах"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
@@ -891,6 +900,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Шинжилгээний хуваарилалт ашиглагдах компанийг сонгоно уу (ж: энэ компанийг "
+"сонговол шинэ захиалагчийн нэхэмжлэл эсвэл борлуулалтын захиалга үүсгэхэд "
+"үүнийг автоматаар шинжилгээний данс болгон авна)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -899,6 +911,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
+"Шинжилгээний хуваарилалт ашиглагдах харилцагчийн ангиллыг сонгоно уу (ж: энэ "
+"харилцагчийг сонговол шинэ захиалагчийн нэхэмжлэл эсвэл борлуулалтын "
+"захиалга үүсгэхэд үүнийг автоматаар шинжилгээний данс болгон авна)"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -907,6 +922,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Шинжилгээний хуваарилалт ашиглагдах харилцагчийг сонгоно уу (ж: энэ "
+"харилцагчийг сонговол шинэ захиалагчийн нэхэмжлэл эсвэл борлуулалтын "
+"захиалга үүсгэхэд үүнийг автоматаар шинжилгээний данс болгон авна)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
@@ -917,17 +935,17 @@ msgstr "Дугаарлалт"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_spark
 msgid "Spark Systems"
-msgstr ""
+msgstr "Spark Systems"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
-msgstr ""
+msgstr "Дэд төлөвлөгөөнүүд"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "Системийн параметр"
 
 #. module: analytic
 #. odoo-python
@@ -936,6 +954,8 @@ msgid ""
 "The value for %s must be the ID to a valid analytic plan that is not a "
 "subplan"
 msgstr ""
+"%s-ийн утга нь дэд төлөвлөгөө биш, хүчинтэй шинжилгээний төлөвлөгөөний ID "
+"байх ёстой"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -951,7 +971,7 @@ msgstr "Нийт дүн"
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__unavailable
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__unavailable
 msgid "Unavailable"
-msgstr ""
+msgstr "Боломжгүй"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
@@ -975,7 +995,7 @@ msgstr "Хэрэглэгч"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Бүгдэд харагдана"
 
 #. module: analytic
 #. odoo-python
@@ -984,6 +1004,8 @@ msgid ""
 "Whoa there! Making this change would wipe out your current data. Let's avoid "
 "that, shall we?"
 msgstr ""
+"Түр хүлээгээрэй! Энэ өөрчлөлт таны одоогийн өгөгдлийг устгах болно. Үүнээс "
+"зайлсхийцгээе, тийм үү?"
 
 #. module: analytic
 #. odoo-python
@@ -992,12 +1014,14 @@ msgid ""
 "You can't change the company of an analytic account that already has "
 "analytic items! It's a recipe for an analytical disaster!"
 msgstr ""
+"Шинжилгээний бичилттэй шинжилгээний дансны компанийг өөрчлөх боломжгүй! Энэ "
+"нь шинжилгээний гамшигт хүргэнэ!"
 
 #. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 msgid "You cannot add a parent to the base plan '%s'"
-msgstr ""
+msgstr "'%s' үндсэн төлөвлөгөөнд эцэг нэмэх боломжгүй"
 
 #. module: analytic
 #. odoo-python
@@ -1006,6 +1030,9 @@ msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
 msgstr ""
+"Та тодорхой компанид харьяалагдах шинжилгээний данстай хуваарилалт "
+"тодорхойлсон боловч загвар нь компаниуд хооронд хуваалцсан эсвэл өөр "
+"компанитай байна"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

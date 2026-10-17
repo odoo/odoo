@@ -4,15 +4,16 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 15:22+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 11:47+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/pos_loyalty/zh_Hans/>\n"
+"projects/odoo-20/pos_loyalty/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,13 +47,13 @@ msgstr "优惠券/忠诚卡必须有唯一的代码。"
 #. odoo-python
 #: code:addons/pos_loyalty/models/loyalty_card.py:0
 msgid "A customer is required to create a %s card."
-msgstr ""
+msgstr "创建%s卡需要客户。"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/models/pos_order_line.js:0
 msgid "A gift card or eWallet top-up can't have a negative quantity."
-msgstr ""
+msgstr "礼品卡或电子钱包充值数量不能为负数。"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -70,12 +71,12 @@ msgstr "用作促销代码替代的技术字段。 这是在促销代码更改�
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order__active_payment_programs
 msgid "Active Payment Programs"
-msgstr ""
+msgstr "生效的支付方案"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order__active_rewards
 msgid "Active Rewards"
-msgstr ""
+msgstr "生效的奖励"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -114,7 +115,7 @@ msgstr "任何产品"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order__applied_codes
 msgid "Applied Codes"
-msgstr ""
+msgstr "已应用的代码"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -128,7 +129,7 @@ msgstr "可用奖赏"
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
 #: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Balance:"
-msgstr ""
+msgstr "余额："
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__promo_barcode
@@ -143,7 +144,7 @@ msgstr "条码规则"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__card_id
 msgid "Card"
-msgstr ""
+msgstr "会员卡"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__barcode_rule__type__coupon
@@ -159,12 +160,12 @@ msgstr "优惠券积分"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
 msgid "Current Balance:"
-msgstr ""
+msgstr "当前余额："
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order__disabled_program_ids
 msgid "Disabled Program"
-msgstr ""
+msgstr "已禁用的方案"
 
 #. module: pos_loyalty
 #: model:ir.ui.menu,name:pos_loyalty.menu_discount_loyalty_type_config
@@ -218,7 +219,7 @@ msgstr "到期"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/models/pos_order_line.js:0
 msgid "Free Product - %s"
-msgstr ""
+msgstr "免费产品 - %s"
 
 #. module: pos_loyalty
 #: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
@@ -229,12 +230,12 @@ msgstr "免费产品 - 简易笔"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Gift Card"
-msgstr ""
+msgstr "礼品卡"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__gift_card_vals
 msgid "Gift Card Vals"
-msgstr ""
+msgstr "礼品卡值"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -246,7 +247,7 @@ msgstr "礼品卡或折扣代码"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/utils/order_payment_validation.js:0
 msgid "Gift card printing failed"
-msgstr ""
+msgstr "礼品卡打印失败"
 
 #. module: pos_loyalty
 #: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
@@ -257,7 +258,7 @@ msgstr "礼品卡和电子钱包"
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
 msgid "How many points this reward cost."
-msgstr ""
+msgstr "此奖励需要消耗的积分数量。"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__id
@@ -281,7 +282,7 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
 msgid "Invalid Gift Card Code"
-msgstr ""
+msgstr "无效的礼品卡代码"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
@@ -291,7 +292,7 @@ msgstr "是奖励行"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "日记账项目"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
@@ -328,7 +329,7 @@ msgstr "会员规则"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/models/pos_order_line.js:0
 msgid "Negative quantity not allowed"
-msgstr ""
+msgstr "不允许负数数量"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -344,11 +345,13 @@ msgid ""
 "(needed)s, available: %(available)s). Remove the reward lines from the order "
 "and validate again."
 msgstr ""
+"积分不足以领取方案“%(program)s”的奖励（需要：%(needed)s，可用：%(available)s"
+"）。请从订单中移除奖励明细行后重新验证。"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "POS Order Reference"
-msgstr ""
+msgstr "POS 订单参考"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__gift_card_vals
@@ -357,6 +360,8 @@ msgid ""
 "expiration date) this funding line sold. The loyalty.card is created from it "
 "when the order is saved; afterwards card_id holds the durable link."
 msgstr ""
+"仅限 POS：此充值明细行所售出的礼品卡/电子钱包方案（以及可选的实体代码和到期日"
+"期）。保存订单时会据此创建 loyalty.card；此后由 card_id 保存持久链接。"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -375,7 +380,7 @@ msgstr "请选择作为奖励的产品"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "Please select a reward"
-msgstr ""
+msgstr "请选择一项奖励"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_order_count
@@ -390,7 +395,7 @@ msgstr "POS"
 #. module: pos_loyalty
 #: model:ir.module.module,shortdesc:base.module_pos_loyalty
 msgid "Point of Sale - Coupons & Loyalty"
-msgstr ""
+msgstr "销售点 - 优惠券与忠诚度"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_config
@@ -400,7 +405,7 @@ msgstr "POS配置"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "POS 订单"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order_line
@@ -425,7 +430,7 @@ msgstr "POS"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
 msgid "Point of sale"
-msgstr ""
+msgstr "销售点"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__points_cost
@@ -467,7 +472,7 @@ msgstr "对于电子钱包或礼品卡方案，不允许退款充值或奖励产
 msgid ""
 "Restrict publishing to those shops. Note: A program will only be used in the "
 "shops using the same currency as the program."
-msgstr ""
+msgstr "仅在这些商店中发布。注意：方案只会用于使用与方案相同币别的商店。"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_id
@@ -478,7 +483,7 @@ msgstr "优惠类型"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Select a product"
-msgstr ""
+msgstr "选择产品"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -509,58 +514,58 @@ msgstr "简易笔"
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
 #: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Spent:"
-msgstr ""
+msgstr "已消费："
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
 msgid "Technical field, whether all products match"
-msgstr ""
+msgstr "技术字段，表示是否所有产品均匹配"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
 msgid "That card code belongs to someone else."
-msgstr ""
+msgstr "该卡代码属于其他人。"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
 msgid "That card code has already been scanned and activated."
-msgstr ""
+msgstr "该卡代码已被扫描并激活。"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
 msgid "That card code is invalid (%s)."
-msgstr ""
+msgstr "该卡代码无效（%s）。"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "That card has expired (%s)."
-msgstr ""
+msgstr "该卡已过期（%s）。"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
 msgid "That card program requires a specific pricelist."
-msgstr ""
+msgstr "该卡方案要求使用指定的价格表。"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "That coupon is invalid (%s)."
-msgstr ""
+msgstr "该优惠券无效（%s）。"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "The POS order from which coupon is generated"
-msgstr ""
+msgstr "生成优惠券的 POS 订单"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__card_id
 msgid "The card used to claim that reward."
-msgstr ""
+msgstr "用于领取该奖励的卡。"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -568,13 +573,13 @@ msgstr ""
 msgid ""
 "The code is invalid. Ensure that the spelling is right or if the gift card "
 "exists."
-msgstr ""
+msgstr "代码无效。请确认拼写正确或该礼品卡存在。"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/utils/order_payment_validation.js:0
 msgid "The gift card could not be printed. Reprint it from the order."
-msgstr ""
+msgstr "礼品卡无法打印。请从订单中重新打印。"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_mail__pos_report_print_id
@@ -589,7 +594,7 @@ msgstr "在POS中创建优惠券/礼品卡/会员卡要执行的报表动作"
 msgid ""
 "The reward \"%s\" contains an error in its domain, your domain must be "
 "compatible with the PoS client"
-msgstr ""
+msgstr "奖励“%s”的域存在错误，您的域必须与 POS 客户端兼容"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
@@ -600,7 +605,7 @@ msgstr "与此行相关联的奖励。"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "This eWallet has no product available to refund to."
-msgstr ""
+msgstr "此电子钱包没有可用于退款的产品。"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -635,12 +640,12 @@ msgstr "被拒收的未付款礼品卡"
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
 msgid "Until:"
-msgstr ""
+msgstr "有效期至："
 
 #. module: pos_loyalty
 #: model:ir.module.module,summary:base.module_pos_loyalty
 msgid "Use Coupons, Gift Cards and Loyalty programs in Point of Sale"
-msgstr ""
+msgstr "在销售点使用优惠券、礼品卡与忠诚度方案"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -670,7 +675,7 @@ msgstr "无论这一行是否是奖励的一部分"
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
 #: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Won:"
-msgstr ""
+msgstr "已赢得："
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -687,12 +692,12 @@ msgstr "您必须在设置%(report)s之前设定%(mail_template)s。"
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
 msgid "no expiration"
-msgstr ""
+msgstr "无到期日期"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
 msgid "these are the products that are valid for this rule."
-msgstr ""
+msgstr "这些是适用于此规则的产品。"
 
 #~ msgid "Reset Programs"
 #~ msgstr "重置方案"

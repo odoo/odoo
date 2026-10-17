@@ -15,15 +15,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 14:40+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"POT-Creation-Date: 2026-10-16 17:42+0000\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/event/zh_Hans/>\n"
+"projects/odoo-20/event/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +49,17 @@ msgid ""
 "* Use emails to automatically confirm and send acknowledgments for any event "
 "registration\n"
 msgstr ""
+"\n"
+"活动的组织与管理。\n"
+"======================================\n"
+"\n"
+"活动模块让您能够高效地组织活动及所有相关任务：策划、登记跟踪、\n"
+"出勤等。\n"
+"\n"
+"主要功能\n"
+"------------\n"
+"* 管理您的活动与登记记录\n"
+"* 使用电子邮件自动确认并发送任何活动登记的确认回执\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -272,6 +284,9 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>如果您希望进行演示，请尽快将您的议题提案发送给 Famke Jenssens 先生（ngh "
+"[at] yourcompany [dot] com）以获取批准。演示内容可以是社区模块介绍、案例研"
+"究、方法论反馈、技术分享等。每次演示都必须使用英语。</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -290,7 +305,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "<i class=\"oi mx-2\" data-icon=\"arrow_forward\" title=\"to\"/>"
-msgstr ""
+msgstr "<i class=\"oi mx-2\" data-icon=\"arrow_forward\" title=\"到\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -307,6 +322,8 @@ msgid ""
 "<i class=\"oi oi-filled mt-1 me-2 text-center\" data-icon=\"location_on\" "
 "title=\"Location\"/>"
 msgstr ""
+"<i class=\"oi oi-filled mt-1 me-2 text-center\" data-icon=\"location_on\" "
+"title=\"地点\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -322,6 +339,10 @@ msgid ""
 "                                <span class=\"d-none d-md-inline\"> "
 "Attended</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"check\" aria-label=\"参加\" title=\"参加\" "
+"role=\"img\"/>\n"
+"                                <span class=\"d-none d-md-inline\"> 参加</"
+"span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.portal_my_events
@@ -331,6 +352,10 @@ msgid ""
 "                                <span class=\"d-none d-md-inline\"> "
 "Registered</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"check\" aria-label=\"已注册\" title=\"已注"
+"册\" role=\"img\"/>\n"
+"                                <span class=\"d-none d-md-inline\"> 已注册</"
+"span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.portal_my_events
@@ -340,6 +365,10 @@ msgid ""
 "                                <span class=\"d-none d-md-inline\"> "
 "Cancelled</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"close\" aria-label=\"已取消\" title=\"已取"
+"消\" role=\"img\"/>\n"
+"                                <span class=\"d-none d-md-inline\"> 已取消</"
+"span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.portal_my_events
@@ -349,6 +378,10 @@ msgid ""
 "                                <span class=\"d-none d-md-inline\"> "
 "Unconfirmed</span>"
 msgstr ""
+"<i class=\"oi oi-fw\" data-icon=\"schedule\" aria-label=\"未确认\" title=\"未"
+"确认\" role=\"img\"/>\n"
+"                                <span class=\"d-none d-md-inline\"> 未确认</"
+"span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -388,6 +421,9 @@ msgid ""
 "                                    Attendee answers\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    与会者回答\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1555,6 +1591,394 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_begin_date, "
+"tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_end_date, "
+"tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and "
+"object.event_id.is_published\"/>\n"
+"<t t-set=\"is_sale\" t-value=\"'sale_order_id' in object and "
+"object.sale_order_id\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<t t-set=\"event_website_url\" t-value=\"is_online and "
+"object.event_id.website_url\"/>\n"
+"<t t-set=\"registration_ids\" t-value=\"object.ids if not is_sale else "
+"object._get_event_registration_ids_from_order()\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">您的登记</span><br/>\n"
+"                    <t t-set=\"default_name\">访客</t>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+"out=\"object.name or default_name\"/>\n"
+"                    <div style=\"margin-bottom: 5px;margin-top: 18px;\">\n"
+"                        <a t-if=\"object.event_id.address_id\" t-attf-"
+"href=\"/event/{{ object.event_id.id }}/my_tickets?"
+"registration_ids={{ object.ids }}"
+"&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}"
+"&amp;responsive_html=1\" target=\"_blank\" style=\"padding: 8px 12px; font-"
+"size: 12px; color: {{object.event_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
+"color: {{object.event_id.company_id.email_secondary_color or '#875A7B'}}; "
+"border-radius:3px\">\n"
+"                            查看门票\n"
+"                        </a>\n"
+"                        <a t-else=\"event_website_url\" t-att-"
+"href=\"event_website_url\" target=\"_blank\" style=\"padding: 8px 12px; font-"
+"size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: "
+"400; background-color: #875A7B; border: 0px solid #875A7B; border-"
+"radius:3px\">\n"
+"                            在线查看\n"
+"                        </a>\n"
+"                    </div>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"object.barcode\">\n"
+"                        <div style=\"margin-bottom: 5px;\">\n"
+"                            <img t-attf-src=\"/report/barcode/QR/"
+"{{object.barcode}}?&amp;width=100&amp;height=100\" width=\"100\" "
+"height=\"100\" alt=\"二维码\" t-att-style=\"'height: 100px !important;'\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % "
+"object.company_id.id\" style=\"padding: 0px; margin: 0px; margin-right: "
+"10px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        <t t-set=\"default_name\">访客</t>\n"
+"                        您好 <t t-out=\"object.name or default_name\"/>，<br/"
+"><br/>\n"
+"                        我们很高兴地提醒您，以下活动\n"
+"                        <t t-if=\"event_website_url\">\n"
+"                            <a t-att-href=\"event_website_url\" t-attf-"
+"style=\"font-weight:bold;color: "
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}}; text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood 系列线上发布"
+"会</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or "
+"''\">OpenWood 系列线上发布会</strong>\n"
+"                        </t>\n"
+"                        即将于 <strong t-out=\"object.event_date_range or "
+"''\">今天</strong> 开始。\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <table style=\"width: auto;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <strong>将此活动添加到您的日历</strong>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/event/"
+"{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" "
+"style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-"
+"left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;"
+"\">\n"
+"                                    <img src=\"/event/static/src/img/apple-"
+"calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/event/"
+"{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" "
+"style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-"
+"left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;"
+"\">\n"
+"                                    <img src=\"/event/static/src/img/outlook-"
+"calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"https://www.google.com/"
+"calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}"
+"&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}"
+"&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                    <img src=\"/event/static/src/img/google-"
+"calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <br/><br/>\n"
+"                    <div>\n"
+"                        我们确认您的登记，期待届时与您相见，<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name or "
+"''\">YourCompany</t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <t t-out=\"object.event_id.name or ''\">OpenWood "
+"系列线上发布会</t> 团队\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/mail/font_to_img/61555/"
+"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" "
+"alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div t-if=\"object.event_id.is_one_day\">\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">2021年5月4日</t>\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">上"
+"午 7:00</t>\n"
+"                                     - <t t-out=\"object.event_end_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">下"
+"午 5:00</t>\n"
+"                                </div>\n"
+"                                <div t-else=\"\">\n"
+"                                    <strong>由</strong>\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;show_seconds&quot;: False, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;medium&quot;}\">2021年5月4"
+"日 - 上午 7:00</t>\n"
+"                                    <br/>\n"
+"                                    <strong>至</strong>\n"
+"                                    <t t-out=\"object.event_end_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;show_seconds&quot;: False, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;medium&quot;}\">2021年5月6"
+"日 - 下午 5:00</t>\n"
+"                                </div>\n"
+"                                <div style=\"font-"
+"size:12px;color:#9e9e9e\"><i>(<t t-out=\"object.event_id.date_tz or "
+"''\">Europe/Brussels</t>)</i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/mail/font_to_img/61505/"
+"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" "
+"alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.name or ''\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.street or ''\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-"
+"value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.street2 or ''\">Of A15, Santiago (RM)</"
+"div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.street2)\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.city)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.state_id.name)\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.zip or ''\">98450</t>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.zip)\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.country_id.name or ''\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-value=\"'%s, "
+"%s' % (location, object.event_id.address_id.country_id.name)\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">"
+"对本次活动有疑问？</span>\n"
+"                            <div>请联系组织者：</div>\n"
+"                            <ul>\n"
+"                                <li t-out=\"event_organizer.name or "
+"''\">YourCompany</li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>邮件：<a t-attf-href=\"mailto:"
+"{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none; color: "
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email or ''\"/></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>电话：<t t-"
+"out=\"event_organizer.phone or ''\"/></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <hr t-if=\"is_online or event_address\" width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <div t-if=\"is_online\">\n"
+"                        <strong>获得最佳移动端体验。</strong>\n"
+"                        <a href=\"/event\">安装我们的移动应用</a>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <hr t-if=\"is_online and event_address\" width=\"100%\" "
+"style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <table t-if=\"event_address and location\" "
+"style=\"width:100%;\"><tr><td>\n"
+"                        <div>\n"
+"                            <img src=\"/web_editor/font_to_img/61505/"
+"rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
+"                            <a t-attf-href=\"https://maps.google.com/maps?"
+"q={{ location }}\" target=\"new\">\n"
+"                                <img t-if=\"event_address.static_map_url and "
+"event_address.static_map_url_is_valid\" t-attf-"
+"src=\"{{ event_address.static_map_url }}\" style=\"vertical-align:bottom; "
+"width: 100%;\" alt=\"Google Maps\"/>\n"
+"                                <span t-else=\"\">在 Google 地图上查看位置</"
+"span>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </td></tr></table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table t-if=\"object.company_id\" width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        发送者：<a target=\"_blank\" t-attf-"
+"href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"        <t t-if=\"'website_url' in object.event_id and "
+"object.event_id.website_url\">\n"
+"            <br/>\n"
+"            浏览<a href=\"/event\" t-attf-style=\"color: "
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">我们的所"
+"有活动</a>。\n"
+"        </t>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -1974,11 +2398,420 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<t t-set=\"date_begin\" t-value=\"format_datetime(object.event_begin_date, "
+"tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"date_end\" t-value=\"format_datetime(object.event_end_date, "
+"tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)\"/>\n"
+"<t t-set=\"is_online\" t-value=\"'is_published' in object.event_id and "
+"object.event_id.is_published\"/>\n"
+"<t t-set=\"is_sale\" t-value=\"'sale_order_id' in object and "
+"object.sale_order_id\"/>\n"
+"<t t-set=\"event_organizer\" t-value=\"object.event_id.organizer_id\"/>\n"
+"<t t-set=\"event_address\" t-value=\"object.event_id.address_id\"/>\n"
+"<t t-set=\"event_website_url\" t-value=\"object.event_id.event_share_url\"/"
+">\n"
+"<t t-set=\"registration_ids\" t-value=\"object.ids if not is_sale else "
+"object._get_event_registration_ids_from_order()\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">您的登记</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-set=\"default_name\">访客</t>\n"
+"                        <t t-out=\"object.name or default_name\"/>\n"
+"                    </span>\n"
+"                    <div style=\"margin-bottom: 5px;margin-top: 18px;\">\n"
+"                        <a t-if=\"object.event_id.address_id\" t-attf-"
+"href=\"/event/{{ object.event_id.id }}/my_tickets?"
+"registration_ids={{ object.ids }}"
+"&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}"
+"&amp;responsive_html=1\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; "
+"font-size: 12px; color: {{object.event_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
+"color: {{object.event_id.company_id.email_secondary_color or '#875A7B'}}; "
+"border-radius:3px\">\n"
+"                            查看门票\n"
+"                        </a>\n"
+"                        <a t-else=\"event_website_url\" t-att-"
+"href=\"event_website_url\" target=\"_blank\" style=\"padding: 8px 12px; font-"
+"size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: "
+"400; background-color: #875A7B; border: 0px solid #875A7B; border-"
+"radius:3px\">\n"
+"                            在线查看\n"
+"                        </a>\n"
+"                    </div>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <t t-if=\"object.barcode\"> \n"
+"                        <div style=\"margin-bottom: 5px;\">\n"
+"                            <img t-attf-src=\"/report/barcode/QR/"
+"{{object.barcode}}?&amp;width=100&amp;height=100\" width=\"100\" "
+"height=\"100\" alt=\"二维码\" t-att-style=\"'height: 100px !important;'\"/>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
+"                        <img t-att-src=\"'/logo.png?company=%s' % "
+"object.company_id.id\" style=\"padding: 0px; margin: 0px; margin-right: "
+"10px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- EVENT DESCRIPTION -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        <t t-set=\"default_name\">访客</t>\n"
+"                        您好 <t t-out=\"object.name or default_name\"/>，<br/"
+"><br/>\n"
+"                        我们很高兴确认您已登记以下活动：\n"
+"                        <t t-if=\"event_website_url\">\n"
+"                            <a t-att-href=\"event_website_url\" t-attf-"
+"style=\"color: {{object.event_id.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration:none;font-weight:bold;\" t-"
+"out=\"object.event_id.name or ''\">OpenWood 系列线上发布会</a>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <strong t-out=\"object.event_id.name or "
+"''\">OpenWood 系列线上发布会</strong>\n"
+"                        </t>.\n"
+"                        <t t-if=\"object.partner_id and "
+"object.partner_id.name and object.partner_id.name != object.name\">\n"
+"                            此门票由 <t t-out=\"object.partner_id.name\"/> 登"
+"记。\n"
+"                        </t>\n"
+"                    </div>\n"
+"                    <div t-if=\"is_sale\">\n"
+"                        <br/>\n"
+"                        此门票的订单编号为 <t t-"
+"out=\"object.sale_order_id.name\"/>\n"
+"                        下单日期为 <t t-"
+"out=\"object.sale_order_id.date_order.date()\"/>\n"
+"                        <t t-if=\"object.sale_order_line_id.price_total\">，"
+"金额为\n"
+"                            <t t-"
+"out=\"object.sale_order_line_id.price_total\" t-options=\"{'widget': "
+"'monetary', 'display_currency': object.sale_order_line_id.currency_id}\"/>\n"
+"                        </t>.\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <table style=\"width: auto;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <strong>将此活动添加到您的日历</strong>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/event/"
+"{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" "
+"style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-"
+"left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;"
+"\">\n"
+"                                    <img src=\"/event/static/src/img/apple-"
+"calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/event/"
+"{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" "
+"style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-"
+"left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;"
+"\">\n"
+"                                    <img src=\"/event/static/src/img/outlook-"
+"calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"https://www.google.com/"
+"calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}"
+"&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}"
+"&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" "
+"target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                    <img src=\"/event/static/src/img/google-"
+"calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; "
+"vertical-align: baseline;\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <br/><br/>\n"
+"                    <div>\n"
+"                        期待与您相见，<br/>\n"
+"                        <span style=\"color: #454748;\">\n"
+"                        -- <br/>\n"
+"                        <t t-if=\"event_organizer\">\n"
+"                            <t t-out=\"event_organizer.name\">YourCompany</"
+"t>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <t t-out=\"object.event_id.name or ''\">OpenWood "
+"系列线上发布会</t> 团队\n"
+"                        </t>\n"
+"                        </span>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- DETAILS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <table style=\"width:100%;\">\n"
+"                        <tr>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <img src=\"/mail/font_to_img/61555/"
+"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" "
+"alt=\"\"/>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div t-if=\"object.event_id.is_one_day\">\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">2021年5月4日</t>\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">上"
+"午 7:00</t>\n"
+"                                     - <t t-out=\"object.event_end_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">下"
+"午 5:00</t>\n"
+"                                </div>\n"
+"                                <div t-else=\"\">\n"
+"                                    <strong>由</strong>\n"
+"                                    <t t-out=\"object.event_begin_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;show_seconds&quot;: False, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;medium&quot;}\">2021年5月4"
+"日 - 上午 7:00</t>\n"
+"                                    <br/>\n"
+"                                    <strong>至</strong>\n"
+"                                    <t t-out=\"object.event_end_date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, "
+"&quot;show_seconds&quot;: False, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;medium&quot;}\">2021年5月6"
+"日 - 下午 5:00</t>\n"
+"                                </div>\n"
+"                                <div style=\"font-"
+"size:12px;color:#9e9e9e\"><i>(<t t-out=\"object.event_id.date_tz or "
+"''\">Europe/Brussels</t>)</i></div>\n"
+"                            </td>\n"
+"                            <td style=\"vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <img src=\"/mail/font_to_img/61505/"
+"rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" "
+"alt=\"\"/>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                            <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;vertical-align:top;\">\n"
+"                                <t t-if=\"event_address\">\n"
+"                                    <t t-set=\"location\" t-value=\"''\"/>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.name\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.name\">Teksa SpA</div>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.street\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.street\">Puerto Madero 9710</div>\n"
+"                                        <t t-set=\"location\" t-"
+"value=\"object.event_id.address_id.street\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.street2\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.street2\">Of A15, Santiago (RM)</div>\n"
+"                                        <t t-set=\"location\" t-"
+"valuef=\"{{location}}, {{object.event_id.address_id.street2}}\"/>\n"
+"                                    </t>\n"
+"                                    <div>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.city\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.city\">Pudahuel</t>,\n"
+"                                        <t t-set=\"location\" t-"
+"valuef=\"{{location}}, {{object.event_id.address_id.city}}\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.state_id.name\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.state_id.name\">C1</t>,\n"
+"                                        <t t-set=\"location\" t-"
+"valuef=\"{{location}}, {{object.event_id.address_id.state_id.name}}\"/>\n"
+"                                    </t>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.zip\">\n"
+"                                        <t t-"
+"out=\"object.event_id.address_id.zip\">98450</t>\n"
+"                                        <t t-set=\"location\" t-"
+"valuef=\"{{location}}, {{object.event_id.address_id.zip}}\"/>\n"
+"                                    </t>\n"
+"                                    </div>\n"
+"                                    <t t-"
+"if=\"object.event_id.address_id.country_id.name\">\n"
+"                                        <div t-"
+"out=\"object.event_id.address_id.country_id.name\">Argentina</div>\n"
+"                                        <t t-set=\"location\" t-"
+"valuef=\"{{location}}, {{object.event_id.address_id.country_id.name}}\"/>\n"
+"                                    </t>\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- CONTACT ORGANIZER -->\n"
+"                    <t t-if=\"event_organizer\">\n"
+"                        <div>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">"
+"对本次活动有疑问？</span>\n"
+"                            <div>请联系组织者：</div>\n"
+"                            <ul>\n"
+"                                <li><t t-out=\"event_organizer.name or "
+"''\">YourCompany</t></li>\n"
+"                                <t t-if=\"event_organizer.email\">\n"
+"                                    <li>邮件：<a t-attf-href=\"mailto:"
+"{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none; color: "
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"                                </t>\n"
+"                                <t t-if=\"event_organizer.phone\">\n"
+"                                    <li>电话：<t t-"
+"out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                    <t t-if=\"is_online or event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- PWA MARKGETING -->\n"
+"                    <t t-if=\"is_online\">\n"
+"                        <div>\n"
+"                            <strong>获得最佳移动端体验。</strong>\n"
+"                            <a href=\"/event\">安装我们的移动应用</a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <!-- PWA MARKGETING SEPARATION-->\n"
+"                    <t t-if=\"is_online and event_address\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <!-- GOOGLE MAPS LINK -->\n"
+"                    <t t-if=\"event_address and location\">\n"
+"                        <table style=\"width:100%;\"><tr><td>\n"
+"                            <div>\n"
+"                                <img src=\"/web_editor/font_to_img/61505/"
+"rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
+"                                <a t-attf-href=\"https://maps.google.com/"
+"maps?q={{ location }}\" target=\"new\">\n"
+"                                    <img t-if=\"event_address.static_map_url "
+"and event_address.static_map_url_is_valid\" t-att-"
+"src=\"event_address.static_map_url\" style=\"vertical-align:bottom; width: "
+"100%;\" alt=\"Google Maps\"/>\n"
+"                                    <t t-else=\"\">在 Google 地图上查看位置</"
+"t>\n"
+"                                </a>\n"
+"                            </div>\n"
+"                        </td></tr></table>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- FOOTER BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <t t-if=\"object.company_id\">\n"
+"        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; "
+"color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"            发送者：<a target=\"_blank\" t-attf-"
+"href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"            <t t-if=\"is_online\">\n"
+"                <br/>\n"
+"                浏览<a href=\"/event\" t-attf-style=\"color: "
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">我们的所"
+"有活动</a>。\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        </table>\n"
+"    </t>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_question_check_default_question_is_reusable
 msgid "A default question must be reusable."
-msgstr ""
+msgstr "默认问题必须设置为可重用。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__description
@@ -1997,6 +2830,11 @@ msgid ""
 "(event_end_time)s\n"
 "Slot:\t%(slot_name)s"
 msgstr ""
+"时段不能安排在活动的时间范围之外。\n"
+"\n"
+"活动：\t%(event_start_date)s, %(event_start_time)s - %(event_end_date)s, %"
+"(event_end_time)s\n"
+"时段：\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -2027,7 +2865,7 @@ msgstr "A6"
 #. module: event
 #: model:portal.entry,description:event.portal_events_client
 msgid "Access all your event tickets"
-msgstr ""
+msgstr "访问您的所有活动门票"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
@@ -2068,7 +2906,7 @@ msgstr "活动异常标示"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_plans_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "活动计划"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
@@ -2090,7 +2928,7 @@ msgstr "活动类型"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Add a description that will appear as a tooltip for this stage"
-msgstr ""
+msgstr "添加一段描述，作为此阶段的工具提示显示"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -2120,6 +2958,10 @@ msgid ""
 "From:\t%(start)s - %(end)s\n"
 "To:\t\t%(new_start)s - %(new_end)s\n"
 msgstr ""
+"添加这些时段将自动调整活动的时间范围以将其包含在内。\n"
+"\n"
+"原：\t%(start)s - %(end)s\n"
+"新：\t\t%(new_start)s - %(new_end)s\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -2163,7 +3005,7 @@ msgstr "年龄"
 #. odoo-python
 #: code:addons/event/controllers/portal.py:0
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -2309,7 +3151,7 @@ msgstr "参加日期"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Attended on %(attended_date)s"
-msgstr ""
+msgstr "参加于 %(attended_date)s"
 
 #. module: event
 #. odoo-python
@@ -2538,7 +3380,7 @@ msgstr "Chamber Works保留取消、重命名、重新定位活动或更改举�
 msgid ""
 "Check this for order-level questions (e.g., 'Company Name') where the answer "
 "is the same for everyone."
-msgstr ""
+msgstr "对于答案对所有人都相同的订单级问题（例如“公司名称”），请勾选此项。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_type_id
@@ -2551,7 +3393,7 @@ msgstr "选择一个模板来自动填写门票资料、通信、描述和其他
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
@@ -2647,19 +3489,19 @@ msgstr "配置"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "确认出勤？"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Confirm the selected dates."
-msgstr ""
+msgstr "确认所选日期。"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 msgid "Confirmation"
-msgstr ""
+msgstr "确认"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2775,7 +3617,7 @@ msgstr "默认问题"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_default
 msgid "Default question"
-msgstr ""
+msgstr "默认问题"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__seats_max
@@ -2878,7 +3720,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Edit Ticket"
-msgstr ""
+msgstr "编辑门票"
 
 #. module: event
 #: model:event.question,title:event.event_question_email
@@ -2905,6 +3747,9 @@ msgid ""
 "- Set to 0 or 1 to disable.\n"
 "- Enter 2 or more to define the maximum number of allowed entries."
 msgstr ""
+"启用多次入场门票\n"
+"- 设为 0 或 1 则禁用。\n"
+"- 输入 2 或以上以定义允许的最大入场次数。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
@@ -2944,7 +3789,7 @@ msgstr "增强您的建筑业务并提高专业技能。"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__entry_limit
 msgid "Entry Limit"
-msgstr ""
+msgstr "入场次数上限"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__error
@@ -3052,7 +3897,7 @@ msgstr "活动问答"
 #. module: event
 #: model:ir.ui.menu,name:event.event_question_menu
 msgid "Event Questions"
-msgstr ""
+msgstr "活动问题"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -3174,7 +4019,7 @@ msgstr "活动类型"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_type_ids
 msgid "Event Types"
-msgstr ""
+msgstr "活动类型"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
@@ -3237,7 +4082,7 @@ msgstr "事件邮件发送排定器"
 #. module: event
 #: model:ir.module.module,shortdesc:base.module_event
 msgid "Events Organization"
-msgstr ""
+msgstr "活动组织"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3357,7 +4202,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "For each attendee"
-msgstr ""
+msgstr "每位参会者"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -3516,7 +4361,7 @@ msgstr "首页"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "Hour range"
-msgstr ""
+msgstr "小时范围"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -3572,7 +4417,7 @@ msgstr "ID"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "ID of your Google app"
-msgstr ""
+msgstr "您的 Google 应用 ID"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_icon
@@ -3648,7 +4493,7 @@ msgstr "进行中"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_default
 msgid "Include by default in new events."
-msgstr ""
+msgstr "默认为新活动包含此项。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
@@ -3670,7 +4515,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__ticket_entry_limit
 msgid "Initial Entry Limit"
-msgstr ""
+msgstr "初始入场次数上限"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3756,7 +4601,7 @@ msgstr "正在进行"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_reusable
 msgid "Is Reusable"
-msgstr ""
+msgstr "可重用"
 
 #. module: event
 #. odoo-python
@@ -3782,7 +4627,7 @@ msgstr "John Doe"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John Doe's avatar"
-msgstr ""
+msgstr "John Doe 的头像"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3809,7 +4654,7 @@ msgstr "看板状态"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_digest_digest__kpi_nbr_of_registrations_value
 msgid "Kpi Nbr Of Registrations Value"
-msgstr ""
+msgstr "Kpi 登记数量值"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__lang
@@ -3901,7 +4746,7 @@ msgstr "有限的登记"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__limit_max_per_order
 msgid "Limit per Order"
-msgstr ""
+msgstr "每单上限"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_url
@@ -3972,7 +4817,7 @@ msgstr "邮件时段"
 #: model:ir.model.fields,field_description:event.field_event_registration__main_registration_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Main Registration"
-msgstr ""
+msgstr "主登记"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4011,7 +4856,7 @@ msgstr "市场"
 #: model:ir.model.fields,help:event.field_event_event__activity_type_icon
 #: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols 图标，例如 checklist"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
@@ -4037,6 +4882,8 @@ msgid ""
 "Maximum of this product per order.\n"
 "Set to 0 to ignore this rule"
 msgstr ""
+"每单此产品的最大数量。\n"
+"设为 0 则忽略此规则"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
@@ -4119,7 +4966,7 @@ msgstr "新建"
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 #: code:addons/event/static/src/views/event_slot/list/event_slot_list_controller.js:0
 msgid "New Slot"
-msgstr ""
+msgstr "新时段"
 
 #. module: event
 #. odoo-python
@@ -4128,6 +4975,8 @@ msgid ""
 "New attendance by this attendee created at %(attendance_datetime)s, see %"
 "(attendance_link)s"
 msgstr ""
+"此参会者的新出勤记录创建于 %(attendance_datetime)s，请参阅 %"
+"(attendance_link)s"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
@@ -4156,7 +5005,7 @@ msgstr "下一活动类型"
 #. module: event
 #: model:res.groups.privilege,placeholder:event.res_groups_privilege_events
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
@@ -4179,7 +5028,7 @@ msgstr "还没有参会者!"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_question_action
 msgid "No questions yet! Please create one."
-msgstr ""
+msgstr "尚无问题！请创建一个。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
@@ -4190,17 +5039,17 @@ msgstr "命名规则"
 #. odoo-python
 #: code:addons/event/controllers/portal.py:0
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not Reusable"
-msgstr ""
+msgstr "不可复用"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not mandatory"
-msgstr ""
+msgstr "非必填"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__note
@@ -4298,7 +5147,7 @@ msgstr "每个订单一次"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Once per order"
-msgstr ""
+msgstr "每单一次"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -4346,7 +5195,7 @@ msgstr "打开日期范围选择器。<br/>为您的事件选择开始和结束�
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open the Tickets tab."
-msgstr ""
+msgstr "打开“门票”标签页。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4388,7 +5237,7 @@ msgstr "合作伙伴"
 #. odoo-python
 #: code:addons/event/controllers/portal.py:0
 msgid "Past"
-msgstr ""
+msgstr "过去"
 
 #. module: event
 #: model:event.question,title:event.event_question_phone
@@ -4406,13 +5255,13 @@ msgstr "电话号码"
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Pick a start date."
-msgstr ""
+msgstr "选择开始日期。"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Pick an end date."
-msgstr ""
+msgstr "选择结束日期。"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
@@ -4625,6 +5474,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"在以下情况下可登记：\n"
+"- 活动尚未结束或未被取消\n"
+"- 活动还有可用座位\n"
+"- 门票可售（如果使用了票务功能）"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
@@ -4636,7 +5489,7 @@ msgstr "开始登记"
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #: model:ir.model.fields,field_description:event.field_event_registration__remaining_entries
 msgid "Remaining Entries"
-msgstr ""
+msgstr "剩余入场次数"
 
 #. module: event
 #. odoo-python
@@ -4675,7 +5528,7 @@ msgstr "响应式 Html 全页票务"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Reusable"
-msgstr ""
+msgstr "可重用"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -4697,7 +5550,7 @@ msgstr "短信发送错误"
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Save the ticket."
-msgstr ""
+msgstr "保存门票。"
 
 #. module: event
 #. odoo-javascript
@@ -4741,7 +5594,7 @@ msgstr "调度员电子邮件"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Search Event Question"
-msgstr ""
+msgstr "搜索活动问题"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -4756,7 +5609,7 @@ msgstr "密匙"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr ""
+msgstr "您的 Google 应用密钥"
 
 #. module: event
 #. odoo-javascript
@@ -4768,7 +5621,7 @@ msgstr "选择参与者"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_multi_selection_buttons.xml:0
 msgid "Select days to add slots"
-msgstr ""
+msgstr "选择要添加时段的日期"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4884,7 +5737,7 @@ msgstr "如果活动有多个时段，您必须选择适用的时段。"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Slot(s)"
-msgstr ""
+msgstr "时段"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
@@ -5078,7 +5931,7 @@ msgstr "文本答案"
 #: code:addons/event/models/event_ticket.py:0
 msgid ""
 "The Entry Limit of event tickets %(ticket_names)s cannot be lower than 0."
-msgstr ""
+msgstr "活动门票 %(ticket_names)s 的入场次数上限不能小于 0。"
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -5126,7 +5979,7 @@ msgstr ""
 msgid ""
 "The finest OpenWood furniture is coming to your house in a brand new "
 "collection"
-msgstr ""
+msgstr "最精美的 OpenWood 家具将以全新系列来到您家中"
 
 #. module: event
 #. odoo-python
@@ -5156,7 +6009,7 @@ msgstr ""
 msgid ""
 "The limit per order cannot be greater than %(limit_orderable)s. Please check "
 "ticket %(ticket_name)s"
-msgstr ""
+msgstr "每单上限不能大于 %(limit_orderable)s。请检查门票 %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5164,14 +6017,14 @@ msgstr ""
 msgid ""
 "The limit per order cannot be greater than the maximum seats number. Please "
 "check ticket %(ticket_name)s"
-msgstr ""
+msgstr "每单上限不能大于最大座位数。请检查门票 %(ticket_name)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid ""
 "The limit per order must be positive. Please check ticket %(ticket_name)s"
-msgstr ""
+msgstr "每单上限必须为正数。请检查门票 %(ticket_name)s"
 
 #. module: event
 #. odoo-javascript
@@ -5179,7 +6032,7 @@ msgstr ""
 msgid ""
 "The offer may have expired or you may have reached the maximum number of "
 "entries allowed."
-msgstr ""
+msgstr "该优惠可能已过期，或者您已达到允许的最大入场次数。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -5206,7 +6059,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.portal_my_events
 msgid "There are no event registrations."
-msgstr ""
+msgstr "没有活动登记记录。"
 
 #. module: event
 #. odoo-python
@@ -5245,7 +6098,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This Card/Ticket is currently unavailable."
-msgstr ""
+msgstr "此卡/门票目前不可用。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -5311,7 +6164,7 @@ msgstr "这可能已连接至模板“%(template_link)s”。"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "This question is used by"
-msgstr ""
+msgstr "此问题被以下对象使用"
 
 #. module: event
 #. odoo-javascript
@@ -5369,13 +6222,13 @@ msgstr "票证类型使您可以区分参会者。 让我们<b>创建</b>一个�
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid ""
 "Ticket types allow you to distinguish your attendees. Let's create a new one."
-msgstr ""
+msgstr "门票类型可帮助您区分参会者。我们来创建一个新的。"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "门票首次扫描于"
 
 #. module: event
 #. odoo-python
@@ -5459,12 +6312,12 @@ msgstr "培训"
 #. module: event
 #: model:ir.module.module,summary:base.module_event
 msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
-msgstr ""
+msgstr "培训、会议、集会、展览、登记"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Transaction"
-msgstr ""
+msgstr "交易"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_3
@@ -5533,7 +6386,7 @@ msgstr "了解不同的模块;"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
-msgstr ""
+msgstr "撤销"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -5550,7 +6403,7 @@ msgstr "直到"
 #. odoo-python
 #: code:addons/event/controllers/portal.py:0
 msgid "Upcoming"
-msgstr ""
+msgstr "即将"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -5566,7 +6419,7 @@ msgstr "即将到来的 或 运行中的"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 msgid "Update Event"
-msgstr ""
+msgstr "更新活动"
 
 #. module: event
 #. odoo-python
@@ -5593,7 +6446,7 @@ msgstr "使用活动标签类别来分类和组织您的活动标签。"
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Use the breadcrumbs to go back to your kanban overview."
-msgstr ""
+msgstr "使用面包屑导航返回看板概览。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
@@ -5703,6 +6556,8 @@ msgid ""
 "(registration_id)s. Please try again from the original registration of this "
 "attendee."
 msgstr ""
+"您无法取消 ID 为 %(registration_id)s 的子登记的最后一条出勤记录。请从该参会者"
+"的原始登记中重试。"
 
 #. module: event
 #. odoo-python
@@ -5715,7 +6570,7 @@ msgstr "您不能更改已经有答案的问题的问题类型！"
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid "You cannot delete a default question."
-msgstr ""
+msgstr "您不能删除默认问题。"
 
 #. module: event
 #. odoo-python
@@ -5723,7 +6578,7 @@ msgstr ""
 msgid ""
 "You cannot delete a question that has already been answered by attendees. "
 "You can archive it instead."
-msgstr ""
+msgstr "您不能删除已有参会者回答的问题。您可以改为将其归档。"
 
 #. module: event
 #. odoo-python
@@ -5741,13 +6596,6 @@ msgstr "您为{{ object.event_id.name }}的徽标。"
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at {{ object.event_id.name }}"
 msgstr "您在{{ object.event_id.name }}的注册情况"
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
-msgid ""
-"class=\"px-2 py-1 d-inline-block bg-200 text-black m-1 "
-"o_event_foldable_badge_answer\""
-msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form

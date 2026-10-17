@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 13:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-4/"
@@ -570,6 +570,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Bấm \"Xác nhận\" sẽ xác nhận khoản thanh toán."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "A customer is required to use the payment method %s."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -1611,12 +1617,12 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "Dòng sao kê ngân hàng"
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_line_ids
-msgid "Bank Statement Lines"
+msgid "Bank Transactions"
 msgstr ""
 
 #. module: point_of_sale
@@ -2805,12 +2811,6 @@ msgstr "Tỷ giá hối đoái"
 msgid "Conversion rate from company currency to order currency."
 msgstr ""
 "Tỷ giá hối đoái giữa đơn vị tiền tệ công ty với đơn vị tiền tệ đơn hàng."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Convert POS Order to Invoice"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__correction_move_ids
@@ -5106,19 +5106,11 @@ msgid ""
 "Defines the journal where to book the accumulated payments (or individual "
 "payment if Identify Customer is true) after closing the session.\n"
 "For cash journal, we directly write to the default account in the journal "
-"via statement lines.\n"
+"via bank transactions.\n"
 "For bank journal, we write to the outstanding account specified in this "
 "payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
-"Để trống để sử dụng tài khoản phải thu của khách hàng.\n"
-"Xác định sổ nhật ký nơi vào sổ các khoản thanh toán lũy kế (hoặc thanh toán "
-"đơn lẻ nếu Định danh khách hàng là đúng) sau khi đóng phiên.\n"
-"Đối với sổ nhật ký tiền mặt, chúng tôi ghi trực tiếp vào tài khoản mặc định "
-"trên sổ kế toán thông qua chi tiết sao kê.\n"
-"Đối với sổ nhật ký ngân hàng, chúng tôi ghi vào tài khoản chưa thanh toán "
-"được chỉ định trong phương thức thanh toán này.\n"
-"Chỉ cho phép sổ nhật ký tiền mặt và ngân hàng."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -6905,6 +6897,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
 msgid "Parent Category"
 msgstr "Danh mục chính"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Partial reversal of %s for PoS Order invoicing"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -9390,6 +9388,12 @@ msgid "Some orders are already being invoiced. Please try again later."
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Some orders are not globally invoiced."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -11224,6 +11228,11 @@ msgid "VAT"
 msgstr "Mã số thuế"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "VAT:"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Validate"
@@ -12105,9 +12114,21 @@ msgid "open orders planned for later."
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "order"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "order(s) for the next few days:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "orders"
 msgstr ""
 
 #. module: point_of_sale
@@ -12185,6 +12206,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "Dòng sao kê ngân hàng"
+
+#~ msgid ""
+#~ "Leave empty to use the receivable account of customer.\n"
+#~ "Defines the journal where to book the accumulated payments (or individual "
+#~ "payment if Identify Customer is true) after closing the session.\n"
+#~ "For cash journal, we directly write to the default account in the journal "
+#~ "via statement lines.\n"
+#~ "For bank journal, we write to the outstanding account specified in this "
+#~ "payment method.\n"
+#~ "Only cash and bank journals are allowed."
+#~ msgstr ""
+#~ "Để trống để sử dụng tài khoản phải thu của khách hàng.\n"
+#~ "Xác định sổ nhật ký nơi vào sổ các khoản thanh toán lũy kế (hoặc thanh "
+#~ "toán đơn lẻ nếu Định danh khách hàng là đúng) sau khi đóng phiên.\n"
+#~ "Đối với sổ nhật ký tiền mặt, chúng tôi ghi trực tiếp vào tài khoản mặc "
+#~ "định trên sổ kế toán thông qua chi tiết sao kê.\n"
+#~ "Đối với sổ nhật ký ngân hàng, chúng tôi ghi vào tài khoản chưa thanh toán "
+#~ "được chỉ định trong phương thức thanh toán này.\n"
+#~ "Chỉ cho phép sổ nhật ký tiền mặt và ngân hàng."
 
 #~ msgid ""
 #~ "Whenever you close a session, one entry is generated in the following "

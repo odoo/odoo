@@ -4,15 +4,16 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 17:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/stock_delivery/zh_Hans/>\n"
+"projects/odoo-20/stock_delivery/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,11 @@ msgid ""
 "When creating invoices from picking, the system is able to add and compute "
 "the shipping line.\n"
 msgstr ""
+"\n"
+"允许您在拣货单中添加交货方式。\n"
+"===============================================\n"
+"\n"
+"从拣货单创建发票时，系统能够添加并计算运费明细行。\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -41,17 +47,17 @@ msgstr "%(name)s（预计成本：%(cost)s）"
 #. odoo-python
 #: code:addons/stock_delivery/wizard/stock_package_label_layout.py:0
 msgid "%(weight_name)s: %(weight)s %(uom)s"
-msgstr ""
+msgstr "%(weight_name)s：%(weight)s %(uom)s"
 
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_docs
 msgid "'Shipping-Document-%s' % object.name"
-msgstr ""
+msgstr "'运输单据-%s' % object.name"
 
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_labels
 msgid "'Shipping-Label-%s' % object.name"
-msgstr ""
+msgstr "'运输标签-%s' % object.name"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_package_view_form
@@ -62,25 +68,25 @@ msgstr "（合计:"
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
 msgid "1. Download and print the Return label and place it in your package."
-msgstr ""
+msgstr "1. 下载并打印退货标签，将其放入您的包裹中。"
 
 #. module: stock_delivery
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_label_info.xml:0
 msgid "2. Download and print the Shipping label and place it on your package."
-msgstr ""
+msgstr "2. 下载并打印运输标签，将其贴在您的包裹上。"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid ""
 "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configure Carrier Labels"
-msgstr ""
+msgstr "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>配置承运商标签"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid ""
 "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configure Export Documents"
-msgstr ""
+msgstr "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>配置出口单据"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
@@ -144,7 +150,7 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "A payment totaling"
-msgstr ""
+msgstr "需要收取的款项合计"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_max_weight
@@ -153,52 +159,54 @@ msgid ""
 "weight if the transfer is added to it.\n"
 "Leave this value as '0' if no weight limit."
 msgstr ""
+"如果加入某调拨单后批次会超出此重量，则该调拨单不会被自动加入该批次。\n"
+"如果没有重量限制，请将此值保留为“0”。"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
 msgid "Action while validating Delivery Orders."
-msgstr ""
+msgstr "验证送货单时执行的操作。"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
 msgid "Allowed Carrier"
-msgstr ""
+msgstr "允许的承运商"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__amount_to_collect
 msgid "Amount To Collect"
-msgstr ""
+msgstr "应收金额"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Delivery Methods"
-msgstr ""
+msgstr "适用于交货方式"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
 msgid "Auto Print Carrier Labels"
-msgstr ""
+msgstr "自动打印承运商标签"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__auto_print_export_documents
 msgid "Auto Print Export Documents"
-msgstr ""
+msgstr "自动打印出口单据"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_group_by_carrier
 msgid "Automatically group batches by carriers"
-msgstr ""
+msgstr "按承运商自动分组批次"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
 msgid ""
 "Automatically print the carrier labels of the picking when they are created."
-msgstr ""
+msgstr "创建拣货单时自动打印其承运商标签。"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_export_documents
@@ -206,12 +214,12 @@ msgid ""
 "Automatically print the export documents of the picking when they are "
 "created. Availability of export documents depends on the carrier and the "
 "destination."
-msgstr ""
+msgstr "创建拣货单时自动打印其出口单据。出口单据是否可用取决于承运商和目的地。"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_batch
 msgid "Batch Transfer"
-msgstr ""
+msgstr "批次调拨"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
@@ -243,12 +251,12 @@ msgstr "承运商代码"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Carrier Labels"
-msgstr ""
+msgstr "承运商标签"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__package_carrier_type
 msgid "Carrier Type"
-msgstr ""
+msgstr "承运商类型"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
@@ -258,19 +266,19 @@ msgstr "承运商名称"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "选择表格布局来打印标签"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Collect Payment"
-msgstr ""
+msgstr "收取款项"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/ir_actions_report.py:0
 msgid "Configure a printer to print this report: '%s'"
-msgstr ""
+msgstr "请配置打印机以打印此报表：“%s”"
 
 #. module: stock_delivery
 #. odoo-python
@@ -278,17 +286,17 @@ msgstr ""
 msgid ""
 "Configure the carrier to generate labels in PDF format, or use a ZPL/ePOS "
 "printer to print %s from the chatter."
-msgstr ""
+msgstr "请将承运商配置为生成 PDF 格式的标签，或使用 ZPL/ePOS 打印机从交谈区打印 %s。"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "Confirm Payment"
-msgstr ""
+msgstr "确认付款"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "联系人"
 
 #. module: stock_delivery
 #. odoo-python
@@ -304,32 +312,32 @@ msgstr "创建客户"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_date
 msgid "Created on"
-msgstr ""
+msgstr "创建日期"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "币别"
 
 #. module: stock_delivery
 #: model:ir.module.module,shortdesc:base.module_stock_delivery
 msgid "Delivery - Stock"
-msgstr ""
+msgstr "送货 - 库存"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
 msgid "Delivery Method"
-msgstr ""
+msgstr "交货方式"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Method Selection Wizard"
-msgstr ""
+msgstr "交货方式选择向导"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
@@ -381,7 +389,7 @@ msgstr "显示运单追踪链接"
 #. odoo-javascript
 #: code:addons/stock_delivery/static/src/return_order_dialog/return_order_dialog.js:0
 msgid "Download Shipping Label"
-msgstr ""
+msgstr "下载运输标签"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
@@ -409,12 +417,12 @@ msgstr "例外："
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Export Documents"
-msgstr ""
+msgstr "出口单据"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "Export documents"
-msgstr ""
+msgstr "出口单据"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -450,12 +458,12 @@ msgstr "ID"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "集成级别"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "库存路线"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__invoice_policy
@@ -470,17 +478,17 @@ msgstr "是退回拣货"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新人"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "上次更新日期"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.manage_printers_action
 msgid "Manage Printers"
-msgstr ""
+msgstr "管理打印机"
 
 #. module: stock_delivery
 #. odoo-python
@@ -491,7 +499,7 @@ msgstr "可能需要手动操作。"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__batch_max_weight
 msgid "Maximum weight"
-msgstr ""
+msgstr "最大重量"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -506,7 +514,7 @@ msgstr "OK"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__order_ids
 msgid "Order"
-msgstr ""
+msgstr "订单"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
@@ -529,23 +537,23 @@ msgstr "包裹太重！"
 #: model:ir.model,name:stock_delivery.model_pay_on_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "Pay on Delivery"
-msgstr ""
+msgstr "货到付款"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "拣货类型"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_res_partner__pickup_location_data
 #: model:ir.model.fields,field_description:stock_delivery.field_res_users__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "取件点数据"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_label_layout
 msgid "Prepare Package Labels"
-msgstr ""
+msgstr "准备包裹标签"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -565,7 +573,7 @@ msgstr "产品移动（库存移动行）"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "产品变体"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -575,7 +583,7 @@ msgstr "服务提供商"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_put_in_pack
 msgid "Put In Pack Wizard"
-msgstr ""
+msgstr "装箱向导"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
@@ -585,17 +593,17 @@ msgstr "实际运费"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "报表操作"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.cached_printers_section
 msgid "Reporting"
-msgstr ""
+msgstr "报表"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.cached_printers_action
 msgid "Reset Linked Printers"
-msgstr ""
+msgstr "重置链接的打印机"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
@@ -656,12 +664,12 @@ msgstr "显示的客户运费"
 #. module: stock_delivery
 #: model:ir.actions.report,name:stock_delivery.action_report_shipping_docs
 msgid "Shipping Documents"
-msgstr ""
+msgstr "运输单据"
 
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.open_export_docs_report
 msgid "Shipping Documents Report"
-msgstr ""
+msgstr "运输单据报表"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -671,12 +679,12 @@ msgstr "发货信息"
 #. module: stock_delivery
 #: model:ir.actions.report,name:stock_delivery.action_report_shipping_labels
 msgid "Shipping Labels"
-msgstr ""
+msgstr "运输标签"
 
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.open_shipping_labels_report
 msgid "Shipping Labels Report"
-msgstr ""
+msgstr "运输标签报表"
 
 #. module: stock_delivery
 #. odoo-python
@@ -717,7 +725,7 @@ msgstr "指示重量是否为公斤（即磅）的技术字段"
 msgid ""
 "Technical field: information needed by delivery providers in case of pickup "
 "point addresses."
-msgstr ""
+msgstr "技术字段：取件点地址情况下物流服务商所需的信息。"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -773,6 +781,8 @@ msgid ""
 "still due are in different currencies. Validate the transfers one currency "
 "at a time to collect them."
 msgstr ""
+"这些调拨单对应的订单采用货到付款，且尚欠金额使用不同币别。请按币别逐一验证调"
+"拨单以收取款项。"
 
 #. module: stock_delivery
 #. odoo-python
@@ -780,7 +790,7 @@ msgstr ""
 msgid ""
 "This action is meant to print %s attachments from the chatter: none was "
 "found."
-msgstr ""
+msgstr "此操作用于从交谈区打印 %s 附件，但未找到任何附件。"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_package__weight
@@ -905,7 +915,7 @@ msgstr "^FS"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "and"
-msgstr ""
+msgstr "和"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
@@ -915,13 +925,16 @@ msgid ""
 "configure a printer on the\n"
 "                    report form.<br/>"
 msgstr ""
+"在验证拣货单时会上传到交谈区。如果您希望在验证时\n"
+"                    自动打印它们，需要在\n"
+"                    报表表单上配置打印机。<br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid ""
 "must be collected for\n"
 "                the delivery of the following orders:"
-msgstr ""
+msgstr "，用于以下订单的送货："
 
 #~ msgid "<span>Shipping Weight: </span>"
 #~ msgstr "<span>‎运输重量：‎</span>"

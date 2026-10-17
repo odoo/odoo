@@ -8,15 +8,16 @@
 # digitalliuzg8888, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 16:21+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/google_calendar/zh_Hans/>\n"
+"projects/odoo-20/google_calendar/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,11 +62,14 @@ msgid ""
 "                                When checked, Google Calendar will not "
 "automatically add a video call link to events without a location."
 msgstr ""
+"<i class=\"oi oi-filled oi-sm me-1\" data-icon=\"info\"/>\n"
+"                                勾选后，Google 日历不会自动为没有地点的事件添"
+"加视频通话链接。"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_user__access_role
 msgid "Access Role"
-msgstr ""
+msgstr "访问角色"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__active
@@ -107,13 +111,13 @@ msgstr "日历事件"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_user
 msgid "Calendar User Manager"
-msgstr ""
+msgstr "日历用户管理器"
 
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_model.js:0
 msgid "Choose which ones to synchronize"
-msgstr ""
+msgstr "选择要同步的项"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
@@ -155,7 +159,7 @@ msgstr "配置"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
 msgid "Continue"
-msgstr ""
+msgstr "继续"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_uid
@@ -170,22 +174,22 @@ msgstr "创建日期"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_events
 msgid "Delete synced events from Odoo"
-msgstr ""
+msgstr "从 Odoo 删除已同步的事件"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Disable automatic meeting links"
-msgstr ""
+msgstr "禁用自动会议链接"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_google_disable_auto_videocall_link
 msgid "Disable videocall generation"
-msgstr ""
+msgstr "禁用视频通话生成"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 msgid "Disconnect Google Calendar"
-msgstr ""
+msgstr "断开 Google 日历连接"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_alarm_manager__display_name
@@ -222,12 +226,12 @@ msgstr "事件重复规则"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_user__is_filter_checked
 msgid "Filter Enabled"
-msgstr ""
+msgstr "已启用筛选"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__calendar_user__access_role__freebusyreader
 msgid "Free Busy Reader"
-msgstr ""
+msgstr "空闲/忙碌查看者"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -250,7 +254,7 @@ msgstr "‎谷歌日历帐户重置‎"
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_account_email
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_account_email
 msgid "Google Calendar Email"
-msgstr ""
+msgstr "Google 日历电子邮件"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
@@ -273,7 +277,7 @@ msgstr "谷歌 日历：同步"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_event_sync
 msgid "Google Event Sync"
-msgstr ""
+msgstr "Google 事件同步"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__calendar_event__videocall_source__google_meet
@@ -287,7 +291,7 @@ msgstr "谷歌会议"
 #: model_terms:ir.ui.view,arch_db:google_calendar.calendar_calendar_view_list_inherit_google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.calendar_user_view_form_inherit_google_calendar
 msgid "Google Sync"
-msgstr ""
+msgstr "Google 同步"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_sync_paused
@@ -343,14 +347,14 @@ msgstr "表示与 谷歌 日历的同步是否暂停。"
 #. odoo-python
 #: code:addons/google_calendar/models/google_event_sync.py:0
 msgid "It will not be synced as long as it is not updated."
-msgstr ""
+msgstr "只要未更新，就不会被同步。"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__last_google_calendar_sync_path
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__last_google_calendar_sync_path
 #: model:ir.model.fields,field_description:google_calendar.field_google_event_sync__last_google_calendar_sync_path
 msgid "Last Google Calendar Sync Path"
-msgstr ""
+msgstr "上次 Google 日历同步路径"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
@@ -374,19 +378,19 @@ msgstr "‎需要同步‎"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_calendar__is_import_pending
 msgid "Needs Import"
-msgstr ""
+msgstr "需要导入"
 
 #. module: google_calendar
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_model.js:0
 msgid "New Google calendars detected"
-msgstr ""
+msgstr "检测到新的 Google 日历"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_sync_token
 msgid "Next Calendar Sync Token"
-msgstr ""
+msgstr "下一个日历同步令牌"
 
 #. module: google_calendar
 #. odoo-python
@@ -398,7 +402,7 @@ msgstr "通知"
 #. odoo-python
 #: code:addons/google_calendar/utils/google_api_resource.py:0
 msgid "Only %s or iterable of dict are supported"
-msgstr ""
+msgstr "仅支持 %s 或可迭代的字典"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
@@ -408,7 +412,7 @@ msgstr "暂停同步"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__calendar_user__access_role__reader
 msgid "Reader"
-msgstr ""
+msgstr "读者"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
@@ -424,13 +428,13 @@ msgstr "‎重置帐户‎"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_user__is_filter_active
 msgid "Shown in Filters List"
-msgstr ""
+msgstr "显示在筛选列表中"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_calendar__google_sync_token
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_user__google_sync_token
 msgid "Sync Token"
-msgstr ""
+msgstr "同步令牌"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_sync
@@ -465,14 +469,14 @@ msgstr "以下事件无法与 谷歌 日历同步。"
 msgid ""
 "This event has more than 5 reminders, only the first 5 will be synced to "
 "Google Calendar."
-msgstr ""
+msgstr "此事件有超过 5 个提醒，将只把前 5 个同步到 Google 日历。"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_events
 msgid ""
 "This will affect events in calendars you own, and any other events you are "
 "organizing."
-msgstr ""
+msgstr "这会影响您拥有的日历中的事件，以及您正在组织的其他事件。"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
@@ -489,7 +493,7 @@ msgstr "用户"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_calendar
 msgid "User Calendar"
-msgstr ""
+msgstr "用户日历"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users_settings
@@ -510,7 +514,7 @@ msgstr "视频呼叫源"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
 msgid "What should happen to previously synced events?"
-msgstr ""
+msgstr "之前已同步的事件应如何处理？"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -521,6 +525,9 @@ msgid ""
 "If you synchronized this calendar with Google, it will not be deleted from "
 "your Google Calendar."
 msgstr ""
+"您即将从 Odoo 中删除此日历。\n"
+"\n"
+"如果您将此日历与 Google 进行了同步，它不会从您的 Google 日历中删除。"
 
 #. module: google_calendar
 #. odoo-python

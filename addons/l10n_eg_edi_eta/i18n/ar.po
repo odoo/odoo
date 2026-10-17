@@ -6,14 +6,15 @@
 # Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 18:19+0000\n"
-"PO-Revision-Date: 2026-08-31 15:08+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-13 06:33+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/"
 "l10n_eg_edi_eta/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +35,11 @@ msgid ""
 "try again.\n"
 "                    "
 msgstr ""
+"\n"
+"                        يتجاوز وصف المنتج الحد الأقصى المسموح به في أنظمة ETA "
+"البالغ 500 حرف (بما في ذلك المسافات) لبعض\n"
+"                        بنود الفاتورة. يرجى تقصير الوصف والمحاولة مرة أخرى.\n"
+"                    "
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
@@ -45,6 +51,11 @@ msgid ""
 "                    [%(code)s] %(message)s %(details)s\n"
 "                "
 msgstr ""
+"\n"
+"                    خطأ: تم رفض الفاتورة من قِبل ETA\n"
+"\n"
+"                    [%(code)s] %(message)s %(details)s\n"
+"                "
 
 #. module: l10n_eg_edi_eta
 #: model:ir.module.module,description:base.module_l10n_eg_edi_eta
@@ -55,11 +66,16 @@ msgid ""
 "Integrates with the ETA portal to automatically send and sign the Invoices "
 "to the Tax Authority.\n"
 msgstr ""
+"\n"
+"تكامل فواتير مصلحة الضرائب المصرية\n"
+"==============================================================================\n"
+"تتكامل مع بوابة مصلحة الضرائب المصرية لإرسال الفواتير وتوقيعها تلقائياً إلى "
+"مصلحة الضرائب.\n"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
 msgid "1. There are three modes available:"
-msgstr ""
+msgstr "1. هناك ثلاثة أوضاع متاحة:"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
@@ -70,6 +86,10 @@ msgid ""
 "                                set your ETA Branch, ETA Branch ID, and ETA "
 "Activity Code."
 msgstr ""
+"2. بمجرد اختيار الوضع المناسب، توجه إلى قسم <span class=\"o_form_label\">"
+"المحاسبة > التهيئات > دفاتر اليومية > النوع=المبيعات </span>\n"
+"                                وقم بتعيين فرع مصلحة الضرائب المصرية (ETA)، "
+"معرّف الفرع، ورقم كود النشاط الخاص بك."
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.product_normal_form_view_inherit_l10n_eg_eta_edi
@@ -78,6 +98,8 @@ msgid ""
 "<i class=\"oi text-muted me-1\" data-icon=\"arrow_forward\"/>\n"
 "                                    Check on the ETA portal"
 msgstr ""
+"<i class=\"oi text-muted me-1\" data-icon=\"arrow_forward\"/>\n"
+"                                    تحقق من بوابة ETA"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
@@ -85,6 +107,8 @@ msgid ""
 "<span class=\"o_form_label\">Demo</span> - Internal Odoo validations only "
 "(No credentials or ETA connection required)"
 msgstr ""
+"<span class=\"o_form_label\">عرض توضيحي</span> - عمليات التحقق الداخلية في "
+"أودو فقط (لا يلزم إدخال بيانات اعتماد أو اتصال ETA)"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
@@ -92,6 +116,8 @@ msgid ""
 "<span class=\"o_form_label\">Pre-production (Testing)</span> - Pre-"
 "production credentials needed to connect to ETA testing environment"
 msgstr ""
+"<span class=\"o_form_label\">مرحلة ما قبل الإنتاج (الاختبار)</span> - بيانات "
+"اعتماد مرحلة ما قبل الإنتاج اللازمة للاتصال ببيئة ETA التجريبية"
 
 #. module: l10n_eg_edi_eta
 #: model_terms:ir.ui.view,arch_db:l10n_eg_edi_eta.res_config_settings_view_form
@@ -224,12 +250,12 @@ msgstr "صندوق"
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_journal__l10n_eg_branch_id
 msgid "Branch"
-msgstr ""
+msgstr "الفرع"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_account_journal__l10n_eg_branch_identifier
 msgid "Branch ID"
-msgstr ""
+msgstr "معرف الفرع"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_res_company__l10n_eg_building_no
@@ -378,7 +404,7 @@ msgstr ""
 #. module: l10n_eg_edi_eta
 #: model:ir.model,website_form_label:l10n_eg_edi_eta.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Create a Customer"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,field_description:l10n_eg_edi_eta.field_l10n_eg_edi_activity_type__create_uid

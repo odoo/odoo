@@ -8,15 +8,16 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 14:10+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"POT-Creation-Date: 2026-10-16 17:42+0000\n"
+"PO-Revision-Date: 2026-10-11 13:33+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/pos_hr/zh_Hans/>\n"
+"projects/odoo-20/pos_hr/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,18 +34,21 @@ msgid ""
 "The actual till still requires one user but an unlimited number of employees "
 "can log on to that till and process sales.\n"
 msgstr ""
+"\n"
+"本模块允许员工（而非用户）使用条码、PIN 码或两者登录销售点应用。\n"
+"实际收银机仍需一名用户，但可以有无限数量的员工登录该收银机并处理销售。\n"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_manager_employee_ids
 msgid " Full access, including reporting, cash management, and session close."
-msgstr ""
+msgstr " 完全访问权限，包括报表、现金管理和会话关闭。"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_cashier_employee_ids
 msgid ""
 " Full register access. Can process sales, discounts, refunds, and close out "
 "payments."
-msgstr ""
+msgstr " 完全收银机访问权限。可处理销售、折扣、退款并结清付款。"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -68,8 +72,8 @@ msgstr "所有已登录本次会话的员工"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_account_bank_statement_line
-msgid "Bank Statement Line"
-msgstr "银行对账单行"
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__restrictive_employee_ids
@@ -77,19 +81,19 @@ msgstr "银行对账单行"
 msgid ""
 "Can process sales and close payments, but not apply discounts, refunds, or "
 "cancel orders."
-msgstr ""
+msgstr "可处理销售和结清付款，但不能应用折扣、退款或取消订单。"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__supervised_employee_ids
 msgid ""
 "Can process sales, but a higher level must approve before payment is closed"
-msgstr ""
+msgstr "可处理销售，但付款结清前需由上级审批"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_supervised_employee_ids
 msgid ""
 "Can process sales, but a higher level must approve before payment is closed."
-msgstr ""
+msgstr "可处理销售，但付款结清前需由上级审批。"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
@@ -133,7 +137,7 @@ msgstr "配置设置"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "联系人"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -144,7 +148,7 @@ msgstr "计数"
 #. module: pos_hr
 #: model:ir.model,website_form_label:pos_hr.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "创建客户"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -203,25 +207,25 @@ msgstr "员工"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__cashier_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_cashier_employee_ids
 msgid "Employees with cashier level access"
-msgstr ""
+msgstr "具有收银员级权限的员工"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__manager_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_manager_employee_ids
 msgid "Employees with manager level access"
-msgstr ""
+msgstr "具有经理级权限的员工"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__restrictive_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_restrictive_employee_ids
 msgid "Employees with restrictive level access"
-msgstr ""
+msgstr "具有受限级权限的员工"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__supervised_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_supervised_employee_ids
 msgid "Employees with supervised level access"
-msgstr ""
+msgstr "具有受监督级权限的员工"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -232,14 +236,14 @@ msgstr "输入您的 PIN 码"
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__manager_employee_ids
 msgid "Full access, including reporting, cash management, and session close."
-msgstr ""
+msgstr "完全访问权限，包括报表、现金管理和会话关闭。"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__cashier_employee_ids
 msgid ""
 "Full register access. Can process sales, discounts, refunds, and close out "
 "payments."
-msgstr ""
+msgstr "完全收银机访问权限。可处理销售、折扣、退款并结清付款。"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__id
@@ -261,7 +265,7 @@ msgstr "ID"
 #. module: pos_hr
 #: model:ir.module.module,summary:base.module_pos_hr
 msgid "Link module between Point of Sale and HR"
-msgstr ""
+msgstr "销售点与人力资源之间的链接模块"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -274,13 +278,13 @@ msgstr "锁"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__logged_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_pos_session__logged_employee_ids
 msgid "Logged In Cashiers"
-msgstr ""
+msgstr "已登录的收银员"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Manager"
-msgstr ""
+msgstr "经理"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -336,7 +340,7 @@ msgstr "找不到 PIN 个人密码"
 #. module: pos_hr
 #: model:ir.module.module,shortdesc:base.module_pos_hr
 msgid "POS - HR"
-msgstr ""
+msgstr "POS - 人力资源"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -394,7 +398,7 @@ msgstr "产品变体"
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Restrictive"
-msgstr ""
+msgstr "受限"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -417,7 +421,7 @@ msgstr "单个员工的会话销售详细信息"
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Supervised"
-msgstr ""
+msgstr "受监督"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
@@ -462,6 +466,11 @@ msgid ""
 "Close the session(s) first:\n"
 "Employee: %(employee)s - PoS Config(s): %(config_list)s"
 msgstr ""
+"无法删除可能正被活动 PoS 会话使用的员工。请先关闭相关会话：\n"
+"员工：%(employee)s - PoS 配置：%(config_list)s"
+
+#~ msgid "Bank Statement Line"
+#~ msgstr "银行对账单行"
 
 #~ msgid "Access Denied"
 #~ msgstr "访问被拒绝"

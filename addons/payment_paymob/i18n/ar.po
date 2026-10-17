@@ -2,15 +2,15 @@
 # This file contains the translation of the following modules:
 # * payment_paymob
 #
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:44+0000\n"
-"PO-Revision-Date: 2026-10-08 14:02+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-10-12 10:36+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/"
 "payment_paymob/ar/>\n"
 "Language: ar\n"
@@ -28,7 +28,6 @@ msgstr "مفتاح الواجهة البرمجية للتطبيق"
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
-#, fuzzy
 msgid "Account Country"
 msgstr "بلد الحساب"
 
@@ -59,9 +58,8 @@ msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__code
-#, fuzzy
 msgid "Code"
-msgstr "رمز "
+msgstr "الكود"
 
 #. module: payment_paymob
 #: model:payment.method,name:payment_paymob.payment_method_contact
@@ -71,7 +69,6 @@ msgstr ""
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
-#, fuzzy
 msgid "Could not generate a new access token."
 msgstr "تعذر إنشاء رمز وصول جديد."
 
@@ -88,7 +85,6 @@ msgstr ""
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
-#, fuzzy
 msgid "HMAC Key"
 msgstr "مفتاح HMAC"
 
@@ -111,7 +107,7 @@ msgstr ""
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
 msgid "Make the payment methods compatible with the Paymob portal."
-msgstr ""
+msgstr "اجعل طرق الدفع متوافقة مع بوابة Paymob."
 
 #. module: payment_paymob
 #: model:payment.method,name:payment_paymob.payment_method_mastercard
@@ -127,7 +123,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
 msgid "Not all enabled payment methods were found on your account."
-msgstr ""
+msgstr "لم يتم العثور على جميع طرق الدفع الممكّنة في حسابك."
 
 #. module: payment_paymob
 #: model:payment.method,name:payment_paymob.payment_method_omannet
@@ -138,7 +134,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
 msgid "Only currencies supported by Paymob can be selected."
-msgstr ""
+msgstr "لا يمكن اختيار سوى العملات التي يدعمها Paymob."
 
 #. module: payment_paymob
 #. odoo-python
@@ -148,9 +144,8 @@ msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model,name:payment_paymob.model_payment_provider
-#, fuzzy
 msgid "Payment Provider"
-msgstr "مزود الدفع "
+msgstr "مزود خدمة الدفع"
 
 #. module: payment_paymob
 #: model:ir.module.module,shortdesc:base.module_payment_paymob
@@ -159,7 +154,6 @@ msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model,name:payment_paymob.model_payment_transaction
-#, fuzzy
 msgid "Payment Transaction"
 msgstr "معاملة السداد"
 
@@ -167,44 +161,43 @@ msgstr "معاملة السداد"
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
 msgid "Payment methods have been successfully set up!"
-msgstr ""
+msgstr "تم إعداد طرق الدفع بنجاح!"
 
 #. module: payment_paymob
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
 msgid "Payment methods not found"
-msgstr ""
+msgstr "لم يتم العثور على طرق الدفع"
 
 #. module: payment_paymob
 #: model:ir.model.fields.selection,name:payment_paymob.selection__payment_provider__code__paymob
-#, fuzzy
 msgid "Paymob"
 msgstr "Paymob"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_api_key
 msgid "Paymob API Key"
-msgstr ""
+msgstr "مفتاح الواجهة البرمجية لـ Paymob"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_account_country_id
 msgid "Paymob Account Country"
-msgstr ""
+msgstr "بلد حساب Paymob"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_hmac_key
 msgid "Paymob HMAC Key"
-msgstr ""
+msgstr "مفتاح HMAC لـ Paymob"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_public_key
 msgid "Paymob Public Key"
-msgstr ""
+msgstr "المفتاح العام لـ Paymob"
 
 #. module: payment_paymob
 #: model:ir.model.fields,field_description:payment_paymob.field_payment_provider__paymob_secret_key
 msgid "Paymob Secret Key"
-msgstr ""
+msgstr "المفتاح السري لـ Paymob"
 
 #. module: payment_paymob
 #: model:payment.method,name:payment_paymob.payment_method_premium_card
@@ -213,9 +206,8 @@ msgstr ""
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
-#, fuzzy
 msgid "Public Key"
-msgstr "مفتاح عام"
+msgstr "المفتاح العام"
 
 #. module: payment_paymob
 #. odoo-python
@@ -230,7 +222,6 @@ msgstr ""
 
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
-#, fuzzy
 msgid "Secret Key"
 msgstr "المفتاح السري"
 
@@ -243,7 +234,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
 msgid "Successfully synchronized with Paymob"
-msgstr ""
+msgstr "تمت المزامنة بنجاح مع Paymob"
 
 #. module: payment_paymob
 #: model:payment.method,name:payment_paymob.payment_method_sympl
@@ -253,7 +244,7 @@ msgstr ""
 #. module: payment_paymob
 #: model_terms:ir.ui.view,arch_db:payment_paymob.payment_provider_form
 msgid "Synchronize With Paymob"
-msgstr ""
+msgstr "المزامنة مع Paymob"
 
 #. module: payment_paymob
 #: model:payment.method,name:payment_paymob.payment_method_tabby
@@ -273,7 +264,6 @@ msgstr ""
 
 #. module: payment_paymob
 #: model:ir.model.fields,help:payment_paymob.field_payment_provider__paymob_account_country_id
-#, fuzzy
 msgid ""
 "The country of the Paymob account. The currency will be updated to match the "
 "country of the Paymob account."
@@ -285,13 +275,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_paymob/models/payment_provider.py:0
 msgid "The following fields must be filled: %(fields)s"
-msgstr ""
+msgstr "يجب ملء الحقول التالية: %(fields)s"
 
 #. module: payment_paymob
 #: model:ir.model.fields,help:payment_paymob.field_payment_provider__code
-#, fuzzy
 msgid "The technical code of this payment provider."
-msgstr "الكود التقني لمزود الدفع هذا. "
+msgstr "الكود التقني لمزود الدفع هذا."
 
 #. module: payment_paymob
 #: model:payment.method,name:payment_paymob.payment_method_visa

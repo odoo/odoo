@@ -38,11 +38,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 17:34+0000\n"
+"POT-Creation-Date: 2026-10-16 17:42+0000\n"
+"PO-Revision-Date: 2026-10-14 15:34+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/sale/"
-"tr/>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/sale/tr/"
+">\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1141,6 +1141,9 @@ msgid ""
 "yet. With perpetual valuation, it counterbalances the stock valuation "
 "account at closing."
 msgstr ""
+"Teslim edilen ancak henüz faturalandırılmamış malların birikmiş değerini "
+"tutan hesap. Sürekli değerleme yönteminde, kapanışta stok değerleme hesabını "
+"dengeler."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_invoiced_not_delivered_id
@@ -1149,6 +1152,9 @@ msgid ""
 "yet. With perpetual valuation, it counterbalances the stock valuation "
 "account at closing."
 msgstr ""
+"Teslim edilen ancak henüz faturalandırılmamış malların birikmiş değerini "
+"tutan hesap. Sürekli değerleme yönteminde, kapanışta stok değerleme hesabını "
+"dengeler."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__accrual_move_ids
@@ -1264,7 +1270,6 @@ msgstr "Tablodan siparişe birkaç varyant ekleme"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-#, fuzzy
 msgid "Add to order"
 msgstr "Siparişe ekleme yapın"
 
@@ -2924,7 +2929,6 @@ msgstr "Siparişte"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-#, fuzzy
 msgid "Included"
 msgstr "Dahil"
 
@@ -3313,6 +3317,11 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Line"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__line_number_offset
+msgid "Line Number Offset"
 msgstr ""
 
 #. module: sale
@@ -4481,7 +4490,6 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
-#, fuzzy
 msgid "Remove"
 msgstr "Kaldır"
 
@@ -6096,16 +6104,6 @@ msgstr "Onaylanmış bir siparişin fiyat listesi değiştirilemez!"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/product_product.py:0
-#: code:addons/sale/models/product_template.py:0
-msgid ""
-"You cannot change the product's type because it is already used in sales "
-"orders."
-msgstr ""
-"Satış siparişlerinde zaten kullanıldığı için ürünün türünü değiştiremezsiniz."
-
-#. module: sale
-#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
@@ -6153,6 +6151,16 @@ msgstr ""
 "hizmet olsun."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+msgid ""
+"You should not change the product type because this product is already used "
+"in sales orders. Changing it may affect how the related order lines are "
+"delivered."
+msgstr ""
+
+#. module: sale
 #: model:portal.entry,name:sale.portal_your_orders
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
@@ -6161,7 +6169,6 @@ msgstr "Siparişiniz"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
-#, fuzzy
 msgid "Your browser does not support iframe."
 msgstr "Tarayıcınız iframe desteklemiyor."
 
@@ -6316,6 +6323,13 @@ msgid ""
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+
+#~ msgid ""
+#~ "You cannot change the product's type because it is already used in sales "
+#~ "orders."
+#~ msgstr ""
+#~ "Satış siparişlerinde zaten kullanıldığı için ürünün türünü "
+#~ "değiştiremezsiniz."
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

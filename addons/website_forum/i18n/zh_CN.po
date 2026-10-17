@@ -10,15 +10,16 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:44+0000\n"
-"PO-Revision-Date: 2026-08-31 15:35+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 13:33+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/website_forum/zh_Hans/>\n"
+"projects/odoo-20/website_forum/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,8 @@ msgid ""
 "\n"
 "Ask questions, get answers, no distractions\n"
 msgstr ""
+"\n"
+"提问、解答，专注无扰\n"
 
 #. module: website_forum
 #. odoo-javascript
@@ -193,7 +196,7 @@ msgstr "%d 积分被需要用于取消链接至帖子。"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "%d karma required to update a flagged post."
-msgstr ""
+msgstr "更新被举报的帖子需要 %d 积分。"
 
 #. module: website_forum
 #. odoo-python
@@ -211,19 +214,19 @@ msgstr "%d 积分被需要用于验证一个帖子。"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_comment.py:0
 msgid "%i karma required to comment."
-msgstr ""
+msgstr "发表评论需要 %i 积分。"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_comment.py:0
 msgid "%i karma required to delete a comment."
-msgstr ""
+msgstr "删除评论需要 %i 积分。"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_comment.py:0
 msgid "%i karma required to edit a comment."
-msgstr ""
+msgstr "编辑评论需要 %i 积分。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index_tags
@@ -435,7 +438,7 @@ msgstr "<i class=\"oi d-inline-block\" data-icon=\"east\"/> 前往论坛区"
 msgid ""
 "<i class=\"oi display-inline-block\" data-icon=\"east\"/> Return to "
 "questions list"
-msgstr ""
+msgstr "<i class=\"oi display-inline-block\" data-icon=\"east\"/> 返回问题列表"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post
@@ -481,7 +484,7 @@ msgstr "<i class=\"oi me-1\" data-icon=\"visibility\" title=\"Views\"/>"
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "<i class=\"oi me-2\" data-icon=\"keyboard_arrow_left\"/>Back to All Posts"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"keyboard_arrow_left\"/>返回所有帖子"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
@@ -530,7 +533,7 @@ msgstr "<i class=\"oi oi-filled\" data-icon=\"person\"/> 用户"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>Accept"
-msgstr ""
+msgstr "<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>接受"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -563,7 +566,7 @@ msgstr "<i class=\"oi oi-fw me-1\" data-icon=\"check\"/>尝试搜索一两个词
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"oi oi-fw me-1\" data-icon=\"close\"/>Reject"
-msgstr ""
+msgstr "<i class=\"oi oi-fw me-1\" data-icon=\"close\"/>拒绝"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
@@ -905,7 +908,7 @@ msgstr "全部"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/website_builder/forum_floating_snippets_plugin.js:0
 msgid "All Forums"
-msgstr ""
+msgstr "所有论坛"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_body
@@ -956,7 +959,7 @@ msgstr "回复被15个以上的人接受"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Answer converted to comment in \"%s\""
-msgstr ""
+msgstr "回答已在“%s”中转为评论"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_downvote
@@ -1293,13 +1296,13 @@ msgstr "能浏览"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_comment.py:0
 msgid "Cannot change the post of a comment."
-msgstr ""
+msgstr "无法更改评论所属的帖子。"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Cannot convert a question to a comment"
-msgstr ""
+msgstr "无法将问题转换为评论"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_retag
@@ -1310,7 +1313,7 @@ msgstr "改变问题标签"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Check edit button is there"
-msgstr ""
+msgstr "检查编辑按钮是否存在"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
@@ -1322,25 +1325,25 @@ msgstr "首席评论员"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click here to accept this answer."
-msgstr ""
+msgstr "点击此处接受此回答。"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click to post your answer."
-msgstr ""
+msgstr "点击发布你的回答。"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click to post your question."
-msgstr ""
+msgstr "点击发布你的问题。"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Click to reply."
-msgstr ""
+msgstr "点击回复。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_dropdown
@@ -1372,13 +1375,13 @@ msgstr "关闭帖子"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Close search bar"
-msgstr ""
+msgstr "关闭搜索栏"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Close this dialog."
-msgstr ""
+msgstr "关闭此对话框。"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
@@ -1447,7 +1450,7 @@ msgstr "评论员"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__comment_ids
 msgid "Comments"
-msgstr ""
+msgstr "评论"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
@@ -1479,7 +1482,7 @@ msgstr "内容"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date_content
 msgid "Content Updated on"
-msgstr ""
+msgstr "内容更新于"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_convert_all
@@ -1531,7 +1534,7 @@ msgstr "创建一个新的论坛文章"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Create a new post in this forum by clicking on the button."
-msgstr ""
+msgstr "点击按钮在此论坛中创建新帖子。"
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
@@ -1554,7 +1557,7 @@ msgstr "创建新标签"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
 msgid "Create option \""
-msgstr ""
+msgstr "创建选项“"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_32
@@ -1752,7 +1755,7 @@ msgstr "对冒犯内容给予差评"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Drag blocks here to add them on all forum"
-msgstr ""
+msgstr "将区块拖到此处，即可添加到所有论坛"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
@@ -1814,7 +1817,7 @@ msgstr "编辑工具：图像和链接"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "邮件会话"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2052,7 +2055,7 @@ msgstr "论坛帖子"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_comment
 msgid "Forum Post Comment"
-msgstr ""
+msgstr "论坛帖子评论"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action
@@ -2106,7 +2109,7 @@ msgstr "有人使用此标签时，接收通知"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Give your post title."
-msgstr ""
+msgstr "为你的帖子填写标题。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2183,12 +2186,12 @@ msgstr "专家（15）"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP 路由"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__can_access
 msgid "Has Access"
-msgstr ""
+msgstr "有权访问"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__uid_has_answered
@@ -2331,7 +2334,7 @@ msgstr "不适当和不可接受的言论"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Insert tags related to your question."
-msgstr ""
+msgstr "插入与你的问题相关的标签。"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
@@ -2485,7 +2488,7 @@ msgstr "列表"
 #. module: website_forum
 #: model:ir.module.module,summary:base.module_website_forum
 msgid "Manage a forum with FAQ and Q&A"
-msgstr ""
+msgstr "管理包含常见问题与问答的论坛"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
@@ -2511,7 +2514,7 @@ msgstr "标记为垃圾邮件"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
 msgid "Meet our community members"
-msgstr ""
+msgstr "认识我们的社区成员"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_error
@@ -2613,7 +2616,7 @@ msgstr "新的答案"
 #: model:mail.message.subtype,description:website_forum.mt_comment_new
 #: model:mail.message.subtype,name:website_forum.mt_comment_new
 msgid "New Comment"
-msgstr ""
+msgstr "新评论"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_forum_action_add
@@ -2638,7 +2641,7 @@ msgstr "新问题"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_comment.py:0
 msgid "New comment in %s"
-msgstr ""
+msgstr "%s 中的新评论"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__create_date_desc
@@ -2675,7 +2678,7 @@ msgstr "尚无帖文"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "No results."
-msgstr ""
+msgstr "没有结果。"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
@@ -2762,7 +2765,7 @@ msgstr "攻击性帖文"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 msgid "On average,"
-msgstr ""
+msgstr "平均而言，"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -2795,7 +2798,7 @@ msgstr "平面内容"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/website_forum_tags_wrapper.xml:0
 msgid "Please enter 2 or more characters"
-msgstr ""
+msgstr "请输入 2 个或更多字符"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_model_nav
@@ -2953,13 +2956,13 @@ msgstr "权威人士"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Put your answer here."
-msgstr ""
+msgstr "在此填写你的回答。"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Put your question here."
-msgstr ""
+msgstr "在此填写你的问题。"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
@@ -2977,7 +2980,7 @@ msgstr "问题%s"
 #: model:mail.message.subtype,description:website_forum.mt_ask_validation
 #: model:mail.message.subtype,name:website_forum.mt_ask_validation
 msgid "Question Ask Validation"
-msgstr ""
+msgstr "提问审核"
 
 #. module: website_forum
 #. odoo-python
@@ -3226,12 +3229,12 @@ msgstr "搜索"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Search Answers..."
-msgstr ""
+msgstr "搜索回答..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Search Questions..."
-msgstr ""
+msgstr "搜索问题..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
@@ -3251,7 +3254,7 @@ msgstr "第二关联参数"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "See answer"
-msgstr ""
+msgstr "查看回答"
 
 #. module: website_forum
 #. odoo-python
@@ -3273,13 +3276,13 @@ msgstr "全选"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Select a forum to post your question in."
-msgstr ""
+msgstr "选择一个论坛来发布你的问题。"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 msgid "Select found select menu item"
-msgstr ""
+msgstr "选择找到的下拉菜单项"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
@@ -3501,14 +3504,14 @@ msgstr "获接纳答案已删除"
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_absolute_url
 #: model:ir.model.fields,help:website_forum.field_forum_tag__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "通过网站访问该文档的完整绝对 URL。"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_url
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_url
 #: model:ir.model.fields,help:website_forum.field_forum_tag__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "通过网站访问该文档的完整相对 URL。"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3626,12 +3629,12 @@ msgstr "此问题已终结"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "This user hasn't answered any questions yet."
-msgstr ""
+msgstr "该用户尚未回答任何问题。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "This user hasn't posted any questions yet."
-msgstr ""
+msgstr "该用户尚未发布任何问题。"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_14
@@ -3896,7 +3899,7 @@ msgstr "网站/论坛"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_absolute_url
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "网站绝对 URL"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_url
@@ -3977,7 +3980,7 @@ msgstr "您已经有一个待处理的帖子"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "You can post only one answer."
-msgstr ""
+msgstr "你只能发布一个回答。"
 
 #. module: website_forum
 #. odoo-javascript
@@ -4014,12 +4017,12 @@ msgstr "您有一则待处理帖文"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "You have not answered any questions yet."
-msgstr ""
+msgstr "你尚未回答任何问题。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "You have not posted any questions yet."
-msgstr ""
+msgstr "你尚未发布任何问题。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
@@ -4170,7 +4173,7 @@ msgstr "原因:"
 msgid ""
 "has been posted and requires your validation. Click here to access the "
 "question :"
-msgstr ""
+msgstr "已发布，需要你审核。点击此处访问该问题："
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -4180,7 +4183,7 @@ msgstr "新答案已发布。点击此处进入问题："
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "has been posted. Click here to access the question:"
-msgstr ""
+msgstr "已发布。点击此处访问该问题："
 
 #. module: website_forum
 #. odoo-javascript
@@ -4213,6 +4216,8 @@ msgid ""
 "if your\n"
 "        answer is selected as the right one. See what you can do with karma"
 msgstr ""
+"如果你的\n"
+"        回答被选为正确答案。看看你能用积分做什么"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message
@@ -4283,6 +4288,8 @@ msgid ""
 "on social networks get an answer within\n"
 "        5 hours. Questions shared on two social networks have"
 msgstr ""
+"在社交网络上分享的问题可在\n"
+"        5 小时内得到回答。同时分享到两个社交网络的问题"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
+"POT-Creation-Date: 2026-10-16 17:41+0000\n"
 "PO-Revision-Date: 2026-08-31 21:15+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Kurdish (Sorani) <https://translate.odoo.com/projects/odoo-"
@@ -428,23 +428,28 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:mail.template,body_html:stock.mail_template_data_stock_move_line_recall
+#: model:mail.template,body_html:stock.mail_template_data_stock_picking_recall
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.picking_partner_id.display_name or ''\"/><br/"
-"><br/>\n"
-"        We would like to issue a product recall regarding the following "
-"product:<br/><br/>\n"
-"        Product:<br/>\n"
-"        <t t-out=\"object.product_id.display_name or ''\"/><br/><br/>\n"
-"        Lot / Serial Number:<br/>\n"
-"        <t t-out=\"object.lot_id.name or object.lot_name or ''\"/><br/><br/"
-">\n"
-"        We apologize for the inconvenience caused.<br/><br/>\n"
-"        Best wishes,\n"
-"    </p>\n"
-"</div>\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Dear <t t-out=\"object.partner_id.display_name or "
+"''\">Marc Demo</t><br/><br/>\n"
+"                    We would like to issue a product recall regarding the "
+"following items from your delivery\n"
+"                    <strong><t t-out=\"object.name\">WH/OUT/EXAMPLE</t></"
+"strong>:<br/><br/>\n"
+"\n"
+"                    <strong>Product(s):</strong><br/>\n"
+"                    <t t-out=\"ctx.get('recalled_products_dict', "
+"{}).get(str(object.id))\">[EXAMPLE] Drawer</t><br/><br/>\n"
+"                    <strong>Lot / Serial Number(s):</strong><br/>\n"
+"                    <t t-out=\"ctx.get('recalled_lots_dict', "
+"{}).get(str(object.id))\">0000000000029</t><br/><br/>\n"
+"\n"
+"                    We apologize for the inconvenience caused.<br/><br/>\n"
+"                    Best wishes,\n"
+"                </p>\n"
+"            </div>\n"
 "        "
 msgstr ""
 
@@ -7517,13 +7522,13 @@ msgid "Product barcode"
 msgstr ""
 
 #. module: stock
-#: model:mail.template,description:stock.mail_template_data_stock_move_line_recall
-msgid "Product recall from lot/serial number"
+#: model:mail.template,subject:stock.mail_template_data_stock_picking_recall
+msgid "Product recall for Delivery {{ object.name }}"
 msgstr ""
 
 #. module: stock
-#: model:mail.template,subject:stock.mail_template_data_stock_move_line_recall
-msgid "Product recall: {{ object.product_id.display_name or 'n/a' }}"
+#: model:mail.template,description:stock.mail_template_data_stock_picking_recall
+msgid "Product recall from lot/serial number"
 msgstr ""
 
 #. module: stock
@@ -9487,11 +9492,6 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: stock
-#: model:mail.template,name:stock.mail_template_data_stock_move_line_recall
-msgid "Stock Move Line: Product Recall"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_reference__move_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -10728,6 +10728,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Transfer:"
+msgstr ""
+
+#. module: stock
+#: model:mail.template,name:stock.mail_template_data_stock_picking_recall
+msgid "Transfer: Product Recall"
 msgstr ""
 
 #. module: stock

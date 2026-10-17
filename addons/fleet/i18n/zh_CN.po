@@ -8,15 +8,16 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-09 14:05+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-10-11 06:34+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/fleet/zh_Hans/>\n"
+"projects/odoo-20/fleet/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +45,12 @@ msgid ""
 "* Show all costs associated to a vehicle or to a type of service\n"
 "* Analysis graph for costs\n"
 msgstr ""
+"\n"
+"车辆、租赁、保险、成本\n"
+"==================================\n"
+"借助本模块，Odoo 帮助您管理所有车辆、\n"
+"与这些车辆相关的合同，以及服务、成本\n"
+"和许多其他功能\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -161,7 +168,7 @@ msgstr "活动异常标示"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_plans_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "活动计划"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_state
@@ -217,6 +224,8 @@ msgid ""
 "All services and contracts linked to this vehicle will also be archived.\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"与该车辆相关的所有服务和合同也将被归档。\n"
+"您确定要继续吗？"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
@@ -242,13 +251,13 @@ msgstr "存档"
 #. odoo-javascript
 #: code:addons/fleet/static/src/js/fleet_form.js:0
 msgid "Archive Vehicle"
-msgstr ""
+msgstr "归档车辆"
 
 #. module: fleet
 #. odoo-javascript
 #: code:addons/fleet/static/src/js/fleet_form.js:0
 msgid "Archive Vehicle & Contracts"
-msgstr ""
+msgstr "归档车辆及合同"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -311,7 +320,7 @@ msgstr "可用"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__next_assignation_date
 msgid "Available From"
-msgstr ""
+msgstr "可用起始日期"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_1920
@@ -468,7 +477,7 @@ msgstr "车辆"
 #: model:ir.model.fields,field_description:fleet.field_res_partner__partner_cars_count
 #: model:ir.model.fields,field_description:fleet.field_res_users__partner_cars_count
 msgid "Cars Count"
-msgstr ""
+msgstr "车辆数量"
 
 #. module: fleet
 #. odoo-python
@@ -480,7 +489,7 @@ msgstr "汽车历史"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__car_value
 msgid "Catalog Value (Tax Incl.)"
-msgstr ""
+msgstr "目录价格（含税）"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -549,7 +558,7 @@ msgstr "选择是服务合同还是车辆服务，或两者的"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__closed
@@ -603,7 +612,7 @@ msgstr "配置"
 #. module: fleet
 #: model:ir.model,name:fleet.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "联系人"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
@@ -652,7 +661,7 @@ msgstr "合同类型"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_contract_types_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_contract_types_menu
 msgid "Contract Types"
-msgstr ""
+msgstr "合同类型"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -669,7 +678,7 @@ msgstr "待续签的合同"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_contract_types_action
 msgid "Contract types define the kinds of vehicle agreements you can track."
-msgstr ""
+msgstr "合同类型定义您可以跟踪的车辆协议种类。"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -767,7 +776,7 @@ msgstr "创建一个新的服务条目"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_contract_types_action
 msgid "Create a new type of contract"
-msgstr ""
+msgstr "新建合同类型"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
@@ -1603,7 +1612,7 @@ msgstr "通过 Odoo 高效管理您的车辆里程表。"
 #. module: fleet
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Manage your fleet and track car costs"
-msgstr ""
+msgstr "管理您的车队并跟踪车辆成本"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
@@ -1634,7 +1643,7 @@ msgstr "制造商"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Mark as Done"
-msgstr ""
+msgstr "标记为完成"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
@@ -1642,7 +1651,7 @@ msgstr ""
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols 图标，例如 checklist"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
@@ -1993,7 +2002,7 @@ msgstr "已订购"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__vehicle_type__other
 msgid "Other"
-msgstr ""
+msgstr "其他"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_33
@@ -2013,7 +2022,7 @@ msgstr "更换氧传感器"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_vehicle
 msgid "Plan To Change Vehicle"
-msgstr ""
+msgstr "计划更换车辆"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
@@ -2098,12 +2107,12 @@ msgstr "范围单元"
 msgid ""
 "Range represents the maximum distance a vehicle can travel on a full charge "
 "(for EVs) or             a full tank (for fuel-powered vehicles)"
-msgstr ""
+msgstr "续航里程表示车辆在满电（电动车）或满油（燃油车）状态下能够行驶的最大距离"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Reactivate"
-msgstr ""
+msgstr "重新启用"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
@@ -2153,7 +2162,7 @@ msgstr "渲染模型"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
 msgid "Rent (Excluding Tax)"
-msgstr ""
+msgstr "租金（不含税）"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_7
@@ -2188,7 +2197,7 @@ msgstr "净值"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_14
 msgid "Residual value (Excluding Tax)"
-msgstr ""
+msgstr "剩余价值（不含税）"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
@@ -2222,7 +2231,7 @@ msgstr "重置转轮"
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "Review driver change"
-msgstr ""
+msgstr "检查驾驶员变更"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_39
@@ -2255,7 +2264,7 @@ msgstr "座位容量"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__semi_automatic
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__transmission__semi_automatic
 msgid "Semi-Automatic"
-msgstr ""
+msgstr "半自动"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
@@ -2314,7 +2323,7 @@ msgstr "服务类型"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Service types define categories of vehicle maintenance and servicing."
-msgstr ""
+msgstr "服务类型定义车辆维护保养和服务的类别。"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_action
@@ -2387,7 +2396,7 @@ msgstr "开始日期"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__date_from
 msgid "Start of Service"
-msgstr ""
+msgstr "服务开始日期"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_42
@@ -2491,7 +2500,7 @@ msgstr ""
 msgid ""
 "The date from which this vehicle becomes available for assignment. Leave "
 "empty if it's available immediately."
-msgstr ""
+msgstr "该车辆可供分配的开始日期。如果立即可用，请留空。"
 
 #. module: fleet
 #. odoo-python
@@ -2502,7 +2511,7 @@ msgstr "以下车辆驾驶员缺少电子邮件地址：%s。"
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_unique_license_plate
 msgid "The license plate must be unique"
-msgstr ""
+msgstr "车辆牌照必须唯一"
 
 #. module: fleet
 #. odoo-python
@@ -2560,7 +2569,7 @@ msgstr "总计"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Total expenses (Excluding Tax)"
-msgstr ""
+msgstr "费用总计（不含税）"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_17
@@ -2636,12 +2645,12 @@ msgstr "单位"
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "Unnamed Vehicle"
-msgstr ""
+msgstr "未命名车辆"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Unregistered"
-msgstr ""
+msgstr "未注册"
 
 #. module: fleet
 #. odoo-python
@@ -2843,7 +2852,7 @@ msgstr "在此输入与服务相关的其他信息。"
 msgid ""
 "Write here any other information related to this vehicle to show in salary "
 "configurator"
-msgstr ""
+msgstr "在此填写与该车辆相关的其他信息，以便在薪资配置器中显示"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form

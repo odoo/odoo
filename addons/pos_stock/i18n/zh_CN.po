@@ -3,15 +3,16 @@
 # * pos_stock
 #
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 17:42+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-11 11:46+0000\n"
+"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-4/pos_stock/zh_Hans/>\n"
+"projects/odoo-20/pos_stock/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgstr "%(name)s拣货 POS"
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "(as of opening)"
-msgstr ""
+msgstr "（截至期初）"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.pos_order_receipt_footer
@@ -71,12 +72,12 @@ msgstr "应用"
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__pos_config__picking_policy__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "尽快发货，允许缺货补发"
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__res_company__point_of_sale_update_stock_quantities__closing
 msgid "At the session closing"
-msgstr ""
+msgstr "会话结束时"
 
 #. module: pos_stock
 #: model:ir.model.fields,help:pos_stock.field_res_company__point_of_sale_update_stock_quantities
@@ -93,7 +94,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Available"
-msgstr ""
+msgstr "可用量"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_res_company
@@ -117,23 +118,23 @@ msgstr "确认"
 msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero "
 "quantity due to rounding:"
-msgstr ""
+msgstr "换算错误：以下计量单位换算因舍入导致数量为零："
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "Create Lot/Serial number..."
-msgstr ""
+msgstr "创建批次/序列号..."
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__create_date
 msgid "Created on"
-msgstr ""
+msgstr "创建日期"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -145,7 +146,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "丢弃"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_account_move__display_name
@@ -168,24 +169,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__failed_pickings
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__failed_pickings
 msgid "Failed Pickings"
-msgstr ""
+msgstr "失败的拣货"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Forecasted"
-msgstr ""
+msgstr "预测数量"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking_type__has_stock_reports_to_print
 msgid "Has Stock Reports To Print"
-msgstr ""
+msgstr "有库存报告待打印"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_account_move__id
@@ -218,11 +219,13 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
+"如果您一次性交付所有产品，送货单将按最长的产品前置时间安排。否则，将按最短的"
+"前置时间安排。"
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__res_company__point_of_sale_update_stock_quantities__real
 msgid "In real time"
-msgstr ""
+msgstr "实时"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -245,12 +248,12 @@ msgstr "库存管理"
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "日记账分录"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "日记账项目"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__write_uid
@@ -291,7 +294,7 @@ msgstr "批次/序列号码"
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Lot/Serial number(s) required for"
-msgstr ""
+msgstr "以下产品需要批次/序列号："
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order_line__pack_lot_ids
@@ -334,7 +337,7 @@ msgstr "无现有序列号/批号"
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "On hand"
-msgstr ""
+msgstr "现有量"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__picking_type_id
@@ -383,7 +386,7 @@ msgstr "拣货"
 #. module: pos_stock
 #: model:ir.module.module,shortdesc:base.module_pos_stock
 msgid "PoS - Stock"
-msgstr ""
+msgstr "PoS - 库存"
 
 #. module: pos_stock
 #. odoo-python
@@ -420,7 +423,7 @@ msgstr "POS 销售订单收据生成器"
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_session
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "POS 会话"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking__pos_order_id
@@ -435,7 +438,7 @@ msgstr "PoS 订单明细"
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr ""
+msgstr "POS 会话"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_product_template
@@ -446,22 +449,22 @@ msgstr "产品"
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "产品类别"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__stock_reference_ids
 msgid "Reference"
-msgstr ""
+msgstr "参考"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "库存单据之间的参考"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_product_removal
 msgid "Removal Strategy"
-msgstr ""
+msgstr "出库策略"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -508,12 +511,12 @@ msgstr "服务器通信问题"
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__ship_later
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_ship_later
 msgid "Ship Later"
-msgstr ""
+msgstr "稍后发货"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__shipping_date
 msgid "Shipping Date"
-msgstr ""
+msgstr "发货日期"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__picking_policy
@@ -536,7 +539,7 @@ msgstr "指定路线"
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__route_id
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_route_id
 msgid "Specific route for products delivered later."
-msgstr ""
+msgstr "稍后交付产品的指定路线。"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_pack_operation_lot
@@ -556,7 +559,7 @@ msgstr "库存移动"
 #. module: pos_stock
 #: model:ir.module.module,summary:base.module_pos_stock
 msgid "Stock integration for PoS"
-msgstr ""
+msgstr "POS 的库存集成"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__update_stock_at_closing
@@ -677,23 +680,23 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "available"
-msgstr ""
+msgstr "可用"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "available,"
-msgstr ""
+msgstr "可用，"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "forecasted"
-msgstr ""
+msgstr "预测"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "on hand"
-msgstr ""
+msgstr "现有"

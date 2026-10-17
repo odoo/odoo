@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-08 08:42+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-10-13 06:44+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/mail/"
 "id/>\n"
 "Language: id\n"
@@ -96,6 +96,71 @@ msgid ""
 "For more specific needs, you may also assign custom-defined actions\n"
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 msgstr ""
+"\n"
+"\n"
+"Chat, mail gateway, dan channel pribadi.\n"
+"=======================================\n"
+"\n"
+"Berkomunikasi dengan kolega/pelanggan/tamu Anda langsung dari Odoo.\n"
+"\n"
+"Diskusi/Obrolan\n"
+"------------\n"
+"Fitur \"Diskusi\" yang mudah digunakan memungkinkan komunikasi one-to-one "
+"atau grup (obrolan teks/voice call/video call), mengundang tamu, dan "
+"membagikan dokumen dengan mereka, semua secara real-time.\n"
+"\n"
+"Mail gateway\n"
+"------------\n"
+"Pengiriman informasi dan dokumen menjadi lebih sederhana sederhana. Anda "
+"dapat mengirim email\n"
+"langsung dari Odoo, yang menyediakan banyak pilihan. Sebagai contoh,\n"
+"desain template email yang indah untuk faktur, dan gunakan desain yang sama\n"
+"untuk semua pelanggan, tanpa perlu mengulang hal yang sama lagi.\n"
+"\n"
+"Chatter\n"
+"\n"
+"-------\n"
+"Lakukan semua percakapan sesuai dengan konteksnya di dokumen. Misalnya di "
+"bagian\n"
+"pelamar, langsung saja posting pembaruan untuk mengirim email ke pelamar,\n"
+"jadwalkan panggilan wawancara berikutnya, lampirkan kontrak, tambahkan "
+"petugas HR\n"
+"ke daftar pengikut untuk memberitahukan peristiwa penting (dengan bantuan "
+"dari\n"
+"subtipe),...\n"
+"\n"
+"\n"
+"Mengambil email masuk di server POP/IMAP.\n"
+"============================================\n"
+"Masukkan parameter akun POP/IMAP Anda, dan email apa pun yang masuk\n"
+"Ke akun itu akan otomatis terunduh ke dalam sistem Odoo. Semua\n"
+"server yang kompatibel dengan POP3/IMAP dapat digunakan, termasuk server "
+"yang membutuhkan\n"
+"enkripsi SSL/TLS.\n"
+"Hal ini dapat digunakan untuk membuat alur kerja berbasis email dengan mudah "
+"untuk banyak dokumen Odoo yang mendukung penggunaan email, seperti:\n"
+"----------------------------------------------------------------------------------------------------------"
+"\n"
+"* Lead/Peluang CRM\n"
+"* Klaim CRM\n"
+"* Masalah Proyek\n"
+"* Tugas Proyek\n"
+"* Rekrutmen HR (Pelamar)\n"
+"Cukup instal aplikasi yang relevan, dan Anda dapat menetapkan semua jenis \n"
+"dokumen ini (Lead, Masalah Proyek) ke akun email masuk Anda. Email baru "
+"akan\n"
+"otomatis membuat dokumen baru dari jenis yang dipilih, jadi akan sangat "
+"mudah untuk membuat\n"
+"intergrasi kotak surat ke Odoo. Lebih kerennya lagi: dokumen-dokumen ini "
+"langsung bertindak sebagai\n"
+"percakapan mini yang disinkronkan melalui email. Anda bisa menjawabnya dari "
+"Odoo, dan\n"
+"jawaban akan secara otomatis dikumpulkan ketika meraka kembali, dan "
+"dilampirkan ke\n"
+"dokumen *percakapan* yang sama.\n"
+"Untuk kebutuhan yang lebih spesifik, Anda juga dapat menetapkan tindakan "
+"custom\n"
+"(secara teknis: Tindakan Server) yang terpicu untuk setiap email masuk.\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -193,13 +258,13 @@ msgstr "%(author)s memulai panggilan."
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "%(author)s started a poll: \"%(question)s\"."
-msgstr ""
+msgstr "%(author)s memulai polling: \"%(question)s\"."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "%(author)s's poll \"%(question)s\" has closed."
-msgstr ""
+msgstr "Polling %(author)s \"%(question)s\" telah ditutup."
 
 #. module: mail
 #. odoo-python
@@ -208,6 +273,8 @@ msgid ""
 "%(author)s's poll \"%(question)s\" has closed. Winning answer: \"%"
 "(answer)s\"."
 msgstr ""
+"Polling %(author)s \"%(question)s\" telah ditutup. Jawaban pemenang: \"%"
+"(answer)s\"."
 
 #. module: mail
 #. odoo-javascript
@@ -256,6 +323,8 @@ msgid ""
 "%(count)s activities on \"%(res_name)s\" (%(model_description)s) assigned to "
 "you"
 msgstr ""
+"%(count)s aktivitas pada \"%(res_name)s\" (%(model_description)s) ditugaskan "
+"kepada Anda"
 
 #. module: mail
 #. odoo-python
@@ -354,7 +423,7 @@ msgstr "%(file1)s dan %(file2)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
 msgid "%(follower_name)s is no longer following this record."
-msgstr ""
+msgstr "%(follower_name)s tidak lagi mengikuti record ini."
 
 #. module: mail
 #. odoo-javascript
@@ -366,13 +435,13 @@ msgstr "%(followersCount)s Pengikut"
 #. odoo-python
 #: code:addons/mail/models/discuss/mail_guest.py:0
 msgid "%(guest_name)s (External)"
-msgstr ""
+msgstr "%(guest_name)s (Eksternal)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/mail_guest.py:0
 msgid "%(guest_name)s --%(guest_indicator)s--"
-msgstr ""
+msgstr "%(guest_name)s --%(guest_indicator)s--"
 
 #. module: mail
 #. odoo-javascript
@@ -463,7 +532,7 @@ msgstr "%(user)s mengubah nama thread menjadi %(name)s"
 #. odoo-python
 #: code:addons/mail/controllers/discuss/channel.py:0
 msgid "%(user)s converted this meeting into a group chat"
-msgstr ""
+msgstr "%(user)s mengubah meeting ini menjadi obrolan grup"
 
 #. module: mail
 #. odoo-javascript
@@ -488,13 +557,13 @@ msgstr "%(user)s baru terhubung untuk pertama kali. Ucapkan selamat!"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_rtc_session.py:0
 msgid "%(user)s started a call"
-msgstr ""
+msgstr "%(user)s memulai panggilan"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s started a thread: "
-msgstr ""
+msgstr "%(user)s memulai thread: "
 
 #. module: mail
 #. odoo-javascript
@@ -534,7 +603,7 @@ msgstr "%s (Templat Email)"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "%s are not valid email addresses"
-msgstr ""
+msgstr "%s bukan alamat email yang valid"
 
 #. module: mail
 #. odoo-python
@@ -552,7 +621,7 @@ msgstr "terlambat %s hari"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "%s is not a valid email address"
-msgstr ""
+msgstr "%s bukan alamat email yang valid"
 
 #. module: mail
 #. odoo-javascript
@@ -673,7 +742,7 @@ msgstr ",<br/><br/>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "- deadline:"
-msgstr ""
+msgstr "- batas waktu:"
 
 #. module: mail
 #. odoo-javascript
@@ -747,7 +816,7 @@ msgstr "1 vote"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "1 week"
-msgstr ""
+msgstr "1 minggu"
 
 #. module: mail
 #. odoo-javascript
@@ -759,7 +828,7 @@ msgstr "10 menit"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "2 weeks"
-msgstr ""
+msgstr "2 minggu"
 
 #. module: mail
 #. odoo-javascript
@@ -771,7 +840,7 @@ msgstr "24 jam"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "3 days"
-msgstr ""
+msgstr "3 hari"
 
 #. module: mail
 #. odoo-javascript
@@ -814,6 +883,8 @@ msgid ""
 "<i class=\"oi mx-2\" data-icon=\"arrow_forward\" invisible=\"not "
 "out_of_office_from\" title=\"to\"/>"
 msgstr ""
+"<i class=\"oi mx-2\" data-icon=\"arrow_forward\" invisible=\"not "
+"out_of_office_from\" title=\"ke\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -822,6 +893,8 @@ msgid ""
 "<i class=\"oi oi-filled mb-2\" data-icon=\"group\" role=\"img\" "
 "title=\"Role\" aria-label=\"Role\"/>"
 msgstr ""
+"<i class=\"oi oi-filled mb-2\" data-icon=\"group\" role=\"img\" "
+"title=\"Peran\" aria-label=\"Peran\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -829,6 +902,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-filled mb-2\" data-icon=\"person\" title=\"Assigned to\"/>"
 msgstr ""
+"<i class=\"oi oi-filled mb-2\" data-icon=\"person\" title=\"Ditetapkan ke\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -836,6 +910,8 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-filled pt-1\" data-icon=\"sticky_note_2\" title=\"Note\"/>"
 msgstr ""
+"<i class=\"oi oi-filled pt-1\" data-icon=\"sticky_note_2\" "
+"title=\"Catatan\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -843,6 +919,8 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Due date\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Batas "
+"waktu\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -850,12 +928,14 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"group\" role=\"img\" title=\"Role\" "
 "aria-label=\"Role\" style=\"font-size: 12px;\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"group\" role=\"img\" title=\"Peran\" "
+"aria-label=\"Role\" style=\"font-size: 12px;\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<i class=\"oi oi-filled\" data-icon=\"phone\" title=\"Phone number\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-filled\" data-icon=\"phone\" title=\"Nomor telepon\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_kanban
