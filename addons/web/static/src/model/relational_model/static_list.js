@@ -53,6 +53,7 @@ export class StaticList extends DataPoint {
         this._initialCommands = [];
         this._savePoint = undefined;
         this._unknownRecordCommands = {}; // tracks update commands on records we haven't fetched yet
+        this._deferredX2ManyCommands = {}; // tracks updates of invisible or not extended x2many fields
         this._currentIds = [...this.resIds];
         this._initialCurrentIds = [...this.currentIds];
         this._needsReordering = false;
@@ -244,6 +245,12 @@ export class StaticList extends DataPoint {
                 delete this._unknownRecordCommands[record.resId];
                 if (commands) {
                     this._applyCommands(commands);
+                }
+                const recordId = record.resId || record._virtualId;
+                const deferredCommands = this._deferredX2ManyCommands[recordId];
+                delete this._deferredX2ManyCommands[recordId];
+                if (deferredCommands) {
+                    this._applyCommands(deferredCommands);
                 }
                 record._addSavePoint();
             } else {
@@ -509,6 +516,7 @@ export class StaticList extends DataPoint {
                         this._unknownRecordCommands[command[1]].push(command);
                     } else {
                         const changes = {};
+                        const deferredChanges = {};
                         for (const fieldName in command[2]) {
                             if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
                                 const invisible = record.activeFields[fieldName]?.invisible;
@@ -517,14 +525,22 @@ export class StaticList extends DataPoint {
                                     invisible === "1" ||
                                     !(fieldName in record.activeFields) // this record hasn't been extended
                                 ) {
-                                    if (!(command[1] in this._unknownRecordCommands)) {
-                                        this._unknownRecordCommands[command[1]] = [];
-                                    }
-                                    this._unknownRecordCommands[command[1]].push(command);
+                                    // keep this field aside, the other ones must still be applied
+                                    deferredChanges[fieldName] = command[2][fieldName];
                                     continue;
                                 }
                             }
                             changes[fieldName] = command[2][fieldName];
+                        }
+                        if (Object.keys(deferredChanges).length) {
+                            if (!(command[1] in this._deferredX2ManyCommands)) {
+                                this._deferredX2ManyCommands[command[1]] = [];
+                            }
+                            this._deferredX2ManyCommands[command[1]].push([
+                                UPDATE,
+                                command[1],
+                                deferredChanges,
+                            ]);
                         }
                         record._applyChanges(record._parseServerValues(changes, record.data));
                     }
@@ -786,6 +802,7 @@ export class StaticList extends DataPoint {
     _clearCommands() {
         this._commands = [];
         this._unknownRecordCommands = {};
+        this._deferredX2ManyCommands = {};
     }
 
     _discard() {
@@ -802,6 +819,7 @@ export class StaticList extends DataPoint {
             this.count = this.resIds.length;
         }
         this._unknownRecordCommands = {};
+        this._deferredX2ManyCommands = {};
         const limit = this.limit - this._tmpIncreaseLimit;
         this._tmpIncreaseLimit = 0;
         this.model._updateConfig(this.config, { limit }, { reload: false });
@@ -840,6 +858,20 @@ export class StaticList extends DataPoint {
                     commands.push([LINK, record.resId]);
                 } else {
                     const values = record._getChanges(record._changes, { withReadonly });
+                    for (const deferredCommand of this._deferredX2ManyCommands[command[1]] || []) {
+                        const deferredValues = fromUnityToServerValues(
+                            deferredCommand[2],
+                            this.fields,
+                            this.activeFields,
+                            { withReadonly, context: this.context }
+                        );
+                        for (const fieldName in deferredValues) {
+                            values[fieldName] = [
+                                ...(values[fieldName] || []),
+                                ...deferredValues[fieldName],
+                            ];
+                        }
+                    }
                     if (command[0] === CREATE || Object.keys(values).length) {
                         commands.push([command[0], command[1], values]);
                     }
