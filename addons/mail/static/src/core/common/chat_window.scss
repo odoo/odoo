@@ -36,6 +36,22 @@
     width: 24px;
 }
 
+.o-mail-ChatWindow-descriptionButton {
+    opacity: 25%;
+    &:hover, &.o-showDescriptionDialog {
+        opacity: var(--mail-ChatWindow-descriptionButtonActiveOpacity, 75%);
+    }
+}
+
+.o-mail-ChatWindow-descriptionDialog {
+    min-width: 75%;
+}
+
+.o-mail-ChatWindow-descriptionDialogBackground {
+    z-index: $o-mail-NavigableList-zIndex - 1;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
 .o-mail-ChatWindow-header {
     .o-mail-ActionList-group {
         gap: map-get($spacers, 3);
