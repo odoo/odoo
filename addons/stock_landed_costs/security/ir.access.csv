@@ -3,3 +3,21 @@ access_stock_landed_cost,stock.landed.cost,stock.landed.cost,stock.group_stock_m
 stock_landed_cost_rule,stock_landed_cost multi-company,stock.landed.cost,,crud,"[('company_id', 'in', company_ids)]"
 access_stock_landed_cost_lines,stock.landed.cost.lines,stock.landed.cost.lines,stock.group_stock_manager,crud,
 access_stock_valuation_adjustment_lines,stock.valuation.adjustment.lines,stock.valuation.adjustment.lines,stock.group_stock_manager,crud,
+
+access_stock_landed_cost_bookkeeper,stock.landed.cost bookkeeper,stock.landed.cost,account.group_account_user,crud,
+access_stock_landed_cost_lines_bookkeeper,stock.landed.cost.lines bookkeeper,stock.landed.cost.lines,account.group_account_user,crud,"[('cost_id', 'access', 'read')]"
+access_stock_valuation_adjustment_lines_bookkeeper,stock.valuation.adjustment.lines bookkeeper,stock.valuation.adjustment.lines,account.group_account_user,crud,"[('cost_id', 'access', 'read')]"
+
+access_stock_landed_cost_purchase_manager,stock.landed.cost purchase manager,stock.landed.cost,purchase.group_purchase_manager,crud,"[('target_model', '!=', 'manufacturing')]"
+access_stock_landed_cost_lines_purchase_manager,stock.landed.cost.lines purchase manager,stock.landed.cost.lines,purchase.group_purchase_manager,crud,"[('cost_id', 'access', 'read')]"
+access_stock_valuation_adjustment_lines_purchase_manager,stock.valuation.adjustment.lines purchase manager,stock.valuation.adjustment.lines,purchase.group_purchase_manager,crud,"[('cost_id', 'access', 'read')]"
+
+access_product_value_purchase_manager,product.value purchase manager,product.value,purchase.group_purchase_manager,r,
+access_product_value_bookkeeper,product.value bookkeeper,product.value,account.group_account_user,r,
+
+access_stock_lot_purchase_manager,stock.lot purchase manager,stock.lot,purchase.group_purchase_manager,r,
+access_stock_lot_bookkeeper,stock.lot bookkeeper,stock.lot,account.group_account_user,r,
+
+access_account_payment_purchase_manager,account.payment purchase manager,account.payment,purchase.group_purchase_manager,r,"[('move_id', 'access', 'read')]"
+access_account_move_stock_manager,account.move stock manager,account.move,stock.group_stock_manager,r,"[('move_type', '=', 'in_invoice'), ('landed_costs_ids', '!=', False)]"
+access_account_move_line_stock_manager,account.move.line stock manager,account.move.line,stock.group_stock_manager,r,"[('move_id', 'access', 'read')]"
