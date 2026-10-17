@@ -383,7 +383,6 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
         queries = self._get_queries_shop()
 
         queries['account_tax'] += 1
-        queries['account_account_tag'] = 2
         queries['res_company'] += 1
 
         if self.env['res.groups']._is_feature_enabled('uom.group_uom'):

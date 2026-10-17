@@ -522,7 +522,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Dynamic ribbon filters ("On sale" / "In stock")
         on_sale_active = on_sale == "1"
         in_stock_active = in_stock == "1"
-        auto_assign_ribbons = self.env["product.ribbon"].sudo().search([("assign", "!=", "manual")])
+        auto_assign_ribbons = (
+            self.env["product.ribbon"].sudo().search_fetch([("assign", "!=", "manual")])
+        )
         ribbon_assign_values = set(auto_assign_ribbons.mapped("assign"))
 
         on_sale_ids = set()
