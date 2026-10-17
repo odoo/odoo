@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
+from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, TransactionCase, tagged
 
@@ -1072,3 +1075,26 @@ class TestSaleMrpKitBom(TransactionCase):
         self.assertEqual(len(so.picking_ids.move_ids.move_line_ids), 2)
         self.assertEqual(so.picking_ids.move_ids.move_line_ids[0].product_packaging_qty, 10)
         self.assertEqual(so.picking_ids.move_ids.move_line_ids[1].product_packaging_qty, 14)
+
+    def test_kit_qty_delivered_at_accrual_date(self):
+        kit = self._create_product('Kit', True, 0.0)
+        component = self._create_product('Component', True, 0.0)
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+        partner = self.env['res.partner'].create({'name': 'customer'})
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [Command.create({'product_id': kit.id, 'product_uom_qty': 1.0})],
+        })
+        so.action_confirm()
+        so.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
+        so.picking_ids.button_validate()
+
+        today = fields.Date.today()
+        for accrual_date, expected_qty in ((today, 1), (today - timedelta(days=1), 0)):
+            order = so.new(origin=so)
+            order.order_line.with_context(accrual_entry_date=accrual_date)._compute_qty_delivered()
+            self.assertEqual(order.order_line.qty_delivered, expected_qty)
