@@ -358,6 +358,7 @@ export class Dropdown extends Component {
             onClosed: () => this.onClosed(),
             items: this.props.items,
             slots: this.props.slots,
+            nesting: this.nesting.current,
         };
         this.popover.open(this.target, props);
     }

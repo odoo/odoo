@@ -5,6 +5,7 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Domain } from "@web/core/domain";
 import { getDefaultDomain } from "@web/core/domain_selector/utils";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
+import { deserializeDate, deserializeDateTime, serializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpcBus } from "@web/core/network/rpc";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
@@ -17,16 +18,20 @@ import { deepCopy } from "@web/core/utils/objects";
 import { hashCode } from "@web/core/utils/strings";
 import { SearchArchParser } from "./search_arch_parser";
 import {
+    constructDateBoundsDomain,
     constructDateDomain,
+    constructRelativeDateDomain,
     DEFAULT_INTERVAL,
+    getDateBoundsLabel,
     getIntervalOptions,
+    getPeriodBounds,
+    getPeriodLabel,
     getPeriodOptions,
+    getRelativeDateLabel,
+    getRelativeFilterOptions,
     INTERVAL_OPTIONS,
     rankInterval,
-    getRelativeFilterOptions,
     yearSelected,
-    constructRelativeDateDomain,
-    getRelativeDateLabel,
 } from "./utils/dates";
 import { FACET_COLORS, FACET_ICONS } from "./utils/misc";
 
@@ -1141,7 +1146,7 @@ export class SearchModel extends EventBus {
     toggleRelativeFilter(searchItemId, optionId) {
         const { groupId, dateFilterId } = this.searchItems[searchItemId];
         const alreadyActive = this.query.some(
-            (q) => q.searchItemId === searchItemId && q.optionId === optionId
+            (q) => q.searchItemId === searchItemId && q.optionId === optionId && !q.offset
         );
 
         // Deactivate other filter from same group (prevent "This week" + "February" )
@@ -1154,12 +1159,66 @@ export class SearchModel extends EventBus {
     }
 
     shiftRelativeFilter(groupId, delta) {
-        const filter = this.query.find((q) => this.searchItems[q.searchItemId].groupId === groupId);
-        if (!filter) {
-            throw new Error(`shiftRelativeFilter: no active search item in group ${groupId}`);
+        const queryElem = this._getGroupQueryElem(groupId);
+        if (queryElem.range) {
+            const { range } = queryElem;
+            const searchItem = this.searchItems[queryElem.searchItemId];
+            const granularity = this._getRangeGranularity(searchItem, range);
+            const [start, end] = range.map((day) => deserializeDate(day));
+            const days = delta * (end.diff(start, "days").days + 1);
+            const bounds = granularity
+                ? getPeriodBounds(start.plus({ [granularity]: delta }), granularity)
+                : [start.plus({ days }), end.plus({ days })];
+            queryElem.range = bounds.map((date) => serializeDate(date));
+        } else {
+            queryElem.offset = (queryElem.offset || 0) + delta;
         }
-        filter.offset = (filter.offset || 0) + delta;
         this._notify();
+    }
+
+    /**
+     * Sets the current period of an option on the relative filter active in the
+     * given group.
+     * @param {number} groupId
+     * @param {string} optionId
+     */
+    setRelativeFilter(groupId, optionId) {
+        this._setRelativeFilterPeriod(groupId, { optionId, offset: 0 });
+    }
+
+    /**
+     * @param {number} groupId
+     * @returns {Object[]} periods selectable for the group's relative filter; an
+     *  option is active when its current period is set. Empty when the group is
+     *  no longer active: its period menu re-renders on the query change before
+     *  being closed.
+     */
+    getRelativeFilterPeriods(groupId) {
+        const queryElem = this.query.find(
+            (q) => this.searchItems[q.searchItemId].groupId === groupId
+        );
+        if (!queryElem) {
+            return [];
+        }
+        const searchItem = this.searchItems[queryElem.searchItemId];
+        return searchItem.options.map(({ id, description }) => ({
+            id,
+            description,
+            isActive: queryElem.optionId === id && !queryElem.offset,
+        }));
+    }
+
+    /**
+     * Opens the filter domain editor on the current period of the relative filter
+     * active in the given group.
+     * @param {number} groupId
+     */
+    editRelativeFilter(groupId) {
+        const queryElem = this._getGroupQueryElem(groupId);
+        const searchItem = this.searchItems[queryElem.searchItemId];
+        const bounds = this._getRelativeFilterBounds(searchItem, queryElem);
+        const domain = constructDateBoundsDomain(searchItem, ...bounds).toString();
+        this.spawnCustomFilterDialog({ domain, groupId });
     }
 
     /**
@@ -1177,7 +1236,12 @@ export class SearchModel extends EventBus {
             context: this.domainEvalContext,
             onConfirm: (nextDomain) => {
                 if (nextDomain !== domain || create) {
-                    this.splitAndAddDomain(nextDomain, groupId);
+                    const range = !create && this._getRelativeFilterRange(groupId, nextDomain);
+                    if (range) {
+                        this._setRelativeFilterPeriod(groupId, { range });
+                    } else {
+                        this.splitAndAddDomain(nextDomain, groupId);
+                    }
                 }
             },
             disableConfirmButton: (domain) => domain === `[]`,
@@ -1763,7 +1827,9 @@ export class SearchModel extends EventBus {
             case "relativeFilter":
                 enrichSearchItem.options = _enrichOptions(
                     searchItem.options,
-                    queryElements.map((queryElem) => queryElem.optionId)
+                    queryElements
+                        .filter((queryElem) => !queryElem.offset)
+                        .map((queryElem) => queryElem.optionId)
                 );
                 break;
             case "field":
@@ -2071,8 +2137,17 @@ export class SearchModel extends EventBus {
                     )}`,
                 ];
             case "relativeFilter": {
-                const option = this._getRelativeFilterOption(searchItem, activeItem.optionId);
-                const label = getRelativeDateLabel(this.referenceMoment, option, activeItem.offset);
+                let label;
+                if (activeItem.range) {
+                    const bounds = this._getRelativeFilterBounds(searchItem, activeItem);
+                    const granularity = this._getRangeGranularity(searchItem, activeItem.range);
+                    label = granularity
+                        ? getPeriodLabel(bounds[0], granularity)
+                        : getDateBoundsLabel(...bounds);
+                } else {
+                    const option = this._getRelativeFilterOption(searchItem, activeItem.optionId);
+                    label = getRelativeDateLabel(this.referenceMoment, option, activeItem.offset);
+                }
                 return [`${description}: ${label}`];
             }
             case "parentFilter":
@@ -2373,10 +2448,10 @@ export class SearchModel extends EventBus {
                         activeItems.push(activeItem);
                     }
                     activeItem.autocompleteValues.push(queryElem.autocompleteValue);
-                } else if ("optionId" in queryElem) {
+                } else if ("optionId" in queryElem || "range" in queryElem) {
                     if (!activeItem) {
-                        const { optionId, offset = 0 } = queryElem;
-                        activeItem = { searchItemId, optionId, offset };
+                        const { optionId, offset = 0, range } = queryElem;
+                        activeItem = { searchItemId, optionId, offset, range };
                         activeItems.push(activeItem);
                     }
                 } else {
@@ -2546,8 +2621,7 @@ export class SearchModel extends EventBus {
                 return this._getParentFilterDomain(searchItem, activeItem.generatorIds);
             }
             case "relativeFilter": {
-                const { optionId, offset } = activeItem;
-                return this._getRelativeFilterDomain(searchItem, optionId, offset);
+                return this._getRelativeFilterDomain(searchItem, activeItem);
             }
             case "filter":
             case "favorite": {
@@ -2559,9 +2633,97 @@ export class SearchModel extends EventBus {
         }
     }
 
-    _getRelativeFilterDomain(searchItem, optionId, offset) {
-        const option = this._getRelativeFilterOption(searchItem, optionId);
-        return constructRelativeDateDomain(searchItem, option, offset);
+    _getRelativeFilterDomain(searchItem, activeItem) {
+        if (activeItem.range) {
+            const bounds = this._getRelativeFilterBounds(searchItem, activeItem);
+            return constructDateBoundsDomain(searchItem, ...bounds);
+        }
+        const option = this._getRelativeFilterOption(searchItem, activeItem.optionId);
+        return constructRelativeDateDomain(searchItem, option, activeItem.offset);
+    }
+
+    /**
+     * @param {Object} searchItem a search item of type "relativeFilter"
+     * @param {Object} activeItem
+     * @returns {[DateTime, DateTime]}
+     */
+    _getRelativeFilterBounds(searchItem, { optionId, offset = 0, range }) {
+        if (range) {
+            const [start, end] = range.map((day) => deserializeDate(day));
+            return [start, end.endOf("day")];
+        }
+        const { granularity } = this._getRelativeFilterOption(searchItem, optionId);
+        return getPeriodBounds(this.referenceMoment.plus({ [granularity]: offset }), granularity);
+    }
+
+    /**
+     * @param {Object} searchItem a search item of type "relativeFilter"
+     * @param {[string, string]} range first and last days of a fixed period
+     * @returns {string | undefined} the granularity of the option one period of
+     *  which is exactly the given range, by which it is then labelled and shifted
+     */
+    _getRangeGranularity(searchItem, range) {
+        const [start, end] = range.map((day) => deserializeDate(day));
+        return searchItem.options.find(({ granularity }) => {
+            const bounds = getPeriodBounds(start, granularity);
+            return bounds[0].hasSame(start, "day") && bounds[1].hasSame(end, "day");
+        })?.granularity;
+    }
+
+    /**
+     * Replaces the query element of the relative filter active in the given
+     * group by one set to the given period.
+     * @param {number} groupId
+     * @param {{ optionId: string, offset: number } | { range: [string, string] }} period
+     */
+    _setRelativeFilterPeriod(groupId, period) {
+        const queryElem = this._getGroupQueryElem(groupId);
+        const index = this.query.indexOf(queryElem);
+        this.query[index] = { searchItemId: queryElem.searchItemId, ...period };
+        this._notify();
+    }
+
+    _getGroupQueryElem(groupId) {
+        const queryElem = this.query.find(
+            (q) => this.searchItems[q.searchItemId].groupId === groupId
+        );
+        if (!queryElem) {
+            throw new Error(`no active search item in group ${groupId}`);
+        }
+        return queryElem;
+    }
+
+    /**
+     * @param {number} groupId
+     * @param {string} domain
+     * @returns {[string, string] | null} the first and last days of the given
+     *  domain if the group is the one of a relative filter and the domain filters
+     *  its field on whole days
+     */
+    _getRelativeFilterRange(groupId, domain) {
+        const { searchItemId } = this._getGroupQueryElem(groupId);
+        const searchItem = this.searchItems[searchItemId];
+        if (searchItem.type !== "relativeFilter") {
+            return null;
+        }
+        const parsedDomain = new Domain(domain);
+        const conditions = parsedDomain.toList(this.domainEvalContext);
+        const getBound = (operator) =>
+            conditions.find((c) => c[0] === searchItem.fieldName && c[1] === operator)?.[2];
+        const deserialize = searchItem.fieldType === "date" ? deserializeDate : deserializeDateTime;
+        const [start, end] = [getBound(">="), getBound("<=")].map(
+            (bound) => typeof bound === "string" && deserialize(bound)
+        );
+        if (!start?.isValid || !end?.isValid || start > end) {
+            return null;
+        }
+        const bounds = [start.startOf("day"), end.endOf("day")];
+        if (
+            constructDateBoundsDomain(searchItem, ...bounds).toString() !== parsedDomain.toString()
+        ) {
+            return null;
+        }
+        return [serializeDate(start), serializeDate(end)];
     }
 
     /**

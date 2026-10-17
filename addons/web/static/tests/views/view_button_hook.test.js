@@ -92,9 +92,11 @@ test("ViewButton clicked in Dropdown close the Dropdown", async () => {
             <div t-ref="this.rootRef" class="myComponent">
                 <Dropdown>
                     <button>dropdown</button>
-                    <DropdownItem>
-                        <ViewButton tag="'a'" clickParams="{ type:'action' }" string="'coucou'" record="{ resId: 1 }" />
-                    </DropdownItem>
+                    <t t-set-slot="content">
+                        <DropdownItem>
+                            <ViewButton tag="'a'" clickParams="{ type:'action' }" string="'coucou'" record="{ resId: 1 }" />
+                        </DropdownItem>
+                    </t>
                 </Dropdown>
             </div>
         `;
