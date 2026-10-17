@@ -47,7 +47,9 @@
         }
 
         .o_wblog_unpublished {
-            @include o-position-absolute(0, 0, auto, auto);
+            position: absolute;
+            top: 0;
+            inset-inline-end: 0;
         }
 
         .o_wblog_mobile_badge {
@@ -174,7 +176,9 @@
             @include media-breakpoint-up(lg) {
                 // Inactive vertical bar
                 &::before {
-                    @include o-position-absolute(0, auto, 0, 0);
+                    position: absolute;
+                    inset-block: 0;
+                    inset-inline-start: 0;
                     content: "";
                     width: calc(var(--o-bs-border-width) * 2);
                     background-color: $gray-300;
@@ -194,7 +198,9 @@
                         // Active vertical bar
                         &::before {
                             content: "";
-                            @include o-position-absolute(0, auto, 0, 0);
+                            position: absolute;
+                            inset-block: 0;
+                            inset-inline-start: 0;
                             width: calc(var(--o-bs-border-width) * 2);
                             background-color: var(--primary);
                             transition: background-color 0.2s;

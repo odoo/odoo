@@ -354,7 +354,8 @@
                 &::before {
                     content: "";
                     display: block;
-                    @include o-position-absolute(0, 0, 0, 0);
+                    position: absolute;
+                    inset: 0;
                     background: var(--o-wsale-filmstrip-overlay-bg, linear-gradient(200deg, rgba(0, 0, 0, .15) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .6) 100%));
                     border-radius: var(--o-bs-border-radius);
                     opacity: .8;
@@ -863,7 +864,8 @@
                         padding-left: var(--_line-gap);
 
                         &:before {
-                            @include o-position-absolute(0, auto, 0);
+                            position: absolute;
+                            inset-block: 0;
                             transform: translateX(calc(var(--_line-gap) * -1));
                             border-left: var(--o-bs-border-width) solid $border-color;
                             content: "";
@@ -1591,7 +1593,8 @@ $-product-radius-map: (
                     }
 
                     .o_product_video_thumb {
-                        @include o-position-absolute(0, 0, 0, 0);
+                        position: absolute;
+                        inset: 0;
                         line-height: 64px;
                     }
 
@@ -1664,7 +1667,9 @@ $-product-radius-map: (
     @include media-breakpoint-up(lg) {
         .o_wsale_product_page_opt_image_width_100_pc &:not(.o_carousel_product_left_indicators) {
             .o_carousel_product_indicators {
-                @include o-position-absolute(auto, 0, .75rem, 0);
+                position: absolute;
+                bottom: .75rem;
+                inset-inline: 0;
             }
         }
     }
@@ -2036,7 +2041,9 @@ body.modal-open:has(.o_wsale_product_page) {
     }
 
     .o_wsale_ribbon.o_right {
-        @include o-position-absolute($top: 0, $right: 0);
+        position: absolute;
+        top: 0;
+        inset-inline-end: 0;
         // 0.708 is 1 - cos(45deg)
         // Transforms are applied right-to-left
         // Cannot use matrix because of the use of % values.
@@ -2044,16 +2051,22 @@ body.modal-open:has(.o_wsale_product_page) {
     }
 
     .o_wsale_ribbon.o_left{
-        @include o-position-absolute($top: 0, $left: 0);
+        position: absolute;
+        top: 0;
+        inset-inline-start: 0;
         transform: translateX(calc(0.708 * (100% - #{2 * $ribbon-padding}) - 100%)) rotate(-45deg) translateX($ribbon-padding);
     }
 
     .o_wsale_badge.o_left {
-        @include o-position-absolute($top: var(--o-bs-spacer-2), $left: var(--o-wsale-ribbon-badge-offset-x, var(--o-bs-spacer-2)));
+        position: absolute;
+        top: var(--o-bs-spacer-2);
+        inset-inline-start: var(--o-wsale-ribbon-badge-offset-x, var(--o-bs-spacer-2));
     }
 
     .o_wsale_badge.o_right {
-        @include o-position-absolute($top: var(--o-bs-spacer-2), $right: var(--o-wsale-ribbon-badge-offset-x, var(--o-bs-spacer-2)));
+        position: absolute;
+        top: var(--o-bs-spacer-2);
+        inset-inline-end: var(--o-wsale-ribbon-badge-offset-x, var(--o-bs-spacer-2));
     }
 
 }

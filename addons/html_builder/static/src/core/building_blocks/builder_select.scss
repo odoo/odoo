@@ -37,7 +37,9 @@
         }
 
         &:after {
-            @include o-position-absolute(50%, var(--o-hb-spacer-1));
+            position: absolute;
+            top: 50%;
+            inset-inline-end: var(--o-hb-spacer-1);
             transform: translate(10%, -50%);
             font-size: 1.2em;
             // Keep truncated-text tooltips anchored on the button.
@@ -121,7 +123,8 @@
 
             &::after {
                 content: "";
-                @include o-position-absolute(0, 0, 0, 0);
+                position: absolute;
+                inset: 0;
                 border: 2px solid color-mix(in srgb, $active-color 50%, transparent);
                 border-radius: inherit;
             }

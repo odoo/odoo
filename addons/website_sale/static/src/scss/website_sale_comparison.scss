@@ -80,7 +80,8 @@
         }
 
         &::after {
-            @include o-position-absolute(-50vh, 0, 0, 0);
+            position: absolute;
+            inset: -50vh 0 0;
             content: "";
             background-color: inherit;
             height: 50vh;

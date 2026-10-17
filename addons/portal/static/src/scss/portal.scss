@@ -378,7 +378,9 @@ img, .media_iframe_video, .o_image {
 }
 
 .o_portal_sidebar .o_portal_html_view .o_portal_html_loader {
-    @include o-position-absolute(45%, 0, auto, 0);
+    position: absolute;
+    top: 45%;
+    inset-inline: 0;
 }
 
 .o_portal_sidebar .o_portal_html_view iframe {
@@ -450,7 +452,9 @@ img, .media_iframe_video, .o_image {
         }
 
         .o_portal_chatter_attachment_delete {
-            @include o-position-absolute($top: 0, $right: 0);
+            position: absolute;
+            top: 0;
+            inset-inline-end: 0;
             opacity: 0;
         }
 

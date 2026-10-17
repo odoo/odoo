@@ -7,14 +7,17 @@ $s-map-desc-alpha: 0.80 !default;
     min-height: clamp(112px, var(--GoogleMap-height), 90svh);
 
     .map_container {
-        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute;
+        inset: 0;
 
         .s_map_embedded {
             @extend %o-we-inner-border-radius;
         }
     }
     .description {
-        @include o-position-absolute(auto, 0, 0, 0);
+        position: absolute;
+        bottom: 0;
+        inset-inline: 0;
         z-index: 99;
         padding: 0 1em;
         background: rgba($s-map-desc-bg, $s-map-desc-alpha);
@@ -22,7 +25,7 @@ $s-map-desc-alpha: 0.80 !default;
         margin-bottom: 0;
     }
     .s_map_color_filter {
-        @include o-position-absolute(0, 0, 0, 0);
+        inset: 0;
         position: absolute !important;
         pointer-events: none;
     }

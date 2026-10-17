@@ -108,7 +108,9 @@ $o-wslides-fs-side-width: 300px;
             display: block;
             border-radius: 100%;
             background-color: inherit;
-            @include o-position-absolute(-2px, -2px);
+            position: absolute;
+            top: -2px;
+            inset-inline-end: -2px;
         }
 
         &:after {
@@ -238,14 +240,18 @@ $o-wslides-fs-side-width: 300px;
 @mixin o-wslides-header-bar() {
     &:before {
         content: "";
-        @include o-position-absolute(auto, 0, 0, 0);
+        position: absolute;
+        bottom: 0;
+        inset-inline: 0;
         height: $o-wslides-tabs-height;
         background: rgba(0, 0, 0, 0.2);
     }
 }
 
 .o_wslides_course_nav {
-    @include o-position-absolute(0,0,auto,0);
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
     border-width: 1px 0;
 
     .breadcrumb-item {
@@ -401,7 +407,9 @@ $o-wslides-fs-side-width: 300px;
                 display: block;
                 border-radius: 100%;
                 background-color: inherit;
-                @include o-position-absolute(-2px, -2px);
+                position: absolute;
+                top: -2px;
+                inset-inline-end: -2px;
             }
 
             &:after {
@@ -671,7 +679,8 @@ li.o_wslides_fs_sidebar_list_item.active {
     }
 
     .oe_slide_embed_option {
-        @include o-position-absolute(0,0,0,0);
+        position: absolute;
+        inset: 0;
     }
 
     .disabled {

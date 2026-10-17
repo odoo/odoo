@@ -266,7 +266,8 @@
                 outline: none;
 
                 &::before {
-                    @include o-position-absolute(0, 0, 0, 0);
+                    position: absolute;
+                    inset: 0;
                     content: "";
                     box-shadow: inset 0 0 0 2px black, inset 0 0 0 4px white;
                     border-radius: inherit;

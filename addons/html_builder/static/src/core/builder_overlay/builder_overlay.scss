@@ -12,7 +12,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
     pointer-events: none;
 
     .oe_overlay {
-        @include o-position-absolute;
+        position: absolute;
         display: none;
         border-color: var(--o-we-handles-accent-color);
         background: transparent;
@@ -58,7 +58,9 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
 
         // HANDLES
         .o_handles {
-            @include o-position-absolute(calc(var(--o-we-handles-offset-to-hide) * -1), 0, auto, 0);
+            position: absolute;
+            top: calc(var(--o-we-handles-offset-to-hide) * -1);
+            inset-inline: 0;
             border-color: inherit;
             pointer-events: auto;
 

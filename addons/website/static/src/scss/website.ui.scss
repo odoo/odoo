@@ -6,14 +6,18 @@
 .o_frontend_to_backend_nav {
     --o-frontend-to-backend-nav-size: 40px;
 
-    @include o-position-absolute(0, auto, auto, 0);
+    position: absolute;
+    top: 0;
+    inset-inline-start: 0;
     z-index: var(--o-bs-zindex-modal);
     @include font-size($o-font-size-base);
     font-family: var(--o-we-font-family);
 
     &::before {
         content: "";
-        @include o-position-absolute(0, auto, auto, 0);
+        position: absolute;
+        top: 0;
+        inset-inline-start: 0;
         border-top: calc(var(--o-frontend-to-backend-nav-size) / 2) solid var(--o-enterprise-color);
         border-left: calc(var(--o-frontend-to-backend-nav-size) / 2) solid var(--o-enterprise-color);
         border-bottom: calc(var(--o-frontend-to-backend-nav-size) / 2) solid transparent;

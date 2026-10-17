@@ -9,7 +9,9 @@
     }
     .close {
         z-index: var(--o-bs-zindex-modal);
-        @include o-position-absolute(0, 0);
+        position: absolute;
+        top: 0;
+        inset-inline-end: 0;
         width: calc(var(--o-bs-font-size-lg) * 2);
         height: calc(var(--o-bs-font-size-lg) * 2);
         line-height: calc(var(--o-bs-font-size-lg) * 2);

@@ -62,7 +62,8 @@
 
     &::after {
         content: "";
-        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute;
+        inset: 0;
         animation: highlightPadding 2s;
         pointer-events: none;
     }

@@ -171,7 +171,9 @@
     }
 
     .o_we_online_agenda_overlay {
-        @include o-position-absolute(0, 0, 63px);
+        position: absolute;
+        inset-block: 0 63px;
+        inset-inline-end: 0;
         background-image: linear-gradient(90deg, color-mix(in srgb, var(--o-bs-body-color) 0%, transparent), color-mix(in srgb, var(--o-bs-body-color) 10%, transparent), color-mix(in srgb, var(--o-bs-body-color) 30%, transparent));
         opacity: 0;
         transition: opacity .1s ease;

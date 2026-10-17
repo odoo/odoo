@@ -57,7 +57,8 @@
     &:before {
         content: "";
         display: block;
-        @include o-position-absolute(0,0,0,0);
+        position: absolute;
+        inset: 0;
         background-color: var(--o-bs-black);
         opacity: 0;
         transition: opacity .3s;

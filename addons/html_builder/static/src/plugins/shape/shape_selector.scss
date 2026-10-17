@@ -112,7 +112,9 @@
 }
 
 .o_we_shape_animated_label {
-    @include o-position-absolute(0, 0);
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
     padding: 0 4px;
     background: var(--o-we-toolbar-color-accent);
     color: white;

@@ -67,7 +67,9 @@ $o-wslides-fs-side-width: 300px;
             display: block;
             border-radius: 100%;
             background-color: inherit;
-            @include o-position-absolute(-2px, -2px);
+            position: absolute;
+            top: -2px;
+            inset-inline-end: -2px;
         }
 
         &:after {

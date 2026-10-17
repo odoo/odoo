@@ -22,13 +22,17 @@
             }
         }
         .o_wevent_badge_event {
-            @include o-position-absolute($top: 0, $right: 0);
+            position: absolute;
+            top: 0;
+            inset-inline-end: 0;
             @include border-end-radius(0);
             padding: calc(var(--o-bs-spacer) * .5) var(--o-bs-card-spacer-x);
             transform: translateY(-50%);
         }
         .o_wevent_badge_event_list {
-            @include o-position-absolute($top: 0, $left: 0);
+            position: absolute;
+            top: 0;
+            inset-inline-start: 0;
             @include border-end-radius(0);
             padding: calc(var(--o-bs-spacer) * .5) var(--o-bs-card-spacer-x);
             transform: translateX(-100%);
@@ -56,7 +60,9 @@
             margin-bottom: 0;
         }
         .figure-caption {
-            @include o-position-absolute($left: 0, $bottom: 0);
+            position: absolute;
+            bottom: 0;
+            inset-inline-start: 0;
             width: 100%;
             padding: var(--o-bs-spacer);
             background-color: rgba(0, 0, 0, 0.5);

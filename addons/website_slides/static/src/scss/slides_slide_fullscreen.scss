@@ -1,6 +1,7 @@
 
 .o_wslides_fs_main {
-    @include o-position-absolute(0,0,0,0);
+    position: absolute;
+    inset: 0;
     z-index: $zindex-website-header + 1;
     background-image: linear-gradient(120deg, $o-wslides-color-dark2, $o-wslides-color-dark3);
 
@@ -46,13 +47,17 @@
         }
 
         .o_wslides_fs_toggle_sidebar {
-            @include o-position-absolute(0, auto, 0, 100%);
+            position: absolute;
+            inset-block: 0;
+            inset-inline-start: 100%;
             width: 700px;
             background: rgba(0, 0, 0, 0.2);
         }
 
         @include media-breakpoint-down (md) {
-            @include o-position-absolute(0, auto, 0, 0);
+            position: absolute;
+            inset-block: 0;
+            inset-inline-start: 0;
             box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
 
             &.o_wslides_fs_sidebar_hidden {

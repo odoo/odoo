@@ -2395,7 +2395,9 @@ $o-offcanvas-horizontal-width: var(--Offcanvas-horizontal-width, #{$o-offcanvas-
 //------------------------------------------------------------------------------
 
 @mixin o-ribbon-right() {
-    @include o-position-absolute($top: 0, $right: 0);
+    position: absolute;
+    top: 0;
+    right: 0;
     padding: 0.5rem $ribbon-padding;
     // 0.708 is 1 - cos(45deg)
     // Transforms are applied right-to-left
@@ -2405,19 +2407,25 @@ $o-offcanvas-horizontal-width: var(--Offcanvas-horizontal-width, #{$o-offcanvas-
 };
 
 @mixin o-ribbon-left() {
-    @include o-position-absolute($top: 0, $left: 0);
+    position: absolute;
+    top: 0;
+    left: 0;
     padding: 0.5rem $ribbon-padding;
     transform: translateX(calc(0.708 * (100% - #{2 * $ribbon-padding}) - 100%)) rotate(-45deg) translateX($ribbon-padding);
     transform-origin: top right;
 };
 
 @mixin o-tag-right() {
-    @include o-position-absolute($top: 0, $right: 0);
+    position: absolute;
+    top: 0;
+    right: 0;
     padding: 0.25rem 1rem;
 };
 
 @mixin o-tag-left() {
-    @include o-position-absolute($top: 0, $left: 0);
+    position: absolute;
+    top: 0;
+    left: 0;
     padding: 0.25rem 1rem;
 };
 
