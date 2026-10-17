@@ -7,9 +7,9 @@
 
         aside {
             input[type="search"] {
-                // Chromium-based browsers render a "cancel" button by default.
-                // When visible, adapt its position in order to visually
-                // "replace" the magnify icon.
+                /* Chromium-based browsers render a "cancel" button by default.
+                   When visible, adapt its position in order to visually
+                   "replace" the magnify icon. */
                 &::-webkit-search-cancel-button {
                     cursor: pointer;
                     transform: translateX(var(--o-hb-spacer-3)) #{"/*rtl:translateX(calc(var(--o-hb-spacer-3) * -1))*/"};
@@ -18,7 +18,7 @@
                 &:not(:placeholder-shown) + .input-group-text {
                     display: none;
 
-                    // Preserve Firefox from chromium adaptations
+                    /* Preserve Firefox from chromium adaptations */
                     @media screen and (min--moz-device-pixel-ratio:0) {
                         display: block;
                     }
@@ -48,8 +48,8 @@
     }
 }
 .o_add_snippet_dialog_iframe_loader {
-    // This loader will appear after a 1s delay, ensuring it doesn't disrupt the
-    // experience for users with a good connection.
+    /* This loader will appear after a 1s delay, ensuring it doesn't disrupt the
+       experience for users with a good connection. */
     visibility: hidden;
     animation: showLoader 0s 1s forwards;
 }

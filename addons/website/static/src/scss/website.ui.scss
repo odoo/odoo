@@ -1,7 +1,5 @@
-///
-/// This file regroups main website UI layout rules (when the user is connected)
-/// and the UI components rules.
-///
+/* This file regroups main website UI layout rules (when the user is connected)
+   and the UI components rules. */
 
 .o_frontend_to_backend_nav {
     --o-frontend-to-backend-nav-size: 40px;
@@ -81,27 +79,27 @@
     }
 }
 
-// LAYOUTING
+/* LAYOUTING */
 body {
-    // Set frontend direction that will be flipped with
-    // rtlcss for right-to-left text direction.
+    /* Set frontend direction that will be flipped with
+       rtlcss for right-to-left text direction. */
     direction: ltr;
 }
 
-// LOGIN FORM
+/* LOGIN FORM */
 .oe_login_form, .oe_signup_form, .oe_reset_password_form {
     max-width: 300px;
     position: relative;
     margin: 50px auto;
 }
 
-// POPOVER NAVIGATION
+/* POPOVER NAVIGATION */
 .tour .popover-navigation {
     margin-left: 13px;
     margin-bottom: 8px;
 }
 
-// PUBLISH
+/* PUBLISH */
 .css_published {
     .btn-danger, .css_publish {
         display: none;
@@ -124,26 +122,26 @@ body {
     border-radius: var(--btn-border-radius);
 }
 
-// Do not show path behind the links in browser printing
+/* Do not show path behind the links in browser printing */
 @media print {
     a[href]:after {
         content: initial;
     }
 }
 
-// Post Submit Links
+/* Post Submit Links */
 .post_link:not(.o_post_link_js_loaded) {
     pointer-events: none;
 }
 
-// Mobile preview
+/* Mobile preview */
 .o_is_mobile {
-    // Scrollbar
+    /* Scrollbar */
     &, .modal {
         --o-mobile-preview-scrollbar-color: #999;
         $-background-color: rgba(255, 255, 255, 0.5);
 
-        // For Chrome & Safari
+        /* For Chrome & Safari */
         &::-webkit-scrollbar {
             width: 5px;
             height: 5px;
@@ -155,7 +153,7 @@ body {
             background: $-background-color;
         }
 
-        // Standard version (Firefox only for now)
+        /* Standard version (Firefox only for now) */
         scrollbar-color: var(--o-mobile-preview-scrollbar-color) $-background-color;
         scrollbar-width: thin;
     }

@@ -1,6 +1,6 @@
 .s_social_media {
     user-select: none;
-    $-size: 3rem; // $spacers isn't working properly here
+    $-size: 3rem; /* $spacers isn't working properly here */
     > * {
         display: inline-block;
         vertical-align: middle;
@@ -59,7 +59,7 @@
         margin: .2rem;
     }
     &:not(.no_icon_color) {
-        @each $media, $color in $o-social-colors { // @see builder.variables.scss for the media colors
+        @each $media, $color in $o-social-colors { /* @see builder.variables.scss for the media colors */
             [data-icon=oi_#{$media}] {
                 color: $color !important;
             }

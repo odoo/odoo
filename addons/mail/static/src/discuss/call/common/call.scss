@@ -1,10 +1,10 @@
-// ------------------------------------------------------------------
-// Layout
-// ------------------------------------------------------------------
+/* ------------------------------------------------------------------
+   Layout
+   ------------------------------------------------------------------ */
 
 .o-discuss-Call {
     --o-discuss-Call-bgColor: var(--o-mail-Meeting-bgColor);
-    height: 50%; // ensures that the view returns to the right height when resized
+    height: 50%; /* ensures that the view returns to the right height when resized */
     min-height: 50%;
     background-color: inherit;
     display: grid;
@@ -20,7 +20,7 @@
     }
 
     &.o-minimized {
-        height: 20%; // ensures that the view returns to the right height when resized
+        height: 20%; /* ensures that the view returns to the right height when resized */
         min-height: #{"max(16%, 130px)"};
         &.o-selfInCall {
             min-height: #{"max(22%, 130px)"};

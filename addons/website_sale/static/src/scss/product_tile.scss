@@ -1,5 +1,5 @@
-// Mixins
-// ============================================================================
+/* Mixins
+   ============================================================================ */
 @mixin o-wsale-card-btn-design-subtle($-bg-color, $-text) {
     @include button-variant(
         $background: $-bg-color,
@@ -25,8 +25,8 @@
     --o-wsale-card-btn-submit-padding-x: 0;
 }
 
-// Base style for a product card with image/description
-// ============================================================================
+/* Base style for a product card with image/description
+   ============================================================================ */
 .oe_product_cart {
     position: relative;
     flex-direction: var(--o-wsale-card-flex-direction, column);
@@ -186,13 +186,13 @@
         font-size: .875rem;
     }
 
-    // 'o_wsale_product_information' flex order map
-    // ------------------------------------------------------------------------
-    //  - 2: 'o_wsale_attribute_previewer' default
-    //  - 4: 'o_wsale_product_information_text' default
-    //  - 6: 'o_wsale_product_sub' default (-> can be display: contents)
-    //       ↳ - 6: 'product_price' default
-    //       ↳ - 8: 'o_wsale_product_btn' default
+    /* 'o_wsale_product_information' flex order map
+       ------------------------------------------------------------------------
+       - 2: 'o_wsale_attribute_previewer' default
+       - 4: 'o_wsale_product_information_text' default
+       - 6: 'o_wsale_product_sub' default (-> can be display: contents)
+       ↳ - 6: 'product_price' default
+       ↳ - 8: 'o_wsale_product_btn' default */
 
     .o_wsale_attribute_previewer {
         width: var(--o-wsale-card-attribute-previewer-width, 100%);
@@ -215,7 +215,7 @@
             }
         }
 
-        // Only visible in /shop page
+        /* Only visible in /shop page */
         .css_attribute_preview_thumbnail {
             border: var(--o-bs-border-width) solid $border-color;
             border-radius: var(--o-wsale-card-attribute-previewer-thumbnail-border-radius, var(--border-radius-sm));
@@ -267,7 +267,7 @@
         max-width: 66ch;
         font-size: var(--o-wsale-card-info-description-font-size, CLAMP(12px, 0.86em, 0.86rem));
 
-        // Hide empty product description in not-edition mode
+        /* Hide empty product description in not-edition mode */
         body:not(.editor_enable) &:empty {
             display: none;
         }
@@ -290,7 +290,7 @@
         }
     }
 
-    // Container for Price and Buttons
+    /* Container for Price and Buttons */
     .o_wsale_product_sub {
         display: var(--o-wsale-card-sub-display, flex);
         flex-direction: var(--o-wsale-card-sub-flex-direction, row);
@@ -408,7 +408,7 @@
     }
 }
 
-// ==== Elements visibility
+/* ==== Elements visibility */
 .o_wsale_products_opt_has_cta {
     --o-wsale-card-btn-submit-display: inline-flex;
 
@@ -423,7 +423,7 @@
     --o-wsale-card-rating-display: block;
 }
 
-// ==== Main Layouts
+/* ==== Main Layouts */
 
 .o_wsale_products_opt_layout_catalog, .o_wsale_products_opt_layout_list {
     --o-wsale-products-grid-gap-y: calc(var(--o-wsale-products-grid-gap, 16px) * var(--o-wsale-products-grid-gap-y-multiplier ,1.25));
@@ -444,7 +444,7 @@
 
         .o_has_variations:where(:not(:hover)):where(:not(:has(:focus-visible))) .o_wsale_attribute_previewer {
             &.show_on_hover {
-                // Hide but render to allow JS to compute dimensions
+                /* Hide but render to allow JS to compute dimensions */
                 visibility: hidden;
                 pointer-events: none;
             }
@@ -518,7 +518,7 @@
 }
 
 
-// ==== Products designs
+/* ==== Products designs */
 .o_wsale_products_opt_design_thumbs {
     --o-wsale-card-border-width: 0;
     --o-wsale-card-info-padding: var(--o-bs-spacer-3) 0 0;
@@ -1112,7 +1112,7 @@
         rgba(var(--o-wsale-card-cc-bg-rgb), .66)
     );
 
-    // o_label equivalent
+    /* o_label equivalent */
     --o-wsale-card-btn-submit-label-font-size: .8em;
 
     .oe_product {
@@ -1202,14 +1202,14 @@
         --o-wsale-card-btn-submit-label-display: inline;
 
         .o_wsale_attribute_previewer {
-            // Needed else --btn-font-size is 1.5rem outside of .btn class
+            /* Needed else --btn-font-size is 1.5rem outside of .btn class */
             @include rfs($btn-font-size, --btn-font-size-rfs);
 
             --o-wsale-product-variant-preview-height: MAX(var(--o-wsale-card-btns-btn-min-height), calc(var(--btn-font-size-rfs) + (var(--o-bs-btn-padding-y) * 2) + #{$btn-border-width} * 2));
 
             height: var(--o-wsale-product-variant-preview-height);
 
-            // --o-wsale-card-btns-btn-min-height is em, so the font-size needs to be set.
+            /* --o-wsale-card-btns-btn-min-height is em, so the font-size needs to be set. */
             font-size: var(--btn-font-size-rfs);
 
 
@@ -1375,7 +1375,7 @@
     }
 }
 
-// ==== Products list decorations
+/* ==== Products list decorations */
 $_wsale_products_roundness_map: (
     0: 0px,
     1: var(--border-radius-sm),
@@ -1391,7 +1391,7 @@ $_wsale_products_roundness_map: (
 }
 
 
-// ==== Card Hover Effects
+/* ==== Card Hover Effects */
 .o_wsale_products_opt_hover_background, .o_wsale_products_opt_hover_background_zoom {
     --o-wsale-card-pseudobg: "";
     --o-wsale-card-pseudobg-color: var(--100);
@@ -1452,7 +1452,7 @@ $_wsale_products_roundness_map: (
 }
 
 
-// ==== Text
+/* ==== Text */
 .o_wsale_products_opt_text_align_center {
     &:where(.o_wsale_products_opt_layout_catalog) {
         --o-wsale-card-text-align: center
@@ -1474,7 +1474,7 @@ $_wsale_products_roundness_map: (
 }
 
 
-// ==== Images effects and secondary images
+/* ==== Images effects and secondary images */
 .o_wsale_products_opt_img_secondary_show .oe_product_cart {
     --o-wsale-card-img-wrapper-secondary-display: flex;
 
@@ -1487,7 +1487,7 @@ $_wsale_products_roundness_map: (
             scroll-snap-type: x mandatory;
             scroll-snap-stop: always;
             scrollbar-color: transparent transparent;
-            scrollbar-width: 0px; // Fallback
+            scrollbar-width: 0px; /* Fallback */
             scrollbar-width: none;
             -ms-overflow-style: none;
 
@@ -1546,21 +1546,21 @@ $_wsale_products_roundness_map: (
     }
 }
 
-// ==== Card Opacity Overlay
+/* ==== Card Opacity Overlay */
 @for $i from 0 through 10 {
     .o_wsale_products_opt_overlay_opacity_#{$i} {
         --o-wsale-card-overlay-opacity: #{$i / 10};
     }
 }
 
-// Mixin to handle secondary images selectors
+/* Mixin to handle secondary images selectors */
 @mixin o-wsale-card-when-secondary-img() {
     &.o_wsale_products_opt_img_secondary_show .oe_product_image_link_has_secondary {
         @content;
     }
 }
-// Default opacity for secondary images, prevents PNG transparency from showing
-// the underlying image when hover effect: None
+/* Default opacity for secondary images, prevents PNG transparency from showing
+   the underlying image when hover effect: None */
 .o_wsale_products_opt_img_secondary_show .oe_product_image_link_has_secondary {
     --o-wsale-card-img-opacity-hover: 0;
 }
@@ -1618,7 +1618,7 @@ $_wsale_products_roundness_map: (
     }
 }
 
-// ==== Products list thumb options
+/* ==== Products list thumb options */
 #o_wsale_products_grid, #o_comparelist_table, .s_dynamic_snippet_products {
     @each $name, $ratio in $o-wsale-shop-ratios {
         &.o_wsale_products_opt_thumb_#{$name} {
@@ -1631,9 +1631,9 @@ $_wsale_products_roundness_map: (
     }
 }
 
-// ==== Products list mobile-specific thumb options
+/* ==== Products list mobile-specific thumb options */
 #o_wsale_products_grid {
-    // For designs with mobile ratio option, desktop ratio only applies on md+
+    /* For designs with mobile ratio option, desktop ratio only applies on md+ */
     &.o_wsale_products_opt_design_list_large,
     &.o_wsale_products_opt_design_showcase {
         @each $name, $ratio in $o-wsale-shop-ratios {
@@ -1646,7 +1646,7 @@ $_wsale_products_roundness_map: (
             }
         }
 
-        // Mobile-specific ratio
+        /* Mobile-specific ratio */
         @each $name, $ratio in $o-wsale-shop-ratios {
             &.o_wsale_products_opt_thumb_#{$name}_mobile {
                 @include media-breakpoint-down(md) {
@@ -1657,7 +1657,7 @@ $_wsale_products_roundness_map: (
     }
 }
 
-// ==== Actions
+/* ==== Actions */
 
 .o_wsale_products_opt_actions_inline {
     --o-wsale-card-btns-btn-min-height: calc(1em + 1.6em);
@@ -1762,10 +1762,10 @@ $_wsale_products_roundness_map: (
 }
 
 
-// ==== Colors Preset and Default Colors
+/* ==== Colors Preset and Default Colors */
 
 @for $index from 1 through length($o-color-combinations) {
-    // Retrieve initial values form the map
+    /* Retrieve initial values form the map */
     $-bg: map-get($colors, 'o-cc#{$index}-bg');
     $-text: map-get($colors, 'o-cc#{$index}-text');
     $-headings: map-get($colors, 'o-cc#{$index}-headings');
@@ -1776,7 +1776,7 @@ $_wsale_products_roundness_map: (
     $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
     $-btn-secondary-border: map-get($colors, 'o-cc#{$index}-btn-secondary-border');
 
-    // Verify and fine-tune retrieved colors
+    /* Verify and fine-tune retrieved colors */
     $-bg-color: o-color($-bg) or $body-bg;
     $-text: o-color($-text) or color-contrast($-bg-color);
     $-headings: o-color($-headings) or $headings-color;
@@ -1824,7 +1824,7 @@ $_wsale_products_roundness_map: (
     }
 }
 
-// ==== No Colors Preset Applied
+/* ==== No Colors Preset Applied */
 
 :where(.o_wsale_products_opt_layout_catalog, .o_wsale_products_opt_layout_list) {
     &:not(.o_wsale_products_opt_cc) {

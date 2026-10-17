@@ -1,12 +1,11 @@
-///
-/// Backend Custom Utility Classes
-/// ==============================================================================
+/* Backend Custom Utility Classes
+   ============================================================================== */
 
 $utilities: map-merge(
     $utilities,
     (
-        // Limit 'text-X' classes generation.
-        // See bootstrap_review_backend.scss
+        /* Limit 'text-X' classes generation.
+           See bootstrap_review_backend.scss */
         "color": (
             property: color,
             class: text,
@@ -20,8 +19,8 @@ $utilities: map-merge(
             ),
         ),
 
-        // Disable 'bg-X' classes generation.
-        // See bootstrap_review_backend.scss
+        /* Disable 'bg-X' classes generation.
+           See bootstrap_review_backend.scss */
         "background-color": null,
 
         "width": map-merge(
@@ -41,8 +40,8 @@ $utilities: map-merge(
     $utilities: map-merge(
         $utilities,
         (
-            // Override Bootstrap's single 'bg-gradient' to also expose sm/lg variants
-            // backed by the --o-gradient* CSS custom properties.
+            /* Override Bootstrap's single 'bg-gradient' to also expose sm/lg variants
+               backed by the --o-gradient* CSS custom properties. */
             "gradient": (
                 property: background-image,
                 class: bg,
@@ -66,7 +65,7 @@ $utilities: map-merge(
     $utilities: map-merge(
         $utilities,
         (
-            // Backdrop blur utility classes backed by --o-backdrop-blur* CSS custom properties.
+            /* Backdrop blur utility classes backed by --o-backdrop-blur* CSS custom properties. */
             "backdrop-blur": (
                 property: backdrop-filter,
                 class: backdrop-blur,
@@ -80,7 +79,7 @@ $utilities: map-merge(
     );
 }
 
-// Generate paddings print classes.
+/* Generate paddings print classes. */
 @each $-padding-type in ("padding", "padding-x", "padding-y", "padding-top", "padding-end", "padding-bottom", "padding-start") {
     $utilities: map-merge(
         $utilities,

@@ -1,10 +1,10 @@
 $MAX-Z-INDEX : 2147483647 !default;
 
-// Retrive the tab's height by summ its properties
+/* Retrive the tab's height by summ its properties */
 $o-wslides-tabs-height: ($nav-link-padding-y*2) + ($font-size-base * $line-height-base);
 
-// Overal page bg-color: Blend it 'over' the color chosen by the user
-// ($body-bg), rather than force it replacing the variable's value.
+/* Overal page bg-color: Blend it 'over' the color chosen by the user
+   ($body-bg), rather than force it replacing the variable's value. */
 $o-wslides-color-bg: mix($body-bg, #efeff4);
 
 $o-wslides-color-dark1: #47525f;
@@ -13,16 +13,16 @@ $o-wslides-color-dark3: #101216;
 $o-wslides-fs-side-width: 300px;
 
 :root {
-    // Border color
-    // Let borders color adapt according to body and CCs. Also, set a fallback
-    // value for browsers that don't support the color-mix function (used by
-    // 'fade-currentColor').
+    /* Border color
+       Let borders color adapt according to body and CCs. Also, set a fallback
+       value for browsers that don't support the color-mix function (used by
+       'fade-currentColor'). */
     --o-border-color: #{o-color('300')};
     --o-border-color: #{fade-currentColor()};
 }
 
-// Common to new slides pages
-// **************************************************
+/* Common to new slides pages
+   ************************************************** */
 
 .o_wslides_course_pict {
     width: 100%;
@@ -50,7 +50,7 @@ $o-wslides-fs-side-width: 300px;
     }
 
     .o_wslides_nav_button.disabled {
-        // show the "not-allowed" cursor while keeping the disabled style
+        /* show the "not-allowed" cursor while keeping the disabled style */
         cursor: not-allowed;
         pointer-events: auto !important;
         box-shadow: none;
@@ -66,7 +66,7 @@ $o-wslides-fs-side-width: 300px;
         }
 
         .o_wslides_js_quiz_validation_error, .o_wslides_js_quiz_submit_error {
-            display: inline-block;  // not using d-inline-block to avoid messing with d-none
+            display: inline-block;  /* not using d-inline-block to avoid messing with d-none */
         }
     }
 
@@ -119,8 +119,8 @@ $o-wslides-fs-side-width: 300px;
         }
     }
 
-    // tools
-    // ****************************************
+    /* tools
+       **************************************** */
     .text_small_caps {
         font-variant: small-caps;
     }
@@ -129,8 +129,8 @@ $o-wslides-fs-side-width: 300px;
         opacity: 0.1;
     }
 
-    // Solve an overfow issue caused in some
-    // circumstances by flex containers.
+    /* Solve an overfow issue caused in some
+       circumstances by flex containers. */
     hr {
         min-height: 1px;
     }
@@ -145,8 +145,8 @@ $o-wslides-fs-side-width: 300px;
     @include font-size(1rem);
 }
 
-// New home page
-// **************************************************
+/* New home page
+   ************************************************** */
 .o_wslides_home_main {
     .o_wslides_home_aside_loggedin {
         background: none;
@@ -165,8 +165,8 @@ $o-wslides-fs-side-width: 300px;
     }
 }
 
-// New course page
-// **************************************************
+/* New course page
+   ************************************************** */
 
 .o_wslides_course_sidebar {
     border: 1px solid $border-color;
@@ -262,7 +262,7 @@ $o-wslides-fs-side-width: 300px;
         text-overflow: ellipsis;
 
         a, a:hover, + .breadcrumb-item::before {
-            // Resolves into the color chosen for slide channel description through cover customization
+            /* Resolves into the color chosen for slide channel description through cover customization */
             color: inherit;
             opacity: 0.8;
         }
@@ -340,7 +340,7 @@ $o-wslides-fs-side-width: 300px;
         }
     }
 
-    // Slides list reordering widget
+    /* Slides list reordering widget */
     .o_wslides_slides_list {
         .o_wslides_slide_list_category_header {
             z-index: 1;
@@ -438,8 +438,8 @@ $o-wslides-fs-side-width: 300px;
 }
 
 
-// New lesson page (not fullscreens)
-// **************************************************
+/* New lesson page (not fullscreens)
+   ************************************************** */
 .o_wslides_lesson_main {
     .o_wslides_lesson_aside {
         .o_wslides_background_image_aside_card {
@@ -515,14 +515,14 @@ $o-wslides-fs-side-width: 300px;
 
     .o_wslides_undone_button.disabled,
     .o_wslides_done_button.disabled {
-        // Show title attribute on disabled link
+        /* Show title attribute on disabled link */
         color: white !important;
         pointer-events: auto;
     }
 }
 
-// Enforce the height of the lesson header, so the DOM element size do not change
-// when the completion progressbar become visible / hidden
+/* Enforce the height of the lesson header, so the DOM element size do not change
+   when the completion progressbar become visible / hidden */
 .o_wslides_lesson_header_container {
     height: 80px;
 }
@@ -548,16 +548,16 @@ li.o_wslides_fs_sidebar_list_item.active {
     }
 }
 
-// Modals
-// **************************************************
+/* Modals
+   ************************************************** */
 
 .o_w_slide_upload_modal_container {
     .o_slide_preview {
-        display: flex; // not using d-flex because it messes with d-none
+        display: flex; /* not using d-flex because it messes with d-none */
     }
 
     .form-check {
-        line-height: 1.5rem; // necessary to align label correctly with radio button
+        line-height: 1.5rem; /* necessary to align label correctly with radio button */
 
     }
 }
@@ -647,8 +647,8 @@ li.o_wslides_fs_sidebar_list_item.active {
     opacity: 0;
 }
 
-// Embed PDFViewer
-// **************************************************
+/* Embed PDFViewer
+   ************************************************** */
 #PDFViewer.o_wslides_fs_pdf_viewer {
     background-image: linear-gradient(120deg, $o-wslides-color-dark2, $o-wslides-color-dark3);
 
@@ -684,7 +684,7 @@ li.o_wslides_fs_sidebar_list_item.active {
     }
 
     .disabled {
-        // remove JS events for disabled elements
+        /* remove JS events for disabled elements */
         pointer-events: none;
     }
 
@@ -698,5 +698,5 @@ li.o_wslides_fs_sidebar_list_item.active {
 }
 
 .oe_show_footer {
-    z-index: $MAX-Z-INDEX; // Looks terrible but seems necessary due to fullscreen & canvas in PDFSlidesViewer
+    z-index: $MAX-Z-INDEX; /* Looks terrible but seems necessary due to fullscreen & canvas in PDFSlidesViewer */
 }

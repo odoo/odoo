@@ -66,7 +66,7 @@
         }
     }
 
-    // Specific States color deviations
+    /* Specific States color deviations */
     @each $-name, $-color in $o-we-colors {
         &.btn-#{$-name}-color-hover {
             --btn-hover-color: #{scale-color($-color, $lightness: 5%, $saturation: 100%)};

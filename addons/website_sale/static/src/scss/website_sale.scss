@@ -1,9 +1,9 @@
-// Website Sale
-// =============================================================================
+/* Website Sale
+   ============================================================================= */
 
 
-// ==== Products list Pages (/shop, /category, /search) ========================
-// =============================================================================
+/* ==== Products list Pages (/shop, /category, /search) ========================
+   ============================================================================= */
 :where(#o_wsale_container) {
     &.o_wsale_page_fluid {
         @include media-breakpoint-up(xl) {
@@ -11,17 +11,17 @@
         }
     }
 
-    // === Sidebar (Left) ======================================================
+    /* === Sidebar (Left) ====================================================== */
     #products_grid_before {
         flex: 0 0 25%;
         min-width: o-to-rem(240px);
         max-width: var(--o-wsale-sidebar-maxwidth, 15rem);
 
-        // == Guess the distance with the navbar
-        $-container-top-gap: $grid-gutter-width / 2; // = o_wsale_products_main_row
+        /* == Guess the distance with the navbar */
+        $-container-top-gap: $grid-gutter-width / 2; /* = o_wsale_products_main_row */
 
-        // == Guess the distance with the viewport's top.
-        // Defined using CSS variables to ease custom-headers overrides.
+        /* == Guess the distance with the viewport's top.
+           Defined using CSS variables to ease custom-headers overrides. */
         --o_ws_sidebar_top_gap: calc((var(--o-bs-navbar-padding-y) * 2) + (var(--o-bs-btn-padding-y-lg) * 2) + #{$-container-top-gap});
 
         @if (o-website-value('header-scroll-effect') == null) or (o-website-value('header-scroll-effect') == 'fixed') {
@@ -53,8 +53,8 @@
     }
 
 
-    // === Content (Right) =====================================================
-    // == Main content wrapper
+    /* === Content (Right) =====================================================
+       == Main content wrapper */
     #products_grid {
         overflow: visible;
         container-type: inline-size;
@@ -65,7 +65,7 @@
         border-left: var(--o-wsale-sidebar-border);
     }
 
-    // == Header (includes Title, Description, Filmstrip and Toolbar)
+    /* == Header (includes Title, Description, Filmstrip and Toolbar) */
     #o_wsale_products_header {
         padding-left: var(--o-wsale-topbar-padding-left);
         padding-right: var(--o-wsale-topbar-padding-right);
@@ -124,7 +124,7 @@
             }
         }
 
-        // Hide empty dropzones when no dropzone are dragged.
+        /* Hide empty dropzones when no dropzone are dragged. */
         @at-root body:where(:not(.oe_dropzone_active)) {
             #oe_structure_products_header_shop {
                 &:has(> br:first-child:last-child), &:empty {
@@ -134,7 +134,7 @@
         }
     }
 
-    // == Filmstrip
+    /* == Filmstrip */
     &.o_wsale_page_contained {
         .o_wsale_filmstrip_container {
             &.o_wsale_filmstrip_grid, &.o_wsale_filmstrip_tabs {
@@ -154,7 +154,7 @@
     .o_wsale_filmstrip_container {
         transform: translateZ(0);
 
-        // Filmstrip design variations ->
+        /* Filmstrip design variations -> */
         &.o_wsale_filmstrip_default {
             --o-wsale-filmstrip-item-min-height: 3.5rem;
             --o-wsale-filmstrip-item-color: var(--o-bs-light-contrast);
@@ -381,7 +381,7 @@
                 }
             }
         }
-        // <- End filmstrip design variations
+        /* <- End filmstrip design variations */
 
         .o_wsale_filmstrip_wrapper {
             margin-bottom: var(--o-bs-spacer-1);
@@ -392,7 +392,7 @@
             cursor: grab;
             scroll-snap-type: x mandatory;
 
-            // Firefox only scrollbar style
+            /* Firefox only scrollbar style */
             @supports (-moz-appearance:none) {
                 scrollbar-width: thin;
                 scrollbar-color: currentColor transparent;
@@ -508,7 +508,7 @@
         }
     }
 
-    // == Floating Bar
+    /* == Floating Bar */
     #o_wsale_floating_bar_rail {
         --_container-gap: calc(var(--gutter-x) * 0.5);
         right: calc(var(--_container-gap) + var(--o-bs-border-width));
@@ -516,7 +516,7 @@
 
         #o_wsale_floating_bar {
             bottom: var(--_container-gap);
-            z-index: 4; // above the comparison bottom bar and pager
+            z-index: 4; /* above the comparison bottom bar and pager */
             max-width: calc(100vw - calc(var(--_container-gap) * 2));
             gap: var(--o-bs-spacer-1) 0;
         }
@@ -545,14 +545,14 @@
 }
 
 
-// ==== Products list Pages - Options ==========================================
-// =============================================================================
+/* ==== Products list Pages - Options ==========================================
+   ============================================================================= */
 :where(#o_wsale_container) {
 
-    // === Option: "5 Products Per Row"
+    /* === Option: "5 Products Per Row" */
     &[data-ppr="5"] {
-        // Bootstrap uses a 12 columns grid system by default.
-        // Tweak the grid when in need to render 5 columns.
+        /* Bootstrap uses a 12 columns grid system by default.
+           Tweak the grid when in need to render 5 columns. */
         .o_wsale_products_grid_table {
             @include media-breakpoint-up(lg) {
                 --columns: 10;
@@ -566,7 +566,7 @@
         }
     }
 
-    // === Option: "Grid Design"
+    /* === Option: "Grid Design" */
     &:where(:has(#o_wsale_products_grid.o_wsale_products_opt_design_grid)) {
         --gap: 0;
 
@@ -681,18 +681,18 @@
         }
     }
 
-    // === Option: "Layout Catalog" (could be be thumbs, cards, grid...)
+    /* === Option: "Layout Catalog" (could be be thumbs, cards, grid...) */
     &:where(:has(#o_wsale_products_grid.o_wsale_products_opt_layout_catalog)) {
         @mixin desktop-setup {
-            // Prevent grid gutter to be higher that bootstrap gutter width to make sure
-            // the negative margin layout does not overflow on elements. This prevents the
-            // use of an ugly overflow: hidden which would break box-shadows.
+            /* Prevent grid gutter to be higher that bootstrap gutter width to make sure
+               the negative margin layout does not overflow on elements. This prevents the
+               use of an ugly overflow: hidden which would break box-shadows. */
             $o-wsale-products-layout-grid-gutter-width: $grid-gutter-width / 2 !default;
             $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale-products-layout-grid-gutter-width) !default;
 
-            // .o_wsale_products_grid_table
-            // Necessary just to ensure that a product with custom height behaves
-            // correctly when rendered into the last row.
+            /* .o_wsale_products_grid_table
+               Necessary just to ensure that a product with custom height behaves
+               correctly when rendered into the last row. */
             grid-auto-rows: minmax(160px, auto);
 
 
@@ -702,7 +702,7 @@
                 grid-row: span var(--o-wsale-products-grid-product-col-height, 1);
             }
 
-            // Stretch
+            /* Stretch */
             .oe_product.oe_product_size_stretch {
                 --o-wsale-card-border-radius: 0;
                 --o-wsale-card-flex-direction: row;
@@ -787,7 +787,7 @@
         }
     }
 
-    // === Option: "List Catalog" (could be thumbs, cards, grid...)
+    /* === Option: "List Catalog" (could be thumbs, cards, grid...) */
     &:where(:has(#o_wsale_products_grid.o_wsale_products_opt_layout_list)) {
         @include media-breakpoint-up(md) {
             --o-wsale-card-price-min-width: MAX(12ch, 16cqw);
@@ -877,8 +877,8 @@
     }
 }
 
-// ==== Generic rules for ANY 'website_sale' view ==============================
-// =============================================================================
+/* ==== Generic rules for ANY 'website_sale' view ==============================
+   ============================================================================= */
 .oe_website_sale {
     .activeDrag * {
         cursor: grabbing !important;
@@ -923,12 +923,12 @@
     }
 
     #o_wsale_pager.o_wsale_pager_accommodate_floating {
-        // Accommodate enough empty space for the floating bar
+        /* Accommodate enough empty space for the floating bar */
         padding-bottom: calc(var(--o-bs-spacer-4) + var(--o-bs-spacer-5)) !important;
     }
 
-    // Remove the breadcrumb splitter '/' on small devices
-    // since show only 1 entry on the product page.
+    /* Remove the breadcrumb splitter '/' on small devices
+       since show only 1 entry on the product page. */
     @include media-breakpoint-down(lg) {
         .o_wsale_breadcrumb .breadcrumb-item {
             padding-left: 0;
@@ -969,10 +969,10 @@ a.no-decoration {
 }
 
 
-// ==== Product Page View ======================================================
-// =============================================================================
+/* ==== Product Page View ======================================================
+   ============================================================================= */
 
-// ==== Utilities ==============================================================
+/* ==== Utilities ============================================================== */
 $-product-ratios-map: (
     'auto': auto,
     '21_9': 21/9,
@@ -1020,7 +1020,7 @@ $-product-radius-map: (
     }
 }
 
-// ==== Layout =================================================================
+/* ==== Layout ================================================================= */
 .o_wsale_content_contained {
     --gutter-x: 0;
 }
@@ -1046,9 +1046,9 @@ $-product-radius-map: (
         z-index: 2;
     }
 
-    // Prevents product_details from creating a stacking context when containing
-    // an open age verification snippet. Otherwise the snippet renders below the
-    // blurred background.
+    /* Prevents product_details from creating a stacking context when containing
+       an open age verification snippet. Otherwise the snippet renders below the
+       blurred background. */
     &:has(.s_age_verification_popup .show) {
         z-index: auto;
         position: relative !important;
@@ -1076,14 +1076,14 @@ $-product-radius-map: (
     }
 }
 
-// ==== Main Details Container =================================================
-// The product details container behaves differently from the default Bootstrap
-// container. Gap, gutter, and padding are carefully adjusted to handle specific
-// option combinations.
-//
-// Note: we avoid targeting Bootstrap's default classes (e.g. `.container` or
-// `.container-fluid`) because they use `@extend`. Any custom rule applied there
-// would unintentionally propagate across the entire website.
+/* ==== Main Details Container =================================================
+   The product details container behaves differently from the default Bootstrap
+   container. Gap, gutter, and padding are carefully adjusted to handle specific
+   option combinations.
+
+   Note: we avoid targeting Bootstrap's default classes (e.g. `.container` or
+   `.container-fluid`) because they use `@extend`. Any custom rule applied there
+   would unintentionally propagate across the entire website. */
 #product_detail {
     &.o_wsale_container_lg .o_wsale_product_images {
         padding: 0;
@@ -1116,7 +1116,7 @@ $-product-radius-map: (
     padding-right: var(--o-wsale-product-col-details-padding-left, calc(var(--gutter-x) * .5));
 }
 
-// ==== Image Area Width =======================================================
+/* ==== Image Area Width ======================================================= */
 .o_wsale_product_page_opt_image_width_none {
     --o-wsale-product-col-images-display: none;
 }
@@ -1181,34 +1181,34 @@ $-product-radius-map: (
     }
 }
 
-// ==== Product Details Content ================================================
+/* ==== Product Details Content ================================================ */
 #o_wsale_product_details_content {
     display: flex;
     flex-direction: column;
 
-    // Two-Column Product Details Layout Mixin
-    // =========================================================================
-    // Creates a responsive two-column layout for product details pages using
-    // CSS container queries. When the container width exceeds the minimum
-    // threshold, transforms the layout from single-column to a three-column
-    // grid (info | spacer | CTA) where content spans the first and third
-    // columns.
-    //
-    // Layout Structure:
-    // ┌─────────────────┬────────┬─────────────────┐
-    // │   Product Info  │ Spacer │      CTA        │
-    // │   (Details,     │        │   (Buy button,  │
-    // │   Description,  │        │   Add to cart,  │
-    // │   etc.)         │        │   Price, etc.)  │
-    // └─────────────────┴────────┴─────────────────┘
-    //
-    // @param {Length|null} $_infos_max - Maximum width for the info column
-    // @param {Length|null} $_spacer_max - Maximum width for the spacer column
-    //
-    // Container Query Breakpoint:
-    // - Activates when container width ≥ (412px + spacer + 300px) = ~minimum
-    //   viable width.
-    // - Uses CSS container queries for element-based responsive design
+    /* Two-Column Product Details Layout Mixin
+       =========================================================================
+       Creates a responsive two-column layout for product details pages using
+       CSS container queries. When the container width exceeds the minimum
+       threshold, transforms the layout from single-column to a three-column
+       grid (info | spacer | CTA) where content spans the first and third
+       columns.
+
+       Layout Structure:
+       ┌─────────────────┬────────┬─────────────────┐
+       │   Product Info  │ Spacer │      CTA        │
+       │   (Details,     │        │   (Buy button,  │
+       │   Description,  │        │   Add to cart,  │
+       │   etc.)         │        │   Price, etc.)  │
+       └─────────────────┴────────┴─────────────────┘
+
+       @param {Length|null} $_infos_max - Maximum width for the info column
+       @param {Length|null} $_spacer_max - Maximum width for the spacer column
+
+       Container Query Breakpoint:
+       - Activates when container width ≥ (412px + spacer + 300px) = ~minimum
+       viable width.
+       - Uses CSS container queries for element-based responsive design */
     @mixin o-product-details-trig-two-cols($_infos_max: null, $_spacer_max: null) {
         $_sizes_min: (
             'infos': 412px,
@@ -1252,7 +1252,7 @@ $-product-radius-map: (
         }
     }
 
-    // ==== Two-columns info product layout trigger conditions
+    /* ==== Two-columns info product layout trigger conditions */
     .o_wsale_product_page_opt_image_width_none &,
     .o_wsale_product_page_opt_image_width_100_pc & {
         @include media-breakpoint-up(lg) {
@@ -1272,7 +1272,7 @@ $-product-radius-map: (
         max-width: var(--o-wsale-product-details-content-section-max-width, 520px);
     }
 
-    // Hide but render empty attributes sections.
+    /* Hide but render empty attributes sections. */
     .o_wsale_product_details_content_section_attributes {
         display: none;
 
@@ -1286,7 +1286,7 @@ $-product-radius-map: (
     }
 }
 
-// ==== Separators
+/* ==== Separators */
 .o_wsale_product_page_opt_separators {
     .o_wsale_product_details_content_section {
         &:where(:not(
@@ -1304,7 +1304,7 @@ $-product-radius-map: (
     }
 }
 
-// ==== CTA Wrapper ============================================================
+/* ==== CTA Wrapper ============================================================ */
 #o_wsale_cta_wrapper {
     &.o_wsale_cta_wrapper_boxed {
         max-width: 26rem;
@@ -1347,10 +1347,10 @@ $-product-radius-map: (
     }
 }
 
-// ==== Product Grid ===========================================================
+/* ==== Product Grid =========================================================== */
 #o-grid-product {
     @at-root {
-        // Make custom property animatable
+        /* Make custom property animatable */
         @property --o-wsale-js-grid-product-height {
             syntax: "<length>";
             inherits: true;
@@ -1368,16 +1368,16 @@ $-product-radius-map: (
     }
 
     .o_ribbons:not([data-ribbon-id]) {
-        // Do not render empty ribbons to avoid conflicts with grid's gaps
+        /* Do not render empty ribbons to avoid conflicts with grid's gaps */
         display: none;
     }
 
-    // ==== Mobile specific styles
+    /* ==== Mobile specific styles */
     @include media-breakpoint-down(lg) {
         --o-wsale-grid-product-col-display: contents;
     }
 
-    // ==== Solo grid styles
+    /* ==== Solo grid styles */
     &.o_grid_solo {
         --o-wsale-grid-product-col-display: contents;
 
@@ -1392,10 +1392,10 @@ $-product-radius-map: (
         }
     }
 
-    // ==== Multi-item grid styles
+    /* ==== Multi-item grid styles */
     &:where(:not(.o_grid_solo)) {
 
-        // ==== Mobile specific styles
+        /* ==== Mobile specific styles */
         @include media-breakpoint-down(lg) {
             $_max_height: 60vh;
 
@@ -1404,7 +1404,7 @@ $-product-radius-map: (
 
                 flex-direction: column;
                 height: var(--o-wsale-js-grid-product-height);
-                min-height: 146px; // Arbitrary, based on the wider aspect-ratio
+                min-height: 146px; /* Arbitrary, based on the wider aspect-ratio */
                 max-height: $_max_height;
                 overflow-y: scroll;
                 overflow-x: hidden;
@@ -1417,7 +1417,7 @@ $-product-radius-map: (
                 &:not(.gap-0) {
                     --_lastBlock_margin_bottom: calc(var(--o-bs-grid-gutter-width) * -0.75);
 
-                    // Normalize desktop values for mobile
+                    /* Normalize desktop values for mobile */
                     gap: calc(var(--o-bs-grid-gutter-width) * .25) 0 !important;
                     padding-right: calc(var(--o-bs-grid-gutter-width) * .5) !important;
                     padding-bottom: calc(var(--o-bs-grid-gutter-width) * .75) !important;
@@ -1425,7 +1425,7 @@ $-product-radius-map: (
             }
 
             &:has(.o_wsale_product_page_grid_row:not(.gap-0)) {
-                // Handle ribbon
+                /* Handle ribbon */
                 padding-left: calc(var(--o-bs-grid-gutter-width) * .5) !important;
             }
 
@@ -1442,9 +1442,9 @@ $-product-radius-map: (
             }
 
             &.o_grid_uses_ratio_auto.o_grid_uses_ratio_mobile_auto {
-                // When images have inconsistent aspect-ratio, we set the grid
-                // height in js according to the tallest image. Perform a "loading"
-                // animation during this process.
+                /* When images have inconsistent aspect-ratio, we set the grid
+                   height in js according to the tallest image. Perform a "loading"
+                   animation during this process. */
                 @keyframes o-produt-grid-loading {
                     0% { opacity: .25; }
                     100% { opacity: .5; }
@@ -1469,7 +1469,7 @@ $-product-radius-map: (
             }
         }
 
-        // Complex grid layout for 100% width images
+        /* Complex grid layout for 100% width images */
         @include media-breakpoint-up(lg) {
             .o_wsale_product_page_opt_image_width_100_pc & {
                 --o-wsale-grid-product-row-display: grid;
@@ -1520,7 +1520,7 @@ $-product-radius-map: (
     }
 }
 
-// ==== Grid image styling
+/* ==== Grid image styling */
 .o_wsale_product_page_grid_column .o_product_detail_img_wrapper {
     aspect-ratio: var(--o-wsale-product-image-ratio);
 
@@ -1530,7 +1530,7 @@ $-product-radius-map: (
     }
 }
 
-// ==== Carousel ===============================================================
+/* ==== Carousel =============================================================== */
 #o-carousel-product {
     transition: top 200ms;
 
@@ -1550,7 +1550,7 @@ $-product-radius-map: (
         min-height: inherit;
     }
 
-    // Hide controls when not hovering on desktop
+    /* Hide controls when not hovering on desktop */
     @include media-breakpoint-up(xl) {
         &:not(:hover) {
             .carousel-control-prev,
@@ -1569,11 +1569,11 @@ $-product-radius-map: (
         transition: transform 0.3s ease-in-out;
     }
 
-    // ==== Carousel indicators
+    /* ==== Carousel indicators */
     .o_carousel_product_indicators {
         max-height: 400px;
 
-        // Desktop indicator styles
+        /* Desktop indicator styles */
         @include media-breakpoint-up(lg) {
             .carousel-indicators {
                 justify-content: start;
@@ -1615,7 +1615,7 @@ $-product-radius-map: (
         }
     }
 
-    // Mobile indicator styles
+    /* Mobile indicator styles */
     @include media-breakpoint-down(lg) {
         &.o_carousel_product_left_indicators {
             flex-direction: column-reverse;
@@ -1642,7 +1642,7 @@ $-product-radius-map: (
         }
     }
 
-    // Indicator spacing
+    /* Indicator spacing */
     @include media-breakpoint-up(lg) {
         .carousel-indicators li {
             margin: 0;
@@ -1663,7 +1663,7 @@ $-product-radius-map: (
         }
     }
 
-    // Indicator Positioning
+    /* Indicator Positioning */
     @include media-breakpoint-up(lg) {
         .o_wsale_product_page_opt_image_width_100_pc &:not(.o_carousel_product_left_indicators) {
             .o_carousel_product_indicators {
@@ -1675,7 +1675,7 @@ $-product-radius-map: (
     }
 }
 
-// ==== Carousel Controls (shared between carousel and image viewer) ===========
+/* ==== Carousel Controls (shared between carousel and image viewer) =========== */
 #o-carousel-product, .o_wsale_image_viewer {
     .carousel-control-prev, .carousel-control-next {
         top: auto;
@@ -1709,7 +1709,7 @@ $-product-radius-map: (
     }
 }
 
-// ==== IMAGE ZOOM ==============================================
+/* ==== IMAGE ZOOM ============================================== */
 .ecom-zoomable[data-ecom-zoom-click] img.product_detail_img {
     cursor: zoom-in;
 }
@@ -1829,8 +1829,8 @@ $-product-radius-map: (
             @include media-breakpoint-up(lg) {
                 overflow-y: scroll;
 
-                // Calculate the height of 4.5 <tr> through the images height.
-                // (+ spacer 3 to compensate negative margin)
+                /* Calculate the height of 4.5 <tr> through the images height.
+                   (+ spacer 3 to compensate negative margin) */
                 max-height: calc(calc(var(--o-bs-border-width) * 4 + (#{$table-cell-padding-y} + #{map-get($spacers, 3)} + (var(--o-wsale-checkout-cart-product-img-width) / var(--o-wsale-shop-thumb-aspect-ratio, 1))) * 4.5) + var(--o-bs-spacer-3));
             }
         }
@@ -1899,7 +1899,7 @@ $-product-radius-map: (
     }
 }
 
-// Unified product image aspect ratios
+/* Unified product image aspect ratios */
 
 %o-wsale-shop-thumb {
     object-fit: cover;
@@ -1941,7 +1941,7 @@ $-product-radius-map: (
 }
 
 .oe_website_sale {
-    // Changes the chevron color to contrast with user's theme background color
+    /* Changes the chevron color to contrast with user's theme background color */
     .accordion-button::after {
         background-image: escape-svg($accordion-button-icon);
     }
@@ -1965,9 +1965,9 @@ $-product-radius-map: (
             box-shadow: none;
         }
 
-        // Necessary to display the first accordion entry as opened before the
-        // JS code is loaded. When loaded, the `.o_accordion_not_initialized` class
-        // will be removed.
+        /* Necessary to display the first accordion entry as opened before the
+           JS code is loaded. When loaded, the `.o_accordion_not_initialized` class
+           will be removed. */
         &.o_accordion_not_initialized > .accordion-item:first-child {
             .accordion-button::after {
                 transform: var(--accordion-btn-icon-transform);
@@ -1990,7 +1990,7 @@ $-product-radius-map: (
     }
 }
 
-// Hide chevrons for collapsed categories
+/* Hide chevrons for collapsed categories */
 #categories_recursive li {
     width: 100% !important;
 }
@@ -2013,7 +2013,7 @@ body.modal-open:has(.o_wsale_product_page) {
     overflow: hidden;
 }
 
-// Product Ribbon Classes
+/* Product Ribbon Classes */
 .oe_website_sale{
     @mixin o-ribbon-tag() {
         margin: 0;
@@ -2044,9 +2044,9 @@ body.modal-open:has(.o_wsale_product_page) {
         position: absolute;
         top: 0;
         inset-inline-end: 0;
-        // 0.708 is 1 - cos(45deg)
-        // Transforms are applied right-to-left
-        // Cannot use matrix because of the use of % values.
+        /* 0.708 is 1 - cos(45deg)
+           Transforms are applied right-to-left
+           Cannot use matrix because of the use of % values. */
         transform: translateX(calc(-0.708 * (100% - #{2 * $ribbon-padding}))) rotate(45deg) translateX(calc(100% - #{$ribbon-padding}));
     }
 
@@ -2079,7 +2079,7 @@ div[name="order_confirmation"] {
     }
 }
 
-// ==== Range Filter ==============================================
+/* ==== Range Filter ============================================== */
 .multirange-wrapper:has(.o_attr_range) > small {
     min-height: 24px;
     margin-top: 0;

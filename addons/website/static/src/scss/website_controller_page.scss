@@ -3,7 +3,7 @@
     @for $size from 1 through length($o-colors) {
         &.o_tag_color_#{$size - 1} {
             $background-color: white;
-            // no color selected
+            /* no color selected */
             @if $size == 1 {
                 & {
                     color: black;

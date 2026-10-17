@@ -10,7 +10,7 @@
         scrollbar-gutter: stable both-edges;
     }
     .o_snippets_preview_row {
-        position: absolute; // Needed for RTL
+        position: absolute; /* Needed for RTL */
         transform: scale(0.3);
         transform-origin: top left;
         width: 333%;
@@ -62,7 +62,7 @@
             .o_three_quarter_height {
                 aspect-ratio: 6 / 3;
             }
-            // This is kept for compatibility
+            /* This is kept for compatibility */
             .o_half_screen_height {
                 aspect-ratio: 8 / 3;
             }
@@ -87,8 +87,8 @@
                     }
                 }
 
-                // Force visibility on root snippets if desktop/mobile invisible
-                // and on conditionally visible elements
+                /* Force visibility on root snippets if desktop/mobile invisible
+                   and on conditionally visible elements */
                 &.o_snippet_desktop_invisible, &.o_snippet_mobile_invisible, &.o_conditional_hidden, & .o_conditional_hidden {
                     display: block !important;
 

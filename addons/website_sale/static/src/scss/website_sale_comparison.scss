@@ -54,7 +54,7 @@
     }
 
 
-    // Mini sticky comparison overview
+    /* Mini sticky comparison overview */
     .o_wsale_comparison_mini_sticky {
         transform: translateY(-100%);
         transition: transform .4s ease-in-out;
@@ -90,7 +90,7 @@
     }
 }
 
-// Specifications
+/* Specifications */
 #product_full_spec {
     border-top: 1px solid var(--gray-400);
 
@@ -133,14 +133,14 @@
     }
 }
 
-// Style the <main> element when comparison bar is present
+/* Style the <main> element when comparison bar is present */
 :where(main:has(.o_wsale_comparison_bottom_bar)) {
     --o-wsale-comparison-bottom-bar-height: 80px;
 
     position: relative;
     padding-bottom: var(--o-wsale-comparison-bottom-bar-height);
 
-    // Offset floating bar when comparison bar is visible
+    /* Offset floating bar when comparison bar is visible */
     #o_wsale_floating_bar {
         bottom: calc(var(--_container-gap) + var(--o-wsale-comparison-bottom-bar-height)) !important;
     }

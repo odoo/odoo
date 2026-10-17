@@ -26,10 +26,10 @@
     transform: scale(-1);
 }
 
-// GRID LAYOUT
+/* GRID LAYOUT */
 .o_grid_mode {
     @include media-breakpoint-down(lg) {
-        // No horizontal gap in mobile view.
+        /* No horizontal gap in mobile view. */
         column-gap: 0px !important;
     }
     --grid-item-padding-y: 10px;
@@ -39,13 +39,13 @@
         padding: var(--grid-item-padding-y) var(--grid-item-padding-x) !important;
 
         @include media-breakpoint-down(lg) {
-            // Force the horizontal padding to 15px in mobile view, to be
-            // consistent with the normal mode.
+            /* Force the horizontal padding to 15px in mobile view, to be
+               consistent with the normal mode. */
             padding: var(--grid-item-padding-y) calc(0.5 * var(--gutter-x)) !important;
 
             &.o_grid_item_image {
-                // If the horizontal padding is set to 0px, keep it as 0px in
-                // mobile view, otherwise, force it to 15px.
+                /* If the horizontal padding is set to 0px, keep it as 0px in
+                   mobile view, otherwise, force it to 15px. */
                 --mobile-grid-item-padding-x: clamp(0px, calc(var(--grid-item-padding-x) * 100000), calc(0.5 * var(--gutter-x)));
                 padding: var(--grid-item-padding-y) var(--mobile-grid-item-padding-x) !important;
 
@@ -59,8 +59,8 @@
             @extend %o-we-inner-border-radius;
         }
 
-        // Override the grid item z-index if it has an open dropdown, so
-        // its content is always visible.
+        /* Override the grid item z-index if it has an open dropdown, so
+           its content is always visible. */
         &.o_grid_item:has(.dropdown-menu.show, .o_dropdown_menu.show) {
             z-index: $zindex-dropdown !important;
         }
@@ -77,9 +77,9 @@
 
         --gutter-x: 0px;
 
-        // Adapt the horizontal margins of a direct row child of a grid item, to
-        // make them compensate the grid item horizontal padding (to avoid an
-        // overflow).
+        /* Adapt the horizontal margins of a direct row child of a grid item, to
+           make them compensate the grid item horizontal padding (to avoid an
+           overflow). */
         .o_grid_item > .row,
         .o_grid_item > .o_text_columns > .row {
             --grid-inner-row-gutter-x: clamp(0px, 2 * var(--grid-item-padding-x), #{$grid-gutter-width});
@@ -116,7 +116,7 @@
             object-fit: contain !important;
         }
 
-        // Allowing "cover" for some hover effects.
+        /* Allowing "cover" for some hover effects. */
         &:not(.o_grid_item_image_contain) img[data-shape$="geo_square"] {
             &:not(
                 [data-hover-effect="dolly_zoom"],
@@ -127,7 +127,7 @@
             }
         }
 
-        // Needed when "a" is "display: block".
+        /* Needed when "a" is "display: block". */
         > a {
             width: 100%;
             height: 100%;
@@ -135,42 +135,42 @@
     }
 }
 
-// Override the default image selection color used in "web_editor". This
-// prevents selected images from being covered with a blue filter in edit mode
-// (Website, Email Marketing). This allows to see the correct final rendering
-// of an image when it is edited.
+/* Override the default image selection color used in "web_editor". This
+   prevents selected images from being covered with a blue filter in edit mode
+   (Website, Email Marketing). This allows to see the correct final rendering
+   of an image when it is edited. */
 body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
     img::selection {
         background-color: transparent !important;
     }
 }
 
-// Bootstrap is overridden to allow the use of CSS variables to configure border
-// and radius. The main goal is to allow computation on the children layers (see
-// %o-we-background-layer) whose radius would depend on both the parent border
-// width and border radius.
-// See BORDER_VARIABLES_RULES_EXTENSION
-//
-// --box-border-XXX-(radius|width) : editor Round Corners user input
-// --box-border-(radius|width) : rounded-XXX classes
-// --border-(radius|width) : theme (+ default bootstrap)
+/* Bootstrap is overridden to allow the use of CSS variables to configure border
+   and radius. The main goal is to allow computation on the children layers (see
+   %o-we-background-layer) whose radius would depend on both the parent border
+   width and border radius.
+   See BORDER_VARIABLES_RULES_EXTENSION
 
-// BORDER WIDTH
+   --box-border-XXX-(radius|width) : editor Round Corners user input
+   --box-border-(radius|width) : rounded-XXX classes
+   --border-(radius|width) : theme (+ default bootstrap) */
+
+/* BORDER WIDTH */
 %box-border-width-rules {
-    // Setup shorthands and fallback: in any case, inline style (on the original
-    // property or on the CSS variable) will dominate. Setting them up this way
-    // allows to make reading/writing on those more precise (although not
-    // fully: reading the main property will not detail the sub-properties).
+    /* Setup shorthands and fallback: in any case, inline style (on the original
+       property or on the CSS variable) will dominate. Setting them up this way
+       allows to make reading/writing on those more precise (although not
+       fully: reading the main property will not detail the sub-properties). */
     --box-border-width: var(--border-width);
     --box-border-top-width: var(--box-border-width);
     --box-border-right-width: var(--box-border-width);
     --box-border-bottom-width: var(--box-border-width);
     --box-border-left-width: var(--box-border-width);
 
-    // TODO make it so builder options do not force all 4 values when the user
-    // simply want to set a single value (and instead use the main CSS variable
-    // in that case). Something to do with improving setStyle's understanding of
-    // CSS_SHORTHANDS when it comes to CSS variables.
+    /* TODO make it so builder options do not force all 4 values when the user
+       simply want to set a single value (and instead use the main CSS variable
+       in that case). Something to do with improving setStyle's understanding of
+       CSS_SHORTHANDS when it comes to CSS variables. */
 
     border-width:
         var(--box-border-top-width)
@@ -178,30 +178,30 @@ body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
         var(--box-border-bottom-width)
         var(--box-border-left-width) !important;
 }
-// TODO this should probably be done for all bootstrap "border" *sizes* classes
-// like "rounded" classes below. At the moment, it was not done because builder
-// options do not allow to set those yet, but layouts could(?).
-// See ROUNDED_SIZES_CLASSES_ONLY.
+/* TODO this should probably be done for all bootstrap "border" *sizes* classes
+   like "rounded" classes below. At the moment, it was not done because builder
+   options do not allow to set those yet, but layouts could(?).
+   See ROUNDED_SIZES_CLASSES_ONLY. */
 .border {
     @extend %box-border-width-rules;
 }
 
-// BORDER RADIUS
+/* BORDER RADIUS */
 %box-border-radius-rules {
-    // Setup shorthands and fallback: in any case, inline style (on the original
-    // property or on the CSS variable) will dominate. Setting them up this way
-    // allows to make reading/writing on those more precise (although not
-    // fully: reading the main property will not detail the sub-properties).
+    /* Setup shorthands and fallback: in any case, inline style (on the original
+       property or on the CSS variable) will dominate. Setting them up this way
+       allows to make reading/writing on those more precise (although not
+       fully: reading the main property will not detail the sub-properties). */
     --box-border-radius: var(--border-radius);
     --box-border-top-left-radius: var(--box-border-radius);
     --box-border-top-right-radius: var(--box-border-radius);
     --box-border-bottom-right-radius: var(--box-border-radius);
     --box-border-bottom-left-radius: var(--box-border-radius);
 
-    // TODO make it so builder options do not force all 4 values when the user
-    // simply want to set a single value (and instead use the main CSS variable
-    // in that case). Something to do with improving setStyle's understanding of
-    // CSS_SHORTHANDS when it comes to CSS variables.
+    /* TODO make it so builder options do not force all 4 values when the user
+       simply want to set a single value (and instead use the main CSS variable
+       in that case). Something to do with improving setStyle's understanding of
+       CSS_SHORTHANDS when it comes to CSS variables. */
 
     border-radius:
         var(--box-border-top-left-radius)
@@ -209,13 +209,13 @@ body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
         var(--box-border-bottom-right-radius)
         var(--box-border-bottom-left-radius) !important;
 }
-// Note: we do not support partial border-radius classes using CSS variables
-// just yet. We could (at the cost of dividing the `%box-border-radius-rules`
-// into 4 or 5 parts), but this is not necessary at the moment. They can be used
-// in layouts but we do not allow edition of their radius via the builder: when
-// we do, we normally should always prefer to give the user full control over
-// the 4 directions, by switching to the `rounded` or a `rounded-{SIZE}` class.
-// See ROUNDED_SIZES_CLASSES_ONLY.
+/* Note: we do not support partial border-radius classes using CSS variables
+   just yet. We could (at the cost of dividing the `%box-border-radius-rules`
+   into 4 or 5 parts), but this is not necessary at the moment. They can be used
+   in layouts but we do not allow edition of their radius via the builder: when
+   we do, we normally should always prefer to give the user full control over
+   the 4 directions, by switching to the `rounded` or a `rounded-{SIZE}` class.
+   See ROUNDED_SIZES_CLASSES_ONLY. */
 @each $size, $value in map-get(map-get($utilities, 'rounded'), 'values') {
     $class-suffix: if($size == null, "", "-#{$size}");
     .rounded#{$class-suffix} {
@@ -223,16 +223,16 @@ body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
     }
 }
 
-// For border with all 4 edges of equal value the max function is useless,
-// but in case the border is uneven it approximates the correct roundness
-// See BORDER_VARIABLES_RULES_EXTENSION
-//
-// --box-border-XXX-(radius|width) : editor Round Corners user input
-// --box-border-(radius|width) : rounded-XXX classes
-// --border-(radius|width) : theme (+ default bootstrap)
-//
-// Generic rule for inner elements to inherit a parent's border-radius
-// without requiring overflow: hidden on the parent.
+/* For border with all 4 edges of equal value the max function is useless,
+   but in case the border is uneven it approximates the correct roundness
+   See BORDER_VARIABLES_RULES_EXTENSION
+
+   --box-border-XXX-(radius|width) : editor Round Corners user input
+   --box-border-(radius|width) : rounded-XXX classes
+   --border-(radius|width) : theme (+ default bootstrap)
+
+   Generic rule for inner elements to inherit a parent's border-radius
+   without requiring overflow: hidden on the parent. */
 %o-we-inner-border-radius {
     border-radius:
         calc(var(--box-border-top-left-radius, 0px) - max(var(--box-border-top-width, 0px), var(--box-border-left-width, 0px)))
@@ -241,7 +241,7 @@ body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
         calc(var(--box-border-bottom-left-radius, 0px) - max(var(--box-border-bottom-width, 0px), var(--box-border-left-width, 0px)));
 }
 
-// Needed to prevent the emoji picker from inheriting theme colors
+/* Needed to prevent the emoji picker from inheriting theme colors */
 .o-EmojiPicker {
     --EmojiPicker-background-color: white;
     --EmojiPicker-font-size: 1rem;

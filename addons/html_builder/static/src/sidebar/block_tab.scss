@@ -1,9 +1,9 @@
-// TODO define these variables elsewhere.
+/* TODO define these variables elsewhere. */
 $o-we-overlay-zindex: ($zindex-fixed + $zindex-modal-backdrop) / 2 !default;
 $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 .o_snippet {
-    // No root because can be dragged and dropped and the helper is in the body.
+    /* No root because can be dragged and dropped and the helper is in the body. */
     --o-hb-snippet-border-radius: .375rem; /* Bootstrap's, not the backend's */
 
     position: relative;
@@ -51,7 +51,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 .o_block_tab {
     padding: var(--o-hb-spacer-2);
-    height: 100%; // give enough space for tips pointing at snippets after a snippet search
+    height: 100%; /* give enough space for tips pointing at snippets after a snippet search */
     z-index: 1;
 
 
@@ -151,16 +151,16 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         }
 
         .o_snippet_thumbnail {
-            min-width: 0; // Ensure text-overflow on flex children
+            min-width: 0; /* Ensure text-overflow on flex children */
         }
 
         .o_snippet_thumbnail_img {
             flex-shrink: 0;
         }
 
-        // TODO improve the following rules later
+        /* TODO improve the following rules later */
         .o_hb_rename_delete_buttons button {
-            // @extend %we-generic-link;
+            /* @extend %we-generic-link; */
             padding-left: var(--o-we-sidebar-content-field-button-group-button-spacing);
             padding-right: var(--o-we-sidebar-content-field-button-group-button-spacing);
         }
@@ -172,7 +172,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         }
 
         .o_hb_rename_input {
-            // @extend %we-generic-text-input;
+            /* @extend %we-generic-text-input; */
             display: flex;
             cursor: pointer;
 
@@ -181,7 +181,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             }
 
             button {
-                // @extend %we-generic-clickable;
+                /* @extend %we-generic-clickable; */
                 cursor: pointer;
                 flex: 1 1 auto;
                 padding: 0 var(--o-we-sidebar-content-field-button-group-button-spacing);
@@ -194,8 +194,8 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 .modal-open:has(.o_block_tab) {
     .o_snippet {
-        // --bs-modal-zindex + 1 so that dragged snippets are visible if the
-        // builder is in a modal
+        /* --bs-modal-zindex + 1 so that dragged snippets are visible if the
+           builder is in a modal */
         z-index: 1056;
     }
 }

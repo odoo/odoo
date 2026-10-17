@@ -1,8 +1,8 @@
-// Retrive the tab's height by summ its properties
+/* Retrive the tab's height by summ its properties */
 $owprofile-tabs-height: ($nav-link-padding-y*2) + ($font-size-base * $line-height-base);
 
-// Overal page bg-color: Blend it 'over' the color chosen by the user
-// ($body-bg), rather than force it replacing the variable's value.
+/* Overal page bg-color: Blend it 'over' the color chosen by the user
+   ($body-bg), rather than force it replacing the variable's value. */
 $owprofile-color-bg: mix($body-bg, #efeff4);
 
 .o_wprofile_body {
@@ -101,14 +101,14 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     }
 }
 
-/// Progress Circle
+/* Progress Circle */
 .o_wprofile_progress_circle {
     position: relative;
     max-width: 300px;
 
     svg.o_pc_circular_chart {
-        // Allow hover effect on svg paths in order to display bootstrap tooltip,
-        // by pushing the circular chart above the next rank info.
+        /* Allow hover effect on svg paths in order to display bootstrap tooltip,
+           by pushing the circular chart above the next rank info. */
         z-index: 1;
         position: relative;
         display: block;
@@ -139,7 +139,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
         inset: 0;
         h4 {
             width: 60%;
-            // only apply ellipsis when in non-edit mode, that way the editor can see the full value
+            /* only apply ellipsis when in non-edit mode, that way the editor can see the full value */
             &:not(.o_savable) {
                 @include o-text-overflow();
             }
@@ -158,7 +158,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     }
 }
 
-// All Users Page
+/* All Users Page */
 .o_wprofile_all_users_nav {
     border-width: 1px 0;
 
@@ -270,7 +270,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 }
 
 
-// Other stuffs
+/* Other stuffs */
 .country_flag {
     display: inline-block;
     margin-left: 2px;
@@ -278,19 +278,19 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     width: auto !important;
 }
 
-// Tools
+/* Tools */
 .o_wprofile_pointer {
     cursor: pointer;
 }
 
-// Own profile border
+/* Own profile border */
 .o_wprofile_border_focus {
     border-left: 4px solid var(--secondary);
 }
 
-// Edition mode
+/* Edition mode */
 .editor_enable {
-    // Allow to edit rank picture in edit mode
+    /* Allow to edit rank picture in edit mode */
     .o_wprofile_progress_circle .o_pc_overlay {
         z-index: initial;
     }

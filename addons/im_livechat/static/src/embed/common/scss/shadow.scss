@@ -1,16 +1,16 @@
-// Duplicate :root/body rules into :host ruleset in order to make them work
-// in the shadow DOM.
+/* Duplicate :root/body rules into :host ruleset in order to make them work
+   in the shadow DOM. */
 
 $o-livechat-font-size: 14px !default;
 
-// Source: bootstrap/scss/_root.scss
+/* Source: bootstrap/scss/_root.scss */
 :host,
 [data-bs-theme="light"] {
   // Note: Custom variable values only support SassScript inside `#{}`.
 
-  // Colors
-  //
-  // Generate palettes for full colors, grays, and theme colors.
+  /* Colors
+
+     Generate palettes for full colors, grays, and theme colors. */
 
   @each $color, $value in $colors {
     --#{$prefix}#{$color}: #{$value};
@@ -43,16 +43,16 @@ $o-livechat-font-size: 14px !default;
   --#{$prefix}white-rgb: #{to-rgb($white)};
   --#{$prefix}black-rgb: #{to-rgb($black)};
 
-  // Fonts
+  /* Fonts */
 
-  // Note: Use `inspect` for lists so that quoted items keep the quotes.
-  // See https://github.com/sass/sass/issues/2383#issuecomment-336349172
+  /* Note: Use `inspect` for lists so that quoted items keep the quotes.
+     See https://github.com/sass/sass/issues/2383#issuecomment-336349172 */
   --#{$prefix}font-sans-serif: #{inspect($font-family-sans-serif)};
   --#{$prefix}font-monospace: #{inspect($font-family-monospace)};
   --#{$prefix}gradient: #{$gradient};
 
-  // Root and body
-  // scss-docs-start root-body-variables
+  /* Root and body
+     scss-docs-start root-body-variables */
   @if $font-size-root != null {
     --#{$prefix}root-font-size: #{$font-size-root};
   }
@@ -81,7 +81,7 @@ $o-livechat-font-size: 14px !default;
   --#{$prefix}tertiary-color-rgb: #{to-rgb($body-tertiary-color)};
   --#{$prefix}tertiary-bg: #{$body-tertiary-bg};
   --#{$prefix}tertiary-bg-rgb: #{to-rgb($body-tertiary-bg)};
-  // scss-docs-end root-body-variables
+  /* scss-docs-end root-body-variables */
 
   --#{$prefix}heading-color: #{$headings-color};
 
@@ -100,7 +100,7 @@ $o-livechat-font-size: 14px !default;
   --#{$prefix}highlight-color: #{$mark-color};
   --#{$prefix}highlight-bg: #{$mark-bg};
 
-  // scss-docs-start root-border-var
+  /* scss-docs-start root-border-var */
   --#{$prefix}border-width: #{$border-width};
   --#{$prefix}border-style: #{$border-style};
   --#{$prefix}border-color: #{$border-color};
@@ -111,35 +111,35 @@ $o-livechat-font-size: 14px !default;
   --#{$prefix}border-radius-lg: #{$border-radius-lg};
   --#{$prefix}border-radius-xl: #{$border-radius-xl};
   --#{$prefix}border-radius-xxl: #{$border-radius-xxl};
-  --#{$prefix}border-radius-2xl: var(--#{$prefix}border-radius-xxl); // Deprecated in v5.3.0 for consistency
+  --#{$prefix}border-radius-2xl: var(--#{$prefix}border-radius-xxl); /* Deprecated in v5.3.0 for consistency */
   --#{$prefix}border-radius-pill: #{$border-radius-pill};
-  // scss-docs-end root-border-var
+  /* scss-docs-end root-border-var */
 
   --#{$prefix}box-shadow: #{$box-shadow};
   --#{$prefix}box-shadow-sm: #{$box-shadow-sm};
   --#{$prefix}box-shadow-lg: #{$box-shadow-lg};
   --#{$prefix}box-shadow-inset: #{$box-shadow-inset};
 
-  // Focus styles
-  // scss-docs-start root-focus-variables
+  /* Focus styles
+     scss-docs-start root-focus-variables */
   --#{$prefix}focus-ring-width: #{$focus-ring-width};
   --#{$prefix}focus-ring-opacity: #{$focus-ring-opacity};
   --#{$prefix}focus-ring-color: #{$focus-ring-color};
-  // scss-docs-end root-focus-variables
+  /* scss-docs-end root-focus-variables */
 
-  // scss-docs-start root-form-validation-variables
+  /* scss-docs-start root-form-validation-variables */
   --#{$prefix}form-valid-color: #{$form-valid-color};
   --#{$prefix}form-valid-border-color: #{$form-valid-border-color};
   --#{$prefix}form-invalid-color: #{$form-invalid-color};
   --#{$prefix}form-invalid-border-color: #{$form-invalid-border-color};
-  // scss-docs-end root-form-validation-variables
+  /* scss-docs-end root-form-validation-variables */
 }
 
 @if $enable-dark-mode {
   @include color-mode(dark, true) {
     color-scheme: dark;
 
-    // scss-docs-start root-dark-mode-vars
+    /* scss-docs-start root-dark-mode-vars */
     --#{$prefix}body-color: #{$body-color-dark};
     --#{$prefix}body-color-rgb: #{to-rgb($body-color-dark)};
     --#{$prefix}body-bg: #{$body-bg-dark};
@@ -188,32 +188,32 @@ $o-livechat-font-size: 14px !default;
     --#{$prefix}form-valid-border-color: #{$form-valid-border-color-dark};
     --#{$prefix}form-invalid-color: #{$form-invalid-color-dark};
     --#{$prefix}form-invalid-border-color: #{$form-invalid-border-color-dark};
-    // scss-docs-end root-dark-mode-vars
+    /* scss-docs-end root-dark-mode-vars */
   }
 }
 
-// Source: bootstrap/_reboot.scss
+/* Source: bootstrap/_reboot.scss */
 :host {
-    margin: 0; // 1
+    margin: 0; /* 1 */
     font-family: var(--#{$prefix}body-font-family);
     @include font-size(var(--#{$prefix}body-font-size));
     font-weight: var(--#{$prefix}body-font-weight);
     line-height: var(--#{$prefix}body-line-height);
     color: var(--#{$prefix}body-color);
     text-align: var(--#{$prefix}body-text-align);
-    background-color: var(--#{$prefix}body-bg); // 2
-    -webkit-text-size-adjust: 100%; // 3
-    -webkit-tap-highlight-color: rgba($black, 0); // 4
+    background-color: var(--#{$prefix}body-bg); /* 2 */
+    -webkit-text-size-adjust: 100%; /* 3 */
+    -webkit-tap-highlight-color: rgba($black, 0); /* 4 */
 }
 
-// Source: webclient.scss
+/* Source: webclient.scss */
 :host {
     --o-webclient-color-scheme: #{$o-webclient-color-scheme};
     font-size: $o-livechat-font-size;
 }
 
 
-// Source: ui.scss
+/* Source: ui.scss */
 :host {
     & .o_hidden {
         display: none!important;

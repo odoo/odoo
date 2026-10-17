@@ -1,10 +1,10 @@
-// ============================
-// Mass Mailing "Theme Default"
-// ============================
+/* ============================
+   Mass Mailing "Theme Default"
+   ============================ */
 
 div.col:not([align]) {
-    // Default browser style but needed so that alignment works on some mail
-    // clients (see convert_inline)
+    /* Default browser style but needed so that alignment works on some mail
+       clients (see convert_inline) */
     text-align: inherit;
 }
 
@@ -27,14 +27,14 @@ div.col:not([align]) {
     }
 }
 
-// ===== Layout =====
+/* ===== Layout ===== */
 .o_layout {
     overflow: hidden;
 
     > .o_mail_wrapper {
         width: 100%;
         margin: 0 auto;
-        max-width: 1320px; // container max-width for xxl dimensions
+        max-width: 1320px; /* container max-width for xxl dimensions */
 
         &.o_mail_small {
             max-width: 600px;
@@ -51,7 +51,7 @@ div.col:not([align]) {
     }
 }
 
-// ===== Snippets (general) =====
+/* ===== Snippets (general) ===== */
 .o_mail_snippet_general {
     width: 100%;
     box-sizing: border-box;
@@ -65,17 +65,17 @@ div.col:not([align]) {
         border: none!important;
     }
 
-    // Icons
+    /* Icons */
     .oi {
         @mixin size($width, $height: $width) {
           width: $width;
           height: $height;
         }
     }
-    // Background Images
+    /* Background Images */
     .oe_img_bg {
-        // Compatibility <= 13.0, TODO remove?
-        // -----------------------------------
+        /* Compatibility <= 13.0, TODO remove?
+           ----------------------------------- */
         &.o_bg_img_opt_contain {
             background-size: contain;
             background-position: center center;
@@ -92,7 +92,7 @@ div.col:not([align]) {
     }
 }
 
-// ===== Snippets (specific) =====
+/* ===== Snippets (specific) ===== */
 .o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
     .o_mail_header_social {
         a:not(.btn), .btn.btn-link {
@@ -110,29 +110,29 @@ div.col:not([align]) {
     }
 }
 
-// -- Bootstrap overrides for transparent colors -- //
+/* -- Bootstrap overrides for transparent colors -- // */
 
 .list-group .list-group-item {
     border-color: #d2d2d2;
 
 }
 
-// ===== Misc =====
+/* ===== Misc ===== */
 
 .o_mail_snippet_general .container {
     border-collapse:separate;
 }
 
-// Compatibility: mb/mt classes on <td/> elements were interpreted as paddings
-// instead of margins before the introduction of pb/pt classes. As thoses mb/mt
-// classes may remain on clients' templates, <td/> are forced to 0 margin to
-// be sure (normally <td/> should not consider margin properties but some mail
-// clients might make the mistake to do so).
+/* Compatibility: mb/mt classes on <td/> elements were interpreted as paddings
+   instead of margins before the introduction of pb/pt classes. As thoses mb/mt
+   classes may remain on clients' templates, <td/> are forced to 0 margin to
+   be sure (normally <td/> should not consider margin properties but some mail
+   clients might make the mistake to do so). */
 div.col[class*="mb"], div.col[class*="mt"] {
     margin: 0!important;
 }
 
-// DEFAULT_CSS styles
+/* DEFAULT_CSS styles */
 
 .o_mail_wrapper {
     --h1-font-family: Arial,Helvetica Neue,Helvetica,sans-serif;

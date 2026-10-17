@@ -22,9 +22,9 @@
     }
 
     &:hover {
-        // Let borders color adapt according to body and CCs. Also, set a fallback
-        // value for browsers that don't support the color-mix function (used by
-        // 'fade-currentColor').
+        /* Let borders color adapt according to body and CCs. Also, set a fallback
+           value for browsers that don't support the color-mix function (used by
+           'fade-currentColor'). */
         --o-wsale-attribute-color-border-color: #{o-color('600')};
         --o-wsale-attribute-color-border-color: #{fade-currentColor(60%)};
     }
@@ -133,12 +133,12 @@
 }
 
 .css_quantity {
-    width: initial; // We don't want the quantity form to be full-width
+    width: initial; /* We don't want the quantity form to be full-width */
     border-radius: var(--o-bs-btn-border-radius);
 
     input {
-        // Needs !important because themes customize btns' padding direclty
-        // rather than change '$input-btn-padding-X' (shared with inputs).
+        /* Needs !important because themes customize btns' padding direclty
+           rather than change '$input-btn-padding-X' (shared with inputs). */
         height: auto !important;
         max-width: 4ch;
     }
@@ -187,10 +187,10 @@ select.form-select.css_attribute_select {
         }
     }
 }
-// In the case of a modal, we cannot rely on '$input-color' to define the color
-// of the select arrow because '$input-color' is set based on the background
-// color of the body. In modals, the input color is adjusted based on the
-// modal's background color (see 'bootstrap_review_frontend.scss').
+/* In the case of a modal, we cannot rely on '$input-color' to define the color
+   of the select arrow because '$input-color' is set based on the background
+   color of the body. In modals, the input color is adjusted based on the
+   modal's background color (see 'bootstrap_review_frontend.scss'). */
 @if ($modal-content-color == null) and ($form-select-bg == $body-bg) {
     .modal-content {
         select.form-select.css_attribute_select {

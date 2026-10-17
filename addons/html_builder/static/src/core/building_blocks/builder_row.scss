@@ -66,9 +66,9 @@
         width: 56%;
         align-items: center;
         gap: var(--hb-row-content-gap);
-        z-index: $_z-index; // Make sure outlines / shadows are not trimmed.
+        z-index: $_z-index; /* Make sure outlines / shadows are not trimmed. */
 
-        // to prevent overlapping of ul with builder options.
+        /* to prevent overlapping of ul with builder options. */
         &:has(ul) {
             z-index: auto;
         }
@@ -99,7 +99,7 @@
         align-self: center;
     }
 
-    // ==== States
+    /* ==== States */
     &:hover, &.active {
         .o_hb_row_content {
             color: var(--o-hb-row-color-active, var(--o-we-fg-lighter));
@@ -122,19 +122,19 @@
         }
     }
 
-    // Actionable labels hover states are currently dependant on the
-    // presence of a collapsable icon. Should be improved using states.
+    /* Actionable labels hover states are currently dependant on the
+       presence of a collapsable icon. Should be improved using states. */
     .o_hb_collapse_toggler:where(:not(.d-none)) + .o_hb_row_label_actionable:hover {
         cursor: pointer;
         color: var(--o-hb-row-color-active, var(--o-we-fg-lighter));
     }
 
-    // ==== Sublevels
+    /* ==== Sublevels */
     &.o_hb_row_sublevel > .o_hb_row_label::after {
         @include sublevel-line;
     }
 
-    // Sublevel specific rules
+    /* Sublevel specific rules */
     @for $_level from 1 through 3 {
         $_level-padding: $o-hb-row-padding-left + ($o-hb-row-indent-left * $_level);
         $_level-width: $o-hb-row-spacing + $o-we-border-width;
@@ -163,7 +163,7 @@
 
     & + .o_hb_collapse_content {
         overflow: hidden;
-        height: 0; // default collapsed state
+        height: 0; /* default collapsed state */
         transition: height 0.35s ease;
     }
 }

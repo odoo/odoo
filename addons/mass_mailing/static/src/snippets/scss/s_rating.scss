@@ -62,10 +62,10 @@
     &.s_rating_inline {
         display: flex;
         align-items: center;
-        // compatibility with a previously used snippets that no longer
-        // included the "s_rating_title" class on its title.
-        // By targeting the first child, we ensure that the styles are
-        // applied correctly even without the "s_rating_title" class.
+        /* compatibility with a previously used snippets that no longer
+           included the "s_rating_title" class on its title.
+           By targeting the first child, we ensure that the styles are
+           applied correctly even without the "s_rating_title" class. */
         .s_rating_title, > :first-child {
             margin: 0;
             margin-right: 0.5em;

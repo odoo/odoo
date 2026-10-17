@@ -1,23 +1,21 @@
-///
-/// This file regroups basic style rules for web_editor enable page edition and
-/// backend utils.
-/// TODO many of those rules should probably not be declared for the backend.
-/// in particular the o_ccX rules, see code linked to the variable named
-/// 'prevent-backend-colors-alteration'.
-///
+/* This file regroups basic style rules for web_editor enable page edition and
+   backend utils.
+   TODO many of those rules should probably not be declared for the backend.
+   in particular the o_ccX rules, see code linked to the variable named
+   'prevent-backend-colors-alteration'. */
 
 :root {
-    // Background the editor adjusts the contrast of the content against.
-    // Defaults to the background the editable is usually drawn on, and can be
-    // overridden by any context rendering the editor on another one.
+    /* Background the editor adjusts the contrast of the content against.
+       Defaults to the background the editable is usually drawn on, and can be
+       overridden by any context rendering the editor on another one. */
     --o-html-editor-background-contrast: #{$o-view-background-color};
 
     @each $color, $value in $grays {
         @include print-variable($color, $value);
     }
 
-    // Most of the keys of the color combination color should be null. We have
-    // to indicate their fallback values.
+    /* Most of the keys of the color combination color should be null. We have
+       to indicate their fallback values. */
     @for $index from 1 through length($o-color-combinations) {
         $-bg-color: o-color(map-get($colors, 'o-cc#{$index}-bg'));
 
@@ -130,8 +128,8 @@ pre {
 /* ----- GENERIC LAYOUTING HELPERS ---- */
 /* table */
 #wrapwrap {
-    // Only style editor-made tables (shop/portal/... tables are not supposed to
-    // use table-bordered...)
+    /* Only style editor-made tables (shop/portal/... tables are not supposed to
+       use table-bordered...) */
     table.table.table-bordered {
         table-layout: fixed;
         overflow-wrap: break-word;
@@ -146,7 +144,7 @@ pre {
     }
 }
 
-// List
+/* List */
 ul.o_checklist {
     list-style: none;
 
@@ -227,15 +225,15 @@ ol > li.o_indent, ul > li.o_indent {
     }
 }
 
-// Stars widget
+/* Stars widget */
 .o_stars [data-icon="star"].oi-filled {
     color: gold;
 }
 
-// Medias
+/* Medias */
 img.o_we_custom_image {
-    // Images added with the editor are .img-fluid by default but should
-    // still behave like inline content.
+    /* Images added with the editor are .img-fluid by default but should
+       still behave like inline content. */
     display: inline-block;
 }
 
@@ -269,12 +267,12 @@ img.ms-auto, img.mx-auto {
 %o-small-font-size {
     @include font-size($o-small-font-size);
 }
-// Dedicated class to be able to keep the default "small" behavior of bootstrap:
-// being "smaller" that the context where it is used (em units). Here we want to
-// define a specific fixed font-size for a smaller font-size than the base font
-// size. Note that this class is designed to work as the display-x classes: an
-// extra "styling" class to go on an element. For the "font-size class"
-// equivalent, see o_small-fs below.
+/* Dedicated class to be able to keep the default "small" behavior of bootstrap:
+   being "smaller" that the context where it is used (em units). Here we want to
+   define a specific fixed font-size for a smaller font-size than the base font
+   size. Note that this class is designed to work as the display-x classes: an
+   extra "styling" class to go on an element. For the "font-size class"
+   equivalent, see o_small-fs below. */
 .o_small {
     @extend %o-small-font-size;
 }
@@ -305,9 +303,9 @@ img.ms-auto, img.mx-auto {
 .base-fs {
     @include font-size($font-size-base);
 }
-// Equivalent "font-size" only for the Odoo own "o_small" class. Note that the
-// "o_small" class currently also changes the font-size only but this is to stay
-// consistent with the other classes which act that way (as display-x).
+/* Equivalent "font-size" only for the Odoo own "o_small" class. Note that the
+   "o_small" class currently also changes the font-size only but this is to stay
+   consistent with the other classes which act that way (as display-x). */
 .o_small-fs {
     @include font-size($small-font-size);
 }
@@ -375,7 +373,7 @@ div.media_iframe_video {
     }
 }
 
-// Fields
+/* Fields */
 address {
     [data-icon="smartphone"] {
         margin: 0 3px 0 2px;
@@ -389,8 +387,8 @@ span[data-oe-type="monetary"] {
     white-space: nowrap;
 }
 
-// Menus
-// TODO should not be here but used by web_studio so must stay here for now
+/* Menus
+   TODO should not be here but used by web_studio so must stay here for now */
 ul.oe_menu_editor {
     .oe_menu_placeholder {
         outline: 1px dashed #4183C4;
@@ -407,19 +405,19 @@ ul.oe_menu_editor {
     }
 }
 
-// Generate all spacings for all sizes
+/* Generate all spacings for all sizes */
 @mixin o-spacing-all($factor: 1) {
-    // Generate vertical margin/padding classes used by the editor
+    /* Generate vertical margin/padding classes used by the editor */
     @for $i from 0 through (256 / 8) {
         @include o-vspacing($i * 8, $factor);
     }
     @include o-vspacing(4, $factor);
 
-    // 92px vertical margin is kept for compatibility
+    /* 92px vertical margin is kept for compatibility */
     @include o-vmargins(92, $factor);
 
-    // Some horizontal margin classes defined for convenience
-    // (and compatibility)
+    /* Some horizontal margin classes defined for convenience
+       (and compatibility) */
     @include o-hmargins(0, $factor);
     @include o-hmargins(4, $factor);
     @include o-hmargins(8, $factor);
@@ -428,8 +426,8 @@ ul.oe_menu_editor {
     @include o-hmargins(64, $factor);
 }
 
-// Generate all spacings for one size, scalled by a given factor
-// (0 <= factor <= 1)
+/* Generate all spacings for one size, scalled by a given factor
+   (0 <= factor <= 1) */
 @mixin o-vspacing($name, $factor: 1) {
     @include o-vmargins($name, $factor);
     @include o-vpaddings($name, $factor);
@@ -451,8 +449,8 @@ ul.oe_menu_editor {
     @include o-hpaddings-define($name, $factor * $name);
 }
 
-// Generate all spacings for one size, given the name of the spacing and
-// intended size
+/* Generate all spacings for one size, given the name of the spacing and
+   intended size */
 @mixin o-vmargins-define($name, $size: $name) {
     .mt#{$name} { margin-top: $size * 1px !important; }
     .mb#{$name} { margin-bottom: $size * 1px !important; }
@@ -470,10 +468,10 @@ ul.oe_menu_editor {
     .pr#{$name} { padding-right: $size * 1px !important; }
 }
 
-// Generate all margins
+/* Generate all margins */
 @include o-spacing-all;
 
-// Underline
+/* Underline */
 a.o_underline {
     text-decoration: underline;
     &:hover {
@@ -511,7 +509,7 @@ a.o_underline {
     }
 }
 
-// BS4 blockquote has no style anymore, except bloquote <footer>
+/* BS4 blockquote has no style anymore, except bloquote <footer> */
 blockquote {
     padding: $spacer/2 $spacer;
     border-inline-start: 5px solid map-get($grays, '300');
@@ -526,8 +524,8 @@ pre {
     }
 }
 
-// Extend bootstrap to create background and text utilities for some colors
-// outside of the $theme-colors too (but not btn-, alert-, etc).
+/* Extend bootstrap to create background and text utilities for some colors
+   outside of the $theme-colors too (but not btn-, alert-, etc). */
 @for $index from 1 through 5 {
     $-color-name: 'o-color-#{$index}';
     $-color: map-get($colors, $-color-name);
@@ -535,36 +533,36 @@ pre {
     @include text-emphasis-variant(".text-#{$-color-name}", $-color);
 }
 
-// Bg/text color classes generation
+/* Bg/text color classes generation */
 .o_cc {
     #{$o-color-extras-nesting-selector} {
-        // Re-force dropdown-item colors inside presets otherwise the presets
-        // 'link' colors take over.
-        .dropdown-menu .dropdown-item { // Need to add +1 priority thanks to
-                                        // .dropdown-menu to counter a:not(.btn)
-            &, h6 { // Quick fix: sometimes we use h6 in dropdowns
+        /* Re-force dropdown-item colors inside presets otherwise the presets
+           'link' colors take over. */
+        .dropdown-menu .dropdown-item { /* Need to add +1 priority thanks to */
+                                        /* .dropdown-menu to counter a:not(.btn) */
+            &, h6 { /* Quick fix: sometimes we use h6 in dropdowns */
                 color: $dropdown-link-color !important;
 
                 &:hover, &:focus {
                     color: $dropdown-link-hover-color !important;
                 }
                 &.active, &:active {
-                    // Restore BS default custom property to allow contextual
-                    // active state. (see bootstrap_review_frontend.scss)
+                    /* Restore BS default custom property to allow contextual
+                       active state. (see bootstrap_review_frontend.scss) */
                     color: var(--dropdown-link-active-color, #{$dropdown-link-active-color}) !important;
                 }
             }
             &.disabled,
             &:disabled {
-                &, h6 { // Quick fix: sometimes we use h6 in dropdowns
+                &, h6 { /* Quick fix: sometimes we use h6 in dropdowns */
                     color: $dropdown-link-disabled-color !important;
                 }
             }
             .btn-link {
-                // Some search autocomplete results use btn-link for extra
-                // information that can be navigated to. (e.g. products give
-                // access to their categories)
-                // These need to be reset in case a dark palette is applied.
+                /* Some search autocomplete results use btn-link for extra
+                   information that can be navigated to. (e.g. products give
+                   access to their categories)
+                   These need to be reset in case a dark palette is applied. */
                 color: $btn-link-color;
 
                 &:hover {
@@ -577,8 +575,8 @@ pre {
         }
         .dropdown-menu .dropdown-item-text .text-muted {
             a {
-                // Search autocomplete's fuzzy matched term is shown as a link
-                // within an information message.
+                /* Search autocomplete's fuzzy matched term is shown as a link
+                   within an information message. */
                 color: $link-color;
 
                 &:hover {
@@ -607,24 +605,24 @@ pre {
     $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
     $-btn-secondary-border: map-get($colors, 'o-cc#{$index}-btn-secondary-border');
 
-    // Those color classes color multiple elements when applied on a snippet.
-    // Those rules are not important so that they can be overridden through
-    // bg and text utility classes. **
+    /* Those color classes color multiple elements when applied on a snippet.
+       Those rules are not important so that they can be overridden through
+       bg and text utility classes. ** */
     .o_cc#{$index} {
-        // Background & Text
+        /* Background & Text */
         $-bg-color: o-color($-bg);
         @include o-bg-color($-bg-color, o-color($-text), $important: false, $yiq-min-opacity-threshold: 0);
 
-        // In the future, we might want to use CSS variables to define all
-        // colors for all components of o_cc and use them here. That way there
-        // would be way less CSS rules and more advantages. For now, this only
-        // exposes the background color which is needed in some snippets.
+        /* In the future, we might want to use CSS variables to define all
+           colors for all components of o_cc and use them here. That way there
+           would be way less CSS rules and more advantages. For now, this only
+           exposes the background color which is needed in some snippets. */
         --o-cc-bg: #{$-bg-color};
 
         #{$o-color-extras-nesting-selector} {
-            // Headings
+            /* Headings */
             h1, h2, h3, h4, h5, h6 {
-                // 'inherit' comes from the o-bg-color mixin
+                /* 'inherit' comes from the o-bg-color mixin */
                 color: o-color($-headings);
             }
             h2 {
@@ -643,7 +641,7 @@ pre {
                 color: o-color($-h6);
             }
 
-            // Links
+            /* Links */
             $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
             $-link-hover-color: darken($-link-color, 15%);
             a:not(.btn):where(:not(.o_cc)), .btn-link:where(:not(.o_cc)) {
@@ -654,9 +652,9 @@ pre {
                 }
             }
 
-            // Buttons
+            /* Buttons */
 
-            // Primary
+            /* Primary */
             $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), map-get($theme-colors, 'primary'));
             $-btn-primary-border-color: if($-btn-primary-border, o-color($-btn-primary-border), $-btn-primary-color);
             $-btn-primary-outline-color: if($-btn-primary, $-btn-primary-color, increase-contrast($-btn-primary-border-color, $-bg-color));
@@ -667,7 +665,7 @@ pre {
                 @include button-outline-variant($-btn-primary-outline-color);
             }
 
-            // Secondary
+            /* Secondary */
             $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), map-get($theme-colors, 'secondary'));
             $-btn-secondary-border-color: if($-btn-secondary-border, o-color($-btn-secondary-border), $-btn-secondary-color);
             $-btn-secondary-outline-color: if($-btn-secondary, $-btn-secondary-color, increase-contrast($-btn-secondary-border-color, $-bg-color));
@@ -678,9 +676,9 @@ pre {
                 @include button-outline-variant($-btn-secondary-outline-color);
             }
 
-            // 'Active' states. Note: this only emulates very common components
-            // used in snippets. This might need to be more complex the day we
-            // can apply color combinations anywhere (page-item, ...).
+            /* 'Active' states. Note: this only emulates very common components
+               used in snippets. This might need to be more complex the day we
+               can apply color combinations anywhere (page-item, ...). */
             .nav-pills, .nav-tabs {
                 .nav-link.active,
                 .show > .nav-link {
@@ -707,13 +705,13 @@ pre {
     }
 }
 
-// Buttons with custom colors
+/* Buttons with custom colors */
 .btn-custom:hover, .btn-fill-custom:hover {
     filter: invert(0.2);
 }
 .btn-outline-custom:not(:hover) {
-    // Custom buttons have their fill color or gradient specified in their
-    // element style. They must only be shown on hover for outline buttons.
+    /* Custom buttons have their fill color or gradient specified in their
+       element style. They must only be shown on hover for outline buttons. */
     background-color: transparent !important;
     background-image: none !important;
 }
@@ -732,14 +730,14 @@ pre {
     min-height: 55vh !important;
 }
 
-// TODO remove cover_full and cover_mid classes (kept for compatibility for now)
+/* TODO remove cover_full and cover_mid classes (kept for compatibility for now) */
 .cover_full {
     @extend .o_full_screen_height;
 }
 .cover_mid {
     @extend .o_half_screen_height;
 }
-// Smaller container
+/* Smaller container */
 .o_container_small {
     @extend .container;
     @include media-breakpoint-up(lg) {
@@ -747,7 +745,7 @@ pre {
     }
 }
 
-// Background Images
+/* Background Images */
 .oe_img_bg {
     background-size: cover;
     background-repeat: no-repeat;
@@ -764,18 +762,18 @@ pre {
     }
 }
 
-// Gradient
-// TODO should be in the editor lib since it is handled there... but could not
-// find the right place for it.
+/* Gradient
+   TODO should be in the editor lib since it is handled there... but could not
+   find the right place for it. */
 .text-gradient {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
-    // FIXME (or wait for a fix in Chrome): the code below is needed to make
-    // animated and highlighted text work with gradient background on Chrome.
-    // It is not based on ".text-gradient *" only to avoid a side effect that
-    // makes text nodes wrapped in a span (e.g. bold, italic) no longer have the
-    // "gradient crossing the whole text" on them but their own gradient.
+    /* FIXME (or wait for a fix in Chrome): the code below is needed to make
+       animated and highlighted text work with gradient background on Chrome.
+       It is not based on ".text-gradient *" only to avoid a side effect that
+       makes text nodes wrapped in a span (e.g. bold, italic) no longer have the
+       "gradient crossing the whole text" on them but their own gradient. */
     .o_animated_text, .o_animated_text *, &.o_animated_text *,
     .o_text_highlight, .o_text_highlight *, &.o_text_highlight * {
         background-image: inherit;
@@ -783,8 +781,8 @@ pre {
         -webkit-text-fill-color: inherit;
     }
 
-    // On Iphone (Safari & Chrome) and Mac (only Safari), the font icons
-    // are not rendered (invisible) when inside a gradient.
+    /* On Iphone (Safari & Chrome) and Mac (only Safari), the font icons
+       are not rendered (invisible) when inside a gradient. */
     .oi {
         display: inherit;
     }
@@ -811,7 +809,7 @@ pre {
     }
 }
 
-// Autocomplete dropdowns
+/* Autocomplete dropdowns */
 .ui-autocomplete {
     max-height: 45vh;
     overflow-y: auto;
@@ -826,15 +824,15 @@ pre {
         }
     }
     .fw-bold {
-        // Needed because the font-family is not "system fonts everywhere" as
-        // elements around it. TODO: use "system fonts everywhere" for
-        // the 'ui-autocomplete' and remove this line.
+        /* Needed because the font-family is not "system fonts everywhere" as
+           elements around it. TODO: use "system fonts everywhere" for
+           the 'ui-autocomplete' and remove this line. */
         font-weight: 700 !important;
     }
 }
 
 .o_editor_banner {
-    // force margin to ensure vertical center alignment in correlation with icon
+    /* force margin to ensure vertical center alignment in correlation with icon */
     p, h1, h2, h3, ul, ol {
         margin-bottom: 1rem;
     }
@@ -856,7 +854,7 @@ code.o_inline_code {
     font-weight: normal;
 }
 
-// Ensure colored font wrapper is inherited by child links
+/* Ensure colored font wrapper is inherited by child links */
 font[class^="text-o-"] a,
 font[style*="color"] a {
     color: inherit !important;
@@ -867,7 +865,7 @@ font[style*="color"] a {
     inset: 0;
 }
 
-// Remove default user-agent styles on buttons
+/* Remove default user-agent styles on buttons */
 .o_btn_reset {
     appearance: none;
     margin: unset;

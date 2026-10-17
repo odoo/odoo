@@ -1,9 +1,9 @@
-// ==================
-// Edit-Mode Previews
-// ==================
+/* ==================
+   Edit-Mode Previews
+   ================== */
 
 body.editor_enable {
-    // Outline the category description box
+    /* Outline the category description box */
     #category_header {
         &:has(br:first-child:last-child), &:empty {
             outline: var(--o-bs-border-width) dashed fade-currentColor(25%);
@@ -14,7 +14,7 @@ body.editor_enable {
         }
     }
 
-    // Outline product description boxes
+    /* Outline product description boxes */
     .oe_subdescription {
         div:has(br:first-child:last-child):not(:hover), div:empty:not(:hover) {
             outline: var(--o-bs-border-width) dashed fade-currentColor(25%);
@@ -22,11 +22,11 @@ body.editor_enable {
     }
 }
 
-// ==========================
-// Preview Components (/shop)
-// ==========================
+/* ==========================
+   Preview Components (/shop)
+   ========================== */
 body.editor_enable:has(.o_wsale_edit_preview_enabled) {
-    // Hide default handles when other elements are highlighted
+    /* Hide default handles when other elements are highlighted */
     &:has(.o_wsale_previewing_sidebar),
     &:has(.o_wsale_previewing_filmstrip),
     &:has(.o_wsale_previewing_offcanvas),
@@ -42,7 +42,7 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
         outline: calc(var(--o-bs-border-width) * 2) solid var(--o-we-handles-accent-color);
     }
 
-    // Sidebar
+    /* Sidebar */
     .o_wsale_sidebar_preview {
         padding: 0;
         flex: 0 0 25%;
@@ -69,7 +69,7 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
         }
     }
 
-    // Categories Filmstrip (top)
+    /* Categories Filmstrip (top) */
     .o_wsale_filmstrip_preview {
         max-height: 0;
         padding: 0;
@@ -92,7 +92,7 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
         }
     }
 
-    // Offcanvas
+    /* Offcanvas */
     .o_wsale_previewing_offcanvas {
         #o_wsale_offcanvas {
             visibility: visible;
@@ -102,7 +102,7 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
         }
     }
 
-    // Descriptions
+    /* Descriptions */
     .o_wsale_description_preview {
         opacity: 0;
         transition: all .2s;
@@ -132,7 +132,7 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
         }
     }
 
-    // Floating Bar
+    /* Floating Bar */
     .o_wsale_floating_bar_preview {
         transform: translateY(100%);
         opacity: 0;
