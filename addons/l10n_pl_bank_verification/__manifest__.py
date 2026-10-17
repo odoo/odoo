@@ -17,6 +17,7 @@ in l10n_pl in 19.4
     ],
     'auto_install': True,
     'data': [
+        'data/cron.xml',
         'security/ir.model.access.csv',
         'views/account_payment_view.xml',
         'wizard/account_payment_register_views.xml',
