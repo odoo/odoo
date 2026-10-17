@@ -562,16 +562,16 @@ class DiscussChannel(models.Model):
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):
         hours = 1  # never remove empty session created within the last hour
-        self.env.cr.execute("""
+        self.env.cr.execute(SQL("""
             SELECT id as id
             FROM discuss_channel C
             WHERE NOT EXISTS (
                 SELECT 1
                 FROM mail_message M
-                WHERE M.res_id = C.id AND m.model = 'discuss.channel'
+                WHERE %s
             ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL AND
                 COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp
-                < ((now() at time zone 'UTC') - interval %s)""", ("%s hours" % hours,))
+                < ((now() at time zone 'UTC') - interval %s)""", self._get_message_sql(SQL("M"), SQL("C.id")), "%s hours" % hours))
         empty_channel_ids = [item['id'] for item in self.env.cr.dictfetchall()]
         self.browse(empty_channel_ids).unlink()
 

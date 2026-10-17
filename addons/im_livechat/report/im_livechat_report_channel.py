@@ -237,12 +237,13 @@ class Im_LivechatReportChannel(models.Model):
                        MAX(CASE WHEN H.livechat_member_type = 'bot' THEN M.create_date END) AS last_bot_message_dt
                   FROM mail_message M
              LEFT JOIN im_livechat_channel_member_history H on H.channel_id = M.res_id AND (M.author_id = H.partner_id OR M.author_guest_id = H.guest_id)
-                 WHERE M.res_id = C.id and M.model = 'discuss.channel'
+                 WHERE %s
             ) AS message_vals ON TRUE
             """,
             self.env.lang,
             self._unknown_chatbot_answer_name,
             self.env.lang,
+            self.env["discuss.channel"]._get_message_sql(SQL("M"), SQL("C.id")),
         )
 
     def _where(self) -> SQL:
