@@ -885,6 +885,13 @@ class Base(models.AbstractModel):
         return Markup("<a href=# data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
             self._name, self.id, title or self.display_name)
 
+    def _get_html_link_with_href(self, title=None):
+        self.ensure_one()
+        return Markup(
+            "<a href='/odoo/%(model)s/%(id)s' data-oe-model='%(model)s' data-oe-id='%(id)s'>"
+            "%(title)s</a>",
+        ) % {"id": self.id, "model": self._name, "title": title or self.display_name}
+
     @api.model
     def _get_backend_root_menu_ids(self):
         """ Method meant to be overridden to define the root menu for the model.
