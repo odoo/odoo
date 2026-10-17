@@ -121,7 +121,10 @@ class DiscussChannelMember(models.Model):
     @api.constrains("channel_role", "channel_id")
     def _check_channel_role_supported(self):
         for member in self:
-            if member.channel_role and member.channel_id.channel_type not in ["group", "channel"]:
+            if (
+                member.channel_role
+                and member.channel_id.channel_type not in member.channel_id._role_allowed_channel_types()
+            ):
                 raise ValidationError(
                     _(
                         "The role '%(role_name)s' is not supported for the channel type '%(channel_type)s'.",

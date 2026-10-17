@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 
 from odoo import api, models, fields
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.addons.mail.tools.discuss import Store
 
@@ -10,6 +11,7 @@ from odoo.addons.mail.tools.discuss import Store
 class DiscussChannelMember(models.Model):
     _inherit = 'discuss.channel.member'
 
+    channel_role = fields.Selection(compute="_compute_channel_role", store=True, readonly=False)
     livechat_member_history_ids = fields.One2many("im_livechat.channel.member.history", "member_id")
     livechat_member_type = fields.Selection(
         [("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
@@ -70,6 +72,19 @@ class DiscussChannelMember(models.Model):
                 ),
             )
         return members
+
+    def write(self, vals):
+        if "channel_role" in vals and self.channel_id.filtered(lambda c: c.channel_type == "livechat"):
+            raise UserError(self.env._("Live chat roles depend on the member type and cannot be modified."))
+        return super().write(vals)
+
+    @api.depends("channel_id.channel_type", "livechat_member_type", "partner_id.user_ids.active")
+    def _compute_channel_role(self):
+        for member in self:
+            if member.channel_id.channel_type != "livechat":
+                continue
+            is_owner = member.livechat_member_type == "agent" and member.partner_id.user_ids.filtered("active")
+            member.channel_role = "owner" if is_owner else False
 
     @api.depends("livechat_member_history_ids.livechat_member_type")
     def _compute_livechat_member_type(self):
