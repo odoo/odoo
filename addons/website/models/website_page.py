@@ -247,8 +247,8 @@ class WebsitePage(models.Model):
             if vals['visibility'] != 'restricted_group':
                 vals['group_ids'] = False
 
-        # write on page == write on view
-        # the view will invalidate the 'templates' cache
+        # page values are cached with the menus, see `_get_menus_cache_values`
+        self.env.transaction.invalidate_ormcache('templates')
         res = super().write(vals)
 
         if url_in_vals:

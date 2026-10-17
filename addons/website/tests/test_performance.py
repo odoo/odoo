@@ -230,14 +230,12 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 select_tables_perf = {
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
-                    'website_page': 2,
-                    # 1. `_serve_page` search page matching URL..
-                    # 2. ..then reads it (`is_visible`)
-                    # menu and layout
-                    'website_menu': 1,
+                    'website_page': 1,
+                    # `_serve_page` search page matching URL
+                    # layout (menus are cached)
                     'ir_ui_view': 1,
                 }
-                expected_query_count = 5
+                expected_query_count = 3
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
                 self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
 
@@ -252,14 +250,12 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 } if cache else {
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
-                    'website_page': 2,
-                    # 1. `_serve_page` search page matching URL..
-                    # 2. ..then reads it (`is_visible`)
-                    # menu and layout
-                    'website_menu': 1,
+                    'website_page': 1,
+                    # `_serve_page` search page matching URL
+                    # layout (menus are cached)
                     'ir_ui_view': 1,
                 }
-                expected_query_count = 1 if cache else 5
+                expected_query_count = 1 if cache else 3
                 insert_tables_perf = {}
                 self.page.track = True
 
@@ -279,15 +275,12 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 self.assertEqual(self._get_url_hot_query('/'), expected_query_count)
 
                 select_tables_perf = {
-                    'website_menu': 1,
-                    # homepage controller is prefetching all menus for perf in one go
-                    'website_page': 2,
-                    # 1. the menu prefetching is also prefetching all menu's pages
-                    # 2. find page matching the `/` url
-                    # layout
+                    'website_page': 1,
+                    # find page matching the `/` url
+                    # layout (menus are cached)
                     'ir_ui_view': 1,
                 }
-                expected_query_count = 4
+                expected_query_count = 2
                 insert_tables_perf = {}
                 self._check_url_hot_query('/', expected_query_count, select_tables_perf, insert_tables_perf, nocache=True)
                 self.assertEqual(self._get_url_hot_query('/', nocache=True), expected_query_count)
@@ -338,13 +331,12 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
         select_tables_perf = {
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
-            'website_page': 2,
-            # 1. `_serve_page` search page matching URL..
-            # 2. ..then reads it (`is_visible`)
-            'website_menu': 1,
+            'website_page': 1,
+            # `_serve_page` search page matching URL
+            # layout (menus are cached)
             'ir_ui_view': 1,
         }
-        expected_query_count = 5
+        expected_query_count = 3
         self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
         self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
 
