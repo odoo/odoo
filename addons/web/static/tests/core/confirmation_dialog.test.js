@@ -7,6 +7,7 @@ import {
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 
 describe.current.tags("desktop");
 
@@ -325,4 +326,20 @@ test("Focus is correctly restored after confirmation", async () => {
     await contains(".modal-footer .btn-primary").click();
 
     expect(".my-input").toBeFocused();
+});
+
+test("click away calls cancel", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    getService("dialog").add(ConfirmationDialog, {
+        body: "Some content",
+        closeOnClickAway: true,
+        confirm: () => expect.step("Confirm action"),
+        cancel: () => expect.step("Cancel action"),
+    });
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    await contains(".modal-dialog").click();
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(0);
+    expect.verifySteps(["Cancel action"]);
 });
