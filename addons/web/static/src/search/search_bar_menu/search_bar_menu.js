@@ -11,6 +11,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { useCommand } from "@web/core/commands/command_hook";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { computeShowSaveFavorite } from "@web/search/custom_favorite_item/custom_favorite_item";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
@@ -204,6 +205,10 @@ export class SearchBarMenu extends Component {
     }
 
     // Favorite Panel
+
+    get showSaveFavorite() {
+        return computeShowSaveFavorite(this.env.searchModel);
+    }
 
     get favorites() {
         return this.env.searchModel.getSearchItems(

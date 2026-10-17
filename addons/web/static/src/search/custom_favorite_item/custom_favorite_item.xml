@@ -2,14 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CustomFavoriteItem">
-        <AccordionItem class="'o_add_favorite text-truncate'" description.translate="Save search">
+        <div t-if="this.showSaveFavorite" class="o_custom_favorite_item">
             <div class="d-flex flex-column gap-2">
+                <label class="form-label mb-0 fw-bold" for="saveCurrentSearchInput">Save current search</label>
                 <input type="text"
-                    class="o_input my-1"
+                    class="o_custom_favorite_input form-control rounded"
                     t-ref="this.descriptionRef"
                     t-model.proxy="this.state.description"
                     t-on-keydown="this.onInputKeydown"
                     placeholder="Filter name"
+                    id="saveCurrentSearchInput"
                     />
                 <CheckBox value="this.state.isDefault" onChange.bind="(checked) => this.state.isDefault = checked" className="'form-switch d-flex gap-1'">
                     <span class="small" data-tooltip="Use this filter by default when opening this view">Default filter</span>
@@ -23,7 +25,7 @@
                     </button>
                 </div>
             </div>
-        </AccordionItem>
+        </div>
     </t>
 
 </templates>
