@@ -1,5 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { sortBy } from "@web/core/utils/arrays";
@@ -80,6 +81,34 @@ const strftimeToHumanFormat = memoize(function strftimeToHumanFormat(value) {
  * data")*
  *
  */
+/**
+ * @param {Object} error as reported by the server, merged with the other
+ *      occurrences of its offending value
+ * @param {string[]} [names] name of the record imported at each row
+ */
+export function formatErrorRows(error, names = []) {
+    const occurrences = error.occurrences || (error.rows ? [error.rows] : []);
+    if (!occurrences.length) {
+        return "";
+    }
+    if (occurrences.length > 1) {
+        return _t("at rows %(rows)s", {
+            rows: formatList(
+                occurrences.map(({ from, to }) =>
+                    from === to ? `${from + 1}` : `${from + 1}-${to + 1}`
+                )
+            ),
+        });
+    }
+    const { from, to } = occurrences[0];
+    if (from !== to) {
+        return _t("at rows %(from)s to %(to)s", { from: from + 1, to: to + 1 });
+    }
+    return names[from]
+        ? _t("at row %(row)s (%(name)s)", { row: from + 1, name: names[from] })
+        : _t("at row %(row)s", { row: from + 1 });
+}
+
 export class BaseImportModel {
     constructor({ env, context, orm }) {
         this.id = 1;
@@ -92,7 +121,6 @@ export class BaseImportModel {
         this.fields = [];
         this.columns = [];
         this.importMessages = [];
-        this._importOptions = {};
 
         this.importTemplates = [];
 
@@ -147,7 +175,9 @@ export class BaseImportModel {
             },
         };
 
-        this.fieldsToHandle = {};
+        // by identity, kept across runs as long as they are reported or resolved
+        this.errors = {};
+        this.resultNames = [];
 
         this.languagesInstalled = [];
 
@@ -175,31 +205,11 @@ export class BaseImportModel {
 
     get importOptions() {
         const tempImportOptions = {
-            import_skip_records: [],
-            import_set_empty_fields: [],
-            fallback_values: {},
             name_create_enabled_fields: {},
         };
         for (const [name, option] of Object.entries(this.importOptionsValues)) {
             tempImportOptions[name] = option.value;
         }
-
-        for (const key in this.fieldsToHandle) {
-            const value = this.fieldsToHandle[key];
-            if (value) {
-                if (value.optionName === "import_skip_records") {
-                    tempImportOptions.import_skip_records.push(key);
-                } else if (value.optionName === "import_set_empty_fields") {
-                    tempImportOptions.import_set_empty_fields.push(key);
-                } else if (value.optionName === "name_create_enabled_fields") {
-                    tempImportOptions.name_create_enabled_fields[key] = true;
-                } else if (value.optionName === "fallback_values") {
-                    tempImportOptions.fallback_values[key] = value.value;
-                }
-            }
-        }
-
-        this._importOptions = tempImportOptions;
         return tempImportOptions;
     }
 
@@ -257,6 +267,9 @@ export class BaseImportModel {
         this.handleInterruption = false;
         this._updateComments();
         this.importMessages = [];
+        for (const error of Object.values(this.errors)) {
+            error.outdated = true;
+        }
 
         const startRow = this.importOptions.skip;
         const importRes = {
@@ -300,6 +313,14 @@ export class BaseImportModel {
             }
         }
 
+        // resolved errors stay displayed, so that their resolution can be changed
+        for (const [key, error] of Object.entries(this.errors)) {
+            if (error.outdated && !error.resolution) {
+                delete this.errors[key];
+            }
+        }
+        this._dispatchErrors();
+
         if (!importRes.hasError) {
             if (!isTest && importRes.nextrow) {
                 this._addMessage("warning", [
@@ -327,6 +348,7 @@ export class BaseImportModel {
     async updateData(fileChanged = false) {
         if (fileChanged) {
             this.importOptionsValues.sheet.value = "";
+            this.clearErrors();
         }
         this.importMessages = [];
 
@@ -345,14 +367,14 @@ export class BaseImportModel {
         return { res, error: res.error };
     }
 
-    async setOption(optionName, value, fieldName) {
-        if (fieldName) {
-            this.fieldsToHandle[fieldName] = {
-                optionName,
-                value,
-            };
-            return;
-        }
+    clearErrors() {
+        this.errors = {};
+        this.resultNames = [];
+        this.importMessages = [];
+        this._dispatchErrors();
+    }
+
+    async setOption(optionName, value) {
         this.importOptionsValues[optionName].value = value;
         if (this.importOptionsValues[optionName].reloadParse) {
             return this.updateData();
@@ -373,8 +395,19 @@ export class BaseImportModel {
     }
 
     setColumnField(column, fieldInfo) {
+        if (column.fieldInfo) {
+            this._forgetErrors(column.fieldInfo.fieldPath);
+        }
         column.fieldInfo = fieldInfo;
         this._updateComments(column);
+    }
+
+    /**
+     * @param {Object} error as reported by the server
+     * @param {Object|false} resolution `{ action: "empty"|"set", value }`
+     */
+    setErrorResolution(error, resolution) {
+        error.resolution = resolution;
     }
 
     setColumnLanguage(column, language) {
@@ -408,7 +441,9 @@ export class BaseImportModel {
             this.id,
             importRes.fields,
             importRes.columns,
-            this.formattedImportOptions,
+            // kept out of the options, so that resolving an error does not
+            // re-render every component watching them
+            { ...this.formattedImportOptions, ...this._getErrorResolutions() },
         ];
         const { ids, messages, nextrow, name, error, binary_filenames } = await this._callImport(
             isTest,
@@ -511,77 +546,142 @@ export class BaseImportModel {
     }
 
     _handleImportErrors(messages, name) {
+        this.resultNames = name || [];
         if (messages[0].not_matching_error) {
-            this._addMessage(messages[0].type, [messages[0].message]);
+            const [error] = this._registerErrors(this._mergeErrors(messages));
+            if (error.value !== undefined && this._findErrorColumn(error)) {
+                this.notificationService.add(_t("Import failed: see errors below"), {
+                    type: "danger",
+                    autocloseDelay: 4000,
+                });
+            } else {
+                this._addMessage(error.type, [error.message]);
+            }
             return true;
         }
 
-        const sortedMessages = this._groupErrorsByField(messages);
-        if (sortedMessages[0]) {
-            this._addMessage(sortedMessages[0].type, [sortedMessages[0].message]);
-            delete sortedMessages[0];
-        } else {
+        const errors = this._registerErrors(this._mergeErrors(messages));
+        const globalErrors = errors.filter((error) => error.record === undefined);
+        for (const error of globalErrors) {
+            this._addMessage(error.type, [error.message]);
+        }
+        if (!globalErrors.length) {
             this.notificationService.add(_t("Import failed: see errors below"), {
                 type: "danger",
                 autocloseDelay: 4000,
             });
         }
+        for (const error of errors) {
+            if (error.record !== undefined && !this._findErrorColumn(error)) {
+                this._addMessage("danger", [this._getErrorText(error)]);
+            }
+        }
+    }
 
-        for (const [columnFieldId, errors] of Object.entries(sortedMessages)) {
-            // Handle errors regarding specific colums.
-            const column = this.columns.find(
-                (e) => e.fieldInfo && e.fieldInfo.fieldPath === columnFieldId
+    /**
+     * Merge the errors a single correction recovers from, i.e. those sharing
+     * the same offending value, into one listing all their rows.
+     */
+    _mergeErrors(messages) {
+        const sorted = sortBy(messages, (e) => ["error", "warning", "info"].indexOf(e.type));
+        const byKey = Object.groupBy(sorted, (e) => this._getErrorKey(e));
+        return Object.values(byKey).map((errors) => {
+            const global = errors.find((e) => e.record === undefined);
+            if (global) {
+                return global;
+            }
+            const occurrences = sortBy(
+                errors.filter((e) => e.rows).map((e) => e.rows),
+                (rows) => rows.from
             );
-            if (column) {
-                column.resultNames = name;
-                column.errors = errors;
-            } else {
-                for (const error of errors) {
-                    // Handle errors regarding specific records.
-                    if (error.record !== undefined) {
-                        this._addMessage("danger", [
-                            error.rows.from === error.rows.to
-                                ? _t('Error at row %(row)s: "%(error)s"', {
-                                      row: error.record,
-                                      error: error.message,
-                                  })
-                                : _t("%s at multiple rows", error.message),
-                        ]);
-                    }
-                    // Handle global errors.
-                    else {
-                        this._addMessage("danger", [error.message]);
-                    }
-                }
+            return { ...errors[0], rows: occurrences[0], occurrences };
+        });
+    }
+
+    _registerErrors(errors) {
+        for (const error of errors) {
+            const key = this._getErrorKey(error);
+            const previous = this.errors[key];
+            error.resolution = previous?.resolution || false;
+            error.reportedBefore = Boolean(previous);
+            this.errors[key] = error;
+        }
+        return errors;
+    }
+
+    _getErrorKey(error) {
+        const fieldPath = this._getErrorFieldPath(error) || null;
+        if (error.value === undefined) {
+            return JSON.stringify([fieldPath, error.message]);
+        }
+        // nothing but the row tells apart the values missing from a column
+        return JSON.stringify(
+            this._isMissingValue(error)
+                ? [fieldPath, error.value, error.rows?.from]
+                : [fieldPath, error.value]
+        );
+    }
+
+    _isMissingValue(error) {
+        return typeof error.value === "string" && !error.value.trim();
+    }
+
+    _getErrorFieldPath(error) {
+        return error.field_path ? error.field_path.join("/") : error.field;
+    }
+
+    _findErrorColumn(error) {
+        const fieldPath = this._getErrorFieldPath(error);
+        if (!fieldPath) {
+            return undefined;
+        }
+        return this.columns.find((column) => column.fieldInfo?.fieldPath === fieldPath);
+    }
+
+    _getErrorText(error) {
+        return _t('Error %(rows)s: "%(error)s"', {
+            rows: formatErrorRows(error),
+            error: error.message,
+        });
+    }
+
+    _forgetErrors(fieldPath) {
+        for (const [key, error] of Object.entries(this.errors)) {
+            if (this._getErrorFieldPath(error) === fieldPath) {
+                delete this.errors[key];
             }
         }
     }
 
-    _groupErrorsByField(messages) {
-        const groupedErrors = {};
-        const errorsByMessage = Object.groupBy(this._sortErrors(messages), (f) => f.message || "0");
-        for (const [message, errors] of Object.entries(errorsByMessage)) {
-            if (!message.record) {
-                const foundError = errors.find((e) => e.record === undefined);
-                if (foundError) {
-                    groupedErrors[0] = foundError;
-                    continue;
-                }
-            }
-
-            errors[0].rows.to = errors[errors.length - 1].rows.to;
-            const fieldId = errors[0].field_path ? errors[0].field_path.join("/") : errors[0].field;
-            if (groupedErrors[fieldId]) {
-                groupedErrors[fieldId].push(errors[0]);
-            } else {
-                groupedErrors[fieldId] = [errors[0]];
-            }
+    _dispatchErrors() {
+        const errors = Object.values(this.errors);
+        for (const column of this.columns) {
+            column.errors = column.fieldInfo
+                ? errors.filter(
+                      (error) => this._getErrorFieldPath(error) === column.fieldInfo.fieldPath
+                  )
+                : [];
         }
-        return groupedErrors;
     }
 
-    _sortErrors(messages) {
-        return sortBy(messages, (e) => ["error", "warning", "info"].indexOf(e.priority));
+    _getErrorResolutions() {
+        const resolutions = {};
+        for (const error of Object.values(this.errors)) {
+            const fieldPath = this._getErrorFieldPath(error);
+            if (!error.resolution || !fieldPath || error.value === undefined) {
+                continue;
+            }
+            resolutions[fieldPath] ||= {};
+            if (this._isMissingValue(error)) {
+                resolutions[fieldPath][""] = {
+                    ...resolutions[fieldPath][""],
+                    [error.rows.from]: error.resolution,
+                };
+            } else {
+                resolutions[fieldPath][error.value] = error.resolution;
+            }
+        }
+        return { resolutions };
     }
 
     /**
@@ -763,10 +863,6 @@ export class BaseImportModel {
         }
         for (const column of this.columns) {
             column.comments = [];
-            column.errors = [];
-            column.resultNames = [];
-            column.importOptions =
-                column.fieldInfo && this.fieldsToHandle[column.fieldInfo.fieldPath];
 
             if (!column.fieldInfo) {
                 continue;
@@ -820,6 +916,7 @@ export class BaseImportModel {
                 }
             }
         }
+        this._dispatchErrors();
     }
 
     _getCSVFormattingOptions() {
