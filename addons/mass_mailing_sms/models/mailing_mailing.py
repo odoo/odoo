@@ -302,6 +302,14 @@ class MailingMailing(models.Model):
             }
         return values
 
+    def _action_view_mailing_statistics_filtered(self, view_filter):
+        action = super()._action_view_mailing_statistics_filtered(view_filter)
+        if self.env.context.get('mailing_sms') and view_filter == 'clicked':
+            context = action['context']
+            context = {**context, 'search_default_groupby_email': False, 'search_default_groupby_sms_number': True}
+            action['context'] = context
+        return action
+
     def _get_pretty_mailing_type(self):
         if self.mailing_type == 'sms':
             return _('SMS Text Message')
