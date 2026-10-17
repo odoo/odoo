@@ -1,5 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date, datetime, time
+
+import pytz
+
 from odoo import _, api, fields, models, modules
 
 
@@ -213,3 +217,28 @@ class ResCompany(models.Model):
     def _get_text_validation(self, confirmation_type):
         self.ensure_one()
         return bool(self.stock_text_confirmation and self.stock_confirmation_type == confirmation_type)
+
+    def _get_stock_tz(self):
+        """ Timezone in which the stock dates of the company are read as days:
+        the company timezone, else the user timezone, else UTC. """
+        self.ensure_one()
+        return self.tz or self.env.user.tz or 'UTC'
+
+    def _get_stock_today(self):
+        """ Today's date in the stock timezone of the company. """
+        return fields.Date.context_today(self.with_context(tz=self._get_stock_tz()))
+
+    def _to_date_upper_bound(self, to_date):
+        """ Convert a ``to_date`` value into the naive UTC upper bound used to
+        filter ``stock.move.date``. A date is taken as the end of that day in the
+        stock timezone of the company; a datetime is an exact moment, kept as-is. """
+        original_value = to_date
+        to_date = fields.Datetime.to_datetime(to_date)
+        if to_date and (
+            (isinstance(original_value, date) and not isinstance(original_value, datetime))
+            or (isinstance(original_value, str) and len(original_value) == 10)
+        ):
+            tz = pytz.timezone(self._get_stock_tz())
+            local_end_of_day = tz.localize(datetime.combine(to_date.date(), time.max))
+            to_date = local_end_of_day.astimezone(pytz.utc).replace(tzinfo=None)
+        return to_date

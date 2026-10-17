@@ -5,7 +5,6 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { serializeDate } from "@web/core/l10n/dates";
-const { DateTime } = luxon;
 
 import { Component, onWillStart, useChildSubEnv, useState } from "@odoo/owl";
 
@@ -87,7 +86,7 @@ export class StockValuationReport extends Component {
         if (accountIds) {
             domain.push(['account_id', 'in', accountIds]);
         }
-        if (serializeDate(this.controller.state.date) !== serializeDate(DateTime.now())) {
+        if (serializeDate(this.controller.state.date) !== this.data.today) {
             domain.push(['date', '<=', serializeDate(this.controller.state.date)]);
         }
         action.domain = domain;
@@ -105,9 +104,9 @@ export class StockValuationReport extends Component {
             ["location_id.usage", "=", usage],
             ["location_dest_id.usage", "=", usage],
         ];
-        if (this.controller.dateAsString) {
+        if (this.data.date_upper_bound) {
             domain.unshift("&");
-            domain.push(["date", "<=", this.controller.dateAsString]);
+            domain.push(["date", "<=", this.data.date_upper_bound]);
         }
         return this.actionService.doAction({
             name: title,

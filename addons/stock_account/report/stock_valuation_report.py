@@ -30,7 +30,8 @@ class StockValuationReport(models.AbstractModel):
         # Check if date is a string instance
         if isinstance(date, str):
             date = fields.Date.from_string(date)
-        if date == fields.Date.context_today(self):
+        today = company._get_stock_today()
+        if date == today:
             date = False
         # PERF: only products holding stock contribute to the valuation. Match the
         # context used by total_value so qty_available scopes to valued internal locations.
@@ -95,6 +96,8 @@ class StockValuationReport(models.AbstractModel):
         report_data = {
             'company_id': company.id,
             'currency_id': company.currency_id.id,
+            'today': fields.Date.to_string(today),
+            'date_upper_bound': fields.Datetime.to_string(company._to_date_upper_bound(date)),
             'ending_stock': ending_stock,
             'initial_balance': initial_balance,
         }
