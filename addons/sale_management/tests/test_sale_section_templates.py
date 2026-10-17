@@ -1,4 +1,4 @@
-from odoo.fields import Command
+from odoo.fields import Command, Domain
 from odoo.tests import tagged
 
 from odoo.addons.sale.tests.common import SaleCommon
@@ -75,10 +75,11 @@ class TestSaleSectionTemplates(SaleCommon):
             ],
         })
 
-    def _get_section_templates(self, company=None):
-        company_id = company.id or self.env.company.id
-        templates = self.env["sale.order.template"].get_section_templates(company_id)
-        return self.env["sale.order.template"].browse([t["id"] for t in templates])
+    def _get_section_templates(self, company):
+        return self.env["sale.order.template"].search(
+            Domain("template_type", "=", "section")
+            & self.env["sale.order.template"]._check_company_domain(company)
+        )
 
     def test_sale_order_section_templates(self):
         order = self.sections_sale_order
