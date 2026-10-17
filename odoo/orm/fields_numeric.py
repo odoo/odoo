@@ -169,6 +169,12 @@ class Float(Field[float]):
         digits = self.get_digits(record.env)
         return float_round(value, precision_digits=digits[1]) if digits else value
 
+    def _convert_to_cache_from_origin(self, value, record):
+        # The value is already stored, possibly with more digits than the field
+        # (imported document, decimal precision lowered since). Keep it, so that
+        # the new record computes the same amounts as its origin record.
+        return value
+
     def convert_to_record(self, value, record):
         return value or 0.0
 

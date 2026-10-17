@@ -1013,6 +1013,26 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertTrue(self.cr.rowcount)
         self.assertEqual(record.number, 1.1)
 
+    def test_float_precision_from_origin(self):
+        """ A new record reads the stored value of its origin, even if it is more
+        precise than the field's digits, while explicit values are rounded. """
+        model = self.env['test_orm.mixed']
+        record = model.create({})
+        self.cr.execute("UPDATE test_orm_mixed SET number = 1.23456 WHERE id = %s", [record.id])
+        record.invalidate_recordset()
+
+        self.assertEqual(model.new(origin=record).number, 1.23456)
+        self.assertEqual(model.new({'number': 1.23456}, origin=record).number, 1.23)
+
+        # `fallback_single`: reading a new record also reads the origin of the other new records
+        # to prefetch; one of these origins is deleted, so the value is read
+        # again on the origin of the record alone
+        to_delete = model.create({'number': 1.0})
+        new_record, _new_to_delete = model.new(origin=record) | model.new(origin=to_delete)
+        to_delete.unlink()
+        self.env.invalidate_all()
+        self.assertEqual(new_record.number, 1.23456)
+
     def test_21_float_digits(self):
         """ test field description """
         precision = self.env.ref('test_orm.decimal_orm_number')
