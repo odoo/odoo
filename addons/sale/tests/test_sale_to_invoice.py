@@ -1240,6 +1240,102 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(sol_prod_deliver.amount_to_invoice, 0.0)
         self.assertEqual(sol_prod_deliver.amount_invoiced, sol_prod_deliver.price_total / 2)
 
+    def test_downpayment_currencies(self):
+        """
+        We check that downpayments made in other currencies are reflected among SOL and amount_invoiced
+        """
+        eur = self.env.ref('base.EUR')
+        eur.active = True
+        idr = self.env.ref('base.IDR')
+        idr.active = True
+        self.env['res.currency.rate'].create({
+            'currency_id': eur.id,
+            'name': '2024-12-01',
+            'rate': 2.0,
+        })
+        self.env['res.currency.rate'].create({
+            'currency_id': idr.id,
+            'name': '2024-12-01',
+            'rate': 10.0,
+        })
+        pricelist_eur = self.env['product.pricelist'].create({
+            'name': 'pricelist EUR',
+            'currency_id': eur.id,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': pricelist_eur.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 5,
+                }),
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+
+        so.action_confirm()
+        down_payment_vals = self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'percentage',
+            'amount': 50,
+            'sale_order_ids': so.ids,
+        }).create_invoices()
+        down_payment = self.env[down_payment_vals['res_model']].browse(down_payment_vals['res_id'])
+        down_payment.currency_id = idr
+        sol = so.order_line.filtered(lambda l: not l.display_type)
+
+        sol_products = [{
+            'amount_to_invoice': 2800,   # in SO currency
+            'amount_invoiced': 0,
+            'price_unit': 560,
+            'price_subtotal': 2800,
+        }, {
+            'amount_to_invoice': 560,
+            'amount_invoiced': 0,
+            'price_unit': 560,
+            'price_subtotal': 560,
+        }]
+        self.assertRecordValues(down_payment, [{
+            'amount_total': 1680,        # in invoice currency
+            'amount_total_signed': 168,  # in company currency
+        }])
+        self.assertRecordValues(so, [{
+            'amount_to_invoice': 3360,   # in SO currency
+            'amount_total': 3360,
+            'amount_invoiced': 0,
+        }])
+        self.assertRecordValues(sol, [*sol_products, {
+            'amount_to_invoice': 0,
+            'amount_invoiced': 0,
+            'price_unit': 1680,
+            'price_subtotal': 0,
+        }])
+        down_payment.action_post()
+        self.assertRecordValues(so, [{
+            'amount_to_invoice': 3360,
+            'amount_total': 3360,
+            'amount_invoiced': 336,
+        }])
+        self.assertRecordValues(sol, [*sol_products, {
+            'amount_to_invoice': 0,
+            'amount_invoiced': 336,
+            'price_unit': 336,
+            'price_subtotal': 0,
+        }])
+        final_invoice_vals = self.env['sale.advance.payment.inv'].create({
+            'sale_order_ids': so.ids,
+        }).create_invoices()
+        final_invoice = self.env[final_invoice_vals['res_model']].browse(final_invoice_vals['res_id'])
+        self.assertRecordValues(final_invoice, [{
+            'amount_total_signed': 1512,
+            'amount_total_in_currency_signed': 3024,
+        }])
+
     def test_amount_to_invoice_with_discount(self):
         """ Test the amount_to_invoice field when a discount is applied on the SO line. """
 
