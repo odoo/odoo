@@ -388,7 +388,10 @@ export class PaymentScreen extends Component {
     }
 
     get orderTotalDue() {
-        return this.currentOrder.orderCurrency.convertFormatted(this.currentOrder.totalDue);
+        return this.currentOrder.orderCurrency.convertFormatted(
+            this.currentOrder.totalDue,
+            this.currentOrder.currency
+        );
     }
 }
 
