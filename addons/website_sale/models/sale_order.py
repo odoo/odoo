@@ -709,9 +709,10 @@ class SaleOrder(models.Model):
         uom = self.env["uom.uom"].browse(uom_id)
 
         # Update new_qty to respect the minimum quantity constraint
-        new_qty = max(
-            new_qty, self._get_remaining_minimum_qty(product, exclude_line=order_line, uom=uom)
+        remaining_min_qty = self._get_remaining_minimum_qty(
+            product, exclude_line=order_line, uom=uom
         )
+        new_qty = max(new_qty, remaining_min_qty)
 
         if product.is_storable and not product.allow_out_of_stock_order:
             product_qty_in_cart, available_qty = self._get_cart_and_free_qty(product)
@@ -722,12 +723,9 @@ class SaleOrder(models.Model):
             available_qty = product_uom._compute_quantity(available_qty, uom, round=False)
             available_qty = float_round(available_qty, precision_digits=0, rounding_method="DOWN")
 
-            if product.minimum_quantity:
-                min_qty = float_round(
-                    product_uom._compute_quantity(product.minimum_quantity, uom, round=False),
-                    precision_digits=0,
-                    rounding_method="UP",
-                )
+            old_qty = order_line.product_uom_qty if order_line else 0
+            if remaining_min_qty:
+                min_qty = product_qty_in_cart - old_qty + remaining_min_qty
                 if available_qty < min_qty:
                     if order_line:
                         warning = self.env._(
@@ -742,7 +740,6 @@ class SaleOrder(models.Model):
                         )
                     return 0, warning
 
-            old_qty = order_line.product_uom_qty if order_line else 0
             added_qty = new_qty - old_qty
             total_cart_qty = product_qty_in_cart + added_qty
             if available_qty < total_cart_qty:
