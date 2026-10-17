@@ -32,6 +32,7 @@ export class DynamicFieldPlugin extends Plugin {
                 groupId: "dynamic_field",
                 namespaces: ["compact", "expanded"],
                 commandId: "editDynamicField",
+                takesFocus: true,
             },
         ],
         user_commands: [
@@ -132,14 +133,17 @@ export class DynamicFieldPlugin extends Plugin {
 
     async editField() {
         if (!this.resModel) {
-            return this.services.notification.add(
+            this.services.notification.add(
                 _t("Oops! Select a model for this template before editing fields."),
                 { type: "danger" }
             );
+            this.dependencies.selection.focusEditable();
+            return;
         }
 
         const target = this.getPopoverTarget(true);
         if (!target) {
+            this.dependencies.selection.focusEditable();
             return;
         }
 
@@ -165,7 +169,10 @@ export class DynamicFieldPlugin extends Plugin {
                 label: initialLabel,
                 filter: this.filter.bind(this),
                 followRelation: this.followRelation.bind(this),
-                close: () => this.fieldPopover.close(),
+                close: () => {
+                    this.fieldPopover.close();
+                    this.dependencies.selection.focusEditable();
+                },
                 validate: async ({ path, label, fieldInfo }) => {
                     if (path !== initialPath) {
                         const fullPath = this.getFieldPath(target, path);
@@ -223,7 +230,10 @@ export class DynamicFieldPlugin extends Plugin {
                 resModel,
                 filter: this.filter.bind(this),
                 followRelation: this.followRelation.bind(this),
-                close: () => this.fieldPopover.close(),
+                close: () => {
+                    this.fieldPopover.close();
+                    this.dependencies.selection.focusEditable();
+                },
                 validate: async ({ path, label, fieldInfo }) => {
                     const doc = this.document;
                     doc.defaultView.focus();

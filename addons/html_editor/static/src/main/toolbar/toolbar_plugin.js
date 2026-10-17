@@ -45,6 +45,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {(selection: EditorSelection) => boolean} [isAvailable] ? *
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
+ * @property {boolean} [takesFocus] The command takes the focus (dialog, popover...)
  *
  * @typedef {Object} ToolbarComponentItem
  * Adds a custom component to the toolbar.
@@ -74,6 +75,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {(selection: EditorSelection) => boolean} isAvailable
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
+ * @property {boolean} [takesFocus]
  *
  * @typedef {Object} ToolbarComponentButton
  * Adds a custom component to the toolbar (processed version with required fields).
@@ -537,7 +539,7 @@ export class ToolbarPlugin extends Plugin {
                         ...(button.Component
                             ? pick(button, "Component", "props")
                             : {
-                                  ...pick(button, "run", "icon", "iconClass", "text"),
+                                  ...pick(button, "run", "icon", "iconClass", "text", "takesFocus"),
                                   isActive: !!button.isActive?.(selection, targetedNodes),
                               }),
                     })),
