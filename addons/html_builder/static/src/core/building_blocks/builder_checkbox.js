@@ -22,7 +22,7 @@ export class BuilderCheckbox extends Component {
             useDependencyDefinition(this.props, { isActive: isApplied }, { onReady });
         }
         this.state = useDomState(async () => {
-            await onReady;
+            await onReady?.();
             return {
                 isActive: isApplied(),
             };
