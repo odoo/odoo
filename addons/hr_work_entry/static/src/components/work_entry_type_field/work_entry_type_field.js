@@ -6,6 +6,10 @@ import {
     many2OneFieldProps,
 } from "@web/views/fields/many2one/many2one_field";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import {
+    Many2ManyTagsField,
+    many2ManyTagsField,
+} from "@web/views/fields/many2many_tags/many2many_tags_field";
 
 //List View Widget
 export class WorkEntryTypeBadgeField extends Component {
@@ -79,3 +83,16 @@ export const many2OneWorkEntryTypeField = {
 };
 
 registry.category("fields").add("many2one_work_entry_type", many2OneWorkEntryTypeField);
+
+//Form View M2M Widget
+export class Many2ManyWorkEntryTypeTagsField extends Many2ManyTagsField {
+    static template = "hr_work_entry.Many2ManyWorkEntryTypeTagsField";
+}
+
+export const many2ManyWorkEntryTypeTagsField = {
+    ...many2ManyTagsField,
+    component: Many2ManyWorkEntryTypeTagsField,
+    additionalClasses: [...(many2ManyTagsField.additionalClasses || []), "o_field_many2many_tags"],
+};
+
+registry.category("fields").add("many2many_work_entry_type_tags", many2ManyWorkEntryTypeTagsField);
