@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:39+0000\n"
-"PO-Revision-Date: 2026-06-12 17:14+0000\n"
+"PO-Revision-Date: 2026-10-12 17:14+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-18/"
 "im_livechat/lt/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
 ": n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: im_livechat
 #. odoo-python
@@ -100,6 +100,12 @@ msgid ""
 "conversation pane.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
+"* „Rodyti“ – puslapiuose rodomas pokalbių mygtukas.\n"
+"* „Rodyti su pranešimu“ – tai „Rodyti“ su papildomu plaukiojančiu tekstu "
+"šalia mygtuko.\n"
+"* „Atidaryti automatiškai“ – rodomas mygtukas ir automatiškai atidaromas "
+"pokalbių langas.\n"
+"* „Paslėpti“ – puslapiuose paslėpiamas pokalbių mygtukas.\n"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -121,7 +127,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Grįžti į redagavimo režimą"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -326,7 +332,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
 msgid "Button Background Color"
-msgstr ""
+msgstr "Mygtuko fono spalva"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text_color
@@ -459,6 +465,7 @@ msgstr "Chatbotai"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Choose the live chat channel you want to display on your website."
 msgstr ""
+"Pasirinkite tiesioginio pokalbio kanalą, kurį norite rodyti savo svetainėje."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -503,12 +510,12 @@ msgstr "Pokalbis"
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Conversation with %s"
-msgstr ""
+msgstr "Pokalbis su %s"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations
 msgid "Conversations handled"
-msgstr ""
+msgstr "Aptariami pokalbiai"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__country_id
@@ -593,12 +600,12 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_background_color
 msgid "Default background color of the Livechat button"
-msgstr ""
+msgstr "„Livechat“ mygtuko numatytoji fono spalva"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Default background color of the channel header once open"
-msgstr ""
+msgstr "Numatytasis kanalo antraštės fono spalva, kai ji atidaryta"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text_color
@@ -636,6 +643,9 @@ msgid ""
 "selected action must be 'Open automatically' otherwise this parameter will "
 "not be taken into account."
 msgstr ""
+"Delay (sekundėmis) – laikas, po kurio automatiškai atsidarys pokalbio "
+"langas. Pastaba: pasirinktas veiksmas turi būti „Atidaryti automatiškai“, "
+"kitaip į šį parametrą nebus atsižvelgta."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -826,12 +836,12 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Header Background Color"
-msgstr ""
+msgstr "Antraštės fono spalva"
 
 #. module: im_livechat
 #: model:im_livechat.channel,default_message:im_livechat.im_livechat_channel_data
 msgid "Hello, how may I help you?"
-msgstr ""
+msgstr "Sveiki, kuo galime padėti?"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
@@ -907,7 +917,7 @@ msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
 msgid "If you need anything else, feel free to get back in touch"
-msgstr ""
+msgstr "Jei reikės ko nors dar, nedvejodami susisiekite su mumis"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__image_1920
@@ -974,7 +984,7 @@ msgstr "Prisijungti prie kanalo"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations_value
 msgid "Kpi Livechat Conversations Value"
-msgstr ""
+msgstr "KPI „Livechat“ pokalbių vertė"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating_value
@@ -1428,7 +1438,7 @@ msgstr "Įvertinimas"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_avg_text
 msgid "Rating Avg Text"
-msgstr ""
+msgstr "Vidutinis teksto įvertinimas"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_feedback
@@ -1449,12 +1459,12 @@ msgstr "Paskutinio įvertinimo reikšmė"
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "Vertinimas: Pasitenkinimas"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_text
 msgid "Rating Text"
-msgstr ""
+msgstr "Vertinimo tekstas"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_count
@@ -1512,13 +1522,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/thread_actions.js:0
 msgid "Restart Conversation"
-msgstr ""
+msgstr "Pradėti pokalbį iš naujo"
 
 #. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Restarting conversation..."
-msgstr ""
+msgstr "Tęsiame pokalbį..."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
@@ -1594,7 +1604,7 @@ msgstr "Rodyti 15 paskutinių aplankytų puslapių"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
 msgid "Select an option above"
-msgstr ""
+msgstr "Pasirinkite vieną iš aukščiau pateiktų variantų"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1658,7 +1668,7 @@ msgstr "Rodyti"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_chatbot_script_step__triggering_answer_ids
 msgid "Show this step only if all of these answers have been selected."
-msgstr ""
+msgstr "Rodyti šį žingsnį tik tuo atveju, jei buvo pažymėti visi šie atsakymai."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button_and_text
@@ -1723,7 +1733,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 msgid "Thank you for your feedback"
-msgstr ""
+msgstr "Dėkojame už jūsų atsiliepimą"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -1734,7 +1744,7 @@ msgstr "Taisyklės kanalas"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/transcript_sender.xml:0
 msgid "The conversation was sent."
-msgstr ""
+msgstr "Pokalbis buvo išsiųstas."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__country_ids
@@ -1885,7 +1895,7 @@ msgstr "Vartotojas"
 #: model:ir.model.fields,field_description:im_livechat.field_res_partner__user_livechat_username
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__user_livechat_username
 msgid "User Livechat Username"
-msgstr ""
+msgstr "Vartotojo „Livechat“ vardas"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users_settings
@@ -1920,7 +1930,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Visitor left the conversation."
-msgstr ""
+msgstr "Lankytojas paliko pokalbį."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
@@ -1955,7 +1965,7 @@ msgstr "Pasisveikinimo pranešimas"
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_welcome
 msgid "Welcome to CompanyName! 👋"
-msgstr ""
+msgstr "Sveiki atvykę į „CompanyName“! 👋"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_dispatch
@@ -1972,12 +1982,14 @@ msgstr "Valdiklis"
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
 msgstr ""
+"Ar galėtumėte palikti savo el. pašto adresą, kad galėtume su jumis "
+"susisiekti?"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/close_confirmation.xml:0
 msgid "Yes, leave conversation"
-msgstr ""
+msgstr "Taip, išeiti iš pokalbio"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template

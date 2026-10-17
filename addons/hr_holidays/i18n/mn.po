@@ -21,13 +21,14 @@
 # Martin Trigaux, 2024
 # Bayarkhuu Bataa, 2024
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2025-12-16 13:08+0000\n"
-"Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
+"PO-Revision-Date: 2026-10-16 17:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/"
 "hr_holidays/mn/>\n"
 "Language: mn\n"
@@ -35,13 +36,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid " to %(date_to_utc)s"
-msgstr ""
+msgstr " - %(date_to_utc)s хүртэл"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -148,12 +149,14 @@ msgid ""
 "%(name)s does not have a valid allocation for the leave type %(leave_type)s "
 "to cover that request."
 msgstr ""
+"%(name)s-д энэ хүсэлтийг хангах %(leave_type)s чөлөөний төрлийн хүчинтэй "
+"хуваарилалт байхгүй байна."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
-msgstr ""
+msgstr "%(name)s: %(duration)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -165,7 +168,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(person)s: %(duration)s (%(start)s)"
-msgstr ""
+msgstr "%(person)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2022,7 +2025,7 @@ msgstr "Цаг"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__hr_icon_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__hr_icon_display
 msgid "Hr Icon Display"
-msgstr ""
+msgstr "Hr дүрс харуулах"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__id
@@ -2139,7 +2142,7 @@ msgstr "Дагагч эсэх"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_name_custom
 msgid "Is Name Custom"
-msgstr ""
+msgstr "Нэр гараар оруулсан эсэх"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
@@ -4162,7 +4165,7 @@ msgstr "Уншаагүй зурвас"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Up to"
-msgstr ""
+msgstr "Хүртэл"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_users
@@ -4392,13 +4395,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/report/hr_leave_report_calendar.py:0
 msgid "You are not allowed to approve this leave request."
-msgstr ""
+msgstr "Танд энэ чөлөөний хүсэлтийг зөвшөөрөх эрх байхгүй."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/report/hr_leave_report_calendar.py:0
 msgid "You are not allowed to refuse this leave request."
-msgstr ""
+msgstr "Танд энэ чөлөөний хүсэлтийг түдгэлзүүлэх эрх байхгүй."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4709,7 +4712,7 @@ msgstr "хоног)"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "e.g. Extra recuperation, Company unavailability, ..."
-msgstr ""
+msgstr "жишээ нь Нэмэлт нөхөн сэргээлт, Компани ажиллахгүй, ..."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -4782,7 +4785,7 @@ msgstr "дараагийнх"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "of the month"
-msgstr ""
+msgstr "-ны өдөр"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4794,7 +4797,7 @@ msgstr "дээр"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "on the"
-msgstr ""
+msgstr "-ны"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban

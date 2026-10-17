@@ -53,7 +53,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-16 16:38+0000\n"
-"PO-Revision-Date: 2026-10-08 08:41+0000\n"
+"PO-Revision-Date: 2026-10-16 10:38+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/base/fi/>"
 "\n"
@@ -985,11 +985,11 @@ msgid ""
 "tax calculation.\n"
 msgstr ""
 "\n"
-"3. osapuolen verolaskelma myyntiä varten\n"
+"Kolmannen osapuolen verolaskelma myyntiä varten\n"
 "==================================\n"
 "\n"
-"Tarjoaa yhteisen käyttöliittymän, jota käytetään sovelluksissa, kun "
-"verolaskenta on ulkoistettua.\n"
+"Tarjoaa yhteisen käyttöliittymän, jota käytetään verolaskelmien "
+"ulkoistamista tukevien sovellusten käyttöönotossa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -14499,8 +14499,8 @@ msgid ""
 "specifically in the case of renting kits.\n"
 msgstr ""
 "\n"
-"Tämä moduuli toimii yhteytenä vuokrauksen ja valmistuksen välillä, "
-"erityisesti sarjojen vuokrauksen tapauksessa.\n"
+"Tämä moduuli toimii siltana Vuokrauksen ja Tuotannon välillä, erityisesti "
+"settejä vuokratessa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_account_edi_ubl_cii_tests
@@ -15827,7 +15827,7 @@ msgstr "kolmannen osapuolen verolaskenta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_external_tax
 msgid "3rd Party Tax Calculation for Sale"
-msgstr "3. osapuolen verolaskelma myyntiä varten"
+msgstr "Kolmannen osapuolen verolaskelma myyntiä varten"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -18701,7 +18701,7 @@ msgstr "Amazon Connector"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon_avatax
 msgid "Amazon/Avatax Bridge"
-msgstr "Amazon/Avatax Bridge"
+msgstr "Amazon/Avatax-silta"
 
 #. module: base
 #. odoo-python
@@ -23408,13 +23408,13 @@ msgstr "Yrityksen tiedot"
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry
 msgid "Company ID"
-msgstr "Yritystunnus"
+msgstr "Y-tunnus"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry_label
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry_label
 msgid "Company ID Label"
-msgstr "Yrityksen ID-tunnus"
+msgstr "Y-tunnuksen nimike"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo
@@ -29065,7 +29065,7 @@ msgstr "Gelato"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_gelato_stock
 msgid "Gelato/Stock bridge"
-msgstr "Gelato/Stock bridge"
+msgstr "Gelato/Varasto-silta"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -32328,7 +32328,7 @@ msgstr "Setin saatavuus"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_mrp_renting
 msgid "Kits rental"
-msgstr "Yhdistelmien vuokraus"
+msgstr "Settien vuokraus"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_knowledge
@@ -32477,7 +32477,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
 msgid "Landed Costs"
-msgstr "Läh. kokonaiskulu"
+msgstr "Kokonaiskustannukset"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_landed_costs
@@ -34033,7 +34033,7 @@ msgstr "Hallitse verkossa tapahtuvaa vuokrausprosessia"
 #: model:ir.module.module,summary:base.module_sale_commission_margin
 #: model:ir.module.module,summary:base.module_sale_commission_subscription
 msgid "Manage your salespersons' commissions"
-msgstr "Hallitse myyjien palkkioita"
+msgstr "Hallinnoi myyjien palkkioita"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social
@@ -34138,7 +34138,7 @@ msgstr "Markkinointitoimisto"
 #: model:ir.module.category,name:base.module_category_marketing_marketing_automation
 #: model:ir.module.module,shortdesc:base.module_marketing_automation
 msgid "Marketing Automation"
-msgstr "Markkinointiautomaatio"
+msgstr "Markkinoinnin automaatio"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation_website_sale
@@ -36653,84 +36653,80 @@ msgid ""
 "manufacturing operations.\n"
 "\n"
 msgstr ""
-"Odoo valmistusresurssien suunnittelu\n"
+"Tuotannon resurssisuunnittelu Odoossa\n"
 "------------------------------------\n"
 "\n"
-"Hallitse osaluetteloita, suunnittele valmistustilauksia, seuraa työtilauksia "
-"Odoo:n avulla\n"
-"Odoo <a href=\"https://www.odoo.com/app/manufacturing\">Open Source MRP</a> "
-"-sovelluksella.\n"
+"Hallinnoi materiaaliluetteloita, suunnittele tuotantotilauksia ja seuraa "
+"työtilauksia Odoon\n"
+"<a href=\"https://www.odoo.com/app/manufacturing\">avoimen lähdekoodin "
+"Tarvelaskenta</a>-sovelluksella.\n"
 "\n"
-"Hanki kaikki kokoonpano- tai valmistustoimintasi hallittavaksi Odoon avulla. "
-"Aikatauluta\n"
-"valmistustilaukset ja työtilaukset automaattisesti. Tarkastele ehdotettuja\n"
-"suunnittelua älykkäiden kanban- ja gantt-näkymien avulla. Käytä kehittynyttä "
-"analytiikkaa\n"
-"ominaisuuksia resurssikapasiteetin ja varastopaikkojen pullonkaulojen "
-"havaitsemiseen.\n"
+"Tee kaikista kokoonpano- tai tuotantoprosesseistasi hallittavia Odoon "
+"avulla. Aikatauluta\n"
+"tuotanto- ja työtilaukset automaattisesti. Tarkastele ehdotettua\n"
+"suunnittelua älykkäiden kanban- ja gantt-näkymien avulla. Käytä "
+"edistyksellisiä analytiikkaominaisuuksia\n"
+"resurssikapasiteetin ja varastosijaintien pullonkaulojen havaitsemiseksi.\n"
 "\n"
-"Aikatauluta valmistustilaukset tehokkaasti\n"
+"Aikatauluta tuotantotilaukset tehokkaasti\n"
 "-----------------------------------------\n"
 "\n"
-"Saat valmistustilaukset ja työtilaukset ajoitettua automaattisesti perustuen "
-"sinun\n"
-"hankintasääntöihin, ennustettuihin määriin ja riippuvaiseen kysyntään "
-"(kysyntä tätä\n"
-"osa perustuu siihen, että toinen osa kuluttaa sitä).\n"
+"Tuotantotilaukset ja työtilaukset aikataulutetaan automaattisesti "
+"hankintsääntöjesi,\n"
+"ennustettujen määrien ja kysynnän perusteella (kysyntä\n"
+"perustuu siihen, että toinen osa kuluttaa sitä).\n"
 "\n"
-"Määritä joustavat päätiedot\n"
+"Määritä joustavat ydintiedot\n"
 "---------------------------\n"
 "\n"
 "Saat joustavuutta monitasoisten materiaaliluetteloiden luomiseen, "
-"valinnainen reititys,\n"
-"versiomuutokset ja fantom-materiaaliluettelot. Voit käyttää BoM:ää sarjoille "
-"tai\n"
-"valmistustilauksiin.\n"
+"vaihtoehtoiseen reititykseen,\n"
+"versiomuutoksiin sekä fantom-materiaaliluetteloihin. Voit käyttää "
+"materiaaliluetteloita seteissä tai\n"
+"tuotantotilauksissa.\n"
 "\n"
 "Joustavuus kaikissa toiminnoissa\n"
 "---------------------------------\n"
 "\n"
-"Muokkaa manuaalisesti kaikkia ehdotettuja toimintoja millä tahansa "
-"etenemistasolla. Odoon avulla,\n"
-"et turhaudu jäykkään järjestelmään.\n"
+"Muokkaa manuaalisesti kaikkia ehdotettuja toimintoja missä tahansa tilassa. "
+"Odoon ansiosta\n"
+"sinun ei tarvitse tyytyä jäykkään järjestelmään.\n"
 "\n"
 "Aikatauluta työtilaukset\n"
 "--------------------\n"
 "\n"
-"Tarkista resurssien kapasiteetit ja korjaa pullonkaulat.  Määrittele reitit "
-"ja suunnittele\n"
-"resurssien työaikaa ja kapasiteettia. Tunnista nopeasti resurssien\n"
-"tarpeet ja pullonkaulat, jotta voit varmistaa, että tuotantosi vastaa "
-"toimituksiasi\n"
-"toimitusaikataulun päivämäärät.\n"
+"Tarkista resurssien kapasiteetit ja korjaa pullonkaulat. Määritä reitit sekä "
+"suunnittele\n"
+"resurssien työaika ja kapasiteetti. Tunnista nopeasti resurssien\n"
+"tarpeet ja pullonkaulat varmistaaksesi, että tuotantosi pysyy\n"
+"toimitusaikataulussa.\n"
 "\n"
 "\n"
 "Tuottava käyttöliittymä\n"
 "---------------------------\n"
 "\n"
-"Järjestä valmistus- ja työtilaukset haluamallasi tavalla. Käsittele "
-"seuraava\n"
-"tilauksia luettelonäkymästä, hallitse kalenterinäkymässä ja muokkaa "
-"ehdotettuja\n"
+"Järjestä tuotanto- ja työtilaukset haluamallasi tavalla. Käsittele "
+"seuraavat\n"
+"tilaukset luettelonäkymässä, hallinnoi kalenterinäkymää ja muokkaa "
+"ehdotettua\n"
 "aikataulua Gantt-näkymässä.\n"
 "\n"
 "\n"
-"Varasto- ja valmistusanalytiikka\n"
+"Varastointi- ja tuotantoanalytiikka\n"
 "-----------------------------------\n"
 "\n"
-"Seuraa varaston arvon kehitystä valmistuksen tason mukaan\n"
-"valmistustoiminnan tason mukaan, kun ne etenevät muutosprosessissa.\n"
+"Seuraa varaston arvon kehitystä tuotantotehtävien\n"
+"tason mukaan, kun ne etenevät muutosprosessissa.\n"
 "\n"
 "Täysin integroitu toimintoihin\n"
 "--------------------------------\n"
 "\n"
-"Saat valmistusresurssien suunnittelun täsmälliseksi täydellisen integraation "
-"ansiosta\n"
-"myynnin ja ostojen sovelluksiin. Kirjanpitointegraatio mahdollistaa "
-"reaaliaikaisen\n"
-"kirjanpidon arvonmäärityksen ja syvällisemmän raportoinnin kustannuksista ja "
-"tuloista\n"
-"tuotantotoiminnoista.\n"
+"Tuotantoresurssien suunnittelu on täsmällistä täyden\n"
+"myynti- ja ostosovellusten integraation ansiosta. Kirjanpidon integraatio "
+"mahdollistaa reaaliaikaisen\n"
+"kirjanpidon arvonmäärityksen ja syvällisemmän raportoinnin "
+"tuotantoprosessin\n"
+"kustannuksista ja tuloista.\n"
 "\n"
 
 #. module: base
@@ -42731,12 +42727,12 @@ msgstr "Myyntikomissio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_commission_margin
 msgid "Sale Commission: Margin"
-msgstr "Myyntikomissio: Marginaali"
+msgstr "Myyntipalkkio: Kate"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_commission_subscription
 msgid "Sale Commission: Subscription"
-msgstr "Myyntikomissio: Tilaus"
+msgstr "Myyntipalkkio: Tilaus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_intrastat
@@ -42751,7 +42747,7 @@ msgstr "Myynti kanta-asiakkuus"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_loyalty_delivery
 msgid "Sale Loyalty - Delivery"
-msgstr "Myynti kanta-asiakkuus - Toimitus"
+msgstr "Myynnin kanta-asiakkuus - Toimitus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_management_renting
@@ -42962,7 +42958,7 @@ msgstr "Myynnin ja varaston hallinta"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale
 msgid "Sales internal machinery"
-msgstr "Myynti sisäiset koneet"
+msgstr "Myynnin sisäinen koneisto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__user_id
@@ -49799,8 +49795,8 @@ msgid ""
 "When re-invoicing the expense on the SO, set the cost to the total untaxed "
 "amount of the expense."
 msgstr ""
-"Kun laskutat kuluja uudelleen myyntitilauksessa, aseta kustannukset kulujen "
-"verottomaan kokonaismäärään."
+"Kun laskutat kuluja uudelleen myyntitilauksessa, määritä kustannukseksi "
+"kulujen veroton kokonaismäärä."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view

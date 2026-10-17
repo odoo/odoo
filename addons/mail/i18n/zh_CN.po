@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-04-18 14:01+0000\n"
+"PO-Revision-Date: 2026-10-16 17:15+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-18/mail/zh_Hans/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: mail
 #. odoo-python
@@ -3900,6 +3900,13 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"无法为 %(template_label)s 渲染 QWeb 模板\n"
+"目标模型：%(model_name)s\n"
+"语言环境：%(lang_context)s\n"
+"错误：%(error_details)s\n"
+"\n"
+"模板源码片段：\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
@@ -3908,6 +3915,8 @@ msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
+"无法渲染 inline_template 模板：%(template_txt)s\n"
+"错误详情：%(error)s"
 
 #. module: mail
 #. odoo-python
@@ -4790,7 +4799,7 @@ msgstr "如果您想使用twilio作为TURN/STUN服务器提供商"
 msgid ""
 "If you were using a Tenor API key, please replace it with a Klipy API key in "
 "the General Settings."
-msgstr ""
+msgstr "如果您之前使用的是 Tenor API 密钥，请在一般设置中将其替换为 Klipy API 密钥。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -5342,7 +5351,7 @@ msgstr "亲切问候"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
 msgid "Klipy API key"
-msgstr ""
+msgstr "Klipy API 密钥"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5814,7 +5823,7 @@ msgstr "邮件模板重置"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "邮件模板：“%(name)s”（ID：%(record_id)s）"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -5964,7 +5973,7 @@ msgstr "标记为完成"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "群发邮件模板：“%(name)s”（ID：%(record_id)s）"
 
 #. module: mail
 #. odoo-javascript
@@ -6599,7 +6608,7 @@ msgstr "没有历史讯息"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "No language detected in context"
-msgstr ""
+msgstr "在上下文中未检测到语言"
 
 #. module: mail
 #. odoo-python
@@ -8594,7 +8603,7 @@ msgstr "搜索收件服务器"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Search Klipy"
-msgstr ""
+msgstr "搜索 Klipy"
 
 #. module: mail
 #. odoo-javascript
@@ -9442,7 +9451,7 @@ msgstr "从合成器创建模板需要有效的模型。"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Template name not identified"
-msgstr ""
+msgstr "未识别模板名称"
 
 #. module: mail
 #. odoo-python
@@ -10391,13 +10400,13 @@ msgstr "未命名的 %(record_model_name)s（%(record_id)s）"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "未命名的邮件模板"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "未命名的群发邮件"
 
 #. module: mail
 #. odoo-javascript
@@ -11177,7 +11186,7 @@ msgstr "您可以放心忽略此消息"
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "You cannot assign an empty domain name."
-msgstr ""
+msgstr "您不能分配空的域名。"
 
 #. module: mail
 #. odoo-python

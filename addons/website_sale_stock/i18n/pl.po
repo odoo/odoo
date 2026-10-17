@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:40+0000\n"
-"PO-Revision-Date: 2026-02-24 23:34+0000\n"
+"PO-Revision-Date: 2026-10-15 12:33+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
 "website_sale_stock/pl/>\n"
@@ -23,18 +23,18 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not show_availability\">Units</span>"
-msgstr ""
+msgstr "<span invisible=\"not show_availability\">Szt.</span>"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
 msgid "All available quantity selected"
-msgstr ""
+msgstr "Wybrano wszystkie dostępne ilości"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -81,7 +81,7 @@ msgstr ""
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Default visibility for custom messages."
-msgstr "Domyślna widoczność dla własnych wiadomości"
+msgstr "Domyślna widoczność niestandardowych wiadomości."
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -93,18 +93,19 @@ msgstr "Powiadom gdy magazyn zapełni się z powrotem"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
 msgstr ""
+"Jak wyświetlać produkty o niskiej dostępności (w magazynie – zarezerwowane)"
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/controllers/main.py:0
 msgid "Invalid Email"
-msgstr "Błędny email"
+msgstr "Nieprawidłowy email"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale.js:0
 msgid "Invalid email"
-msgstr "Błędny email"
+msgstr "Nieprawidłowy email"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -115,7 +116,7 @@ msgstr "Domyślne ustawienia magazynowania"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Only"
-msgstr "Jedynie"
+msgstr "Tylko"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -150,7 +151,7 @@ msgstr "Wiadomość o braku w magazynie"
 #. odoo-python
 #: code:addons/website_sale_stock/controllers/main.py:0
 msgid "Please sign in to proceed."
-msgstr ""
+msgstr "Zaloguj się, aby kontynuować."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -177,13 +178,13 @@ msgstr "Produkt: wyślij email o dostępności produktów"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Regards,"
-msgstr "Pozdrawiam,"
+msgstr "Z poważaniem,"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
 msgid "Requested quantity not available"
-msgstr ""
+msgstr "Żądana ilość nie jest dostępna"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
@@ -222,19 +223,19 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry "
 "for the inconvenience."
 msgstr ""
-"Niektóre produkty stały się niedostępne, a Twój koszyk został "
-"zaktualizowany. Przepraszamy za niedogodności."
+"Niektóre produkty już nie są dostępne, a Twój koszyk został zaktualizowany. "
+"Przepraszamy za niedogodności."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "The following product is now available."
-msgstr "Następujący produkt jest teraz dostępny"
+msgstr "Następujący produkt jest już dostępny."
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "The item has not been added to your cart since it is not available."
-msgstr ""
+msgstr "Produkt nie został dodany do koszyka, ponieważ jest niedostępny."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -246,13 +247,13 @@ msgstr "Produkt '%(product_name)s' jest teraz dostępny"
 #. odoo-python
 #: code:addons/website_sale_stock/controllers/main.py:0
 msgid "This product is not eligible for stock notifications."
-msgstr ""
+msgstr "Ten produkt nie kwalifikuje się do powiadomień magazynu."
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 msgid "This product is out of stock."
-msgstr "Ten produkt został wyprzedany"
+msgstr "Ten produkt został wyprzedany."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -275,7 +276,7 @@ msgstr "Magazyn"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "We'll notify you once the product is back in stock."
-msgstr "Powiadomimy Cię gdy produkt ponownie będzie dostępny"
+msgstr "Powiadomimy Cię, gdy produkt ponownie będzie dostępny."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -287,25 +288,25 @@ msgstr "Strona internetowa"
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website where this order has been placed, for eCommerce orders."
 msgstr ""
-"Witryna na której to zamówienie zostało złożone, dla zamówień eCommerce"
+"Witryna, na której to zamówienie zostało złożone, dla zamówień eCommerce."
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "You already added"
-msgstr "już dodałeś"
+msgstr "Już dodałeś"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "You already added all the available product in your cart."
-msgstr "Już dodałeś wszystkie dostępne produkty do koszyka"
+msgstr "Już dodałeś wszystkie dostępne produkty do koszyka."
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 msgid "You already have %s Units in your cart."
-msgstr "Masz już %s sztuk w koszyku"
+msgstr "Masz już %s sztuk w koszyku."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -314,20 +315,21 @@ msgid ""
 "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
 "available"
 msgstr ""
+"Pytasz o %(desired_qty)s %(product_name)s, ale dostępne jest tylko %(new_qty)"
+"s "
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""
-"Prosisz o %(desired_qty)s produktów lecz tylko %(new_qty)s jest dostępne."
+"Prosisz o %(desired_qty)s sztuk produktu, ale dostępne jest tylko %(new_qty)s"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 msgid "You ask for %(quantity1)s Units but only %(quantity2)s are available."
-msgstr ""
-"Prosisz o %(quantity1)s sztuk lecz jedynie %(quantity2)s jest dostępne."
+msgstr "Prosisz o %(quantity1)s sztuk, ale jedynie %(quantity2)s jest dostępne."
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -339,7 +341,7 @@ msgstr "w Twoim koszyku."
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "left in stock."
-msgstr "pozostało w magazynie."
+msgstr "w magazynie."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
