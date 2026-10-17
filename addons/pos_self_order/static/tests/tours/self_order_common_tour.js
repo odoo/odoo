@@ -3,6 +3,26 @@ import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 
+registry.category("web_tour.tours").add("self_order_kiosk_session_closed", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        LandingPage.isOpened(),
+        {
+            content: "Receive the kiosk session closed notification",
+            trigger: ".self_order_product_card",
+            run() {
+                const { method: onStatus } = window.posmodel.data.channels.find(
+                    ({ channel }) => channel === "STATUS"
+                );
+                onStatus({ status: "closed" });
+            },
+        },
+        LandingPage.isClosed(),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.checkIsNoBtn("Order"),
+    ],
+});
+
 registry.category("web_tour.tours").add("self_order_is_close", {
     steps: () => [
         LandingPage.isClosed(),
