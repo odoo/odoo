@@ -11,7 +11,7 @@ from odoo.service import security
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path
 from odoo.tools.lru import LRU
-from odoo.tools import check_barcode_encoding, config, frozendict, is_html_empty, parse_version, split_every
+from odoo.tools import check_barcode_encoding, config, frozendict, html2plaintext, is_html_empty, parse_version, split_every
 from odoo.http import request, root
 from odoo.tools.pdf import PdfFileWriter, PdfFileReader, PdfReadError
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -39,6 +39,12 @@ from itertools import islice
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 _logger = logging.getLogger(__name__)
+
+# Constants (mm) used to estimate the vertical space a rendered report header needs,
+HEADER_LOGO_BLOCK_MM = 15
+HEADER_LINE_HEIGHT_MM = 8
+HEADER_MARGIN_BUFFER_MM = 10
+HEADER_MARGIN_TOP_CEILING_MM = 100
 
 # A lock occurs when the user wants to print a report having multiple barcode while the server is
 # started in threaded-mode. The reason is that reportlab has to build a cache of the T1 fonts
@@ -366,6 +372,25 @@ class IrActionsReport(models.Model):
 
         return command_args
 
+    def _get_header_needed_margin_top(self, header_node):
+        '''Estimate, in mm, the top margin a report's header actually needs so its content
+        doesn't overflow past a fixed `margin_top`/`header_spacing` budget (wkhtmltopdf treats
+        that budget as fixed regardless of the header's real rendered height).
+
+        :param header_node: the synthetic <div> built by `_prepare_html`, holding one child
+            per company/document header in the current render batch.
+        :return: the needed top margin in mm, capped at HEADER_MARGIN_TOP_CEILING_MM.
+        '''
+        needed_mm = 0
+        for child in header_node:
+            raw_html = re.sub(r'\s+', ' ', lxml.html.tostring(child, encoding='unicode'))
+            text = html2plaintext(raw_html, include_references=False)
+            line_count = len([line for line in text.split('\n') if line.strip()])
+            has_logo = bool(child.xpath('.//img'))
+            needed_mm = max(needed_mm, (HEADER_LOGO_BLOCK_MM if has_logo else 0)
+                             + HEADER_LINE_HEIGHT_MM * line_count + HEADER_MARGIN_BUFFER_MM)
+        return min(needed_mm, HEADER_MARGIN_TOP_CEILING_MM)
+
     def _prepare_html(self, html, report_model=False):
         '''Divide and recreate the header/footer html by merging all found in html.
         The bodies are extracted and added to a list. Then, extract the specific_paperformat_args.
@@ -437,6 +462,12 @@ class IrActionsReport(models.Model):
         for attribute in root.items():
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
+
+        needed_margin_top = self._get_header_needed_margin_top(header_node)
+        paperformat = self.get_paperformat()
+        if paperformat and needed_margin_top > paperformat.margin_top:
+            specific_paperformat_args.setdefault('data-report-margin-top', needed_margin_top)
+            specific_paperformat_args.setdefault('data-report-header-spacing', needed_margin_top)
 
         header = self.env['ir.qweb']._render(layout.id, {
             'subst': True,
