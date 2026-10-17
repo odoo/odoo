@@ -2636,3 +2636,75 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             "No event should be created on Oct 26 (the UTC boundary date)",
         )
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    @patch.object(GoogleCalendarService, 'get_events')
+    def test_no_mail_to_attendees_on_google_sync(self, mock_get_events):
+        """
+        Syncing a recurrence from Google must not send invitation emails from Odoo,
+        Google already notifies the attendees. This must hold even when the organizer
+        is an Odoo user whose Google access token is expired, since the organizer's
+        token validity is what usually prevents those emails from being sent.
+        """
+        now = datetime(2021, 2, 10, 12, 0)
+        self.organizer_user.sudo().res_users_settings_id.write({
+            'google_calendar_rtoken': 'organizer-rtoken',
+            'google_calendar_token': 'organizer-token',
+            'google_calendar_token_validity': now - timedelta(hours=2),
+        })
+        self.env['res.partner'].create([
+            {'name': 'External One', 'email': 'external_one@example.com'},
+            {'name': 'External Two', 'email': 'external_two@example.com'},
+        ])
+        attendee_emails = [self.organizer_user.email, self.attendee_user.email, 'external_one@example.com']
+        recurrence_values = {
+            'id': 'no_mail_recurrence',
+            'summary': 'Weekly meeting',
+            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=10;BYDAY=MO'],
+            'start': {'dateTime': '2021-02-15T08:00:00+00:00'},
+            'end': {'dateTime': '2021-02-15T10:00:00+00:00'},
+            'reminders': {'useDefault': True},
+            'organizer': {'email': self.organizer_user.email},
+            'attendees': [{'email': email, 'responseStatus': 'needsAction'} for email in attendee_emails],
+            'updated': '2021-02-10T12:00:00Z',
+        }
+
+        def sync_from_google(values, mock_dt):
+            mock_get_events.return_value = (GoogleEvent([values]), None, [])
+            with self.mock_datetime_and_now(mock_dt):
+                self.attendee_user.with_user(self.attendee_user).sudo()._sync_google_calendar(self.google_service)
+
+        def get_notifications():
+            return self.env['mail.message'].sudo().search([
+                ('model', '=', 'calendar.event'),
+                ('message_type', '=', 'user_notification'),
+            ])
+
+        notifications = get_notifications()
+        # The recurrence is created from Google.
+        sync_from_google(recurrence_values, '2021-02-10 12:00:00')
+        recurrence = self.env['calendar.recurrence'].search([('google_id', '=', 'no_mail_recurrence')])
+        self.assertEqual(len(recurrence.calendar_event_ids), 10)
+
+        # Add an attendee to the whole recurrence in Google.
+        recurrence_values.update({
+            'attendees': recurrence_values['attendees'] + [
+                {'email': 'external_two@example.com', 'responseStatus': 'needsAction'},
+            ],
+            'updated': '2021-02-10T13:00:00Z',
+        })
+        sync_from_google(recurrence_values, '2021-02-10 13:00:00')
+        self.assertTrue(all(
+            'external_two@example.com' in event.attendee_ids.mapped('email')
+            for event in recurrence.calendar_event_ids
+        ))
+        # The whole recurrence is shifted in Google.
+        recurrence_values.update({
+            'start': {'dateTime': '2021-02-15T11:00:00+00:00'},
+            'end': {'dateTime': '2021-02-15T13:00:00+00:00'},
+            'updated': '2021-02-10T14:00:00Z',
+        })
+        sync_from_google(recurrence_values, '2021-02-10 14:00:00')
+        self.assertEqual(recurrence.base_event_id.start, datetime(2021, 2, 15, 11, 0))
+
+        self.assertFalse(get_notifications() - notifications, "No email should be sent to attendees by a Google sync")
