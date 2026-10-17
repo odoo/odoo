@@ -196,7 +196,7 @@ patch(PosAccessRightPlugin.prototype, {
         return this.hasEmployeeRole(["manager", "cashier"]);
     },
     get showEditPlanButton() {
-        return this.hasEmployeeRole(["manager"]);
+        return super.showEditPlanButton && this.hasEmployeeRole(["manager"]);
     },
     get canAccessDebugMode() {
         return this.hasEmployeeRole(["manager", "cashier"]);
