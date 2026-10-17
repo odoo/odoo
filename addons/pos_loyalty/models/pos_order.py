@@ -2,9 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+<<<<<<< 7fd9775789c590e158e0c602f956b24ff58e7880
 from markupsafe import Markup
 
 from odoo import _, models
+||||||| 5ce600033cdb46b278122b1a519bc1e356c2ebe2
+from odoo import _, models
+=======
+from odoo import _, models, api
+>>>>>>> 26d528147cdbd9497e49113b8967014b92f1c907
 from odoo.tools import float_compare
 import base64
 
@@ -249,6 +255,7 @@ class PosOrder(models.Model):
 
         return updated_gift_cards
 
+<<<<<<< 7fd9775789c590e158e0c602f956b24ff58e7880
     def _add_log_for_gift_cards(self, gift_cards):
         body = Markup(
             """
@@ -260,6 +267,33 @@ class PosOrder(models.Model):
         for gift_card in gift_cards:
             gift_card.message_post(body=body)
 
+||||||| 5ce600033cdb46b278122b1a519bc1e356c2ebe2
+=======
+    @api.model
+    def read_pos_orders(self, domain=False):
+        data = super().read_pos_orders(domain)
+
+        histories = self.env['loyalty.history'].search([
+            ('order_model', '=', 'pos.order'),
+            ('card_id.source_pos_order_id', 'in', [order["id"] for order in data["pos.order"]]),
+            ('card_id.program_id.program_type', '=', 'next_order_coupons'),
+        ])
+        if not histories:
+            return data
+
+        coupon_data = defaultdict(list)
+        for history in histories:
+            coupon_data[history.card_id.source_pos_order_id.id].append({
+                'program_name': history.card_id.program_id.name,
+                'expiration_date': history.card_id.expiration_date,
+                'code': history.card_id.code,
+            })
+        for order in data["pos.order"]:
+            order["new_coupon_info"] = coupon_data.get(order["id"], [])
+
+        return data
+
+>>>>>>> 26d528147cdbd9497e49113b8967014b92f1c907
     def _check_existing_loyalty_cards(self, coupon_data):
         coupon_key_to_modify = []
         for coupon_id, coupon_vals in coupon_data.items():
