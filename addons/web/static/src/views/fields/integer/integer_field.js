@@ -33,6 +33,7 @@ export class IntegerField extends Component {
             getValue: () => this.formattedValue,
             ref: this.numpadDecimalRef,
             parse: (v) => parseInteger(v, { allowOperation: true }),
+            preview: (v) => formatInteger(v),
         });
         useNumpadDecimal(this.numpadDecimalRef);
     }

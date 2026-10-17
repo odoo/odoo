@@ -201,6 +201,7 @@ test("use a formula", async () => {
     });
 
     await contains(".o_field_widget[name=float_field] input").edit("=20+3*2");
+    expect(".o_duration_popover").toHaveText("26.000");
     await clickSave();
 
     expect(".o_field_widget input").toHaveValue("26.000", {
@@ -208,6 +209,7 @@ test("use a formula", async () => {
     });
 
     await contains(".o_field_widget[name=float_field] input").edit("=2**3");
+    expect(".o_duration_popover").toHaveText("8.000");
     await clickSave();
 
     expect(".o_field_widget input").toHaveValue("8.000", {
@@ -215,12 +217,14 @@ test("use a formula", async () => {
     });
 
     await contains(".o_field_widget[name=float_field] input").edit("=100/3");
+    expect(".o_duration_popover").toHaveText("33.333");
     await clickSave();
     expect(".o_field_widget input").toHaveValue("33.333", {
         message: "The new value should be calculated properly.",
     });
 
     await contains(".o_field_widget[name=float_field] input").edit("=2^3");
+    expect(".o_duration_popover").toHaveText("8.000");
     await clickSave();
     expect(".o_field_widget input").toHaveValue("8.000", {
         message: "The new value should be calculated properly.",

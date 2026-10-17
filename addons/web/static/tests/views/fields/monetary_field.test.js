@@ -138,6 +138,7 @@ test("rounding using formula in form view - float field", async () => {
 
     // Test computation and rounding
     await contains(".o_field_monetary input").edit("=100/3");
+    expect(".o_duration_popover").toHaveText("33.33");
     await clickSave();
     expect(".o_field_widget input").toHaveValue("33.33", {
         message: "The new value should be calculated and rounded properly.",
@@ -158,6 +159,7 @@ test("rounding using formula in form view - monetary field", async () => {
 
     // Test computation and rounding
     await contains(".o_field_monetary input").edit("=100/3");
+    expect(".o_duration_popover").toHaveText("33.33");
     await clickSave();
     expect(".o_field_widget input").toHaveValue("33.33", {
         message: "The new value should be calculated and rounded properly.",
