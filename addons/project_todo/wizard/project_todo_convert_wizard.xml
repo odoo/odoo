@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_todo_convert_wizard_view_form" model="ir.ui.view">
+        <field name="name">project.todo.convert.wizard.form</field>
+        <field name="model">project.todo.convert.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Convert to Task" class="o_todo_conversion_form_view">
+                <sheet>
+                    <group>
+                        <field name="company_id" invisible="1"/>
+                        <field name="task_id" invisible="1"/>
+                        <field name="project_sharing_portal_user_ids" invisible="1"/>
+                        <field name="project_id" required="1" default_focus="1"/>
+                        <field name="user_ids"
+                               class="o_task_user_field"
+                               options="{'no_open': True}"
+                               widget="many2many_avatar_user"
+                               context="{'project_id': project_id}"/>
+                        <field name="tag_ids" widget="many2many_tags"
+                               options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"
+                               context="{'project_id': project_id}"
+                               placeholder="Choose tags from the selected project"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_convert_to_task" string="Convert to Task" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button special="cancel" string="Cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_task_action_convert_todo_to_task" model="ir.actions.act_window">
+        <field name="name">Convert to Task</field>
+        <field name="res_model">project.todo.convert.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+    </record>
+</odoo>
