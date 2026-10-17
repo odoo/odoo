@@ -156,6 +156,70 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
         # 6) Check if the SO has an 'mail.mail_activity_data_todo' activity.
         self.assertEqual(len(so.activity_search(['mail.mail_activity_data_todo'])), 0, 'No upsell warning should appear in the SO.')
 
+    def test_display_upsell_warning_after_invoice_creation(self):
+        """ Test to display an upsell warning when the threshold is exceeded after invoicing.
+
+            Unlike test_display_upsell_warning_when_invoiced, the invoice is created
+            before logging time, and the logged time exceeds the upsell threshold.
+
+            Test Case:
+            =========
+            1) Configure a 50% upsell threshold on the prepaid service product,
+            2) Reuse the confirmed SO line containing 2 prepaid hours,
+            3) Create the invoice before logging any time,
+            4) Log 2 hours against this SOL, exceeding the threshold of 1 hour (2 hours * 50%),
+            5) Check the SOL remains invoiced and the SO has one upsell activity.
+        """
+        self.product_order_timesheet1.write({
+            'service_upsell_threshold': 0.5,
+        })
+        sol = self.so.order_line.filtered(lambda line: line.product_id == self.product_order_timesheet1)
+        self.so._create_invoices()
+
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'unit_amount': 2,
+            'employee_id': self.employee_manager.id,
+            'project_id': self.project_task_rate.id,
+            'so_line': sol.id,
+        })
+        self.so._compute_field_value(self.so._fields['invoice_status'])
+
+        self.assertEqual(sol.invoice_status, 'invoiced')
+        self.assertEqual(len(self.so.activity_search(['mail.mail_activity_data_todo'])), 1, 'An upsell warning should appear in the SO.')
+
+    def test_no_duplicate_upsell_warning_after_invoice_creation(self):
+        """ Test that invoicing does not repeat an upsell warning without new logged time.
+
+            Test Case:
+            =========
+            1) Configure a 50% threshold on the prepaid SOL containing 2 hours,
+            2) Log 2 hours and complete the resulting upsell activity,
+            3) Create and post the invoice without logging more time,
+            4) Check that no new upsell activity appears.
+        """
+        self.product_order_timesheet1.write({
+            'service_upsell_threshold': 0.5,
+        })
+        sol = self.so.order_line.filtered(lambda line: line.product_id == self.product_order_timesheet1)
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'unit_amount': 2,
+            'employee_id': self.employee_manager.id,
+            'project_id': self.project_task_rate.id,
+            'so_line': sol.id,
+        })
+        self.so._compute_field_value(self.so._fields['invoice_status'])
+        activities = self.so.activity_search(['mail.mail_activity_data_todo'])
+        self.assertEqual(len(activities), 1, 'An upsell warning should appear in the SO.')
+        activities._action_done()
+
+        invoice = self.so._create_invoices()
+        invoice.action_post()
+        self.so._compute_field_value(self.so._fields['invoice_status'])
+
+        self.assertFalse(self.so.activity_search(['mail.mail_activity_data_todo']), 'No new upsell warning should appear in the SO.')
+
     def test_display_upsell_warning_multiple_times(self):
         """ Test to display an upsell warning caused by an SO line that has already produced an upsell warning previously.
 
