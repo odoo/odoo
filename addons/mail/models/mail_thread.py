@@ -5296,6 +5296,9 @@ class MailThread(models.AbstractModel):
             res.many(
                 "attachments",
                 "_store_attachment_fields",
+                dynamic_fields=lambda res, thread: res.from_method(
+                    "_store_thread_message_fields", thread=thread,
+                ),
                 value=lambda t: t._get_mail_thread_data_attachments(),
                 fields_params={"chatter_fields": kwargs.get("chatter_fields", False)},
             )

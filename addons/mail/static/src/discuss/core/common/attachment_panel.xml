@@ -14,7 +14,7 @@
                     </p>
                     <div t-else="" t-foreach="this.attachmentGroupsByDate" t-as="dateDay" t-key="dateDay" class="d-flex flex-column">
                         <DateSection date="dateDay" className="'my-1'"/>
-                        <AttachmentList attachmentGroups="dateDay_value" unlinkAttachments="(attachments) => this.attachmentUploadService.unlink(attachments)"/>
+                        <AttachmentList attachmentGroups="dateDay_value" thread="this.thread" unlinkAttachments="(attachments) => this.attachmentUploadService.unlink(attachments)"/>
                     </div>
                 </div>
                 <span t-ref="this.loadOlderRef"/>

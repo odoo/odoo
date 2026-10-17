@@ -2,7 +2,7 @@ import { DateSection } from "@mail/core/common/date_section";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 
-import { Component, signal, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, computed, signal, t, useOnChange, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { groupAttachments } from "@mail/utils/common/attachments";
 import { useSequential, useVisible } from "@mail/utils/common/hooks";
@@ -21,6 +21,7 @@ export class AttachmentPanel extends Component {
             channel: t.instanceOf(this.store["discuss.channel"]),
             close: t.function([]).optional(),
         });
+        this.thread = computed(() => this.props.channel.thread);
         this.offlineService = useService("offline");
         this.ormService = useService("orm");
         this.attachmentUploadService = useService("mail.attachment_upload");
