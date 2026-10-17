@@ -1,11 +1,51 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models, _
+from odoo import _, api, fields, models
+
+TAX_TRANSACTION_CODE = [
+    ('01', '01 To the Parties that is not VAT Collector (Regular Customers)'),
+    ('02', '02 To the Treasurer'),
+    ('03', '03 To other VAT Collectors other than the Treasurer'),
+    ('04', '04 Other Value of VAT Imposition Base'),
+    ('05', '05 Specified Amount (Article 9A Paragraph (1) VAT Law)'),
+    ('06', '06 to individuals holding foreign passports'),
+    ('07', '07 Deliveries that the VAT is not Collected'),
+    ('08', '08 Deliveries that the VAT is Exempted'),
+    ('09', '09 Deliveries of Assets (Article 16D of VAT Law)'),
+    ('10', '10 Other deliveries'),
+]
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_id_qris_transaction_ids = fields.Many2many('l10n_id.qris.transaction', groups='account.group_account_invoice')
+    l10n_id_kode_transaksi = fields.Selection(
+        selection=TAX_TRANSACTION_CODE,
+        string='Transaction Type Code',
+        help="A mandatory section in a Tax Invoice containing information on the supply of Taxable Goods (BKP) and/or Taxable Services (JKP).",
+        readonly=False,
+        copy=False,
+        compute="_compute_kode_transaksi",
+        store=True,
+    )
+    l10n_id_need_kode_transaksi = fields.Boolean(compute='_compute_l10n_id_need_kode_transaksi')
+
+    @api.depends('partner_id', 'reversed_entry_id')
+    def _compute_kode_transaksi(self):
+        for move in self:
+            move.l10n_id_kode_transaksi = (
+                move.reversed_entry_id.l10n_id_kode_transaksi
+                or move.commercial_partner_id.l10n_id_kode_transaksi
+            )
+
+    @api.depends('country_code', 'move_type', 'line_ids.tax_ids')
+    def _compute_l10n_id_need_kode_transaksi(self):
+        for move in self:
+            move.l10n_id_need_kode_transaksi = (
+                move.country_code == 'ID'
+                and move.move_type in ('out_invoice', 'out_refund')
+                and bool(move.line_ids.tax_ids)
+            )
 
     def _generate_qr_code(self, silent_errors=False):
         """
@@ -107,21 +147,21 @@ class AccountMove(models.Model):
     def _compute_tax_totals(self):
         """ OVERRIDE
 
-        For invoices based on ID company as of January 2025, there is a separate tax base computation for non-luxury goods.
+        For invoices based on ID company as of January 2025, there is a separate tax base computation for the Other Value VAT tax group.
         Tax base is supposed to be 11/12 of original while tax amount is increased from 11% to 12% hence effectively
         maintaining 11% tax amount.
 
-        We change tax totals section to display adjusted base amount on invoice PDF for special non-luxury goods tax group.
+        We change tax totals section to display adjusted base amount on invoice PDF for the Other Value VAT tax group.
 
         To Prevent the Discrepancy we hide the base amount for 'Collected by VAT Collector' tax group.
         """
         super()._compute_tax_totals()
         for move in self.filtered(lambda m: m.is_sale_document()):
             # invoice might be coming from different companies, each tax group with unique XML ID
-            non_luxury_tax_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_non_luxury_goods", raise_if_not_found=False)
+            other_value_vat_tax_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_other_value_vat", raise_if_not_found=False)
             vat_collector_tax_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_vat_collector", raise_if_not_found=False)
 
-            # for every tax group component with non-luxury tax group, we adjust the base amount and adjust the display to
+            # for every tax group component with the Other Value VAT tax group, we adjust the base amount and adjust the display to
             # show base amount
             # for every tax group component with collected-by-vat-collector tax group, we hide the base amount
             change_tax_base = False
@@ -130,9 +170,9 @@ class AccountMove(models.Model):
             for subtotal in tax_totals["subtotals"]:
                 for tax_group in subtotal["tax_groups"]:
                     if (
-                        non_luxury_tax_group
+                        other_value_vat_tax_group
                         and uses_new_tax_base_computation
-                        and tax_group["id"] == non_luxury_tax_group.id
+                        and tax_group["id"] == other_value_vat_tax_group.id
                     ):
                         tax_group.update({
                             "display_base_amount": tax_group["display_base_amount"] * (11 / 12),
