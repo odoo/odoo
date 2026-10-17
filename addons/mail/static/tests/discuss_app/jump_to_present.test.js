@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred, press, queryFirst, tick } from "@odoo/hoot-dom";
 import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
@@ -44,6 +44,31 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
     await click("[title='Jump to Present']");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
+});
+
+test("Jump to present reaches the bottom in a browser without scrollend", async () => {
+    // Simulate a browser without the "scrollend" event.
+    const onscrollend = Object.getOwnPropertyDescriptor(window, "onscrollend");
+    delete window.onscrollend;
+    after(() => Object.defineProperty(window, "onscrollend", onscrollend));
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 20 });
+    await click("[title='Jump to Present']");
+    await contains(".o-mail-Thread", {
+        contains: [".o-mail-Message", { count: 20 }],
+        scroll: "bottom",
+    });
 });
 
 test("Basic jump to present when scrolling to outdated messages (DESC, chatter aside)", async () => {
