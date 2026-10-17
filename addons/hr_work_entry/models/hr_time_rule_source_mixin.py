@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
 
@@ -23,6 +23,14 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     _time_rule_span_start_field = ''       # span start field name
     _time_rule_span_end_field = ''         # span end field name
     _time_rule_write_ctx = {'skip_time_rules': True, 'tracking_disable': True}
+
+    active = fields.Boolean(default=True)
+    time_rule_id = fields.Many2one('hr.time.rule', index=True)
+
+    @api.model
+    def _time_rule_wizard_extra_domain(self):
+        """Extra domain applied when searching this model in the reprocess wizard."""
+        return []
 
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
         raise NotImplementedError
@@ -45,6 +53,46 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
 
     def _get_source_extra_fields_domain(self):
         return []
+
+    def _undo_time_rules(self):
+        """Delete all engine outputs and restore the original (archived) source records.
+
+        walks the full descendant tree so multi-level chains (daily-OT output
+        used as a source for weekly-OT) are fully removed before the root is unarchived.
+        """
+        all_outputs = self.browse()
+        frontier = self.with_context(active_test=False)
+        while frontier:
+            children = self.with_context(active_test=False).sudo().search(
+                [(self._time_rule_source_field, 'in', frontier.ids)]
+            )
+            all_outputs |= children
+            frontier = children - all_outputs  # avoid infinite loops on unexpected cycles
+        all_outputs.with_context(skip_time_rules=True).unlink()
+        self.with_context(active_test=False).write({'active': True})
+
+    def _get_orphaned_sources_on_unlink(self):
+        """returns archived source records that have no other outputs than self"""
+        if not self._time_rule_source_field:
+            return self.browse()
+        children = self.with_context(active_test=False).filtered(
+            lambda r: r[self._time_rule_source_field]
+        )
+        if not children:
+            return self.browse()
+        sources = children.with_context(active_test=False).mapped(self._time_rule_source_field)
+        sources = sources.filtered(lambda s: not s.active)
+        if not sources:
+            return self.browse()
+        deleting_ids = set(self.ids)
+        orphaned = self.browse()
+        for source in sources:
+            siblings = self.with_context(active_test=False).search(
+                [(self._time_rule_source_field, '=', source.id)]
+            )
+            if all(c.id in deleting_ids for c in siblings):
+                orphaned |= source
+        return orphaned
 
     def _get_write_source_extra_source_fields(self):
         return set()
@@ -111,12 +159,14 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         """
         raise NotImplementedError
 
-    def _get_source_records_for_time_rules(self, start_dt, end_dt, employees=None, check_end=False):
+    def _get_source_records_for_time_rules(self, start_dt, end_dt, employees=None, check_end=False, root_only=True):
         domain = [
             (self._time_rule_span_end_field, '>=', start_dt.replace(tzinfo=None)),
             (self._time_rule_span_end_field, '!=', False),
         ]
         domain.extend(self._get_source_extra_fields_domain())
+        if root_only:
+            domain.append(('time_rule_id', '=', False))
         if check_end:
             domain.append(
                 (self._time_rule_span_end_field, '<=', end_dt.replace(tzinfo=None)))
@@ -144,6 +194,24 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                     merged[emp][src] |= iv
         return merged
 
+    def _pre_undo_rule_outputs(self, rules, start_dt, end_dt, employees):
+        if not self._time_rule_source_field:
+            return
+        start_naive = start_dt.replace(tzinfo=None)
+        end_naive = end_dt.replace(tzinfo=None)
+        domain = [
+            (self._time_rule_source_field, '!=', False),
+            ('time_rule_id', 'in', rules.ids),
+            (self._time_rule_span_start_field, '<=', end_naive),
+            (self._time_rule_span_end_field, '>=', start_naive),
+        ]
+        if employees:
+            domain.append(('employee_id', 'in', employees.ids))
+        outputs = self.with_context(active_test=False).sudo().search(domain)
+        if outputs:
+            sources = outputs.mapped(self._time_rule_source_field)
+            sources.with_context(active_test=False)._undo_time_rules()
+
     def _collect_time_rule_outputs(self, rules, ranges_by_employee):
         all_excess = defaultdict(lambda: defaultdict(list))
         all_deficit = defaultdict(lambda: defaultdict(list))
@@ -159,12 +227,24 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
 
         for (start_dt, end_dt), employees in by_range.items():
             employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
-            sources = self._get_source_records_for_time_rules(start_dt, end_dt, employee_rs)
+
+            self._pre_undo_rule_outputs(rules, start_dt, end_dt, employee_rs)
+
+            sources = self._get_source_records_for_time_rules(start_dt, end_dt, employee_rs, root_only=False)
             if not sources:
                 continue
 
+            # _pre_undo may un-archive a source that falls outside [start_dt, end_dt];
+            # extend the eval window so all its days are re-evaluated
+            start_field = sources._time_rule_span_start_field
+            end_field = sources._time_rule_span_end_field
+            earliest = min((r[start_field] for r in sources if r[start_field]), default=None)
+            latest = max((r[end_field] for r in sources if r[end_field]), default=None)
+            eval_start = min(start_dt, datetime.combine(earliest.date(), time.min, tzinfo=UTC)) if earliest else start_dt
+            eval_end = max(end_dt, datetime.combine(latest.date(), time.max, tzinfo=UTC)) if latest else end_dt
+
             self._on_sources_collected(sources)
-            excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, end_dt)
+            excess, deficit, active_iv = rules._evaluate_rules(sources, eval_start, eval_end)
 
             for emp, by_src in excess.items():
                 for src, items in by_src.items():
@@ -273,13 +353,14 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         merged_active_iv = self._merge_active_iv(day_active_iv, week_active_iv)
         self._apply_record_output(day_rules | week_rules, merged_excess, merged_deficit, merged_active_iv)
 
-    def _trigger_time_rules(self):
+    def _trigger_time_rules(self, include_deficit=False):
         """Apply the full day/week, past/current, exceed/undertime split for validated source record."""
         domain = [
             (self._time_rule_span_start_field, '!=', False),
             (self._time_rule_span_end_field, '!=', False),
         ]
         domain.extend(self._get_source_extra_fields_domain())
+        domain.append(('time_rule_id', '=', False))
         validated = self.filtered_domain(domain)
         if not validated:
             return
@@ -291,11 +372,15 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             time_rule_trigger_model=self._name,
             time_rule_trigger_desc=', '.join(names),
         )._trigger_time_rules_for_affected(
-            [(r.employee_id, r[r._time_rule_span_start_field], r[r._time_rule_span_end_field]) for r in validated]
+            [(r.employee_id, r[r._time_rule_span_start_field], r[r._time_rule_span_end_field]) for r in validated],
+            include_deficit=include_deficit,
         )
 
-    def _trigger_time_rules_for_affected(self, affected):
-        """Apply day/week, past/current, exceed/undertime split for (employee, date_from, date_to) tuples."""
+    def _trigger_time_rules_for_affected(self, affected, include_deficit=False):
+        """
+        include_deficit: when True also evaluates less_than (undertime) day rules, which are
+        normally cron-only.
+        """
         if not affected:
             return
         today = date.today()
@@ -321,10 +406,11 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
         today_list = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
         past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_week_start]
-        self._process_time_rules_for(past_day, rule_period='day')
+        # deficit (undertime) rules are cron-only by default
+        self._process_time_rules_for(past_day, rule_period='day', rule_operator='exceed')
+        if include_deficit:
+            self._process_time_rules_for(past_day, rule_period='day', rule_operator='less_than')
         self._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
-        # weekly undertime is cron-only: triggering it on every record write would create
-        # spurious outputs while the user is still entering a past week's data.
         self._process_time_rules_for(past_week, rule_period='week', rule_operator='exceed')
 
     def write(self, vals):
