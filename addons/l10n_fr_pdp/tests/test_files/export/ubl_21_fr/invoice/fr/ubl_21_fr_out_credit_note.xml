@@ -1,27 +1,26 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
-  <cbc:CustomizationID>urn:cen.eu:en16931:2017</cbc:CustomizationID>
-  <cbc:ProfileID>B2</cbc:ProfileID>
-  <cbc:ID>RINV/2024/00001</cbc:ID>
-  <cbc:IssueDate>2024-12-05</cbc:IssueDate>
-  <cbc:CreditNoteTypeCode>381</cbc:CreditNoteTypeCode>
-  <cbc:Note>test narration</cbc:Note>
-  <cbc:Note>#PMT#In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce).</cbc:Note>
-  <cbc:Note>#PMD#Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date.</cbc:Note>
-  <cbc:Note>#AAB#No discount for early payment.</cbc:Note>
-  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
-  <cac:OrderReference>
-    <cbc:ID>Reversal of: INV/2017/00001</cbc:ID>
-  </cac:OrderReference>
-  <cac:BillingReference>
-    <cac:InvoiceDocumentReference>
-      <cbc:ID>INV/2017/00001</cbc:ID>
-      <cbc:IssueDate>2017-01-01</cbc:IssueDate>
-    </cac:InvoiceDocumentReference>
-  </cac:BillingReference>
-  <cac:AdditionalDocumentReference>
-    <cbc:ID>RINV_2024_00001.pdf</cbc:ID>
-    <cac:Attachment>
+<CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+	<cbc:CustomizationID>urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr</cbc:CustomizationID>
+	<cbc:ProfileID>B2</cbc:ProfileID>
+	<cbc:ID>RINV/2024/00001</cbc:ID>
+	<cbc:IssueDate>2024-12-05</cbc:IssueDate>
+	<cbc:CreditNoteTypeCode>381</cbc:CreditNoteTypeCode>
+	<cbc:Note>test narration</cbc:Note>
+	<cbc:Note>#PMT#In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce).</cbc:Note>
+	<cbc:Note>#PMD#Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date.</cbc:Note>
+	<cbc:Note>#AAB#No discount for early payment.</cbc:Note>
+	<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+	<cac:OrderReference>
+		<cbc:ID>Reversal of: INV/2017/00001</cbc:ID>
+	</cac:OrderReference>
+	<cac:BillingReference>
+		<cac:InvoiceDocumentReference>
+			<cbc:ID>INV/2017/00001</cbc:ID>
+			<cbc:IssueDate>2017-01-01</cbc:IssueDate>
+		</cac:InvoiceDocumentReference>
+	</cac:BillingReference>
+	<cac:AdditionalDocumentReference>
+		<cbc:ID>RINV_2024_00001.pdf</cbc:ID>
+		<cac:Attachment>
       <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="RINV_2024_00001.pdf">___ignore___</cbc:EmbeddedDocumentBinaryObject>
     </cac:Attachment>
   </cac:AdditionalDocumentReference>
