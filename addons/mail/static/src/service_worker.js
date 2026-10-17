@@ -42,6 +42,19 @@ async function openDiscussChannel(channelId, action) {
     targetClient.postMessage({ action: "OPEN_CHANNEL", data: { id: channelId } });
 }
 
+async function openRecord(model, resId) {
+    const targetClient = (
+        await self.clients.matchAll({ type: "window", includeUncontrolled: true })
+    ).find((client) => /^\/odoo(\/|$)/.test(new URL(client.url).pathname));
+    if (!targetClient) {
+        const modelPath = model.includes(".") ? model : `m-${model}`;
+        await self.clients.openWindow(`/odoo/${modelPath}/${resId}`);
+        return;
+    }
+    await targetClient.focus();
+    targetClient.postMessage({ action: "OPEN_RECORD", data: { id: resId, model } });
+}
+
 self.addEventListener("notificationclick", (event) => {
     event.notification.close();
     if (event.notification.data) {
@@ -49,8 +62,7 @@ self.addEventListener("notificationclick", (event) => {
         if (model === "discuss.channel") {
             event.waitUntil(openDiscussChannel(res_id, action));
         } else {
-            const modelPath = model.includes(".") ? model : `m-${model}`;
-            clients.openWindow(`/odoo/${modelPath}/${res_id}`);
+            event.waitUntil(openRecord(model, res_id));
         }
     }
 });
