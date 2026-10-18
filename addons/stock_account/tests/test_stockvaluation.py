@@ -3634,6 +3634,99 @@ class TestStockValuation(TestStockValuationCommon):
             {'account_id': self.product_standard.with_company(self.other_company).categ_id.property_stock_valuation_account_id.id,   'debit': 30, 'credit': 0.0}
         ])
 
+    def test_update_standard_price_average_incremental_no_history(self):
+        """Fully incremental receipts must not replay AVCO history."""
+        for old_quantity, expected_price, expected_value in (
+            (4, 16, 160),
+            (0, 20, 120),
+            (-4, 20, 40),
+        ):
+            with self.subTest(old_quantity=old_quantity):
+                product = self.product_avco.copy({'standard_price': 10})
+                if old_quantity > 0:
+                    self._make_in_move(product, old_quantity, 10)
+                elif old_quantity < 0:
+                    self._make_out_move(product, -old_quantity)
+                self.assertEqual(product.qty_available, old_quantity)
+                self.assertEqual(product.standard_price, 10)
+
+                # Delegate to the actual helper so a history replay cannot be
+                # hidden by a mocked return value.
+                run_average_batch = self.env.registry['product.product']._run_average_batch
+                with patch.object(self.env.registry['product.product'], '_run_average_batch', autospec=True, side_effect=run_average_batch) as run_average:
+                    receipt = self._make_in_move(product, 6, 20)
+                    self.assertFalse([
+                        call for call in run_average.call_args_list
+                        if call.kwargs.get('force_recompute')
+                    ], 'An incrementally updated product must not replay its history')
+
+                self.assertEqual(receipt.value, 120)
+                self.assertRecordValues(product, [{
+                    'qty_available': old_quantity + 6,
+                    'standard_price': expected_price,
+                    'total_value': expected_value,
+                }])
+
+    def test_update_standard_price_average_incremental_remaining_subset(self):
+        """Only remaining AVCO products need history, not the whole input."""
+        incremental = self.product_avco
+        remaining = self.product_avco_auto
+        fifo = self.product_fifo
+        standard = self.product_standard
+        self._make_in_move(incremental, 4, 10)
+        self._make_in_move(incremental, 6, 20)
+        self._make_in_move(remaining, 5, 30)
+        self._make_in_move(fifo, 5, 40)
+        self._make_in_move(standard, 5, 50)
+
+        # Restore the pre-receipt price for the incremental update and make the
+        # remaining product's stored price stale without changing its history.
+        incremental.with_context(disable_auto_revaluation=True).standard_price = 10
+        remaining.with_context(disable_auto_revaluation=True).standard_price = 1
+        products = incremental | remaining | fifo | standard
+        run_average_batch = self.env.registry['product.product']._run_average_batch
+        with patch.object(self.env.registry['product.product'], '_run_average_batch', autospec=True, side_effect=run_average_batch) as run_average:
+            products._update_standard_price(
+                extra_value={incremental: 120},
+                extra_quantity={incremental: 6},
+            )
+            forced_calls = [call for call in run_average.call_args_list if call.kwargs.get('force_recompute')]
+            self.assertEqual(len(forced_calls), 1)
+            self.assertEqual(set(forced_calls[0].args[0].ids), set(remaining.ids))
+
+        self.assertRecordValues(products, [
+            {'qty_available': 10, 'standard_price': 16, 'total_value': 160},
+            {'qty_available': 5, 'standard_price': 30, 'total_value': 150},
+            {'qty_available': 5, 'standard_price': 40, 'total_value': 200},
+            {'qty_available': 5, 'standard_price': 10, 'total_value': 50},
+        ])
+
+    def test_update_standard_price_average_without_incremental_values(self):
+        """The historical fallback still restores AVCO prices and values."""
+        average = self.product_avco
+        fifo = self.product_fifo
+        standard = self.product_standard
+        self._make_in_move(average, 4, 10)
+        self._make_in_move(average, 6, 20)
+        self._make_out_move(average, 2)
+        self._make_in_move(fifo, 4, 30)
+        self._make_in_move(standard, 4, 50)
+        average.with_context(disable_auto_revaluation=True).standard_price = 1
+
+        products = average | fifo | standard
+        run_average_batch = self.env.registry['product.product']._run_average_batch
+        with patch.object(self.env.registry['product.product'], '_run_average_batch', autospec=True, side_effect=run_average_batch) as run_average:
+            products._update_standard_price()
+            forced_calls = [call for call in run_average.call_args_list if call.kwargs.get('force_recompute')]
+            self.assertEqual(len(forced_calls), 1)
+            self.assertEqual(set(forced_calls[0].args[0].ids), set(average.ids))
+
+        self.assertRecordValues(products, [
+            {'qty_available': 8, 'standard_price': 16, 'total_value': 128},
+            {'qty_available': 4, 'standard_price': 30, 'total_value': 120},
+            {'qty_available': 4, 'standard_price': 10, 'total_value': 40},
+        ])
+
     def test_update_standard_price_with_limited_access_users(self):
         """ Ensure that custom record rules do not impact the standard_price compute """
         product = self.product_fifo
