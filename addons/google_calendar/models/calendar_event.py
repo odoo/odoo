@@ -76,6 +76,13 @@ class CalendarEvent(models.Model):
             events._check_alarm_ids_sync_limit()
         return events
 
+        if any(not event.recurrency for event in events):
+            cron = self.env.ref('google_calendar.ir_cron_sync_light_cals', raise_if_not_found=False)
+            if cron:
+                cron._trigger()
+
+        return events
+
     @api.model
     def _check_values_to_sync(self, values):
         """ Return True if values being updated intersects with Google synced values and False otherwise. """
