@@ -163,6 +163,37 @@ class TestMenu(common.TransactionCase):
         default_menu.child_id[0].unlink()
         self.assertEqual(total_menu_items - 1 - self.nb_website, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default child menu and its copies on website 1 and website 2")
 
+    def test_default_menu_unlink_other_menu_trees(self):
+        Menu = self.env['website.menu']
+        website = self.env['website'].browse(1)
+        default_menu = self.env.ref('website.main_menu')
+        generic_menu = Menu.create({
+            'name': 'Generic',
+            'url': '/generic-menu',
+            'parent_id': default_menu.id,
+        })
+        copies = Menu.search([('url', '=', '/generic-menu'), ('website_id', '!=', False)])
+        self.assertEqual(len(copies), self.nb_website)
+        # A copy moved into a submenu of the main menu is still a copy
+        submenu = Menu.create({
+            'name': 'Submenu',
+            'website_id': website.id,
+            'parent_id': website.menu_id.id,
+        })
+        copies.filtered(lambda m: m.website_id == website).parent_id = submenu
+        # Another menu tree of the website links the same URL
+        other_root = Menu.create({'name': 'Other Root', 'website_id': website.id})
+        other_menu = Menu.create({
+            'name': 'Same URL',
+            'url': '/generic-menu',
+            'website_id': website.id,
+            'parent_id': other_root.id,
+        })
+
+        generic_menu.unlink()
+        self.assertFalse(copies.exists(), "Deleting a default menu should delete its copies from the websites' main menus")
+        self.assertTrue(other_menu.exists(), "Deleting a default menu should keep the menus of other menu trees with the same URL")
+
     def test_06_menu_active(self):
         Menu = self.env['website.menu']
         website_1 = self.env['website'].browse(1)
