@@ -255,7 +255,8 @@ export class PosStore extends WithLazyGetterTrap {
             if (!this.config.module_pos_hr) {
                 this.setCashier(this.user);
             }
-        } else {
+        }
+        if (!odoo.from_backend || this.config.module_pos_hr) {
             this.resetCashier();
         }
 
