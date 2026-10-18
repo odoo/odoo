@@ -571,14 +571,16 @@ class IrMail_Server(models.Model):
         if references:
             msg['references'] = references
         msg['Subject'] = subject
-        msg['From'] = email_from
+        # rfc2047 section 5 - no encoded-word in the domain part of an address
+        idna_encode = tools.mail.idna_encode_header_domains
+        msg['From'] = idna_encode(email_from)
         del msg['Reply-To']
-        msg['Reply-To'] = reply_to or email_from
-        msg['To'] = email_to
+        msg['Reply-To'] = idna_encode(reply_to or email_from)
+        msg['To'] = idna_encode(email_to)
         if email_cc:
-            msg['Cc'] = email_cc
+            msg['Cc'] = idna_encode(email_cc)
         if email_bcc:
-            msg['Bcc'] = email_bcc
+            msg['Bcc'] = idna_encode(email_bcc)
         msg['Date'] = datetime.datetime.utcnow()
         for key, value in headers.items():
             msg[key] = value
