@@ -21,6 +21,7 @@ from odoo.tools.translate import (
     TranslationModuleReader,
     TranslationReader,
     babel_extract_qweb,
+    get_text_alias,
     html_translate,
     quote,
     unquote,
@@ -463,6 +464,15 @@ class TranslationToolsTestCase(BaseCase):
         self.assertIn('hello', terms)
         self.assertNotIn('123', terms)
         self.assertNotIn('!@#', terms)
+
+    def test_gettext_local_user_not_a_user(self):
+        """A local variable named 'user' that is no user must not break _()."""
+        def get_label():
+            user = 'Mitchell Admin'  # noqa: F841
+            return get_text_alias("Settings")  # what _() calls
+
+        with self.assertLogs('odoo.tools.translate', 'WARNING'):
+            self.assertEqual(get_label(), "Settings")
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
