@@ -220,6 +220,8 @@ class PosOrder(models.Model):
         lines = [self._check_pos_order_lines(pos_config, order, line, fiscal_position_id) for line in order.get('lines', [])]
         lines = [line for line in lines if len(line)]
         partner = self._get_self_partner_from_token(pos_config, order.get('partner_id')) if order.get('partner_id') else False
+        if not partner and existing_order.exists():
+            partner = existing_order.partner_id
 
         if order.get('id') and order.get('uuid') and isinstance(order['id'], int):
             exists = pos_config.env['pos.order'].search_count([
