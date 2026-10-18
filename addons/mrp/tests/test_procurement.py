@@ -1604,3 +1604,51 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(mos[1].move_raw_ids.lot_ids, child_mos[1].lot_producing_ids)
         self.assertEqual(mos[2].state, 'confirmed')
         self.assertEqual(mos[2].move_raw_ids.lot_ids, child_mos[2].lot_producing_ids)
+
+    def test_mtso_component_picks_split_per_production(self):
+        """ With 3-step manufacturing and a 'mts_else_mto' Pre-Production -> Production rule,
+        the component moves are not chained to the pick components moves. The picks of a
+        parent MO and of its child MO (sharing the same reference) should still be separated
+        per production.
+        """
+        warehouse = self.warehouse_1
+        warehouse.manufacture_steps = 'pbm_sam'
+        pre_prod_rule = warehouse.pbm_route_id.rule_ids.filtered(
+            lambda r: r.action == 'pull' and r.location_src_id == warehouse.pbm_loc_id)
+        pre_prod_rule.procure_method = 'mts_else_mto'
+        self.route_mto.active = True
+
+        comp_a, comp_b, sub_assembly, final_product = self.env['product.product'].create([
+            {'name': 'Comp A', 'is_storable': True},
+            {'name': 'Comp B', 'is_storable': True},
+            {'name': 'Sub-assembly', 'is_storable': True,
+             'route_ids': [Command.set((self.route_mto | self.route_manufacture).ids)]},
+            {'name': 'Final Product', 'is_storable': True,
+             'route_ids': [Command.set(self.route_manufacture.ids)]},
+        ])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': sub_assembly.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': comp_b.id, 'product_qty': 1})],
+        }, {
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'bom_line_ids': [
+                Command.create({'product_id': comp_a.id, 'product_qty': 1}),
+                Command.create({'product_id': sub_assembly.id, 'product_qty': 1}),
+            ],
+        }])
+
+        mo = self.env['mrp.production'].create({
+            'product_id': final_product.id,
+            'picking_type_id': warehouse.manu_type_id.id,
+        })
+        mo.action_confirm()
+        child_mo = mo._get_children()
+        self.assertEqual(child_mo.product_id, sub_assembly)
+
+        parent_picking = mo.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pbm_type_id)
+        child_picking = child_mo.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pbm_type_id)
+        self.assertEqual(len(parent_picking), 1)
+        self.assertEqual(len(child_picking), 1)
+        self.assertNotEqual(parent_picking, child_picking)
+        self.assertEqual(parent_picking.move_ids.product_id, comp_a | sub_assembly)
+        self.assertEqual(child_picking.move_ids.product_id, comp_b)
