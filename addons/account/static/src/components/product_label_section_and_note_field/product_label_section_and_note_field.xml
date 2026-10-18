@@ -41,7 +41,7 @@
                     </t>
                 </div>
                 <div
-                    t-if="this.labelIsReadonly"
+                    t-if="this.labelIsReadonly or !this.props.record.isInEdition"
                     class="o_input d-print-none border-0 fst-italic"
                     t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and label) }"
                     t-out="label"
