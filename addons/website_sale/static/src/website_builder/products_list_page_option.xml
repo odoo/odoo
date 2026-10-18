@@ -93,7 +93,7 @@
         >Top</BuilderButton>
     </BuilderRow>
 
-    <BuilderRow label.translate="Style" level="1">
+    <BuilderRow label.translate="Style" level="1" extraLabelClass="'o_wsale_categories_style_label'">
         <BuilderSelect action="'websiteConfig'" t-if="this.isActiveItem('categories_opt_top')">
             <BuilderSelectItem actionParam="{views: []}" title.translate="Default">
                 <Img
@@ -158,7 +158,8 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow t-if="this.isActiveItem('categories_opt')" label.translate="Collapse Category Recursive" level="1">
+    <BuilderRow t-if="this.isActiveItem('categories_opt')" label.translate="Collapse Category Recursive" level="1"
+                extraLabelClass="this.isActiveItem('categories_opt_top') ? 'o_wsale_sublevel_line_offset' : ''">
         <BuilderCheckbox
                 id="'collapse_category_recursive'"
                 action="'websiteConfig'"
