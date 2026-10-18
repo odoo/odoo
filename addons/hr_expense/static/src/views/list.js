@@ -11,6 +11,8 @@ import { ListController } from "@web/views/list/list_controller";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { onWillStart } from "@odoo/owl";
 
+import { _t } from "@web/core/l10n/translation";
+
 export class ExpenseListController extends ExpenseDocumentUpload(ListController) {
     static template = `hr_expense.ListView`;
 
@@ -34,6 +36,10 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         const records = this.model.root.selection;
         return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submitted');
     }
+    displayRefuse() {
+        const records = this.model.root.selection;
+        return this.userIsExpenseTeamApprover && records.length && records.every(record => ['submitted', 'approved'].includes(record.data.state));
+    }
 
     displayPost() {
         const records = this.model.root.selection;
@@ -50,6 +56,11 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         }
         const res = await this.orm.call(model, action, [recordIds], {context: context});
         if (res) {
+            if (action === 'action_refuse') {
+                const tmpContext = JSON.parse(res.context.replaceAll("'", '"'));
+                tmpContext['active_ids'] = recordIds;
+                res.context = JSON.stringify(tmpContext);
+            }
             await this.actionService.doAction(res, {
                 additionalContext: {
                     dont_redirect_to_payments: 1,
@@ -64,6 +75,37 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
             });
         }
         await this.model.root.load();
+    }
+
+    getStaticActionMenuItems() {
+        const menuItems = super.getStaticActionMenuItems(...arguments);
+        return {
+            ...menuItems,
+            "submitExpense": {
+                isAvailable: () => this.props.resModel === 'hr.expense' && this.env.isSmall && this.displaySubmit(),
+                sequence: 996,
+                description: _t("Submit Expenses JS"),
+                callback: () => this.onClick('action_submit'),
+            },
+            "approveExpense": {
+                isAvailable: () => this.props.resModel === 'hr.expense' && this.env.isSmall && this.displayApprove(),
+                sequence: 997,
+                description: _t("Approve Expenses JS"),
+                callback: () => this.onClick('action_approve'),
+            },
+            "refuseExpense": {
+                isAvailable: () => this.props.resModel === 'hr.expense' && this.env.isSmall && this.displayRefuse(),
+                sequence: 998,
+                description: _t("Refuse Expenses JS"),
+                callback: () => this.onClick('action_refuse'),
+            },
+            "postExpense": {
+                isAvailable: () => this.props.resModel === 'hr.expense' && this.env.isSmall && this.displayPost(),
+                sequence: 999,
+                description: _t("Post Expenses JS"),
+                callback: () => this.onClick('action_post'),
+            }
+        }
     }
 }
 
