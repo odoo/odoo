@@ -358,3 +358,25 @@ class TestTaxesDispatchingBaseLines(TestTaxCommon):
                 'tax_amount_currency': 12.0,
             },
         )
+
+    def test_split_base_line_unsorted_factors(self):
+        '''Reducing base lines must preserve the expected tax amounts and totals.'''
+        AccountTax = self.env['account.tax']
+        tax_16 = self.percent_tax(16.0, name='16 tax')
+
+        document = self.populate_document(self.init_document(
+            lines=[{'product_id': self.product_a, 'price_unit': 100.0, 'tax_ids': tax_16}]
+        ))
+
+        new_base_lines = AccountTax._split_base_line(
+            document['lines'][0],
+            self.env.company,
+            [{'factor': 1.0}, {'factor': 3.0}],
+        )
+        for new_base_line, (price_unit, tax_amount) in zip(new_base_lines, [(25.0, 4), (75.0, 12)]):
+            tax_details = new_base_line['tax_details']
+            tax_data = tax_details['taxes_data'][0]
+            self.assertAlmostEqual(new_base_line['price_unit'], price_unit)
+            self.assertAlmostEqual(tax_details['total_excluded_currency'], price_unit)
+            self.assertAlmostEqual(tax_data['raw_tax_amount_currency'], tax_amount)
+            self.assertAlmostEqual(tax_data['tax_amount_currency'], tax_amount)
