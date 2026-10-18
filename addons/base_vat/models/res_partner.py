@@ -714,7 +714,7 @@ class ResPartner(models.Model):
             return False
         if self.is_company:
             return len(vat) == 9
-        return len(vat) == 14
+        return len(vat) in (9, 14)
 
     def check_vat_ve(self, vat):
         # https://tin-check.com/en/venezuela/

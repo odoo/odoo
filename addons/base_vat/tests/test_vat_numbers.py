@@ -275,3 +275,26 @@ class TestStructure(TransactionCase):
         self.assertEqual(test_partner.vat, '12ABC34501DE35')
         test_partner.write({'vat': '51.494.569/0131-70'})
         self.assertEqual(test_partner.vat, '51494569013170')
+
+    def test_vat_uz(self):
+        """Test Uzbekistan VAT validation for companies and individuals."""
+        uz_country = self.env.ref('base.uz')
+
+        company = self.env['res.partner'].create({
+            'name': 'UZ Company',
+            'country_id': uz_country.id,
+        })
+        company.company_type = 'company'
+        company.vat = '123456789'
+
+        contact = self.env['res.partner'].create({
+            'name': 'UZ Contact',
+            'country_id': uz_country.id,
+            'vat': '123456789',
+        })
+
+        self.assertTrue(company.is_company)
+        self.assertFalse(contact.is_company)
+
+        contact.vat = '12345678901234'
+        self.assertEqual(contact.vat, '12345678901234')
