@@ -869,6 +869,65 @@ class WithContext(HttpCase):
 
 
 @tagged('-at_install', 'post_install')
+class TestPageInMenu(common.TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref('base.default_website')
+        cls.page = cls.env['website.page'].create({
+            'name': 'In Menu Page',
+            'type': 'qweb',
+            'arch': '<div>content</div>',
+            'key': 'test.in_menu_page',
+            'url': '/in-menu-page',
+            'website_id': cls.website.id,
+        })
+        # A menu tree other than the main menu
+        other_menu = cls.env['website.menu'].create({
+            'name': 'Other Menu',
+            'url': '#',
+            'website_id': cls.website.id,
+        })
+        cls.other_entry = cls.env['website.menu'].create({
+            'name': 'In Menu Page',
+            'url': cls.page.url,
+            'page_id': cls.page.id,
+            'parent_id': other_menu.id,
+            'website_id': cls.website.id,
+        })
+
+    def _page_properties(self):
+        return self.env['website.page.properties'].create({
+            'target_model_id': self.page.id,
+            'website_id': self.website.id,
+            'url': self.page.url,
+        })
+
+    def _main_menu_entries(self):
+        return self.env['website.menu'].search([
+            ('page_id', '=', self.page.id),
+            ('parent_id', '=', self.website.menu_id.id),
+        ])
+
+    def test_in_menu_ignores_other_menu_trees(self):
+        self.assertFalse(self.page.is_in_menu)
+        properties = self._page_properties()
+        self.assertFalse(properties.is_in_menu)
+
+        properties.is_in_menu = True
+        self.assertEqual(len(self._main_menu_entries()), 1, "Switching 'In Menu' on should add the page to the main menu")
+        self.page.invalidate_recordset(['menu_ids', 'is_in_menu'])
+        self.assertTrue(self.page.is_in_menu)
+
+        properties = self._page_properties()
+        self.assertTrue(properties.is_in_menu)
+        properties.is_in_menu = False
+        self.assertFalse(self._main_menu_entries(), "Switching 'In Menu' off should remove the page from the main menu")
+        self.assertTrue(self.other_entry.exists(), "'In Menu' should not remove the entries of other menu trees")
+
+
+@tagged('-at_install', 'post_install')
 class TestNewPage(common.TransactionCase):
     def test_new_page_used_key(self):
         website = self.env.ref('base.default_website')
