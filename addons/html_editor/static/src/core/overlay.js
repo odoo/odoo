@@ -144,15 +144,21 @@ export class EditorOverlay extends Component {
             // Attention, ignoring DOM mutations is always dangerous (when we add or remove nodes)
             // because if another mutation uses the target that is not observed, that mutation can never be applied
             // again (when undo/redo and in collaboration).
+            this.props.editable.style.overflowAnchor = "none";
             this.props.shared.ignoreDOMMutations(() => {
                 const clonedRange = range.cloneRange();
                 const shadowCaret = doc.createTextNode("|");
                 clonedRange.insertNode(shadowCaret);
                 clonedRange.selectNode(shadowCaret);
+                // Replacement option which ensures no selectionchange is fired?:
+                // clonedRange.setEnd(clonedRange.startContainer, clonedRange.startOffset + 1);
                 rect = clonedRange.getBoundingClientRect();
                 shadowCaret.remove();
                 clonedRange.detach();
             });
+            setTimeout(() => {
+                this.props.editable.style.overflowAnchor = "";
+            }, 0);
         }
         // Html element with a patched getBoundingClientRect method. It
         // represents the range as a (HTMLElement) target for the usePosition
