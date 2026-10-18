@@ -35,8 +35,14 @@ export class SelectLotPopup extends Component {
         useAutoFocusToLast();
         this.notification = useService("notification");
         this.inputRef = useChildRef();
-        onMounted(() => {
-            this.inputRef.el.click();
+        onMounted(async () => {
+            const input = this.inputRef.el;
+            const dialogContent = input.closest(".modal-content");
+            const animation = dialogContent.getAnimations()[0];
+            if (animation) {
+                await animation.finished;
+            }
+            input.click();
         });
     }
     _nextId() {
