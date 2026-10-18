@@ -214,6 +214,31 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 },
             }
 
+    def _add_invoice_line_item_nodes(self, line_node, vals):
+        """Replace the default item description (the line label, which duplicates the
+        product name reported in <cbc:Name>) with the product's commercial description.
+
+        :param line_node: dict representing the invoice line XML structure to update.
+        :param vals: dict containing invoice line data.
+        """
+        # EXTENDS account.edi.xml.ubl_20
+        super()._add_invoice_line_item_nodes(line_node, vals)
+        line_node['cac:Item']['cbc:Description']['_text'] = self._l10n_tr_get_item_description(vals['base_line']['record'])
+
+    def _l10n_tr_get_item_description(self, line):
+        """Build the <cbc:Description> value from the product's commercial description.
+
+        Uses the purchase description for purchase documents and the sale description
+        otherwise. The internal reference is not repeated here as it is already
+        reported in <cac:SellersItemIdentification>, so the node is dropped when the
+        description is not set.
+
+        :param line: The invoice line.
+        :return: The description string, or ``False`` when there is nothing to report.
+        """
+        product = line.product_id
+        return product.description_purchase if line.move_id.is_purchase_document() else product.description_sale
+
     def _add_document_line_tax_total_nodes(self, line_node, vals):
         """Adds tax total nodes to a document line.
 
@@ -508,3 +533,14 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             if element.text == 'NO_ID':
                 element.text = ''
         return etree.tostring(xml_root, xml_declaration=True, encoding='UTF-8'), errors
+
+    def _import_fill_invoice(self, invoice, tree, qty_factor):
+        # EXTENDS account.edi.xml.ubl_20
+        logs = super()._import_fill_invoice(invoice, tree, qty_factor)
+        lines_by_description = defaultdict(lambda: self.env['account.move.line'])
+        for line in invoice.invoice_line_ids.filtered('product_id'):
+            if description := self._l10n_tr_get_item_description(line):
+                lines_by_description[description] |= line
+        for description, lines in lines_by_description.items():
+            lines.name = description
+        return logs
