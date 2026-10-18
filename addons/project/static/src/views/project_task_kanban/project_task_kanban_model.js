@@ -1,3 +1,4 @@
+import { RottingModelMixin } from "@mail/js/rotting_mixin/rotting_kanban_model";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { Record } from "@web/model/relational_model/record";
 import { makeActiveField } from "@web/model/relational_model/utils";
@@ -59,7 +60,7 @@ export class ProjectTaskRecord extends Record {
     }
 }
 
-export class ProjectTaskKanbanModel extends ProjectTaskRelationalModel {
+export class ProjectTaskKanbanModel extends RottingModelMixin(ProjectTaskRelationalModel) {
     async _webReadGroup(config) {
         config.context = {
             ...config.context,
