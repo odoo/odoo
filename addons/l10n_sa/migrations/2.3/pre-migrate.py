@@ -34,27 +34,36 @@ def migrate(cr, version):
         "Withholding Tax 20% (Managerial)(Tax)": "8(T)_W_G",
     }
 
-    sql_name_mappings_list = []
-    for old_name, new_name in rename_map.items():
-        sql_name_mappings_list.append(
-            SQL(
-                "WHEN %s THEN jsonb_build_object('en_US', %s)",
-                old_name,
-                new_name,
-            )
-        )
-
     cr.execute(
         SQL(
             """
-            UPDATE account_account_tag
-                SET name = CASE name->>'en_US'
-                %s
-                ELSE name
-                END
-                WHERE applicability = 'taxes'
-                AND country_id = (SELECT id FROM res_country WHERE code = 'SA')
+            WITH rename_cte(old_name, new_name) AS (VALUES %s)
+            SELECT old_name, new_name
+              INTO TEMP TABLE tmp_account_tag_rename
+              FROM rename_cte
             """,
-            SQL("\n").join(sql_name_mappings_list),
+            SQL(", ").join(
+                SQL("(%s, %s)", old_name, new_name)
+                for old_name, new_name in rename_map.items()
+            ),
         ),
+    )
+
+    cr.execute(
+        """
+        UPDATE account_account_tag AS t
+           SET name = jsonb_build_object('en_US', v.new_name)
+          FROM tmp_account_tag_rename AS v
+         WHERE t.name->>'en_US' = v.old_name
+           AND t.applicability = 'taxes'
+           AND t.country_id = (SELECT id FROM res_country WHERE code = 'SA')
+           AND NOT EXISTS (
+               SELECT 1
+                 FROM account_account_tag AS t2
+                WHERE t2.id != t.id
+                  AND t2.applicability = t.applicability
+                  AND t2.country_id = t.country_id
+                  AND t2.name->>'en_US' = v.new_name
+           )
+        """
     )
