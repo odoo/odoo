@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import heapq
 import logging
+import math
 from collections import namedtuple
 
 from ast import literal_eval
@@ -637,23 +638,23 @@ class StockQuant(models.Model):
         qty_by_package = self.env.execute_query(
             query.select('package_id', 'SUM(quantity - reserved_quantity) AS available_qty'))
 
-        # Items that do not belong to a package are added individually to the list, any empty packages get removed.
-        pkg_found = False
+        # Items that do not belong to a package are grouped in a single element of unit amount at the end
+        # of the list, any empty packages get removed. Each loose unit still counts as one package, but
+        # they are all taken in a single step instead of exploring them one by one.
         new_qty_by_package = []
-        none_elements = []
+        loose_qty = 0
 
         for elem in qty_by_package:
             if elem[0] is None:
-                none_elements.extend([(None, 1) for _ in range(int(elem[1]))])
+                loose_qty = int(elem[1])
             elif elem[1] != 0:
                 new_qty_by_package.append(elem)
-                pkg_found = True
 
-        new_qty_by_package.extend(none_elements)
-        qty_by_package = new_qty_by_package
-
-        if not pkg_found:
+        if not new_qty_by_package:
             return domain
+        if loose_qty:
+            new_qty_by_package.append((None, 1))
+        qty_by_package = new_qty_by_package
         size = len(qty_by_package)
 
         class PriorityQueue:
@@ -671,30 +672,27 @@ class StockQuant(models.Model):
 
         def heuristic(node):
             if node.next_index < size:
-                return len(node.taken_packages) + node.count_remaining / qty_by_package[node.next_index][1]
-            return len(node.taken_packages)
+                return node.cost + node.count_remaining / qty_by_package[node.next_index][1]
+            return node.cost
 
         def generate_domain(node):
             selected_single_items = []
-            single_item_ids = False
-            for pkg in node.taken_packages:
-                if pkg[0] is None:
-                    # Lazily retrieve ids for single items
-                    if not single_item_ids:
-                        single_item_ids = self.search(Domain('package_id', '=', None) & domain).ids
-                    selected_single_items.append(single_item_ids.pop())
+            single_item_count = sum(pkg[1] for pkg in node.taken_packages if pkg[0] is None)
+            if single_item_count:
+                single_item_ids = self.search(Domain('package_id', '=', None) & domain).ids
+                selected_single_items = single_item_ids[-single_item_count:]
 
             return (
                 Domain('package_id', 'in', [elem[0] for elem in node.taken_packages if elem[0] is not None])
                 | Domain('id', 'in', selected_single_items)
             ) & domain
 
-        Node = namedtuple("Node", "count_remaining taken_packages next_index")
+        Node = namedtuple("Node", "count_remaining taken_packages next_index cost")
 
         frontier = PriorityQueue()
-        frontier.put(Node(qty, (), 0), 0)
+        frontier.put(Node(qty, (), 0, 0), 0)
 
-        best_leaf = Node(qty, (), 0)
+        best_leaf = Node(qty, (), 0, 0)
 
         try:
             while not frontier.empty():
@@ -713,13 +711,20 @@ class StockQuant(models.Model):
                         continue
                     last_count = pkg[1]
 
-                    count = current.count_remaining - pkg[1]
-                    taken = current.taken_packages + (pkg,)
-                    node = Node(count, taken, i)
+                    if pkg[0] is None:
+                        # Take as many loose units as needed, or all of them if there are not enough
+                        units = min(math.ceil(current.count_remaining), loose_qty)
+                        count = current.count_remaining - units
+                        taken = current.taken_packages + ((None, units),)
+                        node = Node(count, taken, i, current.cost + units)
+                    else:
+                        count = current.count_remaining - pkg[1]
+                        taken = current.taken_packages + (pkg,)
+                        node = Node(count, taken, i, current.cost + 1)
 
                     if count < 0:
                         # Overselect case
-                        if best_leaf.count_remaining > 0 or len(node.taken_packages) < len(best_leaf.taken_packages) or (len(node.taken_packages) == len(best_leaf.taken_packages) and node.count_remaining > best_leaf.count_remaining):
+                        if best_leaf.count_remaining > 0 or node.cost < best_leaf.cost or (node.cost == best_leaf.cost and node.count_remaining > best_leaf.count_remaining):
                             best_leaf = node
                         continue
 
