@@ -13,7 +13,7 @@ class PosPreset(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position')
     identification = fields.Selection([('none', 'Not required'), ('address', 'Address'), ('name', 'Name')], default="none", string='Identification', required=True)
-    is_return = fields.Boolean(string='Return mode', default=False, help="All quantity in the cart will be in negative. Ideal for return managment.")
+    is_return = fields.Boolean(string='Return mode', default=False, help="All quantity in the cart will be in negative. Ideal for return management.")
     color = fields.Integer(string='Color', default=0)
     image_512 = fields.Image(string='Image', max_width=512, max_height=512)
     image_128 = fields.Image(string='Image 128', related="image_512", max_width=128, max_height=128, store=True)
