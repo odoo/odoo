@@ -150,6 +150,33 @@ class AccountMove(models.Model):
                 move.l10n_in_edi_error = False
         return super().button_draft()
 
+    def action_l10n_in_edi_send_invoices_batch(self):
+        """
+        This method is used to send multiple invoices to the goverment portal.
+        It is called directly from sever action.
+        """
+        moves_to_send = self.filtered(
+            lambda m: (
+                m._l10n_in_check_einvoice_eligible()
+                and m.state == "posted"
+                and m.l10n_in_edi_status == "to_send"
+            ),
+        )
+        for move in moves_to_send:
+            move._l10n_in_edi_send_invoice()
+        if moves_to_send:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': _(
+                        "E-Invoice submission process completed for %d invoice(s). See the invoice for more details",
+                        len(moves_to_send),
+                    ),
+                    'sticky': False,
+                },
+            }
+
     # Business Methods
     def _post(self, soft=True):
         # EXTENDS 'account'
