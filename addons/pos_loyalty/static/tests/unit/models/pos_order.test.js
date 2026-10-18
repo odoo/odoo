@@ -6,7 +6,7 @@ import {
     addProductLineToOrder,
     deactivateAllProgramsExcept,
 } from "@pos_loyalty/../tests/unit/utils";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { MockServer, onRpc } from "@web/../tests/web_test_helpers";
 import { SERIALIZED_UI_STATE_PROP } from "@point_of_sale/app/models/related_models/utils";
 
 definePosModels();
@@ -759,5 +759,40 @@ describe("pos.order - rebuilt client state", () => {
         order._updateRewardLines();
 
         expect(order._get_reward_lines()).toHaveLength(0);
+    });
+
+    test("reward line keeps its new loyalty card when the order is reloaded from the server", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [7]);
+        const program = models["loyalty.program"].get(7);
+        const reward = models["loyalty.reward"].get(1);
+        program.applies_on = "both";
+        program.reward_ids = [1];
+        reward.program_id = program;
+        reward.required_points = 1;
+        order.setPartner(models["res.partner"].get(4));
+        await addProductLineToOrder(store, order, { templateId: 5, productId: 5, price_unit: 10 });
+        await store.orderUpdateLoyaltyPrograms();
+        // The partner has no card yet: it will be created when the order is paid
+        const pointChange = Object.values(order.uiState.couponPointChanges)[0];
+        expect(pointChange.coupon_id).toBeLessThan(0);
+        expect(order._applyReward(reward, pointChange.coupon_id)).toBe(true);
+        const rewardLine = order._get_reward_lines()[0];
+        expect(rewardLine.coupon_id.id).toBe(pointChange.coupon_id);
+
+        await store.syncAllOrders({ orders: [order] });
+        expect(order.isSynced).toBe(true);
+        // The card does not exist on the server yet: the line is stored without it
+        const serverLines = MockServer.env["pos.order.line"];
+        serverLines.write(serverLines.search([["uuid", "=", rewardLine.uuid]]), {
+            coupon_id: false,
+        });
+        await store.data.loadServerOrders([["id", "=", order.id]]);
+
+        expect(rewardLine.coupon_id.id).toBe(pointChange.coupon_id);
+        const [loyaltyStat] = order.getLoyaltyPoints();
+        expect(loyaltyStat.points.spent).toBe(1);
     });
 });
