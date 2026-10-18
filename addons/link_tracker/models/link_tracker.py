@@ -210,10 +210,19 @@ class LinkTracker(models.Model):
             _logger.warning("Deprecated usage of LinkTracker.search_or_create which now expects a list of dictionaries as input.")
             vals_list = [vals_list]
 
+        def _format_value(obj, field_name):
+            """Empty labels ('' or False) are considered equal, as in the search domain."""
+            value = obj[field_name]
+            if isinstance(value, models.BaseModel):
+                return value.id
+            if field_name == 'label' and not value:
+                return False
+            return value
+
         def _format_key(obj):
             """Generate unique 'key' of trackers, allowing to find duplicates."""
             return tuple(
-                (field_name, obj[field_name].id if isinstance(obj[field_name], models.BaseModel) else obj[field_name])
+                (field_name, _format_value(obj, field_name))
                 for field_name in LINK_TRACKER_UNIQUE_FIELDS
             )
 

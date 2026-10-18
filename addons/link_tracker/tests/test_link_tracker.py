@@ -141,6 +141,34 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         for fname, value in expected_values_5.items():
             self.assertEqual(new_tracker[fname], value)
 
+    def test_search_or_create_empty_label(self):
+        LinkTracker = self.env['link.tracker']
+        tracker_empty = LinkTracker.create({'url': 'https://test.com', 'label': ''})
+        tracker_null = LinkTracker.create({'url': 'https://test.be'})
+        # legacy data: make sure the label is really stored as an empty string
+        self.env.cr.execute("UPDATE link_tracker SET label = '' WHERE id = %s", [tracker_empty.id])
+        tracker_empty.invalidate_recordset(['label'])
+        self.assertEqual(tracker_empty.label, '')
+
+        domain = [('url', 'in', ['https://test.com', 'https://test.be'])]
+        for vals in (
+            {'url': 'https://test.com', 'label': ''},
+            {'url': 'https://test.com', 'label': False},
+            {'url': 'https://test.com'},
+        ):
+            self.assertEqual(LinkTracker.search_or_create([vals]), tracker_empty)
+            self.assertEqual(LinkTracker.search_count(domain), 2, 'No duplicate tracker should be created')
+
+        vals_empty = {'url': 'https://test.com', 'label': ''}
+        vals_null = {'url': 'https://test.be'}
+        trackers = LinkTracker.search_or_create([vals_empty, vals_null, dict(vals_empty), dict(vals_null)])
+        self.assertListEqual(trackers.ids, (tracker_empty + tracker_null + tracker_empty + tracker_null).ids)
+        self.assertEqual(LinkTracker.search_count(domain), 2)
+
+        new_tracker = LinkTracker.search_or_create([{'url': 'https://test.com', 'label': 'Label'}])
+        self.assertNotEqual(new_tracker, tracker_empty)
+        self.assertEqual(new_tracker.label, 'Label')
+
     def test_constraint(self):
         campaign_id = self.env['utm.campaign'].search([], limit=1)
 
