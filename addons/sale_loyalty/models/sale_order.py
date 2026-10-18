@@ -152,6 +152,10 @@ class SaleOrder(models.Model):
             all_coupons = order.applied_coupon_ids | order.coupon_point_ids.coupon_id | order.order_line.coupon_id
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
                 raise ValidationError(_("One or more rewards on the sale order is invalid. Please check them."))
+        # Discount rewards are priced from tax-inclusive amounts, so the taxes
+        # have to be final before the rewards are computed below.
+        self._ensure_final_taxes()
+        for order in self:
             order._update_programs_and_rewards()
             order._add_loyalty_history_lines()
         has_claimable_rewards = len(self) == 1 and bool(self._get_claimable_rewards())
@@ -166,7 +170,7 @@ class SaleOrder(models.Model):
         # Add/remove the points to our coupons
         for coupon, change in self.filtered(lambda s: s.state != 'sale')._get_point_changes().items():
             coupon.points += change
-        res = super().action_confirm()
+        res = super(SaleOrder, self.with_context(external_taxes_are_final=True)).action_confirm()
         # Prioritize any action from super()
         if isinstance(res, bool) and has_claimable_rewards:
             res = {
@@ -1563,3 +1567,12 @@ class SaleOrder(models.Model):
                         send_context['mail_template'] = mail_template
 
                 self.env['account.move.send']._generate_and_send_invoices_post_commit(invoice, **send_context)
+
+    def _recompute_tax_dependent_prices(self):
+        for order in self:
+            if order.state not in ("draft", "sent"):
+                continue
+            if not any(line.is_reward_line for line in order.order_line):
+                continue
+            order._update_programs_and_rewards()
+        return super()._recompute_tax_dependent_prices()
