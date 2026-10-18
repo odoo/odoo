@@ -210,6 +210,44 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_qty_max_fre
     ],
 });
 
+registry.category("web_tour.tours").add("test_self_order_kiosk_combo_fixed_choice", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-In"),
+        ProductPage.clickCategory("Uncategorised"),
+        ProductPage.clickProduct("Test Fixed Combo"),
+        ...ProductPage.setupCombo(
+            [
+                {
+                    product: "Variable Side 1",
+                    attributes: [],
+                },
+            ],
+            false
+        ),
+        {
+            content: "Check the combo price includes the fixed choice extra price",
+            trigger: ".o_self_combo_page .o-so-tabular-nums:contains('12.00')",
+        },
+        Utils.clickBtn("Add to cart"),
+        Utils.clickBtn("Checkout"),
+        ...CartPage.checkCombo("Test Fixed Combo", [
+            {
+                product: "Variable Side 1",
+                attributes: [],
+            },
+            {
+                product: "Fixed Side",
+                attributes: [],
+            },
+        ]),
+        Utils.clickBtn("Order"),
+        Numpad.click("3"),
+        Utils.clickBtn("Order"),
+        Utils.clickBtn("Close"),
+    ],
+});
+
 registry.category("web_tour.tours").add("test_self_order_pricelist", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
