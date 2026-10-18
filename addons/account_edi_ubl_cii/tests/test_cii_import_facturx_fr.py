@@ -104,6 +104,41 @@ class CiiImportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
             ]
         )
 
+    def test_import_invoice_fractional_gross_price_no_rounding_line(self):
+        # The gross unit price rebuilt from the file has 3 decimals (3.021 + 2.307 = 5.328) and is
+        # billed 10368 times. Rounding it to 2 decimals would shift the line subtotal by 20.73,
+        # break the VAT total and make the importer add a compensating 'Rounding' line.
+        self.percent_tax(5.5, type_tax_use='purchase')
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_invoice_fractional_gross_price_no_rounding_line',
+            journal=self.company_data['default_journal_purchase'],
+        )
+
+        # The amounts match the file, so no compensating 'Rounding' line must be added.
+        self.assertEqual(len(invoice.invoice_line_ids), 1)
+        # price_unit keeps all its decimals, so it is compared with a tolerance instead of exactly.
+        self.assertAlmostEqual(invoice.invoice_line_ids.price_unit, 5.328, places=9)
+        self.assertRecordValues(
+            invoice.invoice_line_ids,
+            [
+                {
+                    'quantity': 10368.0,
+                    'price_subtotal': 31321.73,
+                },
+            ],
+        )
+        self.assertRecordValues(
+            invoice,
+            [
+                {
+                    'amount_untaxed': 31321.73,
+                    'amount_tax': 1722.70,
+                    'amount_total': 33044.43,
+                },
+            ],
+        )
+
     def test_import_invoice_product_uom_and_negative_qty(self):
         tax_20 = self.percent_tax(20.0)
         uom_unit = self.ref("uom.product_uom_unit")
