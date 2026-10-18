@@ -278,7 +278,7 @@ class LinkTracker(models.Model):
         found_trackers = self.search(Domain.OR(_format_key_domain(key) for key in unique_keys))
         key_to_trackers_map = {_format_key(tracker): tracker for tracker in found_trackers}
 
-        if len(unique_keys) != len(found_trackers):
+        if any(key not in key_to_trackers_map for key in unique_keys):
             # Create trackers for values with unique keys not found
             seen_keys = set(key_to_trackers_map.keys())
             new_trackers = self.create([
