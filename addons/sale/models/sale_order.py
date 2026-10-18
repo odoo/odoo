@@ -695,7 +695,8 @@ class SaleOrder(models.Model):
         draft_orders = self.filtered(lambda o: o.state == 'draft')
         order_to_duplicate_orders = draft_orders._fetch_duplicate_orders()
         for order in draft_orders:
-            order.duplicated_order_ids = [Command.set(order_to_duplicate_orders.get(order.id, []))]
+            duplicates = self.browse(order_to_duplicate_orders.get(order.id, []))
+            order.duplicated_order_ids = duplicates._filtered_access('read')
         (self - draft_orders).duplicated_order_ids = False
 
     def _fetch_duplicate_orders(self):
