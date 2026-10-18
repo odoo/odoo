@@ -452,14 +452,14 @@ class IrActionsReport(models.Model):
             'base_url': base_url,
             'report_xml_id': self.xml_id,
             'debug': self.env.context.get("debug"),
-        })
+        }) if len(header_node) else None
         footer = self.env['ir.qweb']._render(layout.id, {
             'subst': True,
             'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
             'base_url': base_url,
             'report_xml_id': self.xml_id,
             'debug': self.env.context.get("debug"),
-        })
+        }) if len(footer_node) else None
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
