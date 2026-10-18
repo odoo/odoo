@@ -68,8 +68,10 @@ class WebsitePage(models.Model):
 
     @api.depends('menu_ids')
     def _compute_website_menu(self):
+        website_menus = self.env['website'].search([]).menu_id
+        main_menus = self.env['website.menu'].search([('id', 'child_of', website_menus.ids)])
         for page in self:
-            page.is_in_menu = bool(page.menu_ids)
+            page.is_in_menu = bool(page.menu_ids & main_menus)
 
     # This update was added to make sure the mixin calculations are correct
     # (page.website_url > page.url).
