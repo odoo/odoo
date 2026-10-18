@@ -1299,6 +1299,7 @@ class TestProcurement(TestMrpCommon):
         })
         update_quantity_wizard.change_prod_qty()
         self.assertEqual(replenishment.product_uom_qty, 7)
+<<<<<<< 621f27d320588c575bc71bbccc72d82c7719ac46
 
     def test_update_mo_producing_qty_with_mtso_rule_and_available_stock(self):
         """Have 10 units of a component in stock and a mts_else_mto rule.
@@ -1604,3 +1605,44 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(mos[1].move_raw_ids.lot_ids, child_mos[1].lot_producing_ids)
         self.assertEqual(mos[2].state, 'confirmed')
         self.assertEqual(mos[2].move_raw_ids.lot_ids, child_mos[2].lot_producing_ids)
+||||||| 41c335f2771ab6a714e05f6556ebd83424c25c2b
+=======
+
+    def test_mto_mo_with_kit_component_and_operation(self):
+        """ A MO triggered by MTO whose BoM has an operation and a kit as
+        component should not leave an orphan draft move for the kit's
+        component. """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        mto_route = warehouse.mto_pull_id.route_id
+        mto_route.active = True
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+        parent, finished, kit, component = self.env['product.product'].create([{
+            'name': 'Parent',
+        }, {
+            'name': 'Finished',
+            'is_storable': True,
+            'route_ids': [Command.set((mto_route | manufacture_route).ids)],
+        }, {
+            'name': 'Kit',
+        }, {
+            'name': 'Component',
+        }])
+        parent_bom, _finished_bom, _kit_bom = self.env['mrp.bom'].create([{
+            'product_tmpl_id': parent.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': finished.id, 'product_qty': 1})],
+        }, {
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': kit.id, 'product_qty': 1})],
+            'operation_ids': [Command.create({'name': 'Assembly', 'workcenter_id': self.workcenter_1.id})],
+        }, {
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        }])
+
+        parent_mo = self.env['mrp.production'].create({'bom_id': parent_bom.id})
+        parent_mo.action_confirm()
+        mo = parent_mo._get_children()
+        self.assertEqual(mo.product_id, finished)
+        self.assertEqual(self.env['stock.move'].search([('product_id', '=', component.id)]), mo.move_raw_ids)
+>>>>>>> d45c81c4161557c088d3100cd5b3fdbb8dd71b59
