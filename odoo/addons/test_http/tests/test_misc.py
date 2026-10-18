@@ -164,6 +164,8 @@ class TestHttpMisc(TestHttpBase):
         self.assertEqual(set(res.json()), {'version', 'version_info'})
 
     def test_misc10_request_uri_too_long(self):
+        self._wait_remaining_requests()
+
         # Depending on the Werkzeug version, the request can be rejected before
         # headers are parsed or reach Odoo's routing.
         with mute_logger('werkzeug'):
