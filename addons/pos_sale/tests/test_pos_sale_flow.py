@@ -2832,7 +2832,6 @@ class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
                 'product_uom_qty': 1,
                 'price_unit': self.product_a.lst_price,
             })],
-            'require_signature': False,
             'require_payment': True,
             'prepayment_percent': 0.3,
         })

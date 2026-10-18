@@ -329,15 +329,6 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertFalse(tx.invoice_ids)
         self.assertFalse(self.sale_order.invoice_ids)
 
-    def test_payment_does_not_confirm_order_pending_signature(self):
-        self.sale_order.require_payment = False
-        self.sale_order.require_signature = True
-        tx = self._create_transaction(
-            flow='redirect', sale_order_ids=[self.sale_order.id], state='done'
-        )
-        confirmed_orders = tx._check_amount_and_confirm_order()
-        self.assertFalse(confirmed_orders)
-
     def test_already_confirmed_so_payment(self):
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
@@ -581,7 +572,6 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         sale_order = self.env['sale.order'].with_user(portal_user).sudo().create({
             'partner_id': portal_user.partner_id.id,
             'user_id': self.sale_user.id,
-            'require_signature': False,
             'order_line': [(0, 0, {
                 'product_id': self.product_a.id,
                 'product_uom_qty': 1,
@@ -637,3 +627,22 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         transaction._invoice_sale_orders()
 
         self.assertEqual(transaction.invoice_ids, invoice, "Invoice id was incorrectly removed from payment.transaction")
+
+    def test_payment_confirms_and_invoices_order_pending_signature(self):
+        """Test that paying a quotation waiting for a signature confirms and invoices it."""
+        self.env["ir.config_parameter"].sudo().set_param("sale.automatic_invoice", "True")
+        self.sale_order.require_signature = True
+        self.amount = self.sale_order.amount_total
+        tx = self._create_transaction(
+            flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            tx._post_process()
+
+        self.assertEqual(self.sale_order.state, "sale")
+        self.assertTrue(tx.invoice_ids)
+        self.assertEqual(tx.invoice_ids, self.sale_order.invoice_ids)
+        self.assertEqual(tx.invoice_ids.state, "posted")
+        self.assertEqual(
+            tx.invoice_ids.payment_state, tx.invoice_ids._get_invoice_in_payment_state()
+        )
