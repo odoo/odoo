@@ -566,7 +566,7 @@ export async function moveEventToAllDaySlot(eventId, date) {
     await animationFrame();
 
     await drop();
-    await advanceFrame(5);
+    await advanceFrame(6);
 }
 
 /**
