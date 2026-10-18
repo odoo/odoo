@@ -12,7 +12,7 @@ import io
 
 from odoo.exceptions import UserError
 from odoo.tools import sql
-from odoo.tools.translate import _push, quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader, TranslationReader
+from odoo.tools.translate import _push, get_text_alias, quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader, TranslationReader
 from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
 
 _stats_logger = logging.getLogger('odoo.tests.stats')
@@ -449,6 +449,15 @@ class TranslationToolsTestCase(BaseCase):
         terms = []
         _push(lambda term, line: terms.append(term), 'g', 1)
         self.assertEqual(terms, ['g'])
+
+    def test_gettext_local_user_not_a_user(self):
+        """A local variable named 'user' that is no user must not break _()."""
+        def get_label():
+            user = 'Mitchell Admin'  # noqa: F841
+            return get_text_alias("Settings")  # what _() calls
+
+        with self.assertLogs('odoo.tools.translate', 'WARNING'):
+            self.assertEqual(get_label(), "Settings")
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
