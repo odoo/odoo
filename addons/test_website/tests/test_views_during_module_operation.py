@@ -86,27 +86,19 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
     - Having an ir.ui.view A in the codebase, eg `website.layout`
     - Having a theme.ir.ui.view B in a theme, inheriting ir.ui.view A
     - Removing the theme.ir.ui.view B from the XML file and then updating the
-      theme for a particular website should:
+      theme should:
       1. Remove the theme.ir.ui.view record, which is the record pointed by the
          ir.model.data
          -> This is done through the regular Odoo behavior related to the
             ir.model.data and XML file check on upgrade.
-      2. Remove the theme.ir.ui.view's copy_ids (sort of the COW views)
+      2. Remove the theme.ir.ui.view's copy_ids (sort of the COW views) on every
+         website using this theme
          -> Not working for now
-      3. (not impact other website using this theme, see below)
-         -> This is done through odoo/odoo@96ef4885a79 but did not come with
-            tests
 
       Point 2. was not working, this test aims to ensure it will now.
-      Note: This can't be done through a `ondelete=cascade` as this would
-            impact other websites when modifying a specific website. This would
-            be against the multi-website rule:
-            "What is done on a website should not alter other websites."
-
-            Regarding the flow described above, if a theme module was updated
-            through the command line (or via the UI, but this is not possible in
-            standard as theme modules are hidden from the Apps), it should
-            update every website using this theme.
+      Note: Updating a theme module reloads its templates on every website
+            using it, so a template removed from the XML has to be removed from
+            all of them, otherwise their copies would be left behind as orphans.
     """
     View = env['ir.ui.view']
     ThemeView = env['theme.ir.ui.view']
@@ -118,8 +110,8 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
 
     # Install theme_default on website 1 and website 2
     (website_1 + website_2).theme_id = theme_default
-    env['ir.module.module'].with_context(load_all_views=True)._theme_load(website_1)
-    env['ir.module.module'].with_context(load_all_views=True)._theme_load(website_2)
+    env['theme.engine'].with_context(load_all_views=True)._theme_load(env['ir.module.module'], website_1)
+    env['theme.engine'].with_context(load_all_views=True)._theme_load(env['ir.module.module'], website_2)
 
     key = 'theme_default.theme_child_view'
     domain = [
@@ -201,23 +193,3 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
     assert not View.search(domain), "copy_ids views did not get removed!"
     assert not (view_website_1.exists() or view_website_2.exists()),\
         "copy_ids views did not get removed! (2)"
-
-    #####################################################
-    # CASE 2: specific update (website theme selection) #
-    #####################################################
-
-    view_website_1, view_website_2, theme_child_view = _simulate_xml_view()
-
-    # Upgrade the module
-    theme_default.with_context(website_id=website_1.id).button_immediate_upgrade()
-
-    # Ensure the theme.ir.ui.view got removed (since there is an IMD but not
-    # present in XML files)
-    view = env.ref('theme_default.theme_child_view', False)
-    assert not view, "Theme view should have been removed during module update."
-    assert not theme_child_view.exists(),\
-        "Theme view should have been removed during module update. (2)"
-
-    # Ensure only website_1 copy_ids got removed, website_2 should be untouched
-    assert not view_website_1.exists() and view_website_2.exists(),\
-        "Only website_1 copy should be removed (2)"

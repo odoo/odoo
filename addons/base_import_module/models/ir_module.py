@@ -35,6 +35,8 @@ class IrModuleModule(models.Model):
     _inherit = "ir.module.module"
 
     imported = fields.Boolean(string="Imported Module")
+    manifest_data = fields.Json(string="Manifest", readonly=True,
+                                help="Manifest of an imported module, whose files are not on the file system.")
     module_type = fields.Selection([
         ('official', 'Official Apps'),
         ('industries', 'Industries'),
@@ -45,6 +47,20 @@ class IrModuleModule(models.Model):
         help="Number of lines of code that may be billed under an Enterprise subscription."
             " For exact pricing details, please contact your account manager or visit odoo.com/pricing.",
     )
+
+    def _get_manifest(self):
+        """
+            Return the manifest of the module, read from the file system or,
+            for a module that has been imported as a zip and therefore has no
+            file on the file system, from the database.
+
+            :return: manifest of the module, empty if it has none
+        """
+        if not self:
+            # eg. a module that is not on the database
+            return {}
+        self.ensure_one()
+        return self.get_module_info(self.name) or self.manifest_data or {}
 
     @api.model
     @api.ormcache(cache='stable')
@@ -119,6 +135,15 @@ class IrModuleModule(models.Model):
         if not terp:
             return False
         values = self.get_values_from_terp(terp)
+        # The files of an imported module are not on the file system: keep its
+        # manifest on the record, as it is the only way to read it back. Only
+        # the declared keys are kept: the values ``Manifest`` derives from the
+        # module's location point inside the temporary extraction directory.
+        values['manifest_data'] = {
+            key: value
+            for key in terp
+            if (value := terp.raw_value(key)) is not None
+        }
         try:
             icon_path = terp.raw_value('icon') or opj(terp.name, 'static/description/icon.png')
             file_path(icon_path, env=self.env, check_exists=True)
