@@ -18,7 +18,7 @@ class ProductValue(models.Model):
     lot_id = fields.Many2one('stock.lot', string='Lot')
     move_id = fields.Many2one('stock.move', string='Move', index='btree_not_null')
 
-    value = fields.Monetary(string='Value', currency_field='currency_id', required=True)
+    value = fields.Float(string='Value', digits='Product Price', required=True)
     company_id = fields.Many2one(
         'res.company', string='Company', compute='_compute_company_id',
         store=True, required=True, precompute=True, readonly=False)
