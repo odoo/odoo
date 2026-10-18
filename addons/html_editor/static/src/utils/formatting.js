@@ -95,7 +95,12 @@ export const formatsSpecs = {
             ),
     },
     fontFamily: {
-        isFormatted: (node) => !!closestElement(node, (el) => el.style["font-family"]),
+        isFormatted: (node, props) => {
+            const fontFamily = closestElement(node, (el) => el.style["font-family"])?.style[
+                "font-family"
+            ];
+            return props?.fontFamily ? fontFamily === props.fontFamily : !!fontFamily;
+        },
         hasStyle: (node) => node.style && node.style["font-family"],
         addStyle: (node, props) => {
             removeStyle(node, "font-family");
