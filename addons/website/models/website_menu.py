@@ -163,10 +163,16 @@ class Menu(models.Model):
         self.env.registry.clear_cache('templates')
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self
-        for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
-            menus_to_remove |= self.env['website.menu'].search([('url', '=', menu.url),
-                                                                ('website_id', '!=', False),
-                                                                ('id', '!=', menu.id)])
+        default_menus = self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id)
+        if default_menus:
+            # The copies of a default menu are in the main menu of each website
+            # (see create()); menus of other menu trees may link the same URL.
+            website_main_menus = self.env['website'].search([]).menu_id
+            for menu in default_menus:
+                menus_to_remove |= self.env['website.menu'].search([('url', '=', menu.url),
+                                                                    ('website_id', '!=', False),
+                                                                    ('parent_id', 'child_of', website_main_menus.ids),
+                                                                    ('id', '!=', menu.id)])
         return super(Menu, menus_to_remove).unlink()
 
     @api.ondelete(at_uninstall=False)
