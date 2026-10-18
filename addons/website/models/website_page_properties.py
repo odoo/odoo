@@ -30,7 +30,10 @@ class WebsitePagePropertiesBase(models.TransientModel):
     def _get_menu_domain(self, url=None):
         self.ensure_one()
         target = self.target_model_id
-        domain = [('website_id', '=', self.website_id.id)]
+        domain = [
+            ('website_id', '=', self.website_id.id),
+            ('id', 'child_of', self.website_id.menu_id.id),
+        ]
         url_to_check = url or self.url
         # For website pages, rely primarily on page_id as it stays stable
         # across URL changes. Fall back to URL for non-page targets.
