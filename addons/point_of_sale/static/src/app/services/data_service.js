@@ -17,11 +17,12 @@ const CONSOLE_COLOR = "#28ffeb";
 
 export class PosData {
     static modelToLoad = []; // When empty all models are loaded
-    static serviceDependencies = ["orm", "bus_service"];
+    static serviceDependencies = ["orm", "bus_service", "bus_fallback_service"];
 
-    async setup(env, { orm, bus_service }) {
+    async setup(env, { orm, bus_service, bus_fallback_service }) {
         this.orm = orm;
         this.bus = bus_service;
+        this.busFallback = bus_fallback_service;
         this.relations = [];
         this.custom = {};
         this.syncInProgress = false;
