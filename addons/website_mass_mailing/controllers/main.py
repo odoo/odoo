@@ -47,9 +47,17 @@ class MassMailController(main.MassMailController):
             }
 
         fname = self._get_fname(subscription_type)
+<<<<<<< f9321996984924f9adf9328367c2676f6fed61c3
         self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
         # TODO in master: we no longer display the toast on success, so update
         # the return.
+||||||| 98e48692891fc9a3aaa7f53001305b322f53cfa2
+        self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
+=======
+        refusal = self.subscribe_to_newsletter(subscription_type, value, list_id, fname)
+        if refusal:
+            return refusal
+>>>>>>> 37b660192cab1a21650f3da84384ea482d7f399e
         return {
             'toast_type': 'success',
             'toast_content': _("Thanks for subscribing!"),
