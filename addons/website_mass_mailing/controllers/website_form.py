@@ -15,7 +15,10 @@ class WebsiteNewsletterForm(WebsiteForm):
             list_ids = kwargs.get('list_ids')
             if not list_ids:
                 return json.dumps({'error': _('Mailing List(s) not found!')})
-            list_ids = [int(x) for x in list_ids.split(',')]
+            try:
+                list_ids = [int(x) for x in list_ids.split(',')]
+            except ValueError:
+                return json.dumps({'error': _('Mailing List(s) not found!')})
             private_list_ids = request.env['mailing.list'].sudo().search([
                 ('id', 'in', list_ids), ('is_public', '=', False)])
             if private_list_ids:
