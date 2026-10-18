@@ -10,7 +10,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test, waitFor } from "@odoo/hoot";
+import { describe, expect, getFixture, test, waitFor } from "@odoo/hoot";
 import { contains, mockService, serverState } from "@web/../tests/web_test_helpers";
 
 import { range } from "@web/core/utils/numbers";
@@ -185,6 +185,36 @@ test("[TECHNICAL] unfolded ellipsis button should not fold on message click besi
     expect(".o-mail-Message-body span").toHaveText("--\nSystem");
     await contains(".o-mail-Message:count(1)").click();
     expect(".o-mail-Message-body span").toHaveCount(1);
+});
+
+test("nested quoted replies expand one level at a time", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: `<p>New reply</p>
+            <div data-o-mail-quote="1">
+                <p data-o-mail-quote="1">Previous reply</p>
+                <blockquote data-o-mail-quote="1">
+                    <p class="earlier-reply">Earlier reply</p>
+                </blockquote>
+            </div>`,
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor('.o-mail-Message-richBody p:text("New reply"):visible');
+    expect(".o-mail-ellipsis:visible").toHaveCount(1);
+
+    const ellipsisButtons = getFixture().querySelectorAll(".o-mail-ellipsis");
+    await contains(ellipsisButtons[0]).click();
+    expect(".o-mail-ellipsis:visible").toHaveCount(2);
+    await waitFor('.o-mail-Message-richBody p:text("Previous reply"):visible');
+    expect('.o-mail-Message-richBody p:text("Earlier reply")').not.toBeVisible();
+
+    await contains(ellipsisButtons[1]).click();
+    await waitFor('.o-mail-Message-richBody p:text("Earlier reply"):visible');
 });
 
 test("ellipsis button on message of type notification", async () => {
