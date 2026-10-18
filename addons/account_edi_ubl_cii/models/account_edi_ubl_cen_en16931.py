@@ -67,20 +67,6 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
         ):
             allowance_charge_reason_node['_text'] = allowance_charge_reason_node['_text'][:1024]
 
-    def _line_nodes_filter_base_lines(self, vals, filter_function=None):
-        # Early payment discount lines should not appear as lines but as allowances/charges.
-        # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
-        def new_filter_function(base_line):
-            if any([
-                self._ubl_is_early_payment_base_line(base_line),
-                self._ubl_is_global_discount_base_line(base_line),
-                self._ubl_is_cash_rounding_base_line(base_line),
-            ]):
-                return False
-            return not filter_function or filter_function(base_line)
-
-        return super()._line_nodes_filter_base_lines(vals, filter_function=new_filter_function)
-
     def _need_party_tax_scheme_nodes(self, vals):
         # [BR-O-03]/[BR-O-04]/[BR-O-05] no party tax scheme with "Not subject to VAT" VAT Category Code
         if (
@@ -93,15 +79,6 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
         ):
             return False
         return super()._need_party_tax_scheme_nodes(vals)
-
-    def _ubl_add_allowance_charge_nodes(self, vals):
-        super()._ubl_add_allowance_charge_nodes(vals)
-
-        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
-            # Early payment discount lines are treated as allowances/charges.
-            self._ubl_add_allowance_charge_nodes_early_payment_discount(vals)
-            # Global discount lines are treated as allowances/charges.
-            self._ubl_add_allowance_charge_nodes_global_discount(vals)
 
     def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
         # Recycling contribution taxes / excises should not appear anywhere as taxes but as allowances/charges.
