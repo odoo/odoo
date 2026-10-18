@@ -857,7 +857,10 @@ def _get_uid(frame) -> int | None:
     if 'uid' in frame.f_locals:
         return frame.f_locals['uid']
     if 'user' in frame.f_locals:
-        return int(frame.f_locals['user'])      # user may be a record
+        from odoo.models import BaseModel  # noqa: PLC0415
+        user = frame.f_locals['user']           # user may be a record
+        if isinstance(user, int) or (isinstance(user, BaseModel) and user._name == 'res.users'):
+            return int(user)
     if (local_self := frame.f_locals.get('self')) is not None:
         if hasattr(local_self, 'env') and (uid := local_self.env.uid):
             return uid
