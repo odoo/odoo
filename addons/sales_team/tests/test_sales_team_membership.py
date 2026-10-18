@@ -308,3 +308,14 @@ class TestMembership(TestSalesCommon):
         self.sales_team_1_m1.unlink()
         self.assertEqual(self.user_sales_leads.crm_team_ids, self.new_team)
         self.assertEqual(self.user_sales_leads.sale_team_id, self.new_team)
+
+    def test_users_search_crm_team_ids(self):
+        """ Searching on crm_team_ids must only match active memberships, as
+        the computed value does. """
+        Users = self.env['res.users']
+        self.assertIn(self.user_sales_leads, Users.search([('crm_team_ids', '=', self.sales_team_1.id)]))
+
+        self.sales_team_1_m1.write({'active': False})
+        self.assertFalse(self.user_sales_leads.crm_team_ids)
+        self.assertNotIn(self.user_sales_leads, Users.search([('crm_team_ids', '=', self.sales_team_1.id)]))
+        self.assertNotIn(self.user_sales_leads, Users.search([('crm_team_ids', 'in', self.sales_team_1.ids)]))
