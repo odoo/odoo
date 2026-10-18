@@ -695,7 +695,10 @@ class StockRule(models.Model):
             self.env['ir.cron']._commit_progress(remaining=self._get_scheduler_tasks_to_do())
 
         # Minimum stock rules
-        domain = self._get_orderpoint_domain(company_id=company_id)
+        domain = [('product_id.active', '=', True)]
+        if company_id:
+            domain += [('company_id', '=', company_id)]
+
         orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
         orderpoints.sudo()._compute_qty_to_order_computed()
         orderpoints.sudo()._compute_deadline_date()
@@ -703,7 +706,10 @@ class StockRule(models.Model):
         if use_new_cursor:
             self.env['ir.cron']._commit_progress(1)
 
-        orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
+        auto_orderpoints = self.env['stock.warehouse.orderpoint'].search(domain + [('trigger', '=', 'auto')])
+        auto_orderpoints.sudo()._procure_orderpoint_confirm(
+            use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False
+        )
 
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain(company_id)
@@ -742,6 +748,7 @@ class StockRule(models.Model):
             raise
         return {}
 
+    # TODO: Remove in master
     @api.model
     def _get_orderpoint_domain(self, company_id=False):
         domain = [('trigger', '=', 'auto'), ('product_id.active', '=', True)]
