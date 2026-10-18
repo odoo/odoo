@@ -647,10 +647,19 @@ class AccountEdiCommon(models.AbstractModel):
         if invoice.message_main_attachment_id.mimetype == 'application/pdf':
             # Invoice look like it was already imported, don't import attachments again
             return attachments
-        additional_docs = tree.findall('./{*}AdditionalDocumentReference')
+        additional_docs = (
+            tree.findall('./{*}AdditionalDocumentReference')
+            + tree.findall('./{*}SupplyChainTradeTransaction/{*}ApplicableHeaderTradeAgreement/{*}AdditionalReferencedDocument')
+        )
         for document in additional_docs:
             attachment_name = document.find('{*}ID')
             attachment_data = document.find('{*}Attachment/{*}EmbeddedDocumentBinaryObject')
+            attachment_filename = None
+            if attachment_data is None:
+                attachment_name = document.find('{*}IssuerAssignedID')
+                attachment_data = document.find('{*}AttachmentBinaryObject')
+                if attachment_data is not None:
+                    attachment_filename = attachment_data.get('filename')
             if attachment_name is not None and attachment_data is not None:
                 mimetype = attachment_data.attrib.get('mimeCode')
                 if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)):
@@ -659,7 +668,7 @@ class AccountEdiCommon(models.AbstractModel):
                 # Normalize the name of the file : some e-fff emitters put the full path of the file
                 # (Windows or Linux style) and/or the name of the xml instead of the pdf.
                 # Get only the filename with the right extension.
-                name = (attachment_name.text or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + extension
+                name = (attachment_filename or attachment_name.text or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + extension
                 attachment = self.env['ir.attachment'].create({
                     'name': name,
                     'res_id': invoice.id,
@@ -670,10 +679,13 @@ class AccountEdiCommon(models.AbstractModel):
                 })
                 # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
                 # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.
-                if invoice.message_main_attachment_id and \
-                        invoice.message_main_attachment_id.name.endswith('.xml') and \
-                        'pdf' not in invoice.message_main_attachment_id.mimetype and \
-                        mimetype == 'application/pdf':
+                if mimetype == 'application/pdf' and (
+                    not invoice.message_main_attachment_id
+                    or (
+                        invoice.message_main_attachment_id.name.endswith('.xml')
+                        and 'pdf' not in invoice.message_main_attachment_id.mimetype
+                    )
+                ):
                     invoice._message_set_main_attachment_id(attachment, force=True, filter_xml=False)
                 attachments |= attachment
 
@@ -1855,7 +1867,7 @@ class AccountEdiCommon(models.AbstractModel):
         # Collect the embedded documents.
         invoice = collected_values['invoice']
         source_attachment = collected_values['file_data']['attachment'] or self.env['ir.attachment']
-        attachments = source_attachment + self._import_attachments(invoice, collected_values['tree'])
+        attachments = source_attachment + self._generate_pdf_attachment(invoice, collected_values['tree'])
 
         # Chatter.
         body = Markup("<strong>%s</strong>") % self.env._(
