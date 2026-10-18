@@ -6,6 +6,7 @@ from odoo.tests import tagged
 
 from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.website_sale.controllers.delivery import Delivery
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
@@ -125,3 +126,27 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
             order._recompute_cart()
 
         self.assertEqual(order.amount_delivery, 10.0)
+
+    def test_tracking_dict_sums_delivery_lines(self):
+        order = self.cart
+        order._create_delivery_line(self.carrier, 5.0)
+        order._create_delivery_line(self.carrier, 7.0)
+        self.assertEqual(WebsiteSale().order_2_return_dict(order)['shipping'], 12.0)
+
+    def test_verify_cart_updates_the_carrier_delivery_line_only(self):
+        other_carrier = self._prepare_carrier(
+            self._prepare_carrier_product(name="Other Delivery Fee"), fixed_price=3.0,
+        )
+        order = self.cart
+        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
+            order = request.cart
+            order.partner_id.write(self.dummy_partner_address_values)
+            order._set_delivery_method(self.carrier)
+            carrier_line = order.order_line.filtered('is_delivery')
+            other_line = order._create_delivery_line(other_carrier, 3.0)
+            carrier_line.price_unit = 99.0
+
+            order._verify_cart_after_update()
+
+        self.assertEqual(carrier_line.price_unit, 0.0, "The carrier's delivery line should get the new rate")
+        self.assertEqual(other_line.price_unit, 3.0, "Other delivery lines should keep their price")
