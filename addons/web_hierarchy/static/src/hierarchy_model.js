@@ -111,6 +111,15 @@ export class HierarchyNode {
     }
 
     /**
+     * Get child count inclusive of those not having nodes made
+     *
+     * @returns {Number}
+     */
+    get childCountInc() {
+        return this.data[this.childFieldName]?.length || 0;
+    }
+
+    /**
      * Get child field name
      *
      * @returns {String}
@@ -210,6 +219,12 @@ export class HierarchyNode {
         return this._nodes.filter((n) => !n.hidden);
     }
 
+    findFirstNonrenderedChild(children){
+        let indexOfFirstResId = children.findIndex(child => !(child instanceof Object));
+        indexOfFirstResId = indexOfFirstResId !== -1 ? indexOfFirstResId : children.length;
+        return indexOfFirstResId;
+    }
+
     /**
      * Populate child nodes
      *
@@ -217,13 +232,28 @@ export class HierarchyNode {
      */
     populateChildNodes() {
         this._nodes = [];
-        const children = this.data[this.childFieldName] || [];
+        let children = this.data[this.childFieldName] || [];
+        let childrenToRender;  // we don't want to delete from cache since the children count will be wrong in view
         if (
             children.length &&
             children[0] instanceof Object &&
             this.tree.forest.resIds.filter((resId) => resId === this.resId).length === 1
         ) {
-            this.createChildNodes(children);
+            // we do not want to try rendering resIds that were filtered out from _fetchSubordinates websearchread
+            const indexOfFirstResId = this.findFirstNonrenderedChild(children);
+            children = children.slice(0, indexOfFirstResId);
+
+            if (children[0].isCached){
+                delete children[0].isCached;
+                childrenToRender = structuredClone(children);
+
+                // we want to prevent rendering cached records that exceed the limit
+                const elementsToDelete = Math.min(this.model.limit - childrenToRender.length, 0);
+                childrenToRender.splice(elementsToDelete, -elementsToDelete);
+                this.model.displayRecordCountLimitWarning(this.data[this.childFieldName], false, false);
+            }
+
+            this.createChildNodes(childrenToRender ? childrenToRender : children);
         }
     }
 
@@ -261,9 +291,17 @@ export class HierarchyNode {
                 if (nodeToCollapse) {
                     nodeToCollapse.collapseChildNodes(true);
                 }
+                let remainingNodesToShow = this.model.limit;
+                this.model.displayRecordCountLimitWarning(this.data[this.childFieldName], false, false);
                 this.getDescendantNodes(true).map((n) => {
-                    n.hidden = false;
-                    this.tree.addNode(n);
+                    if (remainingNodesToShow){
+                        n.hidden = false;
+                        this.tree.addNode(n);
+                        remainingNodesToShow -= 1;
+                    } else{
+                        // at this point we can't ever show the child again (e.g. getting more nodes as parents)
+                        this.removeChildNode(n);
+                    }
                 });
                 this.model.notify();
             } else {
@@ -284,8 +322,9 @@ export class HierarchyNode {
      */
     collapseChildNodes(hideNodes = false) {
         const childrenData = [];
+        let nodesToHide; 
         if (hideNodes) {
-            const nodesToHide = this.getDescendantNodes();
+            nodesToHide = this.getDescendantNodes();
             nodesToHide.map((n) => (n.hidden = true));
             this.tree.removeNodes(nodesToHide);
         } else {
@@ -293,9 +332,16 @@ export class HierarchyNode {
                 childNode.data[this.childFieldName] = childNode.childResIds;
                 childrenData.push(childNode.data);
             }
+            const allChildren = this.data[this.childFieldName];
+            let indexOfFirstResId = this.findFirstNonrenderedChild(allChildren);
+            const childrenResIds = allChildren.slice(indexOfFirstResId);
+            // only reason for filter is edge case where employee is manager of itself. getting rid of duplicate
+            childrenData.push(...childrenResIds.filter((id) => id !== this.data.id));
+
             this.data[this.childFieldName] = childrenData;
             this.removeChildNodes();
         }
+        this.model.setLimit(this.model.limit + (nodesToHide ? nodesToHide.length : childrenData.length));
         this.model.notify();
     }
 
@@ -499,6 +545,7 @@ export class HierarchyForest {
 
 export class HierarchyModel extends Model {
     static services = ["notification"];
+    static RECORD_COUNT_LIMIT = 1000;
 
     setup(params, { notification }) {
         this.keepLast = new KeepLast();
@@ -510,6 +557,7 @@ export class HierarchyModel extends Model {
         this.activeFields = params.activeFields;
         this.defaultOrderBy = params.defaultOrderBy;
         this.notification = notification;
+        this.limit = this.constructor.RECORD_COUNT_LIMIT;
         this.config = {
             domain: [],
             ...params.config,
@@ -593,6 +641,17 @@ export class HierarchyModel extends Model {
         };
     }
 
+    resetLimit(){
+        this.limit = this.constructor.RECORD_COUNT_LIMIT;
+    }
+
+    setLimit(count = 0) {
+        if(count > this.constructor.RECORD_COUNT_LIMIT || count < 0){
+            throw new Error(`Set limit should not exceed ${this.constructor.RECORD_COUNT_LIMIT} or be negative`)
+        }
+        this.limit = count;
+    }
+
     /**
      * Load the config and data for hierarchy view
      *
@@ -627,6 +686,33 @@ export class HierarchyModel extends Model {
         this.bus.trigger("hierarchyScrollTarget", payload);
     }
 
+    _showRecordCountLimitWarning(){
+        this.notification.add(
+            _t(
+                "The hierarchy cannot display more than %s records. Try to refine your search criteria",
+                this.constructor.RECORD_COUNT_LIMIT
+            ),
+            { type: "warning" }
+        );
+    }
+
+    /**
+     * Display warning if rendered HierarchyNodes qty exceeds limit and update limit
+     */
+    displayRecordCountLimitWarning(records, forestWillbeReplaced=false, mutableRecords=true){
+        // _loadData (also called by fetchManager) and updateParentNode are places where we are fetching/refetching the entire forest
+        const future_total_records = this.root && !forestWillbeReplaced ? Object.keys(this.root.nodePerNodeId).length + records.length : records.length
+
+        if (future_total_records > this.constructor.RECORD_COUNT_LIMIT){
+            if (mutableRecords){
+                records.pop();  // We set a limit on reads to be the record count limit + 1
+            }
+            this._showRecordCountLimitWarning();
+        }
+
+        this.setLimit(Math.max(this.constructor.RECORD_COUNT_LIMIT - future_total_records, 0))  // update the limit used when querying for future nodes
+    }
+
     /**
      * Fetch parent node of given node
      * @param {HierarchyNode} node node to fetch its parent node
@@ -657,7 +743,7 @@ export class HierarchyModel extends Model {
             return;
         }
         const managerData = await this.keepLast.add(this._fetchManager(node));
-        if (managerData) {
+        if (Object.keys(managerData).length) {
             const parentNode = new HierarchyNode(
                 this,
                 this.config,
@@ -679,9 +765,11 @@ export class HierarchyModel extends Model {
      */
     async fetchSubordinates(node) {
         const childFieldName = this.childFieldName || this.defaultChildFieldName;
-        const children = node.data[childFieldName];
+        let children = node.data[childFieldName];
         if (children.length) {
             const nodesToUpdate = [];
+            const nodeToCollapse = this._searchNodeToCollapse(node);
+            let collapseNode = nodeToCollapse;
             if (!(children[0] instanceof Object)) {
                 const allNodeResIds = this.root.resIds;
                 let existingChildResIds = children.filter((childResId) => allNodeResIds.includes(childResId));
@@ -703,15 +791,22 @@ export class HierarchyModel extends Model {
                         }
                     }
                 }
+                collapseNode = nodeToCollapse && !nodesToUpdate.includes(nodeToCollapse);
+                if (collapseNode) {
+                    // we need this to run prior to fetch as limit needs to be updated
+                    nodeToCollapse.collapseChildNodes(true);
+                    collapseNode = false;
+                }
                 const subordinates = await this.keepLast.add(
                     this._fetchSubordinates(node, existingChildResIds)
                 );
                 if (subordinates.length) {
                     node.data[childFieldName] = subordinates;
                 }
+            } else {
+                children[0].isCached = true;
             }
-            const nodeToCollapse = this._searchNodeToCollapse(node);
-            if (nodeToCollapse && !nodesToUpdate.includes(nodeToCollapse)) {
+            if (collapseNode) {
                 nodeToCollapse.collapseChildNodes(true);
             }
             node.populateChildNodes();
@@ -841,6 +936,7 @@ export class HierarchyModel extends Model {
                 : Domain.and([this.defaultDomain, domain]).toList({});
         }
         const fieldsSpec = this._getFieldsSpec(config.context);
+        this.resetLimit();  // Need this when we are destroying forest & grabbing everything (e.g. domain change)
         const hierarchyRead = async () => {
             return await this.orm.call(
                 this.resModel,
@@ -852,7 +948,7 @@ export class HierarchyModel extends Model {
                     this.childFieldName,
                     orderByToString(config.orderBy),
                 ],
-                { context: this.context }
+                { context: { ...this.context, record_limit: this.limit }}
             );
         };
         let result = await hierarchyRead();
@@ -860,6 +956,7 @@ export class HierarchyModel extends Model {
             domain = config.domain;
             result = await hierarchyRead();
         }
+        this.displayRecordCountLimitWarning(result, true);
         return this._formatData(result);
     }
 
@@ -890,7 +987,9 @@ export class HierarchyModel extends Model {
                 if (ancestorId in recordsPerParentId) {
                     recordIds.push(...recordsPerParentId[ancestorId].map((r) => r.id));
                 }
-                parentRecord[this.childFieldName || this.defaultChildFieldName] = records;
+                const childFieldName = this.childFieldName || this.defaultChildFieldName;
+                this.appendNonfetchedChildren(parentRecord[childFieldName], records);
+                parentRecord[childFieldName] = records;
             }
         }
         if (!formattedData.length && data?.length) {
@@ -929,9 +1028,14 @@ export class HierarchyModel extends Model {
             context: this.context,
             specification: this._getFieldsSpec(),
             order: orderByToString(this.config.orderBy),
+            limit: this.limit + 1,
         });
         let managerData = {};
         if (result?.length) {
+            this.displayRecordCountLimitWarning(result.records);
+            if(!result.records.length){
+                return managerData;
+            }
             const children = [];
             for (const data of result.records) {
                 if (data.id === node.parentResId) {
@@ -948,6 +1052,14 @@ export class HierarchyModel extends Model {
             managerData[this.childFieldName || this.defaultChildFieldName] = children;
         }
         return managerData;
+    }
+
+    appendNonfetchedChildren(childrenResIds, records){
+        const childrenResIdsNotPresent = new Set(childrenResIds);
+        records.forEach((child) => {
+            childrenResIdsNotPresent.delete(child.id)
+        });
+        records.push(...childrenResIdsNotPresent);
     }
 
     /**
@@ -967,17 +1079,23 @@ export class HierarchyModel extends Model {
         if (!childrenResIds.length) {
             return [];
         }
-        const { records } = await this.orm.webSearchRead(
+        let { records } = await this.orm.webSearchRead(
             this.resModel,
             [["id", "in", childrenResIds]],
             {
                 specification: this._getFieldsSpec(),
                 context: this.context,
                 order: orderByToString(this.config.orderBy),
+                limit: this.limit + 1,
             }
         );
+        this.displayRecordCountLimitWarning(records);
         if (!this.childFieldName) {
             await this._fetchDescendants(records);
+        }
+        // we may not grab the information of all children due to limit. but we want the count to be accurate
+        if (childrenResIds.length > records.length){
+            this.appendNonfetchedChildren(childrenResIds, records);
         }
         return records;
     }
@@ -1028,6 +1146,35 @@ export class HierarchyModel extends Model {
         );
     }
 
+    _checkIfDroppedDownALevel(oldParentNode, parentNode){
+        // check if new node is a descendant of its sibling
+        const siblingToSearch = oldParentNode ? oldParentNode.nodes.find(node => !node.isLeaf) : this.root.rootNodes.find(node => !node.isLeaf);
+        return siblingToSearch ? siblingToSearch.getDescendantNodes().includes(parentNode) : undefined;
+    }
+
+    _getTempLimitUpdateParentNode(parentNode, oldParentNode, nodeToCollapse){
+        // moved to the root
+        if (!parentNode){
+            // you would be refetching the entire expanded tree here... 
+            return this.RECORD_COUNT_LIMIT;
+        }
+        // going down. (can be from root)
+        else if (this._checkIfDroppedDownALevel(oldParentNode, parentNode)){
+            // node to collapse includes the node's, any other sibling', or the target sibling's children opened
+            return this.limit + (nodeToCollapse?.getDescendantNodes().length ?? 0) + 1;
+        }
+        // going to sibling (can be from root)
+        else if ((!oldParentNode && this.root.rootNodes.includes(parentNode)) || parentNode.data.parent_id.id === oldParentNode.data.id){
+            // node to collapse includes the node's, any other sibling', or the target sibling's children opened
+            return this.limit + (nodeToCollapse?.getDescendantNodes().length ?? 0) + 1;
+        }
+        // going up
+        else {
+            // getDescendant will have node and node.nodes.length
+            return this.limit + nodeToCollapse.getDescendantNodes().length;
+        }
+    }
+
     /**
      * @param {Number} nodeId of the node to update
      * @param {Object} parentInfo
@@ -1051,47 +1198,7 @@ export class HierarchyModel extends Model {
         ) {
             return;
         }
-        // Hide the node while waiting for the server response.
-        node.hidden = true;
-        this.notify({ scrollTarget: "none" });
-        // Update the parent server side.
-        await this.mutex.exec(async () => {
-            try {
-                await this.updateParentId(node, parentResId);
-            } catch (error) {
-                // Show the node again since the operation failed, don't update the view.
-                node.hidden = false;
-                this.notify({ scrollTarget: "none" });
-                throw error;
-            }
-        });
-        // Reload impacted records.
-        const domain = this.computeUpdateParentNodeDomain(node, parentResId, parentNode);
-        const data = await this.orm.webSearchRead(this.resModel, domain, {
-            specification: this._getFieldsSpec(),
-            context: this.context,
-            order: orderByToString(this.config.orderBy),
-        });
-        if (!data.length) {
-            return this.reload();
-        }
-        const formattedData = this._formatData(data.records);
-        // Validate that data coming from the server is still compatible with the current
-        // configuration of the hierarchy.
-        for (const record of formattedData) {
-            if (getIdOfMany2oneField(record[this.parentFieldName]) !== parentResId) {
-                node.hidden = false;
-                this.notify({ scrollTarget: "none" });
-                this.notification.add(
-                    _t(
-                        `The parent of "%s" was successfully updated. Reloading records to account for other changes.`,
-                        node.data.display_name || node.data.name
-                    ),
-                    { type: "success" }
-                );
-                return this.reload();
-            }
-        }
+
         // Handle the expanded tree.
         let nodeToCollapse;
         const treeExpanded = this._findTreeExpanded();
@@ -1128,6 +1235,53 @@ export class HierarchyModel extends Model {
             // the drop operation.
             nodeToCollapse = parentNode;
         }
+
+        // needs to be before the node is hidden so getDescendants gives us node and node.nodes as well
+        const tempLimit = this._getTempLimitUpdateParentNode(parentNode, oldParentNode, nodeToCollapse);
+        // Hide the node while waiting for the server response.
+        node.hidden = true;
+        this.notify({ scrollTarget: "none" });
+        // Update the parent server side.
+        await this.mutex.exec(async () => {
+            try {
+                await this.updateParentId(node, parentResId);
+            } catch (error) {
+                // Show the node again since the operation failed, don't update the view.
+                node.hidden = false;
+                this.notify({ scrollTarget: "none" });
+                throw error;
+            }
+        });
+        // Reload impacted records.
+        const domain = this.computeUpdateParentNodeDomain(node, parentResId, parentNode);
+        const data = await this.orm.webSearchRead(this.resModel, domain, {
+            specification: this._getFieldsSpec(),
+            context: this.context,
+            order: orderByToString(this.config.orderBy),
+            limit: tempLimit + 1,
+        });
+        if (!data.length) {
+            return this.reload();
+        } else if (data.length > tempLimit){
+            data.records.pop();  // need to pop here to possibly get rid of expanded children
+        }
+        const formattedData = this._formatData(data.records);
+        // Validate that data coming from the server is still compatible with the current
+        // configuration of the hierarchy.
+        for (const record of formattedData) {
+            if (getIdOfMany2oneField(record[this.parentFieldName]) !== parentResId) {
+                node.hidden = false;
+                this.notify({ scrollTarget: "none" });
+                this.notification.add(
+                    _t(
+                        `The parent of "%s" was successfully updated. Reloading records to account for other changes.`,
+                        node.data.display_name || node.data.name
+                    ),
+                    { type: "success" }
+                );
+                return this.reload();
+            }
+        }
         // Update the view.
         if (oldParentNode) {
             oldParentNode.removeChildNode(node);
@@ -1139,9 +1293,11 @@ export class HierarchyModel extends Model {
             // Drop as root, reset the hierarchy.
             nodeId = forestId = treeId = 0;
             this.root = this._createRoot(this.config, formattedData);
+            this.displayRecordCountLimitWarning(data, true, false);
         } else {
             // Update parentNode data.
             parentNode.data[this.childFieldName || this.defaultChildFieldName] = formattedData;
+            this.displayRecordCountLimitWarning(data, false, false);
             parentNode.populateChildNodes();
         }
         const newNodeId = Object.keys(this.root.nodePerNodeId).find((key) => {
