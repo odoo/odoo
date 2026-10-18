@@ -33,14 +33,14 @@ class ResPartner(models.Model):
         # Fetch fields from db and put them in cache.
         order_lines.read(['date_planned', 'partner_id', 'product_uom_qty'], load='')
         moves.read(['purchase_line_id', 'date'], load='')
-        moves = moves.filtered(lambda m: m.date.date() <= m.purchase_line_id.date_planned.date())
+        moves = moves.filtered(lambda m: not m._is_purchase_return() and m.date.date() <= m.purchase_line_id.date_planned.date())
         for move, quantity in zip(moves, moves.mapped('quantity')):
             lines_quantity[move.purchase_line_id.id] += quantity
         partner_dict = {}
         for line in order_lines:
             on_time, ordered = partner_dict.get(line.partner_id, (0, 0))
             ordered += line.product_uom_qty
-            on_time += lines_quantity[line.id]
+            on_time += min(lines_quantity[line.id], line.product_uom_qty)
             partner_dict[line.partner_id] = (on_time, ordered)
         seen_partner = self.env['res.partner']
         for partner, numbers in partner_dict.items():
