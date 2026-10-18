@@ -171,7 +171,7 @@ class AccountMove(models.Model):
                 bool(move.peppol_message_uuid)
                 and move.peppol_is_sent
                 and move.company_id._get_peppol_proxy_type() == 'pdp'
-                and move.partner_id._get_pdp_receiver_identification_info()[0] == 'pdp'
+                and move.partner_id.commercial_partner_id._get_pdp_receiver_identification_info()[0] == 'pdp'
             )
 
     @api.depends('pdp_can_send_response')
@@ -239,7 +239,7 @@ class AccountMove(models.Model):
         if not self.peppol_message_uuid or not self.pdp_is_sent:
             return False
         tax_extract_responses = self.peppol_response_ids.filtered(lambda l: l.pdp_flow_number == '1' and l.peppol_state == 'done')
-        if not tax_extract_responses and self.partner_id._get_pdp_receiver_identification_info()[0] == 'pdp':
+        if not tax_extract_responses and self.partner_id.commercial_partner_id._get_pdp_receiver_identification_info()[0] == 'pdp':
             return 'in_progress'
         states = set(tax_extract_responses.mapped('response_code'))
         if {'refused', 'RE'} & states:
