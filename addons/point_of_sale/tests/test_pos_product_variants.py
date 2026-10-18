@@ -418,14 +418,16 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
     def test_load_product_from_pos_skips_exclusion_of_other_product_value(self):
         """An exclusion can target another product than the one of its value:
         it must not be loaded without that value."""
+        # Created archived: archiving a PoS product is refused while any session is open
         excluded_template, other_template = self.env['product.template'].create([{
             'name': name,
+            'active': active,
             'available_in_pos': True,
             'attribute_line_ids': [Command.create({
                 'attribute_id': self.size_attribute.id,
                 'value_ids': [Command.set([self.size_attribute_s.id, self.size_attribute_m.id])],
             })],
-        } for name in ('Excluded product', 'Other product')])
+        } for name, active in (('Excluded product', True), ('Other product', False))])
         other_ptav = other_template.attribute_line_ids.product_template_value_ids[0]
         own_ptav = excluded_template.attribute_line_ids.product_template_value_ids[0]
         other_exclusion, own_exclusion = self.env['product.template.attribute.exclusion'].create([{
@@ -435,7 +437,7 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
             'product_tmpl_id': excluded_template.id,
             'product_template_attribute_value_id': own_ptav.id,
         }])
-        other_template.action_archive()
+        self.assertTrue(other_ptav)
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
         for load_archived in (False, True):
