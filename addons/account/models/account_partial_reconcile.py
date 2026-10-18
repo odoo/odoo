@@ -567,6 +567,9 @@ class AccountPartialReconcile(models.Model):
                         # Tax line.
 
                         cb_line_vals = self._prepare_cash_basis_tax_line_vals(line, balance, amount_currency)
+                        cb_line_vals['tax_base_amount'] = line.company_currency_id.round(
+                            line.tax_base_amount * partial_values['percentage'])
+
                         grouping_key = self._get_cash_basis_tax_line_grouping_key_from_vals(cb_line_vals)
                     elif caba_treatment == 'base':
                         # Base line.
