@@ -68,7 +68,8 @@
                 <separator/>
                 <filter name="peppol_ready"
                         string="Peppol Ready"
-                        domain="[('state', '=', 'posted'), ('peppol_move_state', '=', 'ready'), ('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]"/>
+                        domain="[('state', '=', 'posted'), ('peppol_move_state', '=', 'ready'), ('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]"
+                        invisible="context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')"/>
                 <separator/>
             </xpath>
         </field>
