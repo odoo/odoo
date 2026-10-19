@@ -221,3 +221,17 @@ class TestHrFleetDriver(common.TransactionCase):
             'departure_reason_id': self.env.ref('hr.departure_fired').id,
         }]).action_register()
         self.assertFalse(self.car.driver_id, "Car was not unassigned after employee's departure")
+
+    def test_driver_employee_other_company(self):
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        car = self.env['fleet.vehicle'].create({
+            'model_id': self.model.id,
+            'company_id': other_company.id,
+            'driver_id': self.test_employee.work_contact_id.id,
+            'future_driver_id': self.test_employee.work_contact_id.id,
+        })
+        self.assertEqual(car.driver_employee_id, self.test_employee)
+        self.assertEqual(car.future_driver_employee_id, self.test_employee)
+
+        assignation_log = self.env['fleet.vehicle.assignation.log'].search([('vehicle_id', '=', car.id)])
+        self.assertEqual(assignation_log.driver_employee_id, self.test_employee)
