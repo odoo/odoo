@@ -11,9 +11,9 @@ test("test fast payment for qr_code type payment method", async () => {
     Utils.clickDisplayedProduct("Bacon burger");
     Utils.clickFastPaymentMethod("QR Code");
     await waitFor(".modal");
-    await contains(".modal .btn:contains(Cancel Payment)").click();
+    await contains(".modal .btn:contains(Discard)").click();
     Utils.clickFastPaymentMethod("QR Code");
     await waitFor(".modal");
-    await contains(".modal .btn:contains(Confirm Payment)").click();
-    await waitFor(".receipt-screen");
+    await contains(".modal .btn:contains(Confirm)").click();
+    await waitFor(".feedback-screen");
 });
