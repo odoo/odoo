@@ -64,7 +64,6 @@ export class OpeningControlPopup extends Component {
             );
         } catch (error) {
             if (error instanceof ConnectionLostError) {
-                this.pos.data.checkConnectivity();
                 this.dialog.add(AlertDialog, {
                     title: _t("Connection Lost"),
                     body: _t("The register cannot be opened while offline. Please try again."),
