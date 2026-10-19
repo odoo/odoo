@@ -25,7 +25,8 @@ class ResConfigSettings(models.TransientModel):
         help="Participate in the Pilot Phase of the French E-Invoicing. This way you are able to test it before it becomes mandatory.",
     )
     l10n_fr_pdp_send_to_ppf = fields.Boolean(
-        related='company_id.l10n_fr_pdp_send_to_ppf', readonly=False,
+        compute='_compute_l10n_fr_pdp_send_to_ppf',
+        inverse='_inverse_l10n_fr_pdp_send_to_ppf',
         string="Send to PPF",
         help="Activate Flux 1 regulatory data, Flux 6 mandatory statuses and Flux 10 e-reporting generation for this company.",
     )
@@ -79,6 +80,16 @@ class ResConfigSettings(models.TransientModel):
 
     def _inverse_l10n_fr_pdp_pilot_phase(self):
         pass
+
+    @api.depends('company_id.l10n_fr_pdp_send_to_ppf')
+    def _compute_l10n_fr_pdp_send_to_ppf(self):
+        for record in self:
+            record.l10n_fr_pdp_send_to_ppf = record.company_id.l10n_fr_pdp_send_to_ppf
+
+    def _inverse_l10n_fr_pdp_send_to_ppf(self):
+        for record in self:
+            if record.l10n_fr_pdp_send_to_ppf != record.company_id.l10n_fr_pdp_send_to_ppf:
+                record.company_id._l10n_fr_pdp_update_send_to_ppf(record.l10n_fr_pdp_send_to_ppf)
 
     @api.depends('account_peppol_proxy_state')
     def _compute_l10n_fr_pdp_peppol_proxy_display_state(self):

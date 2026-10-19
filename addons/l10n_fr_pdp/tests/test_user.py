@@ -13,7 +13,10 @@ class TestPdpUser(TestL10nFrPdpCommon):
 
     @classmethod
     def _get_mock_responses(cls):
-        participant_state = cls.env.context.get('participant_state', 'receiver')
+        participant_status = {
+            'peppol_state': cls.env.context.get('participant_state', 'receiver'),
+            'send_to_ppf': cls.env.context.get('send_to_ppf', True)
+        }
         return {
             '/api/pdp/1/connect': {
                 'result': {
@@ -23,11 +26,7 @@ class TestPdpUser(TestL10nFrPdpCommon):
             },
             '/api/pdp/1/register_receiver': {'result': {}},
             '/api/pdp/1/update_user': {'result': {}},
-            '/api/pdp/2/participant_status': {
-                'result': {
-                    'peppol_state': participant_state,
-                }
-            },
+            '/api/pdp/2/participant_status': {'result': participant_status},
             '/api/pdp/1/cancel_peppol_registration': {'result': {}},
         }
 
@@ -241,3 +240,17 @@ class TestPdpUser(TestL10nFrPdpCommon):
             'edi_mode': 'test',
         }])
         self.assertTrue(other2_peppol_user)
+
+    def test_pdp_send_to_ppf_sync(self):
+        company = self.env.company
+        edi_user = self.env['account_edi_proxy_client.user']
+        self.assertTrue(company.l10n_fr_pdp_send_to_ppf)
+
+        company.account_peppol_proxy_state = 'active'
+        with self._set_context({'send_to_ppf': False}):
+            edi_user._cron_peppol_get_participant_status()
+            self.assertFalse(company.l10n_fr_pdp_send_to_ppf)
+
+        with self._set_context({'send_to_ppf': True}):
+            edi_user._cron_peppol_get_participant_status()
+            self.assertTrue(company.l10n_fr_pdp_send_to_ppf)

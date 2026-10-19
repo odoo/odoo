@@ -89,6 +89,9 @@ DEMO_ENDPOINTS = {  # pdp reports specific endpoints not already mocked by l10n_
     'pilot_phase': lambda params: {
         'annuaire_line_start_date': fields.Date.today(),
     },
+    'send_to_ppf': lambda params: {
+        'send_to_ppf': params['pdp_send_to_ppf'],
+    },
     'participant_status': lambda params: {},
     'send_document': lambda params: {
         'messages': [{'message_uuid': f'demo_{uuid.uuid4()}'} for _d in params['documents']],
@@ -120,6 +123,14 @@ class AccountEdiProxyClientUser(models.Model):
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
+
+    def _get_company_details(self):
+        self.ensure_one()
+        result = super()._get_company_details()
+        if self.proxy_type != 'pdp':
+            return result
+        result['pdp_send_to_ppf'] = self.company_id.l10n_fr_pdp_send_to_ppf
+        return result
 
     @api.model
     def _get_peppol_proxy_types(self):
@@ -256,6 +267,9 @@ class AccountEdiProxyClientUser(models.Model):
             company = self.sudo().company_id
             company.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(annuaire_start_date)
             company._force_update_l10n_fr_f10_moves()
+
+        if 'send_to_ppf' in proxy_user:
+            self.company_id.l10n_fr_pdp_send_to_ppf = proxy_user['send_to_ppf']
 
     def _peppol_get_new_documents(self):
         if 'pdp_einvoicing_chatter_messages' not in self.env.context:

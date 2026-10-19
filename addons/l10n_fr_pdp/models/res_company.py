@@ -212,6 +212,25 @@ class ResCompany(models.Model):
         # DEPRECATED - was for the pre-prod phase
         return
 
+    def _l10n_fr_pdp_update_send_to_ppf(self, value):
+        self.ensure_one()
+        pdp_user = self.account_peppol_edi_user
+        if pdp_user.proxy_type != 'pdp' or self.account_peppol_proxy_state not in ('sender', 'active'):
+            return
+
+        result = pdp_user._call_peppol_proxy(
+            "/api/pdp/1/send_to_ppf",
+            params={
+                'pdp_send_to_ppf': value,
+            },
+        )
+        if 'error' in result:
+            error_message = result['error'].get('data', {}).get('message') or result['error'].get('message')
+            _logger.error('Error while updating send to ppf: %s', error_message)
+            return
+
+        pdp_user._peppol_process_participant_status(result)
+
     def _pdp_get_flow_10_start_date(self):
         self.ensure_one()
         if (param_start_date := self.env['ir.config_parameter'].sudo().get_param(
