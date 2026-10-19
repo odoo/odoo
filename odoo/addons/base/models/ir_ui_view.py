@@ -798,10 +798,18 @@ actual arch.
         ids_to_check = [vid for vid in self.ids if vid not in check_view_ids]
         if not ids_to_check:
             return self
-        loaded_modules = tuple(self.pool._init_modules) + (self.env.context.get('install_module'),)
-        query = self._get_filter_xmlid_query()
-        sql = SQL(query, res_ids=tuple(ids_to_check), modules=loaded_modules)
-        valid_view_ids = {id_ for id_, in self.env.execute_query(sql)} | check_view_ids
+        valid_view_ids = set(check_view_ids)
+        loaded_modules = tuple(self.pool._init_modules)
+        if loaded_modules:
+            query = self._get_filter_xmlid_query()
+            sql = SQL(query, res_ids=tuple(ids_to_check), modules=loaded_modules)
+            valid_view_ids |= {id_ for id_, in self.env.execute_query(sql)}
+        remaining = self.browse(vid for vid in ids_to_check if vid not in valid_view_ids)
+        if remaining:
+            valid_view_ids |= {
+                id_ for id_, xid in remaining.get_external_id().items()
+                if xid in self.pool.loaded_xmlids
+            }
         return self.browse(vid for vid in self.ids if vid in valid_view_ids)
 
     def _check_view_access(self):
