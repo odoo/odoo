@@ -39,6 +39,10 @@ export async function clickTransferButton() {
     await animationFrame();
 }
 
+export async function clickReprintButton() {
+    await contains(".reprint-btn").click();
+}
+
 export async function setGuestCount(count) {
     await clickControlButton("Guest");
     await waitFor(".modal .numpad");
