@@ -13,9 +13,12 @@ patch(BottomSheet.prototype, {
         // Adapt dimensions when mobile virtual-keyboards or browsers bars toggle
         if (this.htmlEditorProps.fitOnResize) {
             useViewportChange(() => {
-                if (this.state.isPositionedReady && !this.state.isDismissing) {
-                    this.updateProgressValue(0);
-                }
+                setTimeout(() => {
+                    if (this.state.isPositionedReady && !this.state.isDismissing) {
+                        this.updateProgressValue(0);
+                        // this.state.progress = 0;
+                    }
+                }, 1000);
             });
         }
     },
