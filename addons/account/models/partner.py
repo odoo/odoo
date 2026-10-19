@@ -835,6 +835,10 @@ class ResPartner(models.Model):
                     vals['customer_rank'] = 1
                 elif is_supplier and 'supplier_rank' not in vals:
                     vals['supplier_rank'] = 1
+        for vals in vals_list:
+            if 'invoice_edi_format' in vals:
+                # The constraints on stored fields run before the inverse, so store the format they must see
+                vals['invoice_edi_format_store'] = vals['invoice_edi_format'] or 'none'
         return super().create(vals_list)
 
     @api.ondelete(at_uninstall=False)
