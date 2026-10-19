@@ -2207,7 +2207,15 @@ class HrEmployee(models.Model):
         Returns the versions of all employees between date_from and date_to
         that have at least 1 day in contract during that period
         """
-        return self.search([])._get_versions_with_contract_overlap_with_period(date_from, date_to)
+        return self.search([
+            ('version_ids', 'any', [
+                ('contract_date_start', '!=', False),
+                ('contract_date_start', '<=', date_to),
+                '|',
+                    ('contract_date_end', '=', False),
+                    ('contract_date_end', '>=', date_from),
+            ]),
+        ])._get_versions_with_contract_overlap_with_period(date_from, date_to)
 
     def _get_unusual_days(self, date_from, date_to=None):
         def _generate_unusual_days(date_from, date_to, value=True):
