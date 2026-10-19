@@ -969,7 +969,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "view_track": view_track,
             "markup_data_json": json_scriptsafe.dumps(markup_data, indent=2),
             "shop_path": SHOP_PATH,
-            "user_email": request.env.user.email
+            "user_email": request.env.user.email_normalized
             or request.session.get("stock_notification_email", ""),
         }
 
