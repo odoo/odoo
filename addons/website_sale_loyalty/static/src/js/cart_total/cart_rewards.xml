@@ -13,7 +13,7 @@
                 </td>
             </tr>
             <t t-foreach="this.props.rewards" t-as="coupon" t-key="coupon.coupon_id">
-                <tr t-if="coupon.is_loyalty">
+                <tr t-if="coupon.is_loyalty" class="alert alert-primary">
                     <td colspan="2" class="border-0 p-2 text-start small">
                         <strong t-out="coupon.point_name"/>
                     </td>
@@ -22,10 +22,10 @@
                     </td>
                 </tr>
                 <tr t-foreach="coupon.rewards" t-as="reward" t-key="reward.id">
-                    <td class="p-0 pt-2" name="o_loyalty_reward" colspan="3">
+                    <td class="p-0 border-0" name="o_loyalty_reward" colspan="3">
                         <div
                             class="d-flex gap-2 text-start justify-content-between"
-                            t-att-class="coupon.is_loyalty ? 'border border-primary-subtle border-top-0 p-2' : 'alert alert-primary p-2'"
+                            t-att-class="coupon.is_loyalty ? 'border border-primary-subtle rounded p-2' : 'alert alert-primary p-2 border'"
                         >
                             <div class="flex-grow-1 text-break">
                                 <strong class="small" t-out="reward.description"/>
