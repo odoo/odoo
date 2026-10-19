@@ -256,6 +256,7 @@ class PosConfig(models.Model):
         if len(models) == 0:
             self._notify('SYNCHRONISATION', {
                 'static_records': {},
+                'deleted_record_ids': deleted_record_ids,
                 'session_id': session_id,
                 'device_identifier': device_identifier,
                 'records': records,
