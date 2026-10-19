@@ -757,7 +757,9 @@ class IrMail_Server(models.Model):
         # emails may create fake emails using extract_rfc2822_addresses, e.g.
         # '"Bike@Home" <email@domain.com>' which can be considered as containing
         # 2 emails by extract_rfc2822_addresses
-        validated_to = self.env.context.get('send_validated_to') or []
+        # normalized addresses are not punycoded, the addresses they are
+        # compared to are: bring both sides to the same form
+        validated_to = extract_rfc2822_addresses(', '.join(self.env.context.get('send_validated_to') or []))
 
         # Support optional skip To list
         skip_to_lst = self.env.context.get('send_smtp_skip_to') or []
