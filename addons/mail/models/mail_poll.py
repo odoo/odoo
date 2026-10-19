@@ -9,12 +9,12 @@ class MailPoll(models.Model):
     _name = "mail.poll"
 
     allow_multiple_options = fields.Boolean()
-    end_message_id = fields.Many2one("mail.message", ondelete="cascade", index=True)
+    end_message_id = fields.Many2one("mail.message", ondelete="cascade")
     option_ids = fields.One2many("mail.poll.option", "poll_id", required=True)
     poll_end_dt = fields.Datetime(index=True)
     poll_question = fields.Char(required=True)
     start_message_id = fields.Many2one(
-        "mail.message", ondelete="cascade", required=True, index=True
+        "mail.message", ondelete="cascade", required=True
     )
     winning_option_id = fields.Many2one("mail.poll.option", compute="_compute_winning_option_ids")
 
