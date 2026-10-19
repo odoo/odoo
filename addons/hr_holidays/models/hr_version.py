@@ -342,7 +342,7 @@ class HrVersion(models.Model):
                 'accrual_plan_id': working_schedule.leave_accrual_plan_id.id,
                 'employee_id': version.employee_id.id,
                 'work_entry_type_id': working_schedule.leave_accrual_plan_id.work_entry_type_id.id,
-                'date_from': version.date_version,
+                'date_from': version.date_start,
                 'date_to': version.date_end,
                 'state': 'confirm',
             })
