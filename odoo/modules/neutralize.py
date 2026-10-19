@@ -9,12 +9,19 @@ import logging
 _logger = logging.getLogger(__name__)
 
 def get_installed_modules(cursor):
+    """ Return the installed modules, each one after the modules it depends
+    on, so that the neutralization of a module can rely on the neutralization
+    of its dependencies, and refine it.
+    """
     cursor.execute('''
-        SELECT name
-          FROM ir_module_module
-         WHERE state IN ('installed', 'to upgrade', 'to remove');
+        SELECT m.name, ARRAY_AGG(d.name ORDER BY d.name) FILTER (WHERE d.name IS NOT NULL)
+          FROM ir_module_module m
+     LEFT JOIN ir_module_module_dependency d ON d.module_id = m.id
+         WHERE m.state IN ('installed', 'to upgrade', 'to remove')
+      GROUP BY m.name
+      ORDER BY m.name
     ''')
-    return [result[0] for result in cursor.fetchall()]
+    return odoo.tools.misc.topological_sort({name: dependencies or () for name, dependencies in cursor.fetchall()})
 
 def get_neutralization_queries(modules):
     # neutralization for each module
