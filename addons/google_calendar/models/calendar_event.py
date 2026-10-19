@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
+import logging
 from uuid import uuid4
 
+import psycopg2
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
@@ -10,6 +12,8 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
 from odoo.addons.google_calendar.utils.google_calendar_service import GoogleCalendarService
+
+_logger = logging.getLogger(__name__)
 
 
 class CalendarEvent(models.Model):
@@ -23,6 +27,11 @@ class CalendarEvent(models.Model):
     guests_readonly = fields.Boolean(
         'Guests Event Modification Permission', default=False)
     videocall_source = fields.Selection(selection_add=[('google_meet', 'Google Meet')], ondelete={'google_meet': 'set discuss'})
+
+    _google_id_uniq = models.UniqueIndex(
+        "(google_id) WHERE google_id IS NOT NULL AND active",
+        "This Google event is already synchronized with another event in Odoo.",
+    )
 
     def _get_calendar_id_domain(self):
         domain = super()._get_calendar_id_domain()
@@ -421,6 +430,38 @@ class CalendarEvent(models.Model):
                 },
             }
         return values
+
+    def _is_google_id_conflict(self, error):
+        """ Whether `error` is a concurrent synchronization having taken the Google id. """
+        return error.diag.constraint_name == f'{self._table}_google_id_uniq'
+
+    @api.model
+    def _create_from_google(self, gevents, calendar, vals_list):
+        """ Create the events, skipping the ones a concurrent synchronization already imported. """
+        try:
+            with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
+                # the unique violation is raised by the flush on savepoint exit
+                return super()._create_from_google(gevents, calendar, vals_list)
+        except psycopg2.errors.UniqueViolation as error:
+            if not self._is_google_id_conflict(error):
+                raise
+
+        # Create the events one at a time to skip the conflicting ones
+        created = self.browse()
+        for gevent, vals in zip(gevents, vals_list):
+            try:
+                with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
+                    record = super()._create_from_google(gevent, calendar, [vals])
+            except psycopg2.errors.UniqueViolation as error:
+                if not self._is_google_id_conflict(error):
+                    raise
+                _logger.info(
+                    "Google event %s already imported by a concurrent synchronization, skipping.",
+                    vals.get('google_id'),
+                )
+                continue
+            created |= record
+        return created
 
     def _cancel(self):
         # only owner can delete => others refuse the event
