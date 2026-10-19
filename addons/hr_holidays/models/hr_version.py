@@ -41,9 +41,11 @@ class HrVersion(models.Model):
                 created_versions |= super().create(vals)
                 continue
             leaves = self._get_leaves_from_vals(vals)
+            contract_date_start = fields.Date.to_date(vals.get('contract_date_start'))
             is_created = False
             for leave in leaves:
-                leaves_state = self._update_leave_state(leave, leaves_state, leave.request_date_from < vals['contract_date_start'])
+                refuse_leave = bool(contract_date_start) and leave.request_date_from < contract_date_start
+                leaves_state = self._update_leave_state(leave, leaves_state, refuse_leave)
                 if not is_created:
                     created_versions |= super().create([vals])
                     is_created = True
