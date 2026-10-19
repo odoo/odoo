@@ -592,6 +592,9 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
             {'account_id': self.account_expense.id, 'debit': 0, 'credit': 360},
             {'account_id': self.account_expense.id, 'debit': 0, 'credit': 240},
         ])
+        # The first accrual is still active as of today: cancel it before accruing again with the new delivered quantity
+        account_move.filtered(lambda m: m.state == 'posted').button_draft()
+        account_move.button_cancel()
 
         # Delivery 3 more units (20 / 20 units.)
         backorder_delivery = sale_order_1.picking_ids.filtered(lambda pick: pick.state == 'assigned')
@@ -1014,16 +1017,11 @@ class TestAccruedSaleOrdersStock(TestSaleCommon):
         ])
 
         self._cancel_accrual_entries(account_move)
+        # Periodic products aren't accrued from the stock valuation report, only the closing entry is created
         action = self.env.company.action_close_stock_valuation(auto_post=True, include_accruals=True)
-        moves = self.env['account.move'].search(action['domain']).filtered(lambda m: not m.reversed_entry_id)
-        accrual_move = moves.filtered(lambda m: accrual_account in m.line_ids.account_id)
-        closing_move = moves.filtered(lambda m: stock_variation_account in m.line_ids.account_id)
-        self.assertEqual(len(moves), 2)
-        self.assertRecordValues(accrual_move.line_ids, [
-            {'account_id': income_account.id, 'debit': 0, 'credit': 500},
-            {'account_id': accrual_account.id, 'debit': 500, 'credit': 0},
-        ])
-        self.assertRecordValues(closing_move.line_ids, [
+        # Only the closing move is created, so the action opens it as a form (`res_id`, no `domain`)
+        moves = self.env['account.move'].browse(action['res_id'])
+        self.assertRecordValues(moves.line_ids, [
             {'account_id': stock_variation_account.id, 'debit': 500, 'credit': 0},
             {'account_id': stock_valuation_account.id, 'debit': 0, 'credit': 500},
         ])
@@ -1065,10 +1063,6 @@ class TestAccruedSaleOrdersStock(TestSaleCommon):
         ])
 
         self._cancel_accrual_entries(account_move)
-        action = self.env.company.action_close_stock_valuation(auto_post=True, include_accruals=True)
-        moves = self.env['account.move'].search(action['domain'])
-        forward_lines = self._filter_reversal(moves).sorted(lambda l: (l.account_id.id, l.debit, l.credit))
-        self.assertRecordValues(forward_lines, [
-            {'account_id': accrual_account.id, 'debit': 0, 'credit': 1000},
-            {'account_id': income_account.id, 'debit': 1000, 'credit': 0},
-        ])
+        # Periodic products aren't accrued from the stock valuation report and nothing was delivered: nothing to close
+        with self.assertRaises(UserError):
+            self.env.company.action_close_stock_valuation(auto_post=True, include_accruals=True)

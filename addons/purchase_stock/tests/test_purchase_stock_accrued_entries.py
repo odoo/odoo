@@ -293,6 +293,26 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         with self.assertRaises(UserError):
             wizard.create_entries()
 
+    def test_accrual_not_duplicated_in_stock_valuation_report(self):
+        """ Until the accrual's reversal is posted, its generated lines must not be suggested again,
+        neither in the inventory valuation report nor in the Bills To Receive menu.
+        """
+        line = self.purchase_order.order_line
+        line.product_id.is_storable = True
+        self.env.company.inventory_valuation = 'real_time'
+        self.purchase_order.picking_ids.button_validate()
+        self.assertEqual(self.env.company._get_accrual_candidate_lines()['bill_to_receive'], line)
+
+        self.env['account.accrued.orders.wizard'].with_context(
+            active_model='purchase.order',
+            active_ids=self.purchase_order.ids,
+            default_accrual_type='bill_to_receive',
+        ).create({
+            'account_id': self.account_expense.id,
+            'date': fields.Date.today()}).create_entries()
+        self.assertFalse(self.env.company._get_accrual_candidate_lines()['bill_to_receive'])
+        self.assertNotIn(line, line.search([('bill_to_receive', '=', True)]))
+
 
 @tagged('post_install', '-at_install')
 class TestAccruedPurchaseOrdersStock(AccountTestInvoicingCommon):
@@ -558,16 +578,11 @@ class TestAccruedPurchaseOrdersStock(AccountTestInvoicingCommon):
         ])
 
         self._cancel_accrual_entries(account_move)
+        # Periodic products aren't accrued from the stock valuation report, only the closing entry is created
         action = self.env.company.action_close_stock_valuation(auto_post=True, include_accruals=True)
-        moves = self.env['account.move'].search(action['domain']).filtered(lambda m: not m.reversed_entry_id)
-        accrual_move = moves.filtered(lambda m: accrual_account in m.line_ids.account_id)
-        closing_move = moves.filtered(lambda m: stock_variation_account in m.line_ids.account_id)
-        self.assertEqual(len(moves), 2)
-        self.assertRecordValues(accrual_move.line_ids, [
-            {'account_id': expense_account.id, 'debit': 500, 'credit': 0},
-            {'account_id': accrual_account.id, 'debit': 0, 'credit': 500},
-        ])
-        self.assertRecordValues(closing_move.line_ids, [
+        # Only the closing move is created, so the action opens it as a form (`res_id`, no `domain`)
+        moves = self.env['account.move'].browse(action['res_id'])
+        self.assertRecordValues(moves.line_ids, [
             {'account_id': stock_variation_account.id, 'debit': 0, 'credit': 2500},
             {'account_id': stock_valuation_account.id, 'debit': 2500, 'credit': 0},
         ])
@@ -611,19 +626,11 @@ class TestAccruedPurchaseOrdersStock(AccountTestInvoicingCommon):
         ])
 
         self._cancel_accrual_entries(account_move)
+        # Periodic products aren't accrued from the stock valuation report, only the closing entry is created
         action = self.env.company.action_close_stock_valuation(auto_post=True, include_accruals=True)
-        moves = self.env['account.move'].search(action['domain']).filtered(lambda m: not m.reversed_entry_id)
-        accrual_move = moves.filtered(lambda m: accrual_account in m.line_ids.account_id)
-        closing_move = moves.filtered(lambda m: stock_variation_account in m.line_ids.account_id)
-        self.assertEqual(len(moves), 2)
-        self.assertRecordValues(
-            accrual_move.line_ids,
-            [
-                {"account_id": expense_account.id, "debit": 0, "credit": 1000},
-                {"account_id": accrual_account.id, "debit": 1000, "credit": 0},
-            ],
-        )
-        self.assertRecordValues(closing_move.line_ids, [
+        # Only the closing move is created, so the action opens it as a form (`res_id`, no `domain`)
+        moves = self.env['account.move'].browse(action['res_id'])
+        self.assertRecordValues(moves.line_ids, [
             {'account_id': stock_variation_account.id, 'debit': 0, 'credit': 2000},
             {'account_id': stock_valuation_account.id, 'debit': 2000, 'credit': 0},
         ])
