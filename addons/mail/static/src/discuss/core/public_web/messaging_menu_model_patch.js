@@ -94,7 +94,7 @@ const messagingMenuPatch = {
                         },
                     ],
                     actions:
-                        this.store.self_user?.share === false
+                        this.store.env.services.action && this.store.self_user?.share === false
                             ? [
                                   {
                                       id: "new_channel",
