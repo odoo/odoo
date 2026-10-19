@@ -71,6 +71,9 @@
                         domain="[('state', '=', 'posted'), ('peppol_move_state', '=', 'ready'), ('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))]"/>
                 <separator/>
             </xpath>
+            <xpath expr="//filter[@name='peppol_ready']" position="attributes">
+                <attribute name="invisible">context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
