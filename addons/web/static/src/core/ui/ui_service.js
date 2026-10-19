@@ -83,13 +83,16 @@ export function useActiveElement(refName) {
                     el.focus();
                 }
                 return async () => {
+                    // Deactivate right away: the element is being removed, so it mustn't be seen
+                    // as active anymore (e.g. by hotkeys registered by components mounted in the
+                    // same render).
+                    uiService.deactivateElement(el);
                     // Components are destroyed from top to bottom, meaning that this cleanup is
                     // called before the ones of children. As a consequence, event handlers added on
                     // the current active element in children aren't removed yet, and can thus be
-                    // executed if we deactivate that active element right away (e.g. the blur and
-                    // change events could be triggered). For that reason, we wait for a micro-tick.
+                    // executed if we move the focus right away (e.g. the blur and change events
+                    // could be triggered). For that reason, we wait for a micro-tick.
                     await Promise.resolve();
-                    uiService.deactivateElement(el);
                     el.removeEventListener("keydown", trapFocus);
 
                     /**
