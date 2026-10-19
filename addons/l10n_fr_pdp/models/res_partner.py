@@ -40,11 +40,14 @@ class ResPartner(models.Model):
     def fields_get(self, allfields=None, attributes=None):
         # Extend to rename the `peppol` option in the `invoice_sending_method` selection
         fields = super().fields_get(allfields, attributes)
+        # Don't read the company when the selection is not requested: mail tracking calls
+        # fields_get during module installs, when the res.company columns may not exist yet
+        field = fields.get('invoice_sending_method', {})
+        if 'selection' not in field:
+            return fields
         company = self.env.company
-        if not self.env.context.get("studio") and company and company._l10n_fr_pdp_uses_french_terminology() and 'invoice_sending_method' in fields:
-            field = fields['invoice_sending_method']
-            if 'selection' in field:
-                field['selection'] = [('peppol', self.env._('by the Approved Platform')) if option[0] == 'peppol' else option for option in field['selection']]
+        if not self.env.context.get("studio") and company and company._l10n_fr_pdp_uses_french_terminology():
+            field['selection'] = [('peppol', self.env._('by the Approved Platform')) if option[0] == 'peppol' else option for option in field['selection']]
         return fields
 
     # -------------------------------------------------------------------------
