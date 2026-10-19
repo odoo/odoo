@@ -155,11 +155,9 @@ export class ProductListPage extends Component {
     }
 
     getProducts(category) {
-        return (
-            category.associatedProducts ||
-            this.selfOrder.productByCategIds[category.id] ||
-            []
-        ).filter((product) => product.self_order_available);
+        return (category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [])
+            .filter((product) => product.self_order_available)
+            .toSorted((a, b) => a.pos_sequence - b.pos_sequence || a.name.localeCompare(b.name));
     }
 
     toggleSubCategoryPanel() {
