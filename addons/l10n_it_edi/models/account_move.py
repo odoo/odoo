@@ -43,6 +43,12 @@ def get_float(tree, xpath):
     except ValueError:
         return 0.0
 
+
+def get_sum(nodes, xpath, currency=None):
+    total = sum(get_float(n, xpath) for n in nodes)
+    return currency.round(total) if currency else total
+
+
 def get_date(tree, xpath):
     """ Dates in FatturaPA are ISO 8601 date format, pattern '[-]CCYY-MM-DD[Z|(+|-)hh:mm]' """
     dt = get_datetime(tree, xpath)
@@ -281,6 +287,11 @@ class AccountMove(models.Model):
         return super()._check_draftable()
 
     def _parse_xml_with_recovery(self, content, name=None):
+        if not content:
+            return None
+        if not isinstance(content, (bytes, str)):
+            content = bytes(content)
+
         def parse_xml(parser, content):
             try:
                 return etree.fromstring(content, parser)
@@ -1673,6 +1684,10 @@ class AccountMove(models.Model):
         :returns:      the imported move
         """
         with self._get_edi_creation() as self:
+            if not self.l10n_it_edi_attachment_file and data.get('raw'):
+                self.l10n_it_edi_attachment_file = BinaryBytes(data['raw'])
+                self.l10n_it_edi_attachment_name = data.get('name')
+
             buyer_seller_info = self._l10n_it_buyer_seller_info()
 
             tree = data['xml_tree']
@@ -1895,7 +1910,180 @@ class AccountMove(models.Model):
 
             for message in message_to_log:
                 self.sudo().message_post(body=message)
-            return self
+
+        self._l10n_it_edi_generate_pdf_attachment(tree)
+        return self
+
+    def _l10n_it_edi_generate_pdf_attachment(self, tree=None):
+        """ Attempts to create a PDF attachment when the XML file doesn't provide one. """
+        self.ensure_one()
+        disable_pdf_in_xml = self.env['ir.config_parameter'].sudo().get_bool("l10n_it_edi.disable_pdf_in_xml")
+        if (
+            (self.message_main_attachment_id and 'pdf' in (self.message_main_attachment_id.mimetype or ''))
+            or not self.is_purchase_document(include_receipts=True)
+            or disable_pdf_in_xml
+        ):
+            return self.env['ir.attachment']
+
+        report_xmlid = 'l10n_it_edi.action_report_account_invoice_sdi_preview'
+        if not self.env.ref(report_xmlid, raise_if_not_found=False):
+            _logger.warning("Missing template while generating preview PDF attachment for invoice %s", self.id)
+            return self.env['ir.attachment']
+
+        try:
+            pdf_raw, pdf_extension = (
+                self.env['ir.actions.report']
+                .with_context(sdi_xml_tree=tree)
+                ._render_qweb_pdf(report_xmlid, res_ids=[self.id])
+            )
+
+            if pdf_extension != 'pdf':
+                return self.env['ir.attachment']
+
+            invoice_name = self.display_name.replace(self.env._('Draft'), '').strip()
+            pdf_filename = self.env._(
+                '%(invoice_name)s - Preview',
+                invoice_name=invoice_name or self.name or self.env._('Invoice'),
+            )
+            attachment = self.env['ir.attachment'].create({
+                'name': f"{pdf_filename}.pdf",
+                'res_id': self.id,
+                'res_model': 'account.move',
+                'raw': pdf_raw,
+                'type': 'binary',
+                'mimetype': 'application/pdf',
+            })
+            self._message_set_main_attachment_id(attachment, force=True, filter_xml=False)
+            return attachment
+        except Exception:  # noqa: BLE001
+            _logger.exception("Error while generating preview PDF attachment for invoice %s", self.id)
+            return self.env['ir.attachment']
+
+    def _l10n_it_edi_get_sdi_summary_values(self):
+        """ Computes the SDI totals summary based on the XML according to the specification.
+        Returns a list of dictionaries representing display rows or an empty list if not applicable.
+        """
+        self.ensure_one()
+        tree = self.env.context.get('sdi_xml_tree')
+        if tree is None and self.l10n_it_edi_attachment_file:
+            tree = self._parse_xml_with_recovery(
+                bytes(self.l10n_it_edi_attachment_file),
+                self.l10n_it_edi_attachment_name,
+            )
+        if tree is None:
+            return []
+
+        body = tree.find('.//{*}FatturaElettronicaBody')
+        if body is None:
+            body = tree
+        currency = self.currency_id or self.company_id.currency_id
+
+        line_nodes = body.xpath('.//DettaglioLinee')
+        summary_nodes = body.xpath('.//DatiRiepilogo')
+        if not (line_nodes or summary_nodes):
+            return []
+
+        # Untaxed amount
+        untaxed = get_sum(line_nodes, './/PrezzoTotale', currency) if line_nodes \
+            else get_sum(summary_nodes, './/ImponibileImporto', currency)
+        rows = [{'title': self.env._("Untaxed amount"), 'value': untaxed, 'css_class': 'o_subtotal'}]
+
+        # Pension Funds on <base> and Pension Funds notes
+        fund_amount = 0.0
+        pension_withholdings = 0.0
+        if pension_nodes := body.xpath('.//DatiCassaPrevidenziale'):
+            fund_amount = get_sum(pension_nodes, './/ImportoContributoCassa', currency)
+            pension_field = self.env['account.tax']._fields['l10n_it_pension_fund_type']
+            pension_map = dict(pension_field._description_selection(self.env))
+            notes = []
+            for c in pension_nodes:
+                fund_type = get_text(c, './/TipoCassa')
+                desc = pension_map.get(fund_type, fund_type).removeprefix(f"[{fund_type}] ")
+                note = f"{fund_type} {desc} - {get_float(c, './/AlCassa'):g}%"
+                details = []
+                if vat_rate := get_float(c, './/AliquotaIVA'):
+                    details.append(self.env._("VAT %(rate)s%%", rate=f"{vat_rate:g}"))
+                if get_text(c, './/Ritenuta') == 'SI':
+                    details.append(self.env._("Withheld"))
+                    pension_withholdings += get_float(c, './/ImportoContributoCassa')
+                notes.append(f"{note} ({', '.join(details)})" if details else note)
+
+            rows.append({
+                'title': self.env._("Pension Funds"),
+                'base': get_sum(pension_nodes, './/ImponibileCassa', currency) or None,
+                'value': fund_amount,
+                'notes': notes,
+                'css_class': 'o_taxes',
+            })
+
+        # Tax rows (DatiRiepilogo)
+        total_tax = 0.0
+        exempt_map = None
+
+        for r in summary_nodes:
+            if nature := get_text(r, './/Natura'):
+                title = self.env._("0%% %(natura)s", natura=nature)
+                if not (note := get_text(r, './/RiferimentoNormativo')):
+                    if exempt_map is None:
+                        exempt_field = self.env['account.tax']._fields['l10n_it_exempt_reason']
+                        exempt_map = dict(exempt_field._description_selection(self.env))
+                    note = exempt_map.get(nature, nature).removeprefix(f"[{nature}] ")
+            else:
+                title = self.env._("%(rate)s%% VAT", rate=f"{get_float(r, './/AliquotaIVA'):g}")
+                note = None
+
+            total_tax += (tax_amount := currency.round(get_float(r, './/Imposta')))
+            rows.append({
+                'title': title,
+                'base': currency.round(get_float(r, './/ImponibileImporto')),
+                'value': tax_amount,
+                'note': note,
+                'css_class': 'o_taxes',
+            })
+
+        # Rounding
+        if rounding := currency.round(get_float(body, './/DatiGeneraliDocumento/Arrotondamento')):
+            rows.append({'title': self.env._("Rounding"), 'value': rounding})
+
+        # Withholdings and Withholdings Excluded
+        withholdings_amount = get_sum(body.xpath('.//DatiRitenuta'), './/ImportoRitenuta', currency)
+        gross_doc_total = currency.round(get_float(body, './/DatiGeneraliDocumento/ImportoTotaleDocumento'))
+
+        gross_withholding_excluded = None
+        if not currency.is_zero(withholdings_amount):
+            gross_withholding_excluded = gross_doc_total or currency.round(
+                untaxed + fund_amount + total_tax + rounding
+            )
+            rows.append({'title': self.env._("Withholdings Excluded"), 'value': gross_withholding_excluded})
+
+            line_withholdings = get_sum(
+                [line for line in line_nodes if get_text(line, './/Ritenuta') == 'SI'],
+                './/PrezzoTotale',
+            )
+            rows.append({
+                'title': self.env._("Withholdings"),
+                'base': currency.round(line_withholdings + pension_withholdings) or None,
+                'value': -abs(withholdings_amount),
+            })
+
+        # Stamp duty
+        if (
+            (stamp_node := body.find('.//DatiBollo')) is not None
+            and get_text(stamp_node, './/BolloVirtuale') == 'SI'
+            and (stamp_amount := currency.round(get_float(stamp_node, './/ImportoBollo')))
+        ):
+            rows.append({'title': self.env._("Stamp duty"), 'value': stamp_amount})
+
+        # Total
+        if gross_withholding_excluded:
+            total_val = currency.round(gross_withholding_excluded - abs(withholdings_amount))
+        else:
+            total_val = gross_doc_total or get_sum(
+                body.xpath('.//DettaglioPagamento'), './/ImportoPagamento', currency
+            ) or currency.round(untaxed + fund_amount + total_tax + rounding)
+
+        rows.append({'title': self.env._("Total"), 'value': total_val, 'css_class': 'o_total'})
+        return rows
 
     @api.model
     def _is_prediction_enabled(self):
