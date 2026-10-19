@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Datetime
+from odoo.tools.func import deprecated
 from odoo.tools.misc import formatLang
 
 
@@ -357,6 +358,7 @@ class AccountBankStatement(models.Model):
         res = self.env.cr.fetchall()
         return [r[0] for r in res]
 
+    @deprecated("Deprecated: should use action_open_review_statements in enterprise instead")
     def action_open_statements_to_review(self):
         self.ensure_one()
 
