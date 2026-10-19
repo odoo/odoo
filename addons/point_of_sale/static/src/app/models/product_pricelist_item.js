@@ -6,7 +6,7 @@ export class ProductPricelistItem extends Base {
 
     setup() {
         super.setup(...arguments);
-        this.pricelist_id.addRuleIndex(this, this.pricelist_id.item_ids.indexOf(this));
+        this.pricelist_id?.addRuleIndex(this, this.pricelist_id.item_ids.indexOf(this));
     }
 }
 
