@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ir_attachment_deca_list" model="ir.ui.view">
+        <field name="name">ir.attachment.deca.list</field>
+        <field name="model">ir.attachment</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0" edit="0">
+                <field name="name" />
+                <field name="raw" string="Download" widget="binary" filename="name" />
+                <field name="create_date" />
+                <field name="create_uid" />
+            </list>
+        </field>
+    </record>
+</odoo>
