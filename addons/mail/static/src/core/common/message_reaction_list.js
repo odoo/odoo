@@ -1,5 +1,13 @@
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
 import { useHover } from "@mail/utils/common/hooks";
 import { Component } from "@odoo/owl";
+||||||| 4b2ab2440fcf8261c02d9d37d04ea710bb94056f
+import { useHover } from "@mail/utils/common/hooks";
+import { Component, onMounted, onPatched, useState } from "@odoo/owl";
+=======
+import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
+import { Component, onMounted, onPatched, useState } from "@odoo/owl";
+>>>>>>> fd1d626db71e9162d211f368c1f4adc6386123ad
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
@@ -9,7 +17,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class MessageReactionList extends Component {
     static template = "mail.MessageReactionList";
-    static components = { Dropdown };
+    static components = { Dropdown, UseHoverOverlay };
     static props = ["message", "openReactionMenu", "reaction"];
 
     setup() {

@@ -8,8 +8,13 @@ import {
     useEffect,
     useRef,
     useState,
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
     useSubEnv,
     xml,
+||||||| 4b2ab2440fcf8261c02d9d37d04ea710bb94056f
+=======
+    xml,
+>>>>>>> fd1d626db71e9162d211f368c1f4adc6386123ad
 } from "@odoo/owl";
 
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
@@ -124,6 +129,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
         _contains: [],
         _count: 0,
         _isHover: false,
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
         _targets: targets,
         addTarget(target) {
             state._targets.push(target);
@@ -140,6 +146,19 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
                 }
             };
         },
+||||||| 4b2ab2440fcf8261c02d9d37d04ea710bb94056f
+=======
+        addTarget(target) {
+            targets.push(target);
+            target.ref.el.addEventListener("mouseenter", onmouseenter, true);
+            target.ref.el.addEventListener("mouseleave", onmouseleave, true);
+            return () => {
+                target.ref.el.removeEventListener("mouseenter", onmouseenter, true);
+                target.ref.el.removeEventListener("mouseleave", onmouseleave, true);
+                targets.splice(targets.indexOf(target), 1);
+            };
+        },
+>>>>>>> fd1d626db71e9162d211f368c1f4adc6386123ad
     });
     function setHover(hovering) {
         if (hovering && !wasHovering) {
@@ -225,11 +244,19 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
     }
 
     if (stateObserver) {
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
         useEffect((open) => {
             // Note: stateObserver is essentially used with useDropdownState()?.isOpen.
             // While isOpen can become false, the ref.el can still be there for a short period of time.
             // Relying on isOpen becoming false forces good syncing of isHover state on dropdown close.
             if ((lastHoveredTarget && !lastHoveredTarget.ref.el) || !open) {
+||||||| 4b2ab2440fcf8261c02d9d37d04ea710bb94056f
+        useEffect(() => {
+            if (lastHoveredTarget && !lastHoveredTarget.ref.el) {
+=======
+        useEffect((open) => {
+            if ((lastHoveredTarget && !lastHoveredTarget.ref.el) || !open) {
+>>>>>>> fd1d626db71e9162d211f368c1f4adc6386123ad
                 setHover(false);
                 lastHoveredTarget = null;
             }
@@ -238,6 +265,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
     return state;
 }
 
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
 export class UseHoverOverlay extends Component {
     static props = ["slots", "hover"];
     static template = xml`<div t-ref="root"><t t-slot="default"/></div>`;
@@ -263,6 +291,24 @@ export class UseHoverOverlay extends Component {
     }
 }
 
+||||||| 4b2ab2440fcf8261c02d9d37d04ea710bb94056f
+=======
+export class UseHoverOverlay extends Component {
+    static props = ["slots", "hover"];
+    static template = xml`<div t-ref="root"><t t-slot="default"/></div>`;
+
+    setup() {
+        super.setup();
+        this.root = useRef("root");
+        let removeTarget;
+        onMounted(() => {
+            removeTarget = this.props.hover.addTarget({ ref: { el: this.root.el } });
+        });
+        onWillUnmount(() => removeTarget?.());
+    }
+}
+
+>>>>>>> fd1d626db71e9162d211f368c1f4adc6386123ad
 /**
  * Hook that execute the callback function each time the scrollable element hit
  * the bottom minus the threshold.
