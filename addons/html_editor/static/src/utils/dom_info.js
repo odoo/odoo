@@ -623,6 +623,8 @@ export function isListItemElement(node) {
     return [...listItem].includes(node.nodeName);
 }
 
+export const listItemElementSelector = [...listItem].join(",");
+
 export function isListElement(node) {
     return [...listContainers].includes(node.nodeName);
 }
