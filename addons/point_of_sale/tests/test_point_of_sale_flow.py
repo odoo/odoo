@@ -2286,6 +2286,95 @@ class TestPointOfSaleFlow(CommonPosTest):
         current_session.close_session_from_ui()
         self.assertEqual(current_session.picking_ids.mapped('state'), ['done', 'done'])
 
+    def test_order_refund_lot_without_lot_encoding(self):
+        """ When neither "Create New" nor "Use Existing" lots is enabled, the lots are chosen by the
+        reservation on sale. Refunds should bring back those same lots instead of untracked stock."""
+        def pay(order):
+            payment_context = {"active_ids": order.ids, "active_id": order.id}
+            self.env['pos.make.payment'].with_context(**payment_context).create({
+                'payment_method_id': self.cash_payment_method.id,
+            }).with_context(**payment_context).check()
+
+        self.pos_config_usd.picking_type_id.write({'use_create_lots': False, 'use_existing_lots': False})
+        product = self.env['product.product'].create({
+            'name': 'Lot Product',
+            'is_storable': True,
+            'tracking': 'lot',
+            'lst_price': 10.0,
+        })
+        lot_1, lot_2 = self.env['stock.lot'].create([
+            {'name': 'LOT1', 'product_id': product.id},
+            {'name': 'LOT2', 'product_id': product.id},
+        ])
+        stock_location = self.pos_config_usd.picking_type_id.default_location_src_id
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 2, lot_id=lot_1)
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 5, lot_id=lot_2)
+
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{'product_id': product.id, 'qty': 3}],
+            'payment_data': [{'payment_method_id': self.cash_payment_method.id}],
+        })
+        self.assertRecordValues(order.picking_ids.move_line_ids.sorted('lot_id'), [
+            {'lot_id': lot_1.id, 'quantity': 2},
+            {'lot_id': lot_2.id, 'quantity': 1},
+        ])
+
+        refund = self.env['pos.order'].browse(order.refund()['res_id'])
+        with Form(refund) as refund_form:
+            with refund_form.lines.edit(0) as line:
+                line.qty = -1
+        pay(refund)
+        self.assertRecordValues(refund.picking_ids.move_line_ids, [{'lot_id': lot_1.id, 'quantity': 1}])
+
+        # The remaining refund must skip what the first one already brought back to LOT1
+        refund = self.env['pos.order'].browse(order.refund()['res_id'])
+        pay(refund)
+        self.assertRecordValues(refund.picking_ids.move_line_ids.sorted('lot_id'), [
+            {'lot_id': lot_1.id, 'quantity': 1},
+            {'lot_id': lot_2.id, 'quantity': 1},
+        ])
+
+    def test_order_refund_lot_without_lot_encoding_at_closing(self):
+        """ Same as above when the stock is updated at session closing: the lots of the sale are only
+        on the session picking, the refund should still bring them back."""
+        self.env.company.point_of_sale_update_stock_quantities = 'closing'
+        self.pos_config_usd.picking_type_id.write({'use_create_lots': False, 'use_existing_lots': False})
+        product = self.env['product.product'].create({
+            'name': 'Lot Product',
+            'is_storable': True,
+            'tracking': 'lot',
+            'lst_price': 10.0,
+        })
+        lot_1, lot_2 = self.env['stock.lot'].create([
+            {'name': 'LOT1', 'product_id': product.id},
+            {'name': 'LOT2', 'product_id': product.id},
+        ])
+        stock_location = self.pos_config_usd.picking_type_id.default_location_src_id
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 2, lot_id=lot_1)
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 5, lot_id=lot_2)
+
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{'product_id': product.id, 'qty': 3}],
+            'payment_data': [{'payment_method_id': self.cash_payment_method.id}],
+        })
+        order.session_id.close_session_from_ui()
+        self.assertRecordValues(order.session_id.picking_ids.move_line_ids.sorted('lot_id'), [
+            {'lot_id': lot_1.id, 'quantity': 2},
+            {'lot_id': lot_2.id, 'quantity': 1},
+        ])
+
+        self.pos_config_usd.open_ui()
+        refund = self.env['pos.order'].browse(order.refund()['res_id'])
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        self.env['pos.make.payment'].with_context(**payment_context).create({
+            'payment_method_id': self.cash_payment_method.id,
+        }).with_context(**payment_context).check()
+        refund.session_id.close_session_from_ui()
+        self.assertRecordValues(refund.session_id.picking_ids.move_line_ids.sorted('lot_id'), [
+            {'lot_id': lot_1.id, 'quantity': 2},
+            {'lot_id': lot_2.id, 'quantity': 1},
+        ])
+
     def test_search_paid_order_ids(self):
         """ Test if the orders from other configs are excluded in search_paid_order_ids """
         other_pos_config = self.env['pos.config'].create({
