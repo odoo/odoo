@@ -95,7 +95,6 @@ const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NO
  */
 const getNodesFromNodesAndFragments = (nodes) =>
     nodes.flatMap((item) => (isFragment(item) ? childNodes(item) : item));
-
 /**
  * @typedef {Object} DomShared
  * @property { DomPlugin['normalize'] } normalize
@@ -110,13 +109,13 @@ const getNodesFromNodesAndFragments = (nodes) =>
 
 /**
  * @typedef {((nodesToInsert: Node[]) => void)[]} on_will_insert_handlers
+ * @typedef {((insertedNodes: Node[]) => void)[]} on_content_inserted_handlers
  * @typedef {((el: HTMLElement) => void)[]} on_will_set_tag_handlers
  * @typedef {((root: HTMLElement) => void)[]} on_will_normalize_handlers
  * @typedef {((root: HTMLElement) => void)[]} on_normalized_handlers
  *
  * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
- * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
  *
  * @typedef {((block: HTMLElement, parent: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
  * @typedef {((block: HTMLElement) => boolean)[]} is_retagging_safe_predicates
@@ -152,7 +151,7 @@ export class DomPlugin extends Plugin {
         /** Handlers */
         on_editor_started_handlers: withSequence(0, this.normalize.bind(this)),
         /** Processors */
-        inserted_content_processors: (insertedContent) => {
+        on_content_inserted_handlers: (insertedContent) => {
             // Remove trailing line breaks.
             getConnectedParents(insertedContent).forEach((node) => cleanTrailingBR(node));
             insertedContent = insertedContent.filter((node) => node.isConnected);
@@ -199,6 +198,8 @@ export class DomPlugin extends Plugin {
         ].join(",");
         this.isUnsplittable = this.dependencies.split.isUnsplittable.bind(this);
         this.createBaseContainer = this.dependencies.baseContainer.createBaseContainer.bind(this);
+        const systemNodeSelector = this.getResource("system_node_selectors").join(",");
+        this.isSystemNode = (node) => systemNodeSelector && node.matches?.(systemNodeSelector);
     }
 
     // Shared
@@ -222,15 +223,11 @@ export class DomPlugin extends Plugin {
      *
      * @param {HTMLElement} element - block element
      * @param {Cursors} [cursors]
-     * @returns {Map<Node, Node|null>} a map of the nodes handled to their
-     *                                 resulting block, themselves if nothing
-     *                                 was done, or null if they were removed.
      */
     wrapInlinesInBlocks(
         element,
         { baseContainerNodeName = "P", cursors = { update: () => {} } } = {}
     ) {
-        const nodesToResults = new Map();
         // Helpers to manipulate preserving selection.
         const wrapInBlock = (node, cursors) => {
             const nextSibling = node.nextSibling;
@@ -246,7 +243,6 @@ export class DomPlugin extends Plugin {
             cursors.update(callbacksForCursorUpdate.append(block, node));
             cursors.update(callbacksForCursorUpdate.before(node, block));
             nextSibling ? nextSibling.before(block) : parent.append(block);
-            nodesToResults.set(node, block);
             return block;
         };
         const appendToCurrentBlock = (currentBlock, node, cursors) => {
@@ -264,13 +260,11 @@ export class DomPlugin extends Plugin {
             }
             cursors.update(callbacksForCursorUpdate.append(currentBlock, node));
             currentBlock.append(node);
-            nodesToResults.set(node, currentBlock);
             return currentBlock;
         };
         const removeNode = (node, cursors) => {
             cursors.update(callbacksForCursorUpdate.remove(node));
             node.remove();
-            nodesToResults.set(node, null);
         };
 
         const children = childNodes(element);
@@ -281,7 +275,6 @@ export class DomPlugin extends Plugin {
         for (const node of children) {
             if (isBlock(node)) {
                 shouldBreakLine = true;
-                nodesToResults.set(node, node);
             } else if (
                 !visibleNodes.has(node) &&
                 (this.checkPredicates("is_node_removable_predicates", node) ?? true)
@@ -303,12 +296,11 @@ export class DomPlugin extends Plugin {
                 currentBlock = appendToCurrentBlock(currentBlock, node, cursors);
             }
         }
-        return nodesToResults;
     }
 
     /**
      * @param {string | DocumentFragment | Element | null} content
-     * @returns {Node[]} the inserted nodes
+     * @returns { Node[] }
      */
     insert(content) {
         // Pre-process
@@ -325,12 +317,13 @@ export class DomPlugin extends Plugin {
         // Insert
         this.trigger("on_will_insert_handlers", getNodesFromNodesAndFragments(nodes));
         const { focusNode, focusOffset } = this.dependencies.selection.getEditableSelection();
-        let insertedContent = this.insertNodesAt(nodes, focusNode, focusOffset);
-        insertedContent = this.processThrough("inserted_content_processors", insertedContent);
+        const observer = this.insertNodesAt(nodes, focusNode, focusOffset);
+        const insertedNodes = this.onContentInserted(observer);
+        observer.disconnect();
 
         // Move selection
-        this.moveSelectionAfterInsertion(insertedContent);
-        return insertedContent;
+        this.moveSelectionAfterInsertion(insertedNodes);
+        return insertedNodes;
     }
 
     /**
@@ -467,19 +460,19 @@ export class DomPlugin extends Plugin {
     }
 
     /**
-     * Insert a list of nodes at the given position and return what was
-     * inserted. Some of the nodes can be document fragment, to signal that they
-     * were previously unwrapped.
+     * Insert a list of nodes at the given position. Some of the nodes can be
+     * document fragment, to signal that they were previously unwrapped.
      *
      * @see insert
      * @param {(Node | DocumentFragment)[]} nodes
      * @param {Node} targetNode
      * @param {number} targetOffset
-     * @returns {Node[]}
+     * @returns {MutationObserver} an observer that observed the insertion
      */
     insertNodesAt(nodes, targetNode, targetOffset) {
         const marker = createMarkerNode(targetNode, targetOffset);
-        const insertedContent = [];
+        const observer = new MutationObserver(() => {});
+        observer.observe(this.editable, { childList: true, subtree: true });
         for (const [index, item] of nodes.entries()) {
             const previousItem = index > 0 && nodes[index - 1];
             const itemNodes = isFragment(item) ? childNodes(item) : [item];
@@ -498,7 +491,6 @@ export class DomPlugin extends Plugin {
                         // The added fake line break will be made unnecessary by the insertion.
                         lineBreaks.pop().remove();
                     }
-                    insertedContent.push(...(lineBreaks || []));
                 }
                 if (marker.isConnected) {
                     const next = marker.nextSibling;
@@ -507,7 +499,6 @@ export class DomPlugin extends Plugin {
                     const target = isNodeBlock ? this.getBlockInsertTarget(node, marker) : marker;
                     if (target) {
                         target.before(node);
-                        insertedContent.push(node);
                         if (isBlock(target) && isEmptyBlock(target)) {
                             target.before(marker);
                             target.remove();
@@ -522,8 +513,7 @@ export class DomPlugin extends Plugin {
             }
         }
         marker.remove();
-
-        return insertedContent;
+        return observer;
     }
 
     /**
@@ -577,6 +567,53 @@ export class DomPlugin extends Plugin {
     }
 
     /**
+     * React to the nodes added during the @see {insert} process and return the
+     * (fully) inserted nodes in DOM traversal order.
+     *
+     * @param {MutationObserver} observer
+     * @returns {Node[]}
+     */
+    onContentInserted(observer) {
+        let addedNodes = /** @type {Node[]} */ ([]);
+        let removed = /** @type {Set<Node>} */ (new Set());
+        const shouldKeepNode = (node) => node.isConnected && !this.isSystemNode(node);
+        const handlers = this.getResource("on_content_inserted_handlers");
+        for (let index = 0; index <= handlers.length; index += 1) {
+            // Include the latest filtered added/removed nodes before calling
+            // each handler (and one more time afterwards).
+            for (const mutation of observer.takeRecords()) {
+                if (!isMarkerMutation(mutation)) {
+                    mutation.removedNodes.forEach((node) => removed.add(node));
+                    addedNodes.push(...mutation.addedNodes);
+                }
+            }
+            removed = new Set([...removed].filter(shouldKeepNode));
+            addedNodes = addedNodes.filter(shouldKeepNode);
+            addedNodes.sort((a, b) =>
+                a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+            );
+            // Now call the handler.
+            handlers[index]?.(addedNodes);
+        }
+        const added = new Set(addedNodes);
+        const mutated = /** @type {Set<Node>} */ (added.union(removed));
+        const onlyAdded = /** @type {Set<Node>} */ (added.difference(removed));
+        return (
+            addedNodes
+                .filter((node) => {
+                    const children = childNodes(node);
+                    return (
+                        // Remove nodes that were simply moved.
+                        !children.some((child) => mutated.has(child)) ||
+                        children.every((child) => onlyAdded.has(child))
+                    );
+                })
+                // Only include highest-level nodes.
+                .filter((node, _, nodes) => !nodes.some((n) => n !== node && n.contains(node)))
+        );
+    }
+
+    /**
      * Move the selection after insertion.
      *
      * @see insert
@@ -587,11 +624,10 @@ export class DomPlugin extends Plugin {
             return;
         }
         let target = insertedNodes.at(-1);
-        const systemNode = this.getResource("system_node_selectors").join(",");
         const mayEnterNode = (node) => isContentEditable(node) && !this.isUnsplittable(node);
         if (mayEnterNode(target)) {
             target = lastLeaf(target, {
-                predicate: (child) => isVisible(child) && !child.matches?.(systemNode),
+                predicate: (child) => isVisible(child) && !this.isSystemNode(child),
             });
             while (target !== insertedNodes.at(-1) && !mayEnterNode(target.parentElement)) {
                 target = target.parentElement;

@@ -389,7 +389,7 @@ export class LinkPlugin extends Plugin {
         /** Processors */
         clean_for_save_processors: (root) => this.removeEmptyLinks(root),
         html_compatibility_processors: this.moveLinkColorToFont.bind(this),
-        inserted_content_processors: this.processInsertedContent.bind(this),
+        on_content_inserted_handlers: this.onContentInserted.bind(this),
         normalize_processors: this.normalizeLink.bind(this),
         to_inline_code_processors: (node) => {
             this.removeEmptyLinks(node);
@@ -1465,7 +1465,7 @@ export class LinkPlugin extends Plugin {
         return true;
     }
 
-    processInsertedContent(insertedNodes) {
+    onContentInserted(insertedNodes) {
         for (const node of insertedNodes) {
             if (node.nodeType === Node.ELEMENT_NODE) {
                 for (const link of selectElements(node, "A")) {
@@ -1475,7 +1475,6 @@ export class LinkPlugin extends Plugin {
                 }
             }
         }
-        return insertedNodes;
     }
 
     initializePopovers() {
