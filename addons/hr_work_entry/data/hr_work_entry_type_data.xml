@@ -497,6 +497,15 @@
         <field name="amount_rate">0.0</field>
     </record>
 
+    <record id="be_work_entry_type_universal_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Time Off (Universal)</field>
+        <field name="display_code">USTO</field>
+        <field name="code">000.02</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+    
     <record id="be_work_entry_type_additional_hours" model="hr.work.entry.type">
         <field name="name">Overtime (Part-time workers)</field>
         <field name="color">4</field>
@@ -1265,6 +1274,15 @@
         <field name="active" eval="False"/>
     </record>
 
+    <record id="l10n_be_work_entry_type_universal_work_accident" model="hr.work.entry.type">
+        <field name="name">Work accident (universal)</field>
+        <field name="code">000.03</field>
+        <field name="color">5</field>
+        <field name="display_code">WAU1</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+    </record>
+    
     <record id="l10n_be_work_entry_type_work_accident_first_week" model="hr.work.entry.type">
         <field name="name">Guaranted weekly wage industrial accident</field>
         <field name="code">009.00</field>
