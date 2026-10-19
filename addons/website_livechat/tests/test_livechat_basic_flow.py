@@ -2,10 +2,12 @@
 
 import datetime
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import fields, tests, _
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.website.models.website_page import WebsitePage
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 from odoo.tests.common import new_test_user
 
@@ -420,6 +422,24 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             if c["id"] == channel_data["channel_id"]
         )
         self.assertEqual(channel_info["livechat_visitor_id"], False)
+
+    def test_cached_page_livechat_availability(self):
+        self.operator.presence_ids.status = "offline"
+        self.url_open("/")
+        with patch.object(
+            WebsitePage, "_get_response_raw", autospec=True, side_effect=WebsitePage._get_response_raw,
+        ) as get_response_raw:
+            self.assertIn("can_load_livechat: false", self.url_open("/").text)
+            self.env["mail.presence"]._update_presence(self.operator)
+            self.assertIn("can_load_livechat: true", self.url_open("/").text)
+            self.operator.presence_ids.status = "offline"
+            self.assertIn("can_load_livechat: false", self.url_open("/").text)
+            self.env["im_livechat.channel.rule"].create({
+                "channel_id": self.livechat_channel.id,
+                "chatbot_script_id": self.env["chatbot.script"].create({"title": "Bot"}).id,
+            })
+            self.assertIn("can_load_livechat: true", self.url_open("/").text)
+            get_response_raw.assert_not_called()
 
 
 @tests.tagged('post_install', '-at_install')
