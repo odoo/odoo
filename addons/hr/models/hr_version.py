@@ -732,7 +732,7 @@ class HrVersion(models.Model):
 
     def _get_field_block_start_date(self, field_name):
         """
-        Return the contract_date_start of the earliest contiguous version
+        Return the date_start of the earliest contiguous version
         that shares the same value for `field_name` as the current version.
 
         Useful to determine since when a given field value has been
@@ -746,7 +746,9 @@ class HrVersion(models.Model):
         if not current_value:
             return None
 
-        versions = self.employee_id.version_ids.sorted(key=lambda v: v.contract_date_start or date.min)
+        # version_ids are ordered by date_version, which is also the date_start
+        # order as the contracts of an employee cannot overlap
+        versions = self.employee_id.version_ids
 
         try:
             idx = next(i for i, v in enumerate(versions) if v.id == self.id)
@@ -760,7 +762,7 @@ class HrVersion(models.Model):
                 break
             start_version = prev
 
-        return start_version.contract_date_start
+        return start_version.date_start
 
     def _has_work_hours_between_versions(self, version_to):
         # we consider two versions to be consecutive if no work hours are
