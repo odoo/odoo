@@ -964,7 +964,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "structured_data": structured_data,
             "shop_path": SHOP_PATH,
             "reset_filters": reset_filters,
-            "user_email": self.env.user.email
+            "user_email": self.env.user.email_normalized
             or request.session.get("stock_notification_email", ""),
         }
 
