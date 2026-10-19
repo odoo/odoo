@@ -3,7 +3,7 @@ from unittest import mock
 from urllib.parse import parse_qs
 
 from odoo import api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
@@ -52,6 +52,28 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
 
         partner.invoice_sending_method = 'email'
         partner.invoice_edi_format = 'ubl_bis3'
+
+    def test_create_partner_with_pdp_einvoicing_info(self):
+        """Check that a new contact without a country can be saved with French e-invoicing information filled in."""
+        partner = self.env['res.partner'].create({
+            'name': 'New French e-invoicing partner',
+            'invoice_sending_method': 'peppol',
+            'invoice_edi_format': 'ubl_21_fr',
+            'peppol_eas': '0225',
+        })
+        self.assertRecordValues(partner, [{
+            'invoice_sending_method': 'peppol',
+            'invoice_edi_format': 'ubl_21_fr',
+            'peppol_eas': '0225',
+        }])
+
+        with self.assertRaisesRegex(ValidationError, r'only France E-Invoicing \(UBL 2.1\) is supported'):
+            self.env['res.partner'].create({
+                'name': 'New French e-invoicing partner',
+                'invoice_sending_method': 'peppol',
+                'invoice_edi_format': 'ubl_bis3',
+                'peppol_eas': '0225',
+            })
 
     def test_einvoicing_terminology_by_company(self):
         self.assertEqual(self.env.company._get_einvoicing_network_name(), "the Approved Platform")
