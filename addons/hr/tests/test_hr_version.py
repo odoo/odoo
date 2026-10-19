@@ -390,6 +390,28 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(employee._get_version(), v1)
         self.assertTrue(v1._is_in_contract())
 
+    def test_calendar_at_date_with_amendment(self):
+        """
+        The calendar used at a given date is the one of the version in effect at
+        that date, not the one of the first version of the contract.
+        """
+        calendar_full, calendar_half = self.env['resource.calendar'].create([
+            {'name': 'Full Time'},
+            {'name': 'Half Time'},
+        ])
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'resource_calendar_id': calendar_full.id,
+        })
+        employee.create_version({
+            'date_version': '2020-06-01',
+            'resource_calendar_id': calendar_half.id,
+        })
+        self.assertEqual(employee._get_calendars(date(2020, 3, 15))[employee.id], calendar_full)
+        self.assertEqual(employee._get_calendars(date(2020, 7, 15))[employee.id], calendar_half)
+
     def test_cron_update_current_version(self):
         cron = self.env.ref('hr.ir_cron_data_employee_update_current_version')
 
