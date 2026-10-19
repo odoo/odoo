@@ -27,13 +27,13 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
                 {
                     'quantity': 150.0,
                     'price_unit': 0.53073,
-                    'discount': 11.996055747115614,
+                    'discount': 11.996055747115609,
                     'tax_ids': tax_21.ids,
                 },
                 {
                     'quantity': 200.0,
                     'price_unit': 0.6369,
-                    'discount': 12.00345423143351,
+                    'discount': 12.003454231433505,
                     'tax_ids': tax_21.ids,
                 },
             ],
