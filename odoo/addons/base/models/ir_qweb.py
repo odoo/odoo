@@ -2019,6 +2019,12 @@ class IrQweb(models.AbstractModel):
                 # If the content is inserted without using a widget, attributes will never be consumed
                 return code
 
+        # The attributes of the element, in order: (name, value, source), where
+        # value is the static value or the compiled code of the dynamic value,
+        # and source is None for a static value, or the expression or format
+        # string of the dynamic value. The name is None for `t-att`.
+        attributes = []
+
         # Compile the introduced new namespaces of the given element.
         #
         # Add the found new attributes into the `attrs` dictionary like
@@ -2028,7 +2034,7 @@ class IrQweb(models.AbstractModel):
                 key = 'xmlns'
                 if ns_prefix is not None:
                     key = f'xmlns:{ns_prefix}'
-                code.append(indent_code(f'attrs[{key!r}] = {ns_definition!r}', level))
+                attributes.append((key, ns_definition, None))
 
         self._pre_processing_att(el.attrib)
 
@@ -2047,7 +2053,7 @@ class IrQweb(models.AbstractModel):
                     attrib_qname = etree.QName(name)
                     if attrib_qname.namespace:
                         name = f'{nsprefixmap[attrib_qname.namespace]}:{attrib_qname.localname}'
-                    code.append(indent_code(f'attrs[{name!r}] = {value!r}', level))
+                    attributes.append((name, value, None))
 
         # Compile the dynamic attributes of the given element. All
         # attributes will be add to the ``attrs`` dictionary in the
@@ -2055,15 +2061,38 @@ class IrQweb(models.AbstractModel):
         for key in list(el.attrib):
             if key.startswith('t-attf-'):
                 value = el.attrib.pop(key)
-                name = key[7:]
-                code.append(indent_code(f"attrs[{name!r}] = {self._compile_format(value, compile_context)}", level))
+                attributes.append((key[7:], self._compile_format(value, compile_context), value))
             elif key.startswith('t-att-'):
                 value = el.attrib.pop(key)
-                code.append(indent_code(f"attrs[{key[6:]!r}] = {self._compile_expr(value, compile_context)}", level))
+                attributes.append((key[6:], self._compile_expr(value, compile_context), value))
             elif key == 't-att':
                 value = el.attrib.pop(key)
+                attributes.append((None, self._compile_expr(value, compile_context), value))
+
+        if not attributes:
+            return code
+
+        if self._can_output_attributes_directly(el, attributes):
+            # The attributes are output by `_compile_directive_tag_open`
+            # without the ``attrs`` dictionary: the dynamic values are only
+            # evaluated here, in the same order as the other directives.
+            direct_attributes = {}
+            for name, value, source in attributes:
+                if source is None:
+                    direct_attributes[name] = (value, None)
+                else:
+                    varname = compile_context['make_name']('attr')
+                    code.append(indent_code(f"{varname} = {value}", level))
+                    direct_attributes[name] = (None, varname)
+            if compile_context.get('qweb_attrs_created'):
+                code.append(indent_code("attrs = None", level))
+            compile_context.setdefault('qweb_direct_attributes', {})[el] = direct_attributes
+            return code
+
+        for name, value, source in attributes:
+            if name is None:
                 code.append(indent_code(f"""
-                    atts_value = {self._compile_expr(value, compile_context)}
+                    atts_value = {value}
                     if isinstance(atts_value, dict):
                         attrs.update(atts_value)
                     elif isinstance(atts_value, (list, tuple)) and not isinstance(atts_value[0], (list, tuple)):
@@ -2071,12 +2100,46 @@ class IrQweb(models.AbstractModel):
                     elif isinstance(atts_value, (list, tuple)):
                         attrs.update(dict(atts_value))
                     """, level))
+            elif source is None:
+                code.append(indent_code(f'attrs[{name!r}] = {value!r}', level))
+            else:
+                code.append(indent_code(f"attrs[{name!r}] = {value}", level))
 
-        if code:
-            code = [indent_code("attrs = {}", level)] + code
-            compile_context['qweb_attrs_created'] = True
+        code = [indent_code("attrs = {}", level)] + code
+        compile_context['qweb_attrs_created'] = True
 
         return code
+
+    def _can_output_attributes_directly(self, el, attributes):
+        """ Return whether the attributes of the given element can be output
+        without going through the ``attrs`` dictionary and `_post_processing_att`:
+        their names must all be known at compile time (no ``t-att``, no
+        attributes added by a ``t-field`` or a widget), and their post-processing
+        must not be able to modify them.
+        """
+        if 't-field' in el.attrib or el.attrib.get('t-consumed-options') == 'True':
+            return False
+        static_atts = {}
+        dynamic_atts = {}
+        for name, value, source in attributes:
+            if name is None:
+                return False
+            if source is None:
+                static_atts[name] = value
+                dynamic_atts.pop(name, None)
+            else:
+                dynamic_atts[name] = source
+                static_atts.pop(name, None)
+        return not self._is_post_processing_att_needed(el.tag, static_atts, dynamic_atts)
+
+    def _is_post_processing_att_needed(self, tagName, static_atts, dynamic_atts):
+        """ Return whether `_post_processing_att` may modify the attributes of
+        a dynamic node, given its static attributes ``{name: value}`` and the
+        source of its dynamic ones ``{name: expression or format string}``.
+        If not, the generated code outputs the attributes as they are, without
+        calling it.
+        """
+        return 'href' in static_atts or 'href' in dynamic_atts
 
     def _compile_directive_tag_open(self, el, compile_context, level):
         """ Compile the opening tag with attributes of the given element into
@@ -2111,7 +2174,20 @@ class IrQweb(models.AbstractModel):
         # Use str(value) to change Markup into str and escape it, then use str
         # to avoid the escaping of the other html content.
 
-        if compile_context.get('qweb_attrs_created'):
+        direct_attributes = compile_context.get('qweb_direct_attributes', {}).pop(el, None)
+        if direct_attributes is not None:
+            code = []
+            for name, (value, varname) in direct_attributes.items():
+                if varname is None:
+                    self._append_text(f' {escape(name)}="{escape(value)}"', compile_context)
+                else:
+                    code.extend(self._flush_text(compile_context, level))
+                    attribute = f' {escape(name)}="'.replace('{', '{{').replace('}', '}}')
+                    code.append(indent_code(f"""
+                        if {varname} or isinstance({varname}, str):
+                            yield f{attribute + '{escape(str(' + varname + '))}"'!r}
+                    """, level))
+        elif compile_context.get('qweb_attrs_created'):
             code = self._flush_text(compile_context, level)
             code.append(indent_code(f"""
                 if attrs:
