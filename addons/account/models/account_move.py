@@ -2362,6 +2362,7 @@ class AccountMove(models.Model):
             move.alerts = move._get_alerts()
 
     @api.depends('line_ids.tax_ids')
+    @api.depends_context('lang')
     def _compute_taxes_legal_notes(self):
         for move in self:
             move.taxes_legal_notes = ''.join(
