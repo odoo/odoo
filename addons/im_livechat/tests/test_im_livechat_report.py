@@ -183,6 +183,22 @@ class TestImLivechatReport(TestImLivechatCommon):
         self.assertEqual([group["start_hour"] for group in result], ["00", "01"])
         result = report_model.formatted_read_group(domain, groupby=["day_number"])
         self.assertEqual([group["day_number"] for group in result], ["6"])
+        history_model = self.env["im_livechat.channel.member.history"].with_user(alice_user)
+        domain = [("session_livechat_channel_id", "=", livechat_channel.id)]
+        histories = history_model.search(domain)
+        self.assertEqual(sorted(histories.mapped("session_start_hour")), [0.0, 0.0, 1.0, 1.0])
+        self.assertEqual(set(histories.mapped("session_week_day")), {"5"})
+        result = history_model.formatted_read_group(domain, groupby=["session_start_hour"])
+        self.assertEqual([group["session_start_hour"] for group in result], [0.0, 1.0])
+        for group in result:
+            self.assertEqual(history_model.search_count(domain + group["__extra_domain"]), 2)
+        result = history_model.formatted_read_group(domain, groupby=["session_week_day"])
+        self.assertEqual([group["session_week_day"] for group in result], ["5"])
+        self.assertEqual(history_model.search_count(domain + result[0]["__extra_domain"]), 4)
+        self.assertEqual(history_model.search_count(domain + [("session_start_hour", ">", 0)]), 2)
+        self.assertEqual(
+            history_model.search_count(domain + [("session_week_day", "!=", False)]), 4,
+        )
 
     def test_time_to_answer_does_not_count_messages_after_close(self):
         with freeze_time("2025-05-20 06:00:00") as frozen_time:
