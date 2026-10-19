@@ -400,6 +400,21 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             msg_to_lst=['forged@xn--example--i1a.com'],
         )
 
+    @mute_logger('odoo.models.unlink')
+    def test_mail_server_send_email_IDNA_validated_to(self):
+        """ 'send_validated_to' holds normalized addresses, whose domain is not
+        punycoded, unlike the recipients they restrict """
+        with self.mock_smtplib_connection():
+            message = self._build_email(mail_from='test@example.com')
+            self.env['ir.mail_server'].with_context(
+                send_validated_to=tools.mail.email_normalize_all('dest@example-é.com'),
+            ).send_email(message)
+
+        self.assertSMTPEmailsSent(
+            smtp_to_list=['dest@xn--example--i1a.com'],
+            msg_to_lst=['dest@xn--example--i1a.com'],
+        )
+
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
     @patch.dict(config.options, {
         "from_filter": "dummy@example.com, test.mycompany.com, dummy2@example.com",
