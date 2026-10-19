@@ -77,7 +77,7 @@
             "web/static/src/views/fields/input_field_hook.js",
             "web/static/src/core/model_field_selector/model_field_selector_popover.js",
             "web/static/src/core/model_field_selector/model_field_selector_popover.xml",
-            "web/static/src/core/model_field_selector/model_field_selector_popover.scss",
+            "web/static/src/core/model_field_selector/model_field_selector_popover.css",
             'web/static/src/core/currency.js',
             'barcodes/static/src/barcode_plugin.js',
             'point_of_sale/static/src/utils.js',

@@ -301,7 +301,7 @@
             ('remove', 'website/static/src/snippets/**/*.edit.js'),
             'website/static/src/scss/website.scss',
             'website/static/src/scss/portal.scss',
-            'website/static/src/scss/website_common.scss',
+            'website/static/src/scss/website_common.css',
             'website/static/src/scss/website_controller_page.scss',
             'website/static/src/scss/website.ui.scss',
             'website/static/src/libs/bootstrap/bootstrap.js',
@@ -312,7 +312,7 @@
             'website/static/src/js/user_custom_javascript.js',
             'website/static/src/js/http_cookie.js',
             'website/static/src/js/highlight_utils.js',
-            'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
+            'website/static/src/client_actions/website_preview/website_builder_action.editor.css',
             'website/static/src/components/user_switch.*',
         ],
         'web.assets_frontend_minimal': [
@@ -479,8 +479,8 @@
         ],
         'website.assets_theme_colors_preview': [
             ('include', 'web._assets_helpers'),
-            'html_builder/static/src/core/operation.edit.scss',
-            'website/static/src/scss/theme_colors_preview.scss',
+            'html_builder/static/src/core/operation.edit.css',
+            'website/static/src/scss/theme_colors_preview.css',
         ],
         'html_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/*',
@@ -502,7 +502,7 @@
             'website/static/src/components/dialog/*.xml',
             'website/static/src/components/editor/editor.scss',
             'website/static/src/components/navbar/navbar.js',
-            'website/static/src/components/navbar/navbar.scss',
+            'website/static/src/components/navbar/navbar.css',
             'website/static/src/components/navbar/navbar.xml',
             'website/static/src/components/burger_menu/burger_menu.js',
             'website/static/src/js/new_content_form.js',
@@ -518,7 +518,7 @@
         ],
         'website.website_builder_assets': [
             ('include', 'html_builder.assets'),
-            'website/static/src/scss/website_common.scss',
+            'website/static/src/scss/website_common.css',
             'website/static/src/builder/**/*',
             'website/static/src/services/google_maps_service.js',
             'website/static/src/components/googleplaces_autocomplete/*',

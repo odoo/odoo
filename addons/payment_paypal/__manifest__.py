@@ -20,7 +20,7 @@
     "assets": {
         "web.assets_frontend": [
             "payment_paypal/static/src/interactions/**/*",
-            "payment_paypal/static/src/scss/payment_paypal.scss",
+            "payment_paypal/static/src/scss/payment_paypal.css",
         ],
         "web.assets_backend": ["payment_paypal/static/src/onboarding/**/*"],
     },

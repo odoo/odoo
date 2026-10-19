@@ -21,15 +21,15 @@
 
     &.o-minimized {
         height: 20%; /* ensures that the view returns to the right height when resized */
-        min-height: #{"max(16%, 130px)"};
+        min-height: max(16%, 130px);
         &.o-selfInCall {
-            min-height: #{"max(22%, 130px)"};
+            min-height: max(22%, 130px);
         }
         &.o-compact {
             height: 10%;
-            min-height: #{"max(10%, 145px)"};
+            min-height: max(10%, 145px);
             &:not(.o-selfInCall) {
-                min-height: #{"max(10%, 120px)"};
+                min-height: max(10%, 120px);
             }
             &.o-hasVideo.o-selfInCall {
                 height: calc(100vw * 9 / 16);

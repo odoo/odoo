@@ -20,7 +20,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'website_event_track_live/static/src/scss/website_event_track_live.scss',
+            'website_event_track_live/static/src/scss/website_event_track_live.css',
             'website_event_track_live/static/src/interactions/*.js',
             'website_event_track_live/static/src/xml/**/*',
         ],

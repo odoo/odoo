@@ -38,7 +38,7 @@
             'website_slides_survey/static/src/js/public/**/*',
         ],
         'survey.survey_assets': [
-            'website_slides_survey/static/src/scss/website_slides_survey_result.scss',
+            'website_slides_survey/static/src/scss/website_slides_survey_result.css',
         ],
     },
     'uninstall_hook': 'uninstall_hook',
