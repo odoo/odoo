@@ -252,14 +252,14 @@ class ProductProduct(models.Model):
                 product_ids_grouped_by_cost_method[product.cost_method].add(product.id)
 
             for cost_method, product_ids in product_ids_grouped_by_cost_method.items():
-                products = products.env['product.product'].browse(product_ids).with_context(warehouse_id=False)
+                products_to_value = products.env['product.product'].browse(product_ids).with_context(warehouse_id=False)
                 # To remove once price_unit isn't truncate in sql anymore (no need of force_recompute)
                 if cost_method == 'standard':
-                    std_prices, total_values = products._run_standard_batch(at_date=at_date)
+                    std_prices, total_values = products_to_value._run_standard_batch(at_date=at_date)
                 elif cost_method == 'average':
-                    std_prices, total_values = products._run_average_batch(at_date=at_date)
+                    std_prices, total_values = products_to_value._run_average_batch(at_date=at_date)
                 else:
-                    std_prices, total_values = products._run_fifo_batch(at_date=at_date)
+                    std_prices, total_values = products_to_value._run_fifo_batch(at_date=at_date)
 
                 std_price_by_product_id.update(std_prices)
                 total_value_by_product_id.update(total_values)
