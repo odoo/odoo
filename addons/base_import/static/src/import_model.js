@@ -252,6 +252,8 @@ export class BaseImportModel {
             fields: this.columns.map((e) => Boolean(e.fieldInfo) && e.fieldInfo.fieldPath),
             columns: this.columns.map((e) => e.name.trim().toLowerCase()),
             hasError: false,
+            messages: [],
+            name: [],
         };
 
         for (let i = 1; i <= totalSteps; i++) {
@@ -285,6 +287,10 @@ export class BaseImportModel {
             }
         }
 
+        if (importRes.messages.length) {
+            this._handleImportErrors(importRes.messages, importRes.name);
+        }
+
         if (!importRes.hasError) {
             if (!isTest && importRes.nextrow) {
                 this._addMessage("warning", [
@@ -296,7 +302,9 @@ export class BaseImportModel {
                 ]);
             }
             if (isTest) {
-                this._addMessage("info", [_t("Everything seems valid.")]);
+                if (!this.importMessages.length) {
+                    this._addMessage("info", [_t("Everything seems valid.")]);
+                }
                 this.setOption("skip", 0);
             }
         } else {
@@ -388,6 +396,7 @@ export class BaseImportModel {
     }
 
     async _executeImportStep(isTest, importRes) {
+        const skip = this.importOptions.skip;
         const importArgs = [
             this.id,
             importRes.fields,
@@ -408,12 +417,20 @@ export class BaseImportModel {
             importRes.ids = importRes.ids.concat(ids);
         }
 
-        // Handle import errors
+        // Collect import messages, they are displayed once all batches are processed
         if (messages && messages.length) {
-            importRes.hasError = true;
-            this.stopImport();
-            if (this._handleImportErrors(messages, name)) {
-                return false;
+            for (const message of messages) {
+                // rows are relative to the batch, make them relative to the file
+                if (message.rows) {
+                    message.rows.from += skip;
+                    message.rows.to += skip;
+                }
+            }
+            importRes.messages.push(...messages);
+            importRes.name = (name || []).map((n, index) => importRes.name[index] || n);
+            importRes.hasError = messages.some((message) => message.type === "error");
+            if (importRes.hasError) {
+                this.stopImport();
             }
         }
 
@@ -504,7 +521,12 @@ export class BaseImportModel {
             this._addMessage(sortedMessages[0].type, [sortedMessages[0].message]);
             delete sortedMessages[0];
         } else {
-            this._addMessage("danger", [_t("The file contains blocking errors (see below)")]);
+            const hasError = messages.some((message) => message.type === "error");
+            this._addMessage(hasError ? "danger" : "warning", [
+                hasError
+                    ? _t("The file contains blocking errors (see below)")
+                    : _t("The file contains non-blocking warnings (see below)"),
+            ]);
         }
 
         for (const [columnFieldId, errors] of Object.entries(sortedMessages)) {
@@ -519,7 +541,7 @@ export class BaseImportModel {
                 for (const error of errors) {
                     // Handle errors regarding specific records.
                     if (error.record !== undefined) {
-                        this._addMessage("danger", [
+                        this._addMessage(error.type, [
                             error.rows.from === error.rows.to
                                 ? _t('Error at row %(row)s: "%(error)s"', {
                                       row: error.record,
@@ -530,7 +552,7 @@ export class BaseImportModel {
                     }
                     // Handle global errors.
                     else {
-                        this._addMessage("danger", [error.message]);
+                        this._addMessage(error.type, [error.message]);
                     }
                 }
             }
@@ -561,7 +583,7 @@ export class BaseImportModel {
     }
 
     _sortErrors(messages) {
-        return sortBy(messages, (e) => ["error", "warning", "info"].indexOf(e.priority));
+        return sortBy(messages, (e) => ["error", "warning", "info"].indexOf(e.type));
     }
 
     /**

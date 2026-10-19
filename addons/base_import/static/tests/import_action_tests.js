@@ -173,7 +173,7 @@ function executeFailingImport(field, isMultiline, field_path = "") {
                       record: 0,
                       rows: { from: 0, to: 0 },
                       value: "Invalid value",
-                      priority: "info",
+                      type: "info",
                   },
                   {
                       field,
@@ -183,7 +183,7 @@ function executeFailingImport(field, isMultiline, field_path = "") {
                       moreInfo,
                       record: 0,
                       rows: { from: 1, to: 1 },
-                      priority: "error",
+                      type: "error",
                   },
                   {
                       field,
@@ -193,7 +193,7 @@ function executeFailingImport(field, isMultiline, field_path = "") {
                       moreInfo,
                       record: 0,
                       rows: { from: 2, to: 3 },
-                      priority: "warning",
+                      type: "warning",
                   },
                   {
                       field,
@@ -204,7 +204,7 @@ function executeFailingImport(field, isMultiline, field_path = "") {
                       record: 0,
                       rows: { from: 4, to: 4 },
                       value: "Bad value",
-                      priority: "warning",
+                      type: "warning",
                   },
                   {
                       field,
@@ -214,7 +214,7 @@ function executeFailingImport(field, isMultiline, field_path = "") {
                       moreInfo,
                       record: 0,
                       rows: { from: 5, to: 5 },
-                      priority: "error",
+                      type: "error",
                   },
               ]
             : [
@@ -223,6 +223,7 @@ function executeFailingImport(field, isMultiline, field_path = "") {
                       field_name: serverData.models.partner.fields[field].string,
                       field_path,
                       message: "Incorrect value",
+                      type: "error",
                       moreInfo,
                       record: 0,
                       rows: { from: 0, to: 0 },
@@ -313,6 +314,144 @@ QUnit.module("Base Import Tests", (hooks) => {
     });
 
     QUnit.module("ImportAction");
+
+    for (const isTest of [true, false]) {
+        QUnit.test(`Import view: non-blocking warnings (${isTest ? "test" : "import"})`, async function (assert) {
+            registerFakeHTTPService();
+            Object.assign(serverData.models.partner.fields.foo, {
+                type: "many2one",
+                comodel_name: "partner",
+            });
+            patchWithCleanup(ImportAction.prototype, {
+                get isBatched() {
+                    return true;
+                },
+                exit(ids) {
+                    assert.deepEqual(ids, [1, 2, 3]);
+                    assert.step("import completed");
+                },
+            });
+            let importedBatches = 0;
+            await createImportAction({
+                "base_import.import/execute_import": () => {
+                    importedBatches++;
+                    return {
+                        ids: [importedBatches],
+                        messages: [
+                            {
+                                type: "warning",
+                                field: "foo",
+                                message: `Found multiple matches for value "abc${importedBatches}" in field "Foo" (2 matches)`,
+                                record: 0,
+                                rows: { from: 0, to: 0 },
+                            },
+                        ],
+                        nextrow: importedBatches < 3 ? importedBatches : 0,
+                    };
+                },
+            });
+            const file = new File(["fake_file"], "fake_file.csv", { type: "text/plain" });
+            await editInput(target, ".o_control_panel_main_buttons input[type='file']", file);
+            await editInput(target, "input#o_import_batch_limit", 1);
+            await click(
+                target.querySelector(`.o_control_panel_main_buttons button:nth-child(${isTest ? 2 : 1})`)
+            );
+
+            assert.strictEqual(importedBatches, 3, "warnings do not interrupt the import");
+            assert.containsOnce(target, ".o_import_report.alert-warning");
+            assert.strictEqual(
+                [...target.querySelectorAll(".o_import_data_content .alert")].filter((el) =>
+                    el.textContent.includes("The file contains non-blocking warnings (see below)")
+                ).length,
+                1,
+                "the warning summary is displayed only once"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_import_report li")].map((el) =>
+                    el.textContent.replace(/\s+/g, " ").trim()
+                ),
+                [1, 2, 3].map(
+                    (row) =>
+                        `Found multiple matches for value "abc${row}" in field "Foo" (2 matches) at row ${row}`
+                ),
+                "the warnings of every batch are kept, with rows relative to the file"
+            );
+            assert.containsNone(target, ".o_import_data_content .alert-danger");
+            assert.containsNone(
+                target,
+                ".o_import_field_many2one",
+                "unmatched-value options do not apply to warnings"
+            );
+            assert.ok(target.textContent.includes("The file contains non-blocking warnings (see below)"));
+            if (isTest) {
+                assert.containsNone(target, ".o_import_data_content .alert-info");
+                assert.strictEqual(
+                    target.querySelector("input#o_import_row_start").value,
+                    "1",
+                    "the actual import will start from the first row"
+                );
+                assert.verifySteps([]);
+            } else {
+                assert.strictEqual(
+                    target.querySelector(".o_notification_body").textContent,
+                    "3 records successfully imported"
+                );
+                assert.verifySteps(["import completed"]);
+            }
+        });
+    }
+
+    QUnit.test("Import view: errors remain blocking alongside warnings", async function (assert) {
+        registerFakeHTTPService();
+        Object.assign(serverData.models.partner.fields.foo, {
+            type: "many2one",
+            comodel_name: "partner",
+        });
+        patchWithCleanup(ImportAction.prototype, {
+            get isBatched() {
+                return true;
+            },
+            exit() {
+                assert.step("unexpected exit");
+            },
+        });
+        let importedBatches = 0;
+        await createImportAction({
+            "base_import.import/execute_import": () => {
+                importedBatches++;
+                return {
+                    ids: false,
+                    messages: [
+                        {
+                            type: "warning",
+                            field: "foo",
+                            message: "Multiple matches",
+                            record: 0,
+                            rows: { from: 0, to: 0 },
+                        },
+                        {
+                            type: "error",
+                            field: "foo",
+                            message: "No matching record found",
+                            record: 1,
+                            rows: { from: 1, to: 1 },
+                        },
+                    ],
+                    nextrow: 1,
+                };
+            },
+        });
+        const file = new File(["fake_file"], "fake_file.csv", { type: "text/plain" });
+        await editInput(target, ".o_control_panel_main_buttons input[type='file']", file);
+        await editInput(target, "input#o_import_batch_limit", 1);
+        await click(target.querySelector(".o_control_panel_main_buttons button:first-child"));
+
+        assert.strictEqual(importedBatches, 1);
+        assert.containsOnce(target, ".o_import_report.alert-danger");
+        assert.containsOnce(target, ".o_import_field_many2one");
+        assert.ok(target.textContent.includes("The file contains blocking errors (see below)"));
+        assert.verifySteps([]);
+    });
 
     QUnit.test("Import view: UI before file upload", async function (assert) {
         const templateURL = "/myTemplateURL.xlsx";

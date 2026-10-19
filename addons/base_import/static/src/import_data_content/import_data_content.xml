@@ -93,7 +93,7 @@
                                     <p class="m-0 p-2 alert" t-att-class="getCommentClass(column, comment, comment_index)"><t t-out="comment.content" /> <b t-if="comment.fieldName" t-out="comment.fieldName"/></p>
                                 </t>
                                 <ImportDataColumnError t-if="column.errors.length" errors="column.errors" resultNames="column.resultNames" fieldInfo="column.fieldInfo" />
-                                <ImportDataOptions t-if="column.errors.length or column.importOptions" importOptions="column.importOptions" fieldInfo="column.fieldInfo" onOptionChanged="props.onOptionChanged" />
+                                <ImportDataOptions t-if="column.errors.some(error => error.type === 'error') or column.importOptions" importOptions="column.importOptions" fieldInfo="column.fieldInfo" onOptionChanged="props.onOptionChanged" />
                             </td>
                         </tr>
                     </t>
