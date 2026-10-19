@@ -9,7 +9,7 @@ from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import UserError, AccessError, RedirectWarning, ValidationError
 from odoo.service import security
 from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.misc import find_in_path
+from odoo.tools.misc import file_path, find_in_path
 from odoo.tools.lru import LRU
 from odoo.tools import check_barcode_encoding, config, frozendict, is_html_empty, parse_version, split_every
 from odoo.http import request, root
@@ -66,6 +66,18 @@ def _get_wkhtmltopdf_bin():
 
 def _get_wkhtmltoimage_bin():
     return find_in_path('wkhtmltoimage')
+
+
+def _get_wkhtml_fontconfig():
+    fontconfig = Markup(
+        '<?xml version="1.0"?><fontconfig>'
+        '<include ignore_missing="yes">fonts.conf</include><dir>%s</dir>'
+        "<cachedir>%s</cachedir></fontconfig>",
+    ) % (
+        file_path("base/static/fonts/noto_emoji"),
+        os.path.join(config["data_dir"], "fontconfig"),
+    )
+    return fontconfig.encode()
 
 
 def _split_table(tree, max_rows):
@@ -474,6 +486,11 @@ class IrActionsReport(models.Model):
             '--format', image_format,
         ]
         with ExitStack() as stack:
+            fontconfig_file = stack.enter_context(
+                tempfile.NamedTemporaryFile(suffix=".conf", prefix="report_image_fontconfig.tmp."),
+            )
+            fontconfig_file.write(_get_wkhtml_fontconfig())
+            fontconfig_file.flush()
             files = []
             for body in bodies:
                 input_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix='report_image_html_input.tmp.'))
@@ -486,7 +503,16 @@ class IrActionsReport(models.Model):
                 input_file.flush()
                 wkhtmltoimage = [_get_wkhtmltoimage_bin()] + command_args + [input_file.name, output_file.name]
                 # start and block, no need for parallelism for now
-                completed_process = subprocess.run(wkhtmltoimage, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, check=False)
+                completed_process = subprocess.run(
+                    wkhtmltoimage,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.PIPE,
+                    check=False,
+                    env={
+                        "FONTCONFIG_FILE": fontconfig_file.name,
+                        **os.environ,
+                    },
+                )
                 if completed_process.returncode:
                     message = _(
                         'Wkhtmltoimage failed (error code: %(error_code)s). Message: %(error_message_end)s',
@@ -591,13 +617,30 @@ class IrActionsReport(models.Model):
             paths.append(body_file_path)
             temporary_files.append(body_file_path)
 
+        fontconfig_file_fd, fontconfig_file_path = tempfile.mkstemp(
+            suffix=".conf",
+            prefix="report.fontconfig.tmp.",
+        )
+        with closing(os.fdopen(fontconfig_file_fd, "wb")) as fontconfig_file:
+            fontconfig_file.write(_get_wkhtml_fontconfig())
+        temporary_files.append(fontconfig_file_path)
+
         pdf_report_fd, pdf_report_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
         os.close(pdf_report_fd)
         temporary_files.append(pdf_report_path)
 
         try:
             wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
-            process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
+            process = subprocess.Popen(
+                wkhtmltopdf,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                encoding="utf-8",
+                env={
+                    "FONTCONFIG_FILE": fontconfig_file_path,
+                    **os.environ,
+                },
+            )
             _out, err = process.communicate()
 
             if process.returncode not in [0, 1]:
