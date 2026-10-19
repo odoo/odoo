@@ -19,6 +19,7 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { DISCUSS_SIDEBAR_COMPACT_LS } from "@mail/core/public_web/discuss_app_model";
 import {
     CROSS_TAB_CLIENT_MESSAGE,
     CROSS_TAB_HOST_MESSAGE,
@@ -563,6 +564,35 @@ test("show call participants in discuss sidebar", async () => {
             ".o-mail-DiscussSidebarChannel:contains('General') ~ .o-mail-DiscussSidebarCallParticipants:contains(Mitchell Admin)",
         ],
     });
+});
+
+test("Compact sidebar call participants panel closes when the mouse leaves it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+        }),
+        channel_id: channelId,
+    });
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, true);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebar .o-mail-DiscussSidebarCallParticipants");
+    await hover(".o-mail-DiscussSidebar .o-mail-DiscussSidebarCallParticipants");
+    await contains(
+        ".o-mail-DiscussSidebar-floatingMenu .o-mail-DiscussSidebarCallParticipants-name:text('Alice')"
+    );
+    await hover(
+        ".o-mail-DiscussSidebar-floatingMenu .o-mail-DiscussSidebarCallParticipants-name:text('Alice')"
+    );
+    await advanceTime(500);
+    await contains(
+        ".o-mail-DiscussSidebar-floatingMenu .o-mail-DiscussSidebarCallParticipants-name:text('Alice')"
+    );
+    await hover(".o-mail-DiscussContent");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
 });
 
 test("Sort call participants in side bar by name", async () => {
