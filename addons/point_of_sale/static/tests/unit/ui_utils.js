@@ -32,9 +32,19 @@ export async function clickBackButton() {
     await contains(".actionpad .back-button").click();
 }
 
+<<<<<<< 22c48ec4aaa6999dca1df33992a6491f34c18cb3
 export async function selectTicketFilter(filterName) {
     await contains(".ticket-screen .filter").click();
     await animationFrame();
     await contains(`.dropdown-item:contains("${filterName}")`).click();
+||||||| 2186bb544403b943b57402c6013a0e33997d47dc
+export async function clickFastPaymentMethod(name) {
+    await ensurePane("right");
+    await contains(`.fast-pay-button:contains("${name}")`).click();
+=======
+export async function clickFastPaymentMethod(name) {
+    await ensurePane("left");
+    await contains(`.fast-pay-button:contains("${name}")`).click();
+>>>>>>> 800473bee0ded5e2fa6c4ff6e097ece78bafa507
     await animationFrame();
 }
