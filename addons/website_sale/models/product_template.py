@@ -687,8 +687,12 @@ class ProductTemplate(models.Model):
 
         if combination_info['prevent_zero_price_sale']:
             # If price is zero and prevent_zero_price_sale is enabled we don't want to send any
-            # price information regarding the product
-            combination_info['compare_list_price'] = 0
+            # price information regarding the product, including the price before discount
+            combination_info.update({
+                'compare_list_price': 0,
+                'has_discounted_price': False,
+                'list_price': combination_info['price'],
+            })
 
         return combination_info
 
