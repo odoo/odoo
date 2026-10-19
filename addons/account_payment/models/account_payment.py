@@ -203,7 +203,7 @@ class AccountPayment(models.Model):
         if self._context.get('active_model', '') == 'account.move':
             invoice_ids = self._context.get('active_ids', [])
         elif self._context.get('active_model', '') == 'account.move.line':
-            invoice_ids = self.env['account.move'].search([('line_ids', '=', self._context.get('active_ids'))]).ids
+            invoice_ids = self.env['account.move'].search([('line_ids', 'in', self._context.get('active_ids', []))]).ids
         else:
             invoice_ids = []
         return {
