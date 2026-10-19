@@ -77,6 +77,11 @@ export class AccountReviewStateSelectionBadge extends Component {
         return this.props.options[value]?.icon;
     }
 
+    getIconClass(value) {
+        const iconClass = this.props.options[value]?.icon_class;
+        return iconClass ? `oi ${iconClass}` : "oi";
+    }
+
     getDropdownButtonFill(value) {
         return this.props.options[value]?.fill;
     }
