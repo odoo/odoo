@@ -676,6 +676,12 @@ class IrMail_Server(models.Model):
         # alter message
         self._alter_message__(message, smtp_from, smtp_to_list)
 
+        # rfc2047 section 5 - an encoded-word is not allowed in the domain part
+        # of an address, punycode it before the header gets folded
+        for header in ('From', 'To', 'Cc', 'Reply-To'):
+            if (value := message[header]) and not value.isascii():
+                message.replace_header(header, tools.mail.idna_encode_header_domains(value))
+
         # Check if it's still possible to put the bounce address as smtp_from
         if self._match_from_filter(bounce_address, from_filter):
             # Mail headers FROM will be spoofed to be able to receive bounce notifications

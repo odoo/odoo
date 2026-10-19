@@ -1081,6 +1081,27 @@ def formataddr(pair, charset='utf-8'):
             return f'"{name}" <{local}@{domain}>'
     return f"{local}@{domain}"
 
+
+def idna_encode_header_domains(value):
+    """Punycode the domain of every address of an address header value.
+
+    An encoded-word is not allowed in the domain part of an address, so an
+    internationalized domain has to be IDNA-encoded before the header is folded.
+
+    >>> idna_encode_header_domains('test@\xe9\xe9\xe9.com')
+    'test@xn--9caaa.com'
+    """
+    addresses = []
+    for pair in getaddresses([value]):
+        try:
+            addresses.append(formataddr(pair, charset='ascii'))
+        except idna.IDNAError:
+            # as extract_rfc2822_addresses does, a malformed domain must not
+            # make the whole message undeliverable
+            addresses.append(formataddr(pair))
+    return ', '.join(addresses)
+
+
 def encapsulate_email(old_email, new_email):
     """Change the FROM of the message and use the old one as name.
 
