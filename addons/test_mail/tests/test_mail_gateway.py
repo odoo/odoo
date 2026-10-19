@@ -2037,6 +2037,25 @@ class TestMailgateway(MailGatewayCommon):
         self.assertEqual(test_string, record.message_ids.attachment_ids.raw.decode())
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_inline_signature_image(self):
+        """ Inline signature/reply images should be marked on arrival,
+        and excluded from message/thread attachment lists
+        """
+        thread = self.format_and_process(test_mail_data.MAIL_MULTIPART_IMAGE_WITH_SIGNATURE, self.email_from, f'groups@{self.alias_domain}')
+        attachments = self.env['ir.attachment'].search([
+            ('name', 'ilike', 'embedded-attachment-'),
+        ], order='name ASC')
+
+        self.assertFalse(attachments[0].quote_attachment,
+            'embedded-attachment-1-bodyAndSignature is present in the body, it should not be marked as quoted')
+        self.assertFalse(attachments[1].quote_attachment,
+            'embedded-attachment-2-attached was separately attached, it should not be marked as quoted')
+        self.assertTrue(attachments[2].quote_attachment,
+            'embedded-attachment-3-signature is only present in the signature, it should be marked as quoted')
+        self.assertEqual(attachments, thread.message_ids.attachment_ids,
+            'Messages are internally related to their attachments regardless of their quote status')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_route_reply_model_none(self):
         """
         Test the message routing and reply functionality when the model is None.
