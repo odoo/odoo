@@ -79,7 +79,7 @@ class TestProjectUpdateAccessRights(TestProjectCommon):
             self.env['project.update'].with_user(self.env.user).create({
                 'name': 'Test Create with portal user',
                 'project_id': self.project_pigs.id,
-                'state': 'on_track',
+                'status': 'on_track',
             })
 
     @users('Portal user')
