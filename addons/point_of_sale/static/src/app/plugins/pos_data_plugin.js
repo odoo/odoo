@@ -1010,8 +1010,27 @@ export class PosDataPlugin extends Plugin {
                 idsMap[model] = idsMap[model] = new Set([...idsMap[model], ...ids]);
             }
 
+<<<<<<< 873c5755bc9338771732c74e482be7498397eea3:addons/point_of_sale/static/src/app/plugins/pos_data_plugin.js
             const models = this.getRelatedModels(model);
             data.models.push(...models);
+||||||| 2f58164151e658c0b04c1b03da762c7bc6b28afa:addons/point_of_sale/static/src/app/services/data_service.js
+            try {
+                if (["product.product", "product.template"].includes(model)) {
+                    const domain = model === "product.product" ? "product_variant_ids.id" : "id";
+                    await this.loadProductFromPos([[domain, "in", Array.from(ids)]]);
+                    continue;
+                }
+=======
+            try {
+                if (["product.product", "product.template"].includes(model)) {
+                    const domain = model === "product.product" ? "product_variant_ids.id" : "id";
+                    // Records already referenced locally (e.g. by a paid order) may be archived
+                    await this._loadProductFromPos([[domain, "in", Array.from(ids)]], 0, 0, {
+                        load_archived: true,
+                    });
+                    continue;
+                }
+>>>>>>> 7ea8ac3807b4ccbef6e0673da4470728044b528d:addons/point_of_sale/static/src/app/services/data_service.js
 
             const domain = [["id", "in", Array.from(ids)]];
             if (["product.product", "product.template"].includes(model)) {
@@ -1056,6 +1075,7 @@ export class PosDataPlugin extends Plugin {
         return acc;
     }
 
+<<<<<<< 873c5755bc9338771732c74e482be7498397eea3:addons/point_of_sale/static/src/app/plugins/pos_data_plugin.js
     async loadRecordsFromPos(
         models,
         domain = {},
@@ -1095,6 +1115,31 @@ export class PosDataPlugin extends Plugin {
                 context,
             },
             false
+||||||| 2f58164151e658c0b04c1b03da762c7bc6b28afa:addons/point_of_sale/static/src/app/services/data_service.js
+    async loadProductFromPos(domain, offset = 0, limit = 0) {
+        const result = {};
+        const data = await this.call(
+            "product.template",
+            "load_product_from_pos",
+            [odoo.pos_config_id, domain, offset, limit],
+            {
+                context: {
+                    load_archived: true,
+                },
+            }
+=======
+    async loadProductFromPos(domain, offset = 0, limit = 0) {
+        return this._loadProductFromPos(domain, offset, limit, {});
+    }
+
+    async _loadProductFromPos(domain, offset, limit, context) {
+        const result = {};
+        const data = await this.call(
+            "product.template",
+            "load_product_from_pos",
+            [odoo.pos_config_id, domain, offset, limit],
+            { context }
+>>>>>>> 7ea8ac3807b4ccbef6e0673da4470728044b528d:addons/point_of_sale/static/src/app/services/data_service.js
         );
     }
 
