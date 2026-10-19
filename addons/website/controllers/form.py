@@ -14,7 +14,7 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
 from odoo.http import request
 from odoo.tools import plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
-from odoo.tools.misc import hmac, consteq
+from odoo.tools.misc import consteq
 from odoo.tools.translate import _, LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -66,6 +66,10 @@ class WebsiteForm(http.Controller):
                 'error': _("This form cannot be submitted. Please contact the website administrator."),
             })
 
+        expected_signature = self.env['website']._get_website_form_signature(model_record.model, kwargs)
+        if expected_signature is not None and not consteq(kwargs.get('website_form_signature', ''), expected_signature):
+            raise AccessDenied(self.env._('invalid website_form_signature'))
+
         try:
             data = self.extract_data(model_record, kwargs)
         # If we encounter an issue while extracting data
@@ -81,15 +85,6 @@ class WebsiteForm(http.Controller):
                 # for the email queue to process
 
                 if model_name == 'mail.mail':
-                    form_has_email_cc = {'email_cc', 'email_bcc'} & kwargs.keys() or \
-                        'email_cc' in kwargs["website_form_signature"]
-                    # remove the email_cc information from the signature
-                    kwargs["website_form_signature"] = kwargs["website_form_signature"].split(':')[0]
-                    if kwargs.get("email_to") or form_has_email_cc:
-                        value = kwargs.get('email_to', '') + (':email_cc' if form_has_email_cc else '')
-                        hash_value = hmac(model_record.env, 'website_form_signature', value)
-                        if not consteq(kwargs["website_form_signature"], hash_value):
-                            raise AccessDenied(self.env._('invalid website_form_signature'))
                     request.env[model_name].sudo().browse(id_record).send()
 
         # Some fields have additional SQL constraints that we can't check generically
