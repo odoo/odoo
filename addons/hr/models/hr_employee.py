@@ -2025,7 +2025,11 @@ class HrEmployee(models.Model):
         return {emp.id: emp._get_tz(date=date) for emp in self}
 
     def _get_first_contract_version_at(self, date):
-        """Return {employee_id: version} with the lowest-id version in contract at ``date``."""
+        """
+        Return {employee_id: version} with the version in effect at ``date`` among the
+        versions in contract at ``date`` (i.e. the latest one with date_version <= date,
+        or the first one of the contract if none started yet).
+        """
         versions = self.sudo().version_ids.filtered_domain([
             ('contract_date_start', '!=', False),
             ('contract_date_start', '<=', date),
@@ -2034,8 +2038,12 @@ class HrEmployee(models.Model):
                 ('contract_date_end', '>=', date),
         ])
         res = {}
-        for version in versions.sorted('id'):
-            res.setdefault(version.employee_id.id, version)
+        for employee, employee_versions in versions.grouped('employee_id').items():
+            started_versions = employee_versions.filtered(lambda v: v.date_version <= date)
+            if started_versions:
+                res[employee.id] = max(started_versions, key=lambda v: v.date_version)
+            else:
+                res[employee.id] = min(employee_versions, key=lambda v: v.date_version)
         return res
 
     def _get_calendars(self, date_from=None):
