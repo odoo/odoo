@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, new_test_user
@@ -142,3 +144,183 @@ class TestMergePartner(TransactionCase):
         self.assertTrue(self.partner1.exists(), "Destination partner should exist after merge")
         self.assertEqual(self.attachment1.res_id, self.partner1.id, "Attachment should be linked to the destination partner")
         self.assertEqual(self.attachment2.res_id, self.partner1.id, "Attachment should be reassigned to the destination partner")
+
+    def test_merge_recomputes_source_dependents(self):
+        destination, source = self.Partner.create([
+            {'name': 'Destination', 'is_company': True},
+            {'name': 'Source', 'is_company': True},
+        ])
+        existing, transferred = self.Partner.create([
+            {'name': 'Existing', 'parent_id': destination.id, 'active': False},
+            {'name': 'Transferred', 'parent_id': source.id, 'active': False},
+        ])
+        grandchild = self.Partner.create({
+            'name': 'Grandchild', 'parent_id': transferred.id, 'active': False,
+        })
+        self.env.invalidate_all()
+        computed_ids = set()
+        compute = self.registry['res.partner']._compute_complete_name
+
+        def track_compute(partners):
+            computed_ids.update(partners.ids)
+            return compute(partners)
+
+        with patch.object(self.registry['res.partner'], '_compute_complete_name', track_compute):
+            self.env['base.partner.merge.automatic.wizard']._merge(
+                (source + destination).ids, destination,
+            )
+            self.env.flush_all()
+
+        self.assertNotIn(existing.id, computed_ids)
+        self.assertIn(transferred.id, computed_ids)
+        self.assertIn(grandchild.id, computed_ids)
+        self.env.invalidate_all()
+        self.assertEqual(transferred.parent_id, destination)
+        self.assertEqual(transferred.complete_name, 'Destination, Transferred')
+        self.assertEqual(grandchild.complete_name, 'Destination, Grandchild')
+
+    def test_merge_recomputes_changed_destination_dependents(self):
+        destination, source = self.Partner.create([
+            {'name': False, 'is_company': True, 'type': 'delivery'},
+            {'name': 'Source', 'is_company': True},
+        ])
+        child = self.Partner.create({
+            'name': 'Existing', 'parent_id': destination.id, 'active': False,
+        })
+        self.env.invalidate_all()
+        self.env['base.partner.merge.automatic.wizard']._merge(
+            (source + destination).ids, destination,
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+        self.assertEqual(destination.name, 'Source')
+        self.assertEqual(child.complete_name, 'Source, Existing')
+
+    def test_merge_recomputes_copied_company_dependent_value(self):
+        self.addCleanup(self.registry.reset_changes)
+        self.env['ir.model.fields'].create({
+            'name': 'x_merge_company_code',
+            'field_description': 'Company code',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'ttype': 'char',
+            'company_dependent': True,
+        })
+        self.env['ir.model.fields'].create({
+            'name': 'x_merge_code_snapshot',
+            'field_description': 'Company code snapshot',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'ttype': 'char',
+            'store': True,
+            'depends': 'x_merge_company_code',
+            'compute': "for record in self: record['x_merge_code_snapshot'] = record.x_merge_company_code",
+        })
+        other_company = self.env['res.company'].create({'name': 'Other company'})
+        for company in self.env.company + other_company:
+            with self.subTest(company=company.name):
+                partners = self.Partner.with_company(company)
+                destination, source = partners.create([
+                    {'name': 'Destination', 'x_merge_company_code': False},
+                    {'name': 'Source', 'x_merge_company_code': 'SOURCE-CODE'},
+                ])
+                partners.env.flush_all()
+                partners.env.invalidate_all()
+                self.assertFalse(destination.x_merge_code_snapshot)
+                self.env['base.partner.merge.automatic.wizard'].with_company(company)._merge(
+                    (source + destination).ids, destination,
+                )
+                partners.env.flush_all()
+                partners.env.invalidate_all()
+                self.assertEqual(destination.x_merge_company_code, 'SOURCE-CODE')
+                self.assertEqual(destination.x_merge_code_snapshot, 'SOURCE-CODE')
+
+    def test_merge_synchronizes_unchanged_values_to_children(self):
+        destination, source = self.Partner.create([
+            {'name': 'Destination', 'is_company': True, 'vat': 'DEST',
+             'country_id': self.env.ref('base.us').id, 'company_id': self.env.company.id},
+            {'name': 'Source', 'is_company': True, 'vat': 'SOURCE',
+             'country_id': self.env.ref('base.ca').id, 'street': 'Source street',
+             'company_id': False},
+        ])
+        child = self.Partner.create({
+            'name': 'Child', 'parent_id': source.id, 'company_id': False,
+        })
+        self.env['base.partner.merge.automatic.wizard']._merge(
+            (source + destination).ids, destination,
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+        self.assertEqual(destination.street, 'Source street')
+        self.assertEqual(child.parent_id, destination)
+        self.assertEqual(child.company_id, destination.company_id)
+        self.assertEqual(child.country_id, destination.country_id)
+        self.assertEqual(child.vat, destination.vat)
+        self.assertEqual(child.street, destination.street)
+
+    def test_merge_sums_values(self):
+        self.partner1.color = 3
+        self.partner2.color = 5
+        wizard = self.env['base.partner.merge.automatic.wizard']
+        with patch.object(self.registry['base.partner.merge.automatic.wizard'], '_get_summable_fields', return_value=['color']):
+            wizard._merge((self.partner1 + self.partner2).ids, self.partner1)
+        self.assertEqual(self.partner1.color, 8)
+
+    def test_merge_recomputes_related_company(self):
+        company = self.env['res.company'].create({'name': 'Source company'})
+        source = company.partner_id
+        destination = self.Partner.create({'name': 'Destination company', 'is_company': True})
+        self.env['base.partner.merge.automatic.wizard']._merge(
+            (source + destination).ids, destination,
+        )
+        self.env.invalidate_all()
+        self.assertEqual(company.partner_id, destination)
+        self.assertEqual(company.name, destination.name)
+
+    def test_merge_company_dependent_values(self):
+        company = self.env['res.company'].create({'name': 'Other company'})
+        self.partner1.barcode = False
+        self.partner2.barcode = 'Source barcode'
+        self.partner1.with_company(company).barcode = 'Other company barcode'
+        self.partner2.with_company(company).barcode = 'Other source barcode'
+        self.env['base.partner.merge.automatic.wizard']._merge(
+            (self.partner1 + self.partner2).ids, self.partner1,
+        )
+        self.env.invalidate_all()
+        self.assertEqual(self.partner1.barcode, 'Source barcode')
+        self.assertEqual(self.partner1.with_company(company).barcode, 'Other company barcode')
+
+    def test_merge_company_dependent_sums(self):
+        self.addCleanup(self.registry.reset_changes)
+        # Preserve assigned scores on recomputation while exercising the computed,
+        # company-dependent summation branch.
+        self.env['ir.model.fields'].create({
+            'name': 'x_merge_score',
+            'field_description': 'Merge score',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'ttype': 'integer',
+            'company_dependent': True,
+            'store': True,
+            'depends': 'name',
+            'compute': "for record in self: record['x_merge_score'] = record['x_merge_score']",
+        })
+        company = self.env['res.company'].create({'name': 'Other company'})
+        commercial_fields = self.Partner._commercial_fields()
+        wizard = self.env['base.partner.merge.automatic.wizard']
+        for first, second, other_first, other_second in [(2, 5, 3, 7), (2, 0, 3, 0)]:
+            with self.subTest(source_score=second):
+                destination, source = self.Partner.create([
+                    {'name': 'Destination'}, {'name': 'Source'},
+                ])
+                destination.x_merge_score = first
+                source.x_merge_score = second
+                destination.with_company(company).x_merge_score = other_first
+                source.with_company(company).x_merge_score = other_second
+                child = self.Partner.create({'name': 'Child', 'parent_id': source.id})
+                child.x_merge_score = 99
+                child.with_company(company).x_merge_score = 99
+                with patch.object(self.registry['base.partner.merge.automatic.wizard'], '_get_summable_fields', return_value=['x_merge_score']), \
+                     patch.object(self.registry['res.partner'], '_commercial_fields', return_value=commercial_fields + ['x_merge_score']):
+                    wizard._merge((source + destination).ids, destination)
+                self.env.invalidate_all()
+                for partner in destination + child:
+                    self.assertEqual(partner.x_merge_score, first + second)
+                    self.assertEqual(partner.with_company(company).x_merge_score, other_first + other_second)
