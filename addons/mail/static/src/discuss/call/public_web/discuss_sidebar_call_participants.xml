@@ -5,9 +5,9 @@
             <Dropdown t-if="compact" state="floating" position="'right-middle'" manual="true" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary py-0'">
                 <t t-call="mail.DiscussSidebarCallParticipants.main"/>
                 <t t-set-slot="content">
-                    <div t-ref="floating">
+                    <UseHoverOverlay hover="hover">
                         <DiscussSidebarCallParticipants thread="props.thread" compact="false"/>
-                    </div>
+                    </UseHoverOverlay>
                 </t>
             </Dropdown>
             <t t-else="" t-call="mail.DiscussSidebarCallParticipants.main"/>

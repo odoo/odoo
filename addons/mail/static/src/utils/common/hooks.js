@@ -223,7 +223,9 @@ export class UseHoverOverlay extends Component {
         this.root = useRef("root");
         let removeTarget;
         onMounted(() => {
-            removeTarget = this.props.hover.addTarget({ ref: { el: this.root.el } });
+            removeTarget = this.props.hover.addTarget({
+                ref: { el: this.root.el.closest(".o-overlay-item") },
+            });
         });
         onWillUnmount(() => removeTarget?.());
     }
