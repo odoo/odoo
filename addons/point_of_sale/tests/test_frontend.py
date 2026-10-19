@@ -3261,6 +3261,34 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_paid_order_with_archived_product_loads', login="pos_user")
 
+    def test_search_more_skips_archived_variant(self):
+        """ Search more must not load an archived variant matched by its internal reference. """
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'create_variant': 'always',
+            'value_ids': [
+                Command.create({'name': 'S', 'sequence': 1}),
+                Command.create({'name': 'XL', 'sequence': 2}),
+            ],
+        })
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Archived Variant Shirt',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': size_attribute.id,
+                'value_ids': [Command.set(size_attribute.value_ids.ids)],
+            })],
+        })
+        variant_xl = product_tmpl.product_variant_ids.filtered(
+            lambda v: v.product_template_attribute_value_ids.name == 'XL'
+        )
+        variant_xl.write({'default_code': 'SHIRT-XL-ARCHIVED', 'active': False})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_search_more_skips_archived_variant')
+
     def test_delete_line(self):
         """ Test that deleting a line in the POS through the popup works correctly. """
         self.main_pos_config.with_user(self.pos_user).open_ui()
