@@ -314,6 +314,21 @@ class WithContext(HttpCase):
             r = self.url_open(self.page.url)
         self.assertEqual(r.status_code, 404, "Restricted users should see a 404 as the page is unpublished")
 
+    def test_page_cache_host_indexability(self):
+        """Cached HTML must preserve the current host's robots directive."""
+        self.env.ref('website.default_website').domain = 'https://example.com'
+        self.authenticate(None, None)
+
+        for hosts in [('preview.example.com', 'example.com'), ('example.com', 'preview.example.com')]:
+            with self.subTest(hosts=hosts):
+                self.env.registry.clear_cache()
+                # Warm the cache on one host, then visit the same page on the other.
+                for host in hosts:
+                    response = self.url_open(self.page.url, headers={'Host': host})
+                    self.assertEqual(response.status_code, 200)
+                    noindex = html.fromstring(response.content).xpath('//meta[@name="robots"]/@content')
+                    self.assertEqual(noindex, ['noindex'] if host == 'preview.example.com' else [], host)
+
     @mute_logger('odoo.addons.rpc.controllers.xmlrpc')
     def test_search(self):
         dbname = common.get_db_name()
