@@ -1,4 +1,4 @@
-import { useHover } from "@mail/utils/common/hooks";
+import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 import { Component, onMounted, onPatched, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -9,7 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class MessageReactionList extends Component {
     static template = "mail.MessageReactionList";
-    static components = { Dropdown };
+    static components = { Dropdown, UseHoverOverlay };
     static props = ["message", "openReactionMenu", "reaction"];
 
     setup() {
