@@ -20,12 +20,16 @@ class ResPartner(models.Model):
 
     def _l10n_fr_get_siren_from_vat(self):
         self.ensure_one()
+        if not self.l10n_fr_is_french:
+            return False
         vat = (self.vat or '').replace(' ', '')
         match = VAT_SIREN_RE.fullmatch(vat)
         return match and match.group(1)
 
     def _l10n_fr_get_siret_or_siren(self):
         self.ensure_one()
+        if not self.l10n_fr_is_french:
+            return ''
         return self.company_registry if self.company_registry and siren_siret_re.fullmatch(self.company_registry) else ''
 
     def _l10n_fr_get_siren(self):
