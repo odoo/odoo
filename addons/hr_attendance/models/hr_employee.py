@@ -9,7 +9,7 @@ from odoo.tools.intervals import Intervals
 from odoo import SUPERUSER_ID, models, fields, api, exceptions, _
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes
-from odoo.tools.date_utils import sum_intervals
+from odoo.tools.date_utils import sum_intervals, time_to_float
 
 
 class HrEmployee(models.Model):
@@ -280,6 +280,56 @@ class HrEmployee(models.Model):
             "employee_id": self.id,
         }
         self._bus_send("hr.employee/presence", payload)
+
+    def _get_work_entry_type_by_checkin_time(self, check_in):
+        """Return the work entry type for the employee's check-in time.
+
+        Convert the UTC check-in to the employee's timezone and find the attendance
+        intervals scheduled for that date. Return the work entry type of the matching
+        interval, or the closest interval if none matches. Fall back to the company's
+        default attendance work entry type when no schedule or work entry type is found.
+
+        Args:
+            check_in (datetime | str)
+
+        Returns:
+            hr.work.entry.type: The matching, closest, or default work entry type.
+        """
+        self.ensure_one()
+
+        company_work_entry_type = self.company_id.attendance_work_entry_type_id
+        calendar = self.resource_calendar_id
+        if not calendar:
+            return company_work_entry_type
+
+        # Convert check-in to employee's local timezone
+        local_check_in = (
+            (fields.Datetime.to_datetime(check_in) or fields.Datetime.now())
+            .replace(tzinfo=datetime.UTC)
+            .astimezone(ZoneInfo(self._get_tz()))
+        )
+        check_in_hour = time_to_float(local_check_in.time())
+
+        # attendance_ids of check_in day
+        day_attendances = calendar._get_attendances_by_date(local_check_in.date(), local_check_in.date()).get(
+            local_check_in.date(), self.env['resource.calendar.attendance']
+        )
+
+        if not day_attendances:
+            return company_work_entry_type
+
+        # Exact period match, check_in falls within [hour_from, hour_to)
+        matching_attendance = day_attendances.filtered(
+            lambda att: att.hour_from <= check_in_hour and check_in_hour < att.hour_to
+        )
+        if matching_attendance:
+            return matching_attendance[0].work_entry_type_id or company_work_entry_type
+
+        # Single or Multiple worked day exists, take the closest match.
+        return min(
+            day_attendances,
+            key=lambda att: abs(check_in_hour - att.hour_from),
+        ).work_entry_type_id or company_work_entry_type
 
     def _attendance_action_change(self, geo_information=None, check_in_image_data=None):
         """ Check In/Check Out action
