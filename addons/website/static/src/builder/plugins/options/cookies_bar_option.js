@@ -86,7 +86,13 @@ export class SelectLayoutAction extends BuilderAction {
     }
     clean({ editingElement }) {
         // See popup_option.xml > Position option
-        const positionClasses = ["s_popup_top", "s_popup_middle", "s_popup_bottom"];
+        const positionClasses = [
+            "s_popup_top",
+            "s_popup_top_left",
+            "s_popup_middle",
+            "s_popup_bottom",
+            "s_popup_bottom_left",
+        ];
         // See popup_option.xml > Size option
         const sizeClasses = ["modal-sm", "modal-lg", "modal-xl", "s_popup_size_full"];
         editingElement.classList.remove(...positionClasses);
