@@ -68,7 +68,7 @@ test("should make a span inside a monetary field be unremovable (1)", async () =
                 <p>
                     <span data-oe-type="monetary" data-oe-field="list_price" class="o_editable">
                         $&nbsp;
-                        <span class="oe_currency_value" data-oe-zws-empty-inline="">[\u200b]</span>
+                        <span class="oe_currency_value" data-oe-zws-empty-inline="">[]</span>
                     </span>
                 </p>
             `),
@@ -107,7 +107,7 @@ test("should make a span inside a monetary field be unremovable (2)", async () =
         contentAfter: unformat(`
                 <p>
                     <span data-oe-type="monetary" data-oe-field="list_price" class="o_editable">
-                        <span class="oe_currency_value" data-oe-zws-empty-inline="">[\u200b]</span>$&nbsp;
+                        <span class="oe_currency_value" data-oe-zws-empty-inline="">[]</span>$&nbsp;
                     </span>
                 </p>
             `),

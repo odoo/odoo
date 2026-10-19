@@ -456,3 +456,16 @@ describe("table normalization", () => {
         });
     });
 });
+
+describe("empty inline fields", () => {
+    test("should fill empty inline fields on editor setup and clean them on save", async () => {
+        await testEditor({
+            contentBefore:
+                '<p>ab<span class="oe_unremovable" data-oe-field="name"></span>cd<span class="oe_unremovable" data-oe-field="description">ef</span></p>',
+            contentBeforeEdit:
+                '<p>ab<span class="oe_unremovable" data-oe-field="name" data-oe-zws-empty-inline="">\u200B</span>cd<span class="oe_unremovable" data-oe-field="description">ef</span></p>',
+            contentAfter:
+                '<p>ab<span class="oe_unremovable" data-oe-field="name"></span>cd<span class="oe_unremovable" data-oe-field="description">ef</span></p>',
+        });
+    });
+});

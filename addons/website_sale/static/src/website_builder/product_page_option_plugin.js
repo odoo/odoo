@@ -6,6 +6,7 @@ import { isImageCorsProtected } from "@html_editor/utils/image";
 import { TABS } from "@html_editor/main/media/media_dialog/media_dialog";
 import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { withSequence } from "@html_editor/utils/resource";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 class ProductPageOptionPlugin extends Plugin {
@@ -28,7 +29,8 @@ class ProductPageOptionPlugin extends Plugin {
             ProductAddExtraImageAction,
             ProductRemoveAllExtraImagesAction,
         },
-        clean_for_save_handlers: ({ root: el }) => {
+        // Runs before FormatPlugin removes the data-oe-zws-empty-inline it reads.
+        clean_for_save_handlers: withSequence(5, ({ root: el }) => {
             // TODO the content of this clean_for_save_handlers should probably
             // be a generic thing for the whole editor.
 
@@ -67,7 +69,7 @@ class ProductPageOptionPlugin extends Plugin {
                     accordionCollapseEl.classList.remove("show");
                 }
             });
-        },
+        }),
         patch_builder_options: [
             {
                 target_name: 'ProductsRibbonOption',
