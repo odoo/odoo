@@ -31,7 +31,7 @@ export class DiscussSearch extends Component {
                 }
             },
         });
-        this.meetingHover = useHover(["meeting-btn", "meeting-floating"], {
+        this.meetingHover = useHover(["meeting-btn"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.meetingFloating.isOpen = true;
