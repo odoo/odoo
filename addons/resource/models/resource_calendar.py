@@ -89,7 +89,6 @@ class ResourceCalendar(models.Model):
         'resource.calendar',
         string="Reference Calendar",
         index='btree_not_null',
-        default=lambda self: self.env.company.resource_calendar_id,
         check_company=True,
         help="Reference working hours used to compute the full-time equivalent.")
 
