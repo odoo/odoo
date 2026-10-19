@@ -3915,6 +3915,64 @@ Forbidden use of `__comp__` in arch."""
 
         self.assertEqual(p2.get_combined_arch(), '<div><p2/></div>')
 
+    def test_check_skip_not_yet_updated_extensions_of_installing_module(self):
+        """ During the update of a module, an extension view of that same
+        module which has not been reloaded yet must not be combined when
+        another view of its tree is checked: its arch is still the old one.
+        """
+        # P: primary, E: extension
+        #
+        #       P1
+        #      /  \
+        #    E1    E2
+        #
+        # P1 belongs to base, E1 and E2 to the module being updated. The new
+        # version of E1 renames <old/> into <new/>, the new version of E2
+        # (loaded after E1) targets <new/>.
+        p1 = self.View.create({
+            'name': 'test_view_p1',
+            'type': 'qweb',
+            'arch_db': '<div><p1/></div>',
+        })
+        e1 = self.View.create({
+            'name': 'test_view_e1',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<div position="inside"><old/></div>',
+        })
+        e2 = self.View.create({
+            'name': 'test_view_e2',
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'arch_db': '<old position="inside"><e2/></old>',
+        })
+        self.env['ir.model.data'].create([{
+            'module': module,
+            'name': view.name,
+            'model': 'ir.ui.view',
+            'res_id': view.id,
+        } for module, view in [
+            ('base', p1),
+            ('test_being_updated', e1),
+            ('test_being_updated', e2),
+        ]])
+
+        # simulate the registry state while test_being_updated is being updated
+        with (
+            patch.object(self.registry, '_init', True),
+            patch.object(self.registry, '_init_modules', {'base'}),
+            patch.object(self.registry, 'loaded_xmlids', set()),
+        ):
+            # E1 is reloaded first, E2 still has its old arch and must be skipped
+            e1.with_context(install_module='test_being_updated').arch_db = '<div position="inside"><new/></div>'
+            self.registry.loaded_xmlids.add('test_being_updated.test_view_e1')
+
+            # E2 is reloaded afterwards with an arch matching the new E1
+            e2.with_context(install_module='test_being_updated').arch_db = '<new position="inside"><e2/></new>'
+            self.registry.loaded_xmlids.add('test_being_updated.test_view_e2')
+
+        self.assertEqual(p1.get_combined_arch(), '<div><p1/><new><e2/></new></div>')
+
 
 @tagged('post_install', '-at_install')
 class TestDebugger(common.TransactionCase):
