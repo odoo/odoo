@@ -29,7 +29,7 @@ from odoo.http import request, root
 from odoo.tools import config, is_html_empty, parse_version, split_every
 from odoo.tools.barcode import check_barcode_encoding, createBarcodeDrawing, get_barcode_font
 from odoo.tools.lru import LRU
-from odoo.tools.misc import find_in_path, frozendict
+from odoo.tools.misc import file_path, find_in_path, frozendict
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -37,6 +37,13 @@ from odoo.tools.safe_eval import safe_eval, time
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 _logger = logging.getLogger(__name__)
+
+
+def _wkhtml_env():
+    return {
+        "FONTCONFIG_FILE": file_path("base/static/fonts/noto_emoji/odoo_emoji.conf"),
+        **os.environ,
+    }
 
 
 def _run_wkhtmltopdf(args):
@@ -52,6 +59,7 @@ def _run_wkhtmltopdf(args):
         capture_output=True,
         encoding='utf-8',
         check=False,
+        env=_wkhtml_env(),
     )
 
 
@@ -497,7 +505,14 @@ class IrActionsReport(models.Model):
             for (input_path, output_path) in files:
                 wkhtmltoimage = [_wkhtml().wkhtmltoimage_bin, *command_args, input_path, output_path]
                 # start and block, no need for parallelism for now
-                completed_process = subprocess.run(wkhtmltoimage, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, check=False, encoding='utf-8')
+                completed_process = subprocess.run(
+                    wkhtmltoimage,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.PIPE,
+                    check=False,
+                    encoding="utf-8",
+                    env=_wkhtml_env(),
+                )
                 if completed_process.returncode:
                     message = _(
                         'Wkhtmltoimage failed (error code: %(error_code)s). Message: %(error_message_end)s',
