@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
+from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import SQL
@@ -363,6 +364,28 @@ class TestWebsitePriceList(WebsiteSaleCommon):
                 "price_reduce"
             ]
             self.assertEqual(price, 18, msg)
+
+    def test_pricelist_report_cost_based_restricted_to_internal_users(self):
+        """ Portal users can read pricelists but not the product cost, so they must not be able
+        to print a cost-based pricelist.
+        """
+        pricelist = self._create_pricelist(item_ids=[Command.create({
+            'base': 'standard_price',
+            'compute_price': 'formula',
+            'price_markup': 10,
+        })])
+        self.product.standard_price = 100.0
+        data = {
+            'pricelist_id': pricelist.id,
+            'active_model': 'product.product',
+            'active_ids': self.product.ids,
+        }
+        report = self.env['report.product.report_pricelist']
+        with self.assertRaisesRegex(AccessError, "not allowed to access this document"):
+            report.with_user(self._create_new_portal_user()).get_html(data)
+
+        report_data = report.with_user(self._create_new_internal_user())._get_report_data(data)
+        self.assertEqual(report_data['products'][0]['price'][self.product.uom_id.id][1], 110.0)
 
     def test_base_price_with_discount_on_pricelist_tax_included(self):
         """
