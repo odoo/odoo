@@ -21,6 +21,13 @@ from urllib.parse import urlparse, urlsplit
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
+from odoo.addons.website.fonts import (
+    get_font_subset,
+    parse_font_faces,
+    parse_font_preload_exports,
+    pick_font_face,
+    read_font_stylesheet,
+)
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import (
     adapt_dark_palette_content,
@@ -1393,6 +1400,39 @@ class Website(models.CachedModel):
     def _get_font_urls(self):
         """Return the list of font URLs to emit as <link> tags in <head>."""
         return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+
+    @api.ormcache('css_url', cache='assets')
+    def _get_font_faces(self, css_url):
+        """Return the faces (see `fonts.parse_font_faces`) declared by a font
+        stylesheet, either served by Google or stored in an attachment.
+        """
+        try:
+            css = read_font_stylesheet(self.env, css_url)
+        except (RequestException, UnicodeDecodeError) as e:
+            logger.info("Font stylesheet %s could not be read, its fonts are not preloaded: %s", css_url, e)
+            return ()
+        return parse_font_faces(css)
+
+    def _get_font_preloads(self, lang=None):
+        """Return the `(url, mime_type)` of the font files to preload in <head>.
+
+        Only the files needed to render the first paint are preloaded: the
+        font of the body (`font-weight-normal`) and the one of the headings
+        (`headings-font-weight`), in the subset matching the language of the
+        page.
+
+        :param lang: code of the language of the page, defaults to the one of
+            the environment
+        """
+        subset = get_font_subset(lang or self.env.lang)
+        if not subset:
+            return []
+        preloads = []
+        for css_url, weight in parse_font_preload_exports(self._get_scss_exports()):
+            preload = pick_font_face(self._get_font_faces(css_url), subset, weight)
+            if preload and preload not in preloads:
+                preloads.append(preload)
+        return preloads
 
     def _get_icon_font_family(self):
         """Return the icon font the website renders with, empty if the default
