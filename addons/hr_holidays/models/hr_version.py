@@ -144,6 +144,9 @@ class HrVersion(models.Model):
             # the recomputation order is not guaranteed.
             allocations = self.env['hr.leave.allocation'].search([
                 ('employee_id', 'in', self.employee_id.ids),
+                '|',
+                    ('date_to', '=', False),
+                    ('date_to', '>=', min(self.mapped('date_start'))),
             ])
             hour_allocations = allocations.filtered(lambda a: a.type_request_unit == 'hour')
             for allocation in hour_allocations:
