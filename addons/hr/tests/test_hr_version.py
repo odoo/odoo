@@ -945,3 +945,21 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(versions, v1)
         versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '>', '2026-06-01')])
         self.assertEqual(versions, v2)
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '=', '2026-05-31')])
+        self.assertEqual(versions, v1)
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '=', False)])
+        self.assertFalse(versions)
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '!=', False)])
+        self.assertEqual(versions, v1 | v2)
+        employee.contract_date_end = False
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '=', False)])
+        self.assertEqual(versions, v2)
+        versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', 'in', [False, '2026-05-31'])])
+        self.assertEqual(versions, v1 | v2)
+        # Contract templates are not chained together
+        template_1, template_2 = self.env['hr.version'].create([
+            {'name': 'Template 1', 'date_version': '2026-01-01'},
+            {'name': 'Template 2', 'date_version': '2026-02-01'},
+        ])
+        versions = self.env['hr.version'].search([('id', 'in', (template_1 | template_2).ids), ('date_end', '=', False)])
+        self.assertEqual(versions, template_1 | template_2)
