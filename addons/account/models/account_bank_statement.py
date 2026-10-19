@@ -357,27 +357,6 @@ class AccountBankStatement(models.Model):
         res = self.env.cr.fetchall()
         return [r[0] for r in res]
 
-    def action_open_statements_to_review(self):
-        self.ensure_one()
-
-        statement_ids = self.ids
-        if not self.is_valid and (previous_statement := self._get_previous_statement()):
-            statement_line_ids = self.line_ids + previous_statement.line_ids
-            statement_ids += previous_statement.ids
-        else:
-            statement_line_ids = self.line_ids
-
-        return statement_line_ids._get_records_action(
-            name=self.env._("Review Statements"),
-            domain=[],  # We use a filter to allow users to quickly switch back to all statement lines
-            views=[[False, 'kanban'], [False, 'list']],
-            context={
-                **self.env.context,
-                'review_statement_ids': statement_ids,
-                'search_default_statement_to_review': 1,
-            },
-        )
-
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
