@@ -14,7 +14,8 @@ patch(BottomSheet.prototype, {
         if (this.htmlEditorProps.fitOnResize) {
             useViewportChange(() => {
                 if (this.state.isPositionedReady && !this.state.isDismissing) {
-                    this.updateProgressValue(0);
+                    //this.updateProgressValue(0);
+                    this.state.progress = 1;
                 }
             });
         }
