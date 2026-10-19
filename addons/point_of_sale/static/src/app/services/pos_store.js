@@ -871,10 +871,7 @@ export class PosStore extends WithLazyGetterTrap {
             ["product.template"],
             modelDomain,
             modelOffset,
-            modelLimit,
-            {
-                active_test: false,
-            }
+            modelLimit
         );
         this.productAttributesExclusion = this.computeProductAttributesExclusion(
             result["product.template.attribute.value"]
