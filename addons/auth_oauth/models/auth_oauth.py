@@ -12,6 +12,14 @@ class AuthOauthProvider(models.Model):
 
     name = fields.Char(string='Provider name', required=True)  # Name of the OAuth2 entity, Google, etc
     client_id = fields.Char(string='Client ID')  # Our identifier
+    link_existing_users = fields.Boolean(
+        string='Link Existing Users',
+        help=(
+            "Allow this provider to link a first OAuth login to an existing internal user "
+            "with the same login. Enable this only for a trusted provider that verifies "
+            "the user's email address."
+        ),
+    )
     auth_endpoint = fields.Char(string='Authorization URL', required=True)  # OAuth provider URL to authenticate users
     scope = fields.Char(default='openid profile email')  # OAUth user data desired to access
     validation_endpoint = fields.Char(string='UserInfo URL', required=True)  # OAuth provider URL to get user information
