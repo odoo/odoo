@@ -216,6 +216,7 @@ async function parsePreview(opts, overrides = {}) {
         batch: false,
         fields,
         num_rows: totalRows,
+        blank_rows: overrides.blankRows ?? [],
         header_types: false,
         headers: opts.has_headers ? headers : false,
         matches,
@@ -1497,6 +1498,35 @@ describe("Import view", () => {
             message: "A message should indicate the import test was successful",
         });
         expect(executeImportCount).toBe(1, { message: "Execute import should finish in 1 step" });
+    });
+
+    test("batch import does not count the blank rows of the file", async () => {
+        serverState.debug = "1";
+        patchWithCleanup(ImportAction.prototype, {
+            get isBatched() {
+                return true;
+            },
+        });
+
+        await mountWebClient();
+        onRpc("base_import.import", "parse_preview", ({ args }) =>
+            parsePreview(args[1], { rowCount: 6, blankRows: [1, 2, 3] })
+        );
+        onRpc("base_import.import", "execute_import", ({ args }) => {
+            expect.step(`batch from row ${args[3].skip}`);
+            // always another row to go on from: only the number of batches stops the import
+            return { ids: [], messages: [], nextrow: args[3].skip + 1, name: [] };
+        });
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains("input#o_import_batch_limit").edit(1);
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        expect.verifySteps(["batch from row 0", "batch from row 1", "batch from row 2"]);
     });
 
     test("import errors with relational fields", async () => {

@@ -141,12 +141,12 @@ class TestNumberSeparators(common.TransactionCase):
         w = self.env['base_import.import'].create({
             'res_model': 'import.float',
         })
-        data = w._parse_import_data(
+        data, _file_rows = w._parse_import_data(
             [
                 ['1.62'], ['-1.62'], ['+1.62'], ['  +1.62  '], ['(1.62)'],
                 ["1'234'567,89"], ["1.234.567'89"]
             ],
-            ['value'], {}, [],
+            ['value'], {}, list(range(7)), [],
         )
         self.assertEqual(
             [d[0] for d in data],

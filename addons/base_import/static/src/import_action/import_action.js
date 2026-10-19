@@ -42,6 +42,7 @@ export class ImportAction extends Component {
         this.state = proxy({
             filename: undefined,
             numRows: 0,
+            blankRows: [],
             importMessages: [],
             importProgress: {
                 value: 0,
@@ -164,7 +165,9 @@ export class ImportAction extends Component {
     }
 
     get totalToImport() {
-        return this.state.numRows - parseInt(this.importOptions.skip);
+        const skip = parseInt(this.importOptions.skip);
+        const blankRows = this.state.blankRows.filter((row) => row >= skip);
+        return this.state.numRows - skip - blankRows.length;
     }
 
     get totalSteps() {
@@ -182,7 +185,7 @@ export class ImportAction extends Component {
     // Activate the batch configuration panel only if the number of rows > 100. (In order to let the user choose
     // the batch size even for medium size file. Could be useful to reduce the batch size for complex models).
     get isBatched() {
-        return this.state.numRows > 100;
+        return this.state.numRows - this.state.blankRows.length > 100;
     }
 
     async onOptionChanged(name, value) {
@@ -193,6 +196,7 @@ export class ImportAction extends Component {
             const { res, error } = result;
             if (!error && res.num_rows) {
                 this.state.numRows = res.num_rows;
+                this.state.blankRows = res.blank_rows;
                 this.state.previewError = undefined;
             } else {
                 this.state.previewError = error;
@@ -226,6 +230,7 @@ export class ImportAction extends Component {
             this.state.previewError = error;
         } else {
             this.state.numRows = res.num_rows;
+            this.state.blankRows = res.blank_rows;
             this.state.previewError = undefined;
         }
         this.state.isTested = false;

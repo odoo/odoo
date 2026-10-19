@@ -555,7 +555,7 @@ class test_convert_import_data(TransactionCase):
             'file_type': 'text/csv'
 
         })
-        data, fields = import_wizard._convert_import_data(
+        data, fields, _file_rows = import_wizard._convert_import_data(
             ['name', 'somevalue', 'othervalue'],
             {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
@@ -713,11 +713,11 @@ class test_convert_import_data(TransactionCase):
             'float_thousand_separator': '.',
             'has_headers': True
         }
-        data, import_fields = import_wizard._convert_import_data(
+        data, import_fields, file_rows = import_wizard._convert_import_data(
             ['name', 'parent_id/.id', 'parent_id/d', 'parent_id/f'],
             options
         )
-        result = import_wizard._parse_import_data(data, import_fields, options, [])
+        result, _file_rows = import_wizard._parse_import_data(data, import_fields, options, file_rows, [])
         # Check if the data 5,69 as been correctly parsed.
         self.assertEqual(float(result[0][-1]), 5.69)
         self.assertEqual(str(result[0][-2]), '2017-10-12')
@@ -758,7 +758,7 @@ class test_convert_import_data(TransactionCase):
             'file': BinaryBytes(content),
             'file_type': 'text/csv'
         })
-        data, fields = import_wizard._convert_import_data(
+        data, fields, _file_rows = import_wizard._convert_import_data(
             ['name', False, 'othervalue'],
             {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
@@ -785,7 +785,7 @@ class test_convert_import_data(TransactionCase):
             'file': BinaryBytes(content),
             'file_type': 'text/csv'
         })
-        data, fields = import_wizard._convert_import_data(
+        data, fields, _file_rows = import_wizard._convert_import_data(
             ['name', False, 'othervalue'],
             {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
@@ -810,7 +810,7 @@ class test_convert_import_data(TransactionCase):
             'file': BinaryBytes(content),
             'file_type': 'text/csv'
         })
-        data, fields = import_wizard._convert_import_data(
+        data, fields, _file_rows = import_wizard._convert_import_data(
             ['name', 'somevalue'],
             {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
@@ -820,6 +820,23 @@ class test_convert_import_data(TransactionCase):
             ['foo', '1'],
             ['bar', '2'],
         ])
+
+    def test_num_rows_trailing_blank_rows(self):
+        content = (
+            b'name,Some Value\n'
+            b'foo,1\n'
+            b',\n'
+            b'bar,2\n'
+            + b',\n' * 200
+        )
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.preview',
+            'file': BinaryBytes(content),
+            'file_type': 'text/csv'
+        })
+        result = import_wizard.parse_preview({'quoting': '"', 'separator': ',', 'has_headers': True})
+        self.assertEqual(result['num_rows'], 4)
+        self.assertEqual(result['blank_rows'], [2])
 
     def test_nofield(self):
         content = (
@@ -868,7 +885,7 @@ class test_convert_import_data(TransactionCase):
             'file': BinaryBytes(output.getvalue().encode()),
             'file_type': 'text/csv',
         })
-        data, _ = import_wizard._convert_import_data(
+        data, _fields, _file_rows = import_wizard._convert_import_data(
             ['name', 'somevalue'],
             {'quoting': '"', 'separator': ',', 'has_headers': True}
         )
@@ -902,8 +919,8 @@ foo2,Ambiguous\n"""),
                     'separator': ',',
                     'resolutions': {
                         'parent_id': [
-                            {'value': 'Ambiguous', 'rows': [0, 2], 'resolution': {'action': 'set', 'value': ambiguous2.id}},
-                            {'value': 'Unknown Parent', 'rows': [1], 'resolution': {'action': 'empty'}},
+                            {'value': 'Ambiguous', 'rows': [0, 4], 'resolution': {'action': 'set', 'value': ambiguous2.id}},
+                            {'value': 'Unknown Parent', 'rows': [2], 'resolution': {'action': 'empty'}},
                         ],
                     },
                 }
@@ -938,21 +955,21 @@ not a number\n"""),
         results = import_wizard.execute_import(['value'], [], dict(options))
         self.assertEqual(
             [(message['value'], message['rows']) for message in results['messages']],
-            [('not a number', {'from': 1, 'to': 1}), ('not a number', {'from': 3, 'to': 3})],
+            [('not a number', {'from': 2, 'to': 2}), ('not a number', {'from': 6, 'to': 6})],
         )
 
         # the rows are the file's, whichever batch is being imported
         results = import_wizard.execute_import(['value'], [], dict(options, skip=1))
         self.assertEqual(
             [message['rows'] for message in results['messages']],
-            [{'from': 1, 'to': 1}, {'from': 3, 'to': 3}],
+            [{'from': 2, 'to': 2}, {'from': 6, 'to': 6}],
         )
 
         with RecordCapturer(self.env['import.float'], []) as capture:
             results = import_wizard.execute_import(['value'], [], dict(
                 options,
                 resolutions={'value': [
-                    {'value': 'not a number', 'rows': [1, 3], 'resolution': {'action': 'set', 'value': '4.5'}},
+                    {'value': 'not a number', 'rows': [2, 6], 'resolution': {'action': 'set', 'value': '4.5'}},
                 ]},
             ))
 
@@ -980,11 +997,11 @@ foo,def\n"""),
         self.assertItemsEqual(
             [(message['field'], message['value'], message['rows']) for message in results['messages']],
             [
-                ('value', 'foo', {'from': 1, 'to': 1}),
-                ('value', 'foo', {'from': 3, 'to': 3}),
-                ('value', 'bar', {'from': 2, 'to': 2}),
+                ('value', 'foo', {'from': 2, 'to': 2}),
+                ('value', 'foo', {'from': 6, 'to': 6}),
+                ('value', 'bar', {'from': 4, 'to': 4}),
                 ('value2', 'abc', {'from': 0, 'to': 0}),
-                ('value2', 'def', {'from': 3, 'to': 3}),
+                ('value2', 'def', {'from': 6, 'to': 6}),
             ],
         )
 
@@ -1028,15 +1045,15 @@ foo,contact\n
         self.assertEqual(message['message'], "Contacts require a name")
         self.assertEqual((message['field'], message['value']), ('name', ''))
         self.assertNotIn('fields', message)
-        self.assertEqual([message['rows']['from'] for message in results['messages']], [1, 2])
+        self.assertEqual([message['rows']['from'] for message in results['messages']], [2, 4])
 
         # each missing value is given its own
         with RecordCapturer(self.env['res.partner'], []) as capture:
             results = import_wizard.execute_import(['name', 'type'], [], dict(
                 options,
                 resolutions={'name': [
-                    {'value': '', 'rows': [1], 'resolution': {'action': 'set', 'value': 'bar'}},
-                    {'value': '', 'rows': [2], 'resolution': {'action': 'set', 'value': 'baz'}},
+                    {'value': '', 'rows': [2], 'resolution': {'action': 'set', 'value': 'bar'}},
+                    {'value': '', 'rows': [4], 'resolution': {'action': 'set', 'value': 'baz'}},
                 ]},
             ))
 
@@ -1047,12 +1064,77 @@ foo,contact\n
         with RecordCapturer(self.env['res.partner'], []) as capture:
             results = import_wizard.execute_import(['name', 'type'], [], dict(
                 options,
-                skip=2,
-                resolutions={'name': [{'value': '', 'rows': [2], 'resolution': {'action': 'set', 'value': 'qux'}}]},
+                skip=4,
+                resolutions={'name': [{'value': '', 'rows': [4], 'resolution': {'action': 'set', 'value': 'qux'}}]},
             ))
 
         self.assertEqual(results['messages'], [])
         self.assertEqual(capture.records.mapped('name'), ['qux'])
+
+    def test_error_rows_of_the_file(self):
+        """ The rows are those of the file, headers and lines with nothing to
+        import included, both to report errors and to start a batch from. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.preview',
+            'file': BinaryBytes(b"name,somevalue,othervalue\n\nfoo,1,\n,,42\nbar,not an integer,\nbaz,2,\n"),
+            'file_type': 'text/csv'
+        })
+        options = {'quoting': '"', 'separator': ',', 'has_headers': True}
+        import_fields = ['name', 'somevalue', False]
+
+        for skip in (0, 3):
+            with self.subTest(skip=skip), mute_logger('odoo.sql_db'):
+                results = import_wizard.execute_import(import_fields, [], dict(options, skip=skip))
+                # the value is both invalid and missing from a required field
+                self.assertEqual({message['rows']['from'] for message in results['messages']}, {4})
+                self.assertEqual(results['name'][4], 'bar')
+
+        with RecordCapturer(self.env['import.preview'], []) as capture:
+            results = import_wizard.execute_import(['name', 'somevalue', False], [], dict(options, limit=1))
+        self.assertEqual(capture.records.mapped('name'), ['foo'])
+        self.assertEqual(results['nextrow'], 4)
+
+        with RecordCapturer(self.env['import.preview'], []) as capture:
+            results = import_wizard.execute_import(import_fields, [], dict(options, skip=5))
+        self.assertEqual(capture.records.mapped('name'), ['baz'])
+
+    @unittest.skipUnless(can_import('openpyxl'), "openpyxl not available")
+    def test_error_rows_of_a_spreadsheet(self):
+        """ The rows of a spreadsheet count those before its first one holding
+        data too. """
+        import openpyxl  # noqa: PLC0415
+        book = openpyxl.Workbook()
+        sheet = book.active
+        sheet['A3'], sheet['B3'] = 'name', 'somevalue'
+        sheet['A4'], sheet['B4'] = 'foo', '1'
+        sheet['A6'], sheet['B6'] = 'bar', 'not an integer'
+        file = io.BytesIO()
+        book.save(file)
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.preview',
+            'file': BinaryBytes(file.getvalue()),
+            'file_type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+
+        with mute_logger('odoo.sql_db'):
+            results = import_wizard.execute_import(['name', 'somevalue'], [], {'has_headers': True})
+        self.assertEqual({message['rows']['from'] for message in results['messages']}, {5})
+
+    @unittest.skipUnless(can_import('odf'), "ODFPY not available")
+    def test_rows_of_an_ods_sheet(self):
+        """ The rows of an ODS sheet count those it repeats, and the blank ones
+        before its data, but not those ending it. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.preview',
+            'file': self.file_read('test_import_export/data/test_import_ods_rows.ods'),
+            'file_type': 'application/vnd.oasis.opendocument.spreadsheet',
+        })
+
+        result = import_wizard.parse_preview({'has_headers': True})
+        self.assertEqual(result['num_rows'], 5)
+        data, _fields, file_rows = import_wizard._convert_import_data(['name', 'somevalue'], {'has_headers': True})
+        self.assertEqual(data, [['foo', '1'], ['foo', '1'], ['bar', '2']])
+        self.assertEqual(file_rows, [2, 3, 4])
 
     def test_unique_error_corrects_only_its_row(self):
         """ A value only offends as a duplicate of another line's: correcting it
@@ -1070,7 +1152,7 @@ foo,contact\n
             results = import_wizard.execute_import(['value'], [], dict(options))
         self.assertEqual(
             [(message['field'], message['value'], message['unique'], message['rows']) for message in results['messages']],
-            [('value', '123', True, {'from': 1, 'to': 1})],
+            [('value', '123', True, {'from': 2, 'to': 2})],
         )
 
         for correction, expected in (
@@ -1080,7 +1162,7 @@ foo,contact\n
             with self.subTest(correction=correction), RecordCapturer(self.env['export.unique'], []) as capture:
                 results = import_wizard.execute_import(['value'], [], dict(
                     options,
-                    resolutions={'value': [{'value': '123', 'rows': [1], 'resolution': correction}]},
+                    resolutions={'value': [{'value': '123', 'rows': [2], 'resolution': correction}]},
                 ))
                 self.assertEqual(results['messages'], [])
                 self.assertEqual(capture.records.mapped('value'), expected)
@@ -1107,7 +1189,7 @@ foo1,Ambiguous\n"""),
             'separator': ',',
             'resolutions': {
                 'parent_id': [
-                    {'value': 'Ambiguous', 'rows': [1], 'resolution': {'action': 'set', 'value': ambiguous2.id}},
+                    {'value': 'Ambiguous', 'rows': [2], 'resolution': {'action': 'set', 'value': ambiguous2.id}},
                 ],
             },
         })
@@ -1139,7 +1221,7 @@ foo1,"Yet Another Unknown Tag"\n'''),
             [
                 ('Unknown Tag', {'from': 0, 'to': 0}),
                 ('Other Unknown Tag', {'from': 0, 'to': 0}),
-                ('Yet Another Unknown Tag', {'from': 1, 'to': 1}),
+                ('Yet Another Unknown Tag', {'from': 2, 'to': 2}),
             ],
         )
 
@@ -1228,7 +1310,7 @@ foo1,"base.other_missing_tag"\n'''),
                     'resolutions': {
                         'category_id/id': [
                             {'value': 'base.missing_tag', 'rows': [0], 'resolution': {'action': 'empty'}},
-                            {'value': 'base.other_missing_tag', 'rows': [1], 'resolution': {'action': 'set', 'value': picked.id}},
+                            {'value': 'base.other_missing_tag', 'rows': [2], 'resolution': {'action': 'set', 'value': picked.id}},
                         ],
                     },
                 },
@@ -1301,7 +1383,7 @@ foo,"Known Child"\n
         results = import_wizard.execute_import(import_fields, [], dict(options))
         self.assertEqual(
             [(message['value'], message['rows']) for message in results['messages']],
-            [('Other, Unknown Child', {'from': 0, 'to': 1})],
+            [('Other, Unknown Child', {'from': 0, 'to': 2})],
         )
 
         # the value may be on any row of the record
@@ -1309,7 +1391,7 @@ foo,"Known Child"\n
             results = import_wizard.execute_import(import_fields, [], dict(
                 options,
                 resolutions={'child_ids': [
-                    {'value': 'Other, Unknown Child', 'rows': [0, 1], 'resolution': {'action': 'set', 'value': picked.id}},
+                    {'value': 'Other, Unknown Child', 'rows': [0, 1, 2], 'resolution': {'action': 'set', 'value': picked.id}},
                 ]},
             ))
 
@@ -1387,9 +1469,8 @@ foo,"Known Child"\n
         )
 
     def test_record_error_on_reshaped_data(self):
-        """ When parsing reshapes the data, the rows of the errors no longer
-        point at the file's: the error is attached to its column, but with no
-        value, rather than with the value of an unrelated line. """
+        """ Parsing may reshape the data, as long as it reshapes the rows of
+        the file along: the errors still point at the file's rows and values. """
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.partner',
             'file': BinaryBytes(b"""\
@@ -1400,17 +1481,18 @@ foo,contact\n
         Import = self.registry['base_import.import']
         parse_import_data = Import._parse_import_data
 
-        def drop_first_line(self, data, import_fields, options, messages):
-            return parse_import_data(self, data, import_fields, options, messages)[1:]
+        def drop_first_line(self, data, import_fields, options, file_rows, messages):
+            data, file_rows = parse_import_data(self, data, import_fields, options, file_rows, messages)
+            return data[1:], file_rows[1:]
 
         with patch.object(Import, '_parse_import_data', drop_first_line), mute_logger('odoo.sql_db'):
             results = import_wizard.execute_import(
                 ['name', 'type'], [], {'quoting': '"', 'separator': ','})
 
-        self.assertEqual(len(results['messages']), 1)
-        message = results['messages'][0]
-        self.assertEqual(message['field'], 'name')
-        self.assertNotIn('value', message)
+        self.assertEqual(
+            [(message['field'], message['value'], message['rows']) for message in results['messages']],
+            [('name', '', {'from': 2, 'to': 2})],
+        )
 
     def test_multi_mapping(self):
         """ Test meant specifically for the '_handle_multi_mapping' that allows mapping multiple
@@ -1588,7 +1670,7 @@ foo,contact\n
             }
         )
         self.assertFalse(response.get('messages'))
-        self.assertEqual(response['name'], ['foo', '08:10:00 06/01/2020', '01/07/2025', '', '', ''])
+        self.assertEqual(response['name'], ['', 'foo', '08:10:00 06/01/2020', '01/07/2025'])
 
     def test_xlsx_datetime_values_assigned_to_related_char_field(self):
         """Test that importing datetime values to a related char field is converted"""
@@ -1668,7 +1750,7 @@ foo,contact\n
             'file': BinaryBytes(content),
             'file_type': 'text/csv',
         })
-        data, fields = import_wizard._convert_import_data(
+        data, fields, _file_rows = import_wizard._convert_import_data(
             ['.id', 'name', 'name@fr_FR', False, 'normal', 'name@it_IT', 'description', 'description@fr_FR', 'name@fr_FR'],
             {'quoting': '"', 'separator': ',', 'has_headers': True},
         )
@@ -1726,7 +1808,7 @@ foo,contact\n
             'file': BinaryBytes(content),
             'file_type': 'text/csv',
         })
-        data, fields = import_wizard._convert_import_data(
+        data, fields, _file_rows = import_wizard._convert_import_data(
             ['.id', 'name', 'name@fr_FR', 'name'],
             {'quoting': '"', 'separator': ',', 'has_headers': True},
         )
@@ -1923,7 +2005,7 @@ class TestBatching(TransactionCase):
         )
         self.assertFalse(results['messages'])
         self.assertEqual(len(results['ids']), 1, "should have imported the first record in full, got %s" % results['ids'])
-        self.assertEqual(results['nextrow'], 10)
+        self.assertEqual(results['nextrow'], 11)
 
         results = import_wizard.execute_import(
             ['name', 'value/value'], [],
@@ -1931,7 +2013,7 @@ class TestBatching(TransactionCase):
         )
         self.assertFalse(results['messages'])
         self.assertEqual(len(results['ids']), 2, "should have importe the first two records, got %s" % results['ids'])
-        self.assertEqual(results['nextrow'], 20)
+        self.assertEqual(results['nextrow'], 21)
 
     def test_batches(self):
         partners_before = self.env['res.partner'].search([])
@@ -1956,20 +2038,19 @@ g,g@example.com
         results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 1})
         self.assertFalse(results['messages'])
         self.assertEqual(len(results['ids']), 1)
-        # titlerow is ignored by lastrow's counter
-        self.assertEqual(results['nextrow'], 1)
+        # the title row is counted
+        self.assertEqual(results['nextrow'], 2)
         partners_1 = self.env['res.partner'].search([]) - partners_before
         self.assertEqual(partners_1.name, 'a')
 
-        results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 2, 'skip': 1})
+        results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 2, 'skip': 2})
         self.assertFalse(results['messages'])
         self.assertEqual(len(results['ids']), 2)
-        # empty row should also be ignored
-        self.assertEqual(results['nextrow'], 3)
+        self.assertEqual(results['nextrow'], 5)
         partners_2 = self.env['res.partner'].search([]) - (partners_before | partners_1)
         self.assertEqual(partners_2.mapped('name'), ['b', 'c'])
 
-        results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 10, 'skip': 3})
+        results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 10, 'skip': 5})
         self.assertFalse(results['messages'])
         self.assertEqual(len(results['ids']), 4)
         self.assertEqual(results['nextrow'], 0)
@@ -2089,7 +2170,7 @@ class TestUrlImport(TransactionCase):
             results["messages"],
             f"Non-admin user should be able to import images via URL, but got errors: {results['messages']}",
         )
-        self.assertEqual(results['name'], ['Test Partner'])
+        self.assertEqual(results['name'], ['', 'Test Partner'])
 
     def test_import_svg_by_url_mimetype(self):
         """SVG imported via URL: text/plain for non-admin (XSS prevention), image/svg+xml for admin."""
@@ -2125,7 +2206,7 @@ class TestUrlImport(TransactionCase):
                 ])],
             })
             results = _run_import(self.env(user=demo_user))
-            self.assertEqual(results['name'], ['Test Partner'])
+            self.assertEqual(results['name'], ['', 'Test Partner'])
 
             partner = self.env['res.partner'].search([('name', '=', 'Test Partner')], limit=1)
             attachment = self.env['ir.attachment'].search([
