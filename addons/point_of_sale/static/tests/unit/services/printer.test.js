@@ -1,4 +1,5 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, getFixture } from "@odoo/hoot";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 
@@ -46,4 +47,18 @@ test("Preparation ticket: order note behavior and change detection", async () =>
         expect(changes[0].extra_data.internal_note).toBe("Order Internal Note");
         expect(changes[0].changes.title).toBe("NOTE UPDATE");
     }
+});
+
+test("printWeb gives the focus back to the POS window after printing", async () => {
+    const store = await setupPosEnv();
+    const iframe = document.createElement("iframe");
+    getFixture().appendChild(iframe);
+    patchWithCleanup(store.ticketPrinter, {
+        _print() {
+            expect.step(document.activeElement === iframe ? "print from iframe" : "print");
+        },
+    });
+    store.ticketPrinter.printWeb(iframe);
+    expect.verifySteps(["print from iframe"]);
+    expect(document.activeElement).not.toBe(iframe);
 });
