@@ -212,10 +212,14 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                     p['count'] = True
                     continue
 
-                move = session.correction_move_ids
+                # A session has one correction move per bank payment method with a closing difference
+                pm = PosPaymentMethod.browse(p['id'])
+                pm_names = {pm.with_context(lang=lang).name for lang, _name in self.env['res.lang'].get_installed()}
+                move = session.correction_move_ids.filtered(
+                    lambda m: m.journal_id == pm.journal_id and pm_names.intersection(m.line_ids.mapped('name'))
+                )[:1]
 
                 if move:
-                    pm = PosPaymentMethod.browse(p['id'])
                     loss = any(l.account_id == pm.journal_id.loss_account_id for l in move.line_ids)
                     profit = any(l.account_id == pm.journal_id.profit_account_id for l in move.line_ids)
 
