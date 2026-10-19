@@ -138,7 +138,7 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN product_template template ON template.id = product.product_tmpl_id
                 LEFT JOIN uom_uom uom_line ON uom_line.id = line.product_uom_id
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
-                INNER JOIN account_move move ON move.id = line.move_id
+                INNER JOIN account_move move ON move.id = line.move_id AND move.company_id = line.company_id
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
                 JOIN %(currency_table)s ON account_currency_table.company_id = line.company_id
             ''',
