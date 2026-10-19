@@ -21,7 +21,7 @@ class DiscussCallHistory(models.Model):
     has_video = fields.Boolean(compute="_compute_recording_media")
     start_dt = fields.Datetime(string="Start Date", index=True, required=True)
     end_dt = fields.Datetime(string="End Date")
-    start_call_message_id = fields.Many2one("mail.message", index=True)
+    start_call_message_id = fields.Many2one("mail.message")
 
     _channel_id_not_null_constraint = models.Constraint(
         "CHECK (channel_id IS NOT NULL)", "Call history must have a channel"
