@@ -164,6 +164,11 @@ class ResGroups(models.Model):
                     groups=", ".join(repr(g.display_name) for g in disjoint_groups),
                 ))
 
+    @api.constrains('user_ids')
+    def _check_at_least_one_administrator(self):
+        # same check as on res.users, when users are removed from the group side
+        self.env['res.users']._check_at_least_one_administrator()
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_settings_group(self):
         classified = self.env['res.config.settings']._get_classified_fields()
