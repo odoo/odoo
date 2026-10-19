@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, new_test_user
@@ -142,3 +144,80 @@ class TestMergePartner(TransactionCase):
         self.assertTrue(self.partner1.exists(), "Destination partner should exist after merge")
         self.assertEqual(self.attachment1.res_id, self.partner1.id, "Attachment should be linked to the destination partner")
         self.assertEqual(self.attachment2.res_id, self.partner1.id, "Attachment should be reassigned to the destination partner")
+
+    def test_merge_recomputes_source_dependents(self):
+        self.addCleanup(self.registry.reset_changes)
+        self.env['ir.model.fields'].create({
+            'name': 'x_merge_invoice_choice',
+            'field_description': 'Invoice choice',
+            'model_id': self.env.ref('base.model_res_partner').id,
+            'ttype': 'boolean',
+            'store': True,
+            'readonly': False,
+            'depends': 'parent_id.name',
+            'compute': "for record in self: record['x_merge_invoice_choice'] = bool(record.parent_id.name)",
+        })
+        destination, source = self.Partner.create([
+            {'name': 'Destination', 'is_company': True},
+            {'name': 'Source', 'is_company': True},
+        ])
+        existing, transferred = self.Partner.create([
+            {'name': 'Existing', 'parent_id': destination.id, 'active': False},
+            {'name': 'Transferred', 'parent_id': source.id, 'active': False},
+        ])
+        grandchild = self.Partner.create({
+            'name': 'Grandchild', 'parent_id': transferred.id, 'active': False,
+        })
+        (existing + transferred).write({'x_merge_invoice_choice': False})
+        self.env.invalidate_all()
+        computed_ids = set()
+        compute = self.registry['res.partner']._compute_complete_name
+
+        def track_compute(partners):
+            computed_ids.update(partners.ids)
+            return compute(partners)
+
+        with patch.object(self.registry['res.partner'], '_compute_complete_name', track_compute):
+            self.env['base.partner.merge.automatic.wizard']._merge(
+                (source + destination).ids, destination,
+            )
+            self.env.flush_all()
+
+        self.env.invalidate_all()
+        self.assertFalse(existing.x_merge_invoice_choice)
+        self.assertNotIn(existing.id, computed_ids)
+        self.assertIn(transferred.id, computed_ids)
+        self.assertIn(grandchild.id, computed_ids)
+        self.env.invalidate_all()
+        self.assertEqual(transferred.parent_id, destination)
+        self.assertEqual(transferred.complete_name, 'Destination, Transferred')
+        self.assertEqual(grandchild.complete_name, 'Destination, Grandchild')
+        self.assertTrue(transferred.x_merge_invoice_choice)
+
+        destination.name = 'Renamed destination'
+        self.env.flush_all()
+        self.env.invalidate_all()
+        self.assertTrue(existing.x_merge_invoice_choice)
+
+    def test_merge_synchronizes_unchanged_values_to_children(self):
+        destination, source = self.Partner.create([
+            {'name': 'Destination', 'is_company': True, 'vat': 'DEST',
+             'country_id': self.env.ref('base.us').id, 'company_id': self.env.company.id},
+            {'name': 'Source', 'is_company': True, 'vat': 'SOURCE',
+             'country_id': self.env.ref('base.ca').id, 'street': 'Source street',
+             'company_id': False},
+        ])
+        child = self.Partner.create({
+            'name': 'Child', 'parent_id': source.id, 'company_id': False,
+        })
+        self.env['base.partner.merge.automatic.wizard']._merge(
+            (source + destination).ids, destination,
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+        self.assertEqual(destination.street, 'Source street')
+        self.assertEqual(child.parent_id, destination)
+        self.assertEqual(child.company_id, destination.company_id)
+        self.assertEqual(child.country_id, destination.country_id)
+        self.assertEqual(child.vat, destination.vat)
+        self.assertEqual(child.street, destination.street)
