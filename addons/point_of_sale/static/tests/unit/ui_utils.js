@@ -33,7 +33,7 @@ export async function clickBackButton() {
 }
 
 export async function clickFastPaymentMethod(name) {
-    await ensurePane("right");
+    await ensurePane("left");
     await contains(`.fast-pay-button:contains("${name}")`).click();
     await animationFrame();
 }
