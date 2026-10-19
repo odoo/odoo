@@ -332,6 +332,35 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             price = product_template._get_sales_prices(self.website)[product_template.id]['price_reduce']
             self.assertEqual(price, 18, msg)
 
+    def test_prevent_zero_price_sale_hides_price_before_discount(self):
+        """ When a pricelist discounts a product to zero and zero prices are hidden,
+        the catalog price must not be sent either: the product page would still
+        print it as a hidden strikethrough, and it is also used as analytics price. """
+        self.website.prevent_zero_price_sale = True
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Test Product',
+            'list_price': 100.0,
+            'taxes_id': False,
+            'is_published': True,
+        })
+        self.pricelist.write({
+            'item_ids': [Command.create({
+                'compute_price': 'percentage',
+                'percent_price': 100,
+                'product_tmpl_id': product_tmpl.id,
+            })],
+        })
+        with MockRequest(self.env, website=self.website, website_sale_current_pl=self.pricelist.id):
+            combination_info = product_tmpl._get_combination_info()
+            analytics_data = product_tmpl._get_google_analytics_data(
+                product_tmpl.product_variant_id, combination_info,
+            )
+
+        self.assertTrue(combination_info['prevent_zero_price_sale'])
+        self.assertFalse(combination_info['has_discounted_price'])
+        self.assertEqual(combination_info['list_price'], 0)
+        self.assertEqual(analytics_data['price'], 0)
+
     def test_base_price_with_discount_on_pricelist_tax_included(self):
         """
         Tests that the base price of a product with tax included

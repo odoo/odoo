@@ -686,9 +686,21 @@ class ProductTemplate(models.Model):
             })
 
         if combination_info['prevent_zero_price_sale']:
+<<<<<<< 783a20957aa78456cba9d21df2db62efd262bf82
             # If price is zero and prevent_zero_price_sale is enabled we don't want to send any
             # price information regarding the product
             combination_info['compare_list_price'] = 0
+||||||| 4e14c279855336a55b7e64762fc1ce7cb64b6c65
+            combination_info['compare_list_price'] = 0
+=======
+            # If price is zero and prevent_zero_price_sale is enabled we don't want to send any
+            # price information regarding the product, including the price before discount
+            combination_info.update({
+                'compare_list_price': 0,
+                'has_discounted_price': False,
+                'list_price': combination_info['price'],
+            })
+>>>>>>> 1da2b71879edfc5b23c36b456003dcf4ff9f018f
 
         return combination_info
 
