@@ -5,12 +5,14 @@ from contextlib import contextmanager
 from functools import wraps
 from datetime import timedelta
 
+import psycopg2
 from dateutil.parser import parse
 
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.modules.registry import Registry
 from odoo.sql_db import BaseCursor
+from odoo.tools import mute_logger
 
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
@@ -138,6 +140,13 @@ class MicrosoftCalendarSync(models.AbstractModel):
     def _create_from_microsoft(self, microsoft_event, vals_list):
         return self.with_context(dont_notify=True, skip_contact_description=True, microsoft_calendar_from_sync=True).create(vals_list)
 
+    def _is_ms_universal_event_id_conflict(self, error):
+        """ Whether `error` is a concurrent synchronization having taken the Outlook identifier. """
+        return error.diag.constraint_name in (
+            'calendar_event_ms_universal_event_id_uniq',
+            'calendar_recurrence_ms_universal_event_id_uniq',
+        )
+
     def _sync_odoo2microsoft(self):
         if not self:
             return
@@ -211,8 +220,19 @@ class MicrosoftCalendarSync(models.AbstractModel):
                 to_create_values += [dict(value, need_sync_m=False)]
 
             new_calendar_recurrence['calendar_event_ids'] = [(0, 0, to_create_value) for to_create_value in to_create_values]
-            new_recurrence_odoo = self.env['calendar.recurrence'].with_context(dont_notify=True).create(new_calendar_recurrence)
-            new_recurrence_odoo.base_event_id = new_recurrence_odoo.calendar_event_ids[0] if new_recurrence_odoo.calendar_event_ids else False
+            # skip a recurrence that a concurrent synchronization already imported
+            try:
+                with self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
+                    new_recurrence_odoo = self.env['calendar.recurrence'].with_context(dont_notify=True).create(new_calendar_recurrence)
+                    new_recurrence_odoo.base_event_id = new_recurrence_odoo.calendar_event_ids[0] if new_recurrence_odoo.calendar_event_ids else False
+            except psycopg2.errors.UniqueViolation as error:
+                if not self._is_ms_universal_event_id_conflict(error):
+                    raise
+                _logger.info(
+                    "Outlook recurrence %s already imported by a concurrent synchronization, skipping.",
+                    new_calendar_recurrence.get('ms_universal_event_id'),
+                )
+                continue
             new_recurrence |= new_recurrence_odoo
 
         # Outlook can turn an existing single event into a recurring one in place:
