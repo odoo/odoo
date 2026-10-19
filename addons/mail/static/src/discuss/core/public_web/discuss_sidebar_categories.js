@@ -3,7 +3,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
 import { cleanTerm } from "@mail/utils/common/format";
-import { useHover } from "@mail/utils/common/hooks";
+import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 
 import { Component, useState, useSubEnv } from "@odoo/owl";
 
@@ -22,12 +22,12 @@ export const discussSidebarChannelIndicatorsRegistry = registry.category(
 export class DiscussSidebarSubchannel extends Component {
     static template = "mail.DiscussSidebarSubchannel";
     static props = ["thread", "isFirst?"];
-    static components = { Dropdown };
+    static components = { Dropdown, UseHoverOverlay };
 
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.hover = useHover(["root", "floating*"], {
+        this.hover = useHover(["root"], {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
         });
@@ -67,13 +67,20 @@ export class DiscussSidebarSubchannel extends Component {
 export class DiscussSidebarChannel extends Component {
     static template = "mail.DiscussSidebarChannel";
     static props = ["thread"];
-    static components = { CountryFlag, DiscussSidebarSubchannel, Dropdown, ImStatus, ThreadIcon };
+    static components = {
+        CountryFlag,
+        DiscussSidebarSubchannel,
+        Dropdown,
+        ImStatus,
+        ThreadIcon,
+        UseHoverOverlay,
+    };
 
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.dialogService = useService("dialog");
-        this.hover = useHover(["root", "floating*"], {
+        this.hover = useHover(["root"], {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
         });
@@ -205,13 +212,13 @@ export class DiscussSidebarChannel extends Component {
 export class DiscussSidebarCategory extends Component {
     static template = "mail.DiscussSidebarCategory";
     static props = ["category"];
-    static components = { Dropdown };
+    static components = { Dropdown, UseHoverOverlay };
 
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.discusscorePublicWebService = useState(useService("discuss.core.public.web"));
-        this.hover = useHover(["root", "floating*"], {
+        this.hover = useHover(["root"], {
             onHover: () => this.onHover(true),
             onAway: () => this.onHover(false),
         });
@@ -269,6 +276,7 @@ export class DiscussSidebarCategories extends Component {
         DiscussSidebarChannel,
         DiscussSidebarQuickSearchInput,
         Dropdown,
+        UseHoverOverlay,
     };
 
     setup() {
@@ -277,10 +285,11 @@ export class DiscussSidebarCategories extends Component {
         this.discusscorePublicWebService = useState(useService("discuss.core.public.web"));
         this.state = useState({ quickSearchVal: "", floatingQuickSearchOpen: false });
         this.orm = useService("orm");
-        this.quickSearchHover = useHover(["quick-search-btn", "quick-search-floating*"], {
+        this.quickSearchHover = useHover(["quick-search-btn"], {
             onHover: () => (this.quickSearchFloating.isOpen = true),
             onAway: () => {
                 if (!this.quickSearchHover.isHover && !this.state.quickSearchVal.length) {
+                    this.quickSearchFloating.isOpen = false;
                     this.state.floatingQuickSearchOpen = false;
                 }
             },
