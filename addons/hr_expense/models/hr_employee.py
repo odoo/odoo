@@ -25,7 +25,8 @@ class HrEmployee(models.Model):
         compute='_compute_expense_manager', store=True, readonly=False,
         domain=_group_hr_expense_user_domain,
         help='Select the user responsible for approving "Expenses" of this employee.\n'
-             'If empty, the approval is done by an Administrator or Approver (determined in settings/users).',
+             'If empty, the approval is done by the department manager (if they are an expense approver), '
+             "otherwise by the employee's manager. If there is none, the expense is auto-validated.",
     )
 
     filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense', groups="hr.group_hr_user,hr_expense.group_hr_expense_manager")
