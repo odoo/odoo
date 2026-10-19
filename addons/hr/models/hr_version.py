@@ -436,10 +436,12 @@ class HrVersion(models.Model):
         for version in self:
             version.is_in_contract = version._is_in_contract()
 
-    def _is_in_contract(self, date=fields.Date.today()):
-        # Return True if the employee is in contract on a given date
+    def _is_in_contract(self, date=None):
+        # Return True if the employee is in contract on a given date (today by default)
         if not self.contract_date_start:
             return False
+        if date is None:
+            date = fields.Date.context_today(self)
         return self.date_start <= date and (not self.date_end or self.date_end >= date)
 
     def _is_flexible(self):
