@@ -476,6 +476,27 @@ class TestAbsenceDetectionCron(TransactionCase):
         )
 
     @freeze_time('2024-01-02 06:00:00')  # yesterday = 2024-01-01 (Monday)
+    def test_absence_after_contract_end(self):
+        """Employee whose contract ended before yesterday is not targeted by the cron."""
+        undertime_wet = self.env['hr.work.entry.type'].create({
+            'name': 'Undertime', 'code': 'UT_CRON_TEST',
+        })
+        self.env['hr.time.rule'].create({
+            'name': 'Daily Undertime',
+            'threshold_operator': 'less_than',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'work_entry_type_id': undertime_wet.id,
+            'condition_work_entry_type_ids': [(4, self.att_type.id)],
+        })
+        self.absent_employee.contract_date_end = '2023-12-31'
+
+        self.env['hr.attendance']._cron_absence_detection()
+
+        atts = self.env['hr.attendance'].search([('employee_id', '=', self.absent_employee.id)])
+        self.assertFalse(atts, "No technical attendance must be created after the end of the contract")
+
+    @freeze_time('2024-01-02 06:00:00')  # yesterday = 2024-01-01 (Monday)
     def test_checked_in_employee_not_targeted(self):
         """Employee who already checked in yesterday is not touched by the cron."""
         self.env['hr.attendance'].create({

@@ -532,7 +532,10 @@ class HrAttendance(models.Model):
             ('id', 'not in', checked_in_employees.ids),
             ('company_id', 'in', companies.ids),
             ('resource_calendar_id', '!=', False),
-            ('current_version_id.contract_date_start', '<=', fields.Date.today() - relativedelta(days=1))
+            ('current_version_id.contract_date_start', '<=', yesterday.date()),
+            '|',
+                ('current_version_id.contract_date_end', '=', False),
+                ('current_version_id.contract_date_end', '>=', yesterday.date()),
         ])
 
         for emp in absent_employees:
