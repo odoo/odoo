@@ -2216,3 +2216,56 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(sum(move.line_ids.mapped('debit')), sum(move.line_ids.mapped('credit')))
         untaxed_line = move.line_ids.filtered(lambda line: line.display_type == 'product' and not line.tax_ids)
         self.assertEqual(untaxed_line.balance, 4.99)
+
+    def test_bank_payment_method_without_outstanding_account(self):
+        outstanding_receipts = self.env['account.chart.template'].ref('account_journal_payment_debit_account_id')
+        # Created without outstanding account, as from an import or by a user without accounting rights
+        new_bank_pm = self.env['pos.payment.method'].create({
+            'name': 'New Bank',
+            'type': 'bank',
+            'journal_id': self.bank_journal.id,
+        })
+        self.assertEqual(new_bank_pm.outstanding_account_id, outstanding_receipts)
+
+        # With accounting installed, account.payment does not fall back to a default outstanding account
+        self.startPatcher(patch.object(self.env.registry['account.move'], '_get_invoice_in_payment_state', return_value='in_payment'))
+        self.bank_pm.outstanding_account_id = False
+        method_lines = self.bank_journal.inbound_payment_method_line_ids | self.bank_journal.outbound_payment_method_line_ids
+        method_lines.payment_account_id = False
+        session = self.open_pos_session()
+        self.create_pos_order(
+            payment_method=[[self.bank_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+        )
+
+        # No payment without journal entry
+        with self.assertRaisesRegex(UserError, "The payment method Bank has no outstanding account"):
+            self.create_pos_order(
+                payment_method=[[self.bank_pm, {'amount': 10.6}]],
+                products=[[self.product_6, {}]],
+                extra_data={
+                    'partner_id': self.partner_1.id,
+                    'to_invoice': True,
+                },
+            )
+        with self.assertRaisesRegex(UserError, "The payment method Bank has no outstanding account"):
+            self.close_session()
+        self.assertFalse(self.env['account.payment'].search([('pos_session_id', '=', session.id)]))
+
+        # The missing account can be set while the session is open, but not changed afterwards
+        self.bank_pm.outstanding_account_id = outstanding_receipts
+        with self.assertRaisesRegex(UserError, "Please close and validate the following open PoS Sessions"):
+            self.bank_pm.outstanding_account_id = self.bank_outstanding_account
+        self.close_session()
+        payment = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
+        self.assertEqual(payment.outstanding_account_id, outstanding_receipts)
+        self.assertTrue(payment.move_id)
+        self.assertEqual(session.sale_move_ids.amount_residual, 0.0)
+
+        # A copy in another company gets the default of that company
+        company_2_data = self.setup_other_company()
+        company_2_pm = new_bank_pm.copy({
+            'company_id': company_2_data['company'].id,
+            'journal_id': company_2_data['default_journal_bank'].id,
+        })
+        self.assertIn(company_2_data['company'], company_2_pm.outstanding_account_id.company_ids)
