@@ -43,7 +43,9 @@ export class OfflinePlugin extends Plugin {
     static VISITED_UI_TABLE_NAME = "visited-ui-items";
     static VISITED_UI_TABLE_NAME_DEBUG = "visited-ui-items-debug";
     static ORM_SYNC_TABLE_NAME = "orm-to-sync";
+    static OWNER_LOCK_PREFIX = "orm-to-sync-owner-";
     static MANY2X_TABLE_PREFIX = "many2x_";
+    static SYNC_RETRY_DELAY = 10000;
 
     static SELECTORS_TO_DISABLE = ["button:not([data-available-offline]):not([disabled])"];
 
@@ -64,6 +66,7 @@ export class OfflinePlugin extends Plugin {
     );
     _timeout = null; // used to repeatedly ping the server when offline
     _observer = null; // used to detect DOM mutations and disable the UI when offline
+    _syncTimeout = null; // used to sync again the calls left while online
 
     /** whether the connection to the server is currently lost */
     isOffline = signal(false);
@@ -73,6 +76,12 @@ export class OfflinePlugin extends Plugin {
 
     /** orm calls that need to be synced once we go back online */
     _ormToSync = signal.Object({});
+
+    /** owners of scheduled orm calls, by key (see scheduleORM) */
+    _ormOwners = {};
+
+    /** web locks held by this tab for the calls it owns, by key */
+    _ownerLocks = {};
 
     /** items available offline (only populated when offline) */
     _visited = signal.Object({ [IS_READY]: null });
@@ -268,6 +277,19 @@ export class OfflinePlugin extends Plugin {
     // ORM Offline
     // -------------------------------------------------------------------------
 
+    /**
+     * @param {string} model
+     * @param {string} method
+     * @param {any[]} args
+     * @param {Object} kwargs
+     * @param {Object} options
+     * @param {string} [options.id] key of the scheduled call to replace
+     * @param {Object} options.extras
+     * @param {() => Promise<boolean>} [options.owner] function that performs the call
+     *  itself when the connection is back, e.g. a record that is still displayed and
+     *  saves itself. It returns false if it can't, in which case the call is made as
+     *  scheduled. While a tab owns a call, the other tabs don't sync it.
+     */
     scheduleORM(model, method, args, kwargs, options) {
         if (!window.isSecureContext) {
             throw new NonSecureContextError(
@@ -278,11 +300,25 @@ export class OfflinePlugin extends Plugin {
         const key = options.id ?? hashCode(JSON.stringify(value));
         this._ormToSync()[key] = { key, value };
         this._idb.write(OfflinePlugin.ORM_SYNC_TABLE_NAME, key, JSON.stringify(value));
+        if (options.owner) {
+            this.setScheduledORMOwner(key, options.owner);
+        }
         return key;
+    }
+
+    /**
+     * @param {string} key
+     * @param {() => Promise<boolean>} owner see `scheduleORM`
+     */
+    setScheduledORMOwner(key, owner) {
+        this._ormOwners[key] = owner;
+        this._holdOwnerLock(key);
     }
 
     removeScheduledORM(key) {
         delete this._ormToSync()[key];
+        delete this._ormOwners[key];
+        this._releaseOwnerLock(key);
         this._idb.delete(OfflinePlugin.ORM_SYNC_TABLE_NAME, key);
     }
 
@@ -340,6 +376,7 @@ export class OfflinePlugin extends Plugin {
         this._onlineUI();
         this._observer?.disconnect();
         browser.clearTimeout(this._timeout);
+        browser.clearTimeout(this._syncTimeout);
     }
 
     async _decryptAndFormat(offlineRes) {
@@ -443,20 +480,38 @@ export class OfflinePlugin extends Plugin {
         await navigator.locks.request("db-sync", async () => {
             this.syncingORM.set(true);
             await this._updateScheduledORMList();
+            // a lock requested but not granted yet also means that the tab owns the call
+            const { held, pending } = await navigator.locks.query();
+            const heldLocks = new Set([...held, ...pending].map((lock) => lock.name));
 
             for (const [index, { key, value }] of Object.values(this._ormToSync())
                 .filter(({ value }) => !value.extras.error)
                 .sort((s1, s2) => s1.value.extras.timeStamp - s2.value.extras.timeStamp)
                 .entries()) {
+                if (!this._ormOwners[key] && heldLocks.has(OfflinePlugin.OWNER_LOCK_PREFIX + key)) {
+                    continue; // owned by another tab, which syncs it
+                }
                 if (index !== 0) {
                     await new Promise((r) => browser.setTimeout(r, 1000)); // Waits 1 second
                 }
+                if (!(key in this._ormToSync())) {
+                    continue; // already done, e.g. by its owner
+                }
                 try {
+                    if (await this._ormOwners[key]?.()) {
+                        if (this.isOffline()) {
+                            break;
+                        }
+                        continue;
+                    }
                     await this.orm.silent.call(value.model, value.method, value.args, value.kwargs);
                     this.removeScheduledORM(key);
                 } catch (e) {
                     if (e instanceof ConnectionLostError) {
                         break;
+                    }
+                    if (!(key in this._ormToSync())) {
+                        continue; // done meanwhile, e.g. by its owner
                     }
                     let error = e.message || _t("Error");
                     if (e.data) {
@@ -470,6 +525,49 @@ export class OfflinePlugin extends Plugin {
             }
             this.syncingORM.set(false);
         });
+        // Calls can be left while online: kept by their owner (e.g. a record with pending
+        // changes), or owned by another tab, which may be closed meanwhile. Try again later.
+        browser.clearTimeout(this._syncTimeout);
+        const left = Object.values(this._ormToSync()).some(({ value }) => !value.extras.error);
+        if (left && !this.isOffline()) {
+            this._syncTimeout = browser.setTimeout(
+                () => this._syncORM(),
+                OfflinePlugin.SYNC_RETRY_DELAY
+            );
+        }
+    }
+
+    /**
+     * Holds a web lock while this tab owns the scheduled call `key`. The browser
+     * releases it if the tab is closed.
+     *
+     * @param {string} key
+     */
+    _holdOwnerLock(key) {
+        if (key in this._ownerLocks) {
+            return;
+        }
+        const lock = { release: null };
+        this._ownerLocks[key] = lock;
+        navigator.locks.request(
+            OfflinePlugin.OWNER_LOCK_PREFIX + key,
+            () =>
+                new Promise((resolve) => {
+                    lock.release = resolve;
+                    if (this._ownerLocks[key] !== lock) {
+                        resolve(); // released before being granted
+                    }
+                })
+        );
+    }
+
+    /**
+     * @param {string} key
+     */
+    _releaseOwnerLock(key) {
+        const lock = this._ownerLocks[key];
+        delete this._ownerLocks[key];
+        lock?.release?.();
     }
 
     async _updateScheduledORMList() {

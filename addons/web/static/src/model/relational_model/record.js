@@ -2,12 +2,14 @@ import { markRaw, markup, toRaw } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { pick } from "@web/core/utils/objects";
 import { DataPoint } from "./datapoint";
 import { FetchRecordError } from "./errors";
 import { Operation } from "./operation";
 import {
+    composeChanges,
     createPropertyActiveField,
     getBasicEvalContext,
     getFieldContext,
@@ -172,6 +174,14 @@ export class Record extends DataPoint {
 
     get offlineId() {
         return this._offlineId;
+    }
+
+    /**
+     * Whether the record has changes that could only be saved offline, i.e. that
+     * aren't on the server yet.
+     */
+    get isSavedOffline() {
+        return Boolean(this._scheduledChanges);
     }
 
     // -------------------------------------------------------------------------
@@ -396,6 +406,15 @@ export class Record extends DataPoint {
                 this._parseOfflineValues(scheduledORM.value.extras.changes)
             );
             this._offlineTimeStamp = scheduledORM.value.extras.timeStamp;
+            // As when they are reopened online, the changes are left to the record when the
+            // connection is back: it saves them, the scheduled call would do it a second time.
+            this.model.offlinePlugin.setScheduledORMOwner(scheduledORM.key, async () => {
+                if (!this.model.isAlive?.() || (this.config.isRoot && this.model.root !== this)) {
+                    return false;
+                }
+                this._clearOfflineSave();
+                return true;
+            });
             return this.update(this._offlineChanges);
         }
     }
@@ -1248,9 +1267,33 @@ export class Record extends DataPoint {
         if (!this._checkValidity({ displayNotification: true })) {
             return false;
         }
+        // (not when the page is being closed: the urgent save must remain synchronous)
+        if (
+            this._scheduledChanges &&
+            !this.model._urgentSave &&
+            !(await this._isOfflineSaveScheduled())
+        ) {
+            // The changes saved offline have been synced by another tab, or discarded from
+            // the offline systray. Saving them again would apply them twice or apply
+            // discarded changes, and a new record would be created twice.
+            if (creation) {
+                this.model.notification.add(
+                    _t(
+                        "The changes saved offline for this record were already synchronized or discarded. Reload the page to continue."
+                    ),
+                    { type: "warning", sticky: true }
+                );
+                return false;
+            }
+            this._clearOfflineSave();
+        }
         const changes = this._getChanges();
         delete changes.id; // id never changes, and should not be written
-        if (!creation && !Object.keys(changes).length) {
+        if (
+            !creation &&
+            !Object.keys(changes).length &&
+            (!this._scheduledChanges || this.model._urgentSave)
+        ) {
             if (nextId) {
                 return this.model.load({ resId: nextId });
             }
@@ -1271,6 +1314,19 @@ export class Record extends DataPoint {
                 this.model._closeUrgentSaveNotification = this.model.notification.add(
                     _t(
                         `Heads up! Your recent changes cannot be saved automatically while you are offline. Please click the %(uploadIcon)s button now to ensure your work is saved before you exit this tab.`,
+                        { uploadIcon: markup`<i class="oi oi-fw" data-icon="cloud_upload"></i>` }
+                    ),
+                    { sticky: true }
+                );
+                return false;
+            }
+            if (this._scheduledChanges) {
+                // The changes saved offline aren't synchronized yet. A beacon can't remove
+                // their scheduled call, which would then save them a second time (and
+                // create a new record twice).
+                this.model._closeUrgentSaveNotification = this.model.notification.add(
+                    _t(
+                        `Heads up! Your changes saved offline are not synchronized yet. Please click the %(uploadIcon)s button now to ensure your work is saved before you exit this tab.`,
                         { uploadIcon: markup`<i class="oi oi-fw" data-icon="cloud_upload"></i>` }
                     ),
                     { sticky: true }
@@ -1307,7 +1363,11 @@ export class Record extends DataPoint {
             }
             return succeeded;
         }
-        const canProceed = await this.model.hooks.onWillSaveRecord(this, changes);
+        // changes saved offline are not on the server yet, they are saved with the new ones
+        const allChanges = this._scheduledChanges
+            ? composeChanges(this._scheduledChanges, changes, this.fields)
+            : changes;
+        const canProceed = await this.model.hooks.onWillSaveRecord(this, allChanges);
         if (canProceed === false) {
             return false;
         }
@@ -1339,12 +1399,12 @@ export class Record extends DataPoint {
             records = await this.model.orm.webSave(
                 this.resModel,
                 this.resId ? [this.resId] : [],
-                changes,
+                allChanges,
                 kwargs
             );
         } catch (e) {
             if (e instanceof ConnectionLostError) {
-                return this._offlineSave();
+                return this._offlineSave(allChanges);
             }
             if (onError && e instanceof RPCError) {
                 return onError(e, {
@@ -1365,7 +1425,10 @@ export class Record extends DataPoint {
             const resIds = this.resIds.concat([resId]);
             this.model._updateConfig(this.config, { resId, resIds }, { reload: false });
         }
-        await this.model.hooks.onRecordSaved(this, changes);
+        if (this._offlineId) {
+            this._clearOfflineSave();
+        }
+        await this.model.hooks.onRecordSaved(this, allChanges);
         if (reload) {
             if (this.resId) {
                 this.model._updateSimilarRecords(this, records[0]);
@@ -1399,30 +1462,164 @@ export class Record extends DataPoint {
         this.dirty = false;
     }
 
-    _offlineSave() {
-        this._offlineChanges = markRaw({ ...(this._offlineChanges || {}), ...this._changes });
-        const offlineChanges = this._getChanges(this._offlineChanges);
-        delete offlineChanges.id; // id never changes, and should not be written
+    _clearOfflineSave() {
+        this.model.offlinePlugin.removeScheduledORM(this._offlineId);
+        this._offlineId = undefined;
+        this._offlineChanges = undefined;
+        this._offlineTimeStamp = undefined;
+        this._scheduledChanges = undefined;
+    }
 
-        this._offlineTimeStamp = this._offlineTimeStamp || Date.now();
+    /**
+     * @returns {Promise<boolean>} whether the changes saved offline are still to be synced
+     */
+    async _isOfflineSaveScheduled() {
+        const offlinePlugin = this.model.offlinePlugin;
+        // another tab may have synced it: read the shared queue
+        const keys = await offlinePlugin._idb.getAllKeys(OfflinePlugin.ORM_SYNC_TABLE_NAME);
+        if (!keys) {
+            return this._offlineId in offlinePlugin._ormToSync(); // IndexedDB unavailable
+        }
+        return keys.map(String).includes(String(this._offlineId));
+    }
+
+    /**
+     * Saves the changes saved offline, when the connection is back and the record is
+     * still displayed. Unlike the scheduled call, it gets the id of a new record and
+     * the values of the server, such as the ids of the lines created offline. Changes
+     * made since the offline save are kept, but not saved.
+     */
+    async _syncOfflineSave() {
+        if (!this._scheduledChanges) {
+            return true; // saved by the user meanwhile
+        }
+        if (!this.model.isAlive?.()) {
+            return false; // closed meanwhile: the call is made as scheduled
+        }
+        const x2manyTypes = ["one2many", "many2many"];
+        if (Object.keys(this._changes).some((f) => x2manyTypes.includes(this.fields[f].type))) {
+            // Reading the record back would replace its lines, which have pending changes.
+            // The next save of the record will save both, the call stays scheduled.
+            return true;
+        }
+        const creation = !this.resId;
+        const orderBys = {};
+        for (const fieldName of this.fieldNames) {
+            if (x2manyTypes.includes(this.fields[fieldName].type)) {
+                orderBys[fieldName] = this.data[fieldName].orderBy;
+            }
+        }
+        const specification = getFieldsSpec(
+            this.activeFields,
+            this.fields,
+            getBasicEvalContext(this.config),
+            { orderBys }
+        );
+        // unscoped: the call must complete, and the queue be cleaned, even if the view
+        // is closed meanwhile (a scoped call would then never settle)
+        const scheduledChanges = this._scheduledChanges;
+        const records = await this.model.orm.unscoped.webSave(
+            this.resModel,
+            creation ? [] : [this.resId],
+            scheduledChanges,
+            { context: this.context, specification }
+        );
+        this._clearOfflineSave();
+        if (!this.model.isAlive?.()) {
+            return true;
+        }
+        if (creation) {
+            const resId = records[0].id;
+            const resIds = this.resIds.concat([resId]);
+            this.model._updateConfig(this.config, { resId, resIds }, { reload: false });
+        }
+        await this.model.hooks.onRecordSaved(this, scheduledChanges);
+        if (!creation) {
+            this.model._updateSimilarRecords(this, records[0]);
+        }
+        const hasChanges = Object.keys(this._changes).length > 0;
+        this._setData(records[0], { orderBys, keepChanges: true });
+        Object.assign(this._textValues, this._getTextValues(this._changes));
+        this._setEvalContext();
+        this.dirty = hasChanges;
+        if (this.config.isRoot) {
+            this.model.hooks.onRootUpdated(this);
+        }
+        return true;
+    }
+
+    /**
+     * @param {Object} [allChanges] changes to save, including the ones already saved offline
+     */
+    _offlineSave(allChanges) {
+        // The changes are committed below, which clears the x2many commands, so they
+        // can't be computed again from the record at the next offline save: the
+        // changes of each offline save are composed with the ones already scheduled.
+        if (!allChanges) {
+            const changes = this._getChanges();
+            delete changes.id; // id never changes, and should not be written
+            allChanges = this._scheduledChanges
+                ? composeChanges(this._scheduledChanges, changes, this.fields)
+                : changes;
+        }
+        // the record is only changed once the call is scheduled, which can fail (e.g. in a
+        // non-secure context), so that the save can be done again
+        const scheduledChanges = markRaw({ ...allChanges });
+        const offlineChanges = markRaw({ ...this._offlineChanges, ...this._changes });
+        const formattedChanges = this._formatOfflineValues(offlineChanges);
+        for (const fieldName in formattedChanges) {
+            if (formattedChanges[fieldName]?.commands) {
+                formattedChanges[fieldName].commands = scheduledChanges[fieldName] || [];
+            }
+        }
+
+        const timeStamp = this._offlineTimeStamp || Date.now();
         this._offlineId = this.model.offlinePlugin.scheduleORM(
             this.resModel,
             "web_save",
-            [this.resId ? [this.resId] : [], offlineChanges],
+            [this.resId ? [this.resId] : [], scheduledChanges],
             { context: this.context, specification: {} }, //Here for the kwargs we don't need the specification or the next_id
             {
                 id: this._offlineId,
+                // While the record is displayed, it syncs its offline save itself (see
+                // `_syncOfflineSave`). Otherwise, the scheduled call is made as is.
+                owner: async () => {
+                    if (
+                        !this.model.isAlive?.() ||
+                        (this.config.isRoot && this.model.root !== this)
+                    ) {
+                        return false;
+                    }
+                    // If the view is closed while another operation holds the mutex, that
+                    // operation never ends: stop waiting, unless the sync already started.
+                    const closed = new Promise((resolve) =>
+                        this.model.bus.addEventListener("WILL_DESTROY", resolve, { once: true })
+                    );
+                    let started = false;
+                    const sync = (async () => {
+                        await this.model._askChanges(); // changes not yet notified are kept too
+                        return this.model.mutex.exec(() => {
+                            started = true;
+                            return this._syncOfflineSave();
+                        });
+                    })();
+                    await Promise.race([sync, closed]);
+                    return started ? sync : false;
+                },
                 extras: {
                     ...getScheduleORMExtras(this.model, [this]),
-                    changes: this._formatOfflineValues(this._offlineChanges),
+                    changes: formattedChanges,
                     originalValues: this._formatOfflineValues(
-                        pick(this._values, ...Object.keys(this._offlineChanges)),
+                        pick(this._values, ...Object.keys(offlineChanges)),
                         { changes: false }
                     ),
-                    timeStamp: this._offlineTimeStamp,
+                    timeStamp,
                 },
             }
         );
+        this._scheduledChanges = scheduledChanges;
+        this._offlineChanges = offlineChanges;
+        this._offlineTimeStamp = timeStamp;
 
         this._commitSave();
         return true;
