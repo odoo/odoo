@@ -178,7 +178,7 @@ export function addBusServiceListeners(...listeners) {
             if (!bound) {
                 bound = true;
                 for (const [type, handler] of listeners) {
-                    useListener(this.bus, type, handler);
+                    useListener(this, type, handler);
                 }
             }
         },
