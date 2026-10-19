@@ -133,6 +133,13 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
         sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
         self.assertEqual(sending_methods['peppol'], "by Peppol")
 
+    def test_einvoicing_terminology_fields_get_without_selection(self):
+        # Mail tracking calls fields_get without attributes during module installs, when
+        # the res.company columns of the installed module may not exist yet
+        with mock.patch.object(self.registry['res.company'], '_l10n_fr_pdp_uses_french_terminology') as mock_terminology:
+            self.env['res.partner'].fields_get(['invoice_sending_method'], attributes=())
+        mock_terminology.assert_not_called()
+
     def test_validate_partner_be_invalid_format(self):
         partner = self.belgian_partner
         with mock_pdp_peppol_lookup_not_found(['0208:0239843188']):  # not on Peppol
