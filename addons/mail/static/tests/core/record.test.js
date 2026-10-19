@@ -959,6 +959,36 @@ test("immediate onChange runs once the write is applied", async () => {
     expect.verifySteps(["General:3"]);
 });
 
+test("writes of the queues drain do not wake the update observers", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        first = fields.One("Persona", {
+            compute() {
+                return this.members[0];
+            },
+            eager: true,
+        });
+        members = fields.Many("Persona");
+    }).register(localRegistry);
+    (class Persona extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const dispose = immediateEffect(() => {
+        expect.step(`updating:${store._.isUpdateInProgress()}`);
+    });
+    expect.verifySteps(["updating:false"]);
+    store.Thread.insert([
+        { name: "A", members: ["John"] },
+        { name: "B", members: ["John"] },
+        { name: "C", members: ["John"] },
+    ]);
+    expect.verifySteps(["updating:true", "updating:false"]);
+    dispose();
+});
+
 test("an onChange keeps running after its callback writes a dependency", async () => {
     (class Thread extends Record {
         static id = "name";

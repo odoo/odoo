@@ -204,6 +204,7 @@ export class RecordInternal {
     makeComputed(compute, msUntilStale, equals) {
         const record = this.record;
         // the last computed value, answered while a write is being applied
+        // (except for the writes of the queues drain, see `MAKE_UPDATE`)
         let heldValue;
         const { isUpdateInProgress } = record._rawStore._;
         const { isDeleted } = this;
