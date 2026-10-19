@@ -412,6 +412,21 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(employee._get_calendars(date(2020, 3, 15))[employee.id], calendar_full)
         self.assertEqual(employee._get_calendars(date(2020, 7, 15))[employee.id], calendar_half)
 
+    def test_field_block_start_date(self):
+        job_a, job_b = self.env['hr.job'].create([{'name': 'Job A'}, {'name': 'Job B'}])
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'job_id': job_a.id,
+        })
+        v1 = employee.version_id
+        v2 = employee.create_version({'date_version': '2022-01-01'})
+        v3 = employee.create_version({'date_version': '2024-06-01', 'job_id': job_b.id})
+        self.assertEqual(v1._get_field_block_start_date('job_id'), date(2020, 1, 1))
+        self.assertEqual(v2._get_field_block_start_date('job_id'), date(2020, 1, 1))
+        self.assertEqual(v3._get_field_block_start_date('job_id'), date(2024, 6, 1))
+
     def test_cron_update_current_version(self):
         cron = self.env.ref('hr.ir_cron_data_employee_update_current_version')
 
