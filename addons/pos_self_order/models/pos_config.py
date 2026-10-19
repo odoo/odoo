@@ -168,7 +168,11 @@ class PosConfig(models.Model):
     def write(self, vals):
         self._prepare_self_order_splash_screen([vals])
         product_delivery_template = self.env.ref('pos_self_order.product_delivery_template', raise_if_not_found=False)
-        if vals.get('self_ordering_mode') in ('kiosk', 'mobile') and not product_delivery_template.active:
+        if (
+            vals.get('self_ordering_mode') in ('kiosk', 'mobile')
+            and product_delivery_template
+            and not product_delivery_template.active
+        ):
             product_delivery_template.active = True
         for record in self:
             mode = vals.get('self_ordering_mode', record.self_ordering_mode)
