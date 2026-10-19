@@ -62,6 +62,7 @@ class AccountInvoiceReport(models.Model):
             ('account_id', '!=', False),
             ('display_type', '=', 'product'),
         ])
+        query.add_where(SQL("%s = %s", query.table._sudo().move_id.company_id, query.table.company_id))
         return query.subselect(*self._select_list(query.table))
 
     def _select_list(self, table: TableSQL):
