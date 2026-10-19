@@ -13,9 +13,11 @@
         <Dropdown t-if="this.store.discuss.isSidebarCompact" state="this.floating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu px-2 mx-2 my-2 min-w-0 ' + this.store.discussDropdownMenuClass(this)" manual="true">
             <t t-call="mail.Mailbox.main"/>
             <t t-set-slot="content">
-                <div class="overflow-hidden" t-custom-ref="floating">
-                    <span class="text-muted user-select-none" t-out="this.mailbox.display_name"/>
-                </div>
+                <UseHoverOverlay hover="this.hover">
+                    <div class="overflow-hidden">
+                        <span class="text-muted user-select-none" t-out="this.mailbox.display_name"/>
+                    </div>
+                </UseHoverOverlay>
             </t>
         </Dropdown>
         <t t-else="" t-call="mail.Mailbox.main"/>
