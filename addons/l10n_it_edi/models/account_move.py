@@ -1909,7 +1909,54 @@ class AccountMove(models.Model):
 
             for message in message_to_log:
                 self.sudo().message_post(body=message)
-            return self
+
+        self._l10n_it_edi_generate_pdf_attachment()
+        return self
+
+    # TODO: in master, refactor to avoid duplication.
+    def _l10n_it_edi_generate_pdf_attachment(self):
+        """ Attempts to create a PDF attachment when the XML file doesn't provide one. """
+        self.ensure_one()
+        disable_pdf_in_xml = self.env['ir.config_parameter'].sudo().get_bool("l10n_it_edi.disable_pdf_in_xml")
+        if (
+            (self.message_main_attachment_id and 'pdf' in (self.message_main_attachment_id.mimetype or ''))
+            or not self.is_purchase_document()
+            or disable_pdf_in_xml
+        ):
+            return self.env['ir.attachment']
+
+        report_xmlid = 'account_edi_ubl_cii.action_report_account_invoices_generated_by_odoo'
+        if not self.env.ref(report_xmlid, raise_if_not_found=False):
+            _logger.warning("Missing template while generating preview PDF attachment for invoice %s", self.id)
+            return self.env['ir.attachment']
+
+        try:
+            pdf_raw, pdf_extension = (
+                self.env['ir.actions.report']
+                ._render_qweb_pdf(report_xmlid, res_ids=[self.id])
+            )
+
+            if pdf_extension != 'pdf':
+                return self.env['ir.attachment']
+
+            invoice_name = self.display_name.replace(self.env._('Draft'), '').strip()
+            pdf_filename = self.env._(
+                '%(invoice_name)s - Preview',
+                invoice_name=invoice_name or self.name or self.env._('Invoice'),
+            )
+            attachment = self.env['ir.attachment'].create({
+                'name': f"{pdf_filename}.pdf",
+                'res_id': self.id,
+                'res_model': 'account.move',
+                'raw': pdf_raw,
+                'type': 'binary',
+                'mimetype': 'application/pdf',
+            })
+            self._message_set_main_attachment_id(attachment, force=True, filter_xml=False)
+            return attachment
+        except Exception:  # noqa: BLE001
+            _logger.exception("Error while generating preview PDF attachment for invoice %s", self.id)
+            return self.env['ir.attachment']
 
     @api.model
     def _is_prediction_enabled(self):

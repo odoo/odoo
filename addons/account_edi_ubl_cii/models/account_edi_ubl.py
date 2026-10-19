@@ -3096,6 +3096,7 @@ class AccountEdiUBL(models.AbstractModel):
                 }),
             ]
 
+    # TODO: in master, refactor to avoid duplication.
     def _import_attachments(self, invoice, tree):
         """ EXTENDS 'account_edi_common': ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
         IrConfigParam = self.env['ir.config_parameter'].sudo()
