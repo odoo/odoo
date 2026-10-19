@@ -191,7 +191,11 @@ export class FormatPlugin extends Plugin {
         before_insert_processors: this.unwrapEmptyFormat.bind(this),
 
         /** Processors */
-        clean_for_save_processors: this.cleanForSave.bind(this),
+        clean_for_save_processors: [
+            this.cleanForSave.bind(this),
+            // Runs last, so the other processors can still read data-oe-zws-empty-inline.
+            withSequence(Infinity, this.removeEmptyInlineZWS.bind(this)),
+        ],
         normalize_processors: this.normalize.bind(this),
 
         /** Predicates */
@@ -201,6 +205,24 @@ export class FormatPlugin extends Plugin {
             }
         },
     };
+
+    setup() {
+        // Give the elements saved empty with data-oe-zws-empty-inline, and the
+        // empty inline fields, a ZWS so the cursor can go in. Done in setup so
+        // it happens before contenteditable is set and is not recorded in the
+        // history.
+        for (const element of selectElements(
+            this.editable,
+            "[data-oe-zws-empty-inline]:empty, [data-oe-field]"
+        )) {
+            if (element.hasAttribute("data-oe-zws-empty-inline")) {
+                // fillEmpty skips elements that already have the attribute.
+                element.append(this.document.createTextNode("\u200B"));
+            } else if (!isVisible(element) && !isBlock(element)) {
+                fillEmpty(element);
+            }
+        }
+    }
 
     /**
      * @param {string[]} formats
@@ -588,6 +610,17 @@ export class FormatPlugin extends Plugin {
             }
         }
         this.mergeAdjacentInlines(root, { preserveSelection });
+    }
+
+    removeEmptyInlineZWS(root, { preserveSelection = false } = {}) {
+        // The ZWS is only needed while editing, so don't save it. Elements
+        // other than fields keep the attribute so the ZWS is put back on load.
+        for (const element of selectElements(root, "[data-oe-zws-empty-inline]")) {
+            if (element.hasAttribute("data-oe-field")) {
+                delete element.dataset.oeZwsEmptyInline;
+            }
+            this.cleanZWS(element, { preserveSelection });
+        }
     }
 
     removeEmptyInlineElement(selectionData) {

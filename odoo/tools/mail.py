@@ -80,6 +80,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-heading-link-id',
      'data-mimetype-before-conversion',
      'data-language-id',
+     'data-oe-zws-empty-inline',
      'data-bs-toggle',  # support nav-tabs
      ])
 
