@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+import psycopg2
 from dateutil.parser import parse
 from markupsafe import Markup
 from requests import HTTPError
@@ -12,7 +13,7 @@ from odoo.addons.google_calendar.utils.google_calendar_service import GoogleCale
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
-from odoo.tools import email_normalize
+from odoo.tools import email_normalize, mute_logger
 
 
 _logger = logging.getLogger(__name__)
@@ -211,8 +212,9 @@ class GoogleEventSync(models.AbstractModel):
             dict(self._odoo_values(e, calendar, default_reminders), need_sync=False)
             for e in new
         ]
-        new_odoo = self.with_context(dont_notify=True, skip_contact_description=True)._create_from_google(new, calendar,
-                                                                                                          odoo_values)
+        new_odoo = self.with_context(
+            dont_notify=True, skip_contact_description=True
+        )._create_from_google_skipping_duplicates(new, calendar, odoo_values)
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
 
@@ -439,6 +441,40 @@ class GoogleEventSync(models.AbstractModel):
     @api.model
     def _create_from_google(self, gevents, calendar, vals_list):
         return self.with_context(google_calendar_from_sync=True).create(vals_list)
+
+    def _is_google_id_conflict(self, error):
+        """ Whether `error` is a concurrent synchronization having taken the Google id. """
+        return error.diag.constraint_name in (
+            'calendar_event_google_id_uniq',
+            'calendar_recurrence_google_id_uniq',
+        )
+
+    @api.model
+    def _create_from_google_skipping_duplicates(self, gevents, calendar, vals_list):
+        """ Create the events, skipping the ones a concurrent synchronization already imported. """
+        try:
+            with self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
+                return self._create_from_google(gevents, calendar, vals_list)
+        except psycopg2.errors.UniqueViolation as error:
+            if not self._is_google_id_conflict(error):
+                raise
+
+        # Create the events one at a time to skip the conflicting ones
+        created = self.browse()
+        for gevent, vals in zip(gevents, vals_list):
+            try:
+                with self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
+                    record = self._create_from_google(gevent, calendar, [vals])
+            except psycopg2.errors.UniqueViolation as error:
+                if not self._is_google_id_conflict(error):
+                    raise
+                _logger.info(
+                    "Google event or recurrence %s already imported by a concurrent synchronization, skipping.",
+                    vals.get('google_id'),
+                )
+                continue
+            created |= record
+        return created
 
     @api.model
     def _get_sync_partner(self, emails):
