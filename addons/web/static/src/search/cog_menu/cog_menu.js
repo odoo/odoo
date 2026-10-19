@@ -1,8 +1,10 @@
-import { asyncComputed, onWillStart, t, useScope } from "@odoo/owl";
+import { computed, t, usePlugin, useScope } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
+import { zip } from "@web/core/utils/arrays";
+import { useAsyncComputed } from "@web/core/utils/hooks";
 import { ActionMenus, actionMenusProps } from "@web/search/action_menus/action_menus";
 
 const cogMenuRegistry = registry.category("cogMenu");
@@ -10,8 +12,10 @@ const cogMenuRegistry = registry.category("cogMenu");
 export const cogMenuProps = {
     ...actionMenusProps,
     getActiveIds: t.function().optional(),
+    hasSelectedRecords: t.number().optional(),
     context: t.object().optional(),
     resModel: t.string().optional(),
+    slots: t.object().optional(),
     items: t
         .object({
             action: t.array().optional(),
@@ -41,29 +45,32 @@ export class CogMenu extends ActionMenus {
     static actionMenusProps = cogMenuProps;
 
     scope = useScope();
+    uiService = usePlugin(UIPlugin);
 
-    setup() {
-        super.setup();
-        this.uiService = useService("ui");
-        this.registryItems = asyncComputed(async () => this._registryItems(), { initial: [] });
-        onWillStart(() => this.registryItems.currentPromise());
-    }
+    cogItems = computed(() =>
+        this.registryItems()
+            .concat(this.actionItems())
+            .sort((item1, item2) => (item1.groupNumber || 0) - (item2.groupNumber || 0))
+    );
+    registryItems = useAsyncComputed(
+        async () => (this.props.hasSelectedRecords ? [] : this.getRegistryItems()),
+        { initial: [] }
+    );
 
     get hasItems() {
-        return this.cogItems.length || this.props.items.print?.length;
+        return this.cogItems().length || this.props.items.print?.length;
     }
 
-    async _registryItems() {
+    async getRegistryItems() {
         const registryItems = cogMenuRegistry.getAll();
         const areDisplayed = await Promise.all(
-            registryItems.map((item) =>
-                "isDisplayed" in item ? this.scope.run(() => item.isDisplayed()) : true
+            registryItems.map(
+                (item) => !("isDisplayed" in item) || this.scope.run(item.isDisplayed)
             )
         );
         const items = [];
-        for (let i = 0; i < registryItems.length; i++) {
-            if (areDisplayed[i]) {
-                const item = registryItems[i];
+        for (const [item, isDisplayed] of zip(registryItems, areDisplayed)) {
+            if (isDisplayed) {
                 items.push({
                     Component: item.Component,
                     groupNumber: item.groupNumber,
@@ -74,14 +81,8 @@ export class CogMenu extends ActionMenus {
         return items;
     }
 
-    get cogItems() {
-        return [...this.registryItems(), ...this.actionItems()].sort(
-            (item1, item2) => (item1.groupNumber || 0) - (item2.groupNumber || 0)
-        );
-    }
-
     hasGroupIcons(groupNumber) {
-        return this.cogItems.some((item) => item.groupNumber === groupNumber && item.icon);
+        return this.cogItems().some((item) => item.groupNumber === groupNumber && item.icon);
     }
 
     getPrintItemAriaLabel(item) {

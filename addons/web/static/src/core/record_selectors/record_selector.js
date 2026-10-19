@@ -1,8 +1,9 @@
-import { render } from "@web/owl2/utils";
-import { asyncComputed, Component, onWillStart, t, useProps } from "@odoo/owl";
+import { Component, t, usePlugin, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { isId } from "@web/core/tree_editor/utils";
-import { useService } from "@web/core/utils/hooks";
+import { useAsyncComputed } from "@web/core/utils/hooks";
+import { render } from "@web/owl2/utils";
+import { NamePlugin } from "../name_plugin";
 import { RecordAutocomplete } from "./record_autocomplete";
 
 export const recordSelectorProps = {
@@ -20,22 +21,19 @@ export const recordSelectorProps = {
 };
 
 export class RecordSelector extends Component {
-    props = useProps(recordSelectorProps);
     static components = { RecordAutocomplete };
     static template = "web.RecordSelector";
 
-    setup() {
-        this.nameService = useService("name");
-        this.displayName = asyncComputed(
-            async () => {
-                const props = { ...this.props };
-                const displayNames = await this.getDisplayNames(props);
-                return this.getDisplayName(props, displayNames);
-            },
-            { initial: "" }
-        );
-        onWillStart(() => this.displayName.currentPromise());
-    }
+    props = useProps(recordSelectorProps);
+    nameService = usePlugin(NamePlugin);
+    displayName = useAsyncComputed(
+        async () => {
+            const props = { ...this.props };
+            const displayNames = await this.getDisplayNames(props);
+            return this.getDisplayName(props, displayNames);
+        },
+        { initial: "" }
+    );
 
     get isAvatarModel() {
         // bof

@@ -7,6 +7,7 @@ import { omit } from "@web/core/utils/objects";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
@@ -20,7 +21,6 @@ import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { KanbanCogMenu } from "./kanban_cog_menu";
 import { KanbanRenderer } from "./kanban_renderer";
 import { ProgressBarState, useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
@@ -54,7 +54,7 @@ export class KanbanController extends Component {
         MultiRecordViewButton,
         OfflineSearchBar,
         SearchBar,
-        CogMenu: KanbanCogMenu,
+        CogMenu,
         SelectionBox,
     };
     static ProgressBarStateClass = ProgressBarState;

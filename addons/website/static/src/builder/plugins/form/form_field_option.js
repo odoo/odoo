@@ -1,8 +1,9 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { asyncComputed, computed, onWillStart, t, useProps } from "@odoo/owl";
+import { computed, t, useProps } from "@odoo/owl";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { useAsyncComputed } from "@web/core/utils/hooks";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import {
     getCurrentFieldInputEl,
@@ -132,7 +133,7 @@ export class FormFieldOption extends BaseOptionComponent {
             return { value: getFieldName(el) === "state_id" && hasCountryField };
         });
 
-        this.fieldOptionData = asyncComputed(
+        this.fieldOptionData = useAsyncComputed(
             async () => {
                 this.props.redrawSequence;
                 const { loadFieldOptionData } = this.dependencies.websiteFormOption;
@@ -157,8 +158,6 @@ export class FormFieldOption extends BaseOptionComponent {
                 },
             }
         );
-
-        onWillStart(() => this.fieldOptionData.currentPromise());
         // TODO select field's hack ?
     }
     get canHaveTextValidationCondition() {

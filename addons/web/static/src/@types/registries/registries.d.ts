@@ -15,7 +15,7 @@ declare module "registries" {
     export interface CogMenuRegistryItemShape {
         Component: typeof Component;
         groupNumber: number;
-        isDisplayed?: () => boolean;
+        isDisplayed?: () => boolean | Promise<boolean>;
     }
 
     export type DialogsRegistryItemShape = typeof Component;

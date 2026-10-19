@@ -1,8 +1,8 @@
 import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
-import { useService } from "@web/core/utils/hooks";
-import { asyncComputed, computed, onWillStart } from "@odoo/owl";
+import { useAsyncComputed, useService } from "@web/core/utils/hooks";
+import { computed } from "@odoo/owl";
 
 export class TimeOffCalendarSidePanel extends CalendarSidePanel {
     static components = {
@@ -35,18 +35,14 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
 
         this.currentDateTime = luxon.DateTime.now();
 
-        this.specialDays = asyncComputed(() => this.getSpecialDays());
-        this.holidays = asyncComputed(() => this.getHolidayData(), { initial: [] });
+        this.specialDays = useAsyncComputed(() => this.getSpecialDays());
+        this.holidays = useAsyncComputed(() => this.getHolidayData(), { initial: [] });
         this.bankHolidays = computed(() =>
             this._mapIsoToDatetimes(this.specialDays().bankHolidays || [])
         );
         this.mandatoryDays = computed(() =>
             this._mapIsoToDatetimes(this.specialDays().mandatoryDays || [])
         );
-
-        onWillStart(async () => {
-            await Promise.all([this.specialDays.currentPromise(), this.holidays.currentPromise()]);
-        });
     }
 
     _mapIsoToDatetimes(days) {
