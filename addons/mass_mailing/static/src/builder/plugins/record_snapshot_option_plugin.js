@@ -50,7 +50,7 @@ export class RecordSnapshotOption extends BaseOptionComponent {
         const model = this.env.getEditingElement().dataset.model;
         const snippetInfo = registry
             .category("mass_mailing.record-snapshot-snippet-info")
-            .get(model);
+            .get(model, {});
         return snippetInfo?.modelDisplayName || _t("Record");
     }
 

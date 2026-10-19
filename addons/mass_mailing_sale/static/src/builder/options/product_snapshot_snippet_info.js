@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { formatMonetary } from "@web/views/fields/formatters";
 
 export const productSnapshotSnippetInfo = {
-    fields: ["id", "display_name", "name", "description_sale", "list_price", "currency_id"],
+    fields: ["id", "display_name", "name", "description_sale", "lst_price", "currency_id"],
     get modelDisplayName() {
         return _t("Product");
     },
@@ -18,14 +18,14 @@ export const productSnapshotSnippetInfo = {
         }
     },
     additionalRenderingContext: async (record) => ({
-        listPrice: formatMonetary(record.list_price, {
+        lstPrice: formatMonetary(record.lst_price, {
             currencyId: record.currency_id[0],
             trailingZeros: false,
         }),
-        coverUrl: `/web/image/product.template/${record.id}/image_1024`,
+        coverUrl: `/web/image/product.product/${record.id}/image_1024`,
     }),
 };
 
 registry
     .category("mass_mailing.record-snapshot-snippet-info")
-    .add("product.template", productSnapshotSnippetInfo);
+    .add("product.product", productSnapshotSnippetInfo);
