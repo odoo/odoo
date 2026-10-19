@@ -22,6 +22,7 @@
 /* ===  Theme rules that can't be expressed with the utility classes === */
 
 .o_calendar_event {
+    position: relative;
     margin: 0 2px 1px;
     border: var(--border-width) solid var(--o-calendar-event-border-color, var(--fc-event-color, var(--o-view-background-color)));
     border-radius: var(--border-radius-sm);
@@ -313,7 +314,11 @@
             padding: var(--o-bs-spacer-1);
         }
     }
+}
 
+.o_calendar_fc_view_dayGridMonth,
+.o_calendar_fc_view_multiMonthYear,
+.o_calendar_event_dragging.dayGridMonth {
     .o_calendar_event_main:not(.o_homework_single):not(.o_homework_multi) {
         line-height: 100%;
     }
