@@ -22,10 +22,12 @@ class MergePartnerAutomatic(models.TransientModel):
 
         # Case 2: there is a visitor only for src_partners.
         # Need to fix the "de-sync" values between `access_token` and
-        # `partner_id`.
+        # `partner_id`. Visitors keeping a hexadecimal (32 chars) access token
+        # are not linked through it and are left untouched.
         self.env.cr.execute("""
             UPDATE website_visitor
                SET access_token = partner_id
-             WHERE partner_id::int != access_token::int
-               AND partner_id = %s;
+             WHERE partner_id = %s
+               AND length(access_token) != 32
+               AND access_token != partner_id::text;
         """, (dst_partner.id,))
