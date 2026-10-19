@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { isBlock } from "@html_editor/utils/blocks";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { removeClass } from "@html_editor/utils/dom";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
@@ -47,6 +48,13 @@ export class LinkSelectionPlugin extends Plugin {
 
         /** Providers */
         feff_providers: this.addFeffsToLinks.bind(this),
+
+        /** Properties */
+        properties: {
+            predicate: (link) =>
+                selectElements(link, "*").some((el) => el.nodeName === "IMG" || isBlock(el)),
+            feff: false,
+        },
 
         system_classes: ["o_link_in_selection"],
     };
