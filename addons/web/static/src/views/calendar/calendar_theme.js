@@ -26,7 +26,7 @@ export const odooCalendarTheme = {
 
         /* Events */
 
-        eventClass: "o_calendar_event position-relative overflow-hidden cursor-pointer smaller",
+        eventClass: "o_calendar_event overflow-hidden cursor-pointer smaller",
         eventInnerClass: "o_calendar_event_main",
         rowEventClass: "o_calendar_row_event",
         columnEventClass: "o_calendar_column_event",
