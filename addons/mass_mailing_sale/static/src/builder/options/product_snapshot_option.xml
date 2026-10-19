@@ -1,0 +1,20 @@
+<templates>
+    <t t-inherit="mass_mailing.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//record_snapshot_option" position="after">
+            <product_snapshot_option selector=".s_record_snapshot:has(.s_product_snapshot_price)"/>
+        </xpath>
+    </t>
+    <t t-name="mass_mailing_sale.productSnapshotOption">
+        <BuilderRow t-if="this.state.isPricelistAvailable" label.translate="Pricelist">
+            <BuilderMany2One
+                action="'selectPricelistAction'"
+                model="'product.pricelist'"
+                fields="['name', 'display_name']"
+                preview="true"
+                allowUnselect="true"
+                actionParam="{
+                    model: 'product.pricelist',
+                }"/>
+        </BuilderRow>
+    </t>
+</templates>
