@@ -2,12 +2,10 @@
 
 
 from odoo.addons.website_mass_mailing.controllers.main import MassMailController
-from odoo.addons.website_sale.controllers.main import (
-    WebsiteSale as WebsiteSaleController,
-)
+from odoo.addons.website_sale.controllers.checkout.address import Address
 
 
-class WebsiteSale(WebsiteSaleController):
+class WebsiteSale(Address):
 
     def _handle_extra_form_data(self, extra_form_data, address_values):
         super()._handle_extra_form_data(extra_form_data, address_values)
