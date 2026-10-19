@@ -38,11 +38,14 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
-        urls['peppol'] = {
-            'prod': 'https://peppol.api.odoo.com',
-            'test': 'https://peppol.test.odoo.com',
-            'demo': 'demo',
-        }
+        if proxy_url := self.env['ir.config_parameter'].sudo().get_param('account_peppol.proxy_url'):
+            urls['peppol'] = {}.fromkeys(['prod', 'test', 'demo'], proxy_url)
+        else:
+            urls['peppol'] = {
+                'prod': 'https://peppol.api.odoo.com',
+                'test': 'https://peppol.test.odoo.com',
+                'demo': 'demo',
+            }
         return urls
 
     def _get_peppol_proxy_endpoint(self, endpoint, proxy_type=None):
