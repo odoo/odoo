@@ -6,7 +6,7 @@ from unittest.mock import patch
 from urllib import parse
 
 from odoo import Command
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import tagged, freeze_time
 from odoo.tools.misc import file_open
 
@@ -370,6 +370,25 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
 
         self.valid_partner.invoice_sending_method = 'email'
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
+
+    def test_create_partner_with_nemhandel_info(self):
+        """Check that a new contact without a country can be saved with Nemhandel information filled in."""
+        partner = self.env['res.partner'].create({
+            'name': 'New Nemhandel partner',
+            'invoice_sending_method': 'nemhandel',
+            'invoice_edi_format': 'oioubl_21',
+        })
+        self.assertRecordValues(partner, [{
+            'invoice_sending_method': 'nemhandel',
+            'invoice_edi_format': 'oioubl_21',
+        }])
+
+        with self.assertRaisesRegex(ValidationError, 'only OIOUBL 2.1 is supported'):
+            self.env['res.partner'].create({
+                'name': 'New Nemhandel partner',
+                'invoice_sending_method': 'nemhandel',
+                'invoice_edi_format': 'ubl_bis3',
+            })
 
     def test_nemhandel_silent_error_while_creating_xml(self):
         """When in multi/async mode, the generation of XML can fail silently (without raising).
