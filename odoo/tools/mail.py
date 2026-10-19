@@ -370,9 +370,15 @@ def html_keep_url(text):
     final = ''
     link_tags = re.compile(r"""(?<!["'])((ftp|http|https):\/\/(\w+:{0,1}\w*@)?([^\s<"']+)(:[0-9]+)?(\/|\/([^\s<"']))?)(?![^\s<"']*["']|[^\s<"']*</a>)""")
     for item in re.finditer(link_tags, text):
+        url, end = item.group(0), item.end()
+        # the punctuation ending a sentence is not part of the url, nor is a
+        # closing parenthesis that the url does not open; ';' is kept, as it
+        # ends the html entities of an escaped text
+        while url[-1] in '.,:!?' or (url[-1] == ')' and url.count('(') < url.count(')')):
+            url, end = url[:-1], end - 1
         final += text[idx:item.start()]
-        final += create_link(item.group(0), item.group(0))
-        idx = item.end()
+        final += create_link(url, url)
+        idx = end
     final += text[idx:]
     return final
 
