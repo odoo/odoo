@@ -155,11 +155,21 @@ export class ProductListPage extends Component {
     }
 
     getProducts(category) {
+<<<<<<< 6cd956b8101c4018ebb89266989a01cd4931ea16
         return (
             category.associatedProducts ||
             this.selfOrder.productByCategIds[category.id] ||
             []
         ).filter((product) => product.self_order_available);
+||||||| f4dfaf2943c03e5a110b024275901828c891e257
+        return category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [];
+=======
+        const products =
+            category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [];
+        return products.toSorted(
+            (a, b) => a.pos_sequence - b.pos_sequence || a.name.localeCompare(b.name)
+        );
+>>>>>>> d97adf2cec673811c39ccff5e9aa0d8239dbd64b
     }
 
     toggleSubCategoryPanel() {
