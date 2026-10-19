@@ -137,7 +137,7 @@ Help your customers with this chat, and analyse their feedback.
         ],
         "portal.assets_chatter_helpers": [
             "im_livechat/static/src/core/common/**/*",
-            ("remove", "im_livechat/static/src/core/common/**/*.scss"),
+            ("remove", "im_livechat/static/src/core/common/**/*.css"),
         ],
     },
     'author': 'Odoo S.A.',

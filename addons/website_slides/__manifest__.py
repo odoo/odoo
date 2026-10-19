@@ -89,7 +89,7 @@ Featuring
             'website_slides/static/src/js/slides_course_service.js',
             'website_slides/static/src/js/utils.js',
             'website_slides/static/src/scss/website_slides.scss',
-            'website_slides/static/src/scss/website_slides_profile.scss',
+            'website_slides/static/src/scss/website_slides_profile.css',
             'website_slides/static/src/scss/slides_slide_fullscreen.scss',
             'website_slides/static/src/xml/website_slides_sidebar.xml',
             'website_slides/static/src/xml/website_slides_fullscreen.xml',

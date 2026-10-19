@@ -1,6 +1,6 @@
 .o-mail-MessageSeenIndicator {
     &.o-hasEveryoneSeen {
-        color: var(--mail-MessageSeenIndicator-hasEveryoneSeenColor, lighten($primary, 20%));
+        color: var(--mail-MessageSeenIndicator-hasEveryoneSeenColor, hsl(from var(--primary) h s calc(l + 20)));
     }
 
     i {

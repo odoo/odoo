@@ -22,7 +22,7 @@
     "assets": {
         "web.assets_frontend": [
             "sale_loyalty/static/src/interactions/gift_card.js",
-            "sale_loyalty/static/src/scss/gift_card.scss",
+            "sale_loyalty/static/src/scss/gift_card.css",
         ],
         "web.assets_backend": [
             "sale_loyalty/static/src/xml/discount_menu_widget.xml",

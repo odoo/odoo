@@ -75,7 +75,7 @@
             ('remove', 'web/static/fonts/fonts.scss'),
             'mass_mailing/static/src/builder/**/*',
             'mass_mailing/static/src/snippets/**/*.xml',
-            ('remove', 'mass_mailing/static/src/builder/**/*.inside.scss'),
+            ('remove', 'mass_mailing/static/src/builder/**/*.inside.css'),
         ],
         # Minimal assets for mass_mailing isolated iframes from web.
         'mass_mailing.assets_iframe_helpers': [
@@ -102,11 +102,11 @@
         ],
         # Assets for theme selector template preview shadowdom
         'mass_mailing.assets_theme_selector_template_shadowdom': [
-            'mass_mailing/static/src/fields/template_preview_field/theme_selector_template_preview/**/*.shadowdom.scss'
+            'mass_mailing/static/src/fields/template_preview_field/theme_selector_template_preview/**/*.shadowdom.css'
         ],
         # Assets for mailing template kanban card shadowdom
         'mass_mailing.assets_mailing_template_kanban_card_shadowdom': [
-            'mass_mailing/static/src/fields/template_preview_field/mailing_template_kanban_card/**/*.shadowdom.scss'
+            'mass_mailing/static/src/fields/template_preview_field/mailing_template_kanban_card/**/*.shadowdom.css'
         ],
         # Common style for mass_mailing mail iframes.
         'mass_mailing.assets_iframe_style_base': [
@@ -146,7 +146,7 @@
             ('include', 'mass_mailing.assets_iframe_style_base'),
             'html_editor/static/src/scss/css_variables.scss',
             'html_builder/static/src/scss/css_variables.scss',
-            'mass_mailing/static/src/builder/**/*.inside.scss'
+            'mass_mailing/static/src/builder/**/*.inside.css'
         ],
         'mass_mailing.iframe_add_dialog': [
             ('include', 'html_builder.iframe_add_dialog'),
@@ -181,7 +181,7 @@
             # Don't include dark mode files in light mode
             ('remove', 'mass_mailing/static/src/**/*.dark.css'),
             # Don't include shadowdom specific style
-            ('remove', 'mass_mailing/static/src/**/*.shadowdom.scss'),
+            ('remove', 'mass_mailing/static/src/**/*.shadowdom.css'),
         ],
         'web.assets_backend_lazy': [
             'mass_mailing/static/src/views/mass_mailing_subscription_graph_renderer.js',
