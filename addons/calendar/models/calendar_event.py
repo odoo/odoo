@@ -1231,7 +1231,8 @@ class CalendarEvent(models.Model):
         """When an event is copied, the attendees should be recreated to avoid sharing the same attendee records
          between copies
          """
-        default = dict(default or {})
+        # A copy of an occurrence is a new event, outside the recurrence
+        default = {'recurrence_id': False, **(default or {})}
         # We need to make sure that the attendee_ids are recreated with new ids to avoid sharing attendees between events
         # The copy should not have the same attendee status than the original event
         default.update(partner_ids=[Command.set([])], attendee_ids=[Command.set([])])

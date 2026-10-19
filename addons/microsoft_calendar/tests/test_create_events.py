@@ -1,17 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from copy import deepcopy
 from unittest.mock import patch, call
 from datetime import timedelta, datetime
 from freezegun import freeze_time
 
 from odoo import Command, fields
+from odoo.tools import mute_logger
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import ResUsers
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_token, _modified_date_in_the_future
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ConcurrencyError, ValidationError, UserError
 from odoo.tests.common import tagged
 
 
@@ -276,6 +278,26 @@ class TestCreateEvents(TestCommon):
         self.assert_odoo_recurrence(new_recurrences, self.expected_odoo_recurrency_from_outlook)
         for i, e in enumerate(sorted(new_events, key=lambda e: e.id)):
             self.assert_odoo_event(e, self.expected_odoo_recurrency_events_from_outlook[i])
+
+    def test_sync_retries_recurrence_imported_concurrently(self):
+        """ A recurrence already imported by a concurrent synchronization makes the synchronization retry. """
+        CalendarEvent = self.env['calendar.event'].with_user(self.organizer_user)
+        CalendarEvent._sync_microsoft2odoo(MicrosoftEvent(deepcopy(self.recurrent_event_from_outlook_organizer)))
+
+        # a concurrent synchronization does not see the recurrence imported above
+        with (
+            patch.object(MicrosoftEvent, 'match_with_odoo_events', return_value=MicrosoftEvent([])),
+            self.assertRaises(ConcurrencyError),
+            mute_logger('odoo.sql_db'),
+            self.env.cr.savepoint(),
+        ):
+            CalendarEvent._sync_microsoft2odoo(MicrosoftEvent(deepcopy(self.recurrent_event_from_outlook_organizer)))
+
+        self.assertEqual(self.env['calendar.recurrence'].search_count([('ms_universal_event_id', '=', 'REC456')]), 1)
+        self.assertEqual(
+            self.env['calendar.event'].search_count([('ms_universal_event_id', '=like', 'REC456_EVENT_%')]),
+            self.recurrent_events_count,
+        )
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_create_recurrent_event_from_outlook_attendee_calendar(self, mock_get_events):
@@ -683,9 +705,7 @@ class TestCreateEvents(TestCommon):
         record = self.env["calendar.event"].with_user(self.organizer_user).create(self.simple_event_values)
 
         # Mock values to simulate Microsoft event creation
-        event_id = "123"
-        event_iCalUId = "456"
-        mock_insert.return_value = (event_id, event_iCalUId)
+        mock_insert.side_effect = lambda *args, **kwargs: (f"123-{mock_insert.call_count}", f"456-{mock_insert.call_count}")
         record2 = record.copy()
         # Prepare the mock event response from Microsoft
         self.response_from_outlook_organizer = {
