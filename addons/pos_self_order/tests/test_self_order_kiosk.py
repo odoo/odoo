@@ -419,3 +419,17 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
             notify.assert_not_called()
             self.pos_config.write({'limit_categories': True})
             notify.assert_called_once_with('CONFIG_UPDATED', {'write_date': self.pos_config.write_date})
+
+    def test_kiosk_paid_order_visible_in_other_pos(self):
+        classic_config = self.pos_config.copy({
+            'payment_method_ids': [Command.set(self.bank_payment_method.ids)],
+        })
+        self.pos_config.write({'self_ordering_mode': 'kiosk'})
+        order, _ = self.create_backend_pos_order({
+            'order_data': {'source': 'kiosk'},
+            'line_data': [{'product_id': self.cola.id, 'qty': 1}],
+            'payment_data': [{'payment_method_id': self.bank_payment_method.id}],
+        })
+
+        result = self.env['pos.order'].search_paid_order_ids(classic_config.id, [], 80, 0)
+        self.assertIn(order.id, [order_id for order_id, _ in result['ordersInfo']])
