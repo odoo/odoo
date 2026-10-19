@@ -7,7 +7,7 @@ import { useFileUploader } from "@web/core/utils/files";
 import { useService } from "@web/core/utils/hooks";
 import { localization } from "@web/core/l10n/localization";
 import { Layout } from "@web/search/layout";
-import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
+import { DocumentationLink } from "@web/core/documentation_link/documentation_link";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { ImportDataContent } from "../import_data_content/import_data_content";
 import { ImportDataProgress } from "../import_data_progress/import_data_progress";

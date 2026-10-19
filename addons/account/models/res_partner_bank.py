@@ -5,6 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 from odoo.tools.image import image_data_uri
 from odoo.tools.bank_account_number import format_account_number, validate_iban, validate_clabe
+from odoo.release import documentation_url
 
 
 class ResPartnerBank(models.Model):
@@ -102,7 +103,7 @@ class ResPartnerBank(models.Model):
             'action_text': self.env._("Learn more"),
             'action': {
                 'type': 'ir.actions.act_url',
-                'url': 'https://www.odoo.com/documentation/latest/applications/finance/accounting/payables/pay/trusted_accounts.html',
+                'url': f'{documentation_url}/applications/finance/accounting/payables/pay/trusted_accounts.html',
                 'target': 'new',
             },
         }

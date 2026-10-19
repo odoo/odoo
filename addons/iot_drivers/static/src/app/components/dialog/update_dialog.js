@@ -40,7 +40,7 @@ export class UpdateDialog extends Component {
 
         <Dialog
             name="'IoT Box update'"
-            help="'https://www.odoo.com/documentation/latest/applications/general/iot/iot_advanced/updating_iot.html'"
+            help="'/applications/general/iot/iot_advanced/updating_iot.html'"
             btnName="'Update'">
             <t t-set-slot="body">
                 <div class="alert alert-info" role="alert">

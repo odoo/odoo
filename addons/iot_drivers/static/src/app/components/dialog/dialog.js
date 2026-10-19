@@ -31,7 +31,13 @@ export class Dialog extends Component {
                 <div class="modal-content">
                     <div class="modal-header gap-1">
                         <t t-out="this.props.name"/>
-                        <a t-if="this.props.help" t-att-href="this.props.help" class="oi text-decoration-none text-dark" data-icon="help" target="_blank"/>
+                        <a
+                          t-if="this.props.help"
+                          t-attf-href="/web/documentation{{this.props.help}}"
+                          class="oi text-decoration-none text-dark"
+                          data-icon="help"
+                          target="_blank"
+                        />
                     </div>
                     <div class="modal-body position-relative dialog-body">
                         <t t-call-slot="body" />
