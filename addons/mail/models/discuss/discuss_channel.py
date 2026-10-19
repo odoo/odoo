@@ -1394,7 +1394,19 @@ class DiscussChannel(models.Model):
         ).add(message, "_store_message_fields")
         if message.channel_id.parent_channel_id:
             store.add(message.channel_id, ["message_count"])
+        self._bus_send_attachment_ownership(message)
         return rdata
+
+    def _bus_send_attachment_ownership(self, message):
+        if not message.attachment_ids:
+            return
+        users = message.author_id.user_ids
+        if message.author_guest_id or any(not user._is_public() for user in users):
+            for bus_channel in (message.author_guest_id or message.author_id)._bus_channels():
+                Store(bus_channel=bus_channel).add(
+                    message.attachment_ids,
+                    "_store_ownership_fields",
+                )
 
     def _notify_by_push_get_title(self, message, force_record_name=False):
         author = message.author_id or message.author_guest_id
@@ -1523,6 +1535,7 @@ class DiscussChannel(models.Model):
         if partner_ids:
             kwargs["partner_ids"] = self._get_allowed_message_partner_ids(partner_ids)
         super()._message_update_content(message, **kwargs)
+        self._bus_send_attachment_ownership(message)
 
     def _check_can_update_message_content(self, message):
         # Don't call super in this override as we want to ignore the mail.thread behavior completely
