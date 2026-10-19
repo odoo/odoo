@@ -12,6 +12,14 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
             'property_account_receivable_id': 'l10n_et2211',
             'property_account_payable_id': 'l10n_et3002',
+<<<<<<< 4fd1a2ea4f90da0a641ce64e12e077cab6c3d851
+||||||| 5be59d6e7de2e0278b4bb2ead69b492606dff0c2
+            'property_account_expense_categ_id': 'l10n_et2301',
+            'property_account_income_categ_id': 'l10n_et1100',
+=======
+            'property_account_expense_categ_id': 'l10n_et5111',
+            'property_account_income_categ_id': 'l10n_et1100',
+>>>>>>> 86851ce4db903883c3ddacc52f764014ebdd7ce1
         }
 
     @template('et', 'res.company')
