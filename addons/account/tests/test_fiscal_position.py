@@ -420,3 +420,17 @@ class TestFiscalPosition(common.TransactionCase):
         self.assertEqual(fp_vat, self.env['account.fiscal.position']._get_fiscal_position(partner_with_vat))
         self.assertEqual(fp_no_vat, self.env['account.fiscal.position']._get_fiscal_position(partner_slash_vat))
         self.assertEqual(fp_no_vat, self.env['account.fiscal.position']._get_fiscal_position(partner_without_vat))
+
+    def test_copy_replacement_tax(self):
+        self.env.company.country_id = self.us
+        self.env['account.tax.group'].create({'name': 'Test Tax Group', 'company_id': self.env.company.id})
+        src_tax = self.env['account.tax'].create({'name': "SRC", 'amount': 21.0})
+        fp = self.fp.create({'name': "FP"})
+        dst_tax = self.env['account.tax'].create({
+            'name': "DST",
+            'amount': 19.0,
+            'fiscal_position_ids': [Command.set(fp.ids)],
+            'original_tax_ids': [Command.set(src_tax.ids)],
+        })
+        dst_tax.copy()
+        self.assertEqual(fp.map_tax(src_tax), dst_tax)
