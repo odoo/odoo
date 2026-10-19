@@ -113,7 +113,7 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
         self.assertEqual(invoice.partner_bank_id.partner_id, invoice.partner_id)
 
     def test_partial_import_partner_retrieval_bank_account_number(self):
-        """Check that the bank account number is used to retrieve the partner when importing a Bis 3 xml."""
+        """Check that the bank account number is used to retrieve the vendor when importing a Bis 3 bill."""
         partner_bank = self.env['res.partner.bank'].create({
             'acc_number': 'BE43200112345678',
             'partner_id': self.partner_a.id,
@@ -131,7 +131,7 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
         })
         invoice = self._import_invoice_as_attachment_on(
             test_name='test_partial_import_partner_retrieval_bank_account_number',
-            journal=self.company_data['default_journal_sale'],
+            journal=self.company_data['default_journal_purchase'],
         )
         # partner_a should be matched through the bank account number and its VAT should be filled in from the XML
         self.assertEqual(invoice.partner_id, self.partner_a)
@@ -142,7 +142,7 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
         # A new partner should be created
         invoice = self._import_invoice_as_attachment_on(
             test_name='test_partial_import_partner_retrieval_bank_account_number',
-            journal=self.company_data['default_journal_sale'],
+            journal=self.company_data['default_journal_purchase'],
         )
         self.assertRecordValues(invoice.partner_id, [{
             'name': "My Belgian Partner",
@@ -152,6 +152,28 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
             'vat': 'BE0727720427',
             'country_id': self.env.ref('base.be').id,
         }])
+
+    def test_partial_import_partner_retrieval_own_bank_account_number(self):
+        """ Test that for a customer invoice, the PayeeFinancialAccount is the company's own bank account,
+        it must not be used to retrieve the customer.
+        """
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_partner_retrieval_own_bank_account_number',
+            journal=self.company_data['default_journal_sale'],
+        )
+        # The customer has no VAT so it can't be created
+        self.assertFalse(invoice.partner_id)
+
+        # Once the customer exists, it is retrieved with its email
+        customer = self.env['res.partner'].create({
+            'name': "Partner without VAT",
+            'email': "partner.without@vat.com",
+        })
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_partner_retrieval_own_bank_account_number',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertEqual(invoice.partner_id, customer)
 
     def test_import_bill_multiple_payment_means(self):
         """ A bill listing several PaymentMeans must keep the reference once
