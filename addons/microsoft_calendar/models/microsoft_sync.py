@@ -5,12 +5,14 @@ from contextlib import contextmanager
 from functools import wraps
 from datetime import timedelta
 
+import psycopg2
 from dateutil.parser import parse
 
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.modules.registry import Registry
 from odoo.sql_db import BaseCursor
+from odoo.tools import mute_logger
 
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
@@ -138,6 +140,41 @@ class MicrosoftCalendarSync(models.AbstractModel):
     def _create_from_microsoft(self, microsoft_event, vals_list):
         return self.with_context(dont_notify=True, skip_contact_description=True).create(vals_list)
 
+    def _is_ms_universal_event_id_conflict(self, error):
+        """ Whether `error` is a concurrent synchronization having taken the Outlook identifier. """
+        return error.diag.constraint_name in (
+            'calendar_event_ms_universal_event_id_uniq',
+            'calendar_recurrence_ms_universal_event_id_uniq',
+        )
+
+    @api.model
+    def _create_from_microsoft_skipping_duplicates(self, microsoft_event, vals_list):
+        """ Create the events, skipping the ones a concurrent synchronization already imported. """
+        try:
+            with self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
+                # the unique violation is raised by the flush on savepoint exit
+                return self._create_from_microsoft(microsoft_event, vals_list)
+        except psycopg2.errors.UniqueViolation as error:
+            if not self._is_ms_universal_event_id_conflict(error):
+                raise
+
+        # Create the events one at a time to skip the conflicting ones
+        created = self.browse()
+        for vals in vals_list:
+            try:
+                with self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
+                    record = self._create_from_microsoft(microsoft_event, [vals])
+            except psycopg2.errors.UniqueViolation as error:
+                if not self._is_ms_universal_event_id_conflict(error):
+                    raise
+                _logger.info(
+                    "Outlook event %s already imported by a concurrent synchronization, skipping.",
+                    vals.get('ms_universal_event_id'),
+                )
+                continue
+            created |= record
+        return created
+
     def _sync_odoo2microsoft(self):
         if not self:
             return
@@ -211,8 +248,19 @@ class MicrosoftCalendarSync(models.AbstractModel):
                 to_create_values += [dict(value, need_sync_m=False)]
 
             new_calendar_recurrence['calendar_event_ids'] = [(0, 0, to_create_value) for to_create_value in to_create_values]
-            new_recurrence_odoo = self.env['calendar.recurrence'].with_context(dont_notify=True).create(new_calendar_recurrence)
-            new_recurrence_odoo.base_event_id = new_recurrence_odoo.calendar_event_ids[0] if new_recurrence_odoo.calendar_event_ids else False
+            # skip a recurrence that a concurrent synchronization already imported
+            try:
+                with self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
+                    new_recurrence_odoo = self.env['calendar.recurrence'].with_context(dont_notify=True).create(new_calendar_recurrence)
+                    new_recurrence_odoo.base_event_id = new_recurrence_odoo.calendar_event_ids[0] if new_recurrence_odoo.calendar_event_ids else False
+            except psycopg2.errors.UniqueViolation as error:
+                if not self._is_ms_universal_event_id_conflict(error):
+                    raise
+                _logger.info(
+                    "Outlook recurrence %s already imported by a concurrent synchronization, skipping.",
+                    new_calendar_recurrence.get('ms_universal_event_id'),
+                )
+                continue
             new_recurrence |= new_recurrence_odoo
 
         # Outlook can turn an existing single event into a recurring one in place:
@@ -316,7 +364,9 @@ class MicrosoftCalendarSync(models.AbstractModel):
             dict(self._microsoft_to_odoo_values(e, with_ids=True, create=True), need_sync_m=False)
             for e in (new - new_recurrence)
         ]
-        synced_events = self.with_context(dont_notify=True, skip_contact_description=True)._create_from_microsoft(new, odoo_values)
+        synced_events = self.with_context(
+            dont_notify=True, skip_contact_description=True
+        )._create_from_microsoft_skipping_duplicates(new, odoo_values)
         synced_recurrences, updated_events = self._sync_recurrence_microsoft2odoo(existing, new_recurrence)
         synced_events |= updated_events
 
