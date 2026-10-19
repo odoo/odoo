@@ -467,6 +467,9 @@ registry.category("web_tour.tours").add("test_switch_cashier_with_badge", {
             PosHr.loginScreenIsShown(),
             scan_barcode("041222"),
             ProductScreen.isShown(),
+            // The LoginScreen exclusive callback must have been unregistered.
+            scan_barcode("2100005000000"),
+            ProductScreen.selectedOrderlineHas("Wall Shelf Unit"),
             ProductScreen.addOrderline("Desk Pad", "1"),
             scan_barcode("041333"),
             Chrome.createFloatingOrder(),
