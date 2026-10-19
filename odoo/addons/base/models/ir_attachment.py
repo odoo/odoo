@@ -803,7 +803,7 @@ class IrAttachment(models.Model):
                 yield res_model, res_id
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
+    def _search(self, domain, offset=0, limit=None, order=None, *, bypass_access=False, **kw):
         assert not self._active_name, "active name not supported on ir.attachment"
         domain = Domain(domain)
         if (
@@ -815,11 +815,11 @@ class IrAttachment(models.Model):
 
         domain = domain.optimize_full(self)
         if self.env.su or bypass_access or domain.is_false():
-            return super()._search(domain, offset, limit, order, active_test=active_test, bypass_access=bypass_access)
+            return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kw)
         if self.env.context.get('_generating_sql_for_fields'):
             raise ValueError("Cannot generate SQL for whole ir.attachment")
         if 0 < len(condition_values(self, 'res_model', domain) or ()) <= MAX_COMODELS_FOR_DOMAIN:
-            return super()._search(domain, offset, limit, order, active_test=active_test, bypass_access=bypass_access)
+            return super()._search(domain, offset, limit, order, **kw)
 
         # Filter in SQL with the read access domain, where res_access_* keep
         # the attachments they may accept and conditions SQL cannot express

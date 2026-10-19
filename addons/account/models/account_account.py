@@ -993,7 +993,7 @@ class AccountAccount(models.Model):
         self.env.flush_all()
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
+    def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, **kw):
         """
             This includes inactive accounts that have active children at any depth if active accounts are being queried
         """
@@ -1004,7 +1004,7 @@ class AccountAccount(models.Model):
             and self.env.context.get('active_test', True)
             and not any(leaf.field_expr == self._active_name for leaf in Domain(domain).iter_conditions())
         )
-        query = super()._search(domain, offset, limit, order, active_test=active_test and not include_inactive_account_parents, bypass_access=bypass_access)
+        query = super()._search(domain, offset, limit, order, active_test=active_test and not include_inactive_account_parents, **kw)
         if include_inactive_account_parents:
             query.add_where(SQL("""(
                     %(active)s = TRUE
