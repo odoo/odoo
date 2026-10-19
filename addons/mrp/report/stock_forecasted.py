@@ -7,8 +7,8 @@ from odoo import api, models
 class StockForecasted_Product_Product(models.AbstractModel):
     _inherit = 'stock.forecasted_product_product'
 
-    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
-        line = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit, read)
+    def _prepare_report_line(self, quantity, move_out=None, move_in=None, warehouse_id=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
+        line = super()._prepare_report_line(quantity, move_out, move_in, warehouse_id, replenishment_filled, product, reserved_move, in_transit, read)
 
         if not move_out or not move_out.raw_material_production_id or not read:
             return line
@@ -32,8 +32,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
             ('raw_material_production_id', '!=', False),
             ('location_id', 'in', wh_location_ids),
         ]
-        in_product_qty = {k.id: v for k, v in self.env['mrp.production'].sudo()._read_group(in_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
-        out_product_qty = {k.id: v for k, v in self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
+        in_product_qty = {(f'{k.id}_{v.id}'): s for k, v, s in self.env['mrp.production'].sudo()._read_group(in_domain, aggregates=['product_qty:sum'], groupby=['product_id', 'warehouse_id'])}
+        out_product_qty = {(f'{k.id}_{v.id}'): s for k, v, s in self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'], groupby=['product_id', 'warehouse_id'])}
 
         self._add_product_quantities(res, product_template_ids, product_ids, 'draft_production_qty', in_product_qty, out_product_qty)
 

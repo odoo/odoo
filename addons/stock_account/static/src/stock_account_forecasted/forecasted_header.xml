@@ -5,8 +5,10 @@
             <h6 t-if="() => this.env.user.has_group('stock.group_stock_manager')">
                 Value On Hand:
                 <a href="#"
-                   t-out="this.props.docs.value"
-                   t-on-click.prevent="this._onClickValuation"/>
+                    t-out="this.props.docs.warehouse_ids.length > 1
+                        ? this.props.docs.total_value
+                        : this.props.docs.values_per_warehouse[this.props.docs.warehouse_ids[0]]"
+                    t-on-click.prevent="this._onClickValuation" />
             </h6>
         </xpath>
     </t>
