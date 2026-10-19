@@ -31,17 +31,31 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 price_unit = abs(amount / processed_qty)
         return qty_to_invoice, price_unit, amount, amount_currency
 
+    def _get_accrual_label(self, order_line, price_unit, currency):
+        quantity_invoiced = order_line.qty_invoiced_at_date
+        quantity_delivered = order_line.qty_delivered_at_date
+        if self.env.user.has_group('uom.group_uom'):
+            uom_name = order_line.product_uom_id.name
+            quantity_invoiced = f'{quantity_invoiced} {uom_name}'
+            quantity_delivered = f'{quantity_delivered} {uom_name}'
+        return _(
+            '%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %(quantity_delivered)s Delivered at %(unit_price)s each',
+            order=order_line.order_id.display_name,
+            order_line=ellipsis(order_line.name or order_line.product_id.name, 20),
+            quantity_invoiced=quantity_invoiced,
+            quantity_delivered=quantity_delivered,
+            unit_price=formatLang(self.env, price_unit, currency_obj=currency),
+        )
+
     def _get_accrual_main_line_vals(self, order_lines, accrual_entry_date):
         if order_lines._name != 'sale.order.line':
             return super()._get_accrual_main_line_vals(order_lines, accrual_entry_date)
 
-        display_uom = self.env.user.has_group('uom.group_uom')
         vals_list = []
         counterpart_vals_list = []
         for order_line in order_lines:
             order = order_line.order_id
             product = order_line.product_id.with_company(order.company_id)
-            order_line_label = ellipsis(order_line.name or product.name, 20)
             qty_to_invoice, price_unit, amount, amount_currency = self._get_accrual_qty_price_and_amount(order_line)
 
             if self.company_id.currency_id.is_zero(amount):
@@ -49,20 +63,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
 
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=order.fiscal_position_id)
             account = accounts['income']
-            quantity_invoiced = order_line.qty_invoiced_at_date
-            quantity_delivered = order_line.qty_delivered_at_date
-            if display_uom:
-                uom_name = order_line.product_uom_id.name
-                quantity_invoiced = f'{quantity_invoiced} {uom_name}'
-                quantity_delivered = f'{quantity_delivered} {uom_name}'
-            label = _(
-                '%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %(quantity_delivered)s Delivered at %(unit_price)s each',
-                order=order.display_name,
-                order_line=order_line_label,
-                quantity_invoiced=quantity_invoiced,
-                quantity_delivered=quantity_delivered,
-                unit_price=formatLang(self.env, price_unit, currency_obj=order.currency_id),
-            )
+            label = self._get_accrual_label(order_line, price_unit, order.currency_id)
             distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
             revenue_vals = self._get_aml_vals(False, order, amount, amount_currency, account.id, label=label, analytic_distribution=distribution)
 
@@ -84,7 +85,6 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         for order_line in order_lines:
             order = order_line.order_id
             product = order_line.product_id.with_company(order.company_id)
-            order_line_label = ellipsis(order_line.name or product.name, 20)
             if product.valuation != 'real_time' or not product.is_storable:
                 continue
             qty_to_invoice, __, __, __ = self._get_accrual_qty_price_and_amount(order_line)
@@ -110,13 +110,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     continue
                 perpetual_price_unit = sum(cogs_lines.mapped('debit')) / posted_quantity
             perpetual_amount = perpetual_price_unit * qty_to_invoice
-            perpetual_label = _(
-                '%(order)s - %(order_line)s: Goods Delivered not Invoiced (perpetual valuation)',
-                order=order.display_name, order_line=order_line_label,
-            ) if qty_to_invoice > 0 else _(
-                '%(order)s - %(order_line)s: Goods Invoiced not Delivered (perpetual valuation)',
-                order=order.display_name, order_line=order_line_label,
-            )
+            perpetual_label = self._get_accrual_label(order_line, perpetual_price_unit, self.company_id.currency_id)
             vals = self._get_aml_vals(False, order, perpetual_amount, 0.0, stock_valuation_account.id, label=perpetual_label)
             counterpart_vals = self._get_aml_vals(False, order, -perpetual_amount, 0.0, expense_account.id, label=perpetual_label)
             vals['display_type'] = counterpart_vals['display_type'] = 'cogs'

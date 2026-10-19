@@ -1348,16 +1348,19 @@ class ResCompany(models.Model):
         for accrual_type, candidate_lines in self._get_accrual_candidate_lines(date=date).items():
             if not candidate_lines:
                 continue
-            wizard = self.env['account.accrued.orders.wizard'].with_context(
+            wizard_model = self.env['account.accrued.orders.wizard'].with_context(
                 active_model=candidate_lines._name,
                 active_ids=candidate_lines.ids,
                 accrual_entry_date=fields.Date.to_string(accrual_entry_date),
                 accrual_allow_mixed_currencies=True,
-            ).new({
+            )
+            wizard_vals = {
                 'company_id': self.id,
                 'date': accrual_entry_date,
                 'accrual_type': accrual_type,
-            })
+            }
+            # using only the cache with duplicate entry detected wipes the cache and causes ref to be False eventually.
+            wizard = wizard_model.create(wizard_vals) if post else wizard_model.new(wizard_vals)
             if post:
                 move_vals, __, __ = wizard._compute_move_vals()
                 all_line_ids = move_vals['line_ids']
@@ -1378,6 +1381,10 @@ class ResCompany(models.Model):
                 'accrual_vals': _balance_vals(cogs_counterpart_vals_list),
             }
             if post:
+                if wizard.duplicate_entry_id:
+                    # add duplicate records to the wizard again before calling `create_entries()` so they are just replaced not dropped.
+                    duplicate_lines = candidate_lines.search([('accrual_move_ids', 'in', wizard.duplicate_entry_id.ids)])
+                    wizard = wizard.with_context(active_ids=(candidate_lines | duplicate_lines).ids)
                 action = wizard.create_entries(auto_post=True)
                 entry['move'] = self.env['account.move'].search(action['domain'])
 
