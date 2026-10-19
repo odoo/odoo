@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
@@ -259,6 +259,24 @@ class TestPosDataLoading(CommonPosTest):
 
         self.assertEqual(sorted(result.get('this.model.does.not.exist', [])), [1, 2],
             "IDs of a model missing from the registry should all be treated as stale")
+
+    def test_filter_local_data_returns_items_of_archived_pricelist(self):
+        """Rules have no active field: when their pricelist is archived, filter_local_data
+        must return them along with the pricelist, otherwise the PoS restores rules
+        pointing to a pricelist missing from its local cache."""
+        session = self._get_session()
+        active_pricelist, archived_pricelist = self.env['product.pricelist'].create([{
+            'name': name,
+            'item_ids': [Command.create({'compute_price': 'fixed', 'fixed_price': 1})],
+        } for name in ('Active Pricelist', 'Archived Pricelist')])
+        archived_pricelist.action_archive()
+
+        result = session.filter_local_data({
+            'product.pricelist': [str(active_pricelist.id), str(archived_pricelist.id)],
+            'product.pricelist.item': [str(active_pricelist.item_ids.id), str(archived_pricelist.item_ids.id)],
+        })
+        self.assertEqual(result['product.pricelist'], archived_pricelist.ids)
+        self.assertEqual(result['product.pricelist.item'], archived_pricelist.item_ids.ids)
 
     # -------------------------------------------------------------------------
     # Pagination via search_params

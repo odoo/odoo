@@ -5,6 +5,7 @@ from datetime import timedelta
 from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
+from odoo.fields import Domain
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, format_datetime, plaintext2html
 
@@ -285,8 +286,12 @@ class PosSession(models.Model):
                 # model no longer exists (ex: module uninstalled)
                 non_existent_and_inactive_ids[model] = ids
                 continue
+            domain = [('id', 'in', ids)]
+            if model == 'product.pricelist.item':
+                # For product pricelist items, we only keep those whose pricelist is active
+                domain = Domain.AND([domain, [('pricelist_id.active', '=', True)]])
             try:
-                existing_active_records = self.env[model].search_read([('id', 'in', ids)], ['id'])
+                existing_active_records = self.env[model].search_read(domain, ['id'])
             except AccessError:
                 continue
             existing_active_records = [r['id'] for r in existing_active_records]
