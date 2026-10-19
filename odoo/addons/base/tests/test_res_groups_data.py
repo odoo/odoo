@@ -382,3 +382,13 @@ class TestGroupsOdoo(common.TransactionCase):
         self.assertGreater(len(system._get_external_ids()[system.id]), 1, "Group with multiple xmlids")
         self.definitions = self.env['res.groups']._get_group_definitions()
         self.assertEqual(self.parse_repr('base.group_system'), self.parse_repr('base.test_group_system'))
+
+    def test_groups_8_keep_one_administrator(self):
+        """ Removing all the users from the administrator group, from the group
+        side, must be forbidden as it is from the user side. """
+        group_system = self.env.ref('base.group_system')
+        self.assertTrue(group_system.user_ids)
+        with self.assertRaises(ValidationError):
+            group_system.write({'user_ids': [Command.clear()]})
+        with self.assertRaises(ValidationError):
+            group_system.write({'user_ids': [Command.unlink(user.id) for user in group_system.user_ids]})
