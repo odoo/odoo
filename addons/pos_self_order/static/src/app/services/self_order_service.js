@@ -21,7 +21,7 @@ import {
     isValidEmail,
     orderUsageUTCtoLocalUtil,
 } from "@point_of_sale/utils";
-import { getAttributeValues, getOrderLineValues } from "./card_utils";
+import { getAttributeValues, getOrderLineValues, getBestMatchingVariant } from "./card_utils";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
 
@@ -967,7 +967,7 @@ export class SelfOrder extends Reactive {
     getProductPriceInfo(productTemplate, product) {
         const order = this.currentOrder;
         const pricelist = order.preset_id?.pricelist_id || this.config.pricelist_id;
-        const productVariant = product || productTemplate.product_variant_ids[0];
+        const productVariant = product || getBestMatchingVariant(this.models, productTemplate, []);
         const price = productTemplate.getPrice(pricelist, 1, 0, false, productVariant);
         const taxesData = (productVariant || productTemplate).getTaxDetails({
             overridedValues: {

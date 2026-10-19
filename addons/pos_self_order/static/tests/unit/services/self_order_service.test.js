@@ -178,6 +178,10 @@ test("getProductPriceInfo", async () => {
     product5.list_price = savedList;
     variant5.lst_price = savedLst;
 
+    const product19 = models["product.template"].get(19);
+    product19.product_variant_ids[0].lst_price = 12;
+    expect(store.getProductPriceInfo(product19).pricelist_price).toBe(10);
+
     expect(store.getProductPriceInfo(product5).pricelist_price).toBe(100);
 
     store.config.pricelist_id = pricelist;
