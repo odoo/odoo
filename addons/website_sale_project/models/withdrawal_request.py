@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 
@@ -43,3 +43,14 @@ class WithdrawalRequest(models.Model):
                 message_type="comment",
                 subtype_xmlid="mail.mt_comment",
             )
+
+
+class Website(models.Model):
+    _inherit = 'website'
+
+    @api.model
+    def _get_website_form_signature_fields(self, model_name):
+        signed_fields = super()._get_website_form_signature_fields(model_name)
+        if model_name == 'withdrawal.request':
+            signed_fields += ('project_id',)
+        return signed_fields
