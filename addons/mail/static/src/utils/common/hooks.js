@@ -23,6 +23,8 @@ import { browser } from "@web/core/browser/browser";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { clamp } from "@web/core/utils/numbers";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 /**
  * Version of usePlugin() where the plugin is allowed to not be provided by any parented component.
@@ -314,6 +316,22 @@ export function useVisible(ref, cb, { ready = true } = {}) {
     return state;
 }
 
+function needsScrollToCenter(el) {
+    const scrollable = closestScrollableY(el.parentElement);
+    if (!scrollable) {
+        return false;
+    }
+    const { height, top } = el.getBoundingClientRect();
+    const center =
+        scrollable.getBoundingClientRect().top + scrollable.clientTop + scrollable.clientHeight / 2;
+    const target = clamp(
+        scrollable.scrollTop + top + height / 2 - center,
+        0,
+        scrollable.scrollHeight - scrollable.clientHeight
+    );
+    return Math.abs(target - scrollable.scrollTop) >= Math.max(2, 2 / window.devicePixelRatio);
+}
+
 /**
  * @typedef {Object} MessageScrolling
  * @property {function} clear
@@ -413,6 +431,9 @@ export function useMessageScrolling({
             } else {
                 // To remove when safari will support the "scrollend" event.
                 setTimeout(resolveScroll, 250);
+            }
+            if (!needsScrollToCenter(el)) {
+                resolveScroll();
             }
             el.scrollIntoView({ behavior: "smooth", block: "center" });
             return scrollPromise;
