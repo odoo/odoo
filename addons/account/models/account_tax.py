@@ -104,6 +104,7 @@ class AccountTax(models.Model):
         column1='dest_tax_id',  # This Replacement tax
         column2='src_tax_id',  # Domestic Tax to replace
         string="Replaces",
+        copy=False,
         domain="""[
             ('type_tax_use', '=', type_tax_use),
             ('is_domestic', '=', True),
