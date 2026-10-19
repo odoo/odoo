@@ -2528,36 +2528,27 @@ class HrEmployee(models.Model):
         if self.ids:
             start, stop = fields.Datetime.from_string(start), fields.Datetime.from_string(stop)
 
-            # Fetch employees that have at least one version with a contract
-            employees_with_contract = self.env["hr.version"].sudo().search_fetch(
+            # Fetch the contracts (one row per contract, not per version) of the employees
+            contracts = self.env["hr.version"].sudo()._read_group(
                 domain=[
                     ("employee_id", "in", self.ids),
                     ('contract_date_start', '!=', False),
                 ],
-                field_names=["employee_id"],
-            ).employee_id
+                groupby=['employee_id', 'contract_date_start:day', 'contract_date_end:day'],
+            )
 
-            # Directly search for overlapping contracts to optimize performance
-            contracts = self.env["hr.version"].sudo().search([
-                ('employee_id', 'in', employees_with_contract.ids),
-                ('contract_date_start', '!=', False),
-                ('contract_date_start', '<=', stop.date()),
-                '|',
-                ('contract_date_end', '>=', start.date()),
-                ('contract_date_end', '=', False),
-            ])
-
-            employees_with_contract_in_current_scale = []
-            for contract in contracts:
-                employee = contract.employee_id
+            employees_with_contract = self.env['hr.employee']
+            for employee, contract_date_start, contract_date_end in contracts:
+                employees_with_contract |= employee
+                if contract_date_start > stop.date() or (contract_date_end and contract_date_end < start.date()):
+                    continue
                 field_key_id = employee[field_key].id
-                end_datetime = contract.contract_date_end and contract.contract_date_end + relativedelta(hour=23, minute=59, second=59)
+                end_datetime = contract_date_end and contract_date_end + relativedelta(hour=23, minute=59, second=59)
                 if end_datetime:
                     end_datetime = end_datetime.replace(tzinfo=self.env.tz).astimezone(UTC).replace(tzinfo=None)
                     end_datetime = fields.Datetime.to_string(end_datetime)
-                employees_with_contract_in_current_scale.append(employee.id)
                 working_periods[field_key_id].append({
-                    "start": fields.Datetime.to_string(contract.contract_date_start),
+                    "start": fields.Datetime.to_string(contract_date_start),
                     "end": end_datetime,
                 })
             for employee in self - employees_with_contract:
