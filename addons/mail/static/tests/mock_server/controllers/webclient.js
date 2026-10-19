@@ -123,13 +123,17 @@ registerStoreHandler(
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
-        store.add_chatter_fields = true;
         const thread = this.env[params.thread_model].browse(params.thread_id);
-        const messages = _resolve_messages.call(this, store, {
-            ...params.fetch_params,
-            domain: [],
-            thread,
-        });
+        const messages = _resolve_messages.call(
+            this,
+            store,
+            {
+                ...params.fetch_params,
+                domain: [],
+                thread,
+            },
+            { fields_params: { chatter_fields: true } }
+        );
         if (!ResUsers._is_public(this.env.uid)) {
             MailMessage.set_message_done(messages.map((message) => message.id));
         }

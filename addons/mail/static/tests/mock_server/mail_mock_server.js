@@ -948,28 +948,19 @@ function processRequest(fetchParams) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
     const store = new Store();
-    // Per-request aggregates, batched in a single add once all fetch params have been processed
-    // (mirrors the `_process_request_loop` overrides on WebclientController and
-    // DiscussChannelWebclientController). The mock env has no mutable request context, so these
-    // live on the per-request store instead of `request.env.context`.
-    store.request_message_ids = new Set();
-    store.add_inbox_fields = false;
-    store.add_chatter_fields = false;
+    // Per-request aggregates mirroring the store attributes the `_process_request_loop` overrides
+    // set on WebclientController and DiscussChannelWebclientController. Messages are grouped by the
+    // fields their fetch needs, so inbox/chatter fields only reach the messages that asked for them.
+    // The mock env has no mutable request context, so grouping by env doesn't apply here.
+    store.message_ids_by_fields = {};
     store.request_channel_ids = new Set();
     store.add_channels_last_message = false;
     store.add_channels_last_needaction = false;
     storeHandlerRegistry.execute_for_user(this, store, fetchParams);
     // messages (WebclientController layer)
-    if (store.request_message_ids.size) {
-        const fields_params = {};
-        if (store.add_inbox_fields) {
-            fields_params.inbox_fields = true;
-        }
-        if (store.add_chatter_fields) {
-            fields_params.chatter_fields = true;
-        }
-        store.add(MailMessage.browse([...store.request_message_ids]), "_store_message_fields", {
-            fields_params,
+    for (const [fieldsKey, messageIds] of Object.entries(store.message_ids_by_fields)) {
+        store.add(MailMessage.browse([...messageIds]), "_store_message_fields", {
+            fields_params: JSON.parse(fieldsKey),
         });
     }
     // channels (DiscussChannelWebclientController layer)
@@ -1021,14 +1012,20 @@ function processRequest(fetchParams) {
     return store;
 }
 
-export function _resolve_messages(store, fetch_params, { add_to_store = true } = {}) {
+export function _resolve_messages(
+    store,
+    fetch_params,
+    { add_to_store = true, fields_params = {} } = {}
+) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
     const res = MailMessage._message_fetch(makeKwArgs(fetch_params));
     const messageIds = res.messages.map((message) => message.id);
     if (add_to_store) {
+        const fieldsKey = JSON.stringify(fields_params);
+        const ids = (store.message_ids_by_fields[fieldsKey] ??= new Set());
         for (const messageId of messageIds) {
-            store.request_message_ids.add(messageId);
+            ids.add(messageId);
         }
     }
     store.resolve_data_request((r) => {
@@ -1038,7 +1035,7 @@ export function _resolve_messages(store, fetch_params, { add_to_store = true } =
             }
         }
         // Serialize with the empty field list: messages resolve as ids in the data request; the
-        // actual `_store_message_fields` serialization happens once in the post-loop batch.
+        // actual `_store_message_fields` serialization happens in the post-loop, once per fields group.
         r.many("messages", [], { value: MailMessage.browse(messageIds) });
     });
     return res.messages;

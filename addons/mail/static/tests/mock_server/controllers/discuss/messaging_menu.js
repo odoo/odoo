@@ -238,10 +238,12 @@ registerStoreHandler(
         if (exclude_ids?.length) {
             domain.push(["id", "not in", exclude_ids]);
         }
-        const messages = _resolve_messages.call(this, store, { domain, limit, search_term });
-        if (messages.length) {
-            store.add_inbox_fields = true;
-        }
+        const messages = _resolve_messages.call(
+            this,
+            store,
+            { domain, limit, search_term },
+            { fields_params: { inbox_fields: true } }
+        );
         store.resolve_data_request((res) => res.attr("is_fully_loaded", messages.length < limit));
     }
 );

@@ -14,33 +14,30 @@ class WebclientController(ThreadController):
     """Generic store handlers for the web client."""
 
     def _process_request_loop(self, store: Store, fetch_params):
-        # aggregate of messages to return, to batch them in a single query when all the fetch
-        # params have been processed
-        request.update_context(messages=request.env["mail.message"], add_inbox_fields=False, add_chatter_fields=False)
+        # grouped by env and fields: each message is formatted in the env of its fetch, without
+        # its sudo, and inbox/chatter fields only reach the messages that asked for them
+        store.messages_by_env_and_fields = defaultdict(list)
         super()._process_request_loop(store, fetch_params)
-        if messages := request.env.context["messages"]:
-            fields_params = {
-                **({"inbox_fields": True} if request.env.context["add_inbox_fields"] else {}),
-                **({"chatter_fields": True} if request.env.context["add_chatter_fields"] else {}),
-            }
-            if request.env.context["add_inbox_fields"]:
-                # sudo: bus.bus: reading non-sensitive last id
-                bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
-                store.add(messages, "_store_message_fields", fields_params=fields_params)
-                for records in messages._records_by_model_name().values():
-                    if not isinstance(records, request.env.registry["mail.thread"]):
-                        continue
-                    store.add(
-                        records,
-                        lambda res: (
-                            # sudo: mail.thread: users can read their own message_needaction_counter on the thread
-                            res.attr("message_needaction_counter", sudo=True),
-                            res.attr("message_needaction_counter_bus_id", bus_last_id),
-                        ),
-                        as_thread=True,
-                    )
-            else:
-                store.add(messages, "_store_message_fields", fields_params=fields_params)
+        for (env, fields), fetched in store.messages_by_env_and_fields.items():
+            fields_params = dict(fields)
+            messages = env["mail.message"].union(fetched)
+            store.add(messages, "_store_message_fields", fields_params=fields_params)
+            if not fields_params.get("inbox_fields"):
+                continue
+            # sudo: bus.bus: reading non-sensitive last id
+            bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
+            for records in messages._records_by_model_name().values():
+                if not isinstance(records, request.env.registry["mail.thread"]):
+                    continue
+                store.add(
+                    records,
+                    lambda res: (
+                        # sudo: mail.thread: users can read their own message_needaction_counter on the thread
+                        res.attr("message_needaction_counter", sudo=True),
+                        res.attr("message_needaction_counter_bus_id", bus_last_id),
+                    ),
+                    as_thread=True,
+                )
 
     @store_handler("mail.thread", audience="everyone")
     def store_mail_thread(
@@ -79,7 +76,7 @@ class WebclientController(ThreadController):
                 ("channel_member_ids.partner_id", "=", odoobot.id),
             ])
             channels |= odoobot_chat
-        request.update_context(channels=request.env.context["channels"] | channels)
+        store.channels |= channels
 
     @store_handler("res.partner", audience="everyone")
     def store_get_res_partner(self, store: Store, id):
@@ -144,7 +141,6 @@ class WebclientController(ThreadController):
         fetch_params=None,
         access_params=None,
     ):
-        request.update_context(add_chatter_fields=True)
         if thread := self._get_thread_with_access(
             thread_model,
             thread_id,
@@ -163,6 +159,7 @@ class WebclientController(ThreadController):
                 domain=domain,
                 thread=thread,
                 fetch_params=fetch_params,
+                fields_params={"chatter_fields": True},
                 sudo=thread.env.su,
             )
             if not request.env.user._is_public():
@@ -217,6 +214,7 @@ class WebclientController(ThreadController):
         thread=None,
         fetch_params=None,
         add_to_store=True,
+        fields_params=None,
         sudo=False,
     ):
         fetch_res = (
@@ -225,8 +223,9 @@ class WebclientController(ThreadController):
             ._message_fetch(domain, thread=thread, **(fetch_params or {}))
         )
         messages = fetch_res.pop("messages")
-        if add_to_store:
-            request.update_context(messages=request.env.context["messages"] | messages)
+        if messages and add_to_store:
+            key = (messages.sudo(False).env, frozenset((fields_params or {}).items()))
+            store.messages_by_env_and_fields[key].append(messages)
         store.resolve_data_request(
             lambda res: (
                 [res.attr(k, v) for k, v in fetch_res.items()],
