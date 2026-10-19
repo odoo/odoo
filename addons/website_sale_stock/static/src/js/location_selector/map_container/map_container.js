@@ -1,5 +1,6 @@
 import {
-    LocationSchedule
+    LocationSchedule,
+    getTodayStatus,
 } from '@website_sale_stock/js/location_selector/location_schedule/location_schedule';
 import { Map } from '@website_sale_stock/js/location_selector/map/map';
 import { Component, onWillStart, proxy, t, useProps } from '@odoo/owl';
@@ -26,7 +27,9 @@ export class MapContainer extends Component {
         })),
         selectedLocationId: t.or([t.string(), t.literal(false)]),
         setSelectedLocation: t.function(),
+        setHoveredLocation: t.function().optional(),
         validateSelection: t.function(),
+        readonly: t.boolean().optional(),
     });
 
     setup() {
@@ -79,11 +82,11 @@ export class MapContainer extends Component {
         return _t("There was an error loading the map");
     }
 
-    get chooseLocationButtonLabel() {
-        return _t("Choose this location");
+    get hasOpeningHours() {
+        return Object.keys(this.selectedLocation.opening_hours).length > 0;
     }
 
-    get openingHoursLabel() {
-        return _t("Opening hours");
+    get todayStatus() {
+        return getTodayStatus(this.selectedLocation.opening_hours);
     }
 }

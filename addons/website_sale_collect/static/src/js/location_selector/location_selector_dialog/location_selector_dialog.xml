@@ -2,23 +2,20 @@
 <templates xml:space="preserve">
 
     <t t-inherit="website_sale_stock.locationSelector.dialog" t-inherit-mode="extension">
-        <section id="location_selector_list_view" position="attributes">
-            <attribute name="t-if">!this.hideListView</attribute>
-        </section>
-        <button id="submit_location_small" position="after">
-            <div t-if="this.taxRecomputationWarning" class="alert alert-warning mt-3">
-                <span t-out="this.taxRecomputationWarning"/>
-            </div>
-        </button>
-        <MapContainer position="attributes">
-            <attribute name="taxRecomputationWarning">taxRecomputationWarning</attribute>
-        </MapContainer>
         <xpath expr="//section[hasclass('o_location_selector_view')][MapContainer]" position="attributes">
             <attribute name="class" add="overflow-y-auto" separator=" "/>
         </xpath>
     </t>
 
     <t t-inherit="website_sale_stock.locationSelector.searchbar" t-inherit-mode="extension">
+        <xpath expr="//div[@role='search']" position="attributes">
+            <attribute name="t-if">!this.isReadonly</attribute>
+        </xpath>
+        <xpath expr="//div[@role='search']" position="after">
+            <div t-if="this.taxRecomputationWarning" class="alert alert-warning mb-0">
+                <span t-out="this.taxRecomputationWarning"/>
+            </div>
+        </xpath>
         <input id="o_location_selector_search" position="before">
             <!-- Country selector -->
             <SelectMenu

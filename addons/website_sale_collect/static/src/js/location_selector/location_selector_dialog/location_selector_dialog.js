@@ -37,12 +37,10 @@ patch(LocationSelectorDialog.prototype, {
 
 
     /**
-     * Returns whether the list view should be hidden.
-     * The list view is hidden when there is only one location available for Click & Collect.
-     *
-     * @return {Boolean} Whether we need to show list view.
+     * @override method from `@website_sale_stock/static/src/js/location_selector_dialog`
+     * The only location available for Click & Collect is already selected.
      */
-    get hideListView() {
+    get isReadonly() {
         return this.isClickAndCollect && this.state.locations.length === 1;
     },
 

@@ -1,46 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="website_sale_stock.locationSelector.location">
-        <button
-            t-attf-id="location-{{this.props.id}}"
-            class="list-group-item list-group-item-action collapsed d-flex gap-2 gap-lg-3"
-            t-att-class="{'border-left-primary text-bg-light': this.props.isSelected}"
-            t-on-click="() => this.props.setSelectedLocation(this.props.id)"
-            type="button"
-            t-attf-data-bs-target="#collapseHours_{{this.props.id}}"
-            aria-expanded="false"
-            t-attf-aria-controls="collapseHours_{{this.props.id}}"
-            data-bs-toggle="collapse"
-        >
+        <div class="position-relative d-flex gap-3 border rounded p-3">
             <span
-                class="position-absolute top-0 start-0 h-100 ps-1 bg-primary transition-base"
-                t-attf-class="#{this.props.isSelected ? 'ms-0' : 'ms-n1' }"
-            />
-            <span t-attf-class="o_location_selector_number d-none d-md-block position-absolute {{ this.props.isSelected ? 'o_location_selector_marker_icon_selected' : 'o_location_selector_marker_icon' }}">
-                <t t-call="website_sale_stock.locationSelector.map.pinIndicator"
-                    number="this.props.number"/>
+                class="o_location_selector_number d-flex align-items-center justify-content-center flex-shrink-0 rounded-circle small fw-bold"
+                t-att-class="{'text-bg-primary': this.isHovered}"
+            >
+                <i t-if="this.props.readonly" class="oi" data-icon="storefront" role="img" aria-hidden="true"/>
+                <t t-else="" t-out="this.props.number"/>
             </span>
-            <span class="d-flex flex-column w-100">
-                <span class="d-flex flex-column mb-1 mb-md-0">
-                    <strong t-out="this.props.name" class="fw-bold"/>
-                    <small class="opacity-75" t-out="this.props.street"/>
-                    <small class="opacity-75" t-out="this.getCityAndZipCode()"/>
-                </span>
-                <small name="location_opening_hours" t-attf-class="d-flex align-items-center mb-1 mb-md-0 gap-1 fw-bold {{Object.keys(this.props.openingHours).length > 0 ? 'd-md-none' : 'd-none'}}">
-                    <i class="oi" data-icon="schedule" role="img" aria-label="Opening hours"/>
-                    <t t-out="this.openingHoursLabel"/>
-                    <i class="oi o_location_selector_hours_caret ms-auto transition-base" data-icon="arrow_drop_up" role="img" aria-hidden="true"/>
+            <div class="d-flex flex-column gap-1 w-100">
+                <strong
+                    t-if="this.props.readonly"
+                    t-attf-id="location-{{this.props.id}}"
+                    name="location_name"
+                    t-out="this.props.name"
+                />
+                <button
+                    t-else=""
+                    t-attf-id="location-{{this.props.id}}"
+                    type="button"
+                    name="location_name"
+                    class="stretched-link border-0 p-0 bg-transparent text-body text-start fw-bold"
+                    t-on-click="() => this.props.setSelectedLocation(this.props.id)"
+                    t-out="this.props.name"
+                />
+                <small name="location_address" class="text-muted">
+                    <t t-out="this.props.street"/>, <t t-out="this.getCityAndZipCode()"/>
                 </small>
-
-                <!-- Schedule -->
-                <span
-                    class="collapse d-md-none"
-                    t-attf-id="collapseHours_{{this.props.id}}"
-                    data-bs-parent="#o_location_selector_list_view"
-                  >
-                    <LocationSchedule openingHours="this.props.openingHours"/>
-                </span>
-            </span>
-        </button>
+                <div
+                    t-if="this.hasOpeningHours"
+                    name="location_opening_hours"
+                    class="position-relative z-2 mt-1 rounded bg-light"
+                >
+                    <t
+                        t-call="website_sale_stock.locationSelector.openingHours"
+                        collapseId="'collapseHours_' + this.props.id"
+                        collapseParent="'#o_location_selector_list_view'"
+                        openingHours="this.props.openingHours"
+                        todayStatus="this.todayStatus"
+                    />
+                </div>
+                <button
+                    t-if="!this.props.readonly"
+                    type="button"
+                    class="btn btn-primary position-relative z-2 mt-2"
+                    t-on-click="this.chooseLocation"
+                >
+                    Choose this location
+                </button>
+            </div>
+        </div>
     </t>
 </templates>

@@ -1,12 +1,37 @@
 import { Component, t, useProps } from '@odoo/owl';
 import { _t } from '@web/core/l10n/translation';
 
+/**
+ * Return the index of the current day of the week. 0 for Monday, 6 for Sunday.
+ *
+ * @return {Number} The index of today in the week.
+ */
+export function getTodayIndex() {
+    return luxon.DateTime.now().weekday - 1;
+}
+
+/**
+ * Return a short label describing whether the location is open today.
+ *
+ * @param {Object} openingHours - The opening periods, per day of the week.
+ * @return {Object} Whether the location is open today, the status label and today's hours.
+ */
+export function getTodayStatus(openingHours) {
+    const periods = openingHours[getTodayIndex()] || [];
+    if (periods.length) {
+        return { isOpen: true, label: _t("Open"), hours: periods.join(", ") };
+    }
+    return { isOpen: false, label: _t("Closed"), hours: "" };
+}
+
 export class LocationSchedule extends Component {
     static template = 'website_sale_stock.locationSelector.schedule';
     props = useProps({
         openingHours: t.record(t.array(t.string()).optional()),
         wrapClass: t.string().optional(),
     });
+
+    todayIndex = getTodayIndex();
 
     /**
      * Return the localized day's name given his index in the week.

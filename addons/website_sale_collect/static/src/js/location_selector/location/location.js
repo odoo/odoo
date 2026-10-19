@@ -2,13 +2,13 @@ import { t, useProps } from '@odoo/owl';
 import { deserializeDate, toLocaleDateString } from '@web/core/l10n/dates';
 import { patch } from '@web/core/utils/patch';
 
-import { MapContainer } from '@website_sale_stock/js/location_selector/map_container/map_container';
+import { Location } from '@website_sale_stock/js/location_selector/location/location';
 
-patch(MapContainer.prototype, {
+patch(Location.prototype, {
     setup() {
         super.setup();
         this.websiteSaleCollectProps = useProps({
-            taxRecomputationWarning: t.string().optional(),
+            closingDates: t.array().optional(),
         });
     },
 

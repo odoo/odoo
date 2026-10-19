@@ -1,19 +1,11 @@
 .o_location_selector_marker_icon {
-    --LocationSelectorMarker-border-color: color-mix(in srgb, var(--body-bg), var(--o-bs-body-color));
-    --LocationSelectorMarker-background: var(--body-bg);
-    --LocationSelectorMarker-color: var(--body-color);
-
-    font-family: var(--body-font-family);
-    font-size: calc(var(--body-font-size) * .85);
-}
-
-.o_location_selector_marker_icon_selected {
     --LocationSelectorMarker-border-color: color-mix(in srgb, var(--primary), var(--o-bs-primary-contrast));
     --LocationSelectorMarker-background: var(--primary);
     --LocationSelectorMarker-color: var(--o-bs-primary-contrast);
 
     font-family: var(--body-font-family);
     font-size: calc(var(--body-font-size) * .85);
+    color: var(--LocationSelectorMarker-color);
 }
 
 .o_location_selector_map {

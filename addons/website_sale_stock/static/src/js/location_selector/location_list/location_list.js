@@ -21,8 +21,10 @@ export class LocationList extends Component {
             longitude: t.or([t.string(), t.number()]),
         })),
         selectedLocationId: t.or([t.string(), t.literal(false)]),
+        hoveredLocationId: t.function().optional(),
         setSelectedLocation: t.function(),
         validateSelection: t.function(),
+        readonly: t.boolean().optional(),
     });
 
     setup() {
