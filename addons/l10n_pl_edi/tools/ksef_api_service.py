@@ -7,6 +7,8 @@ import time
 import zipfile
 from datetime import timezone
 from dateutil.parser import parse
+from pathlib import Path
+from urllib.parse import urlparse, unquote
 
 import requests
 from cryptography import x509
@@ -16,12 +18,18 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
-from odoo import fields
+from odoo import fields, Command
 from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 TIMEOUT = 30
+ROLES = {
+    'seller': 'Subject1',
+    'buyer': 'Subject2',
+    'third_party': 'Subject3',
+    'authorized': 'SubjectAuthorized',
+}
 
 
 def parse_time(s):
@@ -45,6 +53,10 @@ def u64(value):
     if isinstance(value, str):
         value = value.encode()
     return base64.b64decode(value)
+
+
+def url_to_name(url):
+    return Path(unquote(urlparse(url).path)).name
 
 
 class KsefApiService:
@@ -387,14 +399,28 @@ class KsefApiService:
         except requests.exceptions.RequestException as e:
             raise UserError(self.env._("Failed to redeem token: %s", e.response.text if e.response else e))
 
-    def query_invoice_metadata(self, query_criteria, page_size=100, page_offset=0):
+    def query_invoice_metadata(self, date_from, date_to, page_size=250, page_offset=0, subject_type=ROLES['buyer']):
         endpoint = f"{self.api_url}/invoices/query/metadata"
-        params = {'pageSize': page_size, 'pageOffset': page_offset}
-        try:
-            response = self._make_request('POST', endpoint, json=query_criteria, params=params)
-            return response.json()
-        except KSeFRateLimitError as e:
-            return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
+        date_from_str, date_to_str = date_from.isoformat(), date_to.isoformat()
+        invoices_metadata = {}
+        has_more = True
+        while has_more:
+            try:
+                response = self._make_request('POST', endpoint,
+                    json={
+                        'subjectType': subject_type,
+                        'dateRange': {'from': date_from_str, 'to': date_to_str, 'dateType': 'Invoicing'},
+                    },
+                    params={'pageSize': page_size, 'pageOffset': page_offset},
+                )
+            except KSeFRateLimitError as e:
+                return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
+            response = response.json()
+            if response.get('error'):
+                return {'error': {'message': response['error']}}
+            has_more = response['hasMore']
+            invoices_metadata.update({invoice['ksefNumber']: invoice for invoice in response['invoices']})
+        return invoices_metadata
 
     def get_invoice_by_ksef_number(self, ksef_number):
         endpoint = f"{self.api_url}/invoices/ksef/{ksef_number}"
@@ -406,34 +432,26 @@ class KsefApiService:
 
     # -------------------------------------------
 
-    def download_batch_status(self, company, number, date_from, date_to, encryption_data):
-        response = self._make_request("GET", f"{self.api_url}/invoices/exports/{number}")
+    def download_batch_status(self, name):
+        response = self._make_request("GET", f"{self.api_url}/invoices/exports/{name}")
         json_response = response.json()
-
-        batch_data = {
-            'number': number,
-            'company_id': company.id,
-            'status': json_response['status']['code'],
-            'error': '\n'.join(json_response['status']['details'] or []) or False,
-            'date_from': fields.Datetime.to_string(date_from),
-            'date_to': fields.Datetime.to_string(date_to),
+        return {
+            'name': name,
+            'content': response.text,
+            'status': f"{json_response['status']['code']}" or False,
+            'error': '\n'.join(json_response['status'].get('details', []) or []) or False,
             'date_expiry': parse_time(json_response.get('packageExpirationDate')),
-            'parts': {
-                part['partName']: {
-                    'name': part['partName'],
-                    'url': part['url'],
-                    'method': (part['method'] or '').upper(),
-                    'number': part['ordinalNumber'],
-                    'size': part['partSize'],
-                    'unencrypted_size': part['encryptedPartSize'],
-                    'batch_number': number,
-                    'company_id': company.id,
-                }
+            'parts': [
+                Command.create({
+                    'name': url_to_name(part['url']),
+                    'batch_name': name,
+                    'part_number': part['ordinalNumber'],
+                    'download_url': part['url'],
+                    'download_method': (part['method'] or '').upper(),
+                })
                 for part in json_response.get('package', {}).get('parts', [])
-            },
-            'encryption_data': encryption_data,
+            ],
         }
-        return batch_data
 
     def _get_encryption_json(self, encryption_data):
         return {"encryption": {
@@ -441,17 +459,11 @@ class KsefApiService:
             "initializationVector": encryption_data['raw_iv'],
         }}
 
-    def download_batch_request(self, date_from, date_to, encryption_data, subject_type="Subject1"):
+    def download_batch_request(self, date_from, date_to, encryption_data, subject_type=ROLES['buyer']):
         dates = {"from": format_time(date_from), "to": format_time(date_to), "dateType": "Invoicing"}
         payload = {
             **self._get_encryption_json(encryption_data),
             "filters": {"subjectType": subject_type, "dateRange": dates},
         }
         response = self._make_request('POST', f"{self.api_url}/invoices/exports", json=payload)
-        json_response = response.json()
-        return {
-            'number': json_response.get('referenceNumber', False),
-            'encryption_data': encryption_data,
-            'date_from': fields.Datetime.to_string(date_from),
-            'date_to': fields.Datetime.to_string(date_to),
-        }
+        return response.json()

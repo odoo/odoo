@@ -4,19 +4,14 @@ import tempfile
 import zipfile
 
 import requests
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import padding
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 from odoo import models, modules
 from odoo.osv import expression
 from odoo.addons.l10n_pl_edi.models.account_move import KSEF_LOG_HEADER
-from odoo.addons.l10n_pl_edi.tools import u64
 
 _logger = logging.getLogger(__name__)
 
 CRON_NAME = 'l10n_pl_edi.cron_l10n_pl_edi_download_batches'
-CHUNK_SIZE = 64 * 1024
 
 
 class IrAttachment(models.Model):
@@ -94,17 +89,6 @@ class IrAttachment(models.Model):
             'res_model': 'ir.cron',
             'res_id': self.env.ref(CRON_NAME).id,
         }
-
-    def _l10n_pl_edi_decrypt_stream(self, response_stream, encryption_data):
-        raw_key = u64(encryption_data['raw_symmetric_key'])
-        raw_iv = u64(encryption_data['raw_iv'])
-        cipher = Cipher(algorithms.AES(raw_key), modes.CBC(raw_iv), backend=default_backend())
-        decryptor = cipher.decryptor()
-        unpadder = padding.PKCS7(128).unpadder()
-        for chunk in (chk for chk in response_stream.iter_content(chunk_size=CHUNK_SIZE) if chk):
-            decrypted_chunk = decryptor.update(chunk)
-            yield unpadder.update(decrypted_chunk)
-        yield unpadder.update(decryptor.finalize()) + unpadder.finalize()
 
     def _l10n_pl_edi_decompress(self):
         company = self[0].company_id
