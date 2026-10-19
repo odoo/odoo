@@ -789,12 +789,14 @@ class HrEmployee(models.Model):
         # (could be a CASE WHEN with the version_id from the content for the current user)
         return table.current_version_id
 
-    def _get_version(self, date=fields.Date.today()):
+    def _get_version(self, date=None):
         """
-        Return the version that should be used for the given date.
+        Return the version that should be used for the given date (today by default).
         If no valid version is found, we return the very first version of the employee.
         """
         self.ensure_one()
+        if date is None:
+            date = fields.Date.context_today(self)
         versions = self.version_ids.filtered(lambda v: v.active) or self.with_context(active_test=False).version_ids
         if not versions:
             return self.env['hr.version']
@@ -908,11 +910,11 @@ class HrEmployee(models.Model):
     def _is_in_contract(self, date):
         return self._get_contract_dates(date) != (False, False)
 
-    def _is_flexible(self, date=fields.Date.today()):
+    def _is_flexible(self, date=None):
         calendar = self._get_version(date).resource_calendar_id
         return bool(calendar) and calendar._is_flexible()
 
-    def _is_fully_flexible(self, date=fields.Date.today()):
+    def _is_fully_flexible(self, date=None):
         calendar = self._get_version(date).resource_calendar_id
         return bool(calendar) and calendar._is_fully_flexible()
 

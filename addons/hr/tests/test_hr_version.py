@@ -373,6 +373,23 @@ class TestHrVersion(TestHrCommon):
         self.assertTrue(employee._is_in_contract(date(2020, 1, 1)))
         self.assertFalse(employee._is_in_contract(date(2030, 1, 1)))
 
+    @freeze_time('2020-06-15')
+    def test_default_date_is_today(self):
+        """
+        The default date of the version helpers must be evaluated at call time,
+        not when the module is imported.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'contract_date_end': '2020-12-31',
+        })
+        v1 = employee.version_id
+        employee.create_version({'date_version': '2020-10-01'})
+        self.assertEqual(employee._get_version(), v1)
+        self.assertTrue(v1._is_in_contract())
+
     def test_cron_update_current_version(self):
         cron = self.env.ref('hr.ir_cron_data_employee_update_current_version')
 
