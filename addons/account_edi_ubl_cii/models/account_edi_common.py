@@ -1485,10 +1485,17 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_retrieve_customer(self, collected_values):
         company = collected_values['company']
         customer_values = collected_values['customer_values']
+<<<<<<< b75f0e74b6b6d52491404feaf14ca191c04ff041
         customer_values.update({
             'account_numbers': collected_values.get('partner_bank_values', {}).get('account_numbers'),
             'company': company,
         })
+||||||| ac43dda46c086552d32d41a9c7d8faba7bb17d61
+        customer_values['account_numbers'] = collected_values.get('partner_bank_values', {}).get('account_numbers')
+=======
+        if collected_values['invoice'].move_type in ('out_refund', 'in_invoice'):
+            customer_values['account_numbers'] = collected_values.get('partner_bank_values', {}).get('account_numbers')
+>>>>>>> 083611214f2432f453d9f4245278eb67b032b525
         self.env['res.partner']._import_retrieve_customer(
             search_plan=self._import_retrieve_customer_search_plan(collected_values),
             company=company,
