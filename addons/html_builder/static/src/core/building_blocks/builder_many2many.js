@@ -1,5 +1,6 @@
-import { Component, asyncComputed, onWillStart, t, useProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, t, useProps } from "@odoo/owl";
+import { useAsyncComputed, useService } from "@web/core/utils/hooks";
+import { useCachedModel } from "../cached_model_utils";
 import {
     basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
@@ -8,7 +9,6 @@ import {
 } from "../utils";
 import { BasicMany2Many } from "./basic_many2many";
 import { BuilderComponent } from "./builder_component";
-import { useCachedModel } from "../cached_model_utils";
 
 export class BuilderMany2Many extends Component {
     static components = { BuilderComponent, BasicMany2Many };
@@ -25,9 +25,11 @@ export class BuilderMany2Many extends Component {
         message: t.string().optional(),
     });
 
+    fields = useService("field");
+    searchModel = useAsyncComputed(() => this.getSearchModel(this.props));
+
     setup() {
         useBuilderComponent(this.props);
-        this.fields = useService("field");
         const { getAllActions, callOperation } = getAllActionsAndOperations(this.props);
         this.cachedModel = useCachedModel();
         this.callOperation = callOperation;
@@ -62,21 +64,19 @@ export class BuilderMany2Many extends Component {
             }
             return { selection };
         });
-        this.searchModel = asyncComputed(() => this.getSearchModel(this.props));
-        onWillStart(() => this.searchModel.currentPromise());
     }
-    async getSearchModel(props) {
-        if (props.m2oField) {
-            const modelData = await this.fields.loadFields(props.model, {
-                fieldNames: [props.m2oField],
+    async getSearchModel({ model, m2oField }) {
+        if (m2oField) {
+            const modelData = await this.fields.loadFields(model, {
+                fieldNames: [m2oField],
             });
-            const searchModel = modelData[props.m2oField].relation;
+            const searchModel = modelData[m2oField].relation;
             if (!searchModel) {
-                throw new Error(`m2oField ${props.m2oField} is not a relation field`);
+                throw new Error(`m2oField ${m2oField} is not a relation field`);
             }
             return searchModel;
         } else {
-            return props.model;
+            return model;
         }
     }
     callApply(applySpecs) {

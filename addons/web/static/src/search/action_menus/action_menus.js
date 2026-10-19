@@ -1,14 +1,14 @@
+import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { location } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
-import { session } from "@web/session";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
-
-import { Component, asyncComputed, onWillStart, usePlugin, proxy, t, useProps } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { ORM } from "@web/core/orm_plugin";
+import { useAsyncComputed, useService } from "@web/core/utils/hooks";
+import { session } from "@web/session";
 
 export const STATIC_ACTIONS_GROUP_NUMBER = 1;
 export const ACTIONS_GROUP_NUMBER = 100;
@@ -49,23 +49,21 @@ export class ActionMenus extends Component {
     // i do it for now to be able to move this pr forward, and we will refactor
     // later if needed.
     static actionMenusProps = actionMenusProps;
-    props = useProps(this.constructor.actionMenusProps);
 
-    setup() {
-        this.orm = useService("orm");
-        this.actionService = useService("action");
-        this.offlinePlugin = usePlugin(OfflinePlugin);
-        this.state = proxy({ printItems: [] });
-        this.actionItems = asyncComputed(() => this.getActionItems(this.props), { initial: [] });
-        onWillStart(() => this.actionItems.currentPromise());
-    }
+    props = useProps(this.constructor.actionMenusProps);
+    actionService = useService("action");
+    offlinePlugin = usePlugin(OfflinePlugin);
+    orm = usePlugin(ORM);
+
+    printItems = signal.Array([]);
+    actionItems = useAsyncComputed(() => this.getActionItems(this.props), { initial: [] });
 
     //---------------------------------------------------------------------
     // Private
     //---------------------------------------------------------------------
 
-    async getActionItems(props) {
-        return (props.items.action || []).map((action) => {
+    async getActionItems({ items }) {
+        return (items.action || []).map((action) => {
             if (action.callback) {
                 return Object.assign(
                     { key: `action-${action.description}`, groupNumber: ACTIONS_GROUP_NUMBER },
@@ -176,7 +174,7 @@ export class ActionMenus extends Component {
             this.loadAvailablePrintItems(),
             this.props.loadExtraPrintItems(),
         ]);
-        const allItems = [...extraItems, ...items];
+        const allItems = extraItems.concat(items);
         if (!allItems.length) {
             allItems.push({
                 description: _t("No report available."),
@@ -184,6 +182,6 @@ export class ActionMenus extends Component {
                 key: "nothing_to_display",
             });
         }
-        this.state.printItems = allItems;
+        this.printItems.set(allItems);
     }
 }

@@ -21,6 +21,7 @@ import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { onWillRender, render, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
@@ -34,7 +35,6 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useDeleteRecords, useExportRecords } from "@web/views/view_hook";
-import { ListCogMenu } from "./list_cog_menu";
 import { ListConfirmationDialog } from "./list_confirmation_dialog";
 
 // -----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ export class ListController extends Component {
         MultiRecordViewButton,
         SearchBar,
         OfflineSearchBar,
-        CogMenu: ListCogMenu,
+        CogMenu,
         DropdownItem,
         SelectionBox,
     };
