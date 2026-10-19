@@ -819,6 +819,16 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             (datetime(2019, 11, 6, 1, 0), datetime(2019, 11, 6, 2, 0)),
         ])
 
+    def test_edit_recurrence_field_on_empty_recordset(self):
+        """ Test that editing a recurrence field on an empty recordset does not raise an error in order to allow write method override"""
+        write_values = {
+            'recurrency': False,
+            'recurrence_update': 'future_events',
+            'rrule_type': False,
+        }
+        empty_recordset = self.env['calendar.event']
+        self.assertTrue(empty_recordset.write(write_values))
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUpdateMultiDayWeeklyRecurrentEvents(TestRecurrentEvents):
