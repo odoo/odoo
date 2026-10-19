@@ -2651,7 +2651,7 @@ class BaseModel(metaclass=MetaModel):
                 **info,
             )
 
-        if isinstance(exc, psycopg2.errors.ForeignKeyViolation):
+        if isinstance(exc, (psycopg2.errors.ForeignKeyViolation, psycopg2.errors.RestrictViolation)):
             if len(columns) != 1:
                 info['field_display'] = info['constraint_name']
             return self.env._(
