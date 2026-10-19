@@ -5971,6 +5971,17 @@ class AccountMove(models.Model):
     def _is_protected_by_audit_trail(self):
         return any(move.posted_before and move.company_id.restrictive_audit_trail for move in self)
 
+    @api.model
+    def _get_active_accrual_domain(self, date):
+        """ Returns the domain of active accrual entries which is of state posted and as of `date`
+        and its reversal is not yet posted or its planned posted date is not reached yet.
+        """
+        return Domain([
+            ('state', '=', 'posted'),
+            ('date', '<=', date),
+            ('reversal_move_ids', 'not any', [('state', '!=', 'cancel'), ('date', '<=', date)]),
+        ])
+
     def _unlink_or_reverse(self, default_values_list=None):
         if not self:
             return

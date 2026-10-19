@@ -395,9 +395,19 @@ class PurchaseOrderLine(models.Model):
         direction of the mismatch: 'prepaid' (invoiced ahead of receipt) or 'bill_to_receive'
         (received ahead of invoicing). Reused by the `prepaid_expense`/`bill_to_receive` filters
         and by `res.company._get_accrual_candidate_lines`.
+        Lines with an accrual entry still active as of `date` are left out, their mismatch
+        was already accounted for.
         """
+        if not date:
+            date = fields.Date.to_date(self.env.context.get('accrual_entry_date'))
         accrual_entry_date = date or fields.Date.context_today(self)
         domain = self._get_accrual_domain(accrual_entry_date)
+        # TODO: use `accrual_active_only` as an optional argument with default value in master
+        domain &= Domain(
+            'accrual_move_ids',
+            'any' if self.env.context.get('accrual_active_only') else 'not any',
+            self.env['account.move']._get_active_accrual_domain(accrual_entry_date),
+        )
         if extra_domain:
             domain &= extra_domain
         order_lines = self.env['purchase.order.line'].search(domain)

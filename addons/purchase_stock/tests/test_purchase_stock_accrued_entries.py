@@ -293,6 +293,25 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         with self.assertRaises(UserError):
             wizard.create_entries()
 
+    def test_accrual_not_duplicated_in_stock_valuation_report(self):
+        """ Until the accrual's reversal is posted, its generated lines must not be suggested again,
+        neither in the inventory valuation report nor in the Bills To Receive menu.
+        """
+        line = self.purchase_order.order_line
+        line.product_id.is_storable = True
+        self.purchase_order.picking_ids.button_validate()
+        self.assertEqual(self.env.company._get_accrual_candidate_lines()['bill_to_receive'], line)
+
+        self.env['account.accrued.orders.wizard'].with_context(
+            active_model='purchase.order',
+            active_ids=self.purchase_order.ids,
+            default_accrual_type='bill_to_receive',
+        ).create({
+            'account_id': self.account_expense.id,
+            'date': fields.Date.today()}).create_entries()
+        self.assertFalse(self.env.company._get_accrual_candidate_lines()['bill_to_receive'])
+        self.assertNotIn(line, line.search([('bill_to_receive', '=', True)]))
+
 
 @tagged('post_install', '-at_install')
 class TestAccruedPurchaseOrdersStock(AccountTestInvoicingCommon):

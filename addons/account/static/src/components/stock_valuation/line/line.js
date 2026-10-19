@@ -50,7 +50,7 @@ export class StockValuationReportLine extends Component {
     }
 
     get debit() {
-        if (this.props.line?.debit) {
+        if (this.props.line?.debit || (this.props.line?.account_id && !this.props.line.credit)) {
             return this.env.formatMonetary(this.props.line.debit);
         }
         if (!this.state.displaySublines && this.props.sublines?.length === 1 && this.props.sublines[0].debit) {
