@@ -108,6 +108,25 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
     'google.co.zw', 'google.cat',
 ])
 
+FONT_SUBSET_BY_LANG = {
+    **dict.fromkeys(['be', 'bg', 'mk', 'mn', 'ru', 'sr@Cyrl', 'uk'], 'cyrillic'),
+    **dict.fromkeys(['ar', 'fa'], 'arabic'),
+    **dict.fromkeys(['ja', 'ko', 'zh'], None),
+    'am': 'ethiopic',
+    'bn': 'bengali',
+    'el': 'greek',
+    'gu': 'gujarati',
+    'he': 'hebrew',
+    'hi': 'devanagari',
+    'ka': 'georgian',
+    'km': 'khmer',
+    'lo': 'lao',
+    'ml': 'malayalam',
+    'my': 'myanmar',
+    'te': 'telugu',
+    'th': 'thai',
+}
+
 
 class Website(models.CachedModel):
     _name = 'website'
@@ -205,6 +224,8 @@ class Website(models.CachedModel):
 
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.", default=_default_favicon)
     theme_id = fields.Many2one('ir.module.module', help='Installed theme')
+    # {subset: [font file url, ...]}, see `_update_font_preloads`
+    font_preloads = fields.Json(readonly=True, copy=False)
 
     specific_user_account = fields.Boolean('Specific User Account', help='If True, new accounts will be associated to the current website')
     auth_signup_uninvited = fields.Selection([
@@ -315,6 +336,7 @@ class Website(models.CachedModel):
         websites.company_id._compute_website_id()
         for website in websites:
             website._bootstrap_homepage()
+        websites._update_font_preloads()
 
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
@@ -1389,6 +1411,104 @@ class Website(models.CachedModel):
     def _get_font_urls(self):
         """Return the list of font URLs to emit as <link> tags in <head>."""
         return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+
+    def _get_font_faces(self, css_url):
+        """Return the font-face declarations from a font stylesheet, either
+        served by Google or stored in a public attachment, as
+        `{subset: {weight: font file url}}` (subset is empty for the faces not
+        preceded by a subset comment, as in the uploaded fonts stylesheets).
+
+        This may request Google: never call it when rendering a page."""
+        css = ''
+        try:
+            url = urlsplit(css_url)
+            if (url.scheme, url.netloc, url.path) == ('https', 'fonts.googleapis.com', '/css'):
+                # Only the query comes from the stylesheet URL: the requested
+                # endpoint is hard-coded.
+                response = requests.get(
+                    'https://fonts.googleapis.com/css',
+                    params=url.query,
+                    allow_redirects=False,
+                    headers={
+                        # Google serves the font format matching the user agent.
+                        # This one pretends to be a browser supporting woff2
+                        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36",
+                    },
+                    timeout=5,
+                )
+                response.raise_for_status()
+                css = response.text
+            elif match := re.match(r'/web/content/(\d+)/', css_url):
+                attachment = self.env['ir.attachment'].sudo().browse(int(match[1])).exists()
+                if attachment.public:
+                    css = attachment.raw.decode()
+        except (RequestException, UnicodeDecodeError) as e:
+            logger.info("Font stylesheet %s could not be read, its fonts are not preloaded: %s", css_url, e)
+        faces = {}
+        font_face_re = re.compile(r'(?:/\*\s*([^*]*?)\s*\*/\s*)?@font-face\s*\{([^}]*)\}')
+        for subset, body in font_face_re.findall(css):
+            style = re.search(r'font-style:\s*(\w+)', body)
+            weight = re.search(r'font-weight:\s*(\d+)', body)
+            url = re.search(r'url\(\s*["\']?([^)"\']+)', body)
+            if url and (not style or style[1] == 'normal'):
+                faces.setdefault(subset, {})[int(weight[1]) if weight else 400] = url[1]
+        return faces
+
+    @staticmethod
+    def _font_weight_rank(weight, face_weight):
+        """Sort key of `face_weight` when looking for `weight`, following the
+        CSS font matching algorithm.
+        https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/font-weight#fallback_weights"""
+        if 400 <= weight <= 500 and weight <= face_weight <= 500:
+            return 0, face_weight - weight
+        lighter_first = weight <= 500
+        tier = 1 if face_weight == weight or (face_weight < weight) == lighter_first else 2
+        return tier, abs(face_weight - weight)
+
+    def _update_font_preloads(self):
+        """Compute and store the font files to preload in <head>: the ones
+        rendering the body, the headings and the buttons (at their weight), for
+        each script subset.
+
+        The font stylesheets are read (Google may be requested) here, when the
+        fonts change, so that rendering a page never waits for them."""
+        faces_by_css_url = {}
+        for website in self:
+            exports = website.with_context(website_id=website.id)._get_scss_exports()
+            entries = re.findall(r'--o-font-preload-\d+:\s*"([^"]*)"\s+(\d+)', exports)
+            for css_url, _weight in entries:
+                if css_url not in faces_by_css_url:
+                    faces_by_css_url[css_url] = self._get_font_faces(css_url)
+            # The empty subset gives the preloads of the scripts no font has a
+            # subset for (only the fonts without subsets are preloaded).
+            subsets = {''}.union(*(faces_by_css_url[css_url] for css_url, _weight in entries))
+            font_preloads = {}
+            for subset in subsets:
+                preloads = font_preloads[subset] = []
+                for css_url, weight in entries:
+                    faces = faces_by_css_url[css_url]
+                    files = {**faces.get('', {}), **faces.get(subset, {})}
+                    if not files:
+                        continue
+                    url = files[min(files, key=functools.partial(self._font_weight_rank, int(weight)))]
+                    if url not in preloads:
+                        preloads.append(url)
+            if website.font_preloads != font_preloads:
+                website.font_preloads = font_preloads
+
+    def _get_font_preloads(self, lang=None):
+        """Return the `(url, mime_type)` of the font files to preload in <head>
+        for the script of the page language (defaults to the one of the
+        environment), as stored by `_update_font_preloads`."""
+        subset = FONT_SUBSET_BY_LANG.get((lang or self.env.lang or '').split('_')[0], 'latin')
+        if not subset:
+            return []
+        font_preloads = self.font_preloads or {}
+        preloads = []
+        for url in font_preloads.get(subset, font_preloads.get('', [])):
+            extension = url.rpartition('.')[2].lower()
+            preloads.append((url, f'font/{extension}' if extension in ('woff2', 'woff', 'ttf', 'otf') else None))
+        return preloads
 
     def _get_icon_font_family(self):
         """Return the icon font the website renders with, empty if the default
