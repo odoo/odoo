@@ -1,5 +1,5 @@
 import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel";
-import { useHover } from "@mail/utils/common/hooks";
+import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 
 import { Component, props, types } from "@odoo/owl";
 
@@ -9,7 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class DiscussSidebarCategory extends Component {
     static template = "mail.DiscussSidebarCategory";
-    static components = { DiscussSidebarChannel, Dropdown };
+    static components = { DiscussSidebarChannel, Dropdown, UseHoverOverlay };
 
     setup() {
         super.setup();
@@ -18,7 +18,7 @@ export class DiscussSidebarCategory extends Component {
             category: types.instanceOf(this.store["DiscussAppCategory"].Class),
         });
         this.discusscorePublicWebService = useService("discuss.core.public.web");
-        this.hover = useHover(["root", "floating"], {
+        this.hover = useHover(["root"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.onHover(true);
