@@ -118,6 +118,18 @@ class TestWebsiteSaleStockProductWarehouse(
             self.assertTrue(values.get("warning", False))
             self.assertEqual(values.get("quantity"), 25)
 
+    def test_cart_add_minimum_quantity_unavailable(self):
+        """A product shouldn't be added to the cart if the stock can't cover its minimum quantity."""
+        product = self._create_product(minimum_quantity=5)
+        self._add_product_qty_to_wh(product.id, 3, self.warehouse_1.lot_stock_id.id)
+        cart = self._create_so(order_line=[])
+
+        with self.mock_request(sale_order_id=cart.id):
+            values = cart._cart_add(product_id=product.id, quantity=1)
+
+        self.assertFalse(cart.order_line)
+        self.assertIn("unavailable", values["warning"])
+
     def test_open_shop_when_product_has_no_variants(self):
         """Test opening the shop page after deleting all variants of product."""
         product_template = self.product.product_tmpl_id

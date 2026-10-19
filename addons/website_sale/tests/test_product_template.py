@@ -149,6 +149,35 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         )
         self.assertAlmostEqual(result["price"], expected_price, places=2)
 
+    def test_get_additional_combination_info_minimum_quantity(self):
+        """The minimum quantity proposed on the product page accounts for the cart quantity."""
+        self.product.minimum_quantity = 8  # The cart already contains 5 units
+
+        def get_minimum_qty(**request_kwargs):
+            with self.mock_request(**request_kwargs) as request:
+                combination_info = (
+                    self
+                    .env["product.template"]
+                    .with_context(website_sale_product_page=True)
+                    ._get_additional_combination_info(
+                        self.product,
+                        1.0,
+                        self.product.uom_id,
+                        self.website,
+                        request.pricelist,
+                        request.fiscal_position,
+                    )
+                )
+            return combination_info.get("minimum_qty")
+
+        self.assertEqual(get_minimum_qty(), 8)
+        self.assertEqual(get_minimum_qty(sale_order_id=self.cart.id), 3)
+
+        self.cart.order_line.filtered(
+            lambda sol: sol.product_id == self.product
+        ).product_uom_qty = 8
+        self.assertIsNone(get_minimum_qty(sale_order_id=self.cart.id))
+
     def test_get_available_uoms_no_restrictions(self):
         self._enable_uom()
         template = self.product.product_tmpl_id
