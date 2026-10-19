@@ -4,7 +4,7 @@
 }
 
 .o-mail-ChatHub:not(.o-dragged) .o-mail-ChatHub-bubbles {
-    bottom: calc(#{var(--mail-ChatHub-bubbles-bottom, 0px)} + #{var(--mail-ChatHub-bubbles-bottomLift, 0px)});
+    bottom: calc(var(--mail-ChatHub-bubbles-bottom, 0px) + var(--mail-ChatHub-bubbles-bottomLift, 0px));
 
     &.o-liftUp {
         --mail-ChatHub-bubbles-bottomLift: 25px;
