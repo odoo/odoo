@@ -223,7 +223,7 @@ class HrEmployeeBase(models.AbstractModel):
                 employees_without_work_contact += employee
             else:
                 partner = employee.work_contact_id
-                if not employee.user_id:
+                if not employee.user_id and not partner.user_ids:
                     partner = partner.sudo()
                 partner.write({
                     'email': employee.work_email,
