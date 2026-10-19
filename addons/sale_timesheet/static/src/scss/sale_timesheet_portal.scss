@@ -1,0 +1,15 @@
+.o_timesheet_accordion {
+    .card-header {
+        a {
+            text-decoration: none;
+            &:after {
+                content: "arrow_drop_down";
+                font-family: 'Material Symbols Outlined';
+            }
+            &.collapsed:after {
+                content: "arrow_right";
+                font-family: 'Material Symbols Outlined';
+            }
+        }
+    }
+}

@@ -1,0 +1,205 @@
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import Form, tagged
+from odoo.fields import Command
+
+@tagged('post_install', '-at_install')
+class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
+    _test_user_groups = None  # FIXME list needed groups
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.invoice = cls.init_invoice('in_invoice', products=cls.product_a + cls.product_b)
+
+    def test_in_invoice_single_duplicate_reference(self):
+        """ Ensure duplicated ref are computed correctly in this simple case (in_invoice)"""
+        bill_1 = self.invoice
+        bill_1.ref = 'a unique supplier reference that will be copied'
+        bill_2 = bill_1.copy(default={'invoice_date': bill_1.invoice_date})
+        # ensure no Error is raised
+        bill_2.ref = bill_1.ref
+        self.assertRecordValues(bill_2, [{'duplicated_ref_ids': bill_1.ids}])
+
+    def test_out_invoice_single_duplicate_reference(self):
+        """
+            Ensure duplicated move are computed correctly in this simple case (out_invoice).
+            For it to be a duplicate, the partner, the invoice date and the amount total must be the same.
+        """
+        invoice_1 = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            invoice_date='2023-01-01'
+        )
+        invoice_2 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
+        self.assertRecordValues(invoice_2, [{'duplicated_ref_ids': invoice_1.ids}])
+
+        # Different date but same product and same partner, no duplicate
+        invoice_3 = invoice_1.copy(default={'invoice_date': '2023-12-31'})
+        self.assertRecordValues(invoice_3, [{'duplicated_ref_ids': []}])
+
+        # Different product and same partner and same date, no duplicate
+        invoice_4 = invoice_1 = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_b,
+            invoice_date='2023-01-01'
+        )
+        self.assertRecordValues(invoice_4, [{'duplicated_ref_ids': []}])
+
+    def test_in_invoice_single_duplicate_reference_with_form(self):
+        """ Ensure duplicated ref are computed correctly with UI's NEW_ID"""
+        invoice_1 = self.invoice
+        invoice_1.ref = 'a unique supplier reference that will be copied'
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = invoice_1.invoice_date
+        move_form.ref = invoice_1.ref
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_b
+        invoice_2 = move_form.save()
+        self.assertRecordValues(invoice_2, [{'duplicated_ref_ids': invoice_1.ids}])
+
+    def test_in_invoice_multiple_duplicate_reference_batch(self):
+        """ Ensure duplicated ref are computed correctly even when updated in batch"""
+        invoice_1 = self.invoice
+        invoice_1.ref = 'a unique supplier reference that will be copied'
+        invoice_2 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
+        invoice_3 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
+
+        # reassign to trigger the compute method
+        invoices = invoice_1 + invoice_2 + invoice_3
+        invoices.ref = invoice_1.ref
+        self.assertRecordValues(invoices, [
+            {'duplicated_ref_ids': (invoice_2 + invoice_3).ids},
+            {'duplicated_ref_ids': (invoice_1 + invoice_3).ids},
+            {'duplicated_ref_ids': (invoice_1 + invoice_2).ids},
+        ])
+
+    def test_in_invoice_multiple_duplicate_reference_batch_in_edit_mode(self):
+        """
+            Ensure duplicated ref are computed correctly even when updated in batch
+            when they are in edit mode
+        """
+        invoice_1 = self.invoice
+        invoice_1.ref = 'a unique supplier reference that will be copied'
+        invoice_2 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
+        invoices_new = self.env['account.move'].browse([
+            self.env['account.move'].new(origin=inv).id for inv in (invoice_1, invoice_2)
+        ])
+        # reassign to trigger the compute method
+        invoices_new.ref = invoice_1.ref
+        self.assertRecordValues(invoices_new, [
+            {'duplicated_ref_ids': (invoices_new[1]).ids},
+            {'duplicated_ref_ids': (invoices_new[0]).ids},
+        ])
+
+    def test_in_invoice_single_duplicate_reference_diff_date(self):
+        """ Ensure duplicated ref are computed correctly for different dates"""
+        bill1 = self.invoice.copy({'invoice_date': self.invoice.invoice_date})
+        bill1.ref = 'bill1'
+
+        # Same ref but different year -> Not duplicated
+        bill2 = bill1.copy({'invoice_date': '2020-01-01'})
+        bill2.ref = bill1.ref
+        self.assertNotIn(bill1, bill2.duplicated_ref_ids)
+        self.assertNotIn(bill2, bill1.duplicated_ref_ids)
+
+        # Same ref and same year -> Duplicated
+        bill3 = bill1.copy({'invoice_date': f"{bill1.invoice_date.year}-04-11"})
+        bill3.ref = bill1.ref
+        self.assertEqual(bill3.duplicated_ref_ids, bill1)
+
+        # Even after posting
+        bill3.action_post()
+        self.assertEqual(bill3.duplicated_ref_ids, bill1)
+
+        # Same ref and no invoice date -> Duplicated
+        bill4 = self.invoice.copy()
+        bill4.ref = "bill4"
+        bill5 = bill4.copy()
+        bill5.ref = bill4.ref
+        self.assertEqual(bill5.duplicated_ref_ids, bill4)
+
+    def test_in_invoice_single_duplicate_no_reference(self):
+        """ Ensure duplicated bills are recognized with or without
+            a reference when the amount, date, partner are equal"""
+        bill1 = self.invoice.copy({'invoice_date': '2020-01-01'})
+        bill2 = bill1.copy()
+
+        # trigger compute method
+        all_bills = bill1 + bill2
+        all_bills.invoice_date = self.invoice.invoice_date
+
+        # Assert duplicates when there is no ref
+        self.assertIn(bill1, bill2.duplicated_ref_ids)
+        self.assertIn(bill2, bill1.duplicated_ref_ids)
+
+        # Assert duplicates when there is one ref
+        bill1.update({'ref': "bill1 ref"})
+        bill2.update({'ref': bill2.ref})
+        self.assertIn(bill1, bill2.duplicated_ref_ids)
+        self.assertIn(bill2, bill1.duplicated_ref_ids)
+
+        # Assert duplicated when different refs
+        bill1.update({'ref': bill1.ref})
+        bill2.update({'ref': "bill2 ref"})
+        self.assertIn(bill1, bill2.duplicated_ref_ids)
+        self.assertIn(bill2, bill1.duplicated_ref_ids)
+
+    def test_in_receipt_duplicate(self):
+        """ Ensure duplicated in_receipts are detected correctly"""
+        receipt_1 = self.init_invoice(
+            move_type='in_receipt',
+            products=self.product_a,
+            invoice_date='2023-01-01',
+        )
+        receipt_2 = receipt_1.copy(default={'invoice_date': receipt_1.invoice_date})
+        self.assertRecordValues(receipt_2, [{'duplicated_ref_ids': receipt_1.ids}])
+
+        # Duplicates should also be detected between in_invoices and in_receipts
+        receipt_2.move_type = 'in_invoice'
+        self.assertRecordValues(receipt_2, [{'duplicated_ref_ids': receipt_1.ids}])
+
+    def test_out_receipt_duplicate(self):
+        """ Ensure duplicated out_receipts are detected correctly"""
+        receipt_1 = self.init_invoice(
+            move_type='out_receipt',
+            products=self.product_a,
+            invoice_date='2023-01-01',
+        )
+        receipt_2 = receipt_1.copy(default={'invoice_date': receipt_1.invoice_date})
+        receipt_2.ref = receipt_1.ref
+        self.assertRecordValues(receipt_2, [{'duplicated_ref_ids': receipt_1.ids}])
+
+        # Duplicates should also be detected between out_invoices and out_receipts
+        receipt_2.move_type = 'out_invoice'
+        self.assertRecordValues(receipt_2, [{'duplicated_ref_ids': receipt_1.ids}])
+
+    def test_out_invoice_duplicate_with_mixed_epd_onchange(self):
+        """ Changing the invoice date in the form so that a posted invoice with a mixed early payment
+        discount becomes a duplicate should not crash when computing the duplicate's display name."""
+        early_pay_mixed = self.env['account.payment.term'].create({
+            'name': '2% discount if paid within 10 days',
+            'early_discount': True,
+            'discount_percentage': 2,
+            'discount_days': 10,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 0,
+                'value_amount': 100,
+            })],
+        })
+        invoice_1 = self.init_invoice('out_invoice', products=self.product_a, invoice_date='2023-01-01')
+        invoice_1.ref = 'a unique customer reference that will be copied'
+        invoice_1.invoice_payment_term_id = early_pay_mixed
+        invoice_1.action_post()
+        invoice_2 = invoice_1.copy(default={'invoice_date': '2023-01-02', 'ref': invoice_1.ref})
+        self.assertRecordValues(invoice_2, [{'duplicated_ref_ids': []}])
+
+        move_form = Form(invoice_2)
+        move_form.invoice_date = invoice_1.invoice_date
+        invoice_2 = move_form.save()
+        self.assertRecordValues(invoice_2, [{'duplicated_ref_ids': invoice_1.ids}])

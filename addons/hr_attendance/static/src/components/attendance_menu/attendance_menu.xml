@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance.attendance_menu">
+    <t t-if="this.state.isDisplayed">
+        <Dropdown position="'bottom-end'"
+                  beforeOpen.bind="this.beforeDropdownOpen"
+                  menuClass="'p-0'"
+                  state="this.dropdown">
+            <button>
+                <i class="oi oi-filled"
+                   data-icon="circle"
+                   t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"
+                   role="img"
+                   aria-label="Attendance"/>
+            </button>
+
+            <t t-set-slot="content">
+                <div class="att_container d-flex flex-column">
+                    <t t-set="attendanceReviewDetails" t-value="this.attendanceDetails"/>
+                    <div>
+                        <div name="attendance_menu_header"
+                            class="d-flex justify-content-between align-items-center gap-5 border-bottom p-2">
+                            <h3 class="mb-0 ps-1">
+                                <small t-if="this.state.attendances.length">Welcome back</small>
+                                <small t-else="">Welcome,</small>
+                                <span class="d-block">
+                                    <t t-out="this.state.employee?.name || ''"/>
+                                    <t t-if="this.state.attendances.length">!</t>
+                                    <t t-else="">.</t>
+                                </span>
+                            </h3>
+                            <b>
+                                <small class="text-muted text-nowrap align-self-center" t-out="this.todayDateLabel"/>
+                            </b>
+                        </div>
+                        <div t-if="this.showVideoStream" class="d-flex justify-content-center p-3">
+                            <AttendanceVideoStream
+                                height="200"
+                                width="240"
+                                exposeCameraCapture.bind="this.setCameraCapture"
+                                onStreamStateChange.bind="this.setStreamAvailable"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="o_att_today_wrap px-2">
+                        <div t-if="attendanceReviewDetails" class="pt-2 w-100">
+                            <t t-set="isEditingAttendance"
+                                t-value="this.state.editingAttendanceId === attendanceReviewDetails.id"/>
+                            <div t-if="attendanceReviewDetails.sessions.length"
+                                class="list-group mb-2">
+                                <div t-foreach="attendanceReviewDetails.sessions"
+                                     t-as="session"
+                                     t-key="session.id"
+                                     class="list-group-item border-0 p-0"
+                                     t-att-class="session.selected ? 'bg-body-tertiary' : 'list-group-item-action'">
+                                    <div
+                                        class="d-flex justify-content-between align-items-center gap-3 p-2 cursor-pointer"
+                                        t-on-click="() => this.selectAttendance(session.id)">
+                                        <div class="d-flex align-items-center gap-2 min-w-0">
+                                            <i class="oi flex-shrink-0"
+                                               t-attf-data-icon="{{ session.selected
+                                                   ? 'keyboard_arrow_down'
+                                                   : 'keyboard_arrow_right' }}"/>
+                                            <span class="text-truncate">
+                                                <t t-out="this._formatAttendanceTime(session.checkIn)"/> -
+                                                <t t-if="session.checkOut"
+                                                    t-out="this._formatAttendanceTime(session.checkOut)"/>
+                                                <t t-else="">Now</t>
+                                            </span>
+                                            <span t-if="session.timeTypeAbbr"
+                                                  class="o_tag badge rounded-pill flex-shrink-0"
+                                                  t-attf-class="o_tag_color_{{ session.timeTypeColor }}"
+                                                  t-out="session.timeTypeAbbr"/>
+                                        </div>
+                                        <strong class="text-nowrap">
+                                            <t t-out="session.durationLabel"/>
+                                        </strong>
+                                    </div>
+                                    <div t-if="session.selected" class="p-2 pt-0">
+                                        <t t-if="isEditingAttendance">
+                                            <Record t-props="this.attendanceRecordProps"
+                                                t-slot-scope="data" t-key="attendanceReviewDetails.id">
+                                                <AttendanceInlineForm
+                                                    record="data.record"
+                                                    onKeydown="this.onFormKeydown.bind(this)"
+                                                    onSave="this.saveReviewedAttendance.bind(this)"
+                                                    onDiscard="this.discardReviewedAttendance.bind(this)"
+                                                    showBreak="this.state.breakManagementEnabled"
+                                                />
+                                            </Record>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="row g-2 align-items-start">
+                                                <div class="col-6 min-w-0">
+                                                    <label class="small fw-semibold text-muted mb-1">
+                                                        Check In
+                                                    </label>
+                                                    <div class="fw-semibold">
+                                                        <t t-out="this._formatAttendanceTime(attendanceReviewDetails.checkIn)"/>
+                                                    </div>
+                                                    <div class="small text-muted text-break"
+                                                        t-if="attendanceReviewDetails.inLocation">
+                                                        <t t-out="attendanceReviewDetails.inLocation"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6 min-w-0">
+                                                    <label class="small fw-semibold text-muted mb-1">
+                                                        Check Out
+                                                    </label>
+                                                    <div class="fw-semibold"
+                                                        t-att-class="!attendanceReviewDetails.checkOut ? 'text-muted' : ''">
+                                                        <t t-if="attendanceReviewDetails.checkOut"
+                                                            t-out="this._formatAttendanceTime(attendanceReviewDetails.checkOut)"/>
+                                                        <t t-else="">Pending</t>
+                                                    </div>
+                                                    <div class="small text-muted text-break"
+                                                        t-if="attendanceReviewDetails.outLocation">
+                                                        <t t-out="attendanceReviewDetails.outLocation"/>
+                                                    </div>
+                                                </div>
+                                                <div t-if="this.state.breakManagementEnabled" class="col-12">
+                                                    <label class="small fw-semibold text-muted mb-1">
+                                                        Break
+                                                    </label>
+                                                    <div class="fw-semibold text-muted">
+                                                        <t t-if="attendanceReviewDetails.breakDurationLabel"
+                                                            t-out="attendanceReviewDetails.breakDurationLabel"/>
+                                                        <t t-else="">No break</t>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="o_wrap_btn_sign_out d-flex gap-3 align-items-center bottom-0 p-2 z-2">
+                        <button t-on-click="() => this.signInOut()"
+                                t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'primary' }} flex-grow-1">
+                            <span t-if="!this.state.checkedIn">Check in</span>
+                            <span t-else="">Check out</span>
+                            <i class="oi ms-1" t-attf-data-icon="{{ this.state.checkedIn ? 'logout' : 'login' }}"/>
+                        </button>
+                        <t t-set="attendanceTotals"
+                            t-value="this.state.attendances.length > 1 and attendanceReviewDetails"/>
+                        <div t-if="attendanceTotals" name="attendance_totals" class="text-end text-nowrap ms-auto">
+                            <div class="d-flex align-items-baseline justify-content-end gap-2">
+                                <span class="small text-muted">Worked</span>
+                                <strong class="fs-5 lh-1">
+                                    <t t-out="attendanceTotals.totalDisplay"/>
+                                </strong>
+                            </div>
+                            <div t-if="this.state.breakManagementEnabled and attendanceTotals.breakDisplay"
+                                class="small text-muted">
+                                Break: <t t-out="attendanceTotals.breakDisplay"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</t>
+
+</templates>

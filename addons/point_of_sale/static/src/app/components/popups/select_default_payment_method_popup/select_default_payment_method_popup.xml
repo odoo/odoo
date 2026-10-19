@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.SelectDefaultPaymentMethodPopup">
+        <Dialog size="'md'" bodyClass="'pt-0 pb-2'" title.translate="Select your default payment method">
+            <p class="text-muted small">
+                The payment method you choose will be linked to your device. You can change it later from the menu on top right.
+            </p>
+            <div t-foreach="this.props.groups" t-as="group" t-key="group.provider">
+                <h4 class="mb-2" t-out="group.name"/>
+                <div class="d-flex flex-wrap gap-2">
+                    <button t-foreach="group.paymentMethods" t-as="pm" t-key="pm.id"
+                        class="btn btn-secondary btn-lg lh-lg"
+                        t-att-class="{ 'border-primary text-primary bg-primary-subtle': pm.id === this.state.selection[group.provider] }"
+                        t-on-click="() => this.select(group.provider, pm.id)"
+                        t-out="pm.name"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.confirmSelection">
+                    Confirm
+                </button>
+                <button class="btn btn-secondary" t-on-click="this.cancel">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

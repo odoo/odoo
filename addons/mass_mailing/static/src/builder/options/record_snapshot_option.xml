@@ -1,0 +1,15 @@
+<templates>
+    <t t-name="mass_mailing.recordSnapshotOption">
+        <BuilderRow label="this.getModelDisplayName()">
+            <BuilderMany2One
+                action="'selectRecordAction'"
+                model="this.getElementDataModel()"
+                preview="false"
+                allowUnselect="false"
+                actionParam="{
+                    model: this.getElementDataModel(),
+                    fragmentKey: this.getElementFragmentKey(),
+                }"/>
+        </BuilderRow>
+    </t>
+</templates>

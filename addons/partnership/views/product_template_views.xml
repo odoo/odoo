@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.inherit.partnership</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="service_tracking" position="attributes">
+                <attribute name="invisible" remove="1" separator="or"/>
+            </field>
+            <field name="service_tracking" position="after">
+                <field name="grade_id" invisible="service_tracking != 'partnership'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

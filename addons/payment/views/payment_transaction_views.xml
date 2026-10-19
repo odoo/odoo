@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_transaction_form" model="ir.ui.view">
+        <field name="name">payment.transaction.form</field>
+        <field name="model">payment.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Payment Transactions" create="false" edit="false">
+                <header>
+                    <button
+                        string="Capture Transaction"
+                        type="object"
+                        name="action_capture"
+                        invisible="state != 'authorized'"
+                        class="oe_highlight"
+                    />
+                    <button
+                        string="Void Transaction"
+                        type="object"
+                        name="action_void"
+                        confirm="Are you sure you want to void the authorized transaction? This
+                                 action can't be undone."
+                        invisible="state != 'authorized'"
+                    />
+                    <button
+                        string="Post-process"
+                        help="Run the post-processing step for this transaction."
+                        type="object"
+                        name="action_post_process"
+                        invisible="is_post_processed"
+                        groups="base.group_no_one"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,pending,done,cancel,error"
+                        invisible="capture_manually"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,pending,authorized,done,cancel,error"
+                        invisible="not capture_manually"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            type="object"
+                            name="action_view_refunds"
+                            icon="payments"
+                            invisible="refunds_count == 0"
+                            class="oe_stat_button"
+                        >
+                            <field string="Refunds" name="refunds_count" widget="statinfo"/>
+                        </button>
+                        <button
+                            type="object"
+                            name="action_view_payment_data"
+                            icon="refresh"
+                            invisible="payment_data_count == 0"
+                            groups="base.group_no_one"
+                            class="oe_stat_button"
+                        >
+                            <field
+                                string="Pending Updates" name="payment_data_count" widget="statinfo"
+                            />
+                        </button>
+                        <button
+                            type="object"
+                            name="action_view_child_transactions"
+                            icon="history"
+                            invisible="child_transaction_count == 0"
+                            class="oe_stat_button"
+                        >
+                            <field
+                                string="Operations"
+                                name="child_transaction_count"
+                                widget="statinfo"
+                            />
+                        </button>
+                    </div>
+                    <div class="float-end d-flex gap-2">
+                        <span
+                            invisible="is_live"
+                            class="badge rounded-pill text-bg-warning fs-6"
+                        >
+                            Test Mode
+                        </span>
+                        <span
+                            invisible="not is_post_processed"
+                            groups="base.group_no_one"
+                            class="badge rounded-pill text-bg-success fs-6"
+                        >
+                            Post-processed
+                        </span>
+                    </div>
+                    <div class="oe_title">
+                        <label string="Reference" for="reference"/>
+                        <h1><field name="reference" class="text-break"/></h1>
+                    </div>
+                    <group name="transaction_details">
+                        <field name="currency_id" invisible="1"/>
+                        <field name="amount"/>
+                        <field name="partner_id" widget="res_partner_many2one"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="create_date"/>
+                    </group>
+                    <notebook>
+                        <page string="Payment">
+                            <group name="payment_details">
+                                <field name="provider_id"/>
+                                <field name="payment_method_id"/>
+                                <field name="provider_reference"/>
+                                <field name="token_id" invisible="not token_id"/>
+                            </group>
+                        </page>
+                    </notebook>
+                    <group string="Message" invisible="not state_message">
+                        <field name="state_message" colspan="2" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="payment_transaction_list" model="ir.ui.view">
+        <field name="name">payment.transaction.list</field>
+        <field name="model">payment.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Payment Transactions" create="false">
+                <field name="create_date"/>
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'pending'"
+                    decoration-danger="state in ['cancel','error']"
+                    decoration-success="state in ['done','authorized']"
+                />
+                <field name="reference"/>
+                <field name="payment_method_id" string="Method"/>
+                <field name="provider_id"/>
+                <field name="partner_id"/>
+                <!-- Needed to display the currency of the amounts -->
+                <field name="currency_id" column_invisible="True"/>
+                <field name="amount"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="is_live" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="payment_transaction_search" model="ir.ui.view">
+        <field name="name">payment.transaction.search</field>
+        <field name="model">payment.transaction</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="reference"/>
+                <field name="provider_id"/>
+                <field name="partner_id"/>
+                <field name="partner_name"/>
+                <filter
+                    string="Confirmed"
+                    name="confirmed_transactions"
+                    domain="[('state', '=', 'done')]"
+                />
+                <filter
+                    string="Production Environment"
+                    name="live_transactions"
+                    domain="[('is_live', '=', True)]"
+                />
+                <group>
+                    <filter
+                        string="Provider"
+                        name="groupby_provider_id"
+                        context="{'group_by': 'provider_id'}"
+                    />
+                    <filter
+                        string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"
+                    />
+                    <filter string="Status" name="state" context="{'group_by': 'state'}"/>
+                    <filter
+                        string="Production Environment"
+                        name="is_live"
+                        context="{'group_by': 'is_live'}"
+                    />
+                    <filter
+                        string="Company"
+                        name="company"
+                        context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_payment_transaction" model="ir.actions.act_window">
+        <field name="name">Payment Transactions</field>
+        <field name="res_model">payment.transaction</field>
+        <field name="path">payment-transactions</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_neutral_face">
+                There are no transactions to show
+            </p>
+        </field>
+    </record>
+
+    <record id="action_payment_transaction_linked_to_token" model="ir.actions.act_window">
+        <field name="name">Payment Transactions Linked To Token</field>
+        <field name="res_model">payment.transaction</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('token_id','=', active_id)]</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+</odoo>

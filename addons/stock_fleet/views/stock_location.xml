@@ -1,0 +1,14 @@
+<odoo>
+  <data>
+    <record id="stock_location_form_stock_fleet" model="ir.ui.view">
+        <field name="name">stock.location.form.inherit.stock.transport</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <field name="usage" position="attributes">
+                <attribute name="readonly">context.get('for_dock_location', False)</attribute>
+            </field>
+        </field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,50 @@
+.o-discuss-CallMenu-buttonContent {
+    max-width: 160px;
+    @include o-mail-call-bordered(var(--discuss-CallMenu-borderedOpacity, .35));
+
+    &.o-isOdooCommunity {
+        height: $o-navbar-height - 20px !important; // same button height as in enterprise.
+        overflow: hidden;
+        color: $o-action !important;
+    }
+}
+
+.o-discuss-CallMenu-actionsButton, .o-discuss-CallMenu-channelInfo {
+    background-color: transparent !important;
+    &:hover {
+        background-color: mix($gray-200, $gray-300) !important;
+    }
+}
+
+.o-discuss-CallMenu-actionsControl {
+    width: 28px;
+}
+
+.o-discuss-CallMenu-actionsChevron {
+    opacity: 0;
+}
+
+.o-discuss-CallMenu-actionsAudioBars, .o-discuss-CallMenu-actionsChevron {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o-discuss-CallMenu-warningBadge {
+    aspect-ratio: 1 !important;
+    font-size: 0.6rem !important;
+    transform: none !important;
+}
+
+.o-discuss-CallMenu-actionsButton {
+    &:hover, &.o-dropdown-open {
+        .o-discuss-CallMenu-actionsChevron {
+            opacity: 1;
+        }
+        .o-discuss-CallMenu-actionsAudioBars, .o-discuss-CallMenu-warningBadge {
+            opacity: 0;
+        }
+    }
+}

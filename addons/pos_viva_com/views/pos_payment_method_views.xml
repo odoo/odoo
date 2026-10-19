@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_viva_com" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.viva.com</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="payment_provider != 'viva_com'">
+                    <page name="settings" string="Viva Com">
+                        <group>
+                            <field name="viva_com_merchant_id" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                            <field name="viva_com_api_key" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                            <field name="viva_com_client_id" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                            <field name="viva_com_client_secret" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                            <field name="viva_com_test_mode" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                            <field name="viva_com_terminal_id" invisible="payment_provider != 'viva_com'" required="payment_provider == 'viva_com'"/>
+                            <field name="viva_com_webhook_endpoint" invisible="payment_provider != 'viva_com' or not id" required="payment_provider == 'viva_com'" widget="CopyClipboardChar"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

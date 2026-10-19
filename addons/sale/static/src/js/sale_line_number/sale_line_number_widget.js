@@ -1,0 +1,16 @@
+/** @odoo-module **/
+import { Component, useProps } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+
+export class LineNumberWidget extends Component {
+    static template = "sale.LineNumber";
+    props = useProps(standardWidgetProps);
+}
+
+export const lineNumber = {
+    component: LineNumberWidget,
+    fieldDependencies: [{ name: "line_number_offset", type: "integer" }],
+};
+
+registry.category("view_widgets").add("line_number", lineNumber);

@@ -1,0 +1,10 @@
+<templates>
+    <t t-name="mass_mailing.MailingTemplateKanbanIframe">
+        <div class="d-flex w-100 h-100">
+            <div class="flex-grow-1 o_mass_mailing_template_kanban_iframe_container position-relative">
+                <iframe class="w-100 h-100" t-ref="this.iframeRef" t-att-hidden="!this.ready() ? '' : false"
+                    t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"/>
+            </div>
+        </div>
+    </t>
+</templates>

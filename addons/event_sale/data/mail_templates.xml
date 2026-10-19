@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_registration_change_exception" name="Message: Alert on event registration data change">
+    <div>
+        <p>
+            <span>Registration modification for attendee:</span>
+            <a href="#" data-oe-model="event.registration" t-att-data-oe-id="registration.id"><t t-out="registration.name"/></a>.
+            <span>Manual actions may be needed.</span>
+        </p>
+        <div class="mt16">
+            <p>Exception:</p>
+            <ul>
+                <li>
+                    <a href="#" data-oe-model="event.registration" t-att-data-oe-id="registration.id"><t t-out="registration.name"/></a>:
+                    <span><t t-out="record_type"/> changed from <strong><t t-out="old_name"/></strong> to <strong><t t-out="new_name"/></strong></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+</odoo>

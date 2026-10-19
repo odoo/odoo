@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="res_role_accounting_team" model="res.role">
+            <field name="name">Accounting Team</field>
+            <field name="user_ids" eval="[Command.link(ref('base.user_demo')), Command.link(ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo>

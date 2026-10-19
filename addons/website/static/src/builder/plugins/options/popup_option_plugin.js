@@ -1,0 +1,181 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { Plugin } from "@html_editor/plugin";
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
+import { ShowOnOption } from "../floating_snippets_plugin";
+
+export class PopupOption extends BaseOptionComponent {
+    static id = "popup_option";
+    static template = "website.PopupOption";
+    static components = { ShowOnOption };
+}
+
+registry.category("website-options").add(PopupOption.id, PopupOption);
+
+export class PopupOptionPlugin extends Plugin {
+    static id = "PopupOption";
+    static dependencies = ["anchor", "visibility", "domObserver", "popupVisibilityPlugin"];
+
+    /** @type {import("plugins").WebsiteResources} */
+    resources = {
+        dropzone_selectors: {
+            selector: ".s_popup",
+            exclude: "#website_cookies_bar",
+            excludeAncestor:
+                ".s_popup, .s_table_of_content, .s_tabs, .s_tabs_images, .position-sticky, .o_mega_menu",
+            dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
+        },
+        builder_actions: {
+            SetBackdropAction,
+            CopyAnchorAction,
+            SetPopupDelayAction,
+        },
+        floating_snippets_selectors: ".s_popup",
+        before_setup_editor_handlers: this.setPopupEditorMessage.bind(this),
+        on_cloned_handlers: this.onCloned.bind(this),
+        on_removed_handlers: this.onRemoved.bind(this),
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        on_snippet_over_dropzone_handlers: this.onSnippetOverDropzone.bind(this),
+        on_snippet_out_dropzone_handlers: this.onSnippetOutDropzone.bind(this),
+        on_snippet_inserted_handlers: this.onSnippetInserted.bind(this),
+        on_will_remove_handlers: this.onWillRemove.bind(this),
+        no_parent_containers: ".s_popup",
+        anchor_excluded_selectors: ".s_popup",
+    };
+
+    setPopupEditorMessage() {
+        for (const popupEl of this.editable.querySelectorAll(".s_popup")) {
+            const isPopupEmpty = this.isPopupEmpty(popupEl);
+            this.updatePopupEmptyState(popupEl, isPopupEmpty);
+        }
+    }
+
+    onCloned({ cloneEl }) {
+        if (cloneEl.matches(".s_popup")) {
+            this.assignUniqueID(cloneEl);
+        }
+    }
+
+    onSnippetDropped({ snippetEl }) {
+        if (snippetEl.matches(".s_popup")) {
+            this.assignUniqueID(snippetEl);
+            this.dependencies.domObserver.stageCustomMutation({
+                apply: () => {
+                    this.dependencies.visibility.toggleTargetVisibility(snippetEl, true);
+                },
+                revert: () => {
+                    this.dependencies.visibility.toggleTargetVisibility(snippetEl, false);
+                },
+            });
+        }
+    }
+
+    onSnippetOverDropzone({ dragState }) {
+        const popupEl = dragState.currentDropzoneEl.closest(".s_popup");
+        if (popupEl) {
+            this.updatePopupEmptyState(popupEl, false);
+        }
+    }
+
+    onSnippetOutDropzone({ snippetEl, dragState }) {
+        const popupEl = dragState.currentDropzoneEl.closest(".s_popup");
+        if (popupEl) {
+            // The popup is considered empty if it only contains the dragged snippet.
+            const contentEls = [
+                ...popupEl.querySelectorAll(
+                    ".modal-content.oe_structure > *:not(.s_popup_close, .oe_drop_zone)"
+                ),
+            ].filter((el) => el !== snippetEl);
+            const isPopupEmpty = !contentEls.length;
+            this.updatePopupEmptyState(popupEl, isPopupEmpty);
+        }
+    }
+
+    onSnippetInserted(snippetEl) {
+        const popupEl = snippetEl.closest(".s_popup");
+        if (popupEl) {
+            const isPopupEmpty = this.isPopupEmpty(popupEl);
+            this.updatePopupEmptyState(popupEl, isPopupEmpty);
+        }
+    }
+
+    isPopupEmpty(popupEl) {
+        return !popupEl.querySelector(".modal-content.oe_structure > *:not(.s_popup_close)");
+    }
+
+    /**
+     * Shows/hides the empty structure message.
+     *
+     * @param {HTMLElement} popupEl
+     * @param {Boolean} showEmptyMessage
+     */
+    updatePopupEmptyState(popupEl, showEmptyMessage) {
+        const modalContentEl = popupEl.querySelector(".modal-content.oe_structure");
+        if (showEmptyMessage) {
+            modalContentEl.setAttribute("data-editor-message", _t("Drag blocks here"));
+        } else {
+            modalContentEl.removeAttribute("data-editor-message");
+        }
+        modalContentEl.classList.toggle("oe_structure_empty_message", showEmptyMessage);
+    }
+
+    onWillRemove(el) {
+        this.dependencies.visibility.toggleTargetVisibility(el, false);
+        this.dependencies.domObserver.stageCustomMutation({
+            apply: () => {
+                this.dependencies.visibility.toggleTargetVisibility(el, false);
+            },
+            revert: () => {
+                this.dependencies.visibility.toggleTargetVisibility(el, true);
+            },
+        });
+    }
+
+    onRemoved({ nextTargetEl }) {
+        const popupEl = nextTargetEl?.closest(".s_popup");
+        if (popupEl) {
+            const isPopupEmpty = this.isPopupEmpty(popupEl);
+            this.updatePopupEmptyState(popupEl, isPopupEmpty);
+        }
+    }
+
+    assignUniqueID(editingElement) {
+        editingElement.closest(".s_popup").id = `sPopup${Date.now()}`;
+    }
+}
+
+export class SetBackdropAction extends BuilderAction {
+    static id = "setBackdrop";
+    isApplied({ editingElement }) {
+        const hasBackdropColor = !!editingElement.style.getPropertyValue("background-color").trim();
+        const hasNoBackdropClass = editingElement.classList.contains("s_popup_no_backdrop");
+        return hasBackdropColor && !hasNoBackdropClass;
+    }
+    apply({ editingElement }) {
+        editingElement.classList.remove("s_popup_no_backdrop");
+        editingElement.style.setProperty("background-color", "var(--black-50)", "important");
+    }
+    clean({ editingElement }) {
+        editingElement.classList.add("s_popup_no_backdrop");
+        editingElement.style.removeProperty("background-color");
+    }
+}
+export class CopyAnchorAction extends BuilderAction {
+    static id = "copyAnchor";
+    static dependencies = ["anchor"];
+    apply({ editingElement }) {
+        this.dependencies.anchor.createOrEditAnchorLink(editingElement);
+    }
+}
+export class SetPopupDelayAction extends BuilderAction {
+    static id = "setPopupDelay";
+    apply({ editingElement, value }) {
+        editingElement.dataset.showAfter = value * 1000;
+    }
+    getValue({ editingElement }) {
+        return editingElement.dataset.showAfter / 1000;
+    }
+}
+
+registry.category("website-plugins").add(PopupOptionPlugin.id, PopupOptionPlugin);

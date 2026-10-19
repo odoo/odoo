@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="l10n_it_edi.report_invoice_document">
+        <xpath expr="//t[@t-if='o.l10n_it_ddt_id']" position="before">
+            <t t-set="ddt_pickings" t-value="not o.l10n_it_ddt_id and o.l10n_it_ddt_ids.filtered('l10n_it_ddt_number')"/>
+        </xpath>
+        <xpath expr="//t[@t-if='o.l10n_it_ddt_id']" position="attributes">
+            <attribute name="t-if">o.l10n_it_ddt_id or ddt_pickings</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='o.l10n_it_ddt_id']" position="replace">
+            <t t-if="o.l10n_it_ddt_id">
+                <span t-field="o.l10n_it_ddt_id"/>
+            </t>
+            <t t-else="">
+                <t t-foreach="ddt_pickings" t-as="picking">
+                    <span t-out="picking.l10n_it_ddt_number"/> (<span t-out="picking.date_done.date()" t-options="{'widget': 'date'}"/>)<t t-if="not picking_last">, </t>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

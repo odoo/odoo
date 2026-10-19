@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_package_barcode_delivery" inherit_id="stock.report_package_barcode">
+        <xpath expr="//div[@name='datamatrix_barcode']" position="before">
+            <t t-if="o.shipping_weight or o.weight">
+                <t t-if="o.shipping_weight" t-set="weight_str" t-value="str(int(o.shipping_weight/o.weight_uom_rounding))"/>
+                <t t-else="" t-set="weight_str" t-value="str(int(o.weight/o.weight_uom_rounding))"/>
+                <t t-if="len(weight_str) &lt;= 6">
+                    <t t-if="o.weight_is_kg" t-set="barcode" t-value="barcode + '310'"/>
+                    <t t-else="" t-set="barcode" t-value="barcode + '320'"/>
+                    <t t-set="barcode" t-value="barcode + str(len(str(o.weight_uom_rounding).split('.')[1]))"/>
+                    <t t-set="barcode" t-value="barcode + '0' * (6 - len(str(weight_str))) + weight_str"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o_packaging_type')]" position="after">
+            <t t-if="o.valid_sscc">
+                <!-- SSCC uses weight if necessary/available, standard barcode will not -->
+                <div t-if="o.shipping_weight" class="col"><strong>Shipping Weight: </strong><span t-field="o.shipping_weight"/> <t t-out="o.weight_uom_name"/></div>
+                <div t-elif="o.weight" class="col"><strong>Weight: </strong><span t-field="o.weight"/> <t t-out="o.weight_uom_name"/></div>
+            </t>
+            <t t-else="">
+                <div t-if="o.shipping_weight" class="col">
+                    <strong>Shipping Weight:</strong>
+                    <br/>
+                    <span t-field="o.shipping_weight"/>
+                    <span t-out="env['product.template']._get_weight_uom_id_from_ir_config_parameter().display_name"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="package_zpl_label_delivery" inherit_id="stock.package_zpl_label">
+        <xpath expr="//t[@t-if=&quot;label['package_type']&quot;]" position="after">
+            <t t-if="label.get('weight_text')">
+^FO310,200^A0N,44,33^FH^FD<t t-out="label['weight_text']"/>^FS
+            </t>
+        </xpath>
+    </template>
+
+    <template id="package_pdf_label_delivery" inherit_id="stock.package_pdf_label">
+        <xpath expr="(//div[@t-if=&quot;label['package_type']&quot;])[1]" position="after">
+            <div t-if="label.get('weight_text')" t-out="label['weight_text']"/>
+        </xpath>
+        <xpath expr="(//div[@t-if=&quot;label['package_type']&quot;])[2]" position="after">
+            <div t-if="label.get('weight_text')" style="font-size: 24px; font-weight: bold;" t-out="label['weight_text']"/>
+        </xpath>
+    </template>
+</odoo>

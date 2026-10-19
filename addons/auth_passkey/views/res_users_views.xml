@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="auth_passkey_users_form">
+        <field name="name">auth.passkey.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='api_keys']" position="after">
+                <div invisible="id != uid" class="d-md-flex mt-3" >
+                    <div class="col-md-6 col-lg-3 d-flex flex-column">
+                        <label for="action_create_passkey" string="Passkeys" class="o_form_label"/>
+                        <span class="text-muted">
+                            Recommended for extra security.
+                        </span>
+                    </div>
+                    <div class="w-md-50 w-lg-75 d-flex flex-column my-auto">
+                        <field name="auth_passkey_key_ids" invisible="not auth_passkey_key_ids" mode="kanban" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_auth_passkey_kanban_view"/>
+                        <div>
+                            <button type="object" name="action_create_passkey" class="btn btn-secondary h-100" string="Add Passkey"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="auth_passkey_users_preferences">
+        <field name="name">auth.passkey.users.preferences</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='api_keys']" position="after">
+                <div class="d-lg-flex mt-3">
+                    <div class="col-lg-3 d-flex flex-column">
+                        <label for="action_create_passkey" string="Passkeys" class="o_form_label"/>
+                        <span class="text-muted">
+                            Recommended for extra security.
+                        </span>
+                    </div>
+                    <div class="w-lg-75 d-flex flex-column my-auto">
+                        <field name="auth_passkey_key_ids" invisible="not auth_passkey_key_ids" mode="kanban" class="w-lg-75 o_auth_passkey_kanban_view"/>
+                        <div>
+                            <button type="object" name="action_create_passkey" class="btn btn-secondary h-100" string="Add Passkey"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

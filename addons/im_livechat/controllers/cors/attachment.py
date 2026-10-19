@@ -1,0 +1,13 @@
+from odoo.http import route
+
+from odoo.addons.mail.controllers.attachment import AttachmentController
+
+
+class LivechatAttachmentController(AttachmentController):
+    @route("/im_livechat/cors/attachment/upload", auth="force_guest", save_session=False, cors="*", csrf=False)
+    def im_livechat_attachment_upload(self, guest_token, ufile, thread_id, thread_model, is_pending=False, **kwargs):
+        return self.mail_attachment_upload(ufile, thread_id, thread_model, is_pending, **kwargs)
+
+    @route("/im_livechat/cors/attachment/delete", methods=["POST"], type="jsonrpc", auth="force_guest", save_session=False, cors="*")
+    def im_livechat_attachment_delete(self, guest_token, access_token_by_attachment_id):
+        return self.mail_attachment_delete(access_token_by_attachment_id)

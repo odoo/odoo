@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="event_question_name" model="event.question">
+            <field name="title">Name</field>
+            <field name="question_type">name</field>
+            <field name="is_mandatory_answer">True</field>
+            <field name="is_default">True</field>
+            <field name="is_reusable">True</field>
+        </record>
+        <record id="event_question_email" model="event.question">
+            <field name="title">Email</field>
+            <field name="question_type">email</field>
+            <field name="is_mandatory_answer">True</field>
+            <field name="is_default">True</field>
+            <field name="is_reusable">True</field>
+        </record>
+        <record id="event_question_phone" model="event.question">
+            <field name="title">Phone</field>
+            <field name="question_type">phone</field>
+            <field name="is_default">True</field>
+            <field name="is_reusable">True</field>
+        </record>
+    </data>
+</odoo>

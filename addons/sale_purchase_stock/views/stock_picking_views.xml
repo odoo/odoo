@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">sale.purchase.stock.view.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_return']" position="attributes">
+                <attribute name="invisible">not show_return or not (state == 'done' or purchase_id or sale_id)</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

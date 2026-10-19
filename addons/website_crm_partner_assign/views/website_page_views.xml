@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="partner_pages_tree_view" model="ir.ui.view">
+        <field name="name">Partner Pages List</field>
+        <field name="model">res.partner</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="partnership.view_res_partner_grade_tree"/>
+        <field name="arch" type="xml">
+            <!-- Add attributes to the main tree -->
+            <list position="attributes">
+                <attribute name="string">Partners</attribute>
+                <attribute name="js_class">website_pages_list</attribute>
+                <attribute name="type">object</attribute>
+                <attribute name="action">open_website_url</attribute>
+                <attribute name="create">False</attribute>
+            </list>
+
+            <field name="properties" position="after">
+                <field name="is_published"/>
+            </field>
+
+            <field name="grade_id" position="attributes">
+                <attribute name="optional"/>
+            </field>
+            <field name="application_statistics" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="activity_ids" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="partner_pages_kanban_view" model="ir.ui.view">
+        <field name="name">Partner Pages Kanban</field>
+        <field name="model">res.partner</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <!-- Add attributes to the main tree -->
+            <kanban position="attributes">
+                <attribute name="string">Partners</attribute>
+                <attribute name="type">object</attribute>
+                <attribute name="action">open_website_url</attribute>
+                <attribute name="create">False</attribute>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_partner_pages_list" model="ir.actions.act_window">
+        <field name="name">Partner Pages</field>
+        <field name="res_model">res.partner</field>
+        <field name="path">partner-pages</field>
+        <field name="view_mode">list,kanban</field>
+        <field name="domain">[('grade_id','!=',False), ('is_company', '=', True)]</field>
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('partner_pages_tree_view')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('partner_pages_kanban_view')}),
+        ]"/>
+    </record>
+
+    <menuitem id="menu_partners_pages"
+        parent="website.menu_content"
+        sequence="80"
+        name="Partners"
+        action="action_partner_pages_list"/>
+</odoo>

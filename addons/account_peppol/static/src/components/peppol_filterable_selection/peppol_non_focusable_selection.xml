@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account_peppol.NonFocusableSelectMenu" t-inherit="web.SelectMenu" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.SelectMenu.search']" position="attributes">
+            <attribute name="t-call">account_peppol.NonFocusableSelectMenu.search</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="account_peppol.NonFocusableSelectMenu.search" t-inherit="web.SelectMenu.search" t-inherit-mode="primary">
+        <xpath expr="//input" position="attributes">
+            <attribute name="tabindex">-1</attribute>
+        </xpath>
+    </t>
+
+</templates>

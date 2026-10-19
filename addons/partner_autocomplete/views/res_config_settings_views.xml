@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.partner.autcomplete</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="partner_autocomplete" position="inside">
+                <widget name="iap_buy_more_credits" service_name="partner_autocomplete" hide_service="1"/>
+            </setting>
+        </field>
+    </record>
+</odoo>

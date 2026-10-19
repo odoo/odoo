@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="res_city_view_form_inherit_l10n_pe" model="ir.ui.view">
+            <field name="name">res.city.view.form.inherit.l10n_pe</field>
+            <field name="model">res.city</field>
+            <field name="inherit_id" ref="base_address_extended.res_city_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='country_id']" position="after">
+                    <field name="l10n_pe_code" invisible="country_code != 'PE'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

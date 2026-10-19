@@ -1,0 +1,61 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import pprint
+
+from odoo import http
+from odoo.http import request
+
+from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
+
+_logger = get_payment_logger(__name__)
+
+
+class APSController(http.Controller):
+    _return_url = "/payment/aps/return"
+    _webhook_url = "/payment/aps/webhook"
+
+    @http.route(
+        _return_url, type="http", auth="public", methods=["POST"], csrf=False, save_session=False
+    )
+    def aps_return_from_checkout(self, **data):
+        """Process the payment data sent by APS after redirection.
+
+        The route is flagged with `save_session=False` to prevent Odoo from assigning a new session
+        to the user if they are redirected to this route with a POST request. Indeed, as the session
+        cookie is created without a `SameSite` attribute, some browsers that don't implement the
+        recommended default `SameSite=Lax` behavior will not include the cookie in the redirection
+        request from the payment provider to Odoo. As the redirection to the '/payment/status' page
+        will satisfy any specification of the `SameSite` attribute, the session of the user will be
+        retrieved and with it the transaction which will be immediately post-processed.
+
+        :param dict data: The payment data.
+        """
+        _logger.info("Handling redirection from APS with data:\n%s", pprint.pformat(data))
+
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("aps", data)
+        if tx_sudo:
+            received_signature = data.get("signature")
+            expected_signature = tx_sudo.provider_id._aps_calculate_signature(data, incoming=True)
+            payment_utils.verify_signature(received_signature, expected_signature)
+            tx_sudo._record(data)
+        return request.redirect("/payment/status")
+
+    @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
+    def aps_webhook(self, **data):
+        """Process the payment data sent by APS to the webhook.
+
+        See https://paymentservices-reference.payfort.com/docs/api/build/index.html#transaction-feedback.
+
+        :param dict data: The payment data.
+        :return: The 'SUCCESS' string to acknowledge the notification
+        :rtype: str
+        """
+        _logger.info("Notification received from APS with data:\n%s", pprint.pformat(data))
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("aps", data)
+        if tx_sudo:
+            received_signature = data.get("signature")
+            expected_signature = tx_sudo.provider_id._aps_calculate_signature(data, incoming=True)
+            payment_utils.verify_signature(received_signature, expected_signature)
+            tx_sudo._record(data)
+        return ""  # Acknowledge the notification.

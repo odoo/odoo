@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.Meeting">
+        <div t-if="this.store.rtc.channel" class="o-mail-Meeting h-100 w-100 p-2 d-flex flex-column" t-att-class="{'o-fullscreen': this.store.rtc.isFullscreen, 'p-1': !this.ui.isSmall, 'pb-3': !this.ui.isSmall and !this.props.isPip}" t-att-data-active="this.store.meetingViewOpened">
+            <div class="d-flex flex-grow-1 h-100 o-min-height-0 gap-1 position-relative">
+                <div class="o-mail-Meeting-callContainer h-100 flex-grow-1 min-w-0" t-att-class="{'d-none': this.ui.isSmall and this.threadActions.activeAction?.actionPanelComponentCondition, 'pb-0': this.ui.isSmall}">
+                    <Call hasOverlay="false" isPip="this.props.isPip"/>
+                </div>
+                <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer h-100 border flex-shrink-0 rounded-4" t-att-class="{
+                    'w-100': this.ui.isSmall,
+                    'o-mail-DiscussApp-sidebarBgColor': this.threadActions.activeAction.id === 'meeting-chat',
+                    'bg-view': this.threadActions.activeAction.id !== 'meeting-chat',
+                }">
+                    <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
+                </div>
+                <MeetingReadyBanner t-if="this.showInviteBanner"/>
+            </div>
+            <!-- A small screen fits its whole bar: everything past the microphone and the camera
+                 is behind a single "More", so there is nothing left to scroll to. -->
+            <div class="o-mail-Meeting-bar pt-2 d-flex align-items-center justify-content-center flex-shrink-0" t-att-class="{'p-2 pb-3': this.ui.isSmall, 'overflow-x-auto': !this.ui.isSmall}">
+                <t t-set="showClock" t-value="!this.rtc.isPipMode and !this.ui.isSmall"/>
+                <span t-if="showClock" t-out="this.dateSimple" t-att-title="this.datetimeMedium" class="o-mail-Meeting-clock d-flex align-items-center user-select-none ms-3 o-text-white fs-3 opacity-75"/>
+                <CallActionList channel="this.channel" className="showClock ? 'ms-auto' : ''" pipExtraActions="this.pipExtraActions" extraMoreActionGroups="this.sideActionGroups"/>
+                <MeetingSideActions t-if="this.hasSideActions" threadActions="this.threadActions"/>
+            </div>
+        </div>
+    </t>
+</templates>

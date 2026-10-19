@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="picking_type_barcode_zpl_label">
+^PW376
+^LL297
+^FO5,60^A0N,30,24^FB366,1,0,C^FH^FD<t t-out="name"/>^FS
+            <t t-if="barcode_value">
+^FO5,100^BY3^BCN,110,N,N,N^FH^FD<t t-out="barcode_value"/>^FS
+^FO5,215^A0N,22,17^FB366,1,0,C^FH^FD<t t-out="label['barcode_text']"/>^FS
+            </t>
+        </template>
+    </data>
+</odoo>

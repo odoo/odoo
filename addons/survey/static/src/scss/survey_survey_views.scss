@@ -1,0 +1,161 @@
+// KANBAN VIEW
+.o_survey_view_kanban_view .o_kanban_renderer {
+    .o_survey_kanban_card {
+        .o_survey_certification_icon {
+            color: $o-main-favorite-color;
+        }
+
+        .o_progressbar {
+            --ProgressBarField-color: none;
+        }
+    }
+
+    // Grouped / Ungrouped sections hidding
+    &.o_kanban_grouped {
+        .row > div {
+            flex: 1 1 100% !important;
+            max-width: 100% !important;
+            padding-left: 0 !important;
+            &.col-6 {
+                flex: 1 1 50% !important;
+                max-width: 50% !important;
+            }
+            &.d-none {
+                display: none !important; //forcing the d-none to override the d-lg or d-sm classes for grouped view
+            }
+        }
+
+        .o_survey_kanban_card {
+            .progress {
+                display: none;
+            }
+        }
+    }
+
+    // Ungrouped display: whole length (kanban-list)
+    &.o_kanban_ungrouped {
+        .o_survey_kanban_card {
+            --#{$prefix}gap: #{map-get($spacers, 3)} #{map-get($spacers, 2)};
+
+            .btn-link-inline {
+                --#{$prefix}btn-padding-x: #{$btn-padding-x};
+                --#{$prefix}btn-padding-y: #{$btn-padding-y};
+            }
+
+            .o_progressbar {
+                --ProgressBarField-min-width: 100px;
+                --ProgressBarField-padding-x: 0;
+
+                flex-direction: row-reverse;
+
+                @include media-breakpoint-down(lg) {
+                    .progress {
+                        display: none;
+                    }
+                }
+            }
+
+            .o_progressbar_value > div {
+                // Keep the correct size based on the percentage value.
+                width: 5ch;
+                font-variant-numeric: tabular-nums;
+            }
+        }
+    }
+
+    // Grouped specific
+    &.o_kanban_grouped {
+        .o_survey_kanban_card {
+            --#{$prefix}columns: 2;
+        }
+    }
+
+    // Ungrouped specific
+    &.o_kanban_ungrouped {
+        // Set a minimal height otherwise display may have different card sized
+        .o_survey_kanban_card > div.row {
+                min-height: 60px;
+        }
+
+        // Left semi-trophy icon for certifications: tweak display for list view
+        .o_survey_kanban_card_certification {
+            background-position: center left -35px;
+            background-size: auto 75%;
+        }
+    }
+
+    // RIBBON: Kanban specific
+    // Ungrouped specific
+    .o_survey_kanban_card {
+        .ribbon {
+            --Ribbon-wrapper-width: 6rem;
+
+            @include media-breakpoint-down(md) {
+                --Ribbon-wrapper-width: 6.5rem;
+            }
+        }
+    }
+}
+
+// FORM view
+.o_survey_form table.o_section_list_view tr.o_data_row.o_is_section {
+    font-weight: bold;
+    background-color: var(--SurveyForm__section-background-color, #DDD);
+    border-top: 1px solid #BBB;
+    border-bottom: 1px solid #BBB;
+
+    > td {
+        background: transparent;
+    }
+}
+.o_survey_form table.o_section_list_view tr.o_data_row.o_is_section {
+    &:hover i {
+        visibility: visible;
+    }
+    &:not(:hover) i {
+        visibility: hidden;
+    }
+}
+
+.o_survey_form {
+    .o_survey_description_editor {
+        .odoo-editor-editable {
+            min-height: 6em;
+        }
+    }
+}
+
+// TOOLS
+.icon_rotates {
+    transform: rotate(180deg);
+}
+
+/* Style of the tiles allowing the user to load a sample survey. */
+
+.o_survey_sample_card {
+    &:hover {
+        background: var(--SurveySampleCard-background--hover, #{$o-gray-200});
+    }
+
+    &:focus-visible {
+        box-shadow: 0 0 0 #{$btn-focus-width} RGBA(#{$btn-link-focus-shadow-rgb}, .5);
+        outline: none;
+    }
+}
+
+.o_form_label.o_form_label_readonly.o_survey_label_survey_start_url{
+    opacity: 100;
+    font-weight: 500;
+}
+
+.o_nocontent_help:has(.o_survey_load_sample) {
+    max-width: unset;
+
+    @include media-breakpoint-up(sm) {
+        max-width: 90%;
+    }
+
+    @include media-breakpoint-up(lg) {
+        max-width: 80%;
+    }
+}

@@ -1,0 +1,128 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment_interco
+#
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.5a1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"PO-Revision-Date: 2026-10-02 10:28+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
+"account_payment_interco/fr/>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr\n"
+"X-Generator: Weblate 2026.8.1\n"
+
+#. module: account_payment_interco
+#: model_terms:ir.ui.view,arch_db:account_payment_interco.res_config_settings_view_form
+msgid "Account Payable"
+msgstr "Compte fournisseur"
+
+#. module: account_payment_interco
+#: model_terms:ir.ui.view,arch_db:account_payment_interco.res_config_settings_view_form
+msgid "Account Receivable"
+msgstr "Compte client"
+
+#. module: account_payment_interco
+#: model:ir.model,name:account_payment_interco.model_res_company
+msgid "Company"
+msgstr "Société"
+
+#. module: account_payment_interco
+#: model:ir.model,name:account_payment_interco.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de configuration"
+
+#. module: account_payment_interco
+#: model:ir.model.fields,field_description:account_payment_interco.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_payment_interco.field_res_company__display_name
+#: model:ir.model.fields,field_description:account_payment_interco.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: account_payment_interco
+#: model:ir.module.module,summary:base.module_account_payment_interco
+msgid "Enable Intercompany payments to reconcile with their invoices on post."
+msgstr ""
+"Activer les paiements inter-sociétés pour les lettrer avec leurs factures "
+"lors de la comptabilisation."
+
+#. module: account_payment_interco
+#: model:ir.model.fields,field_description:account_payment_interco.field_account_move__id
+#: model:ir.model.fields,field_description:account_payment_interco.field_res_company__id
+#: model:ir.model.fields,field_description:account_payment_interco.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_payment_interco
+#. odoo-python
+#: code:addons/account_payment_interco/models/account_move.py:0
+msgid "Interco Settlement - %s"
+msgstr "Règlement interco - %s"
+
+#. module: account_payment_interco
+#: model_terms:ir.ui.view,arch_db:account_payment_interco.res_config_settings_view_form
+msgid "Intercompany Clearing"
+msgstr "Compensation inter-sociétés"
+
+#. module: account_payment_interco
+#: model:ir.model.fields,field_description:account_payment_interco.field_res_company__account_interco_clearing_journal_id
+#: model:ir.model.fields,field_description:account_payment_interco.field_res_config_settings__account_interco_clearing_journal_id
+msgid "Intercompany Clearing Journal"
+msgstr "Journal de compensation inter-sociétés"
+
+#. module: account_payment_interco
+#: model:ir.model.fields,field_description:account_payment_interco.field_res_company__account_interco_payable_id
+#: model:ir.model.fields,field_description:account_payment_interco.field_res_config_settings__account_interco_payable_id
+msgid "Intercompany Clearing Payable Account"
+msgstr "Compte fournisseur de compensation inter-sociétés"
+
+#. module: account_payment_interco
+#: model:ir.model.fields,field_description:account_payment_interco.field_res_company__account_interco_receivable_id
+#: model:ir.model.fields,field_description:account_payment_interco.field_res_config_settings__account_interco_receivable_id
+msgid "Intercompany Clearing Receivable Account"
+msgstr "Compte client de compensation inter-sociétés"
+
+#. module: account_payment_interco
+#: model:ir.module.module,shortdesc:base.module_account_payment_interco
+msgid "Intercompany Payment - Account"
+msgstr "Paiement inter-sociétés - Comptabilité"
+
+#. module: account_payment_interco
+#: model_terms:ir.ui.view,arch_db:account_payment_interco.res_config_settings_view_form
+msgid "Journal"
+msgstr "Journal"
+
+#. module: account_payment_interco
+#: model:ir.model,name:account_payment_interco.model_account_move
+msgid "Journal Entry"
+msgstr "Pièce comptable"
+
+#. module: account_payment_interco
+#: model:ir.model.fields,help:account_payment_interco.field_res_company__account_interco_receivable_id
+#: model:ir.model.fields,help:account_payment_interco.field_res_config_settings__account_interco_receivable_id
+msgid "The account where Intercompany credit note payments will be cleared"
+msgstr ""
+"Le compte sur lequel les paiements d'avoirs inter-sociétés seront compensés"
+
+#. module: account_payment_interco
+#: model:ir.model.fields,help:account_payment_interco.field_res_company__account_interco_payable_id
+#: model:ir.model.fields,help:account_payment_interco.field_res_config_settings__account_interco_payable_id
+msgid "The account where Intercompany invoice payments will be cleared"
+msgstr ""
+"Le compte sur lequel les paiements de factures inter-sociétés seront "
+"compensés"
+
+#. module: account_payment_interco
+#: model:ir.model.fields,help:account_payment_interco.field_res_company__account_interco_clearing_journal_id
+#: model:ir.model.fields,help:account_payment_interco.field_res_config_settings__account_interco_clearing_journal_id
+msgid "The accounting journal where Intercompany payments will be cleared"
+msgstr ""
+"Le journal comptable dans lequel les paiements inter-sociétés seront "
+"compensés"

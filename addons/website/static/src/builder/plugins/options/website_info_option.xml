@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website.InfoPageOption">
+        <BuilderContext action="'websiteConfig'">
+            <BuilderRow label.translate="Odoo Information">
+                <BuilderCheckbox actionParam="{views: ['website.show_website_info']}" />
+            </BuilderRow>
+        </BuilderContext>
+    </t>
+
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='page_options_hook']" position="after">
+            <info_page_option
+                template="website.InfoPageOption"
+                selector="main:has(.o_website_info)"
+                title="Info Page"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+        </xpath>
+    </t>
+</templates>

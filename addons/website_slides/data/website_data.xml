@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--
+            Note that the default website may change and the fields listed below
+            will not automatically move to the new default website. Add fields
+            to _get_settings_to_copy_onto_new_default_website() to copy
+            them when the default website changes.
+        -->
+        <record id="base.default_website" model="website">
+            <field name="website_slide_google_app_key">AIzaSyDOWlmDW-7DbLmOR9ZsT5AOEXf4n6TFwQA</field>
+        </record>
+
+        <record id="website_menu_slides" model="website.menu">
+            <field name="name">Courses</field>
+            <field name="url">/slides</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">50</field>
+        </record>
+    </data>
+</odoo>

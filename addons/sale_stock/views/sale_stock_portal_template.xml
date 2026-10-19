@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="sale_order_portal_template" inherit_id="sale.sale_order_portal_template">
+        <div id="print_invoice_sidebar_button" position="after">
+            <t t-if="sale_order.with_user(env.user).sudo()._is_portal_return_allowed()">
+                <button
+                    class="btn btn-light o_return_button"
+                    t-att-data-sale-order-id="sale_order.id"
+                    t-att-data-access-token="access_token"
+                >
+                    <i class="oi me-2" data-icon="reply"/>Return
+                </button>
+            </t>
+        </div>
+        <t t-set="mobile_additional_action" position="replace">
+            <t
+                t-set="mobile_additional_action"
+                t-value="sale_order.with_user(env.user).sudo()._is_portal_return_allowed()"/>
+        </t>
+        <a id="mobile_feedback_button" position="before">
+            <button
+                t-if="mobile_additional_action"
+                t-attf-class="btn btn-light o_return_button#{'' if mobile_has_primary_action else ' flex-grow-1'}"
+                t-att-data-sale-order-id="sale_order.id"
+                t-att-data-access-token="access_token"
+            >
+                <i class="oi me-1" data-icon="reply"/>Return
+            </button>
+        </a>
+    </template>
+
+    <template
+        id="sale_stock.sale_order_portal_content_inherit_sale_stock"
+        name="Orders Shipping Followup"
+        inherit_id="sale.sale_order_portal_content"
+    >
+        <div id="informations" position="inside">
+            <div t-if="delivery_orders" class="flex-grow-1 flex-shrink-1 flex-basis-0 min-w-0">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <h5 class="mb-0">Delivery</h5>
+                    <t t-if="sale_order.commitment_date and sale_order.state in ['sent', 'sale']">
+                        <div class="badge px-2 py-1 bg-200 d-md-none align-self-center small">
+                            <i class="oi me-1" data-icon="calendar_today"/>
+                            Expected delivery: <b t-field="sale_order.commitment_date" t-options='{"widget": "date"}'/>
+                        </div>
+                        <div class="badge px-2 py-1 bg-200 d-none d-md-inline-flex align-items-center gap-1 small"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Expected delivery">
+                            <i class="oi" data-icon="calendar_today"/>
+                            <b t-field="sale_order.commitment_date" t-options='{"widget": "date"}'/>
+                        </div>
+                    </t>
+                </div>
+                <div class="d-flex flex-column gap-1 mt-2">
+                    <t t-foreach="delivery_orders.sorted('create_date', reverse=True)" t-as="picking">
+                        <t t-set="delivery_report_url" t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
+                        <div class="d-flex align-items-center gap-2 py-1">
+                            <div name="delivery_details" class="d-flex flex-wrap align-items-center gap-1 flex-grow-1 min-w-0">
+                                <a t-att-href="delivery_report_url">
+                                    <span t-out="picking.name"/>
+                                </a>
+                                <span class="text-muted small">
+                                    <span t-if="picking.state == 'done'" t-field="picking.date_done" t-options="{'date_only': True}"/>
+                                    <span t-elif="picking.scheduled_date" t-field="picking.scheduled_date" t-options="{'date_only': True}"/>
+                                </span>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <span t-if="picking.state == 'done'" class="small badge rounded-pill text-bg-success">
+                                    <i class="oi oi-fw" data-icon="local_shipping"/> Shipped</span>
+                                <span t-elif="picking.state == 'cancel'" class="small badge rounded-pill text-bg-danger">
+                                    <i class="oi oi-fw" data-icon="close"/> Cancelled</span>
+                                <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']" class="small badge rounded-pill text-bg-info">
+                                    <i class="oi oi-fw" data-icon="schedule"/> Preparation</span>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <t t-set="returns" t-value="delivery_orders.return_ids.sorted('create_date', reverse=True)"/>
+            <div t-if="returns" class="flex-grow-1 flex-shrink-1 flex-basis-0 min-w-0">
+                <h5 class="mb-2">Returns</h5>
+                <div class="d-flex flex-column gap-1 mt-2">
+                    <t t-foreach="returns" t-as="picking">
+                        <t t-set="delivery_report_url" t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
+                        <div class="d-flex align-items-center gap-2 py-1">
+                            <div class="d-flex flex-wrap align-items-center gap-1 flex-grow-1 min-w-0">
+                                <a t-att-href="delivery_report_url">
+                                    <span t-out="picking.name"/>
+                                </a>
+                                <span class="text-muted small">
+                                    <span t-if="picking.state == 'done'" t-field="picking.date_done" t-options="{'date_only': True}"/>
+                                    <span t-elif="picking.scheduled_date" t-field="picking.scheduled_date" t-options="{'date_only': True}"/>
+                                </span>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <span t-if="picking.state == 'done'" class="small badge rounded-pill text-bg-success">
+                                    <i class="oi oi-fw" data-icon="local_shipping"/> Received</span>
+                                <span t-elif="picking.state == 'cancel'" class="small badge rounded-pill text-bg-danger">
+                                    <i class="oi oi-fw" data-icon="close"/> Cancelled</span>
+                                <span t-else="" class="small badge rounded-pill text-bg-info">
+                                    <i class="oi oi-fw" data-icon="schedule"/> Awaiting arrival</span>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

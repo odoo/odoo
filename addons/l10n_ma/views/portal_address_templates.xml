@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="address_form_fields" inherit_id="portal.address_form_fields">
+        <div id="div_vat" position="after">
+            <div
+                id="div_ma_ice"
+                t-if="res_company.account_fiscal_country_id.code == 'MA'"
+                class="col-lg-6 mb-2"
+                t-att-style="(not country or country.code != 'MA') and 'display:none;'"
+            >
+                <label class="col-form-label label-optional" for="MA_ICE">ICE</label>
+                <i
+                    t-if="ice_warning"
+                    class="oi text-warning"
+                    data-icon="info"
+                    data-bs-toggle="tooltip"
+                    t-att-title="ice_warning"
+                />
+                <input
+                    type="text"
+                    name="MA_ICE"
+                    t-att-value="current_ice"
+                    t-att-readonly="ice_warning and '1'"
+                    class="form-control"
+                    data-country-code="MA"
+                />
+            </div>
+        </div>
+    </template>
+</odoo>

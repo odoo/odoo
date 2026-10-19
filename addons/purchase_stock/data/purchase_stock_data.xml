@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <function model="purchase.order.line" name="_update_qty_received_method" />
+
+		<!--
+             Stock rules and routes
+        -->
+        <record id="route_warehouse0_buy" model='stock.route'>
+            <field name="name">Buy</field>
+            <field name="company_id"></field>
+            <field name="sequence">10</field>
+            <field name="product_selectable" eval="False"/>
+            <field name="warehouse_selectable" eval="True"/>
+            <field name="warehouse_ids" eval="[(4, ref('stock.warehouse0'))]"/>
+        </record>
+
+        <!-- enable purchase on main warehouse -->
+        <record id="stock.warehouse0" model="stock.warehouse">
+            <field name="buy_to_resupply" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

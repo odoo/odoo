@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_faq_collapse_centered" name="FAQ Centered">
+    <section class="s_faq_collapse pt80 pb80" data-vcss="001">
+        <div class="container">
+            <div class="row align-items-start s_nb_column_fixed">
+                <div class="col-lg-8 offset-lg-2">
+                    <h2 class="display-1-fs" style="text-align: center;">Frequently<br/>asked questions</h2>
+                    <p><br/></p>
+                </div>
+                <div class="col-lg-8 offset-lg-2 s_col_no_bgcolor" data-name="Accordion Box">
+                    <t t-snippet-call="website.s_accordion" extra_classes.f="accordion-flush"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

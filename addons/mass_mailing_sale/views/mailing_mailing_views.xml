@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_mailing_view_form" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.form.inherit.sale</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+    		<xpath expr="//button[@name='action_view_link_trackers']" position="before">
+                <button name="action_redirect_to_quotations"
+                    type="object"
+                    icon="shopping_cart"
+                    class="oe_stat_button"
+                    invisible="state == 'draft'">
+                    <field name="sale_quotation_count" string="Quotations" widget="statinfo"/>
+                </button>
+                <button name="action_redirect_to_invoiced"
+                    type="object"
+                    icon="edit_square"
+                    class="oe_stat_button"
+                    invisible="state == 'draft'" >
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="currency_id" invisible="1"/> <!-- Needed for the monetary widget of the sale_invoiced_amount field. -->
+                            <field name="sale_invoiced_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">Revenues</span>
+                    </div>
+                </button>
+    		</xpath>
+        </field>
+    </record>
+</odoo>

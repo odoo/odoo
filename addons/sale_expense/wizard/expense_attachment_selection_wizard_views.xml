@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="expense_attachment_selection_wizard_view" model="ir.ui.view">
+            <field name="name">Attachments Selection</field>
+            <field name="model">expense.attachment.selection.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="selected_attachments" widget="attachment_selector" nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_import_attachments" string="Import Attachments" type="object" class="btn btn-primary"/>
+                        <button class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

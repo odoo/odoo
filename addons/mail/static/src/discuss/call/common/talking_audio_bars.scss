@@ -1,0 +1,35 @@
+.o-discuss-TalkingAudioBars {
+    gap: 3px;
+    height: 10px;
+
+    .o-discuss-TalkingAudioBars-audioBar {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        transform-origin: center;
+    }
+
+    &.o-isTalking {
+        .o-discuss-TalkingAudioBars-audioBar {
+            border-radius: 2px;
+            animation: o-discuss-TalkingAudioBars-audioBarSpeak ease-in-out infinite;
+            &:nth-child(1) { animation-duration: 1.1s; animation-delay: -0.5s; }
+            &:nth-child(2) { animation-duration: 0.7s; animation-delay: -0.2s; }
+            &:nth-child(3) { animation-duration: 1.5s; animation-delay: -0.8s; }
+        }
+    }
+
+    &.o-pill {
+        background-color: rgba(0, 0, 0, 0.6);
+        .o-discuss-TalkingAudioBars-audioBar {
+            background-color: white !important;
+        }
+    }
+}
+
+@keyframes o-discuss-TalkingAudioBars-audioBarSpeak {
+    0%   { height: 3px; }
+    30%  { height: 11px; }
+    60%  { height: 6px; }
+    100% { height: 3px; }
+}

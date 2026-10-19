@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.AttendeeCalendarFilterSection">
+        <t t-if="!this.isAttendeeSection" t-call="web.CalendarFilterSection"/>
+        <t t-else="">
+            <!-- Attendee section -->
+            <div t-if="this.section.canAddFilter"
+                class="o_calendar_filter d-flex flex-column gap-1 my-2"
+                t-att-data-name="this.section.fieldName">
+
+                <span
+                    t-if="this.section.label"
+                    class="o_cw_filter_label fw-bolder text-truncate">
+                    <t t-out="this.section.label"/>
+                </span>
+
+                <AttendeeCalendarFilterMultiRecordSelector t-props="this.multiRecordSelectorProps"/>
+            </div>
+        </t>
+    </t>
+</templates>

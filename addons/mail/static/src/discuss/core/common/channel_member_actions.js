@@ -1,0 +1,136 @@
+import { registry } from "@web/core/registry";
+import {
+    Action,
+    ACTION_TAGS,
+    IS_ACTION_DEFINITION_SYM,
+    useAction,
+    UseActions,
+} from "@mail/core/common/action";
+import { InvitationSentDate } from "@mail/discuss/core/common/invitation_sent_date";
+import { _t } from "@web/core/l10n/translation";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { rpc } from "@web/core/network/rpc";
+import { markup } from "@odoo/owl";
+
+export const channelMemberActionsRegistry = registry.category("discuss.channel.member/actions");
+
+/** @typedef {import("@odoo/owl").Component} Component */
+/** @typedef {import("models").ChannelMember} ChannelMember */
+/**
+ * @typedef {Object} ChannelMemberActionSpecificParams
+ * @property {ChannelMember} member
+ */
+/** @typedef {import("@mail/core/common/action").ActionParams<ChannelMemberAction, UseChannelMemberActions_Def> & ChannelMemberActionSpecificParams} ChannelMemberActionParams */
+/** @typedef {import("@mail/core/common/action").ActionDefinition<ChannelMemberActionParams, ChannelMemberAction>} ChannelMemberActionDefinition */
+
+/**
+ * @param {string} id
+ * @param {ChannelMemberActionDefinition} definition
+ */
+export function registerChannelMemberAction(id, definition) {
+    channelMemberActionsRegistry.add(
+        id,
+        Object.assign(definition, { [IS_ACTION_DEFINITION_SYM]: true })
+    );
+}
+
+registerChannelMemberAction("set-admin", {
+    condition: ({ member }) => member.canSetAdmin,
+    icon: "crown",
+    iconClass: "opacity-75",
+    name: _t("Set Admin"),
+    onSelected: ({ member }) => member.setChannelRole("admin"),
+    sequence: 20,
+});
+
+registerChannelMemberAction("set-member", {
+    condition: ({ member }) => member.canRemoveAdmin || member.canRemoveOwner,
+    icon: "person",
+    iconClass: "opacity-75",
+    name: _t("Set Member"),
+    onSelected: ({ member }) => member.setChannelRole(false),
+    sequence: 30,
+});
+
+registerChannelMemberAction("set-owner", {
+    condition: ({ member }) => member.canSetOwner,
+    icon: "crown_f",
+    iconClass: "text-warning",
+    name: _t("Set Owner"),
+    onSelected: ({ member }) => member.setChannelRole("owner"),
+    sequence: 10,
+});
+
+registerChannelMemberAction("resend-invitation", {
+    condition: ({ member }) => member.canResendInvitation,
+    extraContentComponent: InvitationSentDate,
+    extraContentComponentProps: ({ member }) => ({ datetime: member.invitation_sent_dt }),
+    icon: "refresh",
+    name: _t("Send Invite again"),
+    onSelected: ({ member }) => member.resendInvitation(),
+    sequence: 35,
+});
+
+registerChannelMemberAction("remove-member", {
+    condition: ({ member }) => member.canRemoveMember,
+    icon: "logout",
+    name: _t("Remove Member"),
+    onSelected: ({ member, store }) => {
+        const isMeeting = member.channel_id.default_display_mode === "video_full_screen";
+        const dialogTitle = isMeeting
+            ? _t("Are you sure you want to remove %(member_name)s from the call?", {
+                  member_name: member.name,
+              })
+            : _t(
+                  "Are you sure you want to remove %(member_name)s from the members of '%(channel_name)s'?",
+                  { member_name: member.name, channel_name: member.channel_id.displayName }
+              );
+        const moreInfo = _t("Don't worry, they can rejoin later or be invited back at any time.");
+        store.env.services.dialog.add(ConfirmationDialog, {
+            body: markup`<p>${dialogTitle}</p><span class="text-muted small">${moreInfo}</span>`,
+            confirmLabel: isMeeting ? _t("Remove") : _t("Remove Member"),
+            cancel: () => {},
+            confirm: () => {
+                rpc("/discuss/channel/remove_member", {
+                    member_id: member.id,
+                });
+            },
+        });
+    },
+    sequence: 40,
+    tags: [ACTION_TAGS.DANGER],
+});
+
+export class ChannelMemberAction extends Action {
+    /** @type {() => ChannelMember} */
+    memberFn;
+
+    /**
+     * @param {Object} param0
+     * @param {Thread|() => ChannelMember} member
+     */
+    constructor({ member }) {
+        super(...arguments);
+        this.memberFn = typeof member === "function" ? member : () => member;
+    }
+
+    get params() {
+        return Object.assign(super.params, { member: this.memberFn() });
+    }
+}
+
+/** @typedef {UseActions<ChannelMemberActionParams, ChannelMemberAction>} UseChannelMemberActions_Def */
+class UseChannelMemberActions extends UseActions {
+    ActionClass = ChannelMemberAction;
+}
+
+/**
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {member?: ChannelMember|() => ChannelMember}} [params0={}]
+ * @returns {UseChannelMemberActions_Def}
+ */
+export function useChannelMemberActions({ member, rootRef } = {}) {
+    return useAction(channelMemberActionsRegistry, UseChannelMemberActions, ChannelMemberAction, {
+        member,
+        rootRef,
+    });
+}

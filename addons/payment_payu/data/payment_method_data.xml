@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://docs.payu.in/docs/checkout-plus-integration#supported-payment-modes -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_payu"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <record id="payment_method_emi_india" model="payment.method">
+        <field name="name">EMI</field>
+        <field name="code">emi_india</field>
+        <field name="provider_id" ref="payment.payment_provider_payu"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <record id="payment_method_netbanking" model="payment.method">
+        <field name="name">Netbanking</field>
+        <field name="code">netbanking</field>
+        <field name="provider_id" ref="payment.payment_provider_payu"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <record id="payment_method_paylater_india" model="payment.method">
+        <field name="name">Pay Later</field>
+        <field name="code">paylater_india</field>
+        <field name="provider_id" ref="payment.payment_provider_payu"/>
+        <field name="image" type="bytes" file="payment/static/img/pay_later.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <record id="payment_method_upi" model="payment.method">
+        <field name="name">UPI</field>
+        <field name="code">upi</field>
+        <field name="provider_id" ref="payment.payment_provider_payu"/>
+        <field name="image" type="bytes" file="payment/static/img/upi.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <record id="payment_method_wallets_india" model="payment.method">
+        <field name="name">Wallets India</field>
+        <field name="code">wallets_india</field>
+        <field name="provider_id" ref="payment.payment_provider_payu"/>
+        <field name="image" type="bytes" file="payment/static/img/wallet.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="primary_payment_method_id" eval="ref('payment_payu.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_payu"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_payu.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_payu"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_rupay" model="payment.method">
+        <field name="name">RuPay</field>
+        <field name="code">rupay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_payu.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_payu"/>
+        <field name="image" type="bytes" file="payment/static/img/rupay.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_payu.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_payu"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

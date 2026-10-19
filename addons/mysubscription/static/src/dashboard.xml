@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mysubscription.Dashboard" owl="1">
+        <MySubscriptionNavBar hasSubscription="this.hasSubscription"/>
+        <div class="o_mysubscription o_action_manager w-100 bg-view position-relative h-100 overflow-auto">
+            <div class="container py-4 px-5">
+
+                <PlanSection hasSubscription="this.hasSubscription" enterpriseCode="this.enterpriseCode"/>
+
+                <t t-if="this.iapAccounts.length">
+                    <hr class="my-4 text-muted opacity-25"/>
+                    <IapSection accounts="this.iapAccounts"/>
+                </t>
+
+                <t t-if="this.showDatabaseAction">
+                    <hr class="my-4 text-muted opacity-25"/>
+                    <DatabaseSection hasSubscription="this.hasSubscription" baseUrl="this.baseUrl"/>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

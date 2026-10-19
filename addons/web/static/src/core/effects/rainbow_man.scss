@@ -1,0 +1,146 @@
+.o_reward {
+    $-reward-base-time: 1.4s;
+
+    will-change: transform;
+    z-index: $zindex-modal + 1;
+    animation: reward-fading $-reward-base-time * 0.5 ease-in-out forwards;
+
+    .o_reward_box {
+        transform-box: fill-box;
+    }
+
+    &.o_reward_fading {
+        animation: reward-fading-reverse $-reward-base-time * 0.4 ease-in-out forwards;
+
+        .o_reward_face_group {
+            animation: reward-jump-reverse $-reward-base-time * 0.4 ease-in-out forwards;
+        }
+
+        .o_reward_rainbow_line {
+            animation: reward-rainbow-reverse $-reward-base-time * 0.5 ease-out forwards;
+        }
+    }
+
+    .o_reward_rainbow_man {
+        max-width: 400px;
+    }
+
+    .o_reward_rainbow_line {
+        animation: reward-rainbow $-reward-base-time * 0.8 ease-out 1 forwards;
+    }
+
+    .o_reward_face_group {
+        animation: reward-jump $-reward-base-time * 0.8 ease-in-out 1;
+    }
+
+    .o_reward_face_wrap {
+        animation: reward-rotate $-reward-base-time * 0.8 cubic-bezier(.51,.92,.24,1.15) 1;
+    }
+
+    .o_reward_face {
+        animation: reward-float $-reward-base-time ease-in-out $-reward-base-time infinite alternate;
+    }
+
+    .o_reward_star_01, .o_reward_star_03 {
+        animation: reward-stars $-reward-base-time ease-in-out infinite alternate-reverse;
+    }
+
+    .o_reward_star_02, .o_reward_star_04 {
+        animation: reward-stars $-reward-base-time * 1.2 ease-in-out infinite alternate;
+    }
+
+    .o_reward_thumbup {
+        animation: reward-scale $-reward-base-time * 0.5 ease-in-out 0s infinite alternate;
+    }
+
+    .o_reward_shadow_container {
+        animation: reward-float $-reward-base-time ease-in-out infinite alternate;
+    }
+
+    .o_reward_shadow {
+        animation: reward-scale $-reward-base-time ease-in-out infinite alternate;
+    }
+
+    .o_reward_msg_container {
+        aspect-ratio: 1 / 1;
+        animation: reward-float-reverse $-reward-base-time ease-in-out infinite alternate-reverse;
+    }
+}
+
+@keyframes reward-fading {
+    0% {
+        opacity: 0;
+    }
+}
+
+@keyframes reward-fading-reverse {
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes reward-jump {
+    0% {
+        transform: scale(0.5);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes reward-jump-reverse {
+    50% {
+        transform: scale(1.05);
+    }
+    to {
+        transform: scale(0.5);
+    }
+}
+
+@keyframes reward-rainbow {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes reward-rainbow-reverse {
+    from {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes reward-float {
+    to {
+        transform: translateY(5px);
+    }
+}
+
+@keyframes reward-float-reverse {
+    from {
+        transform: translateY(5px);
+    }
+}
+
+@keyframes reward-stars {
+    from {
+        transform: scale(0.3) rotate(0deg);
+    }
+    50% {
+        transform: scale(1) rotate(20deg);
+    }
+    to {
+        transform: scale(0.3) rotate(80deg);
+    }
+}
+
+@keyframes reward-scale {
+    from {
+        transform: scale(.8);
+    }
+}
+
+@keyframes reward-rotate {
+    from {
+        transform: scale(.5) rotate(-30deg);
+    }
+}

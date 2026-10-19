@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.PublishField">
+    <t t-set="publish">Publish</t>
+    <t t-set="unpublish">Unpublish</t>
+    <t t-set="published">Published</t>
+    <t t-set="unpublished">Unpublished</t>
+    <div class="o_stat_info">
+        <span class="o_stat_text o_hover"
+              t-att-class="this.props.record.data[this.props.name] ? 'text-danger' : 'text-success'"
+              t-out="this.props.record.data[this.props.name] ? unpublish : publish"/>
+        <span class="o_stat_text o_not_hover"
+              t-att-class="this.props.record.data[this.props.name] ? 'text-success' : 'text-danger'"
+              t-out="this.props.record.data[this.props.name] ? published : unpublished"/>
+    </div>
+</t>
+
+</templates>

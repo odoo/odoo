@@ -1,0 +1,151 @@
+import { useSubEnv } from "@web/owl2/utils";
+import { rpc } from "@web/core/network/rpc";
+import { useDebounced } from "@web/core/utils/timing";
+import { KanbanRecord } from "@web/views/kanban/kanban_record";
+import { ProductCatalogOrderLine } from "./order_line/order_line";
+
+export class ProductCatalogKanbanRecord extends KanbanRecord {
+    static template = "ProductCatalogKanbanRecord";
+    static components = {
+        ...KanbanRecord.components,
+        ProductCatalogOrderLine,
+    };
+
+    setup() {
+        super.setup();
+        this.debouncedUpdateQuantity = useDebounced(this._onQuantityChange.bind(this), 500, {
+            execBeforeUnmount: true,
+        });
+        this._pendingUpdate = Promise.resolve();
+
+        useSubEnv({
+            currencyId: this.props.record.context.product_catalog_currency_id,
+            orderId: this.props.record.context.product_catalog_order_id,
+            orderResModel: this.props.record.context.product_catalog_order_model,
+            digits: this.props.record.context.product_catalog_digits,
+            precision: this.props.record.context.precision,
+            productId: this.props.record.resId,
+            addProduct: this.addProduct.bind(this),
+            increaseQuantity: this.increaseQuantity.bind(this),
+            setQuantity: this.setQuantity.bind(this),
+            decreaseQuantity: this.decreaseQuantity.bind(this),
+            setUom: this.setUom.bind(this),
+            childField: this.props.record.context.child_field,
+        });
+    }
+
+    get orderLineComponent() {
+        return ProductCatalogOrderLine;
+    }
+
+    get productCatalogData() {
+        return this.props.record.productCatalogData;
+    }
+
+    onGlobalClick(ev) {
+        // avoid a concurrent update when clicking on the buttons (that are inside the record)
+        if (ev.target.closest(".o_product_catalog_cancel_global_click")) {
+            return;
+        }
+        if (this.productCatalogData.quantity === 0) {
+            this.addProduct();
+        } else {
+            this.increaseQuantity();
+        }
+    }
+
+    //--------------------------------------------------------------------------
+    // Data Exchanges
+    //--------------------------------------------------------------------------
+
+    async _onQuantityChange() {
+        const result = await this._updateQuantityAndGetPrice();
+        this._updateProductCatalogData(result);
+    }
+
+    _updateProductCatalogData(result) {
+        if (result.price) {
+            this.productCatalogData.price = parseFloat(result.price);
+        }
+    }
+
+    _updateQuantityAndGetPrice() {
+        // Chain RPC calls to ensure that each request is completed before starting the next one.
+        // This prevents race conditions and ensures the server processes updates sequentially.
+        this._pendingUpdate = this._pendingUpdate.then(() => rpc(
+            "/product/catalog/update_order_line_info",
+            this._getUpdateQuantityAndGetPriceParams(),
+        ));
+        return this._pendingUpdate;
+    }
+
+    _getUpdateQuantityAndGetPriceParams() {
+        return {
+            res_model: this.env.orderResModel,
+            order_id: this.env.orderId,
+            product_id: this.env.productId,
+            quantity: this.productCatalogData.quantity,
+            child_field: this.env.childField,
+            uom_id: this.productCatalogData.uomId || false,
+        };
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    async setUom(uomId) {
+        if (this.productCatalogData.readOnly) {
+            return;
+        }
+        const data = this.productCatalogData;
+        const newUom = data.availableUoms.find(u => u.id === uomId);
+        const oldUom = data.availableUoms.find(u => u.id === data.uomId);
+        if (newUom && oldUom) {
+            data.uomId = newUom.id;
+            data.uomDisplayName = newUom.name;
+            if (data.productUomFactor !== undefined) {
+                data.productUomFactor = data.productUomFactor * oldUom.factor / newUom.factor;
+            }
+            await this._onQuantityChange();
+        }
+    }
+
+    updateQuantity(quantity) {
+        if (this.productCatalogData.readOnly) {
+            return;
+        }
+        this.productCatalogData.quantity = quantity || 0;
+        this.debouncedUpdateQuantity();
+    }
+
+    /**
+     * Add the product to the order
+     */
+    addProduct(qty=1) {
+        this.updateQuantity(qty);
+    }
+
+    /**
+     * Increase the quantity of the product on the order line.
+     */
+    increaseQuantity(qty=1) {
+        this.updateQuantity(this.productCatalogData.quantity + qty);
+    }
+
+    /**
+     * Set the quantity of the product on the order line.
+     *
+     * @param {Event} event
+     */
+    setQuantity(event) {
+        this.updateQuantity(parseFloat(event.target.value));
+    }
+
+    /**
+     * Decrease the quantity of the product on the order line.
+     */
+    decreaseQuantity() {
+        this.updateQuantity(parseFloat(this.productCatalogData.quantity - 1));
+    }
+}

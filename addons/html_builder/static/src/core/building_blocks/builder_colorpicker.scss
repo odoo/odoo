@@ -1,0 +1,174 @@
+.o-hb-colorpicker-popover {
+    --popover-bg: #{$o-we-bg-darker};
+    --popover-border-color: #{$o-we-bg-darker};
+}
+
+.o_custom_gradient_button {
+    border: 1px solid $o-we-item-clickable-color;
+
+    &, &:hover, &:focus {
+        color: #000000;
+    }
+
+    &[style*="background-image"] {
+        color: $o-we-item-clickable-color;
+    }
+}
+
+.o-hb-colorpicker {
+    --o-hb-colorpicker-active-bg: #{rgba($o-we-color-accent, .15)};
+    --o-color-picker-active-color: var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});
+
+    --o-color-picker-bg: #{$o-we-item-clickable-bg};
+
+    background-color: $o-we-item-clickable-bg;
+    color: $white;
+
+    .o_color_button {
+        box-shadow: inset 0 0 0 1px rgba($o-we-fg-light, .5);
+    }
+
+    &:has(.theme-tab){
+        width: 255px;
+    }
+
+    & > div:first-child {
+        background-color: $o-we-bg-darker;
+        padding-block: 0.5em;
+    }
+
+    & > div:not(:first-child) {
+        .btn:not(.o-hb-theme-tab-link) {
+            @include button-variant(
+                $background: $o-we-item-clickable-bg,
+                $border: transparent,
+                $color: $o-we-item-clickable-color,
+                $hover-background: $o-we-item-clickable-hover-bg,
+                $hover-border: transparent,
+                $hover-color: $o-we-item-clickable-color,
+                $active-background: var(--o-hb-colorpicker-active-bg),
+                $active-border: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg),
+                $active-color: $o-we-fg-lighter,
+                $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
+                $disabled-border: transparent,
+                $disabled-color: $o-we-item-clickable-color,
+            );
+        }
+    }
+
+    .btn {
+        --gradient: none;
+    }
+
+    .btn.o_color_picker_reset {
+        @include button-variant(
+            $background: $o-we-bg-light,
+            $border: transparent,
+            $color: $o-we-item-clickable-color,
+            $hover-background: $o-we-bg-lighter,
+            $hover-border: transparent,
+            $hover-color: $o-we-item-clickable-color,
+            $active-background: $o-we-bg-lighter,
+            $active-border: transparent,
+            $active-color: $o-we-fg-lighter,
+            $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
+            $disabled-border: transparent,
+            $disabled-color: $o-we-item-clickable-color,
+        );
+    }
+    .btn-tab {
+        @include button-variant(
+            $background: $o-we-bg-darker,
+            $border: transparent,
+            $color: $o-we-item-clickable-color,
+            $hover-background: $o-we-bg-light,
+            $hover-border: transparent,
+            $hover-color: $o-we-item-clickable-color,
+            $active-background: var(--o-hb-colorpicker-active-bg),
+            $active-border: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg),
+            $active-color: $o-we-fg-lighter,
+            $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
+            $disabled-border: transparent,
+            $disabled-color: $o-we-item-clickable-color,
+        );
+    }
+
+    .btn:focus-visible {
+        box-shadow: 0 0 0 $btn-focus-width * 0.4 color-mix(in srgb, var(--o-color-picker-active-color) 50%, transparent) !important;
+        z-index: 1;
+    }
+
+    .o_cc_preview_wrapper > .d-flex {
+        margin-bottom: $o-hb-row-spacing * 0.5;
+    }
+
+    .color-combination-button {
+        &.selected {
+            box-shadow: inset 0 0 0 $o-we-border-width rgba($o-we-fg-light, 0.3), 0 0 0 2px var(--o-color-picker-active-color);
+
+            h1::before {
+                content: "check";
+                margin-right: $o-we-item-spacing;
+                font-size: 0.8em;
+                font-family: 'Material Symbols Outlined';
+                color: var(--o-color-picker-active-color);
+                -webkit-text-stroke: 2px var(--o-color-picker-active-color);
+            }
+        }
+
+        &:focus-visible {
+            box-shadow:
+                inset 0 0 0 $o-we-border-width rgba($o-we-fg-light, 0.5),
+                0 0 0 1px $o-we-bg-darker,
+                0 0 0 3px var(--o-color-picker-active-color);
+            outline: none;
+        }
+    }
+
+    // Gradients
+    .o_custom_gradient_button {
+        color: $o-we-item-clickable-color;
+    }
+
+    .gradient-angle-thumb {
+        background-color: $white;
+    }
+
+    .o_color_picker_inputs, .o_color_gradient_input {
+        --o-iframe-input-color: #{$o-we-item-clickable-color};
+        color: var(--o-iframe-input-color);
+
+        & input {
+            color: currentColor;
+        }
+    }
+
+    .custom-gradient-configurator .o_boolean_toggle {
+        &:hover .form-check-input,
+        .form-check-input:focus {
+            border-color: var(--o-color-picker-active-color);
+            box-shadow: none;
+        }
+
+        .form-check-input {
+            &:focus:not(:checked) {
+                --form-switch-bg: #{escape-svg($form-switch-bg-image)};
+            }
+
+            &:checked {
+                --form-switch-bg: #{escape-svg($o-hb-form-switch-checked-bg-image)};
+
+                background-color: var(--o-color-picker-active-color);
+                border-color: var(--o-color-picker-active-color);
+            }
+        }
+    }
+}
+
+.o_builder_open:has(.o-snippets-tabs [data-name='theme'].active) {
+    .o-hb-colorpicker {
+        --o-hb-colorpicker-active-bg: #{rgba($o-we-color-global, .15)};
+        --o-hb-select-item-active-color: #{$o-we-color-global};
+        --o-color-picker-active-color: #{$o-we-color-global};
+    }
+}

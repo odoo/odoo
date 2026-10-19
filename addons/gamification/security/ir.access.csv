@@ -1,0 +1,25 @@
+id,name,model_id,group_id/id,operation,domain
+goal_user_visibility,User can only see his/her goals or goal from the same challenge in board visibility,gamification.goal,base.group_user,ru,"[
+                '|',
+                    ('user_id','=',user.id),
+                    '&',
+                        ('challenge_id.user_ids','in',user.id),
+                        ('challenge_id.visibility_mode','=','ranking')]"
+goal_gamification_manager_visibility,Manager can see any goal,gamification.goal,base.group_erp_manager,ru,
+goal_manager,Goal Manager,gamification.goal,base.group_erp_manager,cd,
+goal_global_multicompany,Multicompany rule on challenges,gamification.goal,,crud,"[('user_id.company_id', 'in', company_ids)]"
+goal_definition_employee,Goal Definition Employee,gamification.goal.definition,base.group_user,r,
+goal_definition_manager,Goal Definition Manager,gamification.goal.definition,base.group_erp_manager,crud,
+challenge_employee,Goal Challenge Employee,gamification.challenge,base.group_user,r,
+challenge_manager,Goal Challenge Manager,gamification.challenge,base.group_erp_manager,crud,
+challenge_line_employee,Challenge Line Employee,gamification.challenge.line,base.group_user,r,
+challenge_line_manager,Challenge Line Manager,gamification.challenge.line,base.group_erp_manager,crud,
+badge_employee,Badge Employee,gamification.badge,base.group_user,r,
+badge_manager,Badge Manager,gamification.badge,base.group_erp_manager,crud,
+gamification_badge_user_access,User can access gamification badges,gamification.badge.user,base.group_user,cru,
+gamification_badge_user_access_1,User can access gamification badges,gamification.badge.user,base.group_erp_manager,crud,
+gamification_karma_rank_access_employee,gamification.karma.rank.access.all,gamification.karma.rank,base.group_user,r,
+gamification_karma_rank_access_user_manager,gamification.karma.rank.access.user.manager,gamification.karma.rank,base.group_system,crud,
+gamification_karma_tracking_access_user_manager,gamification.karma.tracking.access.user.manager,gamification.karma.tracking,base.group_system,crud,
+access_gamification_goal_wizard,access.gamification.goal.wizard,gamification.goal.wizard,base.group_user,cru,
+access_gamification_badge_user_wizard,access.gamification.badge.user.wizard,gamification.badge.user.wizard,base.group_user,cru,

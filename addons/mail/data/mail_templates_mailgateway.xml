@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="message_notification_limit_email">
+            <p>Dear Sender,</p>
+            <p>
+                The message below could not be accepted by the address <t t-out="email"/> because you have
+                contacted it too many times in the last few minutes.
+                <br/>
+                Please try again later.
+            </p>
+            <p>Kind Regards</p>
+        </template>
+
+        <!-- Out-Of-Office content layout -->
+        <template id="message_notification_out_of_office">
+            <div t-out="out_of_office_message"/>
+            <div class="o_mail_reply_container">
+                <div class="o_mail_reply_content">
+                    <blockquote t-out="replied_body"/>
+                </div>
+            </div>
+        </template>
+
+        <template id="mail_bounce_catchall">
+<div>
+    <p>Hello <t t-out="message['email_from']"/>,</p>
+    <p>The email sent to <t t-out="message['to']"/> cannot be processed. This address
+    is used to collect replies and should not be used to directly contact <t t-out="res_company.name"/>.</p>
+    <p>Please contact us instead using <a t-att-href="'mailto:%s' % res_company.email"><t t-out="res_company.email"/></a></p>
+    <p>Regards,</p>
+    <p>The <t t-out="res_company.name"/> team.</p>
+</div>
+<blockquote><t t-out="message['body']"/></blockquote>
+        </template>
+
+        <!-- Mail bounce alias mail template -->
+        <template id="mail_bounce_alias_security">
+<div><t t-out="body"/></div>
+<blockquote><t t-out="message['body']"/></blockquote>
+        </template>
+
+        <template id="mail_attachment_links" name="Attachment links">
+<div class="o-attachments-container" style="margin: 10px 0 10px; max-width: 900px; width: 100%;">
+    <span t-foreach="attachments" t-as="attachment">
+        <div style="margin:3px; padding: 10px; min-width:400px; display:inline-block; vertical-align:middle; border-style:solid; border-width:0 0 0 3px; border-radius:5px; border-color:#a2dae3; background-color:#d1ecf1; color:#09414a;" t-att-data-attachment-id="attachment.id">
+            <div t-if="is_preview" style="text-decoration:none; font-weight:500; font-size: 15px; width:fit-content; color:#008f8c;" width="fit-content">
+                &amp;#11015; <t t-out="attachment.name"/>
+            </div>
+            <a t-else="" t-attf-href="{{attachment.get_base_url()}}/web/content/{{attachment.id}}?download=1&amp;access_token={{attachment.access_token}}"
+                style="text-decoration:none; font-weight:500; font-size: 15px; width:fit-content; color:#008f8c;" width="fit-content" target="_blank">
+                 &amp;#11015; <t t-out="attachment.name"/>
+            </a>
+        </div>
+    </span>
+</div>
+        </template>
+    </data>
+</odoo>

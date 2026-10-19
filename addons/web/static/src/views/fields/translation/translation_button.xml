@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TranslationButton">
+        <t t-if="this.isMultiLang">
+            <button class="o-translate-button btn"
+                type="button"
+                t-on-click.prevent="this.onClick"
+                t-att-class="this.buttonClasses()"
+                t-att-data-tooltip="this.buttonTooltip()">
+                <t t-out="this.lang" />
+            </button>
+        </t>
+    </t>
+
+</templates>

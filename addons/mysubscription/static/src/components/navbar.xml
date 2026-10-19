@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="MySubscription.NavBar" t-inherit="web.NavBar" t-inherit-mode="primary">
+    <xpath expr="//t[@t-call='web.NavBar.AppsMenu']" position="replace">
+      <t t-if="this.hm">
+        <a href="/odoo" class="o_menu_toggle border-0" t-att-class="{'hasImage': this.currentApp?.webIconData}" data-hotkey="h" title="Home Menu" t-on-click.prevent="() => this.onClickIcon()">
+          <svg class="o_menu_toggle_icon pe-none" width="14px" height="14px" viewBox="0 0 14 14">
+            <g t-foreach="[0, 5, 10]" t-as="Y" t-att-id="'o_menu_toggle_row_' + Y_index" fill="currentColor" t-key="'o_menu_toggle_row_' + Y_index">
+              <rect t-foreach="[0, 5, 10]" t-as="X" width="3" height="3" t-att-x="X" t-att-y="Y" t-key="'o_menu_toggle_cell_' + X_index"/>
+            </g>
+          </svg>
+          <t t-if="!this.ui.isSmall and this.currentApp">
+            <img
+              t-if="this.currentApp.webIconData"
+              t-att-src="this.currentApp.webIconData"
+              class="o_menu_brand_icon d-inline position-absolute start-0 h-100 ps-1 ms-2"
+              t-att-alt="this.currentApp.name"
+            />
+            <span t-out="this.currentApp.name" class="o_menu_brand d-flex ms-3 pe-0"/>
+          </t>
+        </a>
+      </t>
+      <t t-else="">
+        <t t-call="web.NavBar.AppsMenu" apps="this.menuService.getApps()"/>
+      </t>
+    </xpath>
+    <xpath expr="//DropdownItem[@t-out='this.currentApp.name']" position="attributes">
+      <attribute name="t-if">!this.ui.isSmall and this.currentApp and !this.hm</attribute>
+    </xpath>
+  </t>
+</templates>

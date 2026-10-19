@@ -1,0 +1,39 @@
+<odoo>
+  <data>
+    <record id="fleet_vehicle_model_category_view_tree_stock_fleet" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.category.view.list.inherit.stock.fleet</field>
+        <field name="model">fleet.vehicle.model.category</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_model_category_view_tree"/>
+        <field name="arch" type="xml">
+            <data>
+                <field name='name' position="after">
+                    <field name="weight_capacity" optional="show"/>
+                    <field name="volume_capacity" optional="show"/>
+                </field>
+            </data>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_model_category_view_form_stock_fleet" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.category.view.form.inherit.stock.fleet</field>
+        <field name="model">fleet.vehicle.model.category</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_model_category_view_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <field name="name" position="after">
+                    <label for="weight_capacity"/>
+                    <div class='d-flex flex-row gap-1'>
+                        <field name="weight_capacity"/>
+                        <span><field name="weight_capacity_uom_name"/></span>
+                    </div>
+                    <label for="volume_capacity"/>
+                    <div class='d-flex flex-row gap-1'>
+                        <field name="volume_capacity"/>
+                        <span><field name="volume_capacity_uom_name"/></span>
+                    </div>
+                </field>
+            </data>
+        </field>
+    </record>
+  </data>
+</odoo>

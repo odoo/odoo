@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="purchase.PurchaseProductField" t-inherit="account.AccountProductField" t-inherit-mode="primary">
+        <xpath expr="//Many2One" position="after">
+            <button
+                t-if="!this.props.readonly and this.isConfigurableTemplate"
+                type="button"
+                class="btn btn-link oi oi-filled px-2"
+                data-icon="edit"
+                tabindex="-1"
+                draggable="false"
+                t-att-aria-label="this.configurationButtonHelp"
+                t-att-data-tooltip="this.configurationButtonHelp"
+                t-on-click="this.onEditConfiguration"/>
+        </xpath>
+    </t>
+
+</templates>

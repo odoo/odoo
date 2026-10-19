@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report_vat" model="account.report">
+        <field name="name">VAT Report</field>
+        <field name="name@sr@latin">Izveštaj o PDV-u</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.rs"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_vat_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@sr@latin">Balans</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_title_operations" model="account.report.line">
+                <field name="name">Amount of fee without VAT</field>
+                <field name="name@sr@latin">Iznos naknade bez PDV-a</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_title_operations_turnover" model="account.report.line">
+                        <field name="name">I. Trade of goods and services</field>
+                        <field name="name@sr@latin">I. Trgovina robom i uslugama</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_001" model="account.report.line">
+                                <field name="name">001 - Turnover of goods and services exempt from VAT with the right to deduct previous tax</field>
+                                <field name="name@sr@latin">001 - Promet dobara i usluga koji je oslobođen PDV sa pravom na odbitak prethodnog poreza</field>
+                                <field name="code">c001</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_001_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-001</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_002" model="account.report.line">
+                                <field name="name">002 - Turnover of goods and services exempt from VAT without the right to deduct previous tax</field>
+                                <field name="name@sr@latin">002 - Promet dobara i usluga koji je oslobođen PDV bez prava na odbitak prethodnog poreza</field>
+                                <field name="code">c002</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_002_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-002</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_003" model="account.report.line">
+                                <field name="name">003 - Turnover of goods and services at the general rate</field>
+                                <field name="name@sr@latin">003 - Promet dobara i usluga po opštoj stopi</field>
+                                <field name="code">c003</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_003_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-003</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_004" model="account.report.line">
+                                <field name="name">004 - Turnover of goods and services at the special rate</field>
+                                <field name="name@sr@latin">004 - Promet dobara i usluga po posebnoj stopi</field>
+                                <field name="code">c004</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_004_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-004</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_005" model="account.report.line">
+                                <field name="name">005 - Total (001 + 002 + 003 + 004)</field>
+                                <field name="name@sr@latin">005 - ZBIR (001 + 002 + 003 + 004)</field>
+                                <field name="code">c005</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_005_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c001.balance + c002.balance + c003.balance + c004.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_title_operations_previous_tax" model="account.report.line">
+                        <field name="name">II. Previous Tax</field>
+                        <field name="name@sr@latin">II. Prethodni porez</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_006" model="account.report.line">
+                                <field name="name">006 - Previous tax paid upon import</field>
+                                <field name="name@sr@latin">006 - Prethodni porez plaćen prilikom uvoza</field>
+                                <field name="code">c006</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_006_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">006</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_007" model="account.report.line">
+                                <field name="name">007 - VAT Compensation paid to the farmer</field>
+                                <field name="name@sr@latin">007 - PDV Nadoknada plaćena poljoprivredniku</field>
+                                <field name="code">c007</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_007_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">007</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_008" model="account.report.line">
+                                <field name="name">008 - Previous tax, except for the previous tax with item no. 6. and 7</field>
+                                <field name="name@sr@latin">008 - Prethodni porez, osim prethodnog poreza sa red. br. 6. i 7</field>
+                                <field name="code">c008</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_008_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">008</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_009" model="account.report.line">
+                                <field name="name">009 - Total (006 + 007 + 008)</field>
+                                <field name="name@sr@latin">009 - ZBIR (006 + 007 + 008)</field>
+                                <field name="code">c009</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_009_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c006.balance + c007.balance + c008.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_title_VAT" model="account.report.line">
+                <field name="name">VAT</field>
+                <field name="name@sr@latin">PDV</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_title_VAT_turnover" model="account.report.line">
+                        <field name="name">I. Trade of goods and services</field>
+                        <field name="name@sr@latin">I. Trgovina robom i uslugama</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_103" model="account.report.line">
+                                <field name="name">103 - Turnover of goods and services at the general rate</field>
+                                <field name="name@sr@latin">103 - Promet roba i usluga po opštem kursu</field>
+                                <field name="code">c103</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_103_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-103</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_104" model="account.report.line">
+                                <field name="name">104 - Turnover of goods and services at the special rate</field>
+                                <field name="name@sr@latin">104 - Promet roba i usluga po posebnoj stopi</field>
+                                <field name="code">c104</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_104_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-104</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_105" model="account.report.line">
+                                <field name="name">105 - Total (103 + 104)</field>
+                                <field name="name@sr@latin">105 - Ukupno (103 + 104)</field>
+                                <field name="code">c105</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_105_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c103.balance + c104.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_title_VAT_previous_tax" model="account.report.line">
+                        <field name="name">II. Previous Tax</field>
+                        <field name="name@sr@latin">II. Prethodni porez</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_106" model="account.report.line">
+                                <field name="name">106 - Previous tax paid upon import</field>
+                                <field name="name@sr@latin">106 - Prethodni porez plaćen pri uvozu</field>
+                                <field name="code">c106</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_106_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">106</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_107" model="account.report.line">
+                                <field name="name">107 - VAT Compensation paid to the farmer</field>
+                                <field name="name@sr@latin">107 - PDV Naknada plaćena poljoprivredniku</field>
+                                <field name="code">c107</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_107_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">107</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_108" model="account.report.line">
+                                <field name="name">108 - Previous tax, except for the previous tax with item no. 6. and 7</field>
+                                <field name="name@sr@latin">108 - Prethodni porez, osim prethodnog poreza sa br. 6. i 7</field>
+                                <field name="code">c108</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_108_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">108</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line_109" model="account.report.line">
+                                <field name="name">109 - Total (106 + 107 + 108)</field>
+                                <field name="name@sr@latin">109 - Ukupno (106 + 107 + 108)</field>
+                                <field name="code">c109</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_109_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c106.balance + c107.balance + c108.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_title_VAT_liability" model="account.report.line">
+                        <field name="name">III. Tax liability</field>
+                        <field name="name@sr@latin">III. Poreska obaveza</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line_110" model="account.report.line">
+                                <field name="name">110 - Amount of VAT in tax period (105 - 109)</field>
+                                <field name="name@sr@latin">110 - Iznos PDV-a u poreskom periodu (105 - 109)</field>
+                                <field name="code">c110</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line_110_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c105.balance - c109.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

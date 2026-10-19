@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_data_list" model="ir.ui.view">
+        <field name="name">payment.data.list</field>
+        <field name="model">payment.data</field>
+        <field name="arch" type="xml">
+            <list string="Pending Updates" create="false" edit="false" delete="false">
+                <field string="Created On" name="create_date"/>
+                <field name="transaction_id"/>
+                <field name="errored"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="payment_data_form" model="ir.ui.view">
+        <field name="name">payment.data.form</field>
+        <field name="model">payment.data</field>
+        <field name="arch" type="xml">
+            <form string="Pending Updates" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field string="Created On" name="create_date"/>
+                            <field name="transaction_id"/>
+                            <field name="errored"/>
+                            <field name="payload"/>
+                            <field name="error_traceback"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

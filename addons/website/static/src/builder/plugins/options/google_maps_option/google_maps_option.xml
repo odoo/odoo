@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.GoogleMapsOption">
+    <BuilderRow label.translate="Address" tooltip.translate="Write down your address or a GPS position" preview="false">
+        <input
+            type="text"
+            class="o-hb-input-text o-hb-input-base"
+            t-att-value="this.state.formattedAddress"
+            placeholder.translate="e.g. De Brouckere, Brussels, Belgium"
+            t-ref="this.inputRef"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Marker Style">
+        <BuilderSelect dataAttributeAction="'pinStyle'">
+            <BuilderSelectItem dataAttributeActionValue="''">Default</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'flat'">Flat</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Map ID" preview="false">
+        <BuilderTextInput dataAttributeAction="'mapId'"
+            placeholder.translate="e.g. DEMO_MAP_ID"/>
+    </BuilderRow>
+    <div class="alert alert-info mb-0 mt-2">
+        Get a
+        <a href="https://developers.google.com/maps/documentation/javascript/map-ids/get-map-id" target="_blank">Map ID</a>
+        from your Google Cloud console.
+    </div>
+    <BuilderRow label.translate="Type" preview="false">
+        <BuilderSelect dataAttributeAction="'mapType'">
+            <BuilderSelectItem dataAttributeActionValue="'ROADMAP'" id="'roadmap_opt'">RoadMap</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'TERRAIN'">Terrain</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'SATELLITE'">Satellite</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'HYBRID'">Hybrid</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Zoom" preview="false">
+        <BuilderNumberInput dataAttributeAction="'mapZoom'" default="12" step="1" min="0" max="22"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Height">
+        <BuilderRange
+            styleAction="'--GoogleMap-height'"
+            unit="'px'"
+            min="100"
+            max="1000"
+            step="1"
+            withNumberInput="true"
+        />
+    </BuilderRow>
+    <t t-call="website.MapDescriptionOption"/>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <google_maps_option selector=".s_google_map"/>
+    </xpath>
+</t>
+
+</templates>

@@ -1,0 +1,72 @@
+import { Component, t, useProps } from "@odoo/owl";
+import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
+import {
+    getEmptyFilterValue,
+    getFilterTypeOperators,
+    isEmptyFilterValue,
+} from "@spreadsheet/global_filters/helpers";
+import { _t } from "@web/core/l10n/translation";
+import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
+import { useService } from "@web/core/utils/hooks";
+
+/**
+ * This component is used to display a list of all the global filters of a dashboard.
+ */
+export class DashboardFilterList extends Component {
+    static template = "spreadsheet.DashboardFilterList";
+    static components = { FilterValue };
+
+    props = useProps({
+        filtersAndValues: t.array(),
+        searchableParentRelations: t.object(),
+        onFilterChange: t.function(),
+        model: t.object(),
+    });
+
+    setup() {
+        this.uiService = useService("ui");
+    }
+
+    getTranslatedFilterLabel(filter) {
+        return _t(filter.label); // Label is extracted from the spreadsheet json file
+    }
+
+    getOperators(filter) {
+        const operators = getFilterTypeOperators(filter.type);
+        if (filter.type === "relation" && !this.props.searchableParentRelations[filter.modelName]) {
+            return operators.filter((op) => op !== "child_of");
+        }
+        return filter.type === "boolean" ? [undefined, ...operators] : operators;
+    }
+
+    filterHasClearButton(node) {
+        return !isEmptyFilterValue(node.globalFilter, node.value);
+    }
+
+    getOperatorLabel(operator) {
+        return operator ? getOperatorLabel(operator) : "";
+    }
+
+    updateOperator(node, operator) {
+        if (!operator) {
+            this.props.onFilterChange(node.globalFilter.id, undefined);
+            return;
+        }
+
+        const previousValue = node.value || {};
+        const defaultValue = getEmptyFilterValue(node.globalFilter, operator) || {};
+        this.props.onFilterChange(node.globalFilter.id, {
+            ...defaultValue,
+            ...previousValue,
+            operator,
+        });
+    }
+
+    updateValue(node, value) {
+        this.props.onFilterChange(node.globalFilter.id, value);
+    }
+
+    clearFilter(node) {
+        this.props.onFilterChange(node.globalFilter.id, undefined);
+    }
+}

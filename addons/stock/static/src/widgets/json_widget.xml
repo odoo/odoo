@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="stock.leadDays">
+        <h2>Replenishment Time (<span t-out="this.jsonValue['lead_time']"/> days)</h2>
+        <table t-if="this.jsonValue.lead_days_description" class="table table-borderless table-sm">
+            <tbody>
+                <tr class="table-secondary">
+                    <td>Today</td>
+                    <td class="text-end" t-out="this.jsonValue.today"/>
+                </tr>
+                <tr t-foreach="this.jsonValue.lead_days_description" t-key="descr_index" t-as="descr"
+                    t-attf-class="{{ descr[2] ? 'table-secondary' : '' }}">
+                    <td t-out="descr[0]"/>
+                    <td class="text-end" t-out="descr[1]"/>
+                </tr>
+                <tr class="table-info">
+                    <td>Forecasted Date</td>
+                    <td class="text-end text-nowrap">
+                        = <t t-out="this.jsonValue.lead_horizon_date"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button t-name="stock.updateButton"
+            class="btn btn-link btn-icon oi"
+            data-icon="refresh"
+            role="img"
+            aria-label="Refresh"
+            title="Refresh"
+            t-on-click="this.updateDailyDemand"/>
+</templates>

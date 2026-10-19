@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Paymob Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <div invisible="code != 'paymob'">
+                    <button
+                        string="Synchronize With Paymob"
+                        help="Make the payment methods compatible with the Paymob portal."
+                        type="object"
+                        name="action_sync_paymob_payment_methods"
+                        invisible="not paymob_account_country_id"
+                        class="btn-secondary"
+                    />
+                </div>
+            </header>
+            <group name="provider_credentials" position="inside">
+                <field
+                    string="Account Country"
+                    name="paymob_account_country_id"
+                    required="is_live"
+                    invisible="code != 'paymob'"
+                    options="{'no_create': True}"
+                />
+                <field
+                    string="HMAC Key"
+                    name="paymob_hmac_key"
+                    invisible="code != 'paymob'"
+                    required="is_live"
+                    widget="password"
+                />
+                <field
+                    string="API Key"
+                    name="paymob_api_key"
+                    invisible="code != 'paymob'"
+                    required="is_live"
+                    widget="password"
+                />
+                <field
+                    string="Secret Key"
+                    name="paymob_secret_key"
+                    invisible="code != 'paymob'"
+                    required="is_live"
+                    widget="password"
+                />
+                <field
+                    string="Public Key"
+                    name="paymob_public_key"
+                    invisible="code != 'paymob'"
+                    required="is_live"
+                />
+            </group>
+            <field name="available_currency_ids" position="attributes">
+                <attribute name="readonly" separator="or" add="code == 'paymob'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

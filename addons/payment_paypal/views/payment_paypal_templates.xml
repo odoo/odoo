@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="inline_form">
+        <t t-if="pm_sudo.code == 'card'">
+            <div class="row">
+                <div class="col-12 col-md">
+                    <label>
+                        <small>Cardholder Name</small>
+                    </label>
+                    <div id="o_paypal_card_name" class="o_paypal_card_input"/>
+                </div>
+                <div class="col-12 col-md">
+                    <label>
+                        <small>Card Number</small>
+                    </label>
+                    <div id="o_paypal_card_number" class="o_paypal_card_input"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md">
+                    <label>
+                        <small>Expiration (MM/YY)</small>
+                    </label>
+                    <div id="o_paypal_card_expiry" class="o_paypal_card_input"/>
+                </div>
+                <div class="col-12 col-md">
+                    <label>
+                        <small>Card Code (CVV)</small>
+                    </label>
+                    <div id="o_paypal_card_cvv" class="o_paypal_card_input"/>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

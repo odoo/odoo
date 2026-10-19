@@ -1,0 +1,16 @@
+.self_order_language_popup {
+    img {
+        aspect-ratio: 4/3;
+        max-width: 40px;
+    }
+
+
+}
+
+@include o-kiosk-portrait() {
+    .self_order_language_popup {
+        img {
+            max-width: 60px !important;
+        }
+    }
+}

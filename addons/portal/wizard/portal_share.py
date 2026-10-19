@@ -1,0 +1,147 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import api, fields, models
+from odoo.tools import format_list
+
+
+class PortalShare(models.TransientModel):
+    _name = 'portal.share'
+    _description = 'Portal Sharing'
+
+    @api.model
+    def default_get(self, fields):
+        result = super(PortalShare, self).default_get(fields)
+        result['res_model'] = self.env.context.get('active_model', False)
+        result['res_id'] = self.env.context.get('active_id', False)
+        if result['res_model'] and result['res_id']:
+            record = self.env[result['res_model']].browse(result['res_id'])
+            result['share_link'] = record.get_base_url() + record._get_share_url(redirect=True)
+        return result
+
+    @api.model
+    def _selection_target_model(self):
+        return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
+
+    res_model = fields.Char('Related Document Model', required=True)
+    res_id = fields.Integer('Related Document ID', required=True)
+    resource_ref = fields.Reference('_selection_target_model', 'Related Document', compute='_compute_resource_ref')
+    partner_ids = fields.Many2many('res.partner', string="Recipients", required=True)
+    note = fields.Text(help="Add extra content to display in the email")
+    share_link = fields.Char(string="Link", compute='_compute_share_link')
+    access_warning = fields.Text("Access warning", compute="_compute_access_warning")
+
+    @api.depends('res_model', 'res_id')
+    def _compute_resource_ref(self):
+        for wizard in self:
+            if wizard.res_model and wizard.res_model in self.env:
+                wizard.resource_ref = '%s,%s' % (wizard.res_model, wizard.res_id or 0)
+            else:
+                wizard.resource_ref = None
+
+    @api.depends('res_model', 'res_id')
+    def _compute_share_link(self):
+        for rec in self:
+            rec.share_link = False
+            if rec.res_model:
+                res_model = self.env[rec.res_model]
+                if isinstance(res_model, self.pool['portal.mixin']) and rec.res_id:
+                    record = res_model.browse(rec.res_id)
+                    rec.share_link = record.get_base_url() + record._get_share_url(redirect=True)
+
+    @api.depends('res_model', 'res_id')
+    def _compute_access_warning(self):
+        for rec in self:
+            rec.access_warning = False
+            if rec.res_model:
+                res_model = self.env[rec.res_model]
+                if isinstance(res_model, self.pool['portal.mixin']) and rec.res_id:
+                    record = res_model.browse(rec.res_id)
+                    rec.access_warning = record.access_warning
+
+    def _send_public_link(self, partners=None):
+        if partners is None:
+            partners = self.partner_ids
+        for partner in partners:
+            share_link = self.resource_ref.get_base_url() + self.resource_ref._get_share_url(redirect=True, pid=partner.id)
+            saved_lang = self.env.lang
+            self = self.with_context(lang=partner.lang)
+            render_values = {
+                'partner': partner,
+                'note': self.note,
+                'record': self.resource_ref,
+                'share_link': share_link,
+                'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower(),
+                'user': self.env.user,
+                'company': self.env.company,
+            }
+            body_html = self.env['ir.qweb']._render('portal.portal_share_template', render_values)
+            self.resource_ref.message_notify(
+                partner_ids=partner.ids,
+                subject=self.env._("Invitation to access %s", self.resource_ref.display_name),
+                body=body_html,
+                email_layout_xmlid='mail.mail_notification_light',
+            )
+            self = self.with_context(lang=saved_lang)
+
+    def _send_signup_link(self, partners=None):
+        if partners is None:
+            partners = self.partner_ids.filtered(lambda partner: not partner.user_ids)
+        for partner in partners:
+            #  prepare partner for signup and send singup url with redirect url
+            partner.signup_get_auth_param()
+            share_link = partner._get_signup_url_for_action(action='/mail/view', res_id=self.res_id, model=self.res_model)[partner.id]
+            saved_lang = self.env.lang
+            self = self.with_context(lang=partner.lang)
+            render_values = {
+                'partner': partner,
+                'note': self.note,
+                'record': self.resource_ref,
+                'share_link': share_link,
+                'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower(),
+                'user': self.env.user,
+                'company': self.env.company,
+            }
+            body_html = self.env['ir.qweb']._render('portal.portal_share_template', render_values)
+            self.resource_ref.message_notify(
+                partner_ids=partner.ids,
+                subject=self.env._("Invitation to access %s", self.resource_ref.display_name),
+                body=body_html,
+                email_layout_xmlid='mail.mail_notification_light',
+            )
+            self = self.with_context(lang=saved_lang)
+
+    def _log_share_message(self, partners):
+        if partners:
+            model_name = self.env['ir.model']._get(self.resource_ref._name).display_name
+            partner_names = format_list(
+                self.env,
+                [f"{p.name} ({p.email})" if p.email else p.name for p in partners]
+            )
+            self.resource_ref._message_log(
+                body=self.env._("%(model_name)s shared with %(partner_names)s", model_name=model_name, partner_names=partner_names)
+            )
+
+    def action_send_mail(self):
+        signup_enabled = self.env['ir.config_parameter'].sudo().get_str('auth_signup.invitation_scope') or 'b2c' == 'b2c'
+
+        if getattr(self.resource_ref, 'access_token', False) or not signup_enabled:
+            partner_ids = self.partner_ids
+        else:
+            partner_ids = self.partner_ids.filtered(lambda x: x.user_ids)
+        # if partner already user or record has access token send common link in batch to all user
+        self._send_public_link(partner_ids)
+        # when partner not user send individual mail with signup token
+        self._send_signup_link(self.partner_ids - partner_ids)
+
+        self._log_share_message(self.partner_ids)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': self.env._("Shared successfully"),
+                'message': self.env._("An email invitation has been sent to the selected users."),
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }

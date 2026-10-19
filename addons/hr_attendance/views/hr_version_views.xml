@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_version_list_view_enhanced_hr_attendance_base" model="ir.ui.view">
+        <field name="name">hr.version.list.view.enhanced.hr.attendance.base</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_version_list_view_enhanced"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="date_version" position="replace"/>
+            <field name="resource_calendar_id" position="replace"/>
+            <field name="department_id" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="job_id" position="after">
+                <field name="resource_calendar_id" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_version_search_view_enhanced_hr_attendance" model="ir.ui.view">
+        <field name="name">hr.version.search.view.enhanced.hr.attendance</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_version_search_view_enhanced"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//search/group/filter[@name='group_department']" position="before">
+                <filter name="group_resource_calendar" string="Working Hours" domain="[]" context="{'group_by': 'resource_calendar_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

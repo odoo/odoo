@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="dynamic_snippet_latest_job_positions_filter" model="ir.filters">
+            <field name="name">Latest Job Positions</field>
+            <field name="model_id">hr.job</field>
+            <field name="user_ids" eval="False" />
+            <field name="domain">[('website_published', '=', True)]</field>
+            <field name="sort">["published_date desc"]</field>
+            <field name="action_id" ref="website.action_website"/>
+        </record>
+        <record id="dynamic_filter_latest_job_positions" model="website.snippet.filter">
+            <field name="name">Latest Job Positions</field>
+            <field name="filter_id" ref="website_hr_recruitment.dynamic_snippet_latest_job_positions_filter"/>
+            <field name="field_names">name,description,no_of_recruitment,address_id,department_id,employee_type_id</field>
+            <field name="limit" eval="16"/>
+        </record>
+    </data>
+</odoo>

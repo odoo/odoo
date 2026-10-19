@@ -1,0 +1,74 @@
+import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
+import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
+import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
+import { toggleFn } from "@mail/utils/common/signal";
+
+import { Component, computed, signal, t, useOnChange, useProps } from "@odoo/owl";
+
+import { localeCompare } from "@web/core/l10n/utils/collation";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+
+export class MessagingMenuCallParticipants extends Component {
+    static template = "mail.MessagingMenuCallParticipants";
+    static components = { AvatarStack, TalkingAudioBars };
+
+    CALL_ICON_DEAFEN = CALL_ICON_DEAFEN;
+    CALL_ICON_MUTED = CALL_ICON_MUTED;
+    toggleFn = toggleFn;
+    expanded = signal(false);
+    /** Expand / collapse is only offered from 2 participants, a single one is always shown expanded. */
+    canToggle = computed(() => this.channel.rtc_session_ids.length >= 2);
+    isExpanded = computed(() => !this.canToggle() || this.expanded());
+    personas = computed(() =>
+        this.sessions.map((session) => session.channel_member_id?.persona).filter(Boolean)
+    );
+    selfInCall = computed(() => Boolean(this.rtc.selfSession?.in(this.channel.rtc_session_ids)));
+
+    setup() {
+        super.setup();
+        this.store = useService("mail.store");
+        this.rtc = useService("discuss.rtc");
+        this.channel = useProps.static("channel", t.instanceOf(this.store["discuss.channel"]));
+        useOnChange(
+            () => [this.canToggle(), this.selfInCall()],
+            (canToggle, selfInCall) => this.expanded.set(selfInCall)
+        );
+    }
+
+    get sessions() {
+        const sessions = [...this.channel.rtc_session_ids];
+        return sessions.sort((s1, s2) => {
+            const nameDiff = localeCompare(s1.name, s2.name);
+            if (nameDiff !== 0) {
+                return nameDiff;
+            }
+            return s1.id - s2.id;
+        });
+    }
+
+    get title() {
+        return this.isExpanded() ? _t("Collapse participants") : _t("Expand participants");
+    }
+
+    /** @param {import("models").Persona} persona */
+    avatarClass(persona) {
+        return { "o-isTalking": persona.currentRtcSession?.isActuallyTalking };
+    }
+
+    onClickAvatarStack(ev) {
+        ev.stopPropagation();
+        this.expanded.set(true);
+    }
+
+    /**
+     * @param {MouseEvent} ev
+     * @param {import("models").RtcSession} session
+     */
+    onClickParticipant(ev, session) {}
+
+    /** @param {import("models").RtcSession} session */
+    participantClass(session) {
+        return {};
+    }
+}

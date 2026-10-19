@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.NumberPopup">
+        <Dialog title="this.props.title" size="!this.ui.isSmall ? 'sm' : ''" contentClass="'w-100 m-0 position-absolute self_order_pills_selection_popup_dialog'">
+            <div class="mb-3">
+                <div class="form-control text-center py-3 fs-2">
+                    <t t-out="this.displayedValue"/>
+                </div>
+            </div>
+
+            <Numpad buttons="this.buttons" onClick="this.input.bind(this)" class="'o_tip_numpad rounded-1'"/>
+
+            <t t-set-slot="footer">
+                <div class="row g-2 w-100 mt-0">
+                    <div class="col-6">
+                        <button class="btn btn-primary w-100 py-3 rounded-1" t-on-click="this.confirm">
+                            Confirm
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-secondary w-100 py-3 rounded-1" t-on-click="this.cancel">
+                            Discard
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

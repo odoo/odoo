@@ -1,0 +1,228 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, models
+from odoo.exceptions import ValidationError
+from odoo.tools import urls
+
+from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
+from odoo.addons.payment.logging import get_payment_logger
+from odoo.addons.payment_mollie import const
+from odoo.addons.payment_mollie.controllers.main import MollieController
+
+_logger = get_payment_logger(__name__)
+
+
+class PaymentTransaction(models.Model):
+    _inherit = "payment.transaction"
+
+    def _get_specific_rendering_values(self, processing_values):
+        """Override of payment to return Mollie-specific rendering values.
+
+        Note: self.ensure_one() from `_get_processing_values`
+
+        :param dict processing_values: The generic and specific processing values of the transaction
+        :return: The dict of provider-specific rendering values
+        :rtype: dict
+        """
+        if self.provider_code != "mollie":
+            return super()._get_specific_rendering_values(processing_values)
+
+        payload = self._mollie_prepare_payment_request_payload()
+        try:
+            payment_data = self._send_api_request("POST", "/payments", json=payload)
+        except ValidationError as error:
+            self._set_error(str(error))
+            return {}
+
+        # The provider reference is set now to allow fetching the payment status after redirection
+        self.provider_reference = payment_data.get("id")
+
+        checkout_url = payment_data["_links"]["checkout"]["href"]
+        return {
+            "api_url": checkout_url,
+            "http_method": "get",
+            # The URL may include a query string when only one payment method is enabled on Mollie.
+            "url_params": payment_utils.extract_url_params(checkout_url),
+        }
+
+    def _mollie_prepare_payment_request_payload(self):
+        """Create the payload for the payment request based on the transaction values.
+
+        :return: The request payload
+        :rtype: dict
+        """
+        user_lang = self.env.context.get("lang")
+        base_url = self.provider_id.get_base_url()
+        redirect_url = urls.urljoin(base_url, MollieController._return_url)
+        webhook_url = urls.urljoin(base_url, MollieController._webhook_url)
+        decimal_places = CURRENCY_MINOR_UNITS.get(
+            self.currency_id.name, self.currency_id.decimal_places
+        )
+
+        payload = {
+            "description": self.reference,
+            "amount": {
+                "currency": self.currency_id.name,
+                "value": f"{self.amount:.{decimal_places}f}",
+            },
+            "locale": user_lang if user_lang in const.SUPPORTED_LOCALES else "en_US",
+            "method": [
+                const.PAYMENT_METHODS_MAPPING.get(
+                    self.payment_method_code, self.payment_method_code
+                )
+            ],
+            # Since Mollie does not provide the transaction reference when returning from
+            # redirection, we include it in the redirect URL to be able to match the transaction.
+            "redirectUrl": f"{redirect_url}?ref={self.reference}",
+            "webhookUrl": f"{webhook_url}?ref={self.reference}",
+            "billingAddress": self._mollie_prepare_billing_address_payload(),
+            "lines": [
+                {
+                    "description": "Odoo purchase",
+                    "quantity": 1,
+                    "unitPrice": {
+                        "currency": self.currency_id.name,
+                        "value": f"{self.amount:.{decimal_places}f}",
+                    },
+                    "totalAmount": {
+                        "currency": self.currency_id.name,
+                        "value": f"{self.amount:.{decimal_places}f}",
+                    },
+                }
+            ],
+        }
+        if self.token_id:
+            payload["sequenceType"] = "recurring"
+            payload["customerId"] = self.token_id.mollie_customer_id
+            payload["mandateId"] = self.token_id.provider_ref
+            payload.pop("method")
+        elif self.tokenize:
+            payload["sequenceType"] = "first"
+            payload["customerId"] = self._mollie_create_customer()
+        else:
+            payload["sequenceType"] = "oneoff"
+        return payload
+
+    def _mollie_create_customer(self):
+        """Create a Mollie customer.
+
+        Note: exceptions are intentionally left to bubble up to
+        `_get_specific_rendering_values` to ensure more accurate error messages.
+
+        :return: The Mollie customer ID.
+        :rtype: str
+        """
+        payload = {"name": self.partner_name, "email": self.partner_email}
+        response = self._send_api_request("POST", "/customers", json=payload)
+        return response["id"]
+
+    def _mollie_prepare_billing_address_payload(self):
+        """Return correctly formatted billing address payload.
+
+        :return: The Mollie-formatted payload for the billingAddress field in the payment request.
+        :rtype: dict
+        """
+        given_name, family_name = payment_utils.split_partner_name(self.partner_name)
+        billing_address = {
+            "givenName": given_name,
+            "familyName": family_name,
+            "email": self.partner_email or "",
+        }
+        if all((
+            self.partner_address,
+            self.partner_zip,
+            self.partner_city,
+            self.partner_country_id,
+        )):
+            billing_address |= {
+                "streetAndNumber": self.partner_address,
+                "postalCode": self.partner_zip,
+                "city": self.partner_city,
+                "country": self.partner_country_id.code,
+            }
+        return billing_address
+
+    def _send_payment_request(self):
+        """Override of `payment` to send a token payment request to Mollie."""
+        if self.provider_code != "mollie":
+            return super()._send_payment_request()
+
+        payload = self._mollie_prepare_payment_request_payload()
+        payment_data = self._send_api_request("POST", "/payments", json=payload)
+        self._record(payment_data)
+
+    @api.model
+    def _extract_reference(self, provider_code, payment_data):
+        """Override of `payment` to extract the reference from the payment data."""
+        if provider_code != "mollie":
+            return super()._extract_reference(provider_code, payment_data)
+        return payment_data.get("ref")
+
+    def _apply_updates(self, payment_data):
+        """Override of `payment` to update the transaction based on the payment data."""
+        if self.provider_code != "mollie":
+            super()._apply_updates(payment_data)
+            return
+
+        # Update the provider reference.
+        self.provider_reference = payment_data["id"]
+
+        # Update the payment method.
+        payment_method_type = payment_data.get("method", "")
+        if payment_method_type == "creditcard":
+            payment_method_type = payment_data.get("details", {}).get("cardLabel", "").lower()
+        payment_method = self.provider_id._get_pm_from_code(
+            payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
+        )
+        self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
+        payment_status = payment_data.get("status")
+        if payment_status in ("pending", "open"):
+            self._set_pending()
+        elif payment_status == "authorized":
+            self._set_authorized()
+        elif payment_status == "paid":
+            self._set_done()
+        elif payment_status in ["expired", "canceled", "failed"]:
+            self._set_canceled(self.env._("Cancelled payment with status: %s", payment_status))
+        else:
+            _logger.info(
+                "Received data with invalid payment status (%s) for transaction %s.",
+                payment_status,
+                self.reference,
+            )
+            self._set_error(
+                self.env._("Received data with invalid payment status: %s.", payment_status)
+            )
+
+    def _extract_amount_data(self, payment_data):
+        """Override of `payment` to extract the amount and currency from the payment data."""
+        if self.provider_code != "mollie":
+            return super()._extract_amount_data(payment_data)
+
+        amount_data = payment_data.get("amount", {})
+        amount = amount_data.get("value")
+        currency_code = amount_data.get("currency")
+        return {"amount": float(amount), "currency_code": currency_code}
+
+    def _extract_token_values(self, payment_data):
+        """Override of `payment` to extract the token values from the payment data."""
+        if self.provider_code != "mollie":
+            return super()._extract_token_values(payment_data)
+
+        mandate_id = payment_data.get("mandateId")
+        customer_id = payment_data.get("customerId")
+        if not mandate_id or not customer_id:
+            _logger.warning(
+                "Tried to tokenize with missing mandate_id (%s) or customer_id (%s)",
+                mandate_id,
+                customer_id,
+            )
+            return {}
+
+        token_values = {"provider_ref": mandate_id, "mollie_customer_id": customer_id}
+        if card_number := payment_data.get("details", {}).get("cardNumber"):
+            token_values["payment_details"] = card_number[-4:]
+        return token_values

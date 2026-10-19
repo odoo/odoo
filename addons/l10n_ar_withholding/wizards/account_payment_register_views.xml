@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="l10n_account_withholding_tax.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <field name="withholding_net_amount" position="attributes">
+                <attribute name="nolabel">1</attribute>
+            </field>
+            <field name="withholding_net_amount" position="before">
+                <label for="withholding_net_amount" string="Net Amount" invisible="withhold == 'withhold' or l10n_latam_move_check_ids or l10n_latam_new_check_ids"/>
+                <label for="withholding_net_amount" string="Check amount" invisible="withhold == 'withhold' or not l10n_latam_move_check_ids and not l10n_latam_new_check_ids"/>
+            </field>
+        </field>
+    </record>
+</odoo>

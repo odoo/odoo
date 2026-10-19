@@ -1,0 +1,15 @@
+<templates xml:space="preserve">
+    <!-- Extend default mass_mailing snippets with website feature -->
+
+    <t t-inherit="mass_mailing.s_mail_block_footer_social" t-inherit-mode="extension">
+        <xpath expr='//a[@href="/unsubscribe_from_list"]' position="after">
+            <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
+        </xpath>
+    </t>
+
+    <t t-inherit="mass_mailing.s_mail_block_footer_social_left" t-inherit-mode="extension">
+        <xpath expr='//a[@href="/unsubscribe_from_list"]' position="after">
+            <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
+        </xpath>
+    </t>
+</templates>

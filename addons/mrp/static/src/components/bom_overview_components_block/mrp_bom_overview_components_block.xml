@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.BomOverviewComponentsBlock">
+        <t name="components" t-if="this.hasComponents">
+            <t t-foreach="this.data.components" t-as="line" t-key="line.index">
+                <BomOverviewLine
+                    isFolded="this.state[this.getIdentifier(line)]"
+                    showOptions="this.props.showOptions"
+                    data="line"
+                    precision="this.props.precision"
+                    toggleFolded.bind="this.onToggleFolded"/>
+
+                <t t-if="!this.state[this.getIdentifier(line)] &amp;&amp; this.hasComponents">
+                    <BomOverviewComponentsBlock
+                        unfoldAll="this.state.unfoldAll"
+                        showOptions="this.props.showOptions"
+                        currentWarehouseId="this.props.currentWarehouseId"
+                        data="line"
+                        precision="this.props.precision"
+                        changeFolded.bind="this.props.changeFolded"/>
+                </t>
+            </t>
+        </t>
+        <t name="operations" t-if="!!this.data.operations &amp;&amp; this.data.operations.length > 0">
+            <BomOverviewExtraBlock
+                unfoldAll="this.state.unfoldAll"
+                type="'operations'"
+                showOptions="this.props.showOptions"
+                data="this.data"
+                precision="this.props.precision"
+                changeFolded.bind="this.props.changeFolded"/>
+        </t>
+        <t name="byproducts" t-if="!!this.data.byproducts &amp;&amp; this.data.byproducts.length > 0">
+            <BomOverviewExtraBlock
+                unfoldAll="this.state.unfoldAll"
+                type="'byproducts'"
+                showOptions="this.props.showOptions"
+                data="this.data"
+                precision="this.props.precision"
+                changeFolded.bind="this.props.changeFolded"/>
+        </t>
+    </t>
+
+</templates>

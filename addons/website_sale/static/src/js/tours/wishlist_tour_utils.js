@@ -1,0 +1,45 @@
+
+export function addToWishlistFromProductPage() {
+    return [
+        {
+            content: "Add to wishlist",
+            trigger: ".js_product button.o_add_wishlist_dyn:not(:disabled)",
+            run: "click",
+        },
+        {
+            content: "Check if the button is disabled",
+            trigger: ".js_product button.o_add_wishlist_dyn:disabled",
+        },
+    ];
+}
+
+export function addToWishlistFromShopPage() {
+    // TODO in the future, sub-util to target buttons in specific product card.
+    return [
+        {
+            content: "Add to wishlist",
+            trigger: "#o_wsale_products_grid button.o_add_wishlist:not(:disabled)",
+            run: "click",
+        },
+        {
+            content: "Check that the button is disabled",
+            trigger: "#o_wsale_products_grid button.o_add_wishlist:disabled",
+        },
+    ];
+}
+
+export function goToWishlist({ quantity = 1 } = {}) {
+    return {
+        content: "Go to wishlist",
+        trigger: `a sup.my_wish_quantity:text(${quantity})`,
+        run: "click",
+        expectUnloadPage: true,
+    };
+}
+
+export function assertWishlistQuantity(quantity = 1) {
+    return {
+        content: "Check wishlist quantity",
+        trigger: `a sup.my_wish_quantity:text(${quantity})`,
+    };
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="website_livechat_visitor_11_demo" model="website.visitor">
+            <field name="access_token">website_livechat_visitor_11_demo</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="lang_id" ref="base.lang_en"/>
+        </record>
+        <record id="im_livechat.livechat_channel_session_11" model="discuss.channel">
+            <field name="livechat_visitor_id" ref="website_livechat.website_livechat_visitor_11_demo"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,243 @@
+.o-mail-Composer {
+    grid-template-areas:
+        "sidebar-header core-header"
+        "sidebar-main core-main"
+        "sidebar-footer core-footer";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr auto;
+
+    // Text input vertical padding, used to derive the single-line pill radius below.
+    --o-mail-Composer-vPadding: 10px;
+
+    &.o-chatWindow, &.o-isUiSmall {
+        --o-mail-Composer-vPadding: #{$o-mail-Composer-chatWindowVPadding};
+    }
+
+    &.o-isUiSmall:not(.o-editing) {
+        --o-mail-Composer-vPadding: 12px;
+    }
+
+    &.o-hasSelfAvatar {
+        grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
+    }
+
+    .o-mail-Composer-sidebarMain {
+        padding-top: 0.3125rem; // avatar centered with composer text input: 32px (avatar) + 2*5px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
+        width: $o-mail-Message-sidebarWidth;
+    }
+
+    .o-mail-Composer-coreHeader {
+        grid-area: core-header;
+    }
+
+    .o-mail-Composer-coreMain {
+        grid-area: core-main;
+    }
+
+    .o-mail-Composer-sidebarMain {
+        grid-area: sidebar-main;
+    }
+
+    .o-mail-Composer-footer {
+        grid-area: core-footer;
+    }
+
+    .o-mail-Composer-mainActions {
+        margin-top: map-get($spacers, 1) * 5 / 4;
+    }
+
+    &.o-chatWindow .o-mail-Composer-mainActions {
+        margin-top: map-get($spacers, 1) / 2;
+    }
+
+    &.o-isUiSmall:not(.o-editing) .o-mail-Composer-mainActions {
+        margin-top: map-get($spacers, 1) * 6 / 4;
+    }
+
+    &.o-focused {
+        .o-mail-Composer-mainActions button:not(.active) {
+            opacity: 85%;
+
+            &:disabled {
+                opacity: 50%;
+            }
+        }
+    }
+    &:not(.o-focused) {
+        .o-mail-Composer-input::placeholder {
+            opacity: 50%;
+        }
+        .o-mail-Composer-mainActions button:not(.active) {
+            opacity: 50%;
+        }
+    }
+}
+
+.o-mail-Composer-actions {
+
+    button {
+        --btn-border-color: transparent;
+        --btn-hover-border-color: transparent;
+        --btn-active-bg: var(--btn-hover-bg);
+
+        &.o-small {
+            margin: 0 !important;
+            padding: map-get($spacers, 1) !important;
+        }
+        &.o-large {
+            margin: 0 !important;
+            padding: map-get($spacers, 2) !important;
+        }
+        &.o-sendMessageActive {
+            --btn-bg: #{lighten($primary, 7.5%)};
+            --btn-border-color: #{$primary};
+            opacity: 100% !important;
+            &:focus-visible {
+                outline: darken($o-action, 15%) solid 1px;
+            }
+        }
+        i[data-icon="send"] {
+            transform: translate(1px);
+        }
+        &:hover, &:focus, &.active {
+            opacity: 100% !important;
+            color: var(--mail-Composer-actionHoverColor, black);
+            &::before {
+                backdrop-filter: invert(.025);
+            }
+        }
+        &.o-mail-Composer-send.btn-link:not(:disabled) {
+            background-color: rgba($o-action, .75);
+            opacity: 100% !important;
+            &:focus-visible {
+                outline: darken($o-action, 15%) solid 1px;
+            }
+            i[data-icon="send"] {
+                color: #FFF;
+                transform: translate(-1px);
+                scale: .85;
+            }
+        }
+    }
+}
+
+.o-mail-Composer-bg {
+    background-color: var(--mail-Composer-bg, $o-view-background-color);
+
+    &:disabled {
+        background-color: var(--mail-Composer-bg, $o-view-background-color);
+    }
+}
+
+.o-mail-Composer-inputStyle, .o-mail-Composer-html {
+    padding-top: var(--o-mail-Composer-vPadding);
+    padding-bottom: var(--o-mail-Composer-vPadding);
+    padding-left: map-get($spacers, 1);
+    padding-right: map-get($spacers, 1);
+    border-radius: calc(var(--o-mail-Composer-vPadding) + #{$o-mail-Composer-pillRadiusBase}); // Matches the outer container's pill radius
+    line-height: $o-mail-Composer-lineHeight !important;
+
+    .o-mail-Composer.o-editing & {
+        padding-left: map-get($spacers, 2);
+        padding-right: map-get($spacers, 2);
+    }
+
+    .o-mail-Composer.o-extended & {
+        padding-left: map-get($spacers, 2) + map-get($spacers, 1);
+        padding-right: map-get($spacers, 2);
+        // Always multi-line: pill radius would look out of place, use rounded-3 instead.
+        border-radius: $border-radius-lg;
+    }
+
+    .o-mail-Composer.o-chatWindow & {
+        padding-left: map-get($spacers, 1) / 2;
+        padding-right: map-get($spacers, 1) / 2;
+    }
+}
+
+.o-mail-Composer-input, .o-mail-Composer-html {
+    max-height: Min(400px, 60vh);
+    resize: none;
+
+    .o-mail-Composer.o-chatWindow & {
+        @media (min-height: 325px) {
+            max-height: Min(350px, 70vh);
+        }
+    }
+    .o-mail-Composer.o-chatWindowBig & {
+        @media (min-height: 325px) {
+            max-height: Min(550px, 70vh);
+        }
+    }
+
+    .o-mail-Composer.o-discussApp & {
+        @media (min-height: 425px) {
+            max-height: 50vh;
+        }
+    }
+
+    .o-mail-Composer.o-extended & {
+        max-height: Min(400px, 30vh);
+    }
+
+    &::placeholder {
+        opacity: 40%;
+
+        .o-mail-Composer.o-focused & {
+            opacity: 50%;
+        }
+        @include text-truncate();
+    }
+}
+
+.o-mail-Composer-quickActions {
+    margin-right: map-get($spacers, 1);
+    
+    .o-mail-Composer.o-chatWindow & {
+        margin-right: 1px;
+    }
+}
+
+.o-mail-Composer-avatar {
+    --Avatar-size: #{$o-mail-Avatar-size};
+}
+
+.o-mail-Composer-fake {
+    height: 0;
+    left: -10000px;
+    top: -10000px;
+    visibility: hidden;
+}
+
+.o-mail-Composer-inputContainer {
+    --border-color: #{rgba($dark, var(--mail-Composer-inputContainerUnfocusedBorderOpacity, .2))};
+    border-radius: calc(var(--o-mail-Composer-vPadding) + #{$o-mail-Composer-pillRadiusBase}); // Keep the single-line pill radius when the composer grows.
+
+    .o-mail-Composer.o-extended & {
+        border-radius: $border-radius-lg;
+    }
+
+    &:has(textarea:focus) {
+        --border-color: #{rgba($o-component-active-border, .65)};
+    }
+
+    &:has(.o-mail-Composer-html:focus) {
+        --border-color: #{$o-component-active-border};
+    }
+}
+
+.o-mail-Composer-pickerContainer.o-active {
+    height: 50vh;
+}
+
+.o-mail-Composer-replyingToJumpClickable:hover {
+    backdrop-filter: contrast(.8);
+}
+
+.o-mail-Composer-suggestionList:has(.o-open) {
+    border: $border-width solid $border-color;
+}
+
+.o-mail-Composer-suggestionPartner-name.o-has-email {
+    max-width: 70%;
+}

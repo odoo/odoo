@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="point_of_sale.ProductQuickCreateDialogButtons" t-inherit="web.FormView.DialogButtons">
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="replace">
+            <t t-set="isQuickCreate" t-value="this.model.root.context.is_pos_product_quick_create"/>
+            <t t-if="this.model.root.isInEdition">
+                <button
+                    t-if="isQuickCreate"
+                    type="button"
+                    class="btn btn-primary o_form_button_save_new"
+                    data-hotkey="n"
+                    t-on-click.stop="() => this.saveButtonClicked({ saveAndNew: true })">
+                    Add &amp; New
+                </button>
+                <button
+                    type="button"
+                    t-att-class="'btn ' + (isQuickCreate ? 'btn-secondary' : 'btn-primary') + ' o_form_button_save'"
+                    data-hotkey="s"
+                    t-on-click.stop="() => this.saveButtonClicked({ closable: true })">
+                    <t t-out="isQuickCreate ? 'Add &amp; Close' : 'Save'"/>
+                </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

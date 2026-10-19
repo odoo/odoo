@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_dynamic_snippet_carousel" name="Dynamic Carousel">
+        <t t-call="website.s_dynamic_snippet_template"
+            snippet_name.f="s_dynamic_snippet_carousel"
+            snippet_classes="'o_dynamic_carousel_snippet'">
+                <t t-set="snippet_title" t-valuef="Our latest content"/>
+                <t t-set="snippet_description" t-valuef="Check out what's new in our company !"/>
+            </t>
+    </template>
+
+<template id="s_dynamic_snippet_carousel_preview_data" name="Carousel Preview Data">
+    <div class="carousel slide s_dialog_preview" data-bs-ride="true">
+        <div class="carousel-inner w-100">
+            <t t-out="0"/>
+        </div>
+        <div class="s_dynamic_snippet_arrows d-flex gap-2 w-100">
+            <div class="o_carousel_arrow_wrap align-items-center">
+                <a class="carousel-control-prev position-relative pe-auto" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous">
+                    <span class="o_carousel_arrow oi p-3" data-icon="chevron_backward"></span>
+                    <span class="visually-hidden">Previous</span>
+                </a>
+            </div>
+            <div class="o_carousel_arrow_wrap align-items-center justify-content-end">
+                <a class="carousel-control-next position-relative pe-auto" data-bs-slide="next" role="button" aria-label="Next" title="Next">
+                    <span class="o_carousel_arrow oi p-3" data-icon="chevron_forward"></span>
+                    <span class="visually-hidden">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<asset id="website.s_dynamic_snippet_carousel_000_scss" name="Dynamic snippet carousel 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_dynamic_snippet_carousel/000.scss</path>
+</asset>
+
+<asset id="website.s_dynamic_snippet_carousel_000_xml" name="Dynamic snippet carousel 000 XML">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_dynamic_snippet_carousel/000.xml</path>
+</asset>
+
+</odoo>

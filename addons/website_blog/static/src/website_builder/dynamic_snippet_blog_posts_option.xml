@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-inherit="website.DynamicSnippetOption" t-inherit-mode="extension">
+    <xpath expr="//BuilderSelect[@id=&quot;'model_opt'&quot;]" position="inside">
+        <BuilderSelectItem actionParam="'blog.post'">Blog Posts</BuilderSelectItem>
+    </xpath>
+</t>
+
+<t t-name="website_blog.DynamicSnippetBlogPostsOption" t-inherit="website.DynamicSnippetOption">
+    <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
+        <t t-call="website_blog.BlogPostsFilterOptions"/>
+    </xpath>
+    <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
+        <t t-call="website_blog.BlogPostsTemplateOptions"/>
+    </xpath>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//dynamic_snippet_option" position="after">
+        <dynamic_snippet_blog_posts_option selector=".s_dynamic_snippet_blog_posts"/>
+    </xpath>
+</t>
+
+</templates>

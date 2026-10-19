@@ -1,0 +1,203 @@
+from odoo import Command, models
+from odoo.addons.account.models.chart_template import template
+
+
+class AccountChartTemplate(models.AbstractModel):
+    _inherit = 'account.chart.template'
+
+    @template('in')
+    def _get_in_template_data(self):
+        return {
+            'name': self.env._('Non-Corporate Entities'),
+        }
+
+    @template('in_sch3')
+    def _get_in_sch3_template_data(self):
+        return {
+            'name': self.env._('Corporate Entities'),
+            'parent': 'in',
+            'sequence': 2,
+        }
+
+    @template('in', 'res.company')
+    def _get_in_res_company(self):
+        return {
+            self.env.company.id: {
+                'display_invoice_amount_total_words': True,
+                'account_fiscal_country_id': 'base.in',
+                'bank_account_code_prefix': '1002',
+                'cash_account_code_prefix': '1001',
+                'transfer_account_code_prefix': '1008',
+                'account_default_pos_receivable_account_id': 'p10041',
+                'income_currency_exchange_account_id': 'p2013',
+                'expense_currency_exchange_account_id': 'p2117',
+                'account_journal_early_pay_discount_loss_account_id': 'p2132',
+                'account_journal_early_pay_discount_gain_account_id': '2012',
+                'fiscalyear_last_month': '3',
+                'account_sale_tax_id': 'sgst_sale_5',
+                'account_purchase_tax_id': 'sgst_purchase_5',
+                'deferred_expense_account_id': 'p10084',
+                'deferred_revenue_account_id': 'p10085',
+                'expense_account_id': 'p2107',
+                'income_account_id': 'p20011',
+                'receivable_account_id': 'p10040',
+                'payable_account_id': 'p11211',
+                'withholding_tax_base_account_id': 'p100595',
+                'tax_calculation_rounding_method': 'round_per_line',
+            },
+        }
+
+    @template('in', 'account.cash.rounding')
+    def _get_in_account_cash_rounding(self):
+        return {
+            'cash_rounding_in_half_up': {
+                'name': self.env._('Half Up'),
+                'rounding': 1,
+                'profit_account_id': 'p213202',
+                'loss_account_id': 'p213201',
+            }
+        }
+
+    @template('in', 'account.fiscal.position')
+    def _get_in_account_fiscal_position(self):
+        _ = self.env._
+        company = self.env.company
+        state_ids = [Command.set(company.state_id.ids)] if company.state_id else False
+        intra_state_name = company.state_id and _("Within %s", company.state_id.name) or _("Intra State")
+        country_in_id = self.env.ref('base.in').id
+        fiscals_data = {
+            'fiscal_position_in_intra_state': {
+                'name': intra_state_name,
+                'sequence': 1,
+                'auto_apply': True,
+                'state_ids': state_ids,
+                'country_id': country_in_id,
+            },
+            'fiscal_position_in_inter_state': {
+                'name': _("Inter State"),
+                'sequence': 2,
+                'auto_apply': True,
+                'country_group_id': 'l10n_in.inter_state_group',
+            },
+        }
+        if company.parent_id:
+            fiscals_data = {self.company_xmlid(k): v for k, v in fiscals_data.items()}
+        else:
+            fiscals_data.update({
+                'fiscal_position_in_sez': {
+                    'name': _("Special Economic Zone (SEZ)"),
+                    'sequence': 3,
+                    'auto_apply': True,
+                    'state_ids': [Command.set(self.env.ref('l10n_in.state_in_oc').ids)],
+                    'country_id': country_in_id,
+                    'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."),
+                },
+                'fiscal_position_in_export': {
+                    'name': _("Export"),
+                    'sequence': 4,
+                    'auto_apply': True,
+                    'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX."),
+                },
+                'fiscal_position_in_lut_sez': {
+                    'name': _("SEZ - LUT (WOP)"),
+                    'sequence': 5,
+                    'state_ids': [Command.set(self.env.ref('l10n_in.state_in_oc').ids)],
+                    'country_id': country_in_id,
+                    'note': _("SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX."),
+                },
+                'fiscal_position_in_lut_export': {
+                    'name': _("Export - LUT (WOP)"),
+                    'sequence': 6,
+                    'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX.'),
+                },
+            })
+        # Assign tax_ids based on fiscal position
+        for xml_id, data in fiscals_data.items():
+            data['tax_ids'] = self._get_l10n_in_fiscal_tax_vals(xml_id)
+        return fiscals_data
+
+    def _get_l10n_in_fiscal_tax_vals(self, fiscal_position_xml_id):
+        rates = [1, 2, 5, 12, 18, 28, 40]
+        taxes_xml_ids = []
+        match fiscal_position_xml_id:
+            case 'fiscal_position_in_intra_state':
+                taxes_xml_ids = [f"sgst_{tax_type}_{rate}" for tax_type in ["sale", "purchase"] for rate in rates]
+            case 'fiscal_position_in_inter_state' | 'fiscal_position_in_sez':
+                taxes_xml_ids = [f"igst_{tax_type}_{rate}" for tax_type in ["sale", "purchase"] for rate in rates]
+            case 'fiscal_position_in_export':
+                taxes_xml_ids = [f"igst_sale_{rate}_exp" for rate in rates + [0]] + [f"igst_purchase_{rate}" for rate in rates]
+            case 'fiscal_position_in_lut_export':
+                taxes_xml_ids = [f"igst_sale_{rate}_exp_lut" for rate in rates + [0]]
+            case 'fiscal_position_in_lut_sez':
+                taxes_xml_ids = [f"igst_sale_{rate}_sez_lut" for rate in rates + [0]]
+        return [Command.set(taxes_xml_ids)]
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        if template_code and template_code.startswith('in'):
+            company = company or self.env.company
+            company._update_l10n_in_gst_registration_type()
+
+            # The COA (Chart of Accounts) data is loaded after the initial compute methods are called.
+            # During initial journal setup, the payment methods and accounts may not exist yet,
+            # causing the payment method lines to not be properly configured.
+            # We call these helper methods again in _post_load_data to ensure all payment method lines
+            # are correctly assigned once all COA data is fully available.
+            bank_journals = company.bank_journal_ids
+            bank_journals._assign_outstanding_account_to_payment_method_lines("inbound", payment_method_codes=['manual'], chart_template="in")
+            bank_journals._assign_outstanding_account_to_payment_method_lines("outbound", payment_method_codes=['manual'], chart_template="in")
+
+            # Load journals for Indian branch having different GSTIN than parent company.
+            # Process only Indian branches with GST and a parent company.
+            parent = company.parent_id
+            if (
+                company.country_code == 'IN'
+                and (parent.chart_template or '').startswith('in')
+                and all(self.env['res.partner'].check_vat_in(vat) for vat in (parent.vat, company.vat))
+                and parent.vat != company.vat
+            ):
+                AccountChartTemplate = self.env['account.chart.template'].with_company(company)
+                journal_data = AccountChartTemplate._get_account_journal(template_code)
+                # Setting lower sequence to prioritize branch journals
+                journal_data['sale']['sequence'] = 1
+                journal_data['purchase']['sequence'] = 1
+                # Load Sales and Purchase journals for the branch
+                AccountChartTemplate._load_data({'account.journal': {
+                    AccountChartTemplate.company_xmlid('sale'): journal_data['sale'],
+                    AccountChartTemplate.company_xmlid('purchase'): journal_data['purchase'],
+                }})
+
+    def _load(self, template_code, company, install_demo, force_create=True):
+        # Both fields use `ondelete='restrict'`, so the chart template cannot be changed while either account is set.
+        # Clear them from the cash rounding configuration before changing the chart template.
+        is_indian_template = template_code and template_code.startswith('in')
+        if (
+            is_indian_template
+            and (cash_rounding := self.with_company(company).ref('cash_rounding_in_half_up', raise_if_not_found=False))
+            and (cash_rounding.profit_account_id or cash_rounding.loss_account_id)
+        ):
+            cash_rounding.write({'profit_account_id': False, 'loss_account_id': False})
+
+        res = super()._load(template_code, company, install_demo, force_create)
+        if is_indian_template:
+            if company.l10n_in_tds_feature:
+                company._activate_l10n_in_taxes(['tds_it_act_25_group'], company)
+            if company.l10n_in_tcs_feature:
+                company._activate_l10n_in_taxes(['tcs_it_act_25_group'], company)
+        return res
+
+    @template('in', 'account.journal')
+    def _get_in_account_journal(self):
+        """
+        Creates a 'Self Invoice' purchase journal default mapped to the 210700 expense account.
+        """
+        return {
+            'self_invoice': {
+                'name': self.env._('Self Invoice'),
+                'type': 'purchase',
+                'code': 'SELF',
+                'sequence': 7,
+                'default_account_id': 'p2107',
+                'l10n_in_self_invoice': True,
+            },
+        }

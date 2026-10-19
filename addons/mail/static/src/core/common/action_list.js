@@ -1,0 +1,146 @@
+import { attClassObjectToString } from "@mail/utils/common/format";
+import { propSignal } from "@mail/utils/common/hooks";
+import { Component, computed, onWillUnmount, t, useProps } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Action as ActionModel } from "@mail/core/common/action";
+import { useService } from "@web/core/utils/hooks";
+
+const actionListProps = [
+    "inline?",
+    "dropdown?",
+    "fw?",
+    "hasBtnBg?",
+    "odooControlPanelSwitchStyle?",
+];
+
+const actionListPropsSchema = {
+    dropdown: t.boolean().optional(),
+    fw: t.boolean().optional(true),
+    hasBtnBg: t.boolean().optional(),
+    inline: t.boolean().optional(),
+    odooControlPanelSwitchStyle: t.boolean().optional(),
+};
+
+class Action extends Component {
+    static components = { Action, DropdownItem };
+    static template = "mail.Action";
+
+    get ActionList() {
+        return ActionList;
+    }
+
+    get Dropdown() {
+        return Dropdown;
+    }
+
+    setup() {
+        super.setup();
+        this.props = useProps({
+            action: t.instanceOf(ActionModel),
+            isFirstInGroup: t.boolean().optional(),
+            isLastInGroup: t.boolean().optional(),
+            style: t.string().optional(),
+            ...actionListPropsSchema,
+        });
+        this.store = useService("mail.store");
+        this.ui = useService("ui");
+        this.attClassObjectToString = attClassObjectToString;
+        if (this.props.action.definition?.isMoreAction) {
+            onWillUnmount(() => {
+                this.props.action.dropdownState.close();
+            });
+        }
+    }
+
+    get action() {
+        return this.props.action;
+    }
+
+    get hasBtnBg() {
+        return (
+            this.props.odooControlPanelSwitchStyle ||
+            this.props.hasBtnBg ||
+            this.props.action.hasBtnBg
+        );
+    }
+
+    /**
+     * The list then adds no rounding of its own: its segmented-control shape only rounds the outer
+     * corners, which would leave the rest lopsided.
+     */
+    get hasOwnRounding() {
+        return /(^|\s)rounded(-|\s|$)/.test(this.action.btnClass ?? "");
+    }
+
+    get isInlineCircleButtonValue() {
+        if (!this.props.inline || !this.action.icon) {
+            return false;
+        }
+        if (this.env.inComposer || this.env.inMessage) {
+            return true;
+        }
+        return (
+            this.action.tags.includes("JOIN_LEAVE_CALL") &&
+            this.action.icon &&
+            !this.action.inlineName
+        );
+    }
+
+    onSelected(action, ev) {
+        action.onSelected?.(ev);
+    }
+}
+
+export class ActionList extends Component {
+    static components = { Action };
+    static template = "mail.ActionList";
+
+    getActionProps(action, group, { index, isFirstInGroup, isLastInGroup } = {}) {
+        return {
+            action,
+            group,
+            isFirstInGroup,
+            isLastInGroup,
+            ...Object.fromEntries(
+                actionListProps.map((propName) => {
+                    const actualPropName = propName.endsWith("?")
+                        ? propName.substring(0, propName.length - 1)
+                        : propName;
+                    return [actualPropName, this.props[actualPropName]];
+                })
+            ),
+            style: `z-index: ${group.length - index + (action.hotkey ? 1 : 0)}`,
+        };
+    }
+
+    setup() {
+        super.setup();
+        this.actions = propSignal(
+            "actions",
+            t.array(t.or([t.instanceOf(ActionModel), t.array(t.instanceOf(ActionModel))]))
+        );
+        this.props = useProps({
+            groupClass: t.string().optional(),
+            ...actionListPropsSchema,
+        });
+        this.store = useService("mail.store");
+        this.ui = useService("ui");
+        this.actionListProps = actionListProps;
+    }
+
+    groups = computed(() => {
+        const actions = this.actions();
+        let groups;
+        if (actions.find((i) => Array.isArray(i))) {
+            groups = actions;
+        } else {
+            groups = [actions];
+        }
+        return groups.filter((group) => group.length); // don't show empty groups
+    });
+
+    get hasBtnBg() {
+        return this.props.odooControlPanelSwitchStyle || this.props.hasBtnBg;
+    }
+}

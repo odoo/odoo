@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_annual_report_vat_vh" model="account.report">
+        <field name="name">VH VAT Report</field>
+        <field name="name@it">Rapporto IVA VH</field>
+        <field name="sequence">1</field>
+        <field name="country_id" ref="base.it"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_annual_report_vat_balance_vh" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@it">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_annual_report_line_vari_communi_perd" model="account.report.line">
+                <field name="name">Changes in reporting periodicals</field>
+                <field name="name@it">Variazioni dei periodici di comunicazione</field>
+                <field name="code">VH</field>
+                <field name="children_ids">
+                    <record id="tax_annual_report_line_vh1" model="account.report.line">
+                        <field name="name">VH1 - January</field>
+                        <field name="name@it">VH1 - Gennaio</field>
+                        <field name="code">VH1</field>
+                        <field name="tax_tags_formula">vh1</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh2" model="account.report.line">
+                        <field name="name">VH2 - February</field>
+                        <field name="name@it">VH2 - Febbraio</field>
+                        <field name="code">VH2</field>
+                        <field name="tax_tags_formula">v2</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh3" model="account.report.line">
+                        <field name="name">VH3 - March</field>
+                        <field name="name@it">VH3 - Marzo</field>
+                        <field name="code">VH3</field>
+                        <field name="tax_tags_formula">vh3</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh4" model="account.report.line">
+                        <field name="name">VH4 - QUARTER I</field>
+                        <field name="name@it">VH4 - TRIMESTRE I</field>
+                        <field name="code">VH4</field>
+                        <field name="aggregation_formula">VH1.balance + VH2.balance + VH3.balance</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh5" model="account.report.line">
+                        <field name="name">VH5 - April</field>
+                        <field name="name@it">VH5 - Aprile</field>
+                        <field name="code">VH5</field>
+                        <field name="tax_tags_formula">vh5</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh6" model="account.report.line">
+                        <field name="name">VH6 - May</field>
+                        <field name="name@it">VH6 - Maggio</field>
+                        <field name="code">VH6</field>
+                        <field name="tax_tags_formula">vh6</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh7" model="account.report.line">
+                        <field name="name">VH7 - June</field>
+                        <field name="name@it">VH7 - Giugno</field>
+                        <field name="code">VH7</field>
+                        <field name="tax_tags_formula">vh7</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh8" model="account.report.line">
+                        <field name="name">VH8 - QUARTER II</field>
+                        <field name="name@it">VH8 - TRIMESTRE II</field>
+                        <field name="code">VH8</field>
+                        <field name="aggregation_formula">VH5.balance + VH6.balance + VH7.balance</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh9" model="account.report.line">
+                        <field name="name">VH9 - July</field>
+                        <field name="name@it">VH9 - Luglio</field>
+                        <field name="code">VH9</field>
+                        <field name="tax_tags_formula">vh9</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh10" model="account.report.line">
+                        <field name="name">VH10 - August</field>
+                        <field name="name@it">VH10 - Agosto</field>
+                        <field name="code">VH10</field>
+                        <field name="tax_tags_formula">vh10</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh11" model="account.report.line">
+                        <field name="name">VH11 - September</field>
+                        <field name="name@it">VH11 - Settembre</field>
+                        <field name="code">VH11</field>
+                        <field name="tax_tags_formula">vh11</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh12" model="account.report.line">
+                        <field name="name">VH12 - QUARTER III</field>
+                        <field name="name@it">VH12 - TRIMESTRE III</field>
+                        <field name="code">VH12</field>
+                        <field name="aggregation_formula">VH9.balance + VH10.balance + VH11.balance</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh13" model="account.report.line">
+                        <field name="name">VH13 - October</field>
+                        <field name="name@it">VH13 - Ottobre</field>
+                        <field name="code">VH13</field>
+                        <field name="tax_tags_formula">vh13</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh14" model="account.report.line">
+                        <field name="name">VH14 - November</field>
+                        <field name="name@it">VH14 - Novembre</field>
+                        <field name="code">VH14</field>
+                        <field name="tax_tags_formula">vh14</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh15" model="account.report.line">
+                        <field name="name">VH15 - December</field>
+                        <field name="name@it">VH15 - Dicembre</field>
+                        <field name="code">VH15</field>
+                        <field name="tax_tags_formula">vh15</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh16" model="account.report.line">
+                        <field name="name">VH16 - QUARTER IV</field>
+                        <field name="name@it">VH16 - TRIMESTRE IV</field>
+                        <field name="code">VH16</field>
+                        <field name="aggregation_formula">VH13.balance + VH14.balance + VH15.balance</field>
+                    </record>
+                    <record id="tax_annual_report_line_vh17" model="account.report.line">
+                        <field name="name">VH17 - Deposit due</field>
+                        <field name="name@it">VH17 - Deposito dovuto</field>
+                        <field name="code">VH17</field>
+                        <field name="aggregation_formula">
+                            VH4.balance + VH8.balance + VH12.balance + VH16.balance
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

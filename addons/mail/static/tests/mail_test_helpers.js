@@ -1,0 +1,1179 @@
+import {
+    addBusMessageHandler,
+    busModels,
+    waitUntilSubscribe,
+} from "@bus/../tests/bus_test_helpers";
+import {
+    after,
+    before,
+    expect,
+    getFixture,
+    hover as hootHover,
+    mockPermission,
+    queryFirst,
+    registerDebugInfo,
+    resize,
+    test,
+} from "@odoo/hoot";
+import {
+    assignTestEnv,
+    authenticate,
+    defineModels,
+    defineParams,
+    getMockEnv,
+    getService,
+    makeMockServer,
+    makeTestApp,
+    MockServer,
+    mountWithCleanup,
+    onRpc,
+    parseViewProps,
+    serverState,
+    webModels,
+} from "@web/../tests/web_test_helpers";
+
+import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
+import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
+import { click, contains, TIMEOUT } from "./mail_test_helpers_contains";
+
+import { closeStream, mailGlobal } from "@mail/utils/common/misc";
+import { Component, onMounted, onPatched } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { registry } from "@web/core/registry";
+import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_utils";
+import { useService } from "@web/core/utils/hooks";
+import { IndexedDB } from "@web/core/utils/indexed_db";
+import { pick } from "@web/core/utils/objects";
+import { patch } from "@web/core/utils/patch";
+import { session } from "@web/session";
+import { WebClient } from "@web/webclient/webclient";
+export { SIZES } from "@web/core/ui/ui_utils";
+
+import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
+import { Store as StoreService } from "@mail/core/common/store_service";
+import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
+import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
+import { authenticateGuest, DISCUSS_ACTION_ID } from "./mock_server/mail_mock_server";
+import { Base } from "./mock_server/mock_models/base";
+import { DiscussCallHistory } from "./mock_server/mock_models/discuss_call_history";
+import { DiscussCategory } from "./mock_server/mock_models/discuss_category";
+import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
+import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
+import { DiscussChannelRtcSession } from "./mock_server/mock_models/discuss_channel_rtc_session";
+import { DiscussGifFavorite } from "./mock_server/mock_models/discuss_gif_favorite";
+import { DiscussVoiceMetadata } from "./mock_server/mock_models/discuss_voice_metadata";
+import { IrAttachment } from "./mock_server/mock_models/ir_attachment";
+import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
+import { M2xAvatarUser } from "./mock_server/mock_models/m2x_avatar_user";
+import { MailActivity } from "./mock_server/mock_models/mail_activity";
+import { MailActivitySchedule } from "./mock_server/mock_models/mail_activity_schedule";
+import { MailActivityType } from "./mock_server/mock_models/mail_activity_type";
+import { MailAlias } from "./mock_server/mock_models/mail_alias";
+import { MailAliasDomain } from "./mock_server/mock_models/mail_alias_domain";
+import { MailCallArtifact } from "./mock_server/mock_models/mail_call_artifact";
+import { MailCannedResponse } from "./mock_server/mock_models/mail_canned_response";
+import { MailComposeMessage } from "./mock_server/mock_models/mail_composer_message";
+import { MailFollowers } from "./mock_server/mock_models/mail_followers";
+import { MailGuest } from "./mock_server/mock_models/mail_guest";
+import { MailLinkPreview } from "./mock_server/mock_models/mail_link_preview";
+import { MailMessage } from "./mock_server/mock_models/mail_message";
+import { MailMessageLinkPreview } from "./mock_server/mock_models/mail_message_link_preview";
+import { MailMessageReaction } from "./mock_server/mock_models/mail_message_reaction";
+import { MailMessageSubtype } from "./mock_server/mock_models/mail_message_subtype";
+import { MailNotification } from "./mock_server/mock_models/mail_notification";
+import { MailPushDevice } from "./mock_server/mock_models/mail_push_device";
+import { MailScheduledMessage } from "./mock_server/mock_models/mail_scheduled_message";
+import { MailTemplate } from "./mock_server/mock_models/mail_template";
+import { MailThread } from "./mock_server/mock_models/mail_thread";
+import { ResCountry } from "./mock_server/mock_models/res_country";
+import { ResFake } from "./mock_server/mock_models/res_fake";
+import { ResLang } from "./mock_server/mock_models/res_lang";
+import { ResPartner } from "./mock_server/mock_models/res_partner";
+import { ResRole } from "./mock_server/mock_models/res_role";
+import { ResUsers } from "./mock_server/mock_models/res_users";
+import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
+import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
+import { Store } from "./mock_server/store";
+
+export * from "./mail_test_helpers_contains";
+
+const { AudioContext } = window;
+
+before(prepareRegistriesWithCleanup);
+export const registryNamesToCloneWithCleanup = [];
+registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
+
+mailGlobal.isInTest = true;
+patch(useService, {
+    handleCallWhenDestroyed() {
+        // so that RPCs after tests do not throw error
+        return new Promise(() => {});
+    },
+});
+
+addBusMessageHandler("mail.record/insert", (_env, _id, payload) => {
+    const recordsByModelName = Object.entries(payload);
+    for (const [modelName, records] of recordsByModelName) {
+        for (const record of Array.isArray(records) ? records : [records]) {
+            registerDebugInfo(`insert > "${modelName}"`, record);
+        }
+    }
+});
+
+//-----------------------------------------------------------------------------
+// Exports
+//-----------------------------------------------------------------------------
+
+export function defineMailModels() {
+    defineParams({ suite: "mail" }, "replace");
+    return defineModels(mailModels);
+}
+
+export function getChannelCommandsForThread(threadId) {
+    const store = getService("mail.store");
+    const suggestionService = getService("mail.suggestion");
+    const thread = store["mail.thread"].get({ model: "discuss.channel", id: threadId });
+    return suggestionService.getChannelCommands(thread.channel);
+}
+
+export const mailModels = {
+    ...webModels,
+    ...busModels,
+    Base,
+    DiscussCallHistory,
+    DiscussChannel,
+    DiscussCategory,
+    DiscussChannelMember,
+    DiscussChannelRtcSession,
+    DiscussGifFavorite,
+    DiscussVoiceMetadata,
+    IrAttachment,
+    IrWebSocket,
+    M2xAvatarUser,
+    MailCallArtifact,
+    MailActivity,
+    MailActivitySchedule,
+    MailActivityType,
+    MailAlias,
+    MailAliasDomain,
+    MailComposeMessage,
+    MailCannedResponse,
+    MailFollowers,
+    MailGuest,
+    MailLinkPreview,
+    MailMessage,
+    MailMessageLinkPreview,
+    MailMessageReaction,
+    MailMessageSubtype,
+    MailNotification,
+    MailPushDevice,
+    MailScheduledMessage,
+    MailTemplate,
+    MailThread,
+    ResCountry,
+    ResFake,
+    ResLang,
+    ResPartner,
+    ResRole,
+    ResUsers,
+    ResUsersSettings,
+    ResUsersSettingsVolumes,
+};
+
+/**
+ * Register a callback to be executed before an RPC request is processed.
+ *
+ * @param {Function|string} route
+ * - If a function is provided, it will be executed for every RPC call.
+ * - If a string is provided, the callback will only be executed if the RPC
+ *   route matches the provided string.
+ * @param {Function} callback - The function to execute before the RPC call.
+ */
+export function onRpcBefore(route, callback) {
+    if (typeof route === "string") {
+        const handler = registry.category("mail.mock_rpc").get(route);
+        patch(handler, { before: callback });
+    } else {
+        const onRpcBeforeGlobal = registry.category("mail.on_rpc_before_global").get(true);
+        patch(onRpcBeforeGlobal, { cb: route });
+    }
+}
+
+/**
+ * Register a callback to be executed just before end of an RPC request being processed.
+ * Useful to do all server processing but delay the response received by web client.
+ *
+ * @param {string} route the route to put callback just before returning response.
+ * @param {Function} callback - The function to execute just before the end of RPC call.
+ */
+export function onRpcAfter(route, callback) {
+    const handler = registry.category("mail.mock_rpc").get(route);
+    patch(handler, { after: callback });
+}
+/** @type {Map<string, string>} */
+const globalArchs = new Map();
+
+/**
+ * @param {Record<string, string>} newArchs
+ */
+export function registerArchs(newArchs) {
+    if (!globalArchs.size) {
+        after(() => globalArchs.clear());
+    }
+    globalArchs.clear();
+    for (const [key, value] of Object.entries(newArchs)) {
+        globalArchs.set(key, value);
+    }
+}
+
+export function onlineTest(...args) {
+    if (navigator.onLine) {
+        return test(...args);
+    } else {
+        return test.skip(...args);
+    }
+}
+
+/** @typedef {`discuss.tab_${import("menu_tabs").MenuTabs[keyof import("menu_tabs").MenuTabs]}`} MenuTabId */
+
+/** @type {{ [K in keyof import("menu_tabs").MenuTabs]: `discuss.tab_${import("menu_tabs").MenuTabs[K]}` }} */
+export const MENU_ACTIVE_IDS = Object.fromEntries(
+    Object.entries(MENU_TABS).map(([key, value]) => [key, `discuss.tab_${value}`])
+);
+
+/** @param {number|MenuTabId} [activeIdOrTabId] */
+export async function openDiscuss(activeIdOrTabId, { target } = {}) {
+    let tabId;
+    if (typeof activeIdOrTabId === "string" && activeIdOrTabId?.startsWith("discuss.tab_")) {
+        tabId = activeIdOrTabId.slice("discuss.tab_".length);
+        activeIdOrTabId = undefined;
+    }
+    const actionService = target?.services.action ?? getService("action");
+    await actionService.doAction({
+        context: { active_id: activeIdOrTabId },
+        id: DISCUSS_ACTION_ID,
+        tag: "mail.action_discuss",
+        type: "ir.actions.client",
+    });
+    if (tabId) {
+        await click(`.o-mail-Discuss .o-mail-MessagingMenu-tab[data-id=${tabId}]`);
+        await contains(`.o-mail-Discuss .o-mail-MessagingMenu-tab[data-id=${tabId}].active`);
+    }
+}
+
+export async function openFormView(resModel, resId, params) {
+    return openView({
+        res_model: resModel,
+        res_id: resId,
+        views: [[false, "form"]],
+        ...params,
+    });
+}
+
+export async function openKanbanView(resModel, params) {
+    return openView({
+        res_model: resModel,
+        views: [[false, "kanban"]],
+        ...params,
+    });
+}
+
+export async function openListView(resModel, params) {
+    return openView({
+        res_model: resModel,
+        views: [[false, "list"]],
+        ...params,
+    });
+}
+
+export async function openView({ context, res_model, res_id, views, domain, ...params }) {
+    const [[viewId, type]] = views;
+    const action = {
+        context,
+        domain,
+        res_model,
+        res_id,
+        views: [[viewId, type]],
+        type: "ir.actions.act_window",
+    };
+    const options = parseViewProps({
+        type,
+        resModel: res_model,
+        resId: res_id,
+        arch: params?.arch || globalArchs.get(viewId || res_model + `,false,` + type) || undefined,
+        viewId: params?.arch || viewId,
+        ...params,
+    });
+    await getService("action").doAction(action, { props: options });
+}
+
+/** @type {Set<HTMLElement>} */
+const globalTabs = new Set();
+
+/**
+ * Add an item to the "Switch Tab" dropdown. If it doesn't exist, create the
+ * dropdown and add the item afterwards.
+ *
+ * @param {HTMLElement} rootTarget Where to mount the dropdown menu.
+ * @param {HTMLElement} tabTarget Tab to switch to when clicking on the dropdown
+ * item.
+ */
+async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
+    if (!globalTabs.size) {
+        after(() => globalTabs.clear());
+    }
+    globalTabs.add(tabTarget);
+    const zIndexMainTab = 100000;
+    let dropdownDiv = rootTarget.querySelector(".o-mail-multi-tab-dropdown");
+    const onClickDropdownItem = (e) => {
+        const dropdownToggle = dropdownDiv.querySelector(".dropdown-toggle");
+        dropdownToggle.innerText = `Switch Tab (${e.target.innerText})`;
+        globalTabs.forEach((tab) => (tab.style.zIndex = -zIndexMainTab));
+        if (e.target.innerText !== "Hoot") {
+            tabTarget.style.zIndex = zIndexMainTab;
+        }
+    };
+    if (!dropdownDiv) {
+        tabTarget.style.zIndex = zIndexMainTab;
+        dropdownDiv = document.createElement("div");
+        dropdownDiv.style.zIndex = zIndexMainTab + 1;
+        dropdownDiv.style.top = "10%";
+        dropdownDiv.style.right = "5%";
+        dropdownDiv.style.position = "absolute";
+        dropdownDiv.classList.add("dropdown");
+        dropdownDiv.classList.add("o-mail-multi-tab-dropdown");
+        dropdownDiv.innerHTML = `
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Switch Tab (${globalTabs.size})
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item">Hoot</a></li>
+            </ul>
+        `;
+        dropdownDiv.querySelector("a").onclick = onClickDropdownItem;
+        rootTarget.appendChild(dropdownDiv);
+    }
+    const tabIndex = globalTabs.size;
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    li.appendChild(a);
+    a.classList.add("dropdown-item");
+    a.innerText = `Tab ${tabIndex}`;
+    a.onclick = onClickDropdownItem;
+    dropdownDiv.querySelector(".dropdown-menu").appendChild(li);
+}
+
+let discussAsTabId = 0;
+
+/**
+ * @param {{
+ *  asTab?: boolean;
+ *  authenticateAs?: any | { login: string; password: string; };
+ *  env?: Partial<OdooEnv>;
+ *  waitUntilSubscribe?: boolean;
+ * }} [options]
+ */
+export async function start(options) {
+    patch(Rtc.prototype, {
+        start() {
+            super.start();
+            after(() => this.clear());
+        },
+    });
+    serverState.serverVersion = options?.serverVersion ?? [99, 9]; // so local storage entries upgrade to latest version. HOOT sets 1.0 otherwise, ignoring all upgrades...
+    if (!MockServer.current) {
+        await startServer();
+    }
+    let target = getFixture();
+    const pyEnv = MockServer.env;
+    if (options?.authenticateAs !== undefined) {
+        if (options.authenticateAs === false) {
+            // no authentication => new guest
+            const guestId = pyEnv["mail.guest"].create({});
+            authenticateGuest(pyEnv["mail.guest"].read(guestId)[0]);
+        } else if (options.authenticateAs._name === "mail.guest") {
+            authenticateGuest(options.authenticateAs);
+        } else {
+            authenticate(options.authenticateAs.login, options.authenticateAs.password);
+        }
+    } else if ("res.users" in pyEnv) {
+        if (pyEnv.cookie.get("dgid")) {
+            // already authenticated as guest
+        } else {
+            const adminUser = pyEnv["res.users"].search_read([["id", "=", serverState.userId]])[0];
+            authenticate(adminUser.login, adminUser.password);
+        }
+    }
+    if ("res.users" in pyEnv) {
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = pyEnv["res.users"];
+        const store = new Store();
+        ResUsers._init_store_data(store);
+        patch(session, {
+            storeData: store.as_dict(),
+        });
+        registerDebugInfo("session.storeData", session.storeData);
+    }
+    if (options?.asTab) {
+        discussAsTabId++;
+        const rootTarget = target;
+        target = document.createElement("div");
+        target.classList.add("o-mail-Discuss-asTabContainer");
+        target.dataset.asTabId = discussAsTabId;
+        rootTarget.appendChild(target);
+        addSwitchTabDropdownItem(rootTarget, target);
+        const selector = `.o-mail-Discuss-asTabContainer[data-as-tab-id="${target.dataset.asTabId}"]`;
+        assignTestEnv({ discussAsTabId, selector });
+        await makeTestApp({ forceNew: true });
+    }
+    patch(SoundEffectsPlugin.prototype, {
+        _setAudioSrc(audio, srcPath) {
+            audio["data-src"] = srcPath;
+        },
+    });
+    await Promise.all([
+        options?.waitUntilSubscribe === false ? Promise.resolve() : waitUntilSubscribe(),
+        mountWithCleanup(WebClient, { target }),
+    ]);
+    // Note that loading the emojis cannot be called before setting up the env because
+    // it depends on translations being loaded.
+    await emojiLoader.load();
+    const popoutService = getService("mail.popout");
+    after(() => popoutService.resetAll());
+    return Object.assign(Object.create(getMockEnv()), { target });
+}
+
+export async function startServer() {
+    const { env: pyEnv } = await makeMockServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupId]])
+            .map(({ id }) => id),
+    });
+    return pyEnv;
+}
+
+/**
+ * Return the width corresponding to the given size. If an upper and lower bound
+ * are defined, returns the lower bound: this is an arbitrary choice that should
+ * not impact anything. A test should pass the `width` parameter instead of `size`
+ * if it needs a specific width to be set.
+ *
+ * @param {number} size
+ * @returns {number} The width corresponding to the given size.
+ */
+function getWidthFromSize(size) {
+    const { minWidth, maxWidth } = MEDIAS_BREAKPOINTS[size];
+    return minWidth ? minWidth : maxWidth;
+}
+
+/**
+ * Return the size corresponding to the given width.
+ *
+ * @param {number} width
+ * @returns {number} The size corresponding to the given width.
+ */
+function getSizeFromWidth(width) {
+    return MEDIAS_BREAKPOINTS.findIndex(({ minWidth, maxWidth }) => {
+        if (!maxWidth) {
+            return width >= minWidth;
+        }
+        if (!minWidth) {
+            return width <= maxWidth;
+        }
+        return width >= minWidth && width <= maxWidth;
+    });
+}
+
+/**
+ * Adjust ui size either from given size (mapped to window breakpoints) or
+ * width. This will impact uiService.{isSmall/size}, (wowl/legacy)
+ * window.innerWidth, (wowl) uiService.isSmall and. When a size is given, the browser
+ * width is set according to the breakpoints that are used by the webClient.
+ *
+ * @param {Object} params parameters to configure the ui size.
+ * @param {number|undefined} [params.size]
+ * @param {number|undefined} [params.width]
+ * @param {number|undefined} [params.height]
+ */
+export async function patchUiSize({ height, size, width }) {
+    if ((!size && !width) || (size && width)) {
+        throw new Error("Either size or width must be given to the patchUiSize function");
+    }
+    size = size === undefined ? getSizeFromWidth(width) : size;
+    width = width || getWidthFromSize(size);
+
+    patch(uiUtils, {
+        getSize() {
+            return size;
+        },
+    });
+
+    await resize({ width, height });
+}
+
+function createAudioStream() {
+    const ctx = new AudioContext();
+    const dest = ctx.createMediaStreamDestination();
+    after(() => {
+        closeStream(dest.stream);
+        ctx.close().catch(() => {});
+    });
+    return dest.stream;
+}
+
+export function createVideoStream() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1;
+    canvas.height = 1;
+    const stream = canvas.captureStream();
+    after(() => closeStream(stream));
+    return stream;
+}
+
+/**
+ * Mocks the browser's `navigator.mediaDevices.getUserMedia` and `navigator.mediaDevices.getDisplayMedia`
+ * Also mocks the permissions API to return "granted" for camera and microphone permissions by default.
+ */
+export function mockGetMedia() {
+    const streams = [];
+    // Mock permissions API to return "granted" by default.
+    patch(navigator.permissions, {
+        async query() {
+            return {
+                state: "granted",
+                addEventListener: () => {},
+                removeEventListener: () => {},
+                onchange: null,
+            };
+        },
+    });
+    patch(navigator.mediaDevices, {
+        getUserMedia(constraints) {
+            if (constraints.audio) {
+                const audioStream = createAudioStream();
+                streams.push(audioStream);
+                return audioStream;
+            } else {
+                const videoStream = createVideoStream();
+                streams.push(videoStream);
+                return videoStream;
+            }
+        },
+        getDisplayMedia: () => {
+            const videoStream = createVideoStream();
+            streams.push(videoStream);
+            return videoStream;
+        },
+    });
+    return streams;
+}
+
+/**
+ * Intercept the browser's native fullscreen API so tests can drive it without a real user
+ * gesture. `document.fullscreenElement` and the `fullscreenchange` event are simulated, letting
+ * the `mail.fullscreen` service derive its `isBrowserFullscreen` state from a controllable source.
+ *
+ * @param {Object} [param0]
+ * @param {boolean} [param0.grant=true] Whether fullscreen requests are granted. When `false`,
+ *  `requestFullscreen` resolves without entering fullscreen (as a browser does without a user
+ *  gesture), so callers fall back to the windowed overlay.
+ * @returns {{ isBrowserFullscreen: () => boolean, leaveBrowserFullscreen: () => void }}
+ *  `isBrowserFullscreen` reads the simulated state; `leaveBrowserFullscreen` simulates the user
+ *  leaving fullscreen externally (e.g. with the Escape key).
+ */
+export function mockBrowserFullscreen({ grant = true } = {}) {
+    let fullscreenElement = null;
+    function setFullscreenElement(element) {
+        if (fullscreenElement === element) {
+            return;
+        }
+        fullscreenElement = element;
+        window.dispatchEvent(new Event("fullscreenchange"));
+    }
+    Object.defineProperty(document, "fullscreenElement", {
+        configurable: true,
+        get: () => fullscreenElement,
+    });
+    after(() => delete document.fullscreenElement);
+    patch(document.body, {
+        async requestFullscreen() {
+            if (grant) {
+                setFullscreenElement(document.body);
+            }
+        },
+    });
+    patch(document, {
+        async exitFullscreen() {
+            setFullscreenElement(null);
+        },
+    });
+    return {
+        isBrowserFullscreen: () => Boolean(fullscreenElement),
+        leaveBrowserFullscreen: () => setFullscreenElement(null),
+    };
+}
+
+/**
+ * Simulate the popout window used for picture-in-picture by backing it with an in-DOM iframe.
+ * Forces the non-native popout path (`documentPictureInPicture` disabled) and makes `browser.open`
+ * return a fake window whose document is the iframe's, so the PiP content can be queried in tests
+ * through the returned `popoutIframe.contentDocument`.
+ *
+ * @returns {{ popoutWindow: Object, popoutIframe: HTMLIFrameElement }}
+ */
+export function mockPipWindow() {
+    const popoutIframe = document.createElement("iframe");
+    const outsideArea = document.createElement("div");
+    getFixture().appendChild(outsideArea);
+    const popoutWindow = {
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        closed: false,
+        get document() {
+            const doc = popoutIframe.contentDocument;
+            if (!doc) {
+                return undefined;
+            }
+            const originalWrite = doc.write;
+            doc.write = (content) => {
+                // This avoids duplicating the test script in the popoutWindow.
+                const sanitizedContent = content.replace(
+                    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+                    ""
+                );
+                originalWrite.call(doc, sanitizedContent);
+            };
+            return doc;
+        },
+        close() {
+            popoutWindow.closed = true;
+            popoutIframe.remove();
+        },
+    };
+    patch(window, { documentPictureInPicture: false });
+    patch(browser, {
+        open: () => {
+            popoutWindow.closed = false;
+            outsideArea.append(popoutIframe);
+            return popoutWindow;
+        },
+    });
+    return { popoutWindow, popoutIframe };
+}
+
+/**
+ * A MockRemote represents the network API of a remote user, for example calling remote.updateUpload() behaves as if that remote user
+ * had called this function on their own rtc_service.network
+ *
+ * @typedef {Object} MockRemote
+ * @property {number} sessionId
+ * @property {function(string):Promise} updateConnectionState (emits "update" event)
+ * @property {function(import("@mail/discuss/call/common/rtc_service").streamType,MediaStreamTrack):Promise} updateUpload (emits "update" event)
+ * @property {function(import("@mail/discuss/call/common/rtc_session_model").SessionInfo):Promise} updateInfo (emits "update" event)
+ */
+
+/**
+ * @typedef {Object} MockNetwork
+ * @property { function(number): MockRemote } makeMockRemote
+ */
+
+/**
+ * Mocks {import("@mail/discuss/call/common/rtc_service").Network} and allows testing of features that rely on network behavior, such
+ * as other participants changing the state of their microphone, sharing screen,...
+ *
+ * @param {Object} param0
+ * @param {Partial<OdooEnv>} param0.env
+ * @param {number} param0.channelId
+ * @returns {Promise<MockNetwork>}
+ */
+export async function makeMockRtcNetwork({ env, channelId }) {
+    const mockNetwork = new EventTarget();
+    const pyEnv = MockServer.current.env;
+    const rtc = env.services["discuss.rtc"];
+    const dispatchUpdate = (payload) => {
+        mockNetwork.dispatchEvent(new CustomEvent("update", { detail: payload }));
+    };
+    const { promise: rtcServiceIsListening, resolve: resolveRtcServiceIsListening } =
+        Promise.withResolvers();
+    patch(Network.prototype, {
+        addEventListener(name, f) {
+            if (name === "update") {
+                resolveRtcServiceIsListening();
+                // disabling the p2p network so that it does not try to send webRTC events like candidates and offers.
+                rtc.network.p2p.disconnect();
+            }
+            mockNetwork.addEventListener(name, f);
+            after(() => mockNetwork.removeEventListener(name, f));
+        },
+    });
+
+    return {
+        makeMockRemote(channelMemberId) {
+            const sessionId = pyEnv["discuss.channel.rtc.session"].create({
+                channel_member_id: channelMemberId,
+                channel_id: channelId,
+            });
+            return {
+                sessionId,
+                async updateConnectionState(state) {
+                    await rtcServiceIsListening;
+                    dispatchUpdate({
+                        name: UPDATE_EVENT.CONNECTION_CHANGE,
+                        payload: {
+                            id: sessionId,
+                            state,
+                        },
+                    });
+                },
+                async updateInfo(info) {
+                    await rtcServiceIsListening;
+                    // This helper calls the remote update functions directly, so it bypasses
+                    // the updateAndBroadcastDebounce() that a real participant goes through.
+                    // Write the values it would have stored, otherwise a store fetch brings the
+                    // outdated ones back and reverts them.
+                    const serverInfo = pick(
+                        info,
+                        "is_camera_on",
+                        "is_deaf",
+                        "is_muted",
+                        "is_screen_sharing_on"
+                    );
+                    if (Object.keys(serverInfo).length > 0) {
+                        pyEnv["discuss.channel.rtc.session"].write([sessionId], serverInfo);
+                    }
+                    dispatchUpdate({
+                        name: UPDATE_EVENT.INFO_CHANGE,
+                        payload: { [sessionId]: info },
+                    });
+                },
+                async updateUpload(type, track) {
+                    await rtcServiceIsListening;
+                    dispatchUpdate({
+                        name: UPDATE_EVENT.TRACK,
+                        payload: {
+                            sessionId,
+                            type,
+                            track,
+                            active: Boolean(track),
+                        },
+                    });
+                },
+            };
+        },
+    };
+}
+
+/**
+ * Patch both the `Notification` and the `Permissions` API which are codependent
+ * based on the given value. Note that when `requestPermissionResult` is passed,
+ * the `change` event of the `Permissions` API will also be triggered.
+ *
+ * @param {PermissionName} requestPermissionResult
+ */
+export function patchBrowserNotification(requestPermissionResult) {
+    mockPermission("notifications", "prompt");
+
+    patch(Notification, {
+        requestPermission() {
+            mockPermission("notifications", requestPermissionResult);
+            return super.requestPermission();
+        },
+    });
+}
+
+function cloneRegistryWithCleanup(registry) {
+    prepareRegistry(registry, { keepContent: true });
+}
+
+function prepareRegistry(registry, { keepContent = false } = {}) {
+    const _addEventListener = registry.addEventListener.bind(registry);
+    const _removeEventListener = registry.removeEventListener.bind(registry);
+    patch(registry, {
+        content: keepContent ? { ...registry.content } : {},
+        elements: null,
+        entries: null,
+        subRegistries: {},
+        addEventListener(type, callback) {
+            _addEventListener(type, callback);
+            after(() => {
+                _removeEventListener(type, callback);
+            });
+        },
+    });
+}
+
+export function prepareRegistriesWithCleanup() {
+    // Clone registries
+    registryNamesToCloneWithCleanup.forEach((registryName) =>
+        cloneRegistryWithCleanup(registry.category(registryName))
+    );
+}
+
+const observeRenderResults = new Map();
+let nextObserveRenderResults = 0;
+/**
+ * Patch component `onMounted`/`onPatched` to track amount of renders.
+ * This only prepares with the patching. To effectively observe the amount of renders,
+ * should call @see observeRenders
+ * Having both functions allow to track renders as side-effect on specific actions, rather
+ * than aggregate all renders including setup: as this value requires some thinking on
+ * which render comes from what, usually the less with brief explanations the better.
+ */
+export function prepareObserveRenders() {
+    patch(Component.prototype, {
+        setup(...args) {
+            const countRender = () => {
+                for (const result of observeRenderResults.values()) {
+                    if (!result.has(this.constructor)) {
+                        result.set(this.constructor, 0);
+                    }
+                    result.set(this.constructor, result.get(this.constructor) + 1);
+                }
+            };
+            onMounted(countRender);
+            onPatched(countRender);
+            return super.setup(...args);
+        },
+    });
+    after(() => observeRenderResults.clear());
+}
+
+/**
+ * This function tracks renders of components.
+ * Should be prepared before mounting affected components with @see prepareObserveRenders
+ * This function returns a function to stop observing, which itself returns
+ * a Map of amount of renders per component. Key of map is Component constructor.
+ *
+ * @returns {() => Map<Component.constructor, number>}
+ */
+export function observeRenders() {
+    const id = nextObserveRenderResults++;
+    observeRenderResults.set(id, new Map());
+    return () => {
+        const result = observeRenderResults.get(id);
+        observeRenderResults.delete(id);
+        return result;
+    };
+}
+
+/**
+ * Determine if the child element is in the view port of the parent.
+ *
+ * @param {string} childSelector
+ * @param {string} parentSelector
+ */
+export async function isInViewportOf(childSelector, parentSelector) {
+    await contains(parentSelector);
+    await contains(childSelector);
+    const {
+        promise: inViewportPromise,
+        reject: rejectInViewport,
+        resolve: resolveInViewport,
+    } = Promise.withResolvers();
+    const failTimeout = setTimeout(() => check({ crashOnFail: true }), TIMEOUT);
+    const check = ({ crashOnFail = false } = {}) => {
+        const parent = queryFirst(parentSelector);
+        const child = queryFirst(childSelector);
+        let alreadyInViewport = false;
+        if (parent && child) {
+            const childRect = child.getBoundingClientRect();
+            const parentRect = parent.getBoundingClientRect();
+            alreadyInViewport =
+                childRect.top <= parentRect.top
+                    ? parentRect.top - childRect.top <= childRect.height
+                    : childRect.bottom - parentRect.bottom <= childRect.height;
+        }
+        if (alreadyInViewport) {
+            clearTimeout(failTimeout);
+            expect(true).toBe(true, {
+                message: `Element ${childSelector} found in viewport of ${parentSelector}`,
+            });
+            resolveInViewport();
+        } else if (crashOnFail) {
+            const failMsg = `Element ${childSelector} not found in viewport of ${parentSelector}`;
+            expect(false).toBe(true, { message: failMsg });
+            rejectInViewport(new Error(failMsg));
+        } else {
+            parent.addEventListener("scrollend", check, { once: true });
+        }
+    };
+    check();
+    return inViewportPromise;
+}
+
+/** @param {MenuTabId} [tabId] */
+export async function openMessagingMenu(tabId) {
+    if (!queryFirst(".o-mail-MessagingMenuInDropdown")) {
+        await click(".o_menu_systray i[aria-label='Messages']");
+    }
+    if (tabId) {
+        const id = tabId.slice("discuss.tab_".length);
+        await click(`.o-mail-MessagingMenuInDropdown .o-mail-MessagingMenu-tab[data-id='${id}']`);
+        await click(
+            `.o-mail-MessagingMenuInDropdown .o-mail-MessagingMenu-tab[data-id='${id}'].active`
+        );
+    }
+}
+
+export async function hover(selector) {
+    await contains(selector);
+    await hootHover(selector);
+}
+
+function toChatHubData(opened, folded) {
+    return JSON.stringify({
+        opened: opened.map((data) => convertChatHubParam(data)),
+        folded: folded.map((data) => convertChatHubParam(data)),
+    });
+}
+
+function convertChatHubParam(param) {
+    return typeof param === "number" ? { id: param } : param;
+}
+
+export function setupChatHub({ opened = [], folded = [] } = {}) {
+    localStorage.setItem(CHAT_HUB_KEY, toChatHubData(opened, folded));
+}
+
+export function assertChatHub({ opened = [], folded = [] }) {
+    expect(localStorage.getItem(CHAT_HUB_KEY)).toEqual(toChatHubData(opened, folded));
+}
+
+export const STORE_FETCH_ROUTES = ["/mail/store"];
+
+/**
+ * Prepares listeners for the various ways a store fetch could be triggered. It is important to call
+ * this method before the RPC are done (typically before the start() of the test) to not miss any of
+ * them. Each intercepted fetch should have a corresponding waitStoreFetch in the test.
+ *
+ * @param {string|string[]} [nameOrNames=[]] name or names of the store fetch params to intercept
+ * (such as init_messaging). If empty all params are intercepted.
+ * @param {Object} [options={}]
+ * @param {function} [options.onRpc] entry point to override the onRpc of the intercepted calls.
+ * @param {string[]} [options.logParams=[]] names of the store fetch params for which both the name
+ *  and the specific params should be logged in expect.step. By default only the name is logged.
+ */
+export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRpcOverride } = {}) {
+    const namesToRegister = typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames;
+    function isRegistered(name) {
+        return namesToRegister.length === 0 || namesToRegister.includes(name);
+    }
+    patch(StoreService.prototype, {
+        async fetchStoreData(name, params) {
+            const res = await super.fetchStoreData(...arguments);
+            if (isRegistered(name)) {
+                if (logParams.includes(name)) {
+                    expect.step(`store fetch: ${name} - ${JSON.stringify(params)}`);
+                } else {
+                    expect.step(`store fetch: ${name}`);
+                }
+            }
+            return res;
+        },
+    });
+    if (!onRpcOverride) {
+        return;
+    }
+    async function callOverride(request, fetchParams) {
+        let res;
+        for (const fetchParam of fetchParams) {
+            const name = typeof fetchParam === "string" ? fetchParam : fetchParam[0];
+            if (isRegistered(name)) {
+                res = await onRpcOverride(request);
+            }
+        }
+        return res;
+    }
+    onRpc("/mail/store", async (request) => {
+        const { params } = await request.json();
+        return callOverride(request, params.fetch_params);
+    });
+}
+
+/**
+ * Waits for the given name(s) of store fetch parameters to have been fetched
+ * and applied to the store, in the given order. Expected names have to be registered with
+ * listenStoreFetch beforehand.
+ * If other expect.step are resolving in the same flow, they must be provided to stepsAfter (if they
+ * are resolved after the fetch) or stepsBefore (if they are resolved before the fetch). The order
+ * can be ignored with ignoreOrder option.
+ *
+ * @param {string|string[]} nameOrNames
+ * @param {Object} [options={}]
+ * @param {boolean} [options.ignoreOrder=false]
+ * @param {string[]} [options.stepsAfter=[]]
+ * @param {string[]} [options.stepsBefore=[]]
+ * @param {number} [options.timeout=5000]
+ */
+export async function waitStoreFetch(
+    nameOrNames = [],
+    { ignoreOrder = false, stepsAfter = [], stepsBefore = [], timeout = 5000 } = {}
+) {
+    await expect.waitForSteps(
+        [
+            ...stepsBefore,
+            ...(typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames).map(
+                (nameOrNameAndParams) => {
+                    if (typeof nameOrNameAndParams === "string") {
+                        return `store fetch: ${nameOrNameAndParams}`;
+                    }
+                    return `store fetch: ${nameOrNameAndParams[0]} - ${JSON.stringify(
+                        nameOrNameAndParams[1]
+                    )}`;
+                }
+            ),
+            ...stepsAfter,
+        ],
+        { ignoreOrder, timeout }
+    );
+}
+
+export function userContext() {
+    return { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] };
+}
+class MockAnalyserNode {
+    connect() {}
+    disconnect() {}
+}
+class MockAudioBufferSourceNode {
+    buffer;
+    connect() {}
+    disconnect() {}
+    start() {}
+    stop() {}
+}
+class MockAudioContext {
+    audioWorklet = {
+        addModule(url) {},
+    };
+    currentTime;
+    destination;
+    sampleRate;
+    state;
+    async close() {}
+    createAnalyser() {
+        return new MockAnalyserNode();
+    }
+    createBufferSource() {
+        return new MockAudioBufferSourceNode();
+    }
+    createGain() {
+        return new MockGainNode();
+    }
+    createMediaStreamSource(microphone) {
+        return new MockMediaStreamAudioSourceNode();
+    }
+    decodeAudioData(...args) {
+        return new AudioContext().decodeAudioData(...args);
+    }
+    async resume() {}
+}
+class MockAudioWorkletNode {
+    port = {
+        onmessage(e) {},
+        postMessage(data) {
+            this.onmessage({ data, timeStamp: new Date().getTime() });
+        },
+    };
+    constructor(audioContext, processorName) {
+        currentAudioProcessor = this;
+        after(() => {
+            currentAudioProcessor = null;
+        });
+    }
+    connect() {
+        this.port.postMessage();
+    }
+    disconnect() {}
+    process(allInputs) {
+        const inputs = allInputs[0][0];
+        this.port.postMessage(inputs);
+        return true;
+    }
+}
+class MockGainNode {
+    connect() {}
+    close() {}
+    disconnect() {}
+}
+class MockMediaStreamAudioSourceNode {
+    connect(processor) {}
+    disconnect() {}
+}
+
+/** @type {MockAudioWorkletNode | null} */
+let currentAudioProcessor = null;
+
+export function patchVoiceMessageAudio() {
+    patch(browser, {
+        AnalyserNode: MockAnalyserNode,
+        AudioBufferSourceNode: MockAudioBufferSourceNode,
+        AudioContext: MockAudioContext,
+        AudioWorkletNode: MockAudioWorkletNode,
+        GainNode: MockGainNode,
+        MediaStreamAudioSourceNode: MockMediaStreamAudioSourceNode,
+    });
+    return {
+        get audioProcessor() {
+            return currentAudioProcessor;
+        },
+    };
+}
+
+export function mockPermissionsPrompt() {
+    patch(navigator.permissions, {
+        async query() {
+            return {
+                state: "prompt",
+                addEventListener: () => {},
+                removeEventListener: () => {},
+                onchange: null,
+            };
+        },
+    });
+}
+
+/**
+ * Assert IM status on chat bubble and chat window of given `conversationName` with `count`.
+ * The conversation should be present as a bubble initially, becomes open and folded again
+ * after calling function.
+ *
+ * This is made as a function so that negative assertion on ImStatus can use this function and
+ * ensure using correct selector and await properly like the positive assertions.
+ *
+ * @param {string} conversationName
+ * @param {Number} count
+ */
+export async function assertChatBubbleAndWindowImStatus(conversationName, count) {
+    await contains(`.o-mail-ChatBubble[name=${conversationName}]`);
+    expect(`.o-mail-ChatBubble[name=${conversationName}] .o-mail-ImStatus`).toHaveCount(count);
+    await click(`.o-mail-ChatBubble[name=${conversationName}]`);
+    await contains(`.o-mail-ChatWindow-header:has(:text(${conversationName}))`);
+    expect(
+        `.o-mail-ChatWindow-header:has(:text(${conversationName})) .o-mail-ImStatus`
+    ).toHaveCount(count);
+    await click(`.o-mail-ChatWindow-header:has(:text(${conversationName}))`);
+}
+
+/** Sends an update presence for the given record through the bus. */
+export function sendPresenceUpdate(modelName, id, newPresence) {
+    const env = MockServer.env;
+    env[modelName].write(id, { im_status: newPresence });
+    const store = new Store().add(env[modelName].browse(id), {
+        presence_status: newPresence,
+        im_status: newPresence,
+    });
+    env["bus.bus"]._sendone(serverState.userId, "mail.record/insert", store.as_dict());
+}
+
+export async function setIndexedDB(table, key, value) {
+    const db = new IndexedDB("mail");
+    await db.write(table, key, value);
+}
+
+export async function getIndexedDB(table, key) {
+    const db = new IndexedDB("mail");
+    return await db.read(table, key);
+}

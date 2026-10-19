@@ -1,0 +1,18 @@
+<templates>
+    <t t-name="purchase.DocumentFileUploader">
+        <FileUploader
+            acceptedFileExtensions="this.props.acceptedFileExtensions"
+            fileUploadClass="'document_file_uploader'"
+            multiUpload="true"
+            onClick.bind="this.onClick"
+            onUploaded.bind="this.onFileUploaded"
+            onUploadComplete.bind="this.onUploadComplete">
+            <t t-set-slot="toggler">
+                <button type="button" class="btn btn-secondary" data-hotkey="shift+i">
+                    Upload Bill
+                </button>
+            </t>
+            <t t-call-slot="default"/>
+        </FileUploader>
+    </t>
+ </templates>

@@ -1,0 +1,15 @@
+from odoo import fields, models
+
+
+class L10n_Eg_EdiActivityType(models.Model):
+    _name = 'l10n_eg_edi.activity.type'
+    _description = 'ETA code for activity type'
+    _rec_name = 'name'
+    _rec_names_search = ('name', 'code')
+
+    name = fields.Char(required=True, translate=True)
+    code = fields.Char(required=True)
+
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{record.code} {record.name}"

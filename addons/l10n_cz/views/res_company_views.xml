@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_inherit_l10n_ck" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.l10n_ck</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                 <field name="trade_registry" invisible="country_code != 'CZ'"/>
+            </xpath>
+            <xpath expr="//page[@name='general_info']/group/group[2]" position="after">
+                <group invisible="country_code != 'CZ'">
+                    <field name="l10n_cz_economic_activity_code"/>
+                    <field name="l10n_cz_tax_office_id"/>
+                    <field name="l10n_cz_person_authorized"/>
+                    <field name="l10n_cz_relationship_person_authorized"
+                           invisible="not l10n_cz_person_authorized"
+                           required="l10n_cz_person_authorized"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

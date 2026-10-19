@@ -1,0 +1,23 @@
+.o_self_product_card {
+    .product_img{
+        width: 90px;
+    }
+}
+.self_order_product_name{
+    .product_info_icon{
+        margin-left: 6px;
+        padding-top: 2px;
+        width: 24px;
+        height: 24px;
+        font-size: 18px;
+    }
+}
+ @include o-kiosk-portrait() {
+    .self_order_product_name {
+        .product_info_icon {
+            width: 28px;
+            height: 28px;
+            font-size: 20px
+        }
+    }
+}

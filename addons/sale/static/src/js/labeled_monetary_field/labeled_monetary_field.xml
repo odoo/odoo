@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sale.LabeledMonetaryField">
+        <div class="d-flex align-items-baseline gap-1 w-100">
+            <small
+                class="text-muted text-nowrap"
+                t-out="this.props.label"
+            />
+            <div class="flex-grow-1 text-truncate">
+                <t t-call="web.MonetaryField"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

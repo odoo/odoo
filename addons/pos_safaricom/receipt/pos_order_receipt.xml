@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_safaricom.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <xpath expr="//t[@name='payments']/tr" position="after">
+                <tr t-if="payment['safaricom_transaction_id']" class="payment-line">
+                    <td class="text-start w-70 text-small">Transaction ID:</td>
+                    <td class="text-end w-30 text-small font-monospace" t-out="payment['safaricom_transaction_id']"/>
+                </tr>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_lead_enrichment" model="ir.cron">
+        <field name="name">CRM: enrich leads (IAP)</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="state">code</field>
+        <field name="code">model._iap_enrich_leads_cron()</field>
+        <field name="interval_number">24</field>
+        <field name="interval_type">hours</field>
+    </record>
+
+</odoo>

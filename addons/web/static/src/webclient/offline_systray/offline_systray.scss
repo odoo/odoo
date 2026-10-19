@@ -1,0 +1,35 @@
+$o-offline-separator-color: invert($popover-bg, 10%) !default;
+
+.o_offline_systray {
+    .spinner-border {
+        --#{$prefix}spinner-height: 0.8em;
+        --#{$prefix}spinner-width: 0.8em;
+        --#{$prefix}spinner-border-width: #{$border-width * 2};
+        --#{$prefix}spinner-animation-speed: 1.25s;
+    }
+}
+
+.o_offline_systray_content {
+    width: 300px;
+
+    .o_badge {
+        vertical-align: middle;
+    }
+
+    .o_horizontal_separator {
+        box-shadow: 0 $border-width 0 $o-offline-separator-color;
+    }
+
+    .o_cursor_auto {
+        cursor: auto !important;
+    }
+
+    .o_disabled_while_sync {
+        cursor: not-allowed !important;
+        pointer-events: auto !important;
+        opacity: 0.5 !important;
+        .btn {
+            pointer-events: none !important;
+        }
+    }
+}

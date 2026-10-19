@@ -1,0 +1,117 @@
+@keyframes o-tour-pointer-bounce-left {
+    from {
+        transform: translateX(calc(var(--TourPointer__bounce-offset) * 1)) scaleX(var(--TourPointer__scale)) rotate(135deg);
+    }
+    to {
+        transform: translateX(calc(var(--TourPointer__bounce-offset) * -1)) scaleX(var(--TourPointer__scale)) rotate(135deg);
+    }
+}
+
+@keyframes o-tour-pointer-bounce-right {
+    from {
+        transform: translateX(calc(var(--TourPointer__bounce-offset) * 1)) scaleX(var(--TourPointer__scale)) rotate(315deg);
+    }
+    to {
+        transform: translateX(calc(var(--TourPointer__bounce-offset) * -1)) scaleX(var(--TourPointer__scale)) rotate(315deg);
+    }
+}
+
+@keyframes o-tour-pointer-bounce-top {
+    from {
+        transform: translateY(calc(var(--TourPointer__bounce-offset) * -1)) scaleY(var(--TourPointer__scale)) rotate(225deg);
+    }
+    to {
+        transform: translateY(var(--TourPointer__bounce-offset)) scaleY(var(--TourPointer__scale)) rotate(225deg);
+    }
+}
+
+@keyframes o-tour-pointer-bounce-bottom {
+    from {
+        transform:
+            translateY(calc(var(--TourPointer__bounce-offset) * -1)) scaleY(var(--TourPointer__scale)) rotate(45deg);
+    }
+    to {
+        transform:
+            translateY(var(--TourPointer__bounce-offset)) scaleY(var(--TourPointer__scale)) rotate(45deg);
+    }
+}
+
+.o_tour_pointer {
+    --TourPointer__anchor-space: 0;
+    --TourPointer__bounce-offset: 3px;
+    --TourPointer__offset: 8px;
+    --TourPointer__scale: 1.12;
+    --TourPointer__color: #{$o-enterprise-color};
+    --TourPointer__color-accent: #{lighten($o-enterprise-color, 7%)};
+    --TourPointer__border-width: 1px;
+    --TourPointer__border-color-rgb: 255, 255, 255;
+    --TourPointer__border-color: rgba(var(--TourPointer__border-color-rgb), 1);
+    --TourPointer__arrow-size: 1rem;
+    --TourPointer__animation-duration: 500ms;
+    --TourPointer__expand-duration: 200ms;
+    --TourPointer__text-color: black;
+    --TourPointer__reveal-animation: o-tour-pointer-fade-in 400ms ease;
+
+    --TourPointer__translate-x: 0;
+    --TourPointer__translate-y: 0;
+    
+    max-width: 270px;
+    border: var(--TourPointer__border-width) solid transparent;
+
+    .o_tour_pointer_tip {
+        width: var(--TourPointer__width);
+        height: var(--TourPointer__height);
+        border: var(--TourPointer__border-width) solid white;
+        border-radius: 0 50% 50% 50%;
+        background-image: radial-gradient(
+            var(--TourPointer__color-accent),
+            var(--TourPointer__color)
+        );
+        box-shadow: 0 0 40px 2px rgba(var(--TourPointer__border-color-rgb), 0.5);
+
+        &.o_left {
+            animation: o-tour-pointer-bounce-left var(--TourPointer__animation-duration) ease-in infinite alternate,
+                var(--TourPointer__reveal-animation);
+        }
+
+        &.o_right {
+            animation: o-tour-pointer-bounce-right var(--TourPointer__animation-duration) ease-in infinite alternate,
+                var(--TourPointer__reveal-animation);
+        }
+
+        &.o_top {
+            animation: o-tour-pointer-bounce-top var(--TourPointer__animation-duration) ease-in infinite alternate,
+                var(--TourPointer__reveal-animation);
+        }
+
+        &.o_bottom {
+            animation: o-tour-pointer-bounce-bottom var(--TourPointer__animation-duration) ease-in infinite alternate,
+                var(--TourPointer__reveal-animation);
+        }
+    }
+    
+    .o_tour_pointer_content {
+        transition: color 0s ease var(--TourPointer__expand-duration);
+        line-height: $line-height-base;
+        @include font-size($font-size-base);
+        font-family: $font-family-sans-serif;
+        font-weight: normal;
+    }
+
+    .o_tour_dropzone {
+        border: 3px dashed #714b67;
+        background: rgba(113, 75, 103, 0.2);
+        position: fixed;
+    }
+}
+
+.o_tour_anchor {
+    width: 1px;
+    height: 1px;
+}
+
+@media print {
+    .o_tour_anchor, .o_tour_pointer {
+        display: none !important;
+    }
+}

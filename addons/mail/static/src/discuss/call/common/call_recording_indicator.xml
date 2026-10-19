@@ -1,0 +1,15 @@
+<templates>
+
+    <t t-name="discuss.CallRecordingIndicator">
+        <div t-ref="this.rootRef" t-attf-class="o-discuss-CallRecordingIndicator d-flex align-items-center gap-3 px-2 py-1 rounded-2 {{ this.props.className }}" t-att-class="{ 'o-hovered': this.rootHover.isHover }">
+            <div class="o-discuss-CallRecordingIndicator-icons d-flex align-items-center gap-2">
+                <i class="oi oi-filled text-danger o-blinking" data-icon="circle" role="img" title="Recording in progress"/>
+                <i t-if="this.rtc.recordingState.video" title="recording video" class="oi" data-icon="desktop_windows" role="img"/>
+                <i t-else="" title="recording audio only" class="oi" data-icon="mic" role="img"/>
+                <i t-if="this.rtc.recordingState.transcription" title="transcription active" class="oi" data-icon="subtitles" role="img"/>
+            </div>
+            <button t-if="this.rootHover.isHover and this.rtc.canRecord()" class="btn btn-sm btn-danger" t-on-click="() => this.rtc.stopRecording()">Stop recording</button>
+        </div>
+    </t>
+
+</templates>

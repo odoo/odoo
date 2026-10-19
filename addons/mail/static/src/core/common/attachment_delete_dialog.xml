@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.AttachmentDeleteDialog">
+    <Dialog size="'lg'" title="this.title">
+        <p class="text-prewrap mb-0" t-out="this.body"/>
+        <t t-set-slot="footer">
+            <div class="d-flex flex-nowrap gap-2">
+                <button class="o-mail-AttachmentDeleteDialog-deleteAll btn btn-primary text-nowrap" t-on-click="() => this.onClickDeleteAll()" t-out="this.deleteAllLabel"/>
+                <button t-if="this.redundantAttachments.length" class="o-mail-AttachmentDeleteDialog-deleteDuplicates btn btn-secondary text-nowrap" t-on-click="() => this.onClickDeleteDuplicates()">Delete only Duplicates</button>
+                <button class="btn btn-secondary text-nowrap" t-on-click="() => this.props.close()">Discard</button>
+            </div>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

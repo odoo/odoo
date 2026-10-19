@@ -1,0 +1,23 @@
+.o-mail-MessagingMenuCallParticipants-expandBtn {
+    aspect-ratio: 1;
+    opacity: 75%;
+    transform: translateY(50%);
+
+    &:hover {
+        opacity: 100%;
+        background-color: $gray-300;
+    }
+}
+
+.o-mail-MessagingMenuCallParticipants-name {
+    opacity: 60%;
+
+    &.o-isTalking {
+        opacity: 100%;
+    }
+}
+
+.o-mail-MessagingMenuCallParticipants-status .o-live {
+    font-size: 0.6rem;
+    padding: map-get($spacers, 1) / 2;
+}

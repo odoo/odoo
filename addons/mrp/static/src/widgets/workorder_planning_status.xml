@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="mrp.WorkorderPlanningStatus">
+        <i t-if="this.props.record.data.has_conflicts"
+           class="oi text-danger" data-icon="warning"
+           title="Conflict: this work order overlaps with another one on the same work center"
+           aria-hidden="true"
+        />
+        <i t-if="this.props.record.data.has_planning_issues"
+           class="oi text-warning" data-icon="warning"
+           title="Planning issue: this work order is scheduled before a dependency"
+           aria-hidden="true"
+        />
+    </t>
+
+</templates>

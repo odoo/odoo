@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="address_form_fields" inherit_id="portal.address_form_fields">
+        <option name="city_options" position="attributes">
+            <attribute name="t-att-data-l10n_br_zip_ranges" add="c.get('l10n_br_zip_ranges', '')"/>
+        </option>
+        <!-- put base_address_extended fields separately to be more user-friendly -->
+        <div id="div_street" position="attributes">
+            <attribute name="t-att-style">country.code == 'BR' and 'display:none;'</attribute>
+        </div>
+        <input id="o_street" position="attributes">
+            <attribute name="t-att-disabled">
+                country.code == 'BR' and 'disabled' or None
+            </attribute>
+            <attribute name="class" separator=" " add="o_standard_address"/>
+        </input>
+        <div id="div_street" position="after">
+            <div
+                id="div_street_name"
+                t-att-style="country.code != 'BR' and 'display:none;'"
+                class="col-lg-8 mb-2"
+            >
+                <label class="col-form-label" for="o_street_name">Street</label>
+                <input
+                    id="o_street_name"
+                    type="text"
+                    name="street_name"
+                    class="form-control o_l10n_br_extended_address"
+                    t-att-value="partner_sudo.street_name"
+                    t-att-disabled="country.code != 'BR' and 'disabled' or None"
+                />
+            </div>
+            <div
+                id="div_street_number"
+                t-att-style="country.code != 'BR' and 'display:none;'"
+                class="col-lg-4 mb-2"
+            >
+                <label class="col-form-label" for="o_street_number">Street Number</label>
+                <input
+                    id="o_street_number"
+                    type="text"
+                    name="street_number"
+                    class="form-control o_l10n_br_extended_address"
+                    t-att-value="partner_sudo.street_number"
+                    t-att-disabled="country.code != 'BR' and 'disabled' or None"
+                />
+            </div>
+            <div
+                id="div_street_number2"
+                t-att-style="country.code != 'BR' and 'display:none;'"
+                class="col-lg-6 mb-2"
+            >
+                <label class="col-form-label label-optional" for="o_street_number2">
+                    Complement
+                </label>
+                <input
+                    id="o_street_number2"
+                    type="text"
+                    name="street_number2"
+                    class="form-control o_l10n_br_extended_address"
+                    t-att-value="partner_sudo.street_number2"
+                    t-att-disabled="country.code != 'BR' and 'disabled' or None"
+                />
+            </div>
+        </div>
+    </template>
+
+</odoo>

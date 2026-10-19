@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_cashmatic" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.cashmatic</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="payment_provider != 'cashmatic'">
+                    <page name="settings" string="Cashmatic Settings">
+                        <group>
+                            <group>
+                                <field name="cashmatic_ip" required="payment_provider == 'cashmatic'"/>
+                                <field name="cashmatic_username"/>
+                                <field name="cashmatic_password" password="True"/>
+                                <field name="cashmatic_use_lna"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

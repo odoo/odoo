@@ -1,0 +1,70 @@
+.o_form_project_tasks div.o_field_many2many[name=depend_on_ids] tr.o_selected_row td.o_list_button {
+    background-color: $table-border-color !important;
+}
+
+.o_form_project_project, .o_form_project_tasks {
+    .note-editable {
+        border: 0;
+        padding: 0;
+    }
+    .tab-pane.active:has(> div[name="google_map_iframe"]) {
+        padding: 0;
+        div[name="google_map_iframe"] {
+            margin: 0 var(--Notebook-margin-x, -16px) calc(var(--formView-sheet-padding-y, 16px) * -1);
+            border-radius: 0 0 var(--formView-sheet-border-radius, 0) var(--formView-sheet-border-radius, 0);
+            overflow: hidden;
+
+            div.o_readonly {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            @include media-breakpoint-down(sm) {
+                margin: 0 0 calc(var(--formView-sheet-padding-y, 16px) * -1);
+            }
+        }
+    }
+}
+
+.o_form_view.o_form_project_tasks .o_notebook > .tab-content > .tab-pane > :first-child.o_field_html .o_readonly {
+    padding: $o-horizontal-padding $o-horizontal-padding;
+}
+
+.o_project_update_description {
+    .note-editable, .o_wysiwyg_resizer {
+        border: 0;
+    }
+    &.o_field_html .o_readonly {
+        padding: $o-horizontal-padding $o-horizontal-padding;
+    }
+}
+
+.o_form_view .btn.oe_stat_button.o_project_not_clickable {
+    &:hover, &:focus {
+        background-color: transparent;
+        opacity: 0.8;
+        color: $o-main-text-color;
+    }
+}
+
+.o_field_widget {
+    &.o_field_subtasks_one2many {
+        width: 100%;
+    }
+}
+
+.o_project_task_kanban_view .o_kanban_quick_create .o_field_widget .o_input  {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.o_flexible_margin_top {
+    @media only screen and (max-width: 650px) {
+        margin-top: 10px;
+    }
+}
+
+.project_quick_create_task_form_group {
+    padding-bottom: 0.5rem;
+}

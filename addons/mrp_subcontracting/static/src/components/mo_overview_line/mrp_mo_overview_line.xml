@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+     <t t-name="mrp_subcontracting.MoOverviewLine" t-inherit="mrp.MoOverviewLine" t-inherit-mode="extension">
+        <xpath expr="//td[@name='td_mrp_mo_free_to_use']" position="after">
+            <td name="free_to_use_subcontract" class="text-end"
+                t-if="this.props.showOptions.subcontractorAvailabilities and this.props.showOptions.availabilities">
+                <t t-if="this.hasQuantity('subcontract_qty_on_hand')">
+                    <t t-out="this.formatFloat(this.data.subcontract_free_qty)"/> /
+                    <t t-out="this.formatFloat(this.data.subcontract_qty_on_hand)"/>
+                </t>
+            </td>
+        </xpath>
+    </t>
+
+</templates>

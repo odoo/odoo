@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="gamification_karma_tracking_view_search" model="ir.ui.view">
+        <field name="name">gamification.karma.tracking.view.search</field>
+        <field name="model">gamification.karma.tracking</field>
+        <field name="arch" type="xml">
+            <search string="Search Trackings">
+                <field name="user_id" string="Karma Owner"/>
+                <field name="tracking_date"/>
+                <field name="origin_ref_model_name"/>
+                <filter string="Consolidated" name="filter_consolidated"
+                    domain="[('consolidated', '=', True)]"/>
+                <filter string="My Karma" name="filter_user_id"
+                    domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Manual" name="filter_res_users"
+                    domain="[('origin_ref', 'ilike', 'res.users,')]"/>
+                <group>
+                    <filter string="Granted By" name="group_by_create_uid"
+                        context="{'group_by': 'create_uid'}"/>
+                    <filter string="Source Type" name="group_by_origin_ref_model_name"
+                        context="{'group_by': 'origin_ref_model_name'}"/>
+                    <filter string="Karma Owner" name="group_by_user_id"
+                        context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="gamification_karma_tracking_view_tree" model="ir.ui.view">
+        <field name="name">gamification.karma.tracking.view.list</field>
+        <field name="model">gamification.karma.tracking</field>
+        <field name="arch" type="xml">
+            <list string="Trackings" editable="top" delete="0" sample="1">
+                <field name="tracking_date" string="Date"/>
+                <field name="origin_ref" options="{'no_create': True}" required="1"/>
+                <field name="reason"/>
+                <field name="user_id" widget="many2one_avatar_user" string="Karma Owner"
+                     readonly="id"/>
+                <field name="old_value" string="Previous Total" optional="hidden"/>
+                <field name="gain" readonly="id"/>
+                <field name="new_value" string="Total"  optional="show" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="gamification_karma_tracking_view_form" model="ir.ui.view">
+        <field name="name">gamification.karma.tracking.view.form</field>
+        <field name="model">gamification.karma.tracking</field>
+        <field name="arch" type="xml">
+            <form string="Tracking" delete="0">
+                <sheet>
+                    <group>
+                        <field name="user_id" widget="many2one_avatar_user" string="Karma Owner"
+                            readonly="id"/>
+                        <field name="tracking_date"/>
+                        <field name="gain" readonly="id"/>
+                        <field name="old_value"/>
+                        <field name="new_value" readonly="1"/>
+                        <field name="consolidated"/>
+                        <field name="origin_ref" options="{'no_create': True}" required="1"/>
+                        <field name="reason"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="gamification_karma_tracking_action" model="ir.actions.act_window">
+        <field name="name">Karma Tracking</field>
+        <field name="res_model">gamification.karma.tracking</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Karma Tracking
+            </p>
+            <p>
+                Track the sources of the users karma and monitor
+            </p>
+        </field>
+    </record>
+    </data>
+</odoo>

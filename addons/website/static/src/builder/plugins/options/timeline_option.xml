@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TimelineOption">
+    <BuilderRow label.translate="Add Milestones">
+        <BuilderButtonGroup action="'addMilestone'" applyTo="':scope > :has(.s_timeline_row)'" preview="false">
+            <BuilderButton ltrRtlMapping="'left-right'" type="'success'" actionValue="'left'">Left</BuilderButton>
+            <BuilderButton type="'success'" actionValue="'both'">Both</BuilderButton>
+            <BuilderButton ltrRtlMapping="'left-right'" type="'success'" actionValue="'right'">Right</BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <timeline_option template="website.TimelineOption" selector=".s_timeline"/>
+    </xpath>
+</t>
+
+</templates>

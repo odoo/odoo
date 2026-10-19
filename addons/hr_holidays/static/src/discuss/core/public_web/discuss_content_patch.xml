@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-inherit="mail.DiscussContent" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-DiscussContent-localDateTime')]" position="after">
+            <span t-if="this.outOfOfficeDateEndText" class="o-mail-DiscussContent-outOfOffice d-block text-warning smaller fw-bold opacity-75 text-truncate ms-1" t-out="this.outOfOfficeDateEndText"/>
+        </xpath>
+    </t>
+</templates>

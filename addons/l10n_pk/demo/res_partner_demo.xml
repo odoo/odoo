@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_punjab" model="res.partner">
+        <field name="name">Punjab Customer</field>
+        <field name="street">38/A Gulberg Main Boulevard</field>
+        <field name="city">Lahore</field>
+        <field name="state_id" ref='base.state_pk_pb'/>
+        <field name="zip">54000</field>
+        <field name="country_id" ref="base.pk"/>
+        <field name="email">support@punjabpartner.odoo.com</field>
+        <field name="phone">+92 9876543210</field>
+        <field name="website">http://punjabpartner.odoo.com</field>
+        <field name="vat">4174942</field>
+    </record>
+
+    <record id="res_partner_islamabad" model="res.partner">
+        <field name="name">Islamabad Vendor</field>
+        <field name="street">Office 12, 3rd Floor, Giga Mall</field>
+        <field name="city">Taxila</field>
+        <field name="state_id" ref='base.state_pk_is'/>
+        <field name="zip">40000</field>
+        <field name="country_id" ref="base.pk"/>
+        <field name="email">support@islamabadvendor.odoo.com</field>
+        <field name="phone">+92 1234567890</field>
+        <field name="website">http://islamabadvendor.odoo.com</field>
+            <field name="vat">1234567-8</field>
+        </record>
+
+        <record id="res_partner_adil_khan" model="res.partner">
+            <field name="name">Adil Khan</field>
+            <field name="street">Tarnab Farm</field>
+            <field name="city">Peshawar</field>
+            <field name="state_id" ref='base.state_pk_kp'/>
+            <field name="zip">24620</field>
+            <field name="country_id" ref="base.pk"/>
+            <field name="email">adilkhan@demoemail.odoo.com</field>
+            <field name="phone">+92 333123456</field>
+            <field name="additional_identifiers" eval="{'PK_CN': '21201-7654321-9'}"/>
+    </record>
+</odoo>

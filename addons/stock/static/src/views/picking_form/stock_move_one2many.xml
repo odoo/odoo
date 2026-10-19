@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="stock.AddPackageListRendererRow" t-inherit="web.ListRenderer.CreateRow" t-inherit-mode="primary">
+        <td class="o_field_x2many_list_row_add" position="inside">
+            <a t-if="this.canAddPackage" href="#" class="px-3" tabindex="0" t-on-click.stop.prevent="() => this.onClickMovePackage()">Move a Pack</a>
+        </td>
+    </t>
+</templates>

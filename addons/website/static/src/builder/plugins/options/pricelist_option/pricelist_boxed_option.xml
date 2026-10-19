@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.PriceListBoxedDescriptionOption">
+    <BuilderRow label.translate="Descriptions">
+        <BuilderCheckbox
+            action="'togglePriceListDescription'"
+            actionParam="{ itemClass:'s_pricelist_boxed_item', descriptionClass: 's_pricelist_boxed_item_description', descriptionExtraClass: 'o_small-fs' }"/>
+    </BuilderRow>
+    <BuilderContext applyTo="'.s_pricelist_boxed_item_line'">
+        <BorderConfigurator withRoundCorner="false" withBSClass="false" label.translate="Separator" direction="'top'"/>
+    </BuilderContext>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <price_list_boxed_description_option template="website.PriceListBoxedDescriptionOption" selector=".s_pricelist_boxed"/>
+    </xpath>
+</t>
+
+</templates>

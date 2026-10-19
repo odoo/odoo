@@ -1,0 +1,46 @@
+import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
+import { htmlToTextContentInline } from "@mail/utils/common/format";
+import { propComputed } from "@mail/utils/common/hooks";
+
+import { Component, t, useProps } from "@odoo/owl";
+
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+
+/** @param {import("models").Store} store */
+export const subChannelPreviewOnClickType = (store) =>
+    t.function([
+        t.instanceOf(MouseEvent),
+        t.object({ channelAtRender: t.instanceOf(store["discuss.channel"]) }),
+    ]);
+
+export class SubChannelPreview extends Component {
+    static components = { AvatarStack };
+    static template = "mail.SubChannelPreview";
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"]));
+        this.class = propComputed("class", t.string().optional());
+        this.onClick = useProps.static(
+            "onClick",
+            subChannelPreviewOnClickType(this.store).optional()
+        );
+    }
+
+    bodyText(message) {
+        return htmlToTextContentInline(message.body);
+    }
+
+    get messageCountText() {
+        if (this.channel().message_count === 1) {
+            return _t("1 Message");
+        }
+        return _t("%(count)s Messages", { count: this.channel().message_count });
+    }
+
+    get startedByText() {
+        return _t("Started by %(name)s", { name: this.channel().create_uid.name });
+    }
+}

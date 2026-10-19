@@ -1,0 +1,302 @@
+import { fields } from "@mail/model/export";
+import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
+import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
+
+import { localeCompare } from "@web/core/l10n/utils";
+import { patch } from "@web/core/utils/patch";
+
+/** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
+
+/**
+ * How long (ms) a participant keeps their place on the main stage after they stop talking, so a
+ * back-and-forth does not trade the main window on every sentence.
+ */
+export const SPEAKER_WINDOW = 3000;
+
+/** @type {import("models").DiscussChannel} */
+const DiscussChannelPatch = {
+    setup() {
+        super.setup(...arguments);
+        this.activeRtcSession = fields.One("discuss.channel.rtc.session");
+        this.hadSelfSession = false;
+        /** @type {Set<number>} */
+        this.lastSessionIds = new Set();
+        /** @type {number|undefined} */
+        this.cancelRtcInvitationTimeout = undefined;
+        this.rtc_session_ids = fields.Many("discuss.channel.rtc.session", {
+            onDelete: (r) => r?.delete(),
+        });
+        this.onChange(
+            () => [...this.rtc_session_ids],
+            function onChangeRtcSessionIds(...rtcSessions) {
+                this._playRtcSessionsSoundEffects(rtcSessions);
+            },
+            { immediate: true }
+        );
+        this.videoCount = this.computed(
+            () => this.rtc_session_ids.filter((s) => s.hasVideo).length
+        );
+        this.focusStack = fields.Many("discuss.channel.rtc.session");
+        /**
+         * Remote participants talking, or stopped less than {@link SPEAKER_WINDOW} ago, in the
+         * order they took the floor — so a new speaker waits for a place instead of taking one.
+         */
+        this.activeSpeakers = fields.Many("discuss.channel.rtc.session");
+        /** @type {number|undefined} */
+        this.pruneSpeakersTimeout = undefined;
+        this.pinnedRtcSession = fields.One("discuss.channel.rtc.session");
+        /** @type {import("@mail/discuss/call/common/call").CardData[]} */
+        this.visibleCards = this.computed(() => {
+            const raisingHandCards = [];
+            const sessionCards = [];
+            const invitationCards = [];
+            for (const session of this.rtc_session_ids) {
+                const target = session.raisingHand ? raisingHandCards : sessionCards;
+                const cameraStream = session.is_camera_on
+                    ? session.videoStreams.get("camera")
+                    : undefined;
+                target.push({
+                    key: "session_main_" + session.id,
+                    session,
+                    type: "camera",
+                    videoStream: cameraStream,
+                });
+                const screenStream = session.is_screen_sharing_on
+                    ? session.videoStreams.get("screen")
+                    : undefined;
+                if (screenStream) {
+                    target.push({
+                        key: "session_secondary_" + session.id,
+                        session,
+                        type: "screen",
+                        videoStream: screenStream,
+                    });
+                }
+            }
+            for (const member of this.invited_member_ids) {
+                invitationCards.push({ key: "member_" + member.id, member });
+            }
+            raisingHandCards.sort((c1, c2) => c1.session.raisingHand - c2.session.raisingHand);
+            sessionCards.sort((c1, c2) => {
+                const member1 = c1.session.channel_member_id;
+                const member2 = c2.session.channel_member_id;
+                const name1 = member1?.persona?.displayName;
+                const name2 = member2?.persona?.displayName;
+                const nameDiff = localeCompare(name1, name2);
+                if (nameDiff !== 0) {
+                    return nameDiff;
+                }
+                if (member1?.id && !member2?.id) {
+                    return -1;
+                }
+                if (!member1?.id && member2?.id) {
+                    return 1;
+                }
+                const memberDiff = member1?.id - member2?.id;
+                if (memberDiff !== 0) {
+                    return memberDiff;
+                }
+                return c1.session.id - c2.session.id;
+            });
+            invitationCards.sort((c1, c2) => {
+                const name1 = c1.member.persona?.displayName;
+                const name2 = c2.member.persona?.displayName;
+                return localeCompare(name1, name2) || c1.member.id - c2.member.id;
+            });
+            return raisingHandCards.concat(sessionCards, invitationCards);
+        });
+        this.useCameraByDefault = this.computed(() => {
+            if (this.channel_type === "chat" && this.store.rtc.selfSession?.channel?.eq(this)) {
+                return this.store.rtc.selfSession.is_camera_on;
+            }
+            const stored = localStorage.getItem(`discuss_channel_camera_default_${this.id}`);
+            return stored ? JSON.parse(stored) : undefined;
+        });
+        this.onChange(
+            () => [this.useCameraByDefault],
+            function onChangeUseCameraByDefault(useCameraByDefault) {
+                if (typeof useCameraByDefault === "boolean") {
+                    localStorage.setItem(
+                        `discuss_channel_camera_default_${this.id}`,
+                        JSON.stringify(useCameraByDefault)
+                    );
+                }
+            },
+            { immediate: true }
+        );
+    },
+    /** @param {import("models").RtcSession[]} rtcSessions */
+    async _playRtcSessionsSoundEffects(rtcSessions) {
+        const hadSelfSession = this.hadSelfSession;
+        const lastSessionIds = this.lastSessionIds;
+        this.hadSelfSession = Boolean(this.store.rtc.selfSession?.in(rtcSessions));
+        this.lastSessionIds = new Set(rtcSessions.map((s) => s.id));
+        const shouldPlayJoinSound = [...this.lastSessionIds].some((id) => !lastSessionIds.has(id));
+        const shouldPlayLeaveSound = [...lastSessionIds].some((id) => !this.lastSessionIds.has(id));
+        if (
+            !hadSelfSession || // sound for self-join is played instead
+            !this.hadSelfSession || // sound for self-leave is played instead
+            !(await this.store.env.services["multi_tab"].isOnMainTab()) // another tab playing sound
+        ) {
+            return;
+        }
+        if (shouldPlayJoinSound) {
+            this.store.env.services["mail.sound_effects"].play("call-join");
+            this.store.rtc.call({ asFallback: true });
+        }
+        if (shouldPlayLeaveSound) {
+            this.store.env.services["mail.sound_effects"].play("member-leave");
+        }
+    },
+    /** ⚠️ {@link AwaitChatHubInit} */
+    get isCallDisplayedInChatWindow() {
+        return this.chatWindow?.isOpen && !this.store.meetingViewOpened;
+    },
+    get isSelfInCall() {
+        return this.store.rtc.selfSession && this.eq(this.store.rtc.channel);
+    },
+    get showCallView() {
+        return !this.store.rtc.isFullscreen && this.hasRtcSessionActive;
+    },
+    /**
+     * Pin a participant to the main window from the participant menu.
+     * - sidebar/spotlight: keep the current layout, just move the pinned face to the main window.
+     * - tiled (and any non-sidebar/spotlight layout, e.g. auto): switch to the sidebar layout so the
+     *   pinned face takes the main window with the other participants stacked beside it.
+     *
+     * @param {import("models").RtcSession} session
+     */
+    pin(session) {
+        this.pinnedRtcSession = session;
+        this.activeRtcSession = session;
+        session.mainVideoStreamType = session.is_camera_on
+            ? "camera"
+            : session.is_screen_sharing_on
+            ? "screen"
+            : "camera";
+        const layout = this.store.settings.callLayout;
+        if (layout !== CALL_GRID_LAYOUT.SPOTLIGHT && layout !== CALL_GRID_LAYOUT.SIDEBAR) {
+            this.store.settings.callLayout = CALL_GRID_LAYOUT.SIDEBAR;
+        }
+    },
+    unpin() {
+        this.pinnedRtcSession = undefined;
+    },
+    /** Drop the meeting view's focus: pin, else screenshare, else auto-focus, else tiles. */
+    resetCallFocus() {
+        if (this.pinnedRtcSession) {
+            this.activeRtcSession = this.pinnedRtcSession;
+            return;
+        }
+        const presenter = this.rtc_session_ids.find((s) => s.is_screen_sharing_on);
+        this.activeRtcSession = presenter;
+        if (presenter) {
+            presenter.mainVideoStreamType = "screen";
+            return;
+        }
+        this.focusAvailableVideo();
+    },
+    focusAvailableVideo() {
+        if (
+            this.pinnedRtcSession ||
+            !this.store.settings.useCallAutoFocus ||
+            !(
+                this.store.env.services.ui.isSmall ||
+                this.store.rtc.isPipMode ||
+                this.isCallDisplayedInChatWindow
+            )
+        ) {
+            return;
+        }
+        const otherStreamingSession = this.rtc_session_ids.find(
+            (session) => session.notEq(this.store.rtc.selfSession) && session.hasVideo
+        );
+        if (!otherStreamingSession) {
+            return;
+        }
+        this.activeRtcSession = otherStreamingSession;
+        otherStreamingSession.mainVideoStreamType = otherStreamingSession.is_screen_sharing_on
+            ? "screen"
+            : "camera";
+    },
+    /**
+     * @param {import("models").RtcSession} session
+     */
+    updateCallFocusStack(session) {
+        if (
+            this.pinnedRtcSession ||
+            this.notEq(this.store.rtc?.channel) ||
+            session.eq(this.store.rtc.selfSession) ||
+            !this.activeRtcSession ||
+            !this.store.settings.useCallAutoFocus ||
+            this.activeRtcSession?.mainVideoStreamType === "screen"
+        ) {
+            return;
+        }
+        this.focusStack.delete(session);
+        if (session.isTalking && !session.isMute) {
+            this.focusStack.push(session);
+        }
+        const activeSession = this.focusStack.at(-1);
+        if (!activeSession) {
+            return;
+        }
+        if (this.store.rtc.isFullscreen) {
+            return;
+        }
+        this.activeRtcSession = activeSession;
+        activeSession.mainVideoStreamType = "camera";
+    },
+    /**
+     * Stop tracking who is speaking. The self-rescheduling timer outlives the call otherwise, and
+     * the next one would open on the previous call's speakers.
+     */
+    clearActiveSpeakers() {
+        window.clearTimeout(this.pruneSpeakersTimeout);
+        this.pruneSpeakersTimeout = undefined;
+        this.activeSpeakers = [];
+    },
+    /**
+     * Whoever speaks joins the end of {@link activeSpeakers}, whoever's {@link SPEAKER_WINDOW}
+     * lapsed leaves it. How many of them get the stage is a per-view call.
+     */
+    updateActiveSpeakers() {
+        if (this.notEq(this.store.rtc?.channel) || !this.store.settings.useCallAutoFocus) {
+            this.clearActiveSpeakers();
+            return;
+        }
+        window.clearTimeout(this.pruneSpeakersTimeout);
+        const now = Date.now();
+        /** @param {import("models").RtcSession} session */
+        const isInWindow = (session) =>
+            session.isActuallyTalking || now - (session.stoppedTalkingAt ?? 0) < SPEAKER_WINDOW;
+        for (const session of [...this.activeSpeakers]) {
+            if (!isInWindow(session)) {
+                this.activeSpeakers.delete(session);
+            }
+        }
+        for (const session of this.rtc_session_ids) {
+            if (
+                session.isActuallyTalking &&
+                session.notEq(this.store.rtc.selfSession) &&
+                !session.in(this.activeSpeakers)
+            ) {
+                this.activeSpeakers.push(session);
+            }
+        }
+        // A lapsing window fires no event, so the last speaker would hold the stage until the next.
+        const stoppedAt = this.activeSpeakers
+            .filter((session) => !session.isActuallyTalking)
+            .map((session) => session.stoppedTalkingAt ?? 0);
+        if (stoppedAt.length) {
+            this.pruneSpeakersTimeout = window.setTimeout(
+                () => this.updateActiveSpeakers(),
+                Math.max(0, Math.min(...stoppedAt) + SPEAKER_WINDOW - now)
+            );
+        }
+    },
+    get hasRtcSessionActive() {
+        return this.rtc_session_ids.length > 0;
+    },
+};
+patch(DiscussChannel.prototype, DiscussChannelPatch);

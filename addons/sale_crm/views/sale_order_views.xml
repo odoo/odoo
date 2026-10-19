@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_action_quotations_new" model="ir.actions.act_window">
+        <field name="name">Quotation</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">form,list,graph</field>
+        <field name="domain">[('opportunity_id', '=', active_id)]</field>
+        <field name="context">{'search_default_opportunity_id': active_id, 'default_opportunity_id': active_id}</field>
+    </record>
+
+    <record id="sale_view_inherit123" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="opportunity_id" groups="sales_team.group_sale_salesman" context="{
+                    'default_campaign_id': campaign_id,
+                    'default_company_id': company_id,
+                    'default_medium_id': medium_id,
+                    'default_partner_id': partner_id,
+                    'default_source_id': source_id,
+                    'default_tag_ids': tag_ids,
+                    'default_type': 'opportunity',
+                }"/>
+                <field name="opportunity_id" groups="!sales_team.group_sale_salesman" context="{
+                    'default_campaign_id': campaign_id,
+                    'default_company_id': company_id,
+                    'default_medium_id': medium_id,
+                    'default_partner_id': partner_id,
+                    'default_source_id': source_id,
+                    'default_type': 'opportunity',
+                }"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- This menu is display in CRM app when sale is installed-->
+    <menuitem
+        id="sale_order_menu_quotations_crm"
+        name="My Quotations"
+        action="sale.action_quotations"
+        parent="crm.crm_menu_sales"
+        sequence="2"/>
+
+</odoo>

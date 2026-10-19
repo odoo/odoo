@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_adyen" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.adyen</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="payment_provider != 'adyen'">
+                    <page name="settings" string="Adyen">
+                        <group>
+                            <field name="adyen_api_key" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'" password="True"/>
+                            <field name="adyen_terminal_identifier" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
+                            <field name="adyen_merchant_account" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
+                            <field name="adyen_event_url" invisible="payment_provider != 'adyen'" widget="CopyClipboardChar"/>
+                            <field name="adyen_test_mode" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

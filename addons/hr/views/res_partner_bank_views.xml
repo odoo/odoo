@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_bank_form_inherit_hr" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit.hr</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="employee_salary_amount_is_percentage" groups="hr.group_hr_user" invisible="1"/>
+                <field name="employee_has_multiple_bank_accounts" groups="hr.group_hr_user" invisible="1"/>
+                <label string="Salary Allocation" for="employee_salary_amount" 
+                    invisible="not employee_has_multiple_bank_accounts" groups="hr.group_hr_user"/>
+                <div class="d-flex" invisible="not employee_has_multiple_bank_accounts" groups="hr.group_hr_user">
+                    <field name="employee_salary_amount" style="max-width: 200px;"/>
+                    <div invisible="not employee_salary_amount_is_percentage">%</div>
+                </div>
+                <field name="employee_id" invisible="not employee_id" groups="hr.group_hr_user" widget="many2many_avatar_employee"/>
+            </field>
+        </field>
+    </record>
+</odoo>

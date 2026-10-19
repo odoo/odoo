@@ -1,0 +1,24 @@
+.o-mail-NotificationItem {
+    &.o-help {
+        --background-color: RGBA(#{to-rgb($purple)}, .1);
+
+        &:hover {
+            --background-color: #{mix($o-webclient-background-color, $purple, 80%)};
+        }
+
+        &.o-active {
+            --background-color: #{mix($o-webclient-background-color, $purple, 90%)};
+        }
+    }
+
+    &.o-selfMember.o-help {
+        background:
+            repeating-linear-gradient(
+                45deg,
+                rgba($purple, var(--livechat-needHelpSelfMemberBgOpacity, .05)),
+                rgba($purple, var(--livechat-needHelpSelfMemberBgOpacity, .05)) 6px,
+                transparent 6px,
+                transparent 12px
+            );
+    }
+}

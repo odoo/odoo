@@ -1,0 +1,52 @@
+.o-date-filter-dropdown:hover .btn-previous,
+.o-date-filter-dropdown:hover .btn-next,
+.o-date-filter-dropdown.selected .btn-previous,
+.o-date-filter-dropdown.selected .btn-next {
+    color: $o-gray-600;
+}
+
+.o-date-filter-dropdown {
+    .o-date-option-label {
+        min-width: 10ch;
+        padding: 1px 0;
+        border: var(--border-width) solid transparent;
+        border-width: 0 0 var(--border-width) 0;
+        margin-right: 16px;
+    }
+
+    .btn-previous, .btn-next {
+        background: inherit;
+        border: var(--border-width) solid transparent;
+        border-width: 0 0 var(--border-width) 0;
+        color: $o-gray-300;
+        padding: 1px 0;
+        text-align: center;
+        width: 20px;
+    }
+
+    .o_input {
+        text-align: center;
+        border-color: transparent;
+        cursor: pointer;
+        &:focus {
+            outline: none;
+        }
+    }
+    .o_datetime_input {
+        width: 10ch;
+        margin: 0 8px;
+        text-align: center;
+    }
+}
+
+.o-date-filter-input {
+    cursor: pointer;
+    &:focus, &:hover {
+        outline: none;
+    }
+}
+
+.o_bottom_sheet .o-date-filter-dropdown  :last-child {
+    /* Make space for the check icon of the active item */
+    margin-right: 12px;
+}

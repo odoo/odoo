@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="pos_accounting_section" position="inside">
+                <setting
+                    id="l10n_jo_edi_pos_enabled"
+                    string="Jordan Electronic Receipts (JoFotara)"
+                    invisible="country_code != 'JO'"
+                    help="Submit your orders to JoFotara to generate Income and Sales Department (ISTD) compliant receipts.">
+                    <field name="l10n_jo_edi_pos_enabled"/>
+                    <div invisible="not l10n_jo_edi_pos_enabled" groups="base.group_no_one">
+                        <field name="l10n_jo_edi_pos_testing_mode"/>
+                        <label for="l10n_jo_edi_pos_testing_mode" string="Testing Mode" class="me-0"/>
+                        <br/>
+                        <span class="text-muted">Sets Orders Dates to 1 January 2020 in the XMLs which enables testing the submission of orders to the ISTD</span>
+                    </div>
+                </setting>
+            </block>
+        </field>
+    </record>
+</odoo>

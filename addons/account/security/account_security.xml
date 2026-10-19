@@ -1,0 +1,108 @@
+<odoo>
+<data noupdate="0">
+    <!--
+        There are 5 groups
+        The way the groups work is different depending on whether `account`, `account_accountant` or `accountant` are installed.
+
+        Invoicing only (account):
+        ```
+         group_account_invoice &#8680; group_account_manager   (only those two should be used)
+                               &#11010;
+                                 group_account_basic &#11010;   (those are only visible through a server action)
+                              group_account_readonly &#8680; group_account_user
+        ```
+
+        Invoicing Enterprise (account_accountant):
+        ```
+        group_account_invoice &#8680; group_account_basic &#8680; group_account_manager (basic accounting group activated)
+                                                    &#11010;
+                             group_account_readonly &#8680; group_account_user    (these are still not visible)
+        ```
+
+        Invoicing + Accounting (accountant):
+        ```
+           group_account_invoice &#8680; group_account_basic &#11010;
+                                group_account_readonly &#8680; group_account_user &#8680; group_account_manager
+        ```
+        `group_account_user` is almost (a bit more than) the sum of `group_account_invoice` and `group_account_readonly`
+        `group_account_manager` is the king (except when Consolidation is installed, then there is a super-king)
+
+        `group_account_invoice` can create/edit invoices, refunds, payments, etc but cannot see accounting related stuff (journal entries, reports, reconciliation,...)
+        `group_account_basic` can do additional accounting features (eg. basic bank recon) but not journal entries
+        `group_account_readonly` can see (and only see) everything, including the journal entries, advanced configuration, reports
+        `group_account_user`  is the accountant: he can do everything except advanced config (accounting periods for instance)
+        `group_account_manager` can edit some config that `group_account_user` cannot do
+
+        When you have only Invoicing installed, only `group_account_invoice` and `group_account_manager` should be used. The others are giving a shallow access to Accounting features, but we want to remove that.
+    -->
+
+    <record model="res.groups.privilege" id="res_groups_privilege_accounting">
+        <field name="name">Accounting</field>
+        <field name="category_id" ref="base.module_category_accounting"/>
+        <field name="sequence">7</field>
+    </record>
+
+    <record id="group_delivery_invoice_address" model="res.groups">
+        <field name="name">Delivery Address</field>
+    </record>
+
+    <record id="group_account_readonly" model="res.groups">
+        <field name="name">Show Accounting Features - Readonly</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_account_invoice" model="res.groups">
+        <field name="name">Invoicing</field>
+        <field name="sequence">20</field>
+        <field name="comment">Invoices, payments and basic invoice reporting.</field>
+        <field name="privilege_id" ref="res_groups_privilege_accounting"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_account_basic" model="res.groups">
+        <field name="name">Basic</field>
+        <field name="implied_ids" eval="[(4, ref('group_account_invoice'))]"/>
+    </record>
+
+    <record id="group_account_user" model="res.groups">
+        <field name="name">Show Full Accounting Features</field>
+        <field name="implied_ids" eval="[(4, ref('group_account_basic')), (4, ref('group_account_readonly'))]"/>
+    </record>
+
+    <record id="group_account_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="sequence">50</field>
+        <field name="comment">Full access, including configuration rights.</field>
+        <field name="privilege_id" ref="res_groups_privilege_accounting"/>
+        <field name="implied_ids" eval="[(4, ref('group_account_invoice'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="group_account_secured" model="res.groups">
+        <field name="name">Show Inalterability Features</field>
+    </record>
+
+    <record id="group_cash_rounding" model="res.groups">
+        <field name="name">Allow the cash rounding management</field>
+    </record>
+
+    <record id="group_partial_purchase_deductibility" model="res.groups">
+        <field name="name">Partial Purchase Deductibility</field>
+    </record>
+
+    <!-- Add a new setting that can be enabled to allow the user to "trust" a partner bank account -->
+    <record model="res.groups.privilege" id="res_group_privilege_accounting_bank">
+        <field name="name">Bank</field>
+        <field name="sequence">50</field>
+        <field name="category_id" ref="base.module_category_accounting"/>
+    </record>
+
+    <record id="group_validate_bank_account" model="res.groups">
+        <field name="name">Validate bank account</field>
+        <field name="privilege_id" ref="res_group_privilege_accounting_bank"/>
+        <field name="implied_by_ids" eval="[Command.link(ref('base.group_system'))]"/>
+    </record>
+
+</data>
+
+</odoo>

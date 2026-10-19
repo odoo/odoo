@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ActionHelper">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <t t-if="this.showDefaultHelper">
+                    <p class="o_view_nocontent_empty_folder">
+                        <t t-if="this.title" t-out="this.title"/>
+                        <t t-else="">No data to display</t>
+                    </p>
+                    <p>
+                    <t t-if="this.description" t-out="this.description"/>
+                    <t t-else="">Try to add some records, or make sure that there is no
+                        active filter in the search bar.</t>
+                    </p>
+                </t>
+                <t t-else="">
+                    <t t-out="this.props.noContentHelp"/>
+                </t>
+            </div>    
+        </div>
+    </t>
+
+</templates>

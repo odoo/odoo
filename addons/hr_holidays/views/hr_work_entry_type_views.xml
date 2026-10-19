@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_work_entry_type_view_form" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.form</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_see_days_allocated"
+                        icon="calendar_today"
+                        icon_class="oi-filled"
+                        invisible="not requires_allocation or not id"
+                        help="Count of allocations for this time type (approved or waiting for approbation) with a validity period starting this year.">
+                    <div class="o_stat_info">
+                        <field name="allocation_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Allocations</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_see_group_leaves"
+                        icon="calendar_today"
+                        icon_class="oi-filled"
+                        invisible="not id"
+                        help="Count of time off requests for this time type (approved or waiting for approbation) with a start date in the current year.">
+                    <div class="o_stat_info">
+                        <field name="group_days_leave" class="o_stat_value"/>
+                        <span class="o_stat_text">Time Off</span>
+                    </div>
+                </button>
+            </div>
+            <xpath expr="//div[@name='availability_row']/field[@name='resource_calendar_selectable']" position="before">
+                <field name="time_off_selectable" nolabel="1" help="Tells whether this time type can be selected as time off or not"/>
+                <label for="time_off_selectable" string="Time Off"/>
+            </xpath>
+            <xpath expr="//field[@name='count_as']" position="after">
+                <field name="unit_of_measure" widget="radio" options="{'horizontal': True}"/>
+                <field name="request_unit" widget="radio" options="{'horizontal': True}"/>
+            </xpath>
+            <page id="work_entry_payroll_tab" position="before">
+                <page string="Time Off" invisible="not time_off_selectable">
+                    <span class="text-muted fst-italic">Configure how time off requests are approved, allocated and managed for this time type.</span>
+                    <group>
+                        <group name="leave_validation" id="time_off_requests" string="Time Off Requests">
+                            <field name="active" invisible="1"/>
+                            <field name="leave_validation_type" string="Approval" widget="radio"/>
+                        </group>
+                        <group name="allocation_validation" id="allocation_requests" string="Allocation">
+                            <field name="requires_allocation" string="Requires Allocation"/>
+                            <field name="employee_requests" invisible="not requires_allocation"/>
+                            <field name="allocation_validation_type" string="Approval" widget="radio" invisible="not requires_allocation or not employee_requests"/>
+                        </group>
+                    </group>
+                    <group style="justify-content: unset;">
+                        <group name="configuration" id="configuration" string="Configuration">
+                            <label name="label_negative_cap" for="allows_negative" invisible="not requires_allocation"/>
+                            <div name="div_negative_cap" class="gap-2 d-flex align-items-center align-items-sm-start text-nowrap" invisible="not requires_allocation">
+                                <field name="allows_negative" nolabel="1"/>
+                                <div invisible="not allows_negative" class="gap-2 d-flex">
+                                    <span>up to</span>
+                                    <field name="max_allowed_negative" class="w-25"/>
+                                    <span invisible="unit_of_measure == 'hour'">days</span>
+                                    <span invisible="unit_of_measure != 'hour'">hours</span>
+                                </div>
+                            </div>
+                            <field name="count_days_as" widget="radio" options="{'horizontal': true}"/>
+                            <field name="include_public_holidays_in_duration"/>
+                            <field name="hide_on_dashboard"/>
+                            <field name="support_document"/>
+                            <field name="elligible_for_accrual_rate" readonly="count_as != 'absence'"/>
+                            <field name="allow_request_on_top" invisible="count_as == 'absence'"/>
+                            <field name="create_calendar_meeting" invisible="count_as == 'absence'"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_type_view_kanban" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.kanban</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card">
+                        <field class="fw-bold" name="name"/>
+                        <div>
+                            Max Time Off: <field name="max_leaves"/>
+                            <span class="float-end">Time Off Taken: <field name="leaves_taken"/></span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_work_entry_type_normal_tree" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.view.tree.inherit.hr_holidays</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_tree"/>
+        <field name="arch" type="xml">
+             <field name="count_as" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </field>
+            <field name="count_as" position="after">
+                <field name="unit_of_measure" optional="hide"/>
+                <field name="request_unit" optional="hide"/>
+                <field name="leave_validation_type" optional="hide" string="Time Type Approval"/>
+                <field name="time_off_selectable" optional="hide"/>
+                <field name="requires_allocation" optional="hide"/>
+                <field name="employee_requests" optional="hide"/>
+                <field name="allocation_validation_type" string="Allocation Approval" optional="hide" invisible="not (requires_allocation and employee_requests)"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="open_view_work_entry_type" model="ir.actions.act_window">
+        <field name="name">Time Types</field>
+        <field name="res_model">hr.work.entry.type</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">
+            {'default_count_as': 'absence'}
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.AchievementsListOption">
+    <BuilderRow label.translate="Achievements" applyTo="':scope > ul:has(.s_achievements_list_item)'">
+        <BuilderButton action="'addItem'" actionParam="'.s_achievements_list_item:last-child'" type="'success'" preview="false">Add Item</BuilderButton>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <achievements_list_option template="website.AchievementsListOption" selector=".s_achievements_list .row > div"/>
+    </xpath>
+</t>
+
+</templates>

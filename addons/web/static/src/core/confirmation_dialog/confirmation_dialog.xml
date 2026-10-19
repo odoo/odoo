@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.ConfirmationDialog">
+    <Dialog size="this.props.size" title="this.props.title" modalRef="this.modalRef">
+      <p t-out="this.props.body" class="text-prewrap mb-0"/>
+      <t t-set-slot="footer">
+        <button class="btn" t-att-class="this.props.confirmClass" t-on-click="this._confirm" t-out="this.props.confirmLabel" data-hotkey="q" data-available-offline=""/>
+        <button t-if="this.props.cancel" class="btn btn-secondary" t-on-click="this._cancel" t-out="this.props.cancelLabel" data-hotkey="x" data-available-offline=""/>
+      </t>
+    </Dialog>
+  </t>
+
+  <t t-name="web.AlertDialog">
+    <Dialog size="'sm'" title="this.props.title" contentClass="this.props.contentClass">
+      <p t-out="this.props.body" class="text-prewrap mb-0"/>
+      <t t-set-slot="footer">
+        <button class="btn" t-att-class="this.props.confirmClass" t-on-click="this._confirm" t-out="this.props.confirmLabel"/>
+        <button t-if="this.props.cancel" class="btn btn-secondary" t-on-click="this._cancel" t-out="this.props.cancelLabel"/>
+      </t>
+    </Dialog>
+  </t>
+
+</templates>

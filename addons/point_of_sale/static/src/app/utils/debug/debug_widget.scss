@@ -1,0 +1,29 @@
+.o-debug-widget-btn {
+    border-radius: 999px;
+    z-index: 1040;
+
+    &.open {
+        right: 10px;
+        bottom: 10px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    &.close {
+        top: -15px;
+        left: -15px;
+        width: 30px;
+        height: 30px;
+    }
+}
+
+.debug-widget {
+    border-image: repeating-linear-gradient(135deg, #d9b904, #d9b904 10px, #373435 10px, #373435 20px) 2;
+    border-image-width: 2px;
+    z-index: 1040;
+}
+
+.o_popover, .o-tooltip {
+    z-index: 1050;
+}

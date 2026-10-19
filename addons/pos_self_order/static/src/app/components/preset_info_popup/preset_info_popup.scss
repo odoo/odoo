@@ -1,0 +1,37 @@
+.address-delivery-error .o-autocomplete--input {
+    border-color: $danger;
+    background-color: mix(white, $danger, 85%);
+}
+.o-autocomplete--input {
+    display: block;
+    width: 100%;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--body-color);
+    appearance: none;
+    background-color: transparent;
+    background-clip: padding-box;
+    border: var(--border-width) solid var(--border-color);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-top-color: rgb(216, 218, 221);
+    border-right-color: rgb(216, 218, 221);
+    border-bottom-color: rgb(216, 218, 221);
+    border-left-color: rgb(216, 218, 221);
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    min-height: calc(1.5em + 2rem + calc(var(--border-width) * 2));
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+    border-radius: var(--border-radius-lg);
+}

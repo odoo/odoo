@@ -1,0 +1,86 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons.payment.const import SENSITIVE_KEYS as PAYMENT_SENSITIVE_KEYS
+
+SENSITIVE_KEYS = {"client_secret"}
+PAYMENT_SENSITIVE_KEYS.update(SENSITIVE_KEYS)  # Add PayPal-specific keys to the global set.
+
+PAYMENT_COMPLETE_ORDER_ROUTE = "/payment/paypal/complete_order"
+PAYMENT_RETURN_ROUTE = "/payment/paypal/return"
+PAYMENT_CANCEL_ROUTE = "/payment/paypal/cancel"
+WEBHOOK_ROUTE = "/payment/paypal/webhook/"
+OAUTH_INIT_ROUTE = "/payment/paypal/oauth/init"
+OAUTH_FINALIZE_ROUTE = "/payment/paypal/oauth/finalize"
+
+# ISO 4217 codes of currencies supported by PayPal
+# See https://developer.paypal.com/docs/reports/reference/paypal-supported-currencies/.
+# Last seen on: 04 November 2025.
+# CNY removed as it requires in-country PayPal accounts but China mostly uses WeChat and Alipay.
+SUPPORTED_CURRENCIES = (
+    "AUD",
+    "BRL",
+    "CAD",
+    "CZK",
+    "DKK",
+    "EUR",
+    "HKD",
+    "HUF",
+    "ILS",
+    "JPY",
+    "MYR",
+    "MXN",
+    "TWD",
+    "NZD",
+    "NOK",
+    "PHP",
+    "PLN",
+    "GBP",
+    "RUB",
+    "SGD",
+    "SEK",
+    "CHF",
+    "THB",
+    "USD",
+)
+
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {"paypal", "card"}
+
+# Mapping of transaction states to PayPal payment statuses.
+# See https://developer.paypal.com/docs/api/orders/v2/#definition-capture_status.
+# See https://developer.paypal.com/api/rest/webhooks/event-names/#orders.
+PAYMENT_STATUS_MAPPING = {
+    "pending": (
+        "PENDING",
+        "CREATED",
+        "APPROVED",  # The buyer approved a checkout order.
+        "PAYER_ACTION_REQUIRED",
+    ),
+    "done": ("COMPLETED", "CAPTURED"),
+    "cancel": ("CANCELED", "VOIDED"),
+    "error": ("FAILED", "DECLINED"),
+}
+
+# Events which are handled by the webhook.
+# See https://developer.paypal.com/api/rest/webhooks/event-names/
+CHECKOUT_WEBHOOK_EVENTS = [
+    "CHECKOUT.ORDER.COMPLETED",
+    "CHECKOUT.ORDER.APPROVED",
+    "CHECKOUT.ORDER.DECLINED",
+    "CHECKOUT.PAYMENT-APPROVAL.REVERSED",
+]
+CAPTURE_WEBHOOK_EVENTS = ["PAYMENT.CAPTURE.COMPLETED", "PAYMENT.CAPTURE.DENIED"]
+VAULT_WEBHOOK_EVENTS = ["VAULT.PAYMENT-TOKEN.CREATED"]
+MERCHANT_WEBHOOK_EVENTS = ["CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED"]
+
+# The merchant capability required to vault PayPal wallets
+VAULTING_CAPABILITY = "PAYPAL_WALLET_VAULTING_ADVANCED"
+
+# Odoo's public identifiers as a PayPal Partner for OAuth
+OAUTH_ODOO_PARTNER_ID = "NYQZQ556CZFVG"
+OAUTH_ODOO_CLIENT_ID = (
+    "BAA9Z9LIfuRq0p1YAscasv-yxisCONm-ZtVQsuB-decHlQxzt1zciHYn4qYVjBdWEuuGzB52HBEUYEWrDg"
+)
+OAUTH_ODOO_TEST_PARTNER_ID = "QHZVTLZNWGSEW"
+OAUTH_ODOO_TEST_CLIENT_ID = (
+    "AUssUsouGEwQ-elJwte7-ullwiRUY3eQyYlWU-1T6iI7-zVw7bveLzjm8ue53fhVFBojRE6RNQZiecp"
+)

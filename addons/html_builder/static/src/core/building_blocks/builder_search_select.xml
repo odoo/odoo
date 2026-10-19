@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderSearchSelect">
+    <BuilderComponent>
+        <SelectMenu
+            choices="this.state.choices"
+            groups="this.state.groups"
+            onSelect.bind="this.select"
+            menuRef="this.menuRef"
+            onClosed.bind="this.onClosed"
+            onOpened.bind="this.onOpened"
+            searchPlaceholder.translate="Search for items..."
+            class="'o-hb-searchSelect-wrapper min-w-0'"
+            menuClass="'o-hb-select-dropdown o-hb-searchSelect-dropdown'"
+            position="'bottom-end'"
+            value="this.state.currentlySelected"
+            onNavigated.bind="this.onNavigated"
+            fillSearchWithSelection="false"
+            focusFirstItem="false"
+            autoSort="false"
+            required="true"
+        >
+            <t t-out="this.getSelection(this.state.currentlySelected)?.label || this.props.defaultMessage"/>
+        </SelectMenu>
+    </BuilderComponent>
+</t>
+</templates>

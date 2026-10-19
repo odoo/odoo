@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessagingMenuItem">
+    <t t-set="itemProps" t-value="this.notificationItemProps"/>
+    <div class="o-mail-MessagingMenuItem rounded-4" t-att-class="this.attClass" t-ref="this.root">
+        <MessagingMenuItemContextMenu t-if="this.rightClickMenu" t-props="this.rightClickMenu.menuProps"/>
+        <NotificationItem t-if="itemProps" t-props="itemProps">
+            <t t-set-slot="name">
+                <div class="o-mail-MessagingMenuItem-name d-flex text-nowrap">
+                    <t name="itemNameBefore">
+                        <Priority t-if="this.message?.thread?.priority" thread="this.message?.thread"/>
+                    </t>
+                    <t name="itemName"><span t-att-class="{'ms-1': this.message?.thread?.priority}" class="text-truncate" t-out="this.itemName"/></t>
+                </div>
+            </t>
+            <t t-set-slot="name-after"/>
+            <t t-set-slot="body"><span class="o-mail-MessagingMenuItem-body" t-out="this.itemPreviewText"/></t>
+            <t t-set-slot="icon"/>
+            <t t-set-slot="counterSideContent">
+                <div t-if="this.showActions" class="o-mail-MessagingMenu-actions h-100 w-100 z-1 position-absolute bottom-0 end-0 d-none">
+                    <Dropdown
+                        position="'right-start'"
+                        menuClass="'o-mail-MessagingMenu-dropdownMenu o-discuss-dropdownMenu my-0 mx-1 ' + this.store.discussDropdownMenuClass(this)"
+                        state="this.actionsDropdownState"
+                        manual="true"
+                        noClasses="true"
+                    >
+                        <button
+                            class="btn o-discuss-ellipsisButton h-100 w-100 o-mail-DiscussApp-sidebarBgColor"
+                            t-att-class="this.actionsButtonClass"
+                            t-att-title="this.actionsButtonTitle"
+                            t-on-click.stop="() => this.actionsDropdownState.isOpen ? this.actionsDropdownState.close() : this.actionsDropdownState.open()"
+                        />
+                        <t t-set-slot="content">
+                            <ActionList actions="this.actionsList" dropdown="true"/>
+                        </t>
+                    </Dropdown>
+                </div>
+            </t>
+            <t t-set-slot="footer"/>
+        </NotificationItem>
+    </div>
+</t>
+</templates>

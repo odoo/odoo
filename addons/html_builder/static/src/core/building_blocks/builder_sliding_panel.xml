@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderSlidingPanel">
+    <button t-ref="this.openButtonRef"
+        class="o-hb-btn btn"
+        t-on-click="this.showSlidingPanel"
+        t-att-class="this.props.extraClasses"
+        t-att-data-icon="this.props.icon"
+        data-text-truncate-tooltip=""
+    >
+        <t t-call-slot="default"/>
+    </button>
+    <div t-ref="this.slidingPanelRef"
+        class="hb-sliding-panel mb-1 h-100 d-none"
+        t-on-click="this.onBackdropClick"
+        t-att-class="{'hb-sliding-panel-dark': this.props.darkBackground}"
+    >
+        <div class="hb-sliding-panel-content d-flex flex-column" t-att-class="this.props.fullHeight ? 'h-100' : 'pb-3'">
+            <div class="hb-sliding-panel-header">
+                <div class="hb-sliding-panel-label d-flex align-items-stretch p-2">
+                    <button class="btn p-1" t-on-click="this.hideSlidingPanel" aria-label="close" tabindex="0" >
+                        <i class="oi me-1" data-icon="chevron_backward" role="presentation"/>
+                        <t t-out="this.state.optionContainerName + ' / ' + this.props.label"/>
+                    </button>
+                    <t t-call-slot="sliding_panel_top_options"/>
+                </div>
+            </div>
+            <t t-if="this.state.contentRendered" t-call-slot="content" close="this.hideSlidingPanel.bind(this)"/>
+        </div>
+    </div>
+</t>
+
+</templates>

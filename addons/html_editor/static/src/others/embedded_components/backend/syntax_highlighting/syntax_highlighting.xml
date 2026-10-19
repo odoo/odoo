@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- syntax highlighting template -->
+    <t t-name="html_editor.EmbeddedSyntaxHighlighting">
+        <CodeToolbar target="this.props.host" currentLanguage="this.embeddedState.languageId"
+            getContent="() => this.textareaRef().value" onLanguageChange="this.onLanguageChange.bind(this)"
+            convertToParagraph="this.props.convertToParagraph"
+            toggleCodeWrap="this.toggleCodeWrap.bind(this)"
+        />
+        <pre t-ref="this.preRef"/>
+        <textarea t-ref="this.textareaRef" class="o_prism_source" contenteditable="true" placeholder="Code"
+            t-on-input="this.onInput"
+            t-on-scroll="this.onScroll"
+            t-on-keydown="this.onKeydown"
+            t-on-focus="this.props.onTextareaFocus"></textarea>
+    </t>
+</templates>

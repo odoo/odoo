@@ -1,0 +1,41 @@
+.o-mail-CreateChannelDialog, .o-mail-CreateChatDialog {
+    .modal-header {
+        border-bottom: 0;
+    }
+    .modal-footer {
+        border-top: 0;
+    }
+}
+
+.o-mail-DiscussCommand {
+    padding-top: map-get($spacers, 1);
+    padding-bottom: map-get($spacers, 1);
+
+    &.o-uiSmall {
+        padding-top: map-get($spacers, 2);
+        padding-bottom: map-get($spacers, 2);
+    }
+
+    .o_command_name {
+        font-size: $font-size-sm;
+    }
+
+    .o-action {
+       color: lighten($o-action, 5%);
+   }
+}
+
+.o-mail-DiscussCommand-actionIcon {
+    font-size: 0.75rem;
+}
+
+.o-mail-DiscussCommand-img {
+    width: 26px;
+    height: 26px;
+
+    &.o-uiSmall {
+        width: 32px;
+        height: 32px;
+    }
+}
+

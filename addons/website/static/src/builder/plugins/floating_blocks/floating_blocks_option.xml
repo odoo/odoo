@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.FloatingBlocksCardsOption">
+    <BuilderRow label.translate="Cards">
+        <BuilderButton
+            type="'success'"
+            title.translate="Add a new Card"
+            action="'addFloatingBlockCard'"
+            preview="false">
+            Add Card
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+<t t-name="website.FloatingBlocksDesignOption">
+    <hr/>
+    <BuilderRow label.translate="Cards Design">
+            Global options for all inner cards.
+    </BuilderRow>
+    <!-- Apply global cards options to ".s_floating_blocks_wrapper".
+    Each Card will inherit these values in CSS -->
+    <BuilderRow label.translate="Roundness" level="1"
+        tooltip.translate="Applies to all cards">
+        <BuilderRange
+            applyTo="'.s_floating_blocks_wrapper'"
+            action="'floatingBlocksRoundness'"
+            max="5" />
+    </BuilderRow>
+    <BuilderRow label.translate="Shadows" level="1"
+        tooltip.translate="Applies to all cards">
+        <BuilderCheckbox
+            applyTo="'.s_floating_blocks_wrapper'"
+            classAction="'s_floating_blocks_wrapper_shadow'"
+            preview="false"/>
+        </BuilderRow>
+</t>
+
+<t t-name="website.FloatingBlocksBlockOption">
+    <BorderConfigurator withRoundCorner="false" label.translate="Border"/>
+</t>
+
+<t t-name="website.FloatingBlocksBlockMobileOption">
+    <BuilderRow label.translate="Vert. Alignment" tooltip.translate="Vertical Alignment" t-if="this.state.isMobileView">
+        <BuilderButtonGroup>
+            <BuilderButton title.translate="Align Top" classAction="'align-self-start'"
+                    icon="'vertical_align_top'"/>
+            <BuilderButton title.translate="Align Middle" classAction="'align-self-center'"
+                    icon="'vertical_align_center'"/>
+            <BuilderButton title.translate="Align Bottom" classAction="'align-self-end'"
+                    icon="'vertical_align_bottom'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='key_snippet_specific_options']" position="after">
+        <floating_blocks_cards_option
+            template="website.FloatingBlocksCardsOption"
+            selector=".s_floating_blocks"/>
+    </xpath>
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <floating_blocks_block_mobile_option
+            selector=".s_floating_blocks .s_floating_blocks_block"
+            applyTo=".container-fluid"/>
+        <floating_blocks_block_option selector=".s_floating_blocks .s_floating_blocks_block"/>
+    </xpath>
+    <xpath expr="//t[@id='bottom_options_hook']" position="after">
+        <floating_blocks_design_option
+            template="website.FloatingBlocksDesignOption"
+            selector=".s_floating_blocks"/>
+    </xpath>
+</t>
+
+</templates>

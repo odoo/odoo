@@ -1,0 +1,152 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_be
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-18 18:18+0000\n"
+"PO-Revision-Date: 2026-09-18 18:18+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_be
+#: model:ir.module.module,description:base.module_l10n_be
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Belgium in Odoo.\n"
+"==============================================================================\n"
+"\n"
+"After installing this module, the Configuration wizard for accounting is launched.\n"
+"    * We have the account templates which can be helpful to generate Charts of Accounts.\n"
+"    * On that particular wizard, you will be asked to pass the name of the company,\n"
+"      the chart template to follow, the no. of digits to generate, the code for your\n"
+"      account and bank account, currency to create journals.\n"
+"\n"
+"Thus, the pure copy of Chart Template is generated.\n"
+"\n"
+"Wizards provided by this module:\n"
+"--------------------------------\n"
+"    * Partner VAT Intra: Enlist the partners with their related VAT and invoiced\n"
+"      amounts. Prepares an XML file format.\n"
+"\n"
+"        **Path to access:** Invoicing/Reporting/Legal Reports/Belgium Statements/Partner VAT Intra\n"
+"    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of\n"
+"      the Main company of the User currently Logged in.\n"
+"\n"
+"        **Path to access:** Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration\n"
+"    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat\n"
+"      Declaration of the Main company of the User currently Logged in Based on\n"
+"      Fiscal year.\n"
+"\n"
+"        **Path to access:** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers\n"
+"\n"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model,name:l10n_be.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_be
+#. odoo-python
+#: code:addons/l10n_be/models/template_be_asso.py:0
+msgid "Associations and Foundations"
+msgstr ""
+
+#. module: l10n_be
+#. odoo-python
+#: code:addons/l10n_be/models/template_be.py:0
+msgid "Base"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.ui.menu,name:l10n_be.account_reports_be_statements_menu
+msgid "Belgium"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model.fields.selection,name:l10n_be.selection__account_journal__invoice_reference_model__be
+msgid "Belgium (+++000/2024/00182+++)"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.module.module,shortdesc:base.module_l10n_be
+msgid "Belgium - Accounting"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model.fields,field_description:l10n_be.field_account_journal__invoice_reference_model
+msgid "Communication Standard"
+msgstr ""
+
+#. module: l10n_be
+#. odoo-python
+#: code:addons/l10n_be/models/template_be_comp.py:0
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model,name:l10n_be.model_res_company
+msgid "Company"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model.fields,field_description:l10n_be.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_be.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_be.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_be.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_be.field_res_company__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model,name:l10n_be.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model.fields,field_description:l10n_be.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_be.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_be.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_be.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_be.field_res_company__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model.fields.selection,name:l10n_be.selection__account_tax__tax_scope__invest
+msgid "Investment"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model,name:l10n_be.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model,name:l10n_be.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model.fields.selection,name:l10n_be.selection__account_tax__tax_scope__merch
+msgid "Merchandise"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model.fields,field_description:l10n_be.field_account_tax__tax_scope
+msgid "Tax Scope"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.model.fields,help:l10n_be.field_account_journal__invoice_reference_model
+msgid ""
+"You can choose different models for each type of reference. The default one "
+"is the Odoo reference."
+msgstr ""

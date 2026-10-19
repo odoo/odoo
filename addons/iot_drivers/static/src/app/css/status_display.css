@@ -1,0 +1,55 @@
+html {
+    height: 100%;
+}
+body {
+    cursor: none;
+    background: url('/iot_drivers/static/img/background-light.svg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+}
+.qr-code-box {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+}
+.qr-code {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.qr-code img {
+    width: 150px; /* Ensure wifi and url QR code images appear as same size */
+    height: 150px;
+    object-fit: contain; 
+}
+.status-display-boxes {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}
+.status-display-box {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.17);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 5px 0 rgba(60, 60, 60, 0.4);
+    border-radius: 8px;
+    width: 500px;
+    margin-top: 20px;
+    backdrop-filter: blur(5px);
+}
+.table {
+    --bs-table-bg: none;
+}
+.odoo-logo {
+    width: 150px;
+}
+.iotbox-name {
+    font-size: 25px;
+}
+.device-type {
+    text-transform: capitalize;
+}
+
+ul {
+    padding-left: 18px;
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pos_discount.pos_session_sales_details" inherit_id="point_of_sale.pos_session_sales_details">
+        <xpath expr="//div[@id='discounts']" position="inside">
+            <t t-if="global_discount_number">
+                <div class="row">
+                    <div class="col-12">
+                        <strong>Number of global discounts</strong>: <t t-out="global_discount_number"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <strong>Amount of global discounts</strong>: <t t-out="global_discount_amount" t-options="{'widget': 'monetary', 'display_currency': currency.get('user_currency')}"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

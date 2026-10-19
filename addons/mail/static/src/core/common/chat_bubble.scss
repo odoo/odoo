@@ -1,0 +1,133 @@
+
+.o-mail-ChatBubble {
+    height: auto !important;
+    z-index: $o-mail-ChatBubble-zindex;
+    border: none !important;
+    padding: 0;
+    background-color: transparent !important;
+
+    &:hover {
+        .o-mail-ChatBubble-close {
+            display: inline-flex;
+        }
+        .o-mail-ChatBubble-counter {
+            display: none;
+        }
+    }
+
+    &:hover, &.o-active {
+        filter: brightness(1.1);
+    }
+
+    &.o-bouncing {
+        // One iteration is a full bounce, so the component can stop the
+        // animation on any iteration boundary without the bubble jumping.
+        animation: o-mail-ChatBubble-bouncing 0.5s;
+        animation-timing-function: cubic-bezier(.5, 0.95, 0, .5);
+        animation-iteration-count: infinite;
+    }
+
+}
+
+.o-mail-ChatBubble-close {
+    right: -3px;
+    top: -5px;
+    z-index: 6;
+    font-size: 11px;
+    display: none;
+    padding: map-get($spacers, 1) / 2;
+    --border-opacity: .5;
+
+    &:not(:hover) {
+        color: $text-muted;
+    }
+
+    &:hover {
+        --border-opacity: .75;
+    }
+}
+
+.o-mail-ChatBubble-country {
+    width: 14px;
+    left: 0px;
+}
+
+.o-mail-ChatBubble-counter {
+    z-index: 7;
+    top: -3px;
+    right: -4px;
+    display: inline-flex;
+    outline: 1px solid $gray-300;
+}
+
+.o-mail-ChatBubble-preview {
+    min-width: 160px;
+    max-width: 225px;
+    right: $o-mail-ChatHub-bubblesWidth;
+    z-index: $o-mail-ChatBubble-zindex - 1;
+    border-color: $o-gray-300 !important;
+
+    &.o-blue, &.o-green, &.o-orange {
+        background-color: var(--o-bubble-bg) !important;
+        border-color: var(--o-bubble-border-color) !important;
+
+        // the popover arrow is a sibling, not a descendant: it can't read the
+        // custom properties set below directly on this element, so it relies
+        // instead on inheriting them from their common ancestor (see the
+        // `.o_popover:has(...)` rule further down)
+        & + .popover-arrow {
+            &::before {
+                border-left-color: var(--o-bubble-border-color) !important;
+            }
+            &::after {
+                border-left-color: var(--o-bubble-bg) !important;
+            }
+        }
+    }
+
+    & + .popover-arrow {
+        // puts arrow above preview border
+        z-index: 1 !important;
+        &::before {
+            border-left-color: $o-gray-300 !important;
+            right: 1px !important;
+        }
+        &::after {
+            border-left-color: $o-view-background-color !important;
+            right: 2px !important;
+        }
+    }
+}
+
+@mixin o-chat-bubble-preview-colors {
+    .o_popover {
+        @each $_type in map-keys($o-bubble-colors) {
+            &:has(> .o-mail-ChatBubble-preview.#{$_type}) {
+                @include o-bubble-color-vars($_type);
+            }
+        }
+    }
+}
+@include o-chat-bubble-preview-colors;
+
+.o-mail-ChatBubble-status {
+    z-index: 6;
+    bottom: 0px;
+    right: -1px;
+    background-color: transparent;
+}
+
+.o-mail-ChatBubble-unreadIndicator {
+    font-size: .5rem;
+    bottom: 40%;
+    right: -10px;
+}
+
+@keyframes o-mail-ChatBubble-bouncing {
+    from, to {
+        transform: translate3d(0, 0, 0);
+    }
+    50% {
+        transform: translate3d(0, -10px, 0);
+    }
+} 

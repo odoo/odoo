@@ -1,0 +1,112 @@
+from odoo import Command
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged, Form
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestClLatamDocumentType(AccountTestInvoicingCommon):
+
+    _test_user_groups = None  # FIXME list needed groups
+
+    @classmethod
+    @AccountTestInvoicingCommon.setup_country('cl')
+    def setUpClass(cls):
+        super().setUpClass()
+
+        country_cl = cls.env.ref('base.cl')
+
+        cls.cl_partner_a, cls.cl_partner_b = cls.env['res.partner'].create([
+            {
+                'name': 'Chilean Partner A',
+                'country_id': country_cl.id,
+                'vat': '76201224-3',
+                'l10n_cl_sii_taxpayer_type': '1',
+            },
+            {
+                'name': 'Chilean Partner B',
+                'country_id': country_cl.id,
+                'vat': '76201224-3',
+                'l10n_cl_sii_taxpayer_type': '1',
+            },
+        ])
+
+        # Create a purchase journal that uses latam documents
+        cls.purchase_journal = cls.env['account.journal'].create([{
+            'name': 'Vendor bills elec',
+            'code': 'VBE',
+            'company_id': cls.company_data['company'].id,
+            'type': 'purchase',
+            'l10n_latam_use_documents': True,
+            'default_account_id': cls.company_data['default_journal_purchase'].default_account_id.id,
+        }])
+
+    def test_document_type_not_modified_when_partner_changes(self):
+        """ Test that when the partner changes, the document type is not reset to default
+        if the currently selected document type is compatible with the new partner.
+        """
+        document_type_33 = self.env.ref('l10n_cl.dc_a_f_dte')
+        document_type_46 = self.env.ref('l10n_cl.dc_fc_f_dte')
+
+        # 1. Do the test with a new invoice
+        with Form(self.env['account.move'].with_context({'default_move_type': 'in_invoice'})) as invoice_form:
+            # Change the journal to the one that uses documents, set the partner and check that the
+            # l10n_latam_document_type_id is computed and set to 33 (Factura Electronica, the default).
+            invoice_form.journal_id = self.purchase_journal
+            invoice_form.partner_id = self.cl_partner_a
+            self.assertEqual(invoice_form.l10n_latam_document_type_id.id, document_type_33.id)
+
+            # Change the document type to 45 (Factura de Compra)
+            invoice_form.l10n_latam_document_type_id = document_type_46
+
+            # Change the partner and check that the document type hasn't changed
+            invoice_form.partner_id = self.cl_partner_b
+            self.assertEqual(invoice_form.l10n_latam_document_type_id.id, document_type_46.id)
+
+            invoice_form.l10n_latam_document_number = '000001'
+
+        invoice = invoice_form.save()
+        self.assertRecordValues(invoice, [{
+            'partner_id': self.cl_partner_b.id,
+            'l10n_latam_document_type_id': document_type_46.id,
+        }])
+
+        # 2. Do the test again with the existing invoice
+        with Form(invoice) as invoice_form:
+            # Change the partner and check that the document type hasn't changed
+            invoice_form.partner_id = self.cl_partner_a
+            self.assertEqual(invoice_form.l10n_latam_document_type_id.id, document_type_46.id)
+
+        invoice_form.save()
+        self.assertRecordValues(invoice, [{
+            'partner_id': self.cl_partner_a.id,
+            'l10n_latam_document_type_id': document_type_46.id,
+        }])
+
+    def test_miscellaneous_journal_skip_numeric_folio_validation(self):
+        """Ensure numeric folio validation is skipped for miscellaneous entries."""
+        self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': self.env['account.journal'].search([('type', '=', 'general')], limit=1).id,
+            'l10n_latam_document_number': 'ABC123',
+        })
+
+    def test_demo_data_skips_moves_of_partners_without_taxpayer_type(self):
+        """ Test that the chilean demo data does not post moves whose partner is not set up
+            for Chile, as other modules may add such demo moves to the chilean company.
+        """
+        foreign_partner = self.env['res.partner'].create({
+            'name': 'Foreign Partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': foreign_partner.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [Command.create({'name': 'test line', 'price_unit': 100.0})],
+        })
+        self.assertTrue(invoice.l10n_latam_use_documents)
+
+        self.env['account.chart.template']._post_load_demo_data('cl')
+
+        self.assertEqual(invoice.state, 'draft')

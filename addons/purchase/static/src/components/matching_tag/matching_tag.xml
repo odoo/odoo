@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="purchase.MatchingTag">
+        <span t-if="this.canDisplayTag" t-out="this.matchValue" t-attf-class="o_tag o_badge badge rounded-pill {{this.colorClass}}"/>
+    </t>
+
+</templates>

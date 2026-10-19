@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_sa_edi_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
+            <div name="header" position="after">
+                <div t-if="not conditions.get('l10n_gcc_is_settlement') and conditions.get('l10n_sa_not_legal') and conditions.get('code_sa')" class="text-center mt-3">
+                    <div class="text-bold">THIS IS NOT A LEGAL DOCUMENT</div>
+                    <div class="text-bold" t-if="conditions.get('l10n_gcc_dual_language_receipt')">هذا المستند ليس مستنداً قانونياً</div>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.SwitchableViews">
+    <t t-foreach="this.switchableRelatedViews" t-as="view" t-key="view.id">
+        <BuilderRow label="view.name">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{
+                    views: [view.key],
+                }"/>
+        </BuilderRow>
+    </t>
+</t>
+
+<!-- page option -->
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <switchable_views
+            selector=".o_portal_wrap"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
+</templates>

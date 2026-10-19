@@ -1,0 +1,66 @@
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { standardFieldProps } from "../standard_field_props";
+
+import { Component, proxy, t, useEffect, useProps } from "@odoo/owl";
+
+export class ImageUrlField extends Component {
+    static template = "web.ImageUrlField";
+    props = useProps({
+        ...standardFieldProps,
+        width: t.number().optional(),
+        height: t.number().optional(),
+    });
+
+    static fallbackSrc = "/web/static/img/placeholder.png";
+
+    setup() {
+        this.notification = useService("notification");
+        this.state = proxy({
+            src: this.props.record.data[this.props.name],
+        });
+
+        useEffect(() => {
+            this.state.src = this.props.record.data[this.props.name];
+        });
+    }
+
+    get sizeStyle() {
+        let style = "";
+        const width = this.props.width;
+        const height = this.props.height;
+        style = width ? `max-width: ${width}px;` : `width: auto;`;
+        style += height ? `max-height: ${height}px` : `height: auto`;
+
+        return style;
+    }
+
+    onLoadFailed() {
+        this.state.src = this.constructor.fallbackSrc;
+    }
+}
+
+export const imageUrlField = {
+    component: ImageUrlField,
+    displayName: _t("Image"),
+    supportedOptions: [
+        {
+            label: _t("Size"),
+            name: "size",
+            type: "selection",
+            choices: [
+                { label: _t("Small"), value: "[0,90]" },
+                { label: _t("Medium"), value: "[0,180]" },
+                { label: _t("Large"), value: "[0,270]" },
+            ],
+        },
+    ],
+    supportedTypes: ["char"],
+    extractProps: ({ attrs, options }) => ({
+        width: options.size ? options.size[0] : attrs.width,
+        height: options.size ? options.size[1] : attrs.height,
+    }),
+};
+
+registry.category("fields").add("image_url", imageUrlField);

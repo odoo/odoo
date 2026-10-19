@@ -1,0 +1,34 @@
+.o_qr_popup {
+    .skeleton {
+        --skeleton-bg-color: #e0e0e0;
+        --skeleton-bg-color-highlight: #f0f0f0;
+        aspect-ratio: 1 / 1;
+        background-color: var(--skeleton-bg-color);
+        border-radius: 0.5rem;
+
+        animation: pulseSkeleton 1.5s infinite;
+
+        @keyframes pulseSkeleton {
+            0% {
+                background-color: var(--skeleton-bg-color);
+            }
+            50% {
+                background-color: var(--skeleton-bg-color-highlight);
+            }
+            100% {
+                background-color: var(--skeleton-bg-color);
+            }
+        }
+    }
+
+    .loaded {
+        animation: fadeIn 0.5s ease-out forwards;
+        opacity: 0;
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    }
+}

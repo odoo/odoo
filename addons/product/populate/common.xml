@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fake_products" model="populate.blueprint">
+        <field name="name">Common - Products</field>
+        <field name="definition_xml" type="xml">
+            <create model="product.product" count="100" id="products" context="{'tracking_disable': True}">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="type" values="{'consu': 7, 'service': 3}"/>
+                <field name="list_price" start="10.0" end="5000.0" distribution="exponential(rate=0.002)"/>
+                <field name="standard_price" start="5.0" end="3000.0" distribution="exponential(rate=0.002)"/>
+                <field name="active" eval="True"/>
+                <field name="sale_ok" eval="True"/>
+                <field name="purchase_ok" eval="True"/>
+                <field name="default_code" generator="fake.ean13" unique="True"/>
+                <field name="barcode" eval="default_code"/>
+            </create>
+        </field>
+    </record>
+</odoo>

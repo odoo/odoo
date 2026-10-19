@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="l10n_in.hsnAutoComplete">
+        <AutoComplete
+            value="this.props.record.data[this.props.name] || ''"
+            sources="this.sources"
+            input="this.inputRef"
+            placeholder="this.props.placeholder || ''"
+        >
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <div class="text-wrap">
+                    <strong t-out="optionScope.label"/>
+                    <div t-out="optionScope.data.description"/>
+                </div>
+            </t>
+        </AutoComplete>
+    </t>
+</templates>

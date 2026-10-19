@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_work_entry.ExportWorkEntriesCogMenu">
+        <t t-if="!is_actionmenu">
+            <DropdownItem onSelected.bind="this.exportWorkEntries">
+                <i class="oi oi-filled me-1" data-icon="group"/>
+                Export Time Entries
+            </DropdownItem>
+        </t>
+    </t>
+
+</templates>

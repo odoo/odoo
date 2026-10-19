@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Invoice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+    <CustomizationID xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</CustomizationID>
+    <AdditionalDocumentReference xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+        <ID xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" schemeID="AKG">ABCDEF012345GHJKL</ID>
+        <DocumentTypeCode xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">130</DocumentTypeCode>
+    </AdditionalDocumentReference>
+    <InvoiceLine xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+        <LineExtensionAmount currencyID="EUR">1.0</LineExtensionAmount>
+        <Item>
+            <Description xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Model Y</Description>
+            <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">$MDLY</Name>
+            <SellersItemIdentification>
+                <ID xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">$MDLY</ID>
+            </SellersItemIdentification>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Odometer Reading</Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">30</Value>
+            </AdditionalItemProperty>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Odometer Unit</Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">km</Value>
+            </AdditionalItemProperty>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">First Registration Date
+                </Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">01/26/2026 00:00:00</Value>
+            </AdditionalItemProperty>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Vehicle Year</Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">2026</Value>
+            </AdditionalItemProperty>
+        </Item>
+    </InvoiceLine>
+    <InvoiceLine xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+        <LineExtensionAmount currencyID="EUR">1.0</LineExtensionAmount>
+        <Item>
+            <Description xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Delivery and Final
+                Inspection Fee
+            </Description>
+            <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">REG001</Name>
+            <SellersItemIdentification>
+                <ID xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">REG001</ID>
+            </SellersItemIdentification>
+            <ClassifiedTaxCategory>
+                <ID xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">S</ID>
+                <Percent xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">21.0</Percent>
+                <TaxScheme>
+                    <ID xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">VAT</ID>
+                </TaxScheme>
+            </ClassifiedTaxCategory>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Odometer Reading</Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">30</Value>
+            </AdditionalItemProperty>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Odometer Unit</Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">km</Value>
+            </AdditionalItemProperty>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">First Registration Date
+                </Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">01/26/2026 00:00:00</Value>
+            </AdditionalItemProperty>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Vehicle Year</Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">2026</Value>
+            </AdditionalItemProperty>
+        </Item>
+    </InvoiceLine>
+    <InvoiceLine xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+        <LineExtensionAmount currencyID="EUR">1.0</LineExtensionAmount>
+        <Item>
+            <Description xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Tire Recycling Fee
+            </Description>
+            <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">TIR002</Name>
+            <SellersItemIdentification>
+                <ID xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">TIR002</ID>
+            </SellersItemIdentification>
+            <ClassifiedTaxCategory>
+                <ID xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">S</ID>
+                <Percent xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">21.0</Percent>
+                <TaxScheme>
+                    <ID xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">VAT</ID>
+                </TaxScheme>
+            </ClassifiedTaxCategory>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Odometer Reading</Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">30</Value>
+            </AdditionalItemProperty>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Odometer Unit</Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">km</Value>
+            </AdditionalItemProperty>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">First Registration Date
+                </Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">01/26/2026 00:00:00</Value>
+            </AdditionalItemProperty>
+            <AdditionalItemProperty>
+                <Name xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">Vehicle Year</Name>
+                <Value xmlns="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">2026</Value>
+            </AdditionalItemProperty>
+        </Item>
+    </InvoiceLine>
+</Invoice>

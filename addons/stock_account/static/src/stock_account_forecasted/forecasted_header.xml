@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template">
+    <t t-name="stock_account.ForecastedHeader" t-inherit="stock.ForecastedHeader" t-inherit-mode="extension">
+        <xpath expr="//h3[@name='product_name']" position="after">
+            <h6 t-if="() => this.env.user.has_group('stock.group_stock_manager')">
+                Value On Hand:
+                <a href="#"
+                   t-out="this.props.docs.value"
+                   t-on-click.prevent="this._onClickValuation"/>
+            </h6>
+        </xpath>
+    </t>
+</templates>

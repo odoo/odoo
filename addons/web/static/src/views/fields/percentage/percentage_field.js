@@ -1,0 +1,67 @@
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
+import { formatPercentage } from "../formatters";
+import { parsePercentage } from "../parsers";
+import { useInputField } from "../input_field_hook";
+import { useNumpadDecimal } from "../numpad_decimal_hook";
+import { standardFieldProps } from "../standard_field_props";
+
+import { Component, signal, t, useProps } from "@odoo/owl";
+
+export class PercentageField extends Component {
+    static template = "web.PercentageField";
+    props = useProps({
+        ...standardFieldProps,
+        digits: t.array().optional(),
+        noSymbol: t.boolean().optional(),
+    });
+
+    numpadDecimalRef = signal.ref();
+
+    setup() {
+        useInputField({
+            getValue: () =>
+                formatPercentage(this.props.record.data[this.props.name], {
+                    digits: this.props.digits,
+                    noSymbol: true,
+                    field: this.props.record.fields[this.props.name],
+                }),
+            ref: this.numpadDecimalRef,
+            parse: (v) => parsePercentage(v),
+        });
+        useNumpadDecimal(this.numpadDecimalRef);
+    }
+
+    get formattedValue() {
+        return formatPercentage(this.props.record.data[this.props.name], {
+            digits: this.props.digits,
+            noSymbol: this.props.noSymbol,
+            field: this.props.record.fields[this.props.name],
+        });
+    }
+}
+
+export const percentageField = {
+    component: PercentageField,
+    displayName: _t("Percentage"),
+    supportedTypes: ["integer", "float"],
+    extractProps: ({ attrs, options }) => {
+        // Sadly, digits param was available as an option and an attr.
+        // The option version could be removed with some xml refactoring.
+        let digits;
+        if (attrs.digits) {
+            digits = JSON.parse(attrs.digits);
+        } else if (options.digits) {
+            digits = options.digits;
+        }
+
+        const noSymbol = options.no_symbol || false;
+
+        return {
+            digits,
+            noSymbol,
+        };
+    },
+};
+
+registry.category("fields").add("percentage", percentageField);

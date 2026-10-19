@@ -1,0 +1,984 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_management
+#
+# Translators:
+# Bayarkhuu Bataa, 2022
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2022
+# Onii Onii <onii0223@yahoo.com>, 2022
+# Minj P <pminj322@gmail.com>, 2022
+# Батболд <batbold.ts@gmail.com>, 2022
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2022
+# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
+# Насан-Очир <nasaaskii@gmail.com>, 2022
+# hish, 2022
+# Martin Trigaux, 2022
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-25 17:37+0000\n"
+"PO-Revision-Date: 2026-10-14 15:58+0000\n"
+"Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-20/"
+"sale_management/mn/>\n"
+"Language: mn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.8.1\n"
+
+#. module: sale_management
+#: model:ir.module.module,description:base.module_sale_management
+msgid ""
+"\n"
+"Manage sales quotations and orders\n"
+"==================================\n"
+"\n"
+"This application allows you to manage your sales goals in an effective and "
+"efficient manner by\n"
+"keeping track of all sales orders and history.\n"
+"\n"
+"It handles the full sales workflow:\n"
+"\n"
+"* **Quotation** -> **Sales order** -> **Invoice**\n"
+"\n"
+"Preferences (only with Warehouse Management installed)\n"
+"------------------------------------------------------\n"
+"\n"
+"If you also installed the Warehouse Management, you can deal with the "
+"following preferences:\n"
+"\n"
+"* Shipping: Choice of delivery at once or partial delivery\n"
+"* Invoicing: choose how invoices will be paid\n"
+"* Incoterms: International Commercial terms\n"
+"\n"
+"\n"
+"With this module you can personnalize the sales order and invoice report "
+"with\n"
+"categories, subtotals or page-breaks.\n"
+"\n"
+"The Dashboard for the Sales Manager will include\n"
+"------------------------------------------------\n"
+"* My Quotations\n"
+"* Monthly Turnover (Graph)\n"
+msgstr ""
+"\n"
+"Борлуулалтын үнийн санал, захиалга удирдах\n"
+"==================================\n"
+"\n"
+"Энэ аппликейшн нь бүх борлуулалтын захиалга, түүхийг хөтлөх замаар\n"
+"борлуулалтын зорилгоо үр дүнтэй, үр ашигтай удирдах боломж олгоно.\n"
+"\n"
+"Борлуулалтын бүх урсгалыг хамарна:\n"
+"\n"
+"* **Үнийн санал** -> **Борлуулалтын захиалга** -> **Нэхэмжлэл**\n"
+"\n"
+"Тохиргоо (зөвхөн Агуулахын удирдлага суулгасан үед)\n"
+"------------------------------------------------------\n"
+"\n"
+"Хэрэв Агуулахын удирдлагыг мөн суулгасан бол дараах тохиргоог ашиглах "
+"боломжтой:\n"
+"\n"
+"* Хүргэлт: Нэг дор эсвэл хэсэгчлэн хүргэх сонголт\n"
+"* Нэхэмжлэл: нэхэмжлэлийг хэрхэн төлөхийг сонгох\n"
+"* Худалдааны нөхцөл: Олон улсын худалдааны нөхцөл\n"
+"\n"
+"\n"
+"Энэ модулиар борлуулалтын захиалга болон нэхэмжлэлийн тайланг\n"
+"ангилал, дэд дүн эсвэл хуудасны завсраар өөрчлөх боломжтой.\n"
+"\n"
+"Борлуулалтын менежерийн хяналтын самбарт дараах орно\n"
+"------------------------------------------------\n"
+"* Миний үнийн саналууд\n"
+"* Сарын борлуулалтын орлого (График)\n"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template_line.py:0
+msgid "%(attribute)s: %(values)s"
+msgstr "%(attribute)s: %(values)s"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Acoustic ceiling"
+msgstr "Дуу шингээх тааз"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Acoustic underlay"
+msgstr "Дуу шингээх дэвсгэр"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Acoustic wall insulation"
+msgstr "Хананы дуу тусгаарлагч"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
+msgid "Active"
+msgstr "Идэвхтэй"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+msgid "Add Section"
+msgstr "Бүлэг нэмэх"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Add a note"
+msgstr "Тэмдэглэл нэмэх"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Add a product"
+msgstr "Бараа нэмэх"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Add a section"
+msgstr "Бүлэг нэмэх"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_optional_product_quantity
+msgid "Add one"
+msgstr "Нэгийг нэмэх"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
+msgid "All Sales"
+msgstr "Бүх борлуулалт"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr "Зөвшөөрөгдсөн хэмжих нэгж"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Archived"
+msgstr "Архивласан"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_template_attribute_value_ids
+msgid "Attribute Values"
+msgstr "Шинж чанарын утгууд"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/components/product_catalog/kanban_controller.js:0
+msgid "Back to Template"
+msgstr "Загвар руу буцах"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Brainstorm Whiteboard"
+msgstr "Санаа солилцох цагаан самбар"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Camera\n"
+"PTZ conference camera, auto-framing"
+msgstr ""
+"Камер\n"
+"PTZ хурлын камер, автомат хүрээлэлттэй"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__user_has_access
+msgid "Can User access"
+msgstr "Хэрэглэгч хандах эрхтэй эсэх"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Catalog"
+msgstr "Каталог"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__collapse_composition
+msgid "Collapse Composition"
+msgstr "Бүрэлдэхүүнийг хураах"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__collapse_prices
+msgid "Collapse Prices"
+msgstr "Үнийг хураах"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__company_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__company_id
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Company"
+msgstr "Компани"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Conference Room"
+msgstr "Хурлын өрөө"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_res_config_settings
+msgid "Config Settings"
+msgstr "Тохиргооны тохируулга"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Confirmation"
+msgstr "Баталгаажуулалт"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
+msgid "Confirmation Mail"
+msgstr "Баталгаажуулах шуудан"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Connectivity"
+msgstr "Холболт"
+
+#. module: sale_management
+#: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
+msgid "Create your quotation template"
+msgstr "Үнийн саналын загвараа үүсгэнэ үү"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__create_uid
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_uid
+msgid "Created by"
+msgstr "Үүсгэсэн этгээд"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__create_date
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_date
+msgid "Created on"
+msgstr "Үүсгэсэн огноо"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__currency_id
+msgid "Currency"
+msgstr "Валют"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_custom_attribute_value_ids
+msgid "Custom Values"
+msgstr "Тусгай утгууд"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+msgid "Delete"
+msgstr "Устгах"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Description"
+msgstr "Тайлбар"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_digest_digest
+msgid "Digest"
+msgstr "Товч"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Disc %"
+msgstr "Хөн. %"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__discount
+msgid "Discount (%)"
+msgstr "Хөнгөлөлт (%)"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Display / TV\n"
+"65\" 4K screen + wall mount + HDMI/USB-C inputs"
+msgstr ""
+"Дэлгэц / ТВ\n"
+"65\" 4K дэлгэц + хананы бэхэлгээ + HDMI/USB-C оролт"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:sale_management.field_product_attribute_custom_value__display_name
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
+msgid "Display Type"
+msgstr "Харагдах хэлбэр"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Enter a Description"
+msgstr "Тайлбар оруулна уу"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_no_variant_attribute_value_ids
+msgid "Extra Values"
+msgstr "Нэмэлт утгууд"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Flooring parquet"
+msgstr "Паркетан шал"
+
+#. module: sale_management
+#: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
+msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
+msgstr ""
+"Санхүүгийн бус үнийн саналын мөрөнд бараа, тоо хэмжээ болон хэмжих нэгж "
+"хориотой"
+
+#. module: sale_management
+#: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_section_fields_null
+msgid ""
+"Forbidden section quantity or section UoM on non section sale quote line"
+msgstr ""
+"Бүлэг биш үнийн саналын мөрөнд бүлгийн тоо хэмжээ эсвэл бүлгийн хэмжих нэгж "
+"хориотой"
+
+#. module: sale_management
+#: model:ir.module.module,summary:base.module_sale_management
+msgid "From quotations to invoices"
+msgstr "Үнийн саналаас нэхэмжлэл хүртэл"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
+msgid "Gives the sequence order when displaying a list of sale quote lines."
+msgstr ""
+"Борлуулалтын үнийн саналын мөрүүдийг харуулах үед дэс дарааллын эрэмбийг "
+"өгнө."
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__has_productless_lines
+msgid "Has Productless Lines"
+msgstr "Бараагүй мөртэй"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__id
+#: model:ir.model.fields,field_description:sale_management.field_product_attribute_custom_value__id
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__journal_id
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+"Тохируулсан бол энэ загвартай борлуулалтын захиалга энэ журналд "
+"нэхэмжлэгдэнэ; үгүй бол хамгийн бага дугаарлалттай борлуулалтын журналыг "
+"ашиглана."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__active
+msgid ""
+"If unchecked, it will allow you to hide the Order template without removing "
+"it."
+msgstr "Сонголтыг арилгавал захиалгын загварыг устгалгүйгээр нуух боломжтой."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Individual Work Station"
+msgstr "Хувийн ажлын байр"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Invoicing"
+msgstr "Нэхэмжлэл"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__mandatory_product
+msgid "Is Product Mandatory"
+msgstr "Бараа заавал эсэх"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__is_configurable_product
+msgid "Is the product configurable?"
+msgstr "Бараа тохируулах боломжтой эсэх?"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
+msgid "Kpi All Sale Total Value"
+msgstr "Бүх борлуулалтын нийт дүнгийн KPI"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__label
+msgid "Label"
+msgstr "Шошго"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__write_uid
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_uid
+msgid "Last Updated by"
+msgstr "Сүүлд зассан этгээд"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__write_date
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_date
+msgid "Last Updated on"
+msgstr "Сүүлд зассан огноо"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_line_ids
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Lines"
+msgstr "Мөрүүд"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Microphone system\n"
+"Ceiling/table array mic with echo cancellation"
+msgstr ""
+"Микрофоны систем\n"
+"Цуурай арилгагчтай тааз/ширээний массив микрофон"
+
+#. module: sale_management
+#: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
+msgid "Missing required UoM on accountable sale quote line."
+msgstr "Санхүүгийн үнийн саналын мөрөнд заавал бөглөх хэмжих нэгж дутуу байна."
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/views/components/template_dropdown.xml:0
+msgid "New"
+msgstr "Шинэ"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/views/components/template_dropdown.xml:0
+msgid "New Quotation"
+msgstr "Шинэ үнийн санал"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+msgid "New Section"
+msgstr "Шинэ бүлэг"
+
+#. module: sale_management
+#: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Note"
+msgstr "Тэмдэглэл"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
+msgid "Number of days for the validity date computation of the quotation"
+msgstr "Үнийн саналын хүчинтэй хугацааг тооцох өдрийн тоо"
+
+#. module: sale_management
+#: model:sale.order.template,name:sale_management.sale_order_template_1
+msgid "Office Furniture"
+msgstr "Оффисын тавилга"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
+msgid "Online Signature"
+msgstr "Онлайн гарын үсэг"
+
+#. module: sale_management
+#: model:ir.model.constraint,message:sale_management.constraint_product_attribute_custom_value_sotl_custom_value_unique
+msgid ""
+"Only one Custom Value is allowed per Attribute Value per Quotation Template "
+"Line."
+msgstr ""
+"Үнийн саналын загварын мөр бүрт шинж чанарын утга тус бүрд зөвхөн нэг тусгай "
+"утга зөвшөөрөгдөнө."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Open Space Renovation"
+msgstr "Нээлттэй орон зайн засвар"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+msgid "Optional"
+msgstr "Нэмэлт"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__is_optional
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__is_optional
+msgid "Optional Line"
+msgstr "Нэмэлт мөр"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Options"
+msgstr "Нэмэлт сонголтууд"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order_template
+msgid "Order Templates"
+msgstr "Захиалгын загварууд"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__parent_id
+msgid "Parent Section Line"
+msgstr "Эцэг бүлгийн мөр"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Parquet installation"
+msgstr "Паркет суурилуулалт"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
+msgid "Prepayment"
+msgstr "Урьдчилгаа төлбөр"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Prepayment percentage must be a valid percentage."
+msgstr "Урьдчилгаа төлбөрийн хувь хүчинтэй хувь байх ёстой."
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_id
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Product"
+msgstr "Бараа"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_product_attribute_custom_value
+msgid "Product Attribute Custom Value"
+msgstr "Барааны шинж чанарын тусгай утга"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_template_id
+msgid "Product Template"
+msgstr "Барааны загвар"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Product Variant"
+msgstr "Барааны хувилбар"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_qty
+msgid "Quantity"
+msgstr "Тоо хэмжээ"
+
+#. module: sale_management
+#: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template__template_type__quotation
+msgid "Quotation"
+msgstr "Үнийн санал"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
+msgid "Quotation Duration"
+msgstr "Үнийн саналын хүчинтэй хугацаа"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_tree
+msgid "Quotation Template"
+msgstr "Үнийн саналын загвар"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order_template_line
+#: model:ir.model.fields,field_description:sale_management.field_product_attribute_custom_value__sale_order_template_line_id
+msgid "Quotation Template Line"
+msgstr "Үнийн саналын загварын мөр"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Quotation Template Lines"
+msgstr "Үнийн саналын загварын мөр"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
+msgid "Quotation Template Reference"
+msgstr "Үнийн саналын загварын холбоос"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Quotation Templates"
+msgstr "Үнийн саналын загвар"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Quotation Validity"
+msgstr "Үнийн саналын хүчинтэй хугацаа"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_optional_product_quantity
+msgid "Remove one"
+msgstr "Нэгийг хасах"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
+msgid ""
+"Request a online signature to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Захиалагч руу захиалгыг онлайн гарын үсгээр баталгаажуулах хүсэлт илгээх."
+
+#. module: sale_management
+#: model:ir.module.module,shortdesc:base.module_sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.digest_digest_view_form
+msgid "Sales"
+msgstr "Борлуулалт"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order
+msgid "Sales Order"
+msgstr "Борлуулалтын захиалга"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Борлуулалтын захиалгын мөр"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__team_ids
+msgid "Sales Team"
+msgstr "Борлуулалтын баг"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+msgid "Save as Template"
+msgstr "Загвар болгон хадгалах"
+
+#. module: sale_management
+#: model:ir.actions.server,name:sale_management.model_sale_order_action_create_quotation_template
+msgid "Save as template"
+msgstr "Загвар болгон хадгалах"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Search Quotation Template"
+msgstr "Үнийн саналын загвар хайлт"
+
+#. module: sale_management
+#: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template__template_type__section
+#: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Section"
+msgstr "Бүлэг"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__section_qty
+msgid "Section Quantity"
+msgstr "Бүлгийн тоо хэмжээ"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Section Templates"
+msgstr "Бүлгийн загварууд"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__section_uom_id
+msgid "Section Unit of Measure"
+msgstr "Бүлгийн хэмжих нэгж"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
+msgid "Section template %s created successfully"
+msgstr "%s бүлгийн загварыг амжилттай үүсгэлээ"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
+msgid "Section template %s updated successfully"
+msgstr "%s бүлгийн загварыг амжилттай шинэчиллээ"
+
+#. module: sale_management
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
+msgid ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
+msgstr ""
+"Нэг барааг өөр өөр хэмжээ, өнгөөр зардаг уу? Барааны торыг туршиж, хувилбар "
+"бүрийг олон тоо хэмжээгээр захиалгадаа нэмээрэй. Энэ боломж Худалдан авалт "
+"аппад ч бий."
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sequence
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sequence
+msgid "Sequence"
+msgstr "Дугаарлалт"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Set Optional"
+msgstr "Нэмэлт болгох"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Settings"
+msgstr "Тохиргоо"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__share_template
+msgid "Share"
+msgstr "Хуваалцах"
+
+#. module: sale_management
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
+msgid ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr ""
+"Барааны нарийн төвөгтэй каталогтой юу? Борлуулагчдад өнгө, хэмжээ, багтаамж "
+"гэх мэт өөр өөр сонголттой бараа тохируулахад туслах Барааны тохируулагчийг "
+"туршаад үзээрэй. Борлуулалтын захиалга оруулахыг хялбар, алдаагүй болгоно."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Subfloor preparation"
+msgstr "Шалны суурь бэлтгэл"
+
+#. module: sale_management
+#: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_subsection
+msgid "Subsection"
+msgstr "Дэд бүлэг"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__tax_ids
+msgid "Taxes"
+msgstr "Татварууд"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_template_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__name
+msgid "Template"
+msgstr "Загвар"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order.py:0
+msgid "Template from %s"
+msgstr "%s-ээс үүсгэсэн загвар"
+
+#. module: sale_management
+#: model:ir.actions.act_window,name:sale_management.sale_order_template_action
+#: model:ir.ui.menu,name:sale_management.sale_order_template_menu
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Templates"
+msgstr "Загварууд"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Terms & Conditions"
+msgstr "Нөхцөл, болзол"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
+msgid "Terms and conditions"
+msgstr "Худалдааны нөхцөл, болзол"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"Админ хэрэглэгч борлуулалтын ерөнхий тохиргоонд худалдааны үндсэн нөхцөл, "
+"болзлыг тохируулах боломжтой. Энэхүү үнийн саналыг сонгож ашиглах үед энд "
+"тохируулсан худалдааны нөхцөл ашиглагдах болно."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
+msgid "The percentage of the amount needed to be paid to confirm quotations."
+msgstr "Үнийн саналыг батлахын тулд төлөх шаардлагатай дүнгийн хувь."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr ""
+"Борлуулалтыг батлах үед энэхүү загвар бүхий имэйл илгээгдэнэ. Юу ч илгээхгүй "
+"байх бол хоосон үлдээнэ үү."
+
+#. module: sale_management
+#: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
+msgid "Tip: Odoo supports configurable products"
+msgstr "Зөвлөгөө: Odoo тохируулж болох барааг дэмждэг"
+
+#. module: sale_management
+#: model:digest.tip,name:sale_management.digest_tip_sale_management_1
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
+msgid "Tip: Sell or buy products in bulk with matrixes"
+msgstr "Зөвлөгөө: Матрицаар бараа бөөнөөр нь зарах эсвэл худалдан авах"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__template_type
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Type to find a product..."
+msgstr "Бараа хайхын тулд бичнэ үү..."
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
+msgid "Unit"
+msgstr "Нэгж"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__price_unit
+msgid "Unit Price"
+msgstr "Нэгжийн үнэ"
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Unset Optional"
+msgstr "Нэмэлтийг болиулах"
+
+#. module: sale_management
+#: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
+msgid ""
+"Use templates to create polished, professional quotes in minutes.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
+"                Use cross-selling and discounts to push and boost your sales."
+msgstr ""
+"Загвар ашиглан мэргэжлийн төвшинд чанартай үнийн саналыг хормын дотор "
+"бүтээнэ үү.\n"
+"                 Энэ үнийн саналыг имэйлээр илгээж захиалагчаараа онлайн "
+"гарын үсэг зуруулах боломжтой.\n"
+"                 Нэмэлт бараа болон хөнгөлөлт санал болгож борлуулалтаа "
+"өсгөн нэмэгдүүлнэ үү."
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Visible to all"
+msgstr "Бүгдэд харагдана"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Whiteboard"
+msgstr "Цагаан самбар"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Whiteboard Pen"
+msgstr "Цагаан самбарын үзэг"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template_line.py:0
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"Та борлуулалтын үнийн саналын мөрийн төрлийг сольж өөрчлөх боломжгүй. Харин "
+"үүний оронд тухайн мөрийг устгаад дахин шинээр зохих төрөл бүхий мөрүүдийг "
+"нэмнэ үү."
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
+msgid "You cannot save a section with combo lines as a template"
+msgstr "Комбо мөртэй бүлгийг загвар болгон хадгалах боломжгүй"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+"Таны загвар %(template_company)s компанид харьяалагдах боловч %"
+"(template_company)s-д хандах боломжгүй (%(product_company)s) компанийн бараа "
+"агуулж байна.\n"
+"Загварынхаа компанийг өөрчлөх эсвэл бусад компанийн барааг хасна уу."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+"Таны загвар %(template_company)s компанид харьяалагдах боловч %"
+"(template_company)s-д хандах боломжгүй бусад компаниудын (%(product_company)"
+"s) бараа агуулж байна.\n"
+"Загварынхаа компанийг өөрчлөх эсвэл бусад компанийн барааг хасна уу."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
+"Загвар компаниуд хооронд хуваалцагдсан бол тодорхой компанийн бараа агуулж "
+"болохгүй. Загварын хандалтыг хязгаарлах эсвэл тэдгээр барааг хасна уу."
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "days"
+msgstr "өдөр"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "e.g. Standard Consultancy Package"
+msgstr "ж: Стандарт зөвлөх үйлчилгээний багц"
+
+#~ msgid "Create standardized offers with default products"
+#~ msgstr "Үндсэн бараа бүтээгдэхүүнүүдээ ашиглан стандарт үнийн санал бэлтгэх"
+
+#~ msgid "Missing required product and UoM on accountable sale quote line."
+#~ msgstr ""
+#~ "Хүчин төгөлдөр борлуулалтын үнийн саналын мөр дээр бараа болон хэмжих "
+#~ "нэгж заавал сонгогдох ёстой."

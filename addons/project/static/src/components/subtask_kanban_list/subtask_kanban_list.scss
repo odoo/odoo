@@ -1,0 +1,23 @@
+.subtask_list {
+    --#{$prefix}border-style: dashed;
+
+    > div {
+        --#{$prefix}border-style: solid;
+    }
+
+    .subtask_list_row {
+        @include media-breakpoint-up(sm) {
+            .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
+                visibility: hidden !important;
+            }
+        }
+    }
+
+    .subtask_list_row:hover {
+        @include media-breakpoint-up(sm) {
+            .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
+                visibility: visible !important;
+            }
+        }
+    }
+}

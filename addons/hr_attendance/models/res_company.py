@@ -1,0 +1,123 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
+import uuid
+
+from odoo import fields, models, api
+from odoo.tools import SQL
+from odoo.tools.urls import urljoin as url_join
+
+_logger = logging.getLogger(__name__)
+
+
+class ResCompany(models.Model):
+    _inherit = 'res.company'
+
+    attendance_kiosk_mode = fields.Selection([
+        ('barcode', 'Barcode / RFID'),
+        ('barcode_manual', 'Barcode / RFID and Manual Selection'),
+        ('manual', 'Manual Selection'),
+    ], string='Attendance Mode', default='barcode_manual')
+    attendance_barcode_source = fields.Selection([
+        ('scanner', 'Scanner'),
+        ('front', 'Front Camera'),
+        ('back', 'Back Camera'),
+    ], string='Barcode Source', default='front')
+    attendance_kiosk_delay = fields.Integer(default=10)
+    attendance_kiosk_key = fields.Char(default=lambda s: uuid.uuid4().hex, copy=False, groups='hr_attendance.group_hr_attendance_user', init_storage='_init_column_attendance_kiosk_key')
+    attendance_kiosk_url = fields.Char(compute="_compute_attendance_kiosk_url")
+    attendance_kiosk_use_pin = fields.Boolean(string='Employee PIN Identification')
+    attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=True)
+    auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
+    single_check_in = fields.Boolean(string="Single Check-In Attendance System")
+    auto_check_out_mode = fields.Selection([('tolerance', 'Tolerance'), ('specific_time', 'Specific Time')], default='tolerance')
+    auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
+    auto_check_out_specific_time = fields.Float(default=20.0, export_string_translation=False)
+    absence_management = fields.Boolean(string="Absence Management", default=False)
+    attendance_validation = fields.Selection([
+        ('no_validation', 'Worked days are automatically approved'),
+        ('manual_validation', 'Worked days require manual approval'),
+        ('tolerance_validation', 'Worked days require approval if outside tolerance'),
+    ], string="Attendance Validation", default='no_validation')
+    attendance_validation_tolerance = fields.Float(
+        string="Validation Tolerance (Hours)",
+        default=0.0,
+    )
+    attendance_work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type',
+        string="Attendance Time Type",
+        domain=[('count_as', '=', 'working_time')],
+        store=True,
+        compute='_compute_attendance_work_entry_type_id',
+        readonly=False,
+        groups="hr.group_hr_user",
+        help="Work entry type assigned to attendances and read by the time rule engine.",
+    )
+
+    attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
+    attendance_capture_check_in = fields.Boolean(string="Take Pictures on Check-In", default=False)
+    attendance_break_management = fields.Boolean(
+        string="Break Management on Checkout",
+        help="If enabled, employees can record their total break duration after checking out.",
+    )
+    attendance_based = fields.Boolean(default=False, groups="hr.group_hr_user")
+
+    _check_auto_check_out_specific_time_range = models.Constraint(
+        "CHECK (NOT (auto_check_out = true AND auto_check_out_mode = 'specific_time') OR (auto_check_out_specific_time >= 0 AND auto_check_out_specific_time < 24))",
+        'Specific Time must be within a 24-hour range (0h 0m 0s to 23h 59m 59s).',
+    )
+
+    @api.depends("attendance_kiosk_key")
+    def _compute_attendance_kiosk_url(self):
+        for company in self:
+            company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
+
+    @api.depends('country_id')
+    def _compute_attendance_work_entry_type_id(self):
+        fallback = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
+        country_codes = self.mapped('country_id.code')
+        country_types = self.env['hr.work.entry.type'].sudo().search([
+            ('count_as', '=', 'working_time'),
+            ('code', '=', '002.00'),
+            ('country_code', 'in', country_codes),
+        ])
+        type_by_country = {t.country_code: t for t in country_types}
+        for company in self:
+            current = company.attendance_work_entry_type_id
+            country_specific = type_by_country.get(company.country_id.code)
+            if current and (not country_specific or current != fallback):
+                continue
+            company.attendance_work_entry_type_id = country_specific or fallback
+
+    # ---------------------------------------------------------
+    # ORM Overrides
+    # ---------------------------------------------------------
+    def _init_column_attendance_kiosk_key(self):
+        """ Generate different access tokens. """
+        self.env.execute_query(SQL("""
+            UPDATE %s
+            SET attendance_kiosk_key = gen_random_uuid()
+            WHERE attendance_kiosk_key IS NULL
+        """, SQL.identifier(self._table)))
+
+    def _regenerate_attendance_kiosk_key(self):
+        self.ensure_one()
+        self.write({
+            'attendance_kiosk_key': uuid.uuid4().hex
+        })
+
+    def _check_hr_presence_control(self, at_install):
+        companies = self.env.companies
+        for company in companies:
+            if at_install and company.hr_presence_control_login:
+                company.hr_presence_control_attendance = True
+            if not at_install and company.hr_presence_control_attendance:
+                company.hr_presence_control_login = True
+                company.hr_presence_control_attendance = False
+
+    def _action_open_kiosk_mode(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': f'/hr_attendance/kiosk_mode_menu/{self.env.company.id}',
+        }

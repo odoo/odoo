@@ -1,0 +1,77 @@
+import { onWillUnmount, useScope } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+
+/**
+ * @typedef {import("@web/core/popover/popover_plugin").PopoverPlugin["add"]} PopoverServiceAddFunction
+ * @typedef {import("@web/core/popover/popover_plugin").PopoverOptionSchema} PopoverServiceAddOptions
+ */
+
+/**
+ * @typedef PopoverHookReturnType
+ * @property {(target: string | HTMLElement, props: object) => void} open
+ *  - Signals the manager to open the configured popover
+ *    component on the target, with the given props.
+ * @property {() => void} close
+ *  - Signals the manager to remove the popover.
+ * @property {boolean} isOpen
+ *  - Whether the popover is currently open.
+ */
+
+/**
+ * @param {PopoverServiceAddFunction} addFn
+ * @param {typeof import("@odoo/owl").Component} component
+ * @param {PopoverServiceAddOptions} options
+ * @returns {PopoverHookReturnType}
+ */
+export function makePopover(addFn, component, options) {
+    let removeFn = null;
+    function close() {
+        removeFn?.();
+    }
+    return {
+        open(target, props) {
+            close();
+            const newOptions = Object.create(options);
+            newOptions.onClose = () => {
+                removeFn = null;
+                options.onClose?.();
+            };
+            removeFn = addFn(target, component, props, newOptions);
+        },
+        close,
+        get isOpen() {
+            return Boolean(removeFn);
+        },
+    };
+}
+
+/**
+ * Manages a component to be used as a popover.
+ *
+ * @param {typeof import("@odoo/owl").Component} component
+ * @param {PopoverServiceAddOptions} [options]
+ * @returns {PopoverHookReturnType}
+ */
+export function usePopover(component, options = {}) {
+    let service;
+    if (options.useBottomSheet) {
+        service = useService("bottom_sheet");
+    } else {
+        service = useService("popover");
+    }
+    const newOptions = Object.create(options);
+    const scope = useScope();
+    if (options.withScope) {
+        newOptions.scope = scope;
+    }
+    if (options.onClose) {
+        newOptions.onClose = () => {
+            if (scope.status === 1) {
+                options.onClose();
+            }
+        };
+    }
+    const popover = makePopover(service.add.bind(service), component, newOptions);
+    onWillUnmount(popover.close);
+    return popover;
+}

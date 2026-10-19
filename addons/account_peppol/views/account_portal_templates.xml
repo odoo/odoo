@@ -1,0 +1,36 @@
+<odoo>
+    <template id="portal_my_details" inherit_id="portal.portal_my_details">
+        <div name="address_details" position="inside">
+            <div t-if="routing_scheme_list" class="col-lg-6 portal_peppol_toggle">
+                <t t-set="current_eas" t-value="(partner_sudo.routing_identifier or '').partition(':')[0]"/>
+                <label class="col-form-label label-optional" for="routing_scheme">
+                    Peppol e-Address (EAS)
+                </label>
+                <select name="routing_scheme" class="form-select">
+                    <option
+                        t-foreach="routing_scheme_list"
+                        t-as="eas"
+                        t-att-value="eas"
+                        t-att-selected="current_eas == eas"
+                        t-out="eas_value"
+                    />
+                </select>
+            </div>
+            <div t-if="routing_scheme_list" class="col-lg-6 portal_peppol_toggle">
+                <t
+                    t-set="current_endpoint"
+                    t-value="(partner_sudo.routing_identifier or '').partition(':')[2]"
+                />
+                <label class="col-form-label label-optional" for="routing_endpoint">
+                    Peppol Endpoint
+                </label>
+                <input
+                    name="routing_endpoint"
+                    type="text"
+                    class="form-control"
+                    t-att-value="current_endpoint"
+                />
+            </div>
+        </div>
+    </template>
+</odoo>

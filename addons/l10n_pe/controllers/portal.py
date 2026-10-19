@@ -1,0 +1,39 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.http import request, route
+
+from odoo.addons.account.controllers.portal import PortalAccount
+
+
+class L10nPEPortalAccount(PortalAccount):
+
+    def _prepare_address_form_values(self, partner_sudo, *args, **kwargs):
+        rendering_values = super()._prepare_address_form_values(partner_sudo, *args, **kwargs)
+        if rendering_values['country'].code == 'PE':
+            city = rendering_values['city']
+            District = request.env['l10n_pe.res.city.district'].sudo()
+            if city:
+                rendering_values['city_districts'] = District.search([('city_id', '=', city.id)])
+            else:
+                rendering_values['city_districts'] = District
+        return rendering_values
+
+    def _get_mandatory_address_fields(self, country_sudo):
+        mandatory_fields = super()._get_mandatory_address_fields(country_sudo)
+        if self._is_peru_company() and country_sudo.code == 'PE':
+            mandatory_fields.add('l10n_pe_district')
+        return mandatory_fields
+
+    @route(
+        "/my/address/city_info/<model('res.city'):city>",
+        type='jsonrpc',
+        auth='public',
+        methods=['POST'],
+        website=True,
+    )
+    def city_infos(self, city, **kw):
+        return {
+            'districts': request.env['l10n_pe.res.city.district'].sudo().search_read(
+                [('city_id', '=', city.id)], ['id', 'name', 'code']
+            )
+        }

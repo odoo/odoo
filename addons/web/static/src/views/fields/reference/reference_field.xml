@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ReferenceField">
+        <t t-set="relation" t-value="this.getRelation()"/>
+        <div class="o_row">
+            <t t-if="!this.props.readonly and !this.hideModelSelector">
+                <SelectMenu
+                    class="'o_input border-0 flex-basis-50'"
+                    placeholder="this.modelPlaceholder"
+                    value="relation"
+                    choices="this.choices"
+                    onSelect.bind="this.updateModel"
+                />
+            </t>
+            <t t-if="relation">
+                <Many2One
+                    t-key="relation"
+                    t-props="this.m2oProps"
+                    cssClass="'flex-basis-50'"
+                    placeholder="this.recordPlaceholder"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>

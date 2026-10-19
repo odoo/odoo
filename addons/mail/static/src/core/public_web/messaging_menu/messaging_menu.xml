@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessagingMenu">
+    <div class="o-mail-MessagingMenu-container d-flex flex-grow-1 overflow-hidden min-h-0 min-w-0 w-100 h-100 gap-2">
+        <t t-call="mail.MessagingMenu-navigation"/>
+        <div class="o-mail-MessagingMenu d-flex flex-column flex-grow-1 overflow-hidden min-h-0 min-w-0"
+            t-att-class="this.env.inDiscussApp or this.ui.isSmall ? 'rounded-4 border': 'rounded-0 border-start'">
+            <div class="o-mail-MessagingMenu-searchContainer d-flex flex-column gap-2 px-2 o-py-2_5">
+                <div class="o-mail-MessagingMenu-searchRow d-flex align-items-stretch gap-1">
+                    <t t-foreach="this.activeTab().actions" t-as="action" t-key="action.id">
+                        <div t-if="action.subActions?.length" class="flex-shrink-0">
+                            <IsolatedDropdown
+                                items="action.subActions.map(subAction => ({ id: subAction.id, label: subAction.text, onSelected: () => this.onClickAction(subAction) }))"
+                                menuClass="'o-mail-MessagingMenu-dropdownMenu'"
+                                onOpened="() => this.focusSearchInput()"
+                            >
+                                <t t-call="mail.MessagingMenu-action"/>
+                            </IsolatedDropdown>
+                        </div>
+                        <t t-else="" t-call="mail.MessagingMenu-action"/>
+                    </t>
+                    <DiscussSearch autofocus="this.searchInputAutofocus" class="'flex-grow-1 min-w-0'" messagingMenuUiState="this.state"/>
+                </div>
+                <div t-if="this.activeTab().filters.length" class="o-mail-MessagingMenu-filters d-flex align-items-center flex-nowrap gap-1" role="tablist">
+                    <button
+                        class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill o-px-2_5 o-py-0_5 flex-shrink-0"
+                        t-att-class="{ 'o-active': !this.state().selectedFilter, 'text-muted': this.state().selectedFilter }"
+                        t-att-aria-pressed="!this.state().selectedFilter"
+                        t-on-click="() => this.state().selectedFilter = undefined"
+                        data-available-offline=""
+                    >All</button>
+                    <button
+                        t-foreach="this.activeTab().sortedFilters"
+                        t-as="filter"
+                        t-key="filter.id"
+                        class="o-mail-MessagingMenu-filter btn btn-sm rounded-pill o-px-2_5 o-py-0_5 flex-shrink-0"
+                        t-att-class="{ 'o-active': this.state().selectedFilter?.id === filter.id, 'text-muted': this.state().selectedFilter?.id !== filter.id }"
+                        t-att-aria-pressed="this.state().selectedFilter?.id === filter.id"
+                        t-on-click="() => this.state().selectedFilter = filter"
+                        data-available-offline=""
+                        t-out="filter.text"
+                    />
+                </div>
+            </div>
+            <div t-ref="this.tabContentRef" class="o-mail-MessagingMenu-tabContent d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 o-px-1_5 o-gap-0_5">
+                <NotificationItem
+                    t-if="this.showPushPermissionRequest"
+                    className="'bg-info o-my-0_5'"
+                    important="1"
+                    onClick="() => this.notification.requestPermission()"
+                    persona="this.notificationRequest.partner"
+                >
+                    <t t-set-slot="body" t-out="this.notificationRequest.body"/>
+                    <t t-set-slot="name"><t t-out="this.notificationRequest.displayName"/></t>
+                    <t t-set-slot="sideContent">
+                        <div class="d-flex align-items-center justify-content-center o-gap-1_5">
+                            <a class="btn btn-info btn-sm rounded-pill px-2 py-0">Enable</a>
+                            <span t-if="!this.hasTouch()" t-on-click.stop="() => this.store.isNotificationPermissionDismissed = true" class="oi text-dark bg-transparent opacity-50 opacity-100-hover" data-icon="close_small" title="Dismiss"></span>
+                        </div>
+                    </t>
+                </NotificationItem>
+                <t name="messagingMenuExtraItems"/>
+                <MessagingMenuItem
+                    t-foreach="this.messages()" t-as="message" t-key="message.localId"
+                    message="message"
+                    activeTab="this.activeTab"
+                    onClick="this.onClickMessage"
+                />
+                <t t-if="this.isEmpty">
+                    <MessagingMenuEmpty t-if="this.noSearchResultText" title="this.noSearchResultText"/>
+                    <t t-elif="this.activeTab().getLoadStatus(this.state().selectedFilter, this.state().activePluginFilters) === 'loaded'">
+                        <MessagingMenuEmpty t-if="(this.state().selectedFilter and !this.state().selectedFilter.isDefault) or this.state().activePluginFilters.length" title="this.noFilterResultText"/>
+                        <t t-elif="this.activeTab().emptyState">
+                            <t t-set="emptyState" t-value="this.activeTab().emptyState"/>
+                            <t t-if="emptyState.component" t-component="emptyState.component" tab="this.activeTab()" title="emptyState.title" subtitle="emptyState.subtitle" close="this.close"/>
+                            <MessagingMenuEmpty t-else="" title="emptyState.title" subtitle="emptyState.subtitle" action="emptyState.action"/>
+                        </t>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.MessagingMenu-action">
+    <t t-set="togglesDropdown" t-value="action.subActions?.length"/>
+    <button
+        class="btn btn-sm btn-primary rounded-3 py-1 o-my-0_5 d-flex align-items-center justify-content-center"
+        t-att-class="togglesDropdown ? 'w-100 position-relative pe-4' : 'flex-shrink-0'"
+        t-att-disabled="action.isDisabled?.()"
+        t-att-title="action.title"
+        t-on-click="() => togglesDropdown ? undefined : this.onClickAction(action)"
+    >
+        <span t-if="action.icon" class="d-flex align-items-center flex-shrink-0" t-att-class="{'me-1': action.text}">
+            <i class="oi oi-fw" t-att-class="action.iconClass" t-att-data-icon="action.icon"/>
+        </span>
+        <span t-if="action.text" class="text-truncate" t-out="action.text"/>
+        <span t-if="togglesDropdown" class="oi oi-fw position-absolute end-0 me-1" data-icon="keyboard_arrow_down" aria-hidden="true"/>
+    </button>
+</t>
+
+<t t-name="mail.MessagingMenu-navigation">
+    <nav t-if="this.visibleTabs.length" class="o-mail-MessagingMenu-navbar d-flex flex-column flex-shrink-0 px-1 o-py-2_5 gap-2 overflow-auto h-100 o-scrollbar-thin">
+        <button
+            t-foreach="this.visibleTabs" t-key="tab.localId" t-as="tab"
+            class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center w-100 flex-shrink-0 p-1 bg-transparent position-relative border-0"
+            t-att-class="{
+                'active': this.activeTab().eq(tab),
+                'pb-4': this.isIosPwa,
+                'pb-2': !this.isIosPwa,
+            }"
+            t-on-click="() => this.state().selectTab(tab)"
+            t-att-aria-label="tab.label"
+            t-att-data-id="tab.id"
+            data-available-offline=""
+        >
+            <i t-attf-class="oi o-mail-MessagingMenu-tabIcon {{tab.iconClass}} rounded-pill mx-auto p-2 fs-5" t-att-data-icon="this.activeTab().eq(tab) and tab.activeIcon ? tab.activeIcon : tab.icon"/>
+            <span class="o-xsmaller text-center lh-1 opacity-75 mt-1" t-out="tab.label"/>
+            <span t-if="this.getTabCounter(tab)" t-attf-class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block {{ tab.important ? '' : 'o-muted' }}" t-out="this.getTabCounter(tab)"/>
+        </button>
+    </nav>
+</t>
+
+</templates>

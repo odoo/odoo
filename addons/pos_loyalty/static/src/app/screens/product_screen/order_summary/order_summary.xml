@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_loyalty.OrderSummary" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension">
+        <xpath expr="//Orderline" position="inside">
+            <t t-set="balance" t-value="line.getPaymentProgramBalance()"/>
+            <li t-if="balance !== undefined">
+                Current Balance: <t t-out="balance"/>
+            </li>
+            <t t-if="line.payment_program_id?.program_type === 'gift_card'">
+                <a t-if="!line.gift_card_vals?.code and line.qty &lt;= 1" class="text-wrap text-action" t-on-click="() => this.manageGiftCard(line)">Sell physical gift card?</a>
+                <div t-if="line.gift_card_vals?.code" class="text-wrap" t-out="line.gift_card_vals.code"/>
+            </t>
+        </xpath>
+        <xpath expr="//OrderDisplay/t[@t-set-slot='details']" position="inside">
+            <t t-set="order" t-value="this.pos.getOrder()"/>
+            <t t-if="order.partner_id">
+                <t t-foreach="this.pos.models['loyalty.program'].filter((p) => p.program_type === 'loyalty')" t-as="program" t-key="program.id">
+                    <t t-set="won" t-value="this.roundPoints(program.getEarnedPoints(order))"/>
+                    <t t-set="spent" t-value="this.roundPoints(program.getSpentPoints(order))"/>
+                    <t t-set="balance" t-value="this.roundPoints(program.getAvailablePoints(order))"/>
+                    <t t-set="total" t-value="this.roundPoints(program.getNewBalance(order))"/>
+                    <div t-if="won or spent" class="d-flex justify-content-between align-items-center px-2 py-2 bg-view">
+                        <div class="loyalty-points-title fs-4 fw-semibold" t-out="program.portal_visible ? program.portal_point_name : 'Points'"/>
+                        <div class="d-flex align-items-center gap-1 fw-bold fs-4 flex-nowrap text-end">
+                            <span class="loyalty-points-balance" t-out="balance"/>
+                            <span t-if="won" class="loyalty-points-won text-success">+<t t-out="won"/></span>
+                            <span t-if="spent" class="loyalty-points-spent text-danger">-<t t-out="spent"/></span>
+                            <span class="text-muted mx-1">=</span>
+                            <span class="loyalty-points-total fw-bolder" t-out="total"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

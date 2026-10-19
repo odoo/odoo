@@ -1,0 +1,31 @@
+.w-60 {
+    width: 60%;
+}
+
+.product-list {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.button-no-demo {
+    color: #017e84 !important;
+}
+
+.btn-switchpane, .pay-order-button {
+    min-height: 70px;
+}
+
+.internal-note-container .o_tag {
+    border-radius: 3px !important;
+}
+.o_web_client:not(.o_dark_mode) .internal-note-container .o_tag.o_tag_color_0 {
+    --background-color: #{$o-gray-200};
+}
+
+.product-name.no-image {
+    display: flex;
+    align-items: safe center;
+    justify-content: safe center;
+    text-align: left;
+    word-break: break-word;
+    padding: 4px;
+}

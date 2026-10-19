@@ -1,0 +1,1300 @@
+{
+  "version": "19.3.10",
+  "sheets": [
+    {
+      "id": "dashboard_sheet_id",
+      "name": "Dashboard",
+      "colNumber": 10,
+      "rowNumber": 76,
+      "rows": {
+        "75": { "size": 22 }
+      },
+      "cols": {
+        "0": { "size": 136 }
+      },
+      "merges": [],
+      "cells": {},
+      "styles": {},
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [
+        {
+          "id": "833374d1-d09f-4a4e-bb09-2831ceee5465",
+          "width": 237,
+          "height": 108,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#E06666",
+            "baselineColorUp": "#6AA84F",
+            "baselineMode": "text",
+            "title": {
+              "text": "Share reserved stock Value",
+              "align": "left",
+              "bold": true,
+              "color": "#01666B"
+            },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!E4",
+            "keyValue": "Data!B4",
+            "humanize": false,
+            "chartId": "833374d1-d09f-4a4e-bb09-2831ceee5465"
+          },
+          "offset": { "x": 247, "y": 9 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "de7010e1-2cdc-4e19-a1de-1c7fd4795bf4",
+          "width": 237,
+          "height": 108,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#E06666",
+            "baselineColorUp": "#6AA84F",
+            "baselineMode": "text",
+            "title": {
+              "text": "Share reserved stock Qty",
+              "align": "left",
+              "bold": true,
+              "color": "#01666B"
+            },
+            "type": "scorecard",
+            "background": "",
+            "baseline": "Data!E3",
+            "keyValue": "Data!B3",
+            "humanize": false,
+            "chartId": "de7010e1-2cdc-4e19-a1de-1c7fd4795bf4"
+          },
+          "offset": { "x": 0, "y": 9 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "639d221d-d74d-4762-984e-9debac4f5a82",
+          "width": 237,
+          "height": 108,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#E06666",
+            "baselineColorUp": "#6AA84F",
+            "baselineMode": "difference",
+            "title": {
+              "text": "Lines with negative stock",
+              "bold": true,
+              "align": "left",
+              "color": "#01666B"
+            },
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!B5",
+            "humanize": true,
+            "chartId": "639d221d-d74d-4762-984e-9debac4f5a82"
+          },
+          "offset": { "x": 494, "y": 9 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "b2df71e9-7cf7",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 1352 },
+          "width": 1000,
+          "height": 375,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "07303ff1-4288": {
+                "type": "sunburst",
+                "legendPosition": "none",
+                "title": {},
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "B63:B72",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "A63:A72" }
+                  ],
+                  "dataSetsHaveTitle": false
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Products with negative stock",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "07303ff1-4288", "title": "Chart" },
+              {
+                "type": "carouselDataView",
+                "title": "Top 50",
+                "rangeData": {
+                  "_sheetId": "ed075d2c-7ff8",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 2 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "01127dd6-be32",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 127 },
+          "width": 1000,
+          "height": 410,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "0d527983-ee0f-44cb-af82-f637574a4e1e": {
+                "type": "bar",
+                "legendPosition": "top",
+                "title": {},
+                "stacked": true,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Top Locations" }
+                  },
+                  "y": {
+                    "title": { "text": "Stock Quantity" }
+                  }
+                },
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "'Stock location Qty'!A1:A11",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "'Stock location Qty'!B1:B11" },
+                    { "dataSetId": "1", "dataRange": "'Stock location Qty'!C1:C11" }
+                  ],
+                  "dataSetsHaveTitle": true
+                },
+                "dataSetStyles": {}
+              },
+              "e7f90aaf-95ec-4f1d-9b0c-ec7e4465d772": {
+                "type": "bar",
+                "legendPosition": "top",
+                "title": {},
+                "stacked": true,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Top Products" }
+                  },
+                  "y": {
+                    "title": { "text": "Stock Quantity" }
+                  }
+                },
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "'Stock location Qty'!E1:E11",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "'Stock location Qty'!F1:F11" },
+                    { "dataSetId": "1", "dataRange": "'Stock location Qty'!G1:G11" }
+                  ],
+                  "dataSetsHaveTitle": true
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Available & Reserved Stock Quantity",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "0d527983-ee0f-44cb-af82-f637574a4e1e",
+                "title": "Top Locations"
+              },
+              {
+                "type": "chart",
+                "chartId": "e7f90aaf-95ec-4f1d-9b0c-ec7e4465d772",
+                "title": "Top Products"
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "c8d9f32a-11d4",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 547 },
+          "width": 1000,
+          "height": 410,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "8324b219-c649-4392-9fee-a3e7f396d70c": {
+                "type": "bar",
+                "legendPosition": "top",
+                "title": {},
+                "stacked": true,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Top Locations" }
+                  },
+                  "y": {
+                    "title": { "text": "Stock Value" }
+                  }
+                },
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "'Stock location Value'!A1:A12",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "'Stock location Value'!B1:B12" },
+                    { "dataSetId": "1", "dataRange": "'Stock location Value'!C1:C12" }
+                  ],
+                  "dataSetsHaveTitle": true
+                },
+                "dataSetStyles": {}
+              },
+              "ebde3556-983a-475a-95f0-4edb2515b3bb": {
+                "type": "bar",
+                "legendPosition": "top",
+                "title": {},
+                "stacked": true,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Top Products" }
+                  },
+                  "y": {
+                    "title": { "text": "Stock Value" }
+                  }
+                },
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "'Stock location Value'!H1:H11",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "'Stock location Value'!I1:I11" },
+                    { "dataSetId": "1", "dataRange": "'Stock location Value'!J1:J11" }
+                  ],
+                  "dataSetsHaveTitle": true
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Available & Reserved Stock Value",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "8324b219-c649-4392-9fee-a3e7f396d70c",
+                "title": "Top Locations"
+              },
+              {
+                "type": "chart",
+                "chartId": "ebde3556-983a-475a-95f0-4edb2515b3bb",
+                "title": "Top Products"
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "beef0d8c-6d6b",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 967 },
+          "width": 495,
+          "height": 375,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "fad86b76-037f-4b7f-8afc-bc028c2536de": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "bar",
+                "stacked": true,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Creation Date" }
+                  },
+                  "y": {
+                    "title": { "text": "Stock Quantity" }
+                  }
+                },
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "metaData": {
+                    "groupBy": ["create_date:quarter", "product_id"],
+                    "measure": "quantity",
+                    "order": null,
+                    "resModel": "stock.quant",
+                    "mode": "bar"
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {
+                      "mail_notify_force_send": false,
+                      "always_show_loc": 1,
+                      "inventory_mode": true,
+                      "inventory_report_mode": true
+                    },
+                    "domain": [
+                      ["location_id.usage", "=", "internal"]
+                    ],
+                    "groupBy": ["create_date:quarter", "product_id"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Ageing stock qty by product and creation date",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "fad86b76-037f-4b7f-8afc-bc028c2536de" }
+            ],
+            "fieldMatching": {
+              "fad86b76-037f-4b7f-8afc-bc028c2536de": {
+                "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" },
+                "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
+                "7ff87378-db1d-4725-bf25-6eee704b15a5": { "chain": "product_categ_id", "type": "many2one" },
+                "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
+                "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" }
+              }
+            }
+          }
+        },
+        {
+          "id": "9153efa8-1656",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 505, "y": 967 },
+          "width": 495,
+          "height": 375,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "73f61914-d895-4484-b3ba-585107daeb44": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "bar",
+                "stacked": true,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Creation Date" }
+                  },
+                  "y": {
+                    "title": { "text": "Stock Value" }
+                  }
+                },
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "metaData": {
+                    "groupBy": ["create_date:quarter", "product_id"],
+                    "measure": "value",
+                    "order": null,
+                    "resModel": "stock.quant",
+                    "mode": "bar"
+                  },
+                  "searchParams": {
+                    "comparison": null,
+                    "context": {
+                      "mail_notify_force_send": false,
+                      "always_show_loc": 1,
+                      "inventory_mode": true,
+                      "inventory_report_mode": true
+                    },
+                    "domain": [
+                      ["location_id.usage", "=", "internal"]
+                    ],
+                    "groupBy": ["create_date:quarter", "product_id"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Ageing stock value by product and creation date",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "73f61914-d895-4484-b3ba-585107daeb44" }
+            ],
+            "fieldMatching": {
+              "73f61914-d895-4484-b3ba-585107daeb44": {
+                "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" },
+                "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
+                "7ff87378-db1d-4725-bf25-6eee704b15a5": { "chain": "product_categ_id", "type": "many2one" },
+                "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
+                "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" }
+              }
+            }
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "backgroundColor": "#F9FAFB",
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "fb6d5d91-04cf-4c22-953a-a00c4e8f19e4",
+      "name": "Data",
+      "colNumber": 22,
+      "rowNumber": 82,
+      "rows": {},
+      "cols": {
+        "0": { "size": 227 },
+        "1": { "size": 136 },
+        "2": { "size": 111 },
+        "3": { "size": 113 },
+        "4": { "size": 205 },
+        "6": { "size": 107 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "=_t(\"KPI\")",
+        "A2": "=_t(\"Total inventory value\")",
+        "A3": "Share of reserved stock qty",
+        "A4": "Share of reserved stock Value",
+        "A5": "Count of products with negative stock",
+        "B2": "=FORMAT.LARGE.NUMBER(PIVOT.VALUE(20,\"value\"))",
+        "B3": "=iferror(PIVOT.VALUE(20,\"reserved_quantity\")/PIVOT.VALUE(20,\"quantity\"),\"No data\")",
+        "B4": "=IFERROR(C4/D4,\"No data\")",
+        "B5": "=PIVOT.VALUE(22,\"__count\")",
+        "C1": "Reserved",
+        "C3": "=PIVOT.VALUE(20,\"reserved_quantity\")",
+        "C4": "=IFERROR(FORMAT.LARGE.NUMBER(round(PIVOT.VALUE(18,\"value\")/PIVOT.VALUE(18,\"quantity\"))*PIVOT.VALUE(18,\"reserved_quantity\")),\"No data\")",
+        "D1": "Total",
+        "D3": "=PIVOT.VALUE(20,\"quantity\")",
+        "D4": "=FORMAT.LARGE.NUMBER(PIVOT.VALUE(20,\"value\"))",
+        "E3": "=TEXT(C3,\"#,##0\")&\" out of \"&TEXT(D3,\"#,##0\")",
+        "E4": "=Iferror(TEXT(C4,\"#,##0\")&\" out of \"&TEXT(D4,\"#,##0\"),\"No data\")"
+      },
+      "styles": { "A1:D1": 1, "A2:A5": 2 },
+      "formats": { "B3:B4": 1, "B5:C5": 2 },
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "ff7cd299-81f4-49db-a27a-66bf36420f0d",
+      "name": "Stock location Qty",
+      "colNumber": 12,
+      "rowNumber": 99,
+      "rows": {},
+      "cols": {
+        "0": { "size": 134 },
+        "1": { "size": 112 },
+        "2": { "size": 115 },
+        "3": { "size": 55 },
+        "4": { "size": 316 },
+        "5": { "size": 112 },
+        "6": { "size": 115 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "Location",
+        "A2": "=PIVOT.HEADER(8,\"#location_id\",1)",
+        "A3:A11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "B1": "=PIVOT.HEADER(9,\"measure\",\"available_quantity\")",
+        "B2": "=PIVOT.VALUE(8,\"available_quantity\",\"#location_id\",1)",
+        "B3:B11": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "C1": "=PIVOT.HEADER(9,\"measure\",\"reserved_quantity\")",
+        "C2": "=PIVOT.VALUE(8,\"reserved_quantity\",\"#location_id\",1)",
+        "C3:C11": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "E2": "=PIVOT.HEADER(9,\"#product_id\",1)",
+        "E3:E11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "F1": "=PIVOT.HEADER(9,\"measure\",\"available_quantity\")",
+        "F2": "=PIVOT.VALUE(9,\"quantity\",\"#product_id\",1)",
+        "F3:F11": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "G1": "=PIVOT.HEADER(9,\"measure\",\"reserved_quantity\")",
+        "G2": "=PIVOT.VALUE(9,\"reserved_quantity\",\"#product_id\",1)",
+        "G3:G11": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        }
+      },
+      "styles": {},
+      "formats": { "F2:G12": 2 },
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [
+        {
+          "range": "A1:C11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": true,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "styleId": "TableStyleMedium5"
+          }
+        },
+        {
+          "range": "E1:G11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": true,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "styleId": "TableStyleMedium5"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "b87c927f-558d-4244-b0e0-76f0cc2e3467",
+      "name": "Stock location Value",
+      "colNumber": 28,
+      "rowNumber": 99,
+      "rows": {},
+      "cols": {
+        "0": { "size": 113 },
+        "1": { "size": 98 },
+        "2": { "size": 97 },
+        "3": { "size": 72 },
+        "4": { "size": 72 },
+        "5": { "size": 115 },
+        "6": { "size": 92 },
+        "7": { "size": 207 },
+        "8": { "size": 139 },
+        "9": { "size": 139 },
+        "10": { "size": 139 },
+        "11": { "size": 139 },
+        "12": { "size": 139 },
+        "13": { "size": 139 },
+        "14": { "size": 139 },
+        "15": { "size": 139 },
+        "16": { "size": 139 },
+        "17": { "size": 139 },
+        "18": { "size": 139 },
+        "19": { "size": 139 },
+        "20": { "size": 139 },
+        "21": { "size": 139 },
+        "22": { "size": 139 },
+        "23": { "size": 139 },
+        "24": { "size": 139 },
+        "25": { "size": 139 },
+        "26": { "size": 139 },
+        "27": { "size": 139 }
+      },
+      "merges": [],
+      "cells": {
+        "A2:A12": "=PIVOT.HEADER(21,\"#location_id\",row()-1)",
+        "B1": "Available Value",
+        "B2": "=if(D2<>\"\",D2-C2,\"\")",
+        "B3:B12": {
+          "S": ["=", "="],
+          "R": "+R1|+R1|+R1"
+        },
+        "C1": "Reserved value",
+        "C2": "=if(AND(F2>0,A2<>\"\"),IFERROR(FORMAT.LARGE.NUMBER(round(PIVOT.VALUE(23,\"value\",\"#location_id\",row()-1)/PIVOT.VALUE(23,\"quantity\",\"#location_id\",row()-1))*PIVOT.VALUE(23,\"reserved_quantity\",\"#location_id\",row()-1)),\"No data\"),\"\")",
+        "C3:C12": {
+          "N": "=|=|=|=|=|=|=",
+          "S": ["=", "=", "=", "=", "=", "=", "=", "=", "="],
+          "R": "+R1|+R1"
+        },
+        "D1": "=PIVOT.HEADER(21,\"measure\",\"value\")",
+        "D2": "=PIVOT.VALUE(21,\"value\",\"#location_id\",1)",
+        "D3:D12": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "E1": "=PIVOT.HEADER(21,\"measure\",\"quantity\")",
+        "E2": "=PIVOT.VALUE(21,\"quantity\",\"#location_id\",1)",
+        "E3:E12": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "F1": "=PIVOT.HEADER(21,\"measure\",\"reserved_quantity\")",
+        "F2": "=PIVOT.VALUE(8,\"reserved_quantity\",\"#location_id\",1)",
+        "F3": {
+          "N": "+13|+1",
+          "S": ["=", "="]
+        },
+        "F4:F12": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "H2": "=PIVOT.HEADER(20,\"#product_id\",1)",
+        "H3:H11": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "I1": "Available Value",
+        "I2": "=if(K2<>\"\",K2-J2,\"\")",
+        "I3:I11": {
+          "S": ["=", "="],
+          "R": "+R1|+R1|+R1"
+        },
+        "J1": "Reserved value",
+        "J2": "=(M2/L2)*K2",
+        "J3:J11": { "R": "+R1|+R1|+R1" },
+        "K1": "=PIVOT.HEADER(20,\"measure\",\"value\")",
+        "K2:K11": "=PIVOT.VALUE(20,\"value\",\"#product_id\",row()-1)",
+        "L1": "=PIVOT.HEADER(20,\"measure\",\"quantity\")",
+        "L2": "=PIVOT.VALUE(20,\"quantity\",\"#product_id\",1)",
+        "L3:L11": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        },
+        "M1": "=PIVOT.HEADER(20,\"measure\",\"reserved_quantity\")",
+        "M2": "=PIVOT.VALUE(20,\"reserved_quantity\",\"#product_id\",1)",
+        "M3:M11": {
+          "N": "=|+1",
+          "S": ["=", "="]
+        }
+      },
+      "styles": {},
+      "formats": { "D4:E11": 2, "B2:B3": 3, "C2:C12": 3, "D2:F3": 3, "J2:J11": 3 },
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [
+        {
+          "range": "H1:M11",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": true,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "styleId": "TableStyleMedium5"
+          }
+        },
+        {
+          "range": "A1:F12",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": true,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "styleId": "TableStyleMedium5"
+          }
+        }
+      ],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "ed075d2c-7ff8",
+      "name": "Products with negative stock",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {},
+      "merges": [],
+      "cells": { "A1": "=PIVOT(22,50,FALSE,FALSE)" },
+      "styles": { "A1:B1": 3, "A2:C3": 4, "A4:A51": 5, "B4:C51": 6, "C1": 7 },
+      "formats": { "A2:A13": 4 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "28a9f144-6ad5",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "C2:C51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": { "bold": true, "fillColor": "#E6F2F3" },
+    "2": { "fillColor": "#E6F2F3" },
+    "3": {
+      "bold": true,
+      "align": "left",
+      "verticalAlign": "top",
+      "fontSize": 11,
+      "textColor": "#434343"
+    },
+    "4": { "verticalAlign": "middle", "textColor": "#434343" },
+    "5": { "textColor": "#01666B", "verticalAlign": "middle" },
+    "6": { "verticalAlign": "middle" },
+    "7": {
+      "bold": true,
+      "align": "center",
+      "verticalAlign": "top",
+      "fontSize": 11,
+      "textColor": "#434343"
+    }
+  },
+  "formats": { "1": "0.00%", "2": "#,##0.00", "3": "#,##0", "4": "@" },
+  "borders": {},
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "c14d538a-a794-4ea2-ab95-70089c764c85": {
+      "type": "ODOO",
+      "domain": [
+        ["location_id.usage", "=", "internal"]
+      ],
+      "context": {
+        "mail_notify_force_send": false,
+        "always_show_loc": 1,
+        "inventory_mode": true,
+        "inventory_report_mode": true
+      },
+      "sortedColumn": {
+        "measure": "quantity",
+        "order": "desc",
+        "domain": []
+      },
+      "measures": [
+        { "id": "quantity", "fieldName": "quantity", "aggregator": "sum" },
+        {
+          "id": "reserved_quantity",
+          "fieldName": "reserved_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "available_quantity",
+          "fieldName": "available_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "inventory_quantity",
+          "fieldName": "inventory_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "inventory_diff_quantity",
+          "fieldName": "inventory_diff_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "cyclic_inventory_frequency",
+          "fieldName": "cyclic_inventory_frequency",
+          "aggregator": "sum"
+        },
+        {
+          "id": "inventory_quantity_auto_apply",
+          "fieldName": "inventory_quantity_auto_apply",
+          "aggregator": "sum"
+        },
+        { "id": "value", "fieldName": "value", "aggregator": "sum" },
+        { "id": "__count", "fieldName": "__count" }
+      ],
+      "model": "stock.quant",
+      "columns": [],
+      "rows": [
+        { "fieldName": "location_id" }
+      ],
+      "name": "Inventory - locations",
+      "actionXmlId": "stock.dashboard_open_quants",
+      "formulaId": "8",
+      "fieldMatching": {
+        "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
+        "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
+        "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" },
+        "7ff87378-db1d-4725-bf25-6eee704b15a5": { "chain": "product_categ_id", "type": "many2one" },
+        "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" }
+      }
+    },
+    "4f0d7a37-943e-4289-ac4b-3cf1b56ca17a": {
+      "type": "ODOO",
+      "domain": [
+        ["location_id.usage", "=", "internal"]
+      ],
+      "context": {
+        "mail_notify_force_send": false,
+        "always_show_loc": 1,
+        "inventory_mode": true,
+        "inventory_report_mode": true
+      },
+      "sortedColumn": {
+        "measure": "quantity",
+        "order": "desc",
+        "domain": []
+      },
+      "measures": [
+        { "id": "quantity", "fieldName": "quantity", "aggregator": "sum" },
+        {
+          "id": "reserved_quantity",
+          "fieldName": "reserved_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "available_quantity",
+          "fieldName": "available_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "inventory_quantity",
+          "fieldName": "inventory_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "inventory_diff_quantity",
+          "fieldName": "inventory_diff_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "cyclic_inventory_frequency",
+          "fieldName": "cyclic_inventory_frequency",
+          "aggregator": "sum"
+        },
+        {
+          "id": "inventory_quantity_auto_apply",
+          "fieldName": "inventory_quantity_auto_apply",
+          "aggregator": "sum"
+        },
+        { "id": "value", "fieldName": "value", "aggregator": "sum" },
+        { "id": "__count", "fieldName": "__count" }
+      ],
+      "model": "stock.quant",
+      "columns": [],
+      "rows": [
+        { "fieldName": "product_id" }
+      ],
+      "name": "Inventory - products sort by Qty",
+      "actionXmlId": "stock.dashboard_open_quants",
+      "formulaId": "9",
+      "fieldMatching": {
+        "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
+        "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
+        "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" },
+        "7ff87378-db1d-4725-bf25-6eee704b15a5": { "chain": "product_categ_id", "type": "many2one" },
+        "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" }
+      }
+    },
+    "22f3a887-f193-4be2-a4af-e991b7ccc65e": {
+      "type": "ODOO",
+      "domain": [
+        "&",
+        ["location_id.usage", "=", "internal"],
+        ["reserved_quantity", ">", 0]
+      ],
+      "context": {
+        "mail_notify_force_send": false,
+        "always_show_loc": 1,
+        "inventory_mode": true,
+        "inventory_report_mode": true
+      },
+      "sortedColumn": {
+        "measure": "quantity",
+        "order": "desc",
+        "domain": []
+      },
+      "measures": [
+        { "id": "quantity", "fieldName": "quantity", "aggregator": "sum" },
+        {
+          "id": "reserved_quantity",
+          "fieldName": "reserved_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "available_quantity",
+          "fieldName": "available_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "inventory_quantity",
+          "fieldName": "inventory_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "inventory_diff_quantity",
+          "fieldName": "inventory_diff_quantity",
+          "aggregator": "sum"
+        },
+        {
+          "id": "cyclic_inventory_frequency",
+          "fieldName": "cyclic_inventory_frequency",
+          "aggregator": "sum"
+        },
+        {
+          "id": "inventory_quantity_auto_apply",
+          "fieldName": "inventory_quantity_auto_apply",
+          "aggregator": "sum"
+        },
+        { "id": "value", "fieldName": "value", "aggregator": "sum" },
+        { "id": "__count", "fieldName": "__count" }
+      ],
+      "model": "stock.quant",
+      "columns": [],
+      "rows": [
+        { "fieldName": "location_id" }
+      ],
+      "name": "Inventory - locations (reserved stock)",
+      "actionXmlId": "stock.dashboard_open_quants",
+      "formulaId": "18",
+      "fieldMatching": {
+        "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
+        "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
+        "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" },
+        "7ff87378-db1d-4725-bf25-6eee704b15a5": { "chain": "product_categ_id", "type": "many2one" },
+        "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" }
+      }
+    },
+    "858023a6-cd63-47d6-9bce-759b488c2b75": {
+      "type": "ODOO",
+      "domain": [
+        ["location_id.usage", "=", "internal"]
+      ],
+      "context": {
+        "mail_notify_force_send": false,
+        "always_show_loc": 1,
+        "inventory_mode": true,
+        "inventory_report_mode": true
+      },
+      "sortedColumn": {
+        "measure": "value",
+        "order": "desc",
+        "domain": []
+      },
+      "measures": [
+        { "id": "value", "fieldName": "value", "aggregator": "sum" },
+        { "id": "quantity", "fieldName": "quantity", "aggregator": "sum" },
+        {
+          "id": "reserved_quantity",
+          "fieldName": "reserved_quantity",
+          "aggregator": "sum"
+        }
+      ],
+      "model": "stock.quant",
+      "columns": [],
+      "rows": [
+        { "fieldName": "product_id" }
+      ],
+      "name": "Inventory by Product sort by value",
+      "actionXmlId": "stock.dashboard_open_quants",
+      "formulaId": "20",
+      "fieldMatching": {
+        "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
+        "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
+        "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" },
+        "7ff87378-db1d-4725-bf25-6eee704b15a5": { "chain": "product_categ_id", "type": "many2one" },
+        "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" }
+      }
+    },
+    "37e97fb2-1885-4dbd-9632-ec5c54a776f4": {
+      "type": "ODOO",
+      "domain": [
+        ["location_id.usage", "=", "internal"]
+      ],
+      "context": {
+        "mail_notify_force_send": false,
+        "always_show_loc": 1,
+        "inventory_mode": true,
+        "inventory_report_mode": true
+      },
+      "sortedColumn": {
+        "measure": "value",
+        "order": "desc",
+        "domain": []
+      },
+      "measures": [
+        {
+          "id": "reserved_quantity",
+          "fieldName": "reserved_quantity",
+          "aggregator": "sum"
+        },
+        { "id": "quantity", "fieldName": "quantity", "aggregator": "sum" },
+        { "id": "value", "fieldName": "value", "aggregator": "sum" }
+      ],
+      "model": "stock.quant",
+      "columns": [],
+      "rows": [
+        { "fieldName": "location_id" }
+      ],
+      "name": "Inventory by Location sort by value",
+      "actionXmlId": "stock.dashboard_open_quants",
+      "formulaId": "21",
+      "fieldMatching": {
+        "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
+        "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
+        "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" },
+        "7ff87378-db1d-4725-bf25-6eee704b15a5": { "chain": "product_categ_id", "type": "many2one" },
+        "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" }
+      }
+    },
+    "8f099f8d-362a-41e5-b676-75ab717cfc1e": {
+      "type": "ODOO",
+      "domain": [
+        "&",
+        ["location_id.usage", "=", "internal"],
+        ["quantity", "<", 0]
+      ],
+      "context": {
+        "mail_notify_force_send": false,
+        "always_show_loc": 1,
+        "inventory_mode": true,
+        "inventory_report_mode": true
+      },
+      "measures": [
+        { "id": "quantity", "fieldName": "quantity", "aggregator": "sum" },
+        { "id": "__count", "fieldName": "__count", "format": "0" }
+      ],
+      "model": "stock.quant",
+      "columns": [],
+      "rows": [
+        { "fieldName": "product_id" }
+      ],
+      "name": "Products",
+      "actionXmlId": "stock.dashboard_open_quants",
+      "formulaId": "22",
+      "fieldMatching": {
+        "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" },
+        "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
+        "7ff87378-db1d-4725-bf25-6eee704b15a5": { "chain": "product_categ_id", "type": "many2one" },
+        "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
+        "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" }
+      }
+    },
+    "0885aadb-2384-4300-a531-893035a13173": {
+      "type": "ODOO",
+      "domain": [
+        "&",
+        ["location_id.usage", "=", "internal"],
+        ["reserved_quantity", ">", 0]
+      ],
+      "context": {
+        "mail_notify_force_send": false,
+        "always_show_loc": 1,
+        "inventory_mode": true,
+        "inventory_report_mode": true
+      },
+      "sortedColumn": {
+        "measure": "value",
+        "order": "desc",
+        "domain": []
+      },
+      "measures": [
+        {
+          "id": "reserved_quantity",
+          "fieldName": "reserved_quantity",
+          "aggregator": "sum"
+        },
+        { "id": "quantity", "fieldName": "quantity", "aggregator": "sum" },
+        { "id": "value", "fieldName": "value", "aggregator": "sum" }
+      ],
+      "model": "stock.quant",
+      "columns": [],
+      "rows": [
+        { "fieldName": "location_id" }
+      ],
+      "name": "Inventory by Location sort by value (reserved stock)",
+      "actionXmlId": "stock.dashboard_open_quants",
+      "formulaId": "23",
+      "fieldMatching": {
+        "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
+        "8dea5478-ff09-41fc-ada0-cf23c66e4f8b": { "chain": "product_id", "type": "many2one" },
+        "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" },
+        "7ff87378-db1d-4725-bf25-6eee704b15a5": { "chain": "product_categ_id", "type": "many2one" },
+        "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" }
+      }
+    }
+  },
+  "pivotNextId": 25,
+  "customTableStyles": {},
+  "namedRanges": {},
+  "globalFilters": [
+    {
+      "id": "feeb0d08-4596-4e7c-b478-a3c659189cdd",
+      "type": "relation",
+      "label": "Warehouse",
+      "defaultValueDisplayNames": [],
+      "modelName": "stock.warehouse",
+      "includeChildren": false
+    },
+    {
+      "id": "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df",
+      "type": "relation",
+      "label": "Location",
+      "defaultValueDisplayNames": [],
+      "modelName": "stock.location"
+    },
+    {
+      "id": "7ff87378-db1d-4725-bf25-6eee704b15a5",
+      "type": "relation",
+      "label": "Product Category",
+      "defaultValueDisplayNames": [],
+      "modelName": "product.category",
+      "includeChildren": true
+    },
+    {
+      "id": "8dea5478-ff09-41fc-ada0-cf23c66e4f8b",
+      "type": "relation",
+      "label": "Product",
+      "defaultValueDisplayNames": [],
+      "modelName": "product.product"
+    },
+    {
+      "id": "0725cf6d-c980-46a1-bd7b-bd75e34348e7",
+      "type": "relation",
+      "label": "Lot/Serial",
+      "modelName": "stock.lot",
+      "defaultValueDisplayNames": []
+    }
+  ],
+  "lists": {},
+  "listNextId": 3,
+  "odooLinkReferences": {
+    "fad86b76-037f-4b7f-8afc-bc028c2536de": { "type": "odooMenu", "odooMenuId": "stock.menu_valuation" },
+    "73f61914-d895-4484-b3ba-585107daeb44": { "type": "odooMenu", "odooMenuId": "stock.menu_valuation" },
+    "de7010e1-2cdc-4e19-a1de-1c7fd4795bf4": { "type": "odooMenu", "odooMenuId": "stock.menu_valuation" },
+    "833374d1-d09f-4a4e-bb09-2831ceee5465": { "type": "odooMenu", "odooMenuId": "stock.menu_valuation" },
+    "8324b219-c649-4392-9fee-a3e7f396d70c": { "type": "odooMenu", "odooMenuId": "stock.menu_valuation" },
+    "0d527983-ee0f-44cb-af82-f637574a4e1e": { "type": "odooMenu", "odooMenuId": "stock.menu_valuation" },
+    "ebde3556-983a-475a-95f0-4edb2515b3bb": { "type": "odooMenu", "odooMenuId": "stock.menu_valuation" },
+    "e7f90aaf-95ec-4f1d-9b0c-ec7e4465d772": { "type": "odooMenu", "odooMenuId": "stock.menu_valuation" },
+    "639d221d-d74d-4762-984e-9debac4f5a82": { "type": "odooMenu", "odooMenuId": "stock.menu_valuation" }
+  }
+}

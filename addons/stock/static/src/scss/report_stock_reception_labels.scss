@@ -1,0 +1,21 @@
+.o_label_page {
+    margin-left: -3mm;
+    margin-right: -3mm;
+    overflow: hidden;
+    page-break-before: always;
+    padding: 1mm 0mm 0mm;
+
+    &.o_label_dymo {
+        font-size: 80%;
+        width: 57mm;
+        height: 32mm;
+        & span, div {
+            line-height: 1;
+            white-space: nowrap;
+        }
+    }
+
+    span[itemprop="name"] {
+        font-weight: bold;
+    }
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="l10n_jo_edi.JoFotaraErrorDialog">
+        <Dialog title="this.title" size="'lg'" contentClass="'o_error_dialog'">
+            <div role="alert">
+                <div class="text-bg-100 o_error_detail p-2 p-md-3 d-flex align-items-start gap-3">
+                    <p class="m-0 flex-grow-1 min-w-0 text-prewrap text-break" t-out="this.message"/>
+                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                        <button class="btn btn-link link-body-emphasis p-0 lh-1" t-ref="this.copyButtonRef" t-on-click="this.onClickClipboard">
+                            <span class="oi" data-icon="assignment"/>
+                        </button>
+                        <a t-att-href="this.xmlUrl">XML</a>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o-default-button" t-on-click="this.props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

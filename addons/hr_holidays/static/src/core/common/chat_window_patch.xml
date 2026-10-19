@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-inherit="mail.ChatWindow.headerContent" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-ChatWindow-nameBox')]" position="inside">
+            <span t-if="this.outOfOfficeDateEndText" class="o-mail-ChatWindow-outOfOffice text-warning smaller fw-bold opacity-75 text-truncate" t-out="this.outOfOfficeDateEndText"/>
+        </xpath>
+    </t>
+</templates>

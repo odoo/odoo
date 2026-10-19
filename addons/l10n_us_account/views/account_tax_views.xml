@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[group[@name='legal_notes']]" position="before">
+                <group invisible="country_code != 'US' or type_tax_use not in ['sale', 'purchase'] or amount_type == 'group'">
+                    <group string="US" name="l10n_us">
+                        <field name="l10n_us_jurisdiction_type"/>
+                        <field name="l10n_us_state_id"
+                               options="{'no_create': True}"
+                               invisible="not l10n_us_jurisdiction_type"
+                               required="l10n_us_jurisdiction_type"/>
+                        <field name="l10n_us_county_id"
+                               context="{'default_state_id': l10n_us_state_id}"
+                               invisible="l10n_us_jurisdiction_type != 'county'"
+                               required="l10n_us_jurisdiction_type == 'county'"/>
+                        <field name="l10n_us_city_id"
+                               context="{'default_state_id': l10n_us_state_id, 'default_country_id': country_id}"
+                               invisible="l10n_us_jurisdiction_type != 'city'"
+                               required="l10n_us_jurisdiction_type == 'city'"/>
+                        <field name="l10n_us_exempt_tax_ids" widget="many2many_tags"
+                               domain="[('id', '!=', id), ('l10n_us_exempt_parent_tax_id', '=', False), ('l10n_us_nontaxable_parent_tax_id', '=', False)]"
+                               invisible="l10n_us_exempt_parent_tax_id or l10n_us_nontaxable_parent_tax_id"
+                               context="{
+                                   'default_type_tax_use': type_tax_use,
+                                   'default_country_id': country_id,
+                                   'default_amount': 0,
+                                   'default_l10n_us_jurisdiction_type': l10n_us_jurisdiction_type,
+                                   'default_l10n_us_state_id': l10n_us_state_id,
+                                   'default_l10n_us_county_id': l10n_us_county_id,
+                                   'default_l10n_us_city_id': l10n_us_city_id,
+                               }"/>
+                        <field name="l10n_us_nontaxable_tax_ids" widget="many2many_tags"
+                               domain="[('id', '!=', id), ('l10n_us_exempt_parent_tax_id', '=', False), ('l10n_us_nontaxable_parent_tax_id', '=', False)]"
+                               invisible="l10n_us_exempt_parent_tax_id or l10n_us_nontaxable_parent_tax_id"
+                               context="{
+                                   'default_type_tax_use': type_tax_use,
+                                   'default_country_id': country_id,
+                                   'default_amount': 0,
+                                   'default_l10n_us_jurisdiction_type': l10n_us_jurisdiction_type,
+                                   'default_l10n_us_state_id': l10n_us_state_id,
+                                   'default_l10n_us_county_id': l10n_us_county_id,
+                                   'default_l10n_us_city_id': l10n_us_city_id,
+                               }"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

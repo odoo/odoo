@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_departure_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.departure.view.form</field>
+        <field name="model">hr.employee.departure</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="employee_id" invisible="1"/> <!-- used in computes -->
+                    <field name="departure_date" invisible="1"/> <!-- used in computes -->
+                    <group name="header_group">
+                        <group>
+                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                            <field name="dismissal_date"/>
+                        </group>
+                        <group>
+                            <field name="departure_description" string="Reason" placeholder="Additional information"/>
+                            <field name="action_date" placeholder="The day after departure"
+                                   string="Archive Employee On" readonly="apply_date"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Schedule" special="save" class="oe_highlight"
+                        invisible="apply_immediately"/>
+                    <button name="action_register" string="Apply" type="object" class="oe_highlight"
+                        invisible="not apply_immediately"/>
+                    <button
+                        string="Discard"
+                        special="cancel"
+                        data-hotkey="j"
+                        class="btn-secondary"
+                        close="1"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

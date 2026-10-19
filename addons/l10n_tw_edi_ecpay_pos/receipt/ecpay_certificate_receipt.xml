@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_tw_edi_ecpay_pos.ecpay_certificate_receipt">
+            <html id="pos-receipt">
+                <head>
+                    <meta charset="UTF-8"></meta>
+                    <t t-call="point_of_sale.pos_order_receipt_style" />
+                </head>
+                <div style="height: 168mm;" class="ecpay-receipt">
+                    <t t-if="image.get('logo')">
+                        <img t-att-src="image.get('logo')" style="max-height: 30mm;" class="ecpay-logo pos-receipt-logo object-fit-contain" />
+                    </t>
+                    <t t-else="">
+                        <h1 class="text-center" style="margin: 0 0 4px 0;" t-out="company.get('name')"/>
+                    </t>
+                    <h1 class="text-center" style="margin: 0 0 2px 0; line-height: 1.1;">電子發票證明聯</h1>
+                    <h1 class="text-center" style="margin: 0; line-height: 1.1;" t-out="extra_data.get('invoice_month')"/>
+                    <h1 class="text-center" style="margin: 0 0 4px 0; line-height: 1.1;" t-out="extra_data.get('iis_number')"/>
+                    <p class="text-normal-ecpay text-start" style="margin: 0 0 4px 0;">
+                        <t t-out="extra_data.get('iis_create_date')" />
+                    </p>
+                    <table class="w-100 text-normal-ecpay mb-1">
+                        <tbody>
+                            <tr>
+                                <td class="text-start w-50">隨機碼:<t t-out="extra_data.get('iis_random_number')"/></td>
+                                <td class="text-end w-50">總計:<t t-out="extra_data.get('l10n_tw_edi_invoice_amount')"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="text-normal-ecpay text-start" style="margin: 0 0 4px 0;" t-if="extra_data.get('l10n_tw_edi_ecpay_seller_identifier') != ''">
+                        賣方: <t t-out="extra_data.get('l10n_tw_edi_ecpay_seller_identifier')"/>
+                    </p>
+                    <div t-if="image.get('pos_barcode_src') or image.get('pos_barcode')" class="text-center mt-1 w-100">
+                        <img class="ecpay-pos-barcode" t-att-src="image.get('pos_barcode_src') or ('/report/barcode/Code128/' + image.get('pos_barcode'))" alt="Barcode"/>
+                    </div>
+                    <table class="w-100">
+                        <tbody>
+                            <tr>
+                                <td class="text-center w-50"><img class="ecpay-qrcode-left" t-att-src="image.get('qrcode_left')"/></td>
+                                <td class="text-center w-50"><img class="ecpay-qrcode-right" t-att-src="image.get('qrcode_right')"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </html>
+        </template>
+    </data>
+</odoo>

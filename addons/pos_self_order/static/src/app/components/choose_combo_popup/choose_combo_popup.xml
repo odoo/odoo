@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ChooseComboPopup">
+        <div class="choose_combo_popup o_dialog" t-att-id="this.id">
+            <div role="dialog" class="modal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered ms-auto" role="document" t-att-class="!this.ui.isSmall ? 'modal-xl w-100' : 'w-100 px-2'">
+                    <div class="modal-content rounded-4 overflow-hidden">
+                        <div class="modal-header border-0 pb-2 mb-4">
+                            <h2 class="fw-bold text-center w-100 mb-0" t-att-class="!this.ui.isSmall ? 'fs-2' : 'fs-4'">
+                                Do you want to make a combo instead ?
+                            </h2>
+                        </div>
+                        <div class="modal-body pt-0 d-flex flex-column gap-2 chose-combo-popup" style="max-height:75vh; overflow-y:auto;">
+                            <t t-foreach="this.allCombos" t-as="combo" t-key="combo_index">
+                                <t t-set="price_diff" t-value="combo.totalSplitedComboLinePrice - combo.totalComboPrice"/>
+                                <div t-if="price_diff > 0" class="combo-item" t-att-class="{'border-top pt-3': combo_index > 0}">
+                                    <div class="combo-row d-flex align-items-start gap-3">
+                                        <img
+                                            class="combo-img rounded flex-shrink-0"
+                                            t-att-style="this.ui.isSmall
+                                                ? 'width:80px;height:80px;object-fit:cover;'
+                                                : 'width:110px;height:110px;object-fit:cover;'"
+                                            t-att-src="'/web/image/product.product/' + combo.product.id + '/image_128'"
+                                            loading="lazy"
+                                        />
+
+                                        <div class="combo-details flex-grow-1 min-w-0">
+                                            <div class="combo-title d-flex align-items-center gap-3 min-w-0">
+                                                <span class="combo-name fw-medium text-truncate flex-shrink-1 fs-5 fs-md-3">
+                                                    <t t-out="combo.product.display_name"/>
+                                                </span>
+
+                                                <span class="combo-price fw-semibold text-nowrap flex-shrink-0 fs-5 fs-md-3">
+                                                    <t t-out="this.selfOrder.formatMonetary(combo.totalComboPrice)"/>
+                                                </span>
+                                            </div>
+
+                                            <ul class="mb-0 ps-3 combo-lines text-muted mt-1" t-att-class="!this.ui.isSmall ? 'fs-5' : 'small'">
+                                                <li
+                                                    t-foreach="combo.lines"
+                                                    t-as="line"
+                                                    t-key="line_index"
+                                                    t-att-class="{'text-info': line.upsell}"
+                                                    class="text-truncate"
+                                                >
+                                                    <span class="d-inline-block text-truncate w-100">
+                                                        - <t t-if="!line.upsell">
+                                                            <span t-out="line.quantity"/> x
+                                                        </t>
+                                                        <span t-out="line.name"/>
+                                                        <t t-if="line.upsell">
+                                                            (up to <span t-out="line.quantity"/> more)
+                                                        </t>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="combo-actions d-flex flex-column align-items-center flex-shrink-0">
+                                            <button
+                                                class="apply-combo-btn btn btn-primary rounded"
+                                                t-att-class="this.ui.isSmall
+                                                    ? 'px-3 py-2'
+                                                    : 'px-4 py-3 fs-5'"
+                                                t-on-click="() => this.confirm(combo, combo_index)"
+                                            >
+                                                <span t-if="this.isLoading(combo_index)" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
+                                                <t t-else="">
+                                                    <t t-if="combo.upsell">Choose</t>
+                                                    <t t-else="">Apply</t>
+                                                </t>
+                                            </button>
+
+                                            <span
+                                                class="combo-save text-success mt-1 text-nowrap"
+                                                t-att-class="this.ui.isSmall ? 'small' : 'fs-6 fw-semibold'"
+                                            >
+                                                Save
+                                                <t t-out="this.selfOrder.formatMonetary(price_diff)"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="modal-footer border-0 justify-content-center pt-0">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                t-att-class="!this.ui.isSmall ? 'btn-lg px-4' : ''"
+                                t-on-click="this.cancel"
+                            >
+                                No Thanks
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

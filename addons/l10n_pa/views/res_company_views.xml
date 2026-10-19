@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="res_company_view_form_inherit_l10n_pa" model="ir.ui.view">
+        <field name="name">res.company.view.form.inherit.l10n_pa</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <field name="street2" position="after">
+                <field name="l10n_pa_corregimiento"
+                       placeholder="Corregimiento..."
+                       class="o_address_street"
+                       options="{'no_open': True, 'no_quick_create': True}"
+                       invisible="country_code != 'PA'"/>
+            </field>
+            <xpath expr="//div[@name='identifiers']" position="after">
+                <field name="l10n_pa_dv" placeholder="e.g. 00" invisible="country_code != 'PA'"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

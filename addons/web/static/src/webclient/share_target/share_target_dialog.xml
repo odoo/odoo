@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.ShareTargetDialog">
+        <Dialog title.translate="Create...">
+            <div class="text-center w-100 p-2 gap-1">
+                <img class="w-75" t-att-src="this.state.previewFileUrl" t-att-alt="this.previewFile.name"/>
+                <div class="d-flex align-items-center justify-content-center py-1 ">
+                    <div class="o_image me-2 flex-shrink-0" t-att-data-mimetype="this.previewFile.type"/>
+                    <div class="text-truncate align-items-center fw-bold" t-out="this.previewFile.name"/>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap align-center justify-content-center gap-1 p-2">
+                <t t-foreach="this.shareTargetItems" t-as="app" t-key="app.name">
+                    <button class="btn btn-secondary" t-on-click.stop="() => this.onSelectedApp(app.name)"
+                        t-att-class="{
+                            'btn-primary active': this.isSelectedShareTarget(app.name)
+                        }">
+                        <t t-out="app.name"/>
+                    </button>
+                </t>
+            </div>
+
+            <t t-component="this.shareTargetItems[this.state.selectedShareTargetItemIndex]" files="this.props.files" />
+
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="(ev) => this.save(ev)" data-hotkey="S">
+                    Create
+                </button>
+                <button class="btn btn-secondary" t-on-click="(ev) => this.props.close(ev)" data-hotkey="C">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
