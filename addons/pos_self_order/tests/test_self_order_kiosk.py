@@ -384,3 +384,24 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
             notify.assert_not_called()
             self.pos_config.write({'limit_categories': True})
             notify.assert_called_once_with('CONFIG_UPDATED', {'write_date': self.pos_config.write_date})
+
+    def test_kiosk_paid_order_visible_in_other_pos(self):
+        classic_config = self.pos_config.copy()
+        self.pos_config.write({'self_ordering_mode': 'kiosk'})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        order = self.env['pos.order'].create({
+            'session_id': self.pos_config.current_session_id.id,
+            'state': 'paid',
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'lines': [Command.create({
+                'product_id': self.cola.id,
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+            })],
+        })
+
+        result = self.env['pos.order'].search_order_ids(classic_config.id, [], 80, 0)
+        self.assertIn(order.id, [order_id for order_id, _ in result['ordersInfo']])

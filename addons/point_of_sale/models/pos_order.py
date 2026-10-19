@@ -1539,10 +1539,9 @@ class PosOrder(models.Model):
                 ('state', '!=', 'draft'),
                 ('is_refund', '=', True),
             ])
-        order_domain = state_domain & Domain(domain) & Domain([
-            ('config_id', 'in', [config_id] + pos_config.trusted_config_ids.ids),
-            ('config_id.currency_id', '=', pos_config.currency_id.id)
-        ])
+        order_domain = state_domain & Domain(domain) & Domain(
+            'config_id.currency_id', '=', pos_config.currency_id.id
+        ) & pos_config._get_paid_orders_config_domain()
         orders = self.search(order_domain, limit=limit, offset=offset, order='create_date desc')
         PosOrderLineModel = self.env['pos.order.line']
         line_queries = [
