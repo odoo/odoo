@@ -1107,6 +1107,32 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_tax_out_of_scope')
 
+    def test_invoice_export_sections_with_price_included_taxes(self):
+        """
+        When a section is collapsed ('Hide composition' / collapse_composition=True)
+        and its lines use price-included taxes, the generated collapsed line should
+        not double-strip the tax amount.
+        """
+        tax_21_included = self.percent_tax(21.0, price_include_override='tax_included')
+        tax_21_excluded = self.percent_tax(21.0)
+
+        product_1 = self._create_product(lst_price=100.0, name="product_included_1")
+        product_2 = self._create_product(lst_price=50.0, name="product_included_2")
+        product_3 = self._create_product(lst_price=80.0, name="product_excluded_1")
+
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(name="Collapsed Mixed Section", display_type='line_section', collapse_composition=True, price_unit=0.0),
+                self._prepare_invoice_line(product_id=product_1, price_unit=100.0, tax_ids=[tax_21_included.id]),
+                self._prepare_invoice_line(product_id=product_2, price_unit=50.0, tax_ids=[tax_21_included.id]),
+                self._prepare_invoice_line(product_id=product_3, price_unit=80.0, tax_ids=[tax_21_excluded.id]),
+            ],
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_with_price_included_taxes')
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestBeExport(TestUblExportBis3BE):
