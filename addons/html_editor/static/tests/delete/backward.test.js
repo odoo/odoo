@@ -156,7 +156,8 @@ describe("Selection collapsed", () => {
                     '<p data-selection-placeholder=""><br></p>' +
                     '<div><p>uv</p><br><span class="style" data-oe-zws-empty-inline="">[]\u200B</span></div>' +
                     '<p data-selection-placeholder=""><br></p>',
-                contentAfter: '<div><p>uv</p><br><span class="style" data-oe-zws-empty-inline="">[]\u200B</span></div>',
+                contentAfter:
+                    '<div><p>uv</p><br><span class="style" data-oe-zws-empty-inline="">[]</span></div>',
             });
         });
 
@@ -247,7 +248,8 @@ describe("Selection collapsed", () => {
                 },
                 contentAfterEdit:
                     '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
-                contentAfter: '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
+                contentAfter:
+                    '<p>ab<span class="style" data-oe-zws-empty-inline="">[]</span>ef</p>',
             });
         });
 
@@ -267,6 +269,8 @@ describe("Selection collapsed", () => {
         test("should ignore ZWS and merge (1)", async () => {
             await testEditor({
                 contentBefore:
+                    '<p><b>ab</b><span class="removeme" data-oe-zws-empty-inline="">[]</span></p>',
+                contentBeforeEdit:
                     '<p><b>ab</b><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span></p>',
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
@@ -279,6 +283,8 @@ describe("Selection collapsed", () => {
         test("should ignore ZWS and merge (2)", async () => {
             await testEditor({
                 contentBefore:
+                    '<p><span class="a">cd</span><span class="removeme" data-oe-zws-empty-inline="">[]</span></p>',
+                contentBeforeEdit:
                     '<p><span class="a">cd</span><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span></p>',
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
@@ -291,6 +297,8 @@ describe("Selection collapsed", () => {
         test("should ignore ZWS and merge (3)", async () => {
             await testEditor({
                 contentBefore:
+                    '<p><b>ef</b><br><span class="removeme" data-oe-zws-empty-inline="">[]</span></p>',
+                contentBeforeEdit:
                     '<p><b>ef</b><br><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span></p>',
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
@@ -599,7 +607,8 @@ describe("Selection collapsed", () => {
 
         test("should delete empty styled paragraph(s) and move cursor to previous styled inline (1)", async () => {
             await testEditor({
-                contentBefore: `<p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
+                contentBefore: `<p><strong data-oe-zws-empty-inline=""></strong></p><p><strong data-oe-zws-empty-inline="">[]</strong></p>`,
+                contentBeforeEdit: `<p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
                 stepFunction: deleteBackward,
                 contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong><br></p>`,
                 contentAfter: `<p>[]<br></p>`,
@@ -608,7 +617,8 @@ describe("Selection collapsed", () => {
 
         test("should delete empty styled paragraph(s) and move cursor to previous styled inline (2)", async () => {
             await testEditor({
-                contentBefore: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
+                contentBefore: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline=""></strong></p><p><strong data-oe-zws-empty-inline=""></strong></p><p><strong data-oe-zws-empty-inline="">[]</strong></p>`,
+                contentBeforeEdit: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
                 stepFunction: deleteBackward,
                 contentAfterEdit: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong><br></p>`,
                 contentAfter: `<p><strong>abc</strong></p><p><br></p><p>[]<br></p>`,
@@ -1737,7 +1747,8 @@ describe("Selection not collapsed", () => {
                 '<p data-selection-placeholder=""><br></p>' +
                 '<div><p>ab <span class="style" data-oe-zws-empty-inline="">[]\u200B</span> d</p></div>' +
                 '<p data-selection-placeholder=""><br></p>',
-            contentAfter: '<div><p>ab <span class="style" data-oe-zws-empty-inline="">[]\u200B</span> d</p></div>',
+            contentAfter:
+                '<div><p>ab <span class="style" data-oe-zws-empty-inline="">[]</span> d</p></div>',
         });
     });
 
@@ -2216,7 +2227,9 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: '<p>ab<b class="oe_unremovable">[cd]</b>ef</p>',
             stepFunction: deleteBackward,
-            contentAfter: '<p>ab<b class="oe_unremovable" data-oe-zws-empty-inline="">[]\u200B</b>ef</p>',
+            contentAfterEdit:
+                '<p>ab<b class="oe_unremovable" data-oe-zws-empty-inline="">[]\u200B</b>ef</p>',
+            contentAfter: '<p>ab<b class="oe_unremovable" data-oe-zws-empty-inline="">[]</b>ef</p>',
         });
     });
 
@@ -2291,7 +2304,10 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: '<p>a<span class="style-class">[bcde]</span>f</p>',
             stepFunction: deleteBackward,
-            contentAfter: '<p>a<span class="style-class" data-oe-zws-empty-inline="">[]\u200B</span>f</p>',
+            contentAfterEdit:
+                '<p>a<span class="style-class" data-oe-zws-empty-inline="">[]\u200B</span>f</p>',
+            contentAfter:
+                '<p>a<span class="style-class" data-oe-zws-empty-inline="">[]</span>f</p>',
         });
     });
 
