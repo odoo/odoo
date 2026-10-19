@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, status } from "@web/owl2/utils";
 import {
     Component,
     markup,
@@ -6,9 +6,8 @@ import {
     onWillStart,
     onWillUnmount,
     onWillUpdateProps,
-    props,
+    useProps,
     proxy,
-    status,
     t,
     useApp,
 } from "@odoo/owl";
@@ -25,7 +24,7 @@ export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
 
     app = useApp();
-    props = props({
+    props = useProps({
         config: t.object(),
         migrateHTML: t.boolean().optional(true),
     });

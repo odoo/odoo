@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 // import { omit } from "../utils/objects";
 import { dateTimePickerProps } from "./datetime_picker";
 import { useDateTimePicker } from "./datetime_picker_hook";
@@ -25,10 +25,10 @@ const dateTimeInputOwnProps = {
 
 /** @extends {Component<DateTimeInputProps>} */
 export class DateTimeInput extends Component {
-    props = props({
+    props = useProps({
         ...dateTimeInputOwnProps,
     });
-    pickerProps = props(dateTimePickerProps);
+    pickerProps = useProps(dateTimePickerProps);
     static template = "web.DateTimeInput";
 
     setup() {

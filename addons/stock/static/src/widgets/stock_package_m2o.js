@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
@@ -22,7 +22,7 @@ class Many2XStockPackageAutocomplete extends Many2XAutocomplete {
             return saved;
         };
         class PackageFormDialog extends FormViewDialog {
-            props = props({
+            props = useProps({
                 ...formViewDialogProps,
                 onRecordSave: t.function().optional(() => onRecordSave),
             });
@@ -43,7 +43,7 @@ export class StockPackageMany2One extends Component {
     static components = { Many2One: StockPackageMany2OneReplacer };
     // Inline conversion of Many2OneField.props (still declared old-style in
     // @web/views/fields/many2one/many2one_field, without an exported schema).
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         canCreate: t.boolean().optional(),
         canCreateEdit: t.boolean().optional(),

@@ -1254,7 +1254,7 @@ def upgrade_t_slot(file_manager, name, log_info, log_error):
 
 
 def upgrade_useservice(file_manager, name, log_info, log_error):
-    """Sub-task: Migrate useService to plugin, ignoring comments."""
+    """Sub-task: Migrate useService to usePlugin, ignoring comments."""
     js_files = JSTooling.get_js_files(file_manager)
 
     for fileno, file in enumerate(js_files, start=1):
@@ -1269,8 +1269,8 @@ def upgrade_useservice(file_manager, name, log_info, log_error):
                 if not JSTooling.has_active_raw_usage(file.content, pattern):
                     continue
 
-                file.content = JSTooling.replace_usage(file.content, pattern, f'plugin({plugin_class})', match_words=False)
-                file.content = JSTooling.add_import(file.content, 'plugin', '@odoo/owl')
+                file.content = JSTooling.replace_usage(file.content, pattern, f'usePlugin({plugin_class})', match_words=False)
+                file.content = JSTooling.add_import(file.content, 'usePlugin', '@odoo/owl')
                 file.content = JSTooling.add_import(file.content, plugin_class, import_path)
 
             if not JSTooling.has_active_usage(file.content, 'useService'):

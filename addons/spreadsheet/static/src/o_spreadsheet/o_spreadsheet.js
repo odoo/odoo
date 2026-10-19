@@ -11,7 +11,7 @@ odoo.define('@spreadsheet/o_spreadsheet/o_spreadsheet', ['@odoo/owl'], function 
 'use strict';
 let __exports = {};
 const owl = require('@odoo/owl');
-const { App, blockDom, markRaw, onMounted, onPatched, onWillPatch, onWillStart, onWillUnmount, onWillUpdateProps, proxy, signal, status, toRaw, types, useEffect, useListener, useProps, whenReady, xml } = require('@odoo/owl');
+const { App, blockDom, markRaw, onMounted, onPatched, onWillPatch, onWillStart, onWillUnmount, onWillUpdateProps, proxy, signal, STATUS, toRaw, types, useEffect, useListener, useProps, whenReady, xml } = require('@odoo/owl');
 //#region \0rolldown/runtime.js
 var __create = Object.create;
 var __defProp = Object.defineProperty;
@@ -2644,7 +2644,7 @@ function unregisterChartJsExtensions() {
 *
 * The end goal is to eliminate all compatibility shims.
 */
-const { __ODOO_COMPATIBILITY_LAYER_ADDED__, blockDom: blockDom$1, config, onMounted: onMounted$1, onPatched: onPatched$1, onWillUnmount: onWillUnmount$1, App: OwlApp, Component: OwlComponent, EnvPlugin: OwlEnvPlugin, useChildEnv: OwlUseChildEnv, useChildSubEnv: OwlUseChildSubEnv, useComponent: OwlUseComponent, useEnv: OwlUseEnv, useExternalListener: OwlUseExternalListener, useLayoutEffect: OwlUseLayoutEffect, useSubEnv: OwlUseSubEnv, Plugin, usePlugin, useProps: useProps$1, providePlugins, useScope, xml: xml$1 } = owl;
+const { __ODOO_COMPATIBILITY_LAYER_ADDED__, blockDom: blockDom$1, useConfig, onMounted: onMounted$1, onPatched: onPatched$1, onWillUnmount: onWillUnmount$1, App: OwlApp, Component: OwlComponent, EnvPlugin: OwlEnvPlugin, useChildEnv: OwlUseChildEnv, useChildSubEnv: OwlUseChildSubEnv, useComponent: OwlUseComponent, useEnv: OwlUseEnv, useExternalListener: OwlUseExternalListener, useLayoutEffect: OwlUseLayoutEffect, useSubEnv: OwlUseSubEnv, Plugin, usePlugin, useProps: useProps$1, providePlugins, useScope, xml: xml$1 } = owl;
 const isOdooCompatLoaded = __ODOO_COMPATIBILITY_LAYER_ADDED__ === true;
 var _Component = class extends OwlComponent {
 	static template = "";
@@ -2702,7 +2702,7 @@ function _useLayoutEffect(effect, computeDependencies = () => [NaN]) {
 }
 var _EnvPlugin = class extends Plugin {
 	static id = "__ENV__";
-	env = config("env") ?? {};
+	env = useConfig("env") ?? {};
 };
 function _useEnv() {
 	return useScope().component.env;
@@ -3035,7 +3035,7 @@ function useLocalStore(Store, ...args) {
 function useStoreRenderProxy(container, store) {
 	const component = useComponent();
 	return proxifyStoreMutation(store, () => {
-		if (status(component) === "mounted") container.trigger("store-updated");
+		if (component.__owl__.status === STATUS.MOUNTED) container.trigger("store-updated");
 	});
 }
 /**

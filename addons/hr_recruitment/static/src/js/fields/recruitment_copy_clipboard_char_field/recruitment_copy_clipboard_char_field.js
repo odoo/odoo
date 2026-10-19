@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 import { CopyClipboardCharField, copyClipboardCharField, copyClipboardFieldProps } from "@web/views/fields/copy_clipboard/copy_clipboard_field";
 import { CharField } from "@web/views/fields/char/char_field";
 import { GenerateContentAndCopyButton } from "../../buttons/generate_content_and_copy_button";
@@ -10,7 +10,7 @@ import { registry } from "@web/core/registry";
 class RecruitmentCopyClipboardCharField extends CopyClipboardCharField {
     static template = "hr_recruitment.RecruitmentCopyClipboardCharField";
     static components = { Field: CharField, GenerateContentAndCopyButton };
-    props = props({
+    props = useProps({
         ...copyClipboardFieldProps,
         displayedValue: t.string().optional(),
         contentGenerationFunctionName: t.string().optional(),

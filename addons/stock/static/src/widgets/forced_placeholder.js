@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One, many2OneProps } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription } from "@web/views/fields/many2one/many2one_field";
@@ -7,7 +7,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 export class ForcedPlaceholder extends Many2One {
     static template = "stock.ForcedPlaceholder";
     static components = { ...Many2One.components };
-    props = props({ ...many2OneProps });
+    props = useProps({ ...many2OneProps });
 }
 
 export class ForcedPlaceholderField extends Component {
@@ -15,7 +15,7 @@ export class ForcedPlaceholderField extends Component {
     static components = { ForcedPlaceholder };
     // Inline conversion of Many2OneField.props (still declared old-style in
     // @web/views/fields/many2one/many2one_field, without an exported schema).
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         canCreate: t.boolean().optional(),
         canCreateEdit: t.boolean().optional(),

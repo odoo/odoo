@@ -6,7 +6,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useProps, proxy, t } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
 export const STATIC_ACTIONS_GROUP_NUMBER = 1;
@@ -48,7 +48,7 @@ export class ActionMenus extends Component {
     // i do it for now to be able to move this pr forward, and we will refactor
     // later if needed.
     static actionMenusProps = actionMenusProps;
-    props = props(this.constructor.actionMenusProps);
+    props = useProps(this.constructor.actionMenusProps);
 
     setup() {
         this.orm = useService("orm");

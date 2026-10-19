@@ -3,7 +3,7 @@ import {
     onWillStart,
     onWillUpdateProps,
     onWillUnmount,
-    props,
+    useProps,
     proxy,
     signal,
     useEffect,
@@ -30,7 +30,7 @@ export class CallDebrief extends Component {
         callEndDateField: { type: String },
     };
 
-    props = props();
+    props = useProps();
 
     setup() {
         this.callDurationSeconds = 0;

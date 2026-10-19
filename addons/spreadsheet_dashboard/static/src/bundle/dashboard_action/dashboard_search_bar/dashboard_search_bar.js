@@ -1,4 +1,5 @@
-import { Component, status, proxy } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
+import { status } from "@web/owl2/utils";
 import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
 import { DashboardSearchBarMenu } from "../dashboard_search_bar_menu/dashboard_search_bar_menu";

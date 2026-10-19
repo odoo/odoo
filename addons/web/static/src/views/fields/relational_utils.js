@@ -1,4 +1,4 @@
-import { render, useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { render, useComponent, useEnv, useLayoutEffect, useSubEnv, status } from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -38,7 +38,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @typedef {import("services").ServiceFactories} Services
  */
 
-import { Component, onWillUpdateProps, props, status, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, useProps, proxy, t } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { deepEqual } from "@web/core/utils/objects";
@@ -219,7 +219,7 @@ export const many2XAutocompleteProps = {
 export class Many2XAutocomplete extends Component {
     static template = "web.Many2XAutocomplete";
     static components = { AutoComplete };
-    props = props(many2XAutocompleteProps);
+    props = useProps(many2XAutocompleteProps);
     setup() {
         this.orm = useService("orm");
         this.offline = useService("offline");
@@ -699,7 +699,7 @@ export const x2ManyFieldDialogProps = {
 export class X2ManyFieldDialog extends Component {
     static template = "web.X2ManyFieldDialog";
     static components = { Dialog, FormRenderer, ViewButton };
-    props = props(x2ManyFieldDialogProps);
+    props = useProps(x2ManyFieldDialogProps);
     setup() {
         this.actionService = useService("action");
         this.ui = useService("ui");

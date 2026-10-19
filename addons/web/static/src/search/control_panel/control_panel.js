@@ -10,7 +10,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, useProps, proxy, t } from "@odoo/owl";
 import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
 
 const STICKY_CLASS = "o_mobile_sticky";
@@ -28,7 +28,7 @@ export class ControlPanel extends Component {
         Breadcrumbs,
         EmbeddedActionsPanel,
     };
-    props = props({
+    props = useProps({
         display: t.object().optional(DEFAULT_DISPLAY),
         slots: t.object().optional(),
     });

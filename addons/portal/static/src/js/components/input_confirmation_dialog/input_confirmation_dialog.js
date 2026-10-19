@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 import { useLayoutEffect } from "@web/owl2/utils";
 import {
     ConfirmationDialog,
@@ -6,7 +6,7 @@ import {
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class InputConfirmationDialog extends ConfirmationDialog {
-    props = props({
+    props = useProps({
         ...confirmationDialogProps,
         onInput: t.function().optional(),
     });

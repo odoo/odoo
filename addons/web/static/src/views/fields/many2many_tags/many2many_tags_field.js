@@ -20,7 +20,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, useProps, proxy, t } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 
 export const DEFAULT_TAG_LIMIT = 8;
@@ -64,7 +64,7 @@ export class Many2ManyTagsField extends Component {
         Many2XAutocomplete,
         Popover: Many2ManyTagsFieldColorListPopover,
     };
-    props = props(many2ManyTagsFieldProps);
+    props = useProps(many2ManyTagsFieldProps);
 
     setup() {
         this.state = proxy({ expanded: false });

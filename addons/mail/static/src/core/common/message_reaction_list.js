@@ -1,5 +1,5 @@
 import { useHover } from "@mail/utils/common/hooks";
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -15,7 +15,7 @@ export class MessageReactionList extends Component {
         super.setup(...arguments);
         this.loadEmoji = useLoadEmoji();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             message: types.instanceOf(this.store["mail.message"].Class),
             openReactionMenu: types.function([types.instanceOf(this.store.MessageReactions.Class)]),
             reaction: types.instanceOf(this.store.MessageReactions.Class),

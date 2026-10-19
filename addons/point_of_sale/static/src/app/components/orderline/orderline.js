@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { useTimedPress } from "@point_of_sale/app/utils/use_timed_press";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -7,7 +7,7 @@ import { BadgeTag } from "@web/core/tags_list/badge_tag";
 export class Orderline extends Component {
     static components = { BadgeTag };
     static template = "point_of_sale.Orderline";
-    props = props({
+    props = useProps({
         line: t.object(),
         class: t.object().optional(),
         slots: t.object().optional(),

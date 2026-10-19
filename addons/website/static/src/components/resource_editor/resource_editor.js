@@ -15,7 +15,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ResourceEditorWarningOverlay } from "./resource_editor_warning";
 import { checkSCSS, checkXML, formatXML } from "./utils";
 
-import { Component, onWillUnmount, onWillStart, props, useEffect, proxy, t } from "@odoo/owl";
+import { Component, onWillUnmount, onWillStart, useProps, useEffect, proxy, t } from "@odoo/owl";
 
 const BUNDLES_RESTRICTION = [
     "web.assets_frontend",
@@ -33,7 +33,7 @@ export class ResourceEditor extends Component {
         SelectMenu,
     };
     static template = "website.ResourceEditor";
-    props = props({
+    props = useProps({
         close: t.function().optional(() => () => {}),
     });
 

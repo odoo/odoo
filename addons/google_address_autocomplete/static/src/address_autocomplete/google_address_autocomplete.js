@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { CharField, charField, charFieldProps } from "@web/views/fields/char/char_field";
@@ -42,7 +42,7 @@ export class AddressAutoComplete extends CharField {
     static template = "google_address_autocomplete.AddressAutoCompleteTemplate";
     static components = { AutoComplete, ...CharField.components };
 
-    props = props({
+    props = useProps({
         ...charFieldProps,
         addressFieldMap: t.object().optional({}),
     });

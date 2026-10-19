@@ -1,4 +1,4 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, status } from "@web/owl2/utils";
 /* global BarcodeDetector */
 
 import { browser } from "@web/core/browser/browser";
@@ -6,16 +6,7 @@ import { delay } from "@web/core/utils/concurrency";
 import { loadJS } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
-import {
-    Component,
-    onMounted,
-    onWillStart,
-    onWillUnmount,
-    props,
-    proxy,
-    status,
-    t,
-} from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, useProps, proxy, t } from "@odoo/owl";
 import { isIOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
@@ -25,7 +16,7 @@ export class BarcodeVideoScanner extends Component {
     static components = {
         CropOverlay,
     };
-    props = props({
+    props = useProps({
         cssClass: t.string().optional("w-100 h-100"),
         facingMode: t.selection(["environment", "left", "right", "user"]),
         close: t.function().optional(),

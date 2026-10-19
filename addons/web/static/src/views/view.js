@@ -19,7 +19,7 @@ import {
     onWillUpdateProps,
     onWillStart,
     proxy,
-    props,
+    useProps,
     toRaw,
     t,
     applyDefaults,
@@ -211,7 +211,7 @@ export class View extends Component {
     static canOrderByCount = false;
     // View accepts any prop (owl3 validation is loose); only the keys with
     // defaults are declared here.
-    props = props();
+    props = useProps();
 
     setup() {
         this.props = this.applyViewDefaults(this.props);

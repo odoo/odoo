@@ -1,4 +1,5 @@
-import { Component, props, signal, status, t, useEffect, useListener } from "@odoo/owl";
+import { Component, useProps, signal, t, useEffect, useListener } from "@odoo/owl";
+import { status } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallParticipantVideo extends Component {
@@ -8,7 +9,7 @@ export class CallParticipantVideo extends Component {
         super.setup();
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             inset: t
                 .function([
                     t.instanceOf(this.store["discuss.channel.rtc.session"].Class),

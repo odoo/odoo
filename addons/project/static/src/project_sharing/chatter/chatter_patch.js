@@ -1,7 +1,7 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
@@ -9,7 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 patch(Chatter.prototype, {
     setup() {
         super.setup(...arguments);
-        this.projectSharingProps = props({
+        this.projectSharingProps = useProps({
             displayFollowButton: t.boolean(),
             isFollower: t.boolean(),
             projectSharingId: t.number().optional(),

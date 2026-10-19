@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, status } from "@web/owl2/utils";
 import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { AttachmentList } from "@mail/core/common/attachment_list";
@@ -14,7 +14,7 @@ import { FollowerList } from "@mail/core/web/follower_list";
 import { useHover, useOnChange } from "@mail/utils/common/hooks";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 
-import { props, status, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -51,7 +51,7 @@ Object.assign(Chatter.components, {
 const chatterPatch = {
     setup() {
         super.setup(...arguments);
-        this.webChatterProps = props({
+        this.webChatterProps = useProps({
             close: t.function([]).optional(),
             has_activities: t.boolean().optional(true),
             hasAttachmentPreview: t.boolean().optional(false),

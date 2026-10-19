@@ -1,9 +1,7 @@
-import { useComponent, useEnv, useRef, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useEnv, useRef, useSubEnv, status } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-
-import { status } from "@odoo/owl";
 
 export async function executeButtonCallback(el, fct) {
     let btns = [];

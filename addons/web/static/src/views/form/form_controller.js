@@ -42,7 +42,7 @@ import {
     onMounted,
     onWillDestroy,
     onWillUnmount,
-    props,
+    useProps,
     proxy,
     t,
 } from "@odoo/owl";
@@ -155,7 +155,7 @@ export class FormController extends Component {
         Widget,
     };
 
-    props = props(formControllerProps);
+    props = useProps(formControllerProps);
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;

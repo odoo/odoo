@@ -1,4 +1,4 @@
-import { Component, props, signal, types, useEffect } from "@odoo/owl";
+import { Component, useProps, signal, types, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
@@ -17,7 +17,7 @@ export class DiscussSidebarCallParticipants extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
             compact: types.boolean().optional(),
         });

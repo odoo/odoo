@@ -1,6 +1,6 @@
 import { ActivityButton } from "@mail/core/web/activity_button";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { Record } from "@web/model/relational_model/record";
@@ -27,7 +27,7 @@ export class KanbanActivity extends Component {
 
     setup() {
         super.setup(...arguments);
-        this.props = props({ record: types.instanceOf(Record) });
+        this.props = useProps({ record: types.instanceOf(Record) });
     }
 }
 

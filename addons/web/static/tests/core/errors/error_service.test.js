@@ -6,7 +6,7 @@ import {
     manuallyDispatchProgrammaticEvent,
     test,
 } from "@odoo/hoot";
-import { Component, onWillStart, props, xml } from "@odoo/owl";
+import { Component, onWillStart, useProps, xml } from "@odoo/owl";
 import {
     makeMockEnv,
     mockService,
@@ -210,7 +210,7 @@ test("originalError is the root cause of the error chain", async () => {
     class ErrHandler extends Component {
         static template = xml`<t t-component="this.props.comp"/>`;
 
-        props = props();
+        props = useProps();
     }
 
     const error1 = new Error();

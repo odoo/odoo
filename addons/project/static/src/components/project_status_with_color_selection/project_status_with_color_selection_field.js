@@ -1,13 +1,13 @@
 import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 
 import { STATUS_COLORS, STATUS_COLOR_PREFIX } from "../../utils/project_utils";
 
 export class ProjectStatusWithColorSelectionField extends SelectionField {
     // first keys inlined from SelectionField.props (still old-style, has no defaultProps)
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         placeholder: t.string().optional(),
         required: t.boolean().optional(),

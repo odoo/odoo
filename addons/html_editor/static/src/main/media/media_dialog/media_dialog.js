@@ -3,7 +3,7 @@ import { useService, useChildRef } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
-import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { Component, useProps, proxy, signal, t } from "@odoo/owl";
 import { iconClasses } from "@html_editor/utils/dom_info";
 import { TABS, renderMedia } from "./media_dialog_utils";
 
@@ -35,7 +35,7 @@ export class MediaDialog extends Component {
         Dialog,
         Notebook,
     };
-    props = props(mediaDialogProps);
+    props = useProps(mediaDialogProps);
 
     setup() {
         this.size = "xl";

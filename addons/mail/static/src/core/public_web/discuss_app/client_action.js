@@ -6,7 +6,7 @@ import {
     onWillStart,
     onWillUnmount,
     onWillUpdateProps,
-    props,
+    useProps,
     t,
 } from "@odoo/owl";
 
@@ -20,7 +20,7 @@ export class DiscussClientAction extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             action: t
                 .object({
                     context: t.object({

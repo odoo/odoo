@@ -1,4 +1,4 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel_actions";
 import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -14,7 +14,7 @@ export class DiscussSidebarSubchannel extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
             isFirst: types.boolean(),
         });

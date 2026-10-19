@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { onPatched, props, proxy, t } from "@odoo/owl";
+import { onPatched, useProps, proxy, t } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 import { TModelInput } from "@point_of_sale/app/components/inputs/t_model_input";
@@ -30,7 +30,7 @@ export const inputProps = {
 
 export class Input extends TModelInput {
     static template = "point_of_sale.input";
-    props = props(inputProps);
+    props = useProps(inputProps);
     setup() {
         this.state = proxy({ isOpen: false });
         // Bind setValue to ensure that 'this' remains the component instance.

@@ -3,11 +3,11 @@ import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 export class ButtonBox extends Component {
     static template = "web.Form.ButtonBox";
     static components = { Dropdown, DropdownItem };
-    props = props({
+    props = useProps({
         slots: t.object(),
         class: t.string().optional(""),
     });

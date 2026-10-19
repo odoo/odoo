@@ -2,14 +2,14 @@ import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/rela
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { parseXML } from "@web/core/utils/xml";
 import { ResourceCalendarAttendancePopover } from "@resource/components/resource_calendar_attendance_popover/resource_calendar_attendance_popover";
-import { config, types as t, Plugin, whenReady } from "@odoo/owl";
+import { useConfig, types as t, Plugin, whenReady } from "@odoo/owl";
 
 export class ResourceCalendarAttendancePopoverLoader extends Plugin {
     component = ResourceCalendarAttendancePopover;
 
     setup() {
-        this.meta = config("meta", t.object());
-        this.env = config("env", t.object());
+        this.meta = useConfig("meta", t.object());
+        this.env = useConfig("env", t.object());
         this.viewService = this.env.services.view;
         whenReady(() => this.loadPopoverView(this.component.additionalFieldsToFetch));
     }

@@ -2,7 +2,7 @@ import { useRef } from "@web/owl2/utils";
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -17,7 +17,7 @@ export class ActivityCell extends Component {
     static template = "mail.ActivityCell";
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             activityIds: t.array(t.number()),
             activityTypeId: t.number(),
             attachmentsInfo: t

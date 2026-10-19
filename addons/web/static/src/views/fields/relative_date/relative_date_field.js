@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { getClassNameFromDecoration } from "@web/views/utils";
 import { _t } from "@web/core/l10n/translation";
@@ -13,7 +13,7 @@ const { DateTime } = luxon;
 export class RelativeDateField extends Component {
     static components = { DateTimeField };
 
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         classes: t.object().optional({
             bf: "days <= 0",

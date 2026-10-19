@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { MessageReactionList } from "@mail/core/common/message_reaction_list";
@@ -15,7 +15,7 @@ export class MessageReactions extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             message: types.instanceOf(this.store["mail.message"].Class),
             openReactionMenu: types.function([types.instanceOf(this.store.MessageReactions.Class)]),
         });

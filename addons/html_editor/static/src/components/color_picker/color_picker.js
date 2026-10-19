@@ -1,5 +1,5 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, useProps, proxy, t } from "@odoo/owl";
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
@@ -40,7 +40,7 @@ export const DEFAULT_THEME_COLOR_VARS = [
 export class ColorPicker extends Component {
     static template = "html_editor.ColorPicker";
     static components = { CustomColorPicker, Dropdown, DropdownItem };
-    props = props({
+    props = useProps({
         state: t.object({
             selectedColor: t.string(),
             selectedColorCombination: t.string().optional(),

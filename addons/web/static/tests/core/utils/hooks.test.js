@@ -19,7 +19,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { render } from "@web/owl2/utils";
 
-import { Component, onMounted, props, proxy, signal, types as t, xml } from "@odoo/owl";
+import { Component, onMounted, useProps, proxy, signal, types as t, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { CommandPalette } from "@web/core/commands/command_palette";
 import { registry } from "@web/core/registry";
@@ -745,7 +745,7 @@ describe("useBackButton", () => {
         class DummyComponent extends Component {
             static template = xml`<div t-out="this.props.name" />`;
 
-            props = props({ name: t.string() });
+            props = useProps({ name: t.string() });
 
             setup() {
                 useBackButton(this.onBack);

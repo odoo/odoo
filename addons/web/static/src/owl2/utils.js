@@ -10,6 +10,23 @@ export function render(component, deep = false) {
     component.__owl__.render(deep);
 }
 
+/**
+ * @param {any} component
+ * @returns {"new" | "mounted" | "destroyed"}
+ * @deprecated read the status of the component scope instead: `useScope().status`
+ *  (to compare with `STATUS` from "@odoo/owl")
+ */
+export function status(component) {
+    switch (component.__owl__.status) {
+        case owl.STATUS.NEW:
+            return "new";
+        case owl.STATUS.MOUNTED:
+            return "mounted";
+        case owl.STATUS.DESTROYED:
+            return "destroyed";
+    }
+}
+
 export const onWillRender = owl.onWillRender;
 export const onRendered = owl.onRendered;
 export const useRef = owl.useRef;

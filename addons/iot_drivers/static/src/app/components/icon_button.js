@@ -1,9 +1,9 @@
 /* global owl */
 
-const { Component, xml, props, types: t } = owl;
+const { Component, xml, useProps, types: t } = owl;
 
 export class IconButton extends Component {
-    props = props({
+    props = useProps({
         onClick: t.function(),
         icon: t.string(),
     });

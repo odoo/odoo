@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, props, signal, t, useListener } from "@odoo/owl";
+import { Component, onMounted, useProps, signal, t, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class ActivityMarkAsDone extends Component {
@@ -8,7 +8,7 @@ export class ActivityMarkAsDone extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             activity: t.instanceOf(this.store["mail.activity"].Class),
             close: t.function([t.instanceOf(MouseEvent)]).optional(),
             hasHeader: t.boolean().optional(false),

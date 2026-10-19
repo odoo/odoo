@@ -4,7 +4,7 @@ import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps, props, proxy, t, useListener } from "@odoo/owl";
+import { Component, onWillUpdateProps, useProps, proxy, t, useListener } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 
 export const autoCompleteProps = {
@@ -41,7 +41,7 @@ export const autoCompleteProps = {
 
 export class AutoComplete extends Component {
     static template = "web.AutoComplete";
-    props = props(autoCompleteProps);
+    props = useProps(autoCompleteProps);
 
     get timeout() {
         return this.props.inputDebounceDelay;

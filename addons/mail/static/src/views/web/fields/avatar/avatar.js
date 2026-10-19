@@ -1,7 +1,7 @@
 import { usePopover } from "@web/core/popover/popover_hook";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 export const avatarProps = {
     resModel: t.string(),
@@ -15,7 +15,7 @@ export const avatarProps = {
 
 export class Avatar extends Component {
     static template = "mail.Avatar";
-    props = props(avatarProps);
+    props = useProps(avatarProps);
 
     setup() {
         this.avatarCard = usePopover(AvatarCard);

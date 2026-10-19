@@ -10,13 +10,13 @@ import { useAutofocus } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillStart, useProps, proxy, t } from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
     static template = "web.NameAndSignature";
     static components = { Dropdown, DropdownItem };
-    props = props({
+    props = useProps({
         signature: t.object(),
         defaultFont: t.string().optional(""),
         displaySignatureRatio: t.number().optional(3.0),

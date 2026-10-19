@@ -3,7 +3,7 @@ import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { useMessageScrolling, useOnChange } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, useProps, proxy, signal, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
@@ -16,7 +16,7 @@ export class Chatter extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             composer: t.boolean().optional(true),
             threadId: t.or([t.number(), t.literal(false)]).optional(false),
             threadModel: t.string(),

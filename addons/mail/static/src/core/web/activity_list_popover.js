@@ -2,7 +2,7 @@ import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_it
 import { useOnChange } from "@mail/utils/common/hooks";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -12,7 +12,7 @@ export class ActivityListPopover extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             activityIds: types.array(types.number()),
             close: types.function([]),
             defaultActivityTypeId: types.number().optional(),

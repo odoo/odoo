@@ -6,7 +6,7 @@ import { formatFloat } from "../formatters";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, useProps, proxy, t } from "@odoo/owl";
 
 export const floatFieldProps = {
     ...standardFieldProps,
@@ -22,7 +22,7 @@ export const floatFieldProps = {
 
 export class FloatField extends Component {
     static template = "web.FloatField";
-    props = props(floatFieldProps);
+    props = useProps(floatFieldProps);
 
     setup() {
         this.state = proxy({

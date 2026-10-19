@@ -1,5 +1,5 @@
-import { useComponent } from "@web/owl2/utils";
-import { onWillUnmount, status } from "@odoo/owl";
+import { useComponent, status } from "@web/owl2/utils";
+import { onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**

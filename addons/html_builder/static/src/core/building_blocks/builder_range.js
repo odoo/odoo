@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 import {
     useActionInfo,
@@ -16,7 +16,7 @@ import { useDebounced } from "@web/core/utils/timing";
 
 export class BuilderRange extends Component {
     static template = "html_builder.BuilderRange";
-    props = props({
+    props = useProps({
         // basicContainerBuilderComponentProps (converted inline)
         id: t.string().optional(),
         applyTo: t.string().optional(),

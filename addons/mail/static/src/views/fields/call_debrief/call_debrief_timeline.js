@@ -1,4 +1,4 @@
-import { Component, onWillUnmount, props, signal, proxy } from "@odoo/owl";
+import { Component, onWillUnmount, useProps, signal, proxy } from "@odoo/owl";
 import { formatDuration } from "@mail/views/fields/call_debrief/call_debrief_utils";
 
 export class CallDebriefTimeline extends Component {
@@ -15,7 +15,7 @@ export class CallDebriefTimeline extends Component {
         currentTime: { type: Number, optional: true },
     };
 
-    props = props();
+    props = useProps();
 
     setup() {
         this.timeline = signal(null);

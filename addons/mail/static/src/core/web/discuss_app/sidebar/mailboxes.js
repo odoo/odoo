@@ -3,7 +3,7 @@ import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
@@ -17,7 +17,7 @@ export class Mailbox extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({ mailbox: types.instanceOf(this.store["mail.thread"].Class) });
+        this.props = useProps({ mailbox: types.instanceOf(this.store["mail.thread"].Class) });
         this.hover = useHover(["root", "floating"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {

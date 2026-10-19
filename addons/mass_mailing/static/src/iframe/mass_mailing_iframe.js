@@ -7,8 +7,7 @@ import {
     onMounted,
     onWillDestroy,
     onWillUnmount,
-    props,
-    status,
+    useProps,
     proxy,
     t,
     useEffect,
@@ -22,7 +21,7 @@ import { useBus, useChildRef, useForwardRefToParent, useService } from "@web/cor
 import { renderToFragment } from "@web/core/utils/render";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useSubEnv, status } from "@web/owl2/utils";
 import { loadGoogleFonts } from "./mass_mailing_iframe_utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { isBlock } from "@html_editor/utils/blocks";
@@ -35,7 +34,7 @@ export class MassMailingIframe extends Component {
         LazyComponent,
         LocalOverlayContainer,
     };
-    props = props({
+    props = useProps({
         config: t.object(),
         iframeRef: t.function(),
         iframeWrapperRef: t.function(),

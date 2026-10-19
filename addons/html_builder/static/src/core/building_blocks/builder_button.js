@@ -1,4 +1,4 @@
-import { Component, xml, props, t } from "@odoo/owl";
+import { Component, xml, useProps, t } from "@odoo/owl";
 import { useActionInfo, useSelectableItemComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { BuilderSelectableWrapperComponent } from "./builder_selectable_wrapper_component";
@@ -56,7 +56,7 @@ const builderButtonProps = {
 export class BuilderButtonInternal extends Component {
     static template = "html_builder.BuilderButtonInternal";
     static components = { BuilderComponent, Image };
-    props = props({
+    props = useProps({
         ...builderButtonProps,
         type: t.string().optional("secondary"),
         titleActive: t.string().optional(""),
@@ -109,7 +109,7 @@ export class BuilderButton extends BuilderSelectableWrapperComponent {
         </BuilderButtonInternal>
         `;
     static components = { BuilderButtonInternal };
-    props = props({
+    props = useProps({
         ltrRtlMapping: t.string().optional(),
         isLabelLinkedToContent: t.boolean().optional(),
         slots: t.object().optional(),

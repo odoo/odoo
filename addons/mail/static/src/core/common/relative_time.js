@@ -1,4 +1,4 @@
-import { Component, computed, onWillDestroy, props, signal, types, xml } from "@odoo/owl";
+import { Component, computed, onWillDestroy, useProps, signal, types, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { incrementFn } from "../../utils/common/signal";
@@ -12,7 +12,7 @@ export class RelativeTime extends Component {
     setup() {
         super.setup();
         this.recomputeSignal = signal(0);
-        this.props = props({
+        this.props = useProps({
             datetime: types.instanceOf(luxon.DateTime),
         });
         this.timeout = null;

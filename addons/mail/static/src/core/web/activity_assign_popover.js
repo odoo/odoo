@@ -1,5 +1,5 @@
 import { imageUrl } from "@web/core/utils/urls";
-import { Component, props, signal, types } from "@odoo/owl";
+import { Component, useProps, signal, types } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
@@ -13,7 +13,7 @@ export class ActivityAssignPopover extends Component {
         this.store = useService("mail.store");
         this.orm = useService("orm");
         this.responsibleLabel = _t("Responsible");
-        this.props = props(
+        this.props = useProps(
             {
                 activity: types.instanceOf(this.store["mail.activity"].Class),
                 close: types.function().optional(),

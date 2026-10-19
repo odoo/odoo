@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import { Component, useProps, proxy, signal, t, useEffect } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { downloadFile } from "@web/core/network/download";
 import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
@@ -30,7 +30,7 @@ const IMAGE_BUFFER_PADDING = 20;
 export class FileViewer extends Component {
     static template = "web.FileViewer";
     static components = {};
-    props = props({
+    props = useProps({
         files: t.any(),
         startIndex: t.any(),
         close: t.any().optional(),

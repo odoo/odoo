@@ -1,5 +1,5 @@
 import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, effect, props, proxy, t } from "@odoo/owl";
+import { Component, effect, useProps, proxy, t } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -56,7 +56,7 @@ export const dateTimeFieldProps = {
 
 /** @extends {Component<DateTimeFieldProps>} */
 export class DateTimeField extends Component {
-    props = props(dateTimeFieldProps);
+    props = useProps(dateTimeFieldProps);
 
     static template = "web.DateTimeField";
 

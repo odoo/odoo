@@ -1,7 +1,7 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class DiscussSidebarChannelActions extends Component {
@@ -10,7 +10,7 @@ export class DiscussSidebarChannelActions extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
         });
         this.isDiscussSidebarChannelActions = true;

@@ -47,7 +47,7 @@ class Component extends owl.Component {
      */
     constructor(node) {
         super(node);
-        this.props = owl.props(null, this.constructor.defaultProps);
+        this.props = owl.useProps(null, this.constructor.defaultProps);
         this.env = useChildEnv();
         this.__owl__ = node;
     }
@@ -173,7 +173,7 @@ owl.useEnv = function useEnv() {
 };
 
 function useChildEnv() {
-    return owl.plugin(EnvPlugin).env;
+    return owl.usePlugin(EnvPlugin).env;
 }
 owl.useChildEnv = useChildEnv;
 

@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -9,7 +9,7 @@ export class ActivityMailTemplate extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             activity: t.instanceOf(this.store["mail.activity"].Class),
             onActivityChanged: t
                 .function([t.instanceOf(this.store["mail.thread"].Class)])

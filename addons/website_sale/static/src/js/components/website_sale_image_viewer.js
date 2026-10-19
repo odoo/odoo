@@ -1,5 +1,5 @@
 import { onRendered, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { onMounted, props, proxy, t } from "@odoo/owl";
+import { onMounted, useProps, proxy, t } from "@odoo/owl";
 import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDebounced } from "@web/core/utils/timing";
@@ -19,7 +19,7 @@ delete productImageViewerProps.slots;
 
 export class ProductImageViewer extends Dialog {
     static template = "website_sale.ProductImageViewer";
-    props = props(productImageViewerProps);
+    props = useProps(productImageViewerProps);
 
     setup() {
         super.setup();
