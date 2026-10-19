@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
         },
         {
             content: "choose from the positioning list",
-            trigger: "button.o_change_website_purpose",
+            trigger: "button.o_change_website_positioning",
             run: "click",
         },
         // Palette screen
@@ -90,11 +90,11 @@ registry.category("web_tour.tours").add("configurator_flow", {
             content: `Check footer menu ${menu} is there`,
             trigger: `:iframe footer a:contains(${menu})`,
         })),
-        ...["Home", "Events", "Courses", "Blog"].map((menu) => ({
+        ...["Home", "Events", "Courses", "Blog", "Contact Us"].map((menu) => ({
             content: `Check menu ${menu} is there`,
             trigger: `:iframe .top_menu a:contains(${menu}):not(:visible)`,
         })),
-        ...["/", "/event", "/slides", "/blog"].map((url) => ({
+        ...["/", "/event", "/slides", "/blog", "/contactus"].map((url) => ({
             content: `Check url ${url} is there`,
             trigger: `:iframe .top_menu a[href^='${url}']:not(:visible)`,
         })),
