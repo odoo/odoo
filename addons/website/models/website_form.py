@@ -8,10 +8,25 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.tools.misc import hmac
 
 
 class Website(models.Model):
     _inherit = 'website'
+
+    @api.model
+    def _get_website_form_signature(self, model_name, values):
+        signed_fields = self._get_website_form_signature_fields(model_name)
+        field_values = tuple((name, str(values[name])) for name in sorted(signed_fields) if values.get(name))
+        if not field_values:
+            return None
+        return hmac(self.sudo().env, 'website_form_signature', str((model_name, field_values)))
+
+    @api.model
+    def _get_website_form_signature_fields(self, model_name):
+        if model_name == 'mail.mail':
+            return ('email_to', 'email_cc', 'email_bcc')
+        return ()
 
     def _website_form_last_record(self):
         if request and request.session.get('form_builder_model_model'):
