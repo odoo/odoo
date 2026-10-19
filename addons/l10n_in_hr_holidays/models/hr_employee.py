@@ -16,7 +16,7 @@ class HrEmployees(models.Model):
             ('date', '<=', date_end),
             ('date', '>=', date_start),
             ('company_id', 'in', self.env.companies.ids)
-        ])
+        ], order='date, id')
         return [{
             'id': -optional_holiday.id,
             'title': optional_holiday.name,
