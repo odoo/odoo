@@ -741,18 +741,20 @@ class HrEmployee(models.Model):
     @api.depends('version_ids.date_version', 'version_ids.active')
     def _compute_current_version_id(self):
         today = fields.Date.context_today(self)
+        current_version_per_employee = {}
+        for version in self.env['hr.version'].search_fetch(
+            [
+                ('employee_id', 'in', self.ids),
+                ('date_version', '<=', today),
+                ('active', '=', True),
+            ],
+            ['employee_id'],
+            order='employee_id, date_version desc',
+        ):
+            current_version_per_employee.setdefault(version.employee_id.id, version)
         for employee in self:
-            version = self.env['hr.version'].search(
-                [
-                    ('employee_id', 'in', employee.ids),
-                    ('date_version', '<=', today),
-                    ('active', '=', True),
-                ],
-                order='date_version desc',
-                limit=1,
-            )
             new_current_version = False
-            if version:
+            if version := current_version_per_employee.get(employee.id):
                 new_current_version = version
             elif employee.version_ids:
                 new_current_version = employee.version_ids[0]
