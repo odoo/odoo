@@ -1006,6 +1006,9 @@ class CalendarEvent(models.Model):
         return events
 
     def write(self, vals):
+        if not self:
+            return super().write(vals)
+
         values = vals
         detached_events = self.env['calendar.event']
         recurrence_update_setting = values.pop('recurrence_update', None)
