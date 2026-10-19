@@ -1046,7 +1046,7 @@ class SaleOrderLine(models.Model):
             invoice_lines = line._get_invoice_lines()
             for invoice_line in invoice_lines:
                 if line.is_downpayment:
-                    if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel').mapped('balance'))):
+                    if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel' or l.move_id.payment_state == 'invoicing_legacy').mapped('balance'))):
                         invoiced_qties[line] = 1
                         line.qty_invoiced = 1
                     else:
