@@ -727,9 +727,6 @@ class CrmLead(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('website'):
-                vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         leads = super().create(vals_list)
 
         # handling a date_closed value if the lead is directly created in the won stage
@@ -758,9 +755,6 @@ class CrmLead(models.Model):
         return leads
 
     def write(self, vals):
-        if vals.get('website'):
-            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
-
         now = self.env.cr.now()
         stage_updated, stage_is_won = False, False
         # stage change (or reset): update date_last_stage_update if at least one

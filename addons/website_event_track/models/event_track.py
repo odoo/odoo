@@ -454,10 +454,6 @@ class EventTrack(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for values in vals_list:
-            if values.get('website_cta_url'):
-                values['website_cta_url'] = self.env['res.partner']._clean_website(values['website_cta_url'])
-
         tracks = super().create(vals_list)
 
         post_values = {} if self.env.user.email else {'email_from': self.env.company.catchall_formatted}
@@ -476,8 +472,6 @@ class EventTrack(models.Model):
         return tracks
 
     def write(self, vals):
-        if vals.get('website_cta_url'):
-            vals['website_cta_url'] = self.env['res.partner']._clean_website(vals['website_cta_url'])
         if 'stage_id' in vals and 'kanban_state' not in vals:
             vals['kanban_state'] = 'normal'
         if vals.get('stage_id'):

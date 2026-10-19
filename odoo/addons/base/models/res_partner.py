@@ -14,7 +14,6 @@ from stdnum.exceptions import InvalidChecksum, InvalidFormat
 from stdnum.eu import vat as eu_vat
 from stdnum.util import clean
 from zoneinfo import ZoneInfo
-from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
@@ -926,14 +925,6 @@ class ResPartner(models.Model):
             addr_vals = self._convert_fields_to_values(address_fields)
             parent._update_address(addr_vals)
 
-    def _clean_website(self, website):
-        url = urls.url_parse(website)
-        if not url.scheme:
-            if not url.netloc:
-                url = url.replace(netloc=url.path, path='')
-            website = url.replace(scheme='http').to_url()
-        return website
-
     @api.depends('vat')
     def _compute_has_vat(self):
         for partner in self:
@@ -984,8 +975,6 @@ class ResPartner(models.Model):
                     raise ValidationError(_('You cannot archive contacts linked to an active user.\n'
                                             'Ask an administrator to archive their associated user first.\n\n'
                                             'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
-        if vals.get('website'):
-            vals['website'] = self._clean_website(vals['website'])
         if vals.get('name'):
             for partner in self:
                 for bank in partner.bank_ids:
@@ -1030,8 +1019,6 @@ class ResPartner(models.Model):
             self._check_import_consistency(vals_list)
         for vals in vals_list:
             self._clean_additional_identifiers(vals)
-            if vals.get('website'):
-                vals['website'] = self._clean_website(vals['website'])
         partners = super().create(vals_list)
         # due to ir.default, compute is not called as there is a default value
         # hence calling the compute manually
