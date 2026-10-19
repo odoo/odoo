@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo noupdate="1">
+  <record id="sale.list_b2b" model="product.pricelist" forcecreate="0">
+    <field name="active" eval="True"/>
+  </record>
+  <record id="res_partner_grade_members" model="res.partner.grade">
+    <field name="name">Members</field>
+    <field name="default_pricelist_id" ref="sale.list_b2b"/>
+  </record>
+  <record id="product_product_one_year_membership" model="product.product">
+    <field name="name">1-year Membership</field>
+    <field name="type">service</field>
+    <field name="list_price">990.0</field>
+    <field name="service_tracking">partnership</field>
+    <field name="grade_id" ref="res_partner_grade_members"/>
+    <field name="service_type">manual</field>
+    <field name="invoice_policy">order</field>
+  </record>
+  <record id="sale_order_membership_joel" model="sale.order">
+    <field name="partner_id" ref="base.partner_demo_portal"/>
+    <field name="user_id" ref="base.user_admin"/>
+  </record>
+  <record id="sale_order_line_membership_joel" model="sale.order.line">
+    <field name="order_id" ref="sale_order_membership_joel"/>
+    <field name="product_id" ref="product_product_one_year_membership"/>
+  </record>
+  <function model="sale.order" name="action_confirm" eval="[ref('sale_order_membership_joel')]"/>
+</odoo>
