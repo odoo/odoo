@@ -4,15 +4,9 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    # DEPRECATED - was for the pre-prod phase
-    l10n_fr_pdp_pilot_phase = fields.Boolean(
-        compute='_compute_l10n_fr_pdp_pilot_phase',
-        inverse='_inverse_l10n_fr_pdp_pilot_phase',
-        string="Pilot Phase",
-        help="Participate in the Pilot Phase of the French E-Invoicing. This way you are able to test it before it becomes mandatory.",
-    )
     l10n_fr_pdp_send_to_ppf = fields.Boolean(
-        related='company_id.l10n_fr_pdp_send_to_ppf', readonly=False,
+        compute='_compute_l10n_fr_pdp_send_to_ppf',
+        inverse='_inverse_l10n_fr_pdp_send_to_ppf',
         string="Send to PPF",
         help="Activate Flux 1 regulatory data, Flux 6 mandatory statuses and Flux 10 e-reporting generation for this company.",
     )
@@ -47,13 +41,16 @@ class ResConfigSettings(models.TransientModel):
             return super().action_open_peppol_form()
         return self.action_open_pdp_form()
 
-    @api.depends('company_id.l10n_fr_pdp_pilot_phase')
-    def _compute_l10n_fr_pdp_pilot_phase(self):
+    @api.depends('company_id.l10n_fr_pdp_send_to_ppf')
+    def _compute_l10n_fr_pdp_send_to_ppf(self):
         for record in self:
-            record.l10n_fr_pdp_pilot_phase = record.company_id.l10n_fr_pdp_pilot_phase
+            record.l10n_fr_pdp_send_to_ppf = record.company_id.l10n_fr_pdp_send_to_ppf
 
-    def _inverse_l10n_fr_pdp_pilot_phase(self):
-        pass
+    def _inverse_l10n_fr_pdp_send_to_ppf(self):
+        for record in self:
+            if record.l10n_fr_pdp_send_to_ppf != record.company_id.l10n_fr_pdp_send_to_ppf:
+                record.company_id.l10n_fr_pdp_send_to_ppf = record.l10n_fr_pdp_send_to_ppf
+                record.company_id._l10n_fr_pdp_update_send_to_ppf(record.l10n_fr_pdp_send_to_ppf)
 
     # TODO: remove in master
     @api.model

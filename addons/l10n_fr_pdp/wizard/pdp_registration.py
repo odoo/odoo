@@ -32,13 +32,6 @@ class PdpRegistration(models.TransientModel):
         required=True,
         help="The identifier starts with the SIREN, the part after the SIREN is optional. The expected format of the identifier is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage",
     )
-    # DEPRECATED - was for the pre-prod phase
-    pdp_pilot_phase = fields.Boolean(
-        related='company_id.l10n_fr_pdp_pilot_phase',
-        readonly=False,
-        string=" Pilot Phase",
-        help="Participate in the Pilot Phase of the French E-Invoicing. This way you are able to test it before it becomes mandatory.",
-    )
     edi_mode = fields.Selection(
         string='EDI mode',
         selection=[('demo', 'Demo'), ('test', 'Test'), ('prod', 'Live')],

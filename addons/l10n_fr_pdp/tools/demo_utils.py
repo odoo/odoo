@@ -12,21 +12,25 @@ DEMO_PRIVATE_KEY = 'account_peppol/tools/private_key.pem'
 # -------------------------------------------------------------------------
 
 
+PDP_DEMO_ENDPOINTS = {
+    'register_receiver': lambda _user, *args, **kwargs: {},
+    'cancel_pdp_registration': lambda _user, *args, **kwargs: {},
+    'get_all_ppf_documents': lambda _user, *args, **kwargs: {'messages': []},
+    'get_ppf_document': lambda _user, *args, **kwargs: {'messages': []},
+    'send_response': lambda _user, *args, **kwargs: {'messages': []},
+    'send_to_ppf': lambda _user, *args, **kwargs: {},
+}
+
+
 def _mock_call_peppol_proxy(func, self, endpoint, params=None):
     if self.proxy_type != 'pdp':
         return func(self, endpoint, params=params)
 
     endpoint = endpoint.split('/')[-1]
-    if endpoint not in ('register_receiver', 'cancel_pdp_registration', 'get_all_ppf_documents', 'get_ppf_document', 'pilot_phase', 'send_response'):
+    if endpoint not in PDP_DEMO_ENDPOINTS:
         return func(self, endpoint, params=params)
 
-    return {
-        'register_receiver': lambda _user, *args, **kwargs: {},
-        'cancel_pdp_registration': lambda _user, *args, **kwargs: {},
-        'get_all_ppf_documents': lambda _user, *args, **kwargs: {'messages': []},
-        'get_ppf_document': lambda _user, *args, **kwargs: {'messages': []},
-        'send_response': lambda _user, *args, **kwargs: {'messages': []},
-    }[endpoint](self, endpoint, params=params)
+    return PDP_DEMO_ENDPOINTS[endpoint](self, endpoint, params=params)
 
 
 def _mock_register_proxy_user(func, self, company, proxy_type, edi_mode):

@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 from odoo.tools.sql import SQL
 
 from odoo.addons.iap.tools import iap_tools
-from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
 PDP_identifier_re = re.compile(r'^([0-9]{9})(_[0-9]{14})?(_.+)?$')
 
@@ -224,11 +223,13 @@ class ResCompany(models.Model):
         self.ensure_one()
         return super()._peppol_allows_document_reception() and self.country_code != 'FR'
 
-    @handle_demo
-    def _l10n_fr_pdp_update_pilot_phase(self, value):
+    def _l10n_fr_pdp_update_send_to_ppf(self, value):
         self.ensure_one()
-        # DEPRECATED - was for the pre-prod phase
-        return
+        if self.account_peppol_edi_user.proxy_type == 'pdp' and self.account_peppol_proxy_state in ('smp_registration', 'receiver'):
+            self.account_peppol_edi_user._call_peppol_proxy(
+                "/api/pdp/1/send_to_ppf",
+                params={'pdp_send_to_ppf': value},
+            )
 
     def _pdp_get_flow_10_start_date(self):
         self.ensure_one()
