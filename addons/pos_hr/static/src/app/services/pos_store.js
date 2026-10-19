@@ -89,6 +89,20 @@ patch(PosStore.prototype, {
             super.checkPreviousLoggedCashier(...arguments);
         }
     },
+    async setCashierFromBadge(employee, { needsPin = () => true, allowSameCashier = false } = {}) {
+        if (
+            employee &&
+            (allowSameCashier || employee !== this.accessRight.loggedCashier) &&
+            (!employee._pin ||
+                !needsPin(employee) ||
+                (await this.accessRight.checkPin(employee))) &&
+            this.canLoginCashier(employee)
+        ) {
+            this.setCashier(employee);
+            return true;
+        }
+        return false;
+    },
     async selectCashier(pin = false, login = false, list = false) {
         if (!this.config.module_pos_hr) {
             return;
