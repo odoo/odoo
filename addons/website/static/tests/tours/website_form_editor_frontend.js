@@ -29,7 +29,7 @@ tour.register("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('State')):has(select[name='State'][required]:has(option[value='Canada'])))" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')))" +
                         ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))" +
-                        ":has(.s_website_form_field:has(input[name='website_form_signature']))",
+                        ":has(input[name='website_form_signature'])",
         trigger:  ".s_website_form_send"
     },
     {
@@ -142,6 +142,8 @@ tour.register("website_form_editor_tour_submit", {
     {
         content: "Check if conditional field is visible, it should.",
         trigger: "input[name='email_cc']",
+        // Only check visibility; the default input action would fill the field with "Test".
+        run: () => null,
     },
     {
         content: "Select state option",
