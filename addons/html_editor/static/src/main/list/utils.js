@@ -1,6 +1,7 @@
 import { removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import { closestElement, firstLeaf, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { getFontSizeOrClass } from "@html_editor/utils/formatting";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 export function createList(document, mode) {
     const node = document.createElement(mode === "OL" ? "OL" : "UL");
@@ -10,11 +11,15 @@ export function createList(document, mode) {
     return node;
 }
 
-export function insertListAfter(document, afterNode, mode, content = []) {
+export function insertListAfter(document, afterNode, mode, content = [], cursors) {
     const list = createList(document, mode);
+    cursors?.update(callbacksForCursorUpdate.after(afterNode, list));
     afterNode.after(list);
     const li = document.createElement("LI");
-    li.append(...content);
+    for (const el of content) {
+        cursors?.update(callbacksForCursorUpdate.append(li, el));
+        li.append(el);
+    }
     if (content.length === 1 && content[0].nodeType === Node.ELEMENT_NODE) {
         const firstLeafNode = firstLeaf(content[0]);
         const lastLeafNode = lastLeaf(content[0]);
@@ -24,6 +29,7 @@ export function insertListAfter(document, afterNode, mode, content = []) {
             li.style.color = firstClosestFont.style.color;
             removeStyle(firstClosestFont, "color");
             if (!firstClosestFont.hasAttributes()) {
+                cursors?.update(callbacksForCursorUpdate.unwrap(firstClosestFont));
                 unwrapContents(firstClosestFont);
             }
         }
@@ -41,9 +47,11 @@ export function insertListAfter(document, afterNode, mode, content = []) {
             } else if (fontSizeStyle.type === "class") {
                 li.classList.add(fontSizeStyle.value);
             }
+            cursors?.update(callbacksForCursorUpdate.unwrap(firstClosestSpan));
             unwrapContents(firstClosestSpan);
         }
     }
+    cursors?.update(callbacksForCursorUpdate.append(list, li));
     list.append(li);
     return list;
 }
