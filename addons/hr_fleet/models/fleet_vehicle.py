@@ -33,8 +33,15 @@ class FleetVehicle(models.Model):
         employees_by_partner_id_and_company_id = {
             (partner, company): employee for partner, company, employee in employees_by_partner_id_and_company_id
         }
+        # the driver can be an employee of another company than the vehicle's one
+        employees_by_partner_id = {
+            partner: employee for (partner, _company), employee in employees_by_partner_id_and_company_id.items()
+        }
         for vehicle in self:
-            employees = employees_by_partner_id_and_company_id.get((vehicle.driver_id, vehicle.company_id))
+            employees = (
+                employees_by_partner_id_and_company_id.get((vehicle.driver_id, vehicle.company_id))
+                or employees_by_partner_id.get(vehicle.driver_id)
+            )
             vehicle.driver_employee_id = employees[0] if employees else False
 
     @api.depends('future_driver_id')
@@ -47,8 +54,15 @@ class FleetVehicle(models.Model):
         employees_by_partner_id_and_company_id = {
             (partner, company): employee for partner, company, employee in employees_by_partner_id_and_company_id
         }
+        # the future driver can be an employee of another company than the vehicle's one
+        employees_by_partner_id = {
+            partner: employee for (partner, _company), employee in employees_by_partner_id_and_company_id.items()
+        }
         for vehicle in self:
-            employees = employees_by_partner_id_and_company_id.get((vehicle.future_driver_id, vehicle.company_id))
+            employees = (
+                employees_by_partner_id_and_company_id.get((vehicle.future_driver_id, vehicle.company_id))
+                or employees_by_partner_id.get(vehicle.future_driver_id)
+            )
             vehicle.future_driver_employee_id = employees[0] if employees else False
 
     @api.depends('driver_id')
