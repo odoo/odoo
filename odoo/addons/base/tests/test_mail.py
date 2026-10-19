@@ -406,6 +406,11 @@ class TestSanitizer(BaseCase):
         sanitized = html_sanitize(img_tag, sanitize_tags=False, strip_classes=True)
         self.assertEqual(img_tag, sanitized, "img with can have cid containing @ and shouldn't be escaped")
 
+    def test_keep_zws_empty_inline_attribute(self):
+        # The editor needs this attribute to put the ZWS back in the empty inline on load.
+        html = '<span data-oe-zws-empty-inline=""></span>'
+        self.assertEqual(html_sanitize(html, sanitize_attributes=True), html)
+
     # ms office is currently not supported, have to find a way to support it
     # def test_30_email_msoffice(self):
     #     new_html = html_sanitize(mail_examples.MSOFFICE_1, remove=True)
