@@ -681,6 +681,78 @@ class AccountMove(models.Model):
 
         return get_ksef_bill_vals(parse_fa3_bill_xml(xml_content))
 
+    def _fetch_bills_metadata(self, service, date_from, date_to):
+
+        # last_processed_move = self.search([
+        #     ('l10n_pl_edi_number', '!=', False),
+        #     ('move_type', '=', 'in_invoice'),
+        #     ('invoice_date', '!=', False),
+        #     *self._check_company_domain(self.env.company),
+        # ], order='invoice_date DESC', limit=1)
+
+        # if last_processed_move:
+        #     date_from = fields.Datetime.to_datetime(last_processed_move.invoice_date)
+        # else:
+        #     date_from = fields.Datetime.from_string("2026-01-31 00:00:00")  # The date it became mandatory
+
+        # tomorrow = fields.Datetime.now() + relativedelta(days=1)
+        # date_to = min(date_from + relativedelta(months=2), tomorrow)
+
+        query = {
+            'subjectType': 'Subject2',
+            'dateRange': {
+                'from': date_from.isoformat(),
+                'to': date_to.isoformat(),
+                'dateType': 'Invoicing',
+            },
+        }
+
+        blocking_error = False
+        page_offset = 0
+        page_size = 200
+        has_more = True
+        invoice_numbers = []
+
+        while has_more:
+            response = service.query_invoice_metadata(query, page_size, page_offset)
+            if response.get('error'):
+                blocking_error = self._handle_download_bills_from_ksef_error(response['error'])
+                break
+            invoice_numbers.extend(invoice['ksefNumber'] for invoice in response['invoices'])
+            has_more = response['hasMore']
+            page_offset += 1
+
+        #     if not response['invoices'] and date_to < tomorrow:
+        #         # We must keep the time window moving until we find something
+        #         date_from = date_to
+        #         date_to = min(date_from + relativedelta(months=2), tomorrow)
+        #         query['dateRange']['from'] = date_from.isoformat()
+        #         query['dateRange']['to'] = date_to.isoformat()
+        #         continue
+
+        #     invoice_numbers.extend(invoice['ksefNumber'] for invoice in response['invoices'])
+        #     has_more = response['hasMore']
+        #     page_offset += 1
+
+        # already_processed = set(self.env['account.move'].search([
+        #     ('l10n_pl_edi_number', 'in', invoice_numbers),
+        #     ('move_type', '=', 'in_invoice'),
+        #     *self._check_company_domain(self.env.company),
+        # ]).mapped('l10n_pl_edi_number'))
+
+        # if to_process := [invoice_nr for invoice_nr in invoice_numbers if invoice_nr not in already_processed]:
+
+        #     for move in self.create([
+        #         {
+        #             'move_type': 'in_invoice',
+        #             'l10n_pl_edi_number': invoice_nr,
+        #             'l10n_pl_edi_status': 'fetch_ready',
+        #         } for invoice_nr in to_process
+        #     ]):
+        #         move.message_post(body=self.env._("Fetching Bill from KSeF ..."))
+
+        return blocking_error
+
     def _decode_fa3_ksef(self, invoice, file_data, new):
         xml_content = file_data.get('content')
         if move_vals := self.l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content):
@@ -800,7 +872,11 @@ class AccountMove(models.Model):
                         'res_model': move._name,
                         'res_field': 'l10n_pl_edi_attachment_file',
                     })
-                    move.l10n_pl_edi_attachment_id = attachment.id
+                    move.write({
+                        'l10n_pl_edi_attachment_id': attachment.id,
+                        'l10n_pl_edi_status': 'fetched',
+                        'l10n_pl_edi_header': 'Fetched From KSeF',
+                    })
                     move.invalidate_recordset(fnames=['l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'])
                 if not modules.module.current_test:
                     self.env.cr.commit()
