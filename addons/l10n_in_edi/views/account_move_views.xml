@@ -16,6 +16,23 @@
                        invisible="not l10n_in_edi_cancel_remarks"
                        readonly="1"/>
             </xpath>
+            <xpath expr="//group[@name='accounting_info_group']" position="inside">
+                <field name="l10n_in_edi_cancel_reason"
+                       string="EDI Cancel Reason"
+                       invisible="not l10n_in_edi_cancel_reason or move_type != 'in_invoice'"
+                       readonly="1"/>
+                <field name="l10n_in_edi_cancel_remarks"
+                       string="EDI Cancel Remarks"
+                       invisible="not l10n_in_edi_cancel_remarks or move_type != 'in_invoice'"
+                       readonly="1"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_l10n_in_edi_send_self_invoice"
+                        type="object"
+                        string="Send E-Invoice"
+                        class="btn-primary"
+                        invisible="state != 'posted' or move_type != 'in_invoice' or not l10n_in_is_self_invoice or l10n_in_edi_status != 'to_send'"/>
+            </xpath>
             <xpath expr="//header" position="after">
                 <div class="alert alert-danger" role="alert"
                      invisible="not l10n_in_edi_error">
