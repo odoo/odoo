@@ -8,31 +8,6 @@
         padding: 0;
     }
 
-    &_listbox {
-        @media screen and (min-width: 768px), print and (min-width: 188mm) {
-            max-height: 50vh;
-        }
-
-        .o_command {
-            &.focused {
-                background: color-mix(in srgb, var(--o-component-active-bg) 65%, transparent);
-            }
-
-            &_hotkey {
-                align-items: center;
-                justify-content: space-between;
-                background-color: inherit;
-                padding: 0.5rem 1.3em;
-                display: flex;
-            }
-            a {
-                text-decoration: none;
-                color: inherit;
-            }
-        }
-
-    }
-
     .o_favorite {
         color: var(--o-main-favorite-color);
     }
@@ -52,5 +27,30 @@
             white-space: nowrap;
             opacity: 0.9;
         }
+    }
+}
+
+.o_command_palette_listbox {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
+        max-height: 50vh;
+    }
+
+    .o_command {
+        &.focused {
+            background: color-mix(in srgb, var(--o-component-active-bg) 65%, transparent);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+    }
+
+    .o_command_hotkey {
+        align-items: center;
+        justify-content: space-between;
+        background-color: inherit;
+        padding: 0.5rem 1.3em;
+        display: flex;
     }
 }
