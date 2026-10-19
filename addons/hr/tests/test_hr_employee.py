@@ -658,6 +658,20 @@ class TestHrEmployee(TestHrCommon):
         self.assertTrue(days)
         self.assertFalse(days['2025-01-04'])
 
+    def test_unusual_days_before_contract_start(self):
+        """
+        The days of a version before the start of its contract are unusual days.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee',
+            'date_version': datetime(2025, 1, 1),
+        })
+        employee.version_id.with_context(sync_contract_dates=True).contract_date_start = datetime(2025, 1, 15)
+        days = employee._get_unusual_days(str(datetime(2025, 1, 1)), str(datetime(2025, 1, 31)))
+        # Monday 06/01/2025 is before the contract start, Monday 20/01/2025 is in contract
+        self.assertTrue(days['2025-01-06'])
+        self.assertFalse(days['2025-01-20'])
+
     def test_user_creation_from_employee_with_invalid_email(self):
         employee = self.env['hr.employee'].create({
             'name': 'Test Employee',

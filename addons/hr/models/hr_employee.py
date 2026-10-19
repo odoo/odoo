@@ -2243,7 +2243,7 @@ class HrEmployee(models.Model):
         unusual_days = {}
         next_date_to_generate = date_from_date
         for version in employee_versions:
-            tmp_date_from = max(date_from_date, version.date_version)
+            tmp_date_from = max(date_from_date, version.date_start)
             tmp_date_to = min(date_to_date, version.date_end) if version.date_end else date_to_date
             if tmp_date_from > next_date_to_generate:
                 unusual_days.update(_generate_unusual_days(next_date_to_generate, tmp_date_from))
