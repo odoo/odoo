@@ -95,7 +95,6 @@ This module provides the core of the Odoo Web Client.
 
             'base/static/src/css/modules.css',
 
-            'web/static/src/core/utils/transitions.scss',
             'web/static/src/model/**/*',
             'web/static/src/search/**/*',
             'web/static/src/webclient/icons.scss', # variables required in list_controller.scss
@@ -220,7 +219,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/libs/bootstrap.js',
 
             'web/static/src/env.js',
-            'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',  # Note that 'web/static/src/core/utils/ui.js' is included in assets_frontend_minimal already
             ('remove', 'web/static/src/core/commands/**/*'),
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
@@ -368,7 +366,6 @@ This module provides the core of the Odoo Web Client.
             # core
             'web/static/src/env.js',
             'web/static/src/session.js',
-            'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/**/*.dark.scss'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'), # always lazy-loaded
