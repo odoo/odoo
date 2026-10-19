@@ -30,7 +30,7 @@
     'assets': {
         'web.assets_frontend': [
             'website_event_exhibitor/static/src/scss/event_templates_sponsor.css',
-            'website_event_exhibitor/static/src/scss/event_exhibitor_templates.scss',
+            'website_event_exhibitor/static/src/scss/event_exhibitor_templates.css',
             'website_event_exhibitor/static/src/interactions/**/*',
             'website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/**/*',
         ],
