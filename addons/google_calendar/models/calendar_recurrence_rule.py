@@ -17,6 +17,10 @@ class CalendarRecurrence(models.Model):
     _name = 'calendar.recurrence'
     _inherit = ['calendar.recurrence', 'google.event.sync']
 
+    _google_id_uniq = models.UniqueIndex(
+        "(google_id) WHERE google_id IS NOT NULL AND active",
+        "This Google recurrence is already synchronized with another recurrence in Odoo.",
+    )
 
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         events = self.filtered('need_sync').calendar_event_ids
