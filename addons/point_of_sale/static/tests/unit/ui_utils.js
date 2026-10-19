@@ -38,3 +38,9 @@ export async function selectTicketFilter(filterName) {
     await contains(`.dropdown-item:contains("${filterName}")`).click();
     await animationFrame();
 }
+
+export async function clickFastPaymentMethod(name) {
+    await ensurePane("left");
+    await contains(`.fast-pay-button:contains("${name}")`).click();
+    await animationFrame();
+}
