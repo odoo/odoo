@@ -22,6 +22,10 @@ class ResPartner(models.Model):
 
     invoice_edi_format = fields.Selection(selection_add=[('ubl_21_fr', "France E-Invoicing (UBL 2.1)")])
     l10n_fr_is_pdp = fields.Boolean(compute='_compute_l10n_fr_is_pdp')
+    l10n_fr_pdp_regulated_only = fields.Boolean(
+        string="Regulated Messages Only",
+        help="The partner is in the annuaire but doesn't accept non regulated messages on Peppol, so they can't be sent to it.",
+    )
     pdp_verification_display_state = fields.Selection(
         selection=[
             ('not_verified', 'Not verified yet'),
@@ -103,6 +107,18 @@ class ResPartner(models.Model):
                 return {'scheme': '0225', 'value': ctc_value, 'key': 'FR_CTC'}
             return {}  # we preferer suggesting no routing identifier than anything else than 0225 if the PDP is in use.
         return super()._get_preferred_routing_identifier_vals(force_recompute=force_recompute)
+
+    def _l10n_fr_pdp_cannot_receive_unregulated(self, company):
+        """ Whether sending to this partner through the Approved Platform would fail because the
+        company sends non regulated messages and the partner can only receive regulated ones.
+        """
+        self.ensure_one()
+        return (
+            self.l10n_fr_is_pdp
+            and self.peppol_verification_state == 'valid'
+            and self.l10n_fr_pdp_regulated_only
+            and company._l10n_fr_pdp_sends_unregulated()
+        )
 
     def _l10n_fr_pdp_is_b2c(self):
         self.ensure_one()
@@ -208,6 +224,11 @@ class ResPartner(models.Model):
             return 'not_valid_format'
         participant_info = self._pdp_annuaire_lookup_participant(edi_identification) or {}
         if participant_info.get('in_annuaire'):
+            if partner:
+                # Non regulated messages don't go through the annuaire but through Peppol: the
+                # proxy tells whether the partner publishes that process. An older proxy doesn't,
+                # in which case nothing is blocked.
+                partner.l10n_fr_pdp_regulated_only = not participant_info.get('accepts_unregulated', True)
             if partner and participant_info.get('b2g'):
                 # This is a bit of a hack to avoid having to add a field to signify the partner is behind Chorus Pro.
                 # The users that are associated with Chorus Pro (9999) on the annuaire are not on Peppol.

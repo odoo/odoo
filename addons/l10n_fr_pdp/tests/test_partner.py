@@ -77,7 +77,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
         self.assertEqual(wizard._get_peppol_checkbox_label("by Peppol"), "by the Approved Platform")
         self.assertEqual(
             wizard._get_peppol_checkbox_addendum_disable_reason(),
-            " (Customer not available for French E-Invoicing)",
+            " (Customer cannot receive non regulated messages)",
         )
         move.peppol_move_state = 'done'
         self.assertEqual(
