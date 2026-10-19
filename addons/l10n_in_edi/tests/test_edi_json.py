@@ -150,6 +150,56 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         })
         cls.invoice_global_discount.action_post()
 
+    def test_self_invoice_json(self):
+        self.default_company.l10n_in_edi_feature = True
+        journal = self.env['account.journal'].create({
+            'name': 'Self Invoices',
+            'code': 'TS',
+            'type': 'purchase',
+            'company_id': self.default_company.id,
+            'l10n_in_self_invoice': True,
+        })
+        unregistered_partner = self.partner_a.copy({
+            'vat': False,
+            'l10n_in_gst_treatment': 'unregistered',
+        })
+        import_tax = self.env['account.chart.template'].ref('igst_purchase_18_service_rc')
+        for partner, tax, hsn, supply_type in (
+            (unregistered_partner, self.sgst_purchase_5_rc, '111111', 'RCMDOM'),
+            (self.partner_foreign, import_tax, '998313', 'RCMIMP'),
+        ):
+            with self.subTest(supply_type=supply_type):
+                bill = self._create_invoice(
+                    move_type='in_invoice',
+                    partner_id=partner.id,
+                    journal_id=journal.id,
+                    invoice_date='2026-10-16',
+                    invoice_line_ids=[Command.create({
+                        'product_id': self.product_a.id,
+                        'quantity': 1,
+                        'price_unit': 1000,
+                        'l10n_in_hsn_code': hsn,
+                        'tax_ids': [Command.set(tax.ids)],
+                    })],
+                    post=True,
+                )
+                self.assertEqual(bill.l10n_in_edi_status, 'to_send')
+                payload = bill._l10n_in_edi_generate_invoice_json()
+                self.assertEqual(payload['TranDtls']['SupTyp'], supply_type)
+                self.assertEqual(payload['TranDtls']['RegRev'], 'Y')
+                self.assertEqual(payload['SellerDtls']['GSTIN'], 'URP')
+                self.assertEqual(payload['BuyerDtls']['GSTIN'], self.default_company.vat)
+                self.assertEqual(payload['DocDtls']['No'], bill.name)
+                self.assertNotIn('ExpDtls', payload)
+                if supply_type == 'RCMIMP':
+                    self.assertEqual(payload['ItemList'][0]['OrgCntry'], 'US')
+                    self.assertEqual(payload['ItemList'][0]['IsServc'], 'Y')
+                    self.assertEqual(payload['ValDtls']['IgstVal'], 180)
+                else:
+                    self.assertNotIn('OrgCntry', payload['ItemList'][0])
+                    self.assertEqual(payload['ValDtls']['CgstVal'], 25)
+                    self.assertEqual(payload['ValDtls']['SgstVal'], 25)
+
     def test_edi_json(self):
         # line1: 1000, 10% discount and a tax of 5%
         # line2: 1000, 10% discount and 4 taxes: 5%, 1.591, 6% SGST 6% CGST, each one affecting the base:

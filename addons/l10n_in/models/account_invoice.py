@@ -240,9 +240,9 @@ class AccountMove(models.Model):
                 }
 
             if move.l10n_in_is_self_invoice and any(
-                line.l10n_in_gstr_section != 'purchase_b2c_rcm'
+                line.l10n_in_gstr_section not in ('purchase_b2c_rcm', 'purchase_imp_services')
                 for line in move.invoice_line_ids
-                if line._origin
+                if line._origin and line.display_type == 'product'
             ):
                 warnings['invalid_self_invoice'] = {
                     'message': _(
@@ -505,9 +505,13 @@ class AccountMove(models.Model):
         def l10n_in_grouping_key_generator(base_line, tax_data):
             invl = base_line['record']
             tax = tax_data['tax']
-            if self.l10n_in_gst_treatment in ('overseas', 'special_economic_zone') and all(
-                self.env.ref("l10n_in.tax_tag_igst") in rl.tag_ids
-                for rl in tax.invoice_repartition_line_ids if rl.repartition_type == 'tax'
+            if (
+                self.is_sale_document(include_receipts=True)
+                and self.l10n_in_gst_treatment in ('overseas', 'special_economic_zone')
+                and all(
+                    self.env.ref("l10n_in.tax_tag_igst") in rl.tag_ids
+                    for rl in tax.invoice_repartition_line_ids if rl.repartition_type == 'tax'
+                )
             ):
                 tax_data['is_reverse_charge'] = False
             tag_ids = tax.invoice_repartition_line_ids.tag_ids.ids

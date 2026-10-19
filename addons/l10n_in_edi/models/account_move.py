@@ -73,8 +73,10 @@ class AccountMove(models.Model):
             move.l10n_in_edi_content = (
                 move.country_code == 'IN'
                 and move.company_id.l10n_in_edi_feature
-                and move.is_sale_document(include_receipts=True)
-                and move.journal_id.type == 'sale'
+                and (
+                    (move.is_sale_document(include_receipts=True) and move.journal_id.type == 'sale')
+                    or move._l10n_in_edi_is_self_invoice()
+                )
                 and BinaryBytes(json.dumps(move._l10n_in_edi_generate_invoice_json()).encode())
             )
 
@@ -109,6 +111,25 @@ class AccountMove(models.Model):
             move.l10n_in_warning = l10n_in_warning
 
     #  Action Methods
+    def action_l10n_in_edi_send_self_invoice(self):
+        self.ensure_one()
+        if (
+            self.state != 'posted'
+            or self.l10n_in_edi_status != 'to_send'
+            or not self.l10n_in_is_self_invoice
+            or not self._l10n_in_check_einvoice_eligible()
+        ):
+            raise UserError(_("Only eligible posted self-invoices waiting to be sent can be submitted."))
+        errors = [
+            alert['message']
+            for alert in self._l10n_in_check_einvoice_validation().values()
+            if alert.get('level') == 'danger'
+        ]
+        if errors:
+            raise UserError('\n'.join(errors))
+        if not self._l10n_in_edi_send_invoice() and self.invoice_pdf_report_id:
+            self.invoice_pdf_report_file = False
+
     def action_export_l10n_in_edi_content_json(self):
         self.ensure_one()
         return {
@@ -162,7 +183,6 @@ class AccountMove(models.Model):
         return (
             self.country_code == 'IN'
             and not self.env.context.get('l10n_in_edi_force_cancel')
-            and self.is_sale_document()
             and self.l10n_in_edi_status == 'sent'
         )
 
@@ -171,8 +191,28 @@ class AccountMove(models.Model):
         return super()._need_cancel_request() or self._l10n_in_edi_need_cancel_request()
 
     # Indian E-invoice Business Methods
+    def _l10n_in_edi_is_self_invoice(self):
+        """Only recipient-issued bills whose taxable lines are all subject to RCM qualify."""
+        self.ensure_one()
+        if not (
+            self.country_code == 'IN'
+            and self.move_type == 'in_invoice'
+            and self.journal_id.type == 'purchase'
+            and self.l10n_in_is_self_invoice
+            and self.l10n_in_gst_treatment in ('unregistered', 'consumer', 'overseas')
+            and (self.l10n_in_gst_treatment == 'overseas' or not self.partner_id.vat)
+        ):
+            return False
+        lines = self.invoice_line_ids.filtered(
+            lambda line: line.display_type == 'product' and not line._l10n_in_is_global_discount()
+        )
+        section = 'purchase_imp_services' if self.l10n_in_gst_treatment == 'overseas' else 'purchase_b2c_rcm'
+        return bool(lines) and all(line.l10n_in_gstr_section == section for line in lines)
+
     def _l10n_in_check_einvoice_eligible(self):
         self.ensure_one()
+        if self._l10n_in_edi_is_self_invoice():
+            return self.company_id.l10n_in_edi_feature
         return (
             self.company_id.l10n_in_edi_feature
             and self.journal_id.type == 'sale'
@@ -229,7 +269,11 @@ class AccountMove(models.Model):
             self.message_post(body=_(
                 "Retrying to send your E-Invoice to government portal."
             ))
-        partners = set(self._get_l10n_in_seller_buyer_party().values())
+        if self._l10n_in_edi_is_self_invoice():
+            if errors := self._l10n_in_edi_self_invoice_errors():
+                self.l10n_in_edi_error = Markup('<br>').join(errors)
+                return {'messages': errors}
+        partners = set(self._get_l10n_in_edi_seller_buyer_party().values())
         for partner in partners:
             if partner_validation := partner._l10n_in_edi_strict_error_validation():
                 self.l10n_in_edi_error = Markup("<br>").join(partner_validation)
@@ -493,6 +537,17 @@ class AccountMove(models.Model):
             })
         return partner_details
 
+    def _get_l10n_in_edi_seller_buyer_party(self):
+        if self._l10n_in_edi_is_self_invoice():
+            # The recipient authenticates the request, but the vendor remains the supplier.
+            return {
+                'seller_details': self.partner_id,
+                'dispatch_details': self.partner_id,
+                'buyer_details': self.company_id.partner_id,
+                'ship_to_details': self._l10n_in_get_warehouse_address() or self.company_id.partner_id,
+            }
+        return self._get_l10n_in_seller_buyer_party()
+
     def _get_l10n_in_edi_line_details(self, index, line, line_tax_details, is_price_adjustment):
         """
         Create the dictionary with line details
@@ -629,9 +684,10 @@ class AccountMove(models.Model):
     def _l10n_in_edi_generate_invoice_json(self):
         self.ensure_one()
         tax_details = self._l10n_in_prepare_tax_details()
-        seller_buyer = self._get_l10n_in_seller_buyer_party()
+        seller_buyer = self._get_l10n_in_edi_seller_buyer_party()
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details['tax_details'])
-        is_intra_state = self.l10n_in_state_id == self.company_id.state_id
+        is_self_invoice = self._l10n_in_edi_is_self_invoice()
+        is_intra_state = self.l10n_in_state_id == seller_buyer['seller_details'].state_id
         is_overseas = self.l10n_in_gst_treatment == "overseas"
         is_price_adjustment = self.l10n_in_adjustment_type == 'price_adjustment'
         line_ids = []
@@ -667,11 +723,13 @@ class AccountMove(models.Model):
                 "No": self.name,
                 "Dt": self.invoice_date and self.invoice_date.strftime("%d/%m/%Y")
             },
-            "SellerDtls": self._get_l10n_in_edi_partner_details(seller_buyer['seller_details']),
+            "SellerDtls": self._get_l10n_in_edi_partner_details(
+                seller_buyer['seller_details'], is_overseas=is_overseas and is_self_invoice,
+            ),
             "BuyerDtls": self._get_l10n_in_edi_partner_details(
                 seller_buyer['buyer_details'],
                 pos_state_id=self.l10n_in_state_id,
-                is_overseas=is_overseas
+                is_overseas=is_overseas and not is_self_invoice
             ),
             "ItemList": [
                 self._get_l10n_in_edi_line_details(
@@ -719,9 +777,16 @@ class AccountMove(models.Model):
         if seller_buyer['buyer_details'] != seller_buyer['ship_to_details']:
             json_payload['ShipDtls'] = self._get_l10n_in_edi_partner_details(
                 seller_buyer['ship_to_details'],
-                is_overseas=is_overseas
+                is_overseas=is_overseas and not is_self_invoice
             )
-        if is_overseas:
+        if is_self_invoice:
+            json_payload['SellerDtls']['GSTIN'] = 'URP'
+            json_payload['SellerDtls'].pop('POS', None)
+            json_payload['TranDtls']['RegRev'] = 'Y'
+            if is_overseas:
+                for line in json_payload['ItemList']:
+                    line['OrgCntry'] = seller_buyer['seller_details'].country_id.code
+        elif is_overseas:
             json_payload['ExpDtls'] = {
                 'RefClm': tax_details_by_code.get('igst_amount') and 'Y' or 'N',
                 'ForCur': self.currency_id.name,
@@ -759,6 +824,8 @@ class AccountMove(models.Model):
         return self._l10n_in_edi_generate_invoice_json_managing_negative_lines(json_payload)
 
     def _l10n_in_get_supply_type(self, is_igst_amount):
+        if self._l10n_in_edi_is_self_invoice():
+            return 'RCMIMP' if self.l10n_in_gst_treatment == 'overseas' else 'RCMDOM'
         if self.l10n_in_gst_treatment in ("overseas", "special_economic_zone") and is_igst_amount:
             return {
                 'overseas': 'EXPWP',
@@ -771,6 +838,24 @@ class AccountMove(models.Model):
         }.get(self.l10n_in_gst_treatment, 'B2B')
 
     # ================= Get Error =================
+    def _l10n_in_edi_self_invoice_errors(self):
+        self.ensure_one()
+        errors = []
+        country = self.partner_id.country_id
+        if self.l10n_in_gst_treatment == 'overseas':
+            if not country or country.code == 'IN':
+                errors.append(_("For imported services, set the supplier's country to a country outside India."))
+            if any(
+                line.display_type == 'product'
+                and not line._l10n_in_is_global_discount()
+                and not self._l10n_in_is_service_hsn(line.l10n_in_hsn_code)
+                for line in self.invoice_line_ids
+            ):
+                errors.append(_("Only service HSN/SAC codes are allowed on self-invoices for imported services."))
+        elif country.code != 'IN':
+            errors.append(_("For domestic self-invoices, set the supplier's country to India."))
+        return errors
+
     def _l10n_in_check_einvoice_validation(self):
         alerts = {
             **self.company_id._l10n_in_check_einvoice_validation(),
