@@ -70,7 +70,7 @@ class WebManifest(http.Controller):
             'Content-Type': 'application/manifest+json'
         })
 
-    @http.route('/web/service-worker.js', type='http', auth='public', methods=['GET'], readonly=True)
+    @http.route('/web/service-worker.js', type='http', auth='public', methods=['GET'], readonly=True, save_session=False)
     def service_worker(self):
         response = request.make_response(
             self._get_service_worker_content(),

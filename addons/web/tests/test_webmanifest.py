@@ -84,6 +84,7 @@ class WebManifestRoutesTest(HttpCaseWithUserDemo):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["Content-Type"], "text/javascript")
         self.assertEqual(response.headers["Service-Worker-Allowed"], "/odoo")
+        self.assertFalse(response.cookies.get('session_id'))
 
     def test_offline_url(self):
         """
