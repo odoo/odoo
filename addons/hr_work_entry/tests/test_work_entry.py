@@ -508,3 +508,16 @@ class TestWorkEntry(TestWorkEntryBase):
             att_empty.display_name.endswith(" A"),
             "The attendance without a Time Type should keep its default trailing 'A'."
         )
+
+    def test_export_work_entries_employee_versions(self):
+        export = self.env['hr.export.work.entries'].create({
+            'reference_year': 2024,
+            'reference_month': '6',
+        })
+        amendment = self.richard_emp.create_version({'date_version': date(2024, 6, 15)})
+        employee_line = self.env['hr.export.work.entries.employee'].create({
+            'export_id': export.id,
+            'employee_id': self.richard_emp.id,
+        })
+        self.assertIn(amendment, employee_line.version_ids)
+        self.assertIn(self.richard_emp._get_version(date(2024, 6, 1)), employee_line.version_ids)
