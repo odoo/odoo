@@ -18,7 +18,7 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
     'auto_install': ['website', 'mass_mailing'],
     'assets': {
         'web.assets_frontend': [
-            'website_mass_mailing/static/src/scss/website_mass_mailing.scss',
+            'website_mass_mailing/static/src/scss/website_mass_mailing.css',
             'website_mass_mailing/static/src/interactions/**/*',
             'website_mass_mailing/static/src/scss/website_mass_mailing_popup.scss',
             'website_mass_mailing/static/src/interactions/fix_newsletter_list_class.edit.js',
