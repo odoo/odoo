@@ -186,6 +186,22 @@ class TestHolidaysMultiContract(TestHolidayContract):
             ],
         )
 
+    def test_new_version_without_contract_with_leaves(self):
+        # An employee without contract, having time off, can get a new
+        # version with another working schedule
+        employee = self.env['hr.employee'].create({
+            'name': 'No Contract Employee',
+            'date_version': date(2022, 1, 1),
+            'resource_calendar_id': self.calendar_35h.id,
+        })
+        leave = self.create_leave(date(2022, 7, 6), date(2022, 7, 8), name="Doctor Appointment", employee_id=employee.id)
+        employee.create_version({
+            'date_version': date(2022, 7, 1),
+            'resource_calendar_id': self.calendar_40h.id,
+        })
+        self.assertEqual(len(employee.version_ids), 2)
+        self.assertNotEqual(leave.state, 'refuse')
+
     def test_multi_contracts_draft(self):
         # Check that setting a contract as running correctly
         # make the existing time off to draft for this employee
