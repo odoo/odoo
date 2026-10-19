@@ -368,7 +368,8 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
     @mute_logger('odoo.models.unlink')
     def test_mail_server_send_email_IDNA(self):
-        """ Test that the mail from / recipient envelop are encoded using IDNA """
+        """ Test that the mail from / recipient envelop and headers are encoded
+        using IDNA """
         with self.mock_smtplib_connection():
             message = self._build_email(mail_from='test@ééééééé.com')
             self.env['ir.mail_server'].send_email(message)
@@ -377,8 +378,26 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.assertSMTPEmailsSent(
             smtp_from='test@xn--9caaaaaaa.com',
             smtp_to_list=['dest@xn--example--i1a.com'],
-            message_from='test@=?utf-8?b?w6nDqcOpw6nDqcOpw6k=?=.com',
+            message_from='test@xn--9caaaaaaa.com',
+            msg_to_lst=['dest@xn--example--i1a.com'],
             from_filter=False,
+        )
+
+    @mute_logger('odoo.models.unlink')
+    def test_mail_server_send_email_IDNA_forged_to(self):
+        """ 'X-Forge-To' replaces the To header once the message is built, the
+        domain has to be encoded there as well """
+        with self.mock_smtplib_connection():
+            message = self._build_email(
+                mail_from='test@example.com',
+                email_to='dest@example.com',
+                headers={'X-Forge-To': 'forged@example-é.com'},
+            )
+            self.env['ir.mail_server'].send_email(message)
+
+        self.assertSMTPEmailsSent(
+            smtp_to_list=['dest@example.com'],
+            msg_to_lst=['forged@xn--example--i1a.com'],
         )
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
