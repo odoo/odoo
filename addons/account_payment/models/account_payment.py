@@ -200,10 +200,22 @@ class AccountPayment(models.Model):
 
     def _prepare_payment_transaction_vals(self, **extra_create_values):
         self.ensure_one()
+<<<<<<< 703c0df386f2d0fbbce784e686a45fd8c91a47ea
         if self.env.context.get('active_model', '') == 'account.move':
             invoice_ids = self.env.context.get('active_ids', [])
         elif self.env.context.get('active_model', '') == 'account.move.line':
             invoice_ids = self.env['account.move.line'].browse(self.env.context.get('active_ids')).move_id.ids
+||||||| 3f5d2d7f14c212791c130827a35bf537ecc3b036
+        if self._context.get('active_model', '') == 'account.move':
+            invoice_ids = self._context.get('active_ids', [])
+        elif self._context.get('active_model', '') == 'account.move.line':
+            invoice_ids = self.env['account.move'].search([('line_ids', '=', self._context.get('active_ids'))]).ids
+=======
+        if self._context.get('active_model', '') == 'account.move':
+            invoice_ids = self._context.get('active_ids', [])
+        elif self._context.get('active_model', '') == 'account.move.line':
+            invoice_ids = self.env['account.move'].search([('line_ids', 'in', self._context.get('active_ids', []))]).ids
+>>>>>>> dd62240bc4e3734a996ab460dc1b65313efded3f
         else:
             invoice_ids = []
         return {

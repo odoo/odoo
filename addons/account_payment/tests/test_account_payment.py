@@ -503,6 +503,7 @@ class TestAccountPayment(AccountPaymentCommon):
             other_invoice.action_post()
             wizard = payment_register_wizard(invoice + other_invoice)
             self.assertEqual(wizard.suitable_payment_token_ids, parent_token)
+<<<<<<< 703c0df386f2d0fbbce784e686a45fd8c91a47ea
 
     def test_generate_and_send_invoice_with_qr_code(self):
         """Test generating & sending invoices with QR codes enabled."""
@@ -616,3 +617,44 @@ class TestAccountPayment(AccountPaymentCommon):
             counterpart_lines.mapped("name"),
             [expected_line_name],
         )
+||||||| 3f5d2d7f14c212791c130827a35bf537ecc3b036
+=======
+
+    def test_prepare_tx_vals_from_move_lines_no_domain_warning(self):
+        with self.mocked_get_payment_method_information():
+            bank_journal = self.company_data['default_journal_bank']
+            payment_method_line = bank_journal.inbound_payment_method_line_ids\
+                .filtered(lambda line: line.payment_provider_id == self.dummy_provider)
+            invoice = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner.id,
+                'invoice_line_ids': [Command.create({'name': 'test line', 'price_unit': 100.0})],
+            })
+            invoice.action_post()
+            token = self._create_token(partner_id=self.partner.id)
+            payment = self.env['account.payment'].create({
+                'payment_type': 'inbound',
+                'partner_type': 'customer',
+                'partner_id': self.partner.id,
+                'amount': 100.0,
+                'journal_id': bank_journal.id,
+                'payment_method_line_id': payment_method_line.id,
+                'payment_token_id': token.id,
+            })
+
+            with self.assertNoLogs('odoo.osv.expression', level='WARNING'):
+                vals = payment.with_context(
+                    active_model='account.move.line',
+                    active_ids=invoice.line_ids.ids,
+                )._prepare_payment_transaction_vals()
+            self.assertEqual(vals['invoice_ids'], [Command.set(invoice.ids)])
+
+            vals = payment.with_context(
+                active_model='account.move',
+                active_ids=invoice.ids,
+            )._prepare_payment_transaction_vals()
+            self.assertEqual(vals['invoice_ids'], [Command.set(invoice.ids)])
+
+            vals = payment._prepare_payment_transaction_vals()
+            self.assertEqual(vals['invoice_ids'], [Command.set([])])
+>>>>>>> dd62240bc4e3734a996ab460dc1b65313efded3f
