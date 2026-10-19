@@ -10,6 +10,7 @@ import qrcode.image.svg
 
 from odoo import _, api, fields, models, release
 from odoo.exceptions import AccessError, UserError
+from odoo.fields import Domain
 
 
 class PosConfig(models.Model):
@@ -208,6 +209,10 @@ class PosConfig(models.Model):
         self._ensure_public_attachments()
         self._prepare_self_order_custom_btn()
         return res
+
+    def _get_paid_orders_config_domain(self):
+        kiosk_domain = Domain('config_id.self_ordering_mode', '=', 'kiosk') & Domain('config_id.company_id', '=', self.company_id.id)
+        return super()._get_paid_orders_config_domain() | kiosk_domain
 
     def _ensure_public_attachments(self):
         attachments = self.self_ordering_image_background_ids | self.self_ordering_image_home_ids
