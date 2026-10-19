@@ -2,18 +2,20 @@ import { Component, t, useProps } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
 import comparisonUtils from '@website_sale/js/comparison_utils';
 
+export const productRowProps = {
+    id: t.number(),
+    display_name: t.string(),
+    website_url: t.string(),
+    image_url: t.string(),
+    price: t.number(),
+    list_price: t.number().optional(),
+    hide_price: t.boolean(),
+    currency_id: t.number(),
+};
+
 export class ProductRow extends Component {
     static template = 'website_sale.ProductRow';
-    props = useProps({
-        id: t.number(),
-        display_name: t.string(),
-        website_url: t.string(),
-        image_url: t.string(),
-        price: t.number(),
-        strikethrough_price: t.number().optional(),
-        hide_price: t.boolean(),
-        currency_id: t.number(),
-    });
+    props = useProps(productRowProps);
 
     /**
      * Remove the product from the comparison.
@@ -38,6 +40,6 @@ export class ProductRow extends Component {
      * @return {string} The formatted strikethrough price.
      */
     get formattedStrikethroughPrice() {
-        return formatCurrency(this.props.strikethrough_price, this.props.currency_id);
+        return formatCurrency(this.props.list_price, this.props.currency_id);
     }
 }

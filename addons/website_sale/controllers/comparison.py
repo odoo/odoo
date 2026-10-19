@@ -23,26 +23,23 @@ class ProductComparison(Controller):
     @route("/shop/compare/get_product_data", type="jsonrpc", auth="public", website=True)
     def get_product_data(self, product_ids):
         products = self.env["product.product"].search([("id", "in", product_ids)])
-        product_data = []
-
-        for product in products:
-            combination_info = product._get_combination_info_variant()
-            product_data_item = {
+        return [
+            {
                 "id": product.id,
-                "display_name": combination_info["display_name"],
+                "display_name": product.with_context(display_default_code=False).display_name,
                 "website_url": product.website_url,
                 "image_url": product._get_image_1024_url(),
-                "price": combination_info["price"],
-                "hide_price": combination_info["hide_price"],
-                "currency_id": combination_info["currency"].id,
+                **self._prepare_product_price_data(product._get_default_price_info()),
             }
-            if combination_info["has_discounted_price"]:
-                product_data_item["strikethrough_price"] = combination_info["list_price"]
-            elif (
-                combination_info.get("compare_list_price")
-                and combination_info["compare_list_price"] > combination_info["price"]
-            ):
-                product_data_item["strikethrough_price"] = combination_info["compare_list_price"]
-            product_data.append(product_data_item)
+            for product in products
+        ]
 
-        return product_data
+    def _prepare_product_price_data(self, price_info):
+        price_data = {
+            "hide_price": price_info["hide_price"],
+            "price": price_info.get("price", 0),
+            "currency_id": (price_info.get("currency") or self.env.website.currency_id).id,
+        }
+        if list_price := price_info.get("list_price"):
+            price_data["list_price"] = list_price
+        return price_data
