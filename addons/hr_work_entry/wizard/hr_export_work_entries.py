@@ -153,7 +153,7 @@ class HrExportWorkEntries(models.TransientModel):
         if employee_ids is None:
             employees = self._get_employees()
         else:
-            employees = self.env['hr.employee'].search([('id', '=', employee_ids)])
+            employees = self.env['hr.employee'].search([('id', 'in', employee_ids)])
         if period_start is None or period_stop is None:
             period_start = self.period_start
             period_stop = self.period_stop
@@ -183,9 +183,11 @@ class HrExportEmployee(models.TransientModel):
 
     @api.depends('employee_id')
     def _compute_version_ids(self):
-        contracts_by_employee = self.export_id._get_contracts_by_employee(employee_ids=self.employee_id)
-        for line in self:
-            line.version_ids = self.env['hr.version'].browse([c.id for c in contracts_by_employee.get(line.employee_id)])
+        for export, lines in self.grouped('export_id').items():
+            contracts_by_employee = export._get_contracts_by_employee(employee_ids=lines.employee_id.ids)
+            for line in lines:
+                contract_versions = contracts_by_employee.get(line.employee_id.id, {})
+                line.version_ids = self.env['hr.version'].union(*contract_versions.values())
 
     def _get_work_entries_by_day_and_code(self, limit_start=None, limit_stop=None):
         """ Group work entries by day and code.
