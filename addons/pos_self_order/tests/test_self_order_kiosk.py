@@ -235,3 +235,15 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         })
         html = order.order_receipt_generate_html()
         self.assertTrue("Service at Table" in html)
+
+    def test_preset_with_missing_delivery_product(self):
+        if delivery_product := self.env.ref(
+            'pos_self_order.product_delivery_template',
+            raise_if_not_found=False
+        ):
+            delivery_product.unlink()
+        self.pos_config.self_ordering_mode = "kiosk"
+        self.assertEqual(
+            self.pos_config.default_preset_id.delivery_product_id,
+            self.env['product.product']
+        )
