@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
 import { patch } from "@web/core/utils/patch";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { onWillUnmount, proxy, signal, useListener } from "@odoo/owl";
+import { onWillUnmount, onWillDestroy, proxy, signal, useListener } from "@odoo/owl";
 
 patch(LoginScreen.prototype, {
     setup() {
@@ -21,13 +21,17 @@ patch(LoginScreen.prototype, {
                 }
             });
 
-            this.pos.barcodeReader?.register(
+            const unregister = this.pos.barcodeReader?.register(
                 {
                     cashier: this.barcodeCashierAction.bind(this),
                 },
                 // exclusive
                 this.pos.router.currentScreen() === "LoginScreen"
             );
+
+            onWillDestroy(() => {
+                unregister?.();
+            });
         }
 
         onWillUnmount(() => {
