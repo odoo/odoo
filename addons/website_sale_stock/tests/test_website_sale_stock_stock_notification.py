@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import html
+
 from odoo.tests import tagged
-from odoo.tests.common import HttpCase
+from odoo.tests.common import HttpCase, new_test_user
 
 
 @tagged('post_install', '-at_install')
@@ -62,3 +64,17 @@ class TestStockNotificationProduct(HttpCase):
         self.assertEqual(emails[0].subject, "The product 'Macbook Pro' is now available")
         self.assertEqual(emails[0].email_from, website.company_id.partner_id.email_formatted)
         self.assertFalse(product._has_stock_notification(partner))
+
+    def test_multi_email_user_form_prefilled_with_first_address(self):
+        """A contact may hold several addresses in its email field, but the client-side check of
+        the back-in-stock form only accepts a single one."""
+        user = new_test_user(
+            self.env,
+            login='multi_email',
+            groups='base.group_portal',
+            email='buyer@example.com,orders@example.com',
+        )
+        self.authenticate(user.login, user.login)
+        response = self.url_open(self.product.website_url)
+        user_email = html.fromstring(response.content).get_element_by_id('wsale_user_email').get('value')
+        self.assertEqual(user_email, 'buyer@example.com')
