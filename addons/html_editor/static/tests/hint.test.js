@@ -97,9 +97,7 @@ test("should not display hint in paragraph with tab", async () => {
 });
 
 test("should display hint in paragraph with strong (bold)", async () => {
-    const { el } = await setupEditor(
-        `<p><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`
-    );
+    const { el } = await setupEditor(`<p><strong data-oe-zws-empty-inline="">[]</strong></p>`);
     // hint should be visible
     expect(getContent(el)).toBe(
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`
@@ -107,7 +105,7 @@ test("should display hint in paragraph with strong (bold)", async () => {
 });
 
 test("should display hint in paragraph with em (italic)", async () => {
-    const { el } = await setupEditor(`<p><em data-oe-zws-empty-inline="">[]\u200B</em></p>`);
+    const { el } = await setupEditor(`<p><em data-oe-zws-empty-inline="">[]</em></p>`);
     // hint should be visible
     expect(getContent(el)).toBe(
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><em data-oe-zws-empty-inline="">[]\u200B</em></p>`
@@ -115,7 +113,7 @@ test("should display hint in paragraph with em (italic)", async () => {
 });
 
 test("should display hint in paragraph with u (underline)", async () => {
-    const { el } = await setupEditor(`<p><u data-oe-zws-empty-inline="">[]\u200B</u></p>`);
+    const { el } = await setupEditor(`<p><u data-oe-zws-empty-inline="">[]</u></p>`);
     // hint should be visible
     expect(getContent(el)).toBe(
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u></p>`
@@ -123,7 +121,7 @@ test("should display hint in paragraph with u (underline)", async () => {
 });
 
 test("should display hint in paragraph with s (strikethrough)", async () => {
-    const { el } = await setupEditor(`<p><s data-oe-zws-empty-inline="">[]\u200B</s></p>`);
+    const { el } = await setupEditor(`<p><s data-oe-zws-empty-inline="">[]</s></p>`);
     // hint should be visible
     expect(getContent(el)).toBe(
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><s data-oe-zws-empty-inline="">[]\u200B</s></p>`
