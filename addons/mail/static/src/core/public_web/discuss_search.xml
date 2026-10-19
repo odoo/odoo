@@ -15,9 +15,9 @@
             <Dropdown t-if="this.store.discuss.isSidebarCompact and !this.ui.isSmall" state="this.meetingFloating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu px-2 mx-2 my-0 min-w-0 ' + this.store.discussDropdownMenuClass(this)" manual="true">
                 <t t-call="mail.DiscussSearch.newMeeting"/>
                 <t t-set-slot="content">
-                    <div t-custom-ref="meeting-floating">
+                    <UseHoverOverlay hover="this.meetingHover">
                         <span class="text-muted user-select-none" t-out="this.newMeetingText"/>
-                    </div>
+                    </UseHoverOverlay>
                 </t>
             </Dropdown>
             <t t-else="" t-call="mail.DiscussSearch.newMeeting"/>

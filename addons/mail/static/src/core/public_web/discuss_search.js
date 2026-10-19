@@ -1,4 +1,4 @@
-import { useHover } from "@mail/utils/common/hooks";
+import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -12,7 +12,7 @@ import { useService } from "@web/core/utils/hooks";
 export class DiscussSearch extends Component {
     static template = "mail.DiscussSearch";
     static props = ["class?"];
-    static components = { Dropdown };
+    static components = { Dropdown, UseHoverOverlay };
 
     setup() {
         super.setup();
@@ -31,7 +31,7 @@ export class DiscussSearch extends Component {
                 }
             },
         });
-        this.meetingHover = useHover(["meeting-btn", "meeting-floating"], {
+        this.meetingHover = useHover(["meeting-btn"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.meetingFloating.isOpen = true;
