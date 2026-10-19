@@ -153,6 +153,39 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(second_leave.state, 'confirm')
         self.assertEqual(second_leave.number_of_days, 11)
 
+    def test_leave_multi_versions_split(self):
+        # Check that the split of an existing time off is done on the version
+        # periods, not on the contract dates shared by all the versions
+        self.jules_emp.create_version({
+            'date_version': date(2022, 6, 10),
+            'wage': 6000.0,
+        })
+        leave = self.create_leave(date(2022, 6, 1), date(2022, 6, 30), name="Doctor Appointment", employee_id=self.jules_emp.id)
+        leave.action_approve()
+        self.assertEqual(leave.number_of_days, 22)
+
+        self.contract_cdi.contract_date_end = date(2022, 6, 15)
+        self.jules_emp.create_version({
+            'date_version': date(2022, 6, 16),
+            'contract_date_start': date(2022, 6, 16),
+            'contract_date_end': False,
+            'name': 'New Contract for Jules',
+            'resource_calendar_id': self.calendar_40h.id,
+            'wage': 5000.0,
+        })
+
+        self.assertEqual(leave.state, 'refuse')
+        leaves = self.env['hr.leave'].search([('employee_id', '=', self.jules_emp.id), ('state', '!=', 'refuse')])
+        self.assertEqual(sum(leaves.mapped('number_of_days')), 22)
+        self.assertEqual(
+            sorted((l.request_date_from, l.request_date_to) for l in leaves),
+            [
+                (date(2022, 6, 1), date(2022, 6, 9)),
+                (date(2022, 6, 10), date(2022, 6, 15)),
+                (date(2022, 6, 16), date(2022, 6, 30)),
+            ],
+        )
+
     def test_multi_contracts_draft(self):
         # Check that setting a contract as running correctly
         # make the existing time off to draft for this employee
