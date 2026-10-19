@@ -1,6 +1,5 @@
 import { Component, onWillStart, onWillUpdateProps, t, usePlugin, useProps } from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { getExpressionDisplayedOperators } from "@web/core/expression_editor/expression_editor_operator_editor";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { condition } from "@web/core/tree_editor/condition_tree";
@@ -10,6 +9,22 @@ import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operato
 import { getDefaultValue } from "@web/core/tree_editor/tree_editor_value_editors";
 import { treeFromExpression } from "@web/core/tree_editor/tree_from_expression";
 import { getDefaultPath } from "@web/core/tree_editor/utils";
+import { getDomainDisplayedOperators } from "@web/core/tree_editor/operators";
+
+const EXPRESSION_VALID_OPERATORS = [
+    "<",
+    "<=",
+    ">",
+    ">=",
+    "between",
+    "in range",
+    "in",
+    "not in",
+    "=",
+    "!=",
+    "set",
+    "not set",
+];
 
 export class ExpressionEditor extends Component {
     static template = "web.ExpressionEditor";
@@ -50,20 +65,31 @@ export class ExpressionEditor extends Component {
         return null;
     }
 
+    getExpressionDisplayedOperators(fieldDef) {
+        const operators = getDomainDisplayedOperators(fieldDef);
+        const validOperators = Object.fromEntries(EXPRESSION_VALID_OPERATORS.map((o) => [o, true]));
+        if (["char", "html", "text"].includes(fieldDef?.type)) {
+            for (const op of ["ilike", "not ilike"]) {
+                validOperators[op] = true;
+            }
+        }
+        return operators.filter((operator) => validOperators[operator]);
+    }
+
     getDefaultCondition() {
         const defaultPath = getDefaultPath(this.filteredFields);
         const fieldDef = this.filteredFields[defaultPath];
-        const operator = getExpressionDisplayedOperators(fieldDef)[0];
+        const operator = this.getExpressionDisplayedOperators(fieldDef)[0];
         const value = getDefaultValue(fieldDef, operator);
         return condition(fieldDef.name, operator, value);
     }
 
     getDefaultOperator(fieldDef) {
-        return getExpressionDisplayedOperators(fieldDef)[0];
+        return this.getExpressionDisplayedOperators(fieldDef)[0];
     }
 
     getOperatorEditorInfo(fieldDef) {
-        const operators = getExpressionDisplayedOperators(fieldDef);
+        const operators = this.getExpressionDisplayedOperators(fieldDef);
         return getOperatorEditorInfo(operators, fieldDef);
     }
 

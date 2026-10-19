@@ -119,14 +119,35 @@ function simplifyTree(tree) {
     return { ...tree, children };
 }
 
-function _extractIdsRecursive(tree, getFieldDef, idsByModel) {
+/**
+ * Returns the model of the records whose ids are the value of the condition,
+ * if any: the comodel of a relational field, or the model owning the "id" field.
+ * @param {Object} node
+ * @param {Function} getFieldInfo
+ * @returns {string|null}
+ */
+function getValueResModel(node, getFieldInfo) {
+    const { fieldDef, resModel } = getFieldInfo(node.path);
+    if (["many2one", "many2many", "one2many"].includes(fieldDef?.type)) {
+        return getResModel(fieldDef);
+    }
+    if (
+        fieldDef?.name === "id" &&
+        fieldDef.type === "integer" &&
+        ["=", "!=", "in", "not in"].includes(node.operator)
+    ) {
+        return resModel;
+    }
+    return null;
+}
+
+function _extractIdsRecursive(tree, getFieldInfo, idsByModel) {
     if (tree.type === "condition") {
-        const fieldDef = getFieldDef(tree.path);
-        if (["many2one", "many2many", "one2many"].includes(fieldDef?.type)) {
+        const resModel = getValueResModel(tree, getFieldInfo);
+        if (resModel) {
             const value = tree.value;
             const values = Array.isArray(value) ? value : [value];
             const ids = values.filter((val) => isId(val));
-            const resModel = getResModel(fieldDef);
             if (ids.length) {
                 if (!idsByModel[resModel]) {
                     idsByModel[resModel] = [];
@@ -137,14 +158,14 @@ function _extractIdsRecursive(tree, getFieldDef, idsByModel) {
     }
     if (tree.type === "connector") {
         for (const child of tree.children) {
-            _extractIdsRecursive(child, getFieldDef, idsByModel);
+            _extractIdsRecursive(child, getFieldInfo, idsByModel);
         }
     }
     return idsByModel;
 }
 
-function extractIdsFromTree(tree, getFieldDef) {
-    const idsByModel = _extractIdsRecursive(tree, getFieldDef, {});
+function extractIdsFromTree(tree, getFieldInfo) {
+    const idsByModel = _extractIdsRecursive(tree, getFieldInfo, {});
 
     for (const resModel in idsByModel) {
         idsByModel[resModel] = unique(idsByModel[resModel]);
@@ -159,12 +180,12 @@ export const treeProcessorService = {
         "getDomainTreeDescription",
         "getDomainTreeTooltip",
         "makeGetConditionDescription",
-        "makeGetFieldDef",
+        "makeGetFieldInfo",
         "treeFromDomain",
     ],
     start(_, { field: fieldService, name: nameService }) {
-        async function getDisplayNames(tree, getFieldDef) {
-            const resIdsByModel = extractIdsFromTree(tree, getFieldDef);
+        async function getDisplayNames(tree, getFieldInfo) {
+            const resIdsByModel = extractIdsFromTree(tree, getFieldInfo);
             const proms = [];
             const resModels = [];
             for (const [resModel, resIds] of Object.entries(resIdsByModel)) {
@@ -196,15 +217,15 @@ export const treeProcessorService = {
 
         async function makeGetConditionDescription(resModel, tree, limit, pathLimit) {
             tree = simplifyTree(tree);
-            const [getFieldDef, getPathDescription] = await Promise.all([
-                makeGetFieldDef(resModel, tree),
+            const [getFieldInfo, getPathDescription] = await Promise.all([
+                makeGetFieldInfo(resModel, tree),
                 makeGetPathDescriptions(resModel, tree, pathLimit),
             ]);
-            const displayNames = await getDisplayNames(tree, getFieldDef);
+            const displayNames = await getDisplayNames(tree, getFieldInfo);
             return (node) =>
                 _getConditionDescription(
                     node,
-                    getFieldDef,
+                    getFieldInfo,
                     getPathDescription,
                     displayNames,
                     limit
@@ -213,7 +234,7 @@ export const treeProcessorService = {
 
         function _getConditionDescription(
             node,
-            getFieldDef,
+            getFieldInfo,
             getPathDescription,
             displayNames,
             limit = 5
@@ -226,7 +247,7 @@ export const treeProcessorService = {
             if (["=", "!="].includes(operator) && value === false) {
                 operator = operator === "=" ? "not set" : "set";
             }
-            const fieldDef = getFieldDef(path);
+            const { fieldDef } = getFieldInfo(path);
             const operatorLabel = getOperatorLabel(operator, fieldDef?.type, negate, (operator) => {
                 switch (operator) {
                     case "=":
@@ -255,7 +276,7 @@ export const treeProcessorService = {
             if (["set", "not set"].includes(operator)) {
                 return description;
             }
-            const coModeldisplayNames = displayNames[getResModel(fieldDef)];
+            const coModeldisplayNames = displayNames[getValueResModel(node, getFieldInfo)];
             const dis = disambiguate(value, coModeldisplayNames);
             let values;
             if (operator === "in range") {
@@ -323,7 +344,7 @@ export const treeProcessorService = {
                 }
                 return description;
             }
-            const getFieldDef = await makeGetFieldDef(resModel, tree);
+            const getFieldInfo = await makeGetFieldInfo(resModel, tree);
             const getConditionDescription = await makeGetConditionDescription(
                 resModel,
                 tree,
@@ -339,7 +360,7 @@ export const treeProcessorService = {
                 const jointedValues = values.join(joint);
                 stringDescription.push(addParenthesis ? `( ${jointedValues} )` : jointedValues);
             } else if (isTree(tree.value)) {
-                const _fieldDef = getFieldDef(tree.path);
+                const _fieldDef = getFieldInfo(tree.path).fieldDef;
                 const _resModel = getResModel(_fieldDef);
                 const _tree = tree.value;
                 const description = await getDomainTreeDescription(_resModel, _tree);
@@ -363,7 +384,7 @@ export const treeProcessorService = {
                 );
                 return [connector, ...childrenTooltipLines].flat();
             }
-            const getFieldDef = await makeGetFieldDef(resModel, tree);
+            const getFieldInfo = await makeGetFieldInfo(resModel, tree);
             const getConditionDescription = await makeGetConditionDescription(resModel, tree, 20);
             const { pathDescription, operatorDescription, valueDescription } =
                 getConditionDescription(tree);
@@ -377,7 +398,7 @@ export const treeProcessorService = {
             }
             descr.push(`${tabs}${stringDescriptions.join(" ")}`);
             if (isTree(tree.value)) {
-                const _fieldDef = getFieldDef(tree.path);
+                const _fieldDef = getFieldInfo(tree.path).fieldDef;
                 const _resModel = getResModel(_fieldDef);
                 const _tree = tree.value;
                 const tooltipLines = await getTooltipLines(_resModel, _tree, depth + 1);
@@ -391,29 +412,25 @@ export const treeProcessorService = {
             return descriptions.join("\n");
         }
 
-        async function makeGetFieldDef(resModel, tree) {
+        async function makeGetFieldInfo(resModel, tree) {
             const paths = new Set(getPathsInTree(tree, true));
             const promises = [];
-            const fieldDefs = {};
+            const fieldInfos = {};
             for (const path of paths) {
                 promises.push(
-                    fieldService.loadFieldInfo(resModel, path).then(({ fieldDef }) => {
-                        fieldDefs[path] = fieldDef;
+                    fieldService.loadFieldInfo(resModel, path).then((fieldInfo) => {
+                        fieldInfos[path] = fieldInfo;
                     })
                 );
             }
             await Promise.all(promises);
-            return (path) => {
-                if (typeof path === "string") {
-                    return fieldDefs[path];
-                }
-                return null;
-            };
+            return (path) => (typeof path === "string" && fieldInfos[path]) || {};
         }
 
         async function treeFromDomain(resModel, domain, distributeNot = true) {
             const tree = constructTreeFromDomain(domain, distributeNot);
-            const getFieldDef = await makeGetFieldDef(resModel, tree);
+            const getFieldInfo = await makeGetFieldInfo(resModel, tree);
+            const getFieldDef = (path) => getFieldInfo(path).fieldDef;
             return introduceVirtualOperators(tree, { getFieldDef });
         }
 
@@ -421,7 +438,7 @@ export const treeProcessorService = {
             getDomainTreeDescription,
             getDomainTreeTooltip,
             makeGetConditionDescription,
-            makeGetFieldDef,
+            makeGetFieldInfo,
             treeFromDomain,
         };
     },

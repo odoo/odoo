@@ -444,7 +444,7 @@ describe("field HTML", () => {
         await waitFor(".o_hb_snippets_menu [data-label='Domain']", { timeout: 3000 });
         expect(
             ".o_hb_snippets_menu [data-label='Domain'] span[data-icon='filter_alt'] + span"
-        ).toHaveText("Id = 1");
+        ).toHaveText("Id = BE Event");
         await clickSave();
         const table = await waitFor(".o_mail_body_inline table[t-if]", { timeout: 3000 });
         expect(table).toHaveAttribute("t-if", 'object.filtered_domain([("id", "=", 1)])');

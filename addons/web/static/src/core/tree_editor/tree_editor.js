@@ -66,11 +66,12 @@ export class TreeEditor extends Component {
     }
 
     async prepareInfo(props) {
-        const [fieldDefs, getFieldDef] = await Promise.all([
+        const [fieldDefs, getFieldInfo] = await Promise.all([
             this.fieldService.loadFields(props.resModel),
-            this.treeProcessor.makeGetFieldDef(props.resModel, this.tree),
+            this.treeProcessor.makeGetFieldInfo(props.resModel, this.tree),
         ]);
-        this.getFieldDef = getFieldDef;
+        this.getFieldInfo = getFieldInfo;
+        this.getFieldDef = (path) => getFieldInfo(path).fieldDef;
         this.defaultCondition = props.getDefaultCondition(fieldDefs);
 
         if (props.readonly) {
@@ -178,8 +179,8 @@ export class TreeEditor extends Component {
     }
 
     getValueEditorInfo(node) {
-        const fieldDef = this.getFieldDef(node.path);
-        return getValueEditorInfo(fieldDef, node.operator);
+        const { fieldDef, resModel } = this.getFieldInfo(node.path);
+        return getValueEditorInfo(fieldDef, node.operator, { resModel });
     }
 
     async _updatePath(node, path) {

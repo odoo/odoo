@@ -1,7 +1,6 @@
 import { Component, onWillStart, onWillUpdateProps, t, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
-import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_selector_operator_editor";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import {
@@ -11,6 +10,7 @@ import {
     formatValue,
 } from "@web/core/tree_editor/condition_tree";
 import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
+import { getDomainDisplayedOperators } from "@web/core/tree_editor/operators";
 import { TreeEditor } from "@web/core/tree_editor/tree_editor";
 import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { useService } from "@web/core/utils/hooks";

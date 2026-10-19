@@ -904,7 +904,7 @@ test("domain field with 'inDialog' options", async function () {
     await contains(`.modal ${SELECTORS.addNewRule}`).click();
     await contains(".modal-footer .btn-primary").click();
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getConditionText()).toBe("Id = 1");
+    expect(getConditionText()).toBe("Id = ( )");
 });
 
 test("invalid value in domain field with 'inDialog' options", async function () {
@@ -1121,7 +1121,7 @@ test("add condition in empty foldable domain", async function () {
     await contains(".o_domain_add_first_node_button").click();
     // Domain is now unfolded with the default condition
     expect(".o_model_field_selector").toHaveCount(1);
-    expect(SELECTORS.debugArea).toHaveValue('[("id", "=", 1)]');
+    expect(SELECTORS.debugArea).toHaveValue('[("id", "in", [])]');
 });
 
 test("foldable domain field unfolds and hides caret when domain is invalid", async function () {
@@ -1163,11 +1163,11 @@ test("folded domain field with any operator", async function () {
                 </sheet>
             </form>`,
     });
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Company : ( Id = 1 )");
+    expect(`.o_field_domain .o_facet_values`).toHaveText("Company : ( Id = first record )");
 });
 
 test("foldable domain, search_count delayed", async function () {
-    Partner._records[0].foo = '[("id", "=", 1)]';
+    Partner._records[0].foo = '[("id", "=", 12)]';
     const def = Promise.withResolvers();
     onRpc("search_count", async () => {
         await def.promise;
@@ -1188,7 +1188,7 @@ test("foldable domain, search_count delayed", async function () {
     });
     expect(".o_domain_show_selection_button").toHaveCount(0);
     expect(".o_tree_editor").toHaveCount(0);
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Id = 1");
+    expect(`.o_field_domain .o_facet_values`).toHaveText("Id = gold");
     def.resolve();
     await animationFrame();
     expect(".o_domain_show_selection_button").toHaveCount(1);
