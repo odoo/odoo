@@ -165,7 +165,7 @@ owl.useLayoutEffect = function useLayoutEffect(effect, computeDependencies = () 
 
 class EnvPlugin extends owl.Plugin {
     static id = "__ENV__";
-    env = owl.config("env") ?? {};
+    env = owl.useConfig("env") ?? {};
 }
 
 owl.useEnv = function useEnv() {
