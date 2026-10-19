@@ -3,6 +3,13 @@
 import re
 import logging
 from datetime import timedelta
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
+||||||| c2fe265e7e53195c68f5e758e26067e3ca055c3c
+from lxml import etree
+=======
+from lxml import etree
+from markupsafe import Markup
+>>>>>>> 6124206330642d560d95e6dbcf6a1b41318fecbb
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
@@ -274,8 +281,31 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         try:
             move._extend_with_attachments(files_data, new=True)
             move._autopost_bill()
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
         except Exception:
             _logger.exception("Unexpected error occurred during the import of bill with id %s", move.id)
+||||||| c2fe265e7e53195c68f5e758e26067e3ca055c3c
+        except Exception:
+            _logger.exception("Unexpected error occurred during the import of bill with id %s", move.id)
+
+=======
+        except Exception as err:
+            _logger.exception(
+                "Unexpected error occurred during the import of bill with id %s (%s uuid: %s, attachment: %s)",
+                move.id, self.proxy_type, uuid, attachment.id,
+            )
+            move._message_log(
+                body=Markup("%s<br/>%s") % (
+                    self.env._(
+                        "Error importing %(proxy_type)s document (UUID: %(uuid)s):",
+                        proxy_type=dict(self._fields['proxy_type']._description_selection(self.env))[self.proxy_type],
+                        uuid=uuid,
+                    ),
+                    str(err)
+                ),
+                attachment_ids=attachment.ids,
+            )
+>>>>>>> 6124206330642d560d95e6dbcf6a1b41318fecbb
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return {'uuid': uuid, 'move': move}
 
