@@ -57,7 +57,7 @@
         }
 
         .o_wblog_split_grid_sticky {
-            @include media-breakpoint-up(xl) {
+            @media (min-width: 1200px) {
                 height: calc(100vh - var(--wblog-sticky-top, 0px));
 
                 /* Prevent having a big space under the blog posts when there
@@ -76,7 +76,7 @@
         }
 
         .o_wblog_split_grid_view_container {
-            @include media-breakpoint-up(md) {
+            @media (min-width: 768px) {
                 &:nth-child(even) article {
                     flex-direction: row-reverse !important;
                 }
@@ -119,7 +119,7 @@
     .o_wblog_post_page_cover_regular {
         --aspect-ratio: 50%;
 
-        @include media-breakpoint-down(lg) {
+        @media (max-width: 991.98px) {
             --aspect-ratio: 75%; /* ratio: 3/4 */
         }
     }
@@ -129,7 +129,7 @@
     }
 
     .breadcrumb-item {
-        @include media-breakpoint-down(lg) {
+        @media (max-width: 991.98px) {
             --breadcrumb-divider: "";
         }
     }
@@ -173,7 +173,7 @@
                 text-overflow: ellipsis;
             }
 
-            @include media-breakpoint-up(lg) {
+            @media (min-width: 992px) {
                 /* Inactive vertical bar */
                 &::before {
                     position: absolute;

@@ -3,11 +3,11 @@
         grid-template-columns: repeat(var(--DynamicCategory-columns), 1fr);
         margin-top: 1rem;
 
-        @include media-breakpoint-between(md,lg) {
+        @media (min-width: 768px) and (max-width: 991.98px) {
             grid-template-columns: repeat(calc(max(2, var(--DynamicCategory-columns) - 1)), 1fr);
         }
 
-        @include media-breakpoint-down(sm) {
+        @media (max-width: 575.98px) {
             grid-template-columns: repeat(1, 1fr);
         }
     }
@@ -36,7 +36,7 @@
         border-radius: inherit;
         box-shadow: inherit;
 
-        @include media-breakpoint-down(sm) {
+        @media (max-width: 575.98px) {
             --DynamicCategory-max-column-span: 1;
         }
     }

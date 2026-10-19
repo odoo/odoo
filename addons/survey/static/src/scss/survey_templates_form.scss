@@ -39,7 +39,7 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         background: var(--body-bg);
         padding: var(--SurveyForm__question-padding-up-md, 0 var(--o-bs-spacer-4) var(--o-bs-spacer-4));
 
-        @include media-breakpoint-up(md) {
+        @media (min-width: 768px) {
             --SurveyForm__question-padding-up-md: 0 var(--o-bs-spacer-5) var(--o-bs-spacer-5);
         }
 
@@ -174,7 +174,7 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
  **********************************************************/
 
 .o_survey_session_open {
-    @include media-breakpoint-down(md) {
+    @media (max-width: 767.98px) {
         position: absolute;
         inset-block: 0;
     }

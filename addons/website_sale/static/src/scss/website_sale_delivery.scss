@@ -1,14 +1,14 @@
 .o_delivery_method_row {
     grid-template-columns: var(--o-wsale-delivery-narrow-layout-columns, minmax(min-content, 1fr) minmax(10rem, auto) minmax(5.5rem, auto));
 
-    @include media-breakpoint-down(md) {
+    @media (max-width: 767.98px) {
         --o-wsale-delivery-narrow-layout-columns: 2fr 1fr;
 
         .o_delivery_date_col {
             grid-column: 1 / -1;
         }
     }
-    @include media-breakpoint-between(lg, xl) {
+    @media (min-width: 992px) and (max-width: 1199.98px) {
         --o-wsale-delivery-narrow-layout-columns: 2fr 1fr;
 
         .o_delivery_date_col {

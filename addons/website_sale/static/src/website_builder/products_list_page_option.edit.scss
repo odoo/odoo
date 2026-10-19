@@ -76,7 +76,7 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
        } */
 
     .o_wsale_sidebar_preview:first-child {
-      @include media-breakpoint-up(lg) {
+      @media (min-width: 992px) {
         animation: sidebar_preview .2s forwards;
         /* @include _showcase(); */
       }

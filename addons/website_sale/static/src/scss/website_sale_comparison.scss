@@ -23,7 +23,7 @@
     .oe_website_sale > .overflow-x-auto {
         margin: 0 calc(var(--o-website-sale-comparison-table-column-padding-x) * -1);
 
-        @include media-breakpoint-down(lg) {
+        @media (max-width: 991.98px) {
             margin: 0 calc(var(--gutter-x, 30px) / -2);
         }
     }
@@ -31,7 +31,7 @@
     .o_wsale_compare_table_column {
         --o-website-sale-comparison-table-column-width: #{map-get($container-max-widths, 'sm') * .5};
 
-        @include media-breakpoint-up(xl) {
+        @media (min-width: 1200px) {
             --o-website-sale-comparison-table-column-width: 25%;
         }
 
@@ -44,11 +44,11 @@
     }
 
     #o_comparelist_table {
-        @include media-breakpoint-down(xl) {
+        @media (max-width: 1199.98px) {
             min-width: max-content;
         }
 
-        @include media-breakpoint-down(lg) {
+        @media (max-width: 991.98px) {
             padding: 0 calc(var(--o-website-sale-comparison-table-column-padding-x));
         }
     }

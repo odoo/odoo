@@ -49,7 +49,7 @@
     }
 
     #o_wevent_event_main_sidebar {
-        @include media-breakpoint-up(lg) {
+        @media (min-width: 992px) {
             max-width: 19rem;
         }
     }
@@ -103,7 +103,7 @@
         display: flex;
         flex-direction: column;
 
-        @include media-breakpoint-up(sm) {
+        @media (min-width: 576px) {
             :not(.s_popup) > & {
                 overflow: auto;
                 min-height: 0;

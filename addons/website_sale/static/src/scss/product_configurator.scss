@@ -1,7 +1,7 @@
 .css_attribute_color {
     --o-wsale-css-attribute-color__size: 1.6rem;
 
-    @include media-breakpoint-down(sm) {
+    @media (max-width: 575.98px) {
         --o-wsale-css-attribute-color__size: 2rem;
     }
 
@@ -145,20 +145,20 @@
 
     &.input-group-lg {
         &:not(.css_quantity_50) {
-            @include media-breakpoint-up(lg) {
+            @media (min-width: 992px) {
                 width: 100%;
             }
 
-            @include media-breakpoint-up(xl) {
+            @media (min-width: 1200px) {
                 width: auto;
             }
 
             input {
-                @include media-breakpoint-up(lg)  {
+                @media (min-width: 992px) {
                     max-width: 100%;
                 }
 
-                @include media-breakpoint-up(xl)  {
+                @media (min-width: 1200px) {
                     max-width: 4ch;
                 }
             }
@@ -260,7 +260,7 @@ label.css_attribute_color.css_not_available {
         width: 120px;
     }
 
-    @include media-breakpoint-down(md) {
+    @media (max-width: 767.98px) {
         .td-img {
             display: none;
         }

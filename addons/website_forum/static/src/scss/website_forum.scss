@@ -61,7 +61,7 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
         }
 
         &> :not(caption) > * > * {
-            @include media-breakpoint-down(lg) {
+            @media (max-width: 991.98px) {
                 padding-left: 0;
                 padding-right: var(--o-bs-table-cell-padding-x-sm);
             }
@@ -69,7 +69,7 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
         }
 
         tbody {
-            @include media-breakpoint-down(lg) {
+            @media (max-width: 991.98px) {
                 border-top: 0;
             }
 

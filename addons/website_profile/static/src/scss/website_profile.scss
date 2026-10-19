@@ -20,7 +20,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     background-size: cover;
     background-position: center;
 
-    @include media-breakpoint-up(md)  {
+    @media (min-width: 768px) {
         padding-top: 70%;
         border: 1px solid darken(#875A7B, 10%);
         border-bottom-width: 0;
@@ -28,7 +28,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 }
 
 .o_wprofile_header {
-    @include media-breakpoint-up(md)  {
+    @media (min-width: 768px) {
         &:before {
             content: "";
             position: absolute;
@@ -43,13 +43,13 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 .o_wprofile_sidebar {
     border: 1px solid $border-color;
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         border-top-width: 0;
     }
 }
 
 .o_wprofile_nav_tabs {
-    @include media-breakpoint-up(md)  {
+    @media (min-width: 768px) {
         margin-top: $owprofile-tabs-height * -1;
         border-bottom: 0;
 
@@ -80,7 +80,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
         }
     }
 
-    @include media-breakpoint-only(xs) {
+    @media (max-width: 575.98px) {
         overflow-x: auto;
         overflow-y: hidden;
 
@@ -91,12 +91,12 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 }
 
 .o_wprofile_tabs_content {
-    @include media-breakpoint-down(md) {
+    @media (max-width: 767.98px) {
         background-color: $nav-tabs-link-active-bg;
         padding:0 calc(var(--o-bs-grid-gutter-width) * 0.5);
     }
 
-    @include media-breakpoint-only(xs) {
+    @media (max-width: 575.98px) {
         margin: 0 calc(var(--o-bs-grid-gutter-width) * -0.5);
     }
 }
@@ -173,7 +173,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     }
 
     .o_wprofile_all_users_nav_btn {
-        @include media-breakpoint-up(md) {
+        @media (min-width: 768px) {
             color: white;
             margin-top: -1px;
             border-radius: 0;
@@ -190,7 +190,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     }
 
     .o_wprofile_all_users_nav_btn_container {
-        @include media-breakpoint-down(md) {
+        @media (max-width: 767.98px) {
             ~ .o_wprofile_user_profile_sub_nav_mobile_col {
                 padding-left: 0;
             }

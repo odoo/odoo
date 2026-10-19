@@ -22,7 +22,7 @@
             /* Force side panel min-width to account for potential Youtube chat
                And adapt main panel max-width accordingly. */
             &.o_youtube_chat {
-                @include media-breakpoint-up(md) {
+                @media (min-width: 768px) {
                     max-width: calc(100% - 22rem);
                 }
             }
@@ -45,7 +45,7 @@
 
             /* Force side panel min-width to account for potential Youtube chat */
             &.o_youtube_chat {
-                @include media-breakpoint-up(md) {
+                @media (min-width: 768px) {
                     min-width: 22rem;
                 }
             }
