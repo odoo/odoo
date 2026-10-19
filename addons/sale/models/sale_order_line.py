@@ -1303,10 +1303,19 @@ class SaleOrderLine(models.Model):
         invoiced_qties = defaultdict(float)
         for line in self:
             invoice_lines = line._get_invoice_lines()
+            if line.is_downpayment:
+                if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel' or l.move_id.payment_state == 'invoicing_legacy').mapped('balance'))):
+                    invoiced_qties[line] = 1
+                    line.qty_invoiced = 1
+                else:
+                    invoiced_qties[line] = 0
+                    line.qty_invoiced = 0
+                continue
             for invoice_line in invoice_lines:
                 if (
                     invoice_line.move_id.state != "cancel"
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
+<<<<<<< 0cdbc41e6e1588ba5755df944ba2407bd4ed888f
                 ) and line._affects_qty_invoiced(invoice_line):
                     if line.is_downpayment:
                         if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel' or l.move_id.payment_state == 'invoicing_legacy').mapped('balance'))):
@@ -1316,6 +1325,19 @@ class SaleOrderLine(models.Model):
                             invoiced_qties[line] = 0
                             line.qty_invoiced = 0
                         continue
+||||||| 35a2de01aea7fed18aa04d205d86fd6e767c57e5
+                ):
+                    if line.is_downpayment:
+                        if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel').mapped('balance'))):
+                            invoiced_qties[line] = 1
+                            line.qty_invoiced = 1
+                        else:
+                            invoiced_qties[line] = 0
+                            line.qty_invoiced = 0
+                        continue
+=======
+                ):
+>>>>>>> 2dc1df25c334363837d7ca3df0aae37dc1854324
                     invoice_qty = invoice_line.product_uom_id._compute_quantity(
                         invoice_line.quantity, line.product_uom_id, round=False
                     )
