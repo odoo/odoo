@@ -153,11 +153,14 @@ export class ProductListPage extends Component {
     }
 
     getProducts(category) {
-        return (
-            category.associatedProducts ||
-            this.selfOrder.productByCategIds[category.id] ||
-            []
-        ).filter((product) => product.self_order_available && this.isProductAvailable(product));
+        return (category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [])
+            .filter((product) => product.self_order_available && this.isProductAvailable(product))
+            .toSorted(
+                (a, b) =>
+                    b.is_favorite - a.is_favorite ||
+                    a.pos_sequence - b.pos_sequence ||
+                    a.name.localeCompare(b.name)
+            );
     }
 
     toggleSubCategoryPanel() {
