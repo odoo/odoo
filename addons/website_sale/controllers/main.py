@@ -1069,8 +1069,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "view_track": view_track,
             "structured_data": structured_data,
             "shop_path": SHOP_PATH,
+<<<<<<< e37ee361ce744ea134e69c9a3a2e0fff5d8519c4
             "reset_filters": reset_filters,
             "user_email": self.env.user.email
+||||||| d0afbdc12cfad3f5e1b6d65ea46d8d9b66240886
+            "user_email": self.env.user.email
+=======
+            "user_email": self.env.user.email_normalized
+>>>>>>> 3f7b1ea2f18c66f9eabc2cf47401c9932eb58a52
             or request.session.get("stock_notification_email", ""),
         }
 
