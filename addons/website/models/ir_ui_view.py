@@ -347,6 +347,22 @@ class IrUiView(models.Model):
         # prefer inactive website-specific views over active generic ones
         return views.filter_duplicate().filtered('active')
 
+    def _get_loaded_xmlid_view_ids(self):
+        loaded_view_ids = super()._get_loaded_xmlid_view_ids()
+        if not self.env.context.get('website_id'):
+            return loaded_view_ids
+        # A website-specific view has no XML ID: it counts once the generic
+        # view with the same key is loaded (see `_get_filter_xmlid_query()`).
+        specific_views = self.filtered(lambda view: view.website_id and view.id not in loaded_view_ids)
+        if specific_views:
+            generic_views = self.with_context(active_test=False).search([
+                ('key', 'in', specific_views.mapped('key')),
+                ('website_id', '=', False),
+            ])
+            loaded_keys = set(generic_views.browse(generic_views._get_loaded_xmlid_view_ids()).mapped('key'))
+            loaded_view_ids.update(specific_views.filtered(lambda view: view.key in loaded_keys).ids)
+        return loaded_view_ids
+
     @api.model
     def _get_filter_xmlid_query(self):
         """This method add some specific view that do not have XML ID
