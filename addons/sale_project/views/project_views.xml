@@ -148,9 +148,6 @@
             <xpath expr="//templates" position="before">
                 <field name="allow_billable"/>
             </xpath>
-            <xpath expr="//div[@name='project_customer_rating_menu']" position="attributes">
-                <attribute name="t-if">record.show_ratings.raw_value and record.allow_billable.raw_value</attribute>
-            </xpath>
             <xpath expr="//div[@t-if='record.show_ratings.raw_value and record.rating_count.raw_value &gt; 0']" position="attributes">
                 <attribute name="t-if">record.show_ratings.raw_value and record.allow_billable.raw_value and record.rating_count.raw_value &gt; 0 </attribute>
             </xpath>
