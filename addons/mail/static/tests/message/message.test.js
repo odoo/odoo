@@ -469,21 +469,24 @@ test("edit message with multiple mentions keeps the links", async () => {
         pyEnv["res.partner"].write(p, idOverrides[i]);
     });
 
-    pyEnv["mail.message"].create([{
-        author_id: serverState.partnerId,
-        body: "@Other Partner says hi to @Test Partner",
-        model: "res.partner",
-        message_type: "comment",
-        partner_ids: [123, 1234],
-        res_id: serverState.partnerId,
-    }, {
-        author_id: serverState.partnerId,
-        body: "@Test Partner Junior says hi to @Test Partner",
-        model: "res.partner",
-        message_type: "comment",
-        partner_ids: [123, 125],
-        res_id: serverState.partnerId,
-    }]);
+    pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "@Other Partner says hi to @Test Partner",
+            model: "res.partner",
+            message_type: "comment",
+            partner_ids: [123, 1234],
+            res_id: serverState.partnerId,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "@Test Partner Junior says hi to @Test Partner",
+            model: "res.partner",
+            message_type: "comment",
+            partner_ids: [123, 125],
+            res_id: serverState.partnerId,
+        },
+    ]);
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Message:eq(0) [title='Expand']");
@@ -756,6 +759,82 @@ test("Reaction summary", async () => {
             await leave(".o-mail-MessageReaction");
         });
     }
+});
+
+test("Reaction summary closes when leaving it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    pyEnv["mail.message.reaction"].create({
+        message_id: messageId,
+        content: "😅",
+        partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await hover(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-Composer-input");
+    await contains(".o-mail-MessageReactionList-preview", { count: 0 });
+});
+
+test("Reaction summary opens again after clicking it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    pyEnv["mail.message.reaction"].create({
+        message_id: messageId,
+        content: "😅",
+        partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await hover(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-MessageReactionList-preview");
+    await click(".o-mail-MessageReactionList-preview");
+    await contains(".o-mail-MessageReactionMenu");
+    await press("Escape");
+    await contains(".o-mail-MessageReactionMenu", { count: 0 });
+    await contains(".o-mail-MessageReactionList-preview", { count: 0 });
+    await hover(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-Message-body");
+    await hover(".o-mail-MessageReactionList-preview");
+    await click(".o-mail-MessageReactionList-preview");
+    await contains(".o-mail-MessageReactionMenu");
+    await press("Escape");
+    await contains(".o-mail-MessageReactionMenu", { count: 0 });
+    await contains(".o-mail-MessageReactionList-preview", { count: 0 });
+    await hover(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-Message-body");
+    await hover(".o-mail-MessageReaction");
+    await hover(".o-mail-MessageReactionList-preview");
+    await click(".o-mail-MessageReactionList-preview");
+    await contains(".o-mail-MessageReactionMenu");
+    await press("Escape");
+    await contains(".o-mail-MessageReactionMenu", { count: 0 });
+    await contains(".o-mail-MessageReactionList-preview", { count: 0 });
+    await hover(".o-mail-MessageReaction");
+    await contains(".o-mail-MessageReactionList-preview");
 });
 
 test("Select already reacted emoji from the emoji picker keeps the reaction on message", async () => {
@@ -2040,13 +2119,11 @@ test("Copy Message Link", async () => {
 
 test("Notification sent for nameless partner", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create(
-        {
-            type: 'invoice',
-            email: 'invoice@test.example.com',
-            parent_id: serverState.partnerId,
-        }
-    );
+    const partnerId = pyEnv["res.partner"].create({
+        type: "invoice",
+        email: "invoice@test.example.com",
+        parent_id: serverState.partnerId,
+    });
     const messageId = pyEnv["mail.message"].create({
         body: "Hello",
         model: "res.partner",
@@ -2063,5 +2140,7 @@ test("Notification sent for nameless partner", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Message-notification");
-    await contains(".o-mail-MessageNotificationPopover", { text: "Mitchell Admin, Invoice Address" });
+    await contains(".o-mail-MessageNotificationPopover", {
+        text: "Mitchell Admin, Invoice Address",
+    });
 });
