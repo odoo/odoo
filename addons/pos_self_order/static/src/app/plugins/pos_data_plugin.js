@@ -22,6 +22,18 @@ export const unpatchSelf = patch(PosDataPlugin.prototype, {
     get databaseName() {
         return `pos-self-order-${odoo.access_token}`;
     },
+    onRpcResponse() {
+        return false;
+    },
+    scheduleHeartbeat() {
+        return false;
+    },
+    goOffline() {
+        return false;
+    },
+    heartbeat() {
+        return false;
+    },
     async initializeDeviceIdentifier() {
         return false;
     },

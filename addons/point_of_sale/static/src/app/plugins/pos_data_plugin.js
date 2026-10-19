@@ -6,7 +6,13 @@ import { debounce } from "@web/core/utils/timing";
 import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
 import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
-import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
+import {
+    ConnectionLostError,
+    ConnectionAbortedError,
+    rpc,
+    rpcBus,
+    RPCError,
+} from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 import { logPosMessage } from "../utils/pretty_console_log";
@@ -19,6 +25,12 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const { DateTime } = luxon;
 const CONSOLE_COLOR = "#28ffeb";
+// Requests that can be safely aborted and replayed: read-only ones and
+// idempotent calls (sync_from_ui matches existing orders by uuid).
+const HEARTBEAT_INTERVAL = 10000;
+const HEARTBEAT_RETRY_INTERVAL = 3000;
+const HEARTBEAT_TIMEOUT = 10000;
+const HEARTBEAT_MAX_FAILED_ATTEMPTS = 3;
 
 export class PosDataPlugin extends Plugin {
     // Must stay above LocalizationPlugin (10) since loading records needs translations.
@@ -41,6 +53,12 @@ export class PosDataPlugin extends Plugin {
         this.relations = [];
         this.channels = [];
         this.records = {};
+        this.connectivity = {
+            failedAttempts: 0,
+            promises: new Map(),
+            current: null,
+            timeout: null,
+        };
 
         this.mutex = markRaw(new Mutex());
         this.indexedDBMutex = markRaw(new Mutex());
@@ -51,20 +69,20 @@ export class PosDataPlugin extends Plugin {
         );
 
         this.initializeWebsocket();
-        useListener(window, "offline", () => this.checkConnectivity());
-        useListener(window, "online", () => this.checkConnectivity());
         this.bus.addEventListener("BUS:CONNECT", this.reconnectWebSocket.bind(this));
+        useListener(window, "offline", () => this.goOffline());
+        useListener(window, "online", () => this.heartbeat());
+        useListener(rpcBus, "RPC:RESPONSE", (ev) => this.onRpcResponse(ev.detail));
 
         onWillStart(async () => this._onWillStart());
     }
 
     async _onWillStart() {
-        if (!navigator.onLine) {
-            await this.checkConnectivity();
-        }
-
+        // No heartbeat before loading: a slow ping would load stale data from IndexedDB.
+        // An unreachable server makes load_data fail fast and fallback on local data.
         await this.initializeDeviceIdentifier();
         await this.initializeDataRelation();
+        this.heartbeat();
     }
 
     async initializeDeviceIdentifier() {
@@ -72,35 +90,101 @@ export class PosDataPlugin extends Plugin {
         await this.device.initialize();
     }
 
-    async checkConnectivity() {
-        try {
-            clearTimeout(this.checkConnectivityTimeout);
-            this.checkConnectivityTimeout = null;
-            // Runbot tests will soon be run in dockers with no access to the outside world,
-            // so all their interfaces will be disconnected. The problem is that the browser
-            // considers itself offline when no interface is connected. However, in this case,
-            // if the Odoo server is still accessible.
-            //
-            // This method also makes it possible to run local tests when no connection is
-            // available and an Odoo server is running locally.
-            //
-            // A ping is required to verify that the connection to the server is not possible.
-            this.network.offline = false;
-            this.network.warningTriggered = false;
+    scheduleHeartbeat() {
+        clearTimeout(this.connectivity.timeout);
+        const probablyOffline = this.connectivity.failedAttempts || this.network.offline;
+        const delay = probablyOffline ? HEARTBEAT_RETRY_INTERVAL : HEARTBEAT_INTERVAL;
+        this.connectivity.timeout = setTimeout(() => this.heartbeat(), delay);
+    }
 
-            await rpc("/pos/ping");
-            await this.syncData();
-            window.dispatchEvent(new CustomEvent("pos-network-online"));
-        } catch (error) {
-            if (error instanceof ConnectionLostError) {
-                this.network.offline = true;
-                if (navigator.onLine) {
-                    this.checkConnectivityTimeout = setTimeout(
-                        () => this.checkConnectivity(),
-                        2000
-                    );
-                }
+    onRpcResponse({ error }) {
+        if (error instanceof ConnectionAbortedError) {
+            return;
+        }
+        if (error instanceof ConnectionLostError) {
+            if (!this.connectivity.failedAttempts) {
+                this.heartbeat();
             }
+        } else if (this.network.offline) {
+            this.heartbeat();
+        } else {
+            this.connectivity.failedAttempts = 0;
+            this.scheduleHeartbeat();
+        }
+    }
+
+    goOffline() {
+        this.network.offline = true;
+        for (const promise of this.connectivity.promises.values()) {
+            promise?.abort?.();
+        }
+        this.connectivity.promises.clear();
+    }
+
+    /**
+     * The browser will be considered as offline after 3 failed heartbeat attempts.
+     * After 1 successful heartbeat, the browser will be considered online again.
+     */
+    async heartbeat() {
+        if (this.connectivity.current) {
+            return;
+        }
+
+        clearTimeout(this.connectivity.timeout);
+        this.connectivity.current = rpc("/pos/ping", {}, { silent: true });
+        const timer = setTimeout(() => this.connectivity.current.abort(), HEARTBEAT_TIMEOUT);
+        let reachable = true;
+
+        try {
+            await this.connectivity.current;
+        } catch (error) {
+            // Any other error means the server answered, so it is reachable
+            reachable = !(
+                error instanceof ConnectionLostError || error instanceof ConnectionAbortedError
+            );
+        } finally {
+            clearTimeout(timer);
+            this.connectivity.current = null;
+        }
+
+        if (!reachable) {
+            this.connectivity.failedAttempts += 1;
+            if (
+                this.connectivity.failedAttempts >= HEARTBEAT_MAX_FAILED_ATTEMPTS &&
+                !this.network.offline
+            ) {
+                this.goOffline();
+            }
+            this.scheduleHeartbeat();
+            return;
+        }
+
+        this.connectivity.failedAttempts = 0;
+        this.network.warningTriggered = false;
+
+        // Back online detection is based on whether the network was previously offline.
+        // Its used to know when dispatching the "pos-network-online" event.
+        const backOnline = this.network.offline;
+        if (backOnline) {
+            this.network.offline = false;
+        }
+        this.scheduleHeartbeat();
+
+        // Listeners expect offline operations to be replayed before being notified
+        try {
+            await this.syncData();
+        } catch (error) {
+            logPosMessage(
+                "DataService",
+                "heartbeat",
+                "Failed to replay offline operations",
+                CONSOLE_COLOR,
+                [error]
+            );
+        }
+
+        if (backOnline) {
+            window.dispatchEvent(new CustomEvent("pos-network-online"));
         }
     }
 
@@ -537,6 +621,14 @@ export class PosDataPlugin extends Plugin {
     }
 
     handleLoadingDataError(error, localData) {
+        if (error instanceof ConnectionLostError) {
+            this.network.offline = true;
+            // Server unreachable, fallback silently on local data if there is any
+            if (Object.values(localData).some((records) => records.length)) {
+                return localData;
+            }
+        }
+
         let message = _t("An error occurred while loading the Point of Sale: \n");
         if (error instanceof RPCError) {
             message += error.data.message;
@@ -662,7 +754,7 @@ export class PosDataPlugin extends Plugin {
         kwargs = {},
         fields = [],
         options = [],
-        uuid = "",
+        uuid = uuidv4(),
     }) {
         this.network.loading = true;
 
@@ -671,7 +763,7 @@ export class PosDataPlugin extends Plugin {
                 throw new ConnectionLostError();
             }
 
-            let result = true;
+            let promise = null;
             let limitedFields = false;
             if (fields.length === 0) {
                 fields = this.fields[model] || [];
@@ -686,31 +778,45 @@ export class PosDataPlugin extends Plugin {
 
             switch (type) {
                 case "write":
-                    result = await this.orm.write(model, ids, values, {
+                    promise = this.orm.write(model, ids, values, {
                         context: { device_identifier: this.device.identifier },
                     });
                     break;
                 case "delete":
-                    result = await this.orm.unlink(model, ids, {
+                    promise = this.orm.unlink(model, ids, {
                         context: { device_identifier: this.device.identifier },
                     });
                     break;
                 case "call":
-                    result = await this.orm.call(model, method, args, kwargs);
+                    promise = this.orm.call(model, method, args, kwargs);
                     break;
                 case "read":
                     queue = false;
-                    result = await this.orm.read(model, ids, fields, {
+                    promise = this.orm.read(model, ids, fields, {
                         ...options,
                         load: false,
                     });
                     break;
                 case "search_read":
                     queue = false;
-                    result = await this.orm.searchRead(model, args, fields, {
+                    promise = this.orm.searchRead(model, args, fields, {
                         ...options,
                         load: false,
                     });
+            }
+
+            // A non-idempotent request may already have been processed by the
+            // server, aborting and replaying it could apply it twice.
+            const isAbortableMethod = type === "call" && this.opts.abortableMethods.has(method);
+            if (this.opts.abortableTypes.has(type) || isAbortableMethod) {
+                this.connectivity.promises.set(uuid, promise);
+            }
+
+            let result;
+            try {
+                result = await promise;
+            } finally {
+                this.connectivity.promises.delete(uuid);
             }
 
             if (type === "create") {
@@ -802,7 +908,9 @@ export class PosDataPlugin extends Plugin {
                 return true;
             }
             return result;
-        } catch (error) {
+        } catch (err) {
+            // Requests are only aborted by the heartbeat when the server is unreachable
+            const error = err instanceof ConnectionAbortedError ? new ConnectionLostError() : err;
             let throwErr = true;
             const uuids = this.network.unsyncData.map((d) => d.uuid);
             if (
@@ -993,21 +1101,23 @@ export class PosDataPlugin extends Plugin {
     async syncData() {
         this.syncInProgress.set(true);
 
-        await this.mutex.exec(async () => {
-            while (this.network.unsyncData.length > 0) {
-                const data = this.network.unsyncData[0];
-                const result = await this.execute({ ...data.args[0], uuid: data.uuid });
+        try {
+            await this.mutex.exec(async () => {
+                while (this.network.unsyncData.length > 0) {
+                    const data = this.network.unsyncData[0];
+                    const result = await this.execute({ ...data.args[0], uuid: data.uuid });
 
-                if (result) {
-                    this.network.unsyncData.shift();
-                } else {
-                    this.network.unsyncData[0].try += 1;
-                    break;
+                    if (result) {
+                        this.network.unsyncData.shift();
+                    } else {
+                        this.network.unsyncData[0].try += 1;
+                        break;
+                    }
                 }
-            }
-        });
-
-        this.syncInProgress.set(false);
+            });
+        } finally {
+            this.syncInProgress.set(false);
+        }
     }
 
     async loadServerOrders(domain) {

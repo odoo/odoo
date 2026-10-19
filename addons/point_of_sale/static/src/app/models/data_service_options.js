@@ -34,6 +34,14 @@ export class DataServiceOptions {
         };
     }
 
+    get abortableTypes() {
+        return new Set(["read", "search_read"]);
+    }
+
+    get abortableMethods() {
+        return new Set(["sync_from_ui"]);
+    }
+
     get dynamicModels() {
         return [
             "pos.order",
