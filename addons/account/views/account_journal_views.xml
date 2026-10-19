@@ -206,7 +206,7 @@
             <field name="model">account.journal</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <kanban on_create="account_accountant.action_journal_create_wizard" class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile">
                     <templates>
                         <t t-name="card" class="row g-0">
                             <div class="col-6">
