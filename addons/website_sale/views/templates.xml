@@ -512,7 +512,8 @@
     <!-- /shop product listing -->
     <template id="products" name="Products">
         <t t-call="website.layout">
-            <t t-set="additional_title" t-value="category.name"/>
+            <t t-if="category" t-set="additional_title" t-value="category.name"/>
+            <t t-else="" t-set="additional_title">Products</t>
             <t t-set="grid_block_name">Grid</t>
             <t t-set="product_block_name">Product</t>
 
@@ -2758,6 +2759,7 @@
     <!-- /shop/extra_info route -->
     <template id="extra_info" name="Checkout Extra Info" active="False">
         <t t-call="website_sale.checkout_layout">
+            <t t-set="additional_title">Checkout Extra Info</t>
             <t t-set="redirect" t-valuef="/shop/extra_info"/>
             <t t-set="oe_structure">
                 <!-- This is the drag-and-drop area for website building blocs at the end of each
@@ -3114,6 +3116,7 @@
     <!-- /shop/cart route -->
     <template id="cart" name="Shopping Cart">
         <t t-call="website_sale.checkout_layout">
+            <t t-set="additional_title">Shopping Cart</t>
             <t t-set="show_shorter_cart_summary" t-value="True"/>
             <t t-set="show_footer" t-value="True"/>
             <t t-set="oe_structure">
@@ -3588,6 +3591,7 @@
     <!-- /shop/address route -->
     <template id="website_sale.address" name="Address Management">
         <t t-call="website_sale.checkout_layout">
+            <t t-set="additional_title">Address Management</t>
             <div class="o_customer_address_fill">
                 <div>
                     <t t-if="not is_anonymous_cart">

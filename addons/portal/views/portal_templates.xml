@@ -203,6 +203,7 @@
 
     <template id="portal_my_home" name="My Portal">
         <t t-call="portal.portal_layout">
+            <t t-set="additional_title">My Portal</t>
             <t t-set="my_details" t-value="True"/>
             <div class="o_portal_my_home">
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
@@ -429,8 +430,9 @@
     </template>
 
     <template id="portal_my_security">
-        <t t-call="portal.portal_layout"><div class="o_portal_security_body w-md-75 w-lg-50 pb-5">
+        <t t-call="portal.portal_layout">
             <t t-set="additional_title">Security</t>
+            <div class="o_portal_security_body w-md-75 w-lg-50 pb-5">
             <t t-set="no_breadcrumbs" t-value="1"/>
             <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
                 <t t-esc="errors"/>
