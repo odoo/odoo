@@ -23,7 +23,7 @@ export async function clickDisplayedProduct(name) {
 }
 
 export async function clickFastPaymentMethod(name) {
-    await ensurePane("right");
+    await ensurePane("left");
     await contains(`.fast-pay-button:contains("${name}")`).click();
     await animationFrame();
 }
