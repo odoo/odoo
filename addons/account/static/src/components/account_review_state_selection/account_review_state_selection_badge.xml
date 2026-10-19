@@ -5,7 +5,7 @@
         <t t-if="this.editableOptions.includes(this.value)">
             <Dropdown>
                 <button t-attf-class="btn {{ this.getDropdownButtonDecoration(this.value) }} rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}">
-                    <span t-if="this.getIcon(this.value)" class="me-1" t-att-class="this.getIcon(this.value)"/>
+                    <span t-if="this.getIcon(this.value)" class="me-1" t-att-class="this.getIconClass(this.value)" t-att-data-icon="this.getIcon(this.value)"/>
                     <t t-out="this.display || '&#8203;'"/>
                 </button>
                 <t t-set-slot="content">
@@ -26,7 +26,8 @@
                                 <span
                                     t-if="this.getIcon(option[0])"
                                     class="me-2"
-                                    t-att-class="this.getDropdownItemDecoration(option[0], true) + ' ' + this.getIcon(option[0])"
+                                    t-att-class="this.getDropdownItemDecoration(option[0], true) + ' ' + this.getIconClass(option[0])"
+                                    t-att-data-icon="this.getIcon(option[0])"
                                 />
                                 <div
                                     t-else=""
@@ -50,7 +51,7 @@
                     t-attf-class="btn {{ this.getDropdownButtonDecoration(this.value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}"
                     t-att-disabled="true"
                 >
-                    <span t-if="this.getIcon(this.value)" class="me-1" t-att-class="this.getIcon(this.value)"/>
+                    <span t-if="this.getIcon(this.value)" class="me-1" t-att-class="this.getIconClass(this.value)" t-att-data-icon="this.getIcon(this.value)"/>
                     <div t-out="this.display || '&#8203;'"/>
                 </button>
             </div>
