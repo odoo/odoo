@@ -43,8 +43,23 @@ class ImLivechatChannelMemberHistory(models.Model):
         "im_livechat.channel", "Live chat channel", related="channel_id.livechat_channel_id"
     )
     session_outcome = fields.Selection(related="channel_id.livechat_outcome")
-    session_start_hour = fields.Float(related="channel_id.livechat_start_hour")
-    session_week_day = fields.Selection(related="channel_id.livechat_week_day")
+    session_start_hour = fields.Float(
+        "Session Start Hour",
+        compute="_compute_session_start",
+        compute_sql="_compute_sql_session_start_hour",
+        compute_sudo=True,
+    )
+    session_week_day = fields.Selection(
+        lambda self: (
+            self.env["discuss.channel"]
+            ._fields["livechat_week_day"]
+            ._description_selection(self.env)
+        ),
+        string="Day of the Week",
+        compute="_compute_session_start",
+        compute_sql="_compute_sql_session_week_day",
+        compute_sudo=True,
+    )
     session_duration_hour = fields.Float(
         "Session Duration",
         help="Time spent by the persona in the session in hours",
@@ -208,6 +223,29 @@ class ImLivechatChannelMemberHistory(models.Model):
                 history.channel_id.id, fields.Datetime.now()
             )
             history.session_duration_hour = max((end - history.create_date).total_seconds() / 3600, 0)
+
+    @api.depends("channel_id.create_date")
+    @api.depends_context("tz", "uid")
+    def _compute_session_start(self):
+        self.session_start_hour = False
+        self.session_week_day = False
+        for history in self.filtered(lambda h: h.channel_id.create_date):
+            start_date = fields.Datetime.context_timestamp(history, history.channel_id.create_date)
+            history.session_start_hour = start_date.hour
+            history.session_week_day = str(start_date.weekday())
+
+    def _compute_sql_session_start_hour(self, table):
+        return SQL("date_part('hour', %s)", self._session_start_to_sql(table))
+
+    def _compute_sql_session_week_day(self, table):
+        return SQL("(date_part('isodow', %s)::int - 1)::text", self._session_start_to_sql(table))
+
+    def _session_start_to_sql(self, table):
+        return SQL(
+            "timezone(%s, timezone('UTC', %s))",
+            str(self.env.tz),
+            table.channel_id.create_date,
+        )
 
     @api.model
     def action_open_discuss_channel_view(self, domain=()):
