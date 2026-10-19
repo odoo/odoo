@@ -1221,6 +1221,82 @@ test("Reaction with long content stays inside the thread", async () => {
     await waitFor(`.o-mail-MessageReactionMenu button[title='${content}']:count(1)`);
 });
 
+test("Reaction summary closes when leaving it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    pyEnv["mail.message.reaction"].create({
+        message_id: messageId,
+        content: "😅",
+        partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await hover(".o-mail-MessageReaction");
+    await waitFor(".o-mail-MessageReactionList-preview:count(1)");
+    await hover(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-Composer-html");
+    await waitForNone(".o-mail-MessageReactionList-preview");
+});
+
+test("Reaction summary opens again after clicking it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    pyEnv["mail.message.reaction"].create({
+        message_id: messageId,
+        content: "😅",
+        partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await hover(".o-mail-MessageReaction");
+    await waitFor(".o-mail-MessageReactionList-preview:count(1)");
+    await hover(".o-mail-MessageReactionList-preview");
+    await click(".o-mail-MessageReactionList-preview");
+    await waitFor(".o-mail-MessageReactionMenu:count(1)");
+    await press("Escape");
+    await waitForNone(".o-mail-MessageReactionMenu");
+    await waitForNone(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-MessageReaction");
+    await waitFor(".o-mail-MessageReactionList-preview:count(1)");
+    await hover(".o-mail-Message-body");
+    await hover(".o-mail-MessageReactionList-preview");
+    await click(".o-mail-MessageReactionList-preview");
+    await waitFor(".o-mail-MessageReactionMenu:count(1)");
+    await press("Escape");
+    await waitForNone(".o-mail-MessageReactionMenu");
+    await waitForNone(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-MessageReaction");
+    await waitFor(".o-mail-MessageReactionList-preview:count(1)");
+    await hover(".o-mail-Message-body");
+    await hover(".o-mail-MessageReaction");
+    await hover(".o-mail-MessageReactionList-preview");
+    await click(".o-mail-MessageReactionList-preview");
+    await waitFor(".o-mail-MessageReactionMenu:count(1)");
+    await press("Escape");
+    await waitForNone(".o-mail-MessageReactionMenu");
+    await waitForNone(".o-mail-MessageReactionList-preview");
+    await hover(".o-mail-MessageReaction");
+    await waitFor(".o-mail-MessageReactionList-preview:count(1)");
+});
+
 test("Select already reacted emoji from quick reaction removes the reaction on message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
