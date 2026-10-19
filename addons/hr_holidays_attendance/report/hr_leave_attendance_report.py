@@ -197,7 +197,8 @@ class HrLeaveAttendanceReport(models.Model):
                        LEAST(COALESCE(v.contract_date_end, b.date_to), b.date_to),
                        INTERVAL '1 day'
                    ) AS gs(day)
-             WHERE v.contract_date_start IS NOT NULL
+             WHERE v.active
+               AND v.contract_date_start IS NOT NULL
                AND v.date_version <= b.date_to
           ORDER BY v.employee_id, gs.day, v.date_version DESC
         """)
