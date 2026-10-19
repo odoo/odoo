@@ -29,7 +29,7 @@ $o-wslides-fs-side-width: 300px;
     height: 100%;
     object-fit: cover;
 
-    @include media-breakpoint-up(md)  {
+    @media (min-width: 768px) {
         border: 1px solid darken(#875A7B, 10%);
         border-bottom-width: 0;
     }
@@ -150,7 +150,7 @@ $o-wslides-fs-side-width: 300px;
 .o_wslides_home_main {
     .o_wslides_home_aside_loggedin {
         background: none;
-        @include media-breakpoint-up(lg) {
+        @media (min-width: 992px) {
             border: none;
         }
     }
@@ -171,7 +171,7 @@ $o-wslides-fs-side-width: 300px;
 .o_wslides_course_sidebar {
     border: 1px solid $border-color;
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         border-top-width: 0;
     }
 
@@ -271,7 +271,7 @@ $o-wslides-fs-side-width: 300px;
 
 
 .o_wslides_course_header {
-    @include media-breakpoint-up(md)  {
+    @media (min-width: 768px) {
         @include o-wslides-header-bar();
     }
     .o_wslides_header_text {
@@ -289,11 +289,11 @@ $o-wslides-fs-side-width: 300px;
     min-height: 70vh;
 
     .o_wslides_nav_tabs {
-        @include media-breakpoint-up(md)  {
+        @media (min-width: 768px) {
             @include o-wslides-tabs();
         }
 
-        @include media-breakpoint-only(xs) {
+        @media (max-width: 575.98px) {
             overflow-x: auto;
             overflow-y: hidden;
             line-height: 1.51;
@@ -309,12 +309,12 @@ $o-wslides-fs-side-width: 300px;
     }
 
     .o_wslides_tabs_content {
-        @include media-breakpoint-down(md) {
+        @media (max-width: 767.98px) {
             background-color: $nav-tabs-link-active-bg;
             padding:0 calc(var(--o-bs-grid-gutter-width) * 0.5);
         }
 
-        @include media-breakpoint-only(xs) {
+        @media (max-width: 575.98px) {
             margin: 0 calc(var(--o-bs-grid-gutter-width) * -0.5);
         }
 
@@ -454,7 +454,7 @@ $o-wslides-fs-side-width: 300px;
         }
 
         .o_wslides_lesson_aside_list {
-            @include media-breakpoint-up (lg) {
+            @media (min-width: 992px) {
                 top: -58px;
             }
         }
@@ -567,7 +567,7 @@ li.o_wslides_fs_sidebar_list_item.active {
 }
 
 .o_wslides_quiz_modal {
-    @include media-breakpoint-up (sm) {
+    @media (min-width: 576px) {
         height: 461px;
 
         .modal-body {

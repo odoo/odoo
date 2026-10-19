@@ -5,7 +5,7 @@
         div#url-div {
             justify-content: center;
             /* desktop */
-            @include media-breakpoint-up(sm) {
+            @media (min-width: 576px) {
                 a.oi {
                     margin: 0.5rem;
                     width: 5rem;
@@ -15,7 +15,7 @@
                 }
             }
             /* mobile */
-            @include media-breakpoint-down(sm) {
+            @media (max-width: 575.98px) {
                 a.oi {
                     margin: 0.2rem;
                     width: 4rem;

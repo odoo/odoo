@@ -54,7 +54,7 @@
             background: rgba(0, 0, 0, 0.2);
         }
 
-        @include media-breakpoint-down (md) {
+        @media (max-width: 767.98px) {
             position: absolute;
             inset-block: 0;
             inset-inline-start: 0;
@@ -65,7 +65,7 @@
             }
         }
 
-        @include media-breakpoint-up (sm) {
+        @media (min-width: 576px) {
             width: $o-wslides-fs-side-width;
 
             &.o_wslides_fs_sidebar_hidden {

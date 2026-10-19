@@ -20,7 +20,7 @@
 }
 
 /* XS size */
-@include media-breakpoint-down(md) {
+@media (max-width: 767.98px) {
     .oe_website_sale {
         .td-wish-btn {
             width: 100px;
@@ -66,15 +66,15 @@
             position: relative;
             grid-column: auto/span 6;
 
-            @include media-breakpoint-up(md) {
+            @media (min-width: 768px) {
                 grid-column: auto/span 4;
             }
 
-            @include media-breakpoint-up(lg) {
+            @media (min-width: 992px) {
                 grid-column: auto/span 3;
             }
 
-            @include media-breakpoint-up(xxl) {
+            @media (min-width: 1400px) {
                 grid-column: auto/span 2;
             }
             .o_wish_rm {
@@ -90,7 +90,7 @@
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        @include media-breakpoint-up(lg) {
+        @media (min-width: 992px) {
             @for $i from 2 through 6 {
                 &[data-wishlist-grid-columns="#{$i}"] {
                     grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
@@ -109,7 +109,7 @@
             .o_wish_rm {
                 transform: translateY(calc(var(--_card-info-translate-y) * -1));
 
-                @include media-breakpoint-up(lg) {
+                @media (min-width: 992px) {
                     transition: transform var(--_actions_onhover-transition);
                 }
             }
@@ -117,7 +117,7 @@
             .oe_product_cart {
                 &:hover, &:has(:focus-visible) {
                     .o_wish_rm {
-                        @include media-breakpoint-up(lg) {
+                        @media (min-width: 992px) {
                             transform: translateY(calc(var(--_card-info-translate-y-hover) * -1));
                             transition: transform var(--_actions_onhover-transition-hover);
                         }
@@ -158,7 +158,7 @@
         --o-wsale-wishlist-card-offset-x: 3%;
         --o-wsale-wishlist-card-offset-top: 2.5%;
 
-        @include media-breakpoint-up(lg) {
+        @media (min-width: 992px) {
             @include o-wsale-card-btn-lg();
             --btn-padding-x: var(--btn-padding-y);
             --o-wsale-wishlist-card-offset-x: 5%;
@@ -183,7 +183,7 @@
 
             --btn-padding-x: .7rem;
 
-            @include media-breakpoint-up(md) {
+            @media (min-width: 768px) {
                 position: static;
                 align-self: center;
             }
@@ -193,7 +193,7 @@
     }
 
     .o_wsale_product_information_text {
-        @include media-breakpoint-down(md) {
+        @media (max-width: 767.98px) {
             --o-wsale-card-info-text-margin-right: calc((var(--btn-padding-x) * 2) + (var(--o-bs-btn-font-size) * .5));
         }
     }
@@ -214,7 +214,7 @@
     &:where(:has(.o_wsale_products_opt_design_grid.o_wsale_products_opt_layout_list)) {
         &[style*="--o-wsale-products-grid-gap: 0px"] .oe_product_image_link,
         &[style*="--o-wsale-products-grid-gap:0px"] .oe_product_image_link {
-            @include media-breakpoint-down(lg) {
+            @media (max-width: 991.98px) {
                 height: 100%;
                 transform: translateX(-50%);
                 margin-left: 50%;
@@ -230,7 +230,7 @@
             --o-wsale-card-info-flex-align-items: auto;
             --o-wsale-card-padding: 0;
 
-            @include media-breakpoint-up(md) {
+            @media (min-width: 768px) {
                 --o-wsale-card-thumb-size: calc(126px * var(--o-wsale-card-thumb-aspect-ratio, 1));
                 --o-wsale-card-info-padding: 0 calc(var(--o-bs-container-padding-x) * 0.5);
                 --o-wsale-card-sub-align-items: center;
@@ -273,7 +273,7 @@
         }
 
         .o_wish_rm {
-            @include media-breakpoint-down(md) {
+            @media (max-width: 767.98px) {
                 margin-right: calc(var(--o-bs-container-padding-x) * 0.5);
             }
         }
@@ -281,7 +281,7 @@
 
     /* Grid view only */
     :where(.o_wsale_products_opt_design_grid.o_wsale_products_opt_layout_list) .o_wsale_product_btn {
-        @include media-breakpoint-between(md, lg) {
+        @media (min-width: 768px) and (max-width: 991.98px) {
             @include hide-submit-button-label;
 
             .btn {

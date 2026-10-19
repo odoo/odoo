@@ -8,7 +8,7 @@ div[name="o_payment_status_alert"] #o_payment_status_message > p {
 }
 
 .o_payment_summary_separator {
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         border-left: var(--o-bs-border-width) solid $border-color;
     }
 }

@@ -2,7 +2,7 @@
     gap: var(--portal-card-gap, #{o-website-value('portal-card-gap')});
     grid-template-columns: 1fr;
 
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }

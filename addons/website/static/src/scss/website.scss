@@ -324,7 +324,7 @@ h1, h2, h3, h4, h5, h6,
             background-color: var(--body-bg);
         }
 
-        @include media-breakpoint-up(sm) {
+        @media (min-width: 576px) {
             padding-right: calc(var(--o-bs-grid-gutter-width) * 2);
             padding-left: calc(var(--o-bs-grid-gutter-width) * 2);
 
@@ -374,12 +374,12 @@ h1, h2, h3, h4, h5, h6,
         }
 
         @if o-website-value('layout') == 'framed' {
-            @include media-breakpoint-up(md) {
+            @media (min-width: 768px) {
                 padding-top: var(--o-bs-grid-gutter-width);
                 padding-bottom: calc(var(--o-bs-grid-gutter-width) * 1.5);
             }
         } @else if o-website-value('layout') == 'postcard' {
-            @include media-breakpoint-up(md) {
+            @media (min-width: 768px) {
                 $-border-radius: $border-radius-lg;
                 /* Don't know why (browser rounding mistake?) but the inner
                    border radius must be 1px lower for this to be visually ok
@@ -608,7 +608,7 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 }
 
 @if o-website-value('header-template') == 'sidebar' {
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
         @include accordion-style-vertical-menu;
     }
     .o_header_sidebar > nav:not(.o_header_mobile) {
@@ -987,7 +987,7 @@ font[class*='bg-'] {
         }
 
         &.o_header_sidebar > nav.navbar:not(.o_header_mobile) {
-            @include media-breakpoint-up(lg) {
+            @media (min-width: 992px) {
                 --o-bg-blur: #{o-website-value('header-bg-blur')};
                 @include o-bg-blur-option;
             }
@@ -1089,7 +1089,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 %o_horizontal_controllers {
     pointer-events: none;
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         .carousel-indicators {
             position: relative;
             min-width: 0;
@@ -1132,7 +1132,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         width: 8%;
         opacity: 1;
     }
-    @include media-breakpoint-down(md) {
+    @media (max-width: 767.98px) {
         .carousel-control-prev,
         .carousel-control-next {
             display: none; /* remove arrows on mobile */
@@ -1197,7 +1197,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     /* Border */
     &.s_carousel_bordered {
         border: 2rem solid rgba(0,0,0,0);
-        @include media-breakpoint-down(md) {
+        @media (max-width: 767.98px) {
             border: 0.5rem solid rgba(0,0,0,0);
         }
         /* Controls - caret */
@@ -1290,7 +1290,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     }
 
     /* Controllers in Mobile */
-    @include media-breakpoint-down(md) {
+    @media (max-width: 767.98px) {
         .carousel-control-prev,
         .carousel-control-next,
         .o_carousel_pause {
@@ -1469,7 +1469,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             height: 100%;
             padding: 0 var(--o-bs-spacer-3);
 
-            @include media-breakpoint-up(md) {
+            @media (min-width: 768px) {
                 padding: 0 var(--o-bs-carousel-control-width);
             }
         }
@@ -1639,7 +1639,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
                    not have the same appearance and their bottoms do not need
                    to align, and also the numbers may need to go on a second
                    line if there is many slides, so we keep "auto" */
-                @include media-breakpoint-up(md) {
+                @media (min-width: 768px) {
                     height: $-o-carousel-controllers-size;
                 }
 
@@ -1737,7 +1737,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 .carousel.o_carousel_multi_items {
     --o-carousel-gap: var(--o-bs-spacer-3);
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         .carousel-inner {
             /* Display the carousel items in a row */
             display: flex;
@@ -1795,7 +1795,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     > .s_parallax_bg, > .s_parallax_bg_wrap > .s_parallax_bg, > .s_parallax_bg_wrap {
         @extend %o-we-background-layer;
     }
-    @include media-breakpoint-up(xl) {
+    @media (min-width: 1200px) {
         /* Fixed backgrounds are disabled when using a mobile/tablet device,
            which is not a big deal but, on some of them (iOS...), defining the
            background as fixed breaks the background-size/position props.
@@ -1916,7 +1916,7 @@ header {
     /* Dropdown menus */
 
     /* In mobile there is no need to limit the height... */
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
         .navbar .dropdown-menu {
             max-height: 60vh;
             overflow-y: auto;
@@ -1929,7 +1929,7 @@ header {
         overflow-y: auto;
         overflow-x: hidden; /* Needed because of container in container having 0px padding... TODO improve */
 
-        @include media-breakpoint-down(lg) {
+        @media (max-width: 991.98px) {
             .nav-link, .dropdown-item {
                 white-space: normal;
             }
@@ -1938,7 +1938,7 @@ header {
 
     &:not(.o_header_is_scrolled) {
         $-is-hamburger: o-website-value('header-template') == 'hamburger';
-        @include media-breakpoint-up(md) {
+        @media (min-width: 768px) {
             @if $-is-hamburger {
                 .o_main_nav {
                     padding-top: calc(var(--o-bs-spacer) * 0.5);
@@ -2016,7 +2016,7 @@ header {
 }
 
 @if o-website-value('header-template') == 'sidebar' {
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
         #wrapwrap:has(> header) {
             /* Two different website options might add padding:
                - The sidebar header template
@@ -2281,7 +2281,7 @@ header {
    100% width when the breakpoint is above lg, because the menu keeps its mobile
    width when displayed on desktop. */
 @if index(("sidebar", "hamburger"), o-website-value("header-template")) {
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
         .o_mega_menu [class*="col-"] {
             width: 100%;
         }
@@ -2347,7 +2347,7 @@ header {
 }
 
 @if index(('block', 'border-bottom'), o-website-value('header-links-style')) {
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         .navbar,
         .navbar-nav {
             padding-top: 0;
@@ -2474,7 +2474,7 @@ header {
 }
 
 @if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
         #wrapwrap.o_footer_effect_enable {
             > main {
                 @if o-website-value('layout') == 'full' {

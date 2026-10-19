@@ -59,7 +59,7 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
         }
 
         .o_wsale_sidebar_preview:first-child {
-            @include media-breakpoint-up(lg) {
+            @media (min-width: 992px) {
                 min-width: o-to-rem(240px);
                 max-width: var(--o-wsale-sidebar-maxwidth, 15rem);
                 opacity: 1;
