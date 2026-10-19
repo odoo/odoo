@@ -75,3 +75,9 @@ class HrEmployeeType(models.Model):
             ], limit=1)
             if countries_with_same_employee_type:
                 raise ValidationError(self.env._("This employee type is used in another company, you can't modify the country where it's applicable for now.\nChange the employee type on the employees of the other company to be able to modify this."))
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_to_employees(self):
+        linked_types = self.filtered(lambda t: t.employee_ids or self.env['hr.version'].search_count([('employee_type_id', 'in', self.ids)], limit=1))
+        if linked_types:
+            raise ValidationError(self.env._("Employee Type is linked to one or more employees. Please unlink them before deleting it"))
