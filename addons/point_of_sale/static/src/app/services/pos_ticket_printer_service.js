@@ -111,6 +111,8 @@ export class PosTicketPrinterService {
 
         iframe.contentWindow.focus();
         this._print(iframe.contentWindow);
+        // Keyboard events (barcode scanner) are only listened to on the POS document
+        iframe.blur();
     }
 
     /**
