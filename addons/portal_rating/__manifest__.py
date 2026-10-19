@@ -31,7 +31,7 @@ inclusion of rating directly within the customer portal discuss widget.
             "portal_rating/static/src/core/common/**/*",
         ],
         'web.assets_frontend': [
-            'portal_rating/static/src/scss/portal_rating.scss',
+            'portal_rating/static/src/scss/portal_rating.css',
             'portal_rating/static/src/xml/portal_chatter.xml',
             'portal_rating/static/src/interactions/**/*',
             'portal_rating/static/src/xml/portal_rating_composer.xml',
@@ -45,7 +45,7 @@ inclusion of rating directly within the customer portal discuss widget.
             'portal_rating/static/src/chatter/portal/**/*',
         ],
         'portal.assets_chatter_style': [
-            'portal_rating/static/src/scss/portal_rating.scss',
+            'portal_rating/static/src/scss/portal_rating.css',
         ]
     },
     'author': 'Odoo S.A.',
