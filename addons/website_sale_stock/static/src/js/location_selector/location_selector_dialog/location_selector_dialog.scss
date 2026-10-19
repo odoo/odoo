@@ -12,17 +12,16 @@
     }
 
     .o_location_selector_number {
-        right: .75rem;
-        bottom: .75rem;
-        width: 1.75rem;
-
-        svg {
-            width: 100%;
-        }
+        width: 2rem;
+        height: 2rem;
     }
 
-    .o_location_selector_details {
-        transform: translateY(-100%);
+    button[aria-pressed="false"] {
+        background: transparent;
+
+        &:hover {
+            --border-color: #{map-get($theme-colors, 'primary')};
+        }
     }
 
     .collapsed i.o_location_selector_hours_caret {
@@ -69,10 +68,6 @@
     .o_select_menu_toggler_slot {
         display: flex;
         align-items: center;
-    }
-
-    .list-group-item {
-        padding-bottom: .75rem;
     }
 }
 

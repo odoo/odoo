@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="website_sale_stock.locationSelector.mapContainer">
-        <div class="d-flex flex-column h-100 w-100">
+        <div class="position-relative d-flex flex-column h-100 w-100">
             <Map
                 t-if="this.state.shouldLoadMap"
                 locations="this.props.locations"
@@ -16,36 +16,56 @@
             </div>
 
             <!-- Desktop infos -->
-            <div t-if="this.selectedLocation" class="d-none d-md-flex justify-content-between flex-column flex-lg-row gap-3 gap-lg-0 p-4">
-                <div class="col-lg-5 d-flex flex-column justify-content-between">
-                    <div class="d-flex gap-2">
-                        <div class="d-flex flex-column flex-grow-1">
-                            <strong class="h5 fw-bold" t-out="this.selectedLocation.name"/>
-                            <small t-out="this.selectedLocation.street"/>
-                            <small t-out="this.getCityAndZipCode(this.selectedLocation)"/>
-                        </div>
-                    </div>
-                    <!-- large screen and + -->
-                    <button
-                        type="button"
-                        id="submit_location_large"
-                        class="btn btn-primary d-none d-lg-block mt-3"
-                        t-att-disabled="!this.props.selectedLocationId"
-                        t-on-click="this.props.validateSelection"
-                        t-out="this.chooseLocationButtonLabel"/>
+            <div
+                t-if="this.selectedLocation"
+                class="card col-11 col-lg-7 position-absolute bottom-0 start-0 z-1 d-none d-md-flex flex-column gap-3 m-3 m-lg-4 border-0 p-4 shadow"
+            >
+                <div class="d-flex flex-column gap-1">
+                    <h2 class="h5 mb-0" t-out="this.selectedLocation.name"/>
+                    <small class="text-muted">
+                        <t t-out="this.selectedLocation.street"/>
+                        <br/>
+                        <t t-out="this.getCityAndZipCode(this.selectedLocation)"/>
+                    </small>
                 </div>
 
                 <!-- Schedule -->
-                <LocationSchedule
-                    openingHours="this.selectedLocation.opening_hours"
-                    wrapClass="'col-lg-7 flex-grow-1 flex-lg-grow-0 ps-lg-4'"
-                />
+                <div t-if="this.hasOpeningHours" name="location_opening_hours" class="rounded bg-light">
+                    <button
+                        type="button"
+                        class="collapsed d-flex align-items-center gap-2 w-100 border-0 px-3 py-2 bg-transparent text-body text-start small"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#o_location_selector_details_hours"
+                        aria-expanded="false"
+                        aria-controls="o_location_selector_details_hours"
+                    >
+                        <i
+                            class="oi"
+                            t-att-class="this.todayStatus.isOpen ? 'text-success' : 'text-danger'"
+                            data-icon="schedule"
+                            role="img"
+                            aria-hidden="true"
+                        />
+                        <span
+                            class="flex-grow-1 fw-medium"
+                            t-att-class="this.todayStatus.isOpen ? 'text-success' : 'text-danger'"
+                            t-out="this.todayStatus.label"
+                        />
+                        <small class="text-muted">All hours</small>
+                        <i class="oi o_location_selector_hours_caret transition-base" data-icon="keyboard_arrow_up" role="img" aria-hidden="true"/>
+                    </button>
+                    <div id="o_location_selector_details_hours" class="collapse">
+                        <LocationSchedule
+                            openingHours="this.selectedLocation.opening_hours"
+                            wrapClass="'px-3 pb-3'"
+                        />
+                    </div>
+                </div>
 
-                <!-- medium size screen like Tablets, etc. -->
                 <button
                     type="button"
-                    id="submit_location_medium"
-                    class="btn btn-primary d-block d-lg-none align-self-stretch ms-lg-4"
+                    id="submit_location_large"
+                    class="btn btn-primary"
                     t-att-disabled="!this.props.selectedLocationId"
                     t-on-click="this.props.validateSelection"
                     t-out="this.chooseLocationButtonLabel"/>
@@ -69,10 +89,10 @@
                             <span class="d-block" t-out="this.getCityAndZipCode(this.selectedLocation)"/>
                         </small>
                     </span>
-                    <span t-attf-class="d-flex align-items-center gap-1 small fw-bold {{Object.keys(this.selectedLocation.opening_hours).length > 0 ? 'd-md-none' : 'd-none'}}">
+                    <span t-attf-class="d-flex align-items-center gap-1 small fw-bold {{this.hasOpeningHours ? 'd-md-none' : 'd-none'}}">
                         <i class="oi" data-icon="schedule" role="img" aria-hidden="true"/>
                         <t t-out="this.openingHoursLabel"/>
-                        <i class="o_location_selector_hours_caret oi ms-auto transition-base" data-icon="arrow_drop_up" role="img" aria-hidden="true"/>
+                        <i class="o_location_selector_hours_caret oi ms-auto transition-base" data-icon="keyboard_arrow_up" role="img" aria-hidden="true"/>
                     </span>
 
                     <!-- Schedule -->

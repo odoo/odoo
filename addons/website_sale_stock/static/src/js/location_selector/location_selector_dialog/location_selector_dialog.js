@@ -178,6 +178,15 @@ export class LocationSelectorDialog extends Component {
     }
 
     /**
+     * Return whether the list view should be hidden.
+     *
+     * @return {Boolean}
+     */
+    get hideListView() {
+        return false;
+    }
+
+    /**
      *
      * @return {void}
      */
