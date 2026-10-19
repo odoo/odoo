@@ -546,11 +546,9 @@
             </field>
         </record>
 
-        <record id="list_b2b" model="product.pricelist">
-            <field name="name">Professional Prices</field>
-            <field name="sequence">10</field>
+        <record id="sale.list_b2b" model="product.pricelist" forcecreate="0">
+            <field name="active" eval="True"/>
             <field name="tax_display">tax_excluded</field>
-            <field name="company_id"/>
             <field name="website_id" ref="base.default_website"/>
             <field name="item_ids">
                 <record id="rule_b2b_based_on_default" model="product.pricelist.item">
