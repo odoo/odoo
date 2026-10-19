@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import HttpCase
 
 from odoo.addons.uom.tests.common import UomCommon
 
@@ -77,6 +76,41 @@ class ProductCommon(UomCommon):
             'categ_id': cls.product_category.id,
             **create_vals,
         })
+
+    @classmethod
+    def _create_matrix_template(cls):
+        """Create a template with 4 attributes (always, always, dynamic, no_variant) of 2 values
+        each, for the variant grid."""
+        product_attributes = cls.env['product.attribute'].create([
+            {'name': "PA1", 'create_variant': 'always', 'sequence': 1},
+            {'name': "PA2", 'create_variant': 'always', 'sequence': 2},
+            {'name': "PA3", 'create_variant': 'dynamic', 'sequence': 3},
+            {'name': "PA4", 'create_variant': 'no_variant', 'sequence': 4},
+        ])
+        cls.env['product.attribute.value'].create([
+            {
+                'name': "PAV" + str(product_attribute.sequence) + str(i),
+                'attribute_id': product_attribute.id,
+            }
+            for i in range(1, 3)
+            for product_attribute in product_attributes
+        ])
+        matrix_template = cls.env['product.template'].create({
+            'name': "Matrix",
+            'type': 'consu',
+            'uom_id': cls.uom_unit.id,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': [Command.set(attribute.value_ids.ids)],
+                })
+                for attribute in product_attributes
+            ],
+        })
+        ptavs = matrix_template.attribute_line_ids.product_template_value_ids
+        ptavs.filtered(lambda ptav: ptav.name == "PAV12").price_extra = 50
+        ptavs.filtered(lambda ptav: ptav.name == "PAV31").price_extra = -25
+        return matrix_template
 
 
 class ProductVariantsCommon(ProductCommon):
@@ -177,48 +211,3 @@ class ProductVariantsCommon(ProductCommon):
             'attribute_id': cls.custom_attribute.id,
             'is_custom': True,
         })
-
-
-class TestMatrixCommon(HttpCase):
-    def setUp(self):
-        super().setUp()
-
-        # Prepare relevant test data
-        # This is not included in demo data to avoid useless noise
-        product_attributes = self.env["product.attribute"].create([
-            {"name": "PA1", "create_variant": "always", "sequence": 1},
-            {"name": "PA2", "create_variant": "always", "sequence": 2},
-            {"name": "PA3", "create_variant": "dynamic", "sequence": 3},
-            {"name": "PA4", "create_variant": "no_variant", "sequence": 4},
-        ])
-
-        self.env["product.attribute.value"].create([
-            {
-                "name": "PAV" + str(product_attribute.sequence) + str(i),
-                "attribute_id": product_attribute.id,
-            }
-            for i in range(1, 3)
-            for product_attribute in product_attributes
-        ])
-
-        self.matrix_template = self.env["product.template"].create({
-            "name": "Matrix",
-            "type": "consu",
-            "uom_id": self.ref("uom.product_uom_unit"),
-            "attribute_line_ids": [
-                (
-                    0,
-                    0,
-                    {"attribute_id": attribute.id, "value_ids": [(6, 0, attribute.value_ids.ids)]},
-                )
-                for attribute in product_attributes
-            ],
-        })
-
-        def get_ptav(pav_name):
-            return self.env["product.template.attribute.value"].search([
-                ("product_attribute_value_id.name", "=", pav_name)
-            ])
-
-        get_ptav("PAV12").price_extra = 50
-        get_ptav("PAV31").price_extra = -25

@@ -117,9 +117,7 @@ class SaleOrderLine(models.Model):
         # check_company logic despite not being a check_company=True field
         domain=lambda self: self._fields["product_id"]._description_domain(self.env),
     )
-    product_add_mode = fields.Selection(
-        related="product_template_id.product_add_mode", depends=["product_template_id"]
-    )
+    product_add_mode = fields.Selection(related="product_template_id.product_add_mode")
 
     product_template_attribute_value_ids = fields.Many2many(
         related="product_id.product_template_attribute_value_ids", depends=["product_id"]
@@ -482,8 +480,8 @@ class SaleOrderLine(models.Model):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         domain = Domain("product_id.product_tmpl_id", operator, value)
-        if operator == 'in' and False in value:  # relation may be falsy
-            domain |= Domain('product_id', '=', False)
+        if operator == "in" and False in value:  # relation may be falsy
+            domain |= Domain("product_id", "=", False)
         return domain
 
     @api.depends("product_id")
@@ -1300,7 +1298,16 @@ class SaleOrderLine(models.Model):
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
                 ) and line._affects_qty_invoiced(invoice_line):
                     if line.is_downpayment:
-                        if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel' or l.move_id.payment_state == 'invoicing_legacy').mapped('balance'))):
+                        if not line.currency_id.is_zero(
+                            sum(
+                                invoice_lines.filtered(
+                                    lambda l: (
+                                        l.move_id.state != "cancel"
+                                        or l.move_id.payment_state == "invoicing_legacy"
+                                    )
+                                ).mapped("balance")
+                            )
+                        ):
                             invoiced_qties[line] = 1
                             line.qty_invoiced = 1
                         else:
@@ -1570,9 +1577,7 @@ class SaleOrderLine(models.Model):
 
             line.untaxed_amount_to_invoice = amount_to_invoice
 
-    @api.depends(
-        "discount", "price_total", "product_uom_qty", "qty_invoiced_posted"
-    )
+    @api.depends("discount", "price_total", "product_uom_qty", "qty_invoiced_posted")
     def _compute_amount_to_invoice(self):
         for line in self:
             if line.product_uom_qty:

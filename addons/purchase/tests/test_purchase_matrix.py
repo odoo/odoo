@@ -2,13 +2,22 @@
 
 import odoo.tests
 
-from odoo.tests import Form
+from odoo.tests import Form, HttpCase
 
-from odoo.addons.product.tests.common import TestMatrixCommon
+from odoo.addons.product.tests.common import ProductCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPurchaseMatrixUi(TestMatrixCommon):
+class TestPurchaseMatrixUi(HttpCase, ProductCommon):
+    _test_user_groups = (
+        'product.group_product_manager',
+        'purchase.group_purchase_manager',
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.matrix_template = cls._create_matrix_template()
 
     def test_purchase_matrix_ui(self):
         self.start_tour("/odoo", 'purchase_matrix_tour', login="admin")
@@ -44,7 +53,7 @@ class TestPurchaseMatrixUi(TestMatrixCommon):
     def test_translate_never_variant_attributes_on_pol(self):
         """ Check that the attribute values set on a pol for never variant attribute are translated according to the seller language.
         """
-        self.env['res.lang']._activate_lang('fr_BE')
+        self.env['res.lang'].sudo()._activate_lang('fr_BE')
         french_partner = self.env['res.partner'].create({
             'name': 'French Partner',
             'lang': 'fr_BE',

@@ -279,7 +279,9 @@ class ProductTemplate(models.Model):
         The product configurator also has to be opened when the template has optional products,
         regardless of whether the template is configurable or not.
         Also, depending on the product type, the combo configurator might be needed instead of
-        the standard product configurator, and configurable templates can use the matrix instead.
+        the standard product configurator.
+        The returned `mode` tells whether a configurable template is added through the product
+        configurator or the matrix.
         """
         res = super().get_single_product_variant()
         if res.get("product_id", False):

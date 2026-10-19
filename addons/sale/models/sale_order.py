@@ -495,22 +495,6 @@ class SaleOrder(models.Model):
         string="Analytic Account", comodel_name="account.analytic.account"
     )
 
-    _date_order_id_idx = models.Index("(date_order desc, id desc)")
-
-    # if set, the matrix of the products configurable by matrix will be shown
-    # on the report of the order.
-    report_grids = fields.Boolean(string="Print Variant Grids", default=True)
-
-    """ Matrix loading and update: fields and methods :
-
-    NOTE: The matrix functionality was done in python, server side, to avoid js
-        restriction.  Indeed, the js framework only loads the x first lines displayed
-        in the client, which means in case of big matrices and lots of so_lines,
-        the js doesn't have access to the 41nth and following lines.
-
-        To force the loading, a 'hack' of the js framework would have been needed...
-    """
-
     grid_product_tmpl_id = fields.Many2one(comodel_name="product.template", store=False)
     # Whether the grid field contains a new matrix to apply or not
     grid_update = fields.Boolean(default=False, store=False)
@@ -521,6 +505,13 @@ class SaleOrder(models.Model):
         "\nIf not, represents the matrix to open.",
         store=False,
     )
+    report_grids = fields.Boolean(
+        string="Print Variant Grids",
+        help="Show the variant grid of the product added through the matrix on the order report.",
+        default=True,
+    )
+
+    _date_order_id_idx = models.Index("(date_order desc, id desc)")
 
     # === COMPUTE METHODS ===#
 
@@ -1475,6 +1466,9 @@ class SaleOrder(models.Model):
                         "discount": line.discount,
                     })
 
+    # The matrix is loaded and applied server side through the grid onchanges. The web client only
+    # loads the first order lines, so it can't read them all for big matrices or long orders
+    # without a hack of the web framework.
     @api.onchange("grid_product_tmpl_id")
     def _set_grid_up(self):
         """Save locally the matrix of the given product.template, to be used by the matrix
@@ -1490,11 +1484,11 @@ class SaleOrder(models.Model):
             grid = json.loads(self.grid)
             product_template = self.env["product.template"].browse(grid["product_template_id"])
             dirty_cells = grid["changes"]
-            Attrib = self.env["product.template.attribute.value"]
+            PTAV = self.env["product.template.attribute.value"]
             default_so_line_vals = {}
             new_lines = []
             for cell in dirty_cells:
-                combination = Attrib.browse(cell["ptav_ids"])
+                combination = PTAV.browse(cell["ptav_ids"])
                 no_variant_attribute_values = (
                     combination - combination._without_no_variant_attributes()
                 )
@@ -2821,7 +2815,7 @@ class SaleOrder(models.Model):
             return pav == sorted_attr_ids
 
         matrix = product_template._get_template_matrix(
-            company_id=self.company_id, currency_id=self.currency_id, display_extra_price=True
+            company_id=self.company_id, currency_id=self.currency_id, display_extra=True
         )
         if self.order_line:
             lines = matrix["matrix"]

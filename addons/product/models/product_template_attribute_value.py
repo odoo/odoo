@@ -205,10 +205,10 @@ class ProductTemplateAttributeValue(models.Model):
         ptavs = ptavs._filter_single_value_lines().with_prefetch(self._prefetch_ids)
         return ", ".join([ptav.name for ptav in ptavs])
 
-    def _grid_header_cell(self, fro_currency, to_currency, company, display_extra=True):
+    def _grid_header_cell(self, from_currency, to_currency, company, display_extra=True):
         """Generate a header matrix cell for 1 or multiple attributes.
 
-        :param res.currency fro_currency:
+        :param res.currency from_currency:
         :param res.currency to_currency:
         :param res.company company:
         :param bool display_extra: whether extra prices should be displayed in the cell
@@ -222,7 +222,7 @@ class ProductTemplateAttributeValue(models.Model):
         extra_price = sum(self.mapped("price_extra")) if display_extra else 0
         if extra_price:
             header_cell["currency_id"] = to_currency.id
-            header_cell["price"] = fro_currency._convert(extra_price, to_currency, company)
+            header_cell["price"] = from_currency._convert(extra_price, to_currency, company)
         return header_cell
 
     def _filter_single_value_lines(self):

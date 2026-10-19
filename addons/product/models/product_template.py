@@ -1450,17 +1450,16 @@ class ProductTemplate(models.Model):
 
         return True
 
-    def _get_template_matrix(self, **kwargs):
+    def _get_template_matrix(self, company_id=False, currency_id=False, display_extra=False):
         self.ensure_one()
-        company_id = kwargs.get("company_id") or self.company_id or self.env.company
-        currency_id = kwargs.get("currency_id") or self.currency_id
-        display_extra = kwargs.get("display_extra_price", False)
+        company_id = company_id or self.company_id or self.env.company
+        currency_id = currency_id or self.currency_id
         attribute_lines = self.valid_product_template_attribute_line_ids
 
-        Attrib = self.env["product.template.attribute.value"]
+        PTAV = self.env["product.template.attribute.value"]
         first_line_attributes = attribute_lines[0].product_template_value_ids._only_active()
-        attribute_ids_by_line = [
-            line.product_template_value_ids._only_active().ids for line in attribute_lines
+        attribute_ids_by_line = [first_line_attributes.ids] + [
+            line.product_template_value_ids._only_active().ids for line in attribute_lines[1:]
         ]
 
         if self.env.context.get("show_template_name_in_grid", False):
@@ -1470,7 +1469,7 @@ class ProductTemplate(models.Model):
 
         header += [
             attr._grid_header_cell(
-                fro_currency=self.currency_id,
+                from_currency=self.currency_id,
                 to_currency=currency_id,
                 company=company_id,
                 display_extra=display_extra,
@@ -1486,9 +1485,9 @@ class ProductTemplate(models.Model):
 
         matrix = []
         for row in rows:
-            row_attributes = Attrib.browse(row[0][1:])
+            row_attributes = PTAV.browse(row[0][1:])
             row_header_cell = row_attributes._grid_header_cell(
-                fro_currency=self.currency_id,
+                from_currency=self.currency_id,
                 to_currency=currency_id,
                 company=company_id,
                 display_extra=display_extra,
@@ -1496,7 +1495,7 @@ class ProductTemplate(models.Model):
             result = [row_header_cell]
 
             for cell in row:
-                combination = Attrib.browse(cell)
+                combination = PTAV.browse(cell)
                 is_possible_combination = self._is_combination_possible(combination)
                 cell.sort()
                 result.append({

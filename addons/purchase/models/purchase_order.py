@@ -204,16 +204,6 @@ class PurchaseOrder(models.Model):
         help="Internal warning for the partner or the products as set by the user.",
         compute='_compute_purchase_warning_text')
 
-    """ Matrix loading and update: fields and methods :
-
-    NOTE: The matrix functionality was done in python, server side, to avoid js
-        restriction.  Indeed, the js framework only loads the x first lines displayed
-        in the client, which means in case of big matrices and lots of po_lines,
-        the js doesn't have access to the 41st and following lines.
-
-        To force the loading, a 'hack' of the js framework would have been needed...
-    """
-
     grid_product_tmpl_id = fields.Many2one('product.template', store=False, help="Technical field for product_matrix functionalities.")
     grid_update = fields.Boolean(default=False, store=False, help="Whether the grid field contains a new matrix to apply or not.")
     grid = fields.Char(store=False, help="Technical storage of grid. \nIf grid_update, will be loaded on the PO. \nIf not, represents the matrix to open.")
@@ -497,6 +487,9 @@ class PurchaseOrder(models.Model):
                 line.date_planned = line._get_date_planned(line._get_seller_info())
         return new_pos
 
+    # The matrix is loaded and applied server side through the grid onchanges. The web client only
+    # loads the first order lines, so it can't read them all for big matrices or long orders
+    # without a hack of the web framework.
     @api.onchange('grid_product_tmpl_id')
     def _set_grid_up(self):
         if self.grid_product_tmpl_id:
@@ -514,11 +507,11 @@ class PurchaseOrder(models.Model):
             product_template = self.env['product.template'].browse(grid['product_template_id'])
             product_ids = set()
             dirty_cells = grid['changes']
-            Attrib = self.env['product.template.attribute.value']
+            PTAV = self.env['product.template.attribute.value']
             default_po_line_vals = {}
             new_lines = []
             for cell in dirty_cells:
-                combination = Attrib.browse(cell['ptav_ids'])
+                combination = PTAV.browse(cell['ptav_ids'])
                 no_variant_attribute_values = combination - combination._without_no_variant_attributes()
 
                 # create or find product variant from combination

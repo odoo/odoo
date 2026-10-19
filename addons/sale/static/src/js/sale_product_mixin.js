@@ -145,7 +145,7 @@ export const saleProductMixin = () => ({
         } else if (!data.mode || data.mode === 'configurator' || !this._useGridConfigurator()) {
             this._openProductConfigurator({ data: data });
         } else {
-            this._openGridConfigurator();
+            this.matrixConfigurator.open(this.props.record, false);
         }
     },
 
@@ -155,10 +155,6 @@ export const saleProductMixin = () => ({
      */
     _useGridConfigurator() {
         return true;
-    },
-
-    async _openGridConfigurator(edit = false) {
-        return this.matrixConfigurator.open(this.props.record, edit);
     },
 
     async _onProductUpdate() {}, // event_booth_sale, event_sale, sale_renting
@@ -175,7 +171,7 @@ export const saleProductMixin = () => ({
 
     async _openProductConfigurator({ edit = false, selectedComboItems = [], data } = {}) {
         if (edit && this.props.record.data.product_add_mode == "matrix") {
-            return this._openGridConfigurator(true);
+            return this.matrixConfigurator.open(this.props.record, true);
         }
         const saleOrder = this.props.record.model.root.data;
         const saleOrderLine = this.props.record.data;

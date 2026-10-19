@@ -63,7 +63,6 @@ Print product labels with barcode.
         'data/product_category_demo.xml',
         'data/product_demo.xml',
         'data/product_document_demo.xml',
-        'data/product_matrix_demo.xml',
         'data/product_supplierinfo_demo.xml',
     ],
     'assets': {
