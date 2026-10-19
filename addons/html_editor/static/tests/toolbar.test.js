@@ -500,7 +500,9 @@ test("toolbar font size selector reflects heading size after remove format", asy
     await waitFor(".o-we-toolbar");
     const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     const inputEl = await waitUntil(() => {
-        const input = iframeEl.contentWindow.document?.querySelector("input[name='font-size-input']");
+        const input = iframeEl.contentWindow.document?.querySelector(
+            "input[name='font-size-input']"
+        );
         return input?.value && input;
     });
     expect(inputEl).toHaveValue(getFontSizeFromVar("display-3-font-size").toString());
@@ -527,7 +529,9 @@ test("toolbar font size selector reflects default size with o_default_font_size 
     await waitFor(".o-we-toolbar");
     const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     const inputEl = await waitUntil(() => {
-        const input = iframeEl.contentWindow.document?.querySelector("input[name='font-size-input']");
+        const input = iframeEl.contentWindow.document?.querySelector(
+            "input[name='font-size-input']"
+        );
         return input?.value && input;
     });
     expect(inputEl).toHaveValue(getFontSizeFromVar("font-size-base").toString());
@@ -1666,9 +1670,7 @@ test("toolbar should close on edit link from preview", async () => {
 
 test.tags("desktop");
 test("close the toolbar if the selection contains any nodes (traverseNode = [], ignore zws)", async () => {
-    const { el } = await setupEditor(
-        `<p>ab<strong data-oe-zws-empty-inline="">\u200B</strong>cd</p>`
-    );
+    const { el } = await setupEditor(`<p>ab<strong data-oe-zws-empty-inline=""></strong>cd</p>`);
     await expectElementCount(".o-we-toolbar", 0);
 
     setContent(el, `<p>a[b<strong data-oe-zws-empty-inline="">\u200B</strong>c]d</p>`);
