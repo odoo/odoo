@@ -1,4 +1,5 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, getFixture } from "@odoo/hoot";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -48,6 +49,7 @@ test("Preparation ticket: order note behavior and change detection", async () =>
         expect(changes[0].changes.title).toBe("NOTE UPDATE");
     }
 });
+<<<<<<< f6f7b8b42d1b8fa47cb89ced5ccd6eb0a4bd85c7
 
 const setupSinglePrinter = async () => {
     const store = await setupPosEnv();
@@ -86,3 +88,20 @@ test("Cashdrawer: the default printer is restored after a refresh", async () => 
     expect(store.ticketPrinter.defaultPrinter).toBe(printer);
     expect.verifySteps(["cashbox opened"]);
 });
+||||||| 2c06570102e63d646102915f9a4658ebf45f4101
+=======
+
+test("printWeb gives the focus back to the POS window after printing", async () => {
+    const store = await setupPosEnv();
+    const iframe = document.createElement("iframe");
+    getFixture().appendChild(iframe);
+    patchWithCleanup(store.ticketPrinter, {
+        _print() {
+            expect.step(document.activeElement === iframe ? "print from iframe" : "print");
+        },
+    });
+    store.ticketPrinter.printWeb(iframe);
+    expect.verifySteps(["print from iframe"]);
+    expect(document.activeElement).not.toBe(iframe);
+});
+>>>>>>> dc4a2192750b4d76cebbebd4664dc594c5712258
