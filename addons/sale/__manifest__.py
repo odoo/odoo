@@ -49,7 +49,11 @@ This module contains all the common features of Sales Management and eCommerce.
         "views/sale_menus.xml",  # Last because referencing actions defined in previous files,
         "security/ir.access.csv",
     ],
-    "demo": ["data/product_demo.xml", "data/sale_demo.xml"],
+    "demo": [
+        "data/product_demo.xml",
+        "data/product_pricelist_demo.xml",
+        "data/sale_demo.xml",
+    ],
     "assets": {
         "web.assets_backend": [
             "sale/static/src/scss/sale_onboarding.css",
