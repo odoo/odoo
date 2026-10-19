@@ -40,7 +40,7 @@
                         </thead>
                         <tbody>
                             <tr t-foreach="docs" t-as="line">
-                                <td class="text-start"><span t-out="line.date">01/01/2000</span></td>
+                                <td class="text-start"><span t-field="line.date">01/01/2000</span></td>
                                 <td t-att-class="'text-start' + (' o_overflow' if len(line.name or '') > 30 else '')">
                                     <span t-field="line.name">Flight Ticket</span>
                                 </td>
