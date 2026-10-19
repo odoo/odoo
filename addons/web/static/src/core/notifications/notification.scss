@@ -32,7 +32,13 @@
     }
 }
 
-@include owl-fade(0.5s, "o_notification");
+.o_notification_fade {
+    transition: all 0.5s;
+}
+
+.o_notification_fade-enter {
+    opacity: 0;
+}
 
 .o_notification_progress {
     position: absolute;
