@@ -8,6 +8,37 @@ import {
 
 defineWebsiteModels();
 
+test("blog carousel template can be changed", async () => {
+    onRpc("/website/snippet/options_filters", () => [
+        { id: 1, name: "Latest Blog Posts", model_name: "blog.post", limit: 16 },
+    ]);
+    onRpc("/website/snippet/filter_templates", () => [
+        {
+            key: "website_blog.dynamic_filter_template_blog_post_big_picture",
+            name: "Big picture",
+            numberOfElements: "4",
+        },
+        {
+            key: "website_blog.dynamic_filter_template_blog_post_card",
+            name: "Card",
+            numberOfElements: "4",
+        },
+    ]);
+
+    await setupWebsiteBuilderWithSnippet("s_blog_posts_carousel");
+    await contains(":iframe .s_blog_posts_carousel").click();
+
+    expect("[data-label=Model]").toHaveCount(0);
+    expect("[data-label=Template]").toHaveCount(1);
+    await contains("[data-label=Template] button.dropdown").click();
+    await contains(".dropdown-item:contains(Card)").click();
+    expect(":iframe .s_blog_posts_carousel").toHaveAttribute(
+        "data-template-key",
+        "website_blog.dynamic_filter_template_blog_post_card"
+    );
+    expect(":iframe .s_blog_posts_carousel").toHaveClass("o_dynamic_carousel_snippet");
+});
+
 test("dynamic Snippet Blog Filter", async () => {
     // We just need to fulfill these two RPCs, they are not useful in test.
     onRpc(
