@@ -1,8 +1,26 @@
 import { Thread } from "@mail/core/common/thread_model";
 import { onWillDestroy, Plugin, signal, t, useConfig } from "@odoo/owl";
+import { clamp } from "@web/core/utils/numbers";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 /** Duration in ms during which a message stays highlighted. */
 export const HIGHLIGHT_DURATION = 1500;
+
+function needsScrollToCenter(el) {
+    const scrollable = closestScrollableY(el.parentElement);
+    if (!scrollable) {
+        return false;
+    }
+    const { height, top } = el.getBoundingClientRect();
+    const center =
+        scrollable.getBoundingClientRect().top + scrollable.clientTop + scrollable.clientHeight / 2;
+    const target = clamp(
+        scrollable.scrollTop + top + height / 2 - center,
+        0,
+        scrollable.scrollHeight - scrollable.clientHeight
+    );
+    return Math.abs(target - scrollable.scrollTop) >= Math.max(2, 2 / window.devicePixelRatio);
+}
 
 /**
  * Highlights a message of the thread given in config, loading the messages
@@ -98,6 +116,9 @@ export class MessageHighlightPlugin extends Plugin {
         } else {
             // To remove when safari will support the "scrollend" event.
             setTimeout(resolveScroll, 250);
+        }
+        if (!needsScrollToCenter(el)) {
+            resolveScroll();
         }
         el.scrollIntoView({ behavior: "smooth", block: "center" });
         return scrollPromise;
