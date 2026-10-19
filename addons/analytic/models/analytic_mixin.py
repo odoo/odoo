@@ -5,7 +5,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.models import Query
-from odoo.tools import SQL, unique
+from odoo.tools import SQL, frozendict, unique
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.sql import table_exists
 
@@ -168,9 +168,47 @@ class AnalyticMixin(models.AbstractModel):
 
     def write(self, vals):
         """ Format the analytic_distribution float value, so equality on analytic_distribution can be done """
+        if 'analytic_distribution' in vals:
+            self._clean_stale_analytic_distributions()
+
         decimal_precision = self.env['decimal.precision'].precision_get('Percentage Analytic')
         vals = self._sanitize_values(vals, decimal_precision)
         return super().write(vals)
+
+    def _clean_stale_analytic_distributions(self):
+        """Persist the removal of deleted analytic accounts, in batch."""
+        if not self or self.env.context.get('skip_analytic_sync'):
+            return
+
+        distributions = {
+            record.id: record.analytic_distribution
+            for record in self if record.analytic_distribution
+        }
+        account_ids = {
+            int(account_id)
+            for distribution in distributions.values()
+            for key in distribution if key != '__update__'
+            for account_id in key.split(',') if account_id.isdigit()
+        }
+        existing_ids = set(self.env['account.analytic.account'].browse(list(account_ids)).exists().ids)
+
+        to_write = defaultdict(list)
+        for record_id, distribution in distributions.items():
+            cleaned = defaultdict(float)
+            for key, percentage in distribution.items():
+                if key == '__update__':
+                    cleaned[key] = percentage
+                    continue
+                valid_ids = [account_id for account_id in key.split(',') if account_id.isdigit() and int(account_id) in existing_ids]
+                if valid_ids:
+                    cleaned[','.join(valid_ids)] += percentage
+            if cleaned != distribution:
+                to_write[frozendict(cleaned)].append(record_id)
+
+        for cleaned, ids in to_write.items():
+            records = self.browse(ids).with_context(skip_analytic_sync=True)
+            records.analytic_distribution = cleaned
+            records.flush_recordset(['analytic_distribution'])
 
     @api.model_create_multi
     def create(self, vals_list):
