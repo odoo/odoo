@@ -1909,7 +1909,10 @@ class AccountMove(models.Model):
 
             for message in message_to_log:
                 self.sudo().message_post(body=message)
-            return self
+
+        # Generate a PDF preview of the bill when the XML doesn't embed one, as for UBL/CII imports.
+        self.env['account.edi.ubl']._import_attachments(self, tree)
+        return self
 
     @api.model
     def _is_prediction_enabled(self):
