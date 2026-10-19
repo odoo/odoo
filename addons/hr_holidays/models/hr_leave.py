@@ -1900,7 +1900,7 @@ class HrLeave(models.Model):
             user = holiday.user_id
             meeting_name = _(
                 "%(employee)s on Time Off : %(duration)s",
-                employee=holiday.employee_id.name or holiday.category_id.name,
+                employee=holiday.employee_id.name,
                 duration=holiday.duration_display)
             allday_value = (holiday.work_entry_type_request_unit != 'half_day' or holiday.request_date_from_period == 'am' and holiday.request_date_to_period == 'pm')
             if holiday.work_entry_type_request_unit == 'hour':
