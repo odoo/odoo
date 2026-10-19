@@ -8,8 +8,8 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
-import { describe, test } from "@odoo/hoot";
-import { animationFrame, press } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, hover, leave, press, waitFor } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -105,6 +105,38 @@ test("navigate quick reaction menu using arrow keys", async () => {
         await press("ArrowLeft");
     }
     await contains(".o-mail-QuickReactionMenu-emojiPicker:focus");
+});
+
+test("hovered emoji stays highlighted and is used on enter", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "Hello world!",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Add a Reaction']");
+    const [firstEmoji, , thirdEmoji] = QuickReactionMenu.DEFAULT_EMOJIS;
+    await contains(`.o-mail-QuickReactionMenu-emoji:focus:text(${firstEmoji})`);
+    await hover(`.o-mail-QuickReactionMenu-emoji:text(${thirdEmoji})`);
+    await leave();
+    await contains(`.o-mail-QuickReactionMenu-emoji:focus:text(${firstEmoji})`);
+    expect(
+        await waitFor(`.o-mail-QuickReactionMenu-emoji:text(${thirdEmoji}):count(1)`)
+    ).toHaveStyle({
+        outlineStyle: "solid",
+    });
+    expect(
+        await waitFor(`.o-mail-QuickReactionMenu-emoji:text(${firstEmoji}):count(1)`)
+    ).toHaveStyle({
+        boxShadow: "none",
+        outlineStyle: "none",
+    });
+    await press("Enter");
+    await contains(`.o-mail-MessageReaction:text(${thirdEmoji} 1)`);
 });
 
 test("can quick search emoji from quick reaction", async () => {
