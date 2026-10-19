@@ -42,3 +42,16 @@ class TestOptionalHoliday(TestHrHolidaysCommon):
                 leave_form.work_entry_type_id = self.work_entry_type
                 leave_form.request_date_from = '2025-01-03'
                 leave_form.request_date_to = '2025-01-03'
+
+    def test_optional_holidays_sorted_by_date(self):
+        # The dashboard lists the optional holidays from the earliest one, as the company holidays
+        self.env['l10n.in.hr.leave.optional.holiday'].create([
+            {'name': 'later optional holiday', 'date': '2025-03-14'},
+            {'name': 'earlier optional holiday', 'date': '2025-01-01'},
+        ])
+        data = self.env['hr.employee'].with_context(employee_id=self.employee_emp_id).get_special_days_data(
+            '2025-01-01 00:00:00', '2025-12-31 23:59:59')
+        self.assertEqual(
+            [holiday['title'] for holiday in data['optionalHolidays']],
+            ['earlier optional holiday', 'optional holiday', 'later optional holiday'],
+        )
