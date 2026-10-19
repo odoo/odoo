@@ -1362,7 +1362,42 @@ test("show call participants in discuss sidebar", async () => {
     );
 });
 
+<<<<<<< 3a00e0b2160c3572853fa3f8b289ce7f1d7bb159
 test("Sort call participants by name", async () => {
+||||||| a862c87e3268d61753353838da6a011c22ca74f2
+test("Sort call participants in side bar by name", async () => {
+=======
+test("Compact sidebar call participants panel closes when the mouse leaves it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    getService("mail.store").discuss.isSidebarCompact = true;
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebar .o-mail-DiscussSidebarCallParticipants");
+    await hover(".o-mail-DiscussSidebar .o-mail-DiscussSidebarCallParticipants");
+    await contains(
+        ".o-mail-DiscussSidebar-floatingMenu .o-mail-DiscussSidebarCallParticipants-name:text('Alice')"
+    );
+    await hover(
+        ".o-mail-DiscussSidebar-floatingMenu .o-mail-DiscussSidebarCallParticipants-name:text('Alice')"
+    );
+    await advanceTime(500);
+    await contains(
+        ".o-mail-DiscussSidebar-floatingMenu .o-mail-DiscussSidebarCallParticipants-name:text('Alice')"
+    );
+    await hover(".o-mail-DiscussContent");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
+});
+
+test("Sort call participants in side bar by name", async () => {
+>>>>>>> 1c12bf434df27c02659b6398f36fdf9fa6ffb201
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["discuss.channel.rtc.session"].create([

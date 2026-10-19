@@ -20,6 +20,7 @@ export class DiscussSearch extends Component {
         this.props = useProps({
             class: types.or([types.string(), types.object()]).optional(),
         });
+<<<<<<< 3a00e0b2160c3572853fa3f8b289ce7f1d7bb159
         this.search = useSearch({
             searchTerm: this.messagingMenuUiState()._.fieldsAttrSignal.get("searchTerm"),
         });
@@ -27,6 +28,31 @@ export class DiscussSearch extends Component {
             if (this.autofocus?.()) {
                 this.searchInput()?.focus();
             }
+||||||| a862c87e3268d61753353838da6a011c22ca74f2
+        this.meetingHover = useHover(["meeting-btn", "meeting-floating"], {
+            onHover: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.meetingFloating.isOpen = true;
+                }
+            },
+            onAway: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.meetingFloating.isOpen = false;
+                }
+            },
+=======
+        this.meetingHover = useHover(["meeting-btn"], {
+            onHover: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.meetingFloating.isOpen = true;
+                }
+            },
+            onAway: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.meetingFloating.isOpen = false;
+                }
+            },
+>>>>>>> 1c12bf434df27c02659b6398f36fdf9fa6ffb201
         });
     }
 
