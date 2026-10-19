@@ -310,6 +310,10 @@ class AccountPartialReconcile(models.Model):
                 else:
                     payment_date = counterpart_line.date
                     settlement_date = payment_date
+                    if counterpart_line.move_id.is_invoice(include_receipts=True):
+                        # The move is the payment itself, e.g. its early payment discount lines
+                        # carry cash basis taxes: it is settled at its own date, not the invoice's.
+                        settlement_date = move.date
 
                 if move_values['currency'] == move.company_id.currency_id:
                     # Ignore the exchange difference.
