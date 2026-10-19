@@ -339,3 +339,24 @@ test("Pricelist: fixed price with currency conversion still adds attribute extra
 
     expect(product.getPrice(pricelist, 1, 10, false, product)).toBe(110);
 });
+
+test("Pricelist: rule whose pricelist is missing from the PoS does not break loading", async () => {
+    const store = await setupPosEnv();
+    const [rule] = store.models.loadConnectedData({
+        "product.pricelist.item": [
+            {
+                id: 902,
+                pricelist_id: 99997,
+                product_tmpl_id: false,
+                product_id: false,
+                categ_id: false,
+                base: "list_price",
+                compute_price: "fixed",
+                fixed_price: 5,
+                min_quantity: 0,
+            },
+        ],
+    })["product.pricelist.item"];
+
+    expect(rule.pricelist_id).toBe(undefined);
+});
