@@ -94,6 +94,8 @@ class ResPartner(models.Model):
 
     @api.constrains('invoice_edi_format', 'invoice_sending_method')
     def _check_nemhandel_send_oioubl(self):
+        if self.env.context.get('l10n_dk_nemhandel_skip_oioubl_check'):
+            return
         if self.filtered(lambda partner: partner.invoice_edi_format != 'oioubl_21' and partner.invoice_sending_method == 'nemhandel'):
             raise ValidationError(_('On Nemhandel, only OIOUBL 2.1 is supported.'))
 
@@ -252,7 +254,10 @@ class ResPartner(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super().create(vals_list)
+        # The format is only stored by its inverse, which runs after the constraints on stored fields
+        res = super(ResPartner, self.with_context(l10n_dk_nemhandel_skip_oioubl_check=True)).create(vals_list)
+        res = res.with_env(self.env)
+        res._check_nemhandel_send_oioubl()
         if res:
             res._update_nemhandel_state_per_company()
         return res
