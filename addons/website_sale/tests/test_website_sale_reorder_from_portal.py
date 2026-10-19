@@ -99,6 +99,24 @@ class TestWebsiteSaleReorderFromPortal(HttpCaseWithUserPortal):
             order_lines.product_no_variant_attribute_value_ids,
         )
 
+    def test_reorder_fractional_quantity(self):
+        self.empty_cart.write({
+            'website_id': self.website.id,
+            'order_line': [
+                Command.create({'product_id': self.product_1.id, 'product_uom_qty': 0.5}),
+                Command.create({'product_id': self.product_2.id, 'product_uom_qty': 1}),
+            ],
+        })
+        self.empty_cart.action_confirm()
+        self.authenticate('portal', 'portal')
+
+        # Fractional quantities below one should add one unit instead of dropping the product.
+        values = self.make_jsonrpc_request('/my/orders/reorder', {
+            'order_id': self.empty_cart.id,
+        })
+
+        self.assertEqual(values['cart_quantity'], 2)
+
     def test_is_reorder_allowed(self):
         line_published_product = Command.create({
             'product_id': self.product_1.id,
