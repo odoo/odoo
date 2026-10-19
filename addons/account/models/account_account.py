@@ -144,7 +144,7 @@ class AccountAccount(models.Model):
     opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', currency_field='company_currency_id')
     opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', inverse='_set_opening_balance', currency_field='company_currency_id')
 
-    current_balance = fields.Float(compute='_compute_current_balance')
+    current_balance = fields.Monetary(compute='_compute_current_balance', currency_field='company_currency_id')
     related_taxes_amount = fields.Integer(compute='_compute_related_taxes_amount', compute_sql='_compute_sql_related_taxes_amount', compute_sudo=True)
 
     non_trade = fields.Boolean(default=False,
@@ -584,13 +584,18 @@ class AccountAccount(models.Model):
 
         raise UserError(_('Cannot generate an unused account code.'))
 
-    @api.depends_context('company')
+    @api.depends_context('allowed_company_ids')
     def _compute_current_balance(self):
+        # Balance across all the selected companies, converted into the main company's currency
         balances = {
             account.id: balance
-            for account, balance in self.env['account.move.line']._read_group(
-                domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted'), ('company_id', 'child_of', self.env.company.id)], groupby=['account_id'],
-                aggregates=['balance:sum'],
+            for account, balance in self.env['account.move.line'].with_context(
+                currency_translation='cta',
+                date_to=fields.Date.context_today(self),
+            )._read_group(
+                domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted'), ('company_id', 'in', self.env.companies.ids)],
+                groupby=['account_id'],
+                aggregates=['consolidation_balance:sum'],
             )
         }
         for record in self:
