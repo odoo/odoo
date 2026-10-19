@@ -36,6 +36,7 @@ class HrVersion(models.Model):
         all_new_leave_vals = []
         leaves_state = {}
         created_versions = self.env['hr.version']
+        versions_to_trigger = self.env['hr.version']
         for vals in vals_list:
             if not 'employee_id' in vals or not 'resource_calendar_id' in vals:
                 created_versions |= super().create(vals)
@@ -59,7 +60,8 @@ class HrVersion(models.Model):
             # to keep creation order, not ideal but ok for now.
             if not is_created:
                 created_versions |= super().create([vals])
-            created_versions._action_trigger_accrual_plan_working_schedule()
+            versions_to_trigger |= created_versions[-1]
+        versions_to_trigger._action_trigger_accrual_plan_working_schedule()
         try:
             if all_new_leave_vals:
                 self._create_all_new_leave(all_new_leave_origin, all_new_leave_vals)
