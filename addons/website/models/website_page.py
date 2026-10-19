@@ -399,6 +399,7 @@ class WebsitePage(models.Model):
         return (
             request.website.id,
             request.lang.code,
+            request.httprequest.host,
             request.httprequest.path,
             request.session.debug,
             request.website._allConsentsGranted(),
