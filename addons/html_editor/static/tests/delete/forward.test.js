@@ -171,7 +171,7 @@ describe("Selection collapsed", () => {
                 contentAfterEdit:
                     '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
                 contentAfter:
-                    '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
+                    '<p>ab<span class="style" data-oe-zws-empty-inline="">[]</span>ef</p>',
             });
         });
 
@@ -190,7 +190,7 @@ describe("Selection collapsed", () => {
         test("should ignore ZWS and merge (1)", async () => {
             await testEditor({
                 contentBefore:
-                    '<p><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span><b>ab</b></p>',
+                    '<p><span class="removeme" data-oe-zws-empty-inline="">[]</span><b>ab</b></p>',
                 contentBeforeEdit:
                     '<p><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span><b>ab</b></p>',
                 stepFunction: async (editor) => {
@@ -204,6 +204,8 @@ describe("Selection collapsed", () => {
         test("should ignore ZWS and merge (2)", async () => {
             await testEditor({
                 contentBefore:
+                    '<p><span class="removeme" data-oe-zws-empty-inline="">[]</span><span class="a">cd</span></p>',
+                contentBeforeEdit:
                     '<p><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span><span class="a">cd</span></p>',
                 stepFunction: async (editor) => {
                     deleteForward(editor);
@@ -216,6 +218,8 @@ describe("Selection collapsed", () => {
         test("should ignore ZWS and merge (3)", async () => {
             await testEditor({
                 contentBefore:
+                    '<p><span class="removeme" data-oe-zws-empty-inline="">[]</span><br><b>ef</b></p>',
+                contentBeforeEdit:
                     '<p><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span><br><b>ef</b></p>',
                 stepFunction: async (editor) => {
                     deleteForward(editor);
@@ -1369,8 +1373,10 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: '<p>a<span class="style-class">[bcde]</span>f</p>',
             stepFunction: deleteForward,
-            contentAfter:
+            contentAfterEdit:
                 '<p>a<span class="style-class" data-oe-zws-empty-inline="">[]\u200B</span>f</p>',
+            contentAfter:
+                '<p>a<span class="style-class" data-oe-zws-empty-inline="">[]</span>f</p>',
         });
     });
 
@@ -1736,8 +1742,9 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: '<p>ab<b class="oe_unremovable">[cd]</b>ef</p>',
             stepFunction: deleteForward,
-            contentAfter:
+            contentAfterEdit:
                 '<p>ab<b class="oe_unremovable" data-oe-zws-empty-inline="">[]\u200B</b>ef</p>',
+            contentAfter: '<p>ab<b class="oe_unremovable" data-oe-zws-empty-inline="">[]</b>ef</p>',
         });
     });
 

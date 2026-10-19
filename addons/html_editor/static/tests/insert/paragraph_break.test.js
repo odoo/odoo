@@ -644,8 +644,10 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: '<p><span class="a">ab</span></p><p><span class="b">[]cd</span></p>',
                 stepFunction: splitBlock,
+                contentAfterEdit:
+                    '<p><span class="a">ab</span></p><p><span class="b" data-oe-zws-empty-inline="">\u200b</span></p><p><span class="b">[]cd</span></p>',
                 contentAfter:
-                    '<p><span class="a">ab</span></p><p><span class="b" data-oe-zws-empty-inline="">\u200b</span><br></p><p><span class="b">[]cd</span></p>',
+                    '<p><span class="a">ab</span></p><p><span class="b" data-oe-zws-empty-inline=""></span><br></p><p><span class="b">[]cd</span></p>',
             });
         });
 
@@ -679,7 +681,9 @@ describe("Selection collapsed", () => {
         test("should insert a paragraph after an empty h1 with styles and a zero-width space", async () => {
             await testEditor({
                 contentBefore:
-                    '<h1><font style="color: red;" data-oe-zws-empty-inline="">[]\u200B</font></h1>',
+                    '<h1><font style="color: red;" data-oe-zws-empty-inline="">[]</font></h1>',
+                contentBeforeEdit:
+                    '<h1 o-we-hint-text="Heading 1" class="o-we-hint"><font style="color: red;" data-oe-zws-empty-inline="">[]\u200B</font></h1>',
                 stepFunction: splitBlock,
                 contentAfterEdit:
                     '<h1><font style="color: red;" data-oe-zws-empty-inline="">\u200b</font></h1>' +
@@ -702,7 +706,7 @@ describe("Selection collapsed", () => {
                 stepFunction: splitBlock,
                 contentAfter: unformat(`
                     <h1>Title</h1>
-                    <p><span class="oe_unremovable" data-oe-zws-empty-inline="">[]\u200b</span><br></p>
+                    <p><span class="oe_unremovable" data-oe-zws-empty-inline="">[]</span><br></p>
                 `),
             });
         });
