@@ -273,6 +273,11 @@ test("test_switch_cashier_with_badge: scanning a badge switches the cashier", as
     await waitFor(".product-screen");
     expect(store.accessRight.loggedCashier.name).toBe("Employee2");
 
+    createTestProduct(store, { id: 9101, name: "Wall Shelf Unit", barcode: "0123456789" });
+    await animationFrame();
+    await Utils.scanBarcode("0123456789");
+    expect(Utils.hasOrderline({ productName: "Wall Shelf Unit" })).toBe(true);
+
     await Utils.clickDisplayedProduct("TEST");
     expect(store.getOrder().employee_id.name).toBe("Employee2");
 
