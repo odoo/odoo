@@ -217,3 +217,30 @@ test("CallDebrief: generates silence gaps in timeline", async () => {
     expect(segments[3].style.width).toBe("25%");
     expect(segments[3].classList.contains("o-CallDebriefTimeline-silence-segment")).toBe(true);
 });
+
+test("CallDebrief: fullscreen falls back to native video player on iPhone", async () => {
+    _setupCallDebriefPatch();
+    // iPhone Safari: no element fullscreen, only native video fullscreen
+    patchWithCleanup(Element.prototype, {
+        requestFullscreen: undefined,
+        webkitRequestFullscreen: undefined,
+    });
+    patchWithCleanup(HTMLVideoElement.prototype, {
+        webkitEnterFullscreen() {
+            expect.step("webkitEnterFullscreen");
+        },
+    });
+    const pyEnv = await startServer();
+    const videoId = _createRecording(pyEnv, { start: 0, type: "video" });
+    const discussCallHistoryId = pyEnv["discuss.call.history"].create({
+        start_date: "2023-01-01 10:00:00",
+        end_date: "2023-01-01 10:01:00",
+        artifact_ids: [videoId],
+    });
+    await start();
+    await _openDebriefView(pyEnv, discussCallHistoryId);
+
+    await click("button[data-control-feedback='fullscreen']");
+    await animationFrame();
+    expect.verifySteps(["webkitEnterFullscreen"]);
+});

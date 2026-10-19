@@ -7,11 +7,16 @@ import {
     proxy,
     signal,
     useEffect,
-    useListener,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { CallDebriefTimeline } from "@mail/views/fields/call_debrief/call_debrief_timeline";
 import { CallDebriefMediaControls } from "@mail/views/fields/call_debrief/call_debrief_media_controls";
+import {
+    exitFullscreen,
+    getFullscreenElement,
+    requestFullscreen,
+    useIsFullscreen,
+} from "@mail/core/common/mail_fullscreen";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -48,7 +53,6 @@ export class CallDebrief extends Component {
             currentSegment: undefined,
             error: "",
             isPlaying: false,
-            isFullscreen: false,
             playbackRate: 1,
             volume: 1,
             isMuted: false,
@@ -86,9 +90,7 @@ export class CallDebrief extends Component {
         useHotkey("shift+>", () => { this.adjustPlaybackRate(1); this.showMediaControlsFeedback("playback-speed"); }, { global: true });
         useHotkey("shift+<", () => { this.adjustPlaybackRate(-1); this.showMediaControlsFeedback("playback-speed"); }, { global: true });
         useHotkey("f", () => { this.toggleFullscreen(); this.showMediaControlsFeedback("fullscreen"); }, { global: true });
-        useListener(document, "fullscreenchange", () => {
-            this.state.isFullscreen = !!document.fullscreenElement;
-        });
+        this.isFullscreen = useIsFullscreen();
 
         onWillUnmount(() => {
             clearTimeout(this.feedbackTimeout);
@@ -540,10 +542,10 @@ export class CallDebrief extends Component {
         if (!rootEl || !this.hasVideo) {
             return;
         }
-        if (!document.fullscreenElement) {
-            rootEl.requestFullscreen();
+        if (!getFullscreenElement()) {
+            requestFullscreen(rootEl, { videoFallback: true });
         } else {
-            document.exitFullscreen();
+            exitFullscreen();
         }
     }
 }
