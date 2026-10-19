@@ -118,7 +118,7 @@ def _as_validation_error(env, exc):
                 field_tech_name=field.name,
             ))
 
-        case errors.ForeignKeyViolation():
+        case errors.ForeignKeyViolation() | errors.RestrictViolation():
             return ValidationError(env._(
                 "The operation cannot be completed: another model requires "
                 "the record being deleted. If possible, archive it instead.\n\n"
