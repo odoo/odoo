@@ -8,6 +8,7 @@ import odoo.release
 from odoo import SUPERUSER_ID, Command, _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
+from odoo.fields import Domain
 from odoo.tools import SQL, convert
 
 from odoo.addons.point_of_sale.models.pos_printer import format_epson_certified_domain
@@ -262,6 +263,11 @@ class PosConfig(models.Model):
                 'login_number': 0,
                 'records': records
             })
+
+    def _get_paid_orders_config_domain(self):
+        """Domain on pos.order matching configs whose paid orders are visible from this config."""
+        self.ensure_one()
+        return Domain('config_id', 'in', (self | self.trusted_config_ids).ids)
 
     def read_config_open_orders(self, domain, record_ids=[]):
         delete_record_ids = {}
