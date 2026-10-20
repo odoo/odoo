@@ -11,7 +11,14 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    fields,
+    getService,
+    models,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import {
     addPlugin,
@@ -28,6 +35,30 @@ test("trigger mobile view", async () => {
     expect(".o_website_preview.o_is_mobile").toHaveCount(0);
     await toggleMobilePreview();
     expect(".o_website_preview.o_is_mobile").toHaveCount(1);
+});
+
+test("the editor is frozen while offline", async () => {
+    await setupWebsiteBuilder(`<h1> Homepage </h1>`);
+    expect(".o_blockUI:not(.o_blockUI_invisible)").toHaveCount(0);
+    expect("iframe[data-src^='/website/force/1']").not.toHaveAttribute("inert");
+
+    getService("offline").offline = true;
+    await animationFrame();
+    expect(".o_blockUI:not(.o_blockUI_invisible)").toHaveCount(1);
+    expect("iframe[data-src^='/website/force/1']").toHaveAttribute("inert");
+
+    getService("offline").offline = false;
+    await animationFrame();
+    expect(".o_blockUI:not(.o_blockUI_invisible)").toHaveCount(0);
+    expect("iframe[data-src^='/website/force/1']").not.toHaveAttribute("inert");
+});
+
+test("the editor is not frozen while offline when it is closed", async () => {
+    await setupWebsiteBuilder(`<h1> Homepage </h1>`, { openEditor: false });
+    getService("offline").offline = true;
+    await animationFrame();
+    expect(".o_blockUI:not(.o_blockUI_invisible)").toHaveCount(0);
+    expect("iframe[data-src^='/website/force/1']").not.toHaveAttribute("inert");
 });
 
 test("top window url in action context parameter", async () => {
