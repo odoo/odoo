@@ -57,7 +57,7 @@ test("Renaming custom snippets don't make an orm call", async () => {
     };
 
     await setupWebsiteBuilder(
-        `<section data-name="Dummy Section" data-snippet="s_dummy">
+        `<section data-test-builder-name="Dummy Section" data-snippet="s_dummy">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-7">
