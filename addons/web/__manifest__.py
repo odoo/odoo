@@ -152,7 +152,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/polyfills/map.js',
             'web/static/src/session.js',
             'web/static/src/core/browser/cookie.js',
-            'web/static/src/core/utils/ui.js',
+            'web/static/src/core/utils/loading_effect.js',
             'web/static/src/public/utils.js',
             'web/static/src/public/lazyloader.js',
         ],
@@ -220,7 +220,7 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/env.js',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
-            'web/static/src/core/**/*',  # Note that 'web/static/src/core/utils/ui.js' is included in assets_frontend_minimal already
+            'web/static/src/core/**/*',  # Note that 'web/static/src/core/utils/loading_effect.js' is included in assets_frontend_minimal already
             ('remove', 'web/static/src/core/commands/**/*'),
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
             ('remove', 'web/static/src/core/**/*.dark.scss'),
@@ -238,7 +238,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/module_loader.js'),
             ('remove', 'web/static/src/session.js'),
             ('remove', 'web/static/src/core/browser/cookie.js'),
-            ('remove', 'web/static/src/core/utils/ui.js'),
+            ('remove', 'web/static/src/core/utils/loading_effect.js'),
             ('remove', 'web/static/src/public/utils.js'),
             ('remove', 'web/static/src/public/lazyloader.js'),
         ],
@@ -492,6 +492,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/browser/feature_detection.js',
             'web/static/src/core/errors/error_utils.js',
             'web/static/src/core/network/rpc.js',
+            'web/static/src/core/utils/loading_effect.js',
             'web/static/src/core/utils/ui.js',
             'web/static/src/core/utils/functions.js',
             'web/static/src/core/utils/patch.js',
