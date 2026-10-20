@@ -14,6 +14,12 @@
                         <Orderline t-else="" line="course_scope.line" mode="this.props.mode"/>
                     </OrderCourse>
                 </t>
+                <div t-if="unassignedLines.length > 0" class="mb-1">
+                    <t t-foreach="unassignedLines" t-as="line" t-key="line_index + '_other'">
+                        <t t-if="props.slots.default" t-slot="default" line="line"/>
+                        <Orderline t-else="" line="line" mode="this.props.mode"/>
+                    </t>
+                </div>
             </t>
             <t t-else="">$0</t>
         </xpath>

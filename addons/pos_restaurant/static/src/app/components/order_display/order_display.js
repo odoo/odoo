@@ -12,5 +12,8 @@ patch(OrderDisplay.prototype, {
         }
         return this.order.course_ids.length > 0;
     },
+    get unassignedLines() {
+        return this.comboSortedLines.filter((l) => !l.course_id);
+    },
 });
 OrderDisplay.components = { ...OrderDisplay.components, OrderCourse };
