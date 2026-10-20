@@ -452,7 +452,7 @@ registry.category("web_tour.tours").add("edit_menus", {
         {
             content: "Check that the mega menu is closed",
             trigger:
-                ':iframe .top_menu .nav-item:contains("Megaaaaa!"):has(div[data-name="Mega Menu"]:not(.show))',
+                ':iframe .top_menu .nav-item:contains("Megaaaaa!"):has(div[data-builder-name="mega-menu"]:not(.show))',
         },
         {
             content: "Open the mega menu after scroll",

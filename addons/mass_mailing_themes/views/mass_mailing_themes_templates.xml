@@ -94,7 +94,7 @@
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
-        <section class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-vxml="001" data-snippet="s_mail_block_header_social" style="background-color: rgb(26, 36, 54) !important;" data-name="Header Social">
+        <section class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-vxml="001" data-snippet="s_mail_block_header_social" style="background-color: rgb(26, 36, 54) !important;" data-builder-name="header-social">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
@@ -217,7 +217,7 @@
             </div>
         </section>
         <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16"
-            data-vxml="001" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+            data-vxml="001" data-snippet="s_mail_block_footer_social" data-builder-name="footer-center">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 o_mail_footer_links pt8 pb8" style="text-align: center;">
@@ -265,7 +265,7 @@
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
-        <section class="s_header_social o_mail_block_header_social o_mail_snippet_general pt40 pb32" data-vxml="001" data-snippet="s_mail_block_header_social" data-name="Header Social">
+        <section class="s_header_social o_mail_block_header_social o_mail_snippet_general pt40 pb32" data-vxml="001" data-snippet="s_mail_block_header_social" data-builder-name="header-social">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
@@ -368,7 +368,7 @@
         <div class="s_hr o_mail_snippet_general pt16 pb0" data-vxml="001" data-snippet="s_hr">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-vxml="001" data-name="Footer Social Center">
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-vxml="001" data-builder-name="footer-social-center">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 o_mail_footer_links pt8 pb8" style="text-align: center;">
@@ -454,7 +454,7 @@
             </div>
         </section>
         <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt40 pb40 o_colored_level"
-            data-name="Links + Social" data-snippet="s_mail_block_footer_links_social">
+            data-builder-name="links-social" data-snippet="s_mail_block_footer_links_social">
             <t t-set="now" t-value="datetime.datetime.now()"/>
             <div class="container">
                 <div class="row">
@@ -531,7 +531,7 @@
         <div class="s_hr o_mail_snippet_general pb32" data-vxml="001" data-snippet="s_hr">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <section class="s_text_image o_mail_snippet_general" data-vxml="001" data-snippet="s_text_image" data-name="Image - Text">
+        <section class="s_text_image o_mail_snippet_general" data-vxml="001" data-snippet="s_text_image" data-builder-name="image-text">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-md-7 px-0">
@@ -632,7 +632,7 @@
         <div class="s_hr o_mail_snippet_general pt32 pb16" data-vxml="001"  data-snippet="s_hr">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-vxml="001"  data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-vxml="001"  data-snippet="s_mail_block_footer_social" data-builder-name="footer-center">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12" style="text-align: center;" t-translation="off">
@@ -679,7 +679,7 @@
             }
         </style>
         <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general"
-            style="background-color: rgb(220, 234, 255);" data-name="Centered Logo" data-vxml="001">
+            style="background-color: rgb(220, 234, 255);" data-builder-name="centered-logo" data-vxml="001">
             <div class="container">
                 <div class="row">
                     <div class="col-md-3"/>
@@ -716,7 +716,7 @@
             </div>
         </section>
         <section class="s_three_columns o_mail_snippet_general o_cc pt32 pb32" data-vxml="001"
-            data-snippet="s_three_columns" data-name="Three Columns">
+            data-snippet="s_three_columns" data-builder-name="three-columns">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 o_mail_no_colorpicker pt0 pb0 col-12">
@@ -779,7 +779,7 @@
             </div>
         </section>
         <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc5 pt24 pb24 bg-900"
-            data-vxml="001" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+            data-vxml="001" data-snippet="s_mail_block_footer_social" data-builder-name="footer-center">
             <div class="container">
                 <div class="row">
                     <div class="col-10 offset-md-1">
@@ -820,7 +820,7 @@
         <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
         <section class="o_mail_snippet_general pt0 pb24" data-vxml="001"
             data-snippet="s_mail_block_header_logo_and_stacked_menu"
-            data-name="Logo + Stacked Menu">
+            data-builder-name="logo-stacked-menu">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 col-12">
@@ -902,7 +902,7 @@
         </section>
         <section class="s_attributes_horizontal pt24 pb24 o_mail_snippet_general bg-o-color-5"
             data-vxml="001" data-snippet="s_attributes_horizontal"
-            data-name="Attributes Horizontal">
+            data-builder-name="attributes-horizontal">
             <div class="container">
                 <div class="row">
                     <div class="s_attributes_horizontal_col col-md-4 pt24 pb24 col-12">
@@ -964,7 +964,7 @@
         </section>
         <section class="o_mail_snippet_general pt48 pb16 o_colored_level bg-o-color-5"
             data-vxml="001" data-snippet="s_mail_block_footer_logo_and_social_media"
-            data-name="Footer Logo + Social Media">
+            data-builder-name="footer-logo-social-media">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 col-12">
@@ -1143,7 +1143,7 @@
         <div class="s_hr o_mail_snippet_general pt16 pb0" style="background-color: rgb(238, 233, 226) !important;" data-vxml="001" data-snippet="s_hr">
             <hr class="s_hr_1px s_hr_solid" style="border-color: rgba(0,0,0,0)"/>
         </div>
-        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc5 pt24 pb24" style="background-color: rgb(84, 52, 39) !important;" data-vxml="001" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc5 pt24 pb24" style="background-color: rgb(84, 52, 39) !important;" data-vxml="001" data-snippet="s_mail_block_footer_social" data-builder-name="footer-center">
             <div class="container">
                 <div class="row">
                     <div class="col-10 offset-md-1">
@@ -1190,7 +1190,7 @@
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
-        <section class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb0" style="text-align: left; padding-left: 15px; padding-right: 15px;" data-vxml="001" data-name="View in Browser">
+        <section class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb0" style="text-align: left; padding-left: 15px; padding-right: 15px;" data-vxml="001" data-builder-name="view-in-browser">
             <p><a href="/view" class="" target="_blank" data-bs-original-title="" title="">View in Browser</a> - <font style="color: rgb(183, 191, 199);"><span style="font-size: 12.25px" t-out="datetime.datetime.now().strftime('%B %d %Y')"/></font></p>
         </section>
         <section class="s_title o_mail_snippet_general pt32 pb32" data-vxml="001" data-snippet="s_title" style="background-color: rgb(255, 255, 255) !important;">
@@ -1329,7 +1329,7 @@
                 </p>
             </div>
         </section>
-        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc1 pt0 pb0" data-vxml="001" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc1 pt0 pb0" data-vxml="001" data-snippet="s_mail_block_footer_social" data-builder-name="footer-center">
             <div class="container">
                 <div class="col-md-12 o_mail_footer_social pt0 pb0" style="text-align: center;">
                     <a aria-label="Facebook" target="_blank" href="https://www.facebook.com/Odoo" data-original-title="Facebook" rel="noreferrer">
@@ -1347,7 +1347,7 @@
         <div class="s_hr o_mail_snippet_general pt16 pb16" data-vxml="001" data-snippet="s_hr">
             <hr class="s_hr_1px s_hr_solid" style="border-top-color: rgb(108, 117, 125) !important;"/>
         </div>
-        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc1 pt0 pb0" data-vxml="001" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general o_cc o_cc1 pt0 pb0" data-vxml="001" data-snippet="s_mail_block_footer_social" data-builder-name="footer-center">
             <div class="container" style="text-align: center; color:rgb(183, 191, 199) !important;">
                 <span style="font-size: 12px;"><font style="color: rgb(183, 191, 199);">8000 Marina Blvd, Suite 300</font></span>
                 <br/>
@@ -1427,20 +1427,20 @@
         </div>
         <section class="s_text_block o_mail_snippet_general px-3 pt8 pb32" data-vxml="001" data-snippet="s_text_block">
             <div class="container s_allow_columns">
-                <table class="mx-auto" data-name="Schedule Table">
-                    <tr style="vertical-align:top" data-name="Schedule Item">
-                        <td style="text-align: right;" class="p-2" data-name="Time">
+                <table class="mx-auto" data-builder-name="schedule-table">
+                    <tr style="vertical-align:top" data-builder-name="schedule-item">
+                        <td style="text-align: right;" class="p-2" data-builder-name="time">
                             <span class="font-weight: bolder">8h:</span>
                         </td>
-                        <td class="p-2" data-name="Activity">
+                        <td class="p-2" data-builder-name="activity">
                             <span class="font-weight: bolder">Welcome</span>
                         </td>
                     </tr>
-                    <tr style="vertical-align:top" data-name="Schedule Item">
-                        <td style="text-align: right;" class="p-2" data-name="Time">
+                    <tr style="vertical-align:top" data-builder-name="schedule-item">
+                        <td style="text-align: right;" class="p-2" data-builder-name="time">
                             <span class="font-weight: bolder">18h30:</span>
                         </td>
-                        <td class="p-2" data-name="Activity">
+                        <td class="p-2" data-builder-name="activity">
                             <span class="font-weight: bolder">[speaker] &amp; [speaker]'s conference</span>
                             <ul>
                                 <li>Interactive Odoo demo</li>
@@ -1448,11 +1448,11 @@
                             </ul>
                         </td>
                     </tr>
-                    <tr style="vertical-align:top" data-name="Schedule Item">
-                        <td style="text-align: right;" class="p-2" data-name="Time">
+                    <tr style="vertical-align:top" data-builder-name="schedule-item">
+                        <td style="text-align: right;" class="p-2" data-builder-name="time">
                             <span class="font-weight: bolder">19h00:</span>
                         </td>
-                        <td class="p-2" data-name="Activity">
+                        <td class="p-2" data-builder-name="activity">
                             <span class="font-weight: bolder">Table Ronde</span>
                             <ul>
                                 <li>Business Case</li>
@@ -1460,11 +1460,11 @@
                             </ul>
                         </td>
                     </tr>
-                    <tr style="vertical-align:top" data-name="Schedule Item">
-                        <td style="text-align: right;" class="p-2" data-name="Time">
+                    <tr style="vertical-align:top" data-builder-name="schedule-item">
+                        <td style="text-align: right;" class="p-2" data-builder-name="time">
                             <span class="font-weight: bolder">19h30: </span>
                         </td>
-                        <td class="p-2" data-name="Activity">
+                        <td class="p-2" data-builder-name="activity">
                             <span class="font-weight: bolder">Networking: Walking Dinner &amp; Drinks</span>
                         </td>
                     </tr>
@@ -1615,7 +1615,7 @@
                 </div>
             </div>
         </section>
-        <section class="s_mail_block_event o_mail_snippet_general bg-white o_colored_level" data-vxml="001" data-snippet="s_event" data-name="Event" contenteditable="false">
+        <section class="s_mail_block_event o_mail_snippet_general bg-white o_colored_level" data-vxml="001" data-snippet="s_event" data-builder-name="event" contenteditable="false">
             <div class="container" contenteditable="true">
                 <div class="row align-items-center">
                     <div class="o_mail_no_colorpicker pt32 pb0 o_colored_level col-md-10 offset-md-1" style="padding-left: 0px; padding-right: 0px;">
@@ -1680,7 +1680,7 @@
                 </div>
             </div>
         </section>
-        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general" data-vxml="001" data-snippet="s_mail_block_footer_social" data-name="Footer Center" style="background-color: rgb(220, 234, 255); text-align: center;">
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general" data-vxml="001" data-snippet="s_mail_block_footer_social" data-builder-name="footer-center" style="background-color: rgb(220, 234, 255); text-align: center;">
             <div class="container">
                 <div class="row">
                     <div class="col-md o_mail_footer_social pt8 pb8">
@@ -1801,7 +1801,7 @@
             </div>
         </section>
 
-        <section class="s_picture o_mail_snippet_general bg-white pt24 pb0 px-3" data-vxml="001" data-snippet="s_picture" data-name="Large Image">
+        <section class="s_picture o_mail_snippet_general bg-white pt24 pb0 px-3" data-vxml="001" data-snippet="s_picture" data-builder-name="large-image">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12" style="padding-left: 0px; padding-right: 0px;">
@@ -1815,7 +1815,7 @@
         </section>
 
         <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt80 pb16"
-            data-name="Links + Social" data-snippet="s_mail_block_footer_links_social">
+            data-builder-name="links-social" data-snippet="s_mail_block_footer_links_social">
             <t t-set="now" t-value="datetime.datetime.now()"/>
             <div class="container">
                 <div class="row">
@@ -1864,7 +1864,7 @@
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="website_url_or_none" t-value="(company_id.website) or '#'"/>
 
-        <section class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb16" data-name="View in Browser" data-vxml="001">
+        <section class="o_snippet_view_in_browser o_mail_snippet_general pt16 pb16" data-builder-name="view-in-browser" data-vxml="001">
             <p style="text-align: center" class="mb-0">
                 <a href="/view">View in Browser</a>
             </p>
@@ -1872,7 +1872,7 @@
 
         <section class="o_mail_snippet_general pt0 pb24" data-vxml="001"
             data-snippet="s_mail_block_header_logo_and_stacked_menu"
-            data-name="Logo + Stacked Menu">
+            data-builder-name="logo-stacked-menu">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 col-12">
@@ -1899,7 +1899,7 @@
                     <div class="col-md-12 col-12 pb0" style="padding-left: 48px; padding-right: 48px;">
                         <div class="o_cc o_cc2 o_colored_level"
                             style="background-color: rgb(240, 249, 255) !important; border-radius: 16px !important; padding: 24px;"
-                            data-name="Bento card">
+                            data-builder-name="bento-card">
                             <h1><span style="font-size: 24px;">Inside this update</span></h1>
                             <ul>
                                 <li>What's changing</li>
@@ -2001,7 +2001,7 @@
         </section>
 
         <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16"
-            data-snippet="s_mail_block_footer_social" data-name="Footer Center" data-vxml="001">
+            data-snippet="s_mail_block_footer_social" data-builder-name="footer-center" data-vxml="001">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 col-12">
@@ -2084,7 +2084,7 @@
                     <div class="col-md-12 col-12 pb24">
                         <div class="o_colored_level o_cc o_cc2 bg-900"
                             style="padding: 24px; border-radius: 16px !important; text-align: center;"
-                            data-name="Bento card">
+                            data-builder-name="bento-card">
                             <p style="text-align: center;">
                                 <img class="img-fluid o_we_custom_image"
                                     src="/mass_mailing_themes/static/src/img/theme_cta_centric/s_bento_block_default_image_1.webp"
@@ -2103,7 +2103,7 @@
                     <div class="col-md-12 col-12 pb24">
                         <div class="o_colored_level o_cc o_cc2 bg-900"
                             style="padding: 24px; border-radius: 16px !important; text-align: center;"
-                            data-name="Bento card">
+                            data-builder-name="bento-card">
                             <p style="text-align: center;">
                                 <img class="img-fluid o_we_custom_image"
                                     src="/mass_mailing_themes/static/src/img/theme_cta_centric/s_bento_block_default_image_2.webp"
@@ -2122,7 +2122,7 @@
                     <div class="col-md-12 col-12 pb24">
                         <div class="o_colored_level o_cc o_cc2 bg-900"
                             style="padding: 24px; border-radius: 16px !important; text-align: center;"
-                            data-name="Bento callout">
+                            data-builder-name="bento-callout">
                             <h3 class="mb-2" style="text-align: center; color: #ffffff;">Your event recommendations</h3>
                             <p class="mb-3" style="text-align: center;">We selected the best upcoming concerts based on the artists you like.</p>
                             <p style="text-align: center;"><a class="btn btn-lg btn-secondary" t-att-href="website_url_or_none">Discover more</a></p>
@@ -2133,7 +2133,7 @@
         </section>
 
         <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16"
-            data-name="Footer Center" data-vxml="001" data-snippet="s_mail_block_footer_social">
+            data-builder-name="footer-center" data-vxml="001" data-snippet="s_mail_block_footer_social">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 col-12">
