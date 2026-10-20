@@ -6,7 +6,7 @@
         {"_modules_dependencies": "{{_modified_modules|get_dependencies(1)}}"},
         {"_dependant_modules": "{{_modified_modules|get_dependant(1)}}"},
         {"_test_modules": "{{_modified_modules|prepend('test_')|select_existing_modules}}"},
-        {"modules_to_test": "{{_modified_modules|union(_test_modules)|union(_dependant_modules)|union(_modules_dependencies)}}"}
+        {"modules_to_test": "{{_modified_modules|union(_test_modules)|union(_dependant_modules)|union(_modules_dependencies)|union('test_lint')}}"}
     ],
     "steps": [
         {
