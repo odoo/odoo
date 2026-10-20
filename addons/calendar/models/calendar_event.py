@@ -1266,7 +1266,9 @@ class CalendarEvent(models.Model):
                     'default_calendar_event_ids': self.ids,
                     'default_requested_action': requested_action,
                     # To avoid notify users when sync is activated as the external calendar will do it.
-                    'default_block_mail': self.user_id._has_any_active_synchronization(),
+                    'default_block_mail': bool(self.user_id) and all(
+                        user._has_any_active_synchronization() for user in self.user_id
+                    ),
                     'dialog_size': 'small',
                     'next_action': next_action,
                 },
