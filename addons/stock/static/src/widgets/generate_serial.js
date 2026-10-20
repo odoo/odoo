@@ -79,10 +79,15 @@ export class GenerateDialog extends Component {
             count = parseInteger(this.nextSerialCount.el?.value || '0');
             qtyToProcess = this.props.move.data.product_qty;
         }
+        const moveLines = this.props.move.data.move_line_ids;
+        const moveLineLocationIds = (moveLines?.records || [])
+            .map((r) => r.data.location_id && r.data.location_id.id)
+            .filter(Boolean);
         const move_line_vals = await this.orm.call("stock.move", "action_generate_lot_line_vals", [{
                 ...this.props.move.context,
                 default_product_id: this.props.move.data.product_id.id,
                 default_location_dest_id: this.props.move.data.location_dest_id.id,
+                default_move_line_location_ids: moveLineLocationIds,
                 default_location_id: this.props.move.data.location_id.id,
                 default_tracking: this.props.move.data.has_tracking,
                 default_quantity: qtyToProcess,
