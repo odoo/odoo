@@ -1,6 +1,6 @@
 .o-mail-ChatHub-bubbles {
-    width: $o-mail-ChatHub-bubblesWidth;
-    z-index: $o-mail-NavigableList-zIndex - 1;
+    width: var(--o-mail-ChatHub-bubblesWidth);
+    z-index: calc(var(--o-mail-NavigableList-zIndex) - 1);
 }
 
 .o-mail-ChatHub:not(.o-dragged) .o-mail-ChatHub-bubbles {
@@ -11,7 +11,7 @@
     }
 
     &.o-mobile {
-        margin-right: $o-mail-ChatHub-bubblesMargin + 5px;
+        margin-right: calc(var(--o-mail-ChatHub-bubblesMargin) + 5px);
         --mail-ChatHub-bubbles-bottomLift: 35px;
     }
 }
@@ -19,7 +19,7 @@
 .o-mail-ChatHub-bubbleBtn {
     padding: 0 !important;
     border-radius: 50%;
-    box-shadow: $box-shadow-sm;
+    box-shadow: var(--box-shadow-sm);
 
     &:not(.o-bordered) {
         border: none !important;
@@ -33,14 +33,14 @@
 
 .o-mail-ChatHub-hiddenBtnIcon {
     color: #FFFFFF!important;
-    background-color: mix($gray-400, $gray-500) !important;
-    width: $o-mail-ChatBubble-sizeBig !important;
-    height: $o-mail-ChatBubble-sizeBig !important;
+    background-color: color-mix(in srgb, var(--gray-400), var(--gray-500)) !important;
+    width: var(--o-mail-ChatBubble-sizeBig) !important;
+    height: var(--o-mail-ChatBubble-sizeBig) !important;
 }
 
 .o-mail-ChatHub-hiddenBtnCounter {
     padding: 4px 8px;
-    z-index: $o-mail-NavigableList-zIndex - 1;
+    z-index: calc(var(--o-mail-NavigableList-zIndex) - 1);
     top: -4px;
     right: -4px;
 }
@@ -49,11 +49,11 @@
     margin-left: auto;
     background-color: transparent;
     opacity: 25%;
-    padding: map-get($spacers, 1) / 2;
-    border: $border-width solid transparent;
+    padding: calc(var(--o-bs-spacer-1) / 2);
+    border: var(--o-bs-border-width) solid transparent;
 
     &:hover {
-        border-color: mix($o-gray-300, $o-gray-400);
+        border-color: color-mix(in srgb, var(--o-gray-300), var(--o-gray-400));
     }
 }
 
@@ -67,7 +67,7 @@
     max-width: 225px;
 
     &:hover:not(:has(.o-mail-ChatHub-hiddenClose:hover)), &.o-active {
-        background-color: $o-gray-300;
+        background-color: var(--o-gray-300);
     }
 
     &:hover, &.o-active {
@@ -80,7 +80,7 @@
 }
 
 .o-mail-ChatHub-hiddenMenu {
-    border-color: mix($o-gray-300, $o-gray-400) !important;
+    border-color: color-mix(in srgb, var(--o-gray-300), var(--o-gray-400)) !important;
 }
 
 .o-mail-ChatHub-option {

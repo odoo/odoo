@@ -32,9 +32,9 @@
 
     .o_save_current_view {
         &:before {
-            margin-inline-end: map-get($spacers, 1);
+            margin-inline-end: var(--o-bs-spacer-1);
             font-family: 'Material Symbols Outlined';
-            opacity: $o-opacity-muted;
+            opacity: var(--o-opacity-muted);
             content: "save";
         }
     }

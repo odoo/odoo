@@ -26,8 +26,8 @@ $quick-reaction-menu-slide-in-duration: 0.15s;
 
 .o-mail-QuickReactionMenu {
     gap: 1px;
-    padding-top: map-get($spacers, 1) / 2;
-    padding-bottom: map-get($spacers, 1) / 2;
+    padding-top: calc(var(--o-bs-spacer-1) / 2);
+    padding-bottom: calc(var(--o-bs-spacer-1) / 2);
     transform: scaleX(0.3);
     transform-origin: left;
     animation: qrm-menuSlideInAnimation $quick-reaction-menu-slide-in-duration cubic-bezier(0.6, 0, 0.4, 1) forwards;
@@ -42,8 +42,8 @@ $quick-reaction-menu-slide-in-duration: 0.15s;
 .o-mail-QuickReactionMenu-emoji,
 .o-mail-QuickReactionMenu-emojiPicker {
     &.focus {
-        background-color: rgba($o-action, .1);
-        outline: 1px solid rgba($o-action, .5);
+        background-color: color-mix(in srgb, var(--o-action) 10%, transparent);
+        outline: 1px solid color-mix(in srgb, var(--o-action) 50%, transparent);
     }
 
     &:focus-visible:not(.focus) {
@@ -52,7 +52,7 @@ $quick-reaction-menu-slide-in-duration: 0.15s;
 }
 
 .o-mail-QuickReactionMenu-emojiPicker {
-    padding: map-get($spacers, 3) / 2;
+    padding: calc(var(--o-bs-spacer-3) / 2);
 }
 
 
@@ -62,7 +62,6 @@ $quick-reaction-menu-slide-in-duration: 0.15s;
 
 $quick-reaction-menu-total-buttons: 7;
 $quick-reaction-menu-emoji-delay-increment: 0.045s;
-$quick-reaction-menu-emoji-pop-out-duration: 0.075s;
 
 @keyframes qrm-emojiPopAnimation {
     0% {
@@ -80,6 +79,8 @@ $quick-reaction-menu-emoji-pop-out-duration: 0.075s;
 }
 
 .o-mail-QuickReactionMenu-popEffect {
+    --o-mail-QuickReactionMenu-emojiPopOutDuration: 0.075s;
+
     --quick-reaction-menu-final-scale: 1;
 
     &.o-mail-QuickReactionMenu-popEffect--smaller {
@@ -87,7 +88,7 @@ $quick-reaction-menu-emoji-pop-out-duration: 0.075s;
     }
 
     opacity: 0;
-    animation: qrm-emojiPopAnimation $quick-reaction-menu-emoji-pop-out-duration cubic-bezier(.215, .610, .355, 1) forwards;
+    animation: qrm-emojiPopAnimation var(--o-mail-QuickReactionMenu-emojiPopOutDuration) cubic-bezier(.215, .610, .355, 1) forwards;
     aspect-ratio: 1;
 }
 
@@ -102,8 +103,6 @@ $quick-reaction-menu-emoji-pop-out-duration: 0.075s;
 // Picker grow effect
 //==========================================================
 
-$quick-reaction-menu-picker-grow-duration: 0.25s;
-
 @keyframes qrm-pickerGrowAnimation {
     to {
         opacity: 1;
@@ -112,7 +111,8 @@ $quick-reaction-menu-picker-grow-duration: 0.25s;
 }
 
 .o-mail-QuickReactionMenu-pickerPopover {
-    --popover-bg: #{$gray-100};
+    --o-mail-QuickReactionMenu-pickerGrowDuration: 0.25s;
+    --popover-bg: var(--gray-100);
     --popover-border-color: var(--border-color);
 
     background-color: unset;
@@ -135,6 +135,6 @@ $quick-reaction-menu-picker-grow-duration: 0.25s;
         opacity: 0;
         transform: scale(0.8);
         transform-origin: var(--originY);
-        animation: qrm-pickerGrowAnimation $quick-reaction-menu-picker-grow-duration cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        animation: qrm-pickerGrowAnimation var(--o-mail-QuickReactionMenu-pickerGrowDuration) cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
     }
 }

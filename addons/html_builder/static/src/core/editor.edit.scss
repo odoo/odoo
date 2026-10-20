@@ -107,12 +107,12 @@
         &:after {
             @include o-editor-messages;
             content: attr(data-editor-message);
-            color: $o-we-dropzone-text-color;
-            font-size: $o-we-dropzone-font-size;
+            color: var(--o-we-dropzone-text-color);
+            font-size: var(--o-we-dropzone-font-size);
             padding: 112px 0px;
             margin: 20px $-editor-messages-margin-x;
-            font-family: $o-we-font-family;
-            text-shadow: 0 0 5px $o-we-dropzone-sanitized-color
+            font-family: var(--o-we-font-family);
+            text-shadow: 0 0 5px var(--o-we-dropzone-sanitized-color)
         }
     }
 

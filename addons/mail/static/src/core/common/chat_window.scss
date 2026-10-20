@@ -1,20 +1,20 @@
 .o-mail-ChatWindow {
-    width: $o-mail-ChatWindow-width;
+    width: var(--o-mail-ChatWindow-width);
 
-    z-index: $zindex-sticky;
+    z-index: var(--o-bs-zindex-sticky);
     &.o-mobile {
         z-index: var(--mail-ChatWindow-mobileZindex, $zindex-sticky - 2) !important;
     }
     &:not(.o-mobile) {
         --border-opacity: var(--mail-ChatWindow-desktopBorderOpacity, .15);
-        height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9);
-        border-radius: calc(#{$o-mail-Composer-chatWindowVPadding} + #{$o-mail-Composer-pillRadiusBase});
+        height: Min(95vh, calc(var(--o-mail-ChatWindow-width) * 15 / 9));
+        border-radius: calc(var(--o-mail-Composer-chatWindowVPadding) + var(--o-mail-Composer-pillRadiusBase));
     }
     outline: none;
 
     transition: box-shadow 2.0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     &.o-highlighted {
-        box-shadow: 0 0 1.5rem #{$o-component-active-border} !important;
+        box-shadow: 0 0 1.5rem var(--o-component-active-border) !important;
     }
 }
 
@@ -36,7 +36,7 @@
 }
 
 .o-mail-ChatWindow-counter {
-    margin-bottom: map-get($spacers, 1) / 2;
+    margin-bottom: calc(var(--o-bs-spacer-1) / 2);
 }
 
 .o-mail-ChatWindow-country {
@@ -48,20 +48,20 @@
     --border-opacity: var(--mail-ChatWindow-headerBorderOpacity, .15);
 
     .o-mail-ActionList-group {
-        gap: map-get($spacers, 3);
+        gap: var(--o-bs-spacer-3);
 
         button:not(:hover):not(:focus-visible):not(:active):not(.btn-success) {
             --o-mail-ActionList-Button-opacity: .5;
         }
 
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
-            gap: map-get($spacers, 1);
+            gap: var(--o-bs-spacer-1);
         }
     }
 
     .o-mail-ChatWindow-threadAvatar img {
-        height: $o-mail-Avatar-sizeSmall;
-        width: $o-mail-Avatar-sizeSmall;
+        height: var(--o-mail-Avatar-sizeSmall);
+        width: var(--o-mail-Avatar-sizeSmall);
     }
 
     button:not(.o-tag-JOIN_LEAVE_CALL) {
@@ -76,6 +76,6 @@
 }
 
 .o-mail-ChatWindow-typing {
-    font-size: $small-font-size * 0.9;
-    z-index: $o-mail-NavigableList-zIndex - 2;
+    font-size: calc(var(--o-bs-small-font-size) * 0.9);
+    z-index: calc(var(--o-mail-NavigableList-zIndex) - 2);
 }

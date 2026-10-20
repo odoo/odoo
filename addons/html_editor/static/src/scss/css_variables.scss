@@ -4,11 +4,44 @@
  * being compiled by libsass. Every bundle including this file emits its
  * own values (light, dark...).
  */
+@function o-flatten-list($list) {
+    $flat: ();
+    @each $item in $list {
+        $flat: join($flat, $item, comma);
+    }
+    @return $flat;
+}
+
 :root,
 :host {
+    --o-we-bg-dark: #{$o-we-bg-dark};
     --o-we-bg-darker: #{$o-we-bg-darker};
+    --o-we-bg-darkest: #{$o-we-bg-darkest};
     --o-we-bg-light: #{$o-we-bg-light};
     --o-we-bg-lighter: #{$o-we-bg-lighter};
+    --o-we-bg-lightest: #{$o-we-bg-lightest};
+    --o-we-border-color: #{$o-we-border-color};
+    --o-we-border-width: #{$o-we-border-width};
+    --o-we-color-accent: #{$o-we-color-accent};
+    --o-we-color-danger: #{$o-we-color-danger};
+    --o-we-color-global: #{$o-we-color-global};
+    --o-we-color-info: #{$o-we-color-info};
+    --o-we-color-success: #{$o-we-color-success};
+    --o-we-content-to-translate-color: #{$o-we-content-to-translate-color};
     --o-we-fg-dark: #{$o-we-fg-dark};
+    --o-we-fg-light: #{$o-we-fg-light};
     --o-we-fg-lighter: #{$o-we-fg-lighter};
+    /* inspect() keeps the quotes of the font names, on the flattened stack */
+    --o-we-font-family: #{inspect(o-flatten-list($o-we-font-family))};
+    --o-we-font-monospace: #{inspect(o-flatten-list($o-we-font-monospace))};
+    --o-we-font-size: #{$o-we-font-size};
+    --o-we-font-size-lg: #{$o-we-font-size-lg};
+    --o-we-font-size-sm: #{$o-we-font-size-sm};
+    --o-we-font-size-xs: #{$o-we-font-size-xs};
+    --o-we-item-border-radius: #{$o-we-item-border-radius};
+    --o-we-item-border-width: #{$o-we-item-border-width};
+    --o-we-item-clickable-bg: #{$o-we-item-clickable-bg};
+    --o-we-item-clickable-color: #{$o-we-item-clickable-color};
+    --o-we-item-spacing: #{$o-we-item-spacing};
+    --o-we-translated-content-color: #{$o-we-translated-content-color};
 }

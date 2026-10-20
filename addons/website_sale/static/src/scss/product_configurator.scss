@@ -9,16 +9,16 @@
     display: inline-block;
     height: var(--o-wsale-css-attribute-color__size);
     width: var(--o-wsale-css-attribute-color__size);
-    border: $border-width solid var(--o-wsale-attribute-color-border-color, #{$border-color});
+    border: var(--o-bs-border-width) solid var(--o-wsale-attribute-color-border-color, #{$border-color});
     border-radius: 50%;
-    transition: $transition-base;
+    transition: var(--o-bs-transition-base);
 
     input {
         opacity: 0;
     }
 
     &:hover, &.active, &.active:hover {
-        box-shadow: inset 0 0 0 ($border-width * 2) $body-bg;
+        box-shadow: inset 0 0 0 calc(var(--o-bs-border-width) * 2) var(--body-bg);
     }
 
     &:hover {
@@ -30,7 +30,7 @@
     }
 
     &.active, &.active:hover {
-        --o-wsale-attribute-color-border-color: #{$primary};
+        --o-wsale-attribute-color-border-color: var(--primary);
     }
 
     &:has(input:focus-visible)::before {
@@ -41,7 +41,7 @@
         height: 140%;
         border-radius: 100%;
         z-index: -1;
-        background-color: $focus-ring-color;
+        background-color: var(--focus-ring-color);
         transform: translate(-50%, -50%);
     }
 
@@ -56,20 +56,20 @@
 
 .css_attribute_image {
     --o-wsale-css-attribute-image__height: 4rem;
-    --o-wsale-css-attribute-image__outline-width: #{$border-width};
+    --o-wsale-css-attribute-image__outline-width: var(--o-bs-border-width);
 
     height: calc(var(--o-wsale-css-attribute-image__height) - var(--o-wsale-css-attribute-image__outline-width));
     aspect-ratio: 1;
-    border: $border-width * 5 solid $body-bg;
+    border: calc(var(--o-bs-border-width) * 5) solid var(--body-bg);
     outline: var(--o-wsale-css-attribute-image__outline-width) solid $border-color;
-    transition: $input-transition;
+    transition: var(--o-bs-input-transition);
 
     &:hover, &.active {
-        outline-color: map-get($theme-colors, 'primary');
+        outline-color: var(--primary);
     }
 
     &:where(:has(input:focus-visible)) {
-        box-shadow: $focus-ring-box-shadow;
+        box-shadow: var(--o-bs-focus-ring-box-shadow);
     }
 
     &.custom_value {
@@ -82,24 +82,24 @@
 
     &.size_small {
         --o-wsale-css-attribute-image__height: 3rem;
-        --o-wsale-css-attribute-image__outline-width: #{$border-width};
+        --o-wsale-css-attribute-image__outline-width: var(--o-bs-border-width);
     }
 }
 
 .css_attribute_thumbnail {
     box-sizing: content-box;
-    border: 1px solid $body-bg;
+    border: 1px solid var(--body-bg);
     border-radius: MIN(var(--o-wsale-product-image-radius), var(--border-radius));
-    outline: $border-width solid $border-color;
+    outline: var(--o-bs-border-width) solid $border-color;
     aspect-ratio: var(--o-wsale-product-image-ratio);
     width: 64px;
 
     &:hover, &.active {
-        outline-color: $primary;
+        outline-color: var(--primary);
     }
 
     &:where(:has(input:focus-visible)) {
-        box-shadow: $focus-ring-box-shadow;
+        box-shadow: var(--o-bs-focus-ring-box-shadow);
     }
 }
 
@@ -132,7 +132,7 @@
 
 .css_quantity {
     width: initial; // We don't want the quantity form to be full-width
-    border-radius: $btn-border-radius;
+    border-radius: var(--o-bs-btn-border-radius);
 
     input {
         // Needs !important because themes customize btns' padding direclty
@@ -163,8 +163,8 @@
         }
 
         .btn {
-            padding-top: $btn-padding-y-lg;
-            padding-bottom: $btn-padding-y-lg;
+            padding-top: var(--o-bs-btn-padding-y-lg);
+            padding-bottom: var(--o-bs-btn-padding-y-lg);
         }
     }
 }
@@ -199,7 +199,7 @@ select.form-select.css_attribute_select {
 
 .variant_attribute {
     .o_variant_pills {
-        border: $border-width solid $border-color;
+        border: var(--o-bs-border-width) solid $border-color;
 
         &:has(input:focus-visible) {
             box-shadow: $btn-focus-box-shadow;

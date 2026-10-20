@@ -4,7 +4,7 @@
 }
 
 .o-discuss-GifPicker {
-    --o-gif-picker-active: #{$gray-200};
+    --o-gif-picker-active: var(--gray-200);
     .o-active {
         background-color: var(--o-gif-picker-active) !important;
     }
@@ -25,7 +25,7 @@
 
 .o-discuss-Gif {
     .o-starred {
-        color: $o-main-favorite-color !important;
+        color: var(--o-main-favorite-color) !important;
     }
 
     &:hover i {

@@ -1,5 +1,5 @@
 .o_command_palette {
-    $-app-icon-size: 1.8rem;
+    --o-command-palette-app-icon-size: 1.8rem;
     @media screen and (min-width: 768px), print and (min-width: 188mm) {
         top: 120px;
         position: absolute;
@@ -15,7 +15,7 @@
 
         .o_command {
             &.focused {
-                background: rgba($o-component-active-bg, .65);
+                background: color-mix(in srgb, var(--o-component-active-bg) 65%, transparent);
             }
 
             &_hotkey {
@@ -34,12 +34,12 @@
     }
 
     .o_favorite {
-        color: $o-main-favorite-color;
+        color: var(--o-main-favorite-color);
     }
 
     .o_app_icon {
-        height: $-app-icon-size;
-        width: $-app-icon-size;
+        height: var(--o-command-palette-app-icon-size);
+        width: var(--o-command-palette-app-icon-size);
     }
     .o_command{
         cursor: pointer;

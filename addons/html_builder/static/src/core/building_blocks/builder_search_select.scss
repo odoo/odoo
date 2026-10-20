@@ -21,7 +21,7 @@
         padding-right: .95rem;
 
         &, &.btn-light.bg-light {
-            --border-color: #{$o-we-bg-light};
+            --border-color: var(--o-we-bg-light);
             --btn-padding-x: #{map-get($spacers , 2)};
 
             @include button-variant(
@@ -69,7 +69,7 @@
                 --background-color: var(--btn-hover-bg);
 
                 color: var(--btn-active-color);
-                border-color: var(--o-hb-btn-active-color, $o-we-color-accent) !important;
+                border-color: var(--o-hb-btn-active-color, var(--o-we-color-accent)) !important;
             }
         }
 
@@ -86,24 +86,24 @@
     // we also need to reduce the width by an extra “Spacer 2” to compensate for the
     // editor’s scrollbar.
     width: o-to-rem($o-we-sidebar-width) - (2 * map-get($spacers, 2)) - o-to-rem($o-hb-row-padding-left);
-    scrollbar-color: $o-we-bg-lightest $o-we-bg-darker;
+    scrollbar-color: var(--o-we-bg-lightest) var(--o-we-bg-darker);
 
     .o_filtered_text {
-        --SelectMenu__filteredText-bg-color: #{rgba($o-we-color-accent, .25)};
+        --SelectMenu__filteredText-bg-color: color-mix(in srgb, var(--o-we-color-accent) 25%, transparent);
         --SelectMenu__filteredText-color: #{lighten($o-we-color-accent, 25%)};
     }
 
     .o_select_menu_searchbox {
-        --o-hb-select-color: #{$o-we-fg-lighter};
+        --o-hb-select-color: var(--o-we-fg-lighter);
 
         @include border-top-radius(var(--#{$prefix}popover-inner-border-radius));
-        background-color: $o-we-sidebar-content-field-input-bg;
+        background-color: var(--o-we-sidebar-content-field-input-bg);
 
         &:hover, &:focus-within {
-            --o-hb-select-bg-hover: #{$o-we-sidebar-content-field-input-bg};
+            --o-hb-select-bg-hover: var(--o-we-sidebar-content-field-input-bg);
         }
         &:focus-within {
-            box-shadow: 0 0 $o-we-border-width $o-we-border-width inset var(--o-hb-input-active-border, $o-we-sidebar-content-field-input-border-color);
+            box-shadow: 0 0 var(--o-we-border-width) var(--o-we-border-width) inset var(--o-hb-input-active-border, var(--o-we-sidebar-content-field-input-border-color));
         }
         &::before {
             color: var(--o-hb-select-color);
@@ -116,9 +116,9 @@
     .o_select_menu_group {
         margin: 0 !important;
         padding: 6px var(--dropdown-item-padding-x);
-        background-color: $o-we-bg-darker;
+        background-color: var(--o-we-bg-darker);
         color: var(--o-hb-select-color, $white);
-        font-size: $o-we-font-size-lg;
+        font-size: var(--o-we-font-size-lg);
         line-height: 1.7;
         z-index: 2;
     }
@@ -136,7 +136,7 @@
     }
 
     .dropdown-item.o_we_m2o_search_more {
-        color: $o-we-fg-lighter;
+        color: var(--o-we-fg-lighter);
     }
 }
 

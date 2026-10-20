@@ -21,7 +21,7 @@
         // Keep the background image visible instead of fading to the color
         // combination background hidden behind it.
         .o_wevent_location_display_fade {
-            background-image: linear-gradient(to top, rgba(black, .75), transparent);
+            background-image: linear-gradient(to top, rgba(0, 0, 0, .75), transparent);
         }
     }
 
@@ -35,8 +35,8 @@
     }
 
     .o_wevent_location_display_live_badge {
-        width: $spacer;
-        height: $spacer;
+        width: var(--o-bs-spacer);
+        height: var(--o-bs-spacer);
         animation: flash 4s infinite;
     }
 

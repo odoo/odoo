@@ -6,10 +6,10 @@ body.editor_enable {
     // Outline the category description box
     #category_header {
         &:has(br:first-child:last-child), &:empty {
-            outline: $border-width dashed fade-currentColor(25%);
+            outline: var(--o-bs-border-width) dashed fade-currentColor(25%);
 
             &:hover {
-                outline: $border-width * 2 solid $o-we-handles-accent-color;
+                outline: calc(var(--o-bs-border-width) * 2) solid var(--o-we-handles-accent-color);
             }
         }
     }
@@ -17,7 +17,7 @@ body.editor_enable {
     // Outline product description boxes
     .oe_subdescription {
         div:has(br:first-child:last-child):not(:hover), div:empty:not(:hover) {
-            outline: $border-width dashed fade-currentColor(25%);
+            outline: var(--o-bs-border-width) dashed fade-currentColor(25%);
         }
     }
 }
@@ -38,8 +38,8 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
     }
 
     @mixin _showcase {
-        z-index: $zindex-tooltip;
-        outline: $border-width * 2 solid $o-we-handles-accent-color;
+        z-index: var(--o-bs-zindex-tooltip);
+        outline: calc(var(--o-bs-border-width) * 2) solid var(--o-we-handles-accent-color);
     }
 
     // Sidebar
@@ -122,7 +122,7 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
 
         .o_wsale_description_preview {
             opacity: 1;
-            outline: $border-width solid $o-we-handles-accent-color;
+            outline: var(--o-bs-border-width) solid var(--o-we-handles-accent-color);
             outline-offset: 2px;
 
             .placeholder {

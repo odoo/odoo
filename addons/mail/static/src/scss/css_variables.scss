@@ -7,10 +7,27 @@
 :root,
 :host {
     --o-mail-Avatar-size: #{$o-mail-Avatar-size};
+    --o-mail-Avatar-sizeSmall: #{$o-mail-Avatar-sizeSmall};
+    --o-mail-CallMenu-bgColor: #{$o-mail-CallMenu-bgColor};
+    --o-mail-CallMenu-bgColor-lighter: #{$o-mail-CallMenu-bgColor-lighter};
+    --o-mail-ChatBubble-sizeBig: #{$o-mail-ChatBubble-sizeBig};
+    --o-mail-ChatBubble-zindex: #{$o-mail-ChatBubble-zindex};
+    --o-mail-ChatHub-bubblesMargin: #{$o-mail-ChatHub-bubblesMargin};
+    --o-mail-ChatHub-bubblesWidth: #{$o-mail-ChatHub-bubblesWidth};
     --o-mail-ChatWindow-width: #{$o-mail-ChatWindow-width};
     --o-mail-Chatter-minWidth: #{$o-mail-Chatter-minWidth};
+    --o-mail-Composer-chatWindowVPadding: #{$o-mail-Composer-chatWindowVPadding};
+    --o-mail-Composer-lineHeight: #{$o-mail-Composer-lineHeight};
+    --o-mail-Composer-pillRadiusBase: #{$o-mail-Composer-pillRadiusBase};
+    --o-mail-LinkPreview-dialogWidth: #{$o-mail-LinkPreview-dialogWidth};
+    --o-mail-LinkPreview-width: #{$o-mail-LinkPreview-width};
+    --o-mail-LinkPreviewCard-height: #{$o-mail-LinkPreviewCard-height};
+    --o-mail-LinkPreviewCard-squarishImageSize: #{$o-mail-LinkPreviewCard-squarishImageSize};
+    --o-mail-LinkPreviewImage-height: #{$o-mail-LinkPreviewImage-height};
     --o-mail-Meeting-bgColor: #{$o-mail-Meeting-bgColor};
+    --o-mail-Message-sidebarSmallWidth: #{$o-mail-Message-sidebarSmallWidth};
     --o-mail-Message-sidebarWidth: #{$o-mail-Message-sidebarWidth};
+    --o-mail-NavigableList-zIndex: #{$o-mail-NavigableList-zIndex};
 
     /* Tints of the messages and chat bubble previews with a bubble color */
     @each $-type, $-color in (blue: $info, green: $success, orange: $warning) {

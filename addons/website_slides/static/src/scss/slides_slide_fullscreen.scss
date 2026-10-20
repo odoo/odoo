@@ -35,7 +35,7 @@
     .o_wslides_fs_sidebar {
         background-image: linear-gradient(160deg, $o-wslides-color-dark1, $o-wslides-color-dark2);
         position: relative;
-        z-index: $zindex-fixed;
+        z-index: var(--o-bs-zindex-fixed);
 
         .o_wslides_fs_sidebar_content {
             min-width: $o-wslides-fs-side-width;
@@ -44,12 +44,12 @@
         .o_wslides_fs_toggle_sidebar {
             @include o-position-absolute(0, auto, 0, 100%);
             width: 700px;
-            background: rgba(black, 0.2);
+            background: rgba(0, 0, 0, 0.2);
         }
 
         @include media-breakpoint-down (md) {
             @include o-position-absolute(0, auto, 0, 0);
-            box-shadow: 5px 0 15px rgba(black, 0.2);
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
 
             &.o_wslides_fs_sidebar_hidden {
                 display: none;
@@ -79,10 +79,10 @@
         }
 
         .o_wslides_fs_sidebar_section_slides li {
-            color: rgba(white, 0.8);
+            color: rgba(255, 255, 255, 0.8);
 
             &.active {
-                box-shadow: inset 2px 0 0 map-get($theme-colors, 'primary');
+                box-shadow: inset 2px 0 0 var(--primary);
                 background-color: rgba($o-wslides-color-dark3, 0.5);
 
                 &, a {
@@ -94,7 +94,7 @@
                 line-height: unset;
 
                 .list-unstyled i {
-                    color: $gray-600
+                    color: var(--gray-600)
                 }
 
                 i {
@@ -128,7 +128,7 @@
     .o_wslides_js_lesson_quiz_question {
         .list-group-item  {
             input:checked + i[data-icon="circle"] {
-                color: $primary !important;
+                color: var(--primary) !important;
             }
         }
 
@@ -143,15 +143,15 @@
     }
 
     button.o_wslides_button_complete i {
-        color: $gray-400;
+        color: var(--gray-400);
     }
     div.o_wslides_button_complete i {
-        color: $gray-600;
+        color: var(--gray-600);
     }
 }
 
 .modal-open {
     > .modal-backdrop {
-        z-index: $zindex-modal-backdrop;
+        z-index: var(--o-bs-zindex-modal-backdrop);
     }
 }

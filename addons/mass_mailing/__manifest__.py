@@ -96,6 +96,8 @@
         # Minimal assets for theme selector iframe
         'mass_mailing.assets_iframe_theme_selector': [
             ('include', 'mass_mailing.assets_iframe_helpers'),
+            'html_editor/static/src/scss/css_variables.scss',
+            'html_builder/static/src/scss/css_variables.scss',
             'mass_mailing/static/src/themes/iframe_assets/**/*',
         ],
         # Assets for theme selector template preview shadowdom
@@ -142,6 +144,8 @@
             ('include', 'html_editor.assets_editor'),
             ('include', 'html_builder.assets_inside_builder_iframe'),
             ('include', 'mass_mailing.assets_iframe_style_base'),
+            'html_editor/static/src/scss/css_variables.scss',
+            'html_builder/static/src/scss/css_variables.scss',
             'mass_mailing/static/src/builder/**/*.inside.scss'
         ],
         'mass_mailing.iframe_add_dialog': [

@@ -4,7 +4,7 @@
     margin-bottom: var(--ColorListField-marginBottom, 0);
 
     .o_bottom_sheet_body & {
-        --ColorListField-padding: #{map-get($spacers, 3)} var(--BottomSheet-Entry-paddingX);
+        --ColorListField-padding: var(--o-bs-spacer-3) var(--BottomSheet-Entry-paddingX);
         --fieldWidget-display: block;
         --ColorListField-Entry-fontSize: 1.4em;
 
@@ -26,7 +26,7 @@
         }
 
         &:first-child #{$-child}::after {
-            box-shadow: inset 0 0 0 $border-width var(--dropdown-color);
+            box-shadow: inset 0 0 0 var(--o-bs-border-width) var(--dropdown-color);
             border-radius: inherit;
             color: currentColor;
         }
@@ -38,21 +38,21 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                color: var(--color, #{$body-color});
+                color: var(--color, var(--o-bs-body-color));
                 font: normal normal normal var(--ColorListField-Entry-minWidth, o-to-rem(20px))/1 "Material Symbols Outlined";
                 content: "check";
             }
         }
 
         &:hover:not(.active) {
-            opacity: $o-opacity-muted;
+            opacity: var(--o-opacity-muted);
         }
     }
 }
 
 .o_colorlist {
     @include o-colorlist("button", "&" );
-    grid-template-columns: repeat(auto-fit, $o-bubble-color-size-xl);
+    grid-template-columns: repeat(auto-fit, var(--o-bubble-color-size-xl));
 
     :not(.o_field_widget) > & {
         justify-content: center;

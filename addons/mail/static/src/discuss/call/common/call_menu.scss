@@ -2,16 +2,16 @@
     max-width: 160px;
 
     &.o-isOdooCommunity {
-        height: $o-navbar-height - 20px !important; // same button height as in enterprise.
+        height: calc(var(--o-navbar-height) - 20px) !important; // same button height as in enterprise.
         overflow: hidden;
-        color: $o-action !important;
+        color: var(--o-action) !important;
     }
 }
 
 .o-discuss-CallMenu-actionsButton, .o-discuss-CallMenu-channelInfo {
     background-color: transparent !important;
     &:hover {
-        background-color: mix($gray-200, $gray-300) !important;
+        background-color: color-mix(in srgb, var(--gray-200), var(--gray-300)) !important;
     }
 }
 

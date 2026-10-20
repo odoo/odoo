@@ -2,11 +2,11 @@
     line-height: 1.75;
 
     &:not(.o-selfReacted):hover {
-        border-color: rgba($o-action, var(--mail-MessageReaction-selfReactedBorderOpacity, 1)) !important;
+        border-color: color-mix(in srgb, var(--o-action) calc(var(--mail-MessageReaction-selfReactedBorderOpacity, 1) * 100%), transparent) !important;
     }
 
     &.o-selfReacted {
-        --border-opacity: #{var(--mail-MessageReaction-selfReactedBorderOpacity, 1)};
-        background: $o-view-background-color;
+        --border-opacity: var(--mail-MessageReaction-selfReactedBorderOpacity, 1);
+        background: var(--o-view-background-color);
     }
 }

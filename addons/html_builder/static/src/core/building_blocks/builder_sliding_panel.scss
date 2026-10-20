@@ -2,7 +2,7 @@
 
     @include o-input-number-no-arrows();
 
-    background-color: $o-we-bg-darker;
+    background-color: var(--o-we-bg-darker);
     z-index: 10;
 
     .o_hb_sliding_panel_header {
@@ -17,10 +17,10 @@
     // Regular
     &:not(.o_hb_sliding_panel_dark) {
         .o_hb_sliding_panel_content {
-            background-color: $o-we-bg-lighter;
+            background-color: var(--o-we-bg-lighter);
 
             .o_hb_sliding_panel_header {
-                background-color: $o-we-bg-light;
+                background-color: var(--o-we-bg-light);
             }
         }
     }
@@ -28,7 +28,7 @@
     // Dark
     &.o_hb_sliding_panel_dark {
         .o_hb_sliding_panel_content, .o_hb_sliding_panel_header {
-            background-color: $o-we-bg-darker;
+            background-color: var(--o-we-bg-darker);
         }
     }
     
@@ -46,12 +46,12 @@
     animation: 0.2s ease-in-out;
 
     &.o_hb_panel_slide_in {
-        width: $o-we-sidebar-width;
+        width: var(--o-we-sidebar-width);
         position: absolute;
         animation-name: o_hb_sliding_panel_anim_show;
     }
     &.o_hb_panel_slide_out {
-        width: $o-we-sidebar-width;
+        width: var(--o-we-sidebar-width);
         position: absolute;
         animation-name: o_hb_sliding_panel_anim_hide;
     }

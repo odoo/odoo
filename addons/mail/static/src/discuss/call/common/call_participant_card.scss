@@ -17,9 +17,9 @@
 }
 
 .o-discuss-CallParticipantCard-avatar.o-selfInCall {
-    background-color: var(--discuss-CallParticipantCard-bgColor, #{$o-gray-700});
-    background-image: radial-gradient(circle, rgba(white, 0.06) 0%, rgba(0, 0, 0, 0.4) 100%);
-    border: 1px solid rgba(white, 0.2);
+    background-color: var(--discuss-CallParticipantCard-bgColor, var(--o-gray-700));
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.4) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .o-discuss-CallParticipantCard-avatar:not(.o-minimized) {
@@ -48,11 +48,11 @@
     aspect-ratio: 1;
     outline: 3px solid transparent;
     border: none;
-    box-shadow: 0 0 0 calc(var(--discuss-CallParticipantCard-talkingVolume, 0) * 4cqi) rgba(white, 0.25);
+    box-shadow: 0 0 0 calc(var(--discuss-CallParticipantCard-talkingVolume, 0) * 4cqi) rgba(255, 255, 255, 0.25);
     transition: box-shadow 0.3s ease-out, outline 0.3s ease-out;
 
     &.o-small {
-        box-shadow: 0 0 0 calc(var(--discuss-CallParticipantCard-talkingVolume, 0) * 8cqi) rgba(white, 0.25);
+        box-shadow: 0 0 0 calc(var(--discuss-CallParticipantCard-talkingVolume, 0) * 8cqi) rgba(255, 255, 255, 0.25);
     }
 
     &.o-isTalking {
@@ -67,7 +67,7 @@
     }
 
     &.o-isInvitation:hover {
-        outline: solid map-get($theme-colors, 'danger');
+        outline: solid var(--danger);
     }
 }
 
@@ -114,7 +114,7 @@
 
 .o-discuss-CallParticipantCard-contextMenu {
     width: 200px;
-    background-color: $o-mail-CallMenu-bgColor;
-    border-color: $o-mail-CallMenu-bgColor-lighter;
-    color: rgba(white, 0.9);
+    background-color: var(--o-mail-CallMenu-bgColor);
+    border-color: var(--o-mail-CallMenu-bgColor-lighter);
+    color: rgba(255, 255, 255, 0.9);
 }

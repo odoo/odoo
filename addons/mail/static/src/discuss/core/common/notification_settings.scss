@@ -8,13 +8,13 @@
     }
 
     .btn {
-        --#{$prefix}btn-hover-bg: #{$dropdown-link-hover-bg};
-        --#{$prefix}btn-active-bg: #{$dropdown-link-hover-bg};
+        --#{$prefix}btn-hover-bg: var(--o-bs-dropdown-link-hover-bg);
+        --#{$prefix}btn-active-bg: var(--o-bs-dropdown-link-hover-bg);
 
         @if $o-webclient-color-scheme != dark {
             &:hover, &.show {
                 .o-discussCallTheme & {
-                    background-color: mix($gray-700, $gray-800);
+                    background-color: color-mix(in srgb, var(--gray-700), var(--gray-800));
                 }
             }
         }
@@ -22,5 +22,5 @@
 }
 
 .o-discuss-NotificationSettings-defaultValue {
-    color: $o-action;
+    color: var(--o-action);
 }

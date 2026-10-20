@@ -225,6 +225,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/*.dark.css',
         ],
         "web.assets_frontend": [
+            "mail/static/src/scss/css_variables.scss",
             "mail/static/src/html_editor/common/state_file_model_patch.js",
             "mail/static/src/utils/common/format.js",
             "mail/static/src/utils/common/html.js",

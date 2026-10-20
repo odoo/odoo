@@ -1,16 +1,16 @@
 .o-mail-NavigableList {
-    z-index: $o-mail-NavigableList-zIndex;
-    border-radius: calc(#{$border-radius-xl} + #{map-get($spacers, 1)});
+    z-index: var(--o-mail-NavigableList-zIndex);
+    border-radius: calc(var(--border-radius-xl) + var(--o-bs-spacer-1));
 }
 
 .o-mail-NavigableList-active {
-    background-color: var(--mail-NavigableList-activeBgColor, mix($o-view-background-color, $o-action, 90%));
+    background-color: var(--mail-NavigableList-activeBgColor, color-mix(in srgb, var(--o-view-background-color) 90%, var(--o-action)));
 }
 
 .o-mail-NavigableList-item:hover {
-    background-color: var(--mail-NavigableList-hoverBgColor, mix($o-view-background-color, $o-action, 95%));
+    background-color: var(--mail-NavigableList-hoverBgColor, color-mix(in srgb, var(--o-view-background-color) 95%, var(--o-action)));
 }
 
 .o-mail-NavigableList-floatingLoading {
-    right: $border-width; // as to not overlap border
+    right: var(--o-bs-border-width); // as to not overlap border
 }

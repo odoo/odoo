@@ -3,7 +3,7 @@
 // ------------------------------------------------------------------
 
 .o-discuss-Call {
-    --o-discuss-Call-bgColor: #{$o-mail-Meeting-bgColor};
+    --o-discuss-Call-bgColor: var(--o-mail-Meeting-bgColor);
     height: 50%; // ensures that the view returns to the right height when resized
     min-height: 50%;
     background-color: inherit;
@@ -11,7 +11,7 @@
     grid-template-columns: 1fr;
 
     &.o-selfInCall {
-        background-color: var(--o-discuss-Call-bgColor, #{$dark});
+        background-color: var(--o-discuss-Call-bgColor, var(--dark));
     }
 
     &.o-compact {

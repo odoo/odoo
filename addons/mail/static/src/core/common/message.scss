@@ -6,18 +6,18 @@
     transition: background-color .2s ease-out, opacity .25s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
 
     &.o-card {
-        background-color: $o-view-background-color;
+        background-color: var(--o-view-background-color);
         --border-opacity: .2;
     }
 
     &.o-actionMenuMobileOpen {
-        background-color: rgba($o-action, .075);
-        outline: 1px solid rgba($o-action, .125);
+        background-color: color-mix(in srgb, var(--o-action) 7.5%, transparent);
+        outline: 1px solid color-mix(in srgb, var(--o-action) 12.5%, transparent);
         outline-offset: -1px;
     }
 
     .o-mail-Thread & {
-        margin-top: map-get($spacers, 1);
+        margin-top: var(--o-bs-spacer-1);
     }
 
     &:has(.o-mail-template-body) {
@@ -32,40 +32,40 @@
 }
 
 .o-mail-Message-date {
-    color: $text-muted;
+    color: var(--o-bs-text-muted);
 }
 
 .o-mail-Message-sidebar {
-    flex-basis: $o-mail-Message-sidebarWidth;
-    max-width: $o-mail-Message-sidebarWidth;
+    flex-basis: var(--o-mail-Message-sidebarWidth);
+    max-width: var(--o-mail-Message-sidebarWidth);
 
     &.o-inChatWindow {
-        flex-basis: $o-mail-Message-sidebarSmallWidth;
-        max-width: $o-mail-Message-sidebarSmallWidth;
+        flex-basis: var(--o-mail-Message-sidebarSmallWidth);
+        max-width: var(--o-mail-Message-sidebarSmallWidth);
     }
 }
 .o-mail-priority-star {
-    color: $o-main-favorite-color;
+    color: var(--o-main-favorite-color);
 }
 .o-mail-Message-avatarContainer {
-    width: $o-mail-Avatar-size;
-    height: $o-mail-Avatar-size;
+    width: var(--o-mail-Avatar-size);
+    height: var(--o-mail-Avatar-size);
 
     &.o-inChatWindow {
-        width: $o-mail-Avatar-sizeSmall;
-        height: $o-mail-Avatar-sizeSmall;
+        width: var(--o-mail-Avatar-sizeSmall);
+        height: var(--o-mail-Avatar-sizeSmall);
     }
 }
 
 .o-mail-Message-body {
 
     &:not(.o-note) {
-        padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
-        padding-right: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+        padding-left: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2);
+        padding-right: calc((var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2);
 
         .o-mail-Message.o-editing & {
-            padding-left: map-get($spacers, 1);
-            padding-right: map-get($spacers, 1);
+            padding-left: var(--o-bs-spacer-1);
+            padding-right: var(--o-bs-spacer-1);
         }
     }
 
@@ -84,7 +84,7 @@
     padding-left: 0px;
 
     b::before {
-        color: $body-color;
+        color: var(--o-bs-body-color);
         content: "\2192";
         margin: 0 5px;
     }
@@ -100,11 +100,11 @@
     }
 
     b {
-        color: $info;
+        color: var(--info);
         font-weight: bold;
     }
     i {
-        color: $text-muted;
+        color: var(--o-bs-text-muted);
     }
 
     // Stable fix: new tracking bodies miss the last `<br>` element
@@ -157,7 +157,7 @@
 
 .o-mail-Message-expandBtn {
     i {
-        opacity: #{$o-opacity-muted};
+        opacity: var(--o-opacity-muted);
     }
 
     &:hover, &.focus, &.show {
@@ -200,7 +200,7 @@
 }
 
 .o-mail-Message-moreMenu {
-    z-index: $o-mail-NavigableList-zIndex;
+    z-index: var(--o-mail-NavigableList-zIndex);
 }
 
 .o-mail-Message-pendingProgress {
@@ -215,11 +215,11 @@
 }
 
 .o-mail-Message-searchHighlight {
-    background: rgba($warning, 0.75);
+    background: color-mix(in srgb, var(--warning) 75%, transparent);
 }
 
 .o-mail-Message-translated {
-    color: $o-enterprise-action-color;
+    color: var(--o-enterprise-action-color);
 }
 
 .o-mail-Thread-content {

@@ -9,7 +9,7 @@
 
     &.cursor-pointer:hover, &.o-active, &[data-right-clicking] {
         &:not(:has(.o-discuss-ChannelMember-actions:hover)) {
-            background-color: var(--discuss-ChannelMember-hoverBg, mix($gray-100, $gray-200));
+            background-color: var(--discuss-ChannelMember-hoverBg, color-mix(in srgb, var(--gray-100), var(--gray-200)));
         }
     }
     &:hover .o-discuss-ChannelMember-actions {

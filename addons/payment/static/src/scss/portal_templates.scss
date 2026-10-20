@@ -1,6 +1,6 @@
 .o_payment_status_pending > p {
-    font-size: $lead-font-size;
-    font-weight: $lead-font-weight;
+    font-size: var(--o-bs-lead-font-size);
+    font-weight: var(--o-bs-lead-font-weight);
 }
 
 div[name="o_payment_status_alert"] #o_payment_status_message > p {
@@ -9,12 +9,12 @@ div[name="o_payment_status_alert"] #o_payment_status_message > p {
 
 .o_payment_summary_separator {
     @include media-breakpoint-up(md) {
-        border-left: $border-width solid $border-color;
+        border-left: var(--o-bs-border-width) solid $border-color;
     }
 }
 
 .o_payment_summary div {
-    border: $border-width solid $border-color;
-    padding: map-get($spacers, 3);
-    border-radius: $border-radius;
+    border: var(--o-bs-border-width) solid $border-color;
+    padding: var(--o-bs-spacer-3);
+    border-radius: var(--o-bs-border-radius);
 }

@@ -10,7 +10,7 @@
     --o-mail-Composer-vPadding: 10px;
 
     &.o-chatWindow, &.o-isUiSmall {
-        --o-mail-Composer-vPadding: #{$o-mail-Composer-chatWindowVPadding};
+        --o-mail-Composer-vPadding: var(--o-mail-Composer-chatWindowVPadding);
     }
 
     &.o-isUiSmall:not(.o-editing) {
@@ -18,12 +18,12 @@
     }
 
     &.o-hasSelfAvatar {
-        grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
+        grid-template-columns: var(--o-mail-Message-sidebarWidth) 1fr;
     }
 
     .o-mail-Composer-sidebarMain {
         padding-top: 0.3125rem; // avatar centered with composer text input: 32px (avatar) + 2*5px (this value) = 20px + 2 * { 10px (padding) + 1px (border) }
-        width: $o-mail-Message-sidebarWidth;
+        width: var(--o-mail-Message-sidebarWidth);
     }
 
     .o-mail-Composer-coreHeader {
@@ -43,15 +43,15 @@
     }
 
     .o-mail-Composer-mainActions {
-        margin-top: map-get($spacers, 1) * 5 / 4;
+        margin-top: calc(var(--o-bs-spacer-1) * 5 / 4);
     }
 
     &.o-chatWindow .o-mail-Composer-mainActions {
-        margin-top: map-get($spacers, 1) / 2;
+        margin-top: calc(var(--o-bs-spacer-1) / 2);
     }
 
     &.o-isUiSmall:not(.o-editing) .o-mail-Composer-mainActions {
-        margin-top: map-get($spacers, 1) * 6 / 4;
+        margin-top: calc(var(--o-bs-spacer-1) * 6 / 4);
     }
 
     &.o-focused {
@@ -82,15 +82,15 @@
 
         &.o-small {
             margin: 0 !important;
-            padding: map-get($spacers, 1) !important;
+            padding: var(--o-bs-spacer-1) !important;
         }
         &.o-large {
             margin: 0 !important;
-            padding: map-get($spacers, 2) !important;
+            padding: var(--o-bs-spacer-2) !important;
         }
         &.o-sendMessageActive {
             --btn-bg: #{lighten($primary, 7.5%)};
-            --btn-border-color: #{$primary};
+            --btn-border-color: var(--primary);
             opacity: 100% !important;
             &:focus-visible {
                 outline: darken($o-action, 15%) solid 1px;
@@ -107,7 +107,7 @@
             }
         }
         &.o-mail-Composer-send.btn-link:not(:disabled) {
-            background-color: rgba($o-action, .75);
+            background-color: color-mix(in srgb, var(--o-action) 75%, transparent);
             opacity: 100% !important;
             &:focus-visible {
                 outline: darken($o-action, 15%) solid 1px;
@@ -122,36 +122,36 @@
 }
 
 .o-mail-Composer-bg {
-    background-color: var(--mail-Composer-bg, $o-view-background-color);
+    background-color: var(--mail-Composer-bg, var(--o-view-background-color));
 
     &:disabled {
-        background-color: var(--mail-Composer-bg, $o-view-background-color);
+        background-color: var(--mail-Composer-bg, var(--o-view-background-color));
     }
 }
 
 .o-mail-Composer-html {
     padding-top: var(--o-mail-Composer-vPadding);
     padding-bottom: var(--o-mail-Composer-vPadding);
-    padding-left: map-get($spacers, 1);
-    padding-right: map-get($spacers, 1);
-    border-radius: calc(var(--o-mail-Composer-vPadding) + #{$o-mail-Composer-pillRadiusBase}); // Matches the outer container's pill radius
-    line-height: $o-mail-Composer-lineHeight !important;
+    padding-left: var(--o-bs-spacer-1);
+    padding-right: var(--o-bs-spacer-1);
+    border-radius: calc(var(--o-mail-Composer-vPadding) + var(--o-mail-Composer-pillRadiusBase)); // Matches the outer container's pill radius
+    line-height: var(--o-mail-Composer-lineHeight) !important;
 
     .o-mail-Composer.o-editing & {
-        padding-left: map-get($spacers, 2);
-        padding-right: map-get($spacers, 2);
+        padding-left: var(--o-bs-spacer-2);
+        padding-right: var(--o-bs-spacer-2);
     }
 
     .o-mail-Composer.o-extended & {
-        padding-left: map-get($spacers, 2) + map-get($spacers, 1);
-        padding-right: map-get($spacers, 2);
+        padding-left: calc(var(--o-bs-spacer-2) + var(--o-bs-spacer-1));
+        padding-right: var(--o-bs-spacer-2);
         // Always multi-line: pill radius would look out of place, use rounded-3 instead.
-        border-radius: $border-radius-lg;
+        border-radius: var(--o-bs-border-radius-lg);
     }
 
     .o-mail-Composer.o-chatWindow & {
-        padding-left: map-get($spacers, 1) / 2;
-        padding-right: map-get($spacers, 1) / 2;
+        padding-left: calc(var(--o-bs-spacer-1) / 2);
+        padding-right: calc(var(--o-bs-spacer-1) / 2);
     }
 }
 
@@ -193,7 +193,7 @@
 }
 
 .o-mail-Composer-quickActions {
-    margin-right: map-get($spacers, 1);
+    margin-right: var(--o-bs-spacer-1);
     
     .o-mail-Composer.o-chatWindow & {
         margin-right: 1px;
@@ -201,19 +201,19 @@
 }
 
 .o-mail-Composer-avatar {
-    --Avatar-size: #{$o-mail-Avatar-size};
+    --Avatar-size: var(--o-mail-Avatar-size);
 }
 
 .o-mail-Composer-inputContainer {
     --border-color: #{rgba($dark, var(--mail-Composer-inputContainerUnfocusedBorderOpacity, .2))};
-    border-radius: calc(var(--o-mail-Composer-vPadding) + #{$o-mail-Composer-pillRadiusBase}); // Keep the single-line pill radius when the composer grows.
+    border-radius: calc(var(--o-mail-Composer-vPadding) + var(--o-mail-Composer-pillRadiusBase)); // Keep the single-line pill radius when the composer grows.
 
     .o-mail-Composer.o-extended & {
-        border-radius: $border-radius-lg;
+        border-radius: var(--o-bs-border-radius-lg);
     }
 
     &:has(.o-mail-Composer-html:focus) {
-        --border-color: #{rgba($o-component-active-border, .65)};
+        --border-color: color-mix(in srgb, var(--o-component-active-border) 65%, transparent);
     }
 }
 
@@ -226,7 +226,7 @@
 }
 
 .o-mail-Composer-suggestionList:has(.o-open) {
-    border: $border-width solid $border-color;
+    border: var(--o-bs-border-width) solid $border-color;
 }
 
 .o-mail-Composer-suggestionPartner-name.o-has-email {

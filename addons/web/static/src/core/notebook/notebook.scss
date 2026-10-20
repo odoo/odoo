@@ -21,7 +21,7 @@
 
     .nav {
         padding: 0 var(--Notebook-padding-x, 0);
-        background-color: $o-view-background-color;
+        background-color: var(--o-view-background-color);
     }
 
     .nav-item {
@@ -52,7 +52,7 @@
             &, &:hover, &:focus, &:active {
                 border-color: var(--Notebook__link-border-color--active);
                 border-top-color: var(--Notebook__link-border-top-color--active, var(--Notebook__link-border-color--active));
-                border-bottom-color: $o-view-background-color;
+                border-bottom-color: var(--o-view-background-color);
             }
         }
 
@@ -61,7 +61,7 @@
         }
 
         &:focus-visible, &.active:focus-visible {
-            box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color;
+            box-shadow: inset 0 0 var(--o-bs-focus-ring-blur) $focus-ring-width $focus-ring-color;
         }
 
         &:hover {
@@ -70,7 +70,7 @@
 
         &.o_page_invalid {
             color: o-text-color('danger') !important;
-            background-color: #{$o-input-invalid-bg} !important;
+            background-color: var(--o-input-invalid-bg) !important;
         }
     }
 
@@ -107,7 +107,7 @@
                 &, &:hover, &:focus, &:active {
                     border-color: var(--Notebook__link-border-color--active);
                     border-left-color: var(--Notebook__link-border-top-color--active, var(--Notebook__link-border-color--active));
-                    border-right-color: $o-view-background-color;
+                    border-right-color: var(--o-view-background-color);
                 }
             }
         }
@@ -123,8 +123,8 @@
         .o_notebook_content .oe-toolbar {
             position: sticky;
             inset: 0px auto auto;
-            margin-left: var(--Notebook-margin-x, $o-horizontal-padding);
-            margin-right: var(--Notebook-margin-x, $o-horizontal-padding);
+            margin-left: var(--Notebook-margin-x, var(--o-horizontal-padding));
+            margin-right: var(--Notebook-margin-x, var(--o-horizontal-padding));
             width: auto;
         }
     }

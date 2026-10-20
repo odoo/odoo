@@ -1,7 +1,7 @@
 .oe_website_sale {
     .o_add_compare_dyn.btn-lg {
         aspect-ratio: 1/1;
-        height: calc(#{$btn-padding-y-lg} * 2 + #{$btn-font-size-lg} * #{$btn-line-height} + #{$btn-border-width} * 2);
+        height: calc(var(--o-bs-btn-padding-y-lg) * 2 + var(--o-bs-btn-font-size-lg) * var(--o-bs-btn-line-height) + #{$btn-border-width} * 2);
     }
 }
 
@@ -18,7 +18,7 @@
 }
 
 .o_wsale_comparison_page {
-    --o-website-sale-comparison-table-column-padding-x: #{map-get($spacers, 2)};
+    --o-website-sale-comparison-table-column-padding-x: var(--o-bs-spacer-2);
 
     .oe_website_sale > .overflow-x-auto {
         margin: 0 calc(var(--o-website-sale-comparison-table-column-padding-x) * -1);
@@ -58,8 +58,8 @@
     .o_wsale_comparison_mini_sticky {
         transform: translateY(-100%);
         transition: transform .4s ease-in-out;
-        box-shadow: 0px 3px 3px rgba($black, .1);
-        z-index: $zindex-fixed - 1;
+        box-shadow: 0px 3px 3px color-mix(in srgb, var(--o-bs-black) 10%, transparent);
+        z-index: calc(var(--o-bs-zindex-fixed) - 1);
 
         &.show {
             transform: translateY(0);
@@ -91,7 +91,7 @@
 
 // Specifications
 #product_full_spec {
-    border-top: 1px solid map-get($grays, '400');
+    border-top: 1px solid var(--gray-400);
 
     .o_add_compare_dyn {
         @include font-size(1.1rem);
@@ -99,9 +99,9 @@
 }
 
 .o_wsale_comparison_bottom_bar {
-    z-index: $zindex-modal;
+    z-index: var(--o-bs-zindex-modal);
 
-    box-shadow: 0px -12px 32px rgba($black, .175);
+    box-shadow: 0px -12px 32px color-mix(in srgb, var(--o-bs-black) 17.5%, transparent);
 
     .btn[data-bs-toggle="collapse"] {
         [data-icon="keyboard_arrow_up"] {
@@ -122,7 +122,7 @@
     }
 
     div[name="product_comparison_bottom_bar_row"]:where(:has(button[aria-label="Remove product from comparison"]:hover)) {
-        background: $light;
+        background: var(--light);
     }
 
     .o_wsale_comparison_bottom_bar_image {

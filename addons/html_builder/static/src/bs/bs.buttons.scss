@@ -1,8 +1,8 @@
 .o_hb_snippets_menu .btn {
     --btn-font-weight: normal;
-    --btn-font-size: #{$o-we-font-size-sm};
+    --btn-font-size: var(--o-we-font-size-sm);
     --btn-box-shadow: 0 0;
-    --btn-focus-box-shadow: inset 0 0 0 #{$o-we-border-width} var(--o-hb-btn-active-color, #{$o-we-color-accent}), inset 0 0 0 #{$o-we-border-width * 2} #{$o-we-bg-light};
+    --btn-focus-box-shadow: inset 0 0 0 var(--o-we-border-width) var(--o-hb-btn-active-color, var(--o-we-color-accent)), inset 0 0 0 calc(var(--o-we-border-width) * 2) var(--o-we-bg-light);
 
     &:where(:not(.btn-lg)) {
         --btn-padding-x: #{map-get($spacers , 1)};
@@ -25,7 +25,7 @@
     );
 
     &.btn-secondary {
-        --btn-focus-box-shadow: inset 0 0 0 #{$o-we-border-width} var(--o-hb-btn-active-color, #{$o-we-color-accent});
+        --btn-focus-box-shadow: inset 0 0 0 var(--o-we-border-width) var(--o-hb-btn-active-color, var(--o-we-color-accent));
 
         @include button-variant(
             $background: $o-we-item-clickable-bg,
@@ -76,8 +76,8 @@
     @each $-name, $-color in $o-we-colors {
         &.btn-#{$-name}-color-active {
             --btn-active-color: #{scale-color($-color, $lightness: 5%, $saturation: 100%)};
-            --btn-active-bg: #{$o-we-bg-light};
-            --btn-active-border-color: #{$o-we-bg-darker};
+            --btn-active-bg: var(--o-we-bg-light);
+            --btn-active-border-color: var(--o-we-bg-darker);
         }
     }
 

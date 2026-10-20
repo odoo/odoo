@@ -1,17 +1,17 @@
 .o_searchview {
-    --SearchBar-background-color: #{$input-focus-bg};
+    --SearchBar-background-color: var(--o-bs-input-focus-bg);
 
     background-color: var(--SearchBar-background-color);
     border: $input-border-width solid $input-border-color;
 
     &:focus-within {
-        border-color: $input-focus-border-color;
+        border-color: var(--o-bs-input-focus-border-color);
         color: $input-focus-color;
 
         + .o_searchview_dropdown_toggler {
-            border-top-color: $input-focus-border-color;
-            border-right-color: $input-focus-border-color;
-            border-bottom-color: $input-focus-border-color;
+            border-top-color: var(--o-bs-input-focus-border-color);
+            border-right-color: var(--o-bs-input-focus-border-color);
+            border-bottom-color: var(--o-bs-input-focus-border-color);
         }
     }
 
@@ -32,7 +32,7 @@
 
 .o_web_client .o_mobile_search {
     align-items: normal;
-    background-color: var(--mobileSearch-bg, #{$o-white});
+    background-color: var(--mobileSearch-bg, var(--o-white));
     border: none;
     bottom: 0;
     display: flex;
@@ -43,12 +43,12 @@
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: $zindex-modal;
+    z-index: var(--o-bs-zindex-modal);
 
     .o_mobile_search_header {
-        background-color: var(--mobileSearch__header-bg, #{$o-brand-odoo});
+        background-color: var(--mobileSearch__header-bg, var(--o-brand-odoo));
         display: flex;
-        min-height: $o-navbar-height;
+        min-height: var(--o-navbar-height);
         justify-content: space-between;
         width: 100%;
 
@@ -73,10 +73,10 @@
             position: relative;
 
             .o_searchview_input {
-                border-bottom: 1px solid $o-brand-secondary;
+                border-bottom: 1px solid var(--o-brand-secondary);
                 margin-bottom: 15px;
                 width: 100%;
-                background-color: var(--o-input-background-color, #{$input-bg});
+                background-color: var(--o-input-background-color, var(--o-bs-input-bg));
             }
 
             .o_searchview_facet {

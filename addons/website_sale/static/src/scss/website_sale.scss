@@ -22,7 +22,7 @@
 
         // == Guess the distance with the viewport's top.
         // Defined using CSS variables to ease custom-headers overrides.
-        --o_ws_sidebar_top_gap: calc(#{$navbar-padding-y * 2} + #{$btn-padding-y-lg * 2} + #{$-container-top-gap});
+        --o_ws_sidebar_top_gap: calc((var(--o-bs-navbar-padding-y) * 2) + (var(--o-bs-btn-padding-y-lg) * 2) + #{$-container-top-gap});
 
         @if (o-website-value('header-scroll-effect') == null) or (o-website-value('header-scroll-effect') == 'fixed') {
             top: var(--o_ws_sidebar_top_gap);
@@ -47,7 +47,7 @@
             }
 
             &:where(:has(.s_text_block p:not(:only-child))) {
-                padding-top: map-get($spacers, 3);
+                padding-top: var(--o-bs-spacer-3);
             }
         }
     }
@@ -157,38 +157,38 @@
         // Filmstrip design variations ->
         &.o_wsale_filmstrip_default {
             --o-wsale-filmstrip-item-min-height: 3.5rem;
-            --o-wsale-filmstrip-item-color: #{color-contrast($light)};
+            --o-wsale-filmstrip-item-color: var(--o-bs-light-contrast);
             --o-wsale-filmstrip-item-bg-hover: #{if(lightness($light) > .5, darken($light, 8%), lighten($light, 8%))};
         }
 
         &.o_wsale_filmstrip_bordered {
             --o-wsale-filmstrip-item-min-height: 3.5rem;
-            --o-wsale-filmstrip-item-border-width: #{$border-width};
+            --o-wsale-filmstrip-item-border-width: var(--o-bs-border-width);
             --o-wsale-filmstrip-item-bg: transparent;
-            --o-wsale-filmstrip-item-image-bg: #{$gray-100};
+            --o-wsale-filmstrip-item-image-bg: var(--gray-100);
 
             --o-wsale-filmstrip-item-border-color-hover: color-mix(in srgb, var(--o-border-color), black 30%);
         }
 
         &.o_wsale_filmstrip_tabs {
-            --o-wsale-filmstrip-wrapper-border-width: 0 0 #{$border-width} 0;
+            --o-wsale-filmstrip-wrapper-border-width: 0 0 var(--o-bs-border-width) 0;
             --o-wsale-filmstrip-wrapper-padding-bottom: 0;
 
             --o-wsale-filmstrip-gap: 0;
 
             --o-wsale-filmstrip-item-border-width: 0;
             --o-wsale-filmstrip-item-border-radius: 0;
-            --o-wsale-filmstrip-item-padding-y: #{$nav-link-padding-y};
-            --o-wsale-filmstrip-item-padding-x: #{$nav-link-padding-x};
+            --o-wsale-filmstrip-item-padding-y: var(--o-bs-nav-link-padding-y);
+            --o-wsale-filmstrip-item-padding-x: var(--o-bs-nav-link-padding-x);
             --o-wsale-filmstrip-item-color: inherit;
             --o-wsale-filmstrip-item-bg: transparent;
             --o-wsale-filmstrip-item-image-display: none;
 
-            --o-wsale-filmstrip-item-border-color-hover: #{$primary};
-            --o-wsale-filmstrip-item-color-hover: #{$primary};
-            --o-wsale-filmstrip-item-box-shadow-hover: inset 0 #{$border-width * -1} 0 #{$primary};
+            --o-wsale-filmstrip-item-border-color-hover: var(--primary);
+            --o-wsale-filmstrip-item-color-hover: var(--primary);
+            --o-wsale-filmstrip-item-box-shadow-hover: inset 0 calc(var(--o-bs-border-width) * -1) 0 var(--primary);
 
-            --o-wsale-filmstrip-item-border-width-active: 0 0 #{$border-width * 2} 0;
+            --o-wsale-filmstrip-item-border-width-active: 0 0 calc(var(--o-bs-border-width) * 2) 0;
             --o-wsale-filmstrip-item-bg-active: transparent;
 
             .o_wsale_filmstrip_wrapper {
@@ -199,18 +199,18 @@
         &.o_wsale_filmstrip_pills {
             --o-wsale-filmstrip-flex-wrap: wrap;
 
-            --o-wsale-filmstrip-item-border-width: #{$border-width};
-            --o-wsale-filmstrip-item-border-radius: #{$border-radius-pill};
-            --o-wsale-filmstrip-item-padding-y: #{$nav-link-padding-y};
-            --o-wsale-filmstrip-item-padding-x: #{$nav-link-padding-x};
+            --o-wsale-filmstrip-item-border-width: var(--o-bs-border-width);
+            --o-wsale-filmstrip-item-border-radius: var(--border-radius-pill);
+            --o-wsale-filmstrip-item-padding-y: var(--o-bs-nav-link-padding-y);
+            --o-wsale-filmstrip-item-padding-x: var(--o-bs-nav-link-padding-x);
             --o-wsale-filmstrip-item-bg: transparent;
             --o-wsale-filmstrip-item-image-display: none;
 
-            --o-wsale-filmstrip-item-color-hover: #{color-contrast($primary)};
-            --o-wsale-filmstrip-item-bg-hover: #{$primary};
+            --o-wsale-filmstrip-item-color-hover: var(--o-bs-primary-contrast);
+            --o-wsale-filmstrip-item-bg-hover: var(--primary);
 
-            --o-wsale-filmstrip-item-color-active: #{color-contrast($primary)};
-            --o-wsale-filmstrip-item-bg-active: #{$primary};
+            --o-wsale-filmstrip-item-color-active: var(--o-bs-primary-contrast);
+            --o-wsale-filmstrip-item-bg-active: var(--primary);
 
             cursor: auto;
 
@@ -223,11 +223,11 @@
             --o-wsale-filmstrip-item-direction: column;
             --o-wsale-filmstrip-item-justify: top;
             --o-wsale-filmstrip-item-width: 7rem;
-            --o-wsale-filmstrip-item-gap: #{map-get($spacers, 2)};
-            --o-wsale-filmstrip-item-border-radius: #{$border-radius};
-            --o-wsale-filmstrip-item-padding-y: #{map-get($spacers, 2)};
-            --o-wsale-filmstrip-item-padding-x: #{map-get($spacers, 3)};
-            --o-wsale-filmstrip-item-font-size: #{$font-size-sm};
+            --o-wsale-filmstrip-item-gap: var(--o-bs-spacer-2);
+            --o-wsale-filmstrip-item-border-radius: var(--o-bs-border-radius);
+            --o-wsale-filmstrip-item-padding-y: var(--o-bs-spacer-2);
+            --o-wsale-filmstrip-item-padding-x: var(--o-bs-spacer-3);
+            --o-wsale-filmstrip-item-font-size: var(--o-bs-font-size-sm);
             --o-wsale-filmstrip-item-text-align: center;
             --o-wsale-filmstrip-item-text-wrap: wrap;
             --o-wsale-filmstrip-item-bg: transparent;
@@ -235,10 +235,10 @@
             --o-wsale-filmstrip-item-placeholder-display: block;
             --o-wsale-filmstrip-item-word-break: break-word;
 
-            --o-wsale-filmstrip-item-bg-hover: #{$light};
-            --o-wsale-filmstrip-item-color-hover: #{color-contrast($light)};
+            --o-wsale-filmstrip-item-bg-hover: var(--light);
+            --o-wsale-filmstrip-item-color-hover: var(--o-bs-light-contrast);
 
-            --o-wsale-filmstrip-item-color-active: #{color-contrast($light)};
+            --o-wsale-filmstrip-item-color-active: var(--o-bs-light-contrast);
 
             --o-wsale-filmstrip-item-image-width: 75%;
 
@@ -247,7 +247,7 @@
         }
 
         &.o_wsale_filmstrip_grid {
-            --o-wsale-filmstrip-wrapper-border-width: #{$border-width} 0 #{$border-width} 0;
+            --o-wsale-filmstrip-wrapper-border-width: var(--o-bs-border-width) 0 var(--o-bs-border-width) 0;
             --o-wsale-filmstrip-wrapper-padding-bottom: 0;
 
             --o-wsale-filmstrip-gap: 0;
@@ -255,12 +255,12 @@
             --o-wsale-filmstrip-item-direction: column;
             --o-wsale-filmstrip-item-justify: flex-start;
             --o-wsale-filmstrip-item-width: 18rem;
-            --o-wsale-filmstrip-item-border-width: 0 #{$border-width} 0 0 #{"/*rtl: 0 0 0 " + $border-width + "*/"};
+            --o-wsale-filmstrip-item-border-width: 0 var(--o-bs-border-width) 0 0 #{"/*rtl: 0 0 0 " + $border-width + "*/"};
             --o-wsale-filmstrip-item-border-radius: 0;
-            --o-wsale-filmstrip-item-padding-y: #{map-get($spacers, 3)};
-            --o-wsale-filmstrip-item-padding-x: #{map-get($spacers, 3)};
-            --o-wsale-filmstrip-item-font-size: #{$h5-font-size};
-            --o-wsale-filmstrip-item-font-weight: #{$headings-font-weight};
+            --o-wsale-filmstrip-item-padding-y: var(--o-bs-spacer-3);
+            --o-wsale-filmstrip-item-padding-x: var(--o-bs-spacer-3);
+            --o-wsale-filmstrip-item-font-size: var(--o-bs-h5-font-size);
+            --o-wsale-filmstrip-item-font-weight: var(--o-bs-headings-font-weight);
             --o-wsale-filmstrip-item-text-align: center;
             --o-wsale-filmstrip-item-text-wrap: wrap;
             --o-wsale-filmstrip-item-bg: transparent;
@@ -269,7 +269,7 @@
             --o-wsale-filmstrip-item-word-break: break-word;
 
             --o-wsale-filmstrip-item-border-color-active: #{$border-color};
-            --o-wsale-filmstrip-item-color-active: #{$body-color};
+            --o-wsale-filmstrip-item-color-active: var(--o-bs-body-color);
             --o-wsale-filmstrip-item-bg-active: transparent;
             --o-wsale-filmstrip-item-text-decoration-active: underline;
 
@@ -285,7 +285,7 @@
             @include media-breakpoint-down(md) {
                 --o-wsale-filmstrip-item-width: 10rem;
 
-                margin: 0 calc(#{$grid-gutter-width} * -1);
+                margin: 0 calc(var(--o-bs-grid-gutter-width) * -1);
             }
 
             li:last-child .o_wsale_filmstrip_item {
@@ -305,20 +305,20 @@
             --o-wsale-filmstrip-item-justify: end;
             --o-wsale-filmstrip-item-width: 14rem;
             --o-wsale-filmstrip-item-border-width: 0;
-            --o-wsale-filmstrip-item-border-radius: #{$border-radius-lg};
-            --o-wsale-filmstrip-item-padding-y: #{map-get($spacers, 3)};
-            --o-wsale-filmstrip-item-padding-x: #{map-get($spacers, 3)};
+            --o-wsale-filmstrip-item-border-radius: var(--o-bs-border-radius-lg);
+            --o-wsale-filmstrip-item-padding-y: var(--o-bs-spacer-3);
+            --o-wsale-filmstrip-item-padding-x: var(--o-bs-spacer-3);
             --o-wsale-filmstrip-item-min-height: calc(var(--o-wsale-filmstrip-item-width) / 3 * 4);
-            --o-wsale-filmstrip-item-font-size: #{$h3-font-size};
-            --o-wsale-filmstrip-item-font-weight: #{$headings-font-weight};
+            --o-wsale-filmstrip-item-font-size: var(--o-bs-h3-font-size);
+            --o-wsale-filmstrip-item-font-weight: var(--o-bs-headings-font-weight);
             --o-wsale-filmstrip-item-text-wrap: wrap;
-            --o-wsale-filmstrip-item-color: #{$white};
+            --o-wsale-filmstrip-item-color: var(--white);
             --o-wsale-filmstrip-item-bg: #{transparent};
             --o-wsale-filmstrip-item-image-bg: transparent;
             --o-wsale-filmstrip-item-placeholder-display: block;
             --o-wsale-filmstrip-item-word-break: break-word;
 
-            --o-wsale-filmstrip-item-color-active: #{$white};
+            --o-wsale-filmstrip-item-color-active: var(--white);
             --o-wsale-filmstrip-item-bg-active: #{transparent};
             --o-wsale-filmstrip-item-text-decoration-active: underline;
 
@@ -331,20 +331,20 @@
 
             @include media-breakpoint-down(xl) {
                 --o-wsale-filmstrip-item-width: 12rem;
-                --o-wsale-filmstrip-item-font-size: #{$h4-font-size};
+                --o-wsale-filmstrip-item-font-size: var(--o-bs-h4-font-size);
             }
 
             @include media-breakpoint-down(md) {
                 --o-wsale-filmstrip-item-width: 9rem;
-                --o-wsale-filmstrip-item-font-size: #{$h6-font-size};
+                --o-wsale-filmstrip-item-font-size: var(--o-bs-h6-font-size);
             }
 
             .o_wsale_filmstrip_item {
                 overflow: hidden;
 
                 &:has(.o_wsale_filmstrip_no_image) {
-                    --o-wsale-filmstrip-item-bg: #{$primary};
-                    --o-wsale-filmstrip-item-bg-active: #{$primary};
+                    --o-wsale-filmstrip-item-bg: var(--primary);
+                    --o-wsale-filmstrip-item-bg-active: var(--primary);
                 }
             }
 
@@ -356,7 +356,7 @@
                     display: block;
                     @include o-position-absolute(0, 0, 0, 0);
                     background: var(--o-wsale-filmstrip-overlay-bg, linear-gradient(200deg, rgba(0, 0, 0, .15) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .6) 100%));
-                    border-radius: $border-radius;
+                    border-radius: var(--o-bs-border-radius);
                     opacity: .8;
                     transition: opacity .2s ease-in-out;
                 }
@@ -383,11 +383,11 @@
         // <- End filmstrip design variations
 
         .o_wsale_filmstrip_wrapper {
-            margin-bottom: map-get($spacers, 1);
+            margin-bottom: var(--o-bs-spacer-1);
             border-width: var(--o-wsale-filmstrip-wrapper-border-width, 0);
             border-style: solid;
             border-color: $border-color;
-            padding-bottom: var(--o-wsale-filmstrip-wrapper-padding-bottom, #{map-get($spacers, 1)});
+            padding-bottom: var(--o-wsale-filmstrip-wrapper-padding-bottom, var(--o-bs-spacer-1));
             cursor: grab;
             scroll-snap-type: x mandatory;
 
@@ -398,7 +398,7 @@
             }
 
             .o_wsale_filmstrip {
-                gap: var(--o-wsale-filmstrip-gap, #{map-get($spacers, 2)});
+                gap: var(--o-wsale-filmstrip-gap, var(--o-bs-spacer-2));
                 width: max-content;
 
                 li {
@@ -416,21 +416,21 @@
                     flex-direction: var(--o-wsale-filmstrip-item-direction);
                     align-items: var(--o-wsale-filmstrip-item-align, center);
                     justify-content: var(--o-wsale-filmstrip-item-justify);
-                    gap: var(--o-wsale-filmstrip-item-gap, #{map-get($spacers, 3)});
+                    gap: var(--o-wsale-filmstrip-item-gap, var(--o-bs-spacer-3));
                     border-width: var(--o-wsale-filmstrip-item-border-width, 0);
                     border-style: solid;
                     border-color: var(--o-wsale-filmstrip-item-border-color, #{$border-color});
-                    border-radius: var(--o-wsale-filmstrip-item-border-radius, #{$btn-border-radius});
-                    padding: var(--o-wsale-filmstrip-item-padding-y, #{map-get($spacers, 2)})
-                            var(--o-wsale-filmstrip-item-padding-x, #{map-get($spacers, 3)})
-                            var(--o-wsale-filmstrip-item-padding-y, #{map-get($spacers, 2)})
-                            var(--o-wsale-filmstrip-item-padding-x, #{map-get($spacers, 2)});
+                    border-radius: var(--o-wsale-filmstrip-item-border-radius, var(--o-bs-btn-border-radius));
+                    padding: var(--o-wsale-filmstrip-item-padding-y, var(--o-bs-spacer-2))
+                            var(--o-wsale-filmstrip-item-padding-x, var(--o-bs-spacer-3))
+                            var(--o-wsale-filmstrip-item-padding-y, var(--o-bs-spacer-2))
+                            var(--o-wsale-filmstrip-item-padding-x, var(--o-bs-spacer-2));
                     font-size: var(--o-wsale-filmstrip-item-font-size);
                     font-weight: var(--o-wsale-filmstrip-item-font-weight);
                     text-align: var(--o-wsale-filmstrip-item-text-align);
                     text-wrap: var(--o-wsale-filmstrip-item-text-wrap);
-                    color: var(--o-wsale-filmstrip-item-color, #{$body-color});
-                    background-color: var(--o-wsale-filmstrip-item-bg, #{$light});
+                    color: var(--o-wsale-filmstrip-item-color, var(--o-bs-body-color));
+                    background-color: var(--o-wsale-filmstrip-item-bg, var(--light));
                     transition: all .15s ease-in-out;
 
                     .o_wsale_filmstrip_image {
@@ -438,7 +438,7 @@
                         position: var(--o-wsale-filmstrip-item-image-position);
                         width: var(--o-wsale-filmstrip-item-image-width, 2.5rem);
                         height: var(--o-wsale-filmstrip-item-image-height);
-                        background-color: var(--o-wsale-filmstrip-item-image-bg, #{$body-bg});
+                        background-color: var(--o-wsale-filmstrip-item-image-bg, var(--body-bg));
                         aspect-ratio: 1/1;
                         transition: all .15s ease-in-out;
                         overflow: hidden;
@@ -453,20 +453,20 @@
                         display: var(--o-wsale-filmstrip-item-span-display, flex);
                         align-items: center;
                         width: var(--o-wsale-filmstrip-item-span-width);
-                        line-height: $line-height-sm;
+                        line-height: var(--o-bs-line-height-sm);
                     }
 
                     &:has(.o_wsale_filmstrip_placeholder) {
-                        padding: var(--o-wsale-filmstrip-item-padding-y, #{$btn-padding-y}) var(--o-wsale-filmstrip-item-padding-x, #{map-get($spacers, 3)});
+                        padding: var(--o-wsale-filmstrip-item-padding-y, var(--o-bs-btn-padding-y)) var(--o-wsale-filmstrip-item-padding-x, var(--o-bs-spacer-3));
                     }
 
                     &.active {
-                        border-color: var(--o-wsale-filmstrip-item-border-color-active, #{$primary});
-                        border-width: var(--o-wsale-filmstrip-item-border-width-active, var(--o-wsale-filmstrip-item-border-width, #{$border-width}));
-                        background-color: var(--o-wsale-filmstrip-item-bg-active, #{$light});
+                        border-color: var(--o-wsale-filmstrip-item-border-color-active, var(--primary));
+                        border-width: var(--o-wsale-filmstrip-item-border-width-active, var(--o-wsale-filmstrip-item-border-width, var(--o-bs-border-width)));
+                        background-color: var(--o-wsale-filmstrip-item-bg-active, var(--light));
 
                         span {
-                            color: var(--o-wsale-filmstrip-item-color-active, #{$primary});
+                            color: var(--o-wsale-filmstrip-item-color-active, var(--primary));
                             text-decoration: var(--o-wsale-filmstrip-item-text-decoration-active);
                         }
                     }
@@ -489,11 +489,11 @@
 
                 &::-webkit-scrollbar-thumb {
                     border-radius: $btn-border-radius-sm;
-                    background: rgba($body-color, 0.25);
+                    background: color-mix(in srgb, var(--o-bs-body-color) 25%, transparent);
                 }
 
                 &::-webkit-scrollbar-track {
-                    background: rgba($body-color, 0.05);
+                    background: color-mix(in srgb, var(--o-bs-body-color) 5%, transparent);
                 }
             }
 
@@ -510,14 +510,14 @@
     // == Floating Bar
     #o_wsale_floating_bar_rail {
         --_container-gap: calc(var(--gutter-x) * 0.5);
-        right: calc(var(--_container-gap) + #{$border-width});
+        right: calc(var(--_container-gap) + var(--o-bs-border-width));
         width: 0;
 
         #o_wsale_floating_bar {
             bottom: var(--_container-gap);
             z-index: 4; // above the comparison bottom bar and pager
             max-width: calc(100vw - calc(var(--_container-gap) * 2));
-            gap: map-get($spacers, 1) 0;
+            gap: var(--o-bs-spacer-1) 0;
         }
 
         body:has(.o-livechat-root.o-livechat-LivechatButton-isVisible) & {
@@ -587,33 +587,33 @@
         }
 
         &.o_wsale_page_contained {
-            --o-wsale-topbar-border-width: 0 0 #{$border-width} 0;
+            --o-wsale-topbar-border-width: 0 0 var(--o-bs-border-width) 0;
 
             @include media-breakpoint-up(sm) {
-                --o-wsale-topbar-border-width: 0 #{$border-width} #{$border-width} #{$border-width};
+                --o-wsale-topbar-border-width: 0 var(--o-bs-border-width) var(--o-bs-border-width) var(--o-bs-border-width);
             }
 
             &:where(:not(.o_wsale_has_sidebar)) {
                 @include media-breakpoint-up(sm) {
                     #o_wsale_pager {
-                        border-right: #{$border-width} solid #{$border-color};
-                        border-left: #{$border-width} solid #{$border-color};
+                        border-right: var(--o-bs-border-width) solid #{$border-color};
+                        border-left: var(--o-bs-border-width) solid #{$border-color};
                     }
                 }
                 @include media-breakpoint-up(lg) {
-                    --o-wsale-topbar-border-width: 0 #{$border-width} #{$border-width} #{$border-width};
+                    --o-wsale-topbar-border-width: 0 var(--o-bs-border-width) var(--o-bs-border-width) var(--o-bs-border-width);
                 }
             }
 
             &.o_wsale_has_sidebar {
                 @include media-breakpoint-up(sm) {
                     #o_wsale_pager {
-                        border-left: #{$border-width} solid #{$border-color};
-                        border-right: #{$border-width} solid #{$border-color};
+                        border-left: var(--o-bs-border-width) solid #{$border-color};
+                        border-right: var(--o-bs-border-width) solid #{$border-color};
                     }
                 }
                 @include media-breakpoint-up(lg) {
-                    --o-wsale-topbar-border-width: 0 #{$border-width} #{$border-width} 0;
+                    --o-wsale-topbar-border-width: 0 var(--o-bs-border-width) var(--o-bs-border-width) 0;
 
                     #o_wsale_pager {
                         /*rtl:ignore*/
@@ -628,19 +628,19 @@
             }
 
             &:where(:not(.o_wsale_has_sidebar)) #o_wsale_products_grid {
-                border-left: #{$border-width} solid #{$border-color};
+                border-left: var(--o-bs-border-width) solid #{$border-color};
             }
 
             &.o_wsale_has_sidebar .o_wsale_products_opt_layout_catalog#o_wsale_products_grid {
                 @include media-breakpoint-down(lg) {
-                    border-left: #{$border-width} solid #{$border-color};
+                    border-left: var(--o-bs-border-width) solid #{$border-color};
                 }
             }
         }
 
         &.o_wsale_has_sidebar {
             @include media-breakpoint-up(lg) {
-                --o-wsale-sidebar-border: #{$border-width} solid #{$border-color};
+                --o-wsale-sidebar-border: var(--o-bs-border-width) solid #{$border-color};
             }
             @include media-breakpoint-up(lg) {
                 #products_grid {
@@ -651,8 +651,8 @@
         }
 
         #o_wsale_products_header {
-            --o-wsale-topbar-padding-left: #{$container-padding-x * 0.5};
-            --o-wsale-topbar-padding-right: #{$container-padding-x * 0.5};
+            --o-wsale-topbar-padding-left: calc(var(--o-bs-container-padding-x) * 0.5);
+            --o-wsale-topbar-padding-right: calc(var(--o-bs-container-padding-x) * 0.5);
 
             padding-right: 0;
 
@@ -674,8 +674,8 @@
     &.o_wsale_page_fluid {
         &:where(:has(#o_wsale_products_grid.o_wsale_products_opt_design_showcase)) {
             #o_wsale_products_grid {
-                margin-left: $grid-gutter-width * -0.5;
-                margin-right: $grid-gutter-width * -0.5;
+                margin-left: calc(var(--o-bs-grid-gutter-width) * -0.5);
+                margin-right: calc(var(--o-bs-grid-gutter-width) * -0.5);
             }
         }
     }
@@ -706,7 +706,7 @@
                 --o-wsale-card-border-radius: 0;
                 --o-wsale-card-flex-direction: row;
                 --o-wsale-card-flex-align-items: start;
-                --o-wsale-card-info-padding: 0 #{map-get($spacers, 3)};
+                --o-wsale-card-info-padding: 0 var(--o-bs-spacer-3);
                 --o-wsale-card-thumb-size: calc(
                     calc(100cqw / var(--o-wsale-ppr)) - calc(var(--o-wsale-products-grid-gap) / 2)
                 );
@@ -742,12 +742,12 @@
             &.o_wsale_products_opt_design_cards .oe_product.oe_product_size_stretch {
                 --o-wsale-card-padding: 0;
                 --o-wsale-card-border-radius: #{$card-border-radius};
-                --o-wsale-card-info-padding: #{map-get($spacers, 3)};
+                --o-wsale-card-info-padding: var(--o-bs-spacer-3);
             }
 
             &.o_wsale_products_opt_design_grid .oe_product.oe_product_size_stretch {
                 --o-wsale-card-padding: 0;
-                --o-wsale-card-info-padding: #{map-get($spacers, 2)} #{map-get($spacers, 3)};
+                --o-wsale-card-info-padding: var(--o-bs-spacer-2) var(--o-bs-spacer-3);
 
                 &[data-colspan="4"] {
                     --o-wsale-card-thumb-size: 50cqw;
@@ -810,7 +810,7 @@
             }
 
             &.o_wsale_page_fluid .oe_product_cart {
-                --o-wsale-card-border-width: 0 0 #{$border-width};
+                --o-wsale-card-border-width: 0 0 var(--o-bs-border-width);
                 --o-wsale-card-padding: calc(var(--o-wsale-products-grid-gap-y) * 0.5) 0 calc(var(--o-wsale-products-grid-gap-y) * 0.5) calc(var(--o-wsale-products-grid-gap, 16px) * 0.5);
             }
 
@@ -833,7 +833,7 @@
 
                 @include media-breakpoint-up(md) {
                     --o-wsale-card-thumb-size: calc(126px * var(--o-wsale-card-thumb-aspect-ratio, 1));
-                    --o-wsale-card-info-padding: 0 #{$container-padding-x * 0.5};
+                    --o-wsale-card-info-padding: 0 calc(var(--o-bs-container-padding-x) * 0.5);
                     --o-wsale-card-sub-align-items: center;
 
                     .oe_product_image_link {
@@ -858,14 +858,14 @@
                     }
 
                     .product_price, .o_wsale_product_btn {
-                        --_line-gap: #{map-get($spacers, 3)};
+                        --_line-gap: var(--o-bs-spacer-3);
 
                         padding-left: var(--_line-gap);
 
                         &:before {
                             @include o-position-absolute(0, auto, 0);
                             transform: translateX(calc(var(--_line-gap) * -1));
-                            border-left: $border-width solid $border-color;
+                            border-left: var(--o-bs-border-width) solid $border-color;
                             content: "";
                         }
                     }
@@ -898,7 +898,7 @@
 
     h1[itemprop="name"] {
         @include font-size($h3-font-size);
-        font-weight: $font-weight-bold;
+        font-weight: var(--o-bs-font-weight-bold);
     }
 
     input.js_quantity {
@@ -916,13 +916,13 @@
         --table-accent-bg: rgba(0, 0, 0, 0);
     }
     .table-sm tbody td {
-        padding-top: map-get($spacers, 2);
-        padding-bottom: map-get($spacers, 2);
+        padding-top: var(--o-bs-spacer-2);
+        padding-bottom: var(--o-bs-spacer-2);
     }
 
     #o_wsale_pager.o_wsale_pager_accommodate_floating {
         // Accommodate enough empty space for the floating bar
-        padding-bottom: map-get($spacers, 4) + map-get($spacers, 5) !important;
+        padding-bottom: calc(var(--o-bs-spacer-4) + var(--o-bs-spacer-5)) !important;
     }
 
     // Remove the breadcrumb splitter '/' on small devices
@@ -943,7 +943,7 @@
 }
 
 #product_detail ~ .oe_structure.oe_empty > section:first-child {
-    border-top: $border-width solid $border-color;
+    border-top: var(--o-bs-border-width) solid $border-color;
 }
 
 .o_alternative_product {
@@ -1027,14 +1027,14 @@ $-product-radius-map: (
     padding: 0;
 
     @include media-breakpoint-up(lg) {
-        padding: 0 $grid-gutter-width * 0.5;
+        padding: 0 calc(var(--o-bs-grid-gutter-width) * 0.5);
     }
 }
 
 #product_details {
     flex: 0 0 auto;
     width: var(--o-wsale-product-col-details-width, 100%);
-    padding-top: map-get($spacers, 3);
+    padding-top: var(--o-bs-spacer-3);
     padding-left: var(--o-wsale-product-col-details-padding-left, calc(var(--gutter-x) * .5));
     padding-right: var(--o-wsale-product-col-details-padding-right, calc(var(--gutter-x) * .5));
     container: product-details / inline-size;
@@ -1097,16 +1097,16 @@ $-product-radius-map: (
         &:where(.o_wsale_product_page_opt_image_width_50_pc),
         &:where(.o_wsale_product_page_opt_image_width_66_pc) {
             @include media-breakpoint-up(xxl) {
-                --o-wsale-product-col-details-padding-left: #{$grid-gutter-width * 2};
+                --o-wsale-product-col-details-padding-left: calc(var(--o-bs-grid-gutter-width) * 2);
             }
         }
     }
 
     .breadcrumb .breadcrumb-item {
-        padding-top: calc(#{$btn-padding-y} + #{$btn-border-width});
-        padding-bottom: calc(#{$btn-padding-y} + #{$btn-border-width});
-        font-size: $btn-font-size;
-        line-height: $btn-line-height;
+        padding-top: calc(var(--o-bs-btn-padding-y) + #{$btn-border-width});
+        padding-bottom: calc(var(--o-bs-btn-padding-y) + #{$btn-border-width});
+        font-size: var(--o-bs-btn-font-size);
+        line-height: var(--o-bs-btn-line-height);
     }
 }
 #product_detail_main:where(.flex-lg-row-reverse) #product_details {
@@ -1123,19 +1123,19 @@ $-product-radius-map: (
 .o_wsale_product_page_opt_image_width_50_pc,
 .o_wsale_product_page_opt_image_width_66_pc {
     @include media-breakpoint-up(lg) {
-        --o-wsale-product-col-details-padding-left: #{$grid-gutter-width * .5};
+        --o-wsale-product-col-details-padding-left: calc(var(--o-bs-grid-gutter-width) * .5);
         --o-wsale-product-col-details-padding-right: 0;
     }
     @include media-breakpoint-up(xl) {
-        --o-wsale-product-col-details-padding-left: #{$grid-gutter-width * 1.25};
+        --o-wsale-product-col-details-padding-left: calc(var(--o-bs-grid-gutter-width) * 1.25);
     }
     @include media-breakpoint-up(xl) {
-        --o-wsale-product-col-details-padding-left: #{$grid-gutter-width * 2};
+        --o-wsale-product-col-details-padding-left: calc(var(--o-bs-grid-gutter-width) * 2);
     }
 }
 .o_wsale_product_page_opt_image_width_66_pc {
     @include media-breakpoint-up(xl) {
-        --o-wsale-product-col-details-padding-left: #{$grid-gutter-width };
+        --o-wsale-product-col-details-padding-left: var(--o-bs-grid-gutter-width);
     }
 }
 
@@ -1168,7 +1168,7 @@ $-product-radius-map: (
 .o_wsale_product_page_opt_image_width_100_pc {
     --o-wsale-product-col-images-width: 100%;
     --o-wsale-product-col-details-width: 100%;
-    --o-wsale-product-col-details-padding-top-lg: #{map-get($spacers, 3)};
+    --o-wsale-product-col-details-padding-top-lg: var(--o-bs-spacer-3);
 }
 
 .o_wsale_product_page_opt_image_width_100_pc,
@@ -1292,12 +1292,12 @@ $-product-radius-map: (
             .o_wsale_product_details_content_section_price,
             .o_wsale_product_details_content_section_accordion
         )) {
-            border-top: var(--o-wsale-product-details-section-border-width, #{$border-width}) solid $border-color;
-            padding-top: var(--o-wsale-product-details-section-padding-top, #{map-get($spacers, 4)});
+            border-top: var(--o-wsale-product-details-section-border-width, var(--o-bs-border-width)) solid $border-color;
+            padding-top: var(--o-wsale-product-details-section-padding-top, var(--o-bs-spacer-4));
         }
         &:where(.o_wsale_product_details_content_section_cta:has(.o_wsale_cta_wrapper_boxed)) {
             --o-wsale-product-details-section-border-width: 0;
-            --o-wsale-product-details-section-padding-top: #{map-get($spacers, 2)};
+            --o-wsale-product-details-section-padding-top: var(--o-bs-spacer-2);
         }
     }
 }
@@ -1319,7 +1319,7 @@ $-product-radius-map: (
     }
 
     &.o_wsale_cta_wrapper_large .css_quantity {
-        border-radius: $btn-border-radius-lg;
+        border-radius: var(--o-bs-btn-border-radius-lg);
     }
 
     &:not(.o_wsale_cta_wrapper_boxed) #product_option_block:has(button:only-child) {
@@ -1331,13 +1331,13 @@ $-product-radius-map: (
     &.o_wsale_cta_wrapper_large {
         .stock_notification_input_group {
             > :first-child {
-                border-radius: $btn-border-radius-lg;
+                border-radius: var(--o-bs-btn-border-radius-lg);
                 border-top-right-radius: 0;
                 border-bottom-right-radius: 0;
             }
 
             > :last-child {
-                border-radius: $btn-border-radius-lg;
+                border-radius: var(--o-bs-btn-border-radius-lg);
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
             }
@@ -1398,7 +1398,7 @@ $-product-radius-map: (
             $_max_height: 60vh;
 
             .o_wsale_product_page_grid_row {
-                --_lastBlock_margin_bottom: #{$grid-gutter-width * -0.5};
+                --_lastBlock_margin_bottom: calc(var(--o-bs-grid-gutter-width) * -0.5);
 
                 flex-direction: column;
                 height: var(--o-wsale-js-grid-product-height);
@@ -1407,24 +1407,24 @@ $-product-radius-map: (
                 overflow-y: scroll;
                 overflow-x: hidden;
                 scroll-snap-type: y mandatory;
-                scrollbar-color: currentColor rgba($body-bg, .5);
-                padding-bottom: $grid-gutter-width * .5 !important;
+                scrollbar-color: currentColor color-mix(in srgb, var(--body-bg) 50%, transparent);
+                padding-bottom: calc(var(--o-bs-grid-gutter-width) * .5) !important;
                 box-sizing: content-box;
                 transition: height .2s ease-out;
 
                 &:not(.gap-0) {
-                    --_lastBlock_margin_bottom: #{$grid-gutter-width * -0.75};
+                    --_lastBlock_margin_bottom: calc(var(--o-bs-grid-gutter-width) * -0.75);
 
                     // Normalize desktop values for mobile
-                    gap: $grid-gutter-width * .25 0 !important;
-                    padding-right: $grid-gutter-width * .5 !important;
-                    padding-bottom: $grid-gutter-width * .75 !important;
+                    gap: calc(var(--o-bs-grid-gutter-width) * .25) 0 !important;
+                    padding-right: calc(var(--o-bs-grid-gutter-width) * .5) !important;
+                    padding-bottom: calc(var(--o-bs-grid-gutter-width) * .75) !important;
                 }
             }
 
             &:has(.o_wsale_product_page_grid_row:not(.gap-0)) {
                 // Handle ribbon
-                padding-left: $grid-gutter-width * .5 !important;
+                padding-left: calc(var(--o-bs-grid-gutter-width) * .5) !important;
             }
 
             .o_product_detail_img_wrapper {
@@ -1581,7 +1581,7 @@ $-product-radius-map: (
                     height: auto;
                     text-indent: unset;
                     transition: none;
-                    border: $border-width solid $border-color;
+                    border: var(--o-bs-border-width) solid $border-color;
 
                     &,
                     & > div,
@@ -1596,7 +1596,7 @@ $-product-radius-map: (
                     }
 
                     &.active {
-                        border-color: map-get($theme-colors, 'primary');
+                        border-color: var(--primary);
                     }
 
                     &:where(:not(:hover)) {
@@ -1626,11 +1626,11 @@ $-product-radius-map: (
                 height: 8px;
                 min-width: 8px;
                 border-radius: 50%;
-                border: 2px solid map-get($grays, '400');
+                border: 2px solid var(--gray-400);
 
                 &.active {
-                    border-color: map-get($theme-colors, 'primary');
-                    background-color: map-get($theme-colors, 'primary');
+                    border-color: var(--primary);
+                    background-color: var(--primary);
                 }
                 > div {
                     display: none;
@@ -1722,7 +1722,7 @@ $-product-radius-map: (
 }
 
 .o_red_highlight {
-    --badge-bg: #{map-get($theme-colors, 'danger')} !important;
+    --badge-bg: var(--danger) !important;
     --badge-border-color: var(--badge-bg);
 
     box-shadow: 0 0 0 0 rgba(240,8,0,0.4);
@@ -1775,27 +1775,27 @@ $-product-radius-map: (
             border: none;
 
             .o_checkout_cart_total {
-                border-top: $border-width solid $border-color;
+                border-top: var(--o-bs-border-width) solid $border-color;
             }
         }
     }
 
     .o_mobile_summary {
-        margin-left: -$grid-gutter-width * .5;
-        margin-right: -$grid-gutter-width * .5;
-        padding: $spacer $grid-gutter-width * .5;
+        margin-left: calc(var(--o-bs-grid-gutter-width) * -1 * .5);
+        margin-right: calc(var(--o-bs-grid-gutter-width) * -1 * .5);
+        padding: var(--o-bs-spacer) calc(var(--o-bs-grid-gutter-width) * .5);
 
         @include media-breakpoint-down(lg) {
-            box-shadow: $box-shadow-lg;
+            box-shadow: var(--box-shadow-lg);
         }
     }
 
     .o_wsale_scrollable_table_badge {
-        --badge-bg: #{rgba($body-color, 0.85)};
-        --badge-color: #{color-contrast($body-color)};
-        --badge-border-color: #{rgba($body-color, 0.9)};
+        --badge-bg: color-mix(in srgb, var(--o-bs-body-color) 85%, transparent);
+        --badge-color: var(--o-bs-body-color-contrast);
+        --badge-border-color: color-mix(in srgb, var(--o-bs-body-color) 90%, transparent);
 
-        transition: $transition-base;
+        transition: var(--o-bs-transition-base);
         opacity: 1;
 
         &.o_wsale_scrollable_table_badge_desktop {
@@ -1826,14 +1826,14 @@ $-product-radius-map: (
 
                 // Calculate the height of 4.5 <tr> through the images height.
                 // (+ spacer 3 to compensate negative margin)
-                max-height: calc(calc(#{$border-width} * 4 + (#{$table-cell-padding-y} + #{map-get($spacers, 3)} + (var(--o-wsale-checkout-cart-product-img-width) / var(--o-wsale-shop-thumb-aspect-ratio, 1))) * 4.5) + #{map-get($spacers, 3)});
+                max-height: calc(calc(var(--o-bs-border-width) * 4 + (#{$table-cell-padding-y} + #{map-get($spacers, 3)} + (var(--o-wsale-checkout-cart-product-img-width) / var(--o-wsale-shop-thumb-aspect-ratio, 1))) * 4.5) + var(--o-bs-spacer-3));
             }
         }
     }
 
     div[itemprop="address"] {
-        margin: map-get($spacers, 2) 0;
-        font-size: $font-size-sm;
+        margin: var(--o-bs-spacer-2) 0;
+        font-size: var(--o-bs-font-size-sm);
     }
 
     .o_wsale_address_fill {
@@ -1845,8 +1845,8 @@ $-product-radius-map: (
 
     .o_address_signin {
         @include media-breakpoint-down(md) {
-            border-radius: $border-radius;
-            background-color: $gray-100;
+            border-radius: var(--o-bs-border-radius);
+            background-color: var(--gray-100);
         }
     }
 
@@ -1878,15 +1878,15 @@ $-product-radius-map: (
 
             .o_wsale_quick_reorder_group_content {
                 &:not(:last-child) {
-                    padding-bottom: map-get($spacers, 5);
+                    padding-bottom: var(--o-bs-spacer-5);
                 }
 
                 .o_wsale_quick_reorder_line:not(:last-child) {
-                    margin-bottom: map-get($spacers, 3);
+                    margin-bottom: var(--o-bs-spacer-3);
 
                     @include media-breakpoint-down(sm) {
-                        padding-bottom: map-get($spacers, 3);
-                        border-bottom: $border-width solid $border-color;
+                        padding-bottom: var(--o-bs-spacer-3);
+                        border-bottom: var(--o-bs-border-width) solid $border-color;
                     }
                 }
             }
@@ -1948,8 +1948,8 @@ $-product-radius-map: (
         --accordion-body-padding-x: 0;
 
         .accordion-item {
-            border-top: $border-width solid $border-color;
-            border-bottom: $border-width solid $border-color;
+            border-top: var(--o-bs-border-width) solid $border-color;
+            border-bottom: var(--o-bs-border-width) solid $border-color;
 
             &:not(:last-child) {
                 border-bottom: 0;
@@ -2024,14 +2024,14 @@ body.modal-open:has(.o_wsale_product_page) {
 
     .o_wsale_ribbon {
         @include o-ribbon-tag();
-        padding: map-get($spacers, 2) $ribbon-padding;
+        padding: var(--o-bs-spacer-2) $ribbon-padding;
         transform-origin: top right;
         z-index: 1;
     }
 
     .o_wsale_badge {
         @include o-ribbon-tag();
-        padding: map-get($spacers, 1) map-get($spacers, 2);
+        padding: var(--o-bs-spacer-1) var(--o-bs-spacer-2);
         border-radius: var(--border-radius) !important;
     }
 
@@ -2049,11 +2049,11 @@ body.modal-open:has(.o_wsale_product_page) {
     }
 
     .o_wsale_badge.o_left {
-        @include o-position-absolute($top: map-get($spacers, 2), $left: var(--o-wsale-ribbon-badge-offset-x, map-get($spacers, 2)));
+        @include o-position-absolute($top: var(--o-bs-spacer-2), $left: var(--o-wsale-ribbon-badge-offset-x, var(--o-bs-spacer-2)));
     }
 
     .o_wsale_badge.o_right {
-        @include o-position-absolute($top: map-get($spacers, 2), $right: var(--o-wsale-ribbon-badge-offset-x, map-get($spacers, 2)));
+        @include o-position-absolute($top: var(--o-bs-spacer-2), $right: var(--o-wsale-ribbon-badge-offset-x, var(--o-bs-spacer-2)));
     }
 
 }

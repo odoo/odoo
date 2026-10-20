@@ -55,6 +55,8 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+            'html_editor/static/src/scss/css_variables.scss',
+            'html_builder/static/src/scss/css_variables.scss',
             'html_builder/static/src/snippets/snippet_viewer.scss',
         ],
         'web.assets_unit_tests': [

@@ -1,13 +1,13 @@
 .o_payment_form .o_outline {
 
     &:hover {
-        border-color: $primary;
+        border-color: var(--primary);
     }
 
     &:not(:first-child):hover {
         // Since list-group items, except the first child, have no top border, this emulates the top
         // border for the hovered state.
-        box-shadow: 0 (-$border-width) 0 $primary;
+        box-shadow: 0 calc(var(--o-bs-border-width) * -1) 0 var(--primary);
     }
 
     .o_payment_option_label:before {

@@ -73,9 +73,9 @@
 }
 
 .o-dropdown--menu {
-    font-size: $dropdown-font-size;
-    margin-top: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
-    margin-bottom: var(--Dropdown_menu-margin-y, #{map-get($spacers, 1)});
+    font-size: var(--o-bs-dropdown-font-size);
+    margin-top: var(--Dropdown_menu-margin-y, var(--o-bs-spacer-1));
+    margin-bottom: var(--Dropdown_menu-margin-y, var(--o-bs-spacer-1));
 
     /* Scoped to '.dropdown-item', not '.dropdown-toggle': a real submenu item */
     /* always has both classes, an unrelated embedded dropdown only the latter. */
@@ -90,7 +90,7 @@
             background-color: transparent;
         }
         &.focus {
-            background-color: $dropdown-link-hover-bg;
+            background-color: var(--o-bs-dropdown-link-hover-bg);
         }
     }
 
@@ -110,7 +110,7 @@
     }
 
     .dropdown-item.o-dropdown-item-indent {
-        --#{$prefix}dropdown-item-padding-x: #{$dropdown-item-padding-x * 1.5};
+        --#{$prefix}dropdown-item-padding-x: calc(var(--o-bs-dropdown-item-padding-x) * 1.5);
     }
 }
 
@@ -130,7 +130,7 @@
     --dropdown-box-shadow: none;
 
     position: static;
-    max-height: calc(var(--sheet-max-height) - #{$spacer} / 4);
+    max-height: calc(var(--sheet-max-height) - var(--o-bs-spacer) / 4);
 
     .container {
         max-width: inherit;

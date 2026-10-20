@@ -1,9 +1,9 @@
 .o-mail-AutoresizeInput-box {
     --o-input-border-color: transparent;
-    --o-input-padding-x: #{map-get($spacers, 1)};
+    --o-input-padding-x: var(--o-bs-spacer-1);
     padding-inline: var(--o-input-padding-x);
     border: $input-border-width solid var(--o-input-border-color);
-    background-color: var(--o-input-background-color, #{$input-bg});
+    background-color: var(--o-input-background-color, var(--o-bs-input-bg));
 
     // Invisible copy of the value, used for sizing.
     &::after {
@@ -17,12 +17,12 @@
     }
 
     &:focus-within {
-        --o-input-border-color: #{$o-component-active-border};
-        color: $body-color !important; // Reset eventual text-muted.
+        --o-input-border-color: var(--o-component-active-border);
+        color: var(--o-bs-body-color) !important; // Reset eventual text-muted.
     }
 
     &:where(:has(.o-mail-AutoresizeInput[disabled])) {
-        color: $body-color;
+        color: var(--o-bs-body-color);
     }
 }
 

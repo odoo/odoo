@@ -4,7 +4,7 @@
         --Dropdown_menu-margin-y: 0;
 
         /* Needed because they are rendered at a lower stacking context compared to modals. */
-        z-index: $zindex-modal + 1;
+        z-index: calc(var(--o-bs-zindex-modal) + 1);
         max-width: 600px;
     }
     .o-autocomplete--input {
@@ -23,13 +23,13 @@
         > a.ui-state-active {
             margin: 0;
             border: none;
-            font-weight: $font-weight-normal;
+            font-weight: var(--o-bs-font-weight-normal);
             color: $dropdown-link-hover-color;
-            background-color: $dropdown-link-hover-bg;
+            background-color: var(--o-bs-dropdown-link-hover-bg);
         }
 
         &.o_m2o_dropdown_option, &.o_m2o_start_typing, &.o_m2o_no_result {
-            text-indent: $o-dropdown-hpadding * .5;
+            text-indent: calc(var(--o-dropdown-hpadding) * .5);
         }
 
         &.o_m2o_dropdown_option, &.o_calendar_dropdown_option {

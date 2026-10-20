@@ -29,6 +29,7 @@ This addon provides an extensible, maintainable editor.
             ('remove', 'html_editor/static/src/main/media/video/utils.js'),
         ],
         'web.assets_frontend': [
+            'html_editor/static/src/scss/css_variables.scss',
             ('include', 'html_editor.assets_media_dialog'),
             ('include', 'html_editor.assets_readonly'),
             'html_editor/static/src/public/**/*',

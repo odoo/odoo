@@ -29,7 +29,7 @@
         &.show {
             color: var(--btn-hover-color);
             background-color: var(--btn-hover-bg);
-            border-color: var(--o-hb-btn-active-color, $o-we-color-accent);
+            border-color: var(--o-hb-btn-active-color, var(--o-we-color-accent));
         }
 
         > img {
@@ -69,8 +69,8 @@
 // Image format badge.
 .o_hb_select_toggle.dropdown-toggle, .o_hb_select_dropdown_item {
     > div > .badge {
-        color: $o-we-item-clickable-color;
-        background-color: $o-we-bg-darker;
+        color: var(--o-we-item-clickable-color);
+        background-color: var(--o-we-bg-darker);
     }
 }
 
@@ -79,19 +79,19 @@
 // remove most '!important' needed here to override Bootstrap classes. See
 // implementations of Many2X builder components for examples.
 .o_hb_select_dropdown {
-    --o-hb-select-bg: #{$o-we-item-clickable-bg};
-    --o-hb-select-color: #{$o-we-fg-light};
-    --o-hb-select-bg-hover: #{$o-we-bg-lighter};
-    --o-hb-select-color-hover: #{$o-we-fg-lighter};
-    --o-hb-border-color: #{$o-we-bg-darker};
+    --o-hb-select-bg: var(--o-we-item-clickable-bg);
+    --o-hb-select-color: var(--o-we-fg-light);
+    --o-hb-select-bg-hover: var(--o-we-bg-lighter);
+    --o-hb-select-color-hover: var(--o-we-fg-lighter);
+    --o-hb-border-color: var(--o-we-bg-darker);
 
     --border-color: var(--o-hb-border-color);
     --#{$prefix}popover-border-radius: #{map-get($spacers, 2)};
     --#{$prefix}popover-inner-border-radius: calc(var(--#{$prefix}popover-border-radius) - var(--#{$prefix}popover-border-width));
     --#{$prefix}dropdown-item-border-radius: 0;
 
-    font-family: $o-we-font-family;
-    font-size: $o-we-font-size;
+    font-family: var(--o-we-font-family);
+    font-size: var(--o-we-font-size);
     border-color: var(--border-color);
     background-color: var(--o-hb-select-bg) !important;
     padding: 0;
@@ -104,7 +104,7 @@
 
         color: var(--o-hb-select-color, $white);
         line-height: 2rem;
-        border-bottom: $o-we-border-width solid var(--border-color);
+        border-bottom: var(--o-we-border-width) solid var(--border-color);
 
         &.focus {
             background-color: var(--o-hb-select-bg-hover) !important;
@@ -148,7 +148,7 @@
 .o_builder_open {
     &:has(.o_hb_snippets_tabs [data-name='theme'].active) {
         .o_hb_select_dropdown {
-            --o-hb-select-item-active-color: #{$o-we-color-global};
+            --o-hb-select-item-active-color: var(--o-we-color-global);
         }
     }
 }

@@ -33,7 +33,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
             content: "";
             @include o-position-absolute(auto, 0, 0, 0);
             height: $owprofile-tabs-height;
-            background: rgba(black, 0.2);
+            background: rgba(0, 0, 0, 0.2);
         }
     }
 }
@@ -87,11 +87,11 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 .o_wprofile_tabs_content {
     @include media-breakpoint-down(md) {
         background-color: $nav-tabs-link-active-bg;
-        padding:0 ($grid-gutter-width * 0.5);
+        padding:0 calc(var(--o-bs-grid-gutter-width) * 0.5);
     }
 
     @include media-breakpoint-only(xs) {
-        margin: 0 ($grid-gutter-width * -0.5);
+        margin: 0 calc(var(--o-bs-grid-gutter-width) * -0.5);
     }
 }
 
@@ -115,7 +115,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
         }
 
         .o_pc_circle_bg {
-            stroke: rgba(black, 0.1);
+            stroke: rgba(0, 0, 0, 0.1);
         }
 
         .o_pc_circle {
@@ -124,7 +124,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 
         #gradient {
             --o-pc-color-stop-1: #{lighten(map-get($theme-colors, 'primary'), 10%)};
-            --o-pc-color-stop-2: #{map-get($theme-colors, 'primary')};
+            --o-pc-color-stop-2: var(--primary);
         }
     }
 
@@ -156,8 +156,8 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     border-width: 1px 0;
 
     &, .o_wprofile_course_nav_search, .o_wprofile_all_users_nav_btn {
-        background-color: rgba(white, 0.05);
-        border-color: rgba(white, 0.1);
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
         border-style: solid;
     }
 
@@ -186,8 +186,8 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 
             .o_wprofile_all_users_nav_btn {
                 @include o-hover-text-color(white, white);
-                border-radius: $btn-border-radius;
-                background-color: rgba(black, 0.25);
+                border-radius: var(--o-bs-btn-border-radius);
+                background-color: rgba(0, 0, 0, 0.25);
             }
         }
     }
@@ -197,7 +197,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     }
 
     .breadcrumb-item a, .breadcrumb-item + .breadcrumb-item::before, .o_wprofile_course_nav_search input::placeholder {
-        color: rgba(white, 0.8);
+        color: rgba(255, 255, 255, 0.8);
     }
 }
 
@@ -218,22 +218,22 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
         a.page-link {
             background-color: transparent;
             border: 0;
-            color: $gray-600;
+            color: var(--gray-600);
             transition-duration: .3s;
 
             &:hover {
-                color: $primary;
+                color: var(--primary);
             }
         }
 
         &.active {
             a.page-link {
-                color: $white;
+                color: var(--white);
             }
         }
 
         &.o_wprofile_pager_arrow a {
-            color: $primary;
+            color: var(--primary);
 
             &:hover {
                 transform: scaleX(1.50) scaleY(1.50);
@@ -241,7 +241,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
         }
 
         &.o_wprofile_pager_arrow.disabled a {
-            color: $gray-600;
+            color: var(--gray-600);
         }
 
         .page-link:focus {
@@ -270,7 +270,7 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 
 // Own profile border
 .o_wprofile_border_focus {
-    border-left: 4px solid map-get($theme-colors, 'secondary');
+    border-left: 4px solid var(--secondary);
 }
 
 // Edition mode

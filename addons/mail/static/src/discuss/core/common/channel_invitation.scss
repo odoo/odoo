@@ -3,19 +3,19 @@
 }
 
 .o-discuss-ChannelInvitation-copyInvitationLinkButton {
-    right: map-get($spacers, 1);
+    right: var(--o-bs-spacer-1);
     --InputGroupEl-z-index: 5;
 }
 
 .o-discuss-ChannelInvitation-selectable {
     &.o-odd {
-        background-color: $gray-100 !important;;
+        background-color: var(--gray-100) !important;;
     }
     &:hover {
-        background-color: mix($gray-100, $gray-200) !important;
+        background-color: color-mix(in srgb, var(--gray-100), var(--gray-200)) !important;
     }
     &.o-selected {
-        background-color: mix($o-view-background-color, $o-action, 85%) !important;;
+        background-color: color-mix(in srgb, var(--o-view-background-color) 85%, var(--o-action)) !important;;
     }
 }
 
@@ -23,14 +23,14 @@
     max-height: 100px;
 
     button {
-        background-color: mix($o-view-background-color, $o-action, 85%);
-        --border-color: #{mix($o-view-background-color, $o-action, 85%)};
+        background-color: color-mix(in srgb, var(--o-view-background-color) 85%, var(--o-action));
+        --border-color: color-mix(in srgb, var(--o-view-background-color) 85%, var(--o-action));
 
         &:hover {
-            --border-color: #{$danger};
+            --border-color: var(--danger);
 
             .oi[data-icon="close_small"] {
-                color: $danger;
+                color: var(--danger);
             }
         }
     }

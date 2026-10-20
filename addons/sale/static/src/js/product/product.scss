@@ -8,7 +8,7 @@
     }
 
     &:where(:not(.o_sale_product_configurator_table_optional)) {
-        margin-bottom: $spacer !important;
+        margin-bottom: var(--o-bs-spacer) !important;
     }
 }
 
@@ -36,7 +36,7 @@
 
 @media screen and (min-width: 576px) and (max-width: 767.98px), print and (min-width: 100mm) and (max-width: 187.98mm) {
     [name="sale_product_configurator_formatted_price"]:only-child {
-        margin-bottom: map-get($spacers, 2) !important;
+        margin-bottom: var(--o-bs-spacer-2) !important;
     }
 }
 

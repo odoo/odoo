@@ -2,5 +2,5 @@
 // background highlight rather than backdrop-filter, which silently fails to paint on
 // items that aren't promoted to their own compositing layer (e.g. Advanced Settings).
 .o-discuss-QuickVoiceSettings .btn:not(.cursor-default):hover {
-    background-color: rgba($white, 0.1);
+    background-color: color-mix(in srgb, var(--white) 10%, transparent);
 }

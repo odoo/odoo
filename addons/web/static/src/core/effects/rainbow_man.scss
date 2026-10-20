@@ -1,23 +1,23 @@
 .o_reward {
-    $-reward-base-time: 1.4s;
+    --o-reward-base-time: 1.4s;
 
     will-change: transform;
-    z-index: $zindex-modal + 1;
-    animation: reward-fading $-reward-base-time * 0.5 ease-in-out forwards;
+    z-index: calc(var(--o-bs-zindex-modal) + 1);
+    animation: reward-fading calc(var(--o-reward-base-time) * 0.5) ease-in-out forwards;
 
     .o_reward_box {
         transform-box: fill-box;
     }
 
     &.o_reward_fading {
-        animation: reward-fading-reverse $-reward-base-time * 0.4 ease-in-out forwards;
+        animation: reward-fading-reverse calc(var(--o-reward-base-time) * 0.4) ease-in-out forwards;
 
         .o_reward_face_group {
-            animation: reward-jump-reverse $-reward-base-time * 0.4 ease-in-out forwards;
+            animation: reward-jump-reverse calc(var(--o-reward-base-time) * 0.4) ease-in-out forwards;
         }
 
         .o_reward_rainbow_line {
-            animation: reward-rainbow-reverse $-reward-base-time * 0.5 ease-out forwards;
+            animation: reward-rainbow-reverse calc(var(--o-reward-base-time) * 0.5) ease-out forwards;
         }
     }
 
@@ -26,44 +26,44 @@
     }
 
     .o_reward_rainbow_line {
-        animation: reward-rainbow $-reward-base-time * 0.8 ease-out 1 forwards;
+        animation: reward-rainbow calc(var(--o-reward-base-time) * 0.8) ease-out 1 forwards;
     }
 
     .o_reward_face_group {
-        animation: reward-jump $-reward-base-time * 0.8 ease-in-out 1;
+        animation: reward-jump calc(var(--o-reward-base-time) * 0.8) ease-in-out 1;
     }
 
     .o_reward_face_wrap {
-        animation: reward-rotate $-reward-base-time * 0.8 cubic-bezier(.51,.92,.24,1.15) 1;
+        animation: reward-rotate calc(var(--o-reward-base-time) * 0.8) cubic-bezier(.51,.92,.24,1.15) 1;
     }
 
     .o_reward_face {
-        animation: reward-float $-reward-base-time ease-in-out $-reward-base-time infinite alternate;
+        animation: reward-float var(--o-reward-base-time) ease-in-out var(--o-reward-base-time) infinite alternate;
     }
 
     .o_reward_star_01, .o_reward_star_03 {
-        animation: reward-stars $-reward-base-time ease-in-out infinite alternate-reverse;
+        animation: reward-stars var(--o-reward-base-time) ease-in-out infinite alternate-reverse;
     }
 
     .o_reward_star_02, .o_reward_star_04 {
-        animation: reward-stars $-reward-base-time * 1.2 ease-in-out infinite alternate;
+        animation: reward-stars calc(var(--o-reward-base-time) * 1.2) ease-in-out infinite alternate;
     }
 
     .o_reward_thumbup {
-        animation: reward-scale $-reward-base-time * 0.5 ease-in-out 0s infinite alternate;
+        animation: reward-scale calc(var(--o-reward-base-time) * 0.5) ease-in-out 0s infinite alternate;
     }
 
     .o_reward_shadow_container {
-        animation: reward-float $-reward-base-time ease-in-out infinite alternate;
+        animation: reward-float var(--o-reward-base-time) ease-in-out infinite alternate;
     }
 
     .o_reward_shadow {
-        animation: reward-scale $-reward-base-time ease-in-out infinite alternate;
+        animation: reward-scale var(--o-reward-base-time) ease-in-out infinite alternate;
     }
 
     .o_reward_msg_container {
         aspect-ratio: 1 / 1;
-        animation: reward-float-reverse $-reward-base-time ease-in-out infinite alternate-reverse;
+        animation: reward-float-reverse var(--o-reward-base-time) ease-in-out infinite alternate-reverse;
     }
 }
 

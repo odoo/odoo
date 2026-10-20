@@ -1,10 +1,10 @@
 $-editor-messages-margin-x: 2%;
 %o-editor-messages {
-    background: $o-we-dropzone-bg-color;
+    background: var(--o-we-dropzone-bg-color);
     text-align: center;
     color: #fff;
-    outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
-    outline-offset: -$o-we-dropzone-border-width;
+    outline: var(--o-we-dropzone-border-width) dashed var(--o-we-dropzone-accent-color);
+    outline-offset: calc(var(--o-we-dropzone-border-width) * -1);
 
     &:before {
         content: attr(data-editor-message);
@@ -40,8 +40,8 @@ $-editor-messages-margin-x: 2%;
     &:not(:empty), &[data-oe-type] {
         &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):not([data-oe-type="image"]):hover,
         &.o_editable_date_field_linked {
-            outline: $o-we-handle-border-width solid $o-we-handles-accent-color;
-            outline-offset: $o-we-handle-border-width;
+            outline: var(--o-we-handle-border-width) solid var(--o-we-handles-accent-color);
+            outline-offset: var(--o-we-handle-border-width);
         }
         &[data-oe-type="image"]:not(.o_editable_no_shadow):hover {
             position: relative;
@@ -51,8 +51,8 @@ $-editor-messages-margin-x: 2%;
                 pointer-events: none;
                 @include o-position-absolute(0, 0, 0, 0);
                 z-index: 1;
-                outline: $o-we-handle-border-width solid $o-we-handles-accent-color;
-                outline-offset: $o-we-handle-border-width;
+                outline: var(--o-we-handle-border-width) solid var(--o-we-handles-accent-color);
+                outline-offset: var(--o-we-handle-border-width);
             }
         }
     }
@@ -243,7 +243,7 @@ body.editor_enable {
             // This border is useful when there is a green background behind
             // the text.
             border: 1px dotted white;
-            background-color: rgba(greenyellow, .2);
+            background-color: rgba(173, 255, 47, .2);
         }
     }
 }
@@ -274,7 +274,7 @@ body.editor_enable {
 .o_homepage_editor_welcome_message {
     padding-top: 128px;
     padding-bottom: 128px;
-    font-family: $o-font-family-sans-serif;
+    font-family: var(--o-font-family-sans-serif);
 }
 // offcanvas backdrop
 body.editor_enable {
@@ -285,14 +285,15 @@ body.editor_enable {
     }
 }
 // edit link popover
-$o-we-popover-bg: white;
 body.editor_enable {
+    --o-we-popover-bg: white;
+
     .o_edit_menu_popover {
-        background-color: $o-we-popover-bg;
-        font-family: $o-we-font-family;
+        background-color: var(--o-we-popover-bg);
+        font-family: var(--o-we-font-family);
 
         a {
-            color: $o-brand-primary;
+            color: var(--o-brand-primary);
 
             &.text-muted {
                 color: rgba(0, 0, 0, 0.65) !important;
@@ -302,16 +303,16 @@ body.editor_enable {
             color: rgba(0, 0, 0, 0.9);
         }
         &.bs-popover-auto[data-popper-placement^=top] > .popover-arrow::after {
-            border-top-color: $o-we-popover-bg;
+            border-top-color: var(--o-we-popover-bg);
         }
         &.bs-popover-auto[data-popper-placement^=right] > .popover-arrow::after {
-            border-right-color: $o-we-popover-bg;
+            border-right-color: var(--o-we-popover-bg);
         }
         &.bs-popover-auto[data-popper-placement^=bottom] > .popover-arrow::after {
-            border-bottom-color: $o-we-popover-bg;
+            border-bottom-color: var(--o-we-popover-bg);
         }
         &.bs-popover-auto[data-popper-placement^=left] > .popover-arrow::after {
-            border-left-color: $o-we-popover-bg;
+            border-left-color: var(--o-we-popover-bg);
         }
     }
 }

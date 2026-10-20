@@ -15,8 +15,8 @@
     font-size: var(--s_whatsapp-font-size);
     font-weight: normal;
     line-height: var(--s_whatsapp-line-height);
-    right: map-get($spacers, 4);
-    bottom: map-get($spacers, 4);
+    right: var(--o-bs-spacer-4);
+    bottom: var(--o-bs-spacer-4);
     z-index: $zindex-dropdown;
 
     *:not(.oi),
@@ -27,7 +27,7 @@
 
     &:has(.s_whatsapp_fab.s_whatsapp_pos_left) {
         right: auto;
-        left: map-get($spacers, 4);
+        left: var(--o-bs-spacer-4);
 
         .s_whatsapp_chatbox {
             right: auto;

@@ -1,14 +1,14 @@
 .o-mail-LinkPreviewCard {
-    max-width: $o-mail-LinkPreview-width;
+    max-width: var(--o-mail-LinkPreview-width);
 }
 
 .o-mail-LinkPreviewCardImage {
-    max-height: $o-mail-LinkPreviewImage-height;
+    max-height: var(--o-mail-LinkPreviewImage-height);
 }
 
 .o-mail-LinkPreviewCardImage-squarish {
-    max-width: $o-mail-LinkPreviewCard-squarishImageSize;
-    max-height: $o-mail-LinkPreviewCard-squarishImageSize;
+    max-width: var(--o-mail-LinkPreviewCard-squarishImageSize);
+    max-height: var(--o-mail-LinkPreviewCard-squarishImageSize);
 }
 .o-mail-LinkPreviewCard-noImage {
     width: fit-content;
@@ -16,8 +16,8 @@
 
 .o-mail-LinkPreviewImage {
     img {
-        max-width: $o-mail-LinkPreview-width;
-        max-height: $o-mail-LinkPreviewImage-height;
+        max-width: var(--o-mail-LinkPreview-width);
+        max-height: var(--o-mail-LinkPreviewImage-height);
     }
     .o-mail-ChatWindow & img {
         max-width: 100%;
@@ -25,10 +25,10 @@
 }
 
 .o-mail-LinkPreviewVideo {
-    max-width: $o-mail-LinkPreview-width;
+    max-width: var(--o-mail-LinkPreview-width);
 
     .row {
-        min-height: $o-mail-LinkPreviewCard-height;
+        min-height: var(--o-mail-LinkPreviewCard-height);
     }
 }
 
@@ -56,9 +56,9 @@
     }
 }
 
-$o-mail-LinkPreviewVideo-providerBorderWidth: 4px;
-
 .o-mail-LinkPreviewVideo-embed {
+    --o-mail-LinkPreviewVideo-providerBorderWidth: 4px;
+
     max-width: 400px;
     transition: max-width 0.6s cubic-bezier(.215, .610, .355, 1);
     border: 0;
@@ -68,7 +68,7 @@ $o-mail-LinkPreviewVideo-providerBorderWidth: 4px;
     }
 
     &[data-provider=youtube] {
-        border-left: $o-mail-LinkPreviewVideo-providerBorderWidth solid;
+        border-left: var(--o-mail-LinkPreviewVideo-providerBorderWidth) solid;
         border-left-color: #FF0000;
     }
     &[data-provider=google-drive]::before {
@@ -77,7 +77,7 @@ $o-mail-LinkPreviewVideo-providerBorderWidth: 4px;
         content: '';
         position: absolute;
         z-index: 1;
-        width: $o-mail-LinkPreviewVideo-providerBorderWidth;
+        width: var(--o-mail-LinkPreviewVideo-providerBorderWidth);
         height: 100%;
         background: linear-gradient(to bottom, #FBBC05 33.33%, #34A853 33.33%, #34A853 66.66%, #4285F4 66.66%);
     }
@@ -100,6 +100,6 @@ $o-mail-LinkPreviewVideo-providerBorderWidth: 4px;
 
 @media (min-width: 576px) {
     .o-mail-LinkPreview-dialog {
-        max-width: $o-mail-LinkPreview-dialogWidth;
+        max-width: var(--o-mail-LinkPreview-dialogWidth);
     }
 }

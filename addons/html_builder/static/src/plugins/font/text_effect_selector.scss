@@ -1,4 +1,6 @@
 .o_text_effect_popover {
+    --o-hb-text-effect-border-radius: .25rem; /* Bootstrap's, not the backend's */
+
     max-height: 440px !important;
     min-width: unset;
     overflow-y: auto;
@@ -7,8 +9,8 @@
         overflow: hidden;
         height: 40px;
         width: 48px;
-        border: $border-width solid $border-color;
-        border-radius: $border-radius-sm;
+        border: var(--o-bs-border-width) solid $border-color;
+        border-radius: var(--o-hb-text-effect-border-radius);
         background-color: $white;
         color: $black;
 
@@ -29,7 +31,7 @@
         --o-hb-text-effect-shadow-bg: rgba(0, 0, 0, 0.05);
 
         width: 330px;
-        font-size: $o-we-font-size;
+        font-size: var(--o-we-font-size);
         background-color: var(--o-hb-text-effect-option-bg);
 
         [data-icon='chevron_backward'] {
@@ -37,11 +39,11 @@
         }
 
         .o_hb_text_effect_shadow {
-            border-radius: $border-radius-sm;
+            border-radius: var(--o-hb-text-effect-border-radius);
             background-color: var(--o-hb-text-effect-shadow-bg);
 
             .o_hb_text_effect_shadow_options {
-                border-right: $border-width solid var(--o-hb-text-effect-option-bg);
+                border-right: var(--o-bs-border-width) solid var(--o-hb-text-effect-option-bg);
 
                 .o_hb_row_label {
                     background-color: transparent;

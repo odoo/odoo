@@ -30,9 +30,9 @@ label.o_wbooth_category_unavailable {
 
     & > input:checked + div,
     &:hover > input:checked + div {
-        --o-border-color: #{$primary};
+        --o-border-color: var(--primary);
 
-        box-shadow: 0 0 0 ($border-width * 2) $primary;
+        box-shadow: 0 0 0 calc(var(--o-bs-border-width) * 2) var(--primary);
     }
 
     & img {
@@ -51,18 +51,18 @@ label.o_wbooth_category_unavailable {
     }
 
     & > input + label {
-        padding: map-get($spacers, 2) map-get($spacers, 3);
-        border: $card-border-width solid $card-border-color;
-        border-radius: $btn-border-radius;
-        background: $card-bg;
+        padding: var(--o-bs-spacer-2) var(--o-bs-spacer-3);
+        border: $card-border-width solid var(--o-border-color);
+        border-radius: var(--o-bs-btn-border-radius);
+        background: var(--o-bs-card-bg);
         color: $card-color;
     }
 
     & > input:checked + label,
     &:hover > input:checked + label {
-        --o-border-color: #{$primary};
+        --o-border-color: var(--primary);
 
-            box-shadow: 0 0 0 ($border-width) $primary;
+            box-shadow: 0 0 0 ($border-width) var(--primary);
     }
 }
 
