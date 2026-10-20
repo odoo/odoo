@@ -374,7 +374,7 @@ class AccountReport(models.Model):
             old_report.column_ids.copy({'report_id': new_report.id})
         return new_reports
 
-    @api.depends_context('company_id')
+    @api.depends_context('company')
     @api.depends('active_selection', 'active_fallback')
     def _compute_active(self):
         for record in self:
