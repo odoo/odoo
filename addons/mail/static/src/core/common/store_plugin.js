@@ -589,6 +589,42 @@ export class Store extends BaseStore {
         }
     }
 
+    /**
+     * Renders the links to known messages of this database with the name of their thread.
+     *
+     * @param {Iterable<HTMLAnchorElement>} linkEls
+     */
+    renderMessageLinks(linkEls) {
+        for (const linkEl of linkEls) {
+            if (!linkEl.getAttribute("href")?.startsWith(getOrigin())) {
+                continue;
+            }
+            const message = this["mail.message"].get(Number(linkEl.dataset.oeId));
+            const threadName = message?.thread?.displayName;
+            if (
+                !threadName ||
+                // up to date, as the composer renders its links on every update
+                (linkEl.classList.contains("o_message_redirect_transformed") &&
+                    linkEl.textContent.replaceAll("\uFEFF", "") === threadName)
+            ) {
+                continue;
+            }
+            linkEl.classList.add("o_message_redirect_transformed");
+            linkEl.replaceChildren(renderToElement("mail.Message.messageLink", { message }));
+        }
+    }
+
+    /**
+     * Texts that mention the given partner in a message posted on the given thread.
+     *
+     * @param {import("models").ResPartner} partner
+     * @param {import("models").Thread} [thread]
+     */
+    getPartnerMentionTexts(partner, thread) {
+        const name = (thread?.getPersonaName(partner) ?? partner.displayName)?.trim();
+        return [name && `@${name}`, partner.email && `@${partner.email}`].filter(Boolean);
+    }
+
     getMentionsFromText(body, { mentionedPartners = [], mentionedRoles = [], thread } = {}) {
         const validMentions = {};
         const segments = isMarkup(body)
@@ -598,10 +634,7 @@ export class Store extends BaseStore {
               )
             : [body];
         // Longest mention text first, so e.g. "@John" inside "@John Doe" isn't kept.
-        const mentionTexts = (partner) => {
-            const name = (thread?.getPersonaName(partner) ?? partner.displayName)?.trim();
-            return [name && `@${name}`, partner.email && `@${partner.email}`].filter(Boolean);
-        };
+        const mentionTexts = (partner) => this.getPartnerMentionTexts(partner, thread);
         const remaining = [...segments];
         const kept = new Set(
             [...mentionedPartners]

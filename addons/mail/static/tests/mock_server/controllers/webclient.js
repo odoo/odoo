@@ -76,11 +76,28 @@ registerStoreHandler(
     { audience: "everyone" }
 );
 
+registerStoreHandler("res.role", function store_get_res_role(store, params) {
+    /** @type {import("mock_models").ResRole} */
+    const ResRole = this.env["res.role"];
+    const [roleId] = ResRole.search([["id", "=", params["id"]]]);
+    store.add(ResRole.browse(roleId), ["name", "user_ids_count"]);
+});
+
 registerStoreHandler("mail.activity", function store_get_mail_activity(store, params) {
     /** @type {import("mock_models").MailActivity} */
     const MailActivity = this.env["mail.activity"];
     const activities = MailActivity._filter([["id", "in", params.ids]], { active_test: false });
     store.add(MailActivity.browse(activities.map((a) => a.id)), "_store_activity_fields");
+});
+
+registerStoreHandler("mail.message", function store_get_mail_message(store, params) {
+    /** @type {import("mock_models").MailMessage} */
+    const MailMessage = this.env["mail.message"];
+    const messages = MailMessage._filter([["id", "in", params.ids]]);
+    store.add(MailMessage.browse(messages.map((m) => m.id)), (res) => {
+        res.extend(["model", "res_id"]);
+        res.one("thread", ["display_name"], { as_thread: true, sudo: true });
+    });
 });
 
 registerStoreHandler("failures", function store_get_failures(store) {

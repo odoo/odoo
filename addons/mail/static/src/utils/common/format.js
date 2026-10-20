@@ -28,7 +28,7 @@ import { setAttributes } from "@web/core/utils/xml";
 
 export const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}(?:\.{1})?(?:[a-z]{2,13}))\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
-const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/(\\d+)$`);
+export const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/(\\d+)$`);
 const MENTION_CLASSNAMES = new Set([
     "o_mail_redirect",
     "o_message_redirect",
@@ -140,6 +140,30 @@ function _parseAndTransform(nodes, transformFunction) {
 }
 
 /**
+ * Marks the link to a message of this database, and tells whether it is one.
+ *
+ * @param {HTMLAnchorElement} link
+ */
+export function markMessageLink(link) {
+    const messageId = messageUrlRegExp.exec(link.getAttribute("href"))?.[1];
+    if (!messageId) {
+        return false;
+    }
+    for (const [name, value] of Object.entries({
+        "data-oe-id": messageId,
+        "data-oe-model": "mail.message",
+    })) {
+        if (link.getAttribute(name) !== value) {
+            link.setAttribute(name, value);
+        }
+    }
+    if (!link.classList.contains("o_message_redirect")) {
+        link.classList.add("o_message_redirect");
+    }
+    return true;
+}
+
+/**
  * @param {string} text
  * @return {ReturnType<markup>} linkified text
  */
@@ -162,14 +186,7 @@ function linkify(text) {
             href,
         });
         link.textContent = url;
-        const messageMatch = messageUrlRegExp.exec(fixedUrl);
-        if (messageMatch !== null) {
-            setAttributes(link, {
-                "data-oe-id": messageMatch[1],
-                "data-oe-model": "mail.message",
-            });
-            link.classList.add("o_message_redirect");
-        }
+        markMessageLink(link);
         result = htmlJoin([result, getOuterHtml(link)]);
         curIndex = match.index + match[0].length;
     }

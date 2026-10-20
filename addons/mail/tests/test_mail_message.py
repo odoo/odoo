@@ -30,6 +30,22 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.make_jsonrpc_request("/mail/store", {"fetch_params": ["remove_all_bookmarks"]})
         self.assertNotIn(self.env.user.partner_id, message.bookmarked_partner_ids)
 
+    @users("employee")
+    def test_store_mail_message_only_readable(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        # links copied from a group of the user, and from a group they are not a member of
+        Channel = self.env["discuss.channel"].with_user(self.user_admin)
+        member_group = Channel._create_group(users_to=self.user_admin | self.env.user)
+        other_group = Channel._create_group(users_to=self.user_admin)
+        readable = member_group.message_post(body="Readable", message_type="comment")
+        unreadable = other_group.message_post(body="Unreadable", message_type="comment")
+        self.assertFalse(unreadable.with_user(self.env.user).has_access("read"))
+        data = self.make_jsonrpc_request(
+            "/mail/store",
+            {"fetch_params": [["mail.message", {"ids": [readable.id, unreadable.id]}]]},
+        )
+        self.assertEqual([message["id"] for message in data["mail.message"]], readable.ids)
+
     def test_mail_message_read_inexisting(self):
         user = new_test_user(self.env, login="Bob", email="bob@test.com")
         inexisting_message = self.env['mail.message'].with_user(user).browse(-434264)
