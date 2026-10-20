@@ -175,7 +175,7 @@ class SaleReport(models.Model):
             'weight': SQL("SUM(%s * %s * %s)", table.product_id.weight, table.product_uom_qty, uom_ratio),
             'volume': SQL("SUM(%s * %s * %s)", table.product_id.volume, table.product_uom_qty, uom_ratio),
             'discount': table.discount,
-            'discount_amount': SQL("SUM(%s * %s * %s * %s)", table.price_unit, table.product_uom_qty, table.discount, rate),
+            'discount_amount': SQL("SUM(%s * %s * %s / 100.0 * %s)", table.price_unit, table.product_uom_qty, table.discount, rate),
             'currency_id': SQL("%s", self.env.company.currency_id.id),
             'order_reference': SQL("concat('sale.order', ',', %s)", table.order_id),
         }

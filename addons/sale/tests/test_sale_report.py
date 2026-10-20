@@ -20,6 +20,25 @@ class TestSaleReportCurrencyRate(SaleCommon):
             "currency_id": cls.env.ref("base.EUR").id,
         })
 
+    def test_sale_report_discount_amount(self):
+        "The Sales report must convert the line discount percentage to an amount."
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [Command.create({
+                "product_id": self.product.id,
+                "product_uom_qty": 10,
+                "price_unit": 100,
+                "discount": 10,
+            })],
+        })
+        order.action_confirm()
+        order.order_line.flush_recordset()
+        amount_line = self.env["sale.report"].formatted_read_group(
+            [("order_reference", "=", f"sale.order,{order.id}")],
+            aggregates=["discount_amount:sum"],
+        )[0]
+        self.assertEqual(amount_line["discount_amount:sum"], 100)
+
     def test_sale_report_with_downpayment(self):
         """Check that downpayment lines are used in the calculation of amounts invoiced and to
         invoice."""
