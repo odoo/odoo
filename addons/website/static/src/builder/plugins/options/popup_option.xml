@@ -30,6 +30,10 @@
     <BuilderRow label.translate="Close Button Color">
         <BuilderColorPicker styleAction="'color'" applyTo="'.s_popup_close'" enabledTabs="['solid', 'custom']"/>
     </BuilderRow>
+    <BuilderContext applyTo="'.modal-content'">
+        <ShadowOption/>
+        <BorderConfigurator label.translate="Border"/>
+    </BuilderContext>
     <BuilderRow label.translate="Display">
         <BuilderSelect dataAttributeAction="'display'" preview="false">
             <BuilderSelectItem dataAttributeActionValue="'afterDelay'" id="'show_delay'" title.translate="Automatically opens the pop-up if the user stays on a page longer than the specified time.">Delay</BuilderSelectItem>

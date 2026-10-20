@@ -11,6 +11,17 @@
             padding-right: $grid-gutter-width * .5;
             padding-left: $grid-gutter-width * .5;
         }
+        > *:not(.s_popup_close) {
+            overflow: hidden;
+            @extend %o-we-inner-border-radius;
+        }
+        // Round and offset the close button when a corner radius is set.
+        &.rounded .s_popup_close {
+            $radius: var(--box-border-top-right-radius, 0px);
+            top: calc(#{$spacer * .5} * #{'min(1, #{$radius} / 1px)'});
+            right: calc(#{$spacer * .5} * #{'min(1, #{$radius} / 1px)'});
+            border-radius: #{'min(50%, #{$radius} * 100)'};
+        }
     }
 
     // Close icon
@@ -74,9 +85,15 @@
 
             .modal-content {
                 max-height:100%;
-                overflow-y: auto;
-                overflow-x: hidden;
+                // Do not crop the close button that extends beyond the popup
+                overflow: visible;
+                > *:not(.s_popup_close) {
+                    overflow-y: auto;
+                }
             }
+        }
+        .s_popup_close {
+            pointer-events: auto;
         }
     }
 }
