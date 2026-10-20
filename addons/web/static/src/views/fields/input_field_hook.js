@@ -47,6 +47,12 @@ export function useInputField(params) {
     let pendingUpdate = false;
 
     /**
+     * The last value read from the model, used to detect that the value changed in the model
+     * (e.g. another record has been loaded) while the field was flagged as invalid.
+     */
+    let lastModelValue = null;
+
+    /**
      * When a user types, we need to set the field as dirty.
      */
     function onInput(ev) {
@@ -123,8 +129,8 @@ export function useInputField(params) {
 
     /**
      * Sometimes, a patch can happen with possible a new value for the field
-     * If the user was typing a new value (isDirty) or the field is still invalid,
-     * we need to do nothing.
+     * If the user was typing a new value (isDirty) or the field is still invalid
+     * (and its value didn't change in the model), we need to do nothing.
      * If it is not such a case, we update the field with the new value.
      */
     useEffect(() => {
@@ -132,13 +138,18 @@ export function useInputField(params) {
         // the corresponding value in the record. Otherwise, in some cases,
         // if the value in the record change the useEffect isn't triggered.
         const value = params.getValue();
+        const modelValueChanged = value !== lastModelValue;
+        lastModelValue = value;
         if (!inputRef.el) {
             return;
         }
         if (inputRef.el.value === value) {
             isDirty = false;
         }
-        if (!isDirty && !component.props.record.isFieldInvalid(fieldName)) {
+        // A required field without value is flagged as invalid as soon as the record is loaded,
+        // so we can't only rely on the validity to keep the (invalid) value typed by the user.
+        const isInvalid = component.props.record.isFieldInvalid(fieldName);
+        if (!isDirty && (!isInvalid || modelValueChanged)) {
             inputRef.el.value = value;
             lastSetValue = inputRef.el.value;
         }
