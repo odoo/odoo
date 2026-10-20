@@ -2715,6 +2715,144 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(len(so.picking_ids), 1)
         self.assertEqual(so.picking_ids.move_ids.product_qty, 20)
 
+<<<<<<< 873c5755bc9338771732c74e482be7498397eea3
+||||||| 3a1b9d1a0d5992b5c00286dfc5f04bacaea9d9d7
+    def test_reassign_component_picking_sale_order_keeps_mo_reference(self):
+        """Check that linking the components transfer of an MTO manufacturing order to another sales order
+        keeps the further component needs of that manufacturing order in the same transfer, and that linking
+        it back leaves that transfer with the references of its own supply chain only."""
+        warehouse = self.company_data['default_warehouse']
+        warehouse.manufacture_steps = 'pbm'
+        self.product.route_ids = [Command.set([
+            warehouse.mto_pull_id.route_id.id,
+            warehouse.manufacture_pull_id.route_id.id,
+        ])]
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': self.component_a.id, 'product_qty': 1})],
+        })
+        so_1, so_2 = self.env['sale.order'].create([{
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product.id, 'product_uom_qty': 1})],
+        } for _ in range(2)])
+        so_1.action_confirm()
+        mo = so_1.mrp_production_ids
+        component_pick = mo.move_raw_ids.move_orig_ids.picking_id
+        # Link the component pick to the other so and check it is still linked to its supply chain
+        component_pick.sale_id = so_2
+        mo.move_raw_ids.product_uom_qty = 3
+        self.assertEqual(mo.move_raw_ids.move_orig_ids.picking_id, component_pick)
+        self.assertRecordValues(component_pick.move_ids, [{'product_id': self.component_a.id, 'product_uom_qty': 3}])
+        # Link the component pick back to its original so and check it removes its link to so_2's reference
+        component_pick.sale_id = so_1
+        self.assertEqual(component_pick.reference_ids, so_1.stock_reference_ids)
+        self.assertFalse(so_2.stock_reference_ids.move_ids)
+
+=======
+    def test_reassign_component_picking_sale_order_keeps_mo_reference(self):
+        """Check that linking the components transfer of an MTO manufacturing order to another sales order
+        keeps the further component needs of that manufacturing order in the same transfer, and that linking
+        it back leaves that transfer with the references of its own supply chain only."""
+        warehouse = self.company_data['default_warehouse']
+        warehouse.manufacture_steps = 'pbm'
+        self.product.route_ids = [Command.set([
+            warehouse.mto_pull_id.route_id.id,
+            warehouse.manufacture_pull_id.route_id.id,
+        ])]
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': self.component_a.id, 'product_qty': 1})],
+        })
+        so_1, so_2 = self.env['sale.order'].create([{
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product.id, 'product_uom_qty': 1})],
+        } for _ in range(2)])
+        so_1.action_confirm()
+        mo = so_1.mrp_production_ids
+        component_pick = mo.move_raw_ids.move_orig_ids.picking_id
+        # Link the component pick to the other so and check it is still linked to its supply chain
+        component_pick.sale_id = so_2
+        mo.move_raw_ids.product_uom_qty = 3
+        self.assertEqual(mo.move_raw_ids.move_orig_ids.picking_id, component_pick)
+        self.assertRecordValues(component_pick.move_ids, [{'product_id': self.component_a.id, 'product_uom_qty': 3}])
+        # Link the component pick back to its original so and check it removes its link to so_2's reference
+        component_pick.sale_id = so_1
+        self.assertEqual(component_pick.reference_ids, so_1.stock_reference_ids)
+        self.assertFalse(so_2.stock_reference_ids.move_ids)
+
+    def test_two_independent_mos_share_one_delivery_through_push_route(self):
+        """
+        Two independent MOs triggering a customer push route should create
+        only one delivery picking.
+        Explicity testing if MO are marked as done individually or by batch.
+        """
+        warehouse = self.company_data['default_warehouse']
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        shelf_1 = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'location_id': stock_location.id,
+        })
+        warehouse.manu_type_id.default_location_dest_id = shelf_1
+
+        custom_route = self.env['stock.route'].create({
+            'name': 'Manufacture then relay to customer',
+            'product_selectable': True,
+            'rule_ids': [
+                Command.create({
+                    'name': 'Manufacture',
+                    'action': 'manufacture',
+                    'picking_type_id': warehouse.manu_type_id.id,
+                    'location_src_id': stock_location.id,
+                    'location_dest_id': customer_location.id,
+                }),
+                Command.create({
+                    'name': 'Deliver to customer',
+                    'action': 'push',
+                    'auto': 'manual',
+                    'picking_type_id': warehouse.out_type_id.id,
+                    'location_src_id': shelf_1.id,
+                    'location_dest_id': customer_location.id,
+                }),
+            ],
+        })
+
+        product_1 = self._cls_create_product('Product 1', self.uom_unit, routes=[custom_route])
+        product_2 = self._cls_create_product('Product 2', self.uom_unit, routes=[custom_route])
+
+        so1, so2 = sos = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({'product_id': product_1.id, 'product_uom_qty': 1}),
+                    Command.create({'product_id': product_2.id, 'product_uom_qty': 1}),
+                ],
+            }
+            for _i in range(2)
+        ])
+        sos.action_confirm()
+
+        mo1_1, mo1_2 = mos_1 = so1.mrp_production_ids
+        mo2_1, mo2_2 = mos_2 = so2.mrp_production_ids
+        self.assertEqual(len(mos_1), 2)
+        self.assertNotEqual(mo1_1.production_group_id, mo1_2.production_group_id)
+        self.assertEqual(len(mos_2), 2)
+        self.assertNotEqual(mo2_1.production_group_id, mo2_2.production_group_id)
+
+        # Mark as done individually
+        mos_1.action_confirm()
+        mo1_1.button_mark_done()
+        self.assertEqual(len(so1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)), 1)
+        mo1_2.button_mark_done()
+        self.assertEqual(len(so1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)), 1)
+
+        # Mark as done in batch
+        mos_2.action_confirm()
+        mos_2.button_mark_done()
+        self.assertEqual(len(so2.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)), 1)
+
+>>>>>>> d4c6cace84a4e8b6ee33ce3b874fbe4faa13ce8b
     def test_separate_child_mo_for_shared_component(self):
         """Ensure that when confirming a Sale Order with multiple MTO products
         sharing the same component (which has its own BOM), each parent
