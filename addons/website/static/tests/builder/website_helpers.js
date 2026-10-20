@@ -3,6 +3,7 @@ import {
     getSnippetStructure,
     getSnippetView,
     patchImg,
+    patchSnippetModel,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
@@ -313,6 +314,7 @@ export async function setupWebsiteBuilder(
     }
 
     patchImg();
+    patchSnippetModel();
 
     const iframe = queryOne("iframe[data-src^='/website/force/1']");
     if (isBrowserFirefox() && !(iframe?.contentDocument.readyState === "complete")) {
