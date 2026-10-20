@@ -8,7 +8,7 @@ import re
 from collections import defaultdict
 from urllib.parse import urlsplit, parse_qs
 
-from odoo import api, fields, models, _, tools
+from odoo import api, fields, models, _, _lt, tools
 from odoo.exceptions import ValidationError, MissingError
 from odoo.tools import BinaryBytes
 
@@ -33,10 +33,7 @@ class SpreadsheetMixin(models.AbstractModel):
     @api.constrains("spreadsheet_binary_data")
     def _check_spreadsheet_data(self):
         for spreadsheet in self.filtered("spreadsheet_binary_data"):
-            try:
-                data = json.loads(spreadsheet.spreadsheet_binary_data.content)
-            except (json.JSONDecodeError, UnicodeDecodeError):
-                raise ValidationError(_("Uh-oh! Looks like the spreadsheet file contains invalid data."))
+            data = self._try_load_spreadsheet_data(spreadsheet.spreadsheet_binary_data.content)
             if not (tools.config['test_enable'] or tools.config['test_file']):
                 continue
             if data.get("[Content_Types].xml"):
@@ -74,6 +71,13 @@ class SpreadsheetMixin(models.AbstractModel):
                         errors="\n".join(errors),
                     ),
                 )
+
+    @staticmethod
+    def _try_load_spreadsheet_data(data):
+        try:
+            return json.loads(data)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            raise ValidationError(_lt("Uh-oh! Looks like the spreadsheet file contains invalid data."))
 
     @api.depends("spreadsheet_binary_data")
     def _compute_spreadsheet_data(self):
