@@ -2,10 +2,40 @@ import { test, expect, describe } from "@odoo/hoot";
 import { patchWithCleanup, MockServer } from "@web/../tests/web_test_helpers";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
+import { getTemplate } from "@web/core/templates";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 definePosModels();
 
 describe("data_service", () => {
+    test("an unreachable server registers the receipt templates stored in indexedDB", async () => {
+        const store = await setupPosEnv();
+        const views = [{ id: "offline", key: "pos.offline_receipt", _template: "<div/>" }];
+        patchWithCleanup(store.data.orm, {
+            call: () => Promise.reject(new ConnectionLostError("/web/dataset/call_kw")),
+        });
+        patchWithCleanup(store.data, {
+            getCachedServerDataFromIndexedDB: async () => ({ "ir.ui.view": views }),
+        });
+
+        await store.data.initData();
+
+        expect(getTemplate("pos.offline_receipt")).not.toBe(null);
+    });
+
+    test("the receipt templates of the server replace the ones stored in indexedDB", async () => {
+        const store = await setupPosEnv();
+        const key = "point_of_sale.pos_order_receipt";
+        const views = [{ id: "old", key, _template: "<div>old</div>" }];
+        patchWithCleanup(store.data, {
+            getCachedServerDataFromIndexedDB: async () => ({ "ir.ui.view": views }),
+        });
+
+        await store.data.initData();
+
+        expect(getTemplate(key).outerHTML).not.toInclude("<div>old</div>");
+    });
+
     test("localDeleteCascade", async () => {
         const store = await setupPosEnv();
         const data = store.data;
