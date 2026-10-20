@@ -572,6 +572,15 @@ class TestPermissions(TransactionCaseWithUserDemo):
         with patch.object(IrAttachment, '_full_path', lambda self, path: '/proc/dummy_test'), self.assertRaises(OSError):
             self.env['ir.attachment']._file_write('test', io.BytesIO(b'test'))
 
+    def test_write_chmod_permission_error(self):
+        # On filesystems such as CIFS/SMB mounts, fchmod/chmod can raise PermissionError
+        # (operation not permitted) when ownership is fixed at mount time.
+        # Ensure _file_write gracefully continues without failing.
+        with patch('os.fchmod', side_effect=PermissionError(1, 'Operation not permitted')), \
+             patch('os.chmod', side_effect=PermissionError(1, 'Operation not permitted')):
+            attachment = self.env['ir.attachment'].create({'name': 'cifs_test.txt', 'raw': b'test cifs content'})
+            self.assertEqual(attachment.raw.content, b'test cifs content')
+
     def test_write_create_url_binary_attachment(self):
         with self.assertRaisesRegex(ValidationError, r"Sorry, you are not allowed to write on this document"):
             self.Attachments.create({'name': 'Py', 'url': '/blabla.js', 'raw': b'Something'})
