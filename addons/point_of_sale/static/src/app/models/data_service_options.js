@@ -100,7 +100,7 @@ export class DataServiceOptions {
     }
 
     get uniqueModels() {
-        return ["pos.session", "res.users", "res.company"];
+        return ["pos.session", "res.users", "res.company", "ir.ui.view"];
     }
 
     get prohibitedAutoLoadedFields() {

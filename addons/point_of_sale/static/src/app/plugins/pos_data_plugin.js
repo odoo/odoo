@@ -561,6 +561,10 @@ export class PosDataPlugin extends Plugin {
             this.initFieldsAndRelations(params);
         }
 
+        if (!data) {
+            return localData;
+        }
+
         try {
             await this.syncInitialData(data, localData);
         } catch (error) {
@@ -571,11 +575,6 @@ export class PosDataPlugin extends Plugin {
     }
 
     async syncInitialData(data, localData) {
-        for (const template of data["ir.ui.view"]["records"]) {
-            if (template._template) {
-                registerPythonTemplate(template.key, "", template._template);
-            }
-        }
         await this.cleanLocalData(data, localData);
         this.synchronizeServerDataInIndexedDB(localData);
     }
@@ -653,6 +652,11 @@ export class PosDataPlugin extends Plugin {
 
     async initData() {
         const data = await this.loadInitialData();
+        for (const template of data["ir.ui.view"] || []) {
+            if (template._template) {
+                registerPythonTemplate(template.key, "", template._template);
+            }
+        }
         const order = data["pos.order"] || [];
         const orderlines = data["pos.order.line"] || [];
         const posPrepOrder = data["pos.prep.order"] || [];
