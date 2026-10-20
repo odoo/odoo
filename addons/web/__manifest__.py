@@ -153,7 +153,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/session.js',
             'web/static/src/core/browser/cookie.js',
             'web/static/src/core/utils/loading_effect.js',
-            'web/static/src/public/utils.js',
+            'web/static/src/public/button_handler.js',
             'web/static/src/public/lazyloader.js',
         ],
         'web.assets_frontend': [
@@ -239,7 +239,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/session.js'),
             ('remove', 'web/static/src/core/browser/cookie.js'),
             ('remove', 'web/static/src/core/utils/loading_effect.js'),
-            ('remove', 'web/static/src/public/utils.js'),
+            ('remove', 'web/static/src/public/button_handler.js'),
             ('remove', 'web/static/src/public/lazyloader.js'),
         ],
         'web.report_assets_common': [
