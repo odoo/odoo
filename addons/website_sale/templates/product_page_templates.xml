@@ -28,7 +28,7 @@
                 id="wrap"
                 class="o_wsale_product_page"
                 t-att-data-has-available-uoms="has_available_uoms"
-                t-att-data-name="product.name"
+                t-att-data-dynamic-builder-name="editable and product.with_context(lang=env.user.lang).name"
             >
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message.translate="Drag blocks here to add them on all products"/>
                 <section
@@ -43,7 +43,7 @@
                        o_wsale_product_page_opt_image_radius_{{website.product_page_image_roundness}}
                     "
                     t-att-data-view-track="view_track and '1' or '0'"
-                    t-att-data-name="combination_info['display_name']"
+                    t-att-data-dynamic-builder-name="combination_info['display_name_in_user_lang']"
                 >
                     <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
                         <div class="d-flex align-items-center flex-grow-1">

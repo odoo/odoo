@@ -931,10 +931,22 @@ class ProductTemplate(models.Model):
         combination = combination or product.product_template_attribute_value_ids
 
         display_name = product_or_template.with_context(display_default_code=False).display_name
+        # the product's name is shown in the sidebar of the website builder in
+        # user's language (so, avoid loading it if not an allowed editor)
+        shows_name_in_user_lang = self.env.user.has_group("website.group_website_restricted_editor")
+        display_name_in_user_lang = (
+            product_or_template.with_context(display_default_code=False, lang=self.env.user.lang).display_name
+            if shows_name_in_user_lang else display_name
+        )
         if not product:
             combination_name = combination._get_combination_name()
             if combination_name:
                 display_name = f"{display_name} ({combination_name})"
+                combination_name_in_user_language = (
+                    combination.with_context(lang=self.env.user.lang)._get_combination_name()
+                    if shows_name_in_user_lang else combination_name
+                )
+                display_name_in_user_lang = f"{display_name_in_user_lang} ({combination_name_in_user_language})"
 
         price_context = product_or_template._get_product_price_context(combination)
         product_or_template = product_or_template.with_context(**price_context)
@@ -944,6 +956,7 @@ class ProductTemplate(models.Model):
             "product_id": product.id,
             "product_template_id": self.id,
             "display_name": display_name,
+            "display_name_in_user_lang": display_name_in_user_lang,
             "is_combination_possible": self._is_combination_possible(combination=combination),
             **self.with_context(**price_context)._get_additional_combination_info(
                 product_or_template=product_or_template,

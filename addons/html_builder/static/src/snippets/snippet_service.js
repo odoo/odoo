@@ -480,6 +480,9 @@ export class SnippetModel {
         if (snippetEl.classList.contains("s_custom_snippet") && snippetEl.dataset.customName) {
             return snippetEl.dataset.customName;
         }
+        if (snippetEl.dataset.dynamicBuilderName) {
+            return snippetEl.dataset.dynamicBuilderName;
+        }
         const specificNameId = snippetEl.dataset.builderName;
         if (specificNameId) {
             const specificName = this.namesMaps.specific_name?.[specificNameId];
