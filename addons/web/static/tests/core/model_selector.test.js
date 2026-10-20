@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
 import {
@@ -47,7 +47,6 @@ class IrModel extends models.Model {
 }
 
 defineModels([IrModel]);
-describe.current.tags("desktop");
 
 onRpc("ir.model", "display_name_for", function ({ args }) {
     const models = args[0];
@@ -211,11 +210,37 @@ test("model_selector: select a model", async () => {
     expect.verifySteps(["model selected"]);
 });
 
+test.tags("mobile");
+test("model_selector: remains interactive on mobile", async () => {
+    await mountWithCleanup(ModelSelector, {
+        props: {
+            models: ["model.1"],
+            placeholder: "No linked record",
+            onModelSelected: (selected) => {
+                expect.step("model selected");
+                expect(selected).toEqual({
+                    label: "Model 1",
+                    technical: "model.1",
+                });
+            },
+        },
+    });
+
+    expect(".o-autocomplete--input").not.toHaveAttribute("readonly");
+    expect(".o-autocomplete--input").toHaveAttribute("placeholder", "No linked record");
+
+    await contains(".o-autocomplete--input").click();
+    await contains(".o_model_selector_model_1").click();
+
+    expect.verifySteps(["model selected"]);
+});
+
 test("model_selector: with an initial value", async () => {
     await mountModelSelector(["model.1", "model.2", "model.3"], "Model 1");
     expect(".o-autocomplete--input").toHaveValue("Model 1");
 });
 
+test.tags("desktop");
 test("model_selector: autofocus", async () => {
     await mountWithCleanup(ModelSelector, {
         props: {
