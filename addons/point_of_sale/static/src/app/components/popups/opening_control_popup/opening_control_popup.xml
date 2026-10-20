@@ -40,16 +40,28 @@
                 <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-model.proxy="this.state.notes" placeholder="Add an opening note..." />
             </div>
             <t t-set-slot="footer">
-                <button class="button btn btn-primary"
-                    t-if="this.pos.accessRight.canOpenRegister"
-                    t-on-click="this.confirm"
-                    t-att-disabled="!this.pos.isValidFloat(this.state.openingCash)">
-                    Open Register
-                </button>
-                <button class="backend-button button btn btn-secondary"
-                    t-on-click="() => this.pos.showLoginScreen()">
-                    Discard
-                </button>
+                <div class="w-100 d-flex flex-wrap gap-2">
+                    <div class="d-flex gap-2" t-att-class="{'w-100': this.ui.isSmall}">
+                        <button class="button btn btn-primary"
+                            t-if="this.pos.accessRight.canOpenRegister"
+                            t-on-click="this.confirm"
+                            t-att-class="{'w-50': this.ui.isSmall}"
+                            t-att-disabled="!this.pos.isValidFloat(this.state.openingCash)">
+                            Open Register
+                        </button>
+                        <button class="backend-button button btn btn-secondary"
+                            t-on-click="() => this.pos.showLoginScreen()"
+                            t-att-class="{'w-50': this.ui.isSmall}">
+                            Discard
+                        </button>
+                    </div>
+                    <button class="button btn btn-secondary ms-auto"
+                        t-if="this.pos.canOpenCashdrawer"
+                        t-on-click="() => this.pos.openCashboxManually()"
+                        t-att-class="{'w-100': this.ui.isSmall}">
+                        <i class="oi me-2" data-icon="archive"/>Open Cashbox
+                    </button>
+                </div>
             </t>
         </Dialog>
     </t>
