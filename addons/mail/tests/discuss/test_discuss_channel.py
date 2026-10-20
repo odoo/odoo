@@ -1251,8 +1251,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     (
                                         "<span class='o_mail_notification'>"
                                         "You are in a private conversation with "
-                                        f"<a href='/mail/view?model=res.partner&amp;res_id={test_user.partner_id.id}' data-oe-model='res.partner' data-oe-id='{test_user.partner_id.id}' class=o_mail_redirect>@Mario</a> "
-                                        f"and <a href='/mail/view?model=res.partner&amp;res_id={self.partner_employee_nomail.id}' data-oe-model='res.partner' data-oe-id='{self.partner_employee_nomail.id}' class=o_mail_redirect>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</a>."
+                                        f"<a href='/mail/view?model=res.partner&amp;res_id={test_user.partner_id.id}' data-oe-model='res.partner' data-oe-id='{test_user.partner_id.id}' class='o_mail_redirect'>@Mario</a> "
+                                        f"and <a href='/mail/view?model=res.partner&amp;res_id={self.partner_employee_nomail.id}' data-oe-model='res.partner' data-oe-id='{self.partner_employee_nomail.id}' class='o_mail_redirect'>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</a>."
                                         "<br><br><b>@username</b> to mention someone"
                                         "<br><b>@role</b> to notify multiple people"
                                         "<br><b>/command</b> to run a command"
