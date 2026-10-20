@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import html
-from unittest.mock import patch
+from unittest.mock import PropertyMock, patch
 from freezegun import freeze_time
 from datetime import date
 
@@ -313,6 +313,21 @@ class WithContext(HttpCase):
         with freeze_time(date(2025, 12, 31)):
             r = self.url_open(self.page.url)
         self.assertEqual(r.status_code, 404, "Restricted users should see a 404 as the page is unpublished")
+
+    def test_page_cache_geoip_country(self):
+        """Ensure that a page cached for a visitor from one country is not
+        served to a visitor from another country."""
+        self.authenticate(None, None)
+
+        with patch('odoo.http.GeoIP.country_code', new_callable=PropertyMock, return_value='BE'):
+            r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 200)
+        self.assertIn('"geoip_country_code": "BE"', r.text, "The page should be rendered for a visitor from Belgium")
+
+        with patch('odoo.http.GeoIP.country_code', new_callable=PropertyMock, return_value='FR'):
+            r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 200)
+        self.assertIn('"geoip_country_code": "FR"', r.text, "The page cached for Belgium should not be served to a visitor from France")
 
     @mute_logger('odoo.addons.rpc.controllers.xmlrpc')
     def test_search(self):
