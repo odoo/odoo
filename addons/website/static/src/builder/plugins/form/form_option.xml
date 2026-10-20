@@ -21,7 +21,13 @@
     <BuilderRow label.translate="Marker" level="1">
         <BuilderTextInput action="'setMark'" default="''" t-if="this.isActiveItem('form_required_opt') || this.isActiveItem('form_optional_opt')"/>
     </BuilderRow>
+<<<<<<< fda14be72ca618568b2cc7837adb348f55cd94ee
     <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Labels Position">
+||||||| c407de6377d724ff762c643135fb1d06cef13574
+    <BuilderRow t-if="canChangeFieldsLayout" label.translate="Labels Position">
+=======
+    <BuilderRow t-if="this.state.canChangeFieldsLayout" label.translate="Labels Position">
+>>>>>>> 2fa442cc1a32bbe8b8a0a69436a743dd4356b920
         <BuilderButtonGroup action="'selectLabelsPosition'">
             <BuilderButton title.translate="Hide" actionValue="'none'" id="'label_position_hide_opt'">
                 <i class="fa fa-eye-slash"/>
