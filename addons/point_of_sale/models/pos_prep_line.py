@@ -33,3 +33,7 @@ class PosPrepLine(models.Model):
     @api.model
     def _load_pos_data_domain(self, data):
         return [('prep_order_id', 'in', data['pos.prep.order'].ids)]
+
+    @api.model
+    def _load_pos_data_dependencies(self):
+        return ['pos.prep.order']

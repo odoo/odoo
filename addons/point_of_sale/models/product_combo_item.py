@@ -13,6 +13,10 @@ class ProductComboItem(models.Model):
         return [('product_id.active', '=', True), ('id', 'in', combo_item_ids)]
 
     @api.model
+    def _load_pos_data_dependencies(self):
+        return ['product.product']
+
+    @api.model
     def _load_pos_data_fields(self, config):
         return ['id', 'combo_id', 'product_id', 'extra_price', 'currency_id']
 

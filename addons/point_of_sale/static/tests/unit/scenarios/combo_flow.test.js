@@ -156,7 +156,6 @@ test("test_convert_orderlines_to_combo: convert orderlines to combo and break", 
             },
         ],
     });
-    store.comboSuggestion.productCombos = store.comboSuggestion._getProductCombos();
     await animationFrame();
 
     await Utils.clickDisplayedProduct("Combo Product 2");
@@ -240,7 +239,6 @@ test("test_convert_orderlines_to_combo: convert orderlines to combo and break", 
     });
     sci3.combo_id = sCombo3;
     secondCombo.template.combo_ids = [...secondCombo.combos, sCombo3];
-    store.comboSuggestion.productCombos = store.comboSuggestion._getProductCombos();
     await animationFrame();
 
     await Utils.clickDisplayedProduct("Second Product 2");
@@ -314,7 +312,6 @@ test("test_convert_orderlines_to_combo_with_upsell: combo suggestion shows price
             },
         ],
     });
-    store.comboSuggestion.productCombos = store.comboSuggestion._getProductCombos();
     await animationFrame();
 
     await Utils.clickDisplayedProduct("Combo Product 2");
@@ -847,7 +844,6 @@ test("test_convert_orderlines_to_combo_with_same_product: same product with diff
     });
     comboItem.combo_id = deskAccessoriesCombo;
     officeCombo.template.combo_ids = [...officeCombo.combos, deskAccessoriesCombo];
-    store.comboSuggestion.productCombos = store.comboSuggestion._getProductCombos();
     await animationFrame();
 
     await Utils.clickDisplayedProduct("Combo Product 1");
