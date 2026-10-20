@@ -3,13 +3,26 @@
         min-height: $font-size-lg * 2;
         border: 0;
         border-radius: 0;
-        box-shadow: $modal-content-box-shadow-sm-up;
+        box-shadow: none;
 
         .container, .container-fluid, .o_container_small {
             // Force padding when dropped inside another container (e.g. inside
             // a blog post page)
             padding-right: $grid-gutter-width * .5;
             padding-left: $grid-gutter-width * .5;
+        }
+        &.rounded {
+            > *:not(.s_popup_close) {
+                overflow: hidden;
+                @extend %o-we-inner-border-radius;
+            }
+            // Round and offset the close button when a corner radius is set.
+            .s_popup_close {
+                $radius: var(--box-border-top-right-radius, 0px);
+                top: #{"min(#{$spacer * .5}, #{$radius} * 1000)"};
+                right: #{"min(#{$spacer * .5}, #{$radius} * 1000)"};
+                border-radius: #{"min(50%, #{$radius} * 100)"};
+            }
         }
     }
 
@@ -76,7 +89,19 @@
                 max-height:100%;
                 overflow-y: auto;
                 overflow-x: hidden;
+
+                // Do not crop the close button that extends beyond the popup
+                &.rounded {
+                    overflow: visible;
+                    > *:not(.s_popup_close) {
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                    }
+                }
             }
+        }
+        .s_popup_close {
+            pointer-events: auto;
         }
     }
 }
