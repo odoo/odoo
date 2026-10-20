@@ -61,7 +61,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
         # For example, the tour 'time_off_request_calendar_view' would succeed (false positive) without this leave type.
         # However, the tour won't create a time-off request (as expected)because no time-off type is available to be selected on the leave
         # This would cause the test case that uses the tour to fail.
-        cls.env['hr.work.entry.type'].create({
+        cls.default_work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Test Work Entry Type',
             'code': 'Test Work Entry Type',
             'requires_allocation': False,

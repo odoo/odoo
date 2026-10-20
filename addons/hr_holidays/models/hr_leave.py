@@ -2128,6 +2128,8 @@ class HrLeave(models.Model):
                 'meeting_activity_ids': [(5, 0, 0)],
                 'res_id': holiday.id,
             }
+            if holiday.count_as == 'working_time':
+                meeting_values['show_as'] = 'free'
             # Add the partner_id (if exist) as an attendee
             partner_id = (user and user.partner_id) or (holiday.employee_id and holiday.employee_id.work_contact_id)
             if partner_id:
