@@ -1335,7 +1335,7 @@ class TestXMLTranslation(TransactionCase):
     <div class="s_table_of_content_vertical_navbar" data-name="Navbar" contenteditable="false">
         <div class="s_table_of_content_navbar" style="top: 76px;"><a href="#table_of_content_heading_1672668075678_4" class="table_of_content_link">%s</a></div>
     </div>
-    <div class="s_table_of_content_main" data-name="Content">
+    <div class="s_table_of_content_main">
         <section class="pb16">
             <h1 id="table_of_content_heading_1672668075678_4">%s</h1>
         </section>
@@ -1385,7 +1385,7 @@ class TestXMLTranslation(TransactionCase):
     <div class="s_table_of_content_vertical_navbar" data-name="Navbar" contenteditable="false">
         <div class="s_table_of_content_navbar" style="top: 76px;"><a href="#table_of_content_heading_1672668075678_4" class="table_of_content_link">%s</a></div>
     </div>
-    <div class="s_table_of_content_main" data-name="Content">
+    <div class="s_table_of_content_main">
         <section class="pb16">
             <h1 id="table_of_content_heading_1672668075678_4">%s</h1>
         </section>
