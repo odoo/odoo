@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="pos_glory_cash.GloryErrorDialog">
+        <Dialog size="'md'" title.translate="Cash machine error">
+            <p class="fs-3">Error code: <strong t-out="props.errorCode"/></p>
+            <img class="w-100" height="458" width="328" t-att-src="props.errorGif"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="() => { props.reset(); }">
+                    Reset
+                </button>
+                <button class="btn btn-secondary" t-on-click="() => props.close()">
+                    Close
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
