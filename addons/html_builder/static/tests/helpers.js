@@ -5,6 +5,7 @@ import { Image } from "@html_builder/core/img";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { revertPreview } from "@html_builder/core/utils";
 import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_option/background_shape_option_plugin";
+import { SnippetModel } from "@html_builder/snippets/snippet_service";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
@@ -42,6 +43,14 @@ export function patchImg() {
         loadImage: () => {},
         getSvg: function () {
             this.isSvg = () => false;
+        },
+    });
+}
+
+export function patchSnippetModel() {
+    patch(SnippetModel.prototype, {
+        getSnippetName(snippetEl) {
+            return snippetEl.dataset.testBuilderName ?? super.getSnippetName(snippetEl);
         },
     });
 }
@@ -265,6 +274,7 @@ export async function setupHTMLBuilder(
     patch(IrUiView.prototype, {
         render_public_asset: () => getSnippetView(snippets),
     });
+    patchSnippetModel();
 
     const Plugins = [...CORE_PLUGINS];
 
