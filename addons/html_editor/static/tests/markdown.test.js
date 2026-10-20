@@ -271,7 +271,7 @@ describe("inline code", () => {
             contentBefore: "<p>ab[cd<strong>ef]g</strong>h</p>",
             stepFunction: async (editor) => insertText(editor, "`"),
             contentAfterEdit:
-                '<p>ab\ufeff<code class="o_inline_code">\ufeffcd<strong>ef[]</strong>\ufeff</code>\ufeff<strong>g</strong>h</p>',
+                '<p>ab\ufeff<code class="o_inline_code">\ufeffcd<strong>ef[]\ufeff</strong></code>\ufeff<strong>g</strong>h</p>',
             contentAfter:
                 '<p>ab<code class="o_inline_code">cd<strong>ef[]</strong></code><strong>g</strong>h</p>',
         });
@@ -282,7 +282,7 @@ describe("inline code", () => {
             contentBefore: "<p><strong>a<u>b[cd</u>ef]g</strong></p>",
             stepFunction: async (editor) => insertText(editor, "`"),
             contentAfterEdit:
-                '<p><strong>a<u>b</u></strong>\ufeff<code class="o_inline_code">\ufeff<strong><u>cd</u>ef[]</strong>\ufeff</code>\ufeff<strong>g</strong></p>',
+                '<p><strong>a<u>b</u></strong>\ufeff<code class="o_inline_code"><strong><u>\ufeffcd</u>ef[]\ufeff</strong></code>\ufeff<strong>g</strong></p>',
             contentAfter:
                 '<p><strong>a<u>b</u></strong><code class="o_inline_code"><strong><u>cd</u>ef[]</strong></code><strong>g</strong></p>',
         });
