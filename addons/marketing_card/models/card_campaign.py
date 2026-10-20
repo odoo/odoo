@@ -356,7 +356,7 @@ class CardCampaign(models.Model):
         # try to pick a relevant card if users try to visit during preview/test mailings
         preview_card = self._fetch_or_create_preview_card() if self else self.env['card.card']
         return f"""
-<div class="o_layout oe_unremovable oe_unmovable o_empty_theme" data-name="Mailing">
+<div class="o_layout oe_unremovable oe_unmovable o_empty_theme" data-builder-name="mailing">
 <style id="design-element"></style>
 <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
 <div class="row">
