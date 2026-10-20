@@ -10,10 +10,13 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
     Every link receives 4 zero-width non-breaking spaces (unicode FEFF
     characters, hereafter referred to as ZWNBSP):
     - one before the link
-    - one as the link's first child
-    - one as the link's last child
+    - one before the first leaf of the link
+    - one after the last leaf of the link
     - one after the link
     like so: `//ZWNBSP//<a>//ZWNBSP//label//ZWNBSP//</a>//ZWNBSP`.
+    The inner ones go inside the formats of the label, like so:
+    `<a><s>//ZWNBSP//label//ZWNBSP//</s></a>`, so that text typed at the inner
+    edges of the link keeps them.
 
     A visual indication ( `o_link_in_selection` class) is added to a link when
     the selection is contained within it.
@@ -42,6 +45,7 @@ export class LinkSelectionPlugin extends Plugin {
         /** Processors */
         clean_for_save_processors: (root) => this.clearLinkInSelectionClass(root),
         normalize_processors: (root) => {
+            this.updateLinkFeffs(root);
             this.resetLinkInSelection();
             return root;
         },
@@ -49,11 +53,39 @@ export class LinkSelectionPlugin extends Plugin {
         /** Providers */
         feff_providers: this.addFeffsToLinks.bind(this),
 
+        /** Predicates */
+        would_feff_be_legit_predicates: (node) => {
+            // In a link, only the FEFFs of its provider and the ones following
+            // a line break are legit.
+            const link = closestElement(node, "a");
+            if (
+                link &&
+                this.isLinkEligibleForZwnbsp(link) &&
+                node.previousSibling?.nodeName !== "BR"
+            ) {
+                return false;
+            }
+        },
+
         system_classes: ["o_link_in_selection"],
     };
 
+    /**
+     * Updates the FEFFs of the whole link holding the root, as its inner FEFFs
+     * can be outside the root.
+     *
+     * @param {Element} root
+     */
+    updateLinkFeffs(root) {
+        const link = closestElement(root, "a");
+        if (link && link !== root) {
+            this.dependencies.feff.updateFeffs(link);
+        }
+    }
+
     addFeffsToLinks(root, cursors) {
-        return selectElements(root, "a")
+        // The inner FEFFs of the link holding the root can be in the root.
+        return selectElements(closestElement(root, "a") || root, "a")
             .filter(this.isLinkEligibleForZwnbsp.bind(this))
             .flatMap((link) => this.dependencies.feff.surroundWithFeffs(link, cursors));
     }
