@@ -13,7 +13,13 @@ import {
 import { base64Img, setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
-import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
+import {
+    deleteBackward,
+    insertText,
+    simulateArrowKeyPress,
+    tripleClick,
+    undo,
+} from "../_helpers/user_actions";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import {
     compareHighlightedContent,
@@ -2791,4 +2797,21 @@ test("should remove character before unremovable (2)", async () => {
         stepFunction: deleteBackward,
         contentAfter: `<p>a[]<span class="oe_unremovable">x</span>b</p>`,
     });
+});
+
+test("should preserve formatting element wrapping an empty unremovable element", async () => {
+    const { editor, el } = await setupEditor(
+        '<p>ab<b><span class="oe_unremovable">[cd]</span></b>ef</p>'
+    );
+    deleteBackward(editor);
+    await tick();
+    expect(getContent(el)).toBe(
+        '<p>ab<b><span class="oe_unremovable" data-oe-zws-empty-inline="">[]\u200B</span></b>ef</p>'
+    );
+
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await tick();
+    expect(getContent(el)).toBe(
+        '<p>a[]b<b><span class="oe_unremovable" data-oe-zws-empty-inline="">\u200B</span></b>ef</p>'
+    );
 });
