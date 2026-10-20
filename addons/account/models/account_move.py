@@ -4211,6 +4211,18 @@ class AccountMove(models.Model):
             _logger.info(logger_message)
         return res
 
+    def _parse_flush_fnames(self, fnames):
+        if fnames and {'move_type', 'document_tax_mode'} & set(fnames):
+            # flush the two fields together to validate `_check_document_tax_mode_set`
+            fnames = {'move_type', 'document_tax_mode'} | set(fnames)
+        return fnames
+
+    def flush_recordset(self, fnames=None):
+        return super().flush_recordset(self._parse_flush_fnames(fnames))
+
+    def flush_model(self, fnames=None):
+        return super().flush_model(self._parse_flush_fnames(fnames))
+
     @api.depends('partner_id', 'date', 'state', 'move_type')
     @api.depends_context('input_full_display_name')
     def _compute_display_name(self):
