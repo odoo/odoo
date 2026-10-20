@@ -19,20 +19,25 @@ class ResPartner(models.Model):
     @api.depends('purchase_line_ids')
     def _compute_on_time_rate(self):
         date_order_days_delta = int(self.env['ir.config_parameter'].sudo().get_param('purchase_stock.on_time_delivery_days', default='365'))
-        order_lines = self.env['purchase.order.line'].search([
-            ('partner_id', 'in', self.ids),
-            ('date_order', '>', fields.Date.today() - timedelta(date_order_days_delta)),
-            ('qty_received', '!=', 0),
-            ('order_id.state', 'in', ['done', 'purchase']),
-            ('product_id', 'in', self.env['product.product'].sudo()._search([('type', '!=', 'service')]))
-        ])
+        # prefetching for future filtering and calculation logic
+        order_lines = self.env['purchase.order.line'].search_fetch(
+            domain=[
+                ('partner_id', 'in', self.ids),
+                ('date_order', '>', fields.Date.today() - timedelta(date_order_days_delta)),
+                ('qty_received', '!=', 0),
+                ('order_id.state', 'in', ['done', 'purchase']),
+                ('product_id', 'in', self.env['product.product'].sudo()._search([('type', '!=', 'service')])),
+            ],
+            field_names=['date_planned', 'partner_id', 'product_uom_qty'],
+        )
         lines_quantity = defaultdict(lambda: 0)
-        moves = self.env['stock.move'].search([
-            ('purchase_line_id', 'in', order_lines.ids),
-            ('state', '=', 'done')])
-        # Fetch fields from db and put them in cache.
-        order_lines.read(['date_planned', 'partner_id', 'product_uom_qty'], load='')
-        moves.read(['purchase_line_id', 'date'], load='')
+        moves = self.env['stock.move'].search_fetch(
+            domain=[
+                ('purchase_line_id', 'in', order_lines.ids),
+                ('state', '=', 'done'),
+            ],
+            field_names=['purchase_line_id', 'date', 'quantity'],
+        )
         moves = moves.filtered(lambda m: m.date.date() <= m.purchase_line_id.date_planned.date())
         for move, quantity in zip(moves, moves.mapped('quantity')):
             lines_quantity[move.purchase_line_id.id] += quantity
