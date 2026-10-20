@@ -240,7 +240,11 @@ class IrBinary(models.AbstractModel):
         if not stream or stream.size == 0:
             if not placeholder:
                 placeholder = record._get_placeholder_filename(field_name)
+            # on an access error, users who can read the record get the real
+            # image at the same URL: the placeholder stays private
+            public = bool(stream and stream.public)
             stream = self._get_placeholder_stream(placeholder)
+            stream.public = public
 
         if stream.type == 'url':
             return stream  # Rezising an external URL is not supported
