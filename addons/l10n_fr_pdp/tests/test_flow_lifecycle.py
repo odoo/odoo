@@ -1233,6 +1233,31 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertTrue(flow.payload_id)
         self.assertIn(flow, invoice.l10n_fr_pdp_sent_in_flow_ids)
 
+    def test_simplified_periodicity_flow_is_auto_sent_within_due_window(self):
+        """Simplified regimes have a multi-day due window (e.g. the 25th to the
+        30th of the following month). The cron must auto-send their initial flows
+        during that window, not only on a single day."""
+        self.company.l10n_fr_pdp_periodicity = 'simplified_monthly'
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+        )
+        flow = invoice.l10n_fr_pdp_last_flow_id
+        # The due window for a September invoice spans several days.
+        self.assertEqual(flow.due_period_start, fields.Date.to_date('2025-10-25'))
+        self.assertEqual(flow.due_period_end, fields.Date.to_date('2025-10-30'))
+
+        # A day strictly inside the grace window (not the first, not the last).
+        self._run_send_cron('2025-10-27', identifier='FLOW-CRON-SIMPLIFIED')
+        flow.invalidate_recordset(['state', 'payload_id'])
+        invoice.invalidate_recordset(['l10n_fr_pdp_sent_in_flow_ids'])
+
+        self.assertRecordValues(flow, [{
+            'state': 'sent',
+        }])
+        self.assertTrue(flow.payload_id)
+        self.assertIn(flow, invoice.l10n_fr_pdp_sent_in_flow_ids)
+
     def test_transaction_flow_with_errors_is_not_sent_before_due_date(self):
         valid_invoice = self._create_reporting_invoice(
             partner=self.b2bi_customer,
