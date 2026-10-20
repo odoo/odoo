@@ -219,8 +219,11 @@ export class PeerToPeer {
     }
 
     closeAllConnections() {
-        for (const peerId of Object.keys(this.peersInfos)) {
+        const peerIds = Object.keys(this.peersInfos);
+        if (peerIds.length) {
             this.notifyAllPeers("ptp_disconnect");
+        }
+        for (const peerId of peerIds) {
             this.removePeer(peerId);
         }
     }
