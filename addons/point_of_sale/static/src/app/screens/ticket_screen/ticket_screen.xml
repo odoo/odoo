@@ -13,7 +13,7 @@
                             placeholder.translate="Search Orders..."
                             onSearch.bind="onSearch"
                             onFilterSelected.bind="onFilterSelected" />
-                        <div class="buttons d-flex gap-1" t-if="usePreset">
+                        <div class="buttons d-flex gap-1 overflow-auto" t-if="usePreset">
                             <button t-foreach="pos.models['pos.preset'].getAll()" t-as="preset" t-key="preset.id"
                                 class="btn btn-lg btn-secondary text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
                                 t-attf-class="{{this.state.selectedPreset === preset ? 'active' : ''}}">
