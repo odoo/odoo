@@ -11,6 +11,7 @@ from odoo.tools.mimetypes import (
     get_extension,
     guess_file_mimetype,
     guess_mimetype,
+    split_stem_and_extension,
 )
 
 TEST_FOLDER = Path(file_path('base/tests/files'))
@@ -183,19 +184,31 @@ class TestMimeGuessingOdoo(BaseCase, MimeGuessingCases):
             'test',
         )
 
-    def test_get_extension(self):
-        self.assertEqual(get_extension('filename.Abc'), '.abc')
-        self.assertEqual(get_extension('filename.scss'), '.scss')
-        self.assertEqual(get_extension('filename.torrent'), '.torrent')
-        self.assertEqual(get_extension('filename.ab_c'), '.ab_c')
-        self.assertEqual(get_extension('.htaccess'), '')
-        # enough to suppose that extension is present and don't suffix the filename
-        self.assertEqual(get_extension('filename.tar.gz'), '.gz')
-        self.assertEqual(get_extension('filename'), '')
-        self.assertEqual(get_extension('filename.'), '')
-        self.assertEqual(get_extension('filename.not_alnum'), '')
-        self.assertEqual(get_extension('filename.with space'), '')
-        self.assertEqual(get_extension('filename.notAnExtension'), '')
+    def test_split_stem_and_extension(self):
+        for filename, stem, extension in [
+            ('filename.Abc', 'filename', '.Abc'),
+            ('filename.scss', 'filename', '.scss'),
+            ('filename.torrent', 'filename', '.torrent'),
+            ('filename.ab_c', 'filename', '.ab_c'),
+            ('report v1.2.pdf', 'report v1.2', '.pdf'),
+            ('folder.v2/test.pdf', 'folder.v2/test', '.pdf'),
+            ('.config.json', '.config', '.json'),
+            # compressed files keep both extensions
+            ('archive.tar.gz', 'archive', '.tar.gz'),
+            ('archive.TGZ', 'archive', '.TGZ'),
+            ('report v1.2.gz', 'report v1.2', '.gz'),
+            # no extension
+            ('.htaccess', '.htaccess', ''),
+            ('filename', 'filename', ''),
+            ('filename.', 'filename.', ''),
+            ('filename.not_alnum', 'filename.not_alnum', ''),
+            ('filename.with space', 'filename.with space', ''),
+            ('filename.notAnExtension', 'filename.notAnExtension', ''),
+            ('Mr. Doe', 'Mr. Doe', ''),
+        ]:
+            with self.subTest(filename=filename):
+                self.assertEqual(split_stem_and_extension(filename), (stem, extension))
+                self.assertEqual(get_extension(filename), extension.lower())
 
     def test_fix_filename_extension(self):
         fix = fix_filename_extension
