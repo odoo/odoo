@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from odoo import Command, fields
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 from odoo.fields import Domain
 from odoo.models import Model
 from odoo.tests import tagged
@@ -65,6 +65,7 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
             'line_ids': [
                 Command.create({
                     'name': 'Product A',
+                    'product_id': self.product_a.id,
                     'quantity': 1,
                     'price_unit': 500.0,
                     'tax_ids': [self.tax_sale_23.id],
@@ -89,6 +90,7 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
                 'line_ids': [
                     Command.create({
                         'name': 'Product A',
+                        'product_id': self.product_a.id,
                         'quantity': 1,
                         'price_unit': 1000,
                         'tax_ids': [],
@@ -126,6 +128,9 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
             'name': 'Partner B',
             'company_id': self.company_pt.id,
         })
+        invoice_b = self.create_invoice(post=False)
+        invoice_b.partner_id = partner_b
+        invoice_b.action_post()
         with self.assertRaisesRegex(UserError, "You cannot change the name of a partner without a VAT number"):
             partner_b.name = "Partner B2"
 
@@ -179,10 +184,10 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
 
     def test_l10n_pt_hashed_on_date_validation(self):
         """
-        Test that an error is thrown if an invoice has a hashed_on date ahead of the system date.
+        Test that issuing asks to confirm the clock if an invoice has a hashed_on date ahead of the system date.
         """
         self.create_invoice(l10n_pt_hashed_on=fields.Datetime.now() + timedelta(hours=1), do_hash=True)
-        with self.assertRaisesRegex(UserError, "exists secured invoices with a lock date ahead of the present time."):
+        with self.assertRaisesRegex(RedirectWarning, "are earlier than those of the last document issued"):
             self.create_invoice()
 
     def test_l10n_pt_refund_validation(self):
@@ -217,6 +222,7 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
             'line_ids': [
                 Command.create({
                     'name': 'Product A',
+                    'product_id': self.product_a.id,
                     'quantity': 1,
                     'price_unit': 1234.568,
                     'l10n_pt_line_discount': 10.0,
@@ -224,6 +230,7 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
                 }),
                 Command.create({
                     'name': 'Product A',
+                    'product_id': self.product_a.id,
                     'quantity': 1,
                     'price_unit': 756.81,
                     'tax_ids': self.tax_sale_23.ids,
@@ -294,6 +301,8 @@ class TestL10nPtHashDomain(TestL10nPtCommon):
         # write protection on hashed moves.
         Model.write(hashed_invoice, {'inalterable_hash': '$1$' + 'A' * 40})
         invoice = self.create_invoice(invoice_date='2024-01-02')
+        # Posting signed it; take it back out of the chain so there is something left to hash.
+        Model.write(invoice, {'inalterable_hash': False})
         self.assertEqual(invoice.sequence_prefix, hashed_invoice.sequence_prefix)
 
         chains = invoice._get_chains_to_hash(force_hash=True, raise_if_no_document=False)

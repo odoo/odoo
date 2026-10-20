@@ -179,6 +179,8 @@ class TestL10nPtAtSeries(TestL10nPtCommon):
             'journal_id': self.company_data['default_journal_sale'].id,
             'document_type': 'out_invoice',
             'prefix': 'ZXX',
+            # A document can only be issued in a series holding its AT validation code
+            'at_code': 'AT-ZXX2024ZW',
         })
         self.env['account.move'].with_company(self.company_pt).create({
             'company_id': self.company_pt.id,
@@ -189,6 +191,7 @@ class TestL10nPtAtSeries(TestL10nPtCommon):
             'line_ids': [
                 Command.create({
                     'name': 'Product',
+                    'product_id': self.product_a.id,
                     'quantity': 1,
                     'price_unit': 100,
                     'tax_ids': [self.tax_sale_23.id],
@@ -196,30 +199,27 @@ class TestL10nPtAtSeries(TestL10nPtCommon):
             ],
         }).action_post()
 
-        # Fields should be protected since invoice is posted
+        # Fields should be protected since invoice is posted. The end date is not: it closes the series.
         protected_test_cases = [
             ('prefix', 'INV'),
             ('name', '2024RANDOM'),
             ('document_type', 'debit_note'),
             ('date_start', '2024-06-01'),
-            ('date_end', '2024-06-01'),
             ('training_series', False),
             ('journal_id', self.company_data['default_journal_sale'].id),
             ('company_exclusive_series', False),
             ('company_id', self.env.company.id),
         ]
         for field, value in protected_test_cases:
-            with self.assertRaisesRegex(UserError, "You cannot change the properties of a series that has already been used by a journal entry."):
+            with self.assertRaisesRegex(UserError, "You cannot change the properties of a series in which documents were already issued."):
                 series.write({field: value})
 
-        # Since series doesn't have an AT code, we can set it (even if invoice is posted)
-        series.write({'at_code': 'AT-ZXX2024ZW'})
-        # After it's set, it cannot be changed
-        with self.assertRaisesRegex(UserError, "You cannot change the AT Validation Code of a series that has already been used."):
+        # Once set, the AT code cannot be changed
+        with self.assertRaisesRegex(UserError, "You cannot change the AT Validation Code of a series in which documents were already issued."):
             series.write({'at_code': 'AT-ZXX2024ZWZ'})
 
         # Cannot delete a series being used by a posted invoice
-        with self.assertRaisesRegex(UserError, "You cannot delete a series that is used. It will automatically be archived after the End Date"):
+        with self.assertRaisesRegex(UserError, "You cannot delete a series in which documents were already issued"):
             series.unlink()
 
     def test_get_at_code_raises_when_inactive(self):

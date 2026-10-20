@@ -15,8 +15,10 @@ patch(ReceiptScreen.prototype, {
     },
 
     async _sendReceiptToCustomer() {
-        if (this.pos.isPortugueseCompany() && typeof this.currentOrder.id === "number") {
-            const prepared = await this.pos.l10nPtPrepareOrderForReceipt(this.currentOrder);
+        if (this.pos.isPortugueseCompany()) {
+            const prepared = await this.pos.l10nPtPrepareOrderForReceipt(this.currentOrder, {
+                explainNotIssued: true,
+            });
             if (!prepared) {
                 return Promise.reject();
             }

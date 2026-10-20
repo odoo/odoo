@@ -5,9 +5,10 @@ import re
 import requests
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import zeep
+from odoo.tools.misc import format_date
 from odoo.tools.zeep.exceptions import Fault
 
 from odoo.addons.certificate.tools import CertificateAdapter
@@ -75,6 +76,8 @@ class L10nPtATSeries(models.Model):
     )
     # Used in _rec_name to display the types of documents within an AT Series (displayed in the list view of AT Series)
     document_type_name = fields.Char("Type Name", compute="_compute_document_type_name")
+    # Whitelist for the `filterable_selection` widget on `document_type`.
+    available_document_types = fields.Json(compute='_compute_available_document_types')
     at_code = fields.Char("AT Validation Code")
     document_identifier = fields.Char(
         "Document Identifier",
@@ -173,6 +176,13 @@ class L10nPtATSeries(models.Model):
         for series in self:
             series.document_type_name = dict(series._fields['document_type'].selection).get(series.document_type)
 
+    @api.depends_context('l10n_pt_series_document_types')
+    def _compute_available_document_types(self):
+        self.available_document_types = (
+            self.env.context.get('l10n_pt_series_document_types')
+            or self._fields['document_type'].get_values(self.env)
+        )
+
     @api.depends('prefix', 'name')
     def _compute_document_identifier(self):
         """
@@ -213,7 +223,33 @@ class L10nPtATSeries(models.Model):
         self.ensure_one()
         if not self.active:
             raise UserError(_("The series %(prefix)s is not active.", prefix=self.prefix))
+        if not self.at_code:
+            raise self._l10n_pt_missing_at_code_warning()
         return self.at_code
+
+    def _l10n_pt_missing_at_code_warning(self):
+        """
+        No document may be issued in a series before the AT has validated it (Portaria 195/2020):
+        its validation code is part of every document's ATCUD. Opens the series to register it.
+        """
+        self.ensure_one()
+        return RedirectWarning(
+            _(
+                "The AT series %(series)s has no AT validation code yet. Register it with the AT, or enter "
+                "the code obtained from the Portal das Finanças, before issuing documents in it.",
+                series=self.document_identifier,
+            ),
+            {
+                'name': _('AT Series'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'l10n_pt.at.series',
+                'res_id': self.id,
+                'view_mode': 'form',
+                'views': [(self.env.ref('l10n_pt_certification.view_l10n_pt_at_series_form').id, 'form')],
+                'target': 'new',
+            },
+            _('Open the AT Series'),
+        )
 
     def _l10n_pt_get_document_number_sequence(self):
         """
@@ -244,6 +280,15 @@ class L10nPtATSeries(models.Model):
         if not self.company_exclusive_series:
             self.company_id = self.env.company
 
+    @api.model
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
+        # A document asking for one type of series gets that type preset.
+        document_types = self.env.context.get('l10n_pt_series_document_types') or []
+        if 'document_type' in fields and not defaults.get('document_type') and len(document_types) == 1:
+            defaults['document_type'] = document_types[0]
+        return defaults
+
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
@@ -262,39 +307,82 @@ class L10nPtATSeries(models.Model):
                 )
         return records
 
+    @api.model
+    def _l10n_pt_document_models(self):
+        """The models of the documents issued in AT series: every concrete model built on the document mixin."""
+        return [
+            model_name
+            for model_name in self.env.registry.descendants(['l10n.pt.document.mixin'], '_inherit')
+            if not self.env[model_name]._abstract
+        ]
+
+    def _l10n_pt_get_used(self):
+        """
+        The series of ``self`` in which a document was issued, i.e. numbered, whatever its state now:
+        such a series is frozen and kept (FAQ 4327, Despacho 8632/2014 1.9).
+        """
+        used_ids = set()
+        for model_name in self._l10n_pt_document_models():
+            # sudo: a series shared across branches holds documents of companies the user may not see.
+            [(series,)] = self.env[model_name].sudo()._read_group(
+                [('l10n_pt_at_series_id', 'in', self.ids), ('l10n_pt_document_number', '!=', False)],
+                aggregates=['l10n_pt_at_series_id:recordset'],
+            )
+            used_ids.update(series.ids)
+        return self.filtered(lambda s: s.id in used_ids)
+
+    def _l10n_pt_check_closing(self, date_end):
+        """
+        A series in use is discontinued by ending it (Despacho 8632/2014 1.9, 2.5.1): from its end date
+        on, no document can be issued in it. It can be ended at any date from its last document on,
+        moved while it is still open, but never reopened once it has ended, nor left without an end.
+        """
+        date_end = fields.Date.to_date(date_end)
+        last_document_dates = {}
+        for model_name in self._l10n_pt_document_models():
+            # sudo: a series shared across branches holds documents of companies the user may not see.
+            documents = self.env[model_name].sudo()
+            for series, last_date in documents._read_group(
+                [('l10n_pt_at_series_id', 'in', self.ids), ('l10n_pt_document_number', '!=', False)],
+                groupby=['l10n_pt_at_series_id'],
+                aggregates=[f'{documents._l10n_pt_date_field}:max'],
+            ):
+                if last_date := fields.Date.to_date(last_date):
+                    last_document_dates[series.id] = max(last_document_dates.get(series.id, last_date), last_date)
+        for at_series in self:
+            if not at_series.active:
+                raise UserError(_("The series %(series)s has ended and cannot be reopened.", series=at_series.document_identifier))
+            if not date_end and at_series.date_end:
+                raise UserError(_("The end date of the series %(series)s cannot be removed.", series=at_series.document_identifier))
+            last_date = last_document_dates.get(at_series.id)
+            if date_end and last_date and date_end < last_date:
+                raise UserError(_(
+                    "The series %(series)s cannot end before its last document, dated %(date)s.",
+                    series=at_series.document_identifier,
+                    date=format_date(self.env, last_date),
+                ))
+
     def write(self, vals):
-        protected_fields = {'prefix', 'name', 'document_type', 'date_start', 'date_end', 'training_series', 'journal_id', 'company_exclusive_series', 'company_id'}
-        if any(field in vals for field in protected_fields | {'at_code'}):
-            for at_series in self:
-                if at_series.env['account.move'].search_count([
-                    ('l10n_pt_at_series_id', '=', at_series.id),
-                    ('state', "in", ('posted', 'cancel')),
-                    ('l10n_pt_document_type', '=', at_series.document_type),
-                ], limit=1) or at_series.env['account.payment'].search_count([
-                    ('l10n_pt_at_series_id', '=', at_series.id),
-                    ('state', "in", ('posted', 'cancel')),
-                ], limit=1):
-                    if any(field in vals for field in protected_fields):
-                        raise UserError(_("You cannot change the properties of a series that has already been used by a journal entry."))
-                    if 'at_code' in vals and at_series.at_code:
-                        raise UserError(_("You cannot change the AT Validation Code of a series that has already been used."))
+        # Its end date is how a series in use is closed, so it stays writable (see `_l10n_pt_check_closing`).
+        protected_fields = {'prefix', 'name', 'document_type', 'date_start', 'training_series', 'journal_id', 'company_exclusive_series', 'company_id'}
+        if protected_fields & vals.keys() or {'at_code', 'date_end'} & vals.keys():
+            used_series = self._l10n_pt_get_used()
+            if used_series and protected_fields & vals.keys():
+                raise UserError(_("You cannot change the properties of a series in which documents were already issued."))
+            if 'at_code' in vals and used_series.filtered('at_code'):
+                raise UserError(_("You cannot change the AT Validation Code of a series in which documents were already issued."))
+            if 'date_end' in vals:
+                used_series._l10n_pt_check_closing(vals['date_end'])
         return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used(self):
-        for at_series in self:
-            if (
-                self.env['account.move'].search_count([
-                    ('l10n_pt_at_series_id', '=', at_series.id),
-                    ('state', "in", ('posted', 'cancel')),
-                    ('l10n_pt_document_type', '=', at_series.document_type),
-                ], limit=1)
-                or self.env['account.payment'].search_count([
-                    ('l10n_pt_at_series_id', '=', at_series.id),
-                    ('state', "in", ('paid', 'canceled')),
-                ], limit=1)
-            ):
-                raise UserError(_("You cannot delete a series that is used. It will automatically be archived after the End Date"))
+        if used_series := self._l10n_pt_get_used():
+            raise UserError(_(
+                "You cannot delete a series in which documents were already issued (%(series)s). "
+                "Set its End Date to close it.",
+                series=", ".join(used_series.mapped('document_identifier')),
+            ))
 
     def _l10n_pt_at_ws_get_registration_params(self):
         self.ensure_one()

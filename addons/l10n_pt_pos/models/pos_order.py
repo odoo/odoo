@@ -7,30 +7,49 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
-    l10n_pt_is_reprint = fields.Boolean(readonly=True)
 
     def _generate_pos_order_invoice(self):
         if self.country_code != 'PT':
             return super()._generate_pos_order_invoice()
 
-        result = super(PosOrder, self.filtered('partner_id').with_context(generate_pdf=False))._generate_pos_order_invoice()
+        # A session can outlive its series (opened on 31 December): provide the series of each order's date.
+        for config, orders in self.grouped(lambda o: o.session_id.config_id).items():
+            for date in {fields.Date.context_today(order, order.date_order) for order in orders}:
+                config._l10n_pt_pos_ensure_at_series(date)
 
-        for order in self.filtered(lambda o: not o.partner_id and not o.account_move):
-            move = order._create_invoice({
-                'move_type': 'out_receipt',
-                'journal_id': order.session_id.config_id.invoice_journal_id.id,
-                'invoice_origin': order.name,
-                'ref': order.name,
-                'currency_id': order.currency_id.id,
-                'invoice_date': order.date_order.date(),
-                'pos_order_ids': order.ids,
-                'invoice_line_ids': order._prepare_invoice_lines(),
-            })
-            order.state = 'invoiced'
-            move.sudo().with_company(order.company_id)._post()
+        # A sale without a customer is sold to the generic final consumer, as its document says (SAF-T
+        # has no customer-less document), so core's invoice, payments, reconciliation and refund
+        # credit note all apply to it; `_prepare_invoice_vals` makes it a simplified invoice.
+        if customerless := self.filtered(lambda o: not o.partner_id):
+            customerless.partner_id = self.env.ref('l10n_pt_certification.pt_final_consumer')
+        result = super(PosOrder, self.with_context(generate_pdf=False))._generate_pos_order_invoice()
 
         self.env['account.move']._l10n_pt_compute_missing_hashes()
         return result
+
+    def _l10n_pt_is_anonymous(self):
+        """Sold to nobody in particular: no customer, or the generic final consumer (NIF 999999990)."""
+        final_consumer = self.env.ref('l10n_pt_certification.pt_final_consumer', raise_if_not_found=False)
+        return all(not order.partner_id or order.partner_id == final_consumer for order in self)
+
+    def _prepare_invoice_vals(self):
+        vals = super()._prepare_invoice_vals()
+        if self[:1].country_code == 'PT' and vals['move_type'] == 'out_invoice' and self._l10n_pt_is_anonymous():
+            # An anonymous sale is a simplified invoice (FS, CIVA art. 40) within its cap. Above the
+            # cap it stays an invoice-receipt (FR) to the generic final consumer: since DL 28/2019 a
+            # non-taxable buyer need not be identified on an invoice, whatever the amount (CIVA art.
+            # 36(5)(a)). A refund stays core's credit note against the document it refunds.
+            limit = self.env['account.move']._l10n_pt_simplified_invoice_limit(self.lines)
+            eur = self.env.ref('base.EUR')
+            amount_eur = sum(
+                order.currency_id._convert(order.amount_total, eur, order.company_id, vals['invoice_date'])
+                for order in self
+            )
+            if amount_eur > limit:
+                return vals
+            vals['move_type'] = 'out_receipt'
+            vals['invoice_line_ids'] = self._prepare_invoice_lines('out_receipt')
+        return vals
 
     def _l10n_pt_pos_get_vat_exemptions_reasons(self):
         self.ensure_one()
@@ -40,8 +59,10 @@ class PosOrder(models.Model):
         )))
 
     def update_l10n_pt_print_version(self):
+        # The receipt is the print of the order's invoice (FS, FR): printed at the till or from the
+        # back office, the document has one Original.
         self.ensure_one()
-        self.l10n_pt_is_reprint = True
+        self.account_move.update_l10n_pt_print_version()
 
     def post_reprint_reason(self, reason):
         self.ensure_one()
@@ -57,14 +78,13 @@ class PosOrder(models.Model):
         invoice = self.account_move
         if not invoice:
             return {}
-        doc_type_selection = dict(invoice._fields['l10n_pt_document_type']._description_selection(self.env))
         return {
             'name': self.name,
             'hash_short': invoice.l10n_pt_inalterable_hash_short,
             'atcud': invoice.l10n_pt_atcud,
             'document_identifier': invoice.l10n_pt_document_number,
             'qr_code_str': invoice.l10n_pt_qr_code_str,
-            'is_reprint': self.l10n_pt_is_reprint,
-            'document_type': doc_type_selection.get(invoice.l10n_pt_document_type, ''),
+            'is_reprint': bool(invoice.l10n_pt_print_version),
+            'document_type': invoice._l10n_pt_get_document_type_designation(),
             'training_mode': invoice.l10n_pt_at_series_id.training_series if invoice.l10n_pt_at_series_id else False,
         }

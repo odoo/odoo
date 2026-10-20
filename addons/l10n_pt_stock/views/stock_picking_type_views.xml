@@ -7,8 +7,10 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='hardware']" position="after">
                 <page string="Portugal" invisible="country_code != 'PT'">
-                    <label for="l10n_pt_stock_at_series_id" class="col-lg-3 o_light_label"/>
-                    <field name="l10n_pt_stock_at_series_id"/>
+                    <group>
+                        <field name="l10n_pt_stock_at_series_id" invisible="code not in ('outgoing', 'internal')"/>
+                        <field name="l10n_pt_stock_return_at_series_id" invisible="code != 'outgoing'"/>
+                    </group>
                 </page>
             </xpath>
         </field>

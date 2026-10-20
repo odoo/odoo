@@ -13,6 +13,12 @@
                         Setting the invoice date in the future will prevent new documents with an invoice date before
                         <field name="invoice_date" readonly="1"/> from being posted.
                     </div>
+                    <!-- Alert to the data the SAF-T (PT) will need while drafting (Despacho 8632/2014 3.4.1) -->
+                    <div class="alert alert-warning mb-0" role="alert"
+                         invisible="not l10n_pt_saft_missing_data">
+                        <strong>Missing for the SAF-T (PT):</strong>
+                        <field name="l10n_pt_saft_missing_data" readonly="1"/>
+                    </div>
                     <div class="alert alert-warning mb-0" role="alert"
                          invisible="not l10n_pt_at_series_missing_at_code">
                         The AT Series <field name="l10n_pt_at_series_id" readonly="1"/> is missing its validation code.

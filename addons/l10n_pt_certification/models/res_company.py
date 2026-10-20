@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, RedirectWarning, UserError
+from odoo.tools.misc import format_datetime
 
 from odoo.addons.l10n_pt_certification.const import PT_AT_WS_ENDPOINT_TEST, PT_AT_WS_ENDPOINT_PROD
 from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
@@ -9,6 +10,12 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_pt_region_code = fields.Char('Region Code', compute='_compute_l10n_pt_region_code', store=True, readonly=False)
+    l10n_pt_clock_confirmed_entry_date = fields.Datetime(
+        string="System Clock Confirmed Against",
+        readonly=True,
+        help="The SystemEntryDate of the last issued document when a user confirmed that the system "
+             "clock, although earlier, was correct.",
+    )
     l10n_pt_at_ws_env = fields.Selection(
         selection=[
             ('prod', 'Production'),
@@ -47,6 +54,62 @@ class ResCompany(models.Model):
         store=True,
         readonly=False,
     )
+
+    def _l10n_pt_get_last_system_entry_date(self):
+        """The latest SystemEntryDate of any document issued under the root company's NIF, branches included."""
+        self.ensure_one()
+        last_dates = []
+        for model_name in self.env['l10n_pt.at.series']._l10n_pt_document_models():
+            # sudo: every branch's documents count, whichever companies the user may see.
+            documents = self.env[model_name].sudo()
+            if 'l10n_pt_hashed_on' not in documents._fields:
+                continue
+            [(last_date,)] = documents._read_group(
+                [('company_id', 'child_of', self.root_id.id), ('l10n_pt_hashed_on', '!=', False)],
+                aggregates=['l10n_pt_hashed_on:max'],
+            )
+            if last_date:
+                last_dates.append(last_date)
+        return max(last_dates, default=False)
+
+    def _l10n_pt_check_system_clock(self):
+        """
+        Before issuing, a system date and time earlier than that of the last document issued, of any
+        type and series, has to be confirmed by the user (Despacho 8632/2014 3.4.3). Confirming
+        holds until a later document is issued.
+        """
+        now = fields.Datetime.now()
+        for root in self.root_id:
+            last_date = root._l10n_pt_get_last_system_entry_date()
+            confirmed = root.l10n_pt_clock_confirmed_entry_date
+            if last_date and now < last_date and not (confirmed and confirmed >= last_date):
+                raise RedirectWarning(
+                    _(
+                        "The system date and time (%(now)s) are earlier than those of the last document "
+                        "issued (%(last)s). Check the clock of the server. If it is correct, confirm it, "
+                        "then issue the document again.",
+                        now=format_datetime(self.env, now),
+                        last=format_datetime(self.env, last_date),
+                    ),
+                    self.env.ref('l10n_pt_certification.action_l10n_pt_confirm_system_clock').id,
+                    _("The clock is correct"),
+                )
+
+    @api.model
+    def _l10n_pt_confirm_system_clock(self):
+        """Run from the warning of `_l10n_pt_check_system_clock`, by the user it was shown to."""
+        for root in self.env.companies.root_id:
+            # sudo: any user issuing documents confirms the clock, not only those who may edit the company.
+            root.sudo().l10n_pt_clock_confirmed_entry_date = root._l10n_pt_get_last_system_entry_date()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _("The system date and time are confirmed. Issue the document again."),
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }
 
     @api.depends('country_id', 'l10n_pt_at_ws_ssl_certificate_ids')
     def _compute_l10n_pt_at_ws_ssl_certificate(self):
@@ -105,9 +168,7 @@ class ResCompany(models.Model):
         if self.account_fiscal_country_id.code != 'PT':
             return super()._verify_hashed_move(move, previous_hash, versioning_list, current_versioning_index)
         previous_hash = previous_hash.split("$")[2] if previous_hash else ""
-        message = pt_hash_utils.get_message_to_hash(
-            move.date, move.l10n_pt_hashed_on, move._l10n_pt_get_document_number(), abs(move.amount_total_signed), previous_hash,
-        )
+        message = pt_hash_utils.get_message_to_hash(move._l10n_pt_get_hash_values(), previous_hash)
         return pt_hash_utils.verify_integrity(
             message, move.inalterable_hash, versioning_list[current_versioning_index],
         ), current_versioning_index

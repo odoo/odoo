@@ -1,12 +1,42 @@
-from contextlib import contextmanager
+import base64
+from contextlib import contextmanager, nullcontext
 from unittest.mock import MagicMock, patch
 
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.models import Model
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+
+_LOCAL_SIGNING_KEY = None
+
+
+def _local_signing_key():
+    global _LOCAL_SIGNING_KEY  # noqa: PLW0603
+    if _LOCAL_SIGNING_KEY is None:
+        _LOCAL_SIGNING_KEY = rsa.generate_private_key(public_exponent=65537, key_size=1024)
+    return _LOCAL_SIGNING_KEY
+
+
+def _local_sign_records(env, docs_to_sign, model):
+    """In-process stand-in for the IAP signing service: RSA-1024/SHA-1 over the AT message, a batch
+    chained by `sorting_key` as the service does."""
+    res, previous = {}, None
+    for doc in sorted(docs_to_sign, key=lambda d: d['sorting_key']):
+        previous_signature = doc['previous_signature'] if previous is None else previous
+        message = f"{doc['date']};{doc['system_entry_date']};{doc['name']};{doc['gross_total']};{previous_signature or ''}"
+        previous = base64.b64encode(_local_signing_key().sign(message.encode(), padding.PKCS1v15(), hashes.SHA1())).decode()
+        res[env[model].browse(int(doc['id']))] = f"$1${previous}"
+    return res
+
+
+def _local_public_keys(env):
+    return {1: _local_signing_key().public_key().public_bytes(
+        serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo,
+    ).decode()}
 
 
 class TestL10nPtCommon(AccountTestInvoicingCommon):
@@ -31,6 +61,11 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
             return series
 
         super().setUpClass()
+        if 'standard' in cls.test_tags:
+            # Posting a PT invoice signs it through IAP; standard runs sign in-process instead, with
+            # real signatures, so the integrity checks still detect tampering.
+            cls.startClassPatcher(patch('odoo.addons.l10n_pt_certification.utils.hashing.sign_records', _local_sign_records))
+            cls.startClassPatcher(patch('odoo.addons.l10n_pt_certification.utils.hashing.get_public_keys', _local_public_keys))
         cls.company_pt = cls.company_data['company']
         cls.company_pt.write({
             'street': '25 Avenida da Liberdade',
@@ -59,7 +94,8 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
             'line_ids': [
                 Command.create({
                     'name': 'Product A',
-                    'product_id': product_id,
+                    # A PT invoice line needs a product (D-4)
+                    'product_id': product_id or cls.product_a.id,
                     'quantity': quantity,
                     'price_unit': amount,
                     'tax_ids': [tax.id if tax else cls.tax_sale_23.id],
@@ -71,17 +107,15 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
         invoice_data['l10n_pt_at_series_id'] = series_for_year.filtered(lambda s: s.document_type == move_type).id
 
         move = cls.env['account.move'].with_company(cls.company_pt).create(invoice_data)
-        if post:
-            move.action_post()
-        if do_hash:
-            if not l10n_pt_hashed_on:
-                l10n_pt_hashed_on = fields.Date.today()
-            if mock_hash:
-                with freeze_time(l10n_pt_hashed_on), cls._mock_sign_records():
-                    move.button_hash()
-            else:
-                with freeze_time(l10n_pt_hashed_on):
-                    move.button_hash()
+        # Posting signs the invoice, so `l10n_pt_hashed_on` is the time it is posted at.
+        with (
+            freeze_time(l10n_pt_hashed_on or fields.Date.today()) if do_hash else nullcontext(),
+            cls._mock_sign_records() if mock_hash else nullcontext(),
+        ):
+            if post:
+                move.action_post()
+            if do_hash and not move.inalterable_hash:
+                move.button_hash()
         return move
 
     @classmethod

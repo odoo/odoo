@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
+    <!-- A customer without a NIF, or with the generic 999999990 (kept for the SAF-T only), is printed as
+         "Consumidor final" (Despacho 8632/2014 2.2.5, FAQ 4730). -->
     <template id="l10n_pt_partner_vat">
-        <div t-if="o.company_id.account_fiscal_country_id.code == 'PT' and not o.partner_id.vat">
+        <div t-if="o.company_id.account_fiscal_country_id.code == 'PT' and not o.partner_id._l10n_pt_has_nif()">
             <t t-out="'Consumidor final'"/>
         </div>
     </template>
@@ -27,7 +29,16 @@
             </t>
         </xpath>
 
-        <!-- If the customer has no VAT, we must show 'Consumidor final' -->
+        <!-- If the customer has no VAT, we must show 'Consumidor final', and never the generic NIF -->
+        <xpath expr="//div[@id='partner_vat_address_not_same_as_shipping']" position="attributes">
+            <attribute name="t-if">o.partner_id._l10n_pt_has_nif()</attribute>
+        </xpath>
+        <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="attributes">
+            <attribute name="t-if">o.partner_id._l10n_pt_has_nif()</attribute>
+        </xpath>
+        <xpath expr="//div[@id='partner_vat_no_shipping']" position="attributes">
+            <attribute name="t-if">o.partner_id._l10n_pt_has_nif()</attribute>
+        </xpath>
         <xpath expr="//div[@id='partner_vat_address_not_same_as_shipping']" position="after">
             <t t-call="l10n_pt_certification.l10n_pt_partner_vat"/>
         </xpath>
@@ -46,20 +57,34 @@
                     <span t-else="">PROFORMA</span>
                     <span t-if="o.l10n_pt_document_number" t-field="o.l10n_pt_document_number">FS 2023/0001</span>
                     <span>-</span>
-                    <span t-out="dict(o.fields_get(allfields=['l10n_pt_document_type'])['l10n_pt_document_type']['selection'])[o.l10n_pt_document_type]"/>
+                    <span t-out="o._l10n_pt_get_document_type_designation()"/>
                 </t>
                 <t t-else="">$0</t>
             </t>
+        </xpath>
+
+        <!-- Dates are printed as DD-MM-AAAA (Despacho 8632/2014 2.2.4) -->
+        <xpath expr="//div[@t-field='o.invoice_date']" position="attributes">
+            <attribute name="t-options">{'widget': 'date', 'format': 'dd-MM-yyyy'}</attribute>
+        </xpath>
+        <xpath expr="//div[@t-field='o.invoice_date_due']" position="attributes">
+            <attribute name="t-options">{'widget': 'date', 'format': 'dd-MM-yyyy'}</attribute>
+        </xpath>
+        <xpath expr="//div[@t-field='o.delivery_date']" position="attributes">
+            <attribute name="t-options">{'widget': 'date', 'format': 'dd-MM-yyyy'}</attribute>
+        </xpath>
+        <xpath expr="//t[@t-out=&quot;payment_vals['date']&quot;]" position="attributes">
+            <attribute name="t-options">{'widget': 'date', 'format': 'dd-MM-yyyy'}</attribute>
         </xpath>
 
         <!-- QR Code -->
         <xpath expr="//div[@id='qrcode']" position="after">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'PT' and o.l10n_pt_qr_code_str">
                 <div>
-                    ATCUD: <t t-out="o.l10n_pt_atcud"/>
+                    ATCUD:<t t-out="o.l10n_pt_atcud"/>
                 </div>
                 <img style="margin: 0.25cm;"
-                     t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_pt_qr_code_str, 125, 125)"
+                     t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;barLevel=%s'%('QR', quote_plus(o.l10n_pt_qr_code_str), 125, 125, 'M')"
                 />
             </t>
         </xpath>

@@ -38,17 +38,42 @@ def call_iap(env, route, params=None):
         result = response.json().get("result", {})
         error = result.get("error")
         if error:
-            raise UserError(str(ERROR_MESSAGES.get(error, _lt("Unknown error %s while contacting IAP. Please contact Odoo support.", error))))
+            if error in ERROR_MESSAGES:
+                raise UserError(env._(ERROR_MESSAGES[error]))
+            raise UserError(env._("Unknown error %s while contacting IAP. Please contact Odoo support.", error))
         return result
     except (requests.exceptions.ConnectionError, requests.exceptions.Timeout, requests.exceptions.HTTPError):
-        raise UserError(str(ERROR_MESSAGES.get("error_connecting_iap")))
+        raise UserError(env._(ERROR_MESSAGES["error_connecting_iap"]))
 
 
-def get_message_to_hash(date, l10n_pt_hashed_on, l10n_pt_document_number, amount_total, previous_hash):
-    date = date.strftime('%Y-%m-%d')
-    system_entry_date = l10n_pt_hashed_on.isoformat(timespec='seconds')
-    gross_total = float_repr(amount_total, 2)
-    return f"{date};{system_entry_date};{l10n_pt_document_number};{gross_total};{previous_hash}"
+def format_hash_values(hash_values):
+    """
+    Format the values a document is signed over, exactly as the AT expects them in the message.
+
+    Takes the raw values returned by ``_l10n_pt_get_hash_values`` and renders them. Signing
+    (``_calculate_hashes``) and verification (``get_message_to_hash``) both go through here, so
+    the two sides cannot render the same values differently.
+
+    :param hash_values: the ``_l10n_pt_get_hash_values`` dict of the record
+    :return: the formatted components, keyed as the IAP signing service expects them
+    """
+    return {
+        'date': hash_values['date'].strftime('%Y-%m-%d'),
+        'system_entry_date': hash_values['system_entry_date'].isoformat(timespec='seconds'),
+        'name': hash_values['document_number'],
+        'gross_total': float_repr(hash_values['gross_total'], 2),
+    }
+
+
+def get_message_to_hash(hash_values, previous_hash):
+    """
+    The signed message of a document, rebuilt for verification.
+
+    :param hash_values: the ``_l10n_pt_get_hash_values`` dict of the record
+    :param previous_hash: the bare signature of the previous document in the chain
+    """
+    values = format_hash_values(hash_values)
+    return f"{values['date']};{values['system_entry_date']};{values['name']};{values['gross_total']};{previous_hash}"
 
 
 def sign_records(env, docs_to_sign, model):
@@ -109,26 +134,18 @@ def l10n_pt_common_qr_code_str(record, env, date):
     :param record: The record for which the QR code is generated
     :param env: Environment
     :param date: The date required in the QR code, can be move.date, pos.date_order or picking.date_done
-    :return: Dictionary containing some of the values needed for the QR code string, and the correct tax_letter per record
+    :return: Dictionary containing some of the values needed for the QR code string
     """
     company_vat = re.sub(r'\D', '', record.company_id.vat)
-    partner_vat = re.sub(r'\D', '', record.partner_id.vat or '999999990')
-
-    if record.company_id.l10n_pt_region_code == 'PT-AC':
-        tax_letter = 'J'
-    elif record.company_id.l10n_pt_region_code == 'PT-MA':
-        tax_letter = 'K'
-    else:
-        tax_letter = 'I'
+    partner_vat = record.partner_id and record.partner_id._l10n_pt_get_vat() or '999999990'
 
     qr_code_dict = {}
     qr_code_dict['A:'] = f"{company_vat}*"
     qr_code_dict['B:'] = f"{partner_vat}*"
     qr_code_dict['C:'] = f"{record.partner_id.country_id.code if record.partner_id and record.partner_id.country_id else 'Desconhecido'}*"
-    qr_code_dict['E:'] = f"{'A' if record.state == 'cancel' else 'N'}*"
+    qr_code_dict['E:'] = f"{'A' if record._l10n_pt_is_cancelled() else 'N'}*"
     qr_code_dict['F:'] = f"{format_date(env, date, date_format='yyyyMMdd')}*"
     qr_code_dict['G:'] = f"{record.l10n_pt_document_number}*"
-    qr_code_dict[f'{tax_letter}1:'] = f"{record.company_id.l10n_pt_region_code}*"
     qr_code_dict['R:'] = f"{PT_CERTIFICATION_NUMBER}"
 
-    return qr_code_dict, tax_letter
+    return qr_code_dict
