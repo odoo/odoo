@@ -4305,6 +4305,33 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ('2027-01-01', 14),
         ), ('allocated_duration',))
 
+    def test_accrual_allocation_from_working_schedule_contract_template(self):
+        """ A contract template (version without employee) never gets an allocation
+        from its working schedule. """
+        attendances = []
+        for index in range(5):
+            attendances.append((0, 0, {
+                'hour_from': 8,
+                'hour_to': 12,
+                'dayofweek': str(index),
+            }))
+            attendances.append((0, 0, {
+                'hour_from': 13,
+                'hour_to': 18,
+                'dayofweek': str(index),
+            }))
+        calendar_emp = self.env['resource.calendar'].create({
+            'name': '45 Hours',
+            'attendance_ids': attendances,
+            'leave_accrual_plan_id': self.accrual_plan_monthly_end.id,
+        })
+        contract_template = self.env['hr.version'].create({
+            'name': 'Contract Template',
+            'employee_id': False,
+        })
+        contract_template.resource_calendar_id = calendar_emp
+        self.assertFalse(contract_template.allocation_from_working_schedule_id)
+
     def test_allocation_warning_uses_request_date_balance(self):
         """
         The allocation warning of a time off request must be based on the balance at the
