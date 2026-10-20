@@ -38,7 +38,7 @@
             <t t-foreach="this.images" t-as="image" t-key="image_index">
                 <div t-attf-id="{{this.id}}_{{image_index}}" t-attf-class="carousel-item #{image_index == this.index and 'active' or ''}" role="tabpanel" aria-roledescription="slide">
                     <t t-if="!this.copyAttributes">
-                        <img class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt" data-name="Image"/>
+                        <img class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt"/>
                     </t>
                     <t t-else="">
                         <t t-set="imageAttributes" t-value="Object.fromEntries([...image.attributes].map(attr => [attr.name, attr.value]))"/>
