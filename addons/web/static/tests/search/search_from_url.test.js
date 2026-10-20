@@ -240,8 +240,8 @@ test("Good URL does not apply default filters", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([["state", "=", "sent"]]);
 });
 
-// TODO JESC Fix this after owl refactor
-test.todo("hotkey sharing available after dialog", async () => {
+test.tags("desktop");
+test("hotkey sharing available after dialog", async () => {
     defineActions([
         {
             id: 1,
