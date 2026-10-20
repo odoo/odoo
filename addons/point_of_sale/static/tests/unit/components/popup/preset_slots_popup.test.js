@@ -34,3 +34,31 @@ test("PresetSlotsPopup", async () => {
         { label: "Thursday", date: "May 21" },
     ]);
 });
+
+test("PresetSlotsPopupDateTime", async () => {
+    mockDate("2026-05-15 06:00:00", -12); // Timezone GMT-12
+    const store = await setupPosEnv();
+    store.addNewOrder({ preset_id: store.models["pos.preset"].get(2) });
+    await mountWithCleanup(PresetSlotsPopup, {
+        props: {
+            close: () => {},
+            getPayload: () => {},
+        },
+    });
+
+    const buttons = [...document.querySelectorAll(".preset_date_buttons")];
+    const result = buttons.map((btn) => ({
+        label: btn.querySelector("span")?.textContent?.trim(),
+        date: btn.querySelector("small")?.textContent?.trim() || null,
+    }));
+
+    expect(result).toEqual([
+        { label: "Today", date: null },
+        { label: "Tomorrow", date: null },
+        { label: "Saturday", date: "May 16" },
+        { label: "Sunday", date: "May 17" },
+        { label: "Monday", date: "May 18" },
+        { label: "Tuesday", date: "May 19" },
+        { label: "Wednesday", date: "May 20" },
+    ]);
+});
