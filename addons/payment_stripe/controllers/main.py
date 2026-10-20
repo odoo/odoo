@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import logging
 import pprint
+from collections import defaultdict
 from datetime import datetime
 
 from werkzeug.exceptions import Forbidden
@@ -210,11 +211,14 @@ class StripeController(http.Controller):
             return
 
         notification_payload = request.httprequest.data.decode('utf-8')
-        signature_entries = request.httprequest.headers['Stripe-Signature'].split(',')
-        signature_data = {k: v for k, v in [entry.split('=') for entry in signature_entries]}
+        signature_entries = map(lambda s: s.split('='),
+                                request.httprequest.headers['Stripe-Signature'].split(','))
+        signature_data = defaultdict(list)
+        for entry in signature_entries:
+            signature_data[entry[0]].append(entry[1])
 
         # Retrieve the timestamp from the data
-        event_timestamp = int(signature_data.get('t', '0'))
+        event_timestamp = int(signature_data.get('t', ['0'])[0])
         if not event_timestamp:
             _logger.warning("received notification with missing timestamp")
             raise Forbidden()
@@ -225,17 +229,18 @@ class StripeController(http.Controller):
             raise Forbidden()
 
         # Retrieve the received signature from the data
-        received_signature = signature_data.get('v1')
-        if not received_signature:
+        if not signature_data.get('v1'):
             _logger.warning("received notification with missing signature")
             raise Forbidden()
-
-        # Compare the received signature with the expected signature computed from the data
-        signed_payload = f'{event_timestamp}.{notification_payload}'
-        expected_signature = hmac.new(
-            webhook_secret.encode('utf-8'), signed_payload.encode('utf-8'), hashlib.sha256
-        ).hexdigest()
-        if not hmac.compare_digest(received_signature, expected_signature):
+        for received_signature in signature_data.get('v1', []):
+            # Compare the received signature with the expected signature computed from the data
+            signed_payload = f'{event_timestamp}.{notification_payload}'
+            expected_signature = hmac.new(
+                webhook_secret.encode('utf-8'), signed_payload.encode('utf-8'), hashlib.sha256
+            ).hexdigest()
+            if hmac.compare_digest(received_signature, expected_signature):
+                return True
+        else:
             _logger.warning("received notification with invalid signature")
             raise Forbidden()
 
