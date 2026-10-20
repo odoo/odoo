@@ -21,7 +21,7 @@
     <BuilderRow label.translate="Marker" level="1">
         <BuilderTextInput action="'setMark'" default="''" t-if="this.isActiveItem('form_required_opt') || this.isActiveItem('form_optional_opt')"/>
     </BuilderRow>
-    <BuilderRow t-if="canChangeFieldsLayout" label.translate="Labels Position">
+    <BuilderRow t-if="this.state.canChangeFieldsLayout" label.translate="Labels Position">
         <BuilderButtonGroup action="'selectLabelsPosition'">
             <BuilderButton title.translate="Hide" actionValue="'none'" id="'label_position_hide_opt'">
                 <i class="fa fa-eye-slash"/>
