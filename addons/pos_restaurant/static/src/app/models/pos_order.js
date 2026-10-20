@@ -88,10 +88,10 @@ patch(PosOrder.prototype, {
         return super.setPartner(...arguments);
     },
     removeOrderline(line, deep = true) {
-        const courseId = line.course_id;
+        const course = line.course_id;
         const result = super.removeOrderline(...arguments);
-        if (courseId && !this.lines.some((l) => l.course_id === courseId)) {
-            courseId.delete();
+        if (course?.isEmpty()) {
+            course.delete();
         }
         return result;
     },

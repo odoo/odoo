@@ -233,15 +233,6 @@ patch(PosStore.prototype, {
                 const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
                 newLine.course_id = orphanLine.course_id?.id;
                 uuid = newLine.uuid;
-                if (orphanLine.course_id && mergedCourses) {
-                    // Replace new line uuid in the merged courses
-                    const course = mergedCourses[orphanLine.course_id.uuid];
-                    if (course?.lines) {
-                        course.lines = course.lines.map((lineUuid) =>
-                            lineUuid === orphanLine.uuid ? uuid : lineUuid
-                        );
-                    }
-                }
                 this.handlePreparationHistory(
                     sourceOrder.last_order_preparation_change.lines,
                     destOrder.last_order_preparation_change.lines,
@@ -249,6 +240,15 @@ patch(PosStore.prototype, {
                     newLine,
                     orphanLine.qty
                 );
+            }
+            if (orphanLine.course_id && mergedCourses) {
+                // Replace the line uuid in the merged courses, also when merged into an existing line
+                const course = mergedCourses[orphanLine.course_id.uuid];
+                if (course?.lines) {
+                    course.lines = course.lines.map((lineUuid) =>
+                        lineUuid === orphanLine.uuid ? uuid : lineUuid
+                    );
+                }
             }
 
             if (sourceOrder.table_id) {
@@ -325,6 +325,8 @@ patch(PosStore.prototype, {
                 table_id: sourceOrder.table_id?.id,
                 lines: course.line_ids.map((l) => l.uuid),
                 index: course.index,
+                name: course.name,
+                course_id: course.course_id?.id,
                 fired: course.fired,
                 fired_date: course.fired_date,
             };
@@ -401,7 +403,8 @@ patch(PosStore.prototype, {
                         index: courseDetails.index,
                         fired: courseDetails.fired,
                         fired_date: courseDetails.fired_date,
-                        name: _t("Course ") + courseDetails.index,
+                        course_id: courseDetails.course_id || false,
+                        name: courseDetails.name || _t("Course ") + courseDetails.index,
                     });
                     courseDetails.lines?.forEach((lineUuid) => {
                         courseByLines[lineUuid] = course;
@@ -419,6 +422,7 @@ patch(PosStore.prototype, {
                 Object.assign(serializedLine, {
                     order_id: newOrder.id,
                     qty: detail.quantity,
+                    course_id: false, // never keep the course of the merged order
                 });
 
                 const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
@@ -440,7 +444,9 @@ patch(PosStore.prototype, {
 
                 delete order.uiState.unmerge[line.uuid];
             }
-
+            // Drop the courses emptied by the unmerge
+            order.cleanCourses();
+            newOrder.cleanCourses();
             await this.syncAllOrders({ orders: [order, newOrder] });
             return newOrder;
         }
