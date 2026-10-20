@@ -360,7 +360,7 @@ list of filtered posts (by date or tag).
     <xpath expr="//t[@id='o_wblog_post_footer_share_links_hook']" position="replace">
         <!-- Adding the "Share" snippet via xpath to make it editable -->
         <div t-if="opt_blog_post_footer_share_links_display" t-ignore="true">
-            <t t-snippet-call="website.s_share" string="Share"
+            <t t-snippet-call="website.s_share"
                 _classes.f="no_icon_color oe_unremovable oe_unmovable"
                 _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
                 _style.f="--fa-icon-size: 40px;"
@@ -450,7 +450,7 @@ list of filtered posts (by date or tag).
     <!-- Adding the "Share" snippet via xpath to make it editable -->
     <xpath expr="//div[@id='o_wblog_post_header_options']//t[@id='o_wblog_post_cover_share_links_hook']" position="replace">
         <div t-if="opt_blog_post_header_share_links_display" t-ignore="true">
-            <t t-snippet-call="website.s_share" string="Share"
+            <t t-snippet-call="website.s_share"
                 _classes.f="no_icon_color oe_unremovable oe_unmovable"
                 _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
                 _style.f="--fa-icon-size: 40px;"
@@ -511,7 +511,7 @@ list of filtered posts (by date or tag).
     <!-- Adding the "Share" snippet via xpath to make it editable -->
     <xpath expr="//div[@id='o_wblog_post_header_options']//t[@id='o_wblog_post_cover_share_links_hook']" position="replace">
         <div t-if="opt_blog_post_header_share_links_display" t-ignore="true">
-            <t t-snippet-call="website.s_share" string="Share"
+            <t t-snippet-call="website.s_share"
                 _classes.f="no_icon_color oe_unremovable oe_unmovable"
                 _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
                 _style.f="--fa-icon-size: 40px;"

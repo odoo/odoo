@@ -65,7 +65,7 @@ function startFormInteractions() {
 
 const formWithRestrictedFieldsTemplate = /* html */ `
     <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                     <div class="s_website_form_rows row s_col_no_bgcolor">
@@ -116,7 +116,7 @@ const formWithRestrictedFieldsTemplate = /* html */ `
 
 const formWithCharacterLimitRuleTemplate = /* html */ `
     <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                     <div class="s_website_form_rows row s_col_no_bgcolor">
@@ -145,7 +145,7 @@ const formWithCharacterLimitRuleTemplate = /* html */ `
 
 const formWithRestrictedFileTypesTemplate = /* html */ `  
     <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                     <div class="s_website_form_rows row s_col_no_bgcolor">
@@ -189,7 +189,7 @@ const formWithRestrictedFileTypesTemplate = /* html */ `
 function createFileUploadForm(maxFiles = 1) {
     return `
         <div id="wrapwrap">
-            <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                 <div class="container-fluid">
                     <form action="/website/form/" method="post" enctype="multipart/form-data"
                           class="o_mark_required" data-mark="*" data-pre-fill="true"
@@ -228,7 +228,7 @@ function createFileUploadForm(maxFiles = 1) {
 
 const formWithVisibilityRulesTemplate = /* html */ `
     <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                     <div class="s_website_form_rows row s_col_no_bgcolor">

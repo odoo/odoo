@@ -153,7 +153,7 @@ test("'Author' field's type stays selected when you modify the option list", asy
         },
     }));
     await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+        `<section class="s_website_form" data-snippet="s_website_form">
             <div class="container-fluid">
             <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                 <div class="s_website_form_rows">
@@ -527,7 +527,7 @@ test("Visibility dependency on radio field with 'Add other' option", async (fiel
 test("Changing max files number option updates file input 'multiple' attribute", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(`
-    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
         <form data-model_name="mail.mail">
             <div class="s_website_form_rows">
                 <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="binary">
@@ -628,7 +628,7 @@ test("Last list entry cannot be removed", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(
         `
-<section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+<section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
     <form data-model_name="mail.mail">
         <div class="s_website_form_rows">
 			<div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
@@ -782,7 +782,7 @@ test("Shouldn't have the 'Link to country' option if there's no country field", 
 test("Min and max character limits should not contradict one another.", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+        `<section class="s_website_form" data-snippet="s_website_form">
             <div class="container-fluid">
             <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                 <div class="s_website_form_rows">
@@ -876,7 +876,7 @@ test("Only state fields have data-link-state-to-country attr", async () => {
 test("Checkbox default value option stays visible when changing label position", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+        `<section class="s_website_form" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                     <div class="s_website_form_rows">
@@ -1035,7 +1035,7 @@ describe("Many2one Field", () => {
         }));
         await setupWebsiteBuilder(
             `
-            <section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+            <section class="s_website_form" data-snippet="s_website_form">
                 <div class="container-fluid">
                     <form action="/website/form/" method="post" class="o_mark_required" data-model_name="res.partner">
                         <div class="s_website_form_rows">
@@ -1376,7 +1376,7 @@ test("builderList re-renders when the field type changes (existing fields)", asy
         },
     });
     await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+        `<section class="s_website_form" data-snippet="s_website_form">
             <div class="container-fluid">
             <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                 <div class="s_website_form_rows">
@@ -1680,7 +1680,7 @@ test("single-choice field is displayed as a dropdown when it has more than five 
         },
     }));
     await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+        `<section class="s_website_form" data-snippet="s_website_form">
             <div class="container-fluid">
             <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                 <div class="s_website_form_rows">

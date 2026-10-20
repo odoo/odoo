@@ -7,7 +7,7 @@ import {
 
 defineWebsiteModels();
 const snippetHTML = `
-    <section class="s_banner o_half_screen_height" data-snippet="s_banner" data-name="Banner" contenteditable="false">
+    <section class="s_banner o_half_screen_height" data-snippet="s_banner" contenteditable="false">
         <div contenteditable="true" class="container">
         </div>
     </section>`;

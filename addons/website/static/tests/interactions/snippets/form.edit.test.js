@@ -10,7 +10,7 @@ describe.current.tags("interaction_dev");
 
 const formXml = `
     <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                     <div class="s_website_form_rows row s_col_no_bgcolor">

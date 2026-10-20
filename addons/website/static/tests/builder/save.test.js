@@ -373,7 +373,7 @@ test("Drag and drop from the page should only mark the concerned elements as dir
         <section class="s_dummy_snippet_1" style="height: 100px;">
             <div>
                 <p>Test</p>
-                <div class="s_alert" data-vcss="001" data-snippet="s_alert" data-name="Alert">
+                <div class="s_alert" data-vcss="001" data-snippet="s_alert">
                     <div class="s_alert_content">
                         <p>Dummy</p>
                     </div>

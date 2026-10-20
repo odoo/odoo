@@ -31,7 +31,7 @@ test("drop beside dropzone inserts the snippet", async () => {
     expect(".o_add_snippet_dialog").toHaveCount(0);
     await waitForEndOfOperation();
     expect(contentEl)
-        .toHaveInnerHTML(`<section class="s_test" data-snippet="s_test" data-name="Test">
+        .toHaveInnerHTML(`<section class="s_test" data-snippet="s_test">
     <div class="test_a"></div>
     </section>`);
 });

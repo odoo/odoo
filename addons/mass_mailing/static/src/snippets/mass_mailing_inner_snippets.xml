@@ -16,7 +16,7 @@
     </t>
     <t t-set="inactiveStars" t-value="5 - activeStars"/>
 
-    <div class="s_rating o_mail_snippet_general s_rating_no_title" style="padding: 0 15px;" data-snippet="s_rating" data-name="Rating" data-vcss="001" data-vxml="001" data-rating-icon="star">
+    <div class="s_rating o_mail_snippet_general s_rating_no_title" style="padding: 0 15px;" data-snippet="s_rating" data-vcss="001" data-vxml="001" data-rating-icon="star">
         <h3 class="s_rating_title" t-out="title or 'Quality'"/>
         <div class="s_rating_icons o_not_editable" role="img" t-attf-aria-label="{{activeStars}} out of 5 stars">
             <span class="s_rating_active_icons" style="color: #f3cc00;">
@@ -34,7 +34,7 @@
 </t>
 
 <t t-name="mass_mailing.s_hr" name="Separator">
-    <div class="s_hr o_mail_snippet_general pt16 pb16 o_not_editable" data-vxml="001" data-name="Separator" data-snippet="s_hr">
+    <div class="s_hr o_mail_snippet_general pt16 pb16 o_not_editable" data-vxml="001" data-snippet="s_hr">
         <hr class="w-100 mx-auto"/>
     </div>
 </t>
@@ -53,7 +53,7 @@
 </t>
 
 <t name="CTA Badge" t-name="mass_mailing.s_cta_badge">
-    <div class="s_cta_badge badge d-block mx-auto o_mail_snippet_general border rounded py-2 px-3" data-name="CTA Badge" style="border-radius: 32px !important;">
+    <div class="s_cta_badge badge d-block mx-auto o_mail_snippet_general border rounded py-2 px-3" style="border-radius: 32px !important;">
         <p class="mb-0">
             <span class="oi oi-fw" data-icon="info" role="img"/><t t-out="nbsp + nbsp"/>What do you want to promote? <t t-out="nbsp + nbsp + nbsp + nbsp"/><a href="#">See more <span class="oi" data-icon="east" role="img"/></a>
         </p>
@@ -93,7 +93,7 @@
 </t>
 
 <t name="Badge" t-name="mass_mailing.s_badge">
-    <div class="s_badge badge text-bg-secondary o_mail_snippet_general" data-name="Badge" data-vxml="001">
+    <div class="s_badge badge text-bg-secondary o_mail_snippet_general" data-vxml="001">
         <p class="mb-0">
             <span class="oi oi-fw oi-filled" data-icon="folder"/>Category
         </p>
@@ -105,8 +105,7 @@
 </t>
 
 <t t-name="mass_mailing.s_social_media" name="Social Media">
-    <div data-name="Social Media"
-        t-attf-class="s_social_media o_not_editable {{optionalTextPosition || 'text-start'}} {{optionalSnippetClass || ''}}"
+    <div t-attf-class="s_social_media o_not_editable {{optionalTextPosition || 'text-start'}} {{optionalSnippetClass || ''}}"
         contenteditable="false" t-att-data-company-id="company_id.id">
         <span class="s_social_media_links">
             <t t-call="mass_mailing.social_links"/>
