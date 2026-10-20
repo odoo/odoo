@@ -147,6 +147,14 @@ class ResConfigSettings(models.TransientModel):
             }
         }
 
+    @api.onchange('barcode_nomenclature_id')
+    def _onchange_barcode_nomenclature_id(self):
+        for res_config in self:
+            if res_config.pos_fallback_nomenclature_id == res_config.barcode_nomenclature_id:
+                # company_id still holds the saved nomenclature, swap with it
+                saved_nomenclature = res_config.company_id.nomenclature_id
+                res_config.pos_fallback_nomenclature_id = saved_nomenclature if saved_nomenclature != res_config.barcode_nomenclature_id else False
+
     @api.onchange('pos_iface_tipproduct')
     def _onchange_iface_tipproduct(self):
         for res_config in self:

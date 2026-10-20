@@ -42,6 +42,21 @@ class ResCompany(models.Model):
             'account_fiscal_country_id', 'street2',
         ]
 
+    def write(self, vals):
+        if 'nomenclature_id' not in vals:
+            return super().write(vals)
+        old_nomenclatures = {company: company.nomenclature_id for company in self}
+        res = super().write(vals)
+        # the fallback nomenclature must differ from the main one: swap them
+        for company, old_nomenclature in old_nomenclatures.items():
+            if company.nomenclature_id == old_nomenclature:
+                continue
+            self.env['pos.config'].sudo().search([
+                ('company_id', '=', company.id),
+                ('fallback_nomenclature_id', '=', company.nomenclature_id.id),
+            ]).fallback_nomenclature_id = old_nomenclature
+        return res
+
     @api.constrains('fiscalyear_lock_date', 'tax_lock_date', 'sale_lock_date', 'hard_lock_date')
     def validate_lock_dates(self):
         """ This constrains makes it impossible to change the relevant lock dates if
