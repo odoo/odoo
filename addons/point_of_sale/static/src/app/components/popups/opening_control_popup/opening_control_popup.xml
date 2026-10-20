@@ -31,13 +31,13 @@
                 <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-model="state.notes" placeholder="Add an opening note..." />
             </div>
             <t t-set-slot="footer">
-                <button class="button btn btn-lg btn-primary"
+                <button class="button btn btn-lg btn-primary col"
                 t-if="!(this.pos.cashier._role === 'minimal')"
                     t-on-click="confirm"
                     t-att-disabled="!env.utils.isValidFloat(state.openingCash)">
                     Open Register
                 </button>
-                <button class="backend-button button btn btn-lg btn-secondary"
+                <button class="backend-button button btn btn-lg btn-secondary col"
                     t-on-click="() => this.pos.showLoginScreen()">
                     Discard
                 </button>

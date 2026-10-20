@@ -2403,7 +2403,10 @@ export class PosStore extends WithLazyGetterTrap {
             this.action,
             "point_of_sale.res_partner_action_edit_pos",
             {
-                props: { resId: partner?.id },
+                props: {
+                    resId: partner?.id,
+                    buttonTemplate: "point_of_sale.FormDialogButtons",
+                },
                 additionalContext: this.editPartnerContext(),
             }
         );
@@ -2422,6 +2425,7 @@ export class PosStore extends WithLazyGetterTrap {
             {
                 props: {
                     resId: product?.id,
+                    buttonTemplate: "point_of_sale.FormDialogButtons",
                     onSave: async (record) => {
                         await this.data.read("product.template", [record.evalContext.id]);
                         await this.data.searchRead("product.product", [
