@@ -87,8 +87,6 @@
     ],
     "demo": [
         "data/demo.xml",
-        # TODO merge both files
-        "data/product_attribute_category_data.xml",
         "data/product_attribute_category_demo.xml",
     ],
     "application": True,
