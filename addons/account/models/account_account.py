@@ -341,6 +341,21 @@ class AccountAccount(models.Model):
         if self.env.cr.fetchone():
             raise ValidationError(_("You cannot change the type of an account set as Bank Account on a journal to Receivable or Payable."))
 
+    @api.constrains('reconcile')
+    def _constrains_reconcile_cash_basis_taxes(self):
+        if self.env.context.get('chart_template_load'):
+            return
+        no_reconcile = self.filtered(lambda account: not account.reconcile)
+        cash_basis_taxes = self.env['account.tax'].search([
+            ('cash_basis_transition_account_id', 'in', no_reconcile.ids),
+            ('tax_exigibility', '=', 'on_payment'),
+        ])
+        if cash_basis_taxes:
+            raise ValidationError(_(
+                "This account is used as a cash basis transition account for the following taxes and needs to allow reconciliation: %(taxes)s",
+                taxes=", ".join(cash_basis_taxes.mapped('display_name')),
+            ))
+
     @api.depends_context('company')
     @api.depends('code_store')
     def _compute_code(self):
