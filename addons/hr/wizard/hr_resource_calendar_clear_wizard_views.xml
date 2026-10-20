@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_resource_calendar_clear_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.resource.calendar.clear.wizard.form</field>
+        <field name="model">hr.resource.calendar.clear.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="calendar_id" invisible="1"/> <!-- Lets the popup compute its fields from the schedule. -->
+                <div class="alert alert-warning" role="alert" invisible="employees_count &lt;= 1">
+                    This working schedule is shared across
+                    <field name="employees_count" class="fw-bold"/> employees.
+                </div>
+                <group>
+                    <field name="date" placeholder="All entries"/>
+                </group>
+                <footer>
+                    <button name="action_clear" type="object" string="Confirm" class="btn-primary"/>
+                    <button special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_resource_calendar_clear_wizard_action" model="ir.actions.act_window">
+        <field name="name">Clear Entries</field>
+        <field name="res_model">hr.resource.calendar.clear.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
