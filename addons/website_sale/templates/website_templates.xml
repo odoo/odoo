@@ -2,25 +2,27 @@
 <odoo>
 
     <template id="website_sale.header_cart_link" name="Header Cart Link">
-        <t
-            t-set="website_sale_cart_quantity"
-            t-value="(
-                request.session['website_sale_cart_quantity']
-                if 'website_sale_cart_quantity' in request.session
-                else request.cart.cart_quantity
-            ) or 0"
-        />
-        <t t-set="show_cart" t-value="website.has_ecommerce_access()"/>
-        <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
-        <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
-            <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
-                <div t-attf-class="#{_icon_wrap_class}">
-                    <i t-if="_icon" class="oi oi-stack" data-icon="shopping_cart"/>
-                    <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', None) if website_sale_cart_quantity else None"/>
-                </div>
-                <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
-            </a>
-        </li>
+        <t t-nocache="The cart quantity depends on the session.">
+            <t
+                t-set="website_sale_cart_quantity"
+                t-value="(
+                    request.session['website_sale_cart_quantity']
+                    if 'website_sale_cart_quantity' in request.session
+                    else request.cart.cart_quantity
+                ) or 0"
+            />
+            <t t-set="show_cart" t-value="website.has_ecommerce_access()"/>
+            <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
+            <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
+                <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
+                    <div t-attf-class="#{_icon_wrap_class}">
+                        <i t-if="_icon" class="oi oi-stack" data-icon="shopping_cart"/>
+                        <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', None) if website_sale_cart_quantity else None"/>
+                    </div>
+                    <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
+                </a>
+            </li>
+        </t>
     </template>
 
     <template
@@ -35,20 +37,22 @@
     </template>
 
     <template id="website_sale.header_wishlist_link" name="Header Wishlist Link">
-        <t t-set="wishcount" t-value="len(env['product.wishlist'].current())"/>
-        <t t-set="show_wishes" t-value="website.has_ecommerce_access()"/>
-        <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
-            <a href="/shop/wishlist" t-attf-class="#{_link_class}">
-                <div t-attf-class="#{_icon_wrap_class}">
-                    <i t-if="_icon" class="oi oi-1x oi-filled oi-stack" data-icon="favorite"/>
-                    <sup
-                        t-out="wishcount"
-                        t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class} #{'d-none' if (wishcount == 0) else ''}"
-                    />
-                </div>
-                <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
-            </a>
-        </li>
+        <t t-nocache="The wishlist depends on the user.">
+            <t t-set="wishcount" t-value="len(env['product.wishlist'].current())"/>
+            <t t-set="show_wishes" t-value="website.has_ecommerce_access()"/>
+            <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
+                <a href="/shop/wishlist" t-attf-class="#{_link_class}">
+                    <div t-attf-class="#{_icon_wrap_class}">
+                        <i t-if="_icon" class="oi oi-1x oi-filled oi-stack" data-icon="favorite"/>
+                        <sup
+                            t-out="wishcount"
+                            t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class} #{'d-none' if (wishcount == 0) else ''}"
+                        />
+                    </div>
+                    <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
+                </a>
+            </li>
+        </t>
     </template>
 
     <template id="website_sale.header_hide_empty_wishlist_link" inherit_id="website_sale.header_wishlist_link">
@@ -561,17 +565,19 @@ Disallow: /*/shop/confirmation
         name="Header Pricelist Selector"
     >
         <xpath expr="." position="inside">
-            <li
-                t-if="
-                    not hide_pricelist_selector
-                    and website_sale_pricelists
-                    and len(website_sale_pricelists) &gt; 1
-                "
-                name="header_pricelist_selector"
-                t-attf-class="o_header_pricelist_selector #{_item_class}"
-            >
-                <t t-call="website_sale.pricelist_selector" _div_classes.f="#{_div_classes} dropdown"/>
-            </li>
+            <t t-nocache="The pricelists depend on the user.">
+                <li
+                    t-if="
+                        not hide_pricelist_selector
+                        and website_sale_pricelists
+                        and len(website_sale_pricelists) &gt; 1
+                    "
+                    name="header_pricelist_selector"
+                    t-attf-class="o_header_pricelist_selector #{_item_class}"
+                >
+                    <t t-call="website_sale.pricelist_selector" _div_classes.f="#{_div_classes} dropdown"/>
+                </li>
+            </t>
         </xpath>
     </template>
 
@@ -606,39 +612,41 @@ Disallow: /*/shop/confirmation
     </template>
 
     <template id="website_sale.pricelist_selector" name="Pricelist Selector">
-        <div
-            t-if="
-                not hide_pricelist_selector
-                and website_sale_pricelists
-                and len(website_sale_pricelists) &gt; 1
-            "
-            name="pricelist_selector"
-            t-attf-class="#{_div_classes or 'dropdown'} o_typeahead d-print-none"
-        >
-            <t t-set="active_pricelist" t-value="website.pricelist_id"/>
-            <button
-                t-attf-class="dropdown-toggle #{_btn_class or 'btn btn-sm btn-secondary border-0'}"
-                type="button"
-                data-bs-toggle="dropdown"
-                data-bs-auto-close="true"
-                aria-haspopup="true"
-                aria-expanded="false"
-                t-attf-aria-label="Pricelist: #{active_pricelist.name}"
+        <t t-nocache="The pricelists depend on the user.">
+            <div
+                t-if="
+                    not hide_pricelist_selector
+                    and website_sale_pricelists
+                    and len(website_sale_pricelists) &gt; 1
+                "
+                name="pricelist_selector"
+                t-attf-class="#{_div_classes or 'dropdown'} o_typeahead d-print-none"
             >
-                <span t-attf-class="text-truncate #{_txt_class}" t-out="active_pricelist.name"/>
-            </button>
-            <div t-attf-class="dropdown-menu #{_dropdown_menu_class}">
-                <a
-                    t-foreach="website_sale_pricelists"
-                    t-as="pricelist"
-                    t-attf-class="dropdown-item {{pricelist == active_pricelist and 'active'}}"
-                    t-att-aria-current="pricelist == active_pricelist and 'true'"
-                    t-attf-href="/shop/change_pricelist/#{pricelist.id}"
+                <t t-set="active_pricelist" t-value="website.pricelist_id"/>
+                <button
+                    t-attf-class="dropdown-toggle #{_btn_class or 'btn btn-sm btn-secondary border-0'}"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="true"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    t-attf-aria-label="Pricelist: #{active_pricelist.name}"
                 >
-                    <span t-att-class="_txt_class" t-out="pricelist.name"/>
-                </a>
+                    <span t-attf-class="text-truncate #{_txt_class}" t-out="active_pricelist.name"/>
+                </button>
+                <div t-attf-class="dropdown-menu #{_dropdown_menu_class}">
+                    <a
+                        t-foreach="website_sale_pricelists"
+                        t-as="pricelist"
+                        t-attf-class="dropdown-item {{pricelist == active_pricelist and 'active'}}"
+                        t-att-aria-current="pricelist == active_pricelist and 'true'"
+                        t-attf-href="/shop/change_pricelist/#{pricelist.id}"
+                    >
+                        <span t-att-class="_txt_class" t-out="pricelist.name"/>
+                    </a>
+                </div>
             </div>
-        </div>
+        </t>
     </template>
 
     <template id="website_sale.typeahead_language_selector" inherit_id="portal.language_selector">

@@ -298,6 +298,41 @@ class Website(models.CachedModel):
             lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url) or menu.sudo().group_ids
         ))
 
+    @api.ormcache('self.id', cache='templates')
+    def _get_menus_url_info(self):
+        """ Return the URL information of the menus without children, used to
+        compute the active menus without reading the menus (see `t-cache` of
+        the header). The cache is cleared when the menus are modified.
+        """
+        menus = self.env['website.menu'].sudo().search_fetch(
+            Domain('website_id', '=', self.id),
+            ['url', 'page_id', 'parent_path', 'mega_menu_content'],
+        )
+        mega_menu_ids = set(menus.filtered('is_mega_menu').ids)
+        return tuple(
+            (
+                menu._clean_url(),
+                bool(menu.page_id),
+                tuple(menu_id for menu_id in map(int, menu.parent_path.strip('/').split('/')) if menu_id not in mega_menu_ids),
+            )
+            for menu in menus
+            if not menu.child_id and not menu.is_mega_menu
+        )
+
+    def _get_active_menu_ids(self):
+        """ Return the ids of the active menus for the current request, see
+        `website.menu._is_active`.
+        """
+        if not request:
+            return ()
+        request_url = urls.url_parse(request.httprequest.url)
+        Menu = self.env['website.menu']
+        active_ids = set()
+        for url, is_page, menu_ids in self._get_menus_url_info():
+            if Menu._is_url_active(url, is_page, request_url):
+                active_ids.update(menu_ids)
+        return tuple(sorted(active_ids))
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

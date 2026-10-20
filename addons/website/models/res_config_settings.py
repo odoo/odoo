@@ -230,6 +230,19 @@ class ResConfigSettings(models.TransientModel):
             'res_id': False,
         }
 
+    def action_reset_website_cache(self):
+        # clear the rendered parts (t-cache) and the cached pages, the compiled
+        # templates are memoized and are not compiled again
+        self.env.transaction.invalidate_ormcache('templates')
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _("The website cache has been reset."),
+            },
+        }
+
     def action_open_robots(self):
         self.website_id._force()
         return {
