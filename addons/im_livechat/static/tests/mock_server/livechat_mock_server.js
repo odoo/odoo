@@ -15,6 +15,8 @@ import { patch } from "@web/core/utils/patch";
 registerRoute("/im_livechat/get_session", get_session);
 /** @type {RouteCallback} */
 async function get_session(request) {
+    /** @type {import("mock_models").ChatbotScript} */
+    const ChatbotScript = this.env["chatbot.script"];
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").LivechatChannel} */
@@ -28,6 +30,7 @@ async function get_session(request) {
 
     let {
         channel_id,
+        chatbot_script_id,
         previous_operator_id,
         persisted,
         context = {},
@@ -47,11 +50,24 @@ async function get_session(request) {
             country_id = country.id;
         }
     }
+    const welcomeSteps = chatbot_script_id
+        ? ChatbotScript._get_welcome_steps(chatbot_script_id)
+        : [];
     if (!persisted) {
         const store = new mailDataHelpers.Store();
         ResUsers._init_store_data(store);
+        if (chatbot_script_id) {
+            store.add(ChatbotScript.browse(chatbot_script_id));
+            store.add(this.env["chatbot.script.step"].browse(welcomeSteps.map((step) => step.id)));
+        }
         store.add("discuss.channel", {
             channel_type: "livechat",
+            chatbot: chatbot_script_id
+                ? {
+                      script: chatbot_script_id,
+                      steps: welcomeSteps.map((step) => ({ scriptStep: step.id })),
+                  }
+                : null,
             fetchChannelInfoState: "fetched",
             id: -1,
             isLoaded: true,
@@ -81,8 +97,33 @@ async function get_session(request) {
         isLoaded: true,
         scrollUnread: false,
     });
+    if (chatbot_script_id) {
+        // Post the welcome steps, the current step being the last one.
+        const [script] = ChatbotScript.browse(chatbot_script_id);
+        const messageIds = welcomeSteps.map((step) =>
+            this.env["mail.message"].create({
+                author_id: script.operator_partner_id,
+                body: step.message,
+                message_type: "comment",
+                model: "discuss.channel",
+                res_id: channelId,
+            })
+        );
+        const currentStep = { scriptStep: welcomeSteps.at(-1).id, message: messageIds.at(-1) };
+        store.add(ChatbotScript.browse(chatbot_script_id));
+        store.add(this.env["chatbot.script.step"].browse(currentStep.scriptStep));
+        store.add("discuss.channel", {
+            chatbot: { script: chatbot_script_id, steps: [currentStep], currentStep },
+            id: channelId,
+        });
+    }
     return { store_data: store.get_result(), channel_id: channelId };
 }
+
+// Not implemented yet: the chat bot testing does not go further than welcome steps.
+registerRoute("/chatbot/step/trigger", chatbot_trigger_step);
+/** @type {RouteCallback} */
+async function chatbot_trigger_step(_request) {}
 
 registerRoute("/im_livechat/visitor_leave_session", visitor_leave_session);
 /** @type {RouteCallback} */
@@ -243,6 +284,10 @@ patch(mailDataHelpers, {
                         MailGuest.browse(this.env.cookie.get("dgid"))
                     ),
                 });
+            }
+            const matchingRule = this.env["im_livechat.channel.rule"].match_rule(params);
+            if (matchingRule.length) {
+                store.add({ livechat_rule: mailDataHelpers.Store.one(matchingRule) });
             }
         }
     },
