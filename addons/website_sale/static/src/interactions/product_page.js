@@ -709,7 +709,7 @@ export class ProductPage extends Interaction {
         }
         const variantParent = parent.closest('#product_detail')
         if (variantParent) {
-            variantParent.dataset.name = combination.display_name;
+            variantParent.dataset.dynamicBuilderName = combination.display_name_in_user_lang;
         }
         const pricePerUom = parent.querySelector('.o_product_price_unit')
             ?.querySelector('.oe_currency_value');
