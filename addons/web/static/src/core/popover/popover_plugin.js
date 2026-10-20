@@ -24,8 +24,7 @@ export const PopoverOptionSchema = t.object({
 });
 
 export class PopoverPlugin extends Plugin {
-    /** @private */
-    overlay = usePlugin(OverlayPlugin);
+    #overlay = usePlugin(OverlayPlugin);
 
     /**
      * Signals the manager to add a popover.
@@ -42,7 +41,7 @@ export class PopoverPlugin extends Plugin {
             typeof options.closeOnClickAway === "function"
                 ? options.closeOnClickAway
                 : () => options.closeOnClickAway ?? true;
-        const remove = this.overlay.add(
+        const remove = this.#overlay.add(
             Popover,
             {
                 target,
