@@ -21,13 +21,18 @@ class PosPrepOrder(models.Model):
         This method is use to create order changes for orders than was
         created from a self ordering device. Indeed, those orders
         are not created from the PoS itself, so no change is created.
+
+        :return: whether prep lines were created or cancelled
         """
         prep_order = False
+        changed = False
 
         for line in order.lines:
             prep_qty = sum(pl.quantity - pl.cancelled for pl in line.prep_line_ids)
             quantity_diff = line.qty - prep_qty
 
+            if quantity_diff:
+                changed = True
             if quantity_diff > 0:
                 if not prep_order:
                     prep_order = self.env['pos.prep.order'].create({
@@ -51,5 +56,10 @@ class PosPrepOrder(models.Model):
                         break
 
         # Cancel all orphaned prep lines (no pos_order_line_id) - e.g. from deleted orderlines
-        for prep_line in order.prep_order_ids.prep_line_ids.filtered(lambda l: not l.pos_order_line_id):
+        orphan_prep_lines = order.prep_order_ids.prep_line_ids.filtered(
+            lambda l: not l.pos_order_line_id and l.cancelled != l.quantity
+        )
+        for prep_line in orphan_prep_lines:
             prep_line.cancelled = prep_line.quantity
+
+        return changed or bool(orphan_prep_lines)

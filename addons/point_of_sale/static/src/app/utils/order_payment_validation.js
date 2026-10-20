@@ -101,6 +101,7 @@ export default class OrderPaymentValidation {
     }
 
     async validateOrder(isForceValidate) {
+        this.orderChange = this.order.getChanges();
         if ((await this.askBeforeValidation()) === false) {
             return false;
         }
@@ -208,8 +209,9 @@ export default class OrderPaymentValidation {
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
-        await this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
+        await this.pos.printPreparationChanges(this.order, {
             orderDone: true,
+            orderChange: this.orderChange,
         });
 
         if (this.order.nb_print === 0 && this.pos.config.autoPrint) {

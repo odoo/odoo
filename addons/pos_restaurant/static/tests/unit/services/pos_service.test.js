@@ -2,7 +2,11 @@ import { describe, expect, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
-import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
+import {
+    getFilledOrder,
+    setupPosEnv,
+    setupPreparationPrinting,
+} from "@point_of_sale/../tests/unit/utils";
 import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { waitUntil } from "@odoo/hoot-dom";
 import { FloorPlan } from "@pos_restaurant/app/screens/floor_screen/floor_plan/floor_plan";
@@ -40,6 +44,20 @@ describe("restaurant pos_store.js", () => {
         expect(captured.noteUpdateTitle).toBe("Course 1 fired");
         expect(captured.printNoteUpdateData).toBe(false);
         expect(captured.noteUpdate).toHaveLength(1);
+    });
+
+    test("printCourseTicket records the course ticket for reprint", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const course = store.addCourse();
+        order.lines[0].course_id = course;
+        course.line_ids = [order.lines[0]];
+        setupPreparationPrinting(store);
+
+        await store.printCourseTicket(course);
+
+        expect(order.lastPrints).toHaveLength(1);
+        expect(order.lastPrints[0].noteUpdate).toHaveLength(1);
     });
 
     test("setTable", async () => {

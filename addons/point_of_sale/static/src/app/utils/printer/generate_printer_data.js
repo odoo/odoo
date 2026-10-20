@@ -408,7 +408,6 @@ export class GeneratePrinterData {
                 orderChange = [order.lastPrints.at(-1)];
                 reprint = true;
             } else {
-                order.pushLastPrints(orderChange);
                 orderChange = [orderChange];
             }
         }

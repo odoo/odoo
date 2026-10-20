@@ -893,7 +893,7 @@ patch(PosStore.prototype, {
             };
             await this.ticketPrinter.printOrderChanges({
                 order: order,
-                opts: { orderChange: changes },
+                opts: { orderChange: changes, recordPrint: true },
             });
         } catch (e) {
             logPosMessage("Store", "printCourseTicket", "Unable to print course", CONSOLE_COLOR, [
