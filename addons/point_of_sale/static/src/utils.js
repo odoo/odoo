@@ -2,7 +2,7 @@
 
 import { session } from "@web/session";
 import { cookie } from "@web/core/browser/cookie";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, deserializeDate } from "@web/core/l10n/dates";
 import { Time } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 
@@ -294,7 +294,7 @@ export function imageDataUri(base64Source) {
 }
 
 export function getDisplayDateInfo(sqlDate) {
-    const dateTime = deserializeDateTime(sqlDate);
+    const dateTime = deserializeDate(sqlDate);
     if (!dateTime.isValid) {
         return {
             dayLabel: "",
