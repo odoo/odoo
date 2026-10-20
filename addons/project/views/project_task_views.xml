@@ -222,6 +222,14 @@
             <field name="action_id" ref="project.project_update_all_action"/>
         </record>
 
+        <!-- Parent action of the Updates EA bar (pseudo tab there), and target of EA project_embedded_action_project_updates -->
+        <record id="hub_item_updates" model="ir.actions.hub.item">
+            <field name="hub_id" ref="project.hub_project"/>
+            <field name="sequence">120</field>
+            <field name="name">Updates</field>
+            <field name="action_id" ref="project.project_update_all_action"/>
+        </record>
+
         <record id="project_embedded_action_project_overview" model="ir.embedded.actions">
             <field name="parent_res_model">project.project</field>
             <field name="sequence">110</field>
@@ -231,11 +239,28 @@
             <field name="python_method">action_open_project_form</field>
         </record>
 
+        <!-- EA groups dropped: project.group_project_manager -->
+        <!-- hub.item commented pending review
+        <record id="hub_item_overview" model="ir.actions.hub.item">
+            <field name="hub_id" ref="project.hub_project"/>
+            <field name="sequence">110</field>
+            <field name="name">Overview</field>
+            <field name="python_method">action_open_project_form</field>
+        </record> -->
+
         <record id="project_embedded_action_all_tasks_dashboard" model="ir.embedded.actions">
             <field name="parent_res_model">project.project</field>
             <field name="sequence">20</field>
             <field name="name">Tasks</field>
             <field name="parent_action_id" ref="project.project_update_all_action"/>
+            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+        </record>
+
+        <!-- Parent action of the Tasks EA bar (pseudo tab there), and target of EA project_embedded_action_all_tasks_dashboard (seq 20 in the Updates bar); lowest sequence so it is the default item -->
+        <record id="hub_item_tasks" model="ir.actions.hub.item">
+            <field name="hub_id" ref="project.hub_project"/>
+            <field name="sequence">1</field>
+            <field name="name">Tasks</field>
             <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
         </record>
 
@@ -247,6 +272,15 @@
         <field name="action_id" eval="False"/>
         <field name="python_method">action_project_task_burndown_chart_report</field>
         <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]" />
+    </record>
+
+    <!-- Also replaces EA project_embedded_action_update_burndown_chart -->
+    <!-- EA groups dropped: project.group_project_manager -->
+    <record id="hub_item_burndown_chart" model="ir.actions.hub.item">
+        <field name="hub_id" ref="project.hub_project"/>
+        <field name="sequence">130</field>
+        <field name="name">Burndown Chart</field>
+        <field name="python_method">action_project_task_burndown_chart_report</field>
     </record>
 
     <record id="project_embedded_action_update_burndown_chart" model="ir.embedded.actions">
@@ -266,6 +300,14 @@
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
         <field name="python_method">action_project_time_by_stage_report</field>
         <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]" />
+    </record>
+
+    <!-- EA groups dropped: project.group_project_manager -->
+    <record id="hub_item_time_by_stage" model="ir.actions.hub.item">
+        <field name="hub_id" ref="project.hub_project"/>
+        <field name="sequence">132</field>
+        <field name="name">Time by Stage</field>
+        <field name="python_method">action_project_time_by_stage_report</field>
     </record>
 
     <!-- Set pivot view and arrange in order -->

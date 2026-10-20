@@ -11,6 +11,7 @@ CREATE TABLE ir_act_report_xml (primary key(id)) INHERITS (ir_actions);
 CREATE TABLE ir_act_url (primary key(id)) INHERITS (ir_actions);
 CREATE TABLE ir_act_server (primary key(id)) INHERITS (ir_actions);
 CREATE TABLE ir_act_client (primary key(id)) INHERITS (ir_actions);
+CREATE TABLE ir_act_hub (primary key(id)) INHERITS (ir_actions);
 
 CREATE TABLE res_users (
     id serial NOT NULL,

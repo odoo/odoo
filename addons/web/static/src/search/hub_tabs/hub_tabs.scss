@@ -1,0 +1,26 @@
+.o_hub_tabs {
+    background-color: #e3e7e9;
+
+    .nav-tabs {
+        .nav-link{
+            padding: 0.25rem 0.8rem 0.3rem;
+            &.temporary{
+                font-style: italic;
+            }
+            &.active {
+                background-color: #f8f9fa !important;
+                border-color: #f8f9fa !important;
+            }
+            &:hover{
+                border-bottom:none;
+            }
+        }
+        .btn{
+            padding:0.25rem 0.6rem 0.3rem;
+            &:focus{
+                box-shadow: none;
+            }
+        }
+        
+    }
+}
