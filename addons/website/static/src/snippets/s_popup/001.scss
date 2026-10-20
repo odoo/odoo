@@ -3,13 +3,35 @@
         min-height: calc(var(--o-bs-font-size-lg) * 2);
         border: 0;
         border-radius: 0;
-        box-shadow: $modal-content-box-shadow-sm-up;
 
         .container, .container-fluid, .o_container_small {
             // Force padding when dropped inside another container (e.g. inside
             // a blog post page)
             padding-right: calc(var(--o-bs-grid-gutter-width) * .5);
             padding-left: calc(var(--o-bs-grid-gutter-width) * .5);
+        }
+
+        &.rounded {
+            overflow: hidden;
+        }
+
+        // Block the inheritance of the border-radius CSS variables set on .modal-content.
+        // Otherwise a rounded popup would also round nested elements, such as images
+        // inside a section.
+        > *:not([class*="rounded"])
+        {
+            --box-border-radius: 0px;
+            --box-border-top-left-radius: 0px;
+            --box-border-top-right-radius: 0px;
+            --box-border-bottom-right-radius: 0px;
+            --box-border-bottom-left-radius: 0px;
+        }
+        > *:not(.border) {
+            --box-border-width: 0px;
+            --box-border-top-width: 0px;
+            --box-border-right-width: 0px;
+            --box-border-bottom-width: 0px;
+            --box-border-left-width: 0px;
         }
     }
 
@@ -19,6 +41,7 @@
         position: absolute;
         top: 0;
         inset-inline-end: 0;
+        pointer-events: auto;
         width: calc(var(--o-bs-font-size-lg) * 2);
         height: calc(var(--o-bs-font-size-lg) * 2);
         line-height: calc(var(--o-bs-font-size-lg) * 2);
@@ -29,6 +52,12 @@
         text-align: center;
     }
 
+    .s_popup_wrapper:has(> .modal-content.rounded) > .s_popup_close {
+        top: var(--o-bs-spacer-2);
+        inset-inline-end: var(--o-bs-spacer-2);
+        border-radius: 50%;
+    }
+
     .o_cookies_bar_close {
         background-color: transparent !important;
     }
@@ -37,11 +66,6 @@
     .s_popup_size_full {
         padding: 0 !important;
         max-width: 100%;
-
-        > .modal-content {
-            box-shadow: none;
-            border-radius: 0;
-        }
     }
 
     // Position option
@@ -73,6 +97,12 @@
         // Not needed for Firefox and Safari
         .modal-dialog {
             height: 100%;
+
+            > .s_popup_wrapper {
+                display: flex;
+                flex-direction: column;
+                max-height: 100%;
+            }
 
             .modal-content {
                 max-height:100%;
