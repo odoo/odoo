@@ -546,3 +546,27 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         with self.assertRaises(UserError):
             timesheet.unlink()
+
+    def test_timesheet_duration_on_public_holiday(self):
+        """
+        Ensure that public holiday timesheet hours are computed in the
+        calendar's timezone, so that a general full-day holiday(8 - 17)
+        is not truncated by attendances being interpreted as UTC.
+        """
+        calendar_40h = self.test_company.resource_calendar_id
+        self.env.user.tz = "Europe/Brussels"
+        calendar_40h.tz = "Europe/Brussels"
+
+        public_holiday = self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': self.test_company.resource_calendar_id.id,
+            'date_from': datetime(2026, 10, 20, 6, 0),  # 08:00 Brussels (UTC+2)
+            'date_to': datetime(2026, 10, 20, 15, 0),   # 17:00 Brussels (UTC+2)
+        })
+        timesheet = self.env['account.analytic.line'].search([
+            ('global_leave_id', '=', public_holiday.id),
+            ('employee_id', '=', self.full_time_employee.id)
+        ])
+
+        self.assertEqual(len(timesheet), 1)
+        self.assertEqual(timesheet.unit_amount, 8.0)
