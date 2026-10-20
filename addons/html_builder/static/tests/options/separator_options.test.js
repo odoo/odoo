@@ -4,6 +4,15 @@ import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
+test("separator is not editable", async () => {
+    await setupHTMLBuilder(`
+            <div class="s_hr">
+                <hr class="w-100">
+            </div>
+    `);
+    expect(":iframe .s_hr").toHaveAttribute("contenteditable", "false");
+});
+
 test("change width of separator", async () => {
     await setupHTMLBuilder(`
             <div class="s_hr">
