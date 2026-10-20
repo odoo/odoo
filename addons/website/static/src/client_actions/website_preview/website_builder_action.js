@@ -72,6 +72,7 @@ export class WebsiteBuilderClientAction extends Component {
         this.dialog = useService("dialog");
         this.websiteService = useService("website");
         this.ui = useService("ui");
+        this.offline = useService("offline");
         this.title = useService("title");
         this.hotkeyService = useService("hotkey");
         this.websiteService.websiteRootInstance = undefined;
@@ -171,6 +172,35 @@ export class WebsiteBuilderClientAction extends Component {
             websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
             this.websiteService.currentWebsiteId = null;
             websiteSystrayRegistry.trigger("EDIT-WEBSITE");
+        });
+
+        let isFrozenOffline = false;
+        let isDestroyed = false;
+        effect(
+            (offline, state) => {
+                if (isDestroyed) {
+                    return;
+                }
+                const freeze = offline.offline && state.isEditing;
+                if (freeze === isFrozenOffline) {
+                    return;
+                }
+                isFrozenOffline = freeze;
+                if (freeze) {
+                    this.blockIframe();
+                    this.ui.block();
+                } else {
+                    this.unblockIframe();
+                    this.ui.unblock();
+                }
+            },
+            [this.offline, this.state]
+        );
+        onWillDestroy(() => {
+            isDestroyed = true;
+            if (isFrozenOffline) {
+                this.ui.unblock();
+            }
         });
 
         effect(
@@ -594,8 +624,8 @@ export class WebsiteBuilderClientAction extends Component {
             const pathSegments = urlObj.pathname.split("/").map(encodeURIComponent);
             const encodedPath = pathSegments.join("/");
             const newUrl = new URL(encodedPath, baseUrl);
-            if(newUrl.origin !== baseUrl.origin) {
-                console.error("Tried to change the iframe's origin. Reloading instead")
+            if (newUrl.origin !== baseUrl.origin) {
+                console.error("Tried to change the iframe's origin. Reloading instead");
                 this.websiteContent.el.contentWindow.location.reload();
             } else {
                 if (history.state?.skipRouteChange) {
