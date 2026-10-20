@@ -326,7 +326,7 @@ export class SnippetModel {
             `snippets#snippet_custom > [data-oe-snippet-key=${snippet.key}]`
         )) {
             snippetEl.setAttribute("name", newName);
-            snippetEl.firstElementChild.dataset["name"] = newName;
+            snippetEl.firstElementChild.dataset.customName = newName;
         }
         await this.orm.call("ir.ui.view", "rename_snippet", [], {
             name: newName,
@@ -360,7 +360,7 @@ export class SnippetModel {
 
         const defaultSnippetName = isButton
             ? _t("Custom Button")
-            : _t("Custom %s", snippetEl.dataset.name);
+            : _t("Custom %s", this.getSnippetName(snippetEl));
         snippetCopyEl.classList.add("s_custom_snippet");
         delete snippetCopyEl.dataset.name;
         if (isButton) {
@@ -390,9 +390,12 @@ export class SnippetModel {
     }
 
     setSnippetName(snippetsDocument) {
-        // TODO: this should probably be done in py
         for (const snippetEl of snippetsDocument.body.querySelectorAll("snippets > *")) {
-            snippetEl.children[0].dataset["name"] = snippetEl.getAttribute("name");
+            if (snippetEl.children[0].classList.contains("s_custom_snippet")) {
+                snippetEl.children[0].dataset.customName = snippetEl.getAttribute("name");
+            } else {
+                snippetEl.children[0].dataset.name = snippetEl.getAttribute("name");
+            }
         }
     }
 
@@ -465,6 +468,9 @@ export class SnippetModel {
     getSnippetName(snippetEl) {
         if (snippetEl.dataset.name) {
             return snippetEl.dataset.name;
+        }
+        if (snippetEl.classList.contains("s_custom_snippet") && snippetEl.dataset.customName) {
+            return snippetEl.dataset.customName;
         }
         const snippetNameRules = [
             { selector: "img", name: _t("Image") },

@@ -27,12 +27,12 @@ class TestCustomSnippet(TransactionCase):
         # Adding it here to mimick the real flow, but at this point it really is
         # just a regular snippet.
         snippet_arch = f"""
-            <section class="s_text_block s_custom_snippet" data-name="{data_name_attr}">
+            <section class="s_text_block s_custom_snippet" data-custom-name="{data_name_attr}">
                 <div class="custom_snippet_website_1">English Text</div>
             </section>
         """
         snippet_arch2 = f"""
-            <section class="s_title s_custom_snippet" data-name="{data_name_attr2}">
+            <section class="s_title s_custom_snippet" data-custom-name="{data_name_attr2}">
                 <h1 class="custom_snippet_website_1">English Title</h1>
             </section>
         """
@@ -211,7 +211,7 @@ class TestCustomSnippet(TransactionCase):
         # Adding it here to mimick the real flow, but at this point it really is
         # just a regular snippet.
         snippet_arch = f"""
-            <section class="s_text_block s_custom_snippet" data-name="{data_name_attr}">
+            <section class="s_text_block s_custom_snippet" data-custom-name="{data_name_attr}">
                 <div class="custom_snippet_website_1">English Text</div>
             </section>
         """

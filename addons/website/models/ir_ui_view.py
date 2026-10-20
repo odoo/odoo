@@ -550,7 +550,7 @@ class IrUiView(models.Model):
             raise ValidationError(str(e))
 
         for custom_snippet_el in tree.xpath('//*[hasclass("s_custom_snippet")]'):
-            custom_snippet_name = custom_snippet_el.get('data-name')
+            custom_snippet_name = custom_snippet_el.get('data-custom-name')
             custom_snippet_view = self.search([('name', '=', custom_snippet_name)], limit=1)
             if custom_snippet_view:
                 self._copy_field_terms_translations(custom_snippet_view, 'arch_db', record, html_field)

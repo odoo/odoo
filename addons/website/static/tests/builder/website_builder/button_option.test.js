@@ -134,7 +134,7 @@ test("Custom button is not wrapped in <p> when dropped near sibling button", asy
     await waitForEndOfOperation();
     expect(getEditableContent()).toHaveInnerHTML(
         `<section class="o_colored_level">
-            <a class="btn btn-primary o_default_snippet_text s_custom_snippet mb-2 o_translate_inline" href="#" data-bs-original-title="" title="">Custom Button</a>
+            <a class="btn btn-primary o_default_snippet_text s_custom_snippet mb-2 o_translate_inline" href="#" data-bs-original-title="" title="" data-custom-name="Custom Button">Custom Button</a>
             <a class="btn btn-primary mb-2" href="#">Button</a>
         </section>`
     );
