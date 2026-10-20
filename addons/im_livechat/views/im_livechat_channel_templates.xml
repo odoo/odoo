@@ -106,6 +106,7 @@
                         livechatData: {
                             can_load_livechat: <t t-out="'true' if info['available'] else 'false'"/>,
                             serverUrl: "<t t-out="info['server_url']"/>",
+                            cssUrl: "<t t-out="info.get('css_url', '')"/>",
                             options: <t t-out="json.dumps(info.get('options', {}))"/>,
                         },
                         test_mode: <t t-out="'true' if test_mode_enabled else 'false'"/>,

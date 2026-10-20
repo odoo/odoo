@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import _, http
 from odoo.http import request
-from odoo.http.stream import Stream, content_disposition
+from odoo.http.stream import STATIC_CACHE, Stream, content_disposition
 from odoo.tools import format_list
 
 from odoo.addons.mail.tools.discuss import add_guest_to_context, mail_route, Store
@@ -48,11 +48,15 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/material_symbols_outlined', type='http', auth='none', cors="*")
     def material_symbols(self, **kwargs):
-        return Stream.from_path('web/static/src/libs/materialsymbols/material_symbols_outlined_subset.woff2').get_response()
+        return Stream.from_path(
+            'web/static/src/libs/materialsymbols/material_symbols_outlined_subset.woff2', public=True,
+        ).get_response(max_age=STATIC_CACHE)
 
     @http.route('/im_livechat/odoo_ui_icons', type='http', auth='none', cors="*")
     def odoo_ui_icons(self, **kwargs):
-        return Stream.from_path('web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2').get_response()
+        return Stream.from_path(
+            'web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2', public=True,
+        ).get_response(max_age=STATIC_CACHE)
 
     @http.route('/im_livechat/emoji_bundle', type='http', auth='public', cors='*')
     def get_emoji_bundle(self):

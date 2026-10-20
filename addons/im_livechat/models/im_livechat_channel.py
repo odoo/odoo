@@ -622,6 +622,10 @@ class Im_LivechatChannel(models.Model):
         info = {}
         info['available'] = self._is_livechat_available()
         info['server_url'] = self.get_base_url()
+        # the CSS of the external and CORS bundles is the same
+        info['css_url'] = self.env['ir.qweb']._get_asset_bundle(
+            'im_livechat.assets_embed_external', js=False,
+        ).get_link('css')
         info["session_info"] = {
             "bus_info": self.env["ir.http"]._get_bus_session_info(),
             "server_version": release.version,
