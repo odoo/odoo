@@ -14,6 +14,7 @@ from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.exceptions import UserError
 
 import odoo.tests
+from odoo.tests.common import JsonRpcException
 
 
 @odoo.tests.tagged('post_install', '-at_install', 'is_tour')
@@ -453,6 +454,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertEqual(order.state, "draft", "The order should still be in draft state, awaiting the online payment.")
         self.assertEqual(order.amount_total, 96.0, "The increased order total should be synced to the server.")
 
+<<<<<<< e5a4af13360c0fb54ea5ae3301804cccb09668cd
     def test_restaurant_online_payment_flow(self):
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('RestaurantOnlinePaymentTour', login="pos_admin")
@@ -461,6 +463,28 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertEqual(len(order.payment_ids), 1, "There should be one payment line in the order.")
         self.assertEqual(order.payment_ids[0].payment_method_id.id, self.cash_payment_method.id, "The payment should be Cash.")
 
+||||||| 964808830ab441bbe3f551cd43e73bbd3b82e5d7
+=======
+    def test_no_second_online_payment_before_post_processing(self):
+        order = self._open_session_fake_cashier_unpaid_order()
+        payment_context = self._fake_open_pos_order_pay_page(order.id, order.access_token)
+        route_values = {
+            'amount': payment_context['amount'],
+            'access_token': payment_context['access_token'],
+            'landing_route': payment_context['landing_route'],
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
+            'flow': 'direct',
+            'tokenization_requested': False,
+        }
+        processing_values = self._fake_request_pos_order_pay_transaction_page(order.id, route_values)
+        self._get_tx(processing_values['reference'])._set_done()
+
+        with self.assertRaises(JsonRpcException), mute_logger('odoo.http'):
+            self._fake_request_pos_order_pay_transaction_page(order.id, route_values)
+
+>>>>>>> 3d7d5ecb8b0618100c91e26491ec1d1b930ee42c
     @classmethod
     def tearDownClass(cls):
         # Restore company values after the tests
