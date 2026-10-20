@@ -965,7 +965,7 @@ class MailMessage(models.Model):
         )
 
     @api.model
-    def _message_fetch(self, domain, *, thread=None, search_term=None, is_notification=None, before=None, after=None, around=None, limit=30):
+    def _message_fetch(self, domain, *, thread=None, search_term=None, is_notification=None, before=None, after=None, around=None, limit=30, MESSAGE_COUNT_LIMIT=2000):
         res = {}
         domain = Domain(True if domain is None else domain)
         if thread:
@@ -994,7 +994,18 @@ class MailMessage(models.Model):
             ])
             domain &= message_domain
         if search_term or is_notification is not None:
-            res["count"] = self.search_count(domain)
+            records = self._fetch_query(self._search(domain, limit=MESSAGE_COUNT_LIMIT + 1, bypass_access=True), [])
+            if self.env.su:
+                if len(records) > MESSAGE_COUNT_LIMIT:
+                    res["count"] = f"{MESSAGE_COUNT_LIMIT}+"
+                else:
+                    res["count"] = records
+            else:
+                # because of complex security rules, filter the count in memory.
+                if len(records) > MESSAGE_COUNT_LIMIT:
+                    res["count"] = "?+"
+                else:
+                    res["count"] = len(self.sudo().search(domain).sudo(False)._filtered_access('read'))
         if around is not None:
             messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
             messages_after = self.search(domain & Domain('id', '>', around), limit=limit // 2, order='id ASC')
