@@ -30,7 +30,7 @@ import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { PosFormViewDialog } from "@point_of_sale/app/components/popups/form_dialog_buttons/pos_form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
@@ -2403,7 +2403,10 @@ export class PosStore extends WithLazyGetterTrap {
             this.action,
             "point_of_sale.res_partner_action_edit_pos",
             {
-                props: { resId: partner?.id },
+                props: {
+                    resId: partner?.id,
+                    buttonTemplate: "point_of_sale.FormDialogButtons",
+                },
                 additionalContext: this.editPartnerContext(),
             }
         );
@@ -2422,6 +2425,7 @@ export class PosStore extends WithLazyGetterTrap {
             {
                 props: {
                     resId: product?.id,
+                    buttonTemplate: "point_of_sale.FormDialogButtons",
                     onSave: async (record) => {
                         await this.data.read("product.template", [record.evalContext.id]);
                         await this.data.searchRead("product.product", [
@@ -2490,7 +2494,7 @@ export class PosStore extends WithLazyGetterTrap {
         };
     }
     async orderDetails(order) {
-        this.dialog.add(FormViewDialog, this.orderDetailsProps(order));
+        this.dialog.add(PosFormViewDialog, this.orderDetailsProps(order));
     }
     async closePos() {
         this.resetCashier();
