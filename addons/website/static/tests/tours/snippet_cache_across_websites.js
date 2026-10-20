@@ -20,7 +20,7 @@ registerWebsitePreviewTour(
         {
             content: "Ensure custom snippet preview appeared in the dialog",
             trigger:
-                ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_carousel_'] section[data-name='custom_snippet_test']",
+                ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_carousel_'] section[data-custom-name='custom_snippet_test']",
         },
         {
             content: "Ensure custom snippet preview shows the base label",
