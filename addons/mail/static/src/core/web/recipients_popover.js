@@ -1,9 +1,8 @@
 import { PopoverCard } from "@mail/core/common/popover_card/popover_card";
 
-import { _t } from "@web/core/l10n/translation";
 import { ORM } from "@web/core/orm_plugin";
 
-import { Component, onWillStart, types, usePlugin, useProps } from "@odoo/owl";
+import { Component, onWillStart, signal, types, usePlugin, useProps } from "@odoo/owl";
 
 /**
  * This popover is used to show a card with details for the recipients' partner with its name,
@@ -17,29 +16,27 @@ export class RecipientsPopover extends Component {
     setup() {
         this.props = useProps({
             close: types.function([]),
+            email: types.string(),
             id: types.number(),
+            name: types.string(),
             viewProfileBtnOverride: types.function([]),
         });
         this.orm = usePlugin(ORM);
-        onWillStart(async () => {
-            [this.partner] = await this.orm.read("res.partner", [this.props.id], this.fieldNames);
+        this.partner = signal(null);
+        // Not awaited: the card shows name and email at once, the rest when it arrives.
+        onWillStart(() => {
+            this.orm
+                .read("res.partner", [this.props.id], ["email_normalized", "phone"])
+                .then(([partner]) => this.partner.set(partner));
         });
     }
 
-    get name() {
-        return this.partner.name || this.partner.display_name || _t("Unnamed");
+    get email() {
+        return this.partner()?.email_normalized || this.props.email;
     }
 
     get phone() {
-        return this.partner.phone;
-    }
-
-    get email() {
-        return this.partner.email_normalized || this.partner.email;
-    }
-
-    get fieldNames() {
-        return ["name", "email_normalized", "email", "phone", "display_name"];
+        return this.partner()?.phone;
     }
 
     onClickViewProfile() {
