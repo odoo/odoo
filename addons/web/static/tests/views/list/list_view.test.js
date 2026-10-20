@@ -3517,8 +3517,8 @@ test(`change a record field in readonly should change same record in other group
 });
 
 test(`ordered target, sort attribute in context`, async () => {
-    onRpc("create_filter", ({ args }) => {
-        const favorite = args[0];
+    onRpc("ir.filters", "create", ({ args }) => {
+        const favorite = args[0][0];
         expect.step(favorite.sort);
         return [7];
     });
@@ -22686,7 +22686,7 @@ test(`select menu navigation with hot keys`, async () => {
 
 test("save filter with list_optional_show, untoggle, and reapply", async () => {
     // Intercept the RPC call to prevent the missing 'ir.filters' model error
-    onRpc("create_filter", () => [99]);
+    onRpc("ir.filters", "create", () => [99]);
 
     await mountView({
         type: "list",

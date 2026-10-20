@@ -499,9 +499,9 @@ test("SelectCreateDialog: save current search on desktop", async () => {
     onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.options.load_filters).toBe(true, { message: "Missing load_filters option" });
     });
-    onRpc("create_filter", ({ model, args }) => {
+    onRpc("ir.filters", "create", ({ model, args }) => {
         if (model === "ir.filters") {
-            const irFilter = args[0];
+            const irFilter = args[0][0];
             expect(irFilter.domain).toBe(`[("bar", "=", True)]`, {
                 message: "should save the correct domain",
             });
@@ -560,9 +560,9 @@ test("SelectCreateDialog: save current search on mobile", async () => {
     onRpc("get_views", ({ kwargs }) => {
         expect(kwargs.options.load_filters).toBe(true, { message: "Missing load_filters option" });
     });
-    onRpc("create_filter", ({ model, args }) => {
+    onRpc("ir.filters", "create", ({ model, args }) => {
         if (model === "ir.filters") {
-            const irFilter = args[0];
+            const irFilter = args[0][0];
             expect(irFilter.domain).toBe(`[("bar", "=", True)]`, {
                 message: "should save the correct domain",
             });
@@ -573,7 +573,7 @@ test("SelectCreateDialog: save current search on mobile", async () => {
             expect(irFilter.context).toEqual(expectedContext, {
                 message: "should save the correct context",
             });
-            return 7; // fake serverSideId
+            return [7]; // fake serverSideId
         }
     });
 

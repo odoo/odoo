@@ -58,16 +58,16 @@ class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
         })
 
     def get_embedded_actions_ids(self, parent_action):
-        return parent_action.with_context(self.context).read()[0]['embedded_action_ids']
+        embedded_actions = self.env['ir.embedded.actions'].with_context(self.context).search([
+            ('parent_action_id', '=', parent_action.id),
+        ])
+        return embedded_actions.filtered('is_visible').ids
 
     def test_parent_has_embedded_actions(self):
         res = self.get_embedded_actions_ids(self.parent_action)
         self.assertEqual(len(res), 2, "There should be 2 embedded records linked to the parent action")
         self.assertTrue(self.embedded_action_1.id in res and self.embedded_action_2.id in res, "The correct embedded actions\
                         should be in embedded_actions")
-
-    def test_cannot_delete_default_embedded_action(self):
-        return
 
     def test_can_delete_custom_embedded_action(self):
         embedded_action_custo = self.env['ir.embedded.actions'].create({

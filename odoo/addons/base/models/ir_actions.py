@@ -348,14 +348,8 @@ class IrActionsAct_Window(models.Model):
              "unless they reference their own help view (help_id attribute). Takes precedence "
              "over the action's description.")
     help_view_arch = fields.Text(compute='_compute_help_view_arch')
-    embedded_action_ids = fields.One2many('ir.embedded.actions', compute="_compute_embedded_actions")
     filter = fields.Boolean()
     cache = fields.Boolean(string="Data Caching", default=True, help="If enabled, this action will cache the related data used in list, Kanban and form views with the aim to increase the loading speed")
-
-    def _compute_embedded_actions(self):
-        embedded_actions = self.env["ir.embedded.actions"].search([('parent_action_id', 'in', self.ids)]).filtered(lambda x: x.is_visible)
-        for action in self:
-            action.embedded_action_ids = embedded_actions.filtered(lambda rec: rec.parent_action_id == action)
 
     @api.depends("res_model")
     def _compute_can_expand(self):
@@ -383,25 +377,13 @@ class IrActionsAct_Window(models.Model):
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
             "context", "cache", "mobile_view_mode", "domain", "filter", "group_ids", "limit",
-            "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views", "embedded_action_ids",
+            "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views",
             "help_view_arch",
             # this is used by frontend, with the document layout wizard before send and print
             "close_on_report_download",
             # this is used by the frontend to identify wizards
             "can_expand",
         }
-
-    def _get_action_dict(self):
-        """ Override to return action content with detailed embedded actions data if available.
-
-            :return: A dict with updated action dictionary including embedded actions information.
-        """
-        result = super()._get_action_dict()
-        if embedded_action_ids := result["embedded_action_ids"]:
-            EmbeddedActions = self.env["ir.embedded.actions"]
-            embedded_fields = EmbeddedActions._get_readable_fields()
-            result["embedded_action_ids"] = EmbeddedActions.browse(embedded_action_ids).read(embedded_fields)
-        return result
 
 
 VIEW_TYPES = [

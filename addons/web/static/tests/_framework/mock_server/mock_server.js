@@ -345,7 +345,6 @@ const ACTION_TYPES = {
     actions: "ir.actions.actions",
     client: "ir.actions.client",
     close: "ir.actions.act_window_close",
-    embedded: "ir.embedded.actions",
     report: "ir.actions.report",
     server: "ir.actions.server",
     todo: "ir.actions.todo",
@@ -700,14 +699,6 @@ export class MockServer {
                 action.target ??= "current";
                 break;
             }
-            case ACTION_TYPES.embedded: {
-                // Embedded actions are treated as regular actions for simplicity's sake
-                action.context ||= {};
-                action.domain ||= [];
-                action.filter_ids ||= [];
-                action.groups_id ||= [];
-                break;
-            }
             case ACTION_TYPES.report: {
                 action.binding_type = rawAction.binding_type ?? "report";
                 action.report_type ??= "qweb-pdf";
@@ -739,7 +730,6 @@ export class MockServer {
             }
             case ACTION_TYPES.window: {
                 action.context ||= {};
-                action.embedded_action_ids ||= [];
                 action.group_ids ||= [];
                 action.limit ??= 80;
                 action.mobile_view_mode ??= "kanban";
@@ -747,14 +737,6 @@ export class MockServer {
                 action.view_ids ||= [];
                 action.view_mode ??= "list,form";
                 action.cache ??= true;
-                for (const embeddedAction of this.actions) {
-                    if (
-                        embeddedAction.type === ACTION_TYPES.embedded &&
-                        embeddedAction.parent_action_id === id
-                    ) {
-                        action.embedded_action_ids.push(this._getAction(embeddedAction));
-                    }
-                }
                 break;
             }
             default: {

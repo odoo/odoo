@@ -1494,9 +1494,9 @@ test("correctly save measures and groupbys to favorite", async () => {
     expect.assertions(3);
 
     let expectedContext;
-    onRpc("create_filter", ({ args }) => {
-        expect(args[0].context).toEqual(expectedContext);
-        return true;
+    onRpc("ir.filters", "create", ({ args }) => {
+        expect(args[0][0].context).toEqual(expectedContext);
+        return [1];
     });
     await mountView({
         type: "pivot",
@@ -1560,9 +1560,9 @@ test("correctly remove pivot_ keys from the context", async () => {
 
     let expectedContext;
 
-    onRpc("create_filter", ({ args }) => {
-        expect(args[0].context).toEqual(expectedContext);
-        return true;
+    onRpc("ir.filters", "create", ({ args }) => {
+        expect(args[0][0].context).toEqual(expectedContext);
+        return [1];
     });
 
     await mountView({
@@ -1876,9 +1876,9 @@ test("Reload, group by columns, reload", async () => {
 
     let expectedContext;
 
-    onRpc("create_filter", ({ args }) => {
-        expect(args[0].context).toEqual(expectedContext);
-        return true;
+    onRpc("ir.filters", "create", ({ args }) => {
+        expect(args[0][0].context).toEqual(expectedContext);
+        return [1];
     });
 
     await mountView({
@@ -1987,9 +1987,9 @@ test("Empty results keep groupbys", async () => {
         pivot_row_groupby: [],
     };
 
-    onRpc("create_filter", ({ args }) => {
-        expect(args[0].context).toEqual(expectedContext);
-        return true;
+    onRpc("ir.filters", "create", ({ args }) => {
+        expect(args[0][0].context).toEqual(expectedContext);
+        return [1];
     });
 
     await mountView({
@@ -2366,9 +2366,9 @@ test("Row and column groupbys plus a domain", async () => {
         pivot_row_groupby: ["product_id"],
     };
 
-    onRpc("create_filter", ({ args }) => {
-        expect(args[0].context).toEqual(expectedContext);
-        return true;
+    onRpc("ir.filters", "create", ({ args }) => {
+        expect(args[0][0].context).toEqual(expectedContext);
+        return [1];
     });
 
     await mountView({
@@ -3357,8 +3357,8 @@ test("pivot_row_groupby should be also used after first load", async () => {
         },
     ];
 
-    onRpc("create_filter", ({ args }) => {
-        expect(args[0].context).toEqual(expectedContexts.shift());
+    onRpc("ir.filters", "create", ({ args }) => {
+        expect(args[0][0].context).toEqual(expectedContexts.shift());
         return [ids.shift()];
     });
 
@@ -3522,8 +3522,8 @@ test("favorite pivot_measures should be used even if found also in global contex
         groupable: false,
     });
 
-    onRpc("create_filter", ({ args }) => {
-        expect(args[0].context).toEqual({
+    onRpc("ir.filters", "create", ({ args }) => {
+        expect(args[0][0].context).toEqual({
             group_by: [],
             pivot_column_groupby: [],
             pivot_measures: ["computed_field"],

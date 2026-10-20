@@ -64,9 +64,9 @@ test("save filter", async () => {
             });
         }
     }
-    onRpc("create_filter", ({ args, route }) => {
+    onRpc("ir.filters", "create", ({ args, route }) => {
         expect.step(route);
-        const irFilter = args[0];
+        const irFilter = args[0][0];
         expect(irFilter.context).toEqual({ group_by: [], someKey: "foo" });
         return [7]; // fake serverSideId
     });
@@ -85,7 +85,7 @@ test("save filter", async () => {
     await toggleSaveFavorite();
     await editFavoriteName("aaa");
     await saveFavorite();
-    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_filter", "CLEAR-CACHES"]);
+    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create", "CLEAR-CACHES"]);
 });
 
 test("save and edit filter", async () => {
@@ -98,9 +98,9 @@ test("save and edit filter", async () => {
             });
         }
     }
-    onRpc("create_filter", ({ args, route }) => {
+    onRpc("ir.filters", "create", ({ args, route }) => {
         expect.step(route);
-        const irFilter = args[0];
+        const irFilter = args[0][0];
         expect(irFilter.context).toEqual({ group_by: [], someKey: "foo" });
         return [7]; // fake serverSideId
     });
@@ -134,16 +134,16 @@ test("save and edit filter", async () => {
     await editFavoriteName("aaa");
     await saveAndEditFavorite();
     expect.verifySteps([
-        "/web/dataset/call_kw/ir.filters/create_filter",
+        "/web/dataset/call_kw/ir.filters/create",
         "CLEAR-CACHES",
         "Edit favorite",
     ]);
 });
 
 test("dynamic filters are saved dynamic", async () => {
-    onRpc("create_filter", ({ args, route }) => {
+    onRpc("ir.filters", "create", ({ args, route }) => {
         expect.step(route);
-        const irFilter = args[0];
+        const irFilter = args[0][0];
         expect(irFilter.domain).toBe(
             `[("date_field", ">=", (context_today() + relativedelta()).strftime("%Y-%m-%d"))]`
         );
@@ -168,13 +168,13 @@ test("dynamic filters are saved dynamic", async () => {
     await editFavoriteName("My favorite");
     await saveFavorite();
     expect(getFacetTexts()).toEqual(["My favorite"]);
-    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_filter"]);
+    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create"]);
 });
 
 test("save filters created via autocompletion works", async () => {
-    onRpc("create_filter", ({ args, route }) => {
+    onRpc("ir.filters", "create", ({ args, route }) => {
         expect.step(route);
-        const irFilter = args[0];
+        const irFilter = args[0][0];
         expect(irFilter.domain).toBe(`[("foo", "ilike", "a")]`);
         return [7]; // fake serverSideId
     });
@@ -196,7 +196,7 @@ test("save filters created via autocompletion works", async () => {
     await editFavoriteName("My favorite");
     await saveFavorite();
     expect(getFacetTexts()).toEqual(["My favorite"]);
-    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_filter"]);
+    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create"]);
 });
 
 test("undefined name for filter shows notification and not error", async () => {
@@ -208,7 +208,7 @@ test("undefined name for filter shows notification and not error", async () => {
         },
     });
 
-    onRpc("create_filter", () => [7]); // fake serverSideId
+    onRpc("ir.filters", "create", () => [7]); // fake serverSideId
 
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",
@@ -233,16 +233,16 @@ test("save custom favorite filter on enter", async () => {
         }
     }
 
-    onRpc("create_filter", ({ args, route }) => {
+    onRpc("ir.filters", "create", ({ args, route }) => {
         expect.step(route);
 
-        const irFilter = args[0];
+        const irFilter = args[0][0];
         expect(irFilter.context).toEqual({
             group_by: [],
             someKey: "foo",
         });
 
-        return 7;
+        return [7];
     });
 
     await mountWithSearch(TestComponent, {
@@ -260,5 +260,5 @@ test("save custom favorite filter on enter", async () => {
 
     expect(getFacetTexts()).toEqual(["aaa"]);
 
-    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_filter"]);
+    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create"]);
 });

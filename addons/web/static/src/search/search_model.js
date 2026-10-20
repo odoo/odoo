@@ -6,7 +6,6 @@ import { Domain } from "@web/core/domain";
 import { getDefaultDomain } from "@web/core/domain_selector/utils";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { rpcBus } from "@web/core/network/rpc";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
@@ -304,7 +303,6 @@ export class SearchModel extends EventBus {
                 },
                 {
                     actionId: this.env.config.actionId,
-                    embeddedActionId: this.env.config.currentEmbeddedActionId,
                     loadIrFilters: loadIrFilters || false,
                 }
             );
@@ -647,9 +645,9 @@ export class SearchModel extends EventBus {
     }
 
     async _createIrFilters(irFilter) {
-        const serverSideIds = await this.orm.call("ir.filters", "create_filter", [irFilter]);
-        rpcBus.trigger("CLEAR-CACHES", "get_views");
-        return serverSideIds[0];
+        // the views (with their filters) are reloaded by the view plugin
+        const [serverSideId] = await this.orm.create("ir.filters", [irFilter]);
+        return serverSideId;
     }
 
     /**
@@ -2417,7 +2415,7 @@ export class SearchModel extends EventBus {
      * @returns {{ preFavorite: Object, irFilter: Object }}
      */
     _getIrFilterDescription(params = {}) {
-        const { description, isDefault, isShared, embeddedActionId } = params;
+        const { description, isDefault, isShared } = params;
         const fns = this.env.__getContext__.callbacks;
         const localContext = Object.assign({}, ...fns.map((fn) => fn()));
         const gs = this.env.__getOrderBy__.callbacks;
@@ -2452,8 +2450,6 @@ export class SearchModel extends EventBus {
             action_id: this.env.config.actionId,
             model_id: this.resModel,
             domain,
-            embedded_action_id: embeddedActionId,
-            embedded_parent_res_id: this.globalContext.active_id || false,
             is_default: isDefault,
             sort: JSON.stringify(orderBy.map((o) => `${o.name}${o.asc === false ? " desc" : ""}`)),
             user_ids: userIds,

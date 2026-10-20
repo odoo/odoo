@@ -909,9 +909,9 @@ test("bar chart: all dates can be activated through the context", async () => {
 });
 
 test("bar chart: all dates context key is saved in favorites", async () => {
-    onRpc("create_filter", ({ args }) => {
+    onRpc("ir.filters", "create", ({ args }) => {
         expect.step("create_filter");
-        expect(args[0].context.graph_all_dates).toBe(true);
+        expect(args[0][0].context.graph_all_dates).toBe(true);
         return [1];
     });
     await mountView({
@@ -1531,8 +1531,8 @@ test("save params succeeds", async () => {
     ];
 
     let serverId = 1;
-    onRpc("create_filter", ({ args }) => {
-        expect(args[0].context).toEqual(expectedContexts.shift());
+    onRpc("ir.filters", "create", ({ args }) => {
+        expect(args[0][0].context).toEqual(expectedContexts.shift());
         return [serverId++];
     });
 

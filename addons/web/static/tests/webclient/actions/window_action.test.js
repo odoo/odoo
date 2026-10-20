@@ -1734,9 +1734,9 @@ test("save current search", async () => {
         },
     });
 
-    onRpc("create_filter", ({ args }) => {
-        expect(args[0].domain).toBe(`[("m2o", "=", 1)]`);
-        expect(args[0].context).toEqual({
+    onRpc("ir.filters", "create", ({ args }) => {
+        expect(args[0][0].domain).toBe(`[("m2o", "=", 1)]`);
+        expect(args[0][0].context).toEqual({
             group_by: [],
             shouldBeInFilterContext: true,
         });

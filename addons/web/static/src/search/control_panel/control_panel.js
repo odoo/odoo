@@ -20,7 +20,6 @@ import {
     useProps,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
 
 const STICKY_CLASS = "o_mobile_sticky";
 const DEFAULT_DISPLAY = {
@@ -35,7 +34,6 @@ export class ControlPanel extends Component {
         Dropdown,
         DropdownItem,
         Breadcrumbs,
-        EmbeddedActionsPanel,
     };
     props = useProps({
         display: t.object().optional(DEFAULT_DISPLAY),
@@ -44,7 +42,6 @@ export class ControlPanel extends Component {
     root = signal.ref();
 
     setup() {
-        this.embeddedPanelState = useEmbeddedActions();
         this.actionService = useService("action");
         this.offlinePlugin = usePlugin(OfflinePlugin);
         this.uiService = useService("ui");
