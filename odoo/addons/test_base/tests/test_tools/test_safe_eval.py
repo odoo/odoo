@@ -12,6 +12,7 @@ from odoo.tools.safe_eval import (
     safe_checker,
     safe_eval,
 )
+from odoo.tools.safe_eval.evaluation import compile_codeobj
 from odoo.tools.safe_eval.runtime import (
     UnsafeClassError,
     UnsafeFunctionError,
@@ -71,6 +72,28 @@ class TestSafeEval(BaseCase):
             ("\u00A01 + 2\u00A0", 3),  # nbsp
         ]:
             self.assertEqual(safe_eval(expr), expected)
+
+    def test_safe_eval_compiles_once(self):
+        expr = "value * 2  # test_safe_eval_compiles_once"
+        with patch('odoo.tools.safe_eval.evaluation.compile_codeobj', side_effect=compile_codeobj) as compile_mock:
+            self.assertEqual(safe_eval(expr, {'value': 2}), 4)
+            self.assertEqual(safe_eval(expr, {'value': 3}), 6)
+        self.assertEqual(compile_mock.call_count, 1)
+
+    def test_safe_eval_invalid_code_not_cached(self):
+        # failing validation must raise on every evaluation, not only the first one
+        with patch('odoo.tools.safe_eval.evaluation.compile_codeobj', side_effect=compile_codeobj) as compile_mock:
+            for _ in range(2):
+                with self.assertRaises(NameError):
+                    safe_eval("a.__class__  # test_safe_eval_invalid_code_not_cached", {'a': 1})
+        self.assertEqual(compile_mock.call_count, 2)
+
+    def test_safe_eval_cache_by_mode(self):
+        context = {}
+        safe_eval("result = 1", context, mode="exec")
+        self.assertEqual(context['result'], 1)
+        with self.assertRaises(SyntaxError):
+            safe_eval("result = 1")
 
     def test_runs_top_level_scope(self):
         # when we define var in top-level scope, it should become available in locals and globals
