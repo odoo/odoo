@@ -3,7 +3,7 @@
 import binascii
 
 from odoo import SUPERUSER_ID, _, fields, http
-from odoo.exceptions import AccessError, MissingError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
 
@@ -467,6 +467,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_invoice_id
         self._validate_transaction_kwargs(kwargs)
+        if order_sudo._is_paid():
+            raise UserError(_("The order has already been paid. Please refresh the page."))
         kwargs.update({
             'partner_id': partner_sudo.id,
             'currency_id': order_sudo.currency_id.id,

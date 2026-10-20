@@ -646,3 +646,28 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertEqual(
             tx.invoice_ids.payment_state, tx.invoice_ids._get_invoice_in_payment_state()
         )
+
+    @mute_logger('odoo.http')
+    def test_transaction_route_rejects_already_paid_order(self):
+        """ Test that a stale portal page can't create a new transaction for an order that has
+        already been paid in full. """
+        url = self._build_url(f'/my/orders/{self.sale_order.id}/transaction')
+        route_kwargs = {
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
+            'amount': self.sale_order.amount_total,
+            'flow': 'direct',
+            'tokenization_requested': False,
+            'landing_route': self.sale_order.get_portal_url(),
+            'access_token': self.sale_order._portal_ensure_token(),
+        }
+        processing_values = self.make_jsonrpc_request(url, route_kwargs)
+        tx = self._get_tx(processing_values['reference'])
+        tx._set_done()
+        tx._post_process()
+        self.assertEqual(self.sale_order.state, 'sale')
+
+        with self.assertRaises(JsonRpcException, msg='odoo.exceptions.UserError'):
+            self.make_jsonrpc_request(url, route_kwargs)
+        self.assertEqual(self.sale_order.transaction_ids, tx)
