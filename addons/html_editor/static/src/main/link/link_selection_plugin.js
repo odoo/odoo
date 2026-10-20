@@ -1,7 +1,13 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import { childNodes, closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { removeClass } from "@html_editor/utils/dom";
-import { isProtected, isProtecting, isZwnbsp } from "@html_editor/utils/dom_info";
+import {
+    isEmptyTextNode,
+    isProtected,
+    isProtecting,
+    isZwnbsp,
+    PROTECTED_QWEB_SELECTOR,
+} from "@html_editor/utils/dom_info";
 
 /*
     This plugin solves selection issues around links (allowing the cursor at the
@@ -10,10 +16,13 @@ import { isProtected, isProtecting, isZwnbsp } from "@html_editor/utils/dom_info
     Every link receives 4 zero-width non-breaking spaces (unicode FEFF
     characters, hereafter referred to as ZWNBSP):
     - one before the link
-    - one as the link's first child
-    - one as the link's last child
+    - one before the first leaf of the link
+    - one after the last leaf of the link
     - one after the link
     like so: `//ZWNBSP//<a>//ZWNBSP//label//ZWNBSP//</a>//ZWNBSP`.
+    The inner ones go inside the formats of the label, like so:
+    `<a><s>//ZWNBSP//label//ZWNBSP//</s></a>`, so that text typed at the inner
+    edges of the link keeps them.
 
     A visual indication ( `o_link_in_selection` class) is added to a link when
     the selection is contained within it.
@@ -40,33 +49,51 @@ export class LinkSelectionPlugin extends Plugin {
         /** Handlers */
         selectionchange_handlers: this.resetLinkInSelection.bind(this),
         clean_for_save_handlers: ({ root }) => this.clearLinkInSelectionClass(root),
-        normalize_handlers: () => this.resetLinkInSelection(),
+        normalize_handlers: (root) => {
+            this.updateLinkFeffs(root);
+            this.resetLinkInSelection();
+        },
         feff_providers: this.addFeffsToLinks.bind(this),
         system_classes: ["o_link_in_selection"],
     };
 
+    /**
+     * Updates the FEFFs of the whole link holding the root, as the inner FEFFs
+     * of a previous update can be outside the root, in the label.
+     *
+     * @param {Element} root
+     */
+    updateLinkFeffs(root) {
+        const link = closestElement(root, "a");
+        if (link && link !== root) {
+            this.dependencies.feff.updateFeffs(link);
+        }
+    }
+
     addFeffsToLinks(root, cursors) {
-        return [...selectElements(root, "a")]
+        // The inner FEFFs of the link holding the root can be in the root.
+        return [...selectElements(closestElement(root, "a") || root, "a")]
             .filter(this.isLinkEligibleForZwnbsp.bind(this))
             .flatMap((link) => this.addFeffs(link, cursors));
     }
 
     addFeffs(link, cursors) {
-        const addFeff = (position) => {
+        const addFeff = (element, position) => {
             // skip cursor update for append, we want to keep it before the added FEFF
             const c = position === "append" ? null : cursors;
-            return this.dependencies.feff.addFeff(link, position, c);
+            return this.dependencies.feff.addFeff(element, position, c);
         };
 
         const zwnbspNodes = [];
-        for (const [position, relation] of [
-            ["before", "previousSibling"],
-            ["after", "nextSibling"],
-            ["prepend", "firstChild"],
-            ["append", "lastChild"],
+        const [startParent, endParent] = getInnerFeffParents(link);
+        for (const [element, position, relation] of [
+            [link, "before", "previousSibling"],
+            [link, "after", "nextSibling"],
+            [startParent, "prepend", "firstChild"],
+            [endParent, "append", "lastChild"],
         ]) {
-            const candidate = link[relation];
-            const feff = isZwnbsp(candidate) ? candidate : addFeff(position);
+            const candidate = element[relation];
+            const feff = isZwnbsp(candidate) ? candidate : addFeff(element, position);
             zwnbspNodes.push(feff);
         }
         return zwnbspNodes;
@@ -175,4 +202,43 @@ export class LinkSelectionPlugin extends Plugin {
         this.dependencies.feff.removeFeffs(root, cursors, { exclude });
         cursors?.restore();
     }
+}
+
+/**
+ * Returns the parents of the inner FEFFs of the link, at the start and at the
+ * end of its label: the deepest editable inline elements holding these edges.
+ *
+ * Such an element emptied of its text gets a zero-width space, as the other
+ * empty inlines do, so that it is removed on save if no text is typed in it.
+ *
+ * @param {HTMLAnchorElement} link
+ * @returns {Element[]}
+ */
+function getInnerFeffParents(link) {
+    // Skip the FEFFs and the empty text nodes they leave once removed.
+    const getContentNodes = (element) =>
+        childNodes(element).filter((node) => !isZwnbsp(node) && !isEmptyTextNode(node));
+    const getInnerFeffParent = (index) => {
+        let parent = link;
+        let edgeNode = getContentNodes(parent).at(index);
+        while (
+            edgeNode?.nodeType === Node.ELEMENT_NODE &&
+            edgeNode.isContentEditable &&
+            edgeNode.hasChildNodes() &&
+            // Not in QWeb directives, nor in the empty inlines waiting for text.
+            !edgeNode.matches(`t, ${PROTECTED_QWEB_SELECTOR}, [data-oe-zws-empty-inline]`)
+        ) {
+            const innerEdgeNode = getContentNodes(edgeNode).at(index);
+            if (!innerEdgeNode) {
+                edgeNode.append(edgeNode.ownerDocument.createTextNode("\u200B"));
+                edgeNode.setAttribute("data-oe-zws-empty-inline", "");
+                break;
+            }
+            parent = edgeNode;
+            edgeNode = innerEdgeNode;
+        }
+        return parent;
+    };
+    // At the first and at the last content node of the label.
+    return [getInnerFeffParent(0), getInnerFeffParent(-1)];
 }

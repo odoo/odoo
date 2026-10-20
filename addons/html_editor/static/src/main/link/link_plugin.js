@@ -1,6 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { cleanTrailingBR, mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
-import { childNodes, closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    childNodes,
+    closestElement,
+    descendants,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -284,10 +289,8 @@ export class LinkPlugin extends Plugin {
                 const isFirstFeff = !caretPosition.offsetNode.previousSibling;
                 if (isFirstFeff && caretPosition.offset === 0) {
                     ev.preventDefault();
-                    this.dependencies.selection.setSelection({
-                        anchorNode: clickedEl,
-                        anchorOffset: 1,
-                    });
+                    const [anchorNode, anchorOffset] = rightPos(caretPosition.offsetNode);
+                    this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
                     this.dependencies.selection.focusEditable();
                 }
             } else if (!clickedEl.closest("a") && link) {
@@ -417,7 +420,7 @@ export class LinkPlugin extends Plugin {
             if (color && childNodes.every((n) => !isBlock(n))) {
                 anchorEl.style.removeProperty("color");
                 const font = selectElements(anchorEl, "font").next().value;
-                if (font && cleanZWChars(anchorEl.textContent) === font.textContent) {
+                if (font && cleanZWChars(anchorEl.textContent) === cleanZWChars(font.textContent)) {
                     continue;
                 }
                 const newFont = this.document.createElement("font");
@@ -1064,10 +1067,12 @@ export class LinkPlugin extends Plugin {
             return;
         }
         // Move before inner FEFF of the button.
-        this.dependencies.selection.setSelection({
-            anchorNode: startContainer.previousSibling,
-            anchorOffset: startContainer.previousSibling.childNodes.length - 1,
-        });
+        const innerFeff = descendants(previousSibling).findLast(isZwnbsp);
+        if (!innerFeff) {
+            return;
+        }
+        const [anchorNode, anchorOffset] = leftPos(innerFeff);
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         return true;
     }
 }

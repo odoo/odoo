@@ -1,5 +1,5 @@
 import { click, describe, expect, test } from "@odoo/hoot";
-import { deleteBackward, insertText } from "../_helpers/user_actions";
+import { bold, deleteBackward, insertText, simulateArrowKeyPress } from "../_helpers/user_actions";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { descendants } from "@html_editor/utils/dom_traversal";
 import { tick } from "@odoo/hoot-mock";
@@ -28,15 +28,92 @@ test("should pad a link with ZWNBSPs and add visual indication (2)", async () =>
     await testEditor({
         contentBefore: '<p>a<a href="#/"><span class="a">b</span></a></p>',
         contentBeforeEdit:
-            '<p>a\ufeff<a href="#/">\ufeff<span class="a">b</span>\ufeff</a>\ufeff</p>',
+            '<p>a\ufeff<a href="#/"><span class="a">\ufeffb\ufeff</span></a>\ufeff</p>',
         stepFunction: async (editor) => {
             setSelection({ anchorNode: editor.editable.querySelector("a span"), anchorOffset: 0 });
             await tick();
         },
         contentAfterEdit:
-            '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff<span class="a">[]b</span>\ufeff</a>\ufeff</p>',
+            '<p>a\ufeff<a href="#/" class="o_link_in_selection"><span class="a">[]\ufeffb\ufeff</span></a>\ufeff</p>',
         contentAfter: '<p>a<a href="#/"><span class="a">[]b</span></a></p>',
     });
+});
+
+test("should pad a link with ZWNBSPs inside the formats of its label", async () => {
+    await testEditor({
+        contentBefore: '<p>a<a href="#/"><s><u>b</u></s></a>c</p>',
+        contentBeforeEdit: '<p>a\ufeff<a href="#/"><s><u>\ufeffb\ufeff</u></s></a>\ufeffc</p>',
+    });
+});
+
+test("should pad a link with ZWNBSPs inside the formats at the edges of its label", async () => {
+    await testEditor({
+        contentBefore: '<p>a<a href="#/"><s>b</s>c<u>d</u></a>e</p>',
+        contentBeforeEdit: '<p>a\ufeff<a href="#/"><s>\ufeffb</s>c<u>d\ufeff</u></a>\ufeffe</p>',
+    });
+});
+
+test("should not pad a link with ZWNBSPs inside a QWeb directive", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="#/"><t t-if="x">b</t></a></p>',
+        contentBeforeEdit: '<p>\ufeff<a href="#/">\ufeff<t t-if="x">b</t>\ufeff</a>\ufeff</p>',
+    });
+});
+
+test("should not pad a link with ZWNBSPs inside an empty inline", async () => {
+    await testEditor({
+        contentBefore:
+            '<p>a<a href="#/">bc<strong data-oe-zws-empty-inline="">\u200b[]</strong></a>d</p>',
+        contentBeforeEdit:
+            '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeffbc<strong data-oe-zws-empty-inline="">\u200b[]</strong>\ufeff</a>\ufeffd</p>',
+    });
+});
+
+test("should pad a link ending with a line break", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="#/">b<br>c<br></a>d</p>',
+        contentBeforeEdit: '<p>\ufeff<a href="#/">\ufeffb<br>c<br>\ufeff</a>\ufeffd</p>',
+    });
+});
+
+test("should keep the format when typing at the start of a formatted link", async () => {
+    const { editor, el } = await setupEditor('<p>a<a href="#/"><s>b[]c</s></a>d</p>');
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await insertText(editor, "x");
+    expect(cleanLinkArtifacts(getContent(el))).toBe('<p>a<a href="#/"><s>x[]bc</s></a>d</p>');
+});
+
+test("should keep a formatted link padded with ZWNBSPs when retyping its label", async () => {
+    const { editor, el } = await setupEditor('<p>a<a href="#/"><s>[bc]</s></a>d</p>');
+    deleteBackward(editor);
+    await insertText(editor, "xy");
+    expect(getContent(el)).toBe(
+        '<p>a\ufeff<a href="#/" class="o_link_in_selection"><s>\ufeffxy[]\ufeff</s></a>\ufeffd</p>'
+    );
+});
+
+test("should remove the emptied format of a link on save", async () => {
+    await testEditor({
+        contentBefore: '<p>a<a href="#/"><s>[bc]</s>de</a>f</p><p>g</p>',
+        stepFunction: async (editor) => {
+            deleteBackward(editor);
+            setSelection({ anchorNode: editor.editable.lastChild.firstChild, anchorOffset: 0 });
+            await tick();
+        },
+        contentAfter: '<p>a<a href="#/">de</a>f</p><p>[]g</p>',
+    });
+});
+
+test("should move the inner ZWNBSPs of a link into its bold, then out once emptied", async () => {
+    const { editor, el } = await setupEditor('<p>a<a href="#/">[bc]</a>d</p>');
+    bold(editor);
+    expect(getContent(el)).toBe(
+        '<p>a\ufeff<a href="#/" class="o_link_in_selection"><strong>\ufeff[bc]\ufeff</strong></a>\ufeffd</p>'
+    );
+    deleteBackward(editor);
+    expect(getContent(el)).toBe(
+        '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff<strong data-oe-zws-empty-inline="">[]\u200b</strong>\ufeff</a>\ufeffd</p>'
+    );
 });
 
 test("should keep link padded with ZWNBSPs after a delete", async () => {
@@ -273,6 +350,18 @@ describe("button", () => {
         );
     });
 
+    test("should type inside a formatted button after backspacing into it", async () => {
+        const { editor, el } = await setupEditor(
+            '<p>before<a class="btn" href="#/"><s>in</s></a>x[]after</p>'
+        );
+        deleteBackward(editor);
+        deleteBackward(editor);
+        await insertText(editor, "side");
+        expect(getContent(el)).toBe(
+            '<p>before\ufeff<a class="btn" href="#/"><s>\ufeffinside[]\ufeff</s></a>\ufeffafter</p>'
+        );
+    });
+
     test("should delete previous character without errors when backspacing with the cursor in between a zwnbsp and the left edge of a button", async () => {
         const { editor, el } = await setupEditor(
             '<p>before[]<a class="btn" href="#/">in</a>after</p>'
@@ -366,6 +455,29 @@ describe("should position the cursor outside the link", () => {
         );
     });
 
+    test("clicking at the start padding of a formatted button", async () => {
+        const { el } = await setupEditor(
+            '<p><a class="btn btn-primary" href="#/"><s>test</s></a></p>'
+        );
+        const a = el.querySelector("a");
+        const rect = a.getBoundingClientRect();
+        const clientX = rect.left + 1;
+        const clientY = rect.top + rect.height / 2;
+        patchWithCleanup(document, {
+            // The click lands on the padding of the button, outside its label.
+            elementFromPoint: () => a,
+            caretPositionFromPoint: () => ({
+                offsetNode: a.querySelector("s").firstChild,
+                offset: 0,
+            }),
+        });
+        await click(a, { clientX, clientY });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>\ufeff<a class="btn btn-primary" href="#/"><s>\ufeff[]test\ufeff</s></a>\ufeff</p>'
+        );
+    });
+
     test("clicking at the end after the button", async () => {
         const { el } = await setupEditor('<p><a class="btn btn-primary" href="#/">test</a></p>');
         const a = el.querySelector("a");
@@ -405,7 +517,7 @@ describe("should position the cursor outside the link", () => {
         // The selection is set by the browser, but since the unit test events are not trusted,
         // the selection is not actually set. So we just check that the content is unchanged.
         expect(getContent(el)).toBe(
-            '<p>\ufeff<a href="/fake">\ufeff<strong>link</strong>\ufeff</a>\ufeff</p>'
+            '<p>\ufeff<a href="/fake"><strong>\ufefflink\ufeff</strong></a>\ufeff</p>'
         );
     });
     test("clicking at the end of the button when editor is blur", async () => {
