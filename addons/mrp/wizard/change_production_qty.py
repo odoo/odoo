@@ -73,8 +73,8 @@ class ChangeProductionQty(models.TransientModel):
             production._log_manufacture_exception(documents)
             self._update_finished_moves(production, new_production_qty, old_production_qty)
             production.write({'product_qty': new_production_qty})
+            production.qty_producing = min(new_production_qty, production.qty_producing)
             if not production.uom_id.is_zero(production.qty_producing) and not production.workorder_ids:
-                production.qty_producing = min(new_production_qty, production.qty_producing)
                 production._set_qty_producing(False)
 
             for wo in production.workorder_ids:

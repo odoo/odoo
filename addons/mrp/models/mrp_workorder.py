@@ -981,6 +981,8 @@ class MrpWorkorder(models.Model):
         return duration
 
     def get_duration(self):
+        if not self:
+            return 0.0
         self.ensure_one()
         now = self.env.cr.now()
         loss_type_times = defaultdict(lambda: self.env['mrp.workcenter.productivity'])
