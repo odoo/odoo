@@ -1,4 +1,4 @@
-from odoo import api, models, fields
+from odoo import api, fields, models, modules
 
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService, u64
 
@@ -20,29 +20,37 @@ class BatchDownload(models.Model):
 
     company_id = fields.Many2one(comodel_name='res.company', readonly=True, required=True)
     name = fields.Char("KSeF batch reference number", index=True, readonly=True, required=True)
-    error = fields.Char("KSeF batch download error", copy=False, readonly=True)
-    status = fields.Selection(selection=STATUS_CODES, readonly=True, required=True)
-    content = fields.Json(readonly=True)
+
     date_from = fields.Datetime(readonly=True, required=True)
     date_to = fields.Datetime(readonly=True, required=True)
     date_expiry = fields.Datetime(readonly=True)
+    is_expired = fields.Boolean(compute="_compute_is_expired", search="_search_expired")
+
+    status = fields.Selection(selection=STATUS_CODES, readonly=True, required=True)
+    content = fields.Json(readonly=True)
+    error = fields.Char("KSeF batch download error", copy=False, readonly=True)
+
     raw_symmetric_key = fields.Binary("Batch symmetric key", readonly=True, groups='base.group_system')
     encrypted_symmetric_key = fields.Binary("Batch encrypted symmetric key", readonly=True, groups='base.group_system')
     raw_iv = fields.Binary("Batch iv", readonly=True, groups='base.group_system')
-    is_expired = fields.Boolean(compute="_compute_is_expired", search="_search_expired")
-    parts = fields.One2many(
+
+    part_ids = fields.One2many(
         comodel_name='l10n_pl_edi_batch.part',
         string='KSeF Batch parts',
         readonly=True,
         copy=False,
         inverse_name='batch_id',
     )
+    attachment_ids = fields.One2many(
+        string='Downloaded KSeF XMLs',
+        comodel_name='ir.attachment',
+        inverse_name='res_id',
+        domain=[('res_model', '=', 'l10n_pl_edi_batch.download')],
+        readonly=True,
+        copy=False,
+    )
 
-    _sql_constraints = [(
-        'unique_batch_name',
-        'UNIQUE(name)',
-        'The KSeF batch name must be unique'
-    )]
+    _sql_constraints = [('unique_batch_name', 'UNIQUE(name)', 'The KSeF batch name must be unique')]
 
     @api.model
     def _search_expired(self, operator, value):
@@ -70,16 +78,18 @@ class BatchDownload(models.Model):
     def _request(self, company, date_from, date_to):
         service = KsefApiService(company)
         encryption_data = service._create_encryption_data()
-        batch_data = service.download_batch_request(date_from, date_to, encryption_data)
-        return self.sudo().create({
-            'company_id': company.id,
-            'status': '100',
-            'name': batch_data.get('referenceNumber', False),
-            'date_from': fields.Datetime.to_string(date_from),
-            'date_to': fields.Datetime.to_string(date_to),
-            'raw_symmetric_key': u64(encryption_data['raw_symmetric_key']),
-            'raw_iv': u64(encryption_data['raw_iv']),
-        }).with_env(self.env)
+        for record in self:
+            batch_data = service.download_batch_request(date_from, date_to, encryption_data)
+            return self.sudo().create({
+                'company_id': company.id,
+                'status': '100',
+                'name': batch_data.get('referenceNumber', False),
+                'date_from': fields.Datetime.to_string(date_from),
+                'date_to': fields.Datetime.to_string(date_to),
+                'raw_symmetric_key': u64(encryption_data['raw_symmetric_key']),
+                'encrypted_symmetric_key': u64(encryption_data['encrypted_symmetric_key']),
+                'raw_iv': u64(encryption_data['raw_iv']),
+            }).with_env(self.env)
 
     def check_status(self):
         companies = self.mapped("company_id")
@@ -89,3 +99,26 @@ class BatchDownload(models.Model):
         for record in self:
             data = service.download_batch_status(record.name)
             record.update(data)
+
+    def import_attachments(self, commit=True):
+        for record in self:
+            for attachment in record.attachment_ids:
+                move = self.env['account.move'].sudo().with_company(record.company_id).create([{
+                    'move_type': 'in_invoice',
+                }])
+                move.message_post(body=self.env._("KSeF bill %s has been attached", attachment.name), attachment_ids=attachment.ids)
+                attachment.write({
+                    'company_id': record.company_id.id,
+                    'description': self.env._('KSeF Received Bill XML'),
+                    'res_id': move.id,
+                    'res_model': move._name,
+                    'res_field': 'l10n_pl_edi_attachment_file',
+                })
+                move.write({
+                    'l10n_pl_edi_attachment_id': attachment.id,
+                    'l10n_pl_edi_status': 'fetched',
+                    'l10n_pl_edi_header': 'Fetched From KSeF',
+                })
+                move.invalidate_recordset(fnames=['l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'])
+            if not modules.module.current_test:
+                self.env.cr.commit()
