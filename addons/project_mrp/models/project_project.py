@@ -35,7 +35,12 @@ class ProjectProject(models.Model):
         action['domain'] = [('project_id', '=', self.id)]
         action['context'] = {'default_project_id': self.id}
         boms = self.env['mrp.bom'].search([('project_id', '=', self.id)])
-        if not self.env.context.get('from_embedded_action', False) and len(boms) == 1:
+        # old EA style: using from_embedded_action
+        # if not self.env.context.get('from_embedded_action', False) and len(boms) == 1:
+        #     action['views'] = [[False, 'form']]
+        #     action['res_id'] = boms.id
+        # new hub style: using form_when_one
+        if self.env.context.get('form_when_one', True) and len(boms) == 1:
             action['views'] = [[False, 'form']]
             action['res_id'] = boms.id
         return action
@@ -46,7 +51,7 @@ class ProjectProject(models.Model):
         action['domain'] = [('project_id', '=', self.id)]
         action['context'] = {'default_project_id': self.id, 'from_project_action': True}
         productions = self.env['mrp.production'].search([('project_id', '=', self.id)])
-        if not self.env.context.get('from_embedded_action', False) and len(productions) == 1:
+        if len(productions) == 1 and self.env.context.get('form_when_one', True):
             action['views'] = [[False, 'form']]
             action['res_id'] = productions.id
         return action
