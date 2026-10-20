@@ -1,4 +1,4 @@
-import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
+import { useOptionsSubEnv } from "@html_builder/utils/utils";
 import { asyncComputed, onMounted, onWillStart, useProps, signal, t, useListener } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { uniqueId } from "@web/core/utils/functions";
@@ -97,7 +97,11 @@ export class OptionsContainer extends BaseOptionComponent {
             ? this.props.containerTitle.getTitleExtraInfo(this.props.editingElement)
             : "";
 
-        return (title || getSnippetName(this.env.getEditingElement())) + titleExtraInfo;
+        return (
+            (title ||
+                this.env.editor.config.snippetModel.getSnippetName(this.env.getEditingElement())) +
+            titleExtraInfo
+        );
     }
 
     /** @param {PointerEvent | FocusEvent} ev */

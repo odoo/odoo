@@ -3,7 +3,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { markup } from "@odoo/owl";
 import { AnchorDialog } from "./anchor_dialog";
-import { getElementsWithOption, getSnippetName } from "@html_builder/utils/utils";
+import { getElementsWithOption } from "@html_builder/utils/utils";
 
 /**
  * Anchor titles are usually taken from headings (h1–h6). Here, styled titles
@@ -106,7 +106,9 @@ export class AnchorPlugin extends Plugin {
     }
 
     createAnchor(element) {
-        const title = element.querySelector(TITLE_SELECTOR)?.innerText || getSnippetName(element);
+        const title =
+            element.querySelector(TITLE_SELECTOR)?.innerText ||
+            this.config.snippetModel.getSnippetName(element);
         const anchorName = this.formatAnchor(title);
 
         let n = "";
