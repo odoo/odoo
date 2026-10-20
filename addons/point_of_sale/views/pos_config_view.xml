@@ -11,7 +11,6 @@
                     <field name="active" invisible="1"/>
                     <field name="company_has_template" invisible="1"/>
                     <field name="has_active_session" invisible="1"/>
-                    <field name="other_devices" invisible="1"/>
                     <field name="module_pos_hr" invisible="1"/>
 
                     <div class="oe_title" id="title">
@@ -52,40 +51,39 @@
                                             </div>
                                         </div>
                                     </setting>
-                                    <setting id="other_devices" string="Receipt Printers" help="Connect printers to your PoS">
-                                        <field name="other_devices" />
-                                        <div class="content-group" invisible="not other_devices">
-                                            <div class="row mb-2">
-                                                <div class="col-lg-2 o_light_label">
-                                                    <label string="Available" for="receipt_printer_ids"/>
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <field name="receipt_printer_ids"
-                                                        class="w-100 pt-1"
-                                                        widget="many2many_tags"
-                                                        context="{'default_use_type': 'receipt'}"
-                                                        options="{'no_quick_create': True}"/>
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <widget name="point_of_sale_test_epos"/>
-                                                </div>
+                                    <setting id="receipt_printers" string="Receipt Printers" help="Connect printers to your PoS">
+                                        <div class="row mb-2">
+                                            <div class="col-lg-2 o_light_label">
+                                                <label string="Available" for="receipt_printer_ids"/>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <field name="receipt_printer_ids"
+                                                    class="w-100 pt-1"
+                                                    widget="many2many_tags"
+                                                    placeholder="None"
+                                                    context="{'default_use_type': 'receipt'}"
+                                                    options="{'no_quick_create': True}"/>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <widget name="point_of_sale_test_epos" options="{'printer_type': 'receipt_printer_ids'}" invisible="not receipt_printer_ids"/>
                                             </div>
                                         </div>
                                     </setting>
-                                    <setting id="preparation_devices" string="Preparation Printers" help="Connect preparation printers to your PoS">
-                                        <field name="preparation_devices"/>
-                                        <div class="content-group" invisible="not preparation_devices">
-                                            <div class="row mb-2">
-                                                <div class="col-lg-2 o_light_label">
-                                                    <label string="Available" for="preparation_printer_ids"/>
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <field name="preparation_printer_ids"
-                                                        class="w-100 pt-1"
-                                                        widget="many2many_tags"
-                                                        context="{'default_use_type': 'preparation'}"
-                                                        options="{'no_quick_create': True}"/>
-                                                </div>
+                                    <setting id="preparation_printers" string="Preparation Printers" help="Connect preparation printers to your PoS">
+                                        <div class="row mb-2">
+                                            <div class="col-lg-2 o_light_label">
+                                                <label string="Available" for="preparation_printer_ids"/>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <field name="preparation_printer_ids"
+                                                    class="w-100 pt-1"
+                                                    widget="many2many_tags"
+                                                    placeholder="None"
+                                                    context="{'default_use_type': 'preparation'}"
+                                                    options="{'no_quick_create': True}"/>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <widget name="point_of_sale_test_epos" options="{'printer_type': 'preparation_printer_ids'}" invisible="not preparation_printer_ids"/>
                                             </div>
                                         </div>
                                     </setting>
