@@ -188,6 +188,7 @@ export class PosStore extends WithLazyGetterTrap {
         });
 
         this.handleQRPaymentLines();
+        this.restorePendingPayments();
 
         this.debouncedRecomputeServiceFees = debounce((order = this.getOrder()) => {
             order.recomputeServiceFees();
@@ -297,6 +298,46 @@ export class PosStore extends WithLazyGetterTrap {
                 payment.payment_status = "retry";
             }
         });
+    }
+
+    /**
+     * Payment requests do not survive a refresh: hand each line still
+     * processing to its payment interface.
+     */
+    restorePendingPayments() {
+        for (const order of this.models["pos.order"].getAll()) {
+            if (order.finalized) {
+                continue;
+            }
+            for (const line of order.payment_ids) {
+                if (line.isProcessing) {
+                    line.payment_interface?.restorePendingRequest(line);
+                }
+            }
+        }
+    }
+
+    async onPaymentAccepted(line) {
+        const order = line.pos_order_id;
+        if (!order || order.finalized) {
+            return false;
+        }
+        if (order !== this.getOrder()) {
+            this.notification.add(
+                order.toBeValidate()
+                    ? _t(
+                          "The order %s has been fully paid.\nYou just need to validate it.",
+                          order.floatingOrderName
+                      )
+                    : _t("The order %s has been partially paid.", order.floatingOrderName),
+                { type: "success" }
+            );
+            return false;
+        }
+        if (line.uuid !== order.getSelectedPaymentline()?.uuid) {
+            this.notification.add(_t("Payment received"), { type: "success" });
+        }
+        return await this.autoValidateOrder({ order });
     }
 
     async searchProductsFromDB() {
@@ -1038,34 +1079,33 @@ export class PosStore extends WithLazyGetterTrap {
         line.setDiscount(val);
     }
 
-    async setTip(tip, type = "fixed", value = false) {
-        const currentOrder = this.getOrder();
+    async setTip(tip, type = "fixed", value = false, order = this.getOrder()) {
         const tipProduct = this.config.tip_product_id;
-        let line = currentOrder.lines.find((line) => line.product_id.id === tipProduct.id);
+        let line = order.lines.find((line) => line.product_id.id === tipProduct.id);
 
         // Delete tip
         if (line && !tip) {
             line.delete();
-            currentOrder.setTip(false);
+            order.setTip(false);
         }
 
         // Update tip
         else if (line) {
             line.setUnitPrice(tip);
-            currentOrder.setTip(tip, type, value);
+            order.setTip(tip, type, value);
         }
 
         // Add tip
         else if (tip) {
-            line = await this.addLineToCurrentOrder(
+            line = await this.addLineToOrder(
                 {
                     product_id: tipProduct,
                     price_unit: tip,
                     product_tmpl_id: tipProduct.product_tmpl_id,
                 },
-                {}
+                order
             );
-            currentOrder.setTip(tip, type, value);
+            order.setTip(tip, type, value);
         }
         return line;
     }

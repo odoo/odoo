@@ -372,12 +372,8 @@ export class PaymentScreen extends Component {
         }
 
         this.numberBuffer.capture();
-        const isPaymentSuccessful = await line.pay();
-
-        // Automatically validate the order when after an electronic payment,
-        // the current order is fully paid and due is zero.
-        if (isPaymentSuccessful) {
-            await this.pos.autoValidateOrder();
+        if (await line.pay()) {
+            await this.pos.onPaymentAccepted(line);
         }
     }
 

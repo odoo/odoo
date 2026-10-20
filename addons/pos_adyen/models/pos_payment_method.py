@@ -182,6 +182,15 @@ class PosPaymentMethod(models.Model):
 
             data['SaleToPOIRequest'][request_name]['SaleData']['SaleToAcquirerData'] = acquirer_data + '&' + metadata if acquirer_data else metadata
 
+            try:
+                return self._proxy_adyen_request_direct(data, operation)
+            except requests.exceptions.ReadTimeout:
+                # Sent but not answered: Adyen may have received it and the
+                # terminal may take the card, so the POS waits for the result
+                # instead of letting the cashier send it again.
+                _logger.warning('Adyen did not answer the %s in time', request_name)
+                return {'error': {'timeout': True}}
+
         return self._proxy_adyen_request_direct(data, operation)
 
     @api.model

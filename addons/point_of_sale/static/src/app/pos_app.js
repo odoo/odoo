@@ -71,6 +71,13 @@ export class Chrome extends Component {
                 event.returnValue = confirmationMessage;
                 return confirmationMessage;
             }
+            if (this.pos.models["pos.payment"].some((line) => line.isProcessing)) {
+                const confirmationMessage = _t(
+                    "A payment is still in progress. Closing or reloading now may lose its result."
+                );
+                event.returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
             if (this.pos?.session?.state === "opening_control") {
                 browser.sessionStorage.setItem("pos_reload_recovery", String(this.pos.session.id));
                 const data = JSON.stringify({

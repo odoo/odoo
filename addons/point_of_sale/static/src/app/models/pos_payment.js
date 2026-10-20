@@ -118,42 +118,21 @@ export class PosPayment extends Base {
         return this.amount < 0;
     }
 
-    // ----- Payment Request -----
+    // ----- Payment Flows, run by the payment interface -----
     async pay() {
-        this.payment_status = "waiting";
-        try {
-            const response = await this.payment_interface.sendPaymentRequest(this);
-            return this.payment_interface.handlePaymentResponse(this, response);
-        } catch (error) {
-            this.payment_interface.handlePaymentResponseError(this, error);
-            throw error;
-        }
+        return this.payment_interface.pay(this);
     }
 
-    // ----- Payment Cancel -----
     async cancelPayment() {
-        const previousStatus = this.payment_status;
-        this.payment_status = "waiting_cancel";
-        try {
-            const response = await this.payment_interface.sendPaymentCancel(this);
-            return this.payment_interface.handlePaymentCancelResponse(
-                this,
-                response,
-                previousStatus
-            );
-        } catch (error) {
-            this.payment_interface.handlePaymentCancelResponseError(this, error, previousStatus);
-            throw error;
-        }
+        return this.payment_interface.cancelPayment(this);
     }
 
-    // ----- Payment Force State -----
     forceDone() {
-        this.payment_interface.handleForceDone(this);
+        return this.payment_interface.forceDone(this);
     }
 
     forceCancel() {
-        this.payment_interface.handleForceCancel(this);
+        return this.payment_interface.forceCancel(this);
     }
 
     /**
@@ -164,16 +143,20 @@ export class PosPayment extends Base {
 
     canBeAdjusted() {
         if (this.payment_interface) {
-            return this.payment_interface.canBeAdjusted(this.uuid);
+            return this.payment_interface.isLineAdjustable(this);
         }
         return this.payment_method_id.type !== "cash";
     }
 
+    /**
+     * @returns {Promise<boolean>} true when the amount was adjusted. Without
+     * a payment interface, nothing to adjust: the amount stays as it is.
+     */
     async adjustAmount(amount) {
-        if (this.payment_interface) {
-            this.amount += amount;
-            await this.payment_interface.sendPaymentAdjust(this.uuid);
+        if (!this.payment_interface) {
+            return true;
         }
+        return this.payment_interface.adjustAmount(this, amount);
     }
 }
 

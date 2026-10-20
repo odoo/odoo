@@ -1,26 +1,7 @@
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
-import { onMounted } from "@odoo/owl";
 
 patch(PaymentScreen.prototype, {
-    setup() {
-        super.setup(...arguments);
-        onMounted(() => {
-            const pendingPaymentLine = this.currentOrder.payment_ids.find(
-                (paymentLine) =>
-                    paymentLine.payment_provider === "adyen" &&
-                    !paymentLine.isSettled &&
-                    paymentLine.payment_status !== "pending"
-            );
-            if (!pendingPaymentLine) {
-                return;
-            }
-            pendingPaymentLine.payment_interface.setMostRecentServiceId(
-                pendingPaymentLine.terminalServiceId
-            );
-        });
-    },
-
     async addNewPaymentLine(paymentMethod, args = {}) {
         if (paymentMethod.payment_provider === "adyen" && this.isRefundOrder) {
             const refundedOrder = this.currentOrder.lines[0]?.refunded_orderline_id?.order_id;

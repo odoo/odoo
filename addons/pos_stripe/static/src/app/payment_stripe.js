@@ -273,7 +273,7 @@ export class PaymentStripe extends PaymentInterface {
     async sendPaymentAdjust(uuid) {
         var order = this.pos.getOrder();
         var line = order.getPaymentlineByUuid(uuid);
-        this.capturePayment(line.transaction_id, line.amount, {
+        return await this.capturePayment(line.transaction_id, line.amount, {
             stripe_currency_rounding: line.currency_id.rounding,
         });
     }

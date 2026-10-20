@@ -162,6 +162,13 @@ export class PaymentScreenPaymentLines extends Component {
                 action: () => this.props.sendForceCancel(line),
                 severity: "danger",
             },
+            checkStatus: {
+                id: "check_status",
+                label: _t("Check status"),
+                title: _t("Ask the payment provider for the status"),
+                action: () => line.payment_interface.checkPaymentStatus(line),
+                severity: "primary",
+            },
         };
     }
 
@@ -216,6 +223,9 @@ export class PaymentScreenPaymentLines extends Component {
         state.id = line.payment_status;
         if (line.isProcessing) {
             state.icon = "autorenew";
+        }
+        if (line.isProcessing && line.uiState.statusCheckNeeded) {
+            state.actions = [a.checkStatus, ...state.actions];
         }
         return state;
     }

@@ -4,20 +4,8 @@ import { _t } from "@web/core/l10n/translation";
 
 patch(PaymentScreenPaymentLines.prototype, {
     async sendPaymentAdjust(line) {
-        const prevAmount = line.getAmount();
         const amountDiff = line.pos_order_id.getTotalWithTax() - line.pos_order_id.getTotalPaid();
-        const newAmount = prevAmount + amountDiff;
-
-        line.setAmount(newAmount);
-        line.payment_status = "waiting";
-
-        const isAdjustSuccessful = await line.payment_interface?.sendPaymentAdjust(line.uuid);
-
-        if (!isAdjustSuccessful) {
-            line.setAmount(prevAmount);
-        }
-
-        line.payment_status = "done";
+        await line.adjustAmount(amountDiff);
     },
 
     getPaymentActionState(line) {

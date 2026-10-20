@@ -1,4 +1,6 @@
+import copy
 import re
+import requests
 from requests import Response
 from unittest.mock import patch
 
@@ -70,6 +72,38 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
         match = re.search(hash_regex, sale_to_acquirer_data)
         self.assertIsNotNone(match, "POS HMAC could not be parsed from request to Adyen")
         return match and match[1]
+
+    def test_adyen_payment_request_timeout(self):
+        adyen = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.payment_provider == 'adyen')
+        data = {
+            'SaleToPOIRequest': {
+                'MessageHeader': {
+                    'ProtocolVersion': '3.0',
+                    'MessageClass': 'Service',
+                    'MessageType': 'Request',
+                    'MessageCategory': 'Payment',
+                    'SaleID': 'sale',
+                    'ServiceID': '1234567890',
+                    'POIID': 'my_adyen_terminal',
+                },
+                'PaymentRequest': {
+                    'SaleData': {
+                        'SaleTransactionID': {'TransactionID': 'order--1', 'TimeStamp': '2026-10-20T10:00:00+00:00'},
+                    },
+                    'PaymentTransaction': {'AmountsReq': {'Currency': 'USD', 'RequestedAmount': 1.98}},
+                },
+            },
+        }
+        post = 'odoo.addons.pos_adyen.models.pos_payment_method.requests.post'
+
+        # Sent but not answered: maybe received, reported as such
+        with patch(post, side_effect=requests.exceptions.ReadTimeout):
+            self.assertEqual(adyen.proxy_adyen_request(copy.deepcopy(data)), {'error': {'timeout': True}})
+
+        # Not even connected: never received, the error goes through
+        with patch(post, side_effect=requests.exceptions.ConnectTimeout), \
+                self.assertRaises(requests.exceptions.ConnectTimeout):
+            adyen.proxy_adyen_request(copy.deepcopy(data))
 
     def test_adyen_basic_order(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
