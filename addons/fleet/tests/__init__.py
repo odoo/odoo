@@ -6,3 +6,4 @@ from . import test_fleet_ui
 from . import test_overdue
 from . import test_plan_to_change
 from . import test_unique_license_plate
+from . import test_send_mail
