@@ -36,6 +36,13 @@ export class PopupVisibilityPlugin extends Plugin {
             }
             return value;
         },
+        on_cloned_handlers: ({ cloneEl }) => {
+            // The clone of an open popup is displayed but has no Bootstrap
+            // instance backing it: create one in the shown state.
+            if (cloneEl.matches(".s_popup") && cloneEl.querySelector(".modal.show")) {
+                this.onTargetShow(cloneEl);
+            }
+        },
     };
 
     setup() {
