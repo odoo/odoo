@@ -696,6 +696,8 @@ function getValueFromGroupData(field, rawValue) {
  * function is to transform field values from the unity format to the format
  * expected by the server for a write.
  * For instance, for a many2one: { id: 3, display_name: "Marc" } => 3.
+ *
+ * @deprecated Use `fromUnityToServerValues` from `@web/core/orm_service`.
  */
 export function fromUnityToServerValues(
     values,
