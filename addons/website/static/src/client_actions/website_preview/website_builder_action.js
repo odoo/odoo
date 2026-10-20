@@ -69,6 +69,7 @@ export class WebsiteBuilderClientAction extends Component {
         this.dialog = useService("dialog");
         this.websiteService = useService("website");
         this.ui = useService("ui");
+        this.offline = useService("offline");
         this.title = useService("title");
         this.hotkeyService = useService("hotkey");
         this.websiteService.websiteRootInstance = undefined;
@@ -169,6 +170,32 @@ export class WebsiteBuilderClientAction extends Component {
             websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
             this.websiteService.currentWebsiteId = null;
             websiteSystrayRegistry.trigger("EDIT-WEBSITE");
+        });
+
+        let isFrozenOffline = false;
+        let isDestroyed = false;
+        useEffect(() => {
+            if (isDestroyed) {
+                return;
+            }
+            const freeze = this.offline.offline && this.state.isEditing;
+            if (freeze === isFrozenOffline) {
+                return;
+            }
+            isFrozenOffline = freeze;
+            if (freeze) {
+                this.blockIframe();
+                this.ui.block();
+            } else {
+                this.unblockIframe();
+                this.ui.unblock();
+            }
+        });
+        onWillDestroy(() => {
+            isDestroyed = true;
+            if (isFrozenOffline) {
+                this.ui.unblock();
+            }
         });
 
         useEffect(() => {
@@ -533,7 +560,12 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     get websiteId() {
-        return this.props.websiteId || router.current.website_id || this.websiteService.currentWebsiteId || false;
+        return (
+            this.props.websiteId ||
+            router.current.website_id ||
+            this.websiteService.currentWebsiteId ||
+            false
+        );
     }
 
     waitForIframeReady() {
@@ -583,8 +615,8 @@ export class WebsiteBuilderClientAction extends Component {
             const pathSegments = urlObj.pathname.split("/").map(encodeURIComponent);
             const encodedPath = pathSegments.join("/");
             const newUrl = new URL(encodedPath, baseUrl);
-            if(newUrl.origin !== baseUrl.origin) {
-                console.error("Tried to change the iframe's origin. Reloading instead")
+            if (newUrl.origin !== baseUrl.origin) {
+                console.error("Tried to change the iframe's origin. Reloading instead");
                 this.websiteContent.el.contentWindow.location.reload();
             } else {
                 if (history.state?.skipRouteChange) {
