@@ -162,3 +162,11 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         # Ensure that the length of the duration matches the start and stop times
         self.assertTrue(event.allday)
         self.assertEqual(event.duration, 105)
+
+    def test_home_working_calendar_event_is_free(self):
+        """
+        Ensure that calendar events created from home working leave requests are marked as free in the calendar.
+        """
+        home_working_type = self.env.ref('hr_work_entry.generic_work_entry_type_home_working')
+        wfh_leave = self._create_leave(self.employee_emp, home_working_type, date(2027, 7, 7), date(2027, 7, 7), validate=True)
+        self.assertEqual(wfh_leave.meeting_id.show_as, 'free')
