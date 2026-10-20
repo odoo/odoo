@@ -58,3 +58,11 @@ class AccountEdiXmlUBL21RS(models.AbstractModel):
         party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {'_text': partner.l10n_rs_edi_registration_number}
 
         return party_node
+
+    def _add_document_line_amount_nodes(self, line_node, vals):
+        # EXTENDS 'account_edi_ubl_cii'
+        super()._add_document_line_amount_nodes(line_node, vals)
+        # SEF uses H87 as unit code instead of C62
+        quantity_node = line_node[self._get_tags_for_document_type(vals)['line_quantity']]
+        if quantity_node['unitCode'] == 'C62':
+            quantity_node['unitCode'] = 'H87'
