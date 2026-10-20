@@ -219,7 +219,8 @@ class HrEmployee(models.Model):
         tracking=True,
         string='Bank Accounts',
         help='Employee bank accounts to pay salaries')
-    is_trusted_bank_account = fields.Boolean(compute="_compute_is_trusted_bank_account", groups="hr.group_hr_user")
+    is_trusted_bank_account = fields.Boolean(compute="_compute_is_trusted_bank_account", inverse="_inverse_is_trusted_bank_account", groups="hr.group_hr_user")
+    can_trust_bank_account = fields.Boolean(compute="_compute_can_trust_bank_account", groups="hr.group_hr_user")
     primary_bank_account_id = fields.Many2one('res.partner.bank', compute="_compute_primary_bank_account_id", groups="hr.group_hr_user")
     has_multiple_bank_accounts = fields.Boolean(compute="_compute_has_multiple_bank_accounts", default=False, groups="hr.group_hr_user")
     salary_distribution = fields.Json(string="Salary Distribution", compute='_sync_salary_distribution', groups='hr.group_hr_user', store=True, readonly=False)
@@ -468,6 +469,18 @@ class HrEmployee(models.Model):
     def _compute_is_trusted_bank_account(self):
         for employee in self:
             employee.is_trusted_bank_account = employee.primary_bank_account_id.allow_out_payment
+
+    def _inverse_is_trusted_bank_account(self):
+        for employee in self:
+            bank_account = employee.primary_bank_account_id
+            if bank_account and bank_account.allow_out_payment != employee.is_trusted_bank_account:
+                bank_account.allow_out_payment = employee.is_trusted_bank_account
+
+    @api.depends('primary_bank_account_id')
+    @api.depends_context('uid')
+    def _compute_can_trust_bank_account(self):
+        for employee in self:
+            employee.can_trust_bank_account = bool(employee.primary_bank_account_id) and employee.primary_bank_account_id._user_can_trust()
 
     @api.depends('bank_account_ids')
     def _compute_has_multiple_bank_accounts(self):
@@ -3344,11 +3357,6 @@ class HrEmployee(models.Model):
             'view_mode': 'form',
             'target': 'new',
         }
-
-    def action_toggle_primary_bank_account_trust(self):
-        self.ensure_one()
-        current_val = self.primary_bank_account_id.allow_out_payment
-        self.primary_bank_account_id.allow_out_payment = not current_val
 
     def action_new_departure(self):
         """Open the "End of collaboration" wizard (``hr.employee.departure``) for the employee.
