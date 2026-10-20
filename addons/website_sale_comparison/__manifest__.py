@@ -31,7 +31,14 @@ Finally, the module comes with an option to display an attribute summary table i
             'website_sale_comparison/static/src/js/**/*',
         ],
         'web.assets_tests': [
-            'website_sale_comparison/static/tests/**/*',
+            'website_sale_comparison/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'website_sale_comparison/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_sale_comparison/static/src/interactions/**/*',
+            'website_sale_comparison/static/src/js/**/*',
         ],
         'website.website_builder_assets': [
             'website_sale_comparison/static/src/website_builder/**/*',
