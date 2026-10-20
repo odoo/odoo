@@ -1,5 +1,5 @@
 import { Component, proxy, useProps, t, useEffect } from "@odoo/owl";
-import { getSnippetName, isElementInViewport } from "@html_builder/utils/utils";
+import { isElementInViewport } from "@html_builder/utils/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
 
 /**
@@ -66,7 +66,7 @@ export class InvisibleElementsPanel extends Component {
                 // more invisible descendants but is not a descendant.
                 const invisibleElement = {
                     snippetEl: snippetEl,
-                    name: getSnippetName(snippetEl),
+                    name: this.env.editor.config.snippetModel.getSnippetName(snippetEl),
                     isRootParent: !parentEl && !!descendantSnippetEls,
                     isDescendant: !!parentEl,
                     isVisible: snippetEl.dataset.invisible !== "1",
