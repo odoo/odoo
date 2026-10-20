@@ -4,7 +4,7 @@ import logging
 from odoo import _
 from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.http import Controller, request, route
-from .utils import clean_action
+from .utils import add_hub_info, clean_action
 from werkzeug.exceptions import BadRequest
 
 
@@ -44,6 +44,7 @@ class Action(Controller):
         action_type = base_action[0]['type']
         if action_type == 'ir.actions.act_window':
             result = request.env[action_type].sudo().browse([action_id])._get_action_dict()
+            add_hub_info(result, request.env, request.env.context.get('active_id'), action_id=action_id)
             return clean_action(result, env=request.env) if result else False
         result = request.env[action_type].sudo().browse([action_id]).read()
         return clean_action(result[0], env=request.env) if result else False

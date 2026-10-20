@@ -115,9 +115,6 @@ export function getDefaultConfig() {
         actionType: false,
         cache: true,
         actionXmlId: false,
-        embeddedActions: [],
-        currentEmbeddedActionId: false,
-        parentActionId: false,
         breadcrumbs: proxy([
             {
                 get name() {
@@ -331,10 +328,6 @@ export class View extends Component {
                 loadActionMenus,
                 loadIrFilters,
             };
-            if (this.env.config.currentEmbeddedActionId) {
-                options.embeddedActionId = this.env.config.currentEmbeddedActionId;
-                options.embeddedParentResId = context.active_id;
-            }
             const result = await this.keepLast.add(
                 this.viewPlugin.loadViews({ context, resModel, views }, options)
             );

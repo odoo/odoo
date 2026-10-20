@@ -2,33 +2,33 @@
 <templates xml:space="preserve">
 
     <t t-name="project.ProjectTaskControlPanel" t-inherit="web.ControlPanel">
-        <xpath expr="//button[@name='embedded_actions']" position="replace">
-            <t t-if="this.showTaskOptions and (!this.uiService.isSmall or !this.embeddedPanelState.embeddedInfos.embeddedActions?.length)">
+        <xpath expr="//button[@name='hub_tabs']" position="replace">
+            <t t-if="this.showTaskOptions and !this.hasMobileHubItems">
                 <Dropdown>
                     <button class="btn btn-secondary" t-att-title="this.taskOptionsTitle">
                         <i class="oi" data-icon="tune"/>
                     </button>
                     <t t-set-slot="content">
-                        <DropdownItem onSelected="() => this.onClickShowSubtasks()" class="this.embeddedPanelState.showSubtasks ? 'selected' : ''">
+                        <DropdownItem onSelected="() => this.onClickShowSubtasks()" class="this.showSubtasks() ? 'selected' : ''">
                             Show Sub-Tasks
                         </DropdownItem>
-                        <DropdownItem t-if="this.embeddedPanelState.embeddedInfos.embeddedActions?.length and !this.uiService.isSmall"
-                            class="this.embeddedPanelState.embeddedInfos.showEmbedded ? 'selected' : ''"
-                            onSelected="() => this.embeddedPanelState.onClickShowEmbedded()"
+                        <DropdownItem t-if="this.env.config.hub and !this.uiService.isSmall"
+                            class="this.env.config.hub.showTabs() ? 'selected' : ''"
+                            onSelected="() => this.toggleHubTabs()"
                         >
-                            Top Menu
+                            Show Hub Tabs
                         </DropdownItem>
                     </t>
                 </Dropdown>
             </t>
         </xpath>
-         <xpath expr="//EmbeddedActionsPanel[@id='embedded-actions-panel-mobile']" position="replace">
+        <xpath expr="//t[@t-call='web.HubItemsMobileDropdown']" position="replace">
             <t t-call="project.MobileCombinedActionsDropdown"/>
         </xpath>
     </t>
 
-   <t t-name="project.MobileCombinedActionsDropdown">
-        <t t-if="this.uiService.isSmall and this.embeddedPanelState.embeddedInfos.embeddedActions?.length">
+    <t t-name="project.MobileCombinedActionsDropdown">
+        <t t-if="this.hasMobileHubItems and this.showTaskOptions">
             <Dropdown menuClass="'o_combined_mobile_dropdown'">
                 <button class="btn btn-secondary">
                     <i class="oi oi-fw" data-icon="tune" t-att-data-tooltip="this.taskOptionsTitle" />
@@ -36,24 +36,16 @@
                 <t t-set-slot="content">
                     <DropdownItem
                         onSelected="() => this.onClickShowSubtasks()"
-                        class="this.embeddedPanelState.showSubtasks ? 'selected' : ''"
+                        class="this.showSubtasks() ? 'selected' : ''"
                     >
                         Show Sub-Tasks
                     </DropdownItem>
                     <div role="separator" class="dropdown-divider"/>
-                    <t t-if="this.embeddedPanelState.embeddedInfos.embeddedActions?.length">
-                        <t t-foreach="this.embeddedPanelState.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
-                            <DropdownItem
-                                class="this.getDropdownClass(action)"
-                                onSelected="() => this.embeddedPanelState.onEmbeddedActionClick(action)"
-                            >
-                                <span t-out="action.name" />
-                            </DropdownItem>
-                        </t>
-                    </t>
+                    <t t-call="web.HubItemsMobileDropdownItems"/>
                 </t>
             </Dropdown>
         </t>
+        <t t-else="" t-call="web.HubItemsMobileDropdown"/>
     </t>
 
 </templates>

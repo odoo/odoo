@@ -191,17 +191,21 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "click",
 }, {
     trigger: ".o_control_panel_navigation button i[data-icon='tune']",
-    content: 'Open embedded actions',
+    content: 'Open the task options',
     run: "click",
 }, {
-    trigger: "span.o-dropdown-item:contains('Top Menu')",
+    trigger: "span.o-dropdown-item:contains('Show Hub Tabs')",
     run: "click",
 }, {
-    trigger: ".o-dropdown-item div span:contains('Updates')",
-    content: "Put Updates in the embedded actions",
+    trigger: ".o_hub_tabs_toggler",
+    content: "Open the list of hub items",
     run: "click",
 }, {
-    trigger: ".o_embedded_actions button span:contains('Updates')",
+    trigger: ".o_hub_tabs_dropdown_menu .o-dropdown-item:contains('Updates')",
+    content: "Pin Updates",
+    run: "click",
+}, {
+    trigger: ".o_hub_tab .nav-link:contains('Updates')",
     content: "Open Updates",
     run: "click",
 }, {

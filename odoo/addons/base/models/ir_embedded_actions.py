@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
 from ast import literal_eval
 
 
@@ -22,7 +21,6 @@ class IrEmbeddedActions(models.Model):
     user_id = fields.Many2one('res.users', string="User", help="User specific embedded action. If empty, shared embedded action", ondelete="cascade")
     is_deletable = fields.Boolean(compute="_compute_is_deletable")
     default_view_mode = fields.Char(string="Default View", help="Default view (if none, default view of the action is taken)")
-    filter_ids = fields.One2many("ir.filters", "embedded_action_id", help="Default filter of the embedded action (if none, no filters)")
     is_visible = fields.Boolean(string="Embedded visibility", help="Computed field to check if the record should be visible according to the domain", compute="_compute_is_visible")
     domain = fields.Char(default="[]", help="Domain applied to the active id of the parent model")
     context = fields.Char(default="{}", help="Context dictionary as Python expression, empty by default (Default: {})")
@@ -95,17 +93,10 @@ class IrEmbeddedActions(models.Model):
                 else:
                     record.is_visible = False
 
-    # Delete the filters linked to a embedded action.
-    @api.ondelete(at_uninstall=False)
-    def _unlink_if_action_deletable(self):
-        for record in self:
-            if not record.is_deletable:
-                raise UserError(self.env._('You cannot delete a default embedded action'))
-
     def _get_readable_fields(self):
         """ return the list of fields that are safe to read
         """
         return {
             "name", "parent_action_id", "parent_res_id", "parent_res_model", "action_id", "python_method", "user_id",
-            "is_deletable", "default_view_mode", "filter_ids", "domain", "context", "groups_ids"
+            "is_deletable", "default_view_mode", "domain", "context", "groups_ids"
         }

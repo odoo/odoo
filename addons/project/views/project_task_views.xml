@@ -156,7 +156,6 @@
             </field>
         </record>
 
-
         <record id="view_project_task_pivot" model="ir.ui.view">
             <field name="name">project.task.pivot</field>
             <field name="model">project.task</field>
@@ -214,58 +213,49 @@
             </field>
         </record>
 
-        <record id="project_embedded_action_project_updates" model="ir.embedded.actions">
-            <field name="parent_res_model">project.project</field>
+        <record id="hub_item_updates" model="ir.hub.item">
+            <field name="hub_id" ref="project.hub_project"/>
             <field name="sequence">120</field>
             <field name="name">Updates</field>
-            <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
             <field name="action_id" ref="project.project_update_all_action"/>
         </record>
 
-        <record id="project_embedded_action_project_overview" model="ir.embedded.actions">
-            <field name="parent_res_model">project.project</field>
+        <record id="hub_item_overview" model="ir.hub.item">
+            <field name="hub_id" ref="project.hub_project"/>
             <field name="sequence">110</field>
             <field name="name">Overview</field>
-            <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]"/>
-            <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
             <field name="python_method">action_open_project_form</field>
+            <field name="res_model">project.project</field>
+            <field name="group_ids" eval="[(4, ref('project.group_project_manager'))]"/>
+            <field name="context">{'create': False}</field>
         </record>
 
-        <record id="project_embedded_action_all_tasks_dashboard" model="ir.embedded.actions">
-            <field name="parent_res_model">project.project</field>
-            <field name="sequence">20</field>
+        <!-- lowest sequence so it is the default item -->
+        <!-- python_method rather than the action: action_view_tasks adapts it to the project (archived, template, ...) and is overridden in other modules -->
+        <record id="hub_item_tasks" model="ir.hub.item">
+            <field name="hub_id" ref="project.hub_project"/>
+            <field name="sequence">1</field>
             <field name="name">Tasks</field>
-            <field name="parent_action_id" ref="project.project_update_all_action"/>
-            <field name="action_id" ref="project.act_project_project_2_project_task_all"/>
+            <field name="python_method">action_view_tasks</field>
+            <field name="res_model">project.task</field>
         </record>
 
-    <record id="project_embedded_action_project_burndown_chart" model="ir.embedded.actions">
-        <field name="parent_res_model">project.project</field>
+    <record id="hub_item_burndown_chart" model="ir.hub.item">
+        <field name="hub_id" ref="project.hub_project"/>
         <field name="sequence">130</field>
         <field name="name">Burndown Chart</field>
-        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
-        <field name="action_id" eval="False"/>
         <field name="python_method">action_project_task_burndown_chart_report</field>
-        <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]" />
+        <field name="res_model">project.task.burndown.chart.report</field>
+        <field name="group_ids" eval="[(4, ref('project.group_project_manager'))]"/>
     </record>
 
-    <record id="project_embedded_action_update_burndown_chart" model="ir.embedded.actions">
-        <field name="parent_res_model">project.project</field>
-        <field name="sequence">130</field>
-        <field name="name">Burndown Chart</field>
-        <field name="parent_action_id" ref="project.project_update_all_action"/>
-        <field name="action_id" eval="False"/>
-        <field name="python_method">action_project_task_burndown_chart_report</field>
-        <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]" />
-    </record>
-
-    <record id="project_embedded_action_time_by_stage" model="ir.embedded.actions">
-        <field name="parent_res_model">project.project</field>
+    <record id="hub_item_time_by_stage" model="ir.hub.item">
+        <field name="hub_id" ref="project.hub_project"/>
         <field name="sequence">132</field>
         <field name="name">Time by Stage</field>
-        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
         <field name="python_method">action_project_time_by_stage_report</field>
-        <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]" />
+        <field name="res_model">project.task.stage.report</field>
+        <field name="group_ids" eval="[(4, ref('project.group_project_manager'))]"/>
     </record>
 
     <!-- Set pivot view and arrange in order -->
@@ -943,7 +933,6 @@
             </field>
         </record>
 
-
         <record id="project_task_view_activity" model="ir.ui.view">
             <field name="name">project.task.activity</field>
             <field name="model">project.task</field>
@@ -1322,5 +1311,4 @@
             <field name="binding_model_id" ref="project.model_project_task"/>
             <field name="binding_view_types">list,kanban</field>
         </record>
-
 </odoo>
