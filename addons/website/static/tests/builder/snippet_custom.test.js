@@ -47,7 +47,6 @@ test("Renaming custom snippets don't make an orm call", async () => {
     `,
             },
         ],
-        withName: true,
     });
     const snippets = {
         snippet_groups: [

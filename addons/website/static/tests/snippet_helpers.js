@@ -38,7 +38,5 @@ export async function getStructureSnippet(snippetName, withImgSrc = false) {
     const snippetEl = snippetsDocument.querySelector(
         `[data-snippet=${snippetName}]:not([data-snippet] [data-snippet])`
     );
-    const el = snippetEl.cloneNode(true);
-    el.dataset.name = snippetEl.parentElement.getAttribute("name");
-    return el;
+    return snippetEl.cloneNode(true);
 }

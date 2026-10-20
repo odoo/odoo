@@ -500,27 +500,21 @@ export async function modifyText(editor, editableContent) {
  * Creates a basic HTML section structure for test snippets
  * @param {string} content - The content to place inside the section
  * @param {Object} [options={}] - Configuration options
- * @param {string} [options.name] - Name attribute for the section (data-name)
  * @param {string} [options.snippet="s_test"] - Snippet class and data-snippet value
  * @param {string} [options.additionalClassOnRoot=""] - Additional CSS classes for the root element
  * @returns {string} Formatted HTML section element
  */
-export function getBasicSection(
-    content,
-    { name, snippet = "s_test", additionalClassOnRoot = "" } = {}
-) {
+export function getBasicSection(content, { snippet = "s_test", additionalClassOnRoot = "" } = {}) {
     let classes = snippet;
     if (additionalClassOnRoot) {
         classes += ` ${additionalClassOnRoot}`;
     }
     return unformat(
-        `<section class="${classes}" data-snippet="${snippet}" ${
-            name ? `data-name="${name}"` : ""
-        }><div class="test_a">${content}</div></section>`
+        `<section class="${classes}" data-snippet="${snippet}"><div class="test_a">${content}</div></section>`
     );
 }
 
-export function createTestSnippets({ snippets: snippetConfigs = [], withName = false }) {
+export function createTestSnippets({ snippets: snippetConfigs = [] }) {
     return snippetConfigs.map((snippetConfig) => {
         const {
             name,
@@ -539,7 +533,6 @@ export function createTestSnippets({ snippets: snippetConfigs = [], withName = f
         const finalContent =
             content ||
             getBasicSection(innerHTML || name, {
-                name: withName ? name : "",
                 snippet: snippetId || "s_test",
                 additionalClassOnRoot,
             });
