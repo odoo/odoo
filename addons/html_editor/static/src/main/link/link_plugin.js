@@ -461,10 +461,8 @@ export class LinkPlugin extends Plugin {
                 const isFirstFeff = !caretPosition.offsetNode.previousSibling;
                 if (isFirstFeff && caretPosition.offset === 0) {
                     ev.preventDefault();
-                    this.dependencies.selection.setSelection({
-                        anchorNode: clickedEl,
-                        anchorOffset: 1,
-                    });
+                    const [anchorNode, anchorOffset] = rightPos(caretPosition.offsetNode);
+                    this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
                     this.dependencies.selection.focusEditable();
                 }
             } else if (!clickedEl.closest("a") && link) {
@@ -923,7 +921,7 @@ export class LinkPlugin extends Plugin {
                 anchorEl.style.removeProperty("color");
                 const font =
                     anchorEl.nodeName === "FONT" ? anchorEl : anchorEl.querySelector("font");
-                if (font && cleanZWChars(anchorEl.textContent) === font.textContent) {
+                if (font && cleanZWChars(anchorEl.textContent) === cleanZWChars(font.textContent)) {
                     continue;
                 }
                 const newFont = this.document.createElement("font");
@@ -1497,10 +1495,12 @@ export class LinkPlugin extends Plugin {
             return;
         }
         // Move before inner FEFF of the button.
-        this.dependencies.selection.setSelection({
-            anchorNode: startContainer.previousSibling,
-            anchorOffset: startContainer.previousSibling.childNodes.length - 1,
-        });
+        const innerFeff = descendants(previousSibling).findLast(isZwnbsp);
+        if (!innerFeff) {
+            return;
+        }
+        const [anchorNode, anchorOffset] = leftPos(innerFeff);
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         return true;
     }
 
@@ -1579,6 +1579,14 @@ export class LinkPlugin extends Plugin {
 
             const { anchorNode, focusNode, anchorOffset, focusOffset } =
                 this.dependencies.selection.getEditableSelection();
+            // The label is between the inner FEFFs, which can be in its formats.
+            const innerFeffs = descendants(clickedLink).filter(isZwnbsp);
+            const [labelStartNode, labelStartOffset] = innerFeffs.length
+                ? rightPos(innerFeffs[0])
+                : [clickedLink, 0];
+            const [labelEndNode, labelEndOffset] = innerFeffs.length
+                ? leftPos(innerFeffs.at(-1))
+                : [clickedLink, nodeSize(clickedLink)];
 
             // We reset the word selection of double click to be inside the current clicked link
             // when it spreads over different links. Because it's a word selection, we need to keep
@@ -1587,22 +1595,22 @@ export class LinkPlugin extends Plugin {
                 this.dependencies.selection.setSelection({
                     anchorNode,
                     anchorOffset,
-                    focusNode: clickedLink,
-                    focusOffset: nodeSize(clickedLink) - 1, // -1 to avoid the FEFF char
+                    focusNode: labelEndNode,
+                    focusOffset: labelEndOffset,
                 });
             } else if (!clickedLink.contains(anchorNode) && clickedLink.contains(focusNode)) {
                 this.dependencies.selection.setSelection({
-                    anchorNode: clickedLink,
-                    anchorOffset: 1, // 1 to avoid the FEFF char
+                    anchorNode: labelStartNode,
+                    anchorOffset: labelStartOffset,
                     focusNode,
                     focusOffset,
                 });
             } else if (!clickedLink.contains(anchorNode) && !clickedLink.contains(focusNode)) {
                 this.dependencies.selection.setSelection({
-                    anchorNode: clickedLink,
-                    anchorOffset: 1, // 1 to avoid the FEFF char
-                    focusNode: clickedLink,
-                    focusOffset: nodeSize(clickedLink) - 1, // -1 to avoid the FEFF char
+                    anchorNode: labelStartNode,
+                    anchorOffset: labelStartOffset,
+                    focusNode: labelEndNode,
+                    focusOffset: labelEndOffset,
                 });
             } else {
                 this.dependencies.selection.setSelection({
