@@ -131,13 +131,13 @@ class MailMessage(models.Model):
                         "content": content,
                         "count": len(reactions),
                         "guests": [
-                            {"id": guest.id, "name": guest.name}
+                            {"id": guest.id, "name": guest.name, "write_date": guest.write_date}
                             for guest in reactions.guest_id
                         ],
                         "message": message.id,
                         "partners": [
                             # sudo: res.partner - reading partners of reaction on accessible message is allowed
-                            {"id": partner.id, "name": partner.name}
+                            {"id": partner.id, "name": partner.name, "write_date": partner.write_date}
                             for partner in reactions.partner_id.sudo()
                         ],
                     },
@@ -149,6 +149,7 @@ class MailMessage(models.Model):
                         "id": message.author_id.id,
                         "name": message.author_id.name,
                         "avatar_128_access_token": message.author_id._get_avatar_128_access_token(),
+                        "write_date": message.author_id.write_date,
                     } if message.author_id else False,
                     "thread": {
                        "has_mail_thread": isinstance(self.env[values["model"]], self.pool["mail.thread"]),
