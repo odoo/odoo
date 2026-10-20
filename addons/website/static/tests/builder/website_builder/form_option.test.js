@@ -184,7 +184,9 @@ describe("Form action options", () => {
         await contains("[data-label='Action'] button:contains('Send an E-mail')").click();
         await contains("div.o-dropdown-item:contains('Create a Customer')").click();
 
-        await contains("[data-label='Preferred Job'] button:contains('Choose a record...')").click();
+        await contains(
+            "[data-label='Preferred Job'] button:contains('Choose a record...')"
+        ).click();
         await contains("span.o-dropdown-item:contains('Test job')").click();
         expect(":iframe form .s_website_form_dnone input[name='job_id']").toHaveValue("42");
         expect("[data-label='Preferred Job'] button[aria-label='Unselect']").toHaveCount(0);
@@ -606,11 +608,15 @@ test("Changing max files number option updates file input 'multiple' attribute",
     expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
     await contains(":iframe .s_website_form_input").click();
-    await contains(".o_hb_options_container div[data-action-id='setMultipleFiles'] input").edit("2");
+    await contains(".o_hb_options_container div[data-action-id='setMultipleFiles'] input").edit(
+        "2"
+    );
     expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "2");
     expect(":iframe input[type=file]").toHaveAttribute("multiple");
     await contains(":iframe .s_website_form_input").click();
-    await contains(".o_hb_options_container div[data-action-id='setMultipleFiles'] input").edit("1");
+    await contains(".o_hb_options_container div[data-action-id='setMultipleFiles'] input").edit(
+        "1"
+    );
     expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
 });
@@ -800,7 +806,9 @@ test("Can link states to a country", async () => {
         { loadIframeBuilderTemplates: true }
     );
     await contains(":iframe select[name='state_id']").click();
-    expect(".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry']").toHaveCount(1);
+    expect(".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry']").toHaveCount(
+        1
+    );
     expect(
         ".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input"
     ).not.toBeChecked();
@@ -810,7 +818,9 @@ test("Can link states to a country", async () => {
         ".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input"
     ).click();
 
-    expect(".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input").toBeChecked();
+    expect(
+        ".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input"
+    ).toBeChecked();
     expect(".o_hb_options_container .o_hb_row :contains('Option List')").toHaveCount(0);
     expect(":iframe select[name='state_id']").toHaveAttribute("data-link-state-to-country", "true");
 });
@@ -1915,4 +1925,22 @@ test("Don't crash when current form model is not allowed", async () => {
     await contains(":iframe section").click();
     await contains("[data-label='Action'] button:contains('None')").click();
     await contains("[data-action-id='selectAction']:contains('Apply for a Job')").click();
+});
+
+test("No 'Labels Position' option when the form has no field", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    function withIframeRegistry(registry) {
+        registry.category("website.form_editor_actions").add("create_customer", { formFields: [] });
+    }
+    await setupWebsiteBuilderWithSnippet("s_website_form", { withIframeRegistry });
+
+    await contains(":iframe section").click();
+    expect(".o_hb_row[data-label='Labels Position']").toHaveCount(1);
+
+    await contains(".o_hb_row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Create a Customer')").click();
+    await animationFrame();
+
+    expect(":iframe form .s_website_form_field").toHaveCount(0);
+    expect(".o_hb_row[data-label='Labels Position']").toHaveCount(0);
 });

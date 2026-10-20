@@ -22,7 +22,7 @@
         <BuilderTextInput action="'setMark'" default="''"/>
         <BuilderColorPicker enabledTabs="['solid', 'custom']" action="'markColor'"/>
     </BuilderRow>
-    <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Labels Position">
+    <BuilderRow t-if="this.state.canChangeFieldsLayout" label.translate="Labels Position">
         <BuilderButtonGroup action="'selectLabelsPosition'">
             <BuilderButton title.translate="Hide" actionValue="'none'" id="'label_position_hide_opt'">
                 <i class="oi" data-icon="visibility_off" role="img" aria-hidden="true"/>
