@@ -38,11 +38,19 @@ class PaymentPortal(payment_portal.PaymentPortal):
     def _get_amount_to_pay(order_to_pay_sudo):
         if order_to_pay_sudo.state in ('paid', 'done'):
             return 0.0
+        # Paid transactions not yet post-processed have no pos.payment
+        processing_txs_sudo = order_to_pay_sudo.env['payment.transaction'].sudo().search([
+            ('pos_order_id', '=', order_to_pay_sudo.id),
+            ('state', 'in', ('pending', 'authorized', 'done')),
+        ]).filtered(lambda tx: not tx.payment_id.pos_order_id)
+        amount_unpaid = order_to_pay_sudo.get_amount_unpaid()
+        if processing_txs_sudo:
+            amount_unpaid = order_to_pay_sudo.currency_id.round(amount_unpaid - sum(processing_txs_sudo.mapped('amount')))
         amount = order_to_pay_sudo._get_checked_next_online_payment_amount()
         if amount and PaymentPortal._is_valid_amount(amount, order_to_pay_sudo.currency_id):
-            return amount
+            return min(amount, amount_unpaid)
         else:
-            return order_to_pay_sudo.get_amount_unpaid()
+            return amount_unpaid
 
     @staticmethod
     def _is_valid_amount(amount, currency):
