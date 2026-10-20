@@ -9,7 +9,7 @@ describe.current.tags("interaction_dev");
 
 function createTemplate({ labelClass, descriptionInnerHTML }) {
     return /* html */ `
-        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required s_website_form_description_top" data-type="boolean">
+        <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required s_website_form_description_top" data-type="boolean">
             <label class="s_website_form_label ${labelClass}" for="odeosp06g4g4" style="width: 200px;">
                 <span class="s_website_form_label_content">Custom Text</span>
                 <span class="s_website_form_mark"> *</span>

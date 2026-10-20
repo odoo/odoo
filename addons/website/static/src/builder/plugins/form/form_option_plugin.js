@@ -947,7 +947,7 @@ export class FormOptionPlugin extends Plugin {
      * @param {HTMLElement} rootEl
      */
     async rerenderFieldsInElement(rootEl) {
-        if (rootEl.matches("[data-name='Field']:not(.s_website_form_dnone)")) {
+        if (rootEl.matches(".s_website_form_field:not(.s_website_form_dnone)")) {
             // The root element is a single field - rerender it directly
             const { fields } = await this.loadFieldOptionData(rootEl);
             rerenderField(rootEl, this.dependencies.websiteBridge.renderToElement, fields);
@@ -956,7 +956,7 @@ export class FormOptionPlugin extends Plugin {
             // rerender them all
             for (const formEl of selectElements(rootEl, ".s_website_form")) {
                 const formFieldsToRerender = formEl.querySelectorAll(
-                    "[data-name='Field']:not(.s_website_form_dnone)"
+                    ".s_website_form_field:not(.s_website_form_dnone)"
                 );
                 if (formFieldsToRerender.length === 0) {
                     continue;
