@@ -1,6 +1,6 @@
 <templates id="template">
     <t t-name="mass_mailing.ThemeLayout">
-        <div data-name="Mailing" class="o_layout oe_unremovable oe_unmovable"
+        <div data-builder-name="mailing" class="o_layout oe_unremovable oe_unmovable"
             t-att-class="this.className" t-att-style="this.layoutStyles">
             <t t-if="this.nowrap" t-call="mass_mailing.ThemeStructure"/>
             <t t-else="" t-call="mass_mailing.ThemeWrapper"/>
