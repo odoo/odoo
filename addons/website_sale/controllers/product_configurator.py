@@ -139,6 +139,9 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         )
 
         if request.is_frontend:
+            basic_product_information["imageURL"] = self.env["website"].image_url(
+                product_or_template, "image_256"
+            )
             has_zero_price = currency.is_zero(basic_product_information["price"])
             basic_product_information["can_be_sold"] = not self.env.website._prevent_product_sale(
                 product_or_template, has_zero_price

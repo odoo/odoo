@@ -20,7 +20,7 @@
                         <t t-set="product" t-value="combo.combo_items[0].product"/>
                         <div class="col-2 p-0">
                             <img
-                                t-attf-src="/web/image/product.product/{{product.id}}/image_256"
+                                t-att-src="product.image_src || `/web/image/product.product/${product.id}/image_256`"
                                 alt="Product Image"
                                 role="img"
                                 class="img-thumbnail rounded"

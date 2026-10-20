@@ -41,8 +41,9 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         # an issue when public users access the image of each choice via the /web/image route. To
         # bypass this access check, we send the raw image URL if the product is inaccessible to the
         # current user.
-        if not combo_item.product_id.sudo(False).has_access("read") and (
-            combo_item_image := combo_item.product_id.image_256
-        ):
-            data["product"]["image_src"] = image_data_uri(combo_item_image)
+        product = combo_item.product_id
+        if not product.sudo(False).has_access("read") and product.image_256:
+            data["product"]["image_src"] = image_data_uri(product.image_256)
+        else:
+            data["product"]["image_src"] = self.env["website"].image_url(product, "image_256")
         return data
