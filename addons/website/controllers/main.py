@@ -2192,8 +2192,11 @@ class Website(Home):
 
         files_data_by_bundle = []
         t_call_assets_attribute = 't-js'
+        extensions = {file_type}
         if file_type == 'scss':
             t_call_assets_attribute = 't-css'
+            # stylesheets are SCSS or plain CSS files
+            extensions = {'scss', 'css'}
 
         # Compile regex outside of the loop
         # This will used to exclude library scss files from the result
@@ -2211,7 +2214,7 @@ class Website(Home):
                 # Loop through bundle files to search for file info
                 files_data = []
                 for file_info in request.env["ir.qweb"]._get_asset_content(asset_name)[0]:
-                    if file_info["url"].rpartition('.')[2] != file_type:
+                    if file_info["url"].rpartition('.')[2] not in extensions:
                         continue
                     url = file_info["url"]
 

@@ -70,7 +70,7 @@ class WebsiteAssets(models.AbstractModel):
             new_attach = {
                 'name': url.split("/")[-1],
                 'type': "binary",
-                'mimetype': (file_type == 'js' and 'text/javascript' or 'text/scss'),
+                'mimetype': 'text/javascript' if file_type == 'js' else 'text/css' if url.endswith('.css') else 'text/scss',
                 'raw': raw,
                 'url': custom_url,
                 **self._add_website_id({}),
