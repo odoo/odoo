@@ -32,7 +32,7 @@
         }
 
         .o_search_panel_category_value, .o_search_panel_filter_value {
-            margin-bottom: map-get($spacers, 1);
+            margin-bottom: var(--o-bs-spacer-1);
         }
 
         .o_search_panel_category_value {
@@ -43,21 +43,21 @@
 
 // The following styling is not applied inside the bottom sheet
 .o_search_panel {
-    --treeEntry-padding-h: #{map-get($spacers, 3)};
-    --treeEntry-padding-v: #{map-get($spacers, 2)};
-    --SearchPanelHeader-margin-y: #{map-get($spacers, 1) * .5};
+    --treeEntry-padding-h: var(--o-bs-spacer-3);
+    --treeEntry-padding-v: var(--o-bs-spacer-2);
+    --SearchPanelHeader-margin-y: calc(var(--o-bs-spacer-1) * .5);
 
     &:not(:has(.o_toggle_fold_with_children)) {
         --SearchPanelHeader-toggle-fold-width: 0;
     }
 
-    width: var(--SearchPanel-width, #{$o-search-panel-width});
-    font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
+    width: var(--SearchPanel-width, var(--o-search-panel-width));
+    font-size: var(--SearchPanel-fontSize, var(--o-search-panel-font-size));
 
     .list-group-item {
         --list-group-bg: transparent;
-        --list-group-color: #{$gray-800};
-        --list-group-item-padding-y: var(--SearchPanelHeader-padding-y, calc(#{map-get($spacers, 2)} - var(--SearchPanelHeader-margin-y)));
+        --list-group-color: var(--gray-800);
+        --list-group-item-padding-y: var(--SearchPanelHeader-padding-y, calc(var(--o-bs-spacer-2) - var(--SearchPanelHeader-margin-y)));
         --list-group-item-padding-x: 0;
 
         &:where(:not(.list-group-item-action, .o_search_panel_filter_value)) {
@@ -72,7 +72,7 @@
     }
 
     .o_search_panel_filter_value {
-        --list-group-item-padding-y: calc(var(--SearchPanelHeader-margin-y) + #{$border-width});
+        --list-group-item-padding-y: calc(var(--SearchPanelHeader-margin-y) + var(--o-bs-border-width));
 
         margin-bottom: var(--SearchPanelHeader-margin-y);
     }
@@ -84,7 +84,7 @@
     }
 
     .o_toggle_fold {
-        width: var(--SearchPanelHeader-toggle-fold-width, #{map-get($spacers, 3)});
+        width: var(--SearchPanelHeader-toggle-fold-width, var(--o-bs-spacer-3));
     }
 }
 
@@ -134,12 +134,12 @@
         }
 
         &::before, &::after {
-            background-color: $body-color;
+            background-color: var(--o-bs-body-color);
         }
     }
 
     .o_search_panel_category_value:hover > .o_search_panel_category_value_header {
-        --list-group-color: #{$black};
+        --list-group-color: var(--o-bs-black);
 
         .o_search_panel_label_btn {
             color: inherit;
@@ -149,23 +149,23 @@
 
 .o_search_panel_category_value_header, .o_search_panel_filter_value {
     &:focus-visible {
-        box-shadow: var(--SearchPanelHeader-focus, #{$focus-ring-box-shadow});
+        box-shadow: var(--SearchPanelHeader-focus, var(--o-bs-focus-ring-box-shadow));
         outline: none;
     }
 }
 
 .o_search_panel_category_value {
     .o_toggle_fold {
-        color: $text-muted;
+        color: var(--o-bs-text-muted);
     }
 
     .o_search_panel_category_value_header.active:hover {
         .o_toggle_fold {
-            color: var(--SearchPanelHeader-hover-fold-color, #{$black});
+            color: var(--SearchPanelHeader-hover-fold-color, var(--o-bs-black));
         }
     }
 }
 
 .o_search_panel_wrap {
-    padding-top: var(--SearchPanelSidebarButton-padding-top, #{map-get($spacers, 3)});
+    padding-top: var(--SearchPanelSidebarButton-padding-top, var(--o-bs-spacer-3));
 }

@@ -40,14 +40,14 @@
     }
 
     .o_location_selector_schedule_hours {
-        gap: 0 map-get($spacers, 3);
+        gap: 0 var(--o-bs-spacer-3);
     }
 
     .o_select_menu_toggler {
         &::before {
             margin: auto;
-            padding-left: #{map-get($spacers, 2)};
-            border-right: $border-width solid $border-color;
+            padding-left: var(--o-bs-spacer-2);
+            border-right: var(--o-bs-border-width) solid $border-color;
             height: 70%;
             content: "";
             order: 1;
@@ -79,5 +79,5 @@
 .o_location_selector_country_selector {
     --dropdown-link-active-color: var(--body-color);
 
-    min-width: calc(#{$modal-lg} * 1/3 - #{map-get($spacers, 3)} * 2);
+    min-width: calc(var(--o-bs-modal-lg) * 1/3 - var(--o-bs-spacer-3) * 2);
 }

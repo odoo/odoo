@@ -9,15 +9,15 @@
 
 
 .o_btn_circle {
-    $_btn_ratio: 3;
-    $_btn_default_height: 26px;
+    --o-btn-circle-ratio: 3;
+    --o-btn-circle-default-height: 26px;
 
     position: relative;
     z-index: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin: calc(var(--btn-padding-y) * #{$_btn_ratio * 0.5});
+    margin: calc(var(--btn-padding-y) * (var(--o-btn-circle-ratio) * 0.5));
     padding: 0;
     line-height: 1;
 
@@ -35,7 +35,7 @@
         transform: translate(-50%, -50%);
         content: "";
         z-index: -1;
-        height: var(--o-btn-circle-height, #{$_btn_default_height});
+        height: var(--o-btn-circle-height, var(--o-btn-circle-default-height));
         aspect-ratio: 1;
         border-radius: var(--o-btn-circle-radius, 100%);
 

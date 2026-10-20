@@ -17,7 +17,7 @@
         span[itemprop="name"] {
             // Override the field style.
             margin-bottom: 0;
-            font-weight: $font-weight-normal;
+            font-weight: var(--o-bs-font-weight-normal);
         }
     }
 
@@ -26,16 +26,16 @@
 
     #o_wblog_posts_loop {
         .row:has(.o_wblog_bordered_grid_container) {
-            padding-top: $border-width;
-            padding-left: $border-width;
+            padding-top: var(--o-bs-border-width);
+            padding-left: var(--o-bs-border-width);
         }
         
         .o_wblog_bordered_grid_container {
             --border-color: #{$gray-300};
 
-            border: $border-width solid var(--border-color);
-            margin-top: -$border-width;
-            margin-left: -$border-width;
+            border: var(--o-bs-border-width) solid var(--border-color);
+            margin-top: calc(var(--o-bs-border-width) * -1);
+            margin-left: calc(var(--o-bs-border-width) * -1);
         }
 
         .o_wblog_author_avatar {
@@ -94,7 +94,7 @@
     }
 
     .o_filter_tag {
-        transition: $transition-base;
+        transition: var(--o-bs-transition-base);
         cursor: default;
 
         &:hover, &:has(> a:focus-visible) {
@@ -146,8 +146,8 @@
         }
 
         > div:is(.container) .o_container_small {
-            padding-right: $grid-gutter-width * 0.5;
-            padding-left: $grid-gutter-width * 0.5;
+            padding-right: calc(var(--o-bs-grid-gutter-width) * 0.5);
+            padding-left: calc(var(--o-bs-grid-gutter-width) * 0.5);
         }
     }
 
@@ -176,27 +176,27 @@
                 &::before {
                     @include o-position-absolute(0, auto, 0, 0);
                     content: "";
-                    width: $border-width * 2;
+                    width: calc(var(--o-bs-border-width) * 2);
                     background-color: $gray-300;
                 }
 
                 .o_wblog_toc_link {
-                    color: $text-muted;
+                    color: var(--o-bs-text-muted);
                     transition: padding 0.1s, color 0.2s;
 
                     &:hover, &:focus, &.active {
-                        color: #{$body-color};
+                        color: var(--o-bs-body-color);
                     }
 
                     &.active {
-                        padding-left: #{$spacer};
+                        padding-left: var(--o-bs-spacer);
                     
                         // Active vertical bar
                         &::before {
                             content: "";
                             @include o-position-absolute(0, auto, 0, 0);
-                            width: $border-width * 2;
-                            background-color: #{$primary};
+                            width: calc(var(--o-bs-border-width) * 2);
+                            background-color: var(--primary);
                             transition: background-color 0.2s;
                         }
                     }

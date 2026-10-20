@@ -17,7 +17,7 @@
 
     .o_select_menu_caret {
         position: absolute;
-        top: $o-input-padding-y;
+        top: var(--o-input-padding-y);
         left: auto;
         bottom: $input-border-width;
         right: $o-input-padding-x;
@@ -46,10 +46,10 @@
 }
 
 .o_select_menu_menu {
-    background-color: $dropdown-bg;
+    background-color: var(--o-bs-dropdown-bg);
 
     .o_select_menu_searchbox {
-        background-color: $dropdown-bg;
+        background-color: var(--o-bs-dropdown-bg);
         position: relative;
         padding: 5px;
 
@@ -62,7 +62,7 @@
         &:before {
             position: absolute;
             top: 50%;
-            left: map-get($spacers, 2);
+            left: var(--o-bs-spacer-2);
             bottom: auto;
             right: auto;
             transform: translateY(-50%);
@@ -74,7 +74,7 @@
     }
 
     .o_select_menu_group {
-        background-color: $dropdown-bg;
+        background-color: var(--o-bs-dropdown-bg);
         top: calc(var(--border-width) * -1);
     }
 

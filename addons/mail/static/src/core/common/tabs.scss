@@ -3,7 +3,7 @@
 }
 
 .o-mail-Tabs-scroller:hover {
-    background-color: $o-gray-200 !important;
+    background-color: var(--o-gray-200) !important;
 }
 
 .o-mail-Tabs-scrollContainer {
@@ -20,9 +20,9 @@
     }
 
     &.o-active {
-        background: $o-component-active-bg;
-        color: $o-enterprise-action-color;
-        border-color: rgba($o-enterprise-action-color, .25) !important;
+        background: var(--o-component-active-bg);
+        color: var(--o-enterprise-action-color);
+        border-color: color-mix(in srgb, var(--o-enterprise-action-color) 25%, transparent) !important;
     }
 }
 

@@ -32,20 +32,20 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
     }
 
     .o_survey_breadcrumb_container .breadcrumb {
-        padding: map-get($spacers, 2) 0;
+        padding: var(--o-bs-spacer-2) 0;
     }
 
     .o_survey_question {
-        background: $body-bg;
-        padding: var(--SurveyForm__question-padding-up-md, 0 #{map-get($spacers, 4)} #{map-get($spacers, 4)});
+        background: var(--body-bg);
+        padding: var(--SurveyForm__question-padding-up-md, 0 var(--o-bs-spacer-4) var(--o-bs-spacer-4));
 
         @include media-breakpoint-up(md) {
-            --SurveyForm__question-padding-up-md: 0 #{map-get($spacers, 5)} #{map-get($spacers, 5)};
+            --SurveyForm__question-padding-up-md: 0 var(--o-bs-spacer-5) var(--o-bs-spacer-5);
         }
 
         .o_survey_choice_btn {
             background-color: var(--SurveyForm__choice-btn-bg-color);
-            border: $border-width solid transparent;
+            border: var(--o-bs-border-width) solid transparent;
             cursor: pointer;
 
             &:hover {
@@ -56,15 +56,15 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
             // to ensure good contrast
             &.o_survey_selected {
                 @if (lightness($body-bg) > 50%) {
-                    background-color: $primary-bg-subtle;
-                    color: $primary-text-emphasis;
+                    background-color: var(--o-bs-primary-bg-subtle);
+                    color: var(--o-bs-primary-text-emphasis);
                 } @else {
-                    background-color: rgba($primary, 0.4);
+                    background-color: color-mix(in srgb, var(--primary) 40%, transparent);
                 }
             }
 
             &:focus-within {
-                outline: 2px solid $primary;
+                outline: 2px solid var(--primary);
                 outline-offset: -2px;
             }
         }
@@ -81,14 +81,14 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
 
         .o_survey_question_matrix {
             th, tr:not(:last-child) {
-                border-bottom: $border-width solid $border-color;
+                border-bottom: var(--o-bs-border-width) solid $border-color;
             }
 
             td {
                 min-width: 130px;
 
                 .o_survey_choice_key {
-                    @include o-position-absolute($top: calc(50% - (var(--SurveyForm__choice-key-size) / 2)), $left: map-get($spacers, 3));
+                    @include o-position-absolute($top: calc(50% - (var(--SurveyForm__choice-key-size) / 2)), $left: var(--o-bs-spacer-3));
                 }
 
                 &:hover .o_survey_choice_key span.o_survey_key {
@@ -96,7 +96,7 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
                 }
 
                 &:not(.o_survey_question_matrix_label) {
-                    padding: map-get($spacers, 3) 0;
+                    padding: var(--o-bs-spacer-3) 0;
                 }
             }
 
@@ -105,10 +105,10 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
             }
 
             .o_survey_matrix_btn label {
-                @include o-position-absolute($top: map-get($spacers, 2), $left: map-get($spacers, 2));
+                @include o-position-absolute($top: var(--o-bs-spacer-2), $left: var(--o-bs-spacer-2));
 
-                width: calc(100% - #{map-get($spacers, 2) * 2});
-                height: calc(100% - #{map-get($spacers, 2) * 2});
+                width: calc(100% - (var(--o-bs-spacer-2) * 2));
+                height: calc(100% - (var(--o-bs-spacer-2) * 2));
 
                 &:hover {
                     background-color: var(--SurveyForm__choice-btn-bg-color);
@@ -135,16 +135,16 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
     // Apply section-like styling to questions that are not part of a section
     // in one-page layout
     .o_survey_layout_one_page .o_survey_form_content > .o_survey_question {
-        margin-bottom: map-get($spacers, 4);
-        border: $border-width solid $border-color;
-        border-radius: $border-radius;
-        padding-top: map-get($spacers, 5);
+        margin-bottom: var(--o-bs-spacer-4);
+        border: var(--o-bs-border-width) solid $border-color;
+        border-radius: var(--o-bs-border-radius);
+        padding-top: var(--o-bs-spacer-5);
     }
     .o_survey_progress_wrapper {
         display: flex;
         align-items: center;
-        gap: map-get($spacers, 2);
-        border-right: $border-width solid $border-color;
+        gap: var(--o-bs-spacer-2);
+        border-right: var(--o-bs-border-width) solid $border-color;
 
         .o_survey_progress {
             --#{$prefix}progress-height: 0.5rem;
@@ -182,7 +182,7 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         }
 
         .o_survey_session_qrcode {
-            border: 10px solid $white;
+            border: 10px solid var(--white);
             width: var(--SurveySession__qr-code-width);
         }
     }
@@ -209,8 +209,8 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
             .o_survey_session_text_answer {
                 .o_survey_session_text_answer_container {
                     width: 2rem;
-                    border: solid $border-width;
-                    background-color: $dark;
+                    border: solid var(--o-bs-border-width);
+                    background-color: var(--dark);
                     transition: all .4s ease;
                     overflow: hidden;
                 }
@@ -313,7 +313,7 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         input[type="number"],
         input[type="date"],
         textarea {
-            color: $body-color;
+            color: var(--o-bs-body-color);
             background-color: transparent;
         }
 
@@ -328,13 +328,13 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         pointer-events: none;
 
         &.bg-success-subtle input {
-            background-color: $success;
-            border-color: $success;
+            background-color: var(--o-bs-success);
+            border-color: var(--o-bs-success);
         }
 
         &.bg-danger-subtle input {
-            background-color: $danger;
-            border-color: $danger;
+            background-color: var(--danger);
+            border-color: var(--danger);
         }
 
         .btn:disabled {

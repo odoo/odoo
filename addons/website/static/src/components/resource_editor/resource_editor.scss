@@ -11,7 +11,7 @@ $o-we-ace-color: #2F3129 !default;
         flex: 0 0 auto;
         display: flex;
         align-items: center;
-        padding: $grid-gutter-width/4;
+        padding: calc(var(--o-bs-grid-gutter-width) / 4);
 
         > .o_resource_editor_type_switcher .o_caret_down::after {
             margin-left: 4px;
@@ -19,7 +19,7 @@ $o-we-ace-color: #2F3129 !default;
 
         > * {
             flex: 0 0 auto;
-            margin: 0 $grid-gutter-width/4;
+            margin: 0 calc(var(--o-bs-grid-gutter-width) / 4);
 
             &.o_resource_editor_filter {
                 display: flex;
@@ -36,7 +36,7 @@ $o-we-ace-color: #2F3129 !default;
 
     #resource-editor-id {
         flex: 0 0 auto;
-        padding: $grid-gutter-width/4 $grid-gutter-width/2;
+        padding: calc(var(--o-bs-grid-gutter-width) / 4) calc(var(--o-bs-grid-gutter-width) / 2);
         background-color: lighten($o-we-ace-color, 10%);
 
         .o_resource_editor_resource_info {
@@ -49,7 +49,7 @@ $o-we-ace-color: #2F3129 !default;
             content: "";
             z-index: 1000;
             display: flex;
-            background-color: $o-we-color-danger;
+            background-color: var(--o-we-color-danger);
             color: white;
             font-size: 1.2em;
             align-items: center;

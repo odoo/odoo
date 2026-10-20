@@ -8,7 +8,7 @@
 // other cases, once the page has been scrolled, the dropzones should be placed
 // behind the header.
 header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
-    z-index: $o-we-dropzone-z-index + 1;
+    z-index: calc(var(--o-we-dropzone-z-index) + 1);
 }
 
 // The first and last dropzones in the “parallax” and “animated cover”
@@ -17,10 +17,10 @@ header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
 .parallax, .s_animated_cover {
     > .oe_structure > .oe_drop_zone {
         &:first-child {
-            top: $o-we-dropzone-size/2;
+            top: calc(var(--o-we-dropzone-size) / 2);
         }
         &:last-child {
-            bottom: $o-we-dropzone-size/2;
+            bottom: calc(var(--o-we-dropzone-size) / 2);
         }
     }
 }

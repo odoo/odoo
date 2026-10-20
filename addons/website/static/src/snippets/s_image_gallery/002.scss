@@ -370,12 +370,12 @@
                 button {
                     display: flex;
                     align-items: center;
-                    gap: map-get($spacers, 1);
+                    gap: var(--o-bs-spacer-1);
                     width: auto;
                     height: auto;
                     margin: 0;
                     border: 0;
-                    padding: 0 map-get($spacers, 2) 0;
+                    padding: 0 var(--o-bs-spacer-2) 0;
                     background: none !important;
                     color: $carousel-indicator-active-bg;
                     text-indent: 0;
@@ -398,7 +398,7 @@
                     }
 
                     &.active:after {
-                        width: map-get($spacers, 4);
+                        width: var(--o-bs-spacer-4);
                     }
                 }
 
@@ -443,7 +443,7 @@
         &.s_image_gallery_controllers_outside {
 
             .carousel-inner {
-                padding-bottom: calc(#{$-o-carousel-controllers-size} + #{map-get($spacers, 2)});
+                padding-bottom: calc(#{$-o-carousel-controllers-size} + var(--o-bs-spacer-2));
             }
 
             .o_carousel_controllers {
@@ -463,7 +463,7 @@
 
             &:not(.s_image_gallery_indicators_hidden) {
                 .carousel-control-prev, .carousel-control-next {
-                    bottom: calc(#{$-o-carousel-controllers-size} + #{map-get($spacers, 2)});
+                    bottom: calc(#{$-o-carousel-controllers-size} + var(--o-bs-spacer-2));
                 }
             }
 
@@ -495,10 +495,10 @@
                 bottom: 0;
                 display: flex;
                 align-items: center;
-                gap: map-get($spacers, 2);
+                gap: var(--o-bs-spacer-2);
                 justify-content: space-between;
                 width: 100%;
-                margin-top: map-get($spacers, 2);
+                margin-top: var(--o-bs-spacer-2);
 
                 & > * {
                     position: relative;

@@ -45,7 +45,7 @@ $o-wslides-fs-side-width: 300px;
         }
         &:not(.disabled) {
             cursor: pointer;
-            color: $link-color;
+            color: var(--link-color);
         }
     }
 
@@ -75,7 +75,7 @@ $o-wslides-fs-side-width: 300px;
             @include font-size(1rem);
 
             input:checked + i[data-icon="circle"] {
-                color: $primary !important;
+                color: var(--primary) !important;
             }
         }
 
@@ -92,7 +92,7 @@ $o-wslides-fs-side-width: 300px;
     a.o_wslides_js_quiz_is_correct {
         color: black;
         input:checked + i[data-icon="check_circle"]:not(.oi-filled) {
-            color: $success !important;
+            color: var(--o-bs-success) !important;
         }
     }
 
@@ -236,7 +236,7 @@ $o-wslides-fs-side-width: 300px;
         content: "";
         @include o-position-absolute(auto, 0, 0, 0);
         height: $o-wslides-tabs-height;
-        background: rgba(black, 0.2);
+        background: rgba(0, 0, 0, 0.2);
     }
 }
 
@@ -301,21 +301,21 @@ $o-wslides-fs-side-width: 300px;
     .o_wslides_tabs_content {
         @include media-breakpoint-down(md) {
             background-color: $nav-tabs-link-active-bg;
-            padding:0 ($grid-gutter-width * 0.5);
+            padding:0 calc(var(--o-bs-grid-gutter-width) * 0.5);
         }
 
         @include media-breakpoint-only(xs) {
-            margin: 0 ($grid-gutter-width * -0.5);
+            margin: 0 calc(var(--o-bs-grid-gutter-width) * -0.5);
         }
 
         .o_wslides_lesson_nav {
             .navbar {
                 @if ( not has-enough-contrast($body-bg, $dark) ) {
                     .nav-link, .navbar-brand{
-                        color: $navbar-dark-color;
+                        color: var(--o-bs-navbar-dark-color);
                     }
                     .navbar-toggler-icon {
-                        background-image: $navbar-dark-toggler-icon-bg;
+                        background-image: var(--o-bs-navbar-dark-toggler-icon-bg);
                     }
                 }
                 @else {
@@ -323,7 +323,7 @@ $o-wslides-fs-side-width: 300px;
                         color: $navbar-light-color;
                     }
                     .navbar-toggler-icon {
-                        background-image: $navbar-light-toggler-icon-bg;
+                        background-image: var(--o-bs-navbar-light-toggler-icon-bg);
                     }
                 }
             }
@@ -351,7 +351,7 @@ $o-wslides-fs-side-width: 300px;
 
             > * {
                 text-decoration: none!important;
-                color: map-get($grays, "600");
+                color: var(--gray-600);
             }
 
             &:hover > * {
@@ -456,10 +456,10 @@ $o-wslides-fs-side-width: 300px;
 
         .o_wslides_lesson_aside_list {
             .o_wslides_lesson_aside_list_link {
-                @include o-hover-text-color($gray-600, $headings-color );
+                @include o-hover-text-color(var(--gray-600), var(--o-bs-headings-color) );
 
                 &.active {
-                    box-shadow:inset 2px 0 map-get($theme-colors, 'primary');
+                    box-shadow:inset 2px 0 var(--primary);
                 }
             }
             button {
@@ -473,10 +473,10 @@ $o-wslides-fs-side-width: 300px;
                 margin-left: 3px;
             }
             button.o_wslides_button_complete i {
-                color: $gray-600;
+                color: var(--gray-600);
             }
             div.o_wslides_button_complete i {
-                color: $gray-400;
+                color: var(--gray-400);
             }
         }
     }
@@ -487,11 +487,11 @@ $o-wslides-fs-side-width: 300px;
                 background-color: transparent;
                 border: 0;
                 border-bottom: 1px solid $border-color;
-                color: $gray-600;
+                color: var(--gray-600);
 
                 &.active {
-                    border-bottom: 1px solid $success;
-                    color: $gray-800;
+                    border-bottom: 1px solid var(--o-bs-success);
+                    color: var(--gray-800);
                 }
             }
         }
@@ -624,7 +624,7 @@ li.o_wslides_fs_sidebar_list_item.active {
 }
 
 .o_wslides_body .form-control::-webkit-input-placeholder {
-    color: $gray-500;
+    color: var(--gray-500);
 }
 
 .o_wslides_body .form-control:focus::-webkit-input-placeholder {

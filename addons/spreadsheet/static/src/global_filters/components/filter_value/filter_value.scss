@@ -1,17 +1,17 @@
 .o-filter-value {
     .date_filter_values {
         display: flex;
-        gap: map-get($spacers, 2);
+        gap: var(--o-bs-spacer-2);
         align-items: baseline;
     }
 
     select:has(option[value="empty"]:checked),
     select:has(option[value=""]:checked) {
-        color: $input-placeholder-color;
+        color: var(--o-bs-input-placeholder-color);
     }
 
     select option {
-        color: $o-gray-700;
+        color: var(--o-gray-700);
     }
 
     .o_multi_record_selector {

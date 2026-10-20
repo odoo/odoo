@@ -1,5 +1,5 @@
 .o-discuss-Typing-dot {
-    background-color: $gray-500;
+    background-color: var(--gray-500);
 
     .o-discuss-Typing-icon:not(.o-isBrowserSafari) & {
         // Safari bug: some CSS style in foreignobject like opacity / transform / filter reset the position of foreignobject to (0, 0)
@@ -53,5 +53,5 @@
 
 .o-mail-DiscussContent .o-discuss-Typing {
     transform: translateY(-85%);
-    padding-left: calc(#{$o-mail-Message-sidebarWidth} + #{map-get($spacers, 2)});
+    padding-left: calc(var(--o-mail-Message-sidebarWidth) + var(--o-bs-spacer-2));
 }

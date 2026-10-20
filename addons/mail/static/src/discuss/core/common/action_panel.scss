@@ -1,5 +1,5 @@
 .o-mail-ActionPanel .form-check-input {
-    --form-check-bg: #{$white};
+    --form-check-bg: var(--white);
 }
 
 .o-mail-ActionPanel-resizable.o_resizable_panel {
@@ -11,7 +11,7 @@
 }
 
 .o-mail-ActionPanel-header {
-    z-index: $o-mail-NavigableList-zIndex - 1;
+    z-index: calc(var(--o-mail-NavigableList-zIndex) - 1);
 }
 
 .popover:has(.o-mail-ActionPanel-content) {

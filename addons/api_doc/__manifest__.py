@@ -26,6 +26,7 @@ the methods over HTTP, with examples in various programming languages.
             'web/static/lib/bootstrap/scss/_maps.scss',
 
             ('include', 'web._assets_bootstrap'),
+            'web/static/src/scss/css_variables.scss',
             ('include', 'web._assets_core'),
             'web/static/src/core/code_editor/**',
 

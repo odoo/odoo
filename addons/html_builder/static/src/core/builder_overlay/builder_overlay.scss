@@ -14,7 +14,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
     .oe_overlay {
         @include o-position-absolute;
         display: none;
-        border-color: $o-we-handles-accent-color;
+        border-color: var(--o-we-handles-accent-color);
         background: transparent;
         text-align: center;
         font-size: 16px;
@@ -43,7 +43,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
 
             .o_side {
                 &::before {
-                    background: $o-we-hover-overlay-color !important;
+                    background: var(--o-we-hover-overlay-color) !important;
                 }
                 background-color: transparent !important;
                 border-bottom: none !important;
@@ -58,7 +58,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
 
         // HANDLES
         .o_handles {
-            @include o-position-absolute(-$o-we-handles-offset-to-hide, 0, auto, 0);
+            @include o-position-absolute(calc(var(--o-we-handles-offset-to-hide) * -1), 0, auto, 0);
             border-color: inherit;
             pointer-events: auto;
 
@@ -66,21 +66,21 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                 position: absolute;
 
                 &.o_side_y {
-                    height: $o-we-handle-edge-size;
+                    height: var(--o-we-handle-edge-size);
                 }
                 &.o_side_x {
-                    width: $o-we-handle-edge-size;
+                    width: var(--o-we-handle-edge-size);
 
                     &::before {
                         // It’s needed for "pixel-perfect" overlay corners.
                         // Otherwise, the colors can overlap and not look good
                         // depending on the background color behind the overlay.
-                        top: $o-we-handle-border-width/2 !important;
-                        bottom: $o-we-handle-border-width/2 !important;
+                        top: calc(var(--o-we-handle-border-width) / 2) !important;
+                        bottom: calc(var(--o-we-handle-border-width) / 2) !important;
                     }
                 }
                 &.w {
-                    inset: $o-we-handles-offset-to-hide auto $o-we-handles-offset-to-hide * -1 $o-we-handle-border-width * 0.5;
+                    inset: var(--o-we-handles-offset-to-hide) auto calc(var(--o-we-handles-offset-to-hide) * -1) calc(var(--o-we-handle-border-width) * 0.5);
                     transform: translateX(-50%);
                     cursor: ew-resize;
 
@@ -89,11 +89,11 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     }
 
                     &::before {
-                        border-right: $o-we-handle-contrast-border;
+                        border-right: var(--o-we-handle-contrast-border);
                     }
                 }
                 &.e {
-                    inset: $o-we-handles-offset-to-hide $o-we-handle-border-width * 0.5 $o-we-handles-offset-to-hide * -1 auto;
+                    inset: var(--o-we-handles-offset-to-hide) calc(var(--o-we-handle-border-width) * 0.5) calc(var(--o-we-handles-offset-to-hide) * -1) auto;
                     transform: translateX(50%);
                     cursor: ew-resize;
 
@@ -102,11 +102,11 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     }
 
                     &::before {
-                        border-left: $o-we-handle-contrast-border;
+                        border-left: var(--o-we-handle-contrast-border);
                     }
                 }
                 &.n {
-                    inset: $o-we-handles-offset-to-hide 0 auto 0;
+                    inset: var(--o-we-handles-offset-to-hide) 0 auto 0;
                     cursor: ns-resize;
 
                     &.o_grid_handle {
@@ -118,11 +118,11 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     }
 
                     &::before {
-                        border-bottom: $o-we-handle-contrast-border;
+                        border-bottom: var(--o-we-handle-contrast-border);
                     }
                 }
                 &.s {
-                    inset: auto 0 $o-we-handles-offset-to-hide * -1 0;
+                    inset: auto 0 calc(var(--o-we-handles-offset-to-hide) * -1) 0;
                     cursor: ns-resize;
 
                     &.o_grid_handle {
@@ -134,11 +134,11 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     }
 
                     &::before {
-                        border-top: $o-we-handle-contrast-border;
+                        border-top: var(--o-we-handle-contrast-border);
                     }
                 }
                 &.ne {
-                    inset: ($o-we-handles-offset-to-hide + $o-we-handle-border-width * 0.5) $o-we-handle-border-width * 0.5 auto auto;
+                    inset: calc(var(--o-we-handles-offset-to-hide) + var(--o-we-handle-border-width) * 0.5) calc(var(--o-we-handle-border-width) * 0.5) auto auto;
                     transform: translate(50%, -50%);
                     cursor: nesw-resize;
 
@@ -147,7 +147,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     }
                 }
                 &.se {
-                    inset: auto $o-we-handle-border-width * 0.5 ($o-we-handles-offset-to-hide * -1 + $o-we-handle-border-width * 0.5) auto;
+                    inset: auto calc(var(--o-we-handle-border-width) * 0.5) calc(var(--o-we-handles-offset-to-hide) * -1 + var(--o-we-handle-border-width) * 0.5) auto;
                     transform: translate(50%, 50%);
                     cursor: nwse-resize;
 
@@ -156,7 +156,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     }
                 }
                 &.sw {
-                    inset: auto auto ($o-we-handles-offset-to-hide * -1 + $o-we-handle-border-width * 0.5) $o-we-handle-border-width * 0.5;
+                    inset: auto auto calc(var(--o-we-handles-offset-to-hide) * -1 + var(--o-we-handle-border-width) * 0.5) calc(var(--o-we-handle-border-width) * 0.5);
                     transform: translate(-50%, 50%);
                     cursor: nesw-resize;
 
@@ -165,7 +165,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                     }
                 }
                 &.nw {
-                    inset: ($o-we-handles-offset-to-hide + $o-we-handle-border-width * 0.5) auto auto $o-we-handle-border-width * 0.5;
+                    inset: calc(var(--o-we-handles-offset-to-hide) + var(--o-we-handle-border-width) * 0.5) auto auto calc(var(--o-we-handle-border-width) * 0.5);
                     transform: translate(-50%, -50%);
                     cursor: nwse-resize;
 
@@ -175,37 +175,37 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                 }
                 .o_handle_indicator {
                     position: absolute;
-                    inset: $o-we-handles-btn-size * -0.5;
+                    inset: calc(var(--o-we-handles-btn-size) * -0.5);
                     display: block;
-                    width: $o-we-handles-btn-size;
-                    height: $o-we-handles-btn-size;
+                    width: var(--o-we-handles-btn-size);
+                    height: var(--o-we-handles-btn-size);
                     margin: auto;
-                    border: solid $o-we-handle-border-width $o-we-handles-accent-color;
-                    border-radius: $o-we-handles-btn-size;
-                    background-color: $o-we-fg-lighter;
-                    outline: $o-we-handle-border-width solid $o-we-fg-lighter;
-                    outline-offset: -($o-we-handle-border-width * 2);
-                    transition: $transition-base;
+                    border: solid var(--o-we-handle-border-width) var(--o-we-handles-accent-color);
+                    border-radius: var(--o-we-handles-btn-size);
+                    background-color: var(--o-we-fg-lighter);
+                    outline: var(--o-we-handle-border-width) solid var(--o-we-fg-lighter);
+                    outline-offset: calc((var(--o-we-handle-border-width) * 2) * -1);
+                    transition: var(--o-bs-transition-base);
 
                     &::before {
                         content: '';
                         position: absolute;
-                        inset: $o-we-handles-btn-size * -0.5;
+                        inset: calc(var(--o-we-handles-btn-size) * -0.5);
                         display: block;
                         border-radius: inherit;
                     }
                 }
 
                 &.o_column_handle.o_side_y {
-                    background-color: rgba($o-we-handles-accent-color, 0.1);
+                    background-color: color-mix(in srgb, var(--o-we-handles-accent-color) 10%, transparent);
 
                     &::after {
                         content: '';
                         position: absolute;
-                        height: $o-we-handles-btn-size;
+                        height: var(--o-we-handles-btn-size);
                     }
                     &.n {
-                        border-bottom: dashed $o-we-handle-border-width * 0.5 rgba($o-we-contrast-border-color, 0.7);
+                        border-bottom: dashed calc(var(--o-we-handle-border-width) * 0.5) rgba($o-we-contrast-border-color, 0.7);
 
                         &::after {
                             inset: 0 0 auto 0;
@@ -213,7 +213,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                         }
                     }
                     &.s {
-                        border-top: dashed $o-we-handle-border-width * 0.5 rgba($o-we-contrast-border-color, 0.7);
+                        border-top: dashed calc(var(--o-we-handle-border-width) * 0.5) rgba($o-we-contrast-border-color, 0.7);
 
                         &::after {
                             inset: auto 0 0 0;
@@ -226,19 +226,19 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                         content: '';
                         position: absolute;
                         inset: 0;
-                        background: $o-we-handles-accent-color;
+                        background: var(--o-we-handles-accent-color);
                     }
                     &.o_side_x {
 
                         &::before {
-                            width: $o-we-handle-border-width;
+                            width: var(--o-we-handle-border-width);
                             margin: 0 auto;
                         }
                     }
                     &.o_side_y {
 
                         &::before {
-                            height: $o-we-handle-border-width;
+                            height: var(--o-we-handle-border-width);
                             margin: auto 0;
                         }
                     }
@@ -275,7 +275,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
         &.o_handlers_idle .o_handle:hover, .o_handle:active {
 
             .o_handle_indicator {
-                background-color: $o-we-handles-accent-color;
+                background-color: var(--o-we-handles-accent-color);
             }
         }
 
@@ -289,8 +289,8 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
         &.o_handlers_idle .o_column_handle.o_side_y:hover, .o_column_handle.o_side_y:active {
             background: repeating-linear-gradient(
                             45deg,
-                            rgba($o-we-handles-accent-color, .1),
-                            rgba($o-we-handles-accent-color, .1) 5px,
+                            color-mix(in srgb, var(--o-we-handles-accent-color) 10%, transparent),
+                            color-mix(in srgb, var(--o-we-handles-accent-color) 10%, transparent) 5px,
                             darken(rgba($o-we-handles-accent-color, .25), 5%) 5px,
                             darken(rgba($o-we-handles-accent-color, .25), 5%) 10px
                         );
@@ -299,20 +299,20 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
         &.o_handlers_idle .o_side_x:hover, .o_side_x:active {
 
             &::before {
-                width: $o-we-handle-border-width * 2;
+                width: calc(var(--o-we-handle-border-width) * 2);
             }
             .o_handle_indicator {
-                height: $o-we-handles-btn-size * 2;
+                height: calc(var(--o-we-handles-btn-size) * 2);
             }
         }
 
         &.o_handlers_idle .o_side_y:hover, .o_side_y:active {
 
             &::before {
-                height: $o-we-handle-border-width * 2;
+                height: calc(var(--o-we-handle-border-width) * 2);
             }
             .o_handle_indicator {
-                width: $o-we-handles-btn-size * 2;
+                width: calc(var(--o-we-handles-btn-size) * 2);
             }
         }
     }

@@ -4,14 +4,16 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 .o_snippet {
     // No root because can be dragged and dropped and the helper is in the body.
+    --o-hb-snippet-border-radius: .375rem; /* Bootstrap's, not the backend's */
+
     position: relative;
     z-index: $o-we-zindex;
     width: 77px;
-    background-color: $o-we-sidebar-blocks-content-snippet-bg;
+    background-color: var(--o-we-sidebar-blocks-content-snippet-bg);
 
     &.o_draggable_dragging {
         transform: rotate(-3deg) scale(1.2);
-        border-radius: $border-radius;
+        border-radius: var(--o-hb-snippet-border-radius);
         box-shadow: 0 5px 25px -10px black;
         transition: transform 0.3s, box-shadow 0.3s;
     }
@@ -39,10 +41,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     }
 
     &:hover:not(.o_disabled):not(.o_to_install) {
-        background: $o-we-bg-light;
+        background: var(--o-we-bg-light);
 
         .o_snippet_thumbnail_title {
-            color: $o-we-fg-lighter;
+            color: var(--o-we-fg-lighter);
         }
     }
 }
@@ -54,14 +56,14 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 
     .o_snippets_container, .o_snippets_container_header {
-        padding-bottom: $o-we-sidebar-blocks-content-spacing;
+        padding-bottom: var(--o-we-sidebar-blocks-content-spacing);
     }
 
     .o_snippets_container_header {
         position: sticky;
         top: 0;
-        background-color: $o-we-bg-darker;
-        padding-top: $o-we-sidebar-blocks-content-spacing;
+        background-color: var(--o-we-bg-darker);
+        padding-top: var(--o-we-sidebar-blocks-content-spacing);
         z-index: 1;
     }
 
@@ -85,7 +87,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
         .o_snippet {
             width: 100%;
-            border-radius: $border-radius;
+            border-radius: var(--o-hb-snippet-border-radius);
             background-clip: padding-box;
             user-select: none;
             cursor: grab;
@@ -94,7 +96,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             .o_snippet_thumbnail_title {
                 @include o-text-overflow(block);
                 white-space: normal;
-                font-size: $o-we-font-size-sm;
+                font-size: var(--o-we-font-size-sm);
             }
 
             .o_snippet_thumbnail_area {
@@ -105,8 +107,8 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
                 cursor: inherit;
 
                 &:focus-visible {
-                    border: $o-we-border-width * 2 solid $o-we-color-success;
-                    border-radius: $border-radius;
+                    border: calc(var(--o-we-border-width) * 2) solid var(--o-we-color-success);
+                    border-radius: var(--o-hb-snippet-border-radius);
                     outline: none;
                     box-shadow: none;
                 }
@@ -120,10 +122,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
             &.o_disabled, &.o_to_install {
                 cursor: default;
-                background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .2);
+                background-color: color-mix(in srgb, var(--o-we-sidebar-blocks-content-snippet-bg) 20%, transparent);
 
                 .o_snippet_thumbnail_img {
-                    opacity: $o-opacity-disabled;
+                    opacity: var(--o-opacity-disabled);
                     filter: saturate(0);
                 }
             }
@@ -157,8 +159,8 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         // TODO improve the following rules later
         .o_hb_rename_delete_buttons button {
             // @extend %we-generic-link;
-            padding-left: $o-we-sidebar-content-field-button-group-button-spacing;
-            padding-right: $o-we-sidebar-content-field-button-group-button-spacing;
+            padding-left: var(--o-we-sidebar-content-field-button-group-button-spacing);
+            padding-right: var(--o-we-sidebar-content-field-button-group-button-spacing);
         }
 
         &:not(:hover, :focus-within), &.o_disabled:hover {
@@ -180,7 +182,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
                 // @extend %we-generic-clickable;
                 cursor: pointer;
                 flex: 1 1 auto;
-                padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
+                padding: 0 var(--o-we-sidebar-content-field-button-group-button-spacing);
                 line-height: 17px;
                 text-align: center;
             }

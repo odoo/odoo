@@ -3,12 +3,12 @@
 }
 
 .o-mail-MessageInReply-avatar {
-    width: $o-mail-Avatar-size / 2;
+    width: calc(var(--o-mail-Avatar-size) / 2);
     aspect-ratio: 1;
 }
 
 .o-mail-MessageInReply-core {
-    border-width: $border-width !important;
+    border-width: var(--o-bs-border-width) !important;
     border-color: color-mix(in srgb, var(--o-bubble-color-base) 50%, transparent) !important;
 
     .o-mail-MessageInReply-message {
@@ -17,7 +17,7 @@
 
     &:hover, &:focus-visible {
         transform: translateY(#{$border-width * -2});
-        transition: $transition-base;
+        transition: var(--o-bs-transition-base);
 
         .o-mail-MessageInReply-message {
             opacity: 100%;

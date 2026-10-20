@@ -1,5 +1,3 @@
-$o_wss_color_1 : #5B7687;
-$o_wss_color_2 : #485761;
 
 // General
 // **************************************************
@@ -11,20 +9,23 @@ $o_wss_color_2 : #485761;
 // Course page
 // **************************************************
 #wrap.o_wss_certification_channel {
+    --o-wss-color-1: #5B7687;
+    --o-wss-color-2: #485761;
+
     .o_wslides_course_pict {
         @include media-breakpoint-up(md)  {
-            border-color: $o_wss_color_2;
+            border-color: var(--o-wss-color-2);
         }
     }
 
     .o_wslides_nav_tabs .nav-link {
         @include media-breakpoint-up(md) {
             &, &:hover{
-                border-color: $o_wss_color_1;
+                border-color: var(--o-wss-color-1);
             }
 
             &.active {
-                border-color: $gray-100;
+                border-color: var(--gray-100);
             }
         }
     }

@@ -6,16 +6,16 @@
     max-width: 650px; // Matches the max-width of .o_nocontent_help
 
     .o_wsale_empty_screen {
-        border: $border-width * 4 solid darken($primary-bg-subtle, 10%);
+        border: calc(var(--o-bs-border-width) * 4) solid darken($primary-bg-subtle, 10%);
         border-radius: 8px 8px 0 0;
 
         .o_wsale_empty_screen_header, .o_wsale_skeleton_box, .o_wsale_app_icon {
-            height: $spacer * 2;
+            height: calc(var(--o-bs-spacer) * 2);
         }
 
         button {
             --btn-padding-x: 11px;
-            --btn-padding-y: #{map-get($spacers, 2)};
+            --btn-padding-y: var(--o-bs-spacer-2);
             --btn-font-size: var(--btn-padding-x);
 
             &:last-of-type {
@@ -52,8 +52,8 @@
 
         // Fake modal
         .o_wsale_empty_screen_modal_wrapper {
-            @include o-position-absolute($top: 36px, $right: map-get($spacers, 1)); // .o_wsale_empty_screen_header height + 4px
-            width: calc(100% - #{2 * map-get($spacers, 5)});
+            @include o-position-absolute($top: 36px, $right: var(--o-bs-spacer-1)); // .o_wsale_empty_screen_header height + 4px
+            width: calc(100% - (2 * var(--o-bs-spacer-5)));
 
             .o_wsale_skeleton_modal {
                 grid-template-columns: 1fr 1fr;
@@ -79,15 +79,15 @@
                         content: "";
                         @include o-position-absolute($top: 0, $left: 0);
 
-                        width: $spacer * 2;
+                        width: calc(var(--o-bs-spacer) * 2);
                         aspect-ratio: 1;
                         background-color: var(--o_wsale_empty_screen_light_color);
-                        border-radius: $border-radius;
+                        border-radius: var(--o-bs-border-radius);
                     }
                 }
 
                 .o_wsale_app_box {
-                    width: calc(100% + #{map-get($spacers, 2)});
+                    width: calc(100% + var(--o-bs-spacer-2));
                     animation: itemHoverEffect 3s .4s infinite;
 
                     .o_wsale_app_icon {

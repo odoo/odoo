@@ -9,7 +9,7 @@
     }
 
     .o_dropdown_title_icon {
-        width: $dropdown-item-padding-x;
+        width: var(--o-bs-dropdown-item-padding-x);
     }
 
     @media screen and (min-width: 768px), print and (min-width: 188mm) {
@@ -43,6 +43,6 @@
     --#{$prefix}btn-disabled-opacity: 1;
 
     &.o-dropdown.btn-outline-secondary.show {
-        --#{$prefix}btn-active-border-color: #{$input-focus-border-color};
+        --#{$prefix}btn-active-border-color: var(--o-bs-input-focus-border-color);
     }
 }

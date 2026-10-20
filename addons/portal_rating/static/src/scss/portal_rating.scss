@@ -1,6 +1,5 @@
 /* static stars */
 // portal_rating
-$o-w-rating-star-color: #FACC2E;
 
 .o_website_rating_static {
     color: currentColor;
@@ -9,7 +8,7 @@ $o-w-rating-star-color: #FACC2E;
 .o_website_rating_card_container {
 
     .o_message_counter {
-        color: map-get($grays, '700');
+        color: var(--gray-700);
     }
 
     /* progress bars */
@@ -20,7 +19,7 @@ $o-w-rating-star-color: #FACC2E;
 
         .o_website_rating_table_progress {
             .o_rating_progressbar {
-                background-color: $body-color;
+                background-color: var(--o-bs-body-color);
             }
         }
 
@@ -40,7 +39,7 @@ $o-w-rating-star-color: #FACC2E;
     }
 
     .o-mail-Thread-content {
-        gap: map-get($spacers, 4);
+        gap: var(--o-bs-spacer-4);
     }
 }
 
@@ -56,7 +55,7 @@ $o-w-rating-star-color: #FACC2E;
         }
 
         .o-mail-Message-body:not(.o-mail-Message-body-wrating) {
-            padding: 0 0 map-get($spacers, 1) !important;
+            padding: 0 0 var(--o-bs-spacer-1) !important;
             max-width: 74ch;
         }
 
@@ -75,11 +74,13 @@ $o-w-rating-star-color: #FACC2E;
 
 /* Star Widget */
 .o-mail-Composer-starCard {
+    --o-w-rating-star-color: #FACC2E;
+
     width: max-content;
     .o-mail-Composer-stars {
         display: inline-flex;
-        color: $o-w-rating-star-color;
-        margin-right: map-get($spacers, 3);
+        color: var(--o-w-rating-star-color);
+        margin-right: var(--o-bs-spacer-3);
     }
 }
 
@@ -91,6 +92,6 @@ $o-w-rating-star-color: #FACC2E;
     }
 
     .o_portal_chatter_avatar {
-        margin-right: map-get($spacers, 2);
+        margin-right: var(--o-bs-spacer-2);
     }
 }

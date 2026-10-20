@@ -336,6 +336,7 @@
         ],
         'website.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
+            'html_builder/static/src/scss/css_variables.scss',
             'portal/static/src/scss/portal.edit.*',
             'google_recaptcha/static/src/xml/recaptcha.xml',
             'website/static/src/**/*.edit.*',
@@ -470,6 +471,7 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+            'html_builder/static/src/scss/css_variables.scss',
             'website/static/src/scss/website.edit_mode.scss',
             'website/static/src/components/googleplaces_autocomplete/*',
             'website/static/src/js/send_mail_form.js',

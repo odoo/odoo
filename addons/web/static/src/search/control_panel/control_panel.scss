@@ -1,10 +1,10 @@
 .o_control_panel {
     border-bottom: var(--ControlPanel-border-bottom, var(--o-control-panel-border-bottom));
-    padding-bottom: var(--ControlPanel-padding-bottom, #{map-get($spacers, 2)});
-    background-color: $o-control-panel-background-color;
+    padding-bottom: var(--ControlPanel-padding-bottom, var(--o-bs-spacer-2));
+    background-color: var(--o-control-panel-background-color);
     @media screen {
         .o_control_panel_breadcrumbs {
-            --#{$variable-prefix}breadcrumb-font-size: #{$small-font-size};
+            --#{$variable-prefix}breadcrumb-font-size: var(--o-bs-small-font-size);
         }
 
         @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
@@ -35,7 +35,7 @@
     // Print
     // ------------------------------------------------------------------
     @media print {
-        padding: 0 0 map-get($spacers, 2) !important; // The @page margin will be used instead.
+        padding: 0 0 var(--o-bs-spacer-2) !important; // The @page margin will be used instead.
         margin-bottom: 1rem;
 
         &, .o_facet_value {
@@ -47,11 +47,11 @@
         }
 
         .o_searchview_facet_label > i {
-            font-size: $font-size-sm !important;
+            font-size: var(--o-bs-font-size-sm) !important;
         }
 
         .o_facet_value {
-            padding-right: map-get($spacers, 2);
+            padding-right: var(--o-bs-spacer-2);
         }
 
         .o_breadcrumb {
@@ -74,14 +74,14 @@
 
         .o_back_button a, .o_last_breadcrumb_item {
             font-weight: bold !important;
-            font-size: $font-size-base !important;
-            padding-left: $breadcrumb-item-padding-x;
+            font-size: var(--o-bs-font-size-base) !important;
+            padding-left: var(--o-bs-breadcrumb-item-padding-x);
         }
 
         .o_back_button a::after {
             float: right;
-            padding-left: $breadcrumb-item-padding-x;
-            color: $text-muted;
+            padding-left: var(--o-bs-breadcrumb-item-padding-x);
+            color: var(--o-bs-text-muted);
             content: var(--breadcrumb-divider, "/");
         }
 
@@ -128,7 +128,7 @@
             o-safe-get($-value, active-color),
     );
     --#{$prefix}btn-border-width: var(--border-width);
-    --#{$prefix}btn-border-radius: #{$btn-border-radius};
+    --#{$prefix}btn-border-radius: var(--o-bs-btn-border-radius);
 
     background-color: var(--#{$prefix}btn-bg);
     border: var(--#{$prefix}btn-border-width) solid var(--#{$prefix}btn-border-color);
@@ -144,7 +144,7 @@
 
 .o_bottom_sheet .o_cp_switch_buttons {
     display: grid;
-    gap: map-get($spacers, 2);
+    gap: var(--o-bs-spacer-2);
     grid-template-columns: repeat(3, 1fr);
 
     .o-dropdown-item {
@@ -152,8 +152,8 @@
 
         display: grid;
         justify-items: center;
-        gap: map-get($spacers, 2);
-        padding: map-get($spacers, 3) map-get($spacers, 2);
+        gap: var(--o-bs-spacer-2);
+        padding: var(--o-bs-spacer-3) var(--o-bs-spacer-2);
 
         &.selected::before {
             content: none !important;

@@ -1,6 +1,6 @@
 .o_menu_systray.o_website_systray {
-    --NavBar-entry-padding-left: #{$o-navbar-entry-padding-h};
-    --NavBar-entry-padding-right: #{$o-navbar-entry-padding-h};
+    --NavBar-entry-padding-left: var(--o-navbar-entry-padding-h);
+    --NavBar-entry-padding-right: var(--o-navbar-entry-padding-h);
     --NavBar-separator-margin-v: 10px; /* equal to $o-navbar-padding-v in web_enterprise */
     --border-color: #{darken($primary, 10%)};
 
@@ -11,10 +11,10 @@
         --NavBar-entry-borderColor-active: transparent;
 
         height: auto;
-        margin-top: -$o-navbar-padding-v;
-        margin-bottom: -$o-navbar-padding-v;
-        padding-top: $o-navbar-padding-v;
-        padding-bottom: $o-navbar-padding-v;
+        margin-top: calc(var(--o-navbar-padding-v) * -1);
+        margin-bottom: calc(var(--o-navbar-padding-v) * -1);
+        padding-top: var(--o-navbar-padding-v);
+        padding-bottom: var(--o-navbar-padding-v);
     }
 
     .o_website_systray_separator {

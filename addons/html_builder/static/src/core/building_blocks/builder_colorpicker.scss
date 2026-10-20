@@ -1,31 +1,31 @@
 .o_hb_colorpicker_popover {
-    --popover-bg: #{$o-we-bg-darker};
-    --popover-border-color: #{$o-we-bg-darker};
+    --popover-bg: var(--o-we-bg-darker);
+    --popover-border-color: var(--o-we-bg-darker);
 }
 
 .o_custom_gradient_button {
-    border: 1px solid $o-we-item-clickable-color;
+    border: 1px solid var(--o-we-item-clickable-color);
 
     &, &:hover, &:focus {
         color: #000000;
     }
 
     &[style*="background-image"] {
-        color: $o-we-item-clickable-color;
+        color: var(--o-we-item-clickable-color);
     }
 }
 
 .o_hb_colorpicker {
-    --o-hb-colorpicker-active-bg: #{rgba($o-we-color-accent, .15)};
-    --o-color-picker-active-color: var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});
+    --o-hb-colorpicker-active-bg: color-mix(in srgb, var(--o-we-color-accent) 15%, transparent);
+    --o-color-picker-active-color: var(--o-hb-select-item-active-color, var(--o-we-sidebar-content-field-toggle-active-bg));
 
-    --o-color-picker-bg: #{$o-we-item-clickable-bg};
+    --o-color-picker-bg: var(--o-we-item-clickable-bg);
 
-    background-color: $o-we-item-clickable-bg;
+    background-color: var(--o-we-item-clickable-bg);
     color: $white;
 
     .o_color_button {
-        box-shadow: inset 0 0 0 1px rgba($o-we-fg-light, .5);
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--o-we-fg-light) 50%, transparent);
     }
 
     &:has(.theme-tab){
@@ -33,7 +33,7 @@
     }
 
     & > div:first-child {
-        background-color: $o-we-bg-darker;
+        background-color: var(--o-we-bg-darker);
         padding-block: 0.5em;
     }
 
@@ -94,21 +94,21 @@
     }
 
     .btn:focus-visible {
-        box-shadow: 0 0 0 $btn-focus-width * 0.4 color-mix(in srgb, var(--o-color-picker-active-color) 50%, transparent) !important;
+        box-shadow: 0 0 0 calc(var(--o-bs-btn-focus-width) * 0.4) color-mix(in srgb, var(--o-color-picker-active-color) 50%, transparent) !important;
         z-index: 1;
     }
 
     .o_cc_preview_wrapper > .d-flex {
-        margin-bottom: $o-hb-row-spacing * 0.5;
+        margin-bottom: calc(var(--o-hb-row-spacing) * 0.5);
     }
 
     .o_hb_color_combination_button {
         &.selected {
-            box-shadow: inset 0 0 0 $o-we-border-width rgba($o-we-fg-light, 0.3), 0 0 0 2px var(--o-color-picker-active-color);
+            box-shadow: inset 0 0 0 var(--o-we-border-width) color-mix(in srgb, var(--o-we-fg-light) 30%, transparent), 0 0 0 2px var(--o-color-picker-active-color);
 
             h1::before {
                 content: "check";
-                margin-right: $o-we-item-spacing;
+                margin-right: var(--o-we-item-spacing);
                 font-size: 0.8em;
                 font-family: 'Material Symbols Outlined';
                 color: var(--o-color-picker-active-color);
@@ -118,8 +118,8 @@
 
         &:focus-visible {
             box-shadow:
-                inset 0 0 0 $o-we-border-width rgba($o-we-fg-light, 0.5),
-                0 0 0 1px $o-we-bg-darker,
+                inset 0 0 0 var(--o-we-border-width) color-mix(in srgb, var(--o-we-fg-light) 50%, transparent),
+                0 0 0 1px var(--o-we-bg-darker),
                 0 0 0 3px var(--o-color-picker-active-color);
             outline: none;
         }
@@ -127,7 +127,7 @@
 
     // Gradients
     .o_custom_gradient_button {
-        color: $o-we-item-clickable-color;
+        color: var(--o-we-item-clickable-color);
     }
 
     .gradient-angle-thumb {
@@ -135,7 +135,7 @@
     }
 
     .o_color_picker_inputs, .o_color_gradient_input {
-        --o-iframe-input-color: #{$o-we-item-clickable-color};
+        --o-iframe-input-color: var(--o-we-item-clickable-color);
         color: var(--o-iframe-input-color);
 
         & input {
@@ -167,8 +167,8 @@
 
 .o_builder_open:has(.o_hb_snippets_tabs [data-name='theme'].active) {
     .o_hb_colorpicker {
-        --o-hb-colorpicker-active-bg: #{rgba($o-we-color-global, .15)};
-        --o-hb-select-item-active-color: #{$o-we-color-global};
-        --o-color-picker-active-color: #{$o-we-color-global};
+        --o-hb-colorpicker-active-bg: color-mix(in srgb, var(--o-we-color-global) 15%, transparent);
+        --o-hb-select-item-active-color: var(--o-we-color-global);
+        --o-color-picker-active-color: var(--o-we-color-global);
     }
 }

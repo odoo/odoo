@@ -114,6 +114,7 @@ Featuring
             'web/static/lib/bootstrap/scss/_maps.scss',
 
             ('include', 'web._assets_bootstrap_frontend'),
+            'web/static/src/scss/css_variables.scss',
 
             ('include', 'web.icons_fonts'),
             'web/static/src/module_loader.js',

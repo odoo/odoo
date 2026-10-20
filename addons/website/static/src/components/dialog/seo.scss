@@ -19,7 +19,7 @@
             position: relative;
             transition: border-color 200ms;
             display: inline-block;
-            border: 2px solid map-get($grays, '400');
+            border: 2px solid var(--gray-400);
 
             > img {
                 width: 70px;
@@ -29,11 +29,11 @@
             }
 
             &:hover, &:focus-visible {
-                border-color: $o-brand-primary;
+                border-color: var(--o-brand-primary);
             }
 
             &.o_active_image {
-                border-color: $o-brand-primary;
+                border-color: var(--o-brand-primary);
 
                 &:before {
                     position: absolute;
@@ -42,7 +42,7 @@
                     bottom: auto;
                     right: 0;
                     content: '';
-                    border: 16px solid rgba($o-brand-primary, 0.8);
+                    border: 16px solid color-mix(in srgb, var(--o-brand-primary) 80%, transparent);
                     border-left-color: transparent;
                     border-bottom-color: transparent;
                 }
@@ -65,7 +65,7 @@
                 position: absolute;
                 inset: auto auto 0px;
                 cursor: pointer;
-                background: rgba(map-get($grays, '800'), 0.6);
+                background: color-mix(in srgb, var(--gray-800) 60%, transparent);
                 font-size: 12px;
             }
         }
@@ -80,8 +80,8 @@
             color: lighten(map-get($grays, '600'), 30%);
 
             &:hover, &:focus-visible {
-                border-color: $o-brand-primary;
-                color: $o-brand-primary;
+                border-color: var(--o-brand-primary);
+                color: var(--o-brand-primary);
             }
         }
 
@@ -156,7 +156,7 @@
             position: absolute;
             inset: 0;
             z-index: 5;
-            background-color: rgba($o-view-background-color, 0.5);
+            background-color: color-mix(in srgb, var(--o-view-background-color) 50%, transparent);
             backdrop-filter: blur(1.4px);
         }
     }
@@ -167,13 +167,13 @@
         width: 30px;
     }
     .o_seo_keyword_row {
-        border-bottom: 1px dotted map-get($grays, '300');
+        border-bottom: 1px dotted var(--gray-300);
     }
     .o-img-thumbnail {
         width: 70px;
         height: 70px;
         object-fit: cover;
-        border: 1px solid map-get($grays, '300');
+        border: 1px solid var(--gray-300);
     }
 
     /* We don't use a specific class here to highlight the fact that the */

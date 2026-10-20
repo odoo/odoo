@@ -4,7 +4,7 @@
     &.oe_insert {
         position: relative;
         width: 100%;
-        z-index: $o-we-dropzone-z-index;
+        z-index: var(--o-we-dropzone-z-index);
     }
 
     &.o_dropzone_highlighted {
@@ -20,16 +20,16 @@
 
 .oe_drop_zone:not(.oe_grid_zone) {
     &.oe_insert {
-        min-width: $o-we-dropzone-size;
-        height: $o-we-dropzone-size;
-        min-height: $o-we-dropzone-size;
-        margin: (-$o-we-dropzone-size/2) 0;
+        min-width: var(--o-we-dropzone-size);
+        height: var(--o-we-dropzone-size);
+        min-height: var(--o-we-dropzone-size);
+        margin: calc(var(--o-we-dropzone-size) * -1 / 2) 0;
         padding: 0;
 
         &.oe_vertical {
-            width: $o-we-dropzone-size;
+            width: var(--o-we-dropzone-size);
             float: left;
-            margin: 0 (-$o-we-dropzone-size/2);
+            margin: 0 calc(var(--o-we-dropzone-size) * -1 / 2);
         }
     }
 
@@ -37,18 +37,18 @@
         @include o-editor-messages;
         position: absolute;
         top: 0px;
-        z-index: $o-we-dropzone-z-index - 1 !important;
+        z-index: calc(var(--o-we-dropzone-z-index) - 1) !important;
         display: flex;
         margin: 0px;
-        border: 1px solid $o-we-dropzone-sanitized-color !important;
-        outline: $o-we-dropzone-border-width dashed mix(white, $o-we-dropzone-sanitized-color, 50%) !important;
+        border: 1px solid var(--o-we-dropzone-sanitized-color) !important;
+        outline: var(--o-we-dropzone-border-width) dashed mix(white, $o-we-dropzone-sanitized-color, 50%) !important;
         height: auto;
         min-height: 100% !important;
         padding: 0;
         background: repeating-linear-gradient(
             135deg,
-            $o-we-dropzone-sanitized-color,
-            $o-we-dropzone-sanitized-color 5px,
+            var(--o-we-dropzone-sanitized-color),
+            var(--o-we-dropzone-sanitized-color) 5px,
             rgba($o-we-dropzone-sanitized-color, 0.6) 5px,
             rgba($o-we-dropzone-sanitized-color, 0.6) 10px
         ) !important;
@@ -58,7 +58,7 @@
             padding: 10px;
             width: 100%;
             align-content: center;
-            text-shadow: 0 0 5px $o-we-dropzone-sanitized-color !important;
+            text-shadow: 0 0 5px var(--o-we-dropzone-sanitized-color) !important;
         }
     }
 }
@@ -70,27 +70,27 @@
 :not(.oe_structure):not([data-oe-type="html"]) {
     // "Inner content" drop zones.
     > .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone) {
-        height: $o-we-inner-content-dropzone-size;
-        min-height: $o-we-inner-content-dropzone-size;
-        margin: (-$o-we-inner-content-dropzone-size/2) 0;
+        height: var(--o-we-inner-content-dropzone-size);
+        min-height: var(--o-we-inner-content-dropzone-size);
+        margin: calc(var(--o-we-inner-content-dropzone-size) * -1 / 2) 0;
         outline: unset;
         border: unset;
 
         // Make sure no drop zone is on top of another when one is placed before
         // a paragraph and the next is its first child.
         + p > .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone):first-child {
-            margin-top: $o-we-inner-content-dropzone-size;
+            margin-top: var(--o-we-inner-content-dropzone-size);
         }
 
         &:not(.oe_vertical) {
-            border-bottom: $o-we-inner-content-dropzone-border;
+            border-bottom: var(--o-we-inner-content-dropzone-border);
         }
 
         &.oe_vertical {
-            width: $o-we-inner-content-dropzone-size;
-            min-width: $o-we-inner-content-dropzone-size;
-            margin: 1px (-$o-we-inner-content-dropzone-size/2);
-            border-right: $o-we-inner-content-dropzone-border;
+            width: var(--o-we-inner-content-dropzone-size);
+            min-width: var(--o-we-inner-content-dropzone-size);
+            margin: 1px calc(var(--o-we-inner-content-dropzone-size) * -1 / 2);
+            border-right: var(--o-we-inner-content-dropzone-border);
         }
     }
 

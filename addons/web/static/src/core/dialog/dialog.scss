@@ -39,7 +39,7 @@
         }
 
         @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
-            --btn-padding-y: #{map-get($spacers, 2)};
+            --btn-padding-y: var(--o-bs-spacer-2);
         }
     }
 
@@ -49,7 +49,7 @@
 
         $_halfPadding: calc(var(--modal-padding) * 0.5);
 
-        --modal-padding: var(--Dialog-padding, #{map-get($spacers, 3)});
+        --modal-padding: var(--Dialog-padding, var(--o-bs-spacer-3));
         --modal-header-padding-x: var(--modal-padding);
         --modal-header-padding-y: var(--modal-padding);
         --modal-header-padding: var(--modal-padding) var(--modal-padding) #{$_halfPadding};
@@ -68,7 +68,7 @@
             }
 
             @media screen and (min-width: 576px), print and (min-width: 100mm) {
-                --Dialog-padding: #{map-get($spacers, 4)};
+                --Dialog-padding: var(--o-bs-spacer-4);
             }
         }
 
@@ -83,13 +83,13 @@
             }
 
             .modal-content {
-                max-height: calc(100vh - #{$modal-dialog-margin * 8});
+                max-height: calc(100vh - (var(--o-bs-modal-dialog-margin) * 8));
             }
         }
 
         @media screen and (min-width: 576px), print and (min-width: 100mm) {
             .btn-close.position-sm-absolute {
-                margin: map-get($spacers, 2);
+                margin: var(--o-bs-spacer-2);
             }
         }
     }
@@ -130,7 +130,7 @@
 
             @media (prefers-reduced-motion: no-preference) {
                 .modal-content {
-                    animation: modal-in-sm $o-modal-animation-duration $o-easing-enter;
+                    animation: modal-in-sm var(--o-modal-animation-duration) var(--o-easing-enter);
                 }
             }
         }
@@ -138,7 +138,7 @@
 }
 
 .modal.o_inactive_modal {
-    z-index: $zindex-modal-backdrop - 1;
+    z-index: calc(var(--o-bs-zindex-modal-backdrop) - 1);
 }
 
 .o_dialog > .modal {
@@ -158,7 +158,7 @@
     }
 
     .modal-fs {
-        width: calc(100% - #{2 * $modal-dialog-margin-y-sm-up});
+        width: calc(100% - (2 * var(--o-bs-modal-dialog-margin-y-sm-up)));
         max-width: none;
     }
 }

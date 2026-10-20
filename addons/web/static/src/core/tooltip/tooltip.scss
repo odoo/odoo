@@ -7,9 +7,9 @@
 }
 
 .o-tooltip {
-    --#{$variable-prefix}tooltip-max-width: #{$tooltip-max-width};
-    --#{$variable-prefix}tooltip-padding-x: #{$tooltip-padding-x};
-    --#{$variable-prefix}tooltip-padding-y: #{$tooltip-padding-y};
+    --#{$variable-prefix}tooltip-max-width: var(--o-bs-tooltip-max-width);
+    --#{$variable-prefix}tooltip-padding-x: var(--o-bs-tooltip-padding-x);
+    --#{$variable-prefix}tooltip-padding-y: var(--o-bs-tooltip-padding-y);
     --#{$variable-prefix}tooltip-color: #{$tooltip-color};
     --#{$variable-prefix}tooltip-bg: #{$tooltip-bg};
     --#{$variable-prefix}tooltip-border-radius: #{$tooltip-border-radius};
@@ -20,7 +20,7 @@
     /* Note: Not cross-browser but not such a big deal since it's */
     /* needed for minor aesthetic adaptations only. */
     &:has(.o-tooltip--technical) {
-        max-width: $tooltip-max-width * 2;
+        max-width: calc(var(--o-bs-tooltip-max-width) * 2);
 
         .o-tooltip--help {
             background-color: $info;
@@ -28,34 +28,34 @@
         }
 
         .o-tooltip--string, .o-tooltip--help {
-            max-width: MIN($tooltip-max-width, 100%);
+            max-width: MIN(var(--o-bs-tooltip-max-width), 100%);
         }
     }
 
     .o-tooltip--string, .o-tooltip--technical--title {
-        padding:  map-get($spacers, 1) 0;
-        font-weight: $font-weight-bold;
+        padding:  var(--o-bs-spacer-1) 0;
+        font-weight: var(--o-bs-font-weight-bold);
     }
 
     .o-tooltip--help, .o-tooltip--technical {
-        margin: map-get($spacers, 1) map-get($spacers, 2) map-get($spacers, 2);
+        margin: var(--o-bs-spacer-1) var(--o-bs-spacer-2) var(--o-bs-spacer-2);
     }
 
     white-space: pre-line;
 
     .o-tooltip--help {
-        padding: 0 map-get($spacers, 2);
+        padding: 0 var(--o-bs-spacer-2);
     }
 
     .o-tooltip--technical {
         padding-left: 1.3em;
-        line-height: $o-line-height-sm;
+        line-height: var(--o-line-height-sm);
         font-family: $o-font-family-monospace;
-        font-size: $o-font-size-base-smaller;
+        font-size: var(--o-font-size-base-smaller);
         list-style-type: disc;
 
         .o-tooltip--technical--title {
-            margin-right: map-get($spacers, 1);
+            margin-right: var(--o-bs-spacer-1);
         }
     }
 

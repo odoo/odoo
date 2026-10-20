@@ -9,7 +9,7 @@ $o-mail-attachment-height: 10em;
         width: 13em;
         height: $o-mail-attachment-height;
     }
-    background-color: $gray-200;
+    background-color: var(--gray-200);
 
     @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
         width: 12em;
@@ -22,7 +22,7 @@ $o-mail-attachment-height: 10em;
 .o-mail-Attachment-selectCheckbox {
     width: 1.5em;
     height: 1.5em;
-    background-color: $body-bg;
+    background-color: var(--body-bg);
     z-index: 3;
 }
 
@@ -35,7 +35,7 @@ $o-mail-attachment-height: 10em;
     z-index: 3;
 
     &:hover, &:focus-visible {
-        outline: 2px solid $body-bg;
+        outline: 2px solid var(--body-bg);
     }
 }
 
@@ -48,7 +48,7 @@ $o-mail-attachment-height: 10em;
 }
 
 .o-mail-Attachment-hover {
-    background: $gray-100;
+    background: var(--gray-100);
     z-index: 2;
     &.o-bgTranslucent {
         background: rgba(0, 0, 0, 0.4);

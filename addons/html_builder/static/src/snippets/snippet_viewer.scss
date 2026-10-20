@@ -103,9 +103,9 @@
                 z-index: 1;
                 transform-origin: top right;
                 transform: scale(calc(3.4 / var(--SnippetViewer-zoom)));
-                font-family: $o-we-font-family;
-                font-size: $o-we-sidebar-font-size;
-                background-color: $o-we-toolbar-color-accent;
+                font-family: var(--o-we-font-family);
+                font-size: var(--o-we-sidebar-font-size);
+                background-color: var(--o-we-toolbar-color-accent);
                 color: white;
                 padding: 6px 12px;
                 border-bottom-left-radius: 5px;
@@ -120,7 +120,7 @@
             &:hover, &:focus-visible {
                 box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
                 &::after {
-                    outline: calc(6px / var(--SnippetViewer-zoom)) solid $o-we-handles-accent-color;
+                    outline: calc(6px / var(--SnippetViewer-zoom)) solid var(--o-we-handles-accent-color);
                 }
             }
             &.o_snippet_preview_install {
@@ -138,7 +138,7 @@
                 }
 
                 &:focus-within > .o_snippet_preview_install_btn {
-                    outline: 6px solid $o-we-handles-accent-color;
+                    outline: 6px solid var(--o-we-handles-accent-color);
                 }
 
                 > .o_snippet_preview_install_btn {
@@ -148,8 +148,8 @@
                     transform: scale(calc(3.33 / var(--SnippetViewer-zoom)));
                     width: max-content;
                     font-size: 14px;
-                    font-family: $o-we-font-family;
-                    background-color: $o-we-color-info;
+                    font-family: var(--o-we-font-family);
+                    background-color: var(--o-we-color-info);
                     transition: 0.3s;
                 }
             }
@@ -170,7 +170,7 @@
         .o_custom_snippet_edit {
             > * {
                 font-size: 50px;
-                font-family: $o-we-font-family;
+                font-family: var(--o-we-font-family);
             }
             .btn:hover {
                 color: rgba(0, 0, 0, 0.8);

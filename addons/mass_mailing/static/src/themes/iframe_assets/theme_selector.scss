@@ -9,7 +9,7 @@
     display: block;
     font-size: 1rem;
     overflow: auto;
-    background-color: $o-we-sidebar-bg;
+    background-color: var(--o-we-sidebar-bg);
     margin: 0;
     height: 100%;
 
@@ -35,16 +35,16 @@
         }
 
         &:hover {
-            background-color: $o-we-sidebar-bg;
+            background-color: var(--o-we-sidebar-bg);
         }
 
         &:focus {
-            background-color: $o-we-sidebar-bg;
+            background-color: var(--o-we-sidebar-bg);
         }
 
         &.selected .o_thumb {
             border: 2px solid $o-brand-odoo;
-            background-color: $o-we-sidebar-bg;
+            background-color: var(--o-we-sidebar-bg);
         }
     }
 
@@ -63,7 +63,7 @@
             display: none;
             padding-top: 107%;
             border: 1px solid #4e525b;
-            border-top: 1px solid $o-we-border-color;
+            border-top: 1px solid var(--o-we-border-color);
             will-change: transform;
             backface-visibility: hidden;
             transition: all 0.3s ease 0s;

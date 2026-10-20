@@ -10,13 +10,13 @@
 
 .o-FileViewer-header {
     color: #fff;
-    background-color: var(--FileViewer-toolbarBgColor, #{$o-gray-800});
-    height: $o-navbar-height;
+    background-color: var(--FileViewer-toolbarBgColor, var(--o-gray-800));
+    height: var(--o-navbar-height);
 }
 
 .o-FileViewer-main {
     z-index: -1;
-    padding: ($o-navbar-height * 1.125) 0;
+    padding: calc(var(--o-navbar-height) * 1.125) 0;
 
     &:has(.o-FileViewer-loading) {
         cursor: wait;
@@ -24,7 +24,7 @@
 }
 
 .o-FileViewer-zoomer {
-    padding: ($o-navbar-height * 1.125) 0;
+    padding: calc(var(--o-navbar-height) * 1.125) 0;
 }
 
 .o-FileViewer-headerButton:hover {
@@ -33,12 +33,12 @@
 }
 
 .o-FileViewer-toolbar {
-    bottom: map-get($spacers, 2);
-    --border-color: var(--FileViewer-toolbarBorder, #{mix($o-gray-600, $o-gray-700)});
+    bottom: var(--o-bs-spacer-2);
+    --border-color: var(--FileViewer-toolbarBorder, color-mix(in srgb, var(--o-gray-600), var(--o-gray-700)));
 }
 
 .o-FileViewer-toolbarButton {
-    background-color: var(--FileViewer-toolbarBgColor, #{$o-gray-800});
+    background-color: var(--FileViewer-toolbarBgColor, var(--o-gray-800));
     color: #fff;
 
     &:hover {
@@ -55,7 +55,7 @@
         background: $white;
 
         &.o-FileViewer-loading {
-            background: $black;
+            background: var(--o-bs-black);
             opacity: 50%;
             pointer-events: none;
         }

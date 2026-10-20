@@ -1,6 +1,6 @@
 .o_hb_select_pager_tab_container {
-    border-top: $o-we-border-width solid $o-we-bg-lighter;
-    border-bottom: $o-we-border-width solid $o-we-bg-lighter;
+    border-top: var(--o-we-border-width) solid var(--o-we-bg-lighter);
+    border-bottom: var(--o-we-border-width) solid var(--o-we-bg-lighter);
 }
 
 .o_hb_select_pager_tab {
@@ -11,33 +11,33 @@
     border: none;
     border-radius: 0;
     background-color: transparent;
-    color: $o-we-fg-light;
+    color: var(--o-we-fg-light);
     font-weight: normal;
 
     > span {
         $-r: $o-we-sidebar-tabs-size-ratio;
-        border-bottom: $o-we-sidebar-tabs-active-border-width solid transparent;
+        border-bottom: var(--o-we-sidebar-tabs-active-border-width) solid transparent;
         padding: (0.6em * $-r) (0.4em * $-r) (0.5em * $-r);
     }
 
     &:hover > span {
-        color: $o-we-fg-lighter;
-        border-bottom-color: #{rgba($o-we-sidebar-tabs-active-border-color, .5)};
+        color: var(--o-we-fg-lighter);
+        border-bottom-color: color-mix(in srgb, var(--o-we-sidebar-tabs-active-border-color) 50%, transparent);
     }
 
     &.active > span {
-        background-color: $o-we-sidebar-tabs-active-background-color;
-        color: $o-we-sidebar-content-field-colorpicker-dropdown-active-color;
-        border-bottom-color: $o-we-sidebar-tabs-active-border-color;
+        background-color: var(--o-we-sidebar-tabs-active-background-color);
+        color: var(--o-we-sidebar-content-field-colorpicker-dropdown-active-color);
+        border-bottom-color: var(--o-we-sidebar-tabs-active-border-color);
     }
 }
 
 .builder_select_page {
     display: grid;
     grid-template-columns: repeat(var(--o-hb-shape-selector-grid-columns, 4), 1fr);
-    gap: $o-we-item-spacing / 2;
-    padding: $o-we-item-spacing;
-    background-color: $o-we-bg-lighter;
+    gap: calc(var(--o-we-item-spacing) / 2);
+    padding: var(--o-we-item-spacing);
+    background-color: var(--o-we-bg-lighter);
 
     [data-shape-group-id="devices"] & {
         --o-hb-shape-selector-grid-columns: 3;
@@ -47,7 +47,7 @@
         --PreviewAlphaBg-background-size: 16px;
 
         @extend %o-preview-alpha-background;
-        padding: $o-we-item-spacing;
+        padding: var(--o-we-item-spacing);
         background-color: transparent;
         width: 100%;
 
@@ -77,7 +77,7 @@
 
     .o_hb_img_shape_btn,  .o_hb_bg_shape_btn {
         > .o_hb_btn {
-            --o-highlight-shape-color: var(--o-hb-btn-active-color, #{$o-we-color-accent});
+            --o-highlight-shape-color: var(--o-hb-btn-active-color, var(--o-we-color-accent));
             --o-highlight-shape-bg-opacity: 0%;
             --o-highlight-shape-bg-color: color-mix(
                 in srgb,
@@ -114,7 +114,7 @@
 .o_we_shape_animated_label {
     @include o-position-absolute(0, 0);
     padding: 0 4px;
-    background: $o-we-toolbar-color-accent;
+    background: var(--o-we-toolbar-color-accent);
     color: white;
 
     > span {
@@ -124,11 +124,11 @@
 }
 div:hover>.o_we_shape_animated_label {
     i {
-        padding-right: $o-we-item-spacing / 2;
+        padding-right: calc(var(--o-we-item-spacing) / 2);
     }
 
     > span {
-        max-width: $o-we-sidebar-width / 2;
+        max-width: calc(var(--o-we-sidebar-width) / 2);
         transition: max-width 0.5s ease 0s;
     }
 }

@@ -28,7 +28,7 @@ body {
 .o_skip_to_content {
     // We require the z-index property to ensure that the "Skip to Content"
     // button appears above the header.
-    z-index: $zindex-fixed + 1;
+    z-index: calc(var(--o-bs-zindex-fixed) + 1);
 }
 
 header {
@@ -144,9 +144,9 @@ li > p {
 
 // Replaces old BS3 page-header class
 %o-page-header {
-    margin-bottom: $headings-margin-bottom * 2;
-    padding-bottom: $headings-margin-bottom;
-    border-bottom-width: $border-width;
+    margin-bottom: calc(var(--o-bs-headings-margin-bottom) * 2);
+    padding-bottom: var(--o-bs-headings-margin-bottom);
+    border-bottom-width: var(--o-bs-border-width);
     border-bottom-style: solid;
     border-bottom-color: $border-color;
 }
@@ -157,10 +157,10 @@ li > p {
 // Images spacing
 img, .media_iframe_video, .o_image {
     &.float-end {
-        margin-left: $grid-gutter-width / 2;
+        margin-left: calc(var(--o-bs-grid-gutter-width) / 2);
     }
     &.float-start {
-        margin-right: $grid-gutter-width / 2;
+        margin-right: calc(var(--o-bs-grid-gutter-width) / 2);
     }
 }
 
@@ -304,9 +304,9 @@ img, .media_iframe_video, .o_image {
     @if ($o-portal-mobile-toolbar) {
         #o_portal_navbar_content {
             @include media-breakpoint-down(lg) {
-                margin: $navbar-padding-y 0 0;
-                padding: $navbar-padding-y ($grid-gutter-width / 2);
-                border-top: $border-width solid $o-portal-mobile-toolbar-border;
+                margin: var(--o-bs-navbar-padding-y) 0 0;
+                padding: var(--o-bs-navbar-padding-y) calc(var(--o-bs-grid-gutter-width) / 2);
+                border-top: var(--o-bs-border-width) solid $o-portal-mobile-toolbar-border;
                 background-color: $o-portal-mobile-toolbar-bg;
             }
         }
@@ -335,8 +335,8 @@ img, .media_iframe_video, .o_image {
 .o_portal_address {
     span[itemprop="name"] {
         display: inline-block;
-        margin-bottom: map-get($spacers, 1);
-        font-weight: $font-weight-bold;
+        margin-bottom: var(--o-bs-spacer-1);
+        font-weight: var(--o-bs-font-weight-bold);
     }
 
     div[itemprop="address"] > div {
@@ -349,7 +349,7 @@ img, .media_iframe_video, .o_image {
 
         .oi {
             line-height: $line-height-base;
-            color: $o-gray-500;
+            color: var(--o-gray-500);
 
             + span, + div {
                 display: block;
@@ -363,7 +363,7 @@ img, .media_iframe_video, .o_image {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        gap: map-get($spacers, 2);
+        gap: var(--o-bs-spacer-2);
     }
 
     span[itemprop="streetAddress"], .o_address_card_vat {
@@ -428,7 +428,7 @@ img, .media_iframe_video, .o_image {
         .o_portal_chatter_message_title {
             p {
                 font-size: 85%;
-                color: $text-muted;
+                color: var(--o-bs-text-muted);
                 margin: 0px;
             }
         }
@@ -474,9 +474,9 @@ img, .media_iframe_video, .o_image {
 
 .o_portal_security_body {
     section {
-        margin-top: map-get($spacers, 5);
-        border-top: $border-width solid $border-color;
-        padding-top: map-get($spacers, 4);
+        margin-top: var(--o-bs-spacer-5);
+        border-top: var(--o-bs-border-width) solid $border-color;
+        padding-top: var(--o-bs-spacer-4);
 
         form.oe_reset_password_form {
             max-width: initial;
