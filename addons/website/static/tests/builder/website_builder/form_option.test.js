@@ -185,7 +185,9 @@ describe("Form action options", () => {
         await contains("[data-label='Action'] button:contains('Send an E-mail')").click();
         await contains("div.o-dropdown-item:contains('Create a Customer')").click();
 
-        await contains("[data-label='Preferred Job'] button:contains('Choose a record...')").click();
+        await contains(
+            "[data-label='Preferred Job'] button:contains('Choose a record...')"
+        ).click();
         await contains("span.o-dropdown-item:contains('Test job')").click();
         expect(":iframe form .s_website_form_dnone input[name='job_id']").toHaveValue("42");
         expect("[data-label='Preferred Job'] button[aria-label='Unselect']").toHaveCount(0);
@@ -1916,4 +1918,22 @@ test("Don't crash when current form model is not allowed", async () => {
     await contains(":iframe section").click();
     await contains("[data-label='Action'] button:contains('None')").click();
     await contains("[data-action-id='selectAction']:contains('Apply for a Job')").click();
+});
+
+test("No 'Labels Position' option when the form has no field", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    function withIframeRegistry(registry) {
+        registry.category("website.form_editor_actions").add("create_customer", { formFields: [] });
+    }
+    await setupWebsiteBuilderWithSnippet("s_website_form", { withIframeRegistry });
+
+    await contains(":iframe section").click();
+    expect(".hb-row[data-label='Labels Position']").toHaveCount(1);
+
+    await contains(".hb-row[data-label='Action'] button").click();
+    await contains("div.o-dropdown-item:contains('Create a Customer')").click();
+    await animationFrame();
+
+    expect(":iframe form .s_website_form_field").toHaveCount(0);
+    expect(".hb-row[data-label='Labels Position']").toHaveCount(0);
 });
