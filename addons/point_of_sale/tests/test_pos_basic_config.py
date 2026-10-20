@@ -529,7 +529,7 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         orders.with_user(pos_only_user)._generate_pos_order_invoice()
 
-        self.assertEqual(orders.account_move.review_state, 'no_review')
+        self.assertFalse(orders.account_move.review_state)
 
     def test_delete_archive_product_pos_category_with_active_pos_session(self):
         self.env['pos.session'].search([('state', '!=', 'closed')]).state = "closed"

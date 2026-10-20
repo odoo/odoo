@@ -1693,7 +1693,6 @@ class PosOrder(models.Model):
         vals = {
             'invoice_origin': ', '.join(ref or '' for ref in self.mapped('pos_reference')),
             'pos_refunded_invoice_ids': pos_refunded_invoice_ids,
-            'review_state': 'no_review',
             'ref': ref,
             'journal_id': self.config_id.journal_id.id,
             'move_type': move_type,

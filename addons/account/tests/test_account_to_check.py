@@ -3,7 +3,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -17,6 +17,12 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.simple_accountman.group_ids = cls.env.ref('account.group_account_invoice')
+        cls.simple_accountbasic = new_test_user(
+            cls.env,
+            login='accountbasic',
+            groups='account.group_account_basic',
+            company_id=cls.company.id,
+        )
         cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.company.id)], limit=1)
         # As the user has only invoicing right, the move shouldn't be checked if review documents is activated in Accounting Firms mode
         cls.company.set_to_review_documents = True
@@ -39,8 +45,11 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def test_sales_change_invoice_from_accountant(self):
         invoice = self._create_invoice()
         invoice.action_post()
-        with self.assertRaisesRegex(AccessError, "You don't have the access rights to perform this action."):
+        self.assertEqual(invoice.review_state, 'reviewed')
+        with self.assertRaisesRegex(AccessError, "This entry has been reviewed by accountants, only them can edit it now."):
             invoice.with_user(self.simple_accountman).button_draft()
+        with self.assertRaisesRegex(AccessError, "This entry has been reviewed by accountants, only them can edit it now."):
+            invoice.with_user(self.simple_accountbasic).button_draft()
 
     def test_sales_modify_draft_reviewed(self):
         invoice = self._create_invoice(review_state='reviewed')
@@ -50,8 +59,8 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def test_post_move_auto_check(self):
         invoice_admin = self._create_invoice()
         invoice_admin.action_post()
-        # As the user has admin right, the move doesn't need to be checked
-        self.assertEqual(invoice_admin.review_state, 'no_review')
+        # As the user has admin right, the move is reviewed when posted
+        self.assertEqual(invoice_admin.review_state, 'reviewed')
 
         # As the user has only invoicing right and review documents setting enabled from Accounting Firms mode, the move needs to be reviewed
         invoice_invoicing = self._create_invoice(user_id=self.simple_accountman.id)
@@ -62,15 +71,15 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         self.company.set_to_review_documents = False
         invoice_invoicing_1 = self._create_invoice(user_id=self.simple_accountman.id)
         invoice_invoicing_1.with_user(self.simple_accountman).action_post()
-        self.assertEqual(invoice_invoicing_1.review_state, 'no_review')
+        self.assertFalse(invoice_invoicing_1.review_state)
 
     def test_post_move_auto_check_with_auto_post_at_date_accountant(self):
         invoice = self._create_invoice(date=fields.Date.today())
         invoice.auto_post = 'at_date'
-        self.assertEqual(invoice.review_state, 'no_review')
+        self.assertEqual(invoice.review_state, 'reviewed')
         with freeze_time(invoice.date + relativedelta(days=1)), self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
-        self.assertEqual(invoice.review_state, 'no_review')
+        self.assertEqual(invoice.review_state, 'reviewed')
 
     def test_post_move_auto_check_with_auto_post_at_date_sales(self):
         invoice = self._create_invoice(date=fields.Date.today())
@@ -92,12 +101,12 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def test_post_move_auto_check_with_auto_post_monthly_accountant(self):
         invoice = self._create_invoice(date=fields.Date.today())
         invoice.auto_post = 'monthly'
-        self.assertEqual(invoice.review_state, 'no_review')
+        self.assertEqual(invoice.review_state, 'reviewed')
         with freeze_time(invoice.date + relativedelta(days=1)), self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
-        self.assertEqual(invoice.review_state, 'no_review')
+        self.assertEqual(invoice.review_state, 'reviewed')
         last_recurring = self.env['account.move'].search([('auto_post_origin_id', '=', invoice.id)], limit=1, order='date desc')
-        self.assertEqual(last_recurring.review_state, 'no_review')
+        self.assertEqual(last_recurring.review_state, 'reviewed')
 
     def test_post_move_auto_check_with_auto_post_monthly_sales(self):
         invoice = self._create_invoice(date=fields.Date.today())
@@ -156,8 +165,8 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
             'amount': -100,
         }])
         bank_line_1._try_auto_reconcile_statement_lines()
-        self.assertEqual(bank_line_1.move_id.review_state, 'no_review')
-        with self.assertRaisesRegex(AccessError, "You don't have the access rights to perform this action."):
+        self.assertEqual(bank_line_1.move_id.review_state, 'reviewed')
+        with self.assertRaisesRegex(AccessError, r"\(account\.bank\.statement\.line\)"):
             bank_line_1.with_user(self.simple_accountman).delete_reconciled_line(payment.move_id.line_ids[0].id)
 
     def test_auto_post_invoicing_only(self):
