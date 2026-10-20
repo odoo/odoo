@@ -658,12 +658,11 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
     _dropdownHover: function () {
         this.$dropdownMenus.attr('data-bs-popper', 'none');
         if (uiUtils.getSize() >= SIZES.LG) {
-            this.$dropdownMenus.css('margin-top', '0');
             this.$dropdownMenus.css('top', 'unset');
         } else {
             this.$dropdownMenus.css('margin-top', '');
-            this.$dropdownMenus.css('top', '');
         }
+        this.$dropdownMenus.css('top', '');
     },
     /**
      * Hides all opened dropdowns.
@@ -770,6 +769,7 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
         "mousedown .o_extra_menu_items": "_onExtraMenuClick",
         "keyup .o_mega_menu_toggle": "_onMegaMenuClick",
         "keyup .o_extra_menu_items": "_onExtraMenuClick",
+        "shown.bs.dropdown .o_mega_menu_toggle": "_onMegaMenuShown",
     },
 
     /**
@@ -884,6 +884,33 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
     _onExtraMenuClick(ev) {
         const megaMenuToggleEls = ev.currentTarget.querySelectorAll(".o_mega_menu_toggle");
         megaMenuToggleEls.forEach(megaMenuToggleEl => this._moveMegaMenu(megaMenuToggleEl));
+    },
+    /**
+     * Called when a mega menu is shown. The invisible hover "bridge"
+     * (`.o_mega_menu_toggle::before`) must cover the dead zone between the
+     * toggle and the mega menu, otherwise crossing it triggers a `mouseleave`
+     * on the `.dropdown` and the menu closes. That gap depends on the header
+     * template (its padding, extra rows, ...) and so cannot be hardcoded in
+     * SCSS, hence we measure it here and expose it as a CSS variable.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onMegaMenuShown(ev) {
+        if (uiUtils.getSize() < SIZES.LG) {
+            return;
+        }
+
+        const megaMenuToggleEl = ev.currentTarget;
+        const navbarEl = megaMenuToggleEl.closest(".navbar");
+
+        // The bridge is anchored to the bottom of the navbar (where the mega
+        // menu opens), so its height is the distance from the toggle's bottom
+        // edge down to the navbar's bottom edge.
+        const toggleBottom = megaMenuToggleEl.getBoundingClientRect().bottom;
+        const navbarBottom = navbarEl.getBoundingClientRect().bottom;
+        const bridgeHeight = Math.max(0, Math.round(navbarBottom - toggleBottom));
+        megaMenuToggleEl.style.setProperty("--o-mega-menu-bridge-height", `${bridgeHeight}px`);
     },
 });
 
