@@ -42,11 +42,11 @@
                 </t>
                 <t t-else="">
                     <div class="pos-receipt-order-data">
-                        ATCUD: <t t-esc="order.l10nPtPosAtcud"/>
+                        ATCUD:<t t-esc="order.l10nPtPosAtcud"/>
                     </div>
                     <img id="pos_pt_qrcode" t-att-src="order.l10nPtPosQrCodeStr" class="pos-receipt-logo"/>
                     <div class="pos-receipt-order-data">
-                        <t t-out="order.l10nPtPosInalterableHashShort"/> - Processado por programa certificado n.º <t t-out="order.l10nPtCertificationNumber"/>/AT
+                        <t t-out="order.l10nPtPosInalterableHashShort"/>-Processado por programa certificado n.º <t t-out="order.l10nPtCertificationNumber"/>/AT
                     </div>
                 </t>
             </div>

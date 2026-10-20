@@ -1,15 +1,40 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import AccessError, UserError
-from odoo.tools import SQL
-from odoo.tools.misc import format_date
-
-from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
-
-INTEGRITY_HASH_BATCH_SIZE = 1000
+from odoo.exceptions import UserError
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+
+    l10n_pt_down_payment_product_id = fields.Many2one(
+        comodel_name='product.product',
+        string="Down Payment Product (PT)",
+        help="Product of the down payment lines of Portuguese invoices: the SAF-T (PT) needs a product on every line.",
+    )
+
+    def _l10n_pt_get_down_payment_product(self):
+        """
+        The product put on the down payment lines of the company's invoices, created when first needed.
+        Core leaves those lines without product, which a PT invoice cannot be posted with and the SAF-T
+        (PT) cannot export (ProductCode and UnitOfMeasure are mandatory).
+        """
+        self.ensure_one()
+        # sudo: whoever invoices a down payment (a salesman) may neither create products nor write the
+        # company; the product is returned in the caller's environment
+        company = self.sudo()
+        product = company.l10n_pt_down_payment_product_id
+        if not product.exists():
+            product = self.env['product.product'].sudo().create({
+                'name': 'Adiantamento',
+                'default_code': 'ADIANTAMENTO',
+                'type': 'service',
+                'sale_ok': False,
+                'purchase_ok': False,
+                'taxes_id': [],
+                'supplier_taxes_id': [],
+                'company_id': company.id,
+            })
+            company.l10n_pt_down_payment_product_id = product
+        return product.sudo(False)
 
     @api.model
     def _l10n_pt_sale_action_check_hash_integrity(self):
@@ -18,112 +43,4 @@ class ResCompany(models.Model):
     def _l10n_pt_sale_check_hash_integrity(self):
         if self.account_fiscal_country_id.code != 'PT':
             raise UserError(_('This feature is only available for Portuguese companies.'))
-
-        self.env['sale.order']._l10n_pt_compute_missing_hashes(self)
-
-        results = []
-
-        # `active` on l10n_pt.at.series is a validity window (date_end >= today), not an archive
-        # flag, but the ORM still injects it into every search. Expired series must stay visible
-        # here: documents issued before a series ended still have to be signed and verified.
-        at_series_model = self.env['l10n_pt.at.series']
-        at_series_records = at_series_model.with_context(active_test=False).search([
-            *at_series_model._l10n_pt_company_domain(self),
-            ('document_type', 'in', self.env['sale.order']._l10n_pt_series_document_types()),
-        ])
-
-        for at_series in at_series_records:
-            query = self.env['sale.order'].sudo()._search(
-                domain=[
-                    ('l10n_pt_at_series_id', '=', at_series.id),
-                    ('l10n_pt_inalterable_hash', '!=', False),
-                ],
-                order="l10n_pt_document_number",
-            )
-
-            first_order = self.env['sale.order']
-            last_order = self.env['sale.order']
-            corrupted_order = self.env['sale.order']
-
-            self.env.execute_query(SQL("DECLARE hashed_orders CURSOR FOR %s", query.select()))
-            while order_ids := self.env.execute_query(SQL("FETCH %s FROM hashed_orders", INTEGRITY_HASH_BATCH_SIZE)):
-                self.env.invalidate_all()
-                orders = self.env['sale.order'].browse([order_id[0] for order_id in order_ids])
-                if not orders and not last_order:
-                    results.append({
-                        'series_at_code': at_series.at_code,
-                        'status': 'no_data',
-                        'msg_cover': _(
-                            'No %(doc_type)s found for this AT series.',
-                            doc_type='sales orders' if at_series.document_type == 'sales_order' else 'quotation',
-                        ),
-                    })
-                    continue
-
-                current_versioning_index = 0
-                versioning_list = self._get_hash_versioning_list()  # defined in l10n_pt/res_company.py
-                for order in orders:
-                    if corrupted_order:
-                        continue
-                    if not self._verify_hashed_sales_order(order, last_order.l10n_pt_inalterable_hash, versioning_list, current_versioning_index):
-                        corrupted_order = order
-                        continue
-                    first_order = first_order or order
-                    last_order = order
-
-            self.env.execute_query(SQL("CLOSE hashed_orders"))
-            if corrupted_order:
-                results.append({
-                    'series_document_identifier': at_series.document_identifier,
-                    'series_at_code': at_series._get_at_code(),
-                    'status': 'corrupted',
-                    'msg_cover': _(
-                        "Corrupted data on %(doc_type)s with id %(id)s (%(name)s).",
-                        doc_type='sales order' if at_series.document_type == 'sales_order' else 'quotation',
-                        id=corrupted_order.id,
-                        name=corrupted_order.l10n_pt_document_number,
-                    ),
-                })
-            elif first_order and last_order:
-                results.append({
-                    'series_document_identifier': at_series.document_identifier,
-                    'series_at_code': at_series._get_at_code(),
-                    'status': 'verified',
-                    'msg_cover': _(
-                        "%(doc_type)s are correctly hashed",
-                        doc_type=_('Sales Orders') if at_series.document_type == 'sales_order' else _('Quotations'),
-                    ),
-                    'first_order': first_order,
-                    'last_order': last_order,
-                    'first_hash': first_order.l10n_pt_inalterable_hash,
-                    'first_name': first_order.name,
-                    'first_document_number': first_order.l10n_pt_document_number,
-                    'first_date': first_order.date_order,
-                    'last_hash': last_order.l10n_pt_inalterable_hash,
-                    'last_name': last_order.name,
-                    'last_document_number': last_order.l10n_pt_document_number,
-                    'last_date': last_order.date_order,
-                })
-
-        return {
-            'results': results,
-            'printing_date': format_date(self.env, fields.Date.context_today(self)),
-        }
-
-    def _verify_hashed_sales_order(self, order, previous_hash, versioning_list, current_versioning_index):
-        previous_hash = previous_hash.split("$")[2] if previous_hash else ""
-        try:
-            message = pt_hash_utils.get_message_to_hash(
-                order.date_order,
-                order.l10n_pt_hashed_on,
-                order._l10n_pt_get_document_number(),
-                order.amount_total,
-                previous_hash,
-            )
-            return pt_hash_utils.verify_integrity(
-                message, order.l10n_pt_inalterable_hash, versioning_list[current_versioning_index],
-            )
-        except AccessError as e:
-            raise UserError(
-                _("This company has AT Series shared across branches, and other companies also have hashed documents under this series. "
-                  "To generate the report, please also select %s in the company selector.", e.context['suggested_company']['display_name']))
+        return self.env['sale.order']._l10n_pt_check_hash_integrity(self)

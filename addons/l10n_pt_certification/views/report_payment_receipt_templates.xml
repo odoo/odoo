@@ -4,13 +4,13 @@
     <template id="l10n_pt_report_payment_receipt_document_inherit" inherit_id="account.report_payment_receipt_document">
         <!-- If the customer has no VAT, we must show 'Consumidor final' -->
         <xpath expr="//span[@t-field='o.partner_id']" position="after">
-            <span t-if="o.company_id.account_fiscal_country_id.code == 'PT' and not o.partner_id.vat"
+            <span t-if="o.company_id.account_fiscal_country_id.code == 'PT' and not (o.partner_id and o.partner_id._l10n_pt_has_nif())"
                   t-out="'(Consumidor final)'"/>
         </xpath>
         <!-- Add document type and document number -->
         <xpath expr="//span[@t-field='o.payment_receipt_title']" position="replace">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'PT' and o.l10n_pt_document_type">
-                <span t-out="dict(o.fields_get(allfields=['l10n_pt_document_type'])['l10n_pt_document_type']['selection'])[o.l10n_pt_document_type]"/>:
+                <span t-out="o._l10n_pt_get_document_type_designation()"/>:
             </t>
             <t t-else="">$0</t>
         </xpath>
@@ -20,12 +20,22 @@
             </t>
             <t t-else="">$0</t>
         </xpath>
+        <!-- Dates are printed as DD-MM-AAAA (Despacho 8632/2014 2.2.4) -->
+        <xpath expr="//span[@t-field='o.date']" position="attributes">
+            <attribute name="t-options">{'widget': 'date', 'format': 'dd-MM-yyyy'} if o.company_id.account_fiscal_country_id.code == 'PT' else {}</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='inv.invoice_date']" position="attributes">
+            <attribute name="t-options">{'widget': 'date', 'format': 'dd-MM-yyyy'} if o.company_id.account_fiscal_country_id.code == 'PT' else {}</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='payment.move_id.date']" position="attributes">
+            <attribute name="t-options">{'widget': 'date', 'format': 'dd-MM-yyyy'} if o.company_id.account_fiscal_country_id.code == 'PT' else {}</attribute>
+        </xpath>
         <!-- ATCUD -->
         <xpath expr="//div[hasclass('mb-4') and hasclass('mt-3')]" position="inside">
             <div class="oe_structure"></div>
             <div class="row" t-if="o.company_id.account_fiscal_country_id.code == 'PT'">
                 <div name="atcud" class="col-6" t-if="o.l10n_pt_atcud">
-                    ATCUD: <span t-field="o.l10n_pt_atcud">0</span>
+                    ATCUD:<span t-field="o.l10n_pt_atcud">0</span>
                 </div>
                 <div name="internal_name" class="col-6">
                     Internal Number: <span t-field="o.name">INV0001</span>

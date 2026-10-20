@@ -122,7 +122,6 @@ class TestL10nPtStockCommon(TestStockCommon):
         })
         self.env['stock.move'].create({
             'company_id': self.company_pt.id,
-            'name': product.name,
             'product_id': product.id,
             'product_uom_qty': 10,
             'product_uom': product.uom_id.id,

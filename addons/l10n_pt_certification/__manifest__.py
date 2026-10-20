@@ -21,6 +21,7 @@ The module adds the following features:
         'security/ir.model.access.csv',
         'security/l10n_pt_security.xml',
         'data/res_partner_data.xml',
+        'data/ir_actions_server_data.xml',
         'report/l10n_pt_hash_integrity_templates.xml',
         'wizard/account_move_reversal_views.xml',
         'wizard/account_payment_register_views.xml',

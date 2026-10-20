@@ -36,7 +36,7 @@ class TestL10nPtSaleCommon(TestL10nPtCommon, TestSaleCommon):
                 'product_id': (product or self.company_data['product_order_no']).id,
                 'product_uom_qty': 1,
                 'price_unit': amount,
-                'tax_id': [tax.id if tax else self.tax_sale_23.id],
+                'tax_ids': [tax.id if tax else self.tax_sale_23.id],
             })]
         }
 
@@ -55,7 +55,7 @@ class TestL10nPtSaleCommon(TestL10nPtCommon, TestSaleCommon):
 
         if do_hash:
             with freeze_time(l10n_pt_hashed_on):
-                self.env['sale.order']._l10n_pt_compute_missing_hashes(company or self.company_pt)
+                sales_order._l10n_pt_issue()
         return quotation.sales_order_ids
 
 
@@ -158,10 +158,12 @@ class TestL10nPtSaleMiscRequirements(TestL10nPtSaleCommon):
         follows this format: [^ ]+ [^/^ ]+/[0-9]+
         """
         so1 = self.create_sales_order('2024-01-01')
+        so1._l10n_pt_issue()
         quotation = self.create_quotation('2024-01-01')
         quotation.action_l10n_pt_create_sales_order()
         so2 = quotation.sales_order_ids
         so2.date_order = fields.Date.from_string('2024-01-02')
+        so2._l10n_pt_issue()
         so2.action_cancel()  # shouldn't change the document number
         so3 = self.create_sales_order('2024-01-03', do_hash=True)
 
@@ -187,7 +189,7 @@ class TestL10nPtSaleMiscRequirements(TestL10nPtSaleCommon):
                         'product_id': self.company_data['product_order_no'].id,
                         'product_uom_qty': 1,
                         'price_unit': 1000,
-                        'tax_id': [],
+                        'tax_ids': [],
                     }),
                 ],
             })
@@ -251,13 +253,13 @@ class TestL10nPtSaleMiscRequirements(TestL10nPtSaleCommon):
                     'product_uom_qty': 1,
                     'price_unit': 1234.568,
                     'l10n_pt_line_discount': 10.0,
-                    'tax_id': self.tax_sale_23.ids,
+                    'tax_ids': self.tax_sale_23.ids,
                 }),
                 Command.create({
                     'product_id': self.company_data['product_order_no'].id,
                     'product_uom_qty': 1,
                     'price_unit': 756.81,
-                    'tax_id': self.tax_sale_23.ids,
+                    'tax_ids': self.tax_sale_23.ids,
                 }),
             ],
         })

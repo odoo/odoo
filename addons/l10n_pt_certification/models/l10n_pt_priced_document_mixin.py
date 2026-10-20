@@ -1,5 +1,9 @@
+from collections import defaultdict
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+
+from odoo.addons.l10n_pt_certification.const import PT_QR_NOT_SUBJECT_EXEMPTION_REASONS
 
 
 class L10nPtPricedDocumentMixin(models.AbstractModel):
@@ -50,13 +54,57 @@ class L10nPtPricedDocumentMixin(models.AbstractModel):
             for reason_code in line._l10n_pt_get_line_vat_exemptions_reasons(as_string=False)
         })
 
+    def _l10n_pt_split_not_subject_bases(self, details_by_region):
+        """
+        Move the base of the lines not subject to VAT out of the exempt category (``E``) of
+        ``details_by_region`` (see ``_l10n_pt_get_tax_details_by_region``) into a category ``L``,
+        which the QR code reports apart, in its ``L:`` field.
+        """
+        self.ensure_one()
+        for line in self._l10n_pt_get_lines():
+            # A line carries one tax, withholding taxes (negative) aside.
+            tax = line.tax_ids.filtered(lambda t: t.amount >= 0)[:1]
+            if tax.l10n_pt_tax_exemption_reason not in PT_QR_NOT_SUBJECT_EXEMPTION_REASONS:
+                continue
+            details = details_by_region.get(self._l10n_pt_get_tax_region(tax.tax_group_id), {})
+            if 'E' not in details:
+                continue
+            details['E']['base'] -= line.price_subtotal
+            details.setdefault('L', {'base': 0.0, 'vat': 0.0})['base'] += line.price_subtotal
+        for details in details_by_region.values():
+            if 'E' in details and self.currency_id.is_zero(details['E']['base']):
+                del details['E']
+        return details_by_region
+
     def _check_l10n_pt_lines_taxes(self):
         """
         PT requirement: All lines must have at least one tax, and in case of tax exemption, the correct tax with the
-        appropriate exemption reason should be added to the line.
+        appropriate exemption reason should be added to the line. A line carries a single tax, withholding taxes
+        (negative) aside: the SAF-T (PT) has room for one tax per line.
         """
-        if self.filtered(lambda r: r._l10n_pt_country_ok())._l10n_pt_get_lines().filtered(lambda l: not l.tax_ids):
+        lines = self.filtered(lambda r: r._l10n_pt_country_ok())._l10n_pt_get_lines()
+        if lines.filtered(lambda l: not l.tax_ids):
             raise ValidationError(self.env._("You cannot create an invoice line without VAT tax."))
+        if lines.filtered(lambda l: len(l.tax_ids.filtered(lambda t: t.amount >= 0)) > 1):
+            raise ValidationError(self.env._(
+                "A line can only carry one tax, withholding taxes aside. "
+                "Split the line to apply several taxes."
+            ))
+        self._check_l10n_pt_lines_exemption_reasons()
+
+    def _check_l10n_pt_lines_exemption_reasons(self):
+        """
+        PT requirement: a reason must be given whenever tax is not charged (Despacho 8632/2014 3.2.6). The
+        tax itself requires one, but a tax stored before that rule may still lack it.
+        """
+        taxes = self.env['account.tax']
+        for document in self.filtered(lambda r: r._l10n_pt_country_ok()):
+            taxes |= document._l10n_pt_get_lines().tax_ids
+        if taxes := taxes.filtered(lambda t: t._l10n_pt_lacks_exemption_reason()):
+            raise ValidationError(self.env._(
+                "A tax that charges nothing needs a VAT exemption reason: set one on %(taxes)s.",
+                taxes=", ".join(taxes.mapped('name')),
+            ))
 
 
 class L10nPtPricedLineMixin(models.AbstractModel):
@@ -95,6 +143,27 @@ class L10nPtPricedLineMixin(models.AbstractModel):
         global_discount = (self._l10n_pt_get_document().l10n_pt_global_discount or 0.0) / 100
         line_discount = (self.l10n_pt_line_discount or 0.0) / 100
         self.discount = (1 - (1 - global_discount) * (1 - line_discount)) * 100
+
+    def _l10n_pt_keep_given_discounts(self, vals_list):
+        """
+        Keep the core ``discount`` given to PT lines created without a ``l10n_pt_line_discount``
+        (invoices generated from PoS orders, imports, API), by making it their line discount.
+        Otherwise the default line discount (0) fires the inverse, which recomputes ``discount`` from
+        it and drops the given one. The given discount is the line's own: the document's global
+        discount still applies on top of it.
+
+        :param vals_list: the values the lines were created with, in the order of ``self``
+        """
+        lines_by_discount = defaultdict(self.browse)
+        for line, vals in zip(self, vals_list):
+            if (
+                vals.get('discount')
+                and 'l10n_pt_line_discount' not in vals
+                and line._l10n_pt_get_document().country_code == 'PT'
+            ):
+                lines_by_discount[vals['discount']] |= line
+        for discount, lines in lines_by_discount.items():
+            lines.l10n_pt_line_discount = discount
 
     @api.onchange('l10n_pt_line_discount')
     def _inverse_l10n_pt_line_discount(self):

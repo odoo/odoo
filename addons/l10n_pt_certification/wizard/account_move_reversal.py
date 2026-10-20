@@ -5,6 +5,12 @@ from odoo.exceptions import UserError
 class AccountMoveReversal(models.TransientModel):
     _inherit = 'account.move.reversal'
 
+    def _prepare_default_reversal(self, move):
+        values = super()._prepare_default_reversal(move)
+        if move.journal_id.country_code == 'PT':
+            values['l10n_pt_reversal_reason'] = self.reason
+        return values
+
     def reverse_moves(self, is_modify=False):
         self.ensure_one()
         for move in self.move_ids:

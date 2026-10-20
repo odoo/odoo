@@ -28,9 +28,9 @@
                 <attribute name="invisible">country_code == 'PT'</attribute>
             </xpath>
             <!-- PT Fields -->
-            <xpath expr="//div[hasclass('o_row')]" position="after">
-                <label for="l10n_pt_start_transport_date"/>
-                <div class="o_row">
+            <xpath expr="//div[field[@name='scheduled_date']]" position="after">
+                <label for="l10n_pt_start_transport_date" invisible="country_code != 'PT'"/>
+                <div class="o_row" invisible="country_code != 'PT'">
                     <field name="l10n_pt_start_transport_date"/>
                 </div>
             </xpath>

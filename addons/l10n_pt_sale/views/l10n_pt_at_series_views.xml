@@ -14,6 +14,20 @@
             </field>
         </record>
 
+        <record id="view_l10n_pt_at_series_form" model="ir.ui.view">
+            <field name="name">at.series.form.inherit.sales</field>
+            <field name="model">l10n_pt.at.series</field>
+            <field name="inherit_id" ref="l10n_pt_certification.view_l10n_pt_at_series_form"/>
+            <field name="arch" type="xml">
+                <field name="training_series" position="after">
+                    <field name="l10n_pt_create_sales_order_series" invisible="not l10n_pt_offer_sales_order_series"/>
+                </field>
+                <field name="journal_id" position="attributes">
+                    <attribute name="invisible">document_type in ('quotation', 'sales_order')</attribute>
+                </field>
+            </field>
+        </record>
+
         <record id="view_l10n_pt_at_series_tree_inherit_sales" model="ir.ui.view">
             <field name="name">at.series.tree.inherit.sales</field>
             <field name="model">l10n_pt.at.series</field>

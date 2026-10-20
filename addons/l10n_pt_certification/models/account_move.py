@@ -1,9 +1,10 @@
 import json
 import re
-import urllib.parse
+
+from stdnum.pt import nif
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import float_repr
 
@@ -36,13 +37,23 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         return self.move_id
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        given_vals_list = [dict(vals) for vals in vals_list]
+        lines = super().create(vals_list)
+        lines._l10n_pt_keep_given_discounts(given_vals_list)
+        return lines
+
     @api.constrains('price_total')
     def _check_l10n_pt_zero_negative_lines(self):
-        """ Lines with a total amount <= 0 are not allowed, according to PT requirements """
+        """
+        Lines with a total amount <= 0 are not allowed on a PT document, according to PT requirements. The
+        documents a PT company receives (vendor bills and refunds) are not PT documents: they are
+        recorded as their issuer made them.
+        """
         if non_positive_lines := self.filtered(
             lambda l: l.display_type == 'product'
-            and l.move_type != 'entry'
-            and l.company_id.account_fiscal_country_id.code == 'PT'
+            and l.move_id._l10n_pt_country_ok()
             and (l.price_total <= 0.0 and not l.is_downpayment)
         ):
             if any(line.price_total < 0.0 for line in non_positive_lines):
@@ -54,12 +65,15 @@ class AccountMoveLine(models.Model):
 
 class AccountMove(models.Model):
     _name = "account.move"
-    # `l10n.pt.document.mixin` carries the numbering & identity layer (AT series, document number,
-    # ATCUD, print version). The signing layer is deliberately not mixed in: moves keep riding the
-    # base `account` hashing framework (`inalterable_hash`) rather than `l10n_pt_inalterable_hash`.
-    _inherit = ["account.move", "l10n.pt.document.mixin", "l10n.pt.priced.document.mixin"]
+    # `l10n.pt.qr.document.mixin` brings the QR code and, through its own `_inherit`, the numbering
+    # & identity layer (AT series, document number, ATCUD, print version). The signing layer is
+    # deliberately not mixed in: moves keep riding the base `account` hashing framework
+    # (`inalterable_hash`) rather than `l10n_pt_inalterable_hash`, which is why the QR layer
+    # addresses the signature through `_l10n_pt_hash_field` instead of naming a field.
+    _inherit = ["account.move", "l10n.pt.qr.document.mixin", "l10n.pt.priced.document.mixin"]
 
     _l10n_pt_date_field = "invoice_date"
+    _l10n_pt_hash_field = "inalterable_hash"
     _l10n_pt_document_type_depends = ('move_type',)
 
     # PT Document Mixin Fields
@@ -73,16 +87,51 @@ class AccountMove(models.Model):
     )
 
     # PT Hashing & QR Fields
-    l10n_pt_hashed_on = fields.Datetime(string="Hashed On", readonly=True)
-    l10n_pt_inalterable_hash_short = fields.Char(
-        string='Short version of the Portuguese hash',
-        compute='_compute_l10n_pt_inalterable_hash',
+    # Indexed for the latest SystemEntryDate, read before issuing any document (`_l10n_pt_check_system_clock`).
+    l10n_pt_hashed_on = fields.Datetime(string="Hashed On", readonly=True, index='btree_not_null')
+
+    # The reason given when reversing a document, exported in the SAF-T (PT) References of the credit note.
+    l10n_pt_reversal_reason = fields.Char(string="Reversal Reason", readonly=True, copy=False)
+
+    # What the SAF-T (PT) will need and the draft does not have yet.
+    l10n_pt_saft_missing_data = fields.Text(compute='_compute_l10n_pt_saft_missing_data')
+
+    @api.depends(
+        'state', 'move_type', 'company_id.vat', 'company_id.zip',
+        'invoice_line_ids.display_type', 'invoice_line_ids.product_id.default_code', 'invoice_line_ids.product_id.name',
+        'invoice_line_ids.tax_ids.amount', 'invoice_line_ids.tax_ids.l10n_pt_tax_exemption_reason',
     )
-    l10n_pt_inalterable_hash_version = fields.Integer(
-        string='Portuguese hash version',
-        compute='_compute_l10n_pt_inalterable_hash',
-    )
-    l10n_pt_qr_code_str = fields.Char('Portuguese QR Code', compute='_compute_l10n_pt_qr_code_str', store=True)
+    def _compute_l10n_pt_saft_missing_data(self):
+        """
+        Alert, while the document can still change, to the data the SAF-T (PT) requires and the draft
+        lacks (Despacho 8632/2014 3.4.1). Once issued, the export reports it, or refuses to run. A
+        product-less line is not listed: posting refuses it (D-4, `_check_l10n_pt_lines_products`).
+        """
+        for move in self:
+            issues = []
+            if move.state == 'draft' and move._l10n_pt_country_ok():
+                lines = move._l10n_pt_get_lines()
+                if no_reference := lines.product_id.filtered(lambda product: not product.default_code):
+                    issues.append(self.env._(
+                        "These products have no Internal Reference: %(products)s.",
+                        products=", ".join(no_reference.mapped('display_name')),
+                    ))
+                if short_name := lines.product_id.filtered(lambda product: len(product.name or '') < 2):
+                    issues.append(self.env._(
+                        "These products need a name of two characters at least: %(products)s.",
+                        products=", ".join(short_name.mapped('display_name')),
+                    ))
+                if no_reason := lines.tax_ids.filtered(lambda tax: tax._l10n_pt_lacks_exemption_reason()):
+                    issues.append(self.env._(
+                        "These taxes charge nothing and have no VAT exemption reason: %(taxes)s.",
+                        taxes=", ".join(no_reason.mapped('name')),
+                    ))
+                company = move.company_id
+                if not company.vat or not nif.is_valid(company.vat):
+                    issues.append(self.env._("The company's VAT is missing or invalid: it should read like PT123456789."))
+                if company.zip and not re.match(r"[0-9]{4}-[0-9]{3}", company.zip):
+                    issues.append(self.env._("The company's postal code should read like 1234-789."))
+            move.l10n_pt_saft_missing_data = "\n".join(issues) or False
 
     ####################################
     # PT DOCUMENT MIXINS HOOKS
@@ -104,7 +153,37 @@ class AccountMove(models.Model):
 
     def _l10n_pt_get_lines(self):
         self.ensure_one()
-        return self.invoice_line_ids
+        # Sections and notes are not priced lines: they carry no tax, discount or exemption reason.
+        return self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+
+    def _l10n_pt_get_saft_doc_type(self):
+        self.ensure_one()
+        return AT_SERIES_TYPE_SAFT_TYPE_MAP[self.l10n_pt_document_type]
+
+    def _l10n_pt_qr_rate_date(self):
+        # The rate is taken at `date`, the accounting date, and deliberately not at the document
+        # date the rest of the QR code uses: the `O:` amount must equal the gross total that was
+        # signed, and core converts `amount_total_signed` at `date`. Converting at a different date
+        # would make the printed total disagree with the signature.
+        self.ensure_one()
+        return self.date
+
+    def _l10n_pt_qr_get_totals(self):
+        self.ensure_one()
+        return (
+            self._l10n_pt_qr_format_amount(self.tax_totals['tax_amount_currency']),
+            self._l10n_pt_qr_format_amount(self.tax_totals['total_amount_currency']),
+        )
+
+    def _l10n_pt_get_tax_details_by_region(self):
+        return self._l10n_pt_split_not_subject_bases(super()._l10n_pt_get_tax_details_by_region())
+
+    def _l10n_pt_get_gross_total(self):
+        # As per PT requirements for signature: "In case the document is issued in a foreign
+        # currency, the amount must be the counter value in EUR, once this will be the amount
+        # exported on the SAF-T (PT) file." `amount_total_signed` is that counter value.
+        self.ensure_one()
+        return abs(self.amount_total_signed)
 
     def _l10n_pt_assign_document_number(self, number):
         # For a PT invoice the move name IS the legal document number.
@@ -121,7 +200,23 @@ class AccountMove(models.Model):
         for move in self:
             if move.state in ('posted', 'cancel') and 'l10n_pt_at_series_id' in vals:
                 raise UserError(self.env._("The AT Series of a posted document cannot be changed."))
+        # The delivery date is exported as the document's TaxPointDate (see `_compute_show_delivery_date`).
+        if 'delivery_date' in vals and self.filtered(lambda m: (
+            m.l10n_pt_document_number
+            and m.country_code == 'PT'
+            and m.delivery_date != fields.Date.to_date(vals['delivery_date'])
+        )):
+            raise UserError(self.env._("The delivery date of an issued Portuguese document cannot be changed."))
         return super().write(vals)
+
+    @api.depends('country_code', 'move_type')
+    def _compute_show_delivery_date(self):
+        # EXTENDS 'account'
+        # The date the goods were made available or the services performed is recorded on the
+        # document, to fill the SAF-T (PT) TaxPointDate (Despacho 8632/2014 3.2.12).
+        super()._compute_show_delivery_date()
+        for move in self.filtered(lambda m: m.country_code == 'PT'):
+            move.show_delivery_date = move.is_sale_document()
 
     @api.depends('state', 'l10n_pt_document_number')
     def _compute_show_reset_to_draft_button(self):
@@ -139,9 +234,24 @@ class AccountMove(models.Model):
 
     def button_cancel(self):
         """Cannot cancel an already reversed or cancelled invoice"""
-        if self.filtered(lambda m: m.country_code == "PT" and (m.payment_state == 'reversed' or m.state == 'cancel')):
+        pt_moves = self.filtered(lambda m: m.country_code == "PT")
+        if pt_moves.filtered(lambda m: m.payment_state == 'reversed' or m.state == 'cancel'):
             raise UserError(self.env._("You cannot cancel an invoice that has already been fully reversed or cancelled."))
-        return super(AccountMove, self.with_context(_pt_button_cancel=True)).button_cancel()
+        # A document rectified by a credit or debit note, even partially, is annulled only once that
+        # note is (Despacho 8632/2014 3.3.8). Debit notes exist only with `account_debit_note`.
+        rectifying = pt_moves.reversal_move_ids
+        if 'debit_note_ids' in self._fields:
+            rectifying |= pt_moves.debit_note_ids
+        if rectifying := rectifying.filtered(lambda m: m.state == 'posted'):
+            raise UserError(self.env._(
+                "You cannot cancel an invoice while a credit or debit note rectifies it. Cancel %(notes)s first.",
+                notes=", ".join(rectifying.mapped('name')),
+            ))
+        # Annulling goes through a transient draft, which core refuses for a signed move. A PT
+        # invoice is signed from posting and stays in its chain once cancelled, so let it through.
+        res = super(AccountMove, self.with_context(_pt_button_cancel=True, allow_draft_hashed_entries=True)).button_cancel()
+        pt_moves.filtered(lambda m: m.state == 'cancel')._l10n_pt_record_cancellation()
+        return res
 
     def action_reverse(self):
         """Cannot reverse an already reversed or cancelled invoice"""
@@ -190,6 +300,9 @@ class AccountMove(models.Model):
         If they exist, the appropriate binary will be used to render the file. Else, generate the file.
         """
         filename = f"{self._get_move_display_name().replace(' ', '_').replace('/', '_')}.pdf"
+        if self.env.context.get('l10n_pt_legal_document_exists_only'):
+            # Only checking that the document exists (see `get_extra_print_items`): don't render it.
+            return {'filename': filename, 'filetype': 'pdf', 'content': None}
         content, report_type = self.env['ir.actions.report'].with_company(self.company_id) \
             ._pre_render_qweb_pdf('account.report_invoice_with_payments', self.ids)
         content_by_id = self.env['ir.actions.report']._get_splitted_report(
@@ -214,6 +327,12 @@ class AccountMove(models.Model):
         if self.country_code == 'PT':
             return [self._l10n_pt_get_invoice_legal_document('pdf', allow_fallback=allow_fallback)]
         return super()._get_invoice_legal_documents_all(allow_fallback=allow_fallback)
+
+    def get_extra_print_items(self):
+        # EXTENDS account
+        # Core only checks whether each move has a document, to offer "Export ZIP". Skip rendering
+        # the PT PDF for that check: it is slow and would count as a print of the document.
+        return super(AccountMove, self.with_context(l10n_pt_legal_document_exists_only=True)).get_extra_print_items()
 
     def action_print_pdf(self):
         """ PT requirement: documents being reprinted require a reprint reason """
@@ -271,15 +390,29 @@ class AccountMove(models.Model):
                 move.l10n_pt_document_type = 'out_invoice_receipt'
 
             if not move.l10n_pt_at_series_id:
-                move.l10n_pt_at_series_id = move._l10n_pt_create_at_series_from_sequence()
+                # A series created since the move was computed (e.g. from the warning below) is picked up here.
+                move._compute_l10n_pt_at_series_id()
+            if not move.l10n_pt_at_series_id:
+                raise move._l10n_pt_missing_at_series_warning()
 
             move._check_l10n_pt_lines_taxes()
+            move._check_l10n_pt_lines_products()
             move._check_l10n_pt_at_series_id()
 
         pt_moves._check_l10n_pt_dates()
         pt_moves._set_l10n_pt_document_number()
         pt_moves._check_l10n_pt_reversal()
-        return super()._post(soft)
+        posted = super()._post(soft)
+        # An invoice is signed when it is issued, not at its first print (FAQ R23, Despacho
+        # 8632/2014 2.1.1), so posting needs the signing service and fails when it is unreachable.
+        # Printing, sending and exporting still sign whatever is left unsigned, as a catch-up.
+        posted.filtered(lambda m: (
+            m.state == 'posted'
+            and m._l10n_pt_country_ok()
+            and m.is_sale_document(include_receipts=True)
+            and not m.inalterable_hash
+        )).button_hash()
+        return posted
 
     ####################################
     # CHECKS
@@ -293,6 +426,21 @@ class AccountMove(models.Model):
                 "a space, the name of the series followed by a single slash and the number of the "
                 "document within the series (e.g. INV 2025A/1).",
                 self.name
+            ))
+
+    def _check_l10n_pt_lines_products(self):
+        """
+        A PT sales document cannot be issued with a line without product: the SAF-T (PT) needs a
+        ProductCode on every line, and once issued the document can no longer be corrected (D-4).
+        """
+        self.ensure_one()
+        if not self._l10n_pt_country_ok():
+            return
+        if lines := self._l10n_pt_get_lines().filtered(lambda line: not line.product_id):
+            raise UserError(self.env._(
+                "Every line of a Portuguese invoice needs a product, which the SAF-T (PT) exports as its "
+                "product code. Set one on these lines: %(lines)s",
+                lines=", ".join(lines.mapped(lambda line: line.name or '/')),
             ))
 
     def _check_l10n_pt_simplified_invoice_limit(self):
@@ -310,6 +458,20 @@ class AccountMove(models.Model):
             self.company_id,
             self.invoice_date or fields.Date.context_today(self)
         )
+        limit = self._l10n_pt_simplified_invoice_limit(self.invoice_line_ids.filtered(lambda l: l.display_type == 'product'))
+        if total_amount_in_eur > limit:
+            raise UserError(self.env._(
+                "A sales receipt (simplified invoice) cannot exceed %(limit)s EUR. "
+                "Please issue a regular invoice instead.",
+                limit=float_repr(limit, 2),
+            ))
+
+    @api.model
+    def _l10n_pt_simplified_invoice_limit(self, lines):
+        """
+        The EUR limit of a simplified invoice for ``lines`` (any records with ``product_id`` and
+        ``tax_ids``): 1000 for goods, 100 as soon as a service is involved (CIVA art. 40(1)).
+        """
         # If product has no type or its tax has no tax_scope, it is considered a service to be safe
         has_services = any(
             (
@@ -320,16 +482,9 @@ class AccountMove(models.Model):
                     and not line.tax_ids.filtered(lambda t: t.tax_scope)
                 )
             )
-            for line in self.invoice_line_ids
-            if line.display_type == 'product'
+            for line in lines
         )
-        limit = PT_SIMPLIFIED_INVOICE_SERVICES_LIMIT if has_services else PT_SIMPLIFIED_INVOICE_GOODS_LIMIT
-        if total_amount_in_eur > limit:
-            raise UserError(self.env._(
-                "A sales receipt (simplified invoice) cannot exceed %(limit)s EUR. "
-                "Please issue a regular invoice instead.",
-                limit=float_repr(limit, 2),
-            ))
+        return PT_SIMPLIFIED_INVOICE_SERVICES_LIMIT if has_services else PT_SIMPLIFIED_INVOICE_GOODS_LIMIT
 
     def _l10n_pt_is_invoice_receipt(self):
         self.ensure_one()
@@ -368,12 +523,40 @@ class AccountMove(models.Model):
     # PT FIELDS - ATCUD, AT SERIES
     ####################################
 
-    def _l10n_pt_create_at_series_from_sequence(self):
-        """ Auto-create an AT series based on the move's sequence prefix and date metadata.
-        This is called when no matching AT series exists for a new sequence period.
-
-        :return: The newly created l10n_pt.at.series record, or an empty recordset if creation fails.
+    def _l10n_pt_missing_at_series_warning(self):
         """
+        The warning raised when posting a move that has no AT series: it opens the series form,
+        prefilled from the move's sequence. A series is never created on the fly, since a document
+        may only be issued once the series is communicated to the AT and holds its validation code.
+        """
+        self.ensure_one()
+        vals = self._l10n_pt_prepare_at_series_vals()
+        document_type_name = dict(self._fields['l10n_pt_document_type']._description_selection(self.env)).get(vals['document_type'])
+        return RedirectWarning(
+            self.env._(
+                "There is no AT series for %(document_type)s in the journal %(journal)s on %(date)s. "
+                "Create it, and communicate it to the AT, before issuing this document.",
+                document_type=document_type_name,
+                journal=self.journal_id.display_name,
+                date=fields.Date.to_string(self._l10n_pt_get_document_date()),
+            ),
+            {
+                'name': self.env._('New AT Series'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'l10n_pt.at.series',
+                'view_mode': 'form',
+                'views': [(self.env.ref('l10n_pt_certification.view_l10n_pt_at_series_form').id, 'form')],
+                'context': {
+                    'l10n_pt_series_document_types': [vals['document_type']],
+                    **{f'default_{field}': value for field, value in vals.items()},
+                },
+                'target': 'new',
+            },
+            self.env._('Create the AT Series'),
+        )
+
+    def _l10n_pt_prepare_at_series_vals(self):
+        """ The values of the AT series this move would need, derived from its sequence prefix and date metadata. """
         self.ensure_one()
 
         if (self.name and self.name != '/'):
@@ -416,15 +599,60 @@ class AccountMove(models.Model):
             alpha_suffix = re.sub(r'[^a-zA-Z]', '', raw_suffix)
             series_name = f"{series_name}{alpha_suffix}"
 
-        return self.env['l10n_pt.at.series'].create({
+        return {
             'name': series_name,
             'prefix': prefix,
             'document_type': self.l10n_pt_document_type,
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
-            'date_start': date_start,
-            'date_end': date_end,
+            'date_start': fields.Date.to_string(date_start),
+            'date_end': fields.Date.to_string(date_end) if date_end else False,
+        }
+
+    @api.model
+    def _l10n_pt_find_at_series(self, company, journal, document_type, date):
+        """ An active AT series of ``journal`` for ``document_type``, valid on ``date``. """
+        at_series_model = self.env['l10n_pt.at.series']
+        return at_series_model.search([
+            *at_series_model._l10n_pt_company_domain(company),
+            *at_series_model._l10n_pt_validity_domain(date),
+            ('journal_id', '=', journal.id),
+            ('document_type', '=', document_type),
+            ('active', '=', True),
+        ], limit=1)
+
+    @api.model
+    def _l10n_pt_create_at_series(self, journal, document_type, date):
+        """
+        Create the AT series ``journal`` needs for ``document_type`` on ``date``, with the values the
+        prefilled series form proposes. Creating a series registers it with the AT when the company's
+        webservice is configured; otherwise it has no validation code yet, and numbering refuses it.
+
+        The series is created as superuser, for callers whose users cannot create series themselves
+        (the PoS); it is returned in the caller's environment.
+        """
+        draft = self.new({
+            'move_type': 'out_invoice' if document_type == 'out_invoice_receipt' else document_type,
+            'journal_id': journal.id,
+            'company_id': journal.company_id.id,
+            'date': date,
+            'invoice_date': date,
         })
+        draft.l10n_pt_document_type = document_type
+        draft.l10n_pt_at_series_id = False
+        draft.name = '/'
+        vals = draft._l10n_pt_prepare_at_series_vals()
+
+        at_series_model = self.env['l10n_pt.at.series'].sudo().with_context(active_test=False)
+        # A series name identifies it per document type (and per prefix) within the company, whatever
+        # its journal: another journal's series of the same year would collide, so take the journal code.
+        if at_series_model.search_count([
+            ('company_id', '=', vals['company_id']),
+            ('name', '=', vals['name']),
+            '|', ('document_type', '=', vals['document_type']), ('prefix', '=', vals['prefix']),
+        ], limit=1):
+            vals['name'] = re.sub(r'[^a-zA-Z0-9]', '', journal.code).upper() + vals['name']
+        return at_series_model.create(vals).sudo(False)
 
     @api.depends('move_type', 'l10n_pt_document_type', 'invoice_date', 'journal_id', 'company_id')
     def _compute_l10n_pt_at_series_id(self):
@@ -458,13 +686,9 @@ class AccountMove(models.Model):
                 ),
             ], order='id desc', limit=1)
             # If no AT series used in a move in this journal, fallback to an active series for this journal
-            at_series = last_move.l10n_pt_at_series_id or at_series_model.search([
-                *at_series_model._l10n_pt_company_domain(move.company_id),
-                *at_series_model._l10n_pt_validity_domain(move.invoice_date or today),
-                ('journal_id', '=', move.journal_id.id),
-                ('document_type', '=', move.l10n_pt_document_type),
-                ('active', '=', True),
-            ], limit=1)
+            at_series = last_move.l10n_pt_at_series_id or self._l10n_pt_find_at_series(
+                move.company_id, move.journal_id, move.l10n_pt_document_type, move.invoice_date or today,
+            )
 
             move.l10n_pt_at_series_id = at_series
 
@@ -485,12 +709,7 @@ class AccountMove(models.Model):
         docs_to_sign = [{
             'id': move.id,
             'sorting_key': move.sequence_number,
-            'date': move.date.isoformat(),
-            'system_entry_date': move.l10n_pt_hashed_on.isoformat(timespec='seconds'),
-            'name': move._l10n_pt_get_document_number(),
-            # As per PT requirements for signature: "In case the document is issued in a foreign currency, the amount
-            # must be the counter value in EUR, once this will be the amount exported on the SAF-T (PT) file."
-            'gross_total': float_repr(abs(move.amount_total_signed), 2),
+            **pt_hash_utils.format_hash_values(move._l10n_pt_get_hash_values()),
             'previous_signature': previous_hash,
         } for move in self]
         return pt_hash_utils.sign_records(self.env, docs_to_sign, 'account.move')
@@ -509,82 +728,3 @@ class AccountMove(models.Model):
             ('company_id', 'child_of', self.env.companies.root_id.ids),
         ], order='sequence_prefix,sequence_number')
         all_moves.button_hash()
-
-    @api.depends('inalterable_hash')
-    def _compute_l10n_pt_inalterable_hash(self):
-        for move in self:
-            if move.inalterable_hash:
-                hash_version, hash_str = move.inalterable_hash.split("$")[1:]
-                move.l10n_pt_inalterable_hash_version = int(hash_version)
-                move.l10n_pt_inalterable_hash_short = hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
-            else:
-                move.l10n_pt_inalterable_hash_version = False
-                move.l10n_pt_inalterable_hash_short = False
-
-    def l10n_pt_verify_prerequisites_qr_code(self):
-        self.ensure_one()
-        if self._l10n_pt_country_ok():
-            return pt_hash_utils.verify_prerequisites_qr_code(self, self.inalterable_hash, self.l10n_pt_atcud)
-        return None
-
-    @api.depends('l10n_pt_atcud')
-    def _compute_l10n_pt_qr_code_str(self):
-        """
-        Generate the informational QR code for Portugal invoicing.
-        E.g.: A:509445535*B:123456823*C:BE*D:FT*E:N*F:20220103*G:FT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
-        """
-
-        def format_amount(account_move, amount):
-            """
-            Convert amount to EUR based on the rate of a given account_move's date
-            Format amount to 2 decimals as per SAF-T (PT) requirements
-            """
-            amount_eur = account_move.currency_id._convert(amount, self.env.ref('base.EUR'), account_move.company_id, account_move.date)
-            return float_repr(amount_eur, 2)
-
-        def get_details_by_tax_category(account_move):
-            """
-            :return: {tax_category : {'base': base, 'vat': vat}}
-            """
-            res = {}
-            tax_groups = account_move.tax_totals['subtotals'][0]['tax_groups']
-
-            for group in tax_groups:
-                tax_group = self.env['account.tax.group'].browse(group['id'])
-                if (
-                    tax_group.l10n_pt_tax_region == 'PT-ALL'  # I.e. tax is valid in all regions (PT, PT-AC, PT-MA)
-                    or (
-                        tax_group.l10n_pt_tax_region
-                        and tax_group.l10n_pt_tax_region == account_move.company_id.l10n_pt_region_code
-                    )
-                ):
-                    res[tax_group.l10n_pt_tax_category] = {
-                        'base': format_amount(account_move, group['base_amount']),
-                        'vat': format_amount(account_move, group['tax_amount']),
-                    }
-            return res
-
-        for move in self.filtered(lambda m: (
-            m._l10n_pt_country_ok()
-            and m.inalterable_hash
-            and not m.l10n_pt_qr_code_str  # Skip if already computed
-        )):
-            details_by_tax_group = get_details_by_tax_category(move)
-
-            move.l10n_pt_verify_prerequisites_qr_code()
-            # Most of the values needed to create the QR code string are filled in pt_hash_utils, also used by pt_pos and pt_stock
-            qr_code_dict, tax_letter = pt_hash_utils.l10n_pt_common_qr_code_str(move, self.env, move.date)
-            qr_code_dict['D:'] = f"{AT_SERIES_TYPE_SAFT_TYPE_MAP[move.l10n_pt_document_type]}*"
-            qr_code_dict['H:'] = f"{move.l10n_pt_atcud}*"
-            if details_by_tax_group.get('E'):
-                qr_code_dict[f'{tax_letter}2:'] = f"{details_by_tax_group.get('E')['base']}*"
-            for i, tax_category in enumerate(('R', 'I', 'N')):
-                if details_by_tax_group.get(tax_category):
-                    qr_code_dict[f'{tax_letter}{i * 2 + 3}:'] = f"{details_by_tax_group.get(tax_category)['base']}*"
-                    qr_code_dict[f'{tax_letter}{i * 2 + 4}:'] = f"{details_by_tax_group.get(tax_category)['vat']}*"
-            qr_code_dict['N:'] = f"{format_amount(move, move.tax_totals['tax_amount'])}*"
-            qr_code_dict['O:'] = f"{format_amount(move, move.tax_totals['total_amount'])}*"
-            qr_code_dict['Q:'] = f"{move.l10n_pt_inalterable_hash_short}*"
-            # Create QR code string from dictionary
-            qr_code_str = ''.join(f"{key}{value}" for key, value in sorted(qr_code_dict.items()))
-            move.l10n_pt_qr_code_str = urllib.parse.quote_plus(qr_code_str)

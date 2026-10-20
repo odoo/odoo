@@ -56,6 +56,14 @@
                     <field name="l10n_pt_document_number"
                            string="Document Number"
                            invisible="country_code != 'PT'"/>
+                    <!-- Required here, so a missing series is created from its own dropdown before
+                         saving. No quick create: a series also needs a prefix. -->
+                    <field name="l10n_pt_at_series_id"
+                           invisible="country_code != 'PT'"
+                           readonly="l10n_pt_document_number"
+                           required="country_code == 'PT' and state in ('draft', 'sent')"
+                           context="{'l10n_pt_series_document_types': [l10n_pt_document_type], 'default_company_id': company_id}"
+                           options="{'no_quick_create': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='date_order']" position="attributes">
                     <attribute name="readonly">locked</attribute>
@@ -81,8 +89,6 @@
                 <!-- Add PT info group inside Other Info tab -->
                 <xpath expr="//group[@name='sale_reporting']" position="after">
                     <group string="Portugal" name="portuguese_info_group" invisible="country_code != 'PT'">
-                        <field name="l10n_pt_at_series_id"
-                               readonly="l10n_pt_document_number"/>
                         <field name="l10n_pt_atcud"/>
                         <field name="l10n_pt_inalterable_hash" groups="base.group_no_one"/>
                         <field name="l10n_pt_cancel_reason"

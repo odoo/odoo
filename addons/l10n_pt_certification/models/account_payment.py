@@ -24,6 +24,10 @@ class AccountPayment(models.Model):
         self.ensure_one()
         return self.is_pt_inbound()
 
+    def _l10n_pt_is_cancelled(self):
+        self.ensure_one()
+        return self.state == 'canceled'
+
     def _l10n_pt_get_document_date(self):
         self.ensure_one()
         return self.date
@@ -41,6 +45,11 @@ class AccountPayment(models.Model):
         pt_payments._check_l10n_pt_dates()
         pt_payments._set_l10n_pt_document_number()
         return super().action_post()
+
+    def action_cancel(self):
+        res = super().action_cancel()
+        self.filtered(lambda p: p.state == 'canceled')._l10n_pt_record_cancellation()
+        return res
 
     def write(self, vals):
         if (
@@ -66,16 +75,18 @@ class AccountPayment(models.Model):
 
     @api.depends('payment_type', 'company_id', 'date', 'journal_id')
     def _compute_l10n_pt_at_series_id(self):
-        payments = self.filtered(
-            lambda p: not p.l10n_pt_at_series_id or p.l10n_pt_at_series_id.journal_id != p.journal_id
-        )
+        # A receipt not issued yet moves on from a series that has ended, so a series can be closed.
+        payments = self.filtered(lambda p: not p.l10n_pt_document_number and (
+            not p.l10n_pt_at_series_id.active or p.l10n_pt_at_series_id.journal_id != p.journal_id
+        ))
         # Group payments by company and journal
         for (company, journal), grouped_payments in payments.grouped(lambda p: (p.company_id, p.journal_id)).items():
             last_payment = self.env['account.payment'].search([
                 ('company_id', '=', company.id),
                 ('payment_type', '=', 'inbound'),
                 ('journal_id', '=', journal.id),
-                ('l10n_pt_document_type', '=', 'payment_receipt')
+                ('l10n_pt_document_type', '=', 'payment_receipt'),
+                ('l10n_pt_at_series_id.active', '=', True),
             ], order='id desc', limit=1)
             at_series = last_payment.l10n_pt_at_series_id or self.env['l10n_pt.at.series'].search([
                 *self.env['l10n_pt.at.series']._l10n_pt_company_domain(company),

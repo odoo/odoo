@@ -7,11 +7,13 @@ class ReportStockPickingDeliverySlip(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        if self.env.company.account_fiscal_country_id.code == 'PT':
-            self.env['stock.picking']._l10n_pt_compute_missing_hashes(self.env.company)
+        pickings = self.env['stock.picking'].browse(docids)
+        # Signed in each transfer's own company, whichever company is active.
+        if pt_pickings := pickings.filtered(lambda p: p.country_code == 'PT'):
+            pt_pickings._l10n_pt_compute_missing_hashes()
         return {
             'doc_ids': docids,
             'doc_model': 'stock.picking',
             'data': data,
-            'docs': self.env['stock.picking'].browse(docids),
+            'docs': pickings,
         }

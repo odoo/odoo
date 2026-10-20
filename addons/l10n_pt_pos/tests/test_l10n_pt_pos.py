@@ -12,21 +12,23 @@ class TestL10nPtPosCommon(TestL10nPtCommon, TestPoSCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.pos_series = cls.env['l10n_pt.at.series'].create({
+        # A PT PoS order is always invoiced, and the invoice is the signed document: an order with a
+        # customer becomes an invoice-receipt (FR), issued in the series of the PoS invoice journal.
+        cls.fr_series = cls.env['l10n_pt.at.series'].create({
             'name': '2024',
             'company_id': cls.company_pt.id,
             'training_series': True,
+            'company_exclusive_series': True,
             'date_start': '2024-01-01',
             'date_end': '2024-12-31',
             'journal_id': cls.company_data['default_journal_sale'].id,
-            'document_type': 'pos_order',
-            'prefix': 'POS',
-            'at_code': 'AT-TESTPOS',
+            'document_type': 'out_invoice_receipt',
+            'prefix': 'FR',
+            'at_code': 'AT-TESTFR2024',
         })
         category_pt = cls.env['pos.category'].create({'name': 'Test Category'})
         cls.config = cls.basic_config
         cls.config.write({
-            'l10n_pt_pos_at_series_id': cls.pos_series.id,
             'limit_categories': True,
             'iface_available_categ_ids': [Command.set(category_pt.ids)],
         })
@@ -36,6 +38,7 @@ class TestL10nPtPosCommon(TestL10nPtCommon, TestPoSCommon):
         cls.product1 = cls.env['product.product'].create({
             'name': 'Product 1',
             'available_in_pos': True,
+            'default_code': 'P1',
             'list_price': 100,
             'taxes_id': cls.tax_sale_0.ids,
             'pos_categ_ids': [Command.link(category_pt.id)],
@@ -46,8 +49,8 @@ class TestL10nPtPosCommon(TestL10nPtCommon, TestPoSCommon):
             pos_order_lines_ui_args=[
                 (self.product1, 1.0),
             ],
-            payments=[(self.bank_pm1, 50.0)],
-            customer=partner
+            customer=partner or self.partner_a,
+            is_invoiced=True,
         )
         results = self.env['pos.order'].sync_from_ui([order_data])
         order = self.env['pos.order'].browse(results['pos.order'][0]['id'])
@@ -62,59 +65,40 @@ class TestL10nPtPosCommon(TestL10nPtCommon, TestPoSCommon):
 @tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtPosHash(TestL10nPtPosCommon):
     def test_l10n_pt_pos_hash_inalterability(self):
+        """The invoice generated from a PoS order is signed when the order is synced, and locked."""
         self.open_new_session()
-        order = self._create_pos_order()
-        self.assertEqual(order.l10n_pt_pos_inalterable_hash, False)
-        order.l10n_pt_pos_compute_missing_hashes(order.config_id.id)  # Called when printing the receipt
+        move = self._create_pos_order().account_move
+        self.assertEqual(move.l10n_pt_document_type, 'out_invoice_receipt')
+        self.assertTrue(move.inalterable_hash)
 
         expected_error_msg = "This document is protected by a hash. Therefore, you cannot edit the following fields:.*"
-
-        with self.assertRaisesRegex(UserError, f"{expected_error_msg}Inalterability Hash."):
-            order.l10n_pt_pos_inalterable_hash = 'fake_hash'
-        with self.assertRaisesRegex(UserError, f"{expected_error_msg}Date."):
-            order.date_order = fields.Date.from_string('2000-01-01')
-        with self.assertRaisesRegex(UserError, f"{expected_error_msg}Hashed On."):
-            order.l10n_pt_hashed_on = fields.Datetime.now()
-        with self.assertRaisesRegex(UserError, f"{expected_error_msg}Order Ref."):
-            order.name = "New name"
-        with self.assertRaisesRegex(UserError, f"{expected_error_msg}Document Number."):
-            order.l10n_pt_document_number = "New number/0001"
-
-        # The following field is not part of the hash so it can be modified
-        order.general_note = 'new note'
+        with self.assertRaisesRegex(UserError, f"{expected_error_msg}Invoice/Bill Date"):
+            move.invoice_date = fields.Date.from_string('2000-01-01')
+        with self.assertRaisesRegex(UserError, f"{expected_error_msg}Document Number"):
+            move.l10n_pt_document_number = "New number/0001"
 
     def test_l10n_pt_pos_hash_integrity_report(self):
-        """Test the hash integrity report"""
+        """The integrity report verifies the chain of the invoices generated from PoS orders."""
         self.open_new_session()
-        order1 = self._create_pos_order("2024-01-01")
-        self._create_pos_order("2024-01-02")
-        order3 = self._create_pos_order("2024-01-03")
-        order4 = self._create_pos_order("2024-01-04")
-        self.assertEqual(order1.l10n_pt_pos_inalterable_hash, False)
-        order1.l10n_pt_pos_compute_missing_hashes(order1.config_id.id)  # Called when printing the receipt in JS
+        moves = self.env['account.move']
+        for date_order in ("2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04"):
+            moves |= self._create_pos_order(date_order).account_move
 
-        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(),
-                                      self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
-        self.assertEqual(integrity_check['status'], 'verified')
-        self.assertEqual(integrity_check['msg_cover'], 'Orders are correctly hashed')
-        self.assertEqual(integrity_check['first_date'], order1.date_order)
-        self.assertEqual(integrity_check['last_date'], order4.date_order)
+        def integrity_check():
+            return next(
+                result for result in self.company_pt._check_hash_integrity()['results']
+                if f"({moves[0].sequence_prefix}...)" in result['journal_name']
+            )
 
-        # Let's change one of the fields used by the hash. It should be detected by the integrity report.
-        # We need to bypass the write method of pos.order to do so.
-        Model.write(order3, {'date_order': fields.Date.from_string('2024-01-07')})
-        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(),
-                                      self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
-        self.assertEqual(integrity_check['status'], 'corrupted')
-        self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on POS order with id {order3.id} ({order3.l10n_pt_document_number}).')
+        self.assertEqual(integrity_check()['status'], 'verified')
 
-        # Let's try with the l10n_pt_pos_inalterable_hash field itself
-        Model.write(order3, {'date_order': fields.Date.from_string("2024-01-03")})  # Revert the previous change
-        Model.write(order4, {'l10n_pt_pos_inalterable_hash': 'fake_hash'})
-        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(),
-                                      self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
-        self.assertEqual(integrity_check['status'], 'corrupted')
-        self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on POS order with id {order4.id} ({order4.l10n_pt_document_number}).')
+        # Change one of the fields used by the signature, bypassing the write lock of account.move.
+        Model.write(moves[2], {'invoice_date': fields.Date.from_string('2024-01-07')})
+        self.assertEqual(integrity_check()['status'], 'corrupted')
+        self.assertEqual(
+            integrity_check()['msg_cover'],
+            f'Corrupted data on journal entry with id {moves[2].id} ({moves[2].name}).',
+        )
 
 
 @freeze_time('2024-06-15')
@@ -163,5 +147,5 @@ class TestL10nPtPosMiscRequirements(TestL10nPtPosCommon):
             'journal_id': self.company_data['default_journal_bank'].id,
         })
         self.config.write({'payment_method_ids': [Command.link(pos_payment_method.id)]})
-        with self.assertRaisesRegex(RedirectWarning, "a payment mechanism. Payment methods with a bank journal"):
+        with self.assertRaisesRegex(RedirectWarning, "All payment methods available for this Point of Sale should have a payment mechanism"):
             self.open_new_session()

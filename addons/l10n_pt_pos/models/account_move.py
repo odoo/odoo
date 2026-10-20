@@ -10,6 +10,6 @@ class AccountMove(models.Model):
             or (
                 self._l10n_pt_country_ok()
                 and self.move_type == 'out_invoice'
-                and self.pos_order_ids.filtered(lambda o: o.state in ('paid', 'done', 'invoiced'))
+                and self.pos_order_ids.filtered(lambda o: o.state in ('paid', 'done'))
             )
         )

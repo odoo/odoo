@@ -21,10 +21,11 @@ class TestTaxesTaxTotalsSummaryL10nPt(TestTaxesTaxTotalsSummary):
         return values
 
     def convert_base_line_to_invoice_line(self, document, base_line):
-        # EXTENDS 'account' to include line discounts
+        # EXTENDS 'account' to include line discounts. As in the form, the line discount is given (0 when
+        # there is none) and the invoice computes the effective `discount` from it and its global discount;
+        # the `discount` simulated by `_l10n_pt_add_discount` would otherwise be taken as the line's own.
         values = super().convert_base_line_to_invoice_line(document, base_line)
-        if l10n_pt_line_discount := base_line.get('l10n_pt_line_discount'):
-            values['l10n_pt_line_discount'] = l10n_pt_line_discount
+        values['l10n_pt_line_discount'] = base_line.get('l10n_pt_line_discount', 0.0)
         return values
 
     def convert_document_to_invoice(self, document):
@@ -63,7 +64,8 @@ class TestTaxesTaxTotalsSummaryL10nPt(TestTaxesTaxTotalsSummary):
         Therefore, they have to stay like this to stay compliant.
         """
         self.env['decimal.precision'].search([('name', '=', "Product Price")]).digits = 6
-        tax_0 = self.percent_tax(0, tax_group_id=self.tax_groups[0].id)
+        # A PT tax that charges nothing needs an exemption reason.
+        tax_0 = self.percent_tax(0, tax_group_id=self.tax_groups[0].id, l10n_pt_tax_exemption_reason='M10')
         tax_6 = self.percent_tax(6, tax_group_id=self.tax_groups[1].id)
         tax_13 = self.percent_tax(13, tax_group_id=self.tax_groups[2].id)
         tax_23 = self.percent_tax(23, tax_group_id=self.tax_groups[3].id)

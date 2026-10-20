@@ -1,15 +1,10 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import RedirectWarning, ValidationError
-from odoo.tools import float_repr
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 from odoo.addons.l10n_pt_sale.models.l10n_pt_at_series import (
     AT_SERIES_SALES_DOCUMENT_TYPES,
+    AT_SERIES_WORKING_DOCUMENT_SAFT_TYPE_MAP,
 )
-
-AT_SERIES_WORKING_DOCUMENT_SAFT_TYPE_MAP = {
-    'quotation': 'OR',
-    'sales_order': 'NE',
-}
 
 
 class SaleOrderLine(models.Model):
@@ -22,12 +17,15 @@ class SaleOrderLine(models.Model):
 
     @api.constrains('tax_ids')
     def _check_l10n_pt_tax_id(self):
-        if self.filtered(
-            lambda l: not l.display_type
-            and l.company_id.account_fiscal_country_id.code == 'PT'
-            and not l.tax_ids
-        ):
+        pt_lines = self.filtered(lambda l: not l.display_type and l.company_id.account_fiscal_country_id.code == 'PT')
+        if pt_lines.filtered(lambda l: not l.tax_ids):
             raise ValidationError(_("You cannot create a line without VAT tax."))
+        # The SAF-T (PT) has room for one tax per line, withholding taxes (negative) aside.
+        if pt_lines.filtered(lambda l: len(l.tax_ids.filtered(lambda t: t.amount >= 0)) > 1):
+            raise ValidationError(_(
+                "A line can only carry one tax, withholding taxes aside. "
+                "Split the line to apply several taxes."
+            ))
 
     @api.constrains('price_subtotal')
     def _check_l10n_pt_negative_lines(self):
@@ -54,6 +52,12 @@ class SaleOrderLine(models.Model):
         values = super()._prepare_invoice_line(**optional_values)
         if self.company_id.account_fiscal_country_id.code == 'PT':
             values['l10n_pt_line_discount'] = self.l10n_pt_line_discount
+            # A PT invoice line needs a product (D-4); core leaves down payment lines, and the final
+            # invoice's deduction of them, without one
+            if self.is_downpayment and not self.display_type and not values.get('product_id'):
+                product = self.company_id._l10n_pt_get_down_payment_product()
+                values['product_id'] = product.id
+                values['product_uom_id'] = values.get('product_uom_id') or product.uom_id.id
         return values
 
 
@@ -68,7 +72,7 @@ class SaleOrder(models.Model):
         compute='_compute_l10n_pt_at_series_id',
         readonly=False,
         store=True,
-        domain="[('active', '=', True), ('document_type', 'in', ('quotation', 'sales_order'))]",
+        domain="[('active', '=', True), ('document_type', '=', l10n_pt_document_type)]",
     )
     l10n_pt_document_type = fields.Selection(selection_add=AT_SERIES_SALES_DOCUMENT_TYPES)
     quotation_id = fields.Many2one(
@@ -103,22 +107,22 @@ class SaleOrder(models.Model):
             and not so.l10n_pt_document_number
             and not so.l10n_pt_at_series_id.active
         ))
-        for (company, state_sale), orders in sale_orders.grouped(lambda o: (o.company_id, o.state == 'sale')).items():
-            domain = [
+        # Match on the document type rather than on `state`: a quotation confirmed in place (portal
+        # sign & pay) is in state 'sale' but keeps its quotation type and series, which a sales
+        # order must not inherit. Either mismatch is rejected by `_check_l10n_pt_at_series_id`.
+        for (company, document_type), orders in sale_orders.grouped(lambda o: (o.company_id, o.l10n_pt_document_type)).items():
+            if not document_type:
+                continue
+            last_order = self.env['sale.order'].search([
                 ('company_id', '=', company.id),
+                ('l10n_pt_document_type', '=', document_type),
                 ('l10n_pt_at_series_id', '!=', False),
                 ('l10n_pt_at_series_id.active', '=', True),
-            ]
-            if not state_sale and not self.env.context.get('create_sales_order'):
-                domain.append(('state', 'in', ('draft', 'sent')))
-            else:
-                domain.append(('state', '=', 'sale'))
-
-            last_order = self.env['sale.order'].search(domain, order='id desc', limit=1)
+            ], order='id desc', limit=1)
             orders.l10n_pt_at_series_id = last_order.l10n_pt_at_series_id or self.env['l10n_pt.at.series'].search([
                 *self.env['l10n_pt.at.series']._l10n_pt_company_domain(company),
                 ('active', '=', True),
-                ('document_type', 'in', self._l10n_pt_series_document_types()),
+                ('document_type', '=', document_type),
             ], limit=1)
 
     @api.depends('sales_order_ids')
@@ -128,24 +132,27 @@ class SaleOrder(models.Model):
 
     @api.constrains('l10n_pt_at_series_id')
     def _check_l10n_pt_at_series_id(self):
-        orders = self.filtered(lambda so: so.country_code == 'PT')
+        # A cancelled order that was never issued has no document type: it is not an AT document,
+        # and its series may never have been computed.
+        orders = self.filtered(lambda so: so.country_code == 'PT' and so.l10n_pt_document_type)
         if missing_series := orders.filtered(lambda so: not so.l10n_pt_at_series_id):
             document_types = dict(self._fields['l10n_pt_document_type']._description_selection(self.env))
+            missing_types = [document_type for document_type in dict.fromkeys(missing_series.mapped('l10n_pt_document_type')) if document_type]
+            # A quotation's form asks for its own series; this is reached from a form on confirmation,
+            # where the sales order is created server-side. Open the missing series, prefilled.
             raise RedirectWarning(
                 _("There is no AT series for the document type %(document_type)s. "
                   "Create a new series or view existing series via the Accounting Settings.",
-                  document_type=" and ".join(
-                      document_types[document_type]
-                      for document_type in dict.fromkeys(missing_series.mapped('l10n_pt_document_type'))
-                      if document_type
-                  )),
+                  document_type=" and ".join(document_types[document_type] for document_type in missing_types)),
                 {
-                    'name': _('AT Series'),
+                    'name': _('New AT Series'),
                     'type': 'ir.actions.act_window',
                     'res_model': 'l10n_pt.at.series',
-                    'view_mode': 'list',
-                    'views': [[self.env.ref('l10n_pt_certification.view_l10n_pt_at_series_tree').id, 'list']],
-                    'context': {'search_default_sales_document_types': 1},
+                    'view_mode': 'form',
+                    'context': {
+                        'l10n_pt_series_document_types': missing_types,
+                        'default_company_id': missing_series.company_id[:1].id,
+                    },
                     'target': 'new',
                 },
                 _('Add an AT Series'),
@@ -161,9 +168,7 @@ class SaleOrder(models.Model):
 
     def action_quotation_send(self):
         if not self.env.context.get('has_reprint_reason'):
-            self._check_l10n_pt_dates()
-            self._check_l10n_pt_at_series_id()
-            self._set_l10n_pt_document_number()
+            self._l10n_pt_issue()
             reprint = False
             for order in self.filtered(lambda o: o.country_code == 'PT'):
                 if order.l10n_pt_print_version:
@@ -180,42 +185,46 @@ class SaleOrder(models.Model):
 
     def action_preview_sale_order(self):
         self.ensure_one()
-        self._check_l10n_pt_dates()
-        self._check_l10n_pt_at_series_id()
-        self._set_l10n_pt_document_number()
-        if self.state == 'sale':
-            self._l10n_pt_compute_missing_hashes()
+        self._l10n_pt_issue()
         return super().action_preview_sale_order()
 
+    def _l10n_pt_issued_orders(self):
+        return self.filtered(lambda o: o.country_code == 'PT' and o.l10n_pt_document_number)
+
     def action_cancel(self):
+        # An issued order is cancelled with a reason (Portaria 302/2016 4.3.4.3.3), asked for before
+        # anything changes: the wizard writes it, then cancels.
+        if self._l10n_pt_issued_orders().filtered(lambda o: not o.l10n_pt_cancel_reason):
+            action = self.env['ir.actions.actions']._for_xml_id('l10n_pt_certification.action_l10n_pt_cancel')
+            action['context'] = {
+                'model': 'sale.order',
+                'order_ids': self.ids,
+            }
+            return action
         # PT orders are locked once they are hashed, but the AT still requires them to be cancellable.
         # Other countries keep the standard "cannot cancel a locked order" guard.
         self.filtered(lambda o: o.country_code == 'PT').action_unlock()
-        return super().action_cancel()
+        res = super().action_cancel()
+        self._l10n_pt_issued_orders().action_lock()
+        return res
 
     def _action_cancel(self):
+        # Every path to a cancelled order comes here, the mass cancel and RPC included.
+        if self._l10n_pt_issued_orders().filtered(lambda o: not o.l10n_pt_cancel_reason):
+            raise UserError(_("An issued Portuguese quotation or sales order can only be cancelled with a reason."))
         res = super()._action_cancel()
-        pt_orders = self.filtered(lambda o: o.country_code == 'PT')
-        if not pt_orders:
-            return res
-        # The AT requires a reason to be recorded for every cancelled document.
-        action = self.env['ir.actions.actions']._for_xml_id('l10n_pt_certification.action_l10n_pt_cancel')
-        action['context'] = {
-            'model': 'sale.order',
-            'order_ids': pt_orders.ids,
-        }
-        return action
+        self._l10n_pt_record_cancellation()
+        return res
+
+    def action_draft(self):
+        if self._l10n_pt_issued_orders().filtered(lambda o: o.state == 'cancel'):
+            raise UserError(_("A cancelled Portuguese quotation or sales order that was issued cannot be reset to draft."))
+        return super().action_draft()
 
     def _create_invoices(self, grouped=False, final=False, date=None):
-        if self.env.company.account_fiscal_country_id.code == 'PT':
-            self._check_l10n_pt_dates()
-            orders = self.sudo().search([
-                ('company_id', '=', self.env.company.id),
-                ('l10n_pt_inalterable_hash', '=', False),
-                ('l10n_pt_document_number', '=', False),
-            ], order='date_order')
-            orders._check_l10n_pt_at_series_id()
-            orders.filtered(lambda so: so.state == 'sale')._set_l10n_pt_document_number()
+        # The invoice references the orders it invoices, so those are issued first; no other order
+        # is touched.
+        self.filtered(lambda so: so.state == 'sale')._l10n_pt_issue()
         return super()._create_invoices(grouped=grouped, final=final, date=date)
 
     def _prepare_invoice(self):
@@ -230,9 +239,7 @@ class SaleOrder(models.Model):
 
     def action_l10n_pt_create_sales_order(self):
         self.ensure_one()
-        self._check_l10n_pt_dates()
-        self._check_l10n_pt_at_series_id()
-        self._set_l10n_pt_document_number()
+        self._l10n_pt_issue()
 
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['context'] = dict(self.env.context)
@@ -287,8 +294,9 @@ class SaleOrder(models.Model):
         return self.state != 'cancel'
 
     def _l10n_pt_get_gross_total(self):
+        # In EUR whatever the order's currency, as the QR code's `O:` (Despacho 8632/2014 2.1.7).
         self.ensure_one()
-        return self.amount_total
+        return self._l10n_pt_amount_to_eur(self.amount_total)
 
     def _l10n_pt_get_saft_doc_type(self):
         self.ensure_one()
@@ -307,72 +315,59 @@ class SaleOrder(models.Model):
         return self.sudo().search([
             ('l10n_pt_at_series_id', '=', at_series.id),
             ('l10n_pt_inalterable_hash', '!=', False),
-        ], order='l10n_pt_document_number desc', limit=1)
+        ], order='l10n_pt_sequence_number desc', limit=1)
 
     def _l10n_pt_get_unhashed_records(self, at_series):
+        # Numbering is the act of issuing an order (`_l10n_pt_issue`): drafts nobody issued stay
+        # out of the chain, unnumbered, unsigned and editable.
         return self.sudo().search([
             ('l10n_pt_at_series_id', '=', at_series.id),
+            ('l10n_pt_document_number', '!=', False),
             ('l10n_pt_inalterable_hash', '=', False),
-        ], order='l10n_pt_document_number')
+        ], order='l10n_pt_sequence_number')
 
     def _l10n_pt_post_hash_hook(self):
         self.locked = True
 
+    def _l10n_pt_document_label(self, at_series):
+        if at_series.document_type == 'sales_order':
+            return 'sales order', 'sales orders', self.env._('Sales Orders')
+        return 'quotation', 'quotations', self.env._('Quotations')
+
+    def _l10n_pt_issue(self):
+        """
+        Issue the orders: number, sign and lock them in one step.
+
+        AT wants a document signed as soon as it is numbered, and frozen from then on (Despacho
+        8632/2014 2.1.1 and 1.11), so no order may exist numbered but unsigned. Called wherever an
+        order first reaches the customer or another document: print, send, preview, confirmation
+        into a sales order, invoicing.
+        """
+        self._l10n_pt_compute_missing_hashes()
+
     def _l10n_pt_compute_missing_hashes(self, company=None):
         """
-        Compute the hash/atcud for all records that do not have one yet
-        (because they were not printed/previewed yet)
+        Number the orders given, then sign them along with every other order of their series that
+        was issued but is not signed yet.
         """
-        # When printing an order before previewing or creating an invoice from it, at series may not be set yet
-        self._check_l10n_pt_at_series_id()
-        self._set_l10n_pt_document_number()
+        to_issue = self.filtered(lambda so: (
+            so.country_code == 'PT'
+            and so.l10n_pt_document_type
+            and not so.l10n_pt_document_number
+        ))
+        to_issue._check_l10n_pt_dates()
+        to_issue._check_l10n_pt_at_series_id()
+        to_issue._check_l10n_pt_lines_exemption_reasons()
+        to_issue._set_l10n_pt_document_number()
         return super()._l10n_pt_compute_missing_hashes(company=company)
 
     ####################################
     # QR CODE
     ####################################
 
-    def _l10n_pt_qr_add_tax_details(self, qr_code_dict, tax_letter):
-        self.ensure_one()
-        details_by_tax_group = self._l10n_pt_get_details_by_tax_category()
-        if details_by_tax_group.get('E'):
-            qr_code_dict[f'{tax_letter}2:'] = f"{details_by_tax_group.get('E')['base']}*"
-        for i, tax_category in enumerate(('R', 'I', 'N')):
-            if details_by_tax_group.get(tax_category):
-                qr_code_dict[f'{tax_letter}{i * 2 + 3}:'] = f"{details_by_tax_group.get(tax_category)['base']}*"
-                qr_code_dict[f'{tax_letter}{i * 2 + 4}:'] = f"{details_by_tax_group.get(tax_category)['vat']}*"
-
     def _l10n_pt_qr_get_totals(self):
         self.ensure_one()
         return self._l10n_pt_qr_format_amount(self.amount_tax), self._l10n_pt_qr_format_amount(self.amount_total)
 
-    def _l10n_pt_qr_format_amount(self, amount):
-        """
-        Convert amount to EUR based on the rate of the order's date.
-        Format amount to 2 decimals as per SAF-T (PT) requirements.
-        """
-        self.ensure_one()
-        amount_eur = self.currency_id._convert(amount, self.env.ref('base.EUR'), self.company_id, self.date_order)
-        return float_repr(amount_eur, 2)
-
-    def _l10n_pt_get_details_by_tax_category(self):
-        """
-        :return: {tax_category : {'base': base, 'vat': vat}}
-        """
-        self.ensure_one()
-        res = {}
-        tax_groups = self.tax_totals['subtotals'][0]['tax_groups']
-        for group in tax_groups:
-            tax_group = self.env['account.tax.group'].browse(group['id'])
-            if (
-                tax_group.l10n_pt_tax_region == 'PT-ALL'
-                or (
-                    tax_group.l10n_pt_tax_region
-                    and tax_group.l10n_pt_tax_region == self.company_id.l10n_pt_region_code
-                )
-            ):
-                res[tax_group.l10n_pt_tax_category] = {
-                    'base': self._l10n_pt_qr_format_amount(group['base_amount']),
-                    'vat': self._l10n_pt_qr_format_amount(group['tax_amount']),
-                }
-        return res
+    def _l10n_pt_get_tax_details_by_region(self):
+        return self._l10n_pt_split_not_subject_bases(super()._l10n_pt_get_tax_details_by_region())

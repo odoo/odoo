@@ -33,13 +33,20 @@ class AccountChartTemplate(models.AbstractModel):
 
             # we need to ensure AT Series created after the moves are added to the demo moves
             invoices._compute_l10n_pt_at_series_id()
+            # Posting signs an invoice through the IAP signing service, which a demo database usually
+            # cannot reach (no subscription): what cannot be posted is left as a clean draft.
+            unposted, error = self.env['account.move'], None
             for move in invoices:
+                if move.move_type == 'out_refund' and not move.reversed_entry_id:
+                    continue
                 try:
-                    if move.move_type == 'out_refund' and not move.reversed_entry_id:
-                        continue
-                    move.action_post()
-                except (UserError, ValidationError):
-                    _logger.exception('Error while posting demo data')
+                    with self.env.cr.savepoint():
+                        move.action_post()
+                except (UserError, ValidationError) as e:
+                    unposted |= move
+                    error = e
+            if unposted:
+                _logger.warning("%s Portuguese demo invoices were left in draft: %s", len(unposted), error)
         return super()._post_load_demo_data(company)
 
     def _create_l10n_at_series_demo(self, company):

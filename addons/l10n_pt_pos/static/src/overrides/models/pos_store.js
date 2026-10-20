@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
@@ -21,12 +22,34 @@ patch(PosStore.prototype, {
         return this.company.country_id?.code === "PT";
     },
 
-    async l10nPtPrepareOrderForReceipt(order = this.getOrder(), { notifyOnError = true } = {}) {
+    /**
+     * Tell the cashier why the receipt of ``order`` cannot be printed or sent: its fiscal document
+     * (an FS or FR) is only numbered and signed by the server, when the order is synchronised.
+     */
+    l10nPtExplainDocumentNotIssued(order) {
+        const body =
+            typeof order?.id !== "number"
+                ? _t(
+                      "The invoice of this order is issued when the order is synchronised with the server, which has not happened yet. Print or send the receipt from the order list once the till is back online. If the till stays offline, issue a pre-printed document to the customer instead, to be recovered in the system later."
+                  )
+                : _t(
+                      "The invoice of this order is not signed yet, so its receipt cannot be printed or sent. Try again in a moment; if it still fails, ask a manager to check the order's invoice in the back office."
+                  );
+        this.dialog.add(AlertDialog, { title: _t("Document not issued yet"), body });
+    },
+
+    async l10nPtPrepareOrderForReceipt(
+        order = this.getOrder(),
+        { notifyOnError = true, explainNotIssued = false } = {}
+    ) {
         if (!this.isPortugueseCompany()) {
             return true;
         }
         order.l10nPtCertificationNumber = this.session.l10nPtCertificationNumber;
         if (typeof order?.id !== "number") {
+            if (explainNotIssued) {
+                this.l10nPtExplainDocumentNotIssued(order);
+            }
             return false;
         }
 
@@ -46,6 +69,9 @@ patch(PosStore.prototype, {
         }
 
         if (!orderValues || !orderValues.hash_short) {
+            if (explainNotIssued) {
+                this.l10nPtExplainDocumentNotIssued(order);
+            }
             return false;
         }
 
@@ -53,6 +79,7 @@ patch(PosStore.prototype, {
         order.isReprint = orderValues.is_reprint;
         order.l10nPtPosAtcud = orderValues.atcud;
         order.l10nPtPosIdentifier = orderValues.document_identifier;
+        order.l10nPtDocumentType = orderValues.document_type;
         order.l10nPtPosInalterableHashShort = orderValues.hash_short;
         order.l10nPtPosQrCodeStr = orderValues.qr_code_str
             ? order.l10nPtPosGetQrCodeData(orderValues.qr_code_str)
@@ -65,7 +92,7 @@ patch(PosStore.prototype, {
         if (!this.isPortugueseCompany()) {
             return super.printReceipt(...arguments);
         }
-        const prepared = await this.l10nPtPrepareOrderForReceipt(order);
+        const prepared = await this.l10nPtPrepareOrderForReceipt(order, { explainNotIssued: true });
         if (!prepared) {
             return {};
         }

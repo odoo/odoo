@@ -9,6 +9,15 @@ patch(PosOrder.prototype, {
         return this.company.country_id?.code === "PT";
     },
 
+    /**
+     * Sold to a final consumer: no customer, or one without a NIF or with the generic 999999990,
+     * which is kept for the SAF-T only and never printed (Despacho 8632/2014 2.2.5, FAQ 4730).
+     */
+    l10nPtIsFinalConsumer() {
+        const nif = this.partner_id?.vat?.replace(/\D/g, "");
+        return !this.partner_id?.vat || nif === "999999990";
+    },
+
     l10nPtPosGetQrCodeData(qrCodeStr) {
         const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
         const qdCodeSvg = new XMLSerializer().serializeToString(

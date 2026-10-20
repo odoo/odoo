@@ -2,7 +2,7 @@ from datetime import timedelta
 from unittest.mock import patch
 
 from odoo import Command, fields
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.models import Model
 from odoo.tests import tagged
 from odoo.tests.common import freeze_time
@@ -45,6 +45,10 @@ class TestL10nPtFlows(TestL10nPtCommon):
         invoice_form.name = 'INV 2024A/1'
         invoice_form.save()
         self.assertEqual(invoice.name, 'INV 2024A/1')
+        # The series named after it must exist, with its AT code, before the invoice is issued
+        with self.assertRaises(RedirectWarning) as cm:
+            invoice.action_post()
+        self.env['l10n_pt.at.series'].with_context(cm.exception.args[1]['context']).create({'at_code': 'AT-TEST2024A'})
         invoice.action_post()
         self.assertEqual(invoice.name, 'INV 2024A/00001')
 
@@ -126,7 +130,8 @@ class TestL10nPtFlows(TestL10nPtCommon):
         invoice = self.create_invoice('out_invoice', post=False)
         original_series = invoice.l10n_pt_at_series_id
         invoice.l10n_pt_at_series_id = False
-        with patch('odoo.addons.l10n_pt_certification.models.account_move.AccountMove._l10n_pt_create_at_series_from_sequence', return_value=None), self.assertRaisesRegex(UserError, "Please select a series for this document"):
+        with patch('odoo.addons.l10n_pt_certification.models.account_move.AccountMove._compute_l10n_pt_at_series_id'), \
+             self.assertRaisesRegex(RedirectWarning, "There is no AT series for"):
             invoice.action_post()
 
         invoice.l10n_pt_at_series_id = self.series_2024.filtered(lambda s: s.document_type != invoice.l10n_pt_document_type)[0]
@@ -157,8 +162,11 @@ class TestL10nPtFlows(TestL10nPtCommon):
         invoice.l10n_pt_at_series_id = original_series
         invoice.action_post()
 
-    def test_series_posting_auto_creates_when_missing(self):
-        """ An invoice with no series creates a new series from the invoice's sequence upon posting """
+    def test_series_posting_without_series_offers_prefilled_series(self):
+        """
+        An invoice with no series is not posted: a document may only be issued in a series validated by
+        the AT. The warning opens the series form, prefilled from the invoice's sequence.
+        """
         journal = self.env['account.journal'].create({
             'name': 'Sales Journal Test',
             'type': 'sale',
@@ -174,6 +182,7 @@ class TestL10nPtFlows(TestL10nPtCommon):
             'line_ids': [
                 Command.create({
                     'name': 'Product A',
+                    'product_id': self.product_a.id,
                     'quantity': 1,
                     'price_unit': 100,
                     'tax_ids': [self.tax_sale_23.id],
@@ -181,22 +190,33 @@ class TestL10nPtFlows(TestL10nPtCommon):
             ],
         })
         self.assertFalse(invoice.l10n_pt_at_series_id)
+        with self.assertRaises(RedirectWarning) as cm:
+            invoice.action_post()
+        self.assertEqual(invoice.state, 'draft')
         self.assertFalse(invoice.l10n_pt_document_number)
+        action = cm.exception.args[1]
+        self.assertEqual(action['res_model'], 'l10n_pt.at.series')
+        self.assertEqual({key: value for key, value in action['context'].items() if key.startswith('default_')}, {
+            'default_name': '2024A',
+            'default_prefix': 'INV',
+            'default_document_type': 'out_invoice',
+            'default_journal_id': journal.id,
+            'default_company_id': self.company_pt.id,
+            'default_date_start': '2024-01-01',
+            'default_date_end': '2024-12-31',
+        })
+
+        # Once the series exists, with its AT validation code, the same invoice is issued in it
+        self.env['l10n_pt.at.series'].with_context(action['context']).create({'at_code': 'AT-TEST2024A'})
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
         self.assertEqual(invoice.name, 'INV 2024A/00001')
         self.assertEqual(invoice.l10n_pt_document_number, invoice.name)
-        self.assertRecordValues(invoice.l10n_pt_at_series_id, [{
-            'name': '2024A',
-            'prefix': 'INV',
-            'document_type': 'out_invoice',
-            'date_start': fields.Date.from_string('2024-01-01'),
-            'date_end': fields.Date.from_string('2024-12-31'),
-        }])
+        self.assertEqual(invoice.l10n_pt_atcud, 'AT-TEST2024A-1')
 
-    def test_series_posting_auto_receives_at_code_from_ws(self):
-        """ When a series is created from posting an invoice, the series is communicated to AT portal via webserivce.
-            which returns an AT (validation) code to be used on the series
+    def test_series_created_from_posting_receives_at_code_from_ws(self):
+        """ A series created from the warning of a posting is communicated to the AT via webservice,
+            which returns the AT (validation) code the invoice is then issued with.
         """
         journal = self.env['account.journal'].create({
             'name': 'Sales Journal AT',
@@ -213,25 +233,29 @@ class TestL10nPtFlows(TestL10nPtCommon):
             'line_ids': [
                 Command.create({
                     'name': 'Product A',
+                    'product_id': self.product_a.id,
                     'quantity': 1,
                     'price_unit': 100,
                     'tax_ids': [self.tax_sale_23.id],
                 }),
             ],
         })
+        with self.assertRaises(RedirectWarning) as cm:
+            invoice.action_post()
         # For WS communication, there needs to be a username set on the company
         self.company_pt.l10n_pt_at_ws_env = 'test'
         self.company_pt.l10n_pt_at_ws_username = 'test'
         self.company_pt.l10n_pt_at_ws_password = 'test'
         with self._mock_ws(return_code='WS-CODE-123'):
-            invoice.action_post()
+            self.env['l10n_pt.at.series'].with_context(cm.exception.args[1]['context']).create({})
+        invoice.action_post()
         self.assertEqual(invoice.l10n_pt_at_series_id.at_code, 'WS-CODE-123')
+        self.assertEqual(invoice.l10n_pt_atcud, 'WS-CODE-123-1')
 
-    def test_series_posting_not_blocked_by_ws_failure(self):
-        """ When a series is created from posting an invoice, the series is communicated to AT portal via webserivce.
-            If the webservice communication is down or has an error, it shouldn't affect normal invoice posting.
-            Invoice will not have an AT code which will block hashing until an AT validation code is obtained from the AT portal,
-            either manually or using webservice again.
+    def test_series_posting_blocked_until_at_code(self):
+        """ When the webservice is down or has an error, a series is still created, without an AT validation code.
+            No document is issued in it, and no number consumed, until the code is obtained from the AT portal,
+            either manually or using the webservice again.
         """
         journal = self.env['account.journal'].create({
             'name': 'Sales Journal WSFail',
@@ -248,6 +272,7 @@ class TestL10nPtFlows(TestL10nPtCommon):
             'line_ids': [
                 Command.create({
                     'name': 'Product A',
+                    'product_id': self.product_a.id,
                     'quantity': 1,
                     'price_unit': 100,
                     'tax_ids': [self.tax_sale_23.id],
@@ -255,20 +280,26 @@ class TestL10nPtFlows(TestL10nPtCommon):
             ],
         })
 
+        with self.assertRaises(RedirectWarning) as cm:
+            invoice.action_post()
         # For WS communication, there needs to be a username set on the company
         self.company_pt.l10n_pt_at_ws_env = 'test'
         self.company_pt.l10n_pt_at_ws_username = 'test'
         self.company_pt.l10n_pt_at_ws_password = 'test'
         with mute_logger('odoo.addons.l10n_pt_certification.models.l10n_pt_at_series'), \
              self._mock_ws(side_effect=UserError("WS down")):
-            invoice.action_post()
-        self.assertTrue(invoice.l10n_pt_at_series_id)
-        self.assertFalse(invoice.l10n_pt_at_series_id.at_code)
-        self.assertEqual(invoice.state, 'posted')
+            series = self.env['l10n_pt.at.series'].with_context(cm.exception.args[1]['context']).create({})
+        self.assertFalse(series.at_code)
 
-        # Cannot hash (to send or print) if the series doesn't have an AT validation code
-        with self._mock_sign_records(), self.assertRaisesRegex(UserError, "The AT Series .* is missing the AT Validation Code."):
-            invoice.button_hash()
+        with self.assertRaisesRegex(RedirectWarning, "has no AT validation code yet"):
+            invoice.action_post()
+        self.assertEqual(invoice.state, 'draft')
+        self.assertFalse(invoice.l10n_pt_document_number)
+
+        series.at_code = 'AT-MANUAL-1'
+        invoice.action_post()
+        self.assertEqual(invoice.state, 'posted')
+        self.assertEqual(invoice.l10n_pt_atcud, 'AT-MANUAL-1-1')
 
     def test_series_recomputed(self):
         """ The series must be recomputed whe the following changes:
@@ -365,6 +396,8 @@ class TestL10nPtFlows(TestL10nPtCommon):
     def test_cannot_create_qr_without_hash(self):
         """ Cannot create qr code without hash, valid PT VAT, or ATCUD """
         invoice = self.create_invoice('out_invoice')
+        # Posting signs the invoice; an unsigned one is only left behind by older data.
+        Model.write(invoice, {'inalterable_hash': False})
         with self.assertRaisesRegex(UserError,
             r"Some fields required for the generation of the document are missing or invalid[\s\S]*The `hash` is not defined. You can contact the support.*"
         ):
@@ -390,15 +423,15 @@ class TestL10nPtFlows(TestL10nPtCommon):
         with self._mock_sign_records():
             invoice = self.create_invoice('out_invoice', do_hash=True, mock_hash=True)
         qr_str = invoice.l10n_pt_qr_code_str
-        self.assertIn('A%3A', qr_str)
-        self.assertIn('B%3A', qr_str)
-        self.assertIn('C%3A', qr_str)
-        self.assertIn('F%3A', qr_str)
-        self.assertIn('G%3A', qr_str)
-        self.assertIn('H%3A', qr_str)
-        self.assertIn('N%3A', qr_str)
-        self.assertIn('O%3A', qr_str)
-        self.assertIn('Q%3A', qr_str)
+        self.assertTrue(qr_str.startswith('A:'))
+        self.assertIn('*B:', qr_str)
+        self.assertIn('*C:', qr_str)
+        self.assertIn('*F:', qr_str)
+        self.assertIn('*G:', qr_str)
+        self.assertIn('*H:', qr_str)
+        self.assertIn('*N:', qr_str)
+        self.assertIn('*O:', qr_str)
+        self.assertIn('*Q:', qr_str)
 
     # --------------------------------------------------
     # Section 4: Print / Send / Preview
@@ -439,6 +472,9 @@ class TestL10nPtFlows(TestL10nPtCommon):
                 invoices = self.env['account.move']
                 for _ in range(3):
                     invoices += self.create_invoice('out_invoice', do_hash=False, amount=100.0)
+                # Posting signs them; unsigned invoices are only left behind by older data, which
+                # these actions still catch up on.
+                Model.write(invoices, {'inalterable_hash': False})
                 self.assertFalse(any(invoices.mapped('inalterable_hash')))
                 with self._mock_sign_records():
                     trigger_action(invoices[-1])
@@ -469,6 +505,16 @@ class TestL10nPtFlows(TestL10nPtCommon):
 
     def test_invoice_receipt_type_when_paid_before_posting(self):
         """ If an invoice is paid before posting then it's considered an invoice receipt """
+        self.env['l10n_pt.at.series'].create({
+            'name': '2024',
+            'company_id': self.company_pt.id,
+            'training_series': True,
+            'date_start': '2024-01-01',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'document_type': 'out_invoice_receipt',
+            'prefix': 'FR',
+            'at_code': 'AT-TESTFR2024',
+        })
         # Draft -> Pay -> Post ==> Invoice-receipt
         invoice = self.create_invoice('out_invoice', amount=100.0, post=False)
         self.env['account.payment.register'].with_company(self.company_pt).with_context(
@@ -506,7 +552,8 @@ class TestL10nPtFlows(TestL10nPtCommon):
     def test_sales_receipt_limits(self):
         """ A sales receipt's amount must be below a certain limit depending on if product is goods or service """
         good = self.product_a
-        service = self.product_a.copy({'type': 'service'})
+        # product.product.copy() returns no product here, which made the first check pass on a line without one
+        service = self.env['product.product'].create({'name': 'Service A', 'type': 'service'})
 
         with self.assertRaisesRegex(UserError, "A sales receipt.*cannot exceed.*EUR"):
             self.create_invoice('out_receipt', amount=PT_SIMPLIFIED_INVOICE_SERVICES_LIMIT + 1, product_id=service.id)
@@ -659,6 +706,7 @@ class TestL10nPtFlows(TestL10nPtCommon):
             'line_ids': [
                 Command.create({
                     'name': 'Product A',
+                    'product_id': self.product_a.id,
                     'quantity': 1,
                     'price_unit': 100,
                     'tax_ids': [],

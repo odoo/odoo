@@ -15,37 +15,64 @@ L10N_PT_TAX_CATEGORIES_SELECTION = [
     ('E', 'Exempt'),
 ]
 
+# The AT table of VAT exemption reasons, v4.0 (2026-06-18), referenced by Portaria 302/2016: each code with
+# the mention printed on the document and exported as the SAF-T TaxExemptionReason (6 to 60 characters).
+# e-Fatura rejects a code outside the current table (FAQ 5002).
 # https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Faturacao/Fatcorews/Documents/Tabela_Codigos_Motivo_Isencao.pdf
+L10N_PT_TAX_EXEMPTION_MENTIONS = {
+    "M01": "Artigo 16.º n.º 6 do CIVA",
+    "M02": "Artigo 6.º do Decreto-Lei n.º 198/90, de 19 de junho",
+    "M04": "Isento artigo 13.º do CIVA",
+    "M05": "Isento artigo 14.º do CIVA",
+    "M06": "Isento artigo 15.º do CIVA",
+    "M07": "Isento artigo 9.º do CIVA",
+    "M09": "IVA – não confere direito a dedução",
+    "M10": "IVA – regime de isenção",
+    "M11": "Regime particular do tabaco",
+    "M12": "Regime da margem de lucro – Agências de viagens",
+    "M13": "Regime da margem de lucro – Bens em segunda mão",
+    "M14": "Regime da margem de lucro – Objetos de arte",
+    # The table's own mention, with spaces around the dash, is 61 characters: one over the SAF-T's limit.
+    "M15": "Regime da margem de lucro–Objetos de coleção e antiguidades",
+    "M16": "Isento artigo 14.º do RITI",
+    "M19": "Outras isenções",
+    "M20": "IVA – regime forfetário",
+    "M21": "IVA – não confere direito à dedução",
+    "M25": "Mercadorias à consignação",
+    "M26": "Isenção de IVA com direito à dedução no cabaz alimentar",
+    "M30": "IVA – autoliquidação",
+    "M31": "IVA – autoliquidação",
+    "M32": "IVA – autoliquidação",
+    "M33": "IVA – autoliquidação",
+    "M34": "IVA – autoliquidação",
+    "M35": "IVA – autoliquidação",
+    "M40": "IVA – autoliquidação",
+    "M41": "IVA – autoliquidação",
+    "M42": "IVA – autoliquidação",
+    "M43": "IVA – autoliquidação",
+    "M44": "IVA – Regras específicas – artigo 6.º",
+    "M45": "IVA – regime transfronteiriço de isenção",
+    "M46": "IVA – e-TaxFree",
+    "M99": "Não sujeito ou não tributado",
+}
+
+# The legal basis telling apart the codes that share a mention, shown where the code is chosen.
+L10N_PT_TAX_EXEMPTION_LEGAL_BASES = {
+    "M30": "art. 2.º n.º 1 i) CIVA",
+    "M31": "art. 2.º n.º 1 j) CIVA",
+    "M32": "art. 2.º n.º 1 l) CIVA",
+    "M33": "art. 2.º n.º 1 m) CIVA",
+    "M34": "art. 2.º n.º 1 n) CIVA",
+    "M35": "art. 2.º n.º 1 j) CIVA, verba 2.42 da lista I, from 2026-07-01",
+    "M40": "art. 6.º n.º 6 a) CIVA",
+    "M41": "art. 8.º n.º 3 RITI",
+    "M42": "DL 21/2007",
+    "M43": "DL 362/99",
+}
+
 L10N_PT_TAX_EXEMPTION_REASONS_SELECTION = [
-    ("M01", "M01 - Artigo 16.º, n.º 6 do CIVA ou similar"),
-    ("M02", "M02 - Artigo 6.º do Decreto-Lei n.º 198/90, de 19 de Junho"),
-    ("M03", "M03 - Exigibilidade de caixa (revogado)"),
-    ("M04", "M04 - Artigo 13.º do CIVA ou similar"),
-    ("M05", "M05 - Artigo 14.º do CIVA ou similar"),
-    ("M06", "M06 - Artigo 15.º do CIVA ou similar"),
-    ("M07", "M07 - Artigo 9.º do CIVA ou similar"),
-    ("M08", "M08 - IVA - autoliquidação (revogado)"),
-    ("M09", "M09 - IVA - não confere direito a dedução"),
-    ("M10", "M10 - IVA - Regime de isenção (Artigo 57.º do CIVA)"),
-    ("M11", "M11 - Regime particular do tabaco"),
-    ("M12", "M12 - Regime da margem de lucro - Agências de viagens"),
-    ("M13", "M13 - Regime da margem de lucro - Bens em segunda mão"),
-    ("M14", "M14 - Regime da margem de lucro - Objetos de arte"),
-    ("M15", "M15 - Regime da margem de lucro - Objetos de coleção e antiguidades"),
-    ("M16", "M16 - Artigo 14.º do RITI ou similar"),
-    ("M19", "M19 - Outras isenções"),
-    ("M20", "M20 - IVA - regime forfetário"),
-    ("M21", "M21 - IVA – não confere direito à dedução"),
-    ("M25", "M25 - Mercadorias à consignação"),
-    ("M30", "M30 - IVA - autoliquidação (2.1.i)"),
-    ("M31", "M31 - IVA - autoliquidação (2.1.j)"),
-    ("M32", "M32 - IVA - autoliquidação (2.1.l)"),
-    ("M33", "M33 - IVA - autoliquidação (2.1.m)"),
-    ("M40", "M40 - IVA - autoliquidação (6.6.a)"),
-    ("M41", "M41 - IVA - autoliquidação (8.3.R)"),
-    ("M42", "M42 - IVA - autoliquidação (21.2007)"),
-    ("M43", "M43 - IVA - autoliquidação (362.99)"),
-    ("M99", "M99 - Não sujeito; não tributado ou similar"),
+    (code, f"{code} - {mention}" + (f" ({basis})" if (basis := L10N_PT_TAX_EXEMPTION_LEGAL_BASES.get(code)) else ""))
+    for code, mention in L10N_PT_TAX_EXEMPTION_MENTIONS.items()
 ]
 
 
@@ -54,15 +81,26 @@ class AccountTax(models.Model):
 
     l10n_pt_tax_exemption_reason = fields.Selection(string="Tax Exemption Reason", selection=L10N_PT_TAX_EXEMPTION_REASONS_SELECTION)
 
-    @api.constrains('l10n_pt_tax_exemption_reason')
+    @api.constrains('l10n_pt_tax_exemption_reason', 'amount', 'amount_type')
     def _validate_l10n_pt_tax_exemption_reason(self):
         """
         According to Portugal's tax authority: "The proram should ensure the enforceability for the user
-        to present a reason for not assessing tax, if it is the case."
+        to present a reason for not assessing tax, if it is the case." (Despacho 8632/2014 3.2.6). Checked
+        whenever the rate or the reason changes, so a tax cannot become 0 % without one.
         """
         for tax in self:
-            if tax.country_code == 'PT' and tax.amount == 0 and not tax.l10n_pt_tax_exemption_reason:
+            if tax._l10n_pt_lacks_exemption_reason():
                 raise ValidationError(_("Exempt taxes require an exemption reason."))
+
+    def _l10n_pt_lacks_exemption_reason(self):
+        """Whether this PT tax charges nothing without saying why (a group of taxes charges its children)."""
+        self.ensure_one()
+        return (
+            self.country_code == 'PT'
+            and self.amount_type != 'group'
+            and self.amount == 0
+            and not self.l10n_pt_tax_exemption_reason
+        )
 
 
 class AccountTaxGroup(models.Model):

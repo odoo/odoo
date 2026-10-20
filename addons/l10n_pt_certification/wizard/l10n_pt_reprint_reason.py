@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class L10nPtReprintReason(models.TransientModel):
@@ -37,10 +37,7 @@ class L10nPtReprintReason(models.TransientModel):
         # Filter only documents that need a reprint reason to cover the cases where multiple
         # documents are printed at once, and not all are necessarily reprints
         for document in documents.filtered(lambda d: d.l10n_pt_print_version):
-            msg = Markup(_("Reason for reprinting document %(name)s:<br/>%(reason)s")) % {
-                'name': document.name,
-                'reason': self.reason,
-            }
+            msg = self.env._("Reason for reprinting document %(name)s:", name=document.name) + Markup("<br/>") + (self.reason or "")
             document.message_post(body=msg)
 
         report_action = self._get_report_action(model, wizard or documents, self.env.context.get('action_to_return'))
