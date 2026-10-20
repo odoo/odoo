@@ -76,4 +76,7 @@ registry
                 documentCategoryElement.append(children(category));
             }
         }
+        for (const names of snippets.querySelectorAll("names")) {
+            snippetsDoc.body.append(names);
+        }
     });
