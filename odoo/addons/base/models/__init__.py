@@ -10,6 +10,7 @@ from . import ir_ui_view
 from . import ir_asset
 from . import ir_actions
 from . import ir_embedded_actions
+from . import ir_actions_hub
 from . import ir_actions_report
 from . import ir_attachment
 from . import website

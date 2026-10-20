@@ -31,4 +31,13 @@
         <field name="context">{"from_embedded_action": true}</field>
     </record>
 
+    <!-- EA context dropped: {"from_embedded_action": true} -->
+    <!-- EA groups dropped: project.group_project_manager -->
+    <record id="hub_item_forecast_margins" model="ir.actions.hub.item">
+        <field name="hub_id" ref="project.hub_project"/>
+        <field name="sequence">135</field>
+        <field name="name">Forecast Margins</field>
+        <field name="python_method">action_estimated_margin</field>
+    </record>
+
 </odoo>

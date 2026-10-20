@@ -12,6 +12,7 @@ from . import base_document_layout
 from . import res_config_settings
 from . import res_partner
 from . import res_users_settings_embedded_action
+from . import res_users_settings_hub
 from . import res_users_settings
 from . import res_users
 from . import properties_base_definition
