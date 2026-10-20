@@ -117,6 +117,10 @@ export class PosPayment extends Base {
             : false;
     }
 
+    isForceDoneAllowed() {
+        return true;
+    }
+
     isElectronic() {
         return Boolean(this.getPaymentStatus());
     }
