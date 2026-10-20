@@ -6,7 +6,6 @@ from odoo.tests import HttpCase, tagged
 from odoo.addons.sale.tests.common import SaleCommon
 
 
-# TODO VFE move to test_sale_product_configurators
 @tagged("post_install", "-at_install")
 class TestSaleComboConfigurator(HttpCase, SaleCommon):
     _test_user_groups = (
@@ -17,9 +16,6 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
     _test_user_name = 'Test Sales & Product Manager'
 
     def test_sale_combo_configurator(self):
-        if self.env["ir.module.module"]._get("sale_management").state != "installed":
-            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
-
         no_variant_attribute = self.env["product.attribute"].create({
             "name": "No variant attribute",
             "create_variant": "no_variant",
@@ -61,9 +57,6 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         self.start_tour("/odoo", "sale_combo_configurator", login=self.env.user.login)
 
     def test_sale_combo_configurator_with_optional_products(self):
-        if self.env["ir.module.module"]._get("sale_management").state != "installed":
-            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
-
         combo_a = self.env["product.combo"].create({
             "name": "Combo A",
             "combo_item_ids": [
@@ -113,9 +106,6 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
     def test_sale_combo_configurator_preselect_single_unconfigurable_items(self):
         # The tour runs as self.env.user (the test_user), which already holds
         # product.group_product_manager via _test_user_groups, so no extra grant is needed here.
-        if self.env["ir.module.module"]._get("sale_management").state != "installed":
-            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
-
         unconfigurable_no_variant_attribute = self.env["product.attribute"].create({
             "name": "Attribute A",
             "create_variant": "no_variant",
@@ -174,9 +164,6 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         )
 
     def test_sale_combo_configurator_preconfigure_unconfigurable_ptals(self):
-        if self.env["ir.module.module"]._get("sale_management").state != "installed":
-            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
-
         unconfigurable_no_variant_attribute = self.env["product.attribute"].create({
             "name": "Attribute A",
             "create_variant": "no_variant",

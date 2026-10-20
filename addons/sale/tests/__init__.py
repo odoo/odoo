@@ -14,7 +14,6 @@ from . import (
     test_product_attribute_value,
     test_product_catalog,
     test_product_configurator_data,
-    test_sale_combo_configurator,
     test_sale_combo_multicurrency,
     test_sale_early_payment_discount,
     test_sale_flow,
