@@ -58,7 +58,7 @@
                                 </div>
                                 <footer class="pt-0">
                                     <field name="available_operator_ids" widget="many2many_avatar_user" readonly="True"/>
-                                    <a t-if="record.rating_count.raw_value > 0" name="action_view_rating" class="ms-auto fs-6" type="object" tabindex="10" title="Percentage of positive ratings in the last 30 days">
+                                    <a t-if="record.rating_count.raw_value > 0" name="action_view_rating" class="ms-auto mt-auto fs-6 text-nowrap" type="object" tabindex="10" title="Percentage of positive ratings in the last 30 days">
                                         <i class="oi text-success" data-icon="sentiment_satisfied" role="img" aria-label="Happy face"/> <field name="rating_percentage_satisfaction"/>%
                                     </a>
                                 </footer>
