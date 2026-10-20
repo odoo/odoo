@@ -209,6 +209,58 @@ test("Clearing message input while pending search should empty message results",
 });
 
 test.tags("desktop");
+test("Clearing message input while a search is queued should not show its results", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "This is a message",
+        attachment_ids: [],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    let blockedFetchMessages = Promise.withResolvers();
+    listenStoreFetch("/discuss/channel/messages", {
+        logParams: ["/discuss/channel/messages"],
+        async onRpc(request) {
+            await blockedFetchMessages.promise;
+            blockedFetchMessages = Promise.withResolvers();
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    blockedFetchMessages.resolve();
+    await contains(".o-mail-Message");
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelId, fetch_params: { limit: 60, around: 0 } },
+        ],
+    ]);
+    await click("button[title='Search Messages']");
+    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input");
+    await editInput(document.body, ".o-mail-SearchInput input", "This");
+    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput.o-searching");
+    await editInput(document.body, ".o-mail-SearchInput input", "This is");
+    await animationFrame();
+    await click("button[aria-label='Clear']");
+    await contains(".o-mail-SearchInput input", { value: "" });
+    blockedFetchMessages.resolve();
+    await waitStoreFetch([
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelId, fetch_params: { search_term: "This", before: false } },
+        ],
+    ]);
+    blockedFetchMessages.resolve();
+    await animationFrame();
+    expect.verifySteps([]);
+    await contains(".o-mail-SearchInput input", { value: "" });
+    await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 0 });
+});
+
+test.tags("desktop");
 test("Search should be hightlighted", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

@@ -748,6 +748,9 @@ export class SearchState extends Reactive {
         }
         if (this.fetch && !skipFetch) {
             await this.sequential(async () => {
+                if (!this.isActive) {
+                    return;
+                }
                 this.loading = true;
                 let result;
                 try {
