@@ -2513,7 +2513,6 @@ class AccountMove(models.Model):
     def _compute_reconciled_payment_ids(self):
         ''' Retrieve the payments reconciled to the invoices through the reconciliation (account.partial.reconcile) '''
         self.env['account.payment'].flush_model(fnames=['move_id'])
-        self.env['account.move'].flush_model(fnames=['move_type'])
         self.env['account.move.line'].flush_model(fnames=['move_id', 'account_id'])
         self.env['account.partial.reconcile'].flush_model(fnames=['debit_move_id', 'credit_move_id'])
         self.env['account.account'].flush_model(fnames=['account_type'])
@@ -2539,7 +2538,7 @@ class AccountMove(models.Model):
             WHERE account.account_type IN ('asset_receivable', 'liability_payable')
                 AND invoice.id IN %(invoice_ids)s
                 AND line.id != counterpart_line.id
-            GROUP BY invoice.id, invoice.move_type
+            GROUP BY invoice.id
             """,
             invoice_ids=tuple(self.ids),
         ))) if self.ids else {}
@@ -4220,6 +4219,12 @@ class AccountMove(models.Model):
         if logger_message:
             _logger.info(logger_message)
         return res
+
+    def _flush(self):
+        if self._fields['move_type'] in self.env._field_dirty:
+            # `_flush` writes every dirty `move_type`, `_check_document_tax_mode_set` needs their tax mode computed first
+            self._recompute_model(['document_tax_mode'])
+        return super()._flush()
 
     @api.depends('partner_id', 'date', 'state', 'move_type')
     @api.depends_context('input_full_display_name')
