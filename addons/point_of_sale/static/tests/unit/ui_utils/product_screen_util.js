@@ -83,6 +83,12 @@ export async function scanBarcode(barcode) {
     await animationFrame();
 }
 
+export async function clickFastPaymentMethod(name) {
+    await ensurePane("left");
+    await contains(`.fast-pay-button:contains("${name}")`).click();
+    await animationFrame();
+}
+
 export function setFlatProductPrice(store, price) {
     store.models["product.pricelist.item"].get(1).fixed_price = price;
     store.models["product.template"].get(5).taxes_id = [];
