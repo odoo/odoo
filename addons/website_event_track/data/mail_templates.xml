@@ -5,7 +5,7 @@
 <template id="event_track_template_new" technical_usage="mail_post_source">
     <p>
         <span>New track proposal</span>
-        <a href="#" t-att-data-oe-model="track._name" t-att-data-oe-id="track.id" t-out="track.name"/>
+        <t t-out="track._get_html_link(title=track.name)"/>
     </p>
     <ul>
         <!-- "contact" information (the ones from partner_id) take precedence over public information -->

@@ -804,7 +804,7 @@ class Base(models.AbstractModel):
         :rtype: str
         """
         self.ensure_one()
-        classes = f" class={extra_classes}" if extra_classes else ""
+        classes = Markup(" class='{}'").format(extra_classes) if extra_classes else ""
         return Markup(
             "<a href='/mail/view?model={model}&amp;res_id={id}' data-oe-model='{model}'"
             " data-oe-id='{id}'{classes}>{title}</a>",
