@@ -643,6 +643,9 @@ export class SearchState {
         }
         if (this.fetch && !skipFetch) {
             await this.sequential(async () => {
+                if (!this.isActive) {
+                    return;
+                }
                 this.loading = true;
                 let result;
                 try {
