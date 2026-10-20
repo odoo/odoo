@@ -90,7 +90,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 </template>
 
 <template id="s_newsletter_box" name="Newsletter Box">
-    <section class="s_newsletter_box s_newsletter_list o_colored_level pt64 pb64 o_cc o_cc2" data-name="Newsletter Box" data-list-id="0" data-oe-shape-data="{'shape':'html_builder/Blobs/04_001','colors':{'c5':'o-color-5'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}">
+    <section class="s_newsletter_box s_newsletter_list o_colored_level pt64 pb64 o_cc o_cc2" data-list-id="0" data-oe-shape-data="{'shape':'html_builder/Blobs/04_001','colors':{'c5':'o-color-5'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}">
         <div class="o_we_shape o_html_builder_Blobs_04_001" style="background-image: url('/html_editor/shape/html_builder/Blobs/04_001.svg?c5=o-color-5');"/>
         <div class="container">
             <div class="row s_nb_column_fixed s_col_no_bgcolor">
@@ -117,12 +117,12 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 </template>
 
 <template id="s_newsletter_centered" name="Newsletter Centered">
-    <section class="s_newsletter_centered s_newsletter_list o_colored_level pt72 pb72" data-list-id="0" data-oe-shape-data="{'shape':'html_builder/Bold/15','colors':{'c5':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}" data-name="Newsletter Centered">
+    <section class="s_newsletter_centered s_newsletter_list o_colored_level pt72 pb72" data-list-id="0" data-oe-shape-data="{'shape':'html_builder/Bold/15','colors':{'c5':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}">
         <div class="o_we_shape o_html_builder_Bold_15" style="background-image: url('/html_editor/shape/html_builder/Bold/15.svg?c5=o-color-1');"/>
             <div class="container">
                 <div class="row">
                     <div class="col-12 col-lg-6 offset-lg-3 pt16 pb16" data-name="Card">
-                        <div class="s_card card o_cc o_cc1 my-0" data-vxml="001" data-snippet="s_card" data-name="Card">
+                        <div class="s_card card o_cc o_cc1 my-0" data-vxml="001" data-snippet="s_card">
                             <div class="card-body p-md-5">
                                 <p class="h1-fs" style="text-align: center;">✉️</p>
                                 <h2 class="card-title" style="text-align: center;">Subscribe to our newsletter</h2>
@@ -140,7 +140,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 </template>
 
 <template id="s_newsletter_grid" name="Newsletter Grid">
-    <section class="s_newsletter_grid s_newsletter_list o_colored_level pt64 pb64" data-name="Newsletter Grid" data-list-id="0">
+    <section class="s_newsletter_grid s_newsletter_list o_colored_level pt64 pb64" data-list-id="0">
         <div class="container">
             <div class="row o_grid_mode" data-row-count="9">
                 <div class="o_grid_item o_grid_item_image g-col-lg-5 g-height-6 col-lg-5" style="z-index: 1; grid-area: 1 / 1 / 7 / 6;">
@@ -165,7 +165,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 </template>
 
 <template id="s_newsletter_block_form_template" groups="base.group_user">
-    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
         <div class="container o_container_small">
             <form id="newsletter_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required"
                   data-mark="*" data-model_name="mailing.contact" data-success-mode="message" hide-change-model="true">
@@ -273,7 +273,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
             <div class="modal-dialog d-flex">
                 <div class="modal-content oe_structure">
                     <button class="s_popup_close js_close_popup border-0 p-0 o_we_no_overlay o_not_editable" aria-label="Close">×</button>
-                    <section class="s_text_block oe_img_bg o_bg_img_center pt88 pb64" data-snippet="s_text_block" data-name="Text"
+                    <section class="s_text_block oe_img_bg o_bg_img_center pt88 pb64" data-snippet="s_text_block"
                              style="background-image: url('/web/image/website.landscape_xl_1'); background-position: 0 100%;">
                         <div class="container s_allow_columns">
                             <div class="row">
@@ -284,7 +284,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                             </div>
                         </div>
                     </section>
-                    <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                    <section class="s_text_block" data-snippet="s_text_block">
                         <div class="container">
                             <div class="row s_nb_column_fixed g-0">
                                 <div class="col-lg-8 offset-lg-2 pt32 pb32">
@@ -300,7 +300,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 </template>
 
 <template id="s_newsletter_aside" name="Newsletter Aside">
-    <section class="s_newsletter_aside" data-name="Newsletter Aside">
+    <section class="s_newsletter_aside">
         <div class="container-fluid">
             <div class="row o_grid_mode" data-row-count="12">
                 <div class="o_grid_item o_grid_item_image g-height-12 g-col-lg-6 col-lg-6 o_cc o_cc1" style="grid-area: 1 / 1 / 13 / 7; --grid-item-padding-x: 0px; --grid-item-padding-y: 0px;">
@@ -308,7 +308,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                 </div>
                 <div class="o_grid_item g-height-12 g-col-lg-5 col-lg-5" style="grid-area: 1 / 7 / 13 / 12; --grid-item-padding-x: 40px; --grid-item-padding-y: 40px;">
                     <h2 class="h3-fs">Subscribe for updates, offers <br/>and insights!</h2>
-                    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+                    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                         <form id="newsletter_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required"
                                 data-mark="*" data-model_name="mailing.contact" data-success-mode="message" hide-change-model="true">
                             <div class="s_website_form_rows row s_col_no_bgcolor">
@@ -326,7 +326,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                                     </label>
                                     <input id="mailing_sub2" type='email' class='form-control s_website_form_input' name="email" placeholder="johnsmith@example.com"/>
                                 </div>
-                                <div class="s_hr pt8 pb24" data-snippet="s_hr" data-name="Separator">
+                                <div class="s_hr pt8 pb24" data-snippet="s_hr">
                                     <hr class="s_hr_1px s_hr_solid"/>
                                 </div>
                                 <div class="col-lg-12 s_website_form_field s_website_form_model_required mb-3" data-type="many2many" data-name="Field">
@@ -374,7 +374,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
     <section class="s_newsletter_waiting_list s_newsletter_list o_colored_level pt136 pb136 o_cc o_cc2" data-list-id="0" data-oe-shape-data="{'shape':'html_builder/Grids/01','colors':{'c5':'o-color-1'},'flip':[],'showOnMobile':false}">
         <div class="o_we_shape o_html_builder_Grids_01" style="background-image: url('/html_editor/shape/html_builder/Grids/01.svg?c5=o-color-1');"/>
         <div class="o_container_small">
-            <t t-snippet-call="website.s_avatars" string="Avatars" extraClasses.f="o_avatars_center" hideMore.f="True" count.f="500+" labelText.translate="people on the waitlist."/>
+            <t t-snippet-call="website.s_avatars" extraClasses.f="o_avatars_center" hideMore.f="True" count.f="500+" labelText.translate="people on the waitlist."/>
             <h1 class="display-2-fs" style="text-align: center;">Join the waitlist.</h1>
             <p class="lead" style="text-align: center;">Be the first to know when we launch.<br/>Leave your email and we'll notify you at launch.</p>
             <p><br/></p>

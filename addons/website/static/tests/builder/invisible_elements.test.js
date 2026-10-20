@@ -62,7 +62,7 @@ test("Add an element on the invisible elements tab", async () => {
             name: "Test",
             groupName: "a",
             content: unformat(
-                `<div class="s_popup_test o_snippet_invisible" data-snippet="s_popup_test" data-name="Popup">
+                `<div class="s_popup_test o_snippet_invisible" data-snippet="s_popup_test">
                     <div class="test_a">Hello</div>
                 </div>`
             ),

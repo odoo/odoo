@@ -144,7 +144,6 @@ test("dynamic snippet products grid loads items and displays them through grid t
             <section
                 class="s_dynamic_snippet_products s_dynamic_snippet_products_grid s_dynamic pt32 pb32 o_colored_level s_product_product_borderless_1"
                 data-snippet="s_dynamic_snippet_products_grid"
-                data-name="Products Grid"
                 data-filter-id="3"
                 data-product-category-id="current"
                 data-split-variants="true"
