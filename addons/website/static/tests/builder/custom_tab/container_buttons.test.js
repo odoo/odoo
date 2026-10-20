@@ -273,7 +273,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     expect(":iframe section.first").toHaveAttribute("id", "Anchor-test");
     expect(":iframe section.first").toHaveAttribute("data-anchor", "true");
 
-    // Section without title should have the `data-name` as anchor.
+    // Section without title should have the snippet's name as anchor.
     await contains(":iframe section.second").click();
     await animationFrame();
     await contains(anchorSelector).click();
@@ -282,7 +282,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await contains(notificationCloseSelector).click();
     expect(":iframe section.second").toHaveAttribute("id", "Dummy-Section");
 
-    // Same data-name should be suffixed by a number.
+    // Same snippet's name should be suffixed by a number.
     await contains(":iframe section.third").click();
     await animationFrame();
     await contains(anchorSelector).click();
@@ -307,7 +307,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     expect(":iframe section.third").not.toHaveAttribute("id");
     expect(":iframe section.third").not.toHaveAttribute("data-anchor");
 
-    // Column without title nor data-name should use the default name for column
+    // Column without title should use the default name for column
     await contains(":iframe section.fourth div.row div").click();
     await animationFrame();
     await contains(

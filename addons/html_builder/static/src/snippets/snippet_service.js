@@ -372,7 +372,6 @@ export class SnippetModel {
             ? _t("Custom Button")
             : _t("Custom %s", this.getSnippetName(snippetEl));
         snippetCopyEl.classList.add("s_custom_snippet");
-        delete snippetCopyEl.dataset.name;
         if (isButton) {
             snippetCopyEl.classList.remove("mb-2");
             snippetCopyEl.classList.add("o_snippet_drop_in_only", "s_custom_button");
@@ -474,9 +473,6 @@ export class SnippetModel {
      * @returns {String}
      */
     getSnippetName(snippetEl) {
-        if (snippetEl.dataset.name) {
-            return snippetEl.dataset.name;
-        }
         if (snippetEl.classList.contains("s_custom_snippet") && snippetEl.dataset.customName) {
             return snippetEl.dataset.customName;
         }

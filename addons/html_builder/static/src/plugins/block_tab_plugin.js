@@ -110,7 +110,6 @@ export class BlockTabPlugin extends Plugin {
                 snippetEl.removeAttribute("class");
             }
             delete snippetEl.dataset.snippet;
-            delete snippetEl.dataset.name;
         }
     }
 

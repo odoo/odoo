@@ -293,10 +293,7 @@ class AddPageTemplatePreview extends Component {
             const style = window.getComputedStyle(sectionEl);
             if (!style.height || style.display === "none") {
                 const messageEl = renderToElement("website.AddPageTemplatePreviewDynamicMessage", {
-                    message: _t(
-                        "No preview for the %s block because it is dynamically rendered.",
-                        sectionEl.dataset.name
-                    ),
+                    message: _t("No preview for this block because it is dynamically rendered."),
                 });
                 sectionEl.insertAdjacentElement("beforebegin", messageEl);
             }
