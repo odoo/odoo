@@ -733,7 +733,12 @@ export class FormatPlugin extends Plugin {
             this.cleanZWS(element, { preserveSelection });
             return;
         }
-        if (this.dependencies.delete.isUnremovable(element)) {
+        // Removing the element would also remove the unremovable nodes inside it.
+        if (
+            [element, ...descendants(element)].some((node) =>
+                this.dependencies.delete.isUnremovable(node)
+            )
+        ) {
             return;
         }
         if (
