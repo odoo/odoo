@@ -16,5 +16,14 @@ export class EmbeddedWhiteboardComponent extends Component {
 export const whiteboardEmbedding = {
     name: "whiteboard",
     Component: EmbeddedWhiteboardComponent,
-    getProps: (host) => ({ host, ...getEmbeddedProps(host) }),
+    getProps: (host) => {
+        const props = { host, ...getEmbeddedProps(host) };
+        const urlProps = Object.keys(props).filter((key) => key.toLowerCase().includes("url"));
+        if (urlProps.some((url) => !/^https?:/.test(props[url]))) {
+            for (const urlProp of urlProps) {
+                props[urlProp] = "#";
+            }
+        }
+        return props;
+    },
 };
