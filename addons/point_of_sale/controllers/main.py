@@ -101,7 +101,8 @@ class PosController(PortalAccount):
         session_info['user_context']['allowed_company_ids'] = company.ids
         session_info['user_companies'] = {'current_company': company.id, 'allowed_companies': {company.id: session_info['user_companies']['allowed_companies'][company.id]}}
         session_info['nomenclature_id'] = pos_session.company_id.nomenclature_id.id
-        session_info['fallback_nomenclature_id'] = pos_session.config_id.fallback_nomenclature_id.id
+        fallback_nomenclature = pos_session.config_id.fallback_nomenclature_id
+        session_info['fallback_nomenclature_id'] = fallback_nomenclature.id if fallback_nomenclature != company.nomenclature_id else False
         context = {
             'from_backend': 1 if from_backend else 0,
             'use_pos_fake_tours': True if k.get('tours', False) else False,

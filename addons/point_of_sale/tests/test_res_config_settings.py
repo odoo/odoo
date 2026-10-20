@@ -4,6 +4,7 @@
 import odoo
 
 from odoo import Command
+from odoo.tests import Form
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
@@ -80,3 +81,65 @@ class TestConfigureShops(TestPoSCommon):
             'available_preset_ids': [(6, 0, [preset.id])],
             'default_preset_id': preset.id,
         })
+
+    def test_fallback_nomenclature_swapped_when_company_nomenclature_changes(self):
+        default_nomenclature = self.env.ref('barcodes.default_barcode_nomenclature')
+        gs1_nomenclature = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        self.env.company.nomenclature_id = default_nomenclature
+        pos_config = self.env['pos.config'].create({
+            'name': 'Shop 1',
+            'module_pos_restaurant': False,
+            'fallback_nomenclature_id': gs1_nomenclature.id,
+        })
+
+        # e.g. from the Inventory settings
+        self.env.company.nomenclature_id = gs1_nomenclature
+        self.assertEqual(pos_config.fallback_nomenclature_id, default_nomenclature)
+
+        self.env.company.nomenclature_id = default_nomenclature
+        self.assertEqual(pos_config.fallback_nomenclature_id, gs1_nomenclature)
+
+    def test_fallback_nomenclature_swapped_from_pos_settings(self):
+        self._remove_on_payment_taxes()
+        default_nomenclature = self.env.ref('barcodes.default_barcode_nomenclature')
+        gs1_nomenclature = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        self.env.company.nomenclature_id = default_nomenclature
+        pos_config = self.env['pos.config'].create({
+            'name': 'Shop 1',
+            'module_pos_restaurant': False,
+            'fallback_nomenclature_id': gs1_nomenclature.id,
+        })
+
+        with Form(self.env['res.config.settings']) as form:
+            form.pos_config_id = pos_config
+            form.barcode_nomenclature_id = gs1_nomenclature
+            self.assertEqual(form.pos_fallback_nomenclature_id, default_nomenclature)
+
+        self.assertEqual(self.env.company.nomenclature_id, gs1_nomenclature)
+        self.assertEqual(pos_config.fallback_nomenclature_id, default_nomenclature)
+
+    def test_fallback_nomenclature_kept_empty_when_company_nomenclature_cleared(self):
+        default_nomenclature = self.env.ref('barcodes.default_barcode_nomenclature')
+        self.env.company.nomenclature_id = default_nomenclature
+        pos_config = self.env['pos.config'].create({
+            'name': 'Shop 1',
+            'module_pos_restaurant': False,
+        })
+
+        self.env.company.nomenclature_id = False
+        self.assertFalse(pos_config.fallback_nomenclature_id)
+
+    def test_fallback_nomenclature_kept_empty_when_nomenclature_cleared_from_pos_settings(self):
+        self._remove_on_payment_taxes()
+        self.env.company.nomenclature_id = self.env.ref('barcodes.default_barcode_nomenclature')
+        pos_config = self.env['pos.config'].create({
+            'name': 'Shop 1',
+            'module_pos_restaurant': False,
+        })
+
+        with Form(self.env['res.config.settings']) as form:
+            form.pos_config_id = pos_config
+            form.barcode_nomenclature_id = self.env['barcode.nomenclature']
+            self.assertFalse(form.pos_fallback_nomenclature_id)
+
+        self.assertFalse(pos_config.fallback_nomenclature_id)
