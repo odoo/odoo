@@ -17,29 +17,24 @@ function isId(val) {
  */
 
 export class NamePlugin extends Plugin {
-    /** @private */
-    orm = usePlugin(ORM);
-    /** @private */
-    bus = usePlugin(GlobalBusPlugin).bus;
-    /** @private */
-    cache = {};
-    /** @private */
-    batches = {};
+    #orm = usePlugin(ORM);
+    #bus = usePlugin(GlobalBusPlugin).bus;
+    #cache = {};
+    #batches = {};
 
     setup() {
-        useListener(this.bus, "ACTION_MANAGER:UPDATE", () => this.clearCache());
+        useListener(this.#bus, "ACTION_MANAGER:UPDATE", () => this.clearCache());
     }
 
     clearCache() {
-        this.cache = {};
+        this.#cache = {};
     }
 
-    /** @private */
-    getMapping(resModel) {
-        if (!this.cache[resModel]) {
-            this.cache[resModel] = {};
+    #getMapping(resModel) {
+        if (!this.#cache[resModel]) {
+            this.#cache[resModel] = {};
         }
-        return this.cache[resModel];
+        return this.#cache[resModel];
     }
 
     /**
@@ -47,7 +42,7 @@ export class NamePlugin extends Plugin {
      * @param {DisplayNames} displayNames
      */
     addDisplayNames(resModel, displayNames) {
-        const mapping = this.getMapping(resModel);
+        const mapping = this.#getMapping(resModel);
         for (const resId in displayNames) {
             mapping[resId] = Promise.withResolvers();
             mapping[resId].resolve(displayNames[resId]);
@@ -60,7 +55,7 @@ export class NamePlugin extends Plugin {
      * @returns {Promise<DisplayNames>}
      */
     async loadDisplayNames(resModel, resIds) {
-        const mapping = this.getMapping(resModel);
+        const mapping = this.#getMapping(resModel);
         const proms = [];
         const resIdsToFetch = [];
         for (const resId of unique(resIds)) {
@@ -74,16 +69,16 @@ export class NamePlugin extends Plugin {
             proms.push(mapping[resId].promise);
         }
         if (resIdsToFetch.length) {
-            if (this.batches[resModel]) {
-                this.batches[resModel].push(...resIdsToFetch);
+            if (this.#batches[resModel]) {
+                this.#batches[resModel].push(...resIdsToFetch);
             } else {
-                this.batches[resModel] = resIdsToFetch;
+                this.#batches[resModel] = resIdsToFetch;
                 await Promise.resolve();
-                const idsInBatch = unique(this.batches[resModel]);
-                delete this.batches[resModel];
+                const idsInBatch = unique(this.#batches[resModel]);
+                delete this.#batches[resModel];
 
                 const specification = { display_name: {} };
-                this.orm.silent
+                this.#orm.silent
                     .webSearchRead(resModel, [["id", "in", idsInBatch]], {
                         specification,
                         context: { active_test: false },
@@ -119,7 +114,12 @@ export const nameService = {
     dependencies: ["orm"],
     async: ["loadDisplayNames"],
     start() {
-        return usePlugin(NamePlugin);
+        const namePlugin = usePlugin(NamePlugin);
+        return {
+            addDisplayNames: namePlugin.addDisplayNames.bind(namePlugin),
+            clearCache: namePlugin.clearCache.bind(namePlugin),
+            loadDisplayNames: namePlugin.loadDisplayNames.bind(namePlugin),
+        };
     },
 };
 
