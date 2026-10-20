@@ -428,7 +428,8 @@ class Product(models.Model):
         include_zero = (
             value < 0.0 and operator in ('>', '>=') or
             value > 0.0 and operator in ('<', '<=') or
-            float_is_zero(value, precision_digits=8) and operator in ('>=', '<=', '=')
+            float_is_zero(value, precision_digits=8) and operator in ('>=', '<=', '=') or
+            not float_is_zero(value, precision_digits=8) and operator == '!='
         )
 
         processed_product_ids = set()

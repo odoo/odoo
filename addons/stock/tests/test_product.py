@@ -217,6 +217,25 @@ class TestVirtualAvailable(TestStockCommon):
         ])
         self.assertEqual(product, result)
 
+    def test_search_qty_not_equal(self):
+        """ A product without quant has a quantity of zero, so it must be found
+        when searching for a quantity different from another value. """
+        products = self.env['product.product'].create([
+            {'name': 'Without quant', 'is_storable': True},
+            {'name': 'With quant', 'is_storable': True},
+        ])
+        self.env['stock.quant'].create({
+            'product_id': products[1].id,
+            'location_id': self.stock_location,
+            'quantity': 5,
+        })
+        for field in ('qty_available', 'free_qty'):
+            result = self.env['product.product'].search([
+                (field, '!=', 1),
+                ('id', 'in', products.ids),
+            ])
+            self.assertEqual(products, result)
+
     def test_search_product_template(self):
         """
         Suppose a variant V01 that can not be deleted because it is used by a
