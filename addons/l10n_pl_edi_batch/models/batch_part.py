@@ -1,17 +1,21 @@
+import logging
 import tempfile
+import zipfile
 
 import requests
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.exceptions import InvalidKey, InvalidSignature, UnsupportedAlgorithm
 
 from odoo import api, fields, models, modules
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import url_to_name, u64
 
+_logger = logging.getLogger(__name__)
+
 
 CHUNK_SIZE = 64 * 1024
 HTTP_METHODS = [(method, method) for method in ('GET', 'POST', 'PUT', 'PATCH', 'DELETE')]
-CRON_NAME = 'l10n_pl_edi.cron_l10n_pl_edi_download_batches'
 
 
 class BatchDownloadPart(models.Model):
@@ -21,19 +25,16 @@ class BatchDownloadPart(models.Model):
 
     _order = 'batch_name, part_number'
 
-    batch_id = fields.Many2one(comodel_name='l10n_pl_edi_batch.download', readonly=True, required=True)
     company_id = fields.Many2one(related='batch_id.company_id')
     batch_name = fields.Char("KSeF batch name", related='batch_id.name')
     part_name = fields.Char(compute="_compute_part_name")
     part_number = fields.Integer("KSeF part ordinal number", readonly=True, required=True)
+
     download_method = fields.Selection(selection=HTTP_METHODS, readonly=True, required=True)
     download_url = fields.Char(readonly=True, required=True)
-    attachment_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="Related attachment",
-        required=True,
-        ondelete='cascade',
-    )
+
+    batch_id = fields.Many2one(comodel_name='l10n_pl_edi_batch.download', readonly=True, required=True)
+    attachment_id = fields.Many2one(comodel_name='ir.attachment', string="Related attachment", required=True, ondelete='cascade')
 
     def unlink(self):
         attachments = self.attachment_id
@@ -57,22 +58,69 @@ class BatchDownloadPart(models.Model):
 
     def download(self, commit=True):
         for record in self:
-            response = requests.request(record.download_method, record.download_url, stream=True)
-            response.raise_for_status()
             with tempfile.NamedTemporaryFile(mode='w+b') as tmpf:
-                for decrypted_chunk in record._decrypt_stream(response):
-                    tmpf.write(decrypted_chunk)
+                try:
+                    response = requests.request(record.download_method, record.download_url, stream=True)
+                    response.raise_for_status()
+                    for decrypted_chunk in record._decrypt_stream(response):
+                        tmpf.write(decrypted_chunk)
+                except (
+                    requests.RequestException, ValueError, TypeError,
+                    InvalidKey, InvalidSignature, UnsupportedAlgorithm,
+                ) as e:
+                    _logger.warning("Couldn't download KSeF batch %s: %s", record.part_name, e)
+                    continue
                 tmpf.flush()
                 tmpf.seek(0)
-                record.attachment_id = self.env['ir.attachment'].sudo().create({
-                    'company_id': record.batch_id.company_id.id,
-                    'name': record.part_name,
-                    'description': record.batch_name,
-                    'raw': tmpf.read(),
-                    'type': 'binary',
-                    'mimetype': 'application/zip',
-                    'res_model': 'ir.cron',
-                    'res_id': self.env.ref(CRON_NAME).id,
-                }).with_env(record.env)
+                content = tmpf.read()
+            record.attachment_id = self.env['ir.attachment'].sudo().create({
+                'name': record.part_name,
+                'description': record.batch_name,
+                'type': 'binary',
+                'mimetype': 'application/zip',
+                'company_id': record.batch_id.company_id.id,
+                'res_model': record._name,
+                'res_id': record.id,
+                'res_field': 'attachment_id',
+                'raw': content,
+            }).with_env(record.env)
+            _logger.info("KSeF Batch part %s downloaded succesfully", record.part_name)
             if commit and not modules.module.current_test:
                 self.env.cr.commit()
+
+    def unzip(self, commit=True):
+        batches = self.mapped("batch_id")
+        if len(batches) != 1:
+            raise ValueError("You can only unzip KSeF parts belonging to the same KSeF batch")
+        company = self[0].company_id
+        attachments = self.env['ir.attachment']
+        sorted_parts = self.sorted(key=lambda a: a.name)
+        with tempfile.TemporaryFile(mode='w+b') as temp_zip_stream:
+            for part in sorted_parts:
+                temp_zip_stream.write(part.raw)
+            temp_zip_stream.seek(0)
+            existing_names = batches.attachment_ids.mapped("name")
+            with zipfile.ZipFile(temp_zip_stream, 'r') as zf:
+                zipped_names = [
+                    name
+                    for name in zf.namelist()
+                    if '.json' not in name
+                    and name not in existing_names
+                ]
+                for xml_name in zipped_names:
+                    with zf.open(xml_name) as xml_file:
+                        content = xml_file.read()
+                        attachment = self.env['ir.attachment'].sudo().create({
+                            'name': xml_name,
+                            'mimetype': 'application/xml',
+                            'company_id': company.id,
+                            'res_model': 'l10n_pl_edi_batch.download',
+                            'res_id': batches.id,
+                            'raw': content,
+                        }).with_env(self.env)
+                        attachments |= attachment
+                        if commit and not modules.module.current_test:
+                            self.env.cr.commit()
+        batches.attachment_ids |= attachments
+        print(batches.attachment_ids)
+        return batches.attachment_ids
