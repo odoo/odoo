@@ -337,7 +337,7 @@ class HrVersion(models.Model):
                                    "Please review these leaves and/or allocations before changing anything\n\n"
                                    "This error has been triggered by:\n") + str(e))
 
-            if not working_schedule or (working_schedule.work_time_rate <= 1.0 or not working_schedule.leave_accrual_plan_id):
+            if not version.employee_id or not working_schedule or (working_schedule.work_time_rate <= 1.0 or not working_schedule.leave_accrual_plan_id):
                 continue
 
             version.allocation_from_working_schedule_id = self.env['hr.leave.allocation'].create({
