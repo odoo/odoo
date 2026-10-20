@@ -335,11 +335,11 @@
                     create_name_field="calendar_display_name"
                     form_view_id="%(hr_timesheet.hr_timesheet_line_form)d"
                 >
-                    <field name="employee_id" avatar_field="avatar_128" widget="many2one_avatar_employee"/>
                     <field name="project_id"/>
                     <field name="task_id" invisible="not task_id"/>
                     <field name="name"/>
                     <field name="employee_id" avatar_field="avatar_128" filters="1"
+                           widget="many2one_avatar_employee"
                            options="{'relation': 'hr.employee.public'}"
                            write_model="account.analytic.line.calendar.employee"
                            write_field="employee_id" filter_field="checked"/>
@@ -376,7 +376,6 @@
                     <attribute name="js_class">timesheet_calendar_my_timesheets</attribute>
                 </calendar>
                 <field name="employee_id" position="replace"/>
-                <field name="employee_id" filters="1" position="replace"/>
             </field>
         </record>
 
