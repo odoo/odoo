@@ -4,6 +4,9 @@ import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { handleRPCError } from "./error_handlers";
 import { ask } from "./make_awaitable_dialog";
+import { logPosMessage } from "./pretty_console_log";
+
+const CONSOLE_COLOR = "#F5B427";
 
 /**
  * This class contains all methods related to order validation. Previously,
@@ -159,6 +162,7 @@ export default class OrderPaymentValidation {
             if (!syncOrderResult) {
                 return false;
             }
+            this.paidOrderSynced = syncOrderResult.some((order) => order.uuid === this.order.uuid);
 
             // 2. Invoice, should not stop the validation process but a dialog is shown if an
             // error occurred.
@@ -208,9 +212,29 @@ export default class OrderPaymentValidation {
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
-        await this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
-            orderDone: true,
-        });
+        if (this.paidOrderSynced) {
+            if (this.pos.config.printerCategories.size) {
+                const orderChange = this.order.getChanges();
+                try {
+                    await this.pos.ticketPrinter.printOrderChanges({
+                        order: this.order,
+                        opts: { orderDone: true, orderChange, skipPrintHistory: true },
+                    });
+                } catch (error) {
+                    logPosMessage(
+                        "OrderPaymentValidation",
+                        "afterOrderValidation",
+                        "Failed in printing the changes in the order",
+                        CONSOLE_COLOR,
+                        [error]
+                    );
+                }
+            }
+        } else {
+            await this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
+                orderDone: true,
+            });
+        }
 
         if (this.order.nb_print === 0 && this.pos.config.autoPrint) {
             const invoiced_finalized = this.order.isToInvoice() ? this.order.finalized : true;
