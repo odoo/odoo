@@ -135,6 +135,7 @@ export class MessageSearchState extends SearchState {
         this.searched = false;
         this.count = 0;
         this.hasMore = false;
+        this.loadMoreBeforeMessageId = undefined;
     }
 
     /**
