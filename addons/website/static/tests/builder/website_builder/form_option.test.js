@@ -1212,3 +1212,19 @@ test("Changing field type from date to datetime removes value property (and attr
     expect(":iframe input#field").toHaveAttribute("value", "");
     expect(":iframe input#field").toHaveProperty("value", "");
 });
+
+test("No 'Labels Position' option when the form has no field", async () => {
+    registry.category("website.form_editor_actions").add("create_customer", { formFields: [] });
+
+    await setupWebsiteBuilderWithSnippet("s_website_form");
+
+    await contains(":iframe section").click();
+    expect("div:has(>span:contains('Labels Position'))").toHaveCount(1);
+
+    await contains("div:has(>span:contains('Action')) + div button").click();
+    await contains("div.o-dropdown-item:contains('Create a Customer')").click();
+    await animationFrame();
+
+    expect(":iframe form .s_website_form_field").toHaveCount(0);
+    expect("div:has(>span:contains('Labels Position'))").toHaveCount(0);
+});
