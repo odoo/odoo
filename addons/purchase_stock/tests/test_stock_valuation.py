@@ -148,6 +148,19 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
         po.order_line.price_unit = 15
         self.assertEqual(move_in_1.value, 150)
 
+    def test_avco_after_po_discount_update(self):
+        """Changing only the discount of a confirmed PO line must revalue the
+        receipt and the AVCO cost.
+        """
+        product = self.product_avco_auto
+        po = self._create_purchase(product, 10, 100, receive=True)
+        move = po.order_line.move_ids
+        self.assertRecordValues(product, [{'standard_price': 100, 'total_value': 1000}])
+        self.assertEqual(move.value, 1000)
+        po.order_line.discount = 10
+        self.assertRecordValues(product, [{'standard_price': 90, 'total_value': 900}])
+        self.assertEqual(move.value, 900)
+
     def test_move_standard(self):
         po = self._create_purchase(self.product_standard, 5, 12)
         move_in_1 = self._receive(po, 2)
