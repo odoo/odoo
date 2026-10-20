@@ -49,6 +49,7 @@ patch(PosOrder.prototype, {
     },
     /**
      * Whether the program is available for the order's current pricelist.
+     * mirror of *models/pos_order.py* PosOrder._is_program_pricelist_valid
      * @param {loyalty_program} program
      * @returns {boolean}
      */
@@ -327,7 +328,7 @@ patch(PosOrder.prototype, {
      */
     recomputeReward(reward, qty, reward_product_id) {
         const program = reward.program_id;
-        if (!program) {
+        if (!program || !this.isProgramPricelistValid(program)) {
             return;
         }
         const points = program.getPoints(this);
@@ -500,5 +501,9 @@ patch(PosOrder.prototype, {
         const result = super.removeOrderline(lineToRemove);
         this.recomputeRewards();
         return result;
+    },
+    setPricelist(pricelist) {
+        super.setPricelist(pricelist);
+        this.recomputeRewards();
     },
 });
