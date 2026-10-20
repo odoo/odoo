@@ -450,7 +450,7 @@ export class Store extends BaseStore {
         navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
             const { type, payload } = data;
             if (type === "notification-display-request") {
-                const { correlationId, model, res_id } = payload;
+                const { correlationId, model, res_id, message_id } = payload;
                 const thread = this.Thread.get({ model, id: res_id });
                 let isTabFocused;
                 try {
@@ -461,8 +461,14 @@ export class Store extends BaseStore {
                 // Prevent duplicate inbox push notifications since they're already handled by
                 // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
                 // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
-                const isInbox = this.store.self.notification_preference === "inbox" && model !== "discuss.channel";
-                if ((isTabFocused && thread?.isDisplayed) || isInbox) {
+                const isInbox =
+                    this.store.self.notification_preference === "inbox" &&
+                    model !== "discuss.channel";
+                const isMessageSeen =
+                    model === "discuss.channel"
+                        ? thread?.selfMember?.seen_message_id?.id >= message_id
+                        : thread?.messages.some((m) => m.id === message_id);
+                if ((isTabFocused && thread?.isDisplayed) || isInbox || isMessageSeen) {
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
                         payload: { correlationId },
