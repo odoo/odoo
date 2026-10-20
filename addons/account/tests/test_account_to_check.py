@@ -3,7 +3,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -17,6 +17,12 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.simple_accountman.group_ids = cls.env.ref('account.group_account_invoice')
+        cls.simple_accountbasic = new_test_user(
+            cls.env,
+            login='accountbasic',
+            groups='account.group_account_basic',
+            company_id=cls.company.id,
+        )
         cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.company.id)], limit=1)
         # As the user has only invoicing right, the move shouldn't be checked if review documents is activated in Accounting Firms mode
         cls.company.set_to_review_documents = True
@@ -166,3 +172,62 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         self.env.user.write({'group_ids': [Command.unlink(self.env.ref('account.group_account_user').id)]})
         invoice = self._create_invoice(date=fields.Date.today(), auto_post='monthly')
         invoice.action_post()
+
+    def test_basic_user(self):
+        """ An 'Invoicing & Banks' can post an entry and reset it to draft, his own or one the accountant
+        created and each of his changes queues the entry back for review. Once reviewed, it becomes
+        read-only for him.
+        """
+        invoice = self._create_invoice(user_id=self.simple_accountbasic.id)
+        invoice.with_user(self.simple_accountbasic).action_post()
+        self.assertEqual(invoice.review_state, 'todo')
+        invoice.with_user(self.simple_accountbasic).button_draft()
+        invoice.with_user(self.simple_accountbasic).action_post()
+        self.assertEqual(invoice.review_state, 'todo')
+
+        # The accountant's invoice needs no review, but the client may still edit it,
+        # which sends it to the review queue.
+        accountant_invoice = self._create_invoice()
+        accountant_invoice.action_post()
+        self.assertEqual(accountant_invoice.review_state, 'no_review')
+        accountant_invoice.with_user(self.simple_accountbasic).button_draft()
+        accountant_invoice.with_user(self.simple_accountbasic).action_post()
+        self.assertEqual(accountant_invoice.review_state, 'todo')
+
+        # Once the accountant has reviewed it, the client is locked out.
+        accountant_invoice.review_state = 'reviewed'
+        with self.assertRaisesRegex(AccessError, "This entry has been reviewed by accountants, only them can edit it now."):
+            accountant_invoice.with_user(self.simple_accountbasic).button_draft()
+
+    def test_basic_user_reconciliation(self):
+        """ Same rule on the bank reconciliation: the client can undo what is not reviewed yet,
+        and doing so queues the bank entry for review."""
+        if 'account_accountant' not in self.env["ir.module.module"]._installed():
+            self.skipTest('account_accountant is not installed')  # required for `_try_auto_reconcile_statement_lines`
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'amount': 100,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'memo': 'INV/2025/00001',
+        })
+        payment.action_post()
+
+        bank_line = self.env['account.bank.statement.line'].create([{
+            'journal_id': self.bank_journal.id,
+            'date': '2025-01-01',
+            'payment_ref': "INV/2025/00001",
+            'amount': -100,
+        }])
+        bank_line._try_auto_reconcile_statement_lines()
+        self.assertEqual(bank_line.move_id.review_state, 'no_review')
+
+        # A reviewed bank entry is out of reach.
+        bank_line.move_id.review_state = 'reviewed'
+        with self.assertRaisesRegex(AccessError, "This entry has been reviewed by accountants, only them can edit it now."):
+            bank_line.with_user(self.simple_accountbasic).delete_reconciled_line(payment.move_id.line_ids[0].id)
+
+        bank_line.move_id.review_state = 'no_review'
+        bank_line.with_user(self.simple_accountbasic).delete_reconciled_line(payment.move_id.line_ids[0].id)
+        self.assertEqual(bank_line.move_id.review_state, 'todo')

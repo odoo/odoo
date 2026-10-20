@@ -3921,27 +3921,30 @@ class AccountMove(models.Model):
         return _('This entry has been duplicated from %s', self._get_html_link())
 
     def _get_review_state_access_groups(self):
-        """Return a tuple (is_user_able_to_review, is_user_able_to_supervise) for the current user."""
+        """Return a tuple (is_user_able_to_review, is_user_able_to_supervise, is_user_able_to_submit_for_review) for the current user."""
         is_user_able_to_supervise = self.env.user.has_group('account.group_account_manager')
         is_user_able_to_review = self.env.user.has_group('account.group_account_user') or is_user_able_to_supervise
-        return is_user_able_to_review, is_user_able_to_supervise
+        is_user_able_to_submit_for_review = self.env.user.has_group('account.group_account_basic')
+        return is_user_able_to_review, is_user_able_to_supervise, is_user_able_to_submit_for_review
 
     def _check_review_state_access(self, review_state):
         """Raise a AccessError if the current user cannot modify a record with the given review_state.
 
         - 'supervised': requires account.group_account_manager
-        - 'reviewed', 'no_review' or falsy: requires account.group_account_user or account.group_account_manager
+        - 'reviewed': requires account.group_account_user or account.group_account_manager
+        - 'no_review' or falsy: also allowed to account.group_account_basic, whose changes
+          send the entry back to the review queue
         - 'todo', 'anomaly': no restriction
         """
         # Since self might be empty, we fallback on the company
         if self.env.su or not all(self.mapped('set_to_review_documents')) or not self.env.company.set_to_review_documents:
             return
-        is_user_able_to_review, is_user_able_to_supervise = self._get_review_state_access_groups()
+        is_user_able_to_review, is_user_able_to_supervise, is_user_able_to_submit_for_review = self._get_review_state_access_groups()
         if review_state == 'supervised' and not is_user_able_to_supervise:
             raise AccessError(self.env._("This entry has already been supervised. You need the accounting manager role to change it."))
         if (review_state == 'reviewed') and not is_user_able_to_review:
             raise AccessError(self.env._("This entry has been reviewed by accountants, only them can edit it now."))
-        if (review_state == 'no_review' or not review_state) and not is_user_able_to_review:
+        if (review_state == 'no_review' or not review_state) and not is_user_able_to_review and not is_user_able_to_submit_for_review:
             raise AccessError(self.env._("You don't have the access rights to perform this action."))
 
     def _check_user_access(self, vals_list):
@@ -4023,7 +4026,7 @@ class AccountMove(models.Model):
             'invoice_cash_rounding_id',
         ]
 
-        is_user_able_to_review, _unused = self._get_review_state_access_groups()
+        is_user_able_to_review, *_unused = self._get_review_state_access_groups()
         move_ids_review_done = []
         move_ids_review_todo = []
         for move in self:
