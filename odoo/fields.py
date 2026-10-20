@@ -4764,9 +4764,12 @@ class One2many(_RelationalMulti[M]):
                         prefetch_ids = recs[self.name]._prefetch_ids
                         comodel.browse(command[1]).with_prefetch(prefetch_ids).write(command[2])
                     elif command[0] == Command.DELETE:
-                        to_delete.append(command[1])
+                        # an id that was never saved has no row to act on
+                        if isinstance(command[1], int):
+                            to_delete.append(command[1])
                     elif command[0] == Command.UNLINK:
-                        unlink(comodel.browse(command[1]))
+                        if isinstance(command[1], int):
+                            unlink(comodel.browse(command[1]))
                     elif command[0] == Command.LINK:
                         to_link[recs[-1]].add(command[1])
                         allow_full_delete = False

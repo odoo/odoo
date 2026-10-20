@@ -361,6 +361,28 @@ class One2manyCase(TransactionExpressionCase):
                 'line_ids': [Command.link(line0.id), Command.link(line1.id)],
             })
 
+    def test_delete_line_never_saved(self):
+        order = self.env['test_new_api.order'].create({
+            'line_ids': [
+                Command.create({'product': 'a'}),
+                Command.create({'product': 'b'}),
+                Command.create({'product': 'c'}),
+            ],
+        })
+        line0, line1, line2 = order.line_ids
+
+        # the client may send a delete/unlink command for a line it created on
+        # screen but never saved; such an id has no row to delete
+        order.write({
+            'line_ids': [Command.delete('virtual_1'), Command.delete(line1.id)],
+        })
+        self.assertEqual(order.line_ids, line0 + line2)
+
+        order.write({
+            'line_ids': [Command.unlink('virtual_2'), Command.unlink(line2.id)],
+        })
+        self.assertEqual(order.line_ids, line0)
+
     def test_new_real_interactions(self):
         """ Test and specify the interactions between new and real records.
         Through m2o and o2m, with real/unreal records on both sides, the behavior
