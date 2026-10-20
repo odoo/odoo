@@ -12,6 +12,7 @@ export class AddToComparison extends Interaction {
         _productEl: () => this.el.closest('.js_product'),
     };
     dynamicContent = {
+        _window: { 't-on-pageshow': this.onPageShow },
         _root: { 't-on-click': this.addProduct },
         _productEl: { 't-on-product_changed': this.onProductChanged },
     };
@@ -57,6 +58,23 @@ export class AddToComparison extends Interaction {
             );
             button.dataset.productId = productId;
         }
+    }
+
+    /**
+     * Refresh comparison state changed on another page while this page was cached.
+     *
+     * @param {PageTransitionEvent} ev
+     */
+    onPageShow(ev) {
+        if (!ev.persisted) {
+            return;
+        }
+        const productIds = comparisonUtils.getComparisonProductIds();
+        for (const button of this.el.querySelectorAll('[data-action="o_comparelist"]')) {
+            const productId = parseInt(button.dataset.productProductId);
+            button.disabled = productIds.includes(productId);
+        }
+        comparisonUtils.notifyComparisonListeners(this.bus);
     }
 
     //--------------------------------------------------------------------------
