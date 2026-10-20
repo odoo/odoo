@@ -1202,12 +1202,6 @@ class AccountMove(models.Model):
                 invoice.direction_sign = -1
 
     @api.depends(
-        'line_ids.matched_debit_ids.debit_move_id.move_id.origin_payment_id.is_matched',
-        'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual',
-        'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual_currency',
-        'line_ids.matched_credit_ids.credit_move_id.move_id.origin_payment_id.is_matched',
-        'line_ids.matched_credit_ids.credit_move_id.move_id.line_ids.amount_residual',
-        'line_ids.matched_credit_ids.credit_move_id.move_id.line_ids.amount_residual_currency',
         'line_ids.balance',
         'line_ids.currency_id',
         'line_ids.amount_currency',
@@ -2674,8 +2668,8 @@ class AccountMove(models.Model):
     def _search_reconciled_payment_ids(self, operator, value):
         if operator not in ('in', '='):
             return NotImplemented
-        payment_ids = self.env['account.payment'].browse(value).reconciled_invoice_ids.ids
-        return [('id', 'in', payment_ids)]
+        payments = self.env['account.payment'].browse(value)
+        return [('id', 'in', (payments.reconciled_invoice_ids | payments.reconciled_bill_ids).ids)]
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS
