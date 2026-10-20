@@ -139,7 +139,12 @@
     <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" class="js_website_submit_form js_wforum_submit_form d-flex flex-column" role="form">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <input type="hidden" name="karma" t-att-value="user.karma" id="karma"/>
-        <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control o_wysiwyg_loader" required="required" minlength="50" t-att-data-karma="forum.karma_editor"/>
+        <div class="position-relative o_wysiwyg_textarea_wrapper">
+            <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control o_wysiwyg_loader" required="required" minlength="50" t-att-data-karma="forum.karma_editor"/>
+            <div class="o_wysiwyg_loading">
+                <i class="text-600 text-center oi oi-spin oi-2x" data-icon="autorenew" role="img" aria-hidden="true"/>
+            </div>
+        </div>
         <p class="mt-2 mb-1 small">
             <b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just
             <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>

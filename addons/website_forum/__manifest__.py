@@ -89,9 +89,6 @@ Ask questions, get answers, no distractions
         'website.website_builder_assets': [
             'website_forum/static/src/website_builder/**/*',
         ],
-        'web.assets_frontend_minimal': [
-            'website_forum/static/src/interactions/loader_loading.js',
-        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
