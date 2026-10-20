@@ -10,6 +10,42 @@ def _contains_dot_segments(path: str | bytes) -> bool:
     return any(seg in ('.', '..') for seg in decoded_path.split('/'))
 
 
+def sanitize_url(value):
+    """Sanitize the URL to ensure it has a scheme and doesn't end with /.
+    """
+
+    # Spaces must be encoded "%20", trim those that aren't as they
+    # likely come from copy/paste mistakes.
+    value = value.strip()
+    url = urllib.parse.urlsplit(value)
+
+    # Enforce https when the scheme is missing
+    if not url.scheme:
+
+        # IPv6 must be enclosed in []
+        netloc, _, path = value.partition('/')
+        if netloc.count(':') >= 2 and not netloc.startswith('['):
+            value = f'[{netloc}]'
+            if path:
+                value += f'/{path}'
+
+        value = 'https://' + value
+        url = urllib.parse.urlsplit(value)
+
+    # Prefer "example.com" over "example.com/". Some naive code do
+    # ``domain + path`` instead of ``urljoin(domain, path)``, the
+    # former leads to bad double slashes in the concatenated URL.
+    if url.path and url.path.strip() == '/':
+        url = url._replace(path='')
+    # For consistency, do the same for queries and fragments.
+    if url.query and url.query.strip() == '?':
+        url = url._replace(query='')
+    if url.fragment and url.fragment.strip() == '#':
+        url = url._replace(fragment='')
+
+    return urllib.parse.urlunsplit(url)
+
+
 def urljoin(base: str, extra: str) -> str:
     """Join a trusted base URL with a relative URL safely.
 

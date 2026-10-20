@@ -56,7 +56,7 @@ class TestMail(MailCase):
             'company_id': company_2.id,
             'domain': 'http://127.0.0.1:8069',
         })
-        self.env['ir.config_parameter'].sudo().set_str('web.base.url', website_1.domain)
+        self.env['ir.config_parameter'].sudo().set_url('web.base.url', website_1.domain)
 
         subscription_template = self.env.ref('event.event_subscription')
         mail_scheduler_vals = {

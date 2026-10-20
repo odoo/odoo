@@ -152,7 +152,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
 
     def test_blog_notification_website_domain(self):
         backend_domain = 'https://backend.example'
-        self.env['ir.config_parameter'].sudo().set_str('web.base.url', backend_domain)
+        self.env['ir.config_parameter'].sudo().set_url('web.base.url', backend_domain)
         rendered_html = self.env['ir.qweb']._render(
             'website_blog.blog_post_template_new_post',
             {

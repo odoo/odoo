@@ -75,7 +75,7 @@ class Session(Controller):
         params = {
             'response_type': 'token',
             'client_id': ICP.get_str('database.uuid'),
-            'state': json.dumps({'d': request.db, 'u': ICP.get_str('web.base.url')}),
+            'state': json.dumps({'d': request.db, 'u': ICP.get_url('web.base.url')}),
             'scope': 'userinfo',
         }
         return 'https://accounts.odoo.com/oauth2/auth?' + url_encode(params)

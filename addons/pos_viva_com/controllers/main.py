@@ -86,7 +86,7 @@ class PosVivaComController(http.Controller):
 
     # Create a redirect link which should open the Odoo mobile app if it is installed
     def _create_dynamic_link(self, redirect_path):
-        base_url = request.env['ir.config_parameter'].sudo().get_str('web.base.url')
+        base_url = request.env['ir.config_parameter'].sudo().get_url('web.base.url')
         original_link = f"{base_url}{redirect_path}"
         redirect_base = "https://redirect-url.email/"
         url_params = urllib.parse.urlencode({

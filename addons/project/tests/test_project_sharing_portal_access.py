@@ -155,7 +155,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
                 task.write({field: dummy_value(field)})
 
     def test_wizard_confirm(self):
-        self.env['ir.config_parameter'].set_str('web.base.url', "gopher://example.org")
+        self.env['ir.config_parameter'].set_url('web.base.url', "gopher://example.org")
         partner_portal_no_user = self.env['res.partner'].create({
             'name': 'NoUser portal',
             'email': 'no@user.portal',
