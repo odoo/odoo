@@ -107,7 +107,7 @@ import { omit } from "@web/core/utils/objects";
  * Example:
  *
  *     (reasons, el) => {
- *         reasons.push(`I hate ${el.dataset.name}`);
+ *         reasons.push(`I hate ${snippetModel.getSnippetName(el)}`);
  *         return reasons;
  *     }
  */
@@ -121,7 +121,7 @@ import { omit } from "@web/core/utils/objects";
  * Example:
  *
  *     (reasons, el) => {
- *         reasons.push(`I hate ${el.dataset.name}`);
+ *         reasons.push(`I hate ${snippetModel.getSnippetName(el)}`);
  *         return reasons;
  *     }
  */
