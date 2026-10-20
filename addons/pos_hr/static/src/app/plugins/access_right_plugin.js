@@ -3,6 +3,7 @@
 import { PosAccessRightPlugin } from "@point_of_sale/app/plugins/access_right_plugin";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
@@ -97,7 +98,11 @@ patch(PosAccessRightPlugin.prototype, {
         return this.hasEmployeeRole(["cashier", "manager"]);
     },
     get canGoToBackend() {
-        return this.hasEmployeeRole(["manager"]);
+        if (!this.config.module_pos_hr) {
+            return super.canGoToBackend;
+        }
+        // Only the employee linked to the logged-in user, whatever their role
+        return this.cashier?.user_id?.id === user.userId;
     },
     get disablePartner() {
         return super.disablePartner || !this.hasEmployeeRole(["cashier", "manager", "restrictive"]);
