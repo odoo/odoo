@@ -193,12 +193,14 @@ class IrAttachment(models.Model):
                     with open(tmp_path, 'wb') as tmp_file:
                         shutil.copyfileobj(bin_value, tmp_file)
                         tmp_file.flush()
-                        if hasattr(os, 'fchmod'):
-                            os.fchmod(tmp_file.fileno(), 0o444)  # r--r--r--
-                        else:
-                            os.chmod(tmp_path, 0o444)  # r--r--r--
+                        with contextlib.suppress(PermissionError):
+                            if hasattr(os, 'fchmod'):
+                                os.fchmod(tmp_file.fileno(), 0o444)  # r--r--r--
+                            else:
+                                os.chmod(tmp_path, 0o444)  # r--r--r--
                 else:
-                    os.chmod(tmp_path, 0o444)  # r--r--r--
+                    with contextlib.suppress(PermissionError):
+                        os.chmod(tmp_path, 0o444)  # r--r--r--
 
                 # "commit" the file by moving it to its right place
                 try:
