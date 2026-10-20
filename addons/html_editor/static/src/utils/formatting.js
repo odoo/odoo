@@ -95,7 +95,15 @@ export const formatsSpecs = {
             ),
     },
     fontFamily: {
-        isFormatted: (node) => !!closestElement(node, (el) => el.style["font-family"]),
+        isFormatted: (node, props) => {
+            const el = closestElement(node, (el) => el.style["font-family"]);
+            if (!el || !props?.fontFamily) {
+                return !!el;
+            }
+            const normalize = (value) =>
+                value.replace(/["']/g, "").replace(/\s*,\s*/g, ",").trim().toLowerCase();
+            return normalize(el.style["font-family"]) === normalize(props.fontFamily);
+        },
         hasStyle: (node) => node.style && node.style["font-family"],
         addStyle: (node, props) => {
             removeStyle(node, "font-family");

@@ -133,3 +133,11 @@ test("should contain the 5 available font + default", async () => {
         );
     }
 });
+
+test("should apply the font family over an ancestor block's font-family", async () => {
+    await testEditor({
+        contentBefore: `<p style="font-family: Arial, sans-serif;">ab[cde]fg</p>`,
+        stepFunction: setFontFamily("Verdana, sans-serif"),
+        contentAfter: `<p style="font-family: Arial, sans-serif;">ab<span style="font-family: Verdana, sans-serif;">[cde]</span>fg</p>`,
+    });
+});
