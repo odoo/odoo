@@ -68,5 +68,5 @@ test("whatsapp snippet is not a visible sibling of other snippets", async () => 
     await setupWebsiteBuilderWithSnippet(["s_cover", "s_whatsapp"]);
     await contains(":iframe .s_cover").click();
     await waitFor(".overlay");
-    expect(".overlay .fa-angle-down").toHaveCount(0);
+    expect(".overlay [data-icon='keyboard_arrow_down']").toHaveCount(0);
 });
