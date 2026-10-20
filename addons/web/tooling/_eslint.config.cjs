@@ -120,7 +120,7 @@ module.exports = [
         languageOptions: { globals: globals.sharedWorker },
     },
     {
-        files: ["**/tick_worker.js", "**/voip/static/src/worker/init.js"],
+        files: ["**/tick_worker.js"],
         languageOptions: { globals: globals.worker },
     },
     {
