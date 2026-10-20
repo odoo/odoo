@@ -487,8 +487,6 @@
         <div
             t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_title {{'mb-3' if not product.description_ecommerce else ''}}"
         >
-            <!-- FIXME VCR variable seems unused -->
-            <t t-set="base_url" t-value="website.get_base_url()"/>
             <h1
                 t-attf-class="h3 {{'mb-3' if not product.description_ecommerce and not is_view_active('website_sale.product_comment') else ''}}"
                 t-field="product.name"
