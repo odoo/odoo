@@ -1,10 +1,22 @@
+import { useHover } from "@mail/utils/common/hooks";
+
 import { usePopover } from "@web/core/popover/popover_hook";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { OPEN_DELAY } from "@web/core/tooltip/tooltip_plugin";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { RecipientsInputTagsListPopover } from "./recipients_input_tags_list_popover";
 import { RecipientsPopover } from "./recipients_popover";
 
-import { Component, EventBus, onMounted, onPatched, signal, types, useProps } from "@odoo/owl";
+import {
+    Component,
+    EventBus,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    signal,
+    types,
+    useProps,
+} from "@odoo/owl";
 
 export class RecipientTag extends Component {
     static template = "mail.RecipientTag";
@@ -26,9 +38,31 @@ export class RecipientTag extends Component {
         this.ref = signal.ref();
         this.action = useService("action");
 
+        const recipientPopoverRef = signal.ref();
         this.recipientPopover = usePopover(RecipientsPopover, {
             position: "bottom-middle",
+            ref: recipientPopoverRef,
+            setActiveElement: false,
         });
+        // Delayed like a tooltip, so that crossing the tag does not open the card.
+        let openTimeout;
+        const hover = useHover([this.ref, recipientPopoverRef], {
+            onHover: () => {
+                clearTimeout(openTimeout);
+                openTimeout = setTimeout(() => {
+                    // `onAway` only clears the timeout 100 ms after leaving.
+                    if (hover.isHover) {
+                        this.openAvatarCard();
+                    }
+                }, OPEN_DELAY);
+            },
+            onAway: () => {
+                clearTimeout(openTimeout);
+                this.recipientPopover.close();
+            },
+            stateObserver: () => [recipientPopoverRef()],
+        });
+        onWillUnmount(() => clearTimeout(openTimeout));
         this.emailSetterPopover = usePopover(RecipientsInputTagsListPopover, {
             closeOnClickAway: false,
             position: "bottom-middle",
@@ -49,8 +83,12 @@ export class RecipientTag extends Component {
         });
     }
 
-    onClick(ev) {
-        if (!this.props.resId || !this.props.email) {
+    get hasAvatarCard() {
+        return Boolean(this.props.resId && this.props.email);
+    }
+
+    openAvatarCard() {
+        if (!this.hasAvatarCard || this.recipientPopover.isOpen) {
             return;
         }
         const viewProfileBtnOverride = () => {
@@ -63,9 +101,11 @@ export class RecipientTag extends Component {
             };
             this.action.doAction(action);
         };
-        this.recipientPopover.open(ev.target, {
+        this.recipientPopover.open(this.ref(), {
             viewProfileBtnOverride,
+            email: this.props.email,
             id: this.props.resId,
+            name: this.props.name,
         });
     }
 }

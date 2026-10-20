@@ -2,6 +2,7 @@ import {
     click,
     contains as mailContains,
     defineMailModels,
+    hover,
     insertText,
     onRpcBefore,
     openFormView,
@@ -12,7 +13,7 @@ import {
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
-import { contains, mockService } from "@web/../tests/web_test_helpers";
+import { contains, mockService, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -290,4 +291,30 @@ test("closing full composer in 'log note' mode should preserve suggested recipie
     await click("button:text('Send message')");
     await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:contains(John Jane):count(1)");
     await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:contains(john@test.be):count(1)");
+});
+
+test("Hovering a recipient tag opens its avatar card", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "John Jane",
+        email: "john@jane.be",
+        phone: "+32 470 00 00 00",
+    });
+    const fakeId = pyEnv["res.fake"].create({ partner_ids: [partnerId] });
+    registerArchs(archs);
+    const { promise: readHeld, resolve: releaseRead } = Promise.withResolvers();
+    onRpc("res.partner", "read", async () => {
+        await readHeld;
+    });
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button:text('Send message')");
+    await hover(".o-mail-RecipientsInput .o_tag:contains(John Jane)");
+    // The card does not wait for the partner read: only the phone does.
+    await waitFor(".o_avatar_card:contains(John Jane):contains(john@jane.be):count(1)");
+    await waitForNone(".o-mail-avatar-card-tel");
+    releaseRead();
+    await waitFor(".o-mail-avatar-card-tel:contains(+32 470 00 00 00)");
+    await hover(".o-mail-Composer-html");
+    await waitForNone(".o_avatar_card");
 });

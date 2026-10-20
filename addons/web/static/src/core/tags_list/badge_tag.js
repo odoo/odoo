@@ -10,6 +10,7 @@ export const badgeTagProps = {
     slots: t.any().optional(),
     text: t.string().optional(),
     tooltip: t.string().optional(),
+    showTooltip: t.boolean().optional(true),
 };
 
 export class BadgeTag extends Component {
@@ -22,6 +23,10 @@ export class BadgeTag extends Component {
         "ref",
         t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref())
     );
+
+    get tooltipText() {
+        return this.props.tooltip || this.props.text;
+    }
 
     get tagColorClass() {
         return `o_tag_color_${this.color.color}`;

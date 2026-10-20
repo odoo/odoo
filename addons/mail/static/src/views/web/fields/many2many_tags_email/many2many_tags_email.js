@@ -84,7 +84,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
                 record.data.name || record.data.email || record.data.display_name || _t("Unnamed"),
             bus: this.recipientCheckerBus,
             updateRecipient: this.updateRecipient.bind(this),
-            name: p.text,
+            name: record.data.name || record.data.display_name || _t("Unnamed"),
             email: record.data.email,
             tooltip: record.data.email || p.text,
             id: record.id,
