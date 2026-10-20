@@ -194,6 +194,7 @@ class RepairOrder(models.Model):
 
     # UI Fields
     has_uncomplete_moves = fields.Boolean(compute='_compute_has_uncomplete_moves')
+    scrap_count = fields.Integer(compute='_compute_scrap_count')
     unreserve_visible = fields.Boolean(
         'Allowed to Unreserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can unreserve')
@@ -256,6 +257,15 @@ class RepairOrder(models.Model):
     def _compute_invoice_count(self):
         for repair in self:
             repair.invoice_count = len(repair.sudo().invoice_ids)
+
+    def _compute_scrap_count(self):
+        scrap_data = dict(self.env['stock.move']._read_group(
+            [('repair_id', 'in', self.ids), ('is_scrap', '=', True)],
+            ['repair_id'],
+            ['__count'],
+        ))
+        for repair in self:
+            repair.scrap_count = scrap_data.get(repair, 0)
 
     @api.depends('invoice_ids', 'invoice_ids.state', 'partner_id', 'sale_order_id', 'state', 'move_ids', 'repair_service_line_ids')
     def _compute_can_create_sale_or_invoice(self):
@@ -643,6 +653,42 @@ class RepairOrder(models.Model):
 
     def action_unreserve(self):
         return self.move_ids.filtered(lambda m: m.state in ('assigned', 'partially_available'))._do_unreserve()
+
+    def action_scrap(self):
+        self.ensure_one()
+        if self.state == 'draft':
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': self.env._("You cannot scrap products from a draft repair order."),
+                    'type': 'warning',
+                },
+            }
+        return {
+            'name': self.env._("Scrap Products"),
+            'res_model': 'stock.move',
+            'views': [[self.env.ref('stock.view_scrap_move_form').id, 'form']],
+            'type': 'ir.actions.act_window',
+            'context': {
+                'from_order': True,
+                'default_is_scrap': True,
+                'default_repair_id': self.id,
+                'default_company_id': self.company_id.id,
+                'product_ids': (self.move_ids.filtered(lambda m: m.repair_line_type == 'add').product_id if self.state == 'confirmed' else self.product_id).ids,
+                'default_product_id': self.product_id.id if self.state != 'confirmed' else False,
+                'default_lot_ids': self.lot_id.ids if self.state != 'confirmed' else [],
+                'default_location_id': {'confirmed': self.location_id, 'done': self.product_location_dest_id, 'cancel': self.product_location_src_id}[self.state].id,
+            },
+            'target': 'new',
+        }
+
+    def action_see_move_scrap(self):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('stock.stock_scrapped_moves_action')
+        action['domain'] = [('repair_id', '=', self.id), ('is_scrap', '=', True)]
+        action['context'] = dict(self.env.context, create=False)
+        return action
 
     def action_validate(self):
         self.ensure_one()
