@@ -1,4 +1,4 @@
-import { useEffect, onMounted } from "@odoo/owl";
+import { useEffect, onMounted, signal } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -8,8 +8,9 @@ export class TodoFormControlPanel extends ControlPanel {
 
     setup() {
         super.setup();
+        this.displayChatter = signal(false);
         useEffect(() => {
-            if (this.uiService.isSmall && !this.embeddedPanelState.displayChatter) {
+            if (this.uiService.isSmall && !this.displayChatter()) {
                 this.toggleChatter();
             }
         });
@@ -20,7 +21,7 @@ export class TodoFormControlPanel extends ControlPanel {
                 "activity";
             if (
                 !this.uiService.isSmall &&
-                !this.embeddedPanelState.displayChatter &&
+                !this.displayChatter() &&
                 (isFromActivityView || JSON.parse(browser.localStorage.getItem("isChatterOpened")))
             ) {
                 this.toggleChatter();
@@ -29,12 +30,12 @@ export class TodoFormControlPanel extends ControlPanel {
     }
 
     toggleChatter(ev) {
-        this.embeddedPanelState.displayChatter = !this.embeddedPanelState.displayChatter;
+        this.displayChatter.set(!this.displayChatter());
         if (ev) {
-            browser.localStorage.setItem("isChatterOpened", this.embeddedPanelState.displayChatter);
+            browser.localStorage.setItem("isChatterOpened", this.displayChatter());
         }
         this.env.bus.trigger("TODO:TOGGLE_CHATTER", {
-            displayChatter: this.embeddedPanelState.displayChatter,
+            displayChatter: this.displayChatter(),
         });
     }
 }

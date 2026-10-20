@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.HubTabs">
+        <!-- on small screens, the items are listed in the control panel instead -->
+        <Transition visible="!this.ui.isSmall and this.props.hub.showTabs()" name="'o-fade'" t-slot-scope="transition" leaveDuration="500">
+            <div class="o_hub_tabs d-flex align-items-end px-3 pt-2" t-att-class="transition.className">
+                <ul class="nav nav-tabs border-bottom-0" t-ref="this.root">
+                    <t t-foreach="this.getPinnedItems()" t-as="hubItem" t-key="hubItem.id">
+                        <li class="o_hub_tab nav-item me-1" t-att-data-id="hubItem.id">
+                            <span class="nav-link"
+                                t-att-class="{ 'active': this.props.hub.activeItemId === hubItem.id }"
+                                t-custom-click.prevent="(ev, newWindow) => this.openHubItem(hubItem, newWindow)">
+                                <t t-out="hubItem.display_name"/>
+                            </span>
+                        </li>
+                    </t>
+                </ul>
+                <Dropdown menuClass="'o_hub_tabs_dropdown_menu'">
+                    <button class="o_hub_tabs_toggler btn pb-1" aria-label="Hub items" title="Hub items">
+                        <i class="oi" data-icon="keyboard_arrow_down" role="img" aria-hidden="true"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <DropdownItem t-foreach="this.items()" t-as="item" t-key="item.id"
+                            class="this.isPinned(item) ? 'selected' : ''"
+                            onSelected="() => this.togglePin(item)"
+                            closingMode="'none'">
+                            <span t-out="item.display_name"/>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </div>
+        </Transition>
+    </t>
+
+</templates>

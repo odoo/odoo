@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.Layout" t-inherit-mode="extension">
+        <xpath expr="//t[@t-component='this.components.ControlPanel']" position="before">
+            <t t-if="this.env.config.hub and !this.env.inDialog" t-component="this.env.config.HubTabs" hub="this.env.config.hub"/>
+        </xpath>
+    </t>
+
+</templates>

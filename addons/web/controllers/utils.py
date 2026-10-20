@@ -9,6 +9,7 @@ import werkzeug
 import werkzeug.exceptions
 from werkzeug.urls import iri_to_uri
 
+from odoo.fields import Domain
 from odoo.http import request, router
 from odoo.http.session import get_default_session, session_store
 from odoo.tools.misc import file_open
@@ -45,6 +46,7 @@ def clean_action(action, env):
     # When returning an action, keep only relevant fields/properties
     readable_fields = env[action['type']]._get_readable_fields()
     action_type_fields = env[action['type']]._fields.keys()
+    hub_fields = {'hub'}
 
     cleaned_action = {
         field: value
@@ -55,13 +57,48 @@ def clean_action(action, env):
 
     # Warn about custom properties fields, because use is discouraged
     action_name = action.get('name') or action
-    custom_properties = action.keys() - readable_fields - action_type_fields
+
+    custom_properties = action.keys() - readable_fields - action_type_fields - hub_fields
     if custom_properties:
         _logger.warning("Action %r contains custom properties %s. Passing them "
             "via the `params` or `context` properties is recommended instead",
             action_name, ', '.join(map(repr, custom_properties)))
 
     return cleaned_action
+
+
+def add_hub_info(action, env, res_id, action_id=None, model=None, method=None):
+    """ If ``action`` is opened through a hub item, add its hub to it, for the
+    record ``res_id`` of the hub's model.
+
+    The item is the one calling ``method`` on ``model`` if any: a method
+    augmenting an action record takes precedence over that record. Otherwise,
+    it is the one opening ``action_id``. When given, ``model`` must be the
+    model of the hub: ``res_id`` is a record of that model.
+    """
+    # e.g. portal users, who have no access to the hubs
+    if not res_id or not env['ir.hub.item'].has_access('read'):
+        return
+    conditions = []
+    if method:
+        conditions.append(Domain('python_method', '=', method))
+    if action_id:
+        conditions.append(Domain('action_id', '=', action_id))
+    if not conditions:
+        return
+    domain = Domain.OR(conditions)
+    if model:
+        domain &= Domain('hub_id.res_model', '=', model)
+    # an item the user can't see is ignored: the action opens without its hub
+    items = env['ir.hub.item'].search(domain)._filter_allowed()
+    hub_item = items.filtered('python_method')[:1] or items[:1]
+    if not hub_item:
+        return
+    # without a model (e.g. an action restored from the url), res_id may not
+    # be a record of the hub's model: the action opens without its hub
+    record = env[hub_item.hub_id.res_model].browse(res_id).exists()
+    if record and record.has_access('read'):
+        hub_item.hub_id._add_hub_info(action, hub_item, res_id)
 
 
 def ensure_db(redirect='/web/database/selector', db=None):

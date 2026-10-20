@@ -21,7 +21,6 @@ from . import test_web_unlink
 from . import test_domain
 from . import test_translate
 from . import test_web_redirect
-from . import test_res_users_settings
 from . import test_res_users
 from . import test_webmanifest
 from . import test_ir_qweb
@@ -30,3 +29,4 @@ from . import test_perf_load_menu
 from . import test_pivot_export
 from . import test_res_partner_properties
 from . import test_action
+from . import test_ir_hub

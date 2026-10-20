@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 
@@ -8,8 +8,8 @@ export class ProjectTaskControlPanel extends ControlPanel {
     setup() {
         super.setup();
         this.showSubtasksKey = "showSubtasks";
-        this.embeddedPanelState.showSubtasks = JSON.parse(
-            browser.localStorage.getItem(this.showSubtasksKey) || "false"
+        this.showSubtasks = signal(
+            JSON.parse(localStorage.getItem(this.showSubtasksKey) || "false")
         );
     }
 
@@ -23,23 +23,26 @@ export class ProjectTaskControlPanel extends ControlPanel {
     }
 
     get taskOptionsTitle() {
-        if (this.embeddedPanelState.embeddedInfos.embeddedActions?.length) {
-            return _t("Show sub-tasks & top menu");
+        if (this.env.config.hub) {
+            return _t("Show sub-tasks & hub tabs");
         }
         return _t("Show sub-tasks");
     }
 
     onClickShowSubtasks(ev) {
-        this.embeddedPanelState.showSubtasks = !this.embeddedPanelState.showSubtasks;
-        browser.localStorage.setItem(this.showSubtasksKey, this.embeddedPanelState.showSubtasks);
+        this.showSubtasks.set(!this.showSubtasks());
+        localStorage.setItem(this.showSubtasksKey, this.showSubtasks());
         this.env.searchModel.search();
     }
 
-    getDropdownClass(action) {
-        return (!this.uiService.isSmall && this.embeddedPanelState.isEmbeddedActionVisible(action)) ||
-            (this.uiService.isSmall &&
-                this.embeddedPanelState.embeddedInfos.currentEmbeddedAction?.id === action.id)
-            ? "selected"
-            : "";
+    /**
+     * Whether the hub items are listed in the task options dropdown (on small
+     * screens, where the hub tabs aren't displayed).
+     */
+    hasMobileHubItems() {
+        return (
+            this.uiService.isSmall &&
+            Boolean(this.env.config.hub && this.env.config.hub.items().length)
+        );
     }
 }

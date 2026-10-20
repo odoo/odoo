@@ -18,9 +18,6 @@ class ProjectProject(models.Model):
             'context': {'project_id': self.id},
             'domain': domain or [('id', 'in', expense_ids)],
         })
-        if not self.env.context.get('from_embedded_action') and len(expense_ids) == 1:
-            action["views"] = [[False, 'form']]
-            action["res_id"] = expense_ids[0]
         return action
 
     def action_open_project_expenses(self):
