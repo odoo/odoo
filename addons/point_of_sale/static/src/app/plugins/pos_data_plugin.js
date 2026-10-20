@@ -814,7 +814,6 @@ export class PosDataPlugin extends Plugin {
                 this.network.unsyncData.push({
                     args: [...arguments],
                     date: DateTime.now(),
-                    try: 1,
                     uuid: uuidv4(),
                 });
 
@@ -993,21 +992,34 @@ export class PosDataPlugin extends Plugin {
     async syncData() {
         this.syncInProgress.set(true);
 
-        await this.mutex.exec(async () => {
-            while (this.network.unsyncData.length > 0) {
-                const data = this.network.unsyncData[0];
-                const result = await this.execute({ ...data.args[0], uuid: data.uuid });
-
-                if (result) {
+        try {
+            await this.mutex.exec(async () => {
+                while (this.network.unsyncData.length > 0) {
+                    const data = this.network.unsyncData[0];
+                    const { type, model, ids } = data.args[0];
+                    try {
+                        await this.execute({ ...data.args[0], uuid: data.uuid });
+                        if (type === "write") {
+                            this.dispatchWrite(model, ids);
+                        }
+                    } catch (error) {
+                        if (error instanceof ConnectionLostError) {
+                            throw error;
+                        }
+                        logPosMessage(
+                            "DataService",
+                            "syncData",
+                            `Discarding offline operation ${type} on ${model}`,
+                            CONSOLE_COLOR,
+                            [error]
+                        );
+                    }
                     this.network.unsyncData.shift();
-                } else {
-                    this.network.unsyncData[0].try += 1;
-                    break;
                 }
-            }
-        });
-
-        this.syncInProgress.set(false);
+            });
+        } finally {
+            this.syncInProgress.set(false);
+        }
     }
 
     async loadServerOrders(domain) {
@@ -1151,9 +1163,16 @@ export class PosDataPlugin extends Plugin {
 
     async ormWrite(model, ids, values, queue = true) {
         const result = await this.execute({ type: "write", model, ids, values, queue });
+        // No result when offline: the write is queued and other devices are notified on replay
+        if (result) {
+            this.dispatchWrite(model, ids);
+        }
+        return result;
+    }
+
+    dispatchWrite(model, ids) {
         this.deviceSync?.dispatch &&
             this.deviceSync.dispatch({ [model]: ids.map((id) => ({ id })) });
-        return result;
     }
 
     async ormDelete(model, ids, queue = true) {
