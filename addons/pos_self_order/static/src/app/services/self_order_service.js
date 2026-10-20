@@ -832,14 +832,29 @@ export class SelfOrder extends Reactive {
                 ? Object.values(this.currentOrder.uiState.lineChanges[line.uuid]).every((v) => !v)
                 : false;
 
+<<<<<<< 5d79eeeaf77cfb4dfb5e1cba0a0ae2facbaa0334
             const wrongChild = line.combo_line_ids.find((l) => !l.product_id.self_order_available);
             if (wrongChild || !line.product_id?.self_order_available) {
+||||||| 6a4ededbc40041190901eb1b0528a62692adb219
+            const wrongChild = line.combo_line_ids.find((l) => !this.isLineProductAvailable(l));
+            if (wrongChild || !this.isLineProductAvailable(line)) {
+=======
+            const wrongChild = line.combo_line_ids.find((l) => !l.product_id.self_order_available);
+            const lineAvailable = this.isLineProductAvailable(line);
+            if (wrongChild || !lineAvailable) {
+>>>>>>> f63714212774e290589b71a032004e447eeec7e0
                 if (alreadySent) {
                     line.qty = alreadySent.qty;
                     line.customer_note = alreadySent.customer_note;
                     line.selected_attributes = alreadySent.selected_attributes;
                 } else {
+<<<<<<< 5d79eeeaf77cfb4dfb5e1cba0a0ae2facbaa0334
                     const productName = !line.product_id?.self_order_available
+||||||| 6a4ededbc40041190901eb1b0528a62692adb219
+                    const productName = !this.isLineProductAvailable(line)
+=======
+                    const productName = !lineAvailable
+>>>>>>> f63714212774e290589b71a032004e447eeec7e0
                         ? line.product_id?.name
                         : wrongChild?.product_id?.name;
 
