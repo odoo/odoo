@@ -30,7 +30,14 @@
             </t>
             <t t-else="">
                 <div class="o_field_many2one_selection" t-ref="this.rootRef">
-                    <Many2XAutocomplete t-props="this.many2XAutocompleteProps"/>
+                    <div t-if="this.props.bottomSheet and this.uiService.isSmall" class="o_input_dropdown">
+                        <input type="text" t-att-id="this.props.id" class="o_input" readonly="" autocomplete="off"
+                            t-att-placeholder="this.props.placeholder"
+                            t-att-value="this.displayName"
+                            t-on-click="(ev) => this.openBottomSheet(ev.currentTarget)"/>
+                        <span class="o_dropdown_button"/>
+                    </div>
+                    <Many2XAutocomplete t-else="" t-props="this.many2XAutocompleteProps"/>
                     <t t-if="this.hasLinkButton">
                         <button class="o_external_button btn btn-light btn-sm d-inline-flex align-items-center py-0 ms-2" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : this.env.inDialog ? 'dialog' : 'action')">
                             <i class="oi" t-att-data-icon="this.env.inDialog ? 'open_in_browser' : 'arrow_forward'"/>
@@ -48,6 +55,20 @@
                         <div t-out="line" t-att-title="line"  class="text-truncate"/>
                     </t>
                 </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.Many2XBottomSheetOptions">
+        <div t-ref="this.autocompleteContainerRef">
+            <t t-foreach="this.preloadedOptions" t-as="option" t-key="option_index">
+                <a t-if="option.onSelect"
+                    class="o-dropdown-item dropdown-item o-navigable text-truncate"
+                    t-att-class="option.cssClass"
+                    href="#" role="menuitem" tabindex="0"
+                    t-on-click.prevent="() => option.onSelect()"
+                    t-out="option.label"/>
+                <span t-else="" class="d-block px-3 py-2 text-muted fst-italic" t-out="option.label"/>
             </t>
         </div>
     </t>
