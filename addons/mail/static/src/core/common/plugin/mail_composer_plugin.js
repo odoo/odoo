@@ -5,6 +5,7 @@ import { getDeepestPosition, isEmptyBlock } from "@html_editor/utils/dom_info";
 import { childNodes, closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 const ALLOWED_TAGS = [
     "A",
@@ -22,7 +23,11 @@ const ALLOWED_TAGS = [
     "UL",
 ];
 
-export const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o-discuss-mention"]);
+export const PRESERVED_CLASSNAMES = new Set([
+    "o_mail_redirect",
+    "o_message_redirect",
+    "o-discuss-mention",
+]);
 
 /**
  * Hint whose text is re-read on every hint update instead of being captured once.
@@ -49,7 +54,15 @@ function lazyHint(selector, getText) {
  */
 export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
-    static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection"];
+    static dependencies = [
+        "baseContainer",
+        "clipboard",
+        "dom",
+        "hint",
+        "history",
+        "input",
+        "selection",
+    ];
     static shared = ["cancelSelection", "insert", "setCursorEnd", "updateEditableState"];
     resources = {
         on_will_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
@@ -78,6 +91,13 @@ export class MailComposerPlugin extends Plugin {
             }
         },
         on_input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
+        // after the mentions are made non-editable
+        normalize_processors: withSequence(20, (root) => {
+            if (root === this.editable) {
+                this.wrapNonEditableInlineContent();
+            }
+            return root;
+        }),
     };
 
     setup() {
@@ -135,6 +155,39 @@ export class MailComposerPlugin extends Plugin {
         }
         this.dependencies.dom.insert(content);
         this.dependencies.history.commit();
+    }
+
+    /** Directly in the editable, a non-editable element (e.g. a mention) can't be deleted. */
+    wrapNonEditableInlineContent() {
+        const nonEditableEls = childNodes(this.editable).filter(
+            (node) =>
+                node.nodeType === Node.ELEMENT_NODE &&
+                !isBlock(node) &&
+                node.getAttribute("contenteditable") === "false"
+        );
+        for (const el of nonEditableEls) {
+            if (el.parentElement !== this.editable) {
+                continue; // wrapped with a previous one
+            }
+            let firstNode = el;
+            while (firstNode.previousSibling && !isBlock(firstNode.previousSibling)) {
+                firstNode = firstNode.previousSibling;
+            }
+            const inlineNodes = [];
+            for (let node = firstNode; node && !isBlock(node); node = node.nextSibling) {
+                inlineNodes.push(node);
+            }
+            // inserted first, so that the selection is restored in the editable
+            const cursors = this.dependencies.selection.preserveSelection();
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            cursors.update(callbacksForCursorUpdate.before(firstNode, baseContainer));
+            this.editable.insertBefore(baseContainer, firstNode);
+            for (const node of inlineNodes) {
+                cursors.update(callbacksForCursorUpdate.append(baseContainer, node));
+                baseContainer.append(node);
+            }
+            cursors.restore();
+        }
     }
 
     /** Whether the cursor is at the start of its block or after a whitespace. */

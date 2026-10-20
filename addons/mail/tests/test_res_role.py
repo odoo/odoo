@@ -3,9 +3,23 @@
 from odoo import Command
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.tests.common import HttpCase
+from odoo.tools import mute_logger
 
 
 class TestResRole(MailCommon, HttpCase):
+    def test_store_res_role_internal_users_only(self):
+        role = self.env["res.role"].create({"name": "rd-Discuss"})
+        mail_new_test_user(self.env, login="user_d", role_ids=[Command.link(role.id)])
+        fetch_params = {"fetch_params": [["res.role", {"id": role.id}]]}
+        self.authenticate("employee", "employee")
+        data = self.make_jsonrpc_request("/mail/store", fetch_params)
+        self.assertEqual(data["res.role"], [{"id": role.id, "name": "rd-Discuss", "user_ids_count": 1}])
+        portal_user = mail_new_test_user(self.env, login="portal_d", groups="base.group_portal")
+        self.authenticate(portal_user.login, portal_user.login)
+        with mute_logger("odoo.addons.mail.tools.store_handler"):
+            data = self.make_jsonrpc_request("/mail/store", fetch_params)
+        self.assertEqual(data, {})
+
     def test_post_mention_role(self):
         """Test mention with role"""
         contact = self.env["res.partner"].create({"name": "A contact"})

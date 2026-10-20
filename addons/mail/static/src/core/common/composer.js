@@ -397,6 +397,22 @@ export class Composer extends Component {
     }
 
     /**
+     * Adds the mentioned records of the content, which are not all inserted from the suggestions.
+     *
+     * @param {Object} param0
+     * @param {import("models").ResPartner[]} param0.partners
+     * @param {import("models").ResRole[]} param0.roles
+     */
+    addMentions({ partners, roles }) {
+        this.props.composer.mentionedPartners.add(...partners);
+        this.props.composer.mentionedRoles.add(...roles);
+        if (partners.length) {
+            // also for a partner mentioned again, e.g. pasted in a note
+            this.syncMentionsWithComposerType();
+        }
+    }
+
+    /**
      * Keeps the mentions in sync with the current composer type.
      *
      * Mentions of partners that are not internal users must not be links in a
@@ -502,12 +518,14 @@ export class Composer extends Component {
                         ? editorSelection
                         : undefined;
                 },
+                getThread: () => this.props.composer.targetThread,
                 isEditable: () => !this.isEditorReadonly && !this.isEditorDisabled,
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
                 onFocusin: this.onFocusin.bind(this),
                 onFocusout: this.onFocusout.bind(this),
                 onInput: this.onInput.bind(this),
                 onKeydown: this.onKeydown.bind(this),
+                onMentions: (mentions) => this.addMentions(mentions),
                 saveSelection: (selection) => {
                     this.props.composer.editorSelection = {
                         ...selection,
@@ -969,6 +987,7 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
+            await this.editor?.shared.mention.whenMentionsChecked();
             // The type may have just been switched, before the layout effect.
             this.syncMentionsWithComposerType();
             let body = trimEmptyBlocksAround(this.props.composer.composerHtml);
@@ -999,6 +1018,8 @@ export class Composer extends Component {
             this.editMessage();
             return;
         }
+        // the mass mention confirmation needs the pasted mentions
+        await this.editor?.shared.mention.whenMentionsChecked();
         if (this.props.type !== "note") {
             const allRecipients = [
                 ...this.props.composer.thread.suggestedRecipients,
@@ -1181,6 +1202,7 @@ export class Composer extends Component {
         const saveContentToLocalStorage = async ({
             composerHtml,
             emailAddSignature,
+            mentionedPartners,
             replyToMessageId,
             fromFullComposer = this.props.composer.restoredFromFullComposer,
         }) => {
@@ -1190,6 +1212,7 @@ export class Composer extends Component {
                 const db = new IndexedDB("mail");
                 await db.write("composer", this.props.composer.localId, {
                     emailAddSignature,
+                    mentionedPartners: mentionedPartners?.length ? mentionedPartners : undefined,
                     replyToMessageId,
                     composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
                     fromFullComposer,
@@ -1205,6 +1228,12 @@ export class Composer extends Component {
             saveContentToLocalStorage({
                 composerHtml: this.props.composer.composerHtml,
                 emailAddSignature: true,
+                // name: matched on post, token: to mention a partner the user can't read
+                mentionedPartners: this.props.composer.mentionedPartners.map((partner) => ({
+                    id: partner.id,
+                    mention_token: partner.mention_token,
+                    name: partner.displayName,
+                })),
                 replyToMessageId: this.props.composer.replyToMessage?.id,
                 fromFullComposer: false,
             });
@@ -1229,6 +1258,17 @@ export class Composer extends Component {
             }
             this.props.composer.emailAddSignature = config.emailAddSignature;
             this.props.composer.composerHtml = config.composerHtml;
+            if (config.mentionedPartners) {
+                this.props.composer.mentionedPartners = config.mentionedPartners.map(
+                    ({ id, mention_token, name }) => {
+                        const partner = this.store["res.partner"].insert({ id });
+                        // the values of the store are more up-to-date than the saved ones
+                        partner.mention_token ??= mention_token;
+                        partner.name ??= name;
+                        return partner;
+                    }
+                );
+            }
         }
         if (Number.isInteger(config.replyToMessageId)) {
             this.props.composer.replyToMessage = this.store["mail.message"].insert(

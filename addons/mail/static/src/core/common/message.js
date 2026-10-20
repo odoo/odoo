@@ -39,7 +39,6 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
 import { nbsp } from "@web/core/utils/strings";
-import { getOrigin } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
@@ -624,16 +623,7 @@ export class Message extends Component {
         );
         const channelLinks = bodyEl.querySelectorAll("a.o_channel_redirect");
         this.store.handleValidChannelMention(Array.from(channelLinks));
-        for (const el of bodyEl.querySelectorAll(".o_message_redirect")) {
-            // only transform links targetting the same database
-            if (el.getAttribute("href")?.startsWith(getOrigin())) {
-                const message = this.store["mail.message"].get(el.dataset.oeId);
-                if (message?.thread?.displayName) {
-                    el.classList.add("o_message_redirect_transformed");
-                    el.replaceChildren(renderToElement("mail.Message.messageLink", { message }));
-                }
-            }
-        }
+        this.store.renderMessageLinks(bodyEl.querySelectorAll(".o_message_redirect"));
         return this.renderEmbeddedCodeBlocks(bodyEl);
     }
 

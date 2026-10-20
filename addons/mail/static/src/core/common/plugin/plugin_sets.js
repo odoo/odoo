@@ -34,6 +34,7 @@ import { DisableImplicitFormatShortcutsPlugin } from "@mail/core/common/plugin/d
 import { MailCodeBlockPlugin } from "@mail/core/common/plugin/mail_code_block_plugin";
 import { MailComposerPlugin } from "@mail/core/common/plugin/mail_composer_plugin";
 import { MentionPlugin } from "@mail/core/common/plugin/mention_plugin";
+import { MessageLinkPlugin } from "@mail/core/common/plugin/message_link_plugin";
 import { PersistSelectionPlugin } from "@mail/core/common/plugin/persist_selection_plugin";
 import { StripPastedFormatPlugin } from "@mail/core/common/plugin/strip_pasted_format_plugin";
 import { TextLineBreakPlugin } from "@mail/core/common/plugin/text_line_break_plugin";
@@ -56,6 +57,7 @@ export const MAIL_TEXT_PLUGINS = [
     LineBreakPlugin,
     MailComposerPlugin,
     MentionPlugin,
+    MessageLinkPlugin,
     OverlayPlugin,
     PersistSelectionPlugin,
     SanitizePlugin,
@@ -80,6 +82,7 @@ export const MAIL_CORE_PLUGINS = [
     LinkSelectionPlugin,
     MailComposerPlugin,
     MentionPlugin,
+    MessageLinkPlugin,
     OdooLinkSelectionPlugin,
     PersistSelectionPlugin,
     ProtectedNodePlugin,

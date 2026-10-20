@@ -91,12 +91,32 @@ class WebclientController(ThreadController):
         user = request.env["res.users"].search_fetch([("id", "=", id)])
         store.add(user, "_store_user_fields")
 
+    @store_handler("res.role")
+    def store_get_res_role(self, store: Store, id):
+        role = request.env["res.role"].search_fetch([("id", "=", id)], ["name"])
+        store.add(role, ["name", "user_ids_count"])
+
     @store_handler("mail.activity")
     def store_get_mail_activity(self, store: Store, ids):
         activities = request.env["mail.activity"].with_context(active_test=False).search_fetch(
             [("id", "in", ids)]
         )
         store.add(activities, "_store_activity_fields")
+
+    @store_handler("mail.message")
+    def store_get_mail_message(self, store: Store, ids):
+        """Messages linked in the composer, as added once posted (`_store_linked_messages_fields`)."""
+        # no sudo: the ids come from the composer content
+        messages = request.env["mail.message"].search(Domain("id", "in", ids))
+        rec_by_m = messages._record_by_message()
+        store.add(
+            messages,
+            lambda res: (
+                res.extend(["model", "res_id"]),
+                # sudo: mail.thread - reading record name of accessible message is acceptable
+                res.one("thread", ["display_name"], value=rec_by_m.get, as_thread=True, sudo=True),
+            ),
+        )
 
     @store_handler("/mail/poll_option/votes", audience="everyone")
     def store_poll_option_votes(self, store: Store, poll_option_id):

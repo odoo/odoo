@@ -1,6 +1,7 @@
 import { useSubEnv } from "@web/owl2/utils";
 import {
     deleteBackward,
+    pasteHtml,
     pasteText,
     tripleClick,
 } from "@html_editor/../tests/_helpers/user_actions";
@@ -50,9 +51,11 @@ import {
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
+import { range } from "@web/core/utils/numbers";
 import { patch } from "@web/core/utils/patch";
+import { getOrigin } from "@web/core/utils/urls";
 
-import { Composer } from "@mail/core/common/composer";
+import { Composer, MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
 import { click as hootClick, press, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
 import { getIndexedDB } from "../mail_test_helpers";
@@ -1589,6 +1592,364 @@ test("composer reply-to message is restored page reload", async () => {
     await waitFor(".o-mail-Composer:contains('Replying to'):count(1)");
 });
 
+test("composer mention of unknown partner is restored with its token on page reload", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Zara" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    // draft saved before a page reload
+    await setIndexedDB(
+        "composer",
+        `Composer,(mail.thread,discuss.channel AND ${channelId}) OR (undefined)`,
+        {
+            composerHtml: [
+                "markup",
+                `Hello <a class="o_mail_redirect" data-oe-id="${partnerId}" data-oe-model="res.partner">@Zara</a>`,
+            ],
+            mentionedPartners: [{ id: partnerId, mention_token: "zara-token", name: "Zara" }],
+        }
+    );
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("message_post");
+        expect(args.post_data.partner_ids).toEqual([partnerId]);
+        expect(args.post_data.partner_ids_mention_token).toEqual({ [partnerId]: "zara-token" });
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer-html a.o_mail_redirect:text('@Zara'):count(1)");
+    await press("Enter");
+    await waitFor(".o-mail-Message a.o_mail_redirect:text('@Zara'):count(1)");
+    await expect.waitForSteps(["message_post"]);
+});
+
+test("pasted mention of unknown partner is notified when posted right away", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Zara" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("message_post");
+        expect(args.post_data.partner_ids).toEqual([partnerId]);
+    });
+    await start();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `<a class="o_mail_redirect" data-oe-id="${partnerId}" data-oe-model="res.partner">@Zara</a>`
+    );
+    // posted before the partner is fetched
+    await press("Enter");
+    await waitFor(".o-mail-Message a.o_mail_redirect:text('@Zara'):count(1)");
+    await expect.waitForSteps(["message_post"]);
+});
+
+test("pasted mention is checked again after a failed fetch", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Zara" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    pyEnv["mail.message"].create({
+        body: "Welcome",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    let isFirstPartnerFetch = true;
+    onRpc("/mail/store", async (request) => {
+        const { params } = await request.json();
+        if (isFirstPartnerFetch && params.fetch_params.some(([name]) => name === "res.partner")) {
+            isFirstPartnerFetch = false;
+            expect.step("partner fetch failed");
+            throw new Error("partner fetch failed");
+        }
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("message_post");
+        expect(args.post_data.partner_ids).toEqual([partnerId]);
+    });
+    await start();
+    await openDiscuss(channelId);
+    // loaded, so that the failing request only holds the partner fetch
+    await waitFor(".o-mail-Message:contains('Welcome'):count(1)");
+    await focus(".o-mail-Composer-html");
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `<a class="o_mail_redirect" data-oe-id="${partnerId}" data-oe-model="res.partner">@Zara</a>`
+    );
+    await expect.waitForSteps(["partner fetch failed"]);
+    await insertTextInComposer(".o-mail-Composer", " hi");
+    await press("Enter");
+    await waitFor(".o-mail-Message a.o_mail_redirect:text('@Zara'):count(1)");
+    await expect.waitForSteps(["message_post"]);
+});
+
+test("mentioned partners are saved with the composer content", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertTextInComposer(".o-mail-Composer", "@Mitchell");
+    await click(".o-mail-Composer-suggestion strong:text('Mitchell Admin')");
+    await waitFor(".o-mail-Composer-html a.o_mail_redirect:text('@Mitchell Admin'):count(1)");
+    await advanceTime(5000);
+    const composer = getService("mail.store")["discuss.channel"].get(channelId).composer;
+    const { mentionedPartners } = await getIndexedDB("composer", composer.localId);
+    expect(mentionedPartners.map(({ id, name }) => ({ id, name }))).toEqual([
+        { id: serverState.partnerId, name: serverState.partnerName },
+    ]);
+});
+
+test("restored inline content with a mention is wrapped in one paragraph", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    await setIndexedDB(
+        "composer",
+        `Composer,(mail.thread,discuss.channel AND ${channelId}) OR (undefined)`,
+        {
+            composerHtml: [
+                "markup",
+                `Hello <a class="o_mail_redirect" data-oe-id="${serverState.partnerId}" data-oe-model="res.partner">@Mitchell Admin</a> !`,
+            ],
+        }
+    );
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer-html > .o-paragraph:count(1)");
+    await waitFor(
+        ".o-mail-Composer-html > .o-paragraph:contains('Hello'):has(a.o_mail_redirect[contenteditable='false']:text('@Mitchell Admin')):count(1)"
+    );
+    // undo does not come back to the unwrapped content
+    const editor = getEditorFromComposerEl(".o-mail-Composer");
+    const restoredContent = editor.editable.innerHTML;
+    await insertTextInComposer(".o-mail-Composer", " again");
+    await waitFor(".o-mail-Composer-html > .o-paragraph:contains('again'):count(1)");
+    await press(["control", "z"]);
+    await waitUntil(() => editor.editable.innerHTML === restoredContent);
+});
+
+test("pasted mention of a known partner that would not notify is turned into text in the same step", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `<a class="o_mail_redirect" data-oe-id="${serverState.partnerId}" data-oe-model="res.partner">@Nobody</a>`
+    );
+    // a mention would be surrounded by FEFF markers
+    await containsTextInComposer(".o-mail-Composer", "@Nobody");
+    // a single undo removes the paste
+    await press(["control", "z"]);
+    await containsTextInComposer(".o-mail-Composer", "");
+});
+
+test("mention turned into text once fetched is kept as a mention after undo", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `<a class="o_mail_redirect" data-oe-id="999999" data-oe-model="res.partner">@Ghost</a>`
+    );
+    // turned into text once fetched (a mention has FEFF markers)
+    await containsTextInComposer(".o-mail-Composer", "@Ghost");
+    await press(["control", "z"]);
+    await waitFor(".o-mail-Composer-html a.o_mail_redirect:text('@Ghost'):count(1)");
+    // not turned into text again on the next update
+    await insertTextInComposer(".o-mail-Composer", " hi");
+    await containsTextInComposer(".o-mail-Composer", "\uFEFF@Ghost\uFEFF hi");
+    await waitFor(".o-mail-Composer-html a.o_mail_redirect:text('@Ghost'):count(1)");
+});
+
+test("pasted message url in a link is not a message link", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    const editor = getEditorFromComposerEl(".o-mail-Composer");
+    pasteHtml(editor, `<a href="https://www.odoo.com">odoo</a>`);
+    await waitFor(".o-mail-Composer-html a:contains('odoo'):count(1)");
+    const textNode = [...queryFirst(".o-mail-Composer-html a").childNodes].find((node) =>
+        node.textContent.includes("odoo")
+    );
+    editor.shared.selection.setSelection({
+        anchorNode: textNode,
+        anchorOffset: textNode.textContent.indexOf("odoo") + 2,
+    });
+    const url = `${getOrigin()}/mail/message/${messageId}`;
+    pasteText(editor, url);
+    await waitFor(`.o-mail-Composer-html a:contains('${url}'):count(1)`);
+    await waitFor(".o-mail-Composer-html a:count(1)");
+});
+
+test("pasted mention of an external partner in a note is readonly", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "External Partner",
+        email: "external@test.com",
+        partner_share: true,
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button:text('Log note')");
+    await focus(".o-mail-Composer-html");
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `<a class="o_mail_redirect" data-oe-id="${partnerId}" data-oe-model="res.partner">@External Partner</a>`
+    );
+    await waitFor(
+        ".o-mail-Composer-html span.o-discuss-readonly-mention:text('@External Partner'):count(1)"
+    );
+});
+
+test("pasted link to a message of another database is not a message link", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `<a class="o_message_redirect" href="https://other.example.com/mail/message/1" data-oe-id="1" data-oe-model="mail.message">https://other.example.com/mail/message/1</a>`
+    );
+    const linkSelector = ".o-mail-Composer-html a[href='https://other.example.com/mail/message/1']";
+    await waitFor(`${linkSelector}:contains('https://other.example.com/mail/message/1'):count(1)`);
+    expect(queryFirst(linkSelector).getAttributeNames()).toEqual(["href"]);
+});
+
+test("pasted mention of a role with many users asks a confirmation when posted right away", async () => {
+    const pyEnv = await startServer();
+    const roleId = pyEnv["res.role"].create({ name: "VIPs" });
+    pyEnv["res.users"].create(
+        range(MENTION_AMOUNT_WARNING + 1).map(() => ({ role_ids: [roleId] }))
+    );
+    pyEnv["res.role"]._applyComputesAndValidate();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
+    await start();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `<a class="o-discuss-mention" data-oe-id="${roleId}" data-oe-model="res.role">@VIPs</a>`
+    );
+    // posted before the role is fetched
+    await press("Enter");
+    await waitFor(
+        '.modal-body:text("You\'re about to notify 51 people with @VIPs. Do you want to continue?"):count(1)'
+    );
+});
+
+test("pasted message link with its own label keeps it", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const url = `${getOrigin()}/mail/message/${messageId}`;
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("message_post");
+        expect(args.post_data.body).toInclude(`>this discussion</a>`);
+    });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `see <a href="${url}">this discussion</a>`
+    );
+    await waitFor(`.o-mail-Composer-html a[href='${url}']:contains('this discussion'):count(1)`);
+    await press("Enter");
+    await expect.waitForSteps(["message_post"]);
+});
+
+test("pasted role and special mentions are kept only when they notify", async () => {
+    const pyEnv = await startServer();
+    const roleId = pyEnv["res.role"].create({ name: "rd-Discuss" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "channel",
+        name: "General",
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("message_post");
+        expect(args.post_data.role_ids).toEqual([roleId]);
+        expect(args.post_data.special_mentions).toEqual(["everyone"]);
+    });
+    await start();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    // valid role mention, role that does not exist, valid special mention
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `<a class="o-discuss-mention" data-oe-id="${roleId}" data-oe-model="res.role">@rd-Discuss</a> <a class="o-discuss-mention" data-oe-id="999999" data-oe-model="res.role">@rd-Ghost</a> <a class="o-discuss-mention">@everyone</a>`
+    );
+    await waitFor(".o-mail-Composer-html a.o-discuss-mention:count(2)");
+    await waitFor(".o-mail-Composer-html a.o-discuss-mention:text('@rd-Discuss'):count(1)");
+    await waitFor(".o-mail-Composer-html a.o-discuss-mention:text('@everyone'):count(1)");
+    await press("Enter");
+    await waitFor(".o-mail-Message a.o-discuss-mention:count(2)");
+    await expect.waitForSteps(["message_post"]);
+});
+
+test("pasted mention that would not notify is turned into text", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Zara" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("message_post");
+        expect(args.post_data.partner_ids).toEqual([partnerId]);
+    });
+    await start();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    // valid mention, unknown partner, text that is not the partner name
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `<a class="o_mail_redirect" data-oe-id="${partnerId}" data-oe-model="res.partner">@Zara</a> <a class="o_mail_redirect" data-oe-id="999999" data-oe-model="res.partner">@Ghost</a> <a class="o_mail_redirect" data-oe-id="${partnerId}" data-oe-model="res.partner">@Nobody</a>`
+    );
+    await waitFor(".o-mail-Composer-html a.o_mail_redirect:count(1)");
+    await waitFor(".o-mail-Composer-html a.o_mail_redirect:text('@Zara'):count(1)");
+    await press("Enter");
+    await waitFor(".o-mail-Message a.o_mail_redirect:count(1)");
+    await waitFor(".o-mail-Message a.o_mail_redirect:text('@Zara'):count(1)");
+    await expect.waitForSteps(["message_post"]);
+});
+
 test.tags("html composer");
 test("html composer: send a message in a chatter", async () => {
     await startServer();
@@ -1966,4 +2327,97 @@ test("mention partner whose name ends with a space at the end of the message", a
     await click(".o-mail-Composer-suggestion strong", { text: "Zara Space" });
     await press("Enter");
     await waitFor(".o-mail-Message a.o_mail_redirect:text('@Zara Space')");
+});
+
+for (const htmlEnabled of [false, true]) {
+    test(`message link is rendered in the composer like in the message body (html: ${htmlEnabled})`, async () => {
+        const pyEnv = await startServer();
+        const [generalId, salesId] = pyEnv["discuss.channel"].create([
+            { name: "General" },
+            { name: "Sales" },
+        ]);
+        const messageId = pyEnv["mail.message"].create({
+            body: "Hello",
+            model: "discuss.channel",
+            res_id: salesId,
+        });
+        const url = `${getOrigin()}/mail/message/${messageId}`;
+        onRpcBefore("/mail/message/post", (args) => {
+            expect.step("message_post");
+            // the body keeps the URL
+            expect(args.post_data.body).toInclude(`>${url}</a>`);
+        });
+        await start();
+        if (htmlEnabled) {
+            getService("mail.composer").setHtmlComposer();
+        }
+        await openDiscuss(generalId);
+        await focus(".o-mail-Composer-html");
+        const editor = getEditorFromComposerEl(".o-mail-Composer");
+        await pasteText(editor, url);
+        await waitFor(
+            ".o-mail-Composer-html a.o_message_redirect_transformed[contenteditable='false']:text('Sales'):count(1)"
+        );
+        // undo removes the whole link
+        await press(["control", "z"]);
+        await containsTextInComposer(".o-mail-Composer", "");
+        await pasteText(editor, url);
+        await waitFor(
+            ".o-mail-Composer-html a.o_message_redirect_transformed:text('Sales'):count(1)"
+        );
+        await press("Enter");
+        await waitFor(".o-mail-Message a.o_message_redirect_transformed:text('Sales'):count(1)");
+        await expect.waitForSteps(["message_post"]);
+        const unknownUrl = `${getOrigin()}/mail/message/999999`;
+        await pasteText(editor, unknownUrl);
+        await waitFor(`.o-mail-Composer-html a.o_message_redirect:text('${unknownUrl}'):count(1)`);
+    });
+}
+
+test("message link to a message known by its id only is rendered once fetched", async () => {
+    const pyEnv = await startServer();
+    const [generalId, salesId] = pyEnv["discuss.channel"].create([
+        { name: "General" },
+        { name: "Sales" },
+    ]);
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello",
+        model: "discuss.channel",
+        res_id: salesId,
+    });
+    await start();
+    getService("mail.store")["mail.message"].insert({ id: messageId });
+    await openDiscuss(generalId);
+    await focus(".o-mail-Composer-html");
+    pasteText(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `${getOrigin()}/mail/message/${messageId}`
+    );
+    await waitFor(".o-mail-Composer-html a.o_message_redirect_transformed:text('Sales'):count(1)");
+});
+
+test("editing a message keeps the mention of a renamed partner", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Zara Smith" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: `Hello <a class="o_mail_redirect" data-oe-id="${partnerId}" data-oe-model="res.partner">@Zara</a>`,
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await hover(".o-mail-Message");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await waitFor(".o-mail-Message .o-mail-Composer-html a.o_mail_redirect:text('@Zara'):count(1)");
+    // the mention is checked once its partner is fetched
+    await waitUntil(
+        () => getService("mail.store")["res.partner"].get(partnerId)?.name === "Zara Smith"
+    );
+    await insertTextInComposer(".o-mail-Message .o-mail-Composer", " again");
+    await waitFor(".o-mail-Message .o-mail-Composer-html:contains('again'):count(1)");
+    await waitFor(".o-mail-Message .o-mail-Composer-html a.o_mail_redirect:text('@Zara'):count(1)");
 });
