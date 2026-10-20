@@ -90,6 +90,7 @@ test("getPaymentActionState", async () => {
                 label: "Force done",
                 action: "function",
                 severity: "warning",
+                show: true,
             },
         ],
     });
@@ -108,6 +109,7 @@ test("getPaymentActionState", async () => {
                 label: "Force done",
                 action: "function",
                 severity: "warning",
+                show: true,
             },
             {
                 id: "cancel",
@@ -133,6 +135,7 @@ test("getPaymentActionState", async () => {
                 label: "Force done",
                 action: "function",
                 severity: "warning",
+                show: true,
             },
             {
                 id: "cancel",
@@ -158,6 +161,7 @@ test("getPaymentActionState", async () => {
                 label: "Force done",
                 action: "function",
                 severity: "warning",
+                show: true,
             },
             {
                 id: "cancel",
