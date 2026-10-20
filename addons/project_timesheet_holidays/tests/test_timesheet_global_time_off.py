@@ -610,3 +610,15 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         })
         timesheet = self.env['account.analytic.line'].search([('employee_id', '=', self.flexible_employee.id)])
         self.assertEqual(timesheet.unit_amount, self.flexible_calendar.hours_per_day)
+
+    def test_timesheet_generation_on_half_day_public_holiday(self):
+        """ Test that a half-day public holiday generates timesheets for the working hours it covers in the calendar's timezone. """
+        self.test_company.resource_calendar_id.tz = 'Europe/Brussels'
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Half-Day Public Holiday',
+            'calendar_id': self.test_company.resource_calendar_id.id,
+            'date_from': datetime(2021, 1, 4, 11, 0, 0),
+            'date_to': datetime(2021, 1, 4, 22, 59, 59),
+        })
+        timesheet = self.env['account.analytic.line'].search([('employee_id', '=', self.full_time_employee.id)])
+        self.assertEqual(timesheet.unit_amount, 4)
