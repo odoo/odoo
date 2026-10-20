@@ -15,6 +15,7 @@ __all__ = [
     'get_extension',
     'guess_file_mimetype',
     'guess_mimetype',
+    'split_stem_and_extension',
 ]
 
 _logger = logging.getLogger(__name__)
@@ -343,30 +344,43 @@ SUPPORTED_MIMETYPES = [
 _extension_pattern = re.compile(r'[\w-]+')
 
 
-def get_extension(filename):
+def split_stem_and_extension(filename: str) -> tuple[str, str]:
+    """
+    Split the filename into its stem and its extension, e.g. ``'Report.PDF'`` gives ``('Report', '.PDF')``.
+    Compressed files keep both extensions, e.g. ``'Backup.tar.gz'`` gives ``('Backup', '.tar.gz')``.
+
+    :param str filename: the filename to split
+    :returns: the stem and the extension, with its leading dot and its case,
+        or the filename and an empty string when it has no extension
+    """
     # A file has no extension if it has no dot (ignoring the leading one
     # of hidden files) or that what follow the last dot is not a single
     # word, e.g. "Mr. Doe"
+    stem, _dot, ext = filename.rpartition('.')
+    if not stem.lstrip('.') or not _extension_pattern.fullmatch(ext):
+        return filename, ''
 
-    _stem, dot, ext = filename.lstrip('.').rpartition('.')
-    if not dot or not _extension_pattern.fullmatch(ext):
-        return ''
+    # Use the mimetype database to determine the extension of the file.
+    guessed_mimetype = mimetypes.guess_type(filename)[0]
+
+    # Compressed files keep both extensions, e.g. ".tar.gz" but not "report v1.2.gz"
+    if guessed_mimetype and f'.{ext}' in mimetypes.encodings_map:
+        stem, inner_ext = split_stem_and_extension(stem)
+        return stem, f'{inner_ext}.{ext}'
 
     # Assume all 4-chars extensions to be valid extensions even if it is
     # not known from the mimetypes database. In /etc/mime.types, only 7%
     # known extensions are longer.
-    if len(ext) <= 4:
-        return f'.{ext}'.lower()
-
-    # Use the mimetype database to determine the extension of the file.
-    guessed_mimetype, guessed_ext = mimetypes.guess_type(filename)
-    if guessed_ext:
-        return guessed_ext
-    if guessed_mimetype:
-        return f'.{ext}'.lower()
+    if len(ext) <= 4 or guessed_mimetype:
+        return stem, f'.{ext}'
 
     # Unknown extension.
-    return ''
+    return filename, ''
+
+
+def get_extension(filename: str) -> str:
+    """ Return the lowercase extension of the filename, see :func:`split_stem_and_extension`. """
+    return split_stem_and_extension(filename)[1].lower()
 
 
 def fix_filename_extension(filename, mimetype):
