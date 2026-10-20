@@ -413,8 +413,8 @@
                                     invisible="not show_generate_bom">
                                     <span>Generate BOM</span>
                                 </button>
-                                <button name="action_update_bom" string="Update BoM" type="object"
-                                    title="Note that another version of this BOM is available." class="text-danger"
+                                <button name="action_update_bom" string="Update MO" type="object"
+                                    title="Update the manufacturing order with the latest version of the bill of materials" class="btn btn-outline-danger"
                                     invisible="not is_outdated_bom or state not in ['draft', 'confirmed', 'progress', 'to_close']"/>
                             </div>
                             <label for="product_qty" string="Quantity" class="d-touch-none"/>
@@ -825,6 +825,9 @@
                     <filter string="To Close" name="filter_to_close" domain="[('state', '=', 'to_close')]" groups="mrp.group_mrp_routings"/>
                     <separator/>
                     <filter string="MO Pending" name="waiting" domain="[('reservation_state', '=', 'waiting')]"/>
+                    <filter invisible="1" string="Outdated BoM is set" name="filter_outdated_bom" domain="[('is_outdated_bom', '=', True)]"/>
+                    <field invisible="1" name="bom_id"/>
+                    <filter string="Outdated BoM" name="filter_outdated_bom" domain="[('is_outdated_bom', '=', True)]"/>
                     <filter string="MO Ready" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
                     <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
@@ -941,6 +944,17 @@
             <field name="name">Manufacturing Orders</field>
             <field name="res_model">mrp.production</field>
             <field name="view_mode">form</field>
+        </record>
+
+        <record id="action_mrp_production_update_boms" model="ir.actions.server">
+            <field name="name">Update Outdated MO's</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.action_update_bom()
+            </field>
         </record>
     </data>
 </odoo>
