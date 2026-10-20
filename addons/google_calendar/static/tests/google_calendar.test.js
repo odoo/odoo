@@ -27,7 +27,7 @@ class CalendarEvent extends models.Model {
                 <field name="name"/>
                 <field name="partner_ids" write_model="calendar.filters" write_field="partner_id" filter_field="active"/>
                 <field name="calendar_id" write_model="calendar.user" write_field="calendar_id" filters="1" filter_field="is_filter_checked"/>
-                <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
+                <field name="partner_id" string="Organizer" options="{'icon': 'person'}"/>
             </calendar>
         `,
         list: `<list sample="1"/>`
