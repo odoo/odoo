@@ -142,15 +142,17 @@ export class LivechatService {
      */
     async leaveSession({ notifyServer = true } = {}) {
         const session = JSON.parse(expirableStorage.getItem(this.SESSION_STORAGE_KEY) ?? "{}");
-        try {
-            if (session?.uuid && notifyServer) {
-                this.busService.deleteChannel(session.uuid);
-                await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
-            }
-        } finally {
-            expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
-            this.state = SESSION_STATE.NONE;
-            this.sessionInitialized = false;
+        // Clear the saved session synchronously, before notifying the server.
+        // Otherwise, if the visitor leaves the page (navigation, tab/browser
+        // close) before the `visitor_leave_session` request settles, the
+        // request is aborted, the cleanup below never runs and the stale
+        // session is restored on the next page load.
+        expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
+        this.state = SESSION_STATE.NONE;
+        this.sessionInitialized = false;
+        if (session?.uuid && notifyServer) {
+            this.busService.deleteChannel(session.uuid);
+            await this.rpc("/im_livechat/visitor_leave_session", { uuid: session.uuid });
         }
     }
 
