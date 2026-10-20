@@ -3,7 +3,7 @@ from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.exceptions import AccessError
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -17,6 +17,12 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.simple_accountman.group_ids = cls.env.ref('account.group_account_invoice')
+        cls.simple_accountbasic = new_test_user(
+            cls.env,
+            login='accountbasic',
+            groups='account.group_account_basic',
+            company_id=cls.company.id,
+        )
         cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.company.id)], limit=1)
         # As the user has only invoicing right, the move shouldn't be checked if review documents is activated in Accounting Firms mode
         cls.company.set_to_review_documents = True
@@ -39,7 +45,14 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def test_sales_change_invoice_from_accountant(self):
         invoice = self._create_invoice()
         invoice.action_post()
-        with self.assertRaisesRegex(AccessError, "You don't have the access rights to perform this action."):
+        self.assertEqual(invoice.review_state, 'no_review')
+        invoice.with_user(self.simple_accountman).button_draft()
+        self.assertEqual(invoice.state, 'draft')
+        invoice.with_user(self.simple_accountman).action_post()
+        self.assertEqual(invoice.review_state, 'todo')
+
+        invoice.review_state = 'reviewed'
+        with self.assertRaisesRegex(AccessError, "This entry has been reviewed by accountants, only them can edit it now."):
             invoice.with_user(self.simple_accountman).button_draft()
 
     def test_sales_modify_draft_reviewed(self):
@@ -157,7 +170,7 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         }])
         bank_line_1._try_auto_reconcile_statement_lines()
         self.assertEqual(bank_line_1.move_id.review_state, 'no_review')
-        with self.assertRaisesRegex(AccessError, "You don't have the access rights to perform this action."):
+        with self.assertRaisesRegex(AccessError, r"\(account\.bank\.statement\.line\)"):
             bank_line_1.with_user(self.simple_accountman).delete_reconciled_line(payment.move_id.line_ids[0].id)
 
     def test_auto_post_invoicing_only(self):
@@ -166,3 +179,29 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         self.env.user.write({'group_ids': [Command.unlink(self.env.ref('account.group_account_user').id)]})
         invoice = self._create_invoice(date=fields.Date.today(), auto_post='monthly')
         invoice.action_post()
+
+    def test_basic_user(self):
+        """ An 'Invoicing & Banks' can post an entry and reset it to draft, his own or one the accountant
+        created and each of his changes queues the entry back for review. Once reviewed, it becomes
+        read-only for him.
+        """
+        invoice = self._create_invoice(user_id=self.simple_accountbasic.id)
+        invoice.with_user(self.simple_accountbasic).action_post()
+        self.assertEqual(invoice.review_state, 'todo')
+        invoice.with_user(self.simple_accountbasic).button_draft()
+        invoice.with_user(self.simple_accountbasic).action_post()
+        self.assertEqual(invoice.review_state, 'todo')
+
+        # The accountant's invoice needs no review, but the client may still edit it,
+        # which sends it to the review queue.
+        accountant_invoice = self._create_invoice()
+        accountant_invoice.action_post()
+        self.assertEqual(accountant_invoice.review_state, 'no_review')
+        accountant_invoice.with_user(self.simple_accountbasic).button_draft()
+        accountant_invoice.with_user(self.simple_accountbasic).action_post()
+        self.assertEqual(accountant_invoice.review_state, 'todo')
+
+        # Once the accountant has reviewed it, the client is locked out.
+        accountant_invoice.review_state = 'reviewed'
+        with self.assertRaisesRegex(AccessError, "This entry has been reviewed by accountants, only them can edit it now."):
+            accountant_invoice.with_user(self.simple_accountbasic).button_draft()
