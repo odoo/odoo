@@ -1265,8 +1265,6 @@ class CalendarEvent(models.Model):
                 'context': {
                     'default_calendar_event_ids': self.ids,
                     'default_requested_action': requested_action,
-                    # To avoid notify users when sync is activated as the external calendar will do it.
-                    'default_block_mail': self.user_id._has_any_active_synchronization(),
                     'dialog_size': 'small',
                     'next_action': next_action,
                 },
@@ -1278,8 +1276,7 @@ class CalendarEvent(models.Model):
                 'context': {
                     'default_calendar_event_id': self.id,
                     'default_requested_action': requested_action,
-                    # To avoid notify users when sync is activated as the external calendar will do it.
-                    'default_block_mail': self.env.user.partner_id == self.partner_ids or self.user_id._has_any_active_synchronization(),
+                    'default_block_mail': self.env.user.partner_id == self.partner_ids,
                     'form_view_ref': 'calendar.calendar_event_archive_or_unlink_wizard_view_form',
                     'next_action': next_action,
                 },
