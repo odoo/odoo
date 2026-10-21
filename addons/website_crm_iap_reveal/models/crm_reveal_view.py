@@ -39,7 +39,7 @@ class CrmRevealView(models.Model):
             rule_ids = [rule['id'] for rule in rules]
             query = SQL("""
                     INSERT INTO crm_reveal_view (reveal_ip, reveal_rule_id, reveal_state, create_date)
-                    SELECT %s, n.rule_id, 'to_process', now() at time zone 'UTC')
+                    SELECT %s, n.rule_id, 'to_process', now() at time zone 'UTC'
                     FROM UNNEST(%s) AS n(rule_id)
                     ON CONFLICT DO NOTHING;
                     """, ip_address, rule_ids)
