@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<templates>
+<t t-name="web_tuto.TutorialItem">
+    <DropdownItem>
+        <div class="d-flex justify-content-between ps-3">
+            <div class="align-self-center">
+                <span class="form-check form-switch" t-on-click.stop.prevent="() => this.props.toggleItem()">
+                    <input type="checkbox" class="form-check-input" id="tutorials" t-att-checked="this.props.tutorialsEnabled"/>
+                    <label class="form-check-label" for="tutorials">Tutorials</label>
+                </span>
+            </div>
+        </div>
+    </DropdownItem>
+</t>
+</templates>

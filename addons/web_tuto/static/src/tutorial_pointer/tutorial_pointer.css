@@ -1,0 +1,111 @@
+@keyframes o-tutorial-pointer-bounce-left {
+    from {
+        transform: translateX(calc(var(--TutorialPointer__bounce-offset) * 1)) scaleX(var(--TutorialPointer__scale)) rotate(135deg);
+    }
+    to {
+        transform: translateX(calc(var(--TutorialPointer__bounce-offset) * -1)) scaleX(var(--TutorialPointer__scale)) rotate(135deg);
+    }
+}
+
+@keyframes o-tutorial-pointer-bounce-right {
+    from {
+        transform: translateX(calc(var(--TutorialPointer__bounce-offset) * 1)) scaleX(var(--TutorialPointer__scale)) rotate(315deg);
+    }
+    to {
+        transform: translateX(calc(var(--TutorialPointer__bounce-offset) * -1)) scaleX(var(--TutorialPointer__scale)) rotate(315deg);
+    }
+}
+
+@keyframes o-tutorial-pointer-bounce-top {
+    from {
+        transform: translateY(calc(var(--TutorialPointer__bounce-offset) * -1)) scaleY(var(--TutorialPointer__scale)) rotate(225deg);
+    }
+    to {
+        transform: translateY(var(--TutorialPointer__bounce-offset)) scaleY(var(--TutorialPointer__scale)) rotate(225deg);
+    }
+}
+
+@keyframes o-tutorial-pointer-bounce-bottom {
+    from {
+        transform:
+            translateY(calc(var(--TutorialPointer__bounce-offset) * -1)) scaleY(var(--TutorialPointer__scale)) rotate(45deg);
+    }
+    to {
+        transform:
+            translateY(var(--TutorialPointer__bounce-offset)) scaleY(var(--TutorialPointer__scale)) rotate(45deg);
+    }
+}
+
+.o_tutorial_pointer {
+    --TutorialPointer__anchor-space: 0;
+    --TutorialPointer__bounce-offset: 3px;
+    --TutorialPointer__offset: 8px;
+    --TutorialPointer__scale: 1.12;
+    --TutorialPointer__color: var(--o-enterprise-color);
+    --TutorialPointer__color-accent: hsl(from var(--o-enterprise-color) h s calc(l + 7));
+    --TutorialPointer__border-width: 1px;
+    --TutorialPointer__border-color-rgb: 255, 255, 255;
+    --TutorialPointer__border-color: rgba(var(--TutorialPointer__border-color-rgb), 1);
+    --TutorialPointer__arrow-size: 1rem;
+    --TutorialPointer__animation-duration: 500ms;
+    --TutorialPointer__expand-duration: 200ms;
+    --TutorialPointer__text-color: black;
+    --TutorialPointer__reveal-animation: o-tutorial-pointer-fade-in 400ms ease;
+
+    --TutorialPointer__translate-x: 0;
+    --TutorialPointer__translate-y: 0;
+    
+    max-width: 270px;
+    border: var(--TutorialPointer__border-width) solid transparent;
+
+    .o_tutorial_pointer_tip {
+        width: var(--TutorialPointer__width);
+        height: var(--TutorialPointer__height);
+        border: var(--TutorialPointer__border-width) solid white;
+        border-radius: 0 50% 50% 50%;
+        background-image: radial-gradient(
+            var(--TutorialPointer__color-accent),
+            var(--TutorialPointer__color)
+        );
+        box-shadow: 0 0 40px 2px rgba(var(--TutorialPointer__border-color-rgb), 0.5);
+
+        &.o_left {
+            animation: o-tutorial-pointer-bounce-left var(--TutorialPointer__animation-duration) ease-in infinite alternate,
+                var(--TutorialPointer__reveal-animation);
+        }
+
+        &.o_right {
+            animation: o-tutorial-pointer-bounce-right var(--TutorialPointer__animation-duration) ease-in infinite alternate,
+                var(--TutorialPointer__reveal-animation);
+        }
+
+        &.o_top {
+            animation: o-tutorial-pointer-bounce-top var(--TutorialPointer__animation-duration) ease-in infinite alternate,
+                var(--TutorialPointer__reveal-animation);
+        }
+
+        &.o_bottom {
+            animation: o-tutorial-pointer-bounce-bottom var(--TutorialPointer__animation-duration) ease-in infinite alternate,
+                var(--TutorialPointer__reveal-animation);
+        }
+    }
+    
+    .o_tutorial_pointer_content {
+        transition: color 0s ease var(--TutorialPointer__expand-duration);
+        line-height: var(--body-line-height);
+        font-size: var(--o-font-size-base);
+        font-family: var(--o-font-family-sans-serif);
+        font-weight: normal;
+    }
+}
+
+.o_tutorial_anchor {
+    width: 1px;
+    height: 1px;
+}
+
+@media print {
+    .o_tutorial_anchor, .o_tutorial_pointer {
+        display: none !important;
+    }
+}
