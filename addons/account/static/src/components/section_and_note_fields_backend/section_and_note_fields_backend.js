@@ -95,6 +95,8 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         this.priceColumns = [...this.props.aggregatedFields, "price_unit"];
         // invisible fields to force copy when duplicating a section
         this.copyFields = ["display_type", "collapse_composition", "collapse_prices"];
+        // fields to never copy when duplicating a section
+        this.noCopyFields = [];
         this.parentSectionMap = new Map();
         useEffect(
             (editedRecord) => this.focusToName(editedRecord),
@@ -257,6 +259,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         await this.props.list.duplicateRecords(recordsToDuplicate, {
             targetIndex: sectionIndex,
             copyFields: this.copyFields,
+            noCopyFields: this.noCopyFields,
         });
     }
 
