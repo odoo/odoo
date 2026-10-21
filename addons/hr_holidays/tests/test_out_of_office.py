@@ -49,7 +49,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         })
         second_leave.action_approve()
         # missing dependencies on compute functions
-        self.employee_hruser.invalidate_recordset(["leave_date_to"])
+        self.employee_hruser.invalidate_recordset(["leave_date_to", "leave_datetime_to"])
 
         partner = self.employee_hruser.user_id.partner_id
         partner2 = self.user_employee.partner_id
@@ -69,16 +69,80 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         user2_info = next(u for u in data["res.users"] if u["id"] == partner2_info["main_user_id"])
         employee_info = next(e for e in data["hr.employee"] if e["id"] == user_info["all_employee_ids"][0])
         employee2_info = next(e for e in data["hr.employee"] if e["id"] == user2_info["all_employee_ids"][0])
-        self.assertFalse(employee2_info["leave_date_to"], "current user should not be out of office")
-        # The employee will be back in the office the day after his second leave ends
+        self.assertFalse(employee2_info["leave_datetime_to"], "current user should not be out of office")
+        # The employee will be back in the office the day after his second leave ends, at 8:00
+        # in Brussels
         self.assertEqual(
-            employee_info["leave_date_to"], "2024-06-12", "correspondent should be out of office"
+            employee_info["leave_datetime_to"],
+            "2024-06-12 06:00:00",
+            "correspondent should be out of office",
         )
         self.assertEqual(
             self.employee_hruser.user_id.with_context(formatted_display_name=True).display_name,
             'armande (base.group_user,hr_holidays.group_hr_holidays_user) !!✈ Back on Jun 12, 2024!!',
             'formatted display name should show the "Back on" formatted date'
         )
+
+    @freeze_time('2024-06-05 09:00:00')
+    def test_leave_ooo_half_day(self):
+        half_day_work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Half Days',
+            'code': 'Half Days',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'request_unit': 'half_day',
+        })
+        # validate a leave on the morning of 2024-06-05 (Wednesday)
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': half_day_work_entry_type.id,
+            'request_date_from': "2024-06-05",
+            'request_date_from_period': 'am',
+            'request_date_to': "2024-06-05",
+            'request_date_to_period': 'am',
+        })
+        leave.action_approve()
+        self.employee_hruser.invalidate_recordset(["leave_date_to", "leave_datetime_to"])
+        self.assertEqual(self.employee_hruser.leave_date_to, date(2024, 6, 5))
+        # back at 13:00 in Brussels, after the lunch break
+        self.assertEqual(self.employee_hruser.leave_datetime_to, datetime(2024, 6, 5, 11, 0, 0))
+        user = self.employee_hruser.user_id.with_context(formatted_display_name=True)
+        self.assertEqual(
+            user.with_context(tz="Europe/Brussels").display_name,
+            f"{user.name} !!✈ Back at 01:00 PM!!",
+            "formatted display name should show the return time when back today",
+        )
+        self.assertEqual(
+            user.with_context(tz="Asia/Tokyo").display_name,
+            f"{user.name} !!✈ Back at 08:00 PM!!",
+        )
+        self.assertEqual(
+            user.with_context(tz="Pacific/Kiritimati").display_name,
+            f"{user.name} !!✈ Back on Jun 6, 2024!!",
+            "formatted display name should show the day of the viewer",
+        )
+
+    def test_leave_ooo_custom_hours(self):
+        hour_work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Hours',
+            'code': 'Hours',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+        })
+        # the times are in Brussels (UTC+2), the employee is back as soon as the leave ends
+        for hour_from, hour_to, now, back_on in [
+            (9, 11, datetime(2024, 6, 5, 8), datetime(2024, 6, 5, 9)),
+            (14, 16, datetime(2024, 6, 6, 13), datetime(2024, 6, 6, 14)),
+        ]:
+            with self.subTest(hour_from=hour_from, hour_to=hour_to), freeze_time(now):
+                self._create_leave(
+                    self.employee_hruser, hour_work_entry_type, now.date(), now.date(),
+                    hour_from=hour_from, hour_to=hour_to, validate=True,
+                )
+                self.employee_hruser.invalidate_recordset(["leave_date_to", "leave_datetime_to"])
+                self.assertEqual(self.employee_hruser.leave_date_to, back_on.date())
+                self.assertEqual(self.employee_hruser.leave_datetime_to, back_on)
 
     @freeze_time('2024-06-04')
     def test_leave_ooo_batched(self):

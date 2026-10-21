@@ -1,4 +1,5 @@
 import { test, expect } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
 import { mountView, models, defineModels } from "@web/../tests/web_test_helpers";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 
@@ -17,7 +18,7 @@ test("Show Time Off before Work Location", async () => {
             work_location_type: "office",
             show_hr_icon_display: true,
             hr_icon_display: "presence_holiday_absent",
-            leave_date_to: "2025-01-06 00:00:00",
+            leave_datetime_to: "2025-01-06 08:00:00",
         },
     ];
     await mountView({
@@ -36,4 +37,30 @@ test("Show Time Off before Work Location", async () => {
         "On leave, back on Jan 6, 2025"
     );
     expect(".o_employee_availability[data-icon='travel']").toHaveClass("o_icon_employee_absent");
+});
+
+test("Show the return time when back later today", async () => {
+    mockDate("2025-01-06 09:00:00", 0);
+    HrEmployee._records = [
+        {
+            id: 1,
+            name: "Employee test",
+            show_hr_icon_display: true,
+            hr_icon_display: "presence_holiday_absent",
+            leave_datetime_to: "2025-01-06 13:00:00",
+        },
+    ];
+    await mountView({
+        resModel: "hr.employee",
+        type: "form",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="hr_icon_display" widget="hr_presence_status"/>
+            </form>`,
+    });
+    expect(".o_employee_availability[data-icon='travel']").toHaveAttribute(
+        "title",
+        "On leave, back at 1:00 PM"
+    );
 });

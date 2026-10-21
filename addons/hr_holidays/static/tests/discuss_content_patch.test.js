@@ -1,5 +1,5 @@
 import { describe, test } from "@odoo/hoot";
-import { mockTimeZone } from "@odoo/hoot-mock";
+import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { startServer, start, openDiscuss, contains } from "@mail/../tests/mail_test_helpers";
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
@@ -8,12 +8,13 @@ describe.current.tags("desktop");
 defineHrHolidaysModels();
 
 test("show 'Back on' in header of dm chat", async () => {
+    mockDate("2022-12-30 12:00:00");
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId, im_status: "online" });
     const employee = pyEnv["hr.employee"].create({
         user_id: userId,
-        leave_date_to: "2023-01-01",
+        leave_datetime_to: "2023-01-01 08:00:00",
     });
     pyEnv["res.users"].write([userId], {
         employee_ids: [Command.link(employee)],
@@ -33,6 +34,7 @@ test("show 'Back on' in header of dm chat", async () => {
 });
 
 test("show 'Back on' in header of dm chat even when showing local timezone", async () => {
+    mockDate("2022-12-30 12:00:00");
     mockTimeZone(-7);
     const pyEnv = await startServer();
     pyEnv["res.partner"].write([serverState.partnerId], { tz: "America/Los_Angeles" });
@@ -40,7 +42,7 @@ test("show 'Back on' in header of dm chat even when showing local timezone", asy
     const userId = pyEnv["res.users"].create({ partner_id: partnerId, im_status: "online" });
     const employee = pyEnv["hr.employee"].create({
         user_id: userId,
-        leave_date_to: "2023-01-03",
+        leave_datetime_to: "2023-01-03 08:00:00",
     });
     pyEnv["res.users"].write([userId], {
         employee_ids: [Command.link(employee)],
