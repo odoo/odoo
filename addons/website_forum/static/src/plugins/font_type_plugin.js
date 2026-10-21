@@ -1,4 +1,5 @@
-import { FontTypePlugin, headingTags } from "@html_editor/main/font/font_type_plugin";
+import { FontTypePlugin } from "@html_editor/main/font/font_type_plugin";
+import { headingTags } from "@html_editor/utils/dom_info";
 
 const excludedPowerboxCommands = ["setTagHeading1", "setTagHeading2", "setTagHeading3"];
 
