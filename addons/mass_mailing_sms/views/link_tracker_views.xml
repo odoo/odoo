@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- LINK.TRACKER.CLICK VIEWS -->
+    <record id="link_tracker_click_view_search_sms" model="ir.ui.view">
+        <field name="name">link.tracker.click.view.search.inherit.sms</field>
+            <field name="model">link.tracker.click</field>
+        <field name="inherit_id" ref="mass_mailing.link_tracker_click_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='groupby_email']" position="after">
+                <filter string="Phone Number" name="groupby_sms_number" context="{'group_by': 'sms_number'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
