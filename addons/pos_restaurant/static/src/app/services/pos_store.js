@@ -715,6 +715,20 @@ patch(PosStore.prototype, {
 
             // Transferring order to another order from FloorScreen
             if (this.router.currentScreen() === "FloorScreen") {
+                if (ev.target.closest(".new-order")) {
+                    try {
+                        this.ui.block();
+                        this.isOrderTransferMode = false;
+                        await this.transferOrderToFloatingOrder(orderUuid);
+                        this.navigate("ProductScreen", { orderUuid });
+                        document.removeEventListener("click", onClickWhileTransfer);
+                        closeNotification?.();
+                    } finally {
+                        this.ui.unblock();
+                    }
+                    return;
+                }
+
                 const tableElement = ev.target.closest(".table");
                 if (!tableElement) {
                     return;
@@ -805,6 +819,16 @@ patch(PosStore.prototype, {
         if (destinationTable) {
             await this.setTable(destinationTable);
         }
+    },
+    // Detach the order from its table so it becomes a floating order
+    async transferOrderToFloatingOrder(orderUuid) {
+        const order = this.models["pos.order"].getBy("uuid", orderUuid);
+        order.table_id = false;
+        if (!order.floating_order_name) {
+            order.floating_order_name = order.floatingOrderName;
+        }
+        this.setOrder(order);
+        await this.syncAllOrders({ orders: [order] });
     },
     async mergeTableOrders(orderUuid, destinationTable) {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
