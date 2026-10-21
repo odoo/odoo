@@ -283,6 +283,21 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
 
         self.assertEqual(po.order_line.qty_received, 1.0)
 
+    def test_po_to_subcontractor_final_location(self):
+        """
+        Create and confirm a PO with the 'Dropship Subcontractor' picking type.
+        The final location of the move should be the subcontractor location,
+        not the customer location
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.parent_id.id,
+            'picking_type_id': self.env.company.dropship_subcontractor_pick_type_id.id,
+            'dest_address_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({'product_id': self.comp1.id, 'product_qty': 1.0})],
+        })
+        po.button_confirm()
+        self.assertEqual(po.picking_ids.move_ids.location_final_id, self.subcontractor_partner1.property_stock_subcontractor)
+
     def test_subcontracted_bom_routes(self):
         """
         Take two BoM having those components. One being subcontracted and the other not.
