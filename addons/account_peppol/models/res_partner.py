@@ -301,7 +301,7 @@ class ResPartner(models.Model):
         )
 
         if new_value != old_value:
-            self_partner.peppol_verification_state = new_value
+            self_partner.sudo().peppol_verification_state = new_value
             self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)
         return False
 

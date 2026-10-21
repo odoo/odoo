@@ -302,7 +302,7 @@ class ResPartner(models.Model):
             # So the `peppol_supported_documents` would be empty for them otherwise.
             # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
             # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
-            partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+            partner.sudo().peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
 
     @api.model
     @handle_demo
