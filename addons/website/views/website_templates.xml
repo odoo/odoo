@@ -201,6 +201,7 @@
     </xpath>
 
     <xpath expr="//t[@t-call-assets='web.assets_frontend_minimal']" position="after">
+        <t t-if="env.user._is_internal()" t-call-assets="website.assets_frontend_internal_user" t-css="false" defer_load="True"/>
         <t t-if="edit_translations" t-call-assets="website.assets_edit_translations" t-css="false" defer_load="True"/>
     </xpath>
 
