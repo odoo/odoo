@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Japan - Total Average Cost Evaluation',
+    'countries': ['jp'],
     'summary': "Evaluate the JGAAP total average cost of products over a period",
     'category': 'Accounting/Localizations',
     'depends': [

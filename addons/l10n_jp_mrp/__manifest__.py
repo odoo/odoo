@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Japan - Manufacturing',
+    'countries': ['jp'],
     'summary': "Value manufactured goods at their consumed components in the JGAAP total average cost",
     'category': 'Accounting/Localizations',
     'depends': [
