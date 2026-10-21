@@ -149,6 +149,11 @@ class ResPartner(models.Model):
             return '0227', country_code + self.name[:16]
         return False, False
 
+    @api.model
+    def _import_retrieve_customer_from_siret(self, customer_values):
+        if siret := customer_values.get('siret'):
+            return self._import_retrieve_customer_from_additional_identifiers({'additional_identifiers': {'FR_SIRET': siret}})
+
     def _get_edi_builder(self, invoice_edi_format):
         # EXTENDS 'account_edi_ubl_cii'
         if invoice_edi_format == 'ubl_21_fr':
