@@ -1,9 +1,23 @@
+/**
+ * @template [K=string]
+ * @template [V=any]
+ * @template [Args=any[]]
+ */
 export class Cache {
+    /** @type {Record<string, V>} */
+    cache = {};
+
+    /**
+     * @param {(...args: Args) => V} getValue
+     * @param {(...args: Args) => K} [getKey]
+     */
     constructor(getValue, getKey) {
-        this.cache = {};
         this.getKey = getKey;
         this.getValue = getValue;
     }
+    /**
+     * @param {Args} path
+     */
     _getCacheAndKey(...path) {
         let cache = this.cache;
         let key;
@@ -17,6 +31,9 @@ export class Cache {
         }
         return { cache, key };
     }
+    /**
+     * @param {Args} path
+     */
     clear(...path) {
         const { cache, key } = this._getCacheAndKey(...path);
         delete cache[key];
@@ -24,6 +41,10 @@ export class Cache {
     invalidate() {
         this.cache = {};
     }
+    /**
+     * @param {Args} path
+     * @returns {V}
+     */
     read(...path) {
         const { cache, key } = this._getCacheAndKey(...path);
         if (!(key in cache)) {
