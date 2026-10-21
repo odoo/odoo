@@ -6,9 +6,9 @@ patch(TimeOffCalendarSidePanel.prototype, {
     setup() {
         super.setup();
         this.optionalHolidays = computed(() =>
-          this._mapIsoToDatetimes(
-            this.specialDays().optionalHolidays || []
-          )
+            this._filterUpcomingOrCurrentMonth(
+                this._mapIsoToDatetimes(this.specialDays().optionalHolidays || [])
+            )
         );
-    }
+    },
 });

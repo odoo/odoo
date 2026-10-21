@@ -38,7 +38,9 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         this.specialDays = asyncComputed(() => this.getSpecialDays());
         this.holidays = asyncComputed(() => this.getHolidayData(), { initial: [] });
         this.bankHolidays = computed(() =>
-            this._mapIsoToDatetimes(this.specialDays().bankHolidays || [])
+            this._filterUpcomingOrCurrentMonth(
+                this._mapIsoToDatetimes(this.specialDays().bankHolidays || [])
+            )
         );
         this.mandatoryDays = computed(() =>
             this._mapIsoToDatetimes(this.specialDays().mandatoryDays || [])
@@ -55,6 +57,15 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
             day.end = luxon.DateTime.fromISO(day.end);
             return day;
         });
+    }
+
+    // Anchored on the real current date (not the period shown by the calendar), so
+    // browsing to a past period intentionally empties these sections. Shared with
+    // l10n_in_hr_holidays, which patches this class to filter its own holiday list
+    // the same way.
+    _filterUpcomingOrCurrentMonth(days) {
+        const startOfMonth = this.currentDateTime.startOf("month");
+        return days.filter((day) => day.end >= startOfMonth);
     }
 
     fetchSpecialDays(start, end) {
