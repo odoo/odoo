@@ -569,7 +569,10 @@ export class ListRenderer extends Component {
         if (!this.props.list.canResequence() || this.props.readonly) {
             return false;
         }
-        const { groupBy, groupByField, handleField, orderBy } = this.props.list;
+        const { activeFields, groupBy, groupByField, handleField, orderBy } = this.props.list;
+        if (["True", "1"].includes(activeFields[handleField]?.readonly)) {
+            return false;
+        }
         if (groupBy?.length > 1 || (groupByField && !this.isMovableField(groupByField))) {
             return false;
         }
