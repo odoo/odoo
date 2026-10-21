@@ -17,9 +17,9 @@ class HrVersion(models.Model):
 
     def _get_attendance_intervals(self, start_dt, end_dt):
         result = {}
-        for v in self.filtered('attendance_based'):
+        calendar_versions = self.filtered(lambda v: v.has_static_work_entries())
+        for v in self - calendar_versions:
             result[v.employee_id.resource_id.id] = Intervals()
-        calendar_versions = self.filtered(lambda v: not v.attendance_based)
         if calendar_versions:
             result.update(super(HrVersion, calendar_versions)._get_attendance_intervals(start_dt, end_dt))
         return result
@@ -82,7 +82,7 @@ class HrVersion(models.Model):
                 # deficit outputs start after source check_out (unworked time); exclude from time_on
                 if not att.source_attendance_id or att.check_in < att.source_attendance_id.check_out:
                     time_on_raw[rid].append((check_in, check_out, dummy))
-                if not version.attendance_based:
+                if version.has_static_work_entries():
                     start_day = check_in.astimezone(tz).date()
                     end_day = check_out.astimezone(tz).date()
                     knocked_raw[rid].append((
