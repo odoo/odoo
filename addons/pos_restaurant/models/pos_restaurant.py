@@ -110,7 +110,7 @@ class RestaurantFloor(models.Model):
         self.env['ir.attachment'].search([
             ('res_model', '=', 'restaurant.floor'),
             ('res_field', '=', False),
-            ('res_id', '=', 0),
+            ('res_id', '=', False),
             ('write_date', '<', fields.Datetime.now() - relativedelta(days=1))
         ]).unlink()
 

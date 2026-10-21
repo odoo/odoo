@@ -14,7 +14,7 @@ class MailFollowers(models.Model):
     notifications for new messages. A subscription is characterized by:
 
     :param: res_model: model of the followed objects
-    :param: res_id: ID of resource (may be 0 for every objects)
+    :param: res_id: ID of resource (may be False for every object)
     """
     _name = 'mail.followers'
     _log_access = True

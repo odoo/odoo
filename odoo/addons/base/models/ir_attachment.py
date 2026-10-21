@@ -1010,7 +1010,7 @@ class IrAttachment(models.Model):
             ('public', '=', True),
             ("url", "=like", "/web/assets/%"),
             ('res_model', '=', 'ir.ui.view'),
-            ('res_id', '=', 0),
+            ('res_id', '=', False),
             ('create_uid', '=', api.SUPERUSER_ID),
         ]).unlink()
         self.env.transaction.invalidate_ormcache('assets')

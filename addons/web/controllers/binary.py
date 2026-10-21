@@ -100,7 +100,7 @@ class Binary(Controller):
                 ('url', '!=', False),
                 ('url', '=like', url),
                 ('res_model', '=', 'ir.ui.view'),
-                ('res_id', '=', 0),
+                ('res_id', '=', False),
                 ('create_uid', '=', api.SUPERUSER_ID),
             ]
             attachment = env['ir.attachment'].sudo().search(domain, limit=1)

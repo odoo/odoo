@@ -113,7 +113,7 @@ class WebclientController(ThreadController):
             ("notification_status", "in", ("bounce", "exception")),
             ("mail_message_id.message_type", "!=", "user_notification"),
             ("mail_message_id.model", "!=", False),
-            ("mail_message_id.res_id", "!=", 0),
+            ("mail_message_id.res_id", "!=", False),
         ]
         # sudo as to not check ACL, which is far too costly
         # sudo: mail.notification - return only failures of current user as author

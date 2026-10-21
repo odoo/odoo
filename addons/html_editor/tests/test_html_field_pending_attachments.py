@@ -71,7 +71,7 @@ class TestHtmlFieldPendingAttachments(HttpCase):
         orphan_attachments = self.env["ir.attachment"].search([
             ("name", "=", "pending.png"),
             ("res_model", "=", "html_editor.converter.test"),
-            ("res_id", "=", 0),
+            ("res_id", "=", False),
         ])
         self.assertFalse(
             orphan_attachments,
