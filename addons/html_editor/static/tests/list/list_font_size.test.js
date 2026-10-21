@@ -404,3 +404,11 @@ test("should properly pad list from header block", async () => {
         contentAfter: `<ul style="padding-inline-start: 54px;"><li class="display-1-fs"><h4>[awdawd]</h4></li></ul>`,
     });
 });
+
+test("should properly apply font size when header is child of list", async () => {
+    await testEditor({
+        contentBefore: `<ul><li><h1>[test]</h1></li></ul>`,
+        stepFunction: setFontSize("56px"),
+        contentAfter: `<ul><li><h1><span style="font-size: 56px;">[test]</span></h1></li></ul>`,
+    });
+});

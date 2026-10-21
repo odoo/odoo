@@ -1,7 +1,7 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { removeClass, unwrapContents } from "@html_editor/utils/dom";
-import { isRedundantElement } from "@html_editor/utils/dom_info";
+import { headingTags, isRedundantElement } from "@html_editor/utils/dom_info";
 import {
     closestElement,
     closestPath,
@@ -229,7 +229,7 @@ export class FontSizePlugin extends Plugin {
                 },
                 addNeutralStyle: function (node) {
                     const block = closestBlock(node);
-                    if (["H1", "H2", "H3", "H4", "H5", "H6"].includes(block.nodeName)) {
+                    if (headingTags.includes(block.nodeName)) {
                         node.classList.add(block.nodeName.toLowerCase());
                     } else {
                         node.classList.add("o_default_font_size");
