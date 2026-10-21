@@ -12,10 +12,10 @@ export class CrmPlsTooltip extends Component {
     props = useProps({
         close: t.function().optional(),
         dashArrayVals: t.string(),
-        low3Data: t.object().optional(),
+        low3Data: t.array().optional(),
         probability: t.number(),
         teamName: t.string().optional(),
-        top3Data: t.object().optional(),
+        top3Data: t.array().optional(),
     });
 }
 
