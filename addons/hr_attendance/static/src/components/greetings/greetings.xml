@@ -55,7 +55,7 @@
                                         <strong><t t-out="this.hoursToday()"/></strong>
                                     </t>
                                 </div>
-                                <div t-if="this.attendance.check_out and this.overtimeToday()"
+                                <div t-if="this.attendance.check_out"
                                     class="alert alert-warning d-flex flex-column gap-2 mb-0
                                     p-2 p-xl-2 border border-warning text-center">
                                     <div class="small fw-bolder text-uppercase">
