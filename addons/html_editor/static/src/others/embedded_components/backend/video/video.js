@@ -5,6 +5,7 @@ import {
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
 import { ReadonlyEmbeddedVideoComponent } from "@html_editor/others/embedded_components/core/video/readonly_video";
+import { usePositionHook } from "@html_editor/position_hook";
 import {
     Component,
     onMounted,
@@ -15,6 +16,7 @@ import {
     useListener,
     useProps,
 } from "@odoo/owl";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -28,6 +30,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         focusEditable: t.function().optional(),
         commit: t.function().optional(),
         openVideoSelectorDialog: t.function().optional(),
+        editable: t.instanceOf(HTMLElement).optional(),
     });
 
     playerRef = signal.ref();
@@ -35,6 +38,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
     setup() {
         super.setup();
         this.videoBlock = this.videoEmbedProps.host;
+        this.hasTouch = hasTouch();
         this.state = useEmbeddedState(this.videoBlock);
 
         if (!this.state.platform || !this.state.videoId) {
@@ -57,41 +61,54 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
 
         this.videoSettingsOverlay = this.videoEmbedProps.createOverlay(VideoSettings, {
             positionOptions: {
-                position: "right-start",
+                position: this.hasTouch ? "top-end" : "right-start",
+                flip: !this.hasTouch,
             },
             className: "video-overlay",
             closeOnPointerdown: false,
         });
 
-        useListener(this.videoBlock, "pointerenter", () => {
-            this.videoSettingsOverlay.open({
-                target: this.videoBlock,
-                props: {
-                    videoBlock: this.videoBlock,
-                    overlay: this.videoSettingsOverlay,
-                    replaceVideo: () => {
-                        this.videoEmbedProps.openVideoSelectorDialog((media) => {
-                            this.replaceVideo(media);
-                        }, this.playerRef());
-                    },
-                    removeVideo: () => {
-                        this.videoBlock.remove();
-                        this.videoEmbedProps.commit();
-                    },
-                    focusEditable: this.videoEmbedProps.focusEditable,
-                    dropdown: this.dropdown,
-                },
-            });
-        });
+        if (this.hasTouch) {
+            onMounted(() => this.openVideoSettings());
 
-        useListener(this.videoBlock, "pointerleave", (e) => {
-            if (this.dropdown.isOpen || e.relatedTarget?.closest(".video-overlay")) {
-                return;
-            }
-            this.videoSettingsOverlay.close();
-        });
+            let isScrolling = false;
+            const updateVideoSettingsPosition = () => {
+                if (isScrolling) {
+                    return;
+                }
+                this.openVideoSettings();
+            };
+            const onScroll = () => {
+                isScrolling = true;
+                clearTimeout(this.scrollTimeout);
+                // Close menu button on scroll
+                this.videoSettingsOverlay.close();
+                this.scrollTimeout = setTimeout(() => {
+                    isScrolling = false;
+                    updateVideoSettingsPosition();
+                }, 150);
+            };
+            useListener(this.videoBlock.ownerDocument, "scroll", onScroll, { capture: true });
+            usePositionHook(
+                () => this.videoEmbedProps.editable,
+                this.videoBlock.ownerDocument,
+                updateVideoSettingsPosition
+            );
+        } else {
+            useListener(this.videoBlock, "pointerenter", () => {
+                this.openVideoSettings();
+            });
+
+            useListener(this.videoBlock, "pointerleave", (e) => {
+                if (this.dropdown.isOpen || e.relatedTarget?.closest(".video-overlay")) {
+                    return;
+                }
+                this.videoSettingsOverlay.close();
+            });
+        }
 
         onWillDestroy(() => {
+            clearTimeout(this.scrollTimeout);
             this.videoSettingsOverlay?.close();
         });
     }
@@ -99,6 +116,29 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
     get embedUrl() {
         const platFormClass = PLATFORMS[this.state.platform];
         return platFormClass.getEmbedUrl(this.state.videoId, this.state.params);
+    }
+
+    openVideoSettings() {
+        this.videoSettingsOverlay.open({
+            target: this.videoBlock,
+            props: {
+                videoBlock: this.videoBlock,
+                ...(!this.hasTouch && {
+                    overlay: this.videoSettingsOverlay,
+                }),
+                replaceVideo: () => {
+                    this.videoEmbedProps.openVideoSelectorDialog((media) => {
+                        this.replaceVideo(media);
+                    }, this.playerRef());
+                },
+                removeVideo: () => {
+                    this.videoBlock.remove();
+                    this.videoEmbedProps.commit();
+                },
+                focusEditable: this.videoEmbedProps.focusEditable,
+                dropdown: this.dropdown,
+            },
+        });
     }
 
     /**
@@ -134,7 +174,7 @@ export class VideoSettings extends Component {
     static components = { Dropdown, DropdownItem };
     props = useProps({
         videoBlock: t.instanceOf(HTMLElement),
-        overlay: t.object(),
+        overlay: t.object().optional(),
         replaceVideo: t.function(),
         removeVideo: t.function(),
         focusEditable: t.function(),
@@ -144,16 +184,18 @@ export class VideoSettings extends Component {
     menuRef = signal.ref();
 
     setup() {
+        this.hasTouch = hasTouch();
+
         onMounted(() => {
             this.menuRef()?.addEventListener("pointerleave", () => {
-                if (!this.props.dropdown.isOpen) {
+                if (this.props.overlay && !this.props.dropdown.isOpen) {
                     this.props.overlay.close();
                 }
             });
         });
 
         useListener(document, "pointerdown", (ev) => {
-            if (this.props.dropdown.isOpen) {
+            if (!this.props.overlay || this.props.dropdown.isOpen) {
                 return;
             }
             this.props.overlay.close();
