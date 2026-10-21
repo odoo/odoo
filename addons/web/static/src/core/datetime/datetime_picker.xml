@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.DateTimePicker.Days">
-        <div class="d-flex gap-3">
+        <div
+            class="d-flex gap-3"
+            t-on-touchstart="this.onSwipeStart"
+            t-on-touchend="this.onSwipeEnd"
+            t-on-touchcancel="() => (this.swipeStart = null)"
+        >
             <t t-foreach="this.items()" t-as="month" t-key="month.id">
                 <div
                     class="o_date_picker d-grid flex-grow-1 rounded overflow-auto"
@@ -75,7 +80,12 @@
     </t>
 
     <t t-name="web.DateTimePicker.Grid">
-        <div class="o_date_item_picker d-grid">
+        <div
+            class="o_date_item_picker d-grid"
+            t-on-touchstart="this.onSwipeStart"
+            t-on-touchend="this.onSwipeEnd"
+            t-on-touchcancel="() => (this.swipeStart = null)"
+        >
             <t t-foreach="this.items()" t-as="itemInfo" t-key="itemInfo.id">
                 <t t-set="arInfo" t-value="this.getActiveRangeInfo(itemInfo)" />
                 <div
