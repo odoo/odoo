@@ -193,12 +193,22 @@ class IrAttachment(models.Model):
                     with open(tmp_path, 'wb') as tmp_file:
                         shutil.copyfileobj(bin_value, tmp_file)
                         tmp_file.flush()
-                        if hasattr(os, 'fchmod'):
-                            os.fchmod(tmp_file.fileno(), 0o444)  # r--r--r--
-                        else:
-                            os.chmod(tmp_path, 0o444)  # r--r--r--
+                        try:
+                            # Make the copied content read-only. On some
+                            # filesystems (e.g. CIFS/SMB) the ownership is
+                            # fixed at mount time and fchmod raises EPERM for
+                            # a non-owner process, which must not abort the write.
+                            if hasattr(os, 'fchmod'):
+                                os.fchmod(tmp_file.fileno(), 0o444)  # r--r--r--
+                            else:
+                                os.chmod(tmp_path, 0o444)  # r--r--r--
+                        except OSError:
+                            pass
                 else:
-                    os.chmod(tmp_path, 0o444)  # r--r--r--
+                    try:
+                        os.chmod(tmp_path, 0o444)  # r--r--r--
+                    except OSError:
+                        pass
 
                 # "commit" the file by moving it to its right place
                 try:
