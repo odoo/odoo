@@ -38,13 +38,14 @@ function compareRecords(r1, r2, orderBy, fields) {
     return 0;
 }
 
-function copyRecordData(record, copyFields = []) {
+function copyRecordData(record, copyFields = [], noCopyFields = []) {
     const data = {};
     for (const [name, value] of Object.entries(record.data)) {
         if (
-            ![...copyFields, "display_name"].includes(name) &&
-            (record._isReadonly(name) || record._isInvisible(name)) &&
-            !record._isRequired(name)
+            noCopyFields.includes(name) ||
+            (![...copyFields, "display_name"].includes(name) &&
+                (record._isReadonly(name) || record._isInvisible(name)) &&
+                !record._isRequired(name))
         ) {
             continue;
         }
@@ -974,6 +975,7 @@ export class StaticList extends DataPoint {
     async _duplicateRecords(records, options) {
         const targetIndex = options.targetIndex ?? this.records.indexOf(records.at(-1)) + 1;
         const copyFields = options.copyFields || [];
+        const noCopyFields = options.noCopyFields || [];
         let sequence;
         if (this.handleField) {
             sequence = this.records[targetIndex - 1].data[this.handleField] + 1;
@@ -988,7 +990,7 @@ export class StaticList extends DataPoint {
         }
 
         const changesList = records.map((record) => {
-            const changes = { ...copyRecordData(record, copyFields) };
+            const changes = { ...copyRecordData(record, copyFields, noCopyFields) };
             if (this.handleField) {
                 changes[this.handleField] = sequence++;
             }
