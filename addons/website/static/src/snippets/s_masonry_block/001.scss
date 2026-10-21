@@ -7,4 +7,8 @@
         --grid-item-padding-y: 0px;
         --grid-item-padding-x: 0px;
     }
+    // Keep the clickable block link from covering the whole snippet.
+    > div:has(> .stretched-link) {
+        position: relative;
+    }
 }
