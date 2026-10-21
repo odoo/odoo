@@ -53,6 +53,43 @@ class TestPricelist(ProductVariantsCommon):
         cls.env.user.group_ids += cls.env.ref('product.group_product_pricelist')
         cls.uom_ton = cls.env.ref('uom.product_uom_ton')
 
+    def test_pricelist_item_ids_hides_archived_products(self):
+        archived_variant = self.env['product.product'].create({'name': 'Archived variant'})
+        archived_template = self.env['product.template'].create({'name': 'Archived template'})
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Visibility pricelist',
+            'item_ids': [
+                Command.create({'applied_on': '3_global', 'fixed_price': 1}),
+                Command.create({
+                    'applied_on': '0_product_variant',
+                    'product_id': self.usb_adapter.id,
+                    'fixed_price': 2,
+                }),
+                Command.create({
+                    'applied_on': '0_product_variant',
+                    'product_id': archived_variant.id,
+                    'fixed_price': 3,
+                }),
+                Command.create({
+                    'applied_on': '1_product',
+                    'product_tmpl_id': self.usb_adapter.product_tmpl_id.id,
+                    'fixed_price': 4,
+                }),
+                Command.create({
+                    'applied_on': '1_product',
+                    'product_tmpl_id': archived_template.id,
+                    'fixed_price': 5,
+                }),
+            ],
+        })
+        archived_variant.active = False
+        archived_template.active = False
+        pricelist.invalidate_recordset(['item_ids'])
+        self.assertEqual(
+            sorted(pricelist.item_ids.mapped('fixed_price')),
+            [1, 2, 4],
+        )
+
     def test_10_discount(self):
         # Make sure the price using a pricelist is the same than without after
         # applying the computation manually
