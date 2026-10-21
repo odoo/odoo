@@ -4,7 +4,7 @@
 
 from lxml import etree
 from odoo.tests import common
-from odoo.tools.xml_utils import cleanup_xml_node
+from odoo.tools.xml_utils import cleanup_xml_node, remove_control_characters
 
 
 class TestXMLTools(common.TransactionCase):
@@ -72,6 +72,30 @@ _</h1>
 """
         qweb = self.env['ir.qweb']._render(self.qweb_poor.id)
         self.check_xml_cleanup_result_is_as_expected(qweb, expected, remove_blank_nodes=False)
+
+    def test_remove_control_characters(self):
+        text = '\x00\t\n\r\x1f valid \ud7ff\ue000\ufffd\U00010000\U0010ffff invalid \ufffe\uffff'
+
+        result = remove_control_characters(text.encode()).decode()
+
+        self.assertEqual(
+            result,
+            '\t\n\r valid \ud7ff\ue000\ufffd\U00010000\U0010ffff invalid ',
+        )
+        element = etree.Element('test')
+        element.text = result  # lxml rejects the invalid characters if any survived.
+        cleaned = cleanup_xml_node('<test>Color\ufffe BLANCO</test>')
+        self.assertEqual(cleaned.text, 'Color BLANCO')
+
+    def test_remove_control_characters_preserves_non_utf8_xml(self):
+        xml = b'<?xml version="1.0" encoding="ISO-8859-1"?><root>caf\xe9\x03</root>'
+
+        result = remove_control_characters(xml)
+
+        self.assertEqual(
+            result,
+            b'<?xml version="1.0" encoding="ISO-8859-1"?><root>caf\xe9</root>',
+        )
 
     def test_cleanup_xml_t_call_indent(self):
         # Indentation is fixed after t-call (which keeps indentation of called template)
