@@ -1,4 +1,5 @@
 from io import BytesIO
+from unittest.mock import patch
 from zipfile import ZipFile
 
 from odoo.fields import Command
@@ -83,3 +84,25 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
             self.assertEqual(len(file_names), 2)
             self.assertTrue(self.invoices[0].invoice_pdf_report_id.name in file_names)
             self.assertTrue(self.invoices[1].invoice_pdf_report_id.name in file_names)
+
+    def test_invoice_pdf_proforma_company(self):
+        """ The proforma is rendered in the company of the invoice (e.g. for its paper format). """
+        other_company = self.setup_other_company()['company']
+        invoice = self.env['account.move'].with_company(other_company).create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'price_unit': 100})],
+        })
+        self.assertNotEqual(self.env.company, other_company)
+
+        IrActionsReport = self.env.registry['ir.actions.report']
+        pre_render_qweb_pdf = IrActionsReport._pre_render_qweb_pdf
+        companies = []
+
+        def _pre_render_qweb_pdf(report, *args, **kwargs):
+            companies.append(report.env.company)
+            return pre_render_qweb_pdf(report, *args, **kwargs)
+
+        with patch.object(IrActionsReport, '_pre_render_qweb_pdf', _pre_render_qweb_pdf):
+            invoice.with_env(self.env)._get_invoice_pdf_proforma()
+        self.assertEqual(companies, [other_company])
