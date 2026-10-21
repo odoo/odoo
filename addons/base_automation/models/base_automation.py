@@ -1066,6 +1066,22 @@ class BaseAutomation(models.Model):
     def _get_calendar(self, automation, record):
         return automation.trg_date_calendar_id
 
+<<<<<<< 1e03a6496ceb2624374fbc2b83a680726d50394d
+||||||| 82a80077b74e1b277ccb48cd648f3513e124da22
+    @deprecated("Since 19.0, use _cron_process_time_based_automations")
+    def _check(self, automatic=False, use_new_cursor=False):
+        if not automatic:
+            raise RuntimeError("can run time-based automations only in automatic mode")
+        self._cron_process_time_based_actions()
+
+=======
+    @deprecated("Since 19.0, use _cron_process_time_based_actions")
+    def _check(self, automatic=False, use_new_cursor=False):
+        if not automatic:
+            raise RuntimeError("can run time-based automations only in automatic mode")
+        self._cron_process_time_based_actions()
+
+>>>>>>> a04806beb509e07806a55b2697c956b451a47fe4
     def _search_time_based_automation_records(self, *, until):
         automation = self.ensure_one()
 
