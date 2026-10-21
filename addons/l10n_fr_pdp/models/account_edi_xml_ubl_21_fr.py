@@ -222,6 +222,19 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             }
         }
 
+    def _import_ubl_invoice_add_customer_values(self, collected_values):
+        super()._import_ubl_invoice_add_customer_values(collected_values)
+        party_tag = "AccountingCustomerParty" if collected_values['odoo_document_type'] == 'sale' else "AccountingSupplierParty"
+        collected_values['customer_values']['siret'] = collected_values['tree'].findtext(
+            f"./{{*}}{party_tag}/{{*}}Party/{{*}}PartyIdentification/{{*}}ID[@schemeID='0009']"
+        )
+
+    def _import_ubl_retrieve_customer_search_plan(self, collected_values):
+        return [
+            self.env['res.partner']._import_retrieve_customer_from_siret,
+            *super()._import_ubl_retrieve_customer_search_plan(collected_values),
+        ]
+
     def _import_ubl_invoice_add_prepaid_amount(self, collected_values):
         # imported invoice is a final invoice following downpayments.
         # We assume all billing references are references to downpayments.
