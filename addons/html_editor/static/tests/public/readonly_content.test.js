@@ -32,7 +32,7 @@ describe("links", () => {
             `<div class="o_readonly"><a class="external" href="https://www.odoo.com">a</a></div>`
         );
         expect("a.external").toHaveAttribute("target", "_blank");
-        expect("a.external").toHaveAttribute("rel", "noreferrer");
+        expect("a.external").toHaveAttribute("rel", "noreferrer noopener");
     });
 
     test("does not change links to the website itself", async () => {
