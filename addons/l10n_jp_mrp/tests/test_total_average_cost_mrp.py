@@ -312,7 +312,7 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
         # the subcontractor consumes out of their own location, so that is where the components go
         self._create_move(
             qty * component_qty, component_price, self.today, self.supplier_loc,
-            self.env.company.subcontracting_location_id, product=component,
+            self.env.company.subcontracting_location_id, product=component,  # noqa: OLS03028
         )
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': self.product.product_tmpl_id.id, 'product_qty': 1,
