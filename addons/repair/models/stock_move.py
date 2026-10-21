@@ -193,12 +193,13 @@ class StockMove(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _clean_repair_linked_lines(self):
-        if self.repair_id.invoice_ids:
-            self.filtered(
+        moves = self.sudo()
+        if moves.repair_id.invoice_ids:
+            moves.filtered(
                 lambda m: m.repair_id and m.invoice_line_ids and m.invoice_line_ids.move_id.state != 'posted'
             ).invoice_line_ids.write({'quantity': 0.0})
         else:
-            self.filtered(
+            moves.filtered(
                 lambda m: m.repair_id and m.sale_line_id
             ).sale_line_id.write({'product_uom_qty': 0.0})
 

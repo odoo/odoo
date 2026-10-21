@@ -111,7 +111,7 @@ class IrActionsActions(models.Model):
     @api.ondelete(at_uninstall=True)
     def _unlink_reset_todo_open_menu(self):
         try:
-            todo_open_menu = self.env.ref('base.open_menu')
+            todo_open_menu = self.env.ref('base.open_menu').sudo()
             todo_default_action = self.env.ref('base.action_client_base_menu')
             todo_default_action_id = todo_default_action.id  # different model, same id
         except ValueError:
@@ -121,7 +121,7 @@ class IrActionsActions(models.Model):
 
     @api.ondelete(at_uninstall=True)
     def _unlink_check_home_action(self):
-        self.env['res.users'].with_context(active_test=False).search([('action_id', 'in', self.ids)]).sudo().write({'action_id': None})
+        self.env['res.users'].sudo().with_context(active_test=False).search([('action_id', 'in', self.ids)]).write({'action_id': None})
 
     @api.model
     def _get_eval_context(self, action=None):

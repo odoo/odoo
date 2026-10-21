@@ -194,13 +194,10 @@ class LunchSupplier(models.Model):
             self._cancel_future_days(days_removed)
         return res
 
-    def unlink(self):
-        crons = self.cron_id.sudo()
-        server_actions = crons.ir_actions_server_id
-        res = super().unlink()
-        crons.unlink()
-        server_actions.unlink()
-        return res
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self.cron_id
+        yield self.cron_id.ir_actions_server_id
 
     def _cancel_future_days(self, weekdays):
         weekdays_n = [WEEKDAY_TO_NAME.index(wd) for wd in weekdays]

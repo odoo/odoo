@@ -124,12 +124,12 @@ class MicrosoftCalendarSync(models.AbstractModel):
         """
         return self.filtered(lambda e: e.ms_universal_event_id)
 
-    def unlink(self):
-        synced = self._get_synced_events()
+    @api.ondelete(at_uninstall=False)
+    def _unlink_synced_events(self):
         if self.env.user._get_microsoft_sync_status() != "sync_paused":
+            synced = self._get_synced_events()
             for ev in synced:
                 ev._microsoft_delete(ev._get_organizer(), ev.microsoft_id)
-        return super().unlink()
 
     def _write_from_microsoft(self, microsoft_event, vals):
         self.with_context(dont_notify=True).write(vals)

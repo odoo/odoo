@@ -73,13 +73,10 @@ class CalendarAttendee(models.Model):
         self.event_id.check_access('write')
         return attendees
 
-    def unlink(self):
-        self._unsubscribe_partner()
-        return super().unlink()
-
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
+    @api.ondelete(at_uninstall=False)
     def _unsubscribe_partner(self):
         for event in self.event_id:
             partners = (event.attendee_ids & self).partner_id & event.message_partner_ids

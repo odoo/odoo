@@ -62,11 +62,11 @@ class RepairServiceLine(models.Model):
 
     @api.ondelete(at_uninstall=True)
     def _unlink_repair_service_line(self):
-        self.filtered(
+        self.sudo().filtered(
             lambda r: r.repair_id and r.sale_line_id
         ).sale_line_id.write({'product_uom_qty': 0.0})
 
-        self.filtered(
+        self.sudo().filtered(
             lambda r: r.repair_id and r.invoice_line_ids and r.invoice_line_ids.move_id.state != 'posted'
         ).invoice_line_ids.write({'quantity': 0.0})
 

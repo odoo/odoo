@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.fields import Domain
 
 
 class MailTemplate(models.Model):
     _inherit = 'mail.template'
 
-    def unlink(self):
-        res = super().unlink()
-        domain = ('template_ref', 'in', [f"{template._name},{template.id}" for template in self])
-        self.env['event.mail'].sudo().search([domain]).unlink()
-        self.env['event.type.mail'].sudo().search([domain]).unlink()
-        return res
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        domain = Domain('template_ref', 'in', [f"{template._name},{template.id}" for template in self])
+        yield self.env['event.mail'].search(domain)
+        yield self.env['event.type.mail'].search(domain)

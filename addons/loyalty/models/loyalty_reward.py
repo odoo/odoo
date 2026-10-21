@@ -382,12 +382,13 @@ class LoyaltyReward(models.Model):
             )
         return res
 
-    def unlink(self):
-        programs = self.program_id
-        res = super().unlink()
+    @api.ondelete(at_uninstall=False)
+    def _unlink_check_rewards(self):
         # Not guaranteed to trigger the constraint
-        programs._constrains_reward_ids()
-        return res
+        if programs := self.program_id:
+            # programs may be deleted as well (cascade)
+            return lambda: programs.exists()._constrains_reward_ids()
+        return None
 
     def _get_discount_product_values(self):
         return [

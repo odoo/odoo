@@ -518,15 +518,17 @@ class BaseAutomation(models.Model):
             self.env.transaction.invalidate_ormcache()  # _get_trg_field_ref_model_names
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_update_cron(self):
         clear_templates = self._has_trigger_onchange()
-        res = super().unlink()
-        self._update_cron()
-        self._update_registry()
-        if clear_templates:
-            # Invalidate templates cache to update on_change attributes if needed
-            self.env.transaction.invalidate_ormcache('templates')
-        return res
+
+        def after_cron_delete():
+            self._update_cron()
+            self._update_registry()
+            if clear_templates:
+                # Invalidate templates cache to update on_change attributes if needed
+                self.env.transaction.invalidate_ormcache('templates')
+        return after_cron_delete
 
     def copy(self, default=None):
         """Copy the actions of the automation while

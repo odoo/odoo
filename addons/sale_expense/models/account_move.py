@@ -19,4 +19,4 @@ class AccountMove(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_set_sol_quantities(self):
         # EXTENDS sale
-        self.expense_ids._sale_expense_reset_sol_quantities()
+        self.sudo().expense_ids._sale_expense_reset_sol_quantities()

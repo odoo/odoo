@@ -7,7 +7,7 @@ class IrSequence(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_sequence(self):
-        configs = self.env['pos.config'].search(domain=[
+        configs = self.env['pos.config'].sudo().search(domain=[
             '|', '|', '|',
             ('order_seq_id', 'in', self.ids),
             ('order_line_seq_id', 'in', self.ids),
