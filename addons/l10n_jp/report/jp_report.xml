@@ -38,27 +38,6 @@
             </div>
         </template>
 
-        <template id="report_invoice_wizard_preview" inherit_id="web.report_invoice_wizard_preview">
-            <xpath expr="//t[@t-set='address']" position="before">
-                <t t-set="jp_preview_currency" t-value="company._name == 'base.document.layout' and company.company_id.currency_id"/>
-                <t t-set="jp_preview_currency_label"
-                   t-value="' (%s)' % (jp_preview_currency.currency_unit_label if jp_preview_currency.name == 'JPY' else jp_preview_currency.name)
-                            if jp_preview_currency
-                            and company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'
-                            and company.l10n_jp_currency_in_headers
-                            else ''"/>
-            </xpath>
-            <xpath expr="//th[@name='th_priceunit']/span" position="inside">
-                <t t-out="jp_preview_currency_label"/>
-            </xpath>
-            <xpath expr="//th[@name='th_subtotal']" position="attributes">
-                <attribute name="t-att-class">'text-end text-nowrap' if jp_preview_currency_label else 'text-end'</attribute>
-            </xpath>
-            <xpath expr="//th[@name='th_subtotal']/span" position="inside">
-                <t t-out="jp_preview_currency_label"/>
-            </xpath>
-        </template>
-
         <template id="document_tax_totals_template" inherit_id="account.document_tax_totals_template">
             <xpath expr="//t[@t-set='same_tax_base']" position="after">
                 <t t-set="jp_layout_selected" t-value="company and company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'"/>

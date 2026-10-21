@@ -5,7 +5,7 @@ import re
 import lxml.html
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import new_test_user, tagged
+from odoo.tests import tagged
 from odoo.tools import html2plaintext
 
 
@@ -18,13 +18,11 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('ja_JP')
         cls.partner_a.lang = 'ja_JP'
-        # base translates the yen's unit to 円, but a test database does not load it.
-        cls.env.ref('base.JPY').with_context(lang='ja_JP').currency_unit_label = '円'
         cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
         # l10n_din5008 restyles the unit price cell for every company on a full install.
         cls.env['ir.ui.view'].search([('key', '=', 'l10n_din5008.report_invoice_document')]).active = False
 
-    def test_invoice_report_uses_jp_honorific_and_currency_header(self):
+    def test_invoice_report_uses_jp_honorific(self):
         invoice = self._create_invoice_one_line(
             move_type='out_invoice',
             partner_id=self.partner_a,
@@ -37,48 +35,6 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         text = html2plaintext(html)
 
         self.assertIn('様', text)
-        self.assertIn('Unit Price (円)', text)
-        self.assertIn('Amount (円)', text)
-        self.assertIn('Taxable Amount', text)
-
-    def test_currency_can_be_left_out_of_the_headers(self):
-        self.company_data['company'].l10n_jp_currency_in_headers = False
-        invoice = self._create_invoice_one_line(
-            move_type='out_invoice',
-            partner_id=self.partner_a,
-            currency_id=self.env.ref('base.JPY'),
-            product_id=self.product_a,
-            tax_ids=self.tax_sale_a,
-            post=True,
-        )
-        html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
-        text = html2plaintext(html)
-
-        self.assertIn('Unit Price', text)
-        self.assertNotIn('(円)', text)
-
-    def test_document_layout_saves_the_header_currency_choice(self):
-        company = self.company_data['company']
-        accountant = new_test_user(
-            self.env, login='jp_accountant', groups='account.group_account_basic',
-            company_id=company.id, company_ids=company.ids,
-        )
-        wizard = self.env['base.document.layout'].with_user(accountant).with_context(account_document_layout_configurator=True).create({
-            'company_id': company.id,
-            'report_layout_id': self.env.ref('l10n_jp.report_layout_jp_standard').id,
-        })
-        self.assertTrue(wizard.l10n_jp_is_jp_layout)
-        wizard.l10n_jp_currency_in_headers = False
-        self.assertFalse(company.l10n_jp_currency_in_headers)
-
-    def test_document_layout_preview_follows_the_header_currency_choice(self):
-        wizard = self.env['base.document.layout'].with_context(lang='ja_JP').create({
-            'company_id': self.company_data['company'].id,
-            'report_layout_id': self.env.ref('l10n_jp.report_layout_jp_standard').id,
-        })
-        self.assertIn('(円)', html2plaintext(wizard.preview))
-        wizard.l10n_jp_currency_in_headers = False
-        self.assertNotIn('(円)', html2plaintext(wizard.preview))
 
     def test_every_tax_rate_shows_its_base_and_its_tax(self):
         tax_8 = self.tax_sale_a.copy({
@@ -109,25 +65,6 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         text = html2plaintext(html)
 
         self.assertIn('様', text)
-
-    def test_payment_receipt_labels_the_amount_in_the_currency_of_the_invoices(self):
-        usd = self.setup_other_currency('USD')
-        invoice = self._create_invoice_one_line(
-            move_type='out_invoice',
-            partner_id=self.partner_a,
-            currency_id=self.env.ref('base.JPY'),
-            price_unit=10000,
-            post=True,
-        )
-        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
-            'currency_id': usd.id,
-        })._create_payments()
-
-        html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_payment_receipt', payment.ids)[0]
-        text = html2plaintext(html)
-
-        self.assertIn('Amount (円)', text)
-        self.assertNotIn('(USD)', text)
 
     def test_unit_price_column_drops_a_decimal_part_worth_nothing(self):
         # Two of each line, so that a unit price cannot hide inside its own subtotal.

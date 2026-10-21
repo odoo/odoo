@@ -13,17 +13,15 @@ class TestJPPurchaseReport(AccountTestInvoicingCommon):
     @AccountTestInvoicingCommon.setup_country('jp')
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['res.lang']._activate_lang('ja_JP')
-        cls.env.ref('base.JPY').with_context(lang='ja_JP').currency_unit_label = '円'
-        cls.partner_a.lang = 'ja_JP'
         cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
 
-    def test_currency_header_follows_the_vendor_language(self):
+    def test_unit_price_column_drops_a_decimal_part_worth_nothing(self):
         order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [Command.create({'product_id': self.product_a.id, 'price_unit': 100.0})],
+            'order_line': [Command.create({'product_id': self.product_a.id, 'product_qty': 2.0, 'price_unit': 105.0})],
         })
         html = self.env['ir.actions.report']._render_qweb_html('purchase.report_purchaseorder', order.ids)[0]
         text = html2plaintext(html)
 
-        self.assertIn('(円)', text)
+        self.assertIn('105', text)
+        self.assertNotIn('105.00', text)

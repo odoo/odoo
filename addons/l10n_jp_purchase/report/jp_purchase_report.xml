@@ -16,22 +16,6 @@
             <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
                 <attribute name="t-options">{'min_precision': 0} if jp_hide_zero_decimals else {}</attribute>
             </xpath>
-
-            <xpath expr="//div[hasclass('page')]" position="before">
-                <t t-set="jp_layout" t-value="company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'"/>
-                <t t-set="jp_currency_header" t-value="jp_layout and company.l10n_jp_currency_in_headers
-                    and ' (%s)' % (o.currency_id.currency_unit_label if o.currency_id.name == 'JPY' else o.currency_id.name)"/>
-            </xpath>
-
-            <xpath expr="//th[@name='th_price_unit']" position="attributes">
-                <attribute name="t-att-class">'text-end text-nowrap' if jp_layout else 'text-end'</attribute>
-            </xpath>
-            <xpath expr="//th[@name='th_price_unit']/strong" position="inside"><t t-out="jp_currency_header"/></xpath>
-
-            <xpath expr="//th[@name='th_subtotal']" position="attributes">
-                <attribute name="t-att-class">'text-end text-nowrap' if jp_layout else 'text-end'</attribute>
-            </xpath>
-            <xpath expr="//th[@name='th_subtotal']/strong" position="inside"><t t-out="jp_currency_header"/></xpath>
         </template>
 
         <template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">

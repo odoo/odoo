@@ -45,7 +45,6 @@ Note:
         'report/jp_account_report.xml',
         'report/jp_report.xml',
         'data/report_layout.xml',
-        'views/base_document_layout_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
