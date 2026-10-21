@@ -1083,20 +1083,11 @@ class MrpWorkorder(models.Model):
     def _search_has_planning_issues(self, operator, value):
         if operator != "in" or list(value) != [True]:
             return NotImplemented
-        sql = """
-            SELECT wo1.id
-              FROM mrp_workorder wo1
-              JOIN mrp_workorder_dependencies_rel rel ON rel.workorder_id=wo1.id
-              JOIN mrp_workorder wo2 ON wo2.id=rel.blocked_by_id
-             WHERE wo1.state IN ('blocked', 'ready')
-               AND wo2.date_start > wo1.date_start
-                OR wo2.date_finished > wo1.date_start
-        """
-        self.env.cr.execute(sql)
-        res = list()
-        for wo in self.env.cr.fetchall():
-            res.append(wo)
-        return [('id', 'in', res)]
+        # Compute in Python so the search stays consistent with _compute_has_planning_issues,
+        # keeps dates changed within the current transaction visible, and honors any id filter.
+        workorders = self.search([])
+        workorders.compute(['has_planning_issues'])
+        return [('id', 'in', [wo.id for wo in workorders if wo.has_planning_issues])]
 
     @api.depends('production_id.product_qty', 'state')
     def _compute_qty_to_produce(self):
