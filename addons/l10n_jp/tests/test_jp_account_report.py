@@ -159,3 +159,10 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         self.company_data['company'].account_fiscal_country_id = self.env.ref('base.us')
 
         self.assertEqual(invoice._get_name_invoice_report(), 'account.report_invoice_document')
+
+    def test_the_japanese_chart_brings_the_japanese_layout(self):
+        company = self.env['res.company'].create({'name': 'JP Company 2', 'country_id': self.env.ref('base.jp').id})
+        self.env['account.chart.template'].try_loading('jp', company=company, install_demo=False)
+
+        self.assertEqual(company.external_report_layout_id, self.env.ref('l10n_jp.external_layout_jp_standard'))
+        self.assertEqual(company.paperformat_id, self.env.ref('l10n_jp.paperformat_jp'))
