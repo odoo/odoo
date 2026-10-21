@@ -23,6 +23,7 @@ import { DropZoneSelectorPlugin } from "./dropzone_selector_plugin";
 import { GridLayoutPlugin } from "./grid_layout/grid_layout_plugin";
 import { MediaWebsitePlugin } from "./media_website_plugin";
 import { MovePlugin } from "./move_plugin";
+import { OfflinePlugin } from "./offline_plugin";
 import { OperationPlugin } from "./operation_plugin";
 import { OverlayButtonsPlugin } from "./overlay_buttons/overlay_buttons_plugin";
 import { RemovePlugin } from "./remove_plugin";
@@ -79,6 +80,7 @@ export const MAIN_PLUGINS = [
     Many2OneOptionPlugin,
     MonetaryFieldPlugin,
     DateTimeFieldPlugin,
+    OfflinePlugin,
     OperationPlugin,
     OverlayButtonsPlugin,
     SavePlugin,
