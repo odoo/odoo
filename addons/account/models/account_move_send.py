@@ -420,15 +420,14 @@ class AccountMoveSend(models.AbstractModel):
         :param invoice_data:    The collected data for the invoice so far.
         """
 
-        company_id = next(iter(invoices_data)).company_id
         grouped_invoices_by_report = defaultdict(dict)
         for invoice, invoice_data in invoices_data.items():
-            grouped_invoices_by_report[invoice_data['pdf_report']][invoice] = invoice_data
+            grouped_invoices_by_report[invoice_data['pdf_report'], invoice.company_id][invoice] = invoice_data
 
-        for pdf_report, group_invoices_data in grouped_invoices_by_report.items():
+        for (pdf_report, _company), group_invoices_data in grouped_invoices_by_report.items():
             ids = [inv.id for inv in group_invoices_data]
 
-            content, report_type = self.env['ir.actions.report'].with_company(company_id)._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
+            content, report_type = self.env['ir.actions.report']._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
             content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
             if len(content_by_id) == 1 and False in content_by_id:
                 raise ValidationError(_("Cannot identify the invoices in the generated PDF: %s", ids))
@@ -450,7 +449,7 @@ class AccountMoveSend(models.AbstractModel):
         :param invoice_data:    The collected data for the invoice so far.
         """
         pdf_report = invoice_data['pdf_report']
-        content, report_type = self.env['ir.actions.report'].with_company(invoice.company_id)._pre_render_qweb_pdf(pdf_report.report_name, invoice.ids, data={'proforma': True})
+        content, report_type = self.env['ir.actions.report']._pre_render_qweb_pdf(pdf_report.report_name, invoice.ids, data={'proforma': True})
         content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
 
         invoice_data['proforma_pdf_attachment_values'] = {

@@ -1,4 +1,5 @@
 from io import BytesIO
+from unittest.mock import patch
 from zipfile import ZipFile
 
 from odoo.fields import Command
@@ -86,6 +87,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
             self.assertEqual(len(file_names), 2)
             self.assertTrue(self.invoices[0].invoice_pdf_report_id.name in file_names)
             self.assertTrue(self.invoices[1].invoice_pdf_report_id.name in file_names)
+<<<<<<< a896484eeada218dec73d908b2d5ffd844ee05d7
 
     def test_download_moves_attachments(self):
         self.authenticate(self.env.user.login, self.env.user.login)
@@ -137,3 +139,50 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         with ZipFile(BytesIO(res.content)) as zip_file:
             file_names = sorted(zip_file.namelist())
             self.assertEqual(file_names, attachment_names)
+||||||| 5be59d6e7de2e0278b4bb2ead69b492606dff0c2
+=======
+
+    def _get_rendering_companies(self, func):
+        """ Return the companies of the environments in which the reports are rendered when calling ``func``. """
+        IrActionsReport = self.env.registry['ir.actions.report']
+        render_qweb_html = IrActionsReport._render_qweb_html
+        companies = self.env['res.company']
+
+        def _render_qweb_html(report, *args, **kwargs):
+            nonlocal companies
+            companies |= report.env.company
+            return render_qweb_html(report, *args, **kwargs)
+
+        with patch.object(IrActionsReport, '_render_qweb_html', _render_qweb_html):
+            func()
+        return companies
+
+    def test_invoice_pdf_proforma_company(self):
+        """ The proforma is rendered in the company of the invoice (e.g. for its paper format). """
+        other_company = self.setup_other_company()['company']
+        invoice = self.env['account.move'].with_company(other_company).create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'price_unit': 100})],
+        })
+        self.assertNotEqual(self.env.company, other_company)
+        companies = self._get_rendering_companies(invoice.with_env(self.env)._get_invoice_pdf_proforma)
+        self.assertEqual(companies, other_company)
+
+    def test_invoice_pdf_report_several_companies(self):
+        """ Invoices of several companies sent together are each rendered in their company. """
+        other_company = self.setup_other_company()['company']
+        other_invoice = self.env['account.move'].with_company(other_company).create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'price_unit': 100})],
+        })
+        other_invoice.action_post()
+        invoices = self.invoices[0] + other_invoice
+        report = self.env.ref('account.account_invoices')
+        invoices_data = {invoice: {'pdf_report': report} for invoice in invoices}
+        companies = self._get_rendering_companies(
+            lambda: self.env['account.move.send'].with_context(allowed_company_ids=(self.env.company | other_company).ids)._prepare_invoice_pdf_report(invoices_data),
+        )
+        self.assertEqual(companies, invoices.company_id)
+>>>>>>> 70761501dc615d5a8ae10b16b941573807fa8daf
