@@ -1,6 +1,7 @@
-.o-mail-Activity-sidebar {
-    flex-basis: var(--o-mail-Message-sidebarWidth);
-    max-width: var(--o-mail-Message-sidebarWidth);
+.o-mail-Activity {
+    .o-mail-Activity-info-popover {
+        cursor: help;
+    }
 }
 
 .o-mail-Activity-avatarContainer {
@@ -12,19 +13,6 @@
     margin-bottom: var(--o-bs-spacer-0);
 }
 
-.o-mail-Activity-iconContainer {
-    box-shadow: 0 0 0 2px var(--o-view-background-color);
-}
-
 .o-mail-Activity-avatar {
     --Avatar-size: var(--o-mail-Avatar-size);
-}
-
-.o-mail-Activity-copy {
-    opacity: 0;
-}
-
-.o-mail-Activity-phoneNumber:hover .o-mail-Activity-copy,
-.o-mail-Activity-phoneNumber:focus-within .o-mail-Activity-copy {
-    opacity: 1;
 }

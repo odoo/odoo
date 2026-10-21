@@ -23,9 +23,9 @@ registry.category("web_tour.tours").add("mail_activity_date_format", {
             run: "click",
         },
         {
-            trigger: ".o-mail-Activity-info i",
+            trigger: ".o-mail-Activity-info-popover:not(:visible)",
             run: () => {
-                const icon = document.querySelector(".o-mail-Activity-info i");
+                const icon = document.querySelector(".o-mail-Activity-info-popover");
                 const infoString = icon.dataset.tooltipInfo;
                 const { activity } = JSON.parse(infoString);
                 if (activity.dateCreateFormatted !== "01/Jan/24 09:00:00 AM") {
