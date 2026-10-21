@@ -1,0 +1,110 @@
+@keyframes o-tutorial-pointer-bounce {
+    from {
+        transform: translate(var(--TutorialPointer__bounce-x), var(--TutorialPointer__bounce-y))
+            scale(var(--TutorialPointer__scale-x), var(--TutorialPointer__scale-y))
+            rotate(var(--TutorialPointer__rotate));
+    }
+    to {
+        transform: translate(calc(-1 * var(--TutorialPointer__bounce-x)), calc(-1 * var(--TutorialPointer__bounce-y)))
+            scale(var(--TutorialPointer__scale-x), var(--TutorialPointer__scale-y))
+            rotate(var(--TutorialPointer__rotate));
+    }
+}
+
+.o_tutorial_pointer {
+    .o_tutorial_pointer_tip {
+        --TutorialPointer__bounce-x: 0px;
+        --TutorialPointer__bounce-y: 0px;
+        --TutorialPointer__scale-x: 1;
+        --TutorialPointer__scale-y: 1;
+
+        width: 28px;
+        height: 28px;
+        border: 1px solid white;
+        border-radius: 0 50% 50% 50%;
+        background-image: radial-gradient(
+            hsl(from var(--o-enterprise-color) h s calc(l + 7)),
+            var(--o-enterprise-color)
+        );
+        box-shadow: 0 0 40px 2px rgba(255, 255, 255, 0.5);
+        animation: o-tutorial-pointer-bounce 500ms ease-in infinite alternate;
+
+        &.o_left {
+            --TutorialPointer__bounce-x: 3px;
+            --TutorialPointer__scale-x: 1.12;
+            --TutorialPointer__rotate: 135deg;
+        }
+
+        &.o_right {
+            --TutorialPointer__bounce-x: 3px;
+            --TutorialPointer__scale-x: 1.12;
+            --TutorialPointer__rotate: 315deg;
+        }
+
+        &.o_top {
+            --TutorialPointer__bounce-y: -3px;
+            --TutorialPointer__scale-y: 1.12;
+            --TutorialPointer__rotate: 225deg;
+        }
+
+        &.o_bottom {
+            --TutorialPointer__bounce-y: -3px;
+            --TutorialPointer__scale-y: 1.12;
+            --TutorialPointer__rotate: 45deg;
+        }
+    }
+
+    .o_tutorial_pointer_bubble {
+        --TutorialPointer__shift: 0px;
+        --TutorialPointer__gap: 0.5rem;
+
+        position: absolute;
+        width: max-content;
+    }
+
+    &.o_bottom > .o_tutorial_pointer_bubble {
+        top: 100%;
+        padding-top: var(--TutorialPointer__gap);
+    }
+
+    &.o_top > .o_tutorial_pointer_bubble {
+        bottom: 100%;
+        padding-bottom: var(--TutorialPointer__gap);
+    }
+
+    &:is(.o_top, .o_bottom) > .o_tutorial_pointer_bubble {
+        left: 50%;
+        transform: translateX(calc(-50% + var(--TutorialPointer__shift)));
+
+        .popover-arrow {
+            left: calc(50% - var(--TutorialPointer__shift));
+            transform: translateX(-50%);
+        }
+    }
+
+    &.o_right > .o_tutorial_pointer_bubble {
+        left: 100%;
+        padding-left: var(--TutorialPointer__gap);
+    }
+
+    &.o_left > .o_tutorial_pointer_bubble {
+        right: 100%;
+        padding-right: var(--TutorialPointer__gap);
+    }
+
+    &:is(.o_left, .o_right) > .o_tutorial_pointer_bubble {
+        top: 50%;
+        transform: translateY(-50%);
+
+        .popover-arrow {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+}
+
+@media print {
+    .o_tutorial_pointer {
+        display: none !important;
+    }
+}
