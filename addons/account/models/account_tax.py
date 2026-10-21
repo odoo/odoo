@@ -4800,6 +4800,25 @@ class AccountTax(models.Model):
         suffix_currency = base_lines[0]['currency_id'] if in_foreign_currency else company.currency_id
         suffix = '_currency' if in_foreign_currency else ''
 
+        def distribute_delta_on_rounding_residuals(field, delta_amount):
+            # Give each cent to the line whose rounding moved it the farthest from its raw amount in the opposite direction.
+            # That way, each rounded amount stays within one cent of its raw amount and the rounding of 'gross_total_excluded'
+            # and 'discount_amount' can't accumulate in opposite directions on the same line (PEPPOL-EN16931-R040).
+            nb_of_errors = round(abs(delta_amount) / suffix_currency.rounding)
+            if not nb_of_errors:
+                return
+            sign = -1 if delta_amount < 0.0 else 1
+            sorted_base_lines = sorted(
+                base_lines,
+                key=lambda base_line: float_round(
+                    sign * (base_line['tax_details'][f'raw_{field}{suffix}'] - base_line['tax_details'][f'{field}{suffix}']),
+                    precision_digits=6,
+                ),
+                reverse=True,
+            )
+            for i in range(nb_of_errors):
+                sorted_base_lines[i % len(sorted_base_lines)]['tax_details'][f'{field}{suffix}'] += sign * suffix_currency.rounding
+
         # Raw rounding.
         current_gross_total_excluded = 0.0
         current_discount_amount = 0.0
@@ -4838,33 +4857,11 @@ class AccountTax(models.Model):
             value=current_raw_discount_amount,
             precision_rounding=suffix_currency.rounding,
         )
-
-        target_factors = [
-            {
-                'factor': 1.0,  # By default, we avoid to have more than one cent as a difference per line.
-                'base_line': base_line,
-            }
-            for base_line in base_lines
-        ]
-        amounts_to_distribute = self._distribute_delta_amount_smoothly(
-            precision_digits=suffix_currency.decimal_places,
-            delta_amount=expected_gross_total_excluded - current_gross_total_excluded,
-            target_factors=target_factors,
-        )
-        for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
-            base_line = target_factor['base_line']
-            base_line['tax_details'][f'gross_total_excluded{suffix}'] += amount_to_distribute
+        distribute_delta_on_rounding_residuals('gross_total_excluded', expected_gross_total_excluded - current_gross_total_excluded)
 
         # Fix rounding issues for 'discount_amount'.
         expected_discount_amount = expected_gross_total_excluded - expected_total_excluded
-        amounts_to_distribute = self._distribute_delta_amount_smoothly(
-            precision_digits=suffix_currency.decimal_places,
-            delta_amount=expected_discount_amount - current_discount_amount,
-            target_factors=target_factors,
-        )
-        for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
-            base_line = target_factor['base_line']
-            base_line['tax_details'][f'discount_amount{suffix}'] += amount_to_distribute
+        distribute_delta_on_rounding_residuals('discount_amount', expected_discount_amount - current_discount_amount)
 
     @api.model
     def _round_raw_tax_amounts(
