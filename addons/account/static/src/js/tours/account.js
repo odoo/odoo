@@ -33,7 +33,7 @@ export const accountTourSteps = {
     },
 }
 
-registry.category("web_tour.tours").add('account_tour', {
+registry.category("web_tour.tours").add('account_tour_test', {
     steps: () => [
     ...accountTourSteps.goToAccountMenu(markup(_t('Send invoices to your customers in no time with the <b>Invoicing app</b>.'))),
     ...accountTourSteps.onboarding(),
@@ -120,12 +120,6 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: `.o_form_view_container${accountTourSteps.postedInvoiceSelector} button[name=action_invoice_sent]:contains(send)`,
         content: _t("Send the invoice to the customer and check what he'll receive."),
         tooltipPosition: "bottom",
-        run: "click",
-    },
-    {
-        isActive: ["manual"],
-        trigger: "button[name=document_layout_save]",
-        content: _t("Continue with the default document layout."),
         run: "click",
     },
     {

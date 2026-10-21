@@ -14,7 +14,7 @@ class TestUi(HttpCase):
             'login': 'testuser',
             'password': 'testuser',
         })
-        self.start_tour("/odoo", 'discuss_channel_tour', login='testuser')
+        self.start_tour("/odoo", 'discuss_channel_tour_test', login='testuser')
 
     # basic rendering test of the configuration menu in Discuss
     def test_03_mail_discuss_configuration_tour(self):

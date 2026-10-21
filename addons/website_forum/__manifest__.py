@@ -62,12 +62,8 @@ Ask questions, get answers, no distractions
             'website_forum/static/tests/**/*',
             ('remove', 'website_forum/static/tests/interactions/**/*'),
         ],
-        'web.assets_backend': [
-            'website_forum/static/src/js/tours/website_forum.js',
-        ],
         'web.assets_frontend': [
             'website_forum/static/src/interactions/**/*',
-            'website_forum/static/src/js/tours/website_forum.js',
             'website_forum/static/src/scss/website_forum.scss',
             'website_forum/static/src/scss/website_forum_wysiwyg.scss',
             'website_forum/static/src/xml/public_templates.xml',
