@@ -65,7 +65,7 @@
                     <t t-set="changeStore">Change store</t>
                     <t t-set="seeOnMap">See the store on the map</t>
                     <a
-                        t-if="inStoreAvailable and this.state.selectedLocationData.id"
+                        t-if="this.state.selectedLocationData.id"
                         role="button"
                         href="#"
                         class="text-primary ms-1"
