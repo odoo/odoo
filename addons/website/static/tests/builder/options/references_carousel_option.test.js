@@ -86,3 +86,16 @@ test("A logo is only edited through its reference", async () => {
     expect("[data-container-title='Image'] .oe_snippet_clone").toHaveCount(0);
     expect("[data-container-title='Image'] .oe_snippet_remove").toHaveCount(0);
 });
+
+test("A logo has no image size option", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_references_carousel", {
+        loadIframeBundles: true,
+    });
+    queryFirst(":iframe .s_references_carousel_item img").style.cssText =
+        "width: 100px; height: 50px;";
+    await contains(":iframe .s_references_carousel_item img:first").click();
+    await waitSidebarUpdated();
+    // Sized by the "Logo Size" option of the snippet instead.
+    expect("[data-container-title='Image'] [data-label='Transform']").toHaveCount(1);
+    expect("[data-container-title='Image'] [data-label='Size']").toHaveCount(0);
+});

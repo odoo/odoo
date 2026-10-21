@@ -46,6 +46,10 @@
             title="Reference"
             props='{ "withColors": true, "withImages": false, "withColorCombinations": true }'/>
     </xpath>
+    <!-- Logos are sized by the "Logo Size" option. -->
+    <xpath expr="//image_tool_option[@selector='img']" position="after">
+        <image_tool_option selector=".s_references_carousel_item img" props='{ "withSize": false }'/>
+    </xpath>
 </t>
 
 </templates>
