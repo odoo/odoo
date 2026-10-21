@@ -91,17 +91,17 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
 
         self.assertEqual(len(lxml.html.fromstring(html).find_class('o_taxes')), 2)
         self.assertCountEqual(re.findall(r'Taxable Amount\s+¥\s*([\d,]+)', text), ['10,000', '5,000'])
+        self.assertCountEqual(re.findall(r'Tax\s+¥\s*([\d,]+)', text), ['1,000', '400'])
 
     def test_payment_receipt_uses_jp_honorific(self):
         payment = self.init_payment(100.0, partner=self.partner_a, post=True)
 
         html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_payment_receipt', payment.ids)[0]
-        text = html2plaintext(html)
+        header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].text_content()
 
-        self.assertIn('様', text)
+        self.assertIn(f'{self.partner_a.name} 様', header)
 
     def test_unit_price_column_drops_a_decimal_part_worth_nothing(self):
-        # Two of each line, so that a unit price cannot hide inside its own subtotal.
         invoice = self._create_invoice(
             move_type='out_invoice',
             partner_id=self.partner_a,
@@ -113,12 +113,8 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
             post=True,
         )
         html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
-        text = html2plaintext(html)
 
-        self.assertIn('202', text)
-        self.assertNotIn('202.00', text)
-        self.assertIn('105', text)
-        self.assertNotIn('105.00', text)
+        self.assertEqual(self._get_unit_price_cells(html), ['202', '105'])
 
     def test_unit_price_column_keeps_its_decimals_for_one_line_that_needs_them(self):
         invoice = self._create_invoice(
@@ -132,10 +128,8 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
             post=True,
         )
         html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
-        text = html2plaintext(html)
 
-        self.assertIn('202.00', text)
-        self.assertIn('101.50', text)
+        self.assertEqual(self._get_unit_price_cells(html), ['202.00', '101.50'])
 
     def test_another_layout_keeps_the_name_in_the_address(self):
         self.company_data['company'].external_report_layout_id = self.env.ref('web.external_layout_standard')
@@ -196,3 +190,6 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         html = self.env['ir.actions.report']._render_template('web.external_layout', {'o': None})
 
         self.assertIn(self.company_data['company'].name, html2plaintext(html))
+
+    def _get_unit_price_cells(self, html):
+        return [cell.text_content().strip() for cell in lxml.html.fromstring(html).xpath("//td[@name='td_price_unit']")]

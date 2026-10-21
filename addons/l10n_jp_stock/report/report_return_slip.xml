@@ -4,8 +4,8 @@
         <xpath expr="//t[@t-call='web.external_layout']" position="before">
             <t t-set="jp_document_date" t-value="o.date_done if o.state == 'done' else o.scheduled_date"/>
             <!-- The Japanese Business layout prints the title at the top of the page. -->
-            <t t-if="o.company_id.external_report_layout_id.sudo().key == 'l10n_jp.external_layout_jp_standard'">
-                <t t-set="layout_document_title"><t t-out="o.with_context(lang=o._get_report_lang())._get_return_slip_report_title()"/> <t t-out="o.name"/></t>
+            <t t-if="o.company_id.external_report_layout_id.sudo().key == 'l10n_jp.external_layout_jp_standard'" t-set="layout_document_title">
+                <t t-out="o.with_context(lang=o._get_report_lang())._get_return_slip_report_title()"/> <t t-out="o.name"/>
             </t>
         </xpath>
     </template>

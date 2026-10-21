@@ -8,11 +8,9 @@
             <t t-set="jp_recipient_partner" t-value="partner and partner.commercial_partner_id or o.partner_id.commercial_partner_id or o.partner_id"/>
             <t t-set="jp_document_date" t-value="o.date_done if o.state == 'done' else o.scheduled_date"/>
             <!-- The Japanese Business layout prints the title at the top of the page. -->
-            <t t-if="jp_layout">
-                <t t-set="layout_document_title">
-                    <span t-out="o._get_deliveryslip_report_title()"/>
-                    <span t-field="o.name"/>
-                </t>
+            <t t-if="jp_layout" t-set="layout_document_title">
+                <span t-out="o._get_deliveryslip_report_title()"/>
+                <span t-field="o.name"/>
             </t>
         </xpath>
         <xpath expr="//div[hasclass('page')]/h2" position="attributes">

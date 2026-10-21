@@ -41,7 +41,7 @@
             </t>
 
             <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
-                <t t-call="web.external_layout_footer_content" footer_content_classes="'border-top pt-2'"/>
+                <t t-call="web.external_layout_footer_content" is_tagline_footer="True" footer_content_classes="'border-top pt-2'"/>
             </div>
         </template>
     </data>

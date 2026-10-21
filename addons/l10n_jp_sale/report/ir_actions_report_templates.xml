@@ -5,10 +5,9 @@
             <t t-set="jp_layout" t-value="doc.company_id.external_report_layout_id.sudo().key == 'l10n_jp.external_layout_jp_standard'"/>
         </xpath>
         <xpath expr="//t[@t-call='web.external_layout']" position="before">
-            <t t-set="jp_order_lines" t-value="doc._get_order_lines_to_report()"/>
             <t t-set="jp_hide_zero_decimals"
                t-value="doc.company_id.account_fiscal_country_id.code == 'JP'
-                        and all(line.price_unit.is_integer() and line.discount &gt;= 0 for line in jp_order_lines)"/>
+                        and all(line.price_unit.is_integer() and line.discount &gt;= 0 for line in doc._get_order_lines_to_report())"/>
             <t t-set="jp_document_date" t-value="doc.date_order"/>
         </xpath>
 
