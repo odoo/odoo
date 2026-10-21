@@ -7,10 +7,14 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _l10n_es_is_edi_sii_applicable(self, move):
+        if self._name == 'account.move.send.batch.wizard':
+            return False
         return move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state != 'sent'
 
     @api.model
     def _l10n_es_is_edi_sii_resend_applicable(self, move):
+        if self._name == 'account.move.send.batch.wizard':
+            return False
         return move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent'
 
     def _get_all_extra_edis(self) -> dict:
@@ -36,7 +40,6 @@ class AccountMoveSend(models.AbstractModel):
 
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
-
         sii_move_ids = [
             invoice.id
             for invoice, invoice_data in invoices_data.items()
