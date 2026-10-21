@@ -83,6 +83,37 @@ export class PaymentPage extends Component {
         );
     }
 
+    get orderSummary() {
+        const order = this.selfOrder.currentOrder;
+        const count = order.lines
+            .filter((line) => !line.combo_parent_id && !line.isTipLine())
+            .reduce((total, line) => total + line.qty, 0);
+        const items = count === 1 ? _t("1 item") : _t("%s items", count);
+        return _t("%(items)s · Order #%(number)s", { items, number: order.tracking_number });
+    }
+
+    get selectableMethods() {
+        return [...this.paymentMethods, this.cashPaymentMethod].filter(Boolean);
+    }
+
+    getPaymentMethodDisplay(paymentMethod) {
+        switch (paymentMethod.payment_method_type) {
+            case "terminal":
+                return {
+                    icon: "credit_card",
+                    hint: _t("Tap, insert or swipe on the payment terminal"),
+                };
+            case "external_qr":
+                return { icon: "qr_code", hint: _t("Scan the QR code with your phone") };
+            case "cash_machine":
+                return { icon: "payments", hint: _t("Insert your cash into the cash machine") };
+        }
+        if (paymentMethod.type === "cash") {
+            return { icon: "payments", hint: _t("Pay at the counter with your order number") };
+        }
+        return { icon: "credit_card", hint: "" };
+    }
+
     get selectedPaymentMethod() {
         return this.selfOrder.models["pos.payment.method"].find(
             (p) => p.id === this.state.paymentMethodId
