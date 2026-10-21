@@ -122,3 +122,81 @@ class TestEventTicketData(TestEventSaleCommon):
         })
         self.assertFalse(second_ticket.sale_available)
         self.assertFalse(second_ticket.is_expired)
+
+
+@tagged('registration_editor', 'at_install', '-post_install')
+class TestRegistrationEditor(TestEventSaleCommon):
+
+    def test_registration_editor_events_and_slots(self):
+        """ Test computation of has_multiple_events and has_slots in registration.editor. """
+        event_1 = self.event_0
+        event_2 = self.env['event.event'].create({
+            'name': 'Second Event',
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=2)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=4)),
+        })
+        multi_slot_event = self.env['event.event'].create({
+            'name': 'Multi Slot Event',
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=5)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=10)),
+            'is_multi_slots': True,
+        })
+        slot = self.env['event.slot'].create({
+            'event_id': multi_slot_event.id,
+            'date': FieldsDate.today() + timedelta(days=6),
+            'start_hour': 9,
+            'end_hour': 12,
+        })
+
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        sale_order = self.env['sale.order'].create({'partner_id': partner.id})
+
+        # Single event, no slots
+        editor = self.env['registration.editor'].create({
+            'sale_order_id': sale_order.id,
+            'event_registration_ids': [
+                (0, 0, {'event_id': event_1.id, 'name': 'Attendee 1'}),
+                (0, 0, {'event_id': event_1.id, 'name': 'Attendee 2'}),
+            ],
+        })
+        self.assertFalse(editor.has_multiple_events)
+        self.assertFalse(editor.has_slots)
+
+        # Multiple events
+        editor.write({
+            'event_registration_ids': [
+                (0, 0, {'event_id': event_2.id, 'name': 'Attendee 3'}),
+            ],
+        })
+        self.assertTrue(editor.has_multiple_events)
+        self.assertFalse(editor.has_slots)
+
+        # Event with slots
+        editor_slot = self.env['registration.editor'].create({
+            'sale_order_id': sale_order.id,
+            'event_registration_ids': [
+                (0, 0, {'event_id': multi_slot_event.id, 'event_slot_id': slot.id, 'name': 'Attendee 4'}),
+            ],
+        })
+        self.assertFalse(editor_slot.has_multiple_events)
+        self.assertTrue(editor_slot.has_slots)
+
+        # Multi-slot event without a slot on the line: is_multi_slots alone is enough
+        editor_no_slot = self.env['registration.editor'].create({
+            'sale_order_id': sale_order.id,
+            'event_registration_ids': [
+                (0, 0, {'event_id': multi_slot_event.id, 'name': 'Attendee 5'}),
+            ],
+        })
+        self.assertTrue(editor_no_slot.has_slots)
+
+        # Mixed: a regular event and a multi-slot event
+        editor_mixed = self.env['registration.editor'].create({
+            'sale_order_id': sale_order.id,
+            'event_registration_ids': [
+                (0, 0, {'event_id': event_1.id, 'name': 'Attendee 6'}),
+                (0, 0, {'event_id': multi_slot_event.id, 'event_slot_id': slot.id, 'name': 'Attendee 7'}),
+            ],
+        })
+        self.assertTrue(editor_mixed.has_multiple_events)
+        self.assertTrue(editor_mixed.has_slots)
