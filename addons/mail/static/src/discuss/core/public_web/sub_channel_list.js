@@ -3,8 +3,7 @@ import { SearchInput } from "@mail/core/common/search_input";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { SubChannelPreview } from "@mail/discuss/core/public_web/sub_channel_preview";
 import { useSearch, useVisible } from "@mail/utils/common/hooks";
-import { useAncestors } from "@mail/core/common/ancestor_plugin";
-import { Component, signal, types, useProps } from "@odoo/owl";
+import { Component, signal, types, useOnChange, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 
@@ -15,7 +14,6 @@ export class SubChannelList extends Component {
     loadMoreRef = signal.ref();
 
     setup() {
-        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.offlineService = useService("offline");
         // bound once so `onClickSubChannel` is a stable (useProps.static) handler
@@ -30,6 +28,11 @@ export class SubChannelList extends Component {
             filter: (term) =>
                 fuzzyLookup(term, this.props.channel.sortedSubChannels, ({ name }) => name),
         });
+        useOnChange(
+            () => [this.props.channel],
+            () => this.search.reset(),
+            { initialRun: false }
+        );
         this.loadMoreState = useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
                 this.props.channel.loadMoreSubChannels({
