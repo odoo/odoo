@@ -2106,7 +2106,7 @@ class HrEmployee(models.Model):
     def _adjust_leaves(self, leave_intervals):
         return leave_intervals
 
-    def _get_employee_unavailable_intervals(self, start, stop):
+    def _get_employee_unavailable_intervals(self, start, stop, leave_domain=None):
         """ returns a dict {employee_id: [{start, stop}]} for the unavailability intervals of each employee which is used for _gantt_unavailability """
 
         unavailability_mapping = defaultdict(list)
@@ -2138,7 +2138,7 @@ class HrEmployee(models.Model):
         leave_intervals_per_calendar = defaultdict()
         # Standard Calendars
         for (calendar, tz), resources in work_resources_per_calendar.items():
-            work_intervals_per_calendar[calendar, tz] = calendar._work_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
+            work_intervals_per_calendar[calendar, tz] = calendar._work_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources}, domain=leave_domain)
 
         # Duration Based Calendars
         for (calendar, tz), resources in attendance_resources_per_calendar.items():
@@ -2156,7 +2156,7 @@ class HrEmployee(models.Model):
 
         # Flexible and Fully Flexible Calendars
         for (calendar, tz), resources in leave_resources_per_calendar.items():
-            leave_intervals_per_calendar[calendar, tz] = calendar._leave_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
+            leave_intervals_per_calendar[calendar, tz] = calendar._leave_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources}, domain=leave_domain)
 
         for employee, calendar_periods in calendar_tz_periods_per_employee.items():
             employee_work_intervals = []

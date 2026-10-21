@@ -927,7 +927,14 @@ class HrLeaveAllocation(models.Model):
             allocation.message_subscribe(partner_ids=tuple(partners_to_subscribe))
             if not self.env.context.get('import_file'):
                 allocation.activity_update()
-            if allocation.state == 'confirm' and (allocation.validation_type == 'no_validation' or (is_officer and not skip_auto_approve)):
+            if allocation.state == "confirm" and (
+                allocation.validation_type == "no_validation"
+                or (
+                    is_officer
+                    and (allocation.can_validate or allocation.can_approve)
+                    and not skip_auto_approve
+                )
+            ):
                 allocation.action_approve()
         return allocations
 
@@ -1183,7 +1190,8 @@ class HrLeaveAllocation(models.Model):
     def _track_template_parameters(self, tracked_fields):
         self.ensure_one()
         res = super()._track_template_parameters(tracked_fields)
-        if 'state' in tracked_fields and self.state == 'validate':
+        is_requested_by_employee = self.employee_id.user_id and self.create_uid == self.employee_id.user_id
+        if 'state' in tracked_fields and self.state == 'validate' and is_requested_by_employee:
             subtype = self.work_entry_type_id.allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
             if self.employee_id:
                 partner = self.employee_id.work_contact_id or self.employee_id.user_id.partner_id

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="hr_work_entry.Many2OneWorkEntryTypeField" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='autoCompleteItem']/div" position="inside">
+            <span t-if="autoCompleteItemScope.record.remaining_leaves_label"
+                class="text-muted ms-auto ps-2 text-nowrap"
+                t-out="autoCompleteItemScope.record.remaining_leaves_label"/>
+        </xpath>
+    </t>
+</templates>
