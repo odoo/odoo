@@ -144,6 +144,10 @@ class StockPicking(models.Model):
         self.ensure_one()
         group_by_company = defaultdict(lambda: ([], []))
         for move, bom in subcontract_details:
+            productions = move._get_subcontract_production()
+            # Reuse completed output when splitting a historical receipt.
+            if move.has_tracking == 'none' and len(productions) > 1 and all(production.state == 'done' for production in productions):
+                continue
             if move.move_orig_ids.production_id:
                 if len(move.move_orig_ids.move_dest_ids) > 1:
                     # Magic spicy sauce for the backorder case:
