@@ -19,8 +19,8 @@ class ProductPricelist(models.Model):
 
     def _domain_item_ids(self):
         return [
-            '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
-            '|', ('product_id', '=', None), ('product_id.active', '=', True),
+            '|', ('product_tmpl_id', '=', False), ('product_tmpl_id.active', '=', True),
+            '|', ('product_id', '=', False), ('product_id.active', '=', True),
         ]
 
     name = fields.Char(string="Pricelist Name", required=True, translate=True)
