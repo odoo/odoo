@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_pos_ui_inherit_pos_account_peppol" model="ir.ui.view">
+        <field name="name">res.partner.form.pos.ui.inherit.pos_account_peppol</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="point_of_sale.view_partner_form_pos_ui"/>
+        <field name="arch" type="xml">
+            <field name="routing_endpoint" position="after">
+                <label for="peppol_verification_state" invisible="not routing_endpoint"/>
+                <div class="d-flex gap-2" invisible="not routing_endpoint">
+                    <field name="peppol_verification_state" readonly="1"/>
+                    <button name="action_pos_check_peppol_endpoint" type="object"
+                        class="btn btn-secondary" string="Verify"/>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>
