@@ -53,12 +53,6 @@ export class TimeOffDashboard extends Component {
         this.state.allocationsNumber = dashboardData["allocations_number"];
     }
 
-    openNewAllocation() {
-        this.newAllocRequest({
-            employeeId: this.props.employeeId,
-        });
-    }
-
     openPendingAllocations() {
         const context = this.getContext();
         this.actionService.doAction({
