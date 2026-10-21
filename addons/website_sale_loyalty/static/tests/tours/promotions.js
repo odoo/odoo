@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
         },
         {
             content: "check loyalty points",
-            trigger: '.oe_website_sale_gift_card strong[name="o_loyalty_points"]:contains("372.03")',
+            trigger: 'strong[name="o_loyalty_points"]:contains("372.03")',
         },
         /* 2. Add some cabinet to get a free one, play with quantity */
         {

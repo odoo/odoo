@@ -93,8 +93,8 @@
                         <div
                             t-if="this.state.notification.message"
                             t-out="this.state.notification.message"
-                            t-attf-class="alert-#{this.state.notification.success ? 'success' : 'danger'}"
-                            class="alert text-start mt-2 mb-0 py-2 w-100"
+                            t-attf-class="alert-{{this.state.notification.success ? 'success' : 'danger'}}"
+                            class="alert text-start mt-2 mb-2 py-2 w-100"
                             role="alert"
                         />
                     </td>

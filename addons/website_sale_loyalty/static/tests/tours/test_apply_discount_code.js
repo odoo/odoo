@@ -18,7 +18,6 @@ registry.category("web_tour.tours").add('website_sale_loyalty.apply_discount_cod
             content: 'claim reward',
             trigger: '.alert:contains("10% on Super Chair") .btn:contains("Claim")',
             run: "click",
-            expectUnloadPage: true,
         },
         {
             content: "check claimed reward",

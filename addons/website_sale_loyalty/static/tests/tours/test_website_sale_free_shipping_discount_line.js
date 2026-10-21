@@ -10,7 +10,6 @@ registry.category("web_tour.tours").add("website_sale_loyalty.update_shipping_af
             content: "use eWallet to check it doesn't impact `free_over` shipping",
             trigger: "button[name='o_loyalty_claim']:contains('Use')",
             run: "click",
-            expectUnloadPage: true,
         },
         {
             content: "Check pay with eWallet is applied",

@@ -2,83 +2,100 @@
 <templates xml:space="preserve">
     <t t-name="website_sale_loyalty.CartRewards">
         <tbody t-if="this.props.rewards.length">
-            <tr t-if="this.notification.message">
-                <td colspan="3">
-                    <div
-                        t-out="this.notification.message"
-                        t-att-class="'alert alert-' + (this.notification.success ? 'success' : 'danger')"
-                        class="mb-2 py-2"
-                        role="alert"
-                    />
+            <tr class="oe_website_sale_gift_card">
+                <td colspan="3" class="text-center text-xl-end border-0 p-0">
+                    <span>
+                        <div
+                            t-if="this.notification.message"
+                            t-out="this.notification.message"
+                            t-att-class="'alert alert-' + (this.notification.success ? 'success' : 'danger')"
+                            class="mb-2 py-2"
+                            role="alert"
+                        />
+
+                        <t t-foreach="this.props.rewards" t-as="coupon" t-key="coupon.coupon_id">
+                            <div
+                                t-if="coupon.is_loyalty"
+                                class="alert alert-primary d-flex justify-content-between align-items-center mb-0 p-2 rounded-bottom-0"
+                                role="alert"
+                            >
+                                <strong class="text-start small" t-out="coupon.point_name"/>
+                                <strong class="small" name="o_loyalty_points" t-out="coupon.formatted_points"/>
+                            </div>
+
+                            <t t-foreach="coupon.rewards" t-as="reward" t-key="reward.id">
+                                <div
+                                    name="o_loyalty_reward"
+                                    t-att-class="coupon.is_loyalty
+                                        ? 'border border-primary-subtle border-top-0 p-2 text-start'
+                                        : 'alert alert-primary p-2 text-start mb-2'"
+                                    t-attf-class="{{reward_last ? 'rounded-bottom mb-2' : ''}}"
+                                >
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <div class="flex-grow-1 text-break">
+                                            <strong class="small" t-out="reward.description"/>
+
+                                            <span
+                                                t-if="reward.show_ewallet_points"
+                                                class="small ms-2"
+                                                t-out="reward.formatted_points"
+                                            />
+
+                                            <div
+                                                t-if="reward.show_points"
+                                                class="small"
+                                                t-out="reward.formatted_points"
+                                            />
+
+                                            <small
+                                                t-if="reward.show_required_points"
+                                                t-out="reward.formatted_required_points"
+                                            />
+
+                                            <div t-if="reward.show_code_details" class="d-md-block small">
+                                                <span t-if="coupon.coupon_code_display">
+                                                    Code: <t t-out="coupon.coupon_code_display"/>
+                                                </span>
+                                                <t t-if="coupon.coupon_expiration_date">
+                                                    <br/>
+                                                    <span>
+                                                        Expired Date: <t t-out="coupon.coupon_expiration_date"/>
+                                                    </span>
+                                                </t>
+                                            </div>
+
+                                            <select
+                                                t-if="reward.multi_product"
+                                                class="o_select w-100 form-select form-select-sm css_attribute_select mt-1"
+                                                t-model="this.selectedProductIds[reward.id]"
+                                            >
+                                                <option
+                                                    t-foreach="reward.products"
+                                                    t-as="product"
+                                                    t-key="product.id"
+                                                    t-att-value="product.id"
+                                                    t-out="product.display_name"
+                                                />
+                                            </select>
+                                        </div>
+
+                                        <div class="d-flex align-items-center">
+                                            <button
+                                                name="o_loyalty_claim"
+                                                type="button"
+                                                class="btn btn-sm btn-primary"
+                                                t-on-click="() => this.claimReward(reward, coupon)"
+                                                t-att-disabled="this.pendingRewardIds[reward.id] || (reward.multi_product and !this.selectedProductIds[reward.id])"
+                                                t-out="reward.button_label"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                    </span>
                 </td>
             </tr>
-            <t t-foreach="this.props.rewards" t-as="coupon" t-key="coupon.coupon_id">
-                <tr t-if="coupon.is_loyalty" class="alert alert-primary">
-                    <td colspan="2" class="border-0 p-2 text-start small">
-                        <strong t-out="coupon.point_name"/>
-                    </td>
-                    <td class="border-0 p-2 text-end small">
-                        <strong t-out="coupon.formatted_points"/>
-                    </td>
-                </tr>
-                <tr t-foreach="coupon.rewards" t-as="reward" t-key="reward.id">
-                    <td class="p-0 border-0" name="o_loyalty_reward" colspan="3">
-                        <div
-                            class="d-flex gap-2 text-start justify-content-between"
-                            t-att-class="coupon.is_loyalty ? 'border border-primary-subtle rounded p-2' : 'alert alert-primary p-2 border'"
-                        >
-                            <div class="flex-grow-1 text-break">
-                                <strong class="small" t-out="reward.description"/>
-                                <span
-                                    t-if="reward.show_ewallet_points"
-                                    class="small ms-2"
-                                    t-out="reward.formatted_points"
-                                />
-                                <div
-                                    t-if="reward.show_points"
-                                    class="small"
-                                    t-out="reward.formatted_points"
-                                />
-                                <small
-                                    t-if="reward.show_required_points"
-                                    t-out="reward.formatted_required_points"
-                                />
-                                <div t-if="reward.show_code_details" class="small">
-                                    <span t-if="coupon.coupon_code_display">
-                                        Code: <t t-out="coupon.coupon_code_display"/>
-                                    </span>
-                                    <span t-if="coupon.coupon_expiration_date">
-                                        <br/>Expired Date: <t t-out="coupon.coupon_expiration_date"/>
-                                    </span>
-                                </div>
-                                <select
-                                    t-if="reward.multi_product"
-                                    class="form-select form-select-sm w-100 mt-1"
-                                    t-model="this.selectedProductIds[reward.id]"
-                                >
-                                    <option
-                                        t-foreach="reward.products"
-                                        t-as="product"
-                                        t-key="product.id"
-                                        t-att-value="product.id"
-                                        t-out="product.display_name"
-                                    />
-                                </select>
-                            </div>
-                            <div class="align-items-center">
-                                <button
-                                    name="o_loyalty_claim"
-                                    type="button"
-                                    class="btn btn-sm btn-primary"
-                                    t-on-click="() => this.claimReward(reward, coupon)"
-                                    t-att-disabled="this.pendingRewardIds[reward.id] || (reward.multi_product and !this.selectedProductIds[reward.id])"
-                                    t-out="reward.button_label"
-                                />
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </t>
         </tbody>
     </t>
 </templates>
