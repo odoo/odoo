@@ -87,7 +87,7 @@ export class PaymentDPOPay extends PaymentInterface {
             return false;
         }
         this.pollingInProgress = true;
-        line.setPaymentStatus("waitingCard");
+        line.payment_status = "waiting_card";
         return await this._waitForPaymentToConfirm();
     }
 
@@ -110,7 +110,7 @@ export class PaymentDPOPay extends PaymentInterface {
 
             if (this.paymentStopped) {
                 await this._cancelPaymentRequest(data);
-                paymentLine.setPaymentStatus("retry");
+                paymentLine.payment_status = "retry";
                 return resolve(false);
             }
 
@@ -271,7 +271,7 @@ export class PaymentDPOPay extends PaymentInterface {
         } catch (error) {
             const line = this._pendingDPOPaymentLine();
             if (line) {
-                line.setPaymentStatus("force_done");
+                line.payment_status = "force_done";
             }
 
             if (error instanceof ConnectionLostError) {
@@ -297,7 +297,7 @@ export class PaymentDPOPay extends PaymentInterface {
     _handleError(response, fallbackMessage, status = "retry") {
         const line = this._pendingDPOPaymentLine();
         if (line) {
-            line.setPaymentStatus(status);
+            line.payment_status = status;
         }
 
         this._removePaymentHandler();

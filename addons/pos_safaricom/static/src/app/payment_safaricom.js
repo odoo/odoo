@@ -33,7 +33,7 @@ export class PaymentSafaricom extends PaymentInterface {
     _safaricom_handle_response(response, paymentLine) {
         if (response.error && response.error !== "Success") {
             this._show_error(response.error);
-            paymentLine.setPaymentStatus("retry");
+            paymentLine.payment_status = "retry";
             return false;
         }
         paymentLine.uiState = paymentLine.uiState || {};
@@ -70,7 +70,7 @@ export class PaymentSafaricom extends PaymentInterface {
             return Promise.resolve(false);
         }
 
-        line.setPaymentStatus("waitingCard");
+        line.payment_status = "waiting_card";
 
         // Ensure we have a valid account reference
         const accountRef = order.name && order.name !== "/" ? order.name : order.uuid;
@@ -157,7 +157,7 @@ export class PaymentSafaricom extends PaymentInterface {
             return Promise.resolve(false);
         }
 
-        line.setPaymentStatus("waitingCard");
+        line.payment_status = "waiting_card";
 
         const qrData = {
             ref: order.session_id.id + "-" + order.sequence_number,
@@ -167,7 +167,7 @@ export class PaymentSafaricom extends PaymentInterface {
 
         if (!qrCode || qrCode.error) {
             this._show_error(qrCode?.error || _t("Failed to generate QR code"));
-            line.setPaymentStatus("retry");
+            line.payment_status = "retry";
             return false;
         }
 
@@ -185,7 +185,7 @@ export class PaymentSafaricom extends PaymentInterface {
             );
 
             if (!transaction) {
-                line.setPaymentStatus("retry");
+                line.payment_status = "retry";
                 return false;
             }
             line.setAmount(transaction.amount);
@@ -193,7 +193,7 @@ export class PaymentSafaricom extends PaymentInterface {
             line.safaricom_transaction_id = transaction.trans_id;
             line.card_type = "M-Pesa";
             line.cardholder_name = transaction.phone;
-            line.setPaymentStatus("done");
+            line.payment_status = "done";
 
             // Mark transaction as used by deleting it from the database
             await this._call_safaricom(transaction.id, "mark_transaction_used");

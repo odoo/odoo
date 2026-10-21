@@ -291,11 +291,8 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
         order.payment_ids?.forEach((payment) => {
-            if (
-                payment.payment_method_id.useBankQrCode &&
-                payment.getPaymentStatus() === "waiting"
-            ) {
-                payment.setPaymentStatus("retry");
+            if (payment.payment_method_id.useBankQrCode && payment.payment_status === "waiting") {
+                payment.payment_status = "retry";
             }
         });
     }
@@ -1994,7 +1991,7 @@ export class PosStore extends WithLazyGetterTrap {
                 (paymentLine) =>
                     paymentLine.payment_provider === provider &&
                     !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "retry"
+                    paymentLine.payment_status !== "retry"
             );
             if (paymentLine) {
                 return paymentLine;
@@ -2503,7 +2500,7 @@ export class PosStore extends WithLazyGetterTrap {
             this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
             return false;
         }
-        payment.setPaymentStatus("waiting");
+        payment.payment_status = "waiting";
         let qrCodeValue;
         try {
             qrCodeValue = await this.data.call("pos.payment.method", "get_qr_code_value", [

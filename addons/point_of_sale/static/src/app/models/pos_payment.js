@@ -100,25 +100,19 @@ export class PosPayment extends Base {
         return this.amount || 0;
     }
 
-    getPaymentStatus() {
-        return this.payment_status;
-    }
-
-    setPaymentStatus(value) {
-        this.payment_status = value;
-    }
-
     isDone() {
-        const status = this.getPaymentStatus();
-        return status ? status === "done" : true;
+        return this.payment_status ? this.payment_status === "done" : true;
     }
 
     isProcessing() {
-        const status = this.getPaymentStatus();
-        return status
-            ? ["waiting", "waitingCancel", "waitingCard", "waitingScan", "waitingCapture"].includes(
-                  status
-              )
+        return this.payment_status
+            ? [
+                  "waiting",
+                  "waiting_cancel",
+                  "waiting_card",
+                  "waiting_scan",
+                  "waiting_capture",
+              ].includes(this.payment_status)
             : false;
     }
 
@@ -127,12 +121,12 @@ export class PosPayment extends Base {
     }
 
     isElectronic() {
-        return Boolean(this.getPaymentStatus());
+        return Boolean(this.payment_status);
     }
 
     // ----- Payment Request -----
     async pay() {
-        this.setPaymentStatus("waiting");
+        this.payment_status = "waiting";
         try {
             const success = await this.payment_interface.sendPaymentRequest(this);
             return this.handlePaymentResponse(success);
@@ -143,14 +137,13 @@ export class PosPayment extends Base {
     }
 
     handlePaymentResponse(isPaymentSuccessful) {
-        const status = isPaymentSuccessful ? "done" : "retry";
-        this.setPaymentStatus(status);
+        this.payment_status = isPaymentSuccessful ? "done" : "retry";
         return isPaymentSuccessful;
     }
 
     // ----- Payment Cancel -----
     async cancelPayment() {
-        this.setPaymentStatus("waitingCancel");
+        this.payment_status = "waiting_cancel";
         try {
             const success = await this.payment_interface.sendPaymentCancel(this);
             return this.handlePaymentCancelResponse(success);
@@ -162,13 +155,13 @@ export class PosPayment extends Base {
 
     handlePaymentCancelResponse(isCancelSuccessful) {
         if (isCancelSuccessful) {
-            this.setPaymentStatus("retry");
+            this.payment_status = "retry";
         } else if (this.useTerminal) {
-            this.setPaymentStatus("waitingCard");
+            this.payment_status = "waiting_card";
         } else if (this.useQr) {
-            this.setPaymentStatus("waitingScan");
+            this.payment_status = "waiting_scan";
         } else {
-            this.setPaymentStatus("waiting");
+            this.payment_status = "waiting";
         }
 
         return isCancelSuccessful;
@@ -176,11 +169,11 @@ export class PosPayment extends Base {
 
     // ----- Payment Force State -----
     forceDone() {
-        this.setPaymentStatus("done");
+        this.payment_status = "done";
     }
 
     forceCancel() {
-        this.setPaymentStatus("retry");
+        this.payment_status = "retry";
     }
 
     /**

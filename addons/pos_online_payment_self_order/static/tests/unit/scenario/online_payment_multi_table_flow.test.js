@@ -49,7 +49,7 @@ test("OnlinePaymentWithMultiTables: each table pays its own order online", async
     expect(secondOrder.isSynced).toBe(true);
     const onlineLine = Utils.getOnlinePaymentLines(secondOrder)[0];
     expect(onlineLine.getAmount()).toBe(4.4);
-    expect(onlineLine.getPaymentStatus()).toBe("waiting");
+    expect(onlineLine.payment_status).toBe("waiting");
     expect(firstOrder.payment_ids).toHaveLength(0);
     expect(firstOrder.state).toBe("draft");
 });

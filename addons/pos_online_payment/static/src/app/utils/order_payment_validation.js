@@ -9,7 +9,7 @@ import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 patch(OrderPaymentValidation.prototype, {
     getRemainingOnlinePaymentLines() {
         return this.paymentLines.filter(
-            (line) => line.payment_method_id.type === "online" && line.getPaymentStatus() !== "done"
+            (line) => line.payment_method_id.type === "online" && line.payment_status !== "done"
         );
     },
     checkRemainingOnlinePaymentLines(unpaidAmount) {
@@ -111,7 +111,7 @@ patch(OrderPaymentValidation.prototype, {
                     }
                     if (
                         (prevOnlinePaymentLine &&
-                            prevOnlinePaymentLine?.getPaymentStatus() !== "done") ||
+                            prevOnlinePaymentLine?.payment_status !== "done") ||
                         !this.checkRemainingOnlinePaymentLines(lastOrderServerOPData.amount_unpaid)
                     ) {
                         this.cancelOnlinePayment(this.order);
@@ -119,7 +119,7 @@ patch(OrderPaymentValidation.prototype, {
                     }
 
                     await this.pos.syncAllOrders({ orders: [this.order] });
-                    onlinePaymentLine.setPaymentStatus("waiting");
+                    onlinePaymentLine.payment_status = "waiting";
                     this.order.selectPaymentline(onlinePaymentLine);
                     const qrCodeUrl = `${this.pos.config._base_url}/pos/pay/${this.order.id}?access_token=${this.order.access_token}`;
                     const onlinePaymentData = {
@@ -138,12 +138,12 @@ patch(OrderPaymentValidation.prototype, {
                     );
                     if (!paymentResult) {
                         this.cancelOnlinePayment(this.order);
-                        onlinePaymentLine.setPaymentStatus(undefined);
+                        onlinePaymentLine.payment_status = undefined;
                         return false;
                     }
                     qrCodePopupCloser();
-                    if (onlinePaymentLine.getPaymentStatus() === "waiting") {
-                        onlinePaymentLine.setPaymentStatus(undefined);
+                    if (onlinePaymentLine.payment_status === "waiting") {
+                        onlinePaymentLine.payment_status = undefined;
                     }
                     prevOnlinePaymentLine = onlinePaymentLine;
                 }
