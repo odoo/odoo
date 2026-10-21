@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import re
 
 from odoo import api, fields, models
 from odoo.addons.l10n_pa.tools.partner_identifiers import PA_ADDITIONAL_IDENTIFIERS_METADATA
@@ -22,6 +23,17 @@ class ResPartner(models.Model):
         size=2,
         help='Check digit from the DGI',
     )
+    l10n_pa_vat_is_cedula = fields.Boolean(compute='_compute_l10n_pa_vat_is_cedula')
+
+    @api.depends('vat', 'country_code')
+    def _compute_l10n_pa_vat_is_cedula(self):
+        for partner in self:
+            # cédula of province 1-13 (AV, PI included), PE, E or N, NT left out as legal NTs exist
+            partner.l10n_pa_vat_is_cedula = bool(
+                partner.country_code == 'PA'
+                and partner.vat
+                and re.fullmatch(r'((1[0-3]|[1-9])(AV|PI)?|PE|E|N)-[0-9]+-[0-9]+', partner.vat.strip(), re.IGNORECASE),
+            )
 
     @api.onchange('l10n_pa_corregimiento')
     def _onchange_l10n_pa_corregimiento(self):
