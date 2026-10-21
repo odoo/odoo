@@ -142,8 +142,14 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         })
         self._assert_website_menus(event, ['Home', 'Practical'], menus_out=['Rooms'])
 
+        # simulate menu edition via the editor
+        home_menu = event.menu_id.child_id.filtered(lambda menu: menu.name == 'Home')
+        event_home_menu = self.env['website.event.menu'].search([('menu_id', '=', home_menu.id)])
+        replacement = '<div class="oe_structure" data-test="1" id="oe_structure_test" data-oe-id="55" test="2">hello</div>'
+        event_home_menu.view_id.save(replacement, xpath='/t[1]/t[1]/div[3]')
+
         # simulate menu removal from frontend: aka unlinking a menu
-        event.menu_id.child_id.filtered(lambda menu: menu.name == 'Home').unlink()
+        home_menu.unlink()
 
         self.assertTrue(event.website_menu)
         self._assert_website_menus(event, ['Practical'], menus_out=['Home', 'Rooms'])
