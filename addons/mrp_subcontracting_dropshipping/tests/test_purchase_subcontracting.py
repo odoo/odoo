@@ -25,7 +25,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
     def setUpClass(cls):
         super().setUpClass()
         cls.comp1.seller_ids = [Command.create({'partner_id': cls.vendor.id})]
-        cls.warehouse.subcontracting_to_resupply = True
+        cls.warehouse.subcontracting_to_resupply = 'on_order'
 
     def test_mrp_subcontracting_dropshipping_1(self):
         """ Mark the subcontracted product with the route dropship and add the
