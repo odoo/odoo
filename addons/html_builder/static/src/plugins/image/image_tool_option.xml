@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageToolOption">
-    <t t-if="!this.state.isGridMode and !this.state.isSocialMediaImg and !this.state.isImageBinaryField">
+    <t t-if="this.props.withSize and !this.state.isGridMode and !this.state.isSocialMediaImg and !this.state.isImageBinaryField">
         <MediaSizeOption level="1"/>
     </t>
     <BuilderRow label.translate="Transform" level="1" preview="false">
@@ -10,7 +10,7 @@
             <BuilderButton t-if="this.state.showCropTool" title.translate="Crop image" action="'cropImage'" icon="'crop'" id="'cropImage'" />
             <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.state.showCropTool and this.isActiveItem('cropImage')" icon="'close_small'" className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'" />
         </div>
-        <ImageTransformOption t-if="!this.state.isImageAnimated and !this.state.isSocialMediaImg and !this.state.isImageBinaryField" />
+        <ImageTransformOption t-if="this.props.withTransform and !this.state.isImageAnimated and !this.state.isSocialMediaImg and !this.state.isImageBinaryField" />
     </BuilderRow>
     <ImageFilterOption level="1"/>
     <ImageFormatOption level="1"/>
