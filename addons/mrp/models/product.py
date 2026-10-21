@@ -2,21 +2,8 @@
 
 import collections
 from datetime import timedelta
-import operator as py_operator
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-
-
-PY_OPERATORS = {
-    '<': py_operator.lt,
-    '>': py_operator.gt,
-    '<=': py_operator.le,
-    '>=': py_operator.ge,
-    '=': py_operator.eq,
-    '!=': py_operator.ne,
-    'in': lambda elem, container: elem in container,
-    'not in': lambda elem, container: elem not in container,
-}
 
 
 class ProductTemplate(models.Model):
@@ -279,6 +266,9 @@ class ProductProduct(models.Model):
         This override is used to get the correct quantities of products
         with 'phantom' as BoM type.
         """
+        # Callers that never value kits (e.g. stock valuation) can skip the kit BoM expansion.
+        if self.env.context.get('skip_kit_qty_available'):
+            return super()._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
         bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom', company_id=self.env.company.id)
         kits = self.filtered(lambda p: bom_kits.get(p))
         regular_products = self - kits
@@ -409,25 +399,6 @@ class ProductProduct(models.Model):
             ('move_id.unbuild_id', '!=', False),
         ])
         return super()._count_returned_sn_products_domain(sn_lot, or_domains)
-
-    def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
-        '''extending the method in stock.product to take into account kits'''
-        op = PY_OPERATORS.get(operator)
-        if not op:
-            return NotImplemented
-        product_ids = super(ProductProduct, self)._search_qty_available_new(operator, value, lot_id, owner_id, package_id)
-        # Callers that never value kits (e.g. stock valuation) can skip the kit BoM expansion.
-        if self.env.context.get('skip_kit_qty_available'):
-            return product_ids
-        kit_boms = self.env['mrp.bom'].search([('type', "=", 'phantom')])
-        kit_products = kit_boms.mapped(lambda kit: kit.product_id or kit.product_tmpl_id.product_variant_ids)
-        product_ids = set(product_ids)
-        for product in kit_products:
-            if op(product.qty_available, value):
-                product_ids.add(product.id)
-            else:
-                product_ids.discard(product.id)
-        return list(product_ids)
 
     def action_archive(self):
         filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')
