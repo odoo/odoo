@@ -6342,7 +6342,7 @@ test("swiping from an event being dragged on touch devices", async () => {
     expect(".o_calendar_header h5").toHaveText("December 2016");
 
     const eventEl = findEvent(2);
-    const swipeWidth = queryRect(".o_actionswiper").width;
+    const swipeWidth = queryRect(".o_calendar_renderer .o_actionswiper").width;
     const { moveTo, drop } = await drag(eventEl, { position: { x: 10 }, relative: true });
     // move a bit before the swiper gets disabled
     await moveTo(eventEl, { position: { x: 5 }, relative: true });

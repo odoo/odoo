@@ -1,6 +1,15 @@
 /** @odoo-module alias=@web/../tests/mobile/core/action_swiper_tests default=false */
 
-import { beforeEach, expect, hover, mockTouch, queryFirst, test } from "@odoo/hoot";
+import {
+    advanceTime,
+    animationFrame,
+    beforeEach,
+    expect,
+    hover,
+    mockTouch,
+    queryFirst,
+    test,
+} from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import {
     contains,
@@ -345,7 +354,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
             clientX: 0,
             clientY: 0,
         },
-        initialPointerMoveDistance: 0
+        initialPointerMoveDistance: 0,
     });
     await dragHelper.moveTo(swiper, {
         position: {
@@ -671,4 +680,57 @@ test("an async action is awaited before being executed", async () => {
     expect.verifySteps(["action started"]);
     prom.resolve();
     await expect.waitForSteps(["action done"]);
+});
+
+test("render a slot of the parent in the swipe areas", async () => {
+    class Parent extends Component {
+        static components = { ActionSwiper };
+        static template = xml`
+                <ActionSwiper
+                    animationType="'forwards'"
+                    onLeftSwipe="{ action: () => {}, slotName: 'next' }"
+                    onRightSwipe="{ action: () => {}, slotName: 'previous' }"
+                >
+                    <div class="current"/>
+                    <t t-set-slot="previous"><div class="previous"/></t>
+                    <t t-set-slot="next"><div class="next"/></t>
+                </ActionSwiper>
+            `;
+    }
+    await mountWithCleanup(Parent);
+    expect(".o_actionswiper_target_container > .current").toHaveCount(1);
+    expect(".o_actionswiper_right_swipe_area .previous").toHaveCount(1);
+    expect(".o_actionswiper_left_swipe_area .next").toHaveCount(1);
+});
+
+test("only render the slots of the swipe areas while swiping", async () => {
+    class Parent extends Component {
+        static components = { ActionSwiper };
+        static template = xml`
+                <ActionSwiper
+                    animationType="'forwards'"
+                    renderSlotsOnSwipe="true"
+                    onLeftSwipe="{ action: () => {}, slotName: 'next' }"
+                >
+                    <div class="current">current</div>
+                    <t t-set-slot="next"><div class="next"/></t>
+                </ActionSwiper>
+            `;
+    }
+    await mountWithCleanup(Parent);
+    expect(".next").toHaveCount(0);
+
+    const { moveTo, drop } = await contains(".o_actionswiper").drag({
+        position: { x: 0 },
+        relative: true,
+        initialPointerMoveDistance: 0,
+    });
+    await moveTo(".o_actionswiper", { position: { x: -30 }, relative: true });
+    await animationFrame();
+    expect(".o_actionswiper_left_swipe_area .next").toHaveCount(1);
+
+    await drop();
+    await advanceTime(1000);
+    await animationFrame();
+    expect(".next").toHaveCount(0);
 });

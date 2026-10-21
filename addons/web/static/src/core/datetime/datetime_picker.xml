@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="web.DateTimePicker.Days">
+    <t t-name="web.DateTimePicker.DaysPanel">
         <div class="d-flex gap-3">
-            <t t-foreach="this.items()" t-as="month" t-key="month.id">
+            <t t-foreach="panelItems" t-as="month" t-key="month.id">
                 <div
                     class="o_date_picker d-grid flex-grow-1 rounded overflow-auto"
                     t-on-pointerleave="() => (this.state.hoveredDate = null)"
@@ -50,6 +50,11 @@
                 </div>
             </t>
         </div>
+    </t>
+
+    <t t-name="web.DateTimePicker.Days">
+        <t t-set="panelTemplate" t-value="'web.DateTimePicker.DaysPanel'" />
+        <t t-call="web.DateTimePicker.Swiper" />
         <div t-if="this.props.type === 'datetime'" class="d-flex gap-3 justify-content-between">
             <div class="d-flex gap-1 align-items-center">
                 <TimePicker
@@ -75,8 +80,13 @@
     </t>
 
     <t t-name="web.DateTimePicker.Grid">
+        <t t-set="panelTemplate" t-value="'web.DateTimePicker.GridPanel'" />
+        <t t-call="web.DateTimePicker.Swiper" />
+    </t>
+
+    <t t-name="web.DateTimePicker.GridPanel">
         <div class="o_date_item_picker d-grid">
-            <t t-foreach="this.items()" t-as="itemInfo" t-key="itemInfo.id">
+            <t t-foreach="panelItems" t-as="itemInfo" t-key="itemInfo.id">
                 <t t-set="arInfo" t-value="this.getActiveRangeInfo(itemInfo)" />
                 <div
                     class="o_date_item_cell o_datetime_button o_center cursor-pointer"
@@ -95,6 +105,25 @@
                 </div>
             </t>
         </div>
+    </t>
+
+    <t t-name="web.DateTimePicker.Swiper">
+        <ActionSwiper t-props="this.swiperProps">
+            <t t-set="panelItems" t-value="this.items()" />
+            <t t-call="{{ panelTemplate }}" />
+            <t t-set-slot="previous">
+                <div inert="">
+                    <t t-set="panelItems" t-value="this.getItems(this.swipeNeighbors().previous)" />
+                    <t t-call="{{ panelTemplate }}" />
+                </div>
+            </t>
+            <t t-set-slot="next">
+                <div inert="">
+                    <t t-set="panelItems" t-value="this.getItems(this.swipeNeighbors().next)" />
+                    <t t-call="{{ panelTemplate }}" />
+                </div>
+            </t>
+        </ActionSwiper>
     </t>
 
     <t t-name="web.DateTimePicker">
