@@ -16,7 +16,7 @@ patch(PosStore.prototype, {
         const paymentline = this.models["pos.payment"].find(
             (line) => line.bancontact_id === bancontact_id
         );
-        if (!paymentline || paymentline.isDone()) {
+        if (!paymentline || paymentline.isSettled) {
             return;
         }
 
@@ -25,32 +25,17 @@ patch(PosStore.prototype, {
             return;
         }
 
-        const currentOrder = this.getOrder();
-
         // --- SUCCEEDED ---
         if (bancontact_status === "SUCCEEDED") {
-            paymentline.setPaymentStatus("done");
+            paymentline.payment_status = "done";
             paymentline.qr_code = null;
-
-            // Other order selected
-            if (order !== currentOrder) {
-                const message = order.toBeValidate()
-                    ? `The order ${order.floatingOrderName} has been fully paid.\nYou just need to validate it.`
-                    : `The order ${order.floatingOrderName} has been partially paid.`;
-                this.notification.add(message, { type: "success" });
-                return;
-            }
 
             // Close QR code if currently displayed
             if (paymentline.uuid === this.qrCode?.paymentline.uuid) {
                 this.closeQrCode();
             }
 
-            // Notify only if another payment line is selected
-            if (paymentline.uuid !== currentOrder.getSelectedPaymentline()?.uuid) {
-                this.notification.add(_t("Payment received"), { type: "success" });
-            }
-            await this.autoValidateOrder({ order });
+            await this.onPaymentAccepted(paymentline);
             return;
         }
 
@@ -59,7 +44,7 @@ patch(PosStore.prototype, {
             paymentline.payment_status !== "retry" &&
             ["AUTHORIZATION_FAILED", "FAILED", "EXPIRED", "CANCELLED"].includes(bancontact_status)
         ) {
-            paymentline.setPaymentStatus("retry");
+            paymentline.payment_status = "retry";
             paymentline.bancontact_id = null;
             paymentline.qr_code = null;
 

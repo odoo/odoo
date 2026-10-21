@@ -1237,9 +1237,7 @@ export class SelfOrder {
 
     getPendingPaymentLine(provider) {
         const currentPaymentLine = this.currentOrder.getSelectedPaymentline();
-        return currentPaymentLine?.payment_method_id?.payment_provider === provider
-            ? currentPaymentLine
-            : null;
+        return currentPaymentLine?.payment_provider === provider ? currentPaymentLine : null;
     }
 
     calculateOrderLineTotals(changes) {

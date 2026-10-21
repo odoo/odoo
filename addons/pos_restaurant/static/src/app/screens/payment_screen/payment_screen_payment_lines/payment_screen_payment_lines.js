@@ -4,28 +4,15 @@ import { _t } from "@web/core/l10n/translation";
 
 patch(PaymentScreenPaymentLines.prototype, {
     async sendPaymentAdjust(line) {
-        const prevAmount = line.getAmount();
         const amountDiff = line.pos_order_id.getTotalWithTax() - line.pos_order_id.getTotalPaid();
-        const newAmount = prevAmount + amountDiff;
-
-        line.setAmount(newAmount);
-        line.setPaymentStatus("waiting");
-
-        const isAdjustSuccessful =
-            await line.payment_method_id.payment_interface?.sendPaymentAdjust(line.uuid);
-
-        if (!isAdjustSuccessful) {
-            line.setAmount(prevAmount);
-        }
-
-        line.setPaymentStatus("done");
+        await line.adjustAmount(amountDiff);
     },
 
     getPaymentActionState(line) {
         const state = super.getPaymentActionState(line);
 
         if (
-            (state.id === "paid" || state.id === "refunded") &&
+            state?.id === "done" &&
             line.canBeAdjusted() &&
             line.pos_order_id.amountPaid < line.pos_order_id.priceIncl
         ) {

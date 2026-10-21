@@ -109,7 +109,7 @@ class TestModels(TestBancontactPay, CommonPosTest):
         payment_method_sticker_3 = self.env["pos.payment.method"].create(
             {
                 "name": "Bancontact - Sticker 3",
-                "payment_method_type": "external_qr",
+                "payment_method_type": "provider",
                 "payment_provider": "bancontact_pay",
                 "bancontact_usage": "sticker",
                 "type": "bank",

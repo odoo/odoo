@@ -1,22 +1,41 @@
 import { patch } from "@web/core/utils/patch";
+import { _t } from "@web/core/l10n/translation";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 
 patch(PaymentScreen.prototype, {
-    get configPaymentMethods() {
-        let configMethods = super.configPaymentMethods;
-        // don't allow to update and edit and pay with online payments
-        if (this.currentOrder.state === "paid") {
-            configMethods = configMethods.filter((pm) => pm.type !== "online");
-        }
-        return configMethods;
-    },
-    updateSelectedPaymentline() {
+    async deletePaymentLine(uuid) {
+        const order = this.currentOrder;
+        const line = this.paymentLines.find((line) => line.uuid === uuid);
         if (
-            this.selectedPaymentLine?.payment_method_id?.type === "online" &&
-            this.currentOrder.state === "paid"
+            line.payment_method_id.type === "online" &&
+            line.isSynced &&
+            line.payment_status !== "done"
         ) {
-            return;
+            // The customer may have paid it while this POS missed the notification
+            const opData = await this.pos.updateOnlinePaymentsDataWithServer(order, false);
+            if (!opData) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Online payment unavailable"),
+                    body: _t(
+                        "Can't check whether this online payment was paid. Check the connection and try again."
+                    ),
+                });
+                return;
+            }
+            if (opData.isPaid) {
+                await this.pos.data.loadServerOrders([["id", "=", order.id]]);
+            }
+            if (this.paymentLines.find((line) => line.uuid === uuid)?.payment_status === "done") {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Online payment already paid"),
+                    body: _t(
+                        "The customer has already paid this online payment, it can't be deleted."
+                    ),
+                });
+                return;
+            }
         }
-        super.updateSelectedPaymentline(...arguments);
+        return super.deletePaymentLine(...arguments);
     },
 });

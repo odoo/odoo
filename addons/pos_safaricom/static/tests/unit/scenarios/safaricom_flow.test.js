@@ -55,7 +55,7 @@ test("MpesaExpressTour: the phone number is asked and sent with the payment requ
     const paymentLine = store.getOrder().payment_ids[0];
     expect(requestData.amount).toBe(10);
     expect(requestData.phone_number).toBe("254712345678");
-    expect(paymentLine.payment_status).toBe("waitingCard");
+    expect(paymentLine.payment_status).toBe("waiting_card");
     expect(paymentLine.uiState.safaricom_checkout_request_id).toBe("CO_TEST_123");
     expect(paymentLine.uiState.safaricom_merchant_request_id).toBe("TEST-MR-123");
 

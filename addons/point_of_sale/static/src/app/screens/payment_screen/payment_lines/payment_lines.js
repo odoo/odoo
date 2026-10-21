@@ -17,7 +17,6 @@ export const paymentScreenPaymentLinesProps = {
     sendPaymentCancel: t.function(),
     sendPaymentRequest: t.function(),
     updateSelectedPaymentline: t.function(),
-    isRefundOrder: t.boolean(),
 };
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
@@ -41,7 +40,7 @@ export class PaymentScreenPaymentLines extends Component {
 
     async selectLine(paymentline) {
         this.props.selectLine(paymentline.uuid);
-        if (this.ui.isSmall) {
+        if (this.ui.isSmall && paymentline.isAmountEditable) {
             this.dialog.add(NumberPopup, {
                 title: _t("New amount"),
                 buttons: enhancedButtons(),
@@ -62,34 +61,67 @@ export class PaymentScreenPaymentLines extends Component {
     }
 
     /**
-     * Get the payment action state for the given payment line.
-     * @returns {PaymentActionState}
+     * Get the controls displayed around the payment info of the given line.
+     * Controls with an `action` are rendered as buttons, the others as indicators.
+     * @returns {{start: Array<PaymentLineControl>, end: Array<PaymentLineControl>}}
+     *
+     * @typedef {Object} PaymentLineControl
+     * @property {string} id                      - Unique identifier for the control.
+     * @property {string} icon                    - Icon displayed in the control.
+     * @property {string} [iconClass]             - Additional classes for the icon.
+     * @property {string} [classes]               - Additional CSS classes to apply to the control.
+     * @property {string} [title]                 - Title and aria-label of the control.
+     * @property {Function} [action]              - Callback executed when the control is clicked.
+     * @property {boolean} [disabled]             - Whether the button is disabled.
+     */
+    getLineControls(line) {
+        const controls = { start: [], end: [] };
+
+        if (line.qr_code) {
+            controls.start.push({
+                id: "qr_code",
+                icon: "qr_code",
+                classes: "paymentline_show_qr_code ms-2 ps-3",
+                title: _t("Show QR Code"),
+                action: () => this.showQrCode(line),
+                disabled: !line.isProcessing,
+            });
+        }
+
+        if (!line.isSelected() && line.isProcessing) {
+            controls.end.push({
+                id: "spinner",
+                icon: "autorenew",
+                iconClass: "oi-spin",
+                classes: "payment-spinner mx-2 px-3",
+            });
+        } else if (line.payment_status !== "done") {
+            controls.end.push({
+                id: "delete",
+                icon: "close_small",
+                iconClass: "text-danger",
+                classes: "delete-button mx-2 px-3",
+                title: _t("Delete"),
+                action: () => this.props.deleteLine(line.uuid),
+            });
+        }
+
+        return controls;
+    }
+
+    /**
+     * Get the actions that can be offered on the given payment line.
+     * @returns {Object<string, PaymentAction>}
      *
      * @typedef {Object} PaymentAction
      * @property {string} id                      - Unique identifier for the action.
      * @property {string} label                   - Text displayed on the action button.
      * @property {string} [title]                 - Title of the button. If not provided, `label` is used.
      * @property {Function} action                - Callback executed when the button is clicked.
-     * @property {string} classes                 - Additional CSS classes to apply to the button.
      * @property {string} severity                - Bootstrap color variant (e.g., "danger", "warning", "success", "info", ...).
-     * @property {boolean} [show]                 - Condition to determine if the action should be displayed (show by default).
-     *
-     * @typedef {Object} PaymentActionState
-     * @property {string} id                      - Unique identifier for the payment state.
-     * @property {string} title                   - Title of the payment status section.
-     * @property {Array<PaymentAction>} actions   - Actions available for the current payment state.
-     * @property {string} [icon]                  - Optional icon representing the payment state.
-     * @property {string} [iconClass]            - Additional classes for the icon.
-     *
-     * @type {PaymentActionState}
      */
-    getPaymentActionState(line) {
-        const status = line.payment_status;
-        const isRefund = this.props.isRefundOrder;
-        const camelToSnakeCase = (id) => id.replace(/([A-Z])/g, "_$1").toLowerCase();
-        const SPINNER_ICON = "autorenew";
-        const SPINNER_ICON_CLASS = "oi-spin";
-        const ACTIONS = {
+    getPaymentActions(line) {
+        return {
             send: {
                 id: "send",
                 label: _t("Send"),
@@ -97,7 +129,6 @@ export class PaymentScreenPaymentLines extends Component {
                 action: () => this.props.sendPaymentRequest(line),
                 severity: "primary",
             },
-
             retry: {
                 id: "retry",
                 label: _t("Retry"),
@@ -105,7 +136,6 @@ export class PaymentScreenPaymentLines extends Component {
                 action: () => this.props.sendPaymentRequest(line),
                 severity: "primary",
             },
-
             refund: {
                 id: "refund",
                 label: _t("Refund"),
@@ -113,92 +143,90 @@ export class PaymentScreenPaymentLines extends Component {
                 action: () => this.props.sendPaymentRequest(line),
                 severity: "primary",
             },
-
             forceDone: {
                 id: "force_done",
                 label: _t("Force done"),
                 action: () => this.props.sendForceDone(line),
                 severity: "warning",
             },
-
             cancel: {
                 id: "cancel",
                 label: _t("Cancel"),
                 title: _t("Send Cancel Request"),
                 action: () => this.props.sendPaymentCancel(line),
                 severity: "danger",
-                show: !isRefund,
             },
-
             forceCancel: {
                 id: "force_cancel",
                 label: _t("Force Cancel"),
                 action: () => this.props.sendForceCancel(line),
                 severity: "danger",
             },
+            checkStatus: {
+                id: "check_status",
+                label: _t("Check status"),
+                title: _t("Ask the payment provider for the status"),
+                action: () => line.payment_interface.checkPaymentStatus(line),
+                severity: "primary",
+            },
         };
-        const state = { id: "unknown", title: "", actions: [] };
+    }
 
-        // --- Pending
-        if (status === "pending") {
-            state.id = "pending";
-            state.title = _t("Payment request pending");
-            state.actions = [ACTIONS.send];
+    /**
+     * Get the payment action state for the given payment line.
+     * @returns {PaymentActionState|null}
+     *
+     * @typedef {Object} PaymentActionState
+     * @property {string} id                      - The payment status of the line.
+     * @property {string} title                   - Title of the payment status section.
+     * @property {Array<PaymentAction>} actions   - Actions available for the current payment state.
+     * @property {string} [icon]                  - Icon shown next to the title, the spinner while processing.
+     */
+    getPaymentActionState(line) {
+        if (line.payment_interface?.cashier_confirms && line.payment_status === "waiting") {
+            return null;
         }
 
-        // --- Retry
-        else if (status === "retry") {
-            state.id = "retry";
-            state.title = _t("Transaction cancelled");
-            state.actions = [ACTIONS.retry];
+        const isRefund = line.isRefund;
+        const a = this.getPaymentActions(line);
+        const waitingCustomerActions = isRefund ? [a.forceDone] : [a.forceDone, a.cancel];
+        const states = {
+            pending: {
+                title: isRefund ? _t("Refund available") : _t("Payment request pending"),
+                actions: [isRefund ? a.refund : a.send],
+            },
+            retry: { title: _t("Transaction failed"), actions: [a.retry] },
+            force_done: { title: _t("Connection error"), actions: [a.forceDone] },
+            waiting_card: {
+                title: isRefund ? _t("Refund in process") : _t("Waiting for card"),
+                actions: waitingCustomerActions,
+            },
+            waiting_scan: {
+                title: isRefund
+                    ? _t("Refund in process")
+                    : _t("Waiting for the customer to scan the QR Code"),
+                actions: waitingCustomerActions,
+            },
+            waiting: { title: _t("Request sent"), actions: [a.forceDone] },
+            waiting_cancel: { title: _t("Request sent"), actions: [a.forceCancel] },
+            waiting_capture: { title: _t("Request sent"), actions: [] },
+            done: {
+                title: isRefund ? _t("Refund Successful") : _t("Payment Successful"),
+                actions: [],
+            },
+        };
+
+        const state = states[line.payment_status];
+        if (!line.usePaymentInterface || !state) {
+            return null;
         }
-
-        // --- Force done
-        else if (status === "force_done") {
-            state.id = "force_done";
-            state.title = _t("Connection error");
-            state.actions = [ACTIONS.forceDone];
+        state.id = line.payment_status;
+        if (line.isProcessing) {
+            state.icon = "autorenew";
         }
-
-        // --- Waiting customer action
-        else if (["waitingCard", "waitingScan"].includes(status)) {
-            const titles = {
-                waitingCard: _t("Waiting for card"),
-                waitingScan: _t("Waiting for the customer to scan the QR Code"),
-            };
-
-            state.id = isRefund ? "waiting_refund" : camelToSnakeCase(status);
-            state.title = isRefund ? _t("Refund in process") : titles[status];
-            state.icon = SPINNER_ICON;
-            state.iconClass = SPINNER_ICON_CLASS;
-            state.actions = [ACTIONS.forceDone, ACTIONS.cancel];
+        if (line.isProcessing && line.uiState.statusCheckNeeded) {
+            state.actions = [a.checkStatus, ...state.actions];
         }
-
-        // --- Request sent
-        else if (["waiting", "waitingCancel", "waitingCapture"].includes(status)) {
-            state.id = camelToSnakeCase(status);
-            state.title = _t("Request sent");
-            state.icon = SPINNER_ICON;
-            state.iconClass = SPINNER_ICON_CLASS;
-            state.actions = [
-                { ...ACTIONS.forceDone, show: status === "waiting" },
-                { ...ACTIONS.forceCancel, show: status === "waitingCancel" },
-            ];
-        }
-
-        // --- Done
-        else if (status === "done") {
-            state.id = isRefund ? "refunded" : "paid";
-            state.title = isRefund ? _t("Refund Successful") : _t("Payment Successful");
-        }
-
-        // --- Refund available
-        else if (!status && isRefund && line.payment_interface) {
-            state.id = "refund_available";
-            state.title = _t("Refund available");
-            state.actions = [ACTIONS.refund];
-        }
-
         return state;
     }
 }

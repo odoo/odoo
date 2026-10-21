@@ -10,14 +10,14 @@ patch(PosStore.prototype, {
             // Therefore, no sensitive information is sent through it, only a
             // notification to invite the local browser to do a safe RPC to
             // the server to check the new state of the order.
-            const order = this.models["pos.order"].find((o) => o.id == id);
-            const orders = await this.data.loadServerOrders([["id", "=", id]]);
-            const updatedOrder = orders[0];
-            if (updatedOrder) {
-                order.state = updatedOrder.state;
+            const [order] = await this.data.loadServerOrders([["id", "=", id]]);
+            if (!order) {
+                return;
             }
-            if (this.getOrder()?.id === id) {
-                this.updateOnlinePaymentsDataWithServer(this.getOrder(), false);
+            for (const line of order.payment_ids) {
+                if (line.payment_method_id.type === "online") {
+                    line.payment_interface?.checkPaymentStatus(line);
+                }
             }
         });
     },
@@ -30,7 +30,7 @@ patch(PosStore.prototype, {
                 order.id,
                 next_online_payment_amount,
             ]);
-            return this.processOnlinePaymentsDataFromServer(order, opData);
+            return await this.processOnlinePaymentsDataFromServer(order, opData);
         } catch (ex) {
             logPosMessage(
                 "Store",
@@ -42,7 +42,7 @@ patch(PosStore.prototype, {
             return null;
         }
     },
-    processOnlinePaymentsDataFromServer(order, opData) {
+    async processOnlinePaymentsDataFromServer(order, opData) {
         if (!opData) {
             return false;
         }
@@ -55,85 +55,22 @@ patch(PosStore.prototype, {
             );
         }
 
-        const isPaid = "paid_order" in opData;
-        const resolvers = order.payment_ids
-            .map((line) => line.onlinePaymentResolver)
-            .filter(Boolean);
-        if (isPaid || (opData.online_payments && opData.online_payments.length > 0)) {
-            const placeholders = order.payment_ids.filter(
-                (p) => !p.isSynced && p.payment_method_id.type === "online"
-            );
-            for (const p of placeholders) {
-                p.delete();
-            }
-        }
-
-        if ("paid_order" in opData) {
-            opData.isPaid = true;
-            resolvers.forEach((resolve) => resolve(true));
-            return opData;
-        } else {
-            opData.isPaid = false;
-        }
-
-        if (opData["deleted"] === true) {
-            const onlinePm = order.payment_ids.filter(
-                (line) => line.payment_method_id.type === "online"
-            );
-
-            for (const line of onlinePm) {
-                line.delete();
-            }
-
+        opData.isPaid = "paid_order" in opData;
+        if (opData.isPaid) {
             return opData;
         }
 
-        let newDoneOnlinePayment = false;
-
-        const opLinesToUpdate = order.payment_ids.filter(
-            (line) =>
-                line.payment_method_id.type === "online" &&
-                ["waiting", "done"].includes(line.getPaymentStatus())
+        // The server writes the online payments on the lines saved by the POS,
+        // a line unknown or not done here was paid without this POS knowing it.
+        const doneLineIds = new Set(
+            order.payment_ids
+                .filter((line) => line.payment_status === "done")
+                .map((line) => line.id)
         );
-        for (const op of opData.online_payments) {
-            const matchingLineIndex = opLinesToUpdate.findIndex(
-                (pl) =>
-                    pl.payment_method_id.id === op.payment_method_id &&
-                    this.currency.isZero(pl.amount - op.amount)
-            );
-            let opLine = null;
-            if (matchingLineIndex > -1) {
-                opLine = opLinesToUpdate[matchingLineIndex];
-
-                opLinesToUpdate.splice(matchingLineIndex, 1);
-            }
-            if (!opLine) {
-                opLine = this.models["pos.payment"].create({
-                    pos_order_id: order,
-                    payment_method_id: op.payment_method_id,
-                    amount: op.amount,
-                });
-                opData["modified_payment_lines"] = true;
-            }
-            opLine.setAmount(op.amount);
-            if (opLine.getPaymentStatus() !== "done") {
-                newDoneOnlinePayment = true;
-            }
-            opLine.setPaymentStatus("done");
+        if (opData.online_payments.some((op) => !doneLineIds.has(op.id))) {
+            await this.data.loadServerOrders([["id", "=", order.id]]);
+            opData.modified_payment_lines = true;
         }
-        for (const missingInServerLine of opLinesToUpdate) {
-            if (missingInServerLine.getPaymentStatus() === "done") {
-                this.paymentlines = order.payment_ids.filter(
-                    (l) => l.uuid !== missingInServerLine.uuid
-                );
-
-                opData["modified_payment_lines"] = true;
-            }
-        }
-        if (newDoneOnlinePayment || opData["modified_payment_lines"]) {
-            resolvers.forEach((resolve) => resolve());
-        }
-
         return opData;
     },
 });

@@ -142,7 +142,7 @@ class ResConfigSettings(models.TransientModel):
             'target': 'current',
             'context': {
                 'default_config_ids': self.env.context.get('config_ids', False) or False,
-                'default_payment_method_type': 'terminal',
+                'default_payment_method_type': 'provider',
                 'default_payment_provider': self.env.context.get('selection', False),
                 'default_journal_id': bank_journal.id if bank_journal else False,
                 'default_name': f"Bank {self.env.context.get('provider_name', False)}",

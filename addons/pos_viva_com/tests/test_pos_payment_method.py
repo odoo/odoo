@@ -20,7 +20,7 @@ class TestVivaComBearerTokenAcl(AccountTestInvoicingCommon):
             'name': 'Viva ACL Test',
             'journal_id': bank_journal.id,
             'type': 'bank',
-            'payment_method_type': 'terminal',
+            'payment_method_type': 'provider',
             'payment_provider': 'viva_com',
             'viva_com_merchant_id': 'm',
             'viva_com_api_key': 'k',

@@ -130,13 +130,31 @@ export class TipScreen extends Component {
             }
         }
 
-        order.state = "draft";
-        await this.pos.setTip(amount);
-        order.state = "paid";
-        await this.adjustableTipLine.adjustAmount(amount);
+        return this.addAdjustedTip(order, serverId, amount);
+    }
 
-        const serializedTipLine = order.getSelectedOrderline().serializeForORM();
-        order.getSelectedOrderline().delete();
+    /**
+     * Adds the tip line, then adjusts the payment: refused or failed, the tip
+     * line is removed and the order stays as it was.
+     */
+    async addAdjustedTip(order, serverId, amount) {
+        order.state = "draft";
+        const tipLine = await this.pos.setTip(amount, "fixed", false, order);
+        let isAdjusted = false;
+        try {
+            isAdjusted = await this.adjustableTipLine.adjustAmount(amount);
+        } finally {
+            if (!isAdjusted) {
+                await this.pos.setTip(false, "fixed", false, order);
+            }
+            order.state = "paid";
+        }
+        if (!isAdjusted) {
+            return;
+        }
+
+        const serializedTipLine = tipLine.serializeForORM();
+        tipLine.delete();
         delete serializedTipLine["record_dependencies"];
         delete serializedTipLine["relations_uuid_mapping"];
         const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
@@ -147,6 +165,7 @@ export class TipScreen extends Component {
 
         this.goNextScreen();
     }
+
     goNextScreen() {
         this.pos.navigate("FeedbackScreen", {
             orderUuid: this.pos.getOrder().uuid,

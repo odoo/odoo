@@ -25,8 +25,8 @@ class PosPaymentMethod(models.Model):
     mp_id_point_smart_complet = fields.Char()
     mp_webhook_endpoint = fields.Char(string="Mercado Pago Webhook Endpoint", compute='_compute_mp_webhook_endpoint', readonly=True)
 
-    def _get_terminal_provider_selection(self):
-        return super()._get_terminal_provider_selection() + [('mercado_pago', 'Mercado Pago')]
+    def _get_provider_selection(self):
+        return super()._get_provider_selection() + [('mercado_pago', 'Mercado Pago')]
 
     def _allowed_actions_in_self_order(self):
         return super()._allowed_actions_in_self_order() + ['mp_order_create', 'mp_order_get']

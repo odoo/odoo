@@ -19,7 +19,6 @@ export class PaymentPage extends Component {
             paymentCancelled: false,
             qrCode: null,
             fadeOut: false,
-            paymentMethodType: null,
         });
 
         onMounted(() => {
@@ -38,7 +37,7 @@ export class PaymentPage extends Component {
     }
 
     async back() {
-        if (this.state.paymentMethodType === "cash_machine" && !this.selfOrder.paymentError) {
+        if (this.getPanelShown() === "cash_machine" && !this.selfOrder.paymentError) {
             const paymentLine = this.selfOrder.getPendingPaymentLine(
                 this.selectedPaymentMethod.payment_provider
             );
@@ -51,15 +50,24 @@ export class PaymentPage extends Component {
                     return;
                 }
                 this.state.paymentCancelled = true;
-                await this.selectedPaymentMethod.payment_interface.sendPaymentCancel(paymentLine);
+                await paymentLine.cancelPayment();
             }
         }
         this.selfOrder.currentOrder.uiState.lineChanges = {};
         this.router.back();
     }
 
-    get showQrCode() {
-        return this.state.paymentMethodType === "external_qr" && this.state.qrCode;
+    getPanelShown() {
+        if (this.state.qrCode) {
+            return "qr_code";
+        }
+        if (this.selectedPaymentMethod?.useProvider) {
+            return "terminal";
+        }
+        if (this.selectedPaymentMethod?.useCashMachine) {
+            return "cash_machine";
+        }
+        return false;
     }
 
     selectMethod(methodId) {
@@ -73,7 +81,6 @@ export class PaymentPage extends Component {
         }
         this.state.selection = false;
         this.state.paymentMethodId = methodId;
-        this.state.paymentMethodType = this.selectedPaymentMethod.payment_method_type;
         this.startPayment();
     }
 
@@ -107,7 +114,7 @@ export class PaymentPage extends Component {
                 try {
                     const paymentSuccessful = await newPaymentLine.pay();
                     if (!paymentSuccessful) {
-                        if (newPaymentLine.useQr && newPaymentLine.qr_code) {
+                        if (newPaymentLine.qr_code) {
                             this.state.fadeOut = true;
                             setTimeout(() => {
                                 this.state.qrCode = newPaymentLine.qr_code;

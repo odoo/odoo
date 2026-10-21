@@ -41,27 +41,37 @@ class PaymentTransaction(models.Model):
                 if not tx.payment_id:
                     raise ValidationError(_('The POS online payment (tx.id=%d) could not be saved correctly', tx.id))
 
-                payment_method = pos_order.online_payment_method_id
+                pos_payment = pos_order.payment_ids.filtered(
+                    lambda p: p.payment_method_id.type == 'online' and not p.online_account_payment_id and p.payment_status == 'waiting'
+                )[:1]
+                payment_method = pos_payment.payment_method_id or pos_order.online_payment_method_id
                 if not payment_method:
                     pos_config = pos_order.config_id
                     payment_method = self.env['pos.payment.method'].sudo()._get_or_create_online_payment_method(pos_config.company_id.id, pos_config.id)
                     if not payment_method:
                         raise ValidationError(_('The POS online payment (tx.id=%d) could not be saved correctly because the online payment method could not be found', tx.id))
 
-                pos_order.add_payment({
+                payment_vals = {
                     'amount': tx.amount,
+                    'amount_currency': tx.amount,
                     'payment_date': tx.last_state_change,
-                    'payment_method_id': payment_method.id,
                     'online_account_payment_id': tx.payment_id.id,
-                    'pos_order_id': pos_order.id,
-                })
+                    'payment_status': 'done',
+                }
+                if pos_payment:
+                    pos_payment.with_context(pos_online_payment_from_tx=True).write(payment_vals)
+                    pos_order.amount_paid = pos_order._compute_amount_paid()
+                else:
+                    pos_order.with_context(pos_online_payment_from_tx=True).add_payment({
+                        **payment_vals,
+                        'payment_method_id': payment_method.id,
+                        'pos_order_id': pos_order.id,
+                    })
                 tx.payment_id.update({
                     'pos_payment_method_id': payment_method.id,
                     'pos_order_id': pos_order.id,
                     'pos_session_id': pos_order.session_id.id,
                 })
-                if pos_order.state == 'draft' and pos_order._is_pos_order_paid():
-                    pos_order._process_saved_order(False)
                 # The bus communication is only protected by the name of the channel.
                 # Therefore, no sensitive information is sent through it, only a
                 # notification to invite the local browser to do a safe RPC to

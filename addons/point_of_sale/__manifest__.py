@@ -178,6 +178,9 @@
         # Payment terminal assets, also loaded by pos_self_order
         'point_of_sale.payment_terminals': [
             'point_of_sale/static/src/app/utils/payment/payment_interface.js',
+            'point_of_sale/static/src/app/utils/payment/payment_interface_v2.js',
+            'point_of_sale/static/src/app/utils/payment/payment_poller.js',
+            'point_of_sale/static/src/app/utils/payment/payment_request.js',
         ],
 
         # Main PoS assets, they are loaded in the PoS UI

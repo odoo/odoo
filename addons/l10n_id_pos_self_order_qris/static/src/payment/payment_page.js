@@ -15,13 +15,6 @@ patch(PaymentPage.prototype, {
         onWillUnmount(() => this._stopQrPayment());
     },
 
-    get showQrCode() {
-        if (isKioskQris(this.selectedPaymentMethod)) {
-            return !!this.state.qrCode;
-        }
-        return super.showQrCode;
-    },
-
     async startPayment() {
         const paymentMethod = this.selectedPaymentMethod;
         if (!isKioskQris(paymentMethod)) {

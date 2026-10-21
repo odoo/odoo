@@ -8,6 +8,7 @@ patch(PosPayment.prototype, {
             ...(this.uiState ?? {}),
             adyenRefundTransactionId: null,
             adyenRefundTransactionTimestamp: null,
+            adyenTerminalServiceId: null,
         };
     },
 
@@ -19,9 +20,5 @@ patch(PosPayment.prototype, {
                 .toISO();
             this.uiState.adyenRefundTransactionId = refundedPaymentLine.transaction_id;
         }
-    },
-
-    setTerminalServiceId(id) {
-        this.terminalServiceId = id;
     },
 });

@@ -58,8 +58,8 @@ class PosPaymentMethod(models.Model):
                 f"&token={record.viva_com_webhook_verification_key}"
             )
 
-    def _get_terminal_provider_selection(self):
-        return super()._get_terminal_provider_selection() + [('viva_com', 'Viva.com')]
+    def _get_provider_selection(self):
+        return super()._get_provider_selection() + [('viva_com', 'Viva.com')]
 
     @api.model
     def _allowed_actions_in_self_order(self):

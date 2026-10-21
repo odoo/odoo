@@ -57,16 +57,16 @@ export class PosPayment extends Base {
         return this.payment_method_id.payment_provider;
     }
 
-    get useTerminal() {
-        return this.payment_method_id.useTerminal;
+    get useProvider() {
+        return this.payment_method_id.useProvider;
     }
 
-    get useQr() {
-        return this.payment_method_id.useQr;
+    get useBankTransfer() {
+        return this.payment_method_id.useBankTransfer;
     }
 
-    get useBankQrCode() {
-        return this.payment_method_id.useBankQrCode;
+    get usePaymentInterface() {
+        return this.payment_method_id.usePaymentInterface;
     }
 
     get displayName() {
@@ -95,83 +95,44 @@ export class PosPayment extends Base {
         return this.amount || 0;
     }
 
-    getPaymentStatus() {
-        return this.payment_status;
+    get isSettled() {
+        return !this.usePaymentInterface || this.payment_status === "done";
     }
 
-    setPaymentStatus(value) {
-        this.payment_status = value;
+    get isProcessing() {
+        return [
+            "waiting",
+            "waiting_cancel",
+            "waiting_card",
+            "waiting_scan",
+            "waiting_capture",
+            "force_done",
+        ].includes(this.payment_status);
     }
 
-    isDone() {
-        const status = this.getPaymentStatus();
-        return status ? status === "done" : true;
+    get isAmountEditable() {
+        return !this.usePaymentInterface || ["pending", "retry"].includes(this.payment_status);
     }
 
-    isProcessing() {
-        const status = this.getPaymentStatus();
-        return status
-            ? ["waiting", "waitingCancel", "waitingCard", "waitingScan", "waitingCapture"].includes(
-                  status
-              )
-            : false;
+    get isRefund() {
+        return this.amount < 0;
     }
 
-    isElectronic() {
-        return Boolean(this.getPaymentStatus());
-    }
-
-    // ----- Payment Request -----
+    // ----- Payment Flows, run by the payment interface -----
     async pay() {
-        this.setPaymentStatus("waiting");
-        try {
-            const success = await this.payment_interface.sendPaymentRequest(this);
-            return this.handlePaymentResponse(success);
-        } catch (error) {
-            this.handlePaymentResponse(false);
-            throw error;
-        }
+        return this.payment_interface.pay(this);
     }
 
-    handlePaymentResponse(isPaymentSuccessful) {
-        const status = isPaymentSuccessful ? "done" : "retry";
-        this.setPaymentStatus(status);
-        return isPaymentSuccessful;
-    }
-
-    // ----- Payment Cancel -----
     async cancelPayment() {
-        this.setPaymentStatus("waitingCancel");
-        try {
-            const success = await this.payment_interface.sendPaymentCancel(this);
-            return this.handlePaymentCancelResponse(success);
-        } catch (error) {
-            this.handlePaymentCancelResponse(false);
-            throw error;
-        }
+        return this.payment_interface.cancelPayment(this);
     }
 
-    handlePaymentCancelResponse(isCancelSuccessful) {
-        if (isCancelSuccessful) {
-            this.setPaymentStatus("retry");
-        } else if (this.useTerminal) {
-            this.setPaymentStatus("waitingCard");
-        } else if (this.useQr) {
-            this.setPaymentStatus("waitingScan");
-        } else {
-            this.setPaymentStatus("waiting");
-        }
-
-        return isCancelSuccessful;
-    }
-
-    // ----- Payment Force State -----
     forceDone() {
-        this.setPaymentStatus("done");
+        return this.payment_interface.forceDone(this);
     }
 
     forceCancel() {
-        this.setPaymentStatus("retry");
+        return this.payment_interface.forceCancel(this);
     }
 
     /**
@@ -182,16 +143,20 @@ export class PosPayment extends Base {
 
     canBeAdjusted() {
         if (this.payment_interface) {
-            return this.payment_interface.canBeAdjusted(this.uuid);
+            return this.payment_interface.isLineAdjustable(this);
         }
-        return this.payment_method_id.type !== "cash" && !this.useBankQrCode;
+        return this.payment_method_id.type !== "cash";
     }
 
+    /**
+     * @returns {Promise<boolean>} true when the amount was adjusted. Without
+     * a payment interface, nothing to adjust: the amount stays as it is.
+     */
     async adjustAmount(amount) {
-        if (this.payment_interface) {
-            this.amount += amount;
-            await this.payment_interface.sendPaymentAdjust(this.uuid);
+        if (!this.payment_interface) {
+            return true;
         }
+        return this.payment_interface.adjustAmount(this, amount);
     }
 }
 

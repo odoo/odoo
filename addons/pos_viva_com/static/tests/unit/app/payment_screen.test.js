@@ -12,10 +12,10 @@ test("viva app payment blocked by a payment in progress on another order", async
     const store = await setupPosEnv();
     const viva = store.models["pos.payment.method"].get(2);
     viva.payment_provider = "viva_com";
-    viva.payment_method_type = "terminal";
+    viva.payment_method_type = "provider";
 
     const otherOrder = await getFilledOrder(store);
-    createPaymentLine(store, otherOrder, viva, { payment_status: "waitingCard" });
+    createPaymentLine(store, otherOrder, viva, { payment_status: "waiting_card" });
     const order = await getFilledOrder(store);
     const comp = await mountWithCleanup(PaymentScreen, {
         props: { orderUuid: order.uuid },

@@ -13,7 +13,7 @@ export class PaymentBancontact extends PaymentInterface {
         if (
             !line.bancontact_id ||
             !line.qr_code ||
-            !["waiting", "waitingScan", "waitingCancel"].includes(line.payment_status)
+            !["waiting", "waiting_scan", "waiting_cancel"].includes(line.payment_status)
         ) {
             const { bancontact_id, qr_code } = await this.callPaymentMethod(
                 "create_bancontact_payment",
@@ -41,6 +41,24 @@ export class PaymentBancontact extends PaymentInterface {
             this.pos.displayQrCode(line);
         }
         return true;
+    }
+
+    handlePaymentResponse(line, response) {
+        line.payment_status = response ? "waiting_scan" : "retry";
+        // Force the payment to fail to avoid auto-validating the order.
+        // The payment success/failure will be handled by the Bancontact webhook - bancontact_pay_webhook
+        return false;
+    }
+
+    handleForceDone(line) {
+        super.handleForceDone(...arguments);
+        line.qr_code = false;
+    }
+
+    handleForceCancel(line) {
+        super.handleForceCancel(...arguments);
+        line.bancontact_id = false;
+        line.qr_code = false;
     }
 
     async sendPaymentCancel(line) {

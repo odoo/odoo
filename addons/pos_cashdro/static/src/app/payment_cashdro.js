@@ -32,7 +32,7 @@ export class PaymentCashdro extends PaymentInterface {
         );
 
         return cashdroPaymentLines.find((line) =>
-            ["waiting", "waitingCancel"].includes(line.payment_status)
+            ["waiting", "waiting_cancel"].includes(line.payment_status)
         );
     }
 
@@ -51,7 +51,7 @@ export class PaymentCashdro extends PaymentInterface {
 
         if (this.operationId) {
             const isPaymentSuccessful = await this.waitForPaymentResponse();
-            this.paymentLine.handlePaymentResponse(isPaymentSuccessful);
+            this.handlePaymentResponse(this.paymentLine, isPaymentSuccessful);
         }
     }
 

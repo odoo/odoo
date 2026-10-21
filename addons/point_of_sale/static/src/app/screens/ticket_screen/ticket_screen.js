@@ -683,9 +683,7 @@ export class TicketScreen extends Component {
             (this.ui.isSmall && order != this.getSelectedOrder()) ||
             this.isDefaultOrderEmpty(order) ||
             order.finalized ||
-            order.payment_ids.some(
-                (payment) => payment.isElectronic() && payment.getPaymentStatus() === "done"
-            )
+            order.payment_ids.some((payment) => payment.payment_status === "done")
         );
     }
     isHighlighted(order) {
@@ -693,7 +691,7 @@ export class TicketScreen extends Component {
         return selectedOrder ? order.id && order.id == selectedOrder.id : false;
     }
     showCardholderName() {
-        return this.pos.models["pos.payment.method"].some((method) => method.useTerminal);
+        return this.pos.models["pos.payment.method"].some((method) => method.useProvider);
     }
     getSearchBarConfig() {
         return {

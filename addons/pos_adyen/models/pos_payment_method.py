@@ -18,8 +18,8 @@ UNPREDICTABLE_ADYEN_DATA = object() # sentinel
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
-    def _get_terminal_provider_selection(self):
-        return super()._get_terminal_provider_selection() + [('adyen', 'Adyen')]
+    def _get_provider_selection(self):
+        return super()._get_provider_selection() + [('adyen', 'Adyen')]
 
     # Adyen
     adyen_api_key = fields.Char(string="Adyen API key", help='Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description', copy=False, groups='base.group_erp_manager')
@@ -181,6 +181,15 @@ class PosPaymentMethod(models.Model):
             metadata = 'metadata.pos_hmac=' + self._get_hmac(msg_header['SaleID'], msg_header['ServiceID'], msg_header['POIID'], data['SaleToPOIRequest'][request_name]['SaleData']['SaleTransactionID']['TransactionID'])
 
             data['SaleToPOIRequest'][request_name]['SaleData']['SaleToAcquirerData'] = acquirer_data + '&' + metadata if acquirer_data else metadata
+
+            try:
+                return self._proxy_adyen_request_direct(data, operation)
+            except requests.exceptions.ReadTimeout:
+                # Sent but not answered: Adyen may have received it and the
+                # terminal may take the card, so the POS waits for the result
+                # instead of letting the cashier send it again.
+                _logger.warning('Adyen did not answer the %s in time', request_name)
+                return {'error': {'timeout': True}}
 
         return self._proxy_adyen_request_direct(data, operation)
 
