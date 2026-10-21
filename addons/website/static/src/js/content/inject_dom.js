@@ -3,7 +3,7 @@ import {
     setUtmsHtmlDataset,
     getClosestLiEls,
     unhideConditionalElements,
-} from "@website/utils/misc";
+} from "@website/utils/visibility";
 
 document.addEventListener("DOMContentLoaded", () => {
     // Transfer cookie/session data as HTML element's attributes so that CSS
