@@ -2107,6 +2107,32 @@ class TestPointOfSaleFlow(CommonPosTest):
         data = session.load_data([])
         self.assertTrue(set(ptavs.ids) <= {v['id'] for v in data['product.template.attribute.value']})
 
+    def test_load_product_from_pos_skips_archived_attribute_values(self):
+        """A product loaded on demand (search, barcode) must not bring the
+        archived values of its attribute lines, as the initial load does not."""
+        self.pos_config_usd.open_ui()
+        attribute = self.env['product.attribute'].create({
+            'name': 'Grape',
+            'create_variant': 'no_variant',
+            'value_ids': [Command.create({'name': 'Chardonnay'}), Command.create({'name': 'Merlot'})],
+        })
+        template = self.env['product.template'].create({
+            'name': 'Cuvee Wine',
+            'available_in_pos': True,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attribute.id,
+                'value_ids': [Command.set(attribute.value_ids.ids)],
+            })],
+        })
+        chardonnay, merlot = template.attribute_line_ids.product_template_value_ids
+        # Kept archived instead of deleted when the value is still referenced (e.g. on an order)
+        chardonnay.ptav_active = False
+
+        data = self.env['product.template'].load_product_from_pos(
+            self.pos_config_usd.id, [('id', '=', template.id)],
+        )
+        self.assertEqual([v['id'] for v in data['product.template.attribute.value']], [merlot.id])
+
     def test_sequence_dynamic_prefix_suffix(self):
         """Test that sequence_number is correctly extracted when sequence has dynamic prefix/suffix."""
         self.pos_config_usd.open_ui()
