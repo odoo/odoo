@@ -203,8 +203,32 @@ class ProductProduct(models.Model):
         if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
-            domain_move_in_done = list(domain_move_in)
-            domain_move_out_done = list(domain_move_out)
+            # Build the "undo" domains (moves done after `to_date`, to subtract back out of the
+            # current quantity) against each move's own `move_line_ids.location_id`/
+            # `move_line_ids.location_dest_id` instead of its header location_id/location_dest_id
+            # — the same basis `is_in`/`is_out` use — so this historical reconstruction can't
+            # silently disagree with the AVCO/FIFO valuation about which moves are real stock
+            # entries/exits. `skip_in_progress` keeps the simpler "done"-only domain shape, which
+            # is all that's needed since both domains are further restricted to done moves below.
+            _, domain_move_in_done_loc, domain_move_out_done_loc = self.with_context(
+                skip_in_progress=True, move_scoped=True,
+            )._get_domain_locations()
+            domain_move_in_done = domain_move_in_done_loc if search_all else [('product_id', 'in', self.ids)] + domain_move_in_done_loc
+            domain_move_out_done = domain_move_out_done_loc if search_all else [('product_id', 'in', self.ids)] + domain_move_out_done_loc
+            if lot_id is not None:
+                domain_move_in_done += [('move_line_ids.lot_id', '=', lot_id)]
+                domain_move_out_done += [('move_line_ids.lot_id', '=', lot_id)]
+            if owner_id is not None:
+                domain_move_in_done += [('restrict_partner_id', '=', owner_id)]
+                domain_move_out_done += [('restrict_partner_id', '=', owner_id)]
+            if 'owners' in self.env.context:
+                owners = self.env.context['owners']
+                if owners:
+                    domain_move_in_done += [('move_line_ids.owner_id', 'in', owners)]
+                    domain_move_out_done += [('move_line_ids.owner_id', 'in', owners)]
+                else:
+                    domain_move_in_done += [('move_line_ids.owner_id', '=', False)]
+                    domain_move_out_done += [('move_line_ids.owner_id', '=', False)]
         if from_date:
             date_date_expected_domain_from = [('date', '>=', from_date)]
             domain_move_in += date_date_expected_domain_from
@@ -347,6 +371,13 @@ class ProductProduct(models.Model):
         Parses the context and returns a list of location_ids based on it.
         It will return all stock locations when no parameters are given
         Possible parameters are shop, warehouse, location, compute_child
+
+        The `move_scoped` context key, when set, builds the move-side domains against each
+        move's own `move_line_ids.location_id`/`move_line_ids.location_dest_id` instead of its
+        header `location_id`/`location_dest_id`. A move's header location can be a coarser
+        location than the one its move line actually operated on (e.g. a transit/putaway hop
+        through a more specific child location), which would otherwise disagree with `is_in`/
+        `is_out` (computed from the move line) about whether that move is a real stock entry/exit.
         '''
         Location = self.env['stock.location']
         Warehouse = self.env['stock.warehouse']
@@ -401,14 +432,20 @@ class ProductProduct(models.Model):
         if not location_ids:
             return (Domain.FALSE,) * 3
         locations = self.env['stock.location'].browse(location_ids)
+        # See `_get_domain_locations`'s docstring for the `move_scoped` context key.
+        # `location_final_id` is move-only (not a move.line field) and is only ever consulted
+        # for not-yet-done moves, so it's left untouched here regardless of `move_scoped`.
+        move_scoped = self.env.context.get('move_scoped')
+        loc_field = 'move_line_ids.location_id' if move_scoped else 'location_id'
+        dest_field = 'move_line_ids.location_dest_id' if move_scoped else 'location_dest_id'
         # TDE FIXME: should move the support of child_of + bypass_search_access directly in expression
         # this optimizes [('location_id', 'child_of', locations.ids)]
         # by avoiding the ORM to search for children locations and injecting a
         # lot of location ids into the main query
         if self.env.context.get('strict'):
-            loc_domain = Domain('location_id', 'in', locations.ids)
-            dest_loc_domain = Domain('location_dest_id', 'in', locations.ids)
-            dest_loc_domain_out = Domain('location_dest_id', 'not in', locations.ids)
+            loc_domain = Domain(loc_field, 'in', locations.ids)
+            dest_loc_domain = Domain(dest_field, 'in', locations.ids)
+            dest_loc_domain_out = Domain(dest_field, 'not in', locations.ids)
         elif locations:
             descendants_query = Query(
                 locations.env,
@@ -434,14 +471,14 @@ class ProductProduct(models.Model):
                     tuple(locations.ids),
                 ),
             )
-            loc_domain = Domain('location_id', 'in', descendants_query)
+            loc_domain = Domain(loc_field, 'in', descendants_query)
             # The condition should be split for done and not-done moves as the final_dest_id only make sense
             # for the part of the move chain that is not done yet.
-            dest_loc_domain_done = Domain('location_dest_id', 'in', descendants_query)
+            dest_loc_domain_done = Domain(dest_field, 'in', descendants_query)
             dest_loc_domain_in_progress = Domain([
                 '|',
                     '&', ('location_final_id', '!=', False), ('location_final_id', 'in', descendants_query),
-                    '&', ('location_final_id', '=', False), ('location_dest_id', 'in', descendants_query),
+                    '&', ('location_final_id', '=', False), (dest_field, 'in', descendants_query),
             ])
             dest_loc_domain = Domain([
                 '|',
