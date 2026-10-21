@@ -95,7 +95,9 @@
                                 <td class="ps-5">
                                     <t t-set="assignees" t-value="task.sudo().user_ids"/>
                                     <div t-if="assignees" class="flex-nowrap">
-                                        <img class="o_avatar rounded" t-attf-src="#{image_data_uri(assignees[:1].avatar_128)}" alt="User"/>
+                                        <t t-set="assignee" t-value="assignees[:1].partner_id"/>
+                                        <t t-set="avatar_128_access_token" t-value="assignee._get_avatar_128_access_token()"/>
+                                        <img class="o_avatar rounded" t-attf-src="/web/image/#{assignee._name}/#{assignee.id}/avatar_128?access_token=#{avatar_128_access_token}&amp;unique=#{assignee.avatar_128.checksum}" alt="User"/>
                                         <span class="align-middle" t-att-title="'\n'.join(assignees.mapped('name'))">
                                             <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill bg-light"> +<span t-out="len(assignees) - 1"/></span>
                                         </span>
