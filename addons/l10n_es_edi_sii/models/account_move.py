@@ -50,6 +50,8 @@ class AccountMove(models.Model):
         string="SII Error",
         compute='_compute_l10n_es_edi_sii_data',
     )
+    first_invoice = fields.Char('First Invoice')
+    last_invoice = fields.Char('Last Invoice')
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -311,7 +313,7 @@ class AccountMove(models.Model):
             }
 
             com_partner = move.commercial_partner_id
-            is_simplified = move.l10n_es_invoice_type in ('F2', 'R5')
+            is_simplified = move.l10n_es_invoice_type in ('F2', 'F4', 'R5')
 
             if move.is_sale_document():
                 invoice_node = info['FacturaExpedida'] = {}
@@ -339,7 +341,13 @@ class AccountMove(models.Model):
                     nif = move.company_id.vat
 
                 info['IDFactura']['IDEmisorFactura'] = {'NIF': nif}
-                info['IDFactura']['NumSerieFacturaEmisor'] = move.name[:60]
+                info['IDFactura']['IDEmisorFactura'] = {'NIF': nif}
+
+                if move.l10n_es_invoice_type == 'F4' and move.first_invoice and move.last_invoice:
+                    info['IDFactura']['NumSerieFacturaEmisor'] = move.first_invoice[:60]
+                    info['IDFactura']['NumSerieFacturaEmisorResumenFin'] = move.last_invoice[:60]
+                else:
+                    info['IDFactura']['NumSerieFacturaEmisor'] = move.name[:60]
 
                 if not is_simplified:
                     invoice_node['Contraparte'] = {
