@@ -765,7 +765,7 @@ export class Record extends DataPoint {
         } else if (fieldType === "many2one") {
             return value ? value.id : false;
         } else if (fieldType === "many2one_reference") {
-            return value ? value.resId : 0;
+            return value ? value.resId : false;
         } else if (fieldType === "reference") {
             return value && value.resModel && value.resId
                 ? `${value.resModel},${value.resId}`

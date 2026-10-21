@@ -5,7 +5,6 @@ from operator import attrgetter
 from odoo.tools import OrderedSet, unique
 
 from .fields import Field
-from .fields_numeric import Integer
 from .fields_selection import Selection
 from .models import BaseModel
 
@@ -55,7 +54,7 @@ class Reference(Selection):
         return value.display_name if value else False
 
 
-class Many2oneReference(Integer):
+class Many2oneReference(Field[int]):
     """ Pseudo-relational field (no FK in database).
 
     The field value is stored as an :class:`integer <int>` id in database.
@@ -67,9 +66,9 @@ class Many2oneReference(Integer):
     :param str model_field: name of the :class:`Char` where the model name is stored.
     """
     type = 'many2one_reference'
+    _column_type = ('int4', 'int4')
 
     model_field = None
-    aggregator = None
 
     _related_model_field = property(attrgetter('model_field'))
 
@@ -80,11 +79,20 @@ class Many2oneReference(Integer):
         if self.model_field not in model._fields:
             raise Exception(f"Field {self} with unknown model_field {self.model_field!r}")
 
+    def convert_to_column(self, value, record, values=None, validate=True):
+        return int(value) if value else None
+
     def convert_to_cache(self, value, records, validate=True):
         # cache format: id or None
         if isinstance(value, BaseModel):
-            value = value._ids[0] if value._ids else None
-        return super().convert_to_cache(value, records, validate)
+            value = value.id
+        elif isinstance(value, dict):
+            # special case, when an integer field is used as inverse for a one2many
+            value = value.get('id')
+        return int(value) if value else None
+
+    def convert_to_record(self, value, record):
+        return value or False
 
     def _update_inverse(self, records: BaseModel, value: BaseModel):
         self._update_cache(records, self.convert_to_cache(value, records))

@@ -61,7 +61,7 @@ def get_existing_attachment(IrAttachment, vals):
     """
     fields = dict(vals)
     # Falsy res_id defaults to 0 on attachment creation.
-    fields['res_id'] = fields.get('res_id') or 0
+    fields['res_id'] = fields.get('res_id') or False
     raw = fields.pop('raw', None)
     domain = [(field, '=', value) for field, value in fields.items()]
     if fields.get('type') == 'url':

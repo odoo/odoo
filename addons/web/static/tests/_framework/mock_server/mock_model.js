@@ -3634,7 +3634,7 @@ export class Model extends Array {
                     for (const record of records) {
                         const id = record[fieldName];
                         if (!id) {
-                            record[fieldName] = 0;
+                            record[fieldName] = false;
                             continue;
                         }
                         if (!relatedFields) {

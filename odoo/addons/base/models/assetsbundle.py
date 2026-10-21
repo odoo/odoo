@@ -252,7 +252,7 @@ class AssetsBundle(object):
               WHERE create_uid = %s
                 AND url like %s
                 AND res_model = 'ir.ui.view'
-                AND res_id = 0
+                AND res_id IS NULL
                 AND public = true
            GROUP BY name
            ORDER BY name

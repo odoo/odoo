@@ -769,7 +769,7 @@ class MailComposeMessage(models.TransientModel):
         Those are attachments:
 
             - linked to res_model 'mail.compose.message', the composer wizard
-            - with res_id 0, because they were created outside of an existing
+            - with res_id False, because they were created outside of an existing
                 wizard (typically user input through Chatter or reports
                 created on-the-fly by the templates)
             - unused since at least one day (create_date and write_date)
@@ -777,7 +777,7 @@ class MailComposeMessage(models.TransientModel):
         limit_date = fields.Datetime.subtract(fields.Datetime.now(), days=1)
         self.env['ir.attachment'].search([
             ('res_model', '=', self._name),
-            ('res_id', '=', 0),
+            ('res_id', '=', False),
             ('create_date', '<', limit_date),
             ('write_date', '<', limit_date)]
         ).unlink()
