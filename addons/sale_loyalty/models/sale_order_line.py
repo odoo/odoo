@@ -54,7 +54,7 @@ class SaleOrderLine(models.Model):
         return self.is_reward_line or super()._is_not_sellable_line()
 
     def _is_discount_line(self):
-        return super()._is_discount_line() or self.reward_id.reward_type == 'discount'
+        return super()._is_discount_line() or self.reward_id.sudo().reward_type == 'discount'
 
     def _reset_loyalty(self, complete=False):
         """
