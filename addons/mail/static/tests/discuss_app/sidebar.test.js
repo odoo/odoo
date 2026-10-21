@@ -497,6 +497,32 @@ test("channel - counter: should have correct value of needaction threads if cate
     });
 });
 
+test("channel - counter: should count needaction sub threads if category is folded", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Main Channel" });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        name: "Sub Channel",
+        parent_channel_id: channelId,
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello @Mitchell Admin",
+        model: "discuss.channel",
+        partner_ids: [serverState.partnerId],
+        res_id: subChannelId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    setDiscussSidebarCategoryFoldState("channels", true);
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory", {
+        contains: [["i.oi.oi-chevron-right"], ["span:text('Channels')"], [".badge:text('1')"]],
+    });
+});
+
 test("chat - counter: should not have a counter if the category is unfolded and without unread messages", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
@@ -1341,4 +1367,47 @@ test("Muted group chats show notification counter from mentions-only", async () 
     rpc("/discuss/settings/mute", { minutes: -1, channel_id: channelId_2 });
     await contains(".o-mail-DiscussSidebarChannel:contains(Sales Team) .badge", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel:contains(Development Team) .badge:text('1')");
+});
+
+test("Sidebar sub channels show correct notification counter based on settings", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        channel_notifications: "all",
+    });
+    const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "Thread",
+        parent_channel_id: channelId,
+    });
+    const mentionMessageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        model: "discuss.channel",
+        res_id: subChannelId,
+        body: "@Mitchell Admin",
+        needaction: true,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: mentionMessageId,
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        model: "discuss.channel",
+        res_id: subChannelId,
+        body: "test",
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarSubchannel:contains(Thread) .badge:text('2')");
+    rpc("/discuss/settings/custom_notifications", { custom_notifications: false }); // default: @mention only
+    await contains(".o-mail-DiscussSidebarSubchannel:contains(Thread) .badge:text('1')");
+    rpc("/discuss/settings/custom_notifications", { custom_notifications: "no_notif" });
+    await contains(".o-mail-DiscussSidebarSubchannel:contains(Thread) .badge", { count: 0 });
 });
