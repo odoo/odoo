@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import operator as py_operator
 import re
 from collections import defaultdict
+from collections.abc import Iterable
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
@@ -416,7 +418,17 @@ class ProductProduct(models.Model):
         return self._search_product_quantity(operator, value, 'outgoing_qty')
 
     def _search_product_quantity(self, operator, value, field):
-        op = PY_OPERATORS.get(operator)
+        py_operators = {
+            '<': py_operator.lt,
+            '>': py_operator.gt,
+            '<=': py_operator.le,
+            '>=': py_operator.ge,
+            '=': py_operator.eq,
+            '!=': py_operator.ne,
+            'in': lambda elem, container: elem in container,
+            'not in': lambda elem, container: elem not in container,
+        }
+        op = py_operators.get(operator)
         if not op:
             # Order the search on `id` to prevent the default order on the product name which slows
             # down the search.
