@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payment_receipt_document" inherit_id="account.report_payment_receipt_document">
+        <xpath expr="//t[@t-call='web.external_layout']" position="before">
+            <t t-set="jp_document_date" t-value="o.date"/>
+        </xpath>
+    </template>
+</odoo>

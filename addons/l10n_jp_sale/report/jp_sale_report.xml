@@ -7,6 +7,7 @@
                 <t t-set="jp_hide_zero_decimals"
                    t-value="doc.company_id.account_fiscal_country_id.code == 'JP'
                             and all(line.price_unit.is_integer() and line.discount &gt;= 0 for line in jp_order_lines)"/>
+                <t t-set="jp_document_date" t-value="doc.date_order"/>
             </xpath>
 
             <xpath expr="//div[@t-field='doc.partner_id']" position="attributes">

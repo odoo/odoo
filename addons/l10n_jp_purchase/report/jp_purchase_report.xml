@@ -6,6 +6,7 @@
                 <t t-set="jp_hide_zero_decimals"
                    t-value="o.company_id.account_fiscal_country_id.code == 'JP'
                             and all(line.price_unit.is_integer() for line in o.order_line if line.display_type or line.product_qty)"/>
+                <t t-set="jp_document_date" t-value="o.date_order"/>
             </xpath>
 
             <xpath expr="//div[@t-field='o.partner_id']" position="attributes">
@@ -19,6 +20,10 @@
         </template>
 
         <template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <t t-set="jp_document_date" t-value="o.date_order"/>
+            </xpath>
+
             <xpath expr="//div[@t-field='o.partner_id']" position="attributes">
                 <attribute name="t-options">{"widget": "contact", "fields": ["address", "phone", "vat"], "no_marker": True, "phone_icons": True}</attribute>
             </xpath>

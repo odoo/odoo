@@ -6,7 +6,7 @@ import lxml.html
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import new_test_user, tagged
-from odoo.tools import html2plaintext
+from odoo.tools import format_date, html2plaintext
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
@@ -56,6 +56,19 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].text_content()
 
         self.assertIn(f'{self.partner_a.name} 様', header)
+
+    def test_layout_heads_the_invoice_with_its_date(self):
+        invoice = self._create_invoice_one_line(
+            move_type='out_invoice',
+            partner_id=self.partner_a,
+            product_id=self.product_a,
+            invoice_date='2026-10-01',
+            post=True,
+        )
+        html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
+        header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].text_content()
+
+        self.assertIn(format_date(self.env, invoice.invoice_date, lang_code='ja_JP'), header)
 
     def test_every_tax_rate_shows_its_base_and_its_tax(self):
         tax_8 = self.tax_sale_a.copy({

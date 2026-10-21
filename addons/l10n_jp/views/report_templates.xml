@@ -5,8 +5,6 @@
             <t t-set="jp_recipient_partner" t-value="jp_recipient_partner or (o and 'partner_id' in o and o.partner_id) or False"/>
             <t t-set="jp_recipient_lang" t-value="(jp_recipient_partner and jp_recipient_partner.lang) or company.partner_id.lang or ''"/>
             <t t-set="jp_honorific" t-value="jp_recipient_lang.startswith('ja') and (' 御中' if jp_recipient_partner and jp_recipient_partner.is_company else ' 様') or ''"/>
-            <t t-set="jp_document_date"
-               t-value="(o and 'invoice_date' in o and o.invoice_date) or (o and 'date_order' in o and o.date_order) or (o and 'date' in o and o.date) or (o and 'scheduled_date' in o and o.scheduled_date) or False"/>
 
             <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
                 <div class="o_jp_standard_header">
