@@ -229,6 +229,12 @@ export const textHighlightFactory = {
  * @param {String} highlightID
  */
 export function makeHighlightSvgs(highlightEl, highlightID) {
+    return withoutAnimationTransforms(highlightEl, () =>
+        makeUntransformedHighlightSvgs(highlightEl, highlightID)
+    );
+}
+
+function makeUntransformedHighlightSvgs(highlightEl, highlightID) {
     const style = window.getComputedStyle(highlightEl);
     if (!style.getPropertyValue("--text-highlight-width")) {
         // The default value for `--text-highlight-width` is 0.1em.
@@ -242,21 +248,19 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
     const rects = textNodes.map((node) => getTextnodeRects(node, 0, node.length)).flat();
     const finalRects = rectToBatch(rects).map((rects) => getBiggestBoxFromBoxes(rects));
 
+    const containerRect = highlightEl.getBoundingClientRect();
+    const inPreviewIframe =
+        highlightEl.ownerDocument.documentElement.classList.contains("o_add_snippets_preview");
+    const scale = inPreviewIframe && containerRect.width ? highlightEl.offsetWidth / containerRect.width : 1;
     const sizePerChar = memoize(() => {
         const numberOfChar = textNodes.reduce(
             (acc, node) => acc + node.textContent.replaceAll(/\s/g, "").length,
             0
         );
-        return finalRects.reduce((acc, rect) => acc + rect.width, 0) / numberOfChar;
+        return finalRects.reduce((acc, rect) => acc + rect.width * scale, 0) / numberOfChar;
     });
     const numberOfCharPerWidth = memoize((width) => Math.round(width / sizePerChar()));
 
-    const containerRect = highlightEl.getBoundingClientRect();
-    // Note: We cannot use `getClientRects()` as we want to be able to draw
-    // text highlights in the snippet/page dialogs where iframe is scaled.
-    const inPreviewIframe =
-        highlightEl.ownerDocument.documentElement.classList.contains("o_add_snippets_preview");
-    const scale = inPreviewIframe ? highlightEl.offsetWidth / containerRect.width : 1;
     const rtl = window.getComputedStyle(highlightEl).direction === "rtl";
     const firstRect = highlightEl.getClientRects()[0];
     const svgs = [];
@@ -298,8 +302,10 @@ export function adaptHighlightPosition(highlightEl, svg) {
     // Reposition element in RTL to what was intended because
     // safari positionning work differently than other browsers
     if ("rtlIntendedRightPosition" in svg.dataset) {
-        const rightPositionDelta = svg.getBoundingClientRect().right - parseFloat(svg.dataset.rtlIntendedRightPosition);
-        svg.style.right = `${parseFloat(svg.style.right) + rightPositionDelta}px`;
+        withoutAnimationTransforms(highlightEl, () => {
+            const rightPositionDelta = svg.getBoundingClientRect().right - parseFloat(svg.dataset.rtlIntendedRightPosition);
+            svg.style.right = `${parseFloat(svg.style.right) + rightPositionDelta}px`;
+        });
     }
 }
 
@@ -497,4 +503,23 @@ export function closestToObserve(el, topEl = el.ownerDocument.body) {
 export function getObservedEls(el) {
     const closestToObserveEl = closestToObserve(el);
     return closestToObserveEl ? [closestToObserveEl, el] : [el];
+}
+
+/**
+ * Measure layout without animation transforms, preserving inline styles and
+ * animation timing. Restore the transforms before the browser paints.
+ */
+function withoutAnimationTransforms(el, callback) {
+    const selector = ".o_animate.o_animating, .o_animate.o_animate_in_dropdown";
+    if (!el.closest(selector)) {
+        return callback();
+    }
+    const style = el.ownerDocument.createElement("style");
+    style.textContent = `${selector} { transform: matrix(1, 0, 0, 1, 0, 0) !important; }`;
+    el.ownerDocument.head.append(style);
+    try {
+        return callback();
+    } finally {
+        style.remove();
+    }
 }
