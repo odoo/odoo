@@ -11235,6 +11235,55 @@ test(`list with handle widget`, async () => {
     });
 });
 
+test(`list with handle widget on a readonly field`, async () => {
+    Foo._fields.int_field = fields.Integer({ readonly: true });
+    onRpc("web_resequence", () => {
+        expect.step("web_resequence");
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="int_field" widget="handle"/>
+                <field name="amount" widget="float" digits="[5,0]"/>
+            </list>
+        `,
+    });
+    expect(`.o_row_draggable`).toHaveCount(0);
+    expect(`.o_field_handle:first span`).not.toBeEnabled();
+    expect(queryAllTexts(`.o_data_cell[name='amount']`)).toEqual(["0", "500", "1,200", "300"]);
+
+    await contains(`tbody tr:eq(3) .o_handle_cell`).dragAndDrop(queryFirst(`tbody tr:eq(1)`));
+    expect.verifySteps([]);
+    expect(queryAllTexts(`.o_data_cell[name='amount']`)).toEqual(["0", "500", "1,200", "300"]);
+});
+
+test(`list with readonly handle widget`, async () => {
+    onRpc("web_resequence", () => {
+        expect.step("web_resequence");
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="int_field" widget="handle" readonly="1"/>
+                <field name="amount" widget="float" digits="[5,0]"/>
+            </list>
+        `,
+    });
+    expect(`.o_row_draggable`).toHaveCount(0);
+    expect(`.o_field_handle:first span`).not.toBeEnabled();
+    expect(queryAllTexts(`.o_data_cell[name='amount']`)).toEqual(["0", "500", "1,200", "300"]);
+
+    await contains(`tbody tr:eq(3) .o_handle_cell`).dragAndDrop(queryFirst(`tbody tr:eq(1)`));
+    expect.verifySteps([]);
+    expect(queryAllTexts(`.o_data_cell[name='amount']`)).toEqual(["0", "500", "1,200", "300"]);
+});
+
 test.tags("desktop");
 test(`list with handle widget: drag and drop multiple selected records`, async () => {
     Foo._records = [
