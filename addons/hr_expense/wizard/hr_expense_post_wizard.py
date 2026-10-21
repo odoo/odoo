@@ -47,6 +47,7 @@ class HrExpensePostWizard(models.TransientModel):
             raise AccessError(self.env._("You don't have the access rights to modify this expense."))
         if not self.env['account.move'].has_access('create'):
             raise UserError(_("You don't have the rights to create accounting entries."))
+        expenses._check_can_create_move()
         expense_receipt_vals_list = [
             {
                 **new_receipt_vals,
