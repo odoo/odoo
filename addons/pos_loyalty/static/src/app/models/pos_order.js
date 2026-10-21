@@ -198,6 +198,7 @@ patch(PosOrder.prototype, {
                 rejection_message: _t("That card code is invalid (%s).", code),
             };
         }
+<<<<<<< 410961c4839d6fa2864245c4b1862e593e9f895b
         const appliedCode = rule ? rule.code : code;
         if (this.applied_codes.includes(appliedCode)) {
             return {
@@ -205,6 +206,48 @@ patch(PosOrder.prototype, {
                 program_id: null,
                 rejection_message: _t("That card code has already been scanned and activated."),
             };
+||||||| 31cb034a88ca322cff26e51feba1a4c4a147c9cc
+        return Object.entries(loyaltyPoints).map(([couponId, points]) => ({
+            couponId,
+            points,
+            program: points.program,
+        }));
+    },
+    /**
+     * The points in the couponPointChanges for free product reward is not correct.
+     * It doesn't take into account the points from the `free` product. Use this method
+     * to compute the necessary correction.
+     * @param {*} program
+     * @returns {number}
+     */
+    _getPointsCorrection(program) {
+        const rewardLines = this.lines.filter((line) => line.is_reward_line);
+        if (!this._canGenerateRewards(program, this.priceIncl, this.priceExcl)) {
+            return 0;
+=======
+        return Object.entries(loyaltyPoints).map(([couponId, points]) => ({
+            couponId,
+            points,
+            program: points.program,
+        }));
+    },
+    /**
+     * The points in the couponPointChanges for free product reward is not correct.
+     * It doesn't take into account the points from the `free` product. Use this method
+     * to compute the necessary correction.
+     * @param {*} program
+     * @returns {number}
+     */
+    _getPointsCorrection(program) {
+        return this._getPointsCorrectionForLines(
+            program,
+            this.lines.filter((line) => line.is_reward_line)
+        );
+    },
+    _getPointsCorrectionForLines(program, rewardLines) {
+        if (!this._canGenerateRewards(program, this.priceIncl, this.priceExcl)) {
+            return 0;
+>>>>>>> 699179e04afb597e3b27f5fb5c3b6187f4d8f4b6
         }
         const program = card?.program_id || rule?.program_id;
         if (program && !this.isProgramPricelistValid(program)) {
@@ -311,11 +354,253 @@ patch(PosOrder.prototype, {
      * @param {string} uuid - the (priced) order line uuid
      * @returns {number} the remaining discountable tax-included price
      */
+<<<<<<< 410961c4839d6fa2864245c4b1862e593e9f895b
     getLineDiscountablePrice(uuid) {
         if (uuid in this._line_discountable_price) {
             return this._line_discountable_price[uuid];
+||||||| 31cb034a88ca322cff26e51feba1a4c4a147c9cc
+    _computeUnclaimedFreeProductQty(reward, coupon_id, product, remainingPoints) {
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
+        let claimed = 0;
+        let available = 0;
+        let shouldCorrectRemainingPoints = false;
+        for (const line of this.getOrderlines()) {
+            if (
+                reward.reward_product_ids.map((reward) => reward.id).includes(product.id) &&
+                reward.reward_product_ids.map((reward) => reward.id).includes(line.getProduct().id)
+            ) {
+                if (this._get_reward_lines() == 0) {
+                    if (line.getProduct() === product) {
+                        available += line.getQuantity();
+                    }
+                } else {
+                    available += line.getQuantity();
+                }
+            } else if (
+                reward.reward_product_ids
+                    .map((reward) => reward.id)
+                    .includes(line._reward_product_id?.id)
+            ) {
+                if (line.reward_id.id == reward.id) {
+                    remainingPoints += line.points_cost;
+                    claimed += line.getQuantity();
+                } else {
+                    shouldCorrectRemainingPoints = true;
+                }
+            }
+=======
+    _computeUnclaimedFreeProductQty(reward, coupon_id, product, remainingPoints) {
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
+        let claimed = 0;
+        let available = 0;
+        for (const line of this.getOrderlines()) {
+            if (
+                reward.reward_product_ids.map((reward) => reward.id).includes(product.id) &&
+                reward.reward_product_ids.map((reward) => reward.id).includes(line.getProduct().id)
+            ) {
+                if (this._get_reward_lines() == 0) {
+                    if (line.getProduct() === product) {
+                        available += line.getQuantity();
+                    }
+                } else {
+                    available += line.getQuantity();
+                }
+            } else if (
+                reward.reward_product_ids
+                    .map((reward) => reward.id)
+                    .includes(line._reward_product_id?.id)
+            ) {
+                if (line.reward_id.id == reward.id) {
+                    remainingPoints += line.points_cost;
+                    claimed += line.getQuantity();
+                }
+            }
+>>>>>>> 699179e04afb597e3b27f5fb5c3b6187f4d8f4b6
         }
+<<<<<<< 410961c4839d6fa2864245c4b1862e593e9f895b
         return this.models["pos.order.line"].getBy("uuid", uuid)?.priceIncl || 0;
+||||||| 31cb034a88ca322cff26e51feba1a4c4a147c9cc
+        let freeQty;
+        if (reward.program_id.trigger == "auto") {
+            if (
+                this._isRewardProductPartOfRules(reward, product) &&
+                reward.program_id.applies_on !== "future"
+            ) {
+                // OPTIMIZATION: Pre-calculate the factors for each reward-product combination during the loading.
+                // For points not based on quantity, need to normalize the points to compute free quantity.
+                const appliedRulesIds = this.uiState.couponPointChanges[coupon_id].appliedRules;
+                const appliedRules =
+                    appliedRulesIds !== undefined
+                        ? reward.program_id.rule_ids.filter((rule) =>
+                              appliedRulesIds.includes(rule.id)
+                          )
+                        : reward.program_id.rule_ids;
+                let factor = 0;
+                let orderPoints = 0;
+                for (const rule of appliedRules) {
+                    if (rule.any_product || rule.validProductIds.has(product.id)) {
+                        if (rule.reward_point_mode === "order") {
+                            orderPoints += rule.reward_point_amount;
+                        } else if (rule.reward_point_mode === "money") {
+                            factor += ProductPrice.round(
+                                rule.reward_point_amount * product.lst_price
+                            );
+                        } else if (rule.reward_point_mode === "unit") {
+                            factor += rule.reward_point_amount;
+                        }
+                    }
+                }
+                if (factor === 0) {
+                    freeQty = Math.floor(
+                        (remainingPoints / reward.required_points) * reward.reward_product_qty
+                    );
+                } else {
+                    const correction = shouldCorrectRemainingPoints
+                        ? this._getPointsCorrection(reward.program_id)
+                        : 0;
+                    freeQty = computeFreeQuantity(
+                        (remainingPoints - correction - orderPoints) / factor,
+                        reward.required_points / factor,
+                        reward.reward_product_qty
+                    );
+                    freeQty += Math.floor(
+                        (orderPoints / reward.required_points) * reward.reward_product_qty
+                    );
+                }
+            } else {
+                freeQty = Math.floor(
+                    (remainingPoints / reward.required_points) * reward.reward_product_qty
+                );
+            }
+        } else if (reward.program_id.trigger == "with_code") {
+            freeQty = Math.floor(
+                (remainingPoints / reward.required_points) * reward.reward_product_qty
+            );
+        }
+        return Math.min(available, freeQty) - claimed;
+    },
+    _computePotentialFreeProductQty(reward, product, remainingPoints) {
+        if (reward.program_id.trigger == "auto") {
+            if (
+                this._isRewardProductPartOfRules(reward, product) &&
+                reward.program_id.applies_on !== "future"
+            ) {
+                // Compute the correction points once even if there are multiple reward lines.
+                // This is because _getPointsCorrection is taking into account all the lines already.
+                const claimedPoints = this._getPointsCorrection(reward.program_id);
+                return Math.floor((remainingPoints - claimedPoints) / reward.required_points) > 0
+                    ? reward.reward_product_qty
+                    : 0;
+            } else {
+                return Math.floor(
+                    (remainingPoints / reward.required_points) * reward.reward_product_qty
+                );
+            }
+        } else if (reward.program_id.trigger == "with_code") {
+            return Math.floor(
+                (remainingPoints / reward.required_points) * reward.reward_product_qty
+            );
+        }
+    },
+    _getRewardedProduct(reward, args) {
+        return (
+            reward.reward_product_ids.find((p) => p.id === args["product"]?.id) ||
+            reward.reward_product_ids[0]
+        );
+=======
+        let freeQty;
+        if (reward.program_id.trigger == "auto") {
+            if (
+                this._isRewardProductPartOfRules(reward, product) &&
+                reward.program_id.applies_on !== "future"
+            ) {
+                // OPTIMIZATION: Pre-calculate the factors for each reward-product combination during the loading.
+                // For points not based on quantity, need to normalize the points to compute free quantity.
+                const appliedRulesIds = this.uiState.couponPointChanges[coupon_id].appliedRules;
+                const appliedRules =
+                    appliedRulesIds !== undefined
+                        ? reward.program_id.rule_ids.filter((rule) =>
+                              appliedRulesIds.includes(rule.id)
+                          )
+                        : reward.program_id.rule_ids;
+                let factor = 0;
+                let orderPoints = 0;
+                for (const rule of appliedRules) {
+                    if (rule.any_product || rule.validProductIds.has(product.id)) {
+                        if (rule.reward_point_mode === "order") {
+                            orderPoints += rule.reward_point_amount;
+                        } else if (rule.reward_point_mode === "money") {
+                            factor += ProductPrice.round(
+                                rule.reward_point_amount * product.lst_price
+                            );
+                        } else if (rule.reward_point_mode === "unit") {
+                            factor += rule.reward_point_amount;
+                        }
+                    }
+                }
+                if (factor === 0) {
+                    freeQty = Math.floor(
+                        (remainingPoints / reward.required_points) * reward.reward_product_qty
+                    );
+                } else {
+                    const correction = this._getPointsCorrectionForLines(
+                        reward.program_id,
+                        this._get_reward_lines().filter((line) => line.reward_id.id !== reward.id)
+                    );
+                    freeQty = computeFreeQuantity(
+                        (remainingPoints - correction - orderPoints) / factor,
+                        reward.required_points / factor,
+                        reward.reward_product_qty
+                    );
+                    freeQty += Math.floor(
+                        (orderPoints / reward.required_points) * reward.reward_product_qty
+                    );
+                }
+            } else {
+                freeQty = Math.floor(
+                    (remainingPoints / reward.required_points) * reward.reward_product_qty
+                );
+            }
+        } else if (reward.program_id.trigger == "with_code") {
+            freeQty = Math.floor(
+                (remainingPoints / reward.required_points) * reward.reward_product_qty
+            );
+        }
+        return Math.min(available, freeQty) - claimed;
+    },
+    _computePotentialFreeProductQty(reward, product, remainingPoints) {
+        if (reward.program_id.trigger == "auto") {
+            if (
+                this._isRewardProductPartOfRules(reward, product) &&
+                reward.program_id.applies_on !== "future"
+            ) {
+                // Compute the correction points once even if there are multiple reward lines.
+                // This is because _getPointsCorrection is taking into account all the lines already.
+                const claimedPoints = this._getPointsCorrection(reward.program_id);
+                return Math.floor((remainingPoints - claimedPoints) / reward.required_points) > 0
+                    ? reward.reward_product_qty
+                    : 0;
+            } else {
+                return Math.floor(
+                    (remainingPoints / reward.required_points) * reward.reward_product_qty
+                );
+            }
+        } else if (reward.program_id.trigger == "with_code") {
+            return Math.floor(
+                (remainingPoints / reward.required_points) * reward.reward_product_qty
+            );
+        }
+    },
+    _getRewardedProduct(reward, args) {
+        return (
+            reward.reward_product_ids.find((p) => p.id === args["product"]?.id) ||
+            reward.reward_product_ids[0]
+        );
+>>>>>>> 699179e04afb597e3b27f5fb5c3b6187f4d8f4b6
     },
     /**
      * Removes the reward line from the order, calculates the available points on the program,
