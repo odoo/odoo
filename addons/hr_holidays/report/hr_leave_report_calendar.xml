@@ -16,7 +16,7 @@
                         />
                     </div>
 
-                    <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="work_entry_type_id_label">
+                    <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="work_entry_type_id_label" groups="hr_holidays.group_hr_holidays_user">
                         <i class="oi oi-lg oi-fw flex-shrink-0" data-icon="label" title="Work Entry Types" name="work_entry_type_id"/>
                         <field name="work_entry_type_id" widget="many2one_work_entry_type" nolabel="1" class="min-w-0"/>
                     </div>
@@ -37,7 +37,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="description_label">
+                    <div class="d-flex align-items-center gap-4 py-1 ps-2" colspan="2" id="description_label" groups="hr_holidays.group_hr_holidays_user">
                         <i class="oi oi-lg oi-fw oi-filled flex-shrink-0" data-icon="edit" title="Description" name="description"/>
                         <field name="description" nolabel="1" class="min-w-0"/>
                     </div>
@@ -95,6 +95,8 @@
                 <field name="is_hatched" invisible="1"/>
                 <field name="state" invisible="1"/>
                 <field name="leave_manager_id" invisible="1"/>
+                <field name="can_delete" invisible="1"/>
+                <field name="can_expand" invisible="1"/>
             </calendar>
         </field>
     </record>
@@ -120,6 +122,7 @@
                 <field name="is_striked" invisible="1"/>
                 <field name="state" invisible="1"/>
                 <field name="leave_manager_id" invisible="1"/>
+                <field name="can_delete" invisible="1"/>
             </calendar>
         </field>
     </record>
