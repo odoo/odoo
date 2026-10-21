@@ -65,6 +65,9 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
     ],
     'post_init_hook': 'post_init',
     'author': 'Odoo S.A.',
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
     'iap_paid_service': True,
     'assets': {

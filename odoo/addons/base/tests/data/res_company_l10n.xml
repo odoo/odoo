@@ -1,0 +1,1572 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Shared localization companies have no chart until their accounting localization is installed. -->
+        <record id="test_company_ae" model="res.company">
+            <field name="name">Test Company AE</field>
+            <field name="country_id" ref="base.ae"/>
+            <field name="currency_id" ref="base.AED"/>
+        </record>
+        <record id="test_company_ae_2" model="res.company">
+            <field name="name">Test Company AE 2</field>
+            <field name="country_id" ref="base.ae"/>
+            <field name="currency_id" ref="base.AED"/>
+        </record>
+        <record id="test_company_ar" model="res.company">
+            <field name="name">Test Company AR</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="currency_id" ref="base.ARS"/>
+        </record>
+        <record id="test_company_ar_2" model="res.company">
+            <field name="name">Test Company AR 2</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="currency_id" ref="base.ARS"/>
+        </record>
+        <record id="test_company_at" model="res.company">
+            <field name="name">Test Company AT</field>
+            <field name="country_id" ref="base.at"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_at_2" model="res.company">
+            <field name="name">Test Company AT 2</field>
+            <field name="country_id" ref="base.at"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_au" model="res.company">
+            <field name="name">Test Company AU</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="currency_id" ref="base.AUD"/>
+        </record>
+        <record id="test_company_au_2" model="res.company">
+            <field name="name">Test Company AU 2</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="currency_id" ref="base.AUD"/>
+        </record>
+        <record id="test_company_bd" model="res.company">
+            <field name="name">Test Company BD</field>
+            <field name="country_id" ref="base.bd"/>
+            <field name="currency_id" ref="base.BDT"/>
+        </record>
+        <record id="test_company_bd_2" model="res.company">
+            <field name="name">Test Company BD 2</field>
+            <field name="country_id" ref="base.bd"/>
+            <field name="currency_id" ref="base.BDT"/>
+        </record>
+        <record id="test_company_be" model="res.company">
+            <field name="name">Test Company BE</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_be_2" model="res.company">
+            <field name="name">Test Company BE 2</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_bf" model="res.company">
+            <field name="name">Test Company BF</field>
+            <field name="country_id" ref="base.bf"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_bf_2" model="res.company">
+            <field name="name">Test Company BF 2</field>
+            <field name="country_id" ref="base.bf"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_bg" model="res.company">
+            <field name="name">Test Company BG</field>
+            <field name="country_id" ref="base.bg"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_bg_2" model="res.company">
+            <field name="name">Test Company BG 2</field>
+            <field name="country_id" ref="base.bg"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_bh" model="res.company">
+            <field name="name">Test Company BH</field>
+            <field name="country_id" ref="base.bh"/>
+            <field name="currency_id" ref="base.BHD"/>
+        </record>
+        <record id="test_company_bh_2" model="res.company">
+            <field name="name">Test Company BH 2</field>
+            <field name="country_id" ref="base.bh"/>
+            <field name="currency_id" ref="base.BHD"/>
+        </record>
+        <record id="test_company_bj" model="res.company">
+            <field name="name">Test Company BJ</field>
+            <field name="country_id" ref="base.bj"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_bj_2" model="res.company">
+            <field name="name">Test Company BJ 2</field>
+            <field name="country_id" ref="base.bj"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_bo" model="res.company">
+            <field name="name">Test Company BO</field>
+            <field name="country_id" ref="base.bo"/>
+            <field name="currency_id" ref="base.BOB"/>
+        </record>
+        <record id="test_company_bo_2" model="res.company">
+            <field name="name">Test Company BO 2</field>
+            <field name="country_id" ref="base.bo"/>
+            <field name="currency_id" ref="base.BOB"/>
+        </record>
+        <record id="test_company_br" model="res.company">
+            <field name="name">Test Company BR</field>
+            <field name="country_id" ref="base.br"/>
+            <field name="currency_id" ref="base.BRL"/>
+        </record>
+        <record id="test_company_br_2" model="res.company">
+            <field name="name">Test Company BR 2</field>
+            <field name="country_id" ref="base.br"/>
+            <field name="currency_id" ref="base.BRL"/>
+        </record>
+        <record id="test_company_ca" model="res.company">
+            <field name="name">Test Company CA</field>
+            <field name="country_id" ref="base.ca"/>
+            <field name="currency_id" ref="base.CAD"/>
+        </record>
+        <record id="test_company_ca_2" model="res.company">
+            <field name="name">Test Company CA 2</field>
+            <field name="country_id" ref="base.ca"/>
+            <field name="currency_id" ref="base.CAD"/>
+        </record>
+        <record id="test_company_cd" model="res.company">
+            <field name="name">Test Company CD</field>
+            <field name="country_id" ref="base.cd"/>
+            <field name="currency_id" ref="base.CDF"/>
+        </record>
+        <record id="test_company_cd_2" model="res.company">
+            <field name="name">Test Company CD 2</field>
+            <field name="country_id" ref="base.cd"/>
+            <field name="currency_id" ref="base.CDF"/>
+        </record>
+        <record id="test_company_cf" model="res.company">
+            <field name="name">Test Company CF</field>
+            <field name="country_id" ref="base.cf"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_cf_2" model="res.company">
+            <field name="name">Test Company CF 2</field>
+            <field name="country_id" ref="base.cf"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_cg" model="res.company">
+            <field name="name">Test Company CG</field>
+            <field name="country_id" ref="base.cg"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_cg_2" model="res.company">
+            <field name="name">Test Company CG 2</field>
+            <field name="country_id" ref="base.cg"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_ch" model="res.company">
+            <field name="name">Test Company CH</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="currency_id" ref="base.CHF"/>
+        </record>
+        <record id="test_company_ch_2" model="res.company">
+            <field name="name">Test Company CH 2</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="currency_id" ref="base.CHF"/>
+        </record>
+        <record id="test_company_ci" model="res.company">
+            <field name="name">Test Company CI</field>
+            <field name="country_id" ref="base.ci"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_ci_2" model="res.company">
+            <field name="name">Test Company CI 2</field>
+            <field name="country_id" ref="base.ci"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_cl" model="res.company">
+            <field name="name">Test Company CL</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="currency_id" ref="base.CLP"/>
+        </record>
+        <record id="test_company_cl_2" model="res.company">
+            <field name="name">Test Company CL 2</field>
+            <field name="country_id" ref="base.cl"/>
+            <field name="currency_id" ref="base.CLP"/>
+        </record>
+        <record id="test_company_cm" model="res.company">
+            <field name="name">Test Company CM</field>
+            <field name="country_id" ref="base.cm"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_cm_2" model="res.company">
+            <field name="name">Test Company CM 2</field>
+            <field name="country_id" ref="base.cm"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_cn" model="res.company">
+            <field name="name">Test Company CN</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="currency_id" ref="base.CNY"/>
+        </record>
+        <record id="test_company_cn_2" model="res.company">
+            <field name="name">Test Company CN 2</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="currency_id" ref="base.CNY"/>
+        </record>
+        <record id="test_company_co" model="res.company">
+            <field name="name">Test Company CO</field>
+            <field name="country_id" ref="base.co"/>
+            <field name="currency_id" ref="base.COP"/>
+        </record>
+        <record id="test_company_co_2" model="res.company">
+            <field name="name">Test Company CO 2</field>
+            <field name="country_id" ref="base.co"/>
+            <field name="currency_id" ref="base.COP"/>
+        </record>
+        <record id="test_company_cr" model="res.company">
+            <field name="name">Test Company CR</field>
+            <field name="country_id" ref="base.cr"/>
+            <field name="currency_id" ref="base.CRC"/>
+        </record>
+        <record id="test_company_cr_2" model="res.company">
+            <field name="name">Test Company CR 2</field>
+            <field name="country_id" ref="base.cr"/>
+            <field name="currency_id" ref="base.CRC"/>
+        </record>
+        <record id="test_company_cy" model="res.company">
+            <field name="name">Test Company CY</field>
+            <field name="country_id" ref="base.cy"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_cy_2" model="res.company">
+            <field name="name">Test Company CY 2</field>
+            <field name="country_id" ref="base.cy"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_cz" model="res.company">
+            <field name="name">Test Company CZ</field>
+            <field name="country_id" ref="base.cz"/>
+            <field name="currency_id" ref="base.CZK"/>
+        </record>
+        <record id="test_company_cz_2" model="res.company">
+            <field name="name">Test Company CZ 2</field>
+            <field name="country_id" ref="base.cz"/>
+            <field name="currency_id" ref="base.CZK"/>
+        </record>
+        <record id="test_company_de" model="res.company">
+            <field name="name">Test Company DE</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_de_2" model="res.company">
+            <field name="name">Test Company DE 2</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_dk" model="res.company">
+            <field name="name">Test Company DK</field>
+            <field name="country_id" ref="base.dk"/>
+            <field name="currency_id" ref="base.DKK"/>
+        </record>
+        <record id="test_company_dk_2" model="res.company">
+            <field name="name">Test Company DK 2</field>
+            <field name="country_id" ref="base.dk"/>
+            <field name="currency_id" ref="base.DKK"/>
+        </record>
+        <record id="test_company_do" model="res.company">
+            <field name="name">Test Company DO</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="currency_id" ref="base.DOP"/>
+        </record>
+        <record id="test_company_do_2" model="res.company">
+            <field name="name">Test Company DO 2</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="currency_id" ref="base.DOP"/>
+        </record>
+        <record id="test_company_dz" model="res.company">
+            <field name="name">Test Company DZ</field>
+            <field name="country_id" ref="base.dz"/>
+            <field name="currency_id" ref="base.DZD"/>
+        </record>
+        <record id="test_company_dz_2" model="res.company">
+            <field name="name">Test Company DZ 2</field>
+            <field name="country_id" ref="base.dz"/>
+            <field name="currency_id" ref="base.DZD"/>
+        </record>
+        <record id="test_company_ec" model="res.company">
+            <field name="name">Test Company EC</field>
+            <field name="country_id" ref="base.ec"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        <record id="test_company_ec_2" model="res.company">
+            <field name="name">Test Company EC 2</field>
+            <field name="country_id" ref="base.ec"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        <record id="test_company_ee" model="res.company">
+            <field name="name">Test Company EE</field>
+            <field name="country_id" ref="base.ee"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_ee_2" model="res.company">
+            <field name="name">Test Company EE 2</field>
+            <field name="country_id" ref="base.ee"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_eg" model="res.company">
+            <field name="name">Test Company EG</field>
+            <field name="country_id" ref="base.eg"/>
+            <field name="currency_id" ref="base.EGP"/>
+        </record>
+        <record id="test_company_eg_2" model="res.company">
+            <field name="name">Test Company EG 2</field>
+            <field name="country_id" ref="base.eg"/>
+            <field name="currency_id" ref="base.EGP"/>
+        </record>
+        <record id="test_company_es" model="res.company">
+            <field name="name">Test Company ES</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_es_2" model="res.company">
+            <field name="name">Test Company ES 2</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_et" model="res.company">
+            <field name="name">Test Company ET</field>
+            <field name="country_id" ref="base.et"/>
+            <field name="currency_id" ref="base.ETB"/>
+        </record>
+        <record id="test_company_et_2" model="res.company">
+            <field name="name">Test Company ET 2</field>
+            <field name="country_id" ref="base.et"/>
+            <field name="currency_id" ref="base.ETB"/>
+        </record>
+        <record id="test_company_fi" model="res.company">
+            <field name="name">Test Company FI</field>
+            <field name="country_id" ref="base.fi"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_fi_2" model="res.company">
+            <field name="name">Test Company FI 2</field>
+            <field name="country_id" ref="base.fi"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_fr" model="res.company">
+            <field name="name">Test Company FR</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_fr_2" model="res.company">
+            <field name="name">Test Company FR 2</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_ga" model="res.company">
+            <field name="name">Test Company GA</field>
+            <field name="country_id" ref="base.ga"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_ga_2" model="res.company">
+            <field name="name">Test Company GA 2</field>
+            <field name="country_id" ref="base.ga"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_gb" model="res.company">
+            <field name="name">Test Company GB</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="currency_id" ref="base.GBP"/>
+        </record>
+        <record id="test_company_gb_2" model="res.company">
+            <field name="name">Test Company GB 2</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="currency_id" ref="base.GBP"/>
+        </record>
+        <record id="test_company_ge" model="res.company">
+            <field name="name">Test Company GE</field>
+            <field name="country_id" ref="base.ge"/>
+            <field name="currency_id" ref="base.GEL"/>
+        </record>
+        <record id="test_company_ge_2" model="res.company">
+            <field name="name">Test Company GE 2</field>
+            <field name="country_id" ref="base.ge"/>
+            <field name="currency_id" ref="base.GEL"/>
+        </record>
+        <record id="test_company_gf" model="res.company">
+            <field name="name">Test Company GF</field>
+            <field name="country_id" ref="base.gf"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_gf_2" model="res.company">
+            <field name="name">Test Company GF 2</field>
+            <field name="country_id" ref="base.gf"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_gn" model="res.company">
+            <field name="name">Test Company GN</field>
+            <field name="country_id" ref="base.gn"/>
+            <field name="currency_id" ref="base.GNF"/>
+        </record>
+        <record id="test_company_gn_2" model="res.company">
+            <field name="name">Test Company GN 2</field>
+            <field name="country_id" ref="base.gn"/>
+            <field name="currency_id" ref="base.GNF"/>
+        </record>
+        <record id="test_company_gp" model="res.company">
+            <field name="name">Test Company GP</field>
+            <field name="country_id" ref="base.gp"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_gp_2" model="res.company">
+            <field name="name">Test Company GP 2</field>
+            <field name="country_id" ref="base.gp"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_gq" model="res.company">
+            <field name="name">Test Company GQ</field>
+            <field name="country_id" ref="base.gq"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_gq_2" model="res.company">
+            <field name="name">Test Company GQ 2</field>
+            <field name="country_id" ref="base.gq"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_gr" model="res.company">
+            <field name="name">Test Company GR</field>
+            <field name="country_id" ref="base.gr"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_gr_2" model="res.company">
+            <field name="name">Test Company GR 2</field>
+            <field name="country_id" ref="base.gr"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_gt" model="res.company">
+            <field name="name">Test Company GT</field>
+            <field name="country_id" ref="base.gt"/>
+            <field name="currency_id" ref="base.GTQ"/>
+        </record>
+        <record id="test_company_gt_2" model="res.company">
+            <field name="name">Test Company GT 2</field>
+            <field name="country_id" ref="base.gt"/>
+            <field name="currency_id" ref="base.GTQ"/>
+        </record>
+        <record id="test_company_gw" model="res.company">
+            <field name="name">Test Company GW</field>
+            <field name="country_id" ref="base.gw"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_gw_2" model="res.company">
+            <field name="name">Test Company GW 2</field>
+            <field name="country_id" ref="base.gw"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_hk" model="res.company">
+            <field name="name">Test Company HK</field>
+            <field name="country_id" ref="base.hk"/>
+            <field name="currency_id" ref="base.HKD"/>
+        </record>
+        <record id="test_company_hk_2" model="res.company">
+            <field name="name">Test Company HK 2</field>
+            <field name="country_id" ref="base.hk"/>
+            <field name="currency_id" ref="base.HKD"/>
+        </record>
+        <record id="test_company_hn" model="res.company">
+            <field name="name">Test Company HN</field>
+            <field name="country_id" ref="base.hn"/>
+            <field name="currency_id" ref="base.HNL"/>
+        </record>
+        <record id="test_company_hn_2" model="res.company">
+            <field name="name">Test Company HN 2</field>
+            <field name="country_id" ref="base.hn"/>
+            <field name="currency_id" ref="base.HNL"/>
+        </record>
+        <record id="test_company_hr" model="res.company">
+            <field name="name">Test Company HR</field>
+            <field name="country_id" ref="base.hr"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_hr_2" model="res.company">
+            <field name="name">Test Company HR 2</field>
+            <field name="country_id" ref="base.hr"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_hu" model="res.company">
+            <field name="name">Test Company HU</field>
+            <field name="country_id" ref="base.hu"/>
+            <field name="currency_id" ref="base.HUF"/>
+        </record>
+        <record id="test_company_hu_2" model="res.company">
+            <field name="name">Test Company HU 2</field>
+            <field name="country_id" ref="base.hu"/>
+            <field name="currency_id" ref="base.HUF"/>
+        </record>
+        <record id="test_company_id" model="res.company">
+            <field name="name">Test Company ID</field>
+            <field name="country_id" ref="base.id"/>
+            <field name="currency_id" ref="base.IDR"/>
+        </record>
+        <record id="test_company_id_2" model="res.company">
+            <field name="name">Test Company ID 2</field>
+            <field name="country_id" ref="base.id"/>
+            <field name="currency_id" ref="base.IDR"/>
+        </record>
+        <record id="test_company_ie" model="res.company">
+            <field name="name">Test Company IE</field>
+            <field name="country_id" ref="base.ie"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_ie_2" model="res.company">
+            <field name="name">Test Company IE 2</field>
+            <field name="country_id" ref="base.ie"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_il" model="res.company">
+            <field name="name">Test Company IL</field>
+            <field name="country_id" ref="base.il"/>
+            <field name="currency_id" ref="base.ILS"/>
+        </record>
+        <record id="test_company_il_2" model="res.company">
+            <field name="name">Test Company IL 2</field>
+            <field name="country_id" ref="base.il"/>
+            <field name="currency_id" ref="base.ILS"/>
+        </record>
+        <record id="test_company_in" model="res.company">
+            <field name="name">Test Company IN</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="currency_id" ref="base.INR"/>
+        </record>
+        <record id="test_company_in_2" model="res.company">
+            <field name="name">Test Company IN 2</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="currency_id" ref="base.INR"/>
+        </record>
+        <record id="test_company_iq" model="res.company">
+            <field name="name">Test Company IQ</field>
+            <field name="country_id" ref="base.iq"/>
+            <field name="currency_id" ref="base.IQD"/>
+        </record>
+        <record id="test_company_iq_2" model="res.company">
+            <field name="name">Test Company IQ 2</field>
+            <field name="country_id" ref="base.iq"/>
+            <field name="currency_id" ref="base.IQD"/>
+        </record>
+        <record id="test_company_it" model="res.company">
+            <field name="name">Test Company IT</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_it_2" model="res.company">
+            <field name="name">Test Company IT 2</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_jo" model="res.company">
+            <field name="name">Test Company JO</field>
+            <field name="country_id" ref="base.jo"/>
+            <field name="currency_id" ref="base.JOD"/>
+        </record>
+        <record id="test_company_jo_2" model="res.company">
+            <field name="name">Test Company JO 2</field>
+            <field name="country_id" ref="base.jo"/>
+            <field name="currency_id" ref="base.JOD"/>
+        </record>
+        <record id="test_company_jp" model="res.company">
+            <field name="name">Test Company JP</field>
+            <field name="country_id" ref="base.jp"/>
+            <field name="currency_id" ref="base.JPY"/>
+        </record>
+        <record id="test_company_jp_2" model="res.company">
+            <field name="name">Test Company JP 2</field>
+            <field name="country_id" ref="base.jp"/>
+            <field name="currency_id" ref="base.JPY"/>
+        </record>
+        <record id="test_company_ke" model="res.company">
+            <field name="name">Test Company KE</field>
+            <field name="country_id" ref="base.ke"/>
+            <field name="currency_id" ref="base.KES"/>
+        </record>
+        <record id="test_company_ke_2" model="res.company">
+            <field name="name">Test Company KE 2</field>
+            <field name="country_id" ref="base.ke"/>
+            <field name="currency_id" ref="base.KES"/>
+        </record>
+        <record id="test_company_kh" model="res.company">
+            <field name="name">Test Company KH</field>
+            <field name="country_id" ref="base.kh"/>
+            <field name="currency_id" ref="base.KHR"/>
+        </record>
+        <record id="test_company_kh_2" model="res.company">
+            <field name="name">Test Company KH 2</field>
+            <field name="country_id" ref="base.kh"/>
+            <field name="currency_id" ref="base.KHR"/>
+        </record>
+        <record id="test_company_km" model="res.company">
+            <field name="name">Test Company KM</field>
+            <field name="country_id" ref="base.km"/>
+            <field name="currency_id" ref="base.KMF"/>
+        </record>
+        <record id="test_company_km_2" model="res.company">
+            <field name="name">Test Company KM 2</field>
+            <field name="country_id" ref="base.km"/>
+            <field name="currency_id" ref="base.KMF"/>
+        </record>
+        <record id="test_company_kr" model="res.company">
+            <field name="name">Test Company KR</field>
+            <field name="country_id" ref="base.kr"/>
+            <field name="currency_id" ref="base.KRW"/>
+        </record>
+        <record id="test_company_kr_2" model="res.company">
+            <field name="name">Test Company KR 2</field>
+            <field name="country_id" ref="base.kr"/>
+            <field name="currency_id" ref="base.KRW"/>
+        </record>
+        <record id="test_company_kw" model="res.company">
+            <field name="name">Test Company KW</field>
+            <field name="country_id" ref="base.kw"/>
+            <field name="currency_id" ref="base.KWD"/>
+        </record>
+        <record id="test_company_kw_2" model="res.company">
+            <field name="name">Test Company KW 2</field>
+            <field name="country_id" ref="base.kw"/>
+            <field name="currency_id" ref="base.KWD"/>
+        </record>
+        <record id="test_company_kz" model="res.company">
+            <field name="name">Test Company KZ</field>
+            <field name="country_id" ref="base.kz"/>
+            <field name="currency_id" ref="base.KZT"/>
+        </record>
+        <record id="test_company_kz_2" model="res.company">
+            <field name="name">Test Company KZ 2</field>
+            <field name="country_id" ref="base.kz"/>
+            <field name="currency_id" ref="base.KZT"/>
+        </record>
+        <record id="test_company_lb" model="res.company">
+            <field name="name">Test Company LB</field>
+            <field name="country_id" ref="base.lb"/>
+            <field name="currency_id" ref="base.LBP"/>
+        </record>
+        <record id="test_company_lb_2" model="res.company">
+            <field name="name">Test Company LB 2</field>
+            <field name="country_id" ref="base.lb"/>
+            <field name="currency_id" ref="base.LBP"/>
+        </record>
+        <record id="test_company_lk" model="res.company">
+            <field name="name">Test Company LK</field>
+            <field name="country_id" ref="base.lk"/>
+            <field name="currency_id" ref="base.LKR"/>
+        </record>
+        <record id="test_company_lk_2" model="res.company">
+            <field name="name">Test Company LK 2</field>
+            <field name="country_id" ref="base.lk"/>
+            <field name="currency_id" ref="base.LKR"/>
+        </record>
+        <record id="test_company_lt" model="res.company">
+            <field name="name">Test Company LT</field>
+            <field name="country_id" ref="base.lt"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_lt_2" model="res.company">
+            <field name="name">Test Company LT 2</field>
+            <field name="country_id" ref="base.lt"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_lu" model="res.company">
+            <field name="name">Test Company LU</field>
+            <field name="country_id" ref="base.lu"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_lu_2" model="res.company">
+            <field name="name">Test Company LU 2</field>
+            <field name="country_id" ref="base.lu"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_lv" model="res.company">
+            <field name="name">Test Company LV</field>
+            <field name="country_id" ref="base.lv"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_lv_2" model="res.company">
+            <field name="name">Test Company LV 2</field>
+            <field name="country_id" ref="base.lv"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_ma" model="res.company">
+            <field name="name">Test Company MA</field>
+            <field name="country_id" ref="base.ma"/>
+            <field name="currency_id" ref="base.MAD"/>
+        </record>
+        <record id="test_company_ma_2" model="res.company">
+            <field name="name">Test Company MA 2</field>
+            <field name="country_id" ref="base.ma"/>
+            <field name="currency_id" ref="base.MAD"/>
+        </record>
+        <record id="test_company_mc" model="res.company">
+            <field name="name">Test Company MC</field>
+            <field name="country_id" ref="base.mc"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_mc_2" model="res.company">
+            <field name="name">Test Company MC 2</field>
+            <field name="country_id" ref="base.mc"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_mk" model="res.company">
+            <field name="name">Test Company MK</field>
+            <field name="country_id" ref="base.mk"/>
+            <field name="currency_id" ref="base.MKD"/>
+        </record>
+        <record id="test_company_mk_2" model="res.company">
+            <field name="name">Test Company MK 2</field>
+            <field name="country_id" ref="base.mk"/>
+            <field name="currency_id" ref="base.MKD"/>
+        </record>
+        <record id="test_company_ml" model="res.company">
+            <field name="name">Test Company ML</field>
+            <field name="country_id" ref="base.ml"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_ml_2" model="res.company">
+            <field name="name">Test Company ML 2</field>
+            <field name="country_id" ref="base.ml"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_mm" model="res.company">
+            <field name="name">Test Company MM</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="currency_id" ref="base.MMK"/>
+        </record>
+        <record id="test_company_mm_2" model="res.company">
+            <field name="name">Test Company MM 2</field>
+            <field name="country_id" ref="base.mm"/>
+            <field name="currency_id" ref="base.MMK"/>
+        </record>
+        <record id="test_company_mn" model="res.company">
+            <field name="name">Test Company MN</field>
+            <field name="country_id" ref="base.mn"/>
+            <field name="currency_id" ref="base.MNT"/>
+        </record>
+        <record id="test_company_mn_2" model="res.company">
+            <field name="name">Test Company MN 2</field>
+            <field name="country_id" ref="base.mn"/>
+            <field name="currency_id" ref="base.MNT"/>
+        </record>
+        <record id="test_company_mq" model="res.company">
+            <field name="name">Test Company MQ</field>
+            <field name="country_id" ref="base.mq"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_mq_2" model="res.company">
+            <field name="name">Test Company MQ 2</field>
+            <field name="country_id" ref="base.mq"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_mr" model="res.company">
+            <field name="name">Test Company MR</field>
+            <field name="country_id" ref="base.mr"/>
+            <field name="currency_id" ref="base.MRU"/>
+        </record>
+        <record id="test_company_mr_2" model="res.company">
+            <field name="name">Test Company MR 2</field>
+            <field name="country_id" ref="base.mr"/>
+            <field name="currency_id" ref="base.MRU"/>
+        </record>
+        <record id="test_company_mt" model="res.company">
+            <field name="name">Test Company MT</field>
+            <field name="country_id" ref="base.mt"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_mt_2" model="res.company">
+            <field name="name">Test Company MT 2</field>
+            <field name="country_id" ref="base.mt"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_mu" model="res.company">
+            <field name="name">Test Company MU</field>
+            <field name="country_id" ref="base.mu"/>
+            <field name="currency_id" ref="base.MUR"/>
+        </record>
+        <record id="test_company_mu_2" model="res.company">
+            <field name="name">Test Company MU 2</field>
+            <field name="country_id" ref="base.mu"/>
+            <field name="currency_id" ref="base.MUR"/>
+        </record>
+        <record id="test_company_mx" model="res.company">
+            <field name="name">Test Company MX</field>
+            <field name="country_id" ref="base.mx"/>
+            <field name="currency_id" ref="base.MXN"/>
+        </record>
+        <record id="test_company_mx_2" model="res.company">
+            <field name="name">Test Company MX 2</field>
+            <field name="country_id" ref="base.mx"/>
+            <field name="currency_id" ref="base.MXN"/>
+        </record>
+        <record id="test_company_my" model="res.company">
+            <field name="name">Test Company MY</field>
+            <field name="country_id" ref="base.my"/>
+            <field name="currency_id" ref="base.MYR"/>
+        </record>
+        <record id="test_company_my_2" model="res.company">
+            <field name="name">Test Company MY 2</field>
+            <field name="country_id" ref="base.my"/>
+            <field name="currency_id" ref="base.MYR"/>
+        </record>
+        <record id="test_company_mz" model="res.company">
+            <field name="name">Test Company MZ</field>
+            <field name="country_id" ref="base.mz"/>
+            <field name="currency_id" ref="base.MZN"/>
+        </record>
+        <record id="test_company_mz_2" model="res.company">
+            <field name="name">Test Company MZ 2</field>
+            <field name="country_id" ref="base.mz"/>
+            <field name="currency_id" ref="base.MZN"/>
+        </record>
+        <record id="test_company_ne" model="res.company">
+            <field name="name">Test Company NE</field>
+            <field name="country_id" ref="base.ne"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_ne_2" model="res.company">
+            <field name="name">Test Company NE 2</field>
+            <field name="country_id" ref="base.ne"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_ng" model="res.company">
+            <field name="name">Test Company NG</field>
+            <field name="country_id" ref="base.ng"/>
+            <field name="currency_id" ref="base.NGN"/>
+        </record>
+        <record id="test_company_ng_2" model="res.company">
+            <field name="name">Test Company NG 2</field>
+            <field name="country_id" ref="base.ng"/>
+            <field name="currency_id" ref="base.NGN"/>
+        </record>
+        <record id="test_company_nl" model="res.company">
+            <field name="name">Test Company NL</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_nl_2" model="res.company">
+            <field name="name">Test Company NL 2</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_no" model="res.company">
+            <field name="name">Test Company NO</field>
+            <field name="country_id" ref="base.no"/>
+            <field name="currency_id" ref="base.NOK"/>
+        </record>
+        <record id="test_company_no_2" model="res.company">
+            <field name="name">Test Company NO 2</field>
+            <field name="country_id" ref="base.no"/>
+            <field name="currency_id" ref="base.NOK"/>
+        </record>
+        <record id="test_company_nz" model="res.company">
+            <field name="name">Test Company NZ</field>
+            <field name="country_id" ref="base.nz"/>
+            <field name="currency_id" ref="base.NZD"/>
+        </record>
+        <record id="test_company_nz_2" model="res.company">
+            <field name="name">Test Company NZ 2</field>
+            <field name="country_id" ref="base.nz"/>
+            <field name="currency_id" ref="base.NZD"/>
+        </record>
+        <record id="test_company_om" model="res.company">
+            <field name="name">Test Company OM</field>
+            <field name="country_id" ref="base.om"/>
+            <field name="currency_id" ref="base.OMR"/>
+        </record>
+        <record id="test_company_om_2" model="res.company">
+            <field name="name">Test Company OM 2</field>
+            <field name="country_id" ref="base.om"/>
+            <field name="currency_id" ref="base.OMR"/>
+        </record>
+        <record id="test_company_pa" model="res.company">
+            <field name="name">Test Company PA</field>
+            <field name="country_id" ref="base.pa"/>
+            <field name="currency_id" ref="base.PAB"/>
+        </record>
+        <record id="test_company_pa_2" model="res.company">
+            <field name="name">Test Company PA 2</field>
+            <field name="country_id" ref="base.pa"/>
+            <field name="currency_id" ref="base.PAB"/>
+        </record>
+        <record id="test_company_pe" model="res.company">
+            <field name="name">Test Company PE</field>
+            <field name="country_id" ref="base.pe"/>
+            <field name="currency_id" ref="base.PEN"/>
+        </record>
+        <record id="test_company_pe_2" model="res.company">
+            <field name="name">Test Company PE 2</field>
+            <field name="country_id" ref="base.pe"/>
+            <field name="currency_id" ref="base.PEN"/>
+        </record>
+        <record id="test_company_ph" model="res.company">
+            <field name="name">Test Company PH</field>
+            <field name="country_id" ref="base.ph"/>
+            <field name="currency_id" ref="base.PHP"/>
+        </record>
+        <record id="test_company_ph_2" model="res.company">
+            <field name="name">Test Company PH 2</field>
+            <field name="country_id" ref="base.ph"/>
+            <field name="currency_id" ref="base.PHP"/>
+        </record>
+        <record id="test_company_pk" model="res.company">
+            <field name="name">Test Company PK</field>
+            <field name="country_id" ref="base.pk"/>
+            <field name="currency_id" ref="base.PKR"/>
+        </record>
+        <record id="test_company_pk_2" model="res.company">
+            <field name="name">Test Company PK 2</field>
+            <field name="country_id" ref="base.pk"/>
+            <field name="currency_id" ref="base.PKR"/>
+        </record>
+        <record id="test_company_pl" model="res.company">
+            <field name="name">Test Company PL</field>
+            <field name="country_id" ref="base.pl"/>
+            <field name="currency_id" ref="base.PLN"/>
+        </record>
+        <record id="test_company_pl_2" model="res.company">
+            <field name="name">Test Company PL 2</field>
+            <field name="country_id" ref="base.pl"/>
+            <field name="currency_id" ref="base.PLN"/>
+        </record>
+        <record id="test_company_pt" model="res.company">
+            <field name="name">Test Company PT</field>
+            <field name="country_id" ref="base.pt"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_pt_2" model="res.company">
+            <field name="name">Test Company PT 2</field>
+            <field name="country_id" ref="base.pt"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_qa" model="res.company">
+            <field name="name">Test Company QA</field>
+            <field name="country_id" ref="base.qa"/>
+            <field name="currency_id" ref="base.QAR"/>
+        </record>
+        <record id="test_company_qa_2" model="res.company">
+            <field name="name">Test Company QA 2</field>
+            <field name="country_id" ref="base.qa"/>
+            <field name="currency_id" ref="base.QAR"/>
+        </record>
+        <record id="test_company_re" model="res.company">
+            <field name="name">Test Company RE</field>
+            <field name="country_id" ref="base.re"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_re_2" model="res.company">
+            <field name="name">Test Company RE 2</field>
+            <field name="country_id" ref="base.re"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_ro" model="res.company">
+            <field name="name">Test Company RO</field>
+            <field name="country_id" ref="base.ro"/>
+            <field name="currency_id" ref="base.RON"/>
+        </record>
+        <record id="test_company_ro_2" model="res.company">
+            <field name="name">Test Company RO 2</field>
+            <field name="country_id" ref="base.ro"/>
+            <field name="currency_id" ref="base.RON"/>
+        </record>
+        <record id="test_company_rs" model="res.company">
+            <field name="name">Test Company RS</field>
+            <field name="country_id" ref="base.rs"/>
+            <field name="currency_id" ref="base.RSD"/>
+        </record>
+        <record id="test_company_rs_2" model="res.company">
+            <field name="name">Test Company RS 2</field>
+            <field name="country_id" ref="base.rs"/>
+            <field name="currency_id" ref="base.RSD"/>
+        </record>
+        <record id="test_company_rw" model="res.company">
+            <field name="name">Test Company RW</field>
+            <field name="country_id" ref="base.rw"/>
+            <field name="currency_id" ref="base.RWF"/>
+        </record>
+        <record id="test_company_rw_2" model="res.company">
+            <field name="name">Test Company RW 2</field>
+            <field name="country_id" ref="base.rw"/>
+            <field name="currency_id" ref="base.RWF"/>
+        </record>
+        <record id="test_company_sa" model="res.company">
+            <field name="name">Test Company SA</field>
+            <field name="country_id" ref="base.sa"/>
+            <field name="currency_id" ref="base.SAR"/>
+        </record>
+        <record id="test_company_sa_2" model="res.company">
+            <field name="name">Test Company SA 2</field>
+            <field name="country_id" ref="base.sa"/>
+            <field name="currency_id" ref="base.SAR"/>
+        </record>
+        <record id="test_company_se" model="res.company">
+            <field name="name">Test Company SE</field>
+            <field name="country_id" ref="base.se"/>
+            <field name="currency_id" ref="base.SEK"/>
+        </record>
+        <record id="test_company_se_2" model="res.company">
+            <field name="name">Test Company SE 2</field>
+            <field name="country_id" ref="base.se"/>
+            <field name="currency_id" ref="base.SEK"/>
+        </record>
+        <record id="test_company_sg" model="res.company">
+            <field name="name">Test Company SG</field>
+            <field name="country_id" ref="base.sg"/>
+            <field name="currency_id" ref="base.SGD"/>
+        </record>
+        <record id="test_company_sg_2" model="res.company">
+            <field name="name">Test Company SG 2</field>
+            <field name="country_id" ref="base.sg"/>
+            <field name="currency_id" ref="base.SGD"/>
+        </record>
+        <record id="test_company_si" model="res.company">
+            <field name="name">Test Company SI</field>
+            <field name="country_id" ref="base.si"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_si_2" model="res.company">
+            <field name="name">Test Company SI 2</field>
+            <field name="country_id" ref="base.si"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_sk" model="res.company">
+            <field name="name">Test Company SK</field>
+            <field name="country_id" ref="base.sk"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_sk_2" model="res.company">
+            <field name="name">Test Company SK 2</field>
+            <field name="country_id" ref="base.sk"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_sn" model="res.company">
+            <field name="name">Test Company SN</field>
+            <field name="country_id" ref="base.sn"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_sn_2" model="res.company">
+            <field name="name">Test Company SN 2</field>
+            <field name="country_id" ref="base.sn"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_td" model="res.company">
+            <field name="name">Test Company TD</field>
+            <field name="country_id" ref="base.td"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_td_2" model="res.company">
+            <field name="name">Test Company TD 2</field>
+            <field name="country_id" ref="base.td"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_tg" model="res.company">
+            <field name="name">Test Company TG</field>
+            <field name="country_id" ref="base.tg"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_tg_2" model="res.company">
+            <field name="name">Test Company TG 2</field>
+            <field name="country_id" ref="base.tg"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_th" model="res.company">
+            <field name="name">Test Company TH</field>
+            <field name="country_id" ref="base.th"/>
+            <field name="currency_id" ref="base.THB"/>
+        </record>
+        <record id="test_company_th_2" model="res.company">
+            <field name="name">Test Company TH 2</field>
+            <field name="country_id" ref="base.th"/>
+            <field name="currency_id" ref="base.THB"/>
+        </record>
+        <record id="test_company_tn" model="res.company">
+            <field name="name">Test Company TN</field>
+            <field name="country_id" ref="base.tn"/>
+            <field name="currency_id" ref="base.TND"/>
+        </record>
+        <record id="test_company_tn_2" model="res.company">
+            <field name="name">Test Company TN 2</field>
+            <field name="country_id" ref="base.tn"/>
+            <field name="currency_id" ref="base.TND"/>
+        </record>
+        <record id="test_company_tr" model="res.company">
+            <field name="name">Test Company TR</field>
+            <field name="country_id" ref="base.tr"/>
+            <field name="currency_id" ref="base.TRY"/>
+        </record>
+        <record id="test_company_tr_2" model="res.company">
+            <field name="name">Test Company TR 2</field>
+            <field name="country_id" ref="base.tr"/>
+            <field name="currency_id" ref="base.TRY"/>
+        </record>
+        <record id="test_company_tw" model="res.company">
+            <field name="name">Test Company TW</field>
+            <field name="country_id" ref="base.tw"/>
+            <field name="currency_id" ref="base.TWD"/>
+        </record>
+        <record id="test_company_tw_2" model="res.company">
+            <field name="name">Test Company TW 2</field>
+            <field name="country_id" ref="base.tw"/>
+            <field name="currency_id" ref="base.TWD"/>
+        </record>
+        <record id="test_company_tz" model="res.company">
+            <field name="name">Test Company TZ</field>
+            <field name="country_id" ref="base.tz"/>
+            <field name="currency_id" ref="base.TZS"/>
+        </record>
+        <record id="test_company_tz_2" model="res.company">
+            <field name="name">Test Company TZ 2</field>
+            <field name="country_id" ref="base.tz"/>
+            <field name="currency_id" ref="base.TZS"/>
+        </record>
+        <record id="test_company_ua" model="res.company">
+            <field name="name">Test Company UA</field>
+            <field name="country_id" ref="base.ua"/>
+            <field name="currency_id" ref="base.UAH"/>
+        </record>
+        <record id="test_company_ua_2" model="res.company">
+            <field name="name">Test Company UA 2</field>
+            <field name="country_id" ref="base.ua"/>
+            <field name="currency_id" ref="base.UAH"/>
+        </record>
+        <record id="test_company_ug" model="res.company">
+            <field name="name">Test Company UG</field>
+            <field name="country_id" ref="base.ug"/>
+            <field name="currency_id" ref="base.UGX"/>
+        </record>
+        <record id="test_company_ug_2" model="res.company">
+            <field name="name">Test Company UG 2</field>
+            <field name="country_id" ref="base.ug"/>
+            <field name="currency_id" ref="base.UGX"/>
+        </record>
+        <record id="test_company_us" model="res.company">
+            <field name="name">Test Company US</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        <record id="test_company_us_2" model="res.company">
+            <field name="name">Test Company US 2</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        <record id="test_company_uy" model="res.company">
+            <field name="name">Test Company UY</field>
+            <field name="country_id" ref="base.uy"/>
+            <field name="currency_id" ref="base.UYU"/>
+        </record>
+        <record id="test_company_uy_2" model="res.company">
+            <field name="name">Test Company UY 2</field>
+            <field name="country_id" ref="base.uy"/>
+            <field name="currency_id" ref="base.UYU"/>
+        </record>
+        <record id="test_company_uz" model="res.company">
+            <field name="name">Test Company UZ</field>
+            <field name="country_id" ref="base.uz"/>
+            <field name="currency_id" ref="base.UZS"/>
+        </record>
+        <record id="test_company_uz_2" model="res.company">
+            <field name="name">Test Company UZ 2</field>
+            <field name="country_id" ref="base.uz"/>
+            <field name="currency_id" ref="base.UZS"/>
+        </record>
+        <record id="test_company_ve" model="res.company">
+            <field name="name">Test Company VE</field>
+            <field name="country_id" ref="base.ve"/>
+            <field name="currency_id" ref="base.VEF"/>
+        </record>
+        <record id="test_company_ve_2" model="res.company">
+            <field name="name">Test Company VE 2</field>
+            <field name="country_id" ref="base.ve"/>
+            <field name="currency_id" ref="base.VEF"/>
+        </record>
+        <record id="test_company_vn" model="res.company">
+            <field name="name">Test Company VN</field>
+            <field name="country_id" ref="base.vn"/>
+            <field name="currency_id" ref="base.VND"/>
+        </record>
+        <record id="test_company_vn_2" model="res.company">
+            <field name="name">Test Company VN 2</field>
+            <field name="country_id" ref="base.vn"/>
+            <field name="currency_id" ref="base.VND"/>
+        </record>
+        <record id="test_company_xi" model="res.company">
+            <field name="name">Test Company XI</field>
+            <field name="country_id" ref="base.xi"/>
+            <field name="currency_id" ref="base.GBP"/>
+        </record>
+        <record id="test_company_xi_2" model="res.company">
+            <field name="name">Test Company XI 2</field>
+            <field name="country_id" ref="base.xi"/>
+            <field name="currency_id" ref="base.GBP"/>
+        </record>
+        <record id="test_company_yt" model="res.company">
+            <field name="name">Test Company YT</field>
+            <field name="country_id" ref="base.yt"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_yt_2" model="res.company">
+            <field name="name">Test Company YT 2</field>
+            <field name="country_id" ref="base.yt"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_za" model="res.company">
+            <field name="name">Test Company ZA</field>
+            <field name="country_id" ref="base.za"/>
+            <field name="currency_id" ref="base.ZAR"/>
+        </record>
+        <record id="test_company_za_2" model="res.company">
+            <field name="name">Test Company ZA 2</field>
+            <field name="country_id" ref="base.za"/>
+            <field name="currency_id" ref="base.ZAR"/>
+        </record>
+        <record id="test_company_zm" model="res.company">
+            <field name="name">Test Company ZM</field>
+            <field name="country_id" ref="base.zm"/>
+            <field name="currency_id" ref="base.ZMW"/>
+        </record>
+        <record id="test_company_zm_2" model="res.company">
+            <field name="name">Test Company ZM 2</field>
+            <field name="country_id" ref="base.zm"/>
+            <field name="currency_id" ref="base.ZMW"/>
+        </record>
+        <record id="test_company_chart_ar_base" model="res.company">
+            <field name="name">Test Company ar_base</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="currency_id" ref="base.ARS"/>
+        </record>
+        <record id="test_company_chart_ar_base_2" model="res.company">
+            <field name="name">Test Company ar_base 2</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="currency_id" ref="base.ARS"/>
+        </record>
+        <record id="test_company_chart_ar_ex" model="res.company">
+            <field name="name">Test Company ar_ex</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="currency_id" ref="base.ARS"/>
+        </record>
+        <record id="test_company_chart_ar_ex_2" model="res.company">
+            <field name="name">Test Company ar_ex 2</field>
+            <field name="country_id" ref="base.ar"/>
+            <field name="currency_id" ref="base.ARS"/>
+        </record>
+        <record id="test_company_chart_be_asso" model="res.company">
+            <field name="name">Test Company be_asso</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_be_asso_2" model="res.company">
+            <field name="name">Test Company be_asso 2</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_bf_syscebnl" model="res.company">
+            <field name="name">Test Company bf_syscebnl</field>
+            <field name="country_id" ref="base.bf"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_bf_syscebnl_2" model="res.company">
+            <field name="name">Test Company bf_syscebnl 2</field>
+            <field name="country_id" ref="base.bf"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_bj_syscebnl" model="res.company">
+            <field name="name">Test Company bj_syscebnl</field>
+            <field name="country_id" ref="base.bj"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_bj_syscebnl_2" model="res.company">
+            <field name="name">Test Company bj_syscebnl 2</field>
+            <field name="country_id" ref="base.bj"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_cd_syscebnl" model="res.company">
+            <field name="name">Test Company cd_syscebnl</field>
+            <field name="country_id" ref="base.cd"/>
+            <field name="currency_id" ref="base.CDF"/>
+        </record>
+        <record id="test_company_chart_cd_syscebnl_2" model="res.company">
+            <field name="name">Test Company cd_syscebnl 2</field>
+            <field name="country_id" ref="base.cd"/>
+            <field name="currency_id" ref="base.CDF"/>
+        </record>
+        <record id="test_company_chart_cf_syscebnl" model="res.company">
+            <field name="name">Test Company cf_syscebnl</field>
+            <field name="country_id" ref="base.cf"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_cf_syscebnl_2" model="res.company">
+            <field name="name">Test Company cf_syscebnl 2</field>
+            <field name="country_id" ref="base.cf"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_cg_syscebnl" model="res.company">
+            <field name="name">Test Company cg_syscebnl</field>
+            <field name="country_id" ref="base.cg"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_cg_syscebnl_2" model="res.company">
+            <field name="name">Test Company cg_syscebnl 2</field>
+            <field name="country_id" ref="base.cg"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_ci_syscebnl" model="res.company">
+            <field name="name">Test Company ci_syscebnl</field>
+            <field name="country_id" ref="base.ci"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_ci_syscebnl_2" model="res.company">
+            <field name="name">Test Company ci_syscebnl 2</field>
+            <field name="country_id" ref="base.ci"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_cm_syscebnl" model="res.company">
+            <field name="name">Test Company cm_syscebnl</field>
+            <field name="country_id" ref="base.cm"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_cm_syscebnl_2" model="res.company">
+            <field name="name">Test Company cm_syscebnl 2</field>
+            <field name="country_id" ref="base.cm"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_cn_large_bis" model="res.company">
+            <field name="name">Test Company cn_large_bis</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="currency_id" ref="base.CNY"/>
+        </record>
+        <record id="test_company_chart_cn_large_bis_2" model="res.company">
+            <field name="name">Test Company cn_large_bis 2</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="currency_id" ref="base.CNY"/>
+        </record>
+        <record id="test_company_chart_de_skr04" model="res.company">
+            <field name="name">Test Company de_skr04</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_de_skr04_2" model="res.company">
+            <field name="name">Test Company de_skr04 2</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_es_assec" model="res.company">
+            <field name="name">Test Company es_assec</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_es_assec_2" model="res.company">
+            <field name="name">Test Company es_assec 2</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_es_coop_full" model="res.company">
+            <field name="name">Test Company es_coop_full</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_es_coop_full_2" model="res.company">
+            <field name="name">Test Company es_coop_full 2</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_es_coop_pymes" model="res.company">
+            <field name="name">Test Company es_coop_pymes</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_es_coop_pymes_2" model="res.company">
+            <field name="name">Test Company es_coop_pymes 2</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_es_full" model="res.company">
+            <field name="name">Test Company es_full</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_es_full_2" model="res.company">
+            <field name="name">Test Company es_full 2</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_fr_asso" model="res.company">
+            <field name="name">Test Company fr_asso</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_fr_asso_2" model="res.company">
+            <field name="name">Test Company fr_asso 2</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_ga_syscebnl" model="res.company">
+            <field name="name">Test Company ga_syscebnl</field>
+            <field name="country_id" ref="base.ga"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_ga_syscebnl_2" model="res.company">
+            <field name="name">Test Company ga_syscebnl 2</field>
+            <field name="country_id" ref="base.ga"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_gn_syscebnl" model="res.company">
+            <field name="name">Test Company gn_syscebnl</field>
+            <field name="country_id" ref="base.gn"/>
+            <field name="currency_id" ref="base.GNF"/>
+        </record>
+        <record id="test_company_chart_gn_syscebnl_2" model="res.company">
+            <field name="name">Test Company gn_syscebnl 2</field>
+            <field name="country_id" ref="base.gn"/>
+            <field name="currency_id" ref="base.GNF"/>
+        </record>
+        <record id="test_company_chart_gq_syscebnl" model="res.company">
+            <field name="name">Test Company gq_syscebnl</field>
+            <field name="country_id" ref="base.gq"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_gq_syscebnl_2" model="res.company">
+            <field name="name">Test Company gq_syscebnl 2</field>
+            <field name="country_id" ref="base.gq"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_gw_syscebnl" model="res.company">
+            <field name="name">Test Company gw_syscebnl</field>
+            <field name="country_id" ref="base.gw"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_gw_syscebnl_2" model="res.company">
+            <field name="name">Test Company gw_syscebnl 2</field>
+            <field name="country_id" ref="base.gw"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_in_sch3" model="res.company">
+            <field name="name">Test Company in_sch3</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="currency_id" ref="base.INR"/>
+        </record>
+        <record id="test_company_chart_in_sch3_2" model="res.company">
+            <field name="name">Test Company in_sch3 2</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="currency_id" ref="base.INR"/>
+        </record>
+        <record id="test_company_chart_km_syscebnl" model="res.company">
+            <field name="name">Test Company km_syscebnl</field>
+            <field name="country_id" ref="base.km"/>
+            <field name="currency_id" ref="base.KMF"/>
+        </record>
+        <record id="test_company_chart_km_syscebnl_2" model="res.company">
+            <field name="name">Test Company km_syscebnl 2</field>
+            <field name="country_id" ref="base.km"/>
+            <field name="currency_id" ref="base.KMF"/>
+        </record>
+        <record id="test_company_chart_ml_syscebnl" model="res.company">
+            <field name="name">Test Company ml_syscebnl</field>
+            <field name="country_id" ref="base.ml"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_ml_syscebnl_2" model="res.company">
+            <field name="name">Test Company ml_syscebnl 2</field>
+            <field name="country_id" ref="base.ml"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_ne_syscebnl" model="res.company">
+            <field name="name">Test Company ne_syscebnl</field>
+            <field name="country_id" ref="base.ne"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_ne_syscebnl_2" model="res.company">
+            <field name="name">Test Company ne_syscebnl 2</field>
+            <field name="country_id" ref="base.ne"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_se_K2" model="res.company">
+            <field name="name">Test Company se_K2</field>
+            <field name="country_id" ref="base.se"/>
+            <field name="currency_id" ref="base.SEK"/>
+        </record>
+        <record id="test_company_chart_se_K2_2" model="res.company">
+            <field name="name">Test Company se_K2 2</field>
+            <field name="country_id" ref="base.se"/>
+            <field name="currency_id" ref="base.SEK"/>
+        </record>
+        <record id="test_company_chart_se_K3" model="res.company">
+            <field name="name">Test Company se_K3</field>
+            <field name="country_id" ref="base.se"/>
+            <field name="currency_id" ref="base.SEK"/>
+        </record>
+        <record id="test_company_chart_se_K3_2" model="res.company">
+            <field name="name">Test Company se_K3 2</field>
+            <field name="country_id" ref="base.se"/>
+            <field name="currency_id" ref="base.SEK"/>
+        </record>
+        <record id="test_company_chart_sn_syscebnl" model="res.company">
+            <field name="name">Test Company sn_syscebnl</field>
+            <field name="country_id" ref="base.sn"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_sn_syscebnl_2" model="res.company">
+            <field name="name">Test Company sn_syscebnl 2</field>
+            <field name="country_id" ref="base.sn"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <!-- Regional OHADA charts need a fiscal country; use Benin for these fixtures. -->
+        <record id="test_company_chart_syscebnl" model="res.company">
+            <field name="name">Test Company syscebnl</field>
+            <field name="country_id" ref="base.bj"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_syscebnl_2" model="res.company">
+            <field name="name">Test Company syscebnl 2</field>
+            <field name="country_id" ref="base.bj"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_syscohada" model="res.company">
+            <field name="name">Test Company syscohada</field>
+            <field name="country_id" ref="base.bj"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_syscohada_2" model="res.company">
+            <field name="name">Test Company syscohada 2</field>
+            <field name="country_id" ref="base.bj"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_td_syscebnl" model="res.company">
+            <field name="name">Test Company td_syscebnl</field>
+            <field name="country_id" ref="base.td"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_td_syscebnl_2" model="res.company">
+            <field name="name">Test Company td_syscebnl 2</field>
+            <field name="country_id" ref="base.td"/>
+            <field name="currency_id" ref="base.XAF"/>
+        </record>
+        <record id="test_company_chart_tg_syscebnl" model="res.company">
+            <field name="name">Test Company tg_syscebnl</field>
+            <field name="country_id" ref="base.tg"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_tg_syscebnl_2" model="res.company">
+            <field name="name">Test Company tg_syscebnl 2</field>
+            <field name="country_id" ref="base.tg"/>
+            <field name="currency_id" ref="base.XOF"/>
+        </record>
+        <record id="test_company_chart_hr_kuna" model="res.company">
+            <field name="name">Test Company hr_kuna</field>
+            <field name="country_id" ref="base.hr"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="test_company_chart_hr_kuna_2" model="res.company">
+            <field name="name">Test Company hr_kuna 2</field>
+            <field name="country_id" ref="base.hr"/>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+    </data>
+    <!-- Reserve localization fixtures only when a test explicitly adds them to its user. -->
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root')]"/>
+        <value model="ir.model.data" eval="{'company_ids': [Command.unlink(data.res_id) for data in obj().search([('module', '=', 'base'), ('model', '=', 'res.company'), ('name', '=like', 'test_company_%'), ('name', 'not in', ['test_company_with_branch', 'test_company_branch_a', 'test_company_branch_b', 'test_company_template', 'test_company_template2'])])]}"/>
+    </function>
+</odoo>

@@ -1536,6 +1536,40 @@ class TransactionCase(BaseCase):
             transaction.ormcaches__[name] = CacheLayer(layer)
 
     @classmethod
+    def _get_localization_country_code(cls):
+        parts = cls.__module__.split('.')
+        if len(parts) < 3 or parts[:2] != ['odoo', 'addons']:
+            return False
+        module = parts[2]
+        if not module.startswith('l10n_'):
+            return False
+        code = module.split('_')[1]
+        return 'gb' if code == 'uk' else code
+
+    @classmethod
+    def setup_localization_company(cls, country_code, values=None):
+        """Reuse an available localization fixture, without installing accounting.
+
+        Tests needing more than two independent companies retain normal company
+        creation. The accounting localization installs the fixtures' charts once.
+        """
+        country_code = country_code.lower()
+        for suffix in ('', '_2'):
+            xmlid = f'base.test_company_{country_code}{suffix}'
+            company = cls.env.ref(xmlid)
+            if company not in cls.env.user.company_ids:
+                return cls.add_class_company(xmlid, values)
+        country = cls.env['res.country'].search([('code', '=', country_code.upper())], limit=1)
+        company = cls.env['res.company'].create({
+            'name': f'Test Company {country_code.upper()} {uuid4().hex}',
+            'country_id': country.id,
+            'currency_id': country.currency_id.id,
+            **(values or {}),
+        })
+        cls.env.user.company_ids |= company
+        return company
+
+    @classmethod
     def add_class_company(cls, xmlid, values=None):
         company = cls.env.ref(xmlid).sudo()
         if values:

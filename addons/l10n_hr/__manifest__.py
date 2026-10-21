@@ -26,5 +26,8 @@ https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF
         'demo/demo_company.xml',
     ],
     'author': 'Odoo S.A.',
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }
