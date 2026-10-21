@@ -14,12 +14,15 @@ import atexit
 import logging
 import os
 import sys
+from contextlib import closing
 
+import psycopg2
 from psycopg2.errors import InsufficientPrivilege
 
 from odoo.release import author as __author__  # noqa: F401
 from odoo.release import version as __version__  # noqa: F401
 from odoo.service import server
+from odoo.sql_db import db_connect
 from odoo.tools import config
 
 from . import Command
@@ -35,13 +38,32 @@ def check_root_user():
 
 
 def check_postgres_user():
-    """ Exit if the configured database user is 'postgres'.
-
-    This function assumes the configuration has been initialized.
-    """
+    """ Exit if the connected PostgreSQL role has superuser privileges. """
     if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
-        sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
-        sys.exit(1)
+        sys.exit("Using the database user 'postgres' is a security risk, aborting.")
+
+    for dbname in (config['db_system'], 'postgres'):
+        try:
+            with closing(db_connect(dbname).cursor()) as cr:
+                cr.execute("SELECT rolname, rolsuper FROM pg_roles WHERE rolname = CURRENT_USER")
+                rolname, rolsuper = cr.fetchone()
+            break
+        except psycopg2.Error as e:
+            _logger.info("Could not check role privileges on %r: %s", dbname, e)
+    else:
+        _logger.warning("Could not verify the database role privileges: no system database is reachable")
+        return
+
+    if rolsuper:
+        sys.exit(
+            f"Odoo cannot run with superuser role {rolname!r}: PostgreSQL superusers "
+            "can execute OS commands and read/write files as the PostgreSQL system "
+            "user, risking host privilege escalation and sandbox escape.\n"
+            "Fix it as a database administrator, then restart Odoo.\n"
+            "Suggested fix:\n"
+            f'sudo -u postgres psql -d postgres -c \'ALTER ROLE "{rolname}" WITH NOSUPERUSER CREATEDB\'\n'
+        )
+
 
 def report_configuration():
     """ Log the server version and some configuration values.
