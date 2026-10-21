@@ -12,6 +12,22 @@ class RegistrationEditor(models.TransientModel):
 
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', required=True, ondelete='cascade')
     event_registration_ids = fields.One2many('registration.editor.line', 'editor_id', string='Registrations to Edit')
+    has_multiple_events = fields.Boolean(
+        "Has Multiple Events", compute="_compute_events_slots",
+        help="Whether attendee lines span multiple events")
+    has_slots = fields.Boolean(
+        "Has Slots", compute="_compute_events_slots",
+        help="Whether any attendee line belongs to a multi-slot event")
+
+    @api.depends('event_registration_ids.event_id', 'event_registration_ids.event_id.is_multi_slots', 'event_registration_ids.event_slot_id')
+    def _compute_events_slots(self):
+        for editor in self:
+            events = editor.event_registration_ids.event_id
+            editor.has_multiple_events = len(events) > 1
+            editor.has_slots = any(
+                line.event_slot_id or line.event_id.is_multi_slots
+                for line in editor.event_registration_ids
+            )
 
     @api.model
     def default_get(self, fields):
