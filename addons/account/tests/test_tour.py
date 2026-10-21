@@ -94,7 +94,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
             'is_favorite': True,
             'default_code': '0',
         })
-        self.start_tour("/odoo/customer-invoices/new", 'test_use_product_catalog_on_invoice', login="admin")
+        self.start_tour("/odoo/customer-invoices/new", 'test_use_product_catalog_on_invoice', login=self.env.user.login)
 
     def test_deductible_amount_column(self):
         self.assertFalse(self.env.user.has_group('account.group_partial_purchase_deductibility'))
@@ -114,5 +114,5 @@ class TestUi(AccountTestInvoicingHttpCommon):
         self.start_tour(
             '/odoo/customer-invoices/new',
             'test_add_section_from_product_catalog_on_invoice',
-            login='admin',
+            login=self.env.user.login,
         )

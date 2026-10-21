@@ -58,6 +58,11 @@ class TestTracking(AccountTestInvoicingCommon, MailCase):
                 'phone': '0455135790',
             })
         partner_admin = self.env.ref('base.partner_admin')
+        self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'code': 'TEST',
+            'type': 'general',
+        })
         multiple_account_moves = [
             {
                 'description': 'Single account.move',
