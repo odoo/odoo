@@ -22,9 +22,6 @@
 }
 
 .o-translate-side-panel {
-    /* Dark */
-    --_highlight-bg-rgb: 209, 236, 241;
-
     height: 100vh;
     width: var(--translate-side-panel-width);
     z-index: 2000;
@@ -33,25 +30,18 @@
         cursor: pointer;
 
         &:hover {
-            background-color: rgba(var(--_highlight-bg-rgb), 0.5);
+            background-color: color-mix(in srgb, var(--info-bg-subtle) 50%, transparent);
         }
 
         &:focus,
         &:focus-within {
-            background-color: rgba(var(--_highlight-bg-rgb), 1);
+            background-color: var(--info-bg-subtle);
         }
     }
 
     .o-translation-flag {
         object-fit: contain;
         max-width: 1.5rem;
-    }
-}
-
-/* TODO: use bundle system */
-@media (prefers-color-scheme: dark) {
-    .o-translate-side-panel {
-        --_highlight-bg-rgb: 32, 54, 75;
     }
 }
 
