@@ -10,7 +10,7 @@
         'sale',
     ],
     'data': [
-        'report/jp_sale_report.xml',
+        'report/ir_actions_report_templates.xml',
     ],
     'auto_install': True,
     'license': 'LGPL-3',

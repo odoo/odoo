@@ -10,7 +10,8 @@
         'purchase',
     ],
     'data': [
-        'report/jp_purchase_report.xml',
+        'report/purchase_order_templates.xml',
+        'report/purchase_quotation_templates.xml',
     ],
     'auto_install': True,
     'license': 'LGPL-3',

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">
+        <xpath expr="//t[@t-set='address']" position="before">
+            <t t-set="jp_layout" t-value="o.company_id.external_report_layout_id.sudo().key == 'l10n_jp.external_layout_jp_standard'"/>
+        </xpath>
+        <xpath expr="//t[@t-call='web.external_layout']" position="before">
+            <t t-set="jp_document_date" t-value="o.date_order"/>
+        </xpath>
+
+        <!-- The Japanese Business layout heads the address with the recipient's name and honorific. -->
+        <xpath expr="//div[@t-field='o.partner_id']" position="attributes">
+            <attribute name="t-options">{"widget": "contact", "fields": ["address", "phone", "vat"] if jp_layout else ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}</attribute>
+        </xpath>
+    </template>
+</odoo>

@@ -10,7 +10,8 @@
         'stock',
     ],
     'data': [
-        'report/jp_stock_report.xml',
+        'report/report_deliveryslip.xml',
+        'report/report_return_slip.xml',
     ],
     'auto_install': True,
     'license': 'LGPL-3',

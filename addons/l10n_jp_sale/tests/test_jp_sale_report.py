@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import lxml.html
+
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
@@ -31,3 +33,13 @@ class TestJPSaleReport(AccountTestInvoicingCommon):
 
         self.assertIn('220.00', text)
         self.assertIn('111.10', text)
+
+    def test_another_layout_keeps_the_name_in_the_address(self):
+        self.company_data['company'].external_report_layout_id = self.env.ref('web.external_layout_standard')
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        })
+        html = self.env['ir.actions.report']._render_qweb_html('sale.report_saleorder', order.ids)[0]
+
+        self.assertIn(self.partner_a.name, lxml.html.fromstring(html).find_class('address')[0].text_content())

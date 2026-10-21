@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import lxml.html
+
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import new_test_user, tagged
@@ -44,3 +46,14 @@ class TestJPStockReport(AccountTestInvoicingCommon):
         html = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', self.picking.ids)[0]
 
         self.assertRegex(html2plaintext(html), r'JP Trading\s+御中')
+
+    def test_another_layout_keeps_its_slip_titles_and_names(self):
+        self.company_data['company'].external_report_layout_id = self.env.ref('web.external_layout_standard')
+        company = self.env['res.partner'].create({'name': 'JP Trading'})
+        self.picking.partner_id = self.env['res.partner'].create({'name': 'Taro Yamada', 'parent_id': company.id})
+
+        html = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', self.picking.ids)[0]
+        page = lxml.html.fromstring(html).find_class('page')[0]
+
+        self.assertIn('JP-DEL-0001', page.find('.//h2').text_content())
+        self.assertIn('JP Trading', html2plaintext(html))
