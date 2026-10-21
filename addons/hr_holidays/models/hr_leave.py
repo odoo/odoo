@@ -808,28 +808,6 @@ class HrLeave(models.Model):
             ]
         return domain
 
-    # so that when we consider allocated work entry types for employees that don't have allocations, it doesn't revert back to a generic one
-    @api.onchange('employee_id', 'request_date_from', 'request_date_to')
-    def _onchange_work_entry_type_id(self):
-        for holiday in self:
-            if not holiday.work_entry_type_id.requires_allocation:
-                continue
-            if not holiday.work_entry_type_id.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id):
-                local_work_entry_types = self.env['hr.work.entry.type'].with_context(
-                    default_date_from=holiday.request_date_from,
-                    default_date_to=holiday.request_date_to,
-                ).search([('country_id', 'in', [holiday.employee_id.country_id.id or holiday.employee_id.company_id.country_id.id] + [False])])
-                all_valid_work_entry_types = local_work_entry_types.with_context(
-                    default_date_from=holiday.request_date_from,
-                    default_date_to=holiday.request_date_to,
-                ).filtered_domain([('has_valid_allocation', '=', True)])
-                no_allocation_required = local_work_entry_types.filtered_domain([('requires_allocation', '=', False)])
-                valid_types = all_valid_work_entry_types.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id)
-                if not valid_types or not holiday.employee_id:
-                    holiday.work_entry_type_id = no_allocation_required[:1] or False
-                else:
-                    holiday.work_entry_type_id = valid_types[0]
-
     @api.depends('employee_id')
     def _compute_department_id(self):
         for holiday in self:
@@ -1353,7 +1331,7 @@ class HrLeave(models.Model):
             max_leaves = 0
             primary_unit = 'hours' if leave.work_entry_type_id.unit_of_measure == 'hour' else 'days'
             for allocation, allocation_dict in employee_days_per_allocation[leave.employee_id][leave.work_entry_type_id].items():
-                if allocation and (not allocation.date_to or allocation.date_to >= target_date):
+                if allocation and allocation.date_from <= target_date and (not allocation.date_to or allocation.date_to >= target_date):
                     max_leaves += allocation_dict[f'{primary_unit}_max_leaves']
                     virtual_remaining_leaves += allocation_dict[f'{primary_unit}_virtual_remaining_leaves']
             balance_per_leave[leave] = (virtual_remaining_leaves, max_leaves)
