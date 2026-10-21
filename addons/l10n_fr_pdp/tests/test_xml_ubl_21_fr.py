@@ -184,3 +184,17 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
             {'price_subtotal': 1000.0, 'price_total': 1200.0},
             {'price_subtotal': 400.0, 'price_total': 480.0},
         ])
+
+    def test_import_partner_with_siret(self):
+        """ Test that Odoo retrieves correctly the partner using the SIRET """
+        # partner a is SUPER FRENCH PARTNER with VAT FR23334175221
+        self.partner_a.supplier_rank = 10
+        other_establishment = self.env['res.partner'].create({
+            'name': 'SUPER FRENCH PARTNER PARIS',
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR23334175221',
+            'additional_identifiers': {'FR_SIRET': '33417522100012'},
+        })
+        bill = self._import_invoice_as_attachment_on('ubl_21_fr_in_invoice_establishment')
+        self.assertEqual(bill.partner_id, other_establishment)
+        self.assertEqual(bill.partner_bank_id.partner_id, other_establishment)
