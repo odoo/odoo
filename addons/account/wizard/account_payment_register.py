@@ -85,7 +85,7 @@ class AccountPaymentRegister(models.TransientModel):
     unreconciled_paid_amount = fields.Monetary(currency_field="currency_id", compute="_compute_unreconciled_paid_amount")
     exchange_rate = fields.Float(
         compute="_compute_exchange_rate",
-        digits=(12, 6),
+        digits=0,
         readonly=True,
         store=False
     )
