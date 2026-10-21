@@ -49,8 +49,8 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'count': 3,
             'event_tz': 'UTC',
         })
-        self.assertEqual(detached_events, self.event, "It should be detached from the recurrence")
-        self.assertFalse(self.event.recurrence_id, "It should be detached from the recurrence")
+        self.assertFalse(detached_events, "Event should be moved at the start of the recurrence")
+        self.assertTrue(self.event.recurrence_id, "It should still be part of the recurrence")
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         events = recurrence.calendar_event_ids
         self.assertEqual(len(events), 3, "It should have 3 events in the recurrence")
@@ -776,7 +776,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         self.assertFalse(self.recurrence.exists())
         self.assertFalse(self.events.exists())
 
-    def test_recurrence_update_all_first_archived(self):
+    def test_recurrence_update_all_first_moved(self):
         """Test to check the flow when a calendar event is
         created from a day that does not belong to the recurrence.
         """
@@ -800,10 +800,10 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         # Wednesday datetime(2019, 10, 30, 1, 0)
         recurrence = self.env['calendar.recurrence'].search([('id', '!=', self.recurrence.id)])
         events = recurrence.calendar_event_ids.sorted('start')
-        # Check first event is archived
-        self.assertFalse(event.active)
-        # Check base_event is different than archived and it is first active event
-        self.assertNotEqual(recurrence.base_event_id, event)
+        # Check first event is not archived
+        self.assertTrue(event.active)
+        # Check base_event is the same and it is first active event
+        self.assertEqual(recurrence.base_event_id, event)
         self.assertEqual(recurrence.base_event_id, events[0])
         # Update all events to check that error is not thrown
         events[0].write({
@@ -1003,7 +1003,6 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
     def test_recurring_ui_options_daily(self):
         with Form(self.env['calendar.event']) as calendar_form:
             calendar_form.name = 'test recurrence daily'
-            calendar_form.recurrency = True
             calendar_form.rrule_type_ui = 'daily'
             calendar_form.end_type = 'count'
             calendar_form.count = 2
@@ -1020,7 +1019,6 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
     def test_recurring_ui_options_monthly(self):
         with Form(self.env['calendar.event']) as calendar_form:
             calendar_form.name = 'test recurrence monthly'
-            calendar_form.recurrency = True
             calendar_form.rrule_type_ui = 'monthly'
             calendar_form.end_type = 'count'
             calendar_form.count = 2
@@ -1038,7 +1036,6 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
     def test_recurring_ui_options_yearly(self):
         with Form(self.env['calendar.event']) as calendar_form:
             calendar_form.name = 'test recurrence yearly'
-            calendar_form.recurrency = True
             calendar_form.rrule_type_ui = 'yearly'
             calendar_form.end_type = 'count'
             calendar_form.count = 2
