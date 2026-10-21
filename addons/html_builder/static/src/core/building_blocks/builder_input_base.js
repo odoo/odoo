@@ -1,4 +1,12 @@
+<<<<<<< d60b687b047701f0bac45f47f4dee875dea5ba3e
 import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+||||||| 41850d515556c47dcd5ee60fd23ea2140f69466d
+import { Component, useEffect, proxy } from "@odoo/owl";
+import { useForwardRefToParent } from "@web/core/utils/hooks";
+=======
+import { Component, onMounted, useOnChange } from "@odoo/owl";
+import { useForwardRefToParent } from "@web/core/utils/hooks";
+>>>>>>> 2d2bf74bddf1fef9fb95481842cdeb25c11fb7c5
 import { useActionInfo } from "../utils";
 
 /**
@@ -49,25 +57,46 @@ export class BuilderInputBase extends Component {
 
     setup() {
         this.isEditing = false;
+<<<<<<< d60b687b047701f0bac45f47f4dee875dea5ba3e
         this.info = useActionInfo(this.props);
         this.state = proxy({ value: this.props.value });
         useEffect(() => {
             const value = this.props.value;
             this.state.value = this.isEditing ? this.inputRef().value : value;
         });
+||||||| 41850d515556c47dcd5ee60fd23ea2140f69466d
+        this.info = useActionInfo();
+        this.inputRef = useForwardRefToParent("inputRef");
+        this.state = proxy({ value: this.props.value });
+        useEffect(() => {
+            const value = this.props.value;
+            this.state.value = this.isEditing ? this.inputRef.el.value : value;
+        });
+=======
+        this.info = useActionInfo();
+        this.inputRef = useForwardRefToParent("inputRef");
+        const syncValue = (value) => {
+            // While editing, the DOM owns the value. In particular, number
+            // inputs may display transient values such as "-" even though
+            // their exposed value is an empty string.
+            if (!this.isEditing && this.inputRef.el) {
+                this.inputRef.el.value = value ?? "";
+            }
+        };
+        onMounted(() => syncValue(this.props.value));
+        useOnChange(() => [this.props.value], syncValue, { initialRun: false });
+>>>>>>> 2d2bf74bddf1fef9fb95481842cdeb25c11fb7c5
     }
 
     onChange(ev) {
         this.isEditing = false;
         const normalizedDisplayValue = this.props.commit(ev.target.value);
         ev.target.value = normalizedDisplayValue;
-        this.state.value = normalizedDisplayValue;
         this.props.onChange?.(ev);
     }
 
     onInput(ev) {
         this.isEditing = true;
-        this.state.value = ev.target.value;
         this.props.preview(ev.target.value);
         this.props.onInput?.(ev);
     }
@@ -77,6 +106,10 @@ export class BuilderInputBase extends Component {
             this.inputRef().select();
         }
         this.props.onFocus?.(ev);
+    }
+
+    onBlur() {
+        this.isEditing = false;
     }
 
     onKeydown(ev) {
