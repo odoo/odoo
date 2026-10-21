@@ -7,10 +7,9 @@ from babel.dates import format_date, get_date_format
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
-from odoo.fields import Domain
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
-from odoo.tools import SQL, get_lang, babel_locale_parse
+from odoo.tools import get_lang, babel_locale_parse
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -152,8 +151,8 @@ class HrVersion(models.Model):
     fixed_term = fields.Boolean('Fixed Term', tracking=1, groups='hr.group_hr_user')
     trial_date_end = fields.Date('End of Trial Period', help="End date of the trial period (if there is one).",
                                  groups="hr.group_hr_user", tracking=1)
-    date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_user", search="_search_start_date")
-    date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_user", search="_search_end_date")
+    date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_user", store=True)
+    date_end = fields.Date(compute='_compute_dates', groups="hr.group_hr_user", store=True)
     is_current = fields.Boolean(compute='_compute_is_current', groups="hr.group_hr_user")
     is_past = fields.Boolean(compute='_compute_is_past', groups="hr.group_hr_user")
     is_future = fields.Boolean(compute='_compute_is_future', groups="hr.group_hr_user")
@@ -685,7 +684,7 @@ class HrVersion(models.Model):
 
     @api.depends(
         'contract_date_start', 'contract_date_end', 'date_version', 'employee_id',
-        'employee_id.version_ids.date_version', 'departure_date')
+        'employee_id.version_ids.date_version', 'employee_id.version_ids.active', 'departure_date')
     def _compute_dates(self):
         """Compute ``date_start`` and ``date_end``, the period during which the version is in effect.
 
@@ -695,7 +694,7 @@ class HrVersion(models.Model):
           capped by ``contract_date_end``; ``False`` if it is the last version
           of an open-ended (or no) contract.
 
-        Both dates are inclusive. These fields are not stored but searchable.
+        Both dates are inclusive.
         """
         for version in self:
             version.date_start = max(version.date_version, version.contract_date_start) \
@@ -720,73 +719,6 @@ class HrVersion(models.Model):
                 version.date_end = date_version_end
             else:
                 version.date_end = version.contract_date_end
-
-    def _search_start_date(self, operator, value):
-        if operator in ('>', '>='):
-            return [
-                '|',
-                    ('date_version', operator, value),
-                    ('contract_date_start', operator, value),
-            ]
-
-        if operator in ('<', '<='):
-            return [
-                '&',
-                    ('date_version', operator, value),
-                    '|',
-                        ('contract_date_start', '=', False),
-                        ('contract_date_start', operator, value),
-            ]
-
-        if operator == '=':
-            return [
-                '|',
-                    '&',
-                        ('date_version', '=', value),
-                        '|',
-                            ('contract_date_start', '=', False),
-                            ('contract_date_start', '<=', value),
-                    '&',
-                        ('contract_date_start', '=', value),
-                        ('date_version', '<=', value),
-            ]
-
-        if operator == '!=':
-            return ['!', *self._search_start_date('=', value)]
-
-        return NotImplemented
-
-    def _search_end_date(self, operator, value):
-        if operator not in ('<', '<=', '>', '>=', 'in'):
-            return NotImplemented
-        # Same logic as _compute_dates: the version ends the day before the next
-        # active version of the employee, or at the end of its contract.
-        date_end_sql = SQL("""
-            LEAST(
-                (
-                    SELECT MIN(next_version.date_version)
-                      FROM hr_version next_version
-                     WHERE next_version.employee_id = hr_version.employee_id
-                       AND next_version.active
-                       AND next_version.date_version > hr_version.date_version
-                ) - 1,
-                hr_version.contract_date_end
-            )
-        """)
-        if operator == 'in':
-            dates = [fields.Date.to_date(d) for d in value if d]
-            conditions = []
-            if dates:
-                conditions.append(SQL("%s IN %s", date_end_sql, tuple(dates)))
-            if False in value:
-                conditions.append(SQL("%s IS NULL", date_end_sql))
-            if not conditions:
-                return Domain.FALSE
-            condition = SQL(" OR ").join(conditions)
-        else:
-            sql_operator = {'<': SQL('<'), '<=': SQL('<='), '>': SQL('>'), '>=': SQL('>=')}[operator]
-            condition = SQL("%s %s %s::date", date_end_sql, sql_operator, value)
-        return [('id', 'in', SQL("(SELECT hr_version.id FROM hr_version WHERE %s)", condition))]
 
     @api.model
     def _get_marital_status_selection(self):
