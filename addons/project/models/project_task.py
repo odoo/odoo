@@ -2292,6 +2292,7 @@ class ProjectTask(models.Model):
 
     def project_sharing_toggle_is_follower(self):
         self.ensure_one()
+        self.check_access('read')
         is_follower = self.message_is_follower
         if is_follower:
             self.sudo().message_unsubscribe(self.env.user.partner_id.ids)
