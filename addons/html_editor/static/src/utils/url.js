@@ -117,7 +117,7 @@ export function getLinksToRetarget(container) {
  */
 export function retargetLinkToNewTab(link) {
     link.setAttribute("target", "_blank");
-    link.setAttribute("rel", "noreferrer");
+    link.setAttribute("rel", "noreferrer noopener");
 }
 
 export function scrollAndHighlightHeading(
