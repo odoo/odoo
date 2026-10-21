@@ -248,7 +248,7 @@ class ResPartner(models.Model):
             self_partner._get_peppol_edi_format(),
         )
         if old_value != new_value:
-            self_partner.peppol_verification_state = new_value
+            self_partner.sudo().peppol_verification_state = new_value
             (self_partner._origin or self_partner)._log_verification_state_update(old_value, new_value)
         return False
 
