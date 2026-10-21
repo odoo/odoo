@@ -21,15 +21,15 @@ $-references-carousel-cell-padding: calc(#{$-references-carousel-logo-height} / 
         flex: 0 0 auto;
         align-items: center;
         justify-content: center;
-        // Fixed box so the strip width (and thus the animation) does not
-        // depend on the images being loaded. The landscape ratio suits the
-        // wordmarks most logos are, and keeps every cell the same size
-        // whatever the uploaded image.
+        // Fixed height, but the width follows the logo, so that the space
+        // between two logos stays the same whatever their shape (a narrow
+        // logo in a fixed-width cell left holes once the cell had no
+        // background). The interaction lays the strip out again once the
+        // logos are loaded.
         // The padding keeps a logo cropped flush to its edges off the cell
         // border, and adds to the logo size so that the option still sizes the
         // logo itself.
         height: calc(#{$-references-carousel-logo-height} + 2 * #{$-references-carousel-cell-padding});
-        width: calc(#{$-references-carousel-logo-height} * 2.5 + 2 * #{$-references-carousel-cell-padding});
         padding: $-references-carousel-cell-padding;
         // Keeps a logo transformed with the image tools (e.g. rotated) inside
         // its cell instead of painting over the next ones.
@@ -40,8 +40,10 @@ $-references-carousel-cell-padding: calc(#{$-references-carousel-logo-height} / 
             // cropped logo is a broken logo. Only caps, no explicit size, so a
             // logo smaller than its cell is never upscaled into a blurry mess
             // (same behavior as the other references snippets via `img-fluid`).
-            max-width: 100%;
-            max-height: 100%;
+            // Absolute caps: a percentage of a cell sized by its content would
+            // be circular. Wide wordmarks stop at a landscape ratio.
+            max-width: calc(#{$-references-carousel-logo-height} * 2.5);
+            max-height: $-references-carousel-logo-height;
             // Keeps the ratio when the image options set an explicit width
             // while the height stays capped by the cell.
             object-fit: contain;
