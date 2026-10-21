@@ -17,6 +17,8 @@ export const onSwipeType = t.object({
     bgColor: t.string().optional(),
     icon: t.string().optional(),
     slot: t.object().optional(),
+    // name of a slot given to the swiper, rendered instead of `slot`
+    slotName: t.string().optional(),
 });
 /**
  * Action Swiper
@@ -35,6 +37,12 @@ export class ActionSwiper extends Component {
         enabledDuration: t.number().optional(),
         slots: t.object(),
         animationType: t.string().optional("bounce"),
+        // only render the slots of the swipe areas while swiping
+        renderSlotsOnSwipe: t.boolean().optional(),
+        // distance (px) to swipe to perform the action, a ratio of the width by default
+        swipeThreshold: t.number().optional(),
+        // speed (px/ms) above which a shorter swipe (a flick) performs the action
+        flickVelocity: t.number().optional(),
     });
     static swipeDistanceRatio = 4;
     static swipeEffectiveThreshold = 10;
@@ -44,6 +52,7 @@ export class ActionSwiper extends Component {
     targetContainer = signal.ref();
     leftPanel = signal.ref();
     rightPanel = signal.ref();
+    isSwiping = signal(false);
 
     setup() {
         super.setup();
@@ -99,17 +108,17 @@ export class ActionSwiper extends Component {
         if (this.isSwipeStarted) {
             ev.stopPropagation();
             ev.preventDefault();
-            if (
-                this.localizedProps.onRightSwipe &&
-                this.swipedDistance > this.containerWidth / this.constructor.swipeDistanceRatio
-            ) {
+            const velocity = Math.abs(this.swipedDistance) / (Date.now() - this.startTime || 1);
+            const threshold =
+                this.props.flickVelocity && velocity >= this.props.flickVelocity
+                    ? 0
+                    : this.props.swipeThreshold ??
+                      this.containerWidth / this.constructor.swipeDistanceRatio;
+            if (this.localizedProps.onRightSwipe && this.swipedDistance > threshold) {
                 this.swipedDistance = this.containerWidth;
                 this.handleSwipe(this.localizedProps.onRightSwipe.action);
                 return;
-            } else if (
-                this.localizedProps.onLeftSwipe &&
-                this.swipedDistance < -this.containerWidth / this.constructor.swipeDistanceRatio
-            ) {
+            } else if (this.localizedProps.onLeftSwipe && this.swipedDistance < -threshold) {
                 this.swipedDistance = -this.containerWidth;
                 this.handleSwipe(this.localizedProps.onLeftSwipe.action);
                 return;
@@ -177,6 +186,7 @@ export class ActionSwiper extends Component {
                 }
                 if (Math.abs(this.swipedDistance) > this.constructor.swipeEffectiveThreshold) {
                     this.isSwipeStarted = true;
+                    this.isSwiping.set(true);
                     this.cancelTargetTouch(ev);
                     this.applyStyle(this.swipedDistance);
                 }
@@ -209,6 +219,7 @@ export class ActionSwiper extends Component {
         this.targetContainer().classList.remove("o_actionswiper_transition_enabled");
         this.startX = ev.touches[0].clientX;
         this.startY = ev.touches[0].clientY;
+        this.startTime = Date.now();
         if (this.props.enabledDuration) {
             this.enabledTimeoutId = browser.setTimeout(
                 () => this._reset(),
@@ -227,6 +238,7 @@ export class ActionSwiper extends Component {
         this.swipedDistance = 0;
         this.isSwipeEnabled = false;
         this.isSwipeStarted = false;
+        this.isSwiping.set(false);
         this.applyStyle(0);
         if (this.targetContainer()) {
             this.targetContainer().classList.add("o_actionswiper_transition_enabled");
@@ -267,6 +279,11 @@ export class ActionSwiper extends Component {
     applyStyle(distance) {
         if (this.targetContainer()) {
             this.targetContainer().style.transform = distance ? `translateX(${distance}px)` : "";
+        }
+        if (this.props.animationType === "forwards") {
+            // the panels are entirely displayed next to the target, which is
+            // enough as they are hidden by the overflow container
+            return;
         }
         if (this.leftPanel()) {
             this.leftPanel().style.maxWidth = `${distance}px`;

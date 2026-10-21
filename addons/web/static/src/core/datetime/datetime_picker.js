@@ -1,4 +1,5 @@
-import { Component, computed, proxy, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, computed, onPatched, proxy, t, useOnChange, useProps } from "@odoo/owl";
+import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { _t } from "@web/core/l10n/translation";
 import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
 import { localization } from "../l10n/localization";
@@ -275,6 +276,8 @@ const PRECISION_LEVELS = new Map()
 // Other constants
 const GRID_COUNT = 10;
 const GRID_MARGIN = 1;
+const SWIPE_THRESHOLD = 50; // px
+const SWIPE_FLICK_VELOCITY = 0.3; // px/ms
 
 const DAYS_PER_WEEK = 7;
 const WEEKS_PER_MONTH = 6;
@@ -308,7 +311,7 @@ export class DateTimePicker extends Component {
     props = useProps(dateTimePickerProps);
 
     static template = "web.DateTimePicker";
-    static components = { TimePicker };
+    static components = { ActionSwiper, TimePicker };
 
     values = computed(() =>
         ensureArray(this.props.value).map((value) => (value && !value.isValid ? null : value))
@@ -336,15 +339,18 @@ export class DateTimePicker extends Component {
         }
         return { minDate, maxDate };
     });
-    items = computed(() => {
-        const { minDate, maxDate } = this.dateRange();
-        return this.activePrecisionLevel.getItems(this.state.focusDate, {
-            maxDate,
-            minDate,
-            showWeekNumbers: this.props.showWeekNumbers ?? !this.props.range,
-            isDateValid: this.props.isDateValid,
-            dayCellClass: this.props.dayCellClass,
-        });
+    items = computed(() => this.getItems(this.state.focusDate));
+    /** Dates focused by swiping, null when there is nothing to show (min/max date) */
+    swipeNeighbors = computed(() => {
+        const { focusDate } = this.state;
+        const { getTitle, step } = this.activePrecisionLevel;
+        const title = String(this.title());
+        // a date clamped by min/max date may still be on the current panel
+        const getNeighbor = (date) => (String(getTitle(date)) === title ? null : date);
+        return {
+            previous: getNeighbor(this.clamp(focusDate.minus(step))),
+            next: getNeighbor(this.clamp(focusDate.plus(step))),
+        };
     });
     selectedRange = computed(() => {
         const values = this.values();
@@ -381,6 +387,25 @@ export class DateTimePicker extends Component {
         return ensureArray(this.title());
     }
 
+    /**
+     * Swiping left (right in RTL) goes to the next panel, and right to the
+     * previous one. The neighbor panels are rendered in the "next" and
+     * "previous" slots of the swiper.
+     */
+    get swiperProps() {
+        const { previous, next } = this.swipeNeighbors();
+        return {
+            onLeftSwipe: next ? { action: () => this.swipeTo(next), slotName: "next" } : undefined,
+            onRightSwipe: previous
+                ? { action: () => this.swipeTo(previous), slotName: "previous" }
+                : undefined,
+            animationType: "forwards",
+            renderSlotsOnSwipe: true,
+            swipeThreshold: SWIPE_THRESHOLD,
+            flickVelocity: SWIPE_FLICK_VELOCITY,
+        };
+    }
+
     //-------------------------------------------------------------------------
     // Lifecycle
     //-------------------------------------------------------------------------
@@ -410,6 +435,11 @@ export class DateTimePicker extends Component {
             ],
             () => this.onPropsUpdated()
         );
+
+        onPatched(() => {
+            this.onNextPatch?.();
+            this.onNextPatch = null;
+        });
     }
 
     onPropsUpdated() {
@@ -439,6 +469,20 @@ export class DateTimePicker extends Component {
 
         this.shouldAdjustFocusDate = false;
         this.state.focusDate = this.clamp(dateToFocus.startOf("month"), minDate, maxDate);
+    }
+
+    /**
+     * @param {DateTime} focusDate
+     */
+    getItems(focusDate) {
+        const { minDate, maxDate } = this.dateRange();
+        return this.activePrecisionLevel.getItems(focusDate, {
+            maxDate,
+            minDate,
+            showWeekNumbers: this.props.showWeekNumbers ?? !this.props.range,
+            isDateValid: this.props.isDateValid,
+            dayCellClass: this.props.dayCellClass,
+        });
     }
 
     /**
@@ -540,6 +584,16 @@ export class DateTimePicker extends Component {
         ev.preventDefault();
         const { step } = this.activePrecisionLevel;
         this.state.focusDate = this.clamp(this.state.focusDate.minus(step));
+    }
+
+    /**
+     * Resolves once the new panel is rendered, so that the swiper only moves
+     * back to its initial position at that point.
+     * @param {DateTime} focusDate
+     */
+    swipeTo(focusDate) {
+        this.state.focusDate = focusDate;
+        return new Promise((resolve) => (this.onNextPatch = resolve));
     }
 
     /**

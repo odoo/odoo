@@ -9,7 +9,10 @@
                         <t t-if="this.localizedProps.onRightSwipe">
                             <div t-ref="this.leftPanel" class="o_actionswiper_right_swipe_area position-absolute overflow-hidden w-100 h-100">
                                 <t t-if="this.props.animationType === 'forwards'">
-                                    <t t-if="this.localizedProps.onRightSwipe.slot" t-component="this.localizedProps.onRightSwipe.slot.component" t-props="this.localizedProps.onRightSwipe.slot.props" />
+                                    <t t-if="!this.props.renderSlotsOnSwipe or this.isSwiping()">
+                                        <t t-if="this.localizedProps.onRightSwipe.slot" t-component="this.localizedProps.onRightSwipe.slot.component" t-props="this.localizedProps.onRightSwipe.slot.props" />
+                                        <t t-elif="this.localizedProps.onRightSwipe.slotName" t-call-slot="{{ this.localizedProps.onRightSwipe.slotName }}" />
+                                    </t>
                                 </t>
                                 <div t-else="" class="h-100 w-100 d-flex align-items-center justify-content-center rounded-end" t-att-class="this.localizedProps.onRightSwipe.bgColor">
                                     <i class="oi oi-2x" t-att-class="this.localizedProps.onRightSwipe.iconClass" t-att-data-icon="this.localizedProps.onRightSwipe.icon"/>
@@ -19,7 +22,10 @@
                         <t t-if="this.localizedProps.onLeftSwipe">
                             <div t-ref="this.rightPanel" class="o_actionswiper_left_swipe_area position-absolute overflow-hidden w-100 h-100">
                                 <t t-if="this.props.animationType === 'forwards'">
-                                    <t t-if="this.localizedProps.onLeftSwipe.slot" t-component="this.localizedProps.onLeftSwipe.slot.component" t-props="this.localizedProps.onLeftSwipe.slot.props" />
+                                    <t t-if="!this.props.renderSlotsOnSwipe or this.isSwiping()">
+                                        <t t-if="this.localizedProps.onLeftSwipe.slot" t-component="this.localizedProps.onLeftSwipe.slot.component" t-props="this.localizedProps.onLeftSwipe.slot.props" />
+                                        <t t-elif="this.localizedProps.onLeftSwipe.slotName" t-call-slot="{{ this.localizedProps.onLeftSwipe.slotName }}" />
+                                    </t>
                                 </t>
                                 <div t-else="" class="h-100 w-100 d-flex align-items-center justify-content-center rounded-start" t-att-class="this.localizedProps.onLeftSwipe.bgColor">
                                     <i class="oi oi-2x" t-att-class="this.localizedProps.onLeftSwipe.iconClass" t-att-data-icon="this.localizedProps.onLeftSwipe.icon"/>
