@@ -138,6 +138,10 @@ describe("getProductPrice with variants", () => {
         // select the second variant, with price extra of 10
         await Utils.selectNthAttributeValue(2);
         expect(comp.getProductPrice()).toBe(210);
+
+        comp.selfOrder.currentOrder.pricelist_id = models["product.pricelist"].get(101);
+        await Utils.selectNthAttributeValue(1);
+        expect(comp.getProductPrice()).toBe(150);
     });
 
     test("With mixed attribute `create_variant`", async () => {

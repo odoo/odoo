@@ -6,6 +6,6 @@ ProductPricelist._records = [
         id: 101,
         name: "Test Pricelist Variants",
         display_name: "Test Pricelist Variants (USD)",
-        item_ids: [101, 102],
+        item_ids: [101, 102, 103],
     },
 ];
