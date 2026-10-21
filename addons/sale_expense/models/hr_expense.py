@@ -76,7 +76,24 @@ class HrExpense(models.Model):
             if expense.sale_order_id and not expense.analytic_distribution:
                 analytic_account = self.env['account.analytic.account'].create(expense.sale_order_id._prepare_analytic_account_data())
                 expense.analytic_distribution = {analytic_account.id: 100}
-        return super().action_post()
+        res = super().action_post()
+        self.filtered(lambda e: e.has_existing_bill and e.sale_order_id and not e.sale_order_line_id)._create_reinvoice_sale_order_line()
+        return res
+
+    def _create_reinvoice_sale_order_line(self):
+        virtual_lines = self.env['account.move.line']
+        for expense in self:
+            virtual_lines |= self.env['account.move.line'].new({
+                'move_id': expense.account_move_id.id,
+                'name': expense._get_move_line_name(),
+                'product_id': expense.product_id.id,
+                'product_uom_id': expense.product_uom_id.id,
+                'quantity': 1.0,
+                'balance': expense.untaxed_amount,
+                'analytic_distribution': expense.analytic_distribution,
+                'expense_id': expense.id,
+            })
+        virtual_lines._sale_create_reinvoice_sale_line()
 
     def action_open_sale_order(self):
         self.ensure_one()
