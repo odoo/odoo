@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import AccessError, MissingError, ValidationError
-from odoo.http import request, route
+from odoo.http import get_controller, request, route
 
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website_sale.controllers.cart import Cart
@@ -32,7 +32,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
         if not lines_to_reorder:
             raise ValidationError(self.env._("Nothing can be reordered in this order"))
 
-        Cart_controller = Cart()
+        Cart_controller = get_controller(Cart)
         order_sudo = request.cart or self.env.website._create_cart()
         values = {"tracking_info": []}
         for line in lines_to_reorder:

@@ -227,6 +227,46 @@ def route(
     return decorator
 
 
+def is_valid(cls, modules):
+    """Determine if the class is defined in one of the installed addons. """
+    path = cls.__module__.split('.')
+    return path[:2] == ['odoo', 'addons'] and path[2] in modules
+
+
+def get_leaf_classes(cls, modules):
+    """
+    Find the classes that have no child and that have ``cls`` as
+    ancestor.
+    """
+    result = []
+    for subcls in cls.__subclasses__():
+        if is_valid(subcls, modules):
+            result.extend(get_leaf_classes(subcls, modules))
+    if not result and is_valid(cls, modules):
+        result.append(cls)
+    return result
+
+
+def get_controller(cls):
+    """Return an already-merged instance of the controller class ``cls``.
+
+    Controllers can be extended in other installed addons.
+    Instantiating a controller class directly (for example ``Cart()``)
+    bypasses those overrides: the call would not reach the overrides of
+    other installed addons, exactly like it does in a routing dispatch.
+
+    This helper builds the merged class of ``cls`` using the currently
+    installed addons and returns an already-merged instance, so internal
+    calls go through every installed override.
+    """
+    registry = request.registry
+    modules = registry._init_modules.union(odoo.tools.config['server_wide_modules'])
+    leaf_classes = list(unique(get_leaf_classes(cls, modules)))
+    if not leaf_classes or leaf_classes == [cls]:
+        return cls()
+    return type(cls.__name__ + ' (extended)', tuple(reversed(leaf_classes)), {})()
+
+
 def _generate_routing_rules(modules: Collection[str], nodb_only: bool, converters=None) -> Iterator[tuple[str, Endpoint]]:
     """
     Two-fold algorithm used to (1) determine which method in the
@@ -235,24 +275,6 @@ def _generate_routing_rules(modules: Collection[str], nodb_only: bool, converter
     arguments of said method with the @route arguments of the method it
     overrides.
     """
-    def is_valid(cls):
-        """ Determine if the class is defined in an addon. """
-        path = cls.__module__.split('.')
-        return path[:2] == ['odoo', 'addons'] and path[2] in modules
-
-    def get_leaf_classes(cls):
-        """
-        Find the classes that have no child and that have ``cls`` as
-        ancestor.
-        """
-        result = []
-        for subcls in cls.__subclasses__():
-            if is_valid(subcls):
-                result.extend(get_leaf_classes(subcls))
-        if not result and is_valid(cls):
-            result.append(cls)
-        return result
-
     def build_controllers():
         """
         Create dummy controllers that inherit only from the controllers
@@ -270,7 +292,7 @@ def _generate_routing_rules(modules: Collection[str], nodb_only: bool, converter
             highest_controllers.extend(Controller.children_classes.get(module, []))
 
         for top_ctrl in highest_controllers:
-            leaf_controllers = list(unique(get_leaf_classes(top_ctrl)))
+            leaf_controllers = list(unique(get_leaf_classes(top_ctrl, modules)))
 
             name = top_ctrl.__name__
             if leaf_controllers != [top_ctrl]:
