@@ -146,6 +146,28 @@ class TestAccessRightsSimpleUser(TestAllocationRights):
         allocation = self.request_allocation(self.user_employee.id, values)
         self.assertEqual(allocation.state, 'confirm', "The allocation should be in 'confirm' state")
 
+    def test_simple_user_select_self_on_allocation_request(self):
+        """ A simple user can select themselves on an allocation request """
+        domain = self.env['hr.leave.allocation'].with_user(self.user_employee)._domain_employee_id()
+        employees = self.env['hr.employee'].search(domain)
+        self.assertIn(self.employee_emp, employees)
+        self.assertNotIn(self.employee_hruser, employees)
+
+    def test_simple_user_unlink_allocation_to_approve(self):
+        """ A simple user can delete their allocation request to approve, not an approved one """
+        values = {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.lt_validation_manager.id,
+        }
+        allocation_to_approve = self.request_allocation(self.user_employee.id, values)
+        allocation_approved = self.request_allocation(self.user_employee.id, values)
+        allocation_approved.sudo().action_approve()
+        self.assertEqual(allocation_approved.state, 'validate')
+        allocation_to_approve.with_user(self.user_employee).unlink()
+        self.assertFalse(allocation_to_approve.exists())
+        with self.assertRaises(AccessError):
+            allocation_approved.with_user(self.user_employee).unlink()
+
 
 class TestAccessRightsEmployeeManager(TestAllocationRights):
 
