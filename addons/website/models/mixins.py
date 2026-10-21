@@ -61,7 +61,6 @@ class WebsiteSeoMetadata(models.AbstractModel):
         }
         default_twitter = {
             'twitter:card': 'summary_large_image',
-            'twitter:image': default_opengraph['og:image'],
         }
 
         return {
@@ -89,7 +88,7 @@ class WebsiteSeoMetadata(models.AbstractModel):
             ["", "", *urllib.parse.urlsplit(self.website_meta_og_img)[2:]]
         )
         opengraph_meta['og:image'] = url_join(root_url, self.env['ir.http']._url_for(og_image or opengraph_meta['og:image']))
-        twitter_meta['twitter:image'] = url_join(root_url, self.env['ir.http']._url_for(og_image or twitter_meta['twitter:image']))
+        twitter_meta['twitter:image'] = opengraph_meta['og:image']
         return {
             'opengraph_meta': opengraph_meta,
             'twitter_meta': twitter_meta,
