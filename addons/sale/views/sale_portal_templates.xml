@@ -557,7 +557,7 @@
             <button name="o_sale_portal_amount_total_button" class="btn btn-light">
                 Full amount <br/>
                 <span
-                    t-out="sale_order.amount_total"
+                    t-out="sale_order.amount_total - sale_order.amount_paid"
                     t-options="{
                         'widget': 'monetary',
                         'display_currency': sale_order.currency_id,
