@@ -622,6 +622,73 @@ class TestPointOfSaleFlow(CommonPosTest):
             {'amount': 450.0, 'payment_method_id': self.bank_payment_method.id},
         ])
 
+    def _get_customer_account_draft_order_data(self, uuid):
+        self.pos_config_usd.open_ui()
+        return {
+            'amount_paid': 0,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 450,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'pricelist_id': self.pos_config_usd.pricelist_id.id,
+            'lines': [[0, 0, {
+                'discount': 0,
+                'price_unit': 450.0,
+                'product_id': self.product.id,
+                'price_subtotal': 450.0,
+                'price_subtotal_incl': 450.0,
+                'tax_ids': [[6, False, []]],
+                'qty': 1,
+                'uuid': f'line-{uuid}',
+            }]],
+            'name': f'Order {uuid}',
+            'partner_id': False,
+            'session_id': self.pos_config_usd.current_session_id.id,
+            'state': 'draft',
+            'uuid': uuid,
+            'user_id': self.env.uid,
+        }
+
+    def _get_customer_account_paid_order_data(self, draft_data, partner_id):
+        paid_data = copy.deepcopy(draft_data)
+        paid_data.update({
+            'amount_paid': 450,
+            'lines': [],
+            'partner_id': partner_id,
+            'state': 'paid',
+            'payment_ids': [[0, 0, {
+                'amount': 450,
+                'name': fields.Datetime.to_string(fields.Datetime.now()),
+                'payment_method_id': self.credit_payment_method.id,
+                'uuid': f"pay-{draft_data['uuid']}",
+            }]],
+        })
+        return paid_data
+
+    def test_pay_synced_draft_order_with_customer_account(self):
+        """A draft order already synced without customer (e.g. a restaurant table
+        order) can be paid with a customer account once the customer is set."""
+        draft_data = self._get_customer_account_draft_order_data('32346-123-1234')
+        self.env['pos.order'].sync_from_ui([copy.deepcopy(draft_data)])
+        order = self.env['pos.order'].search([('uuid', '=', '32346-123-1234')])
+        self.assertFalse(order.partner_id)
+
+        paid_data = self._get_customer_account_paid_order_data(draft_data, self.partner.id)
+        self.env['pos.order'].sync_from_ui([paid_data])
+        self.assertRecordValues(order, [{'state': 'paid', 'partner_id': self.partner.id}])
+        self.assertRecordValues(order.payment_ids, [
+            {'amount': 450.0, 'payment_method_id': self.credit_payment_method.id, 'partner_id': self.partner.id},
+        ])
+
+    def test_pay_synced_draft_order_with_customer_account_without_customer(self):
+        draft_data = self._get_customer_account_draft_order_data('42346-123-1234')
+        self.env['pos.order'].sync_from_ui([copy.deepcopy(draft_data)])
+
+        paid_data = self._get_customer_account_paid_order_data(draft_data, False)
+        with self.assertRaisesRegex(ValidationError, "A customer must be set on the order to pay with a customer account."):
+            self.env['pos.order'].sync_from_ui([paid_data])
+
     def test_refund_qty_refund_cancel(self):
         """
         Test the refunded qty of an order, when the refund order has been cancelled
