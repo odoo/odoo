@@ -301,12 +301,24 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 amount = payment_amount
             else:
                 amount = order_sudo._get_prepayment_required_amount()
+<<<<<<< 8409da267165e5a842bf32eea5aefc955e63ec93
         elif payment_amount:
             amount = payment_amount
         elif order_sudo.state == "sale":
             amount = order_sudo.amount_total
         else:
             amount = currency.round(order_sudo.amount_total - order_sudo.amount_paid)
+||||||| 6bf2abc76b7fe69841364d20e7e458f46a5f7090
+        elif order_sudo.state == 'sale':
+            amount = payment_amount or order_sudo.amount_total
+        else:
+            amount = order_sudo.amount_total
+=======
+        elif order_sudo.state == 'sale':
+            amount = payment_amount or order_sudo.amount_total
+        else:
+            amount = currency.round(order_sudo.amount_total - order_sudo.amount_paid)
+>>>>>>> 806d234d715f597d659eaaa608d8313ad91fb0fd
 
         # Prepare the portal page values
         company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(
