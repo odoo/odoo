@@ -194,8 +194,31 @@ class ProductProduct(models.Model):
         if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
-            domain_move_in_done = list(domain_move_in)
-            domain_move_out_done = list(domain_move_out)
+            # Build the "undo" domains (moves done after `to_date`, to subtract back out of the
+            # current quantity) to run against stock.move.line below rather than stock.move -
+            # see the comment further down for why. `skip_in_progress` keeps the simpler
+            # "done"-only domain shape, which is all that's needed since both domains are
+            # further restricted to done moves below; its location_id/location_dest_id fields
+            # are shared by move lines, so the same domain applies unchanged to either model.
+            _, domain_move_in_done_loc, domain_move_out_done_loc = self.with_context(
+                skip_in_progress=True,
+            )._get_domain_locations()
+            domain_move_in_done = domain_move_in_done_loc if search_all else [('product_id', 'in', self.ids)] + domain_move_in_done_loc
+            domain_move_out_done = domain_move_out_done_loc if search_all else [('product_id', 'in', self.ids)] + domain_move_out_done_loc
+            if lot_id is not None:
+                domain_move_in_done += [('lot_id', '=', lot_id)]
+                domain_move_out_done += [('lot_id', '=', lot_id)]
+            if owner_id is not None:
+                domain_move_in_done += [('owner_id', '=', owner_id)]
+                domain_move_out_done += [('owner_id', '=', owner_id)]
+            if 'owners' in self.env.context:
+                owners = self.env.context['owners']
+                if owners:
+                    domain_move_in_done += [('owner_id', 'in', owners)]
+                    domain_move_out_done += [('owner_id', 'in', owners)]
+                else:
+                    domain_move_in_done += [('owner_id', '=', False)]
+                    domain_move_out_done += [('owner_id', '=', False)]
         if from_date:
             date_date_expected_domain_from = [('date', '>=', from_date)]
             domain_move_in += date_date_expected_domain_from
@@ -217,17 +240,28 @@ class ProductProduct(models.Model):
             domain_quant += [('removal_date', '<=', max_date)]
             expired_unreserved_quants_res = {product.id: quantity - reserved_quantity for product, quantity, reserved_quantity in Quant._read_group(domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'], having=[('quantity:sum', '!=', 0)])}
         if dates_in_the_past:
-            # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
-            domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
-            domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
-            groupby = ['product_id', 'product_uom']
+            # Calculate the moves that were done before now to calculate back in time (as most
+            # questions will be recent ones). Grouped on stock.move.line, not stock.move: a
+            # move's own `quantity` sums every one of its lines, but a move can have lines on
+            # both sides of `self`'s locations (e.g. a transit hop through a more specific child
+            # location) - aggregating per move would attribute the whole move's quantity to it
+            # as soon as any one line matched, instead of only the quantity that actually
+            # crossed through. `quantity_product_uom` is already expressed in the product's UoM,
+            # so no groupby/conversion on `product_uom_id` is needed.
+            # Filtered on the move's own `date`, not the move line's: retroactively correcting a
+            # done move's quantity can add a new move line stamped with today's date (see
+            # stock.move.line's `date` field help), but the move itself keeps the date it was
+            # originally done on, which is what "done after to_date" should mean here.
+            domain_move_in_done = [('state', '=', 'done'), ('move_id.date', '>', to_date)] + domain_move_in_done
+            domain_move_out_done = [('state', '=', 'done'), ('move_id.date', '>', to_date)] + domain_move_out_done
+            MoveLine = self.env['stock.move.line'].with_context(active_test=False)
             moves_in_res_past = defaultdict(float)
-            for product, uom, quantity in Move._read_group(domain_move_in_done, groupby, ['quantity:sum'], having=[('quantity:sum', '!=', 0)]):
-                moves_in_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
+            for product, quantity in MoveLine._read_group(domain_move_in_done, ['product_id'], ['quantity_product_uom:sum'], having=[('quantity_product_uom:sum', '!=', 0)]):
+                moves_in_res_past[product.id] += quantity
 
             moves_out_res_past = defaultdict(float)
-            for product, uom, quantity in Move._read_group(domain_move_out_done, groupby, ['quantity:sum'], having=[('quantity:sum', '!=', 0)]):
-                moves_out_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
+            for product, quantity in MoveLine._read_group(domain_move_out_done, ['product_id'], ['quantity_product_uom:sum'], having=[('quantity_product_uom:sum', '!=', 0)]):
+                moves_out_res_past[product.id] += quantity
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):

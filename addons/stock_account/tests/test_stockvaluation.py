@@ -1737,6 +1737,51 @@ class TestStockValuation(TestStockValuationCommon):
 
         self.assertAlmostEqual(product.standard_price, 12.6315789)
 
+    def test_fifo_total_value_at_date(self):
+        """ Ensure that a move with a location not valued but having a
+        stock.move.line in a valued location will compute the same way
+        the valuation today and at date
+        """
+        product = self.product_fifo
+
+        location_not_valued = self.env['stock.location'].create({
+            'name': 'not valued', 'usage': 'internal', 'company_id': False,
+        })
+        location_valued = self.env['stock.location'].create({
+            'name': 'valued', 'usage': 'internal', 'company_id': self.company.id,
+        })
+
+        with freeze_time('2024-01-01 10:00:00'):
+            self._make_in_move(product, 10, 10)
+        before_transfer = Datetime.to_string(Datetime.from_string('2024-01-01 10:00:00') + timedelta(minutes=30))
+
+        with freeze_time('2024-01-01 11:00:00'):
+            transfer = self.env['stock.move'].create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom.id,
+                'location_id': location_not_valued.id,
+                'location_dest_id': self.stock_location.id,
+                'company_id': self.company.id,
+            })
+            transfer._action_confirm()
+            transfer.move_line_ids.unlink()
+            transfer.move_line_ids = [Command.create({
+                'product_id': product.id,
+                'product_uom_id': self.uom.id,
+                'quantity': 1,
+                'location_id': location_valued.id,
+                'location_dest_id': self.stock_location.id,
+            })]
+            transfer.picked = True
+            transfer._action_done()
+
+        self.assertFalse(transfer.is_in)
+        self.assertFalse(transfer.is_out)
+
+        self.assertEqual(product.total_value, 100.0)
+        self.assertEqual(product.with_context(to_date=before_transfer).total_value, 100.0)
+
     def test_fifo_sublocation_valuation_1(self):
         """ Set the main stock as a view location. Receive 2 units of a
         product, put 1 unit in an internal sublocation and the second
