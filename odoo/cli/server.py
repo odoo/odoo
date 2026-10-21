@@ -14,12 +14,15 @@ import atexit
 import logging
 import os
 import sys
+from contextlib import closing
 
+import psycopg2
 from psycopg2.errors import InsufficientPrivilege
 
 from odoo.release import author as __author__  # noqa: F401
 from odoo.release import version as __version__  # noqa: F401
 from odoo.service import server
+from odoo.sql_db import db_connect
 from odoo.tools import config
 
 from . import Command
@@ -35,13 +38,54 @@ def check_root_user():
 
 
 def check_postgres_user():
-    """ Exit if the configured database user is 'postgres'.
+    """ Exit if the connected PostgreSQL role has superuser-like privileges.
 
-    This function assumes the configuration has been initialized.
+        A role that is SUPERUSER / REPLICATION / BYPASSRLS (directly, or
+        reachable via SET ROLE) can read and tamper with every database in the
+        cluster, which defeats Odoo's isolation between databases.
+        This function assumes the configuration has been initialized.
     """
     if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
         sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
         sys.exit(1)
+    if config['db_allow_privileged']:
+        return
+
+    sys_cr = None
+    for dbname in [config['db_system'], 'postgres']:
+        try:
+            sys_cr = db_connect(dbname).cursor()
+            break
+        except psycopg2.errors.OperationalError:
+            _logger.info("Could not connect to %r for the role privilege check", dbname)
+
+    if sys_cr is None:
+        _logger.warning("Could not verify the database role privileges: no system database is reachable")
+        return
+
+    try:
+        with closing(sys_cr) as cr:
+            cr.execute("""
+                SELECT EXISTS (
+                    SELECT 1
+                      FROM pg_roles r
+                     WHERE (r.rolsuper OR r.rolreplication OR r.rolbypassrls)
+                       AND (r.rolname = CURRENT_USER OR pg_has_role(CURRENT_USER, r.oid, 'SET'))
+                )
+            """)
+            if not cr.fetchone()[0]:
+                return
+    except psycopg2.Error as e:
+        _logger.warning("Could not verify the database role privileges: %s", e)
+        return
+
+    sys.exit(
+        "The configured PostgreSQL role has SUPERUSER, REPLICATION or "
+        "BYPASSRLS privileges, which is a security risk, aborting.\n"
+        "Create a dedicated unprivileged role (see setup/db_setup.py) or "
+        "pass --db-allow-privileged to bypass this check at your own risk.\n"
+    )
+
 
 def report_configuration():
     """ Log the server version and some configuration values.

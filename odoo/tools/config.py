@@ -403,6 +403,8 @@ class configmanager:
         group = optparse.OptionGroup(parser, "Database related options")
         group.add_option("-d", "--database", dest="db_name", type='comma', metavar="DATABASE,...", my_default=[], env_name='PGDATABASE',
                          help="database(s) used when installing or updating modules.")
+        group.add_option("--db-allow-privileged", dest="db_allow_privileged", action="store_true", my_default=False, env_name='ODOO_DB_ALLOW_PRIVILEGED',
+                         help="allow starting with a PostgreSQL role that has superuser-like privileges")
         group.add_option("-r", "--db_user", dest="db_user", my_default='', env_name='PGUSER',
                          help="specify the database user name")
         group.add_option("-w", "--db_password", dest="db_password", my_default='', env_name='PGPASSWORD',
