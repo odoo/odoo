@@ -3,10 +3,11 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { RewardCard } from "@pos_self_order_loyalty/app/components/popup/select_reward_popup/reward_card/reward_card";
+import { IdentifyBanner } from "@pos_self_order_loyalty/app/components/identify_banner/identify_banner";
 
 export class SelectRewardPopup extends Component {
     static template = "pos_self_order_loyalty.SelectRewardPopup";
-    static components = { RewardCard };
+    static components = { RewardCard, IdentifyBanner };
 
     setup() {
         this.props = useProps({

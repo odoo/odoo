@@ -824,3 +824,167 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
             self._validate_code('new@example.com', '111111')['res.partner'],
             "Wrong codes from before a successful identification don't count anymore",
         )
+
+    # ------------------------------------------------------------------
+    # Delivery addresses of an identified customer
+    # ------------------------------------------------------------------
+
+    def _enable_delivery(self):
+        self.pos_config.write({
+            'use_presets': True,
+            'available_preset_ids': [Command.set(self.delivery_preset.ids)],
+            'default_preset_id': self.delivery_preset.id,
+        })
+
+    def _signed_address(self, address):
+        return self.env['pos.order']._get_signed_self_address_id(self.pos_config, address.parent_id or address, address)
+
+    def _validate_address(self, partner=None, **values):
+        partner = self.loyalty_partner if partner is None else partner
+        return self._jsonrpc('/pos-self-order/validate-partner', {
+            'preset_id': self.delivery_preset.id,
+            'partner_id': self._signed(partner),
+            **values,
+        })['result']
+
+    def _address_values(self, street='Rue de la Gare 1'):
+        return {
+            'name': 'Loyalty Customer', 'phone': '+32 470 00 00 00', 'street': street,
+            'zip': '1000', 'city': 'Brussels', 'country_id': self.env.ref('base.be').id,
+        }
+
+    def _create_delivery_address(self, partner, street='Avenue Louise 2'):
+        return self.env['res.partner'].create({
+            'type': 'delivery', 'parent_id': partner.id, 'name': 'Office', 'street': street,
+            'phone': '+32 470 11 11 11',
+        })
+
+    def test_first_address_is_written_on_the_customer(self):
+        """A customer without an address gets the one they enter, no new contact is made."""
+        self.loyalty_partner.write({'name': 'customer@example.com', 'email': 'customer@example.com'})
+        result = self._validate_address(**self._address_values())
+        self.assertEqual([p['id'] for p in result['res.partner']], [self._signed(self.loyalty_partner)])
+        self.assertRecordValues(self.loyalty_partner, [{
+            'street': 'Rue de la Gare 1', 'city': 'Brussels', 'phone': '+32 470 00 00 00',
+            'name': 'Loyalty Customer',  # replaces the email it was named after
+        }])
+        self.assertFalse(self.loyalty_partner.child_ids)
+
+    def test_new_address_is_a_delivery_contact_of_the_customer(self):
+        self.loyalty_partner.street = 'Home Street 1'
+        result = self._validate_address(**self._address_values())
+        address = self.loyalty_partner.child_ids
+        self.assertRecordValues(address, [{'type': 'delivery', 'street': 'Rue de la Gare 1'}])
+        self.assertEqual([p['id'] for p in result['res.partner']], [self._signed_address(address)])
+        self.assertNotEqual(self._signed_address(address), self._signed(address),
+            "A delivery address isn't signed as a proof of identity")
+        self.assertEqual(self.loyalty_partner.street, 'Home Street 1')
+
+        self._validate_address(**self._address_values())
+        self.assertEqual(self.loyalty_partner.child_ids, address, "The same address is reused")
+
+    def test_address_choice_is_checked(self):
+        own_address = self._create_delivery_address(self.loyalty_partner)
+        result = self._validate_address(delivery_partner_id=self._signed_address(own_address))
+        self.assertEqual([p['id'] for p in result['res.partner']], [self._signed_address(own_address)])
+
+        other_address = self._create_delivery_address(self.other_partner)
+        for delivery_partner_id in (
+            self._signed_address(other_address),  # someone else's
+            own_address.id,  # unsigned
+            f"{own_address.id}-forged",
+        ):
+            with self.subTest(delivery_partner_id=delivery_partner_id):
+                result = self._validate_address(delivery_partner_id=delivery_partner_id)
+                self.assertEqual(result['error']['type'], 'address')
+        own_address.action_archive()
+        result = self._validate_address(delivery_partner_id=self._signed_address(own_address))
+        self.assertEqual(result['error']['type'], 'address', "An archived address can't be chosen anymore")
+
+    def test_unidentified_customer_keeps_the_base_delivery_form(self):
+        result = self._jsonrpc('/pos-self-order/validate-partner', {
+            'preset_id': self.delivery_preset.id, **self._address_values(),
+        })['result']
+        partner = self.env['pos.order']._get_self_partner_from_token(self.pos_config, result['res.partner'][0]['id'])
+        self.assertEqual(partner.street, 'Rue de la Gare 1')
+        self.assertFalse(partner.parent_id)
+
+    def test_order_is_delivered_to_the_customer_address(self):
+        self._enable_delivery()
+        address = self._create_delivery_address(self.loyalty_partner)
+        result, order_uuid = self._post_self_order([self._product_line(self.cola, 1)], order_values={
+            'preset_id': self.delivery_preset.id,
+            'delivery_partner_id': self._signed_address(address),
+        })
+        self.assertNotIn('error', result, result.get('error'))
+        order = self.env['pos.order'].search([('uuid', '=', order_uuid)])
+        self.assertRecordValues(order, [{
+            'partner_id': self.loyalty_partner.id,
+            'delivery_partner_id': address.id,
+            'mobile': '+32 470 11 11 11',
+        }])
+        self.assertEqual(result['result']['pos.order'][0]['delivery_partner_id'], self._signed_address(address))
+        receipt_partner = order._get_common_record_data()['partner']
+        self.assertEqual((receipt_partner['name'], receipt_partner['street']), ('Loyalty Customer', 'Avenue Louise 2'),
+            "The receipt shows the customer with the delivery address")
+
+        order.email = 'customer@example.com'
+        with patch.object(type(self.env['mail.template']), 'send_mail', autospec=True) as send_mail:
+            order.action_send_self_order_receipt(
+                order.email, self.env.ref('pos_self_order.delivery_email_template').id, False, False,
+            )
+        template = send_mail.call_args.args[0]
+        self.assertEqual(template, self.env.ref('pos_self_order_loyalty.delivery_address_email_template'))
+        body = template._render_field('body_html', order.ids)[order.id]
+        self.assertIn('Avenue Louise 2', body, "The mail shows the delivery address")
+
+    def test_foreign_delivery_address_is_ignored(self):
+        self._enable_delivery()
+        other_address = self._create_delivery_address(self.other_partner)
+        for delivery_partner_id in (self._signed_address(other_address), other_address.id):
+            with self.subTest(delivery_partner_id=delivery_partner_id):
+                result, order_uuid = self._post_self_order([self._product_line(self.cola, 1)], order_values={
+                    'preset_id': self.delivery_preset.id,
+                    'delivery_partner_id': delivery_partner_id,
+                })
+                self.assertNotIn('error', result, result.get('error'))
+                self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]).delivery_partner_id)
+
+    def test_get_delivery_addresses(self):
+        self.loyalty_partner.street = 'Home Street 1'
+        address = self._create_delivery_address(self.loyalty_partner)
+        self._create_delivery_address(self.other_partner)
+        self.env['res.partner'].create({'parent_id': self.loyalty_partner.id, 'type': 'invoice', 'street': 'Billing 1'})
+        result = self._jsonrpc('/pos-self-order/get-delivery-addresses', {
+            'partner_id': self._signed(self.loyalty_partner),
+        })['result']
+        self.assertEqual(
+            [p['id'] for p in result['res.partner']],
+            [self._signed(self.loyalty_partner), self._signed_address(address)],
+        )
+        result = self._jsonrpc('/pos-self-order/get-delivery-addresses', {
+            'partner_id': self.loyalty_partner.id,
+        })['result']
+        self.assertEqual(result['res.partner'], [], "Only a verified customer gets their addresses")
+
+    @mute_logger('odoo.http')
+    def test_archive_delivery_address(self):
+        address = self._create_delivery_address(self.loyalty_partner)
+        other_address = self._create_delivery_address(self.other_partner)
+        for partner, delivery_partner_id in (
+            (self.loyalty_partner, self._signed(self.loyalty_partner)),  # their own contact
+            (self.loyalty_partner, self._signed_address(other_address)),
+            (self.other_partner, self._signed_address(address)),
+        ):
+            with self.subTest(partner=partner.name, delivery_partner_id=delivery_partner_id):
+                result = self._jsonrpc('/pos-self-order/archive-delivery-address', {
+                    'partner_id': self._signed(partner), 'delivery_partner_id': delivery_partner_id,
+                })
+                self.assertEqual(result['error']['data']['name'], 'werkzeug.exceptions.Forbidden')
+        self.assertTrue(self.loyalty_partner.active and address.active and other_address.active)
+
+        result = self._jsonrpc('/pos-self-order/archive-delivery-address', {
+            'partner_id': self._signed(self.loyalty_partner), 'delivery_partner_id': self._signed_address(address),
+        })
+        self.assertTrue(result['result'])
+        self.assertFalse(address.active)

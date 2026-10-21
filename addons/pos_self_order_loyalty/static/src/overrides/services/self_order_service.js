@@ -435,6 +435,24 @@ patch(SelfOrder.prototype, {
             return false;
         }
     },
+    isValidSelection(slot, partner) {
+        return super.isValidSelection(...arguments) && !this.needsDeliveryAddress(partner);
+    },
+    /**
+     * The identified customer is enough for the base checks, while they still have to pick
+     * the address to deliver to (see PresetInfoPopup).
+     */
+    needsDeliveryAddress(partner) {
+        const order = this.currentOrder;
+        const identified = this.identifiedPartner;
+        return Boolean(
+            order.preset_id?.needsPartner &&
+                identified &&
+                order.partner_id === identified &&
+                partner?.id === parseInt(identified.id) &&
+                !order.delivery_partner_id
+        );
+    },
     //#region Identify Customer
     async identifyCustomer(title = "") {
         // Open identification popup
