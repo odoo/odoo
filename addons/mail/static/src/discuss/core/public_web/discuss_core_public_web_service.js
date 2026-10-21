@@ -28,7 +28,11 @@ export class DiscussCorePublicWeb {
                     if (this.store.rtc.localChannel) {
                         await this.store.rtc.leaveCall();
                     }
-                    this.store.rtc.joinCall(channel);
+                    await this.store.rtc.mediaPermissionsPromise;
+                    this.store.rtc.joinCall(channel, {
+                        audio: this.store.rtc.microphonePermission === "granted",
+                        camera: false,
+                    });
                 } else if (action === "POST_RTC_LOGS") {
                     const logs = data || {};
                     logs.odooInfo = odoo.info;

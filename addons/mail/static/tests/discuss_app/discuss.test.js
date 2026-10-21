@@ -57,6 +57,7 @@ import {
     withUser,
 } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
+import { getOrigin } from "@web/core/utils/urls";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { Settings } from "@mail/core/common/settings_model";
 import { toRawValue } from "@mail/utils/common/local_storage";
@@ -1201,6 +1202,12 @@ test("out-of-focus notif on needaction message in channel", async () => {
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
+        name: "General",
+    });
+    patch(OutOfFocusService.prototype, {
+        sendNotification({ title, icon }) {
+            expect.step(`notification:${title}:${new URL(icon, getOrigin()).pathname}`);
+        },
     });
     patch(document, {
         set title(value) {
@@ -1229,7 +1236,10 @@ test("out-of-focus notif on needaction message in channel", async () => {
         })
     );
     await waitFor(".o-mail-ChatBubble:count(1)");
-    await expect.waitForSteps(["set_counters:discuss:1"]);
+    await expect.waitForSteps([
+        `notification:#General:/web/image/discuss.channel/${channelId}/avatar_128`,
+        "set_counters:discuss:1",
+    ]);
 });
 
 test("receive new chat message: out of odoo focus (notification, chat)", async () => {
@@ -1242,6 +1252,11 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
+    });
+    patch(OutOfFocusService.prototype, {
+        sendNotification({ title, icon }) {
+            expect.step(`notification:${title}:${new URL(icon, getOrigin()).pathname}`);
+        },
     });
     patch(document, {
         set title(value) {
@@ -1268,7 +1283,46 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
         })
     );
     await waitFor(".o-mail-ChatBubble:count(1)");
-    await expect.waitForSteps(["set_counters:discuss:1"]);
+    await expect.waitForSteps([
+        `notification:Dumbledore:/web/image/res.partner/${partnerId}/avatar_128`,
+        "set_counters:discuss:1",
+    ]);
+});
+
+test("receive new group message: out of odoo focus (notification, nameless group)", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    patch(OutOfFocusService.prototype, {
+        sendNotification({ title, icon }) {
+            expect.step(`notification:${title}:${new URL(icon, getOrigin()).pathname}`);
+        },
+    });
+    listenStoreFetch("init_messaging");
+    await start();
+    await waitStoreFetch("init_messaging");
+    await waitFor(".o_menu_systray i[aria-label='Messages']:count(1)");
+    // simulate receiving a new message with odoo out-of-focused
+    withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "New message",
+                message_type: "comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await expect.waitForSteps([
+        `notification:Mitchell Admin and Dumbledore:/web/image/discuss.channel/${channelId}/avatar_128`,
+    ]);
 });
 
 test("no out-of-focus notif on non-needaction message in channel", async () => {

@@ -68,7 +68,9 @@ class TestMailMessage(common.MailCommon, HttpCase):
                     attachment_ids=[a.id for a in attachments],
                 )
                 payload = partner._notify_by_web_push_prepare_payload(message)
-                self.assertEqual(payload["options"]["body"], expected_body)
+                self.assertEqual(
+                    payload["options"]["body"], f"{self.env.user.name}: {expected_body}",
+                )
 
     def test_mail_message_read_access(self):
         self.env['res.company'].invalidate_model(['name'])

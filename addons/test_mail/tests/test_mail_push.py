@@ -127,13 +127,12 @@ class TestWebPushNotification(SMSCommon):
                         self.assertNotIn("False", payload_value['title'])
                     else:
                         self.assertEqual(payload_value['title'], f'#{channel.name}')
-                    icon = (
-                        '/web/static/img/odoo-icon-192x192.png'
-                        if sender == self.guest
-                        else f'/web/image/res.partner/{self.user_email.partner_id.id}/avatar_128'
-                    )
+                    author = self.guest if sender == self.guest else self.user_email.partner_id
+                    icon_record = channel if channel.channel_type in ["channel", "group"] else author
+                    icon = f"/web/image/{icon_record._name}/{icon_record.id}/avatar_128"
+                    body = f"{author.name}: Test Push" if channel.channel_type != "chat" else "Test Push"
                     self.assertEqual(payload_value['options']['icon'], icon)
-                    self.assertEqual(payload_value['options']['body'], 'Test Push')
+                    self.assertEqual(payload_value['options']['body'], body)
                     self.assertEqual(payload_value['options']['data']['res_id'], channel.id)
                     self.assertEqual(payload_value['options']['data']['model'], channel._name)
                     self.assertEqual(push_to_end_point.call_args.kwargs['device']['endpoint'], 'https://test.odoo.com/webpush/user2')
@@ -310,7 +309,7 @@ class TestWebPushNotification(SMSCommon):
             if has_notif:
                 # user_inbox is notified by Odoo, hence receives a push notification
                 self.assertPushNotification(
-                    mail_push_count=0, title_content=self.user_email.name,
+                    mail_push_count=0, title_content=test_record.display_name,
                     body_content='Please call me as soon as possible this afternoon!\n\n--\nSylvie',
                 )
             else:
@@ -333,8 +332,8 @@ class TestWebPushNotification(SMSCommon):
                     self.assertPushNotification(
                         mail_push_count=0,
                         endpoint='https://test.odoo.com/webpush/user2', keys=('vapid_private_key', 'vapid_public_key'),
-                        title=f'{self.user_admin.name}: {self.record_simple.display_name}',
-                        body_content='Test Push Body',
+                        title=self.record_simple.display_name,
+                        body_content=f"{self.user_admin.name}: Test Push Body",
                         options={
                             'data': {'model': self.record_simple._name, 'res_id': self.record_simple.id,},
                         },
@@ -342,45 +341,107 @@ class TestWebPushNotification(SMSCommon):
                 else:
                     self.assertNoPushNotification()
 
+        # record-less notification (e.g. hr_holidays time off): fall back on the subject
+        with self.mock_mail_gateway():
+            self.env['mail.thread'].with_user(self.user_admin).message_notify(
+                body='Test Push Body',
+                partner_ids=self.user_inbox.partner_id.ids,
+                subject='Test Push Notification',
+            )
+        self.assertPushNotification(
+            mail_push_count=0,
+            endpoint='https://test.odoo.com/webpush/user2', keys=('vapid_private_key', 'vapid_public_key'),
+            title='Test Push Notification',
+            body_content=f"{self.user_admin.name}: Test Push Body",
+            options={'data': {'model': '', 'res_id': ''}},
+        )
+
     @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
     @mute_logger('odoo.tests')
     def test_notify_call_invitation(self, push_to_end_point):
+        """ Call invitations are titled after the caller in a DM and after the conversation
+        otherwise, nameless groups being named after their members in the language of each recipient. """
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.user_inbox.lang = 'fr_FR'
         inviting_user = self.env.ref('base.test_user')
-        channel = self.env['discuss.channel'].with_user(inviting_user)._get_or_create_chat(
+        chat = self.env['discuss.channel'].with_user(inviting_user)._get_or_create_chat(
             partners_to=[self.user_email.partner_id.id])
-        inviting_channel_member = channel.with_user(inviting_user).self_member_id
-        inviting_channel_member.sudo()._rtc_join_call()
-        self.assertEqual(push_to_end_point.call_count, 2)
-        payload_value = json.loads(push_to_end_point.call_args_list[1].kwargs['payload'])
-        self.assertEqual(
-            payload_value['title'],
-            "Incoming call",
+        group = self.env['discuss.channel'].with_user(inviting_user)._create_group(
+            users_to=self.user_email + self.user_inbox,
         )
-        options = payload_value['options']
-        self.assertTrue(options['requireInteraction'])
-        self.assertEqual(options['body'], f"Conference: {channel.name}")
-        self.assertEqual(options['actions'], [
-            {
-                "action": "DECLINE",
-                "type": "button",
-                "title": "Decline",
-            },
-            {
-                "action": "ACCEPT",
-                "type": "button",
-                "title": "Accept",
-            },
-        ])
-        data = options['data']
-        self.assertEqual(data['type'], "CALL")
-        self.assertEqual(data['res_id'], channel.id)
-        self.assertEqual(data['model'], "discuss.channel")
-        push_to_end_point.reset_mock()
-        inviting_channel_member.sudo()._rtc_leave_call()
-        push_to_end_point.assert_called_once()
-        payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
-        self.assertEqual(payload_value['options']['data']['type'], "CANCEL")
-        push_to_end_point.reset_mock()
+        channel = self.env['discuss.channel'].with_user(inviting_user)._create_channel(name="General", group_id=None)
+        channel._add_members(users=self.user_email + self.user_inbox)
+        member_names = group.channel_name_member_ids.partner_id.mapped('name')
+        self.assertEqual(len(member_names), 3)
+
+        def get_payload_by_endpoint(notification_type):
+            return {
+                call.kwargs['device']['endpoint']: payload
+                for call in push_to_end_point.call_args_list
+                if (payload := json.loads(call.kwargs['payload']))['options']['data'].get('type') == notification_type
+            }
+
+        for conversation, icon, title_by_endpoint in [
+            (
+                chat,
+                f"/web/image/res.partner/{inviting_user.partner_id.id}/avatar_128",
+                {'https://test.odoo.com/webpush/user1': inviting_user.partner_id.name},
+            ),
+            (
+                group,
+                f"/web/image/discuss.channel/{group.id}/avatar_128",
+                {
+                    'https://test.odoo.com/webpush/user1': f"{member_names[0]}, {member_names[1]}, and {member_names[2]}",
+                    'https://test.odoo.com/webpush/user2': f"{member_names[0]}, {member_names[1]} et {member_names[2]}",
+                },
+            ),
+            (
+                channel,
+                f"/web/image/res.partner/{inviting_user.partner_id.id}/avatar_128",
+                {
+                    'https://test.odoo.com/webpush/user1': "#General",
+                    'https://test.odoo.com/webpush/user2': "#General",
+                },
+            ),
+        ]:
+            with self.subTest(channel_type=conversation.channel_type):
+                push_to_end_point.reset_mock()
+                inviting_member = conversation.with_user(inviting_user).self_member_id.sudo()
+                inviting_member._rtc_join_call()
+                if conversation.channel_type == "channel":
+                    # joining a call in a channel does not ring its members, they have to be invited
+                    inviting_member._rtc_invite_members()
+                payload_by_endpoint = get_payload_by_endpoint("CALL")
+                self.assertEqual(payload_by_endpoint.keys(), title_by_endpoint.keys())
+                for endpoint, title in title_by_endpoint.items():
+                    body, decline, accept = (
+                        ("Appel entrant", "Refuser", "Accepter")
+                        if endpoint == 'https://test.odoo.com/webpush/user2'
+                        else ("Incoming call", "Decline", "Accept")
+                    )
+                    payload_value = payload_by_endpoint[endpoint]
+                    self.assertEqual(payload_value['title'], title)
+                    options = payload_value['options']
+                    self.assertEqual(options['icon'], icon)
+                    self.assertTrue(options['requireInteraction'])
+                    self.assertEqual(options['body'], body)
+                    self.assertEqual(options['actions'], [
+                        {
+                            "action": "DECLINE",
+                            "type": "button",
+                            "title": decline,
+                        },
+                        {
+                            "action": "ACCEPT",
+                            "type": "button",
+                            "title": accept,
+                        },
+                    ])
+                    self.assertEqual(options['data']['res_id'], conversation.id)
+                    self.assertEqual(options['data']['model'], "discuss.channel")
+                push_to_end_point.reset_mock()
+                inviting_member._rtc_leave_call()
+                self.assertEqual(get_payload_by_endpoint("CANCEL").keys(), title_by_endpoint.keys())
 
     @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
     def test_notify_by_push_tracking(self, push_to_end_point):
@@ -419,7 +480,7 @@ class TestWebPushNotification(SMSCommon):
         push_to_end_point.assert_called_once()
         payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
         self.assertEqual(
-            f'{container_update_subtype.description}\n{container.name} → *{container2.name}* ({container.name})',
+            f'{self.user_email.name}: {container_update_subtype.description}\n{container.name} → *{container2.name}* ({container.name})',
             payload_value['options']['body'],
             'Tracking changes should be included in push notif payload'
         )
@@ -582,7 +643,10 @@ class TestWebPushNotification(SMSCommon):
         - ASCII characters (X)
         - UTF-8 characters (Ø), at various offsets
         """
-        # compute the size of an empty notification with these parameters
+        # push notification bodies are prefixed with the author name, which is part of
+        # the truncated text: sizes below are those of the message text on top of it
+        author_prefix = f"{self.user_email.partner_id.name}: "
+        # compute the size of a notification with an empty message body with these parameters
         # this could change based on the id of record_simple for example
         # but is otherwise constant for any notification sent with the same parameters
         self.record_simple.with_user(self.user_email).message_notify(
@@ -628,7 +692,8 @@ class TestWebPushNotification(SMSCommon):
                     len(encrypted_payload), 4096, 'Final encrypted payload should not exceed 4096 bytes'
                 )
                 self.assertEqual(
-                    len(json.loads(payload_before_encryption)['options']['body']), expected_body_length
+                    len(json.loads(payload_before_encryption)['options']['body']),
+                    len(author_prefix) + expected_body_length,
                 )
                 self.assertEqual(
                     len(encrypted_payload),
@@ -666,16 +731,21 @@ class TestWebPushNotification(SMSCommon):
 
         body = "BØDY"
         body_json = json.dumps(body)[1:-1]
+        # push notification bodies are prefixed with the author name, which is part of the truncated text
+        author_prefix = f"{self.user_email.partner_id.name}: "
         for size_limit, expected_body in [
-            (base_payload_size + len(body_json), "BØDY"),
-            (base_payload_size + len(body_json) - 1, "BØD"),
-            (base_payload_size + len(body_json) - 2, "BØ"),
+            (base_payload_size + len(body_json), f"{author_prefix}BØDY"),
+            (base_payload_size + len(body_json) - 1, f"{author_prefix}BØD"),
+            (base_payload_size + len(body_json) - 2, f"{author_prefix}BØ"),
         ] + [  # truncating anywhere in \u00d8 (Ø) should truncate to the nearest full character (B)
-            (base_payload_size + len(body_json) - n, "B")
+            (base_payload_size + len(body_json) - n, f"{author_prefix}B")
             for n in range(3, 9)
         ] + [
-            (base_payload_size + len(body_json) - 9, ""),
-            (base_payload_size + len(body_json) - 10, ""),  # should still work even if it would still be too big after truncate
+            (base_payload_size + len(body_json) - 9, author_prefix),  # nothing left of the message text
+            # the author prefix is truncated as well once the message text is gone
+            (base_payload_size + len(body_json) - 10, author_prefix[:-1]),
+            # should still work even if it would still be too big after truncate
+            (base_payload_size - len(author_prefix) - 1, ""),
         ]:
             with self.subTest(size_limit=size_limit), patch.object(
                 odoo.addons.mail.models.mail_thread.MailThread, '_truncate_payload_get_max_payload_length',
@@ -698,7 +768,7 @@ class TestWebPushNotification(SMSCommon):
                 self.assertEqual(
                     json.loads(payload_at_push)['options']['body'], expected_body
                 )
-                if not expected_body:
+                if expected_body == author_prefix:
                     self.assertEqual(
                         payload_before_encrypt, base_payload,
                         "Only the contents of the body should be truncated, not the rest of the payload."
