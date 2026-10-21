@@ -12,6 +12,7 @@ import {
     getDeepestPosition,
     isElement,
     isEmptyBlock,
+    isHeadingRelatedElement,
     isListElement,
     isListItemElement,
     isParagraphRelatedElement,
@@ -236,8 +237,15 @@ export class ListPlugin extends Plugin {
             }
         },
         formattable_node_providers: (node) => {
-            const li = closestElement(node, isListItem);
-            if (li && this.dependencies.selection.areNodeContentsFullySelected(li)) {
+            const li = closestElement(
+                node,
+                (node) => isListItem(node) || isHeadingRelatedElement(node)
+            );
+            if (
+                li &&
+                isListItem(li) &&
+                this.dependencies.selection.areNodeContentsFullySelected(li)
+            ) {
                 return li;
             }
         },
