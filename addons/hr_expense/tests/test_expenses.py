@@ -1284,3 +1284,18 @@ class TestExpenses(TestExpenseCommon):
         expense.unlink()
         self.assertFalse(expense.exists())
         self.assertFalse(attachment.exists())
+
+    def test_post_wizard_submitted_twice(self):
+        """ Submitting the same post wizard twice must not create a second receipt and orphan the first one """
+        expenses = self.create_expenses([{'name': 'Expense 1'}, {'name': 'Expense 2'}])
+        expenses.action_submit()
+        expenses._do_approve()  # Skip duplicate wizard
+        action = expenses.action_post()
+        wizard = self.env['hr.expense.post.wizard'].with_context(action['context']).browse(action['res_id'])
+        wizard.action_post_entry()
+        move = expenses.account_move_id
+
+        with self.assertRaises(UserError):
+            wizard.action_post_entry()
+        self.assertEqual(expenses.account_move_id, move)
+        self.assertEqual(move.expense_ids, expenses)
