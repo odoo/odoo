@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
 from odoo.tests import tagged
@@ -8,7 +9,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('ir_actions')
-class TestServerAction(SMSCommon, TestSMSRecipients):
+class TestServerAction(SMSCommon, TestSMSRecipients, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -79,8 +80,22 @@ class TestServerAction(SMSCommon, TestSMSRecipients):
             'active_ids': (self.test_record | self.test_record_2).ids,
         }
 
-        with self.with_user('employee'), self.mockSMSGateway():
-            self.action.with_user(self.env.user).with_context(**context).run()
+        with self.mockSMSGateway():
+            with self.with_user('employee'), \
+                    self.capture_triggers('sms.ir_cron_sms_scheduler_action') as captured_triggers:
+                self.action.with_user(self.env.user).with_context(**context).run()
+
+            # SMS are queued, not sent within the transaction running the action:
+            # if it is rolled back (e.g. failing automation), nothing has been sent
+            self.assertEqual(self._sms, [])
+            self.assertTrue(captured_triggers.records)
+            self.assertSMSNotification(
+                [{'partner': self.test_record.customer_id, 'state': 'ready'}],
+                'Dear %s this is an SMS.' % self.test_record.display_name,
+                messages=self.test_record.message_ids[-1],
+            )
+
+            self.env.ref('sms.ir_cron_sms_scheduler_action').sudo().method_direct_trigger()
 
         self.assertSMSNotification(
             [{'partner': self.test_record.customer_id}],
