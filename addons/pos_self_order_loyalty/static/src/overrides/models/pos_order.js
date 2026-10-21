@@ -10,13 +10,25 @@ patch(PosOrder.prototype, {
             askedRewards: this.uiState.askedRewards || [],
         };
     },
+    serializeForORM(opts = {}) {
+        const data = super.serializeForORM(opts);
+        // Its id is signed (a string), which the serialization drops, as for partner_id
+        data.delivery_partner_id = this.raw.delivery_partner_id || false;
+        return data;
+    },
     setPartner(partner) {
         let partnerToRemove = false;
         if (this.config._self_order_pos && partner != this.partner_id) {
             partnerToRemove = this.partner_id;
         }
+        // The delivery address belongs to the customer who leaves
+        const addressToRemove = partnerToRemove && this.delivery_partner_id;
         super.setPartner(...arguments);
         if (partnerToRemove) {
+            this.delivery_partner_id = false;
+            if (addressToRemove && addressToRemove !== partnerToRemove) {
+                this.models["res.partner"].delete(addressToRemove);
+            }
             this.models["loyalty.card"]
                 .filter((card) => card.partner_id?.id === partnerToRemove.id)
                 .forEach((card) => card.delete());

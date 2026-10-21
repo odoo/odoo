@@ -14,12 +14,7 @@
                             <div class="mt-5 mt-md-4 d-flex flex-column align-items-center gap-2">
                                 <h1 t-out="this.props.title"></h1>
                                 <t t-if="!this.selfOrder.currentOrder.getPartner()">
-                                    <div class="btn bg-light-pink w-75 d-flex justify-content-between align-items-center px-4" t-on-click.stop="() => this.selfOrder.identifyCustomer()" >
-                                        <h2 class="flex-basis-75 my-auto text-start">Already a member?</h2>
-                                        <button class="btn btn-lg btn-primary w-50 p-2 my-3 text-center">
-                                            Identify Yourself
-                                        </button>
-                                    </div>
+                                    <IdentifyBanner />
                                     <br/>
                                     <h2 class="text-center">Or claim your rewards</h2>
                                     <br/>

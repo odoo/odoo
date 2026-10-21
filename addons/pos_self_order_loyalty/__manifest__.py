@@ -8,6 +8,7 @@
         'security/ir.access.csv',
         'data/mail_template_data.xml',
         'views/loyalty_reward_views.xml',
+        'views/pos_order_views.xml',
         'views/res_config_settings_views.xml',
     ],
     'assets': {
@@ -16,6 +17,10 @@
             'pos_self_order_loyalty/static/src/**/*',
             'pos_loyalty/static/src/app/models/**/*',
             ('remove', 'pos_loyalty/static/src/app/models/data_service_options.js'),
+            ('remove', 'pos_self_order_loyalty/static/src/point_of_sale/**/*'),
+        ],
+        'point_of_sale._assets_pos': [
+            'pos_self_order_loyalty/static/src/point_of_sale/**/*',
         ],
     },
     'author': 'Odoo S.A.',

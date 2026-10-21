@@ -1,8 +1,9 @@
 from odoo import fields, http
+from odoo.http import request
 from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 from odoo.tools.mail import email_normalize
 from odoo.exceptions import UserError
-from werkzeug.exceptions import Unauthorized
+from werkzeug.exceptions import Forbidden, Unauthorized
 import re
 
 
@@ -175,6 +176,120 @@ class PosSelfOrderControllerLoyalty(PosSelfOrderController):
                 'loyalty.reward': pos_config.env['loyalty.reward']._load_pos_self_data_read(reward_ids, pos_config),
             },
         }
+
+    def _generate_return_values(self, order, config):
+        result = super()._generate_return_values(order, config)
+        # The client knows the delivery addresses by their signed id only
+        orders_by_id = {o.id: o for o in order}
+        for order_data in result['pos.order']:
+            pos_order = orders_by_id[order_data['id']]
+            if pos_order.delivery_partner_id:
+                order_data['delivery_partner_id'] = pos_order._get_signed_self_address_id(
+                    config, pos_order.partner_id, pos_order.delivery_partner_id,
+                )
+        return result
+
+    def _read_self_delivery_addresses(self, pos_config, partner, addresses):
+        """Data of the delivery addresses of the identified customer `partner`, with signed ids."""
+        addresses_data = pos_config.env['res.partner']._load_pos_self_data_read(addresses, pos_config)
+        for address_data in addresses_data:
+            address = addresses.browse(address_data['id'])
+            address_data['id'] = pos_config.env['pos.order']._get_signed_self_address_id(pos_config, partner, address)
+        return addresses_data
+
+    @http.route('/pos-self-order/get-delivery-addresses', auth='public', type='jsonrpc', website=True)
+    def get_delivery_addresses(self, access_token, partner_id):
+        """The addresses the identified customer (signed id) can get an order delivered to."""
+        pos_config = self._verify_pos_config(access_token)
+        POSOrder = pos_config.env['pos.order']
+        partner = POSOrder._get_self_partner_from_token(pos_config, partner_id)
+        if not partner:
+            return {'res.partner': []}
+        addresses = POSOrder._get_self_delivery_addresses(partner).filtered(lambda a: a.street or a.street2)
+        return {'res.partner': self._read_self_delivery_addresses(pos_config, partner, addresses)}
+
+    @http.route('/pos-self-order/archive-delivery-address', auth='public', type='jsonrpc', website=True)
+    def archive_delivery_address(self, access_token, partner_id, delivery_partner_id):
+        """Remove a delivery address of the identified customer, never their own contact."""
+        pos_config = self._verify_pos_config(access_token)
+        POSOrder = pos_config.env['pos.order']
+        partner = POSOrder._get_self_partner_from_token(pos_config, partner_id)
+        address = POSOrder._get_self_delivery_address(pos_config, partner, delivery_partner_id)
+        if not address or address == partner:
+            raise Forbidden()
+        address.action_archive()
+        return True
+
+    @http.route()
+    def validate_partner(self, access_token, name=None, phone=None, street=None, zip=None, city=None, country_id=None,
+                         state_id=None, partner_id=None, email=None, preset_id=None, delivery_partner_id=None):
+        """An identified customer (signed partner_id) stays the order's customer, with their
+        loyalty: the order is delivered to one of their addresses (delivery_partner_id) or to
+        the address they enter, instead of a new partner made from the form."""
+        pos_config = self._verify_pos_config(access_token)
+        POSOrder = pos_config.env['pos.order']
+        partner = POSOrder._get_self_partner_from_token(pos_config, partner_id)
+        preset = pos_config.env['pos.preset'].browse(int(preset_id)).exists() if preset_id else pos_config.env['pos.preset']
+        if not partner or preset.identification != 'address':
+            return super().validate_partner(
+                access_token, name, phone, street, zip, city, country_id,
+                state_id=state_id, partner_id=partner_id, email=email, preset_id=preset_id,
+            )
+
+        if delivery_partner_id:
+            address = POSOrder._get_self_delivery_address(pos_config, partner, delivery_partner_id)
+            if not address:
+                return {'error': {'type': 'address', 'message': self.env._("This address isn't available anymore.")}}
+        elif street:
+            address = self._set_self_delivery_address(partner, {
+                'name': name or False,
+                'phone': phone or False,
+                'street': street,
+                'zip': zip or False,
+                'city': city or False,
+                'country_id': pos_config.env['res.country'].browse(int(country_id)).exists().id if country_id else False,
+                'state_id': pos_config.env['res.country.state'].browse(int(state_id)).exists().id if state_id else False,
+            })
+        else:
+            return {'error': {'type': 'address', 'message': self.env._("Please enter your address.")}}
+
+        google_places_api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
+        if google_places_api_key and preset.service_at == 'delivery':
+            # The address is kept even when it's too far: it's still the customer's
+            error = self._check_delivery_address_for_partner(preset, address)
+            if error:
+                return {'error': error}
+        return {'res.partner': self._read_self_delivery_addresses(pos_config, partner, address)}
+
+    def _set_self_delivery_address(self, partner, values):
+        """The address of the customer `partner` matching `values`.
+
+        Their own contact gets it when it has no address yet. Otherwise it's one of their
+        delivery addresses, a new one if none matches.
+        """
+        partner = partner.sudo()  # the self-order user isn't allowed to write contacts
+        if not partner.street and not partner.street2:
+            contact_values = {key: values[key] for key in ('street', 'zip', 'city', 'country_id', 'state_id')}
+            if not partner.phone:
+                contact_values['phone'] = values['phone']
+            if values['name'] and partner.name == partner.email:
+                # named after their email when identified by it (see _get_or_create_partner_by_mail)
+                contact_values['name'] = values['name']
+            partner.write(contact_values)
+            return partner
+        for address in partner.env['pos.order']._get_self_delivery_addresses(partner):
+            if self._is_same_self_address(address, values):
+                return address
+        return partner.env['res.partner'].create({**values, 'type': 'delivery', 'parent_id': partner.id})
+
+    def _is_same_self_address(self, address, values):
+        # as portal's _are_same_addresses: unset on both sides counts as the same
+        ResPartner = address.env['res.partner']
+        for key, value in values.items():
+            current = ResPartner._fields[key].convert_to_cache(address[key], ResPartner)
+            if value != current and (value or current):
+                return False
+        return True
 
     def _add_product_linked_to_reward(self, reward_ids, pos_config):
         product_read = pos_config.env['product.template'].load_product_from_pos(pos_config.id, [('product_variant_ids', 'in', reward_ids.discount_line_product_id.ids + reward_ids.reward_product_ids.ids)])

@@ -4,8 +4,9 @@ import logging
 import math
 from collections import defaultdict
 
-from odoo import api, models, Command, _
+from odoo import api, fields, models, Command, _
 from odoo.exceptions import UserError
+from odoo.tools import consteq, hmac
 
 
 _logger = logging.getLogger(__name__)
@@ -19,6 +20,8 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
     _name = 'pos.order'
 
+    delivery_partner_id = fields.Many2one('res.partner', string="Delivery Address", index='btree_not_null')
+
     @api.model
     def _check_pos_order(self, pos_config, order, device_type, table=None):
         # The partner is only trusted when the server signed its id (see
@@ -27,6 +30,13 @@ class PosOrder(models.Model):
         partner = self._get_self_partner_from_token(pos_config, order.get('partner_id'))
         order = {**order, '_self_order_partner_id': partner.id if partner else False}
         result = super()._check_pos_order(pos_config, order, device_type, table)
+        preset = pos_config.env['pos.preset'].browse(result['preset_id'])
+        delivery_partner = preset.identification == 'address' and self._get_self_delivery_address(
+            pos_config, partner, order.get('delivery_partner_id'),
+        )
+        result['delivery_partner_id'] = delivery_partner.id if delivery_partner else False
+        if delivery_partner and delivery_partner.phone:
+            result['mobile'] = delivery_partner.phone
         # pos.order._process_loyalty only lets a with_code rule earn points if its code was entered
         result['applied_codes'] = self._get_self_order_applied_codes(pos_config, order)
         # The classic POS replays this state when it opens the order (recomputeRewards)
@@ -55,9 +65,77 @@ class PosOrder(models.Model):
         # _is_self_order_card_usable). The rest of the loyalty state lets rewards survive a
         # reload, and a classic POS taking the order over find them (see
         # _get_self_order_loyalty_state).
-        return super()._load_pos_self_data_fields(config) + [
+        field_names = super()._load_pos_self_data_fields(config) + [
             'applied_codes', 'active_rewards', 'active_payment_programs', 'disabled_program_ids',
         ]
+        if not self.env.context.get('pos_self_order_unsigned_partners'):
+            # Its id is signed for the client (see _get_signed_self_address_id)
+            field_names.append('delivery_partner_id')
+        return field_names
+
+    def _get_common_record_data(self):
+        data = super()._get_common_record_data()
+        if self.delivery_partner_id and data['partner']:
+            # The receipt shows the customer with the address the order is delivered to
+            address = self.delivery_partner_id
+            data['partner'] = {
+                **data['partner'],
+                **address.read(['street', 'street2', 'zip', 'city', 'state_id', 'country_id'], load=False)[0],
+                'id': self.partner_id.id,
+            }
+        return data
+
+    def action_send_self_order_receipt(self, email, mail_template_id, ticket_image, basic_image):
+        # The default delivery mail shows the customer's own address: when the order is
+        # delivered to another of their addresses, send this module's copy, which shows it
+        default_template = self.env.ref('pos_self_order.delivery_email_template', raise_if_not_found=False)
+        if self.delivery_partner_id and default_template and mail_template_id == default_template.id:
+            address_template = self.env.ref('pos_self_order_loyalty.delivery_address_email_template', raise_if_not_found=False)
+            mail_template_id = address_template.id if address_template else mail_template_id
+        return super().action_send_self_order_receipt(email, mail_template_id, ticket_image, basic_image)
+
+    def _send_payment_result(self, payment_result):
+        # The order is read there without signing its partners: the client keeps its own
+        return super(PosOrder, self.with_context(pos_self_order_unsigned_partners=True))._send_payment_result(payment_result)
+
+    @api.model
+    def _get_self_delivery_addresses(self, partner):
+        """The addresses the customer `partner` can get an order delivered to."""
+        return partner | partner.child_ids.filtered(lambda child: child.type == 'delivery')
+
+    @api.model
+    def _get_self_address_token(self, pos_config, partner_id):
+        # Not the partner token: a delivery address isn't a proof of identity
+        return hmac(self.env(su=True), 'pos-self-order-delivery-address', (pos_config.id, partner_id))
+
+    @api.model
+    def _get_signed_self_address_id(self, pos_config, partner, address):
+        """The id of the delivery address `address` of the customer `partner` for the client.
+
+        The customer's own contact keeps its signed partner id, it's the same record on
+        the client.
+        """
+        if address == partner:
+            return self._get_signed_self_partner_id(pos_config, partner.id)
+        return f"{address.id}-{self._get_self_address_token(pos_config, address.id)}"
+
+    @api.model
+    def _get_self_delivery_address(self, pos_config, partner, signed_address):
+        """The delivery address of the verified customer `partner` the client sent, or False."""
+        if not partner or not isinstance(signed_address, str):
+            return False
+        if signed_address == self._get_signed_self_partner_id(pos_config, partner.id):
+            return partner
+        raw_id, _sep, token = signed_address.partition('-')
+        try:
+            address_id = int(raw_id)
+        except ValueError:
+            return False
+        if not consteq(token, self._get_self_address_token(pos_config, address_id)):
+            return False
+        address = pos_config.env['res.partner'].sudo().browse(address_id)
+        # Archived or moved to another contact since it was signed
+        return address if address in self._get_self_delivery_addresses(partner.sudo()) else False
 
     @api.model
     def _get_self_order_applied_codes(self, pos_config, order):
