@@ -5,8 +5,8 @@
             <xpath expr="//t[@t-call='web.external_layout']" position="before">
                 <t t-set="jp_order_lines" t-value="doc._get_order_lines_to_report()"/>
                 <t t-set="jp_hide_zero_decimals"
-                   t-value="doc.company_id._l10n_jp_hide_zero_decimals(jp_order_lines.mapped('price_unit'))
-                            and not any(line.discount &lt; 0 for line in jp_order_lines)"/>
+                   t-value="doc.company_id.account_fiscal_country_id.code == 'JP'
+                            and all(line.price_unit.is_integer() and line.discount &gt;= 0 for line in jp_order_lines)"/>
             </xpath>
 
             <xpath expr="//div[@t-field='doc.partner_id']" position="attributes">

@@ -4,8 +4,8 @@
         <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
             <xpath expr="//t[@t-call='web.external_layout']" position="before">
                 <t t-set="jp_hide_zero_decimals"
-                   t-value="o.company_id._l10n_jp_hide_zero_decimals(
-                       o.order_line.filtered(lambda l: l.display_type or l.product_qty != 0).mapped('price_unit'))"/>
+                   t-value="o.company_id.account_fiscal_country_id.code == 'JP'
+                            and all(line.price_unit.is_integer() for line in o.order_line if line.display_type or line.product_qty)"/>
             </xpath>
 
             <xpath expr="//div[@t-field='o.partner_id']" position="attributes">

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//t[@t-call='web.external_layout']" position="before">
+            <!-- A whole yen price prints without decimals, unless another price of its column needs them. -->
+            <t t-set="jp_hide_zero_decimals" t-value="all(line.price_unit.is_integer() for line in o._get_move_lines_to_report())"/>
+        </xpath>
+
+        <!-- The Japanese Business layout heads the address with the recipient's name and honorific,
+             so the address drops the name in each of the three shipping cases. -->
+        <xpath expr="//t[@t-set='address']" position="before">
+            <t t-set="jp_layout" t-value="o.company_id.external_report_layout_id.sudo().key == 'l10n_jp.external_layout_jp_standard'"/>
+        </xpath>
+        <xpath expr="//t[@name='address_not_same_as_shipping']/address" position="attributes">
+            <attribute name="t-options">{"widget": "contact", "fields": ["address"] if jp_layout else ["address", "name"], "no_marker": True}</attribute>
+        </xpath>
+        <xpath expr="//t[@name='address_same_as_shipping']/address" position="attributes">
+            <attribute name="t-options">{"widget": "contact", "fields": ["address"] if jp_layout else ["address", "name"], "no_marker": True}</attribute>
+        </xpath>
+        <xpath expr="//t[@name='no_shipping']/address" position="attributes">
+            <attribute name="t-options">{"widget": "contact", "fields": ["address"] if jp_layout else ["address", "name"], "no_marker": True}</attribute>
+        </xpath>
+
+        <xpath expr="//td[@name='td_price_unit']/span" position="attributes">
+            <attribute name="t-options">{'min_precision': 0} if jp_hide_zero_decimals else {}</attribute>
+        </xpath>
+
+        <t t-call="account.document_tax_totals" position="attributes">
+            <attribute name="t-call">l10n_jp.document_tax_totals</attribute>
+        </t>
+    </template>
+
+    <!-- A qualified invoice shows the taxable amount of each tax rate next to its tax. -->
+    <template id="document_tax_totals" inherit_id="account.document_tax_totals" primary="True">
+        <xpath expr="//tr[hasclass('o_taxes')]" position="replace">
+            <tr class="o_taxes">
+                <td>
+                    <span t-out="tax_group['group_name']">Tax 10%</span>
+                    <t t-if="tax_group['display_base_amount_currency'] is not False">
+                        <span>Taxable Amount</span>
+                        <span class="text-nowrap"
+                              t-out="tax_group['display_base_amount_currency']"
+                              t-options='{"widget": "monetary", "display_currency": currency}'
+                        >27.00</span>
+                        <span>Tax</span>
+                    </t>
+                </td>
+                <td class="text-end o_price_total">
+                    <span class="text-nowrap"
+                          t-out="tax_group['tax_amount_currency']"
+                          t-options='{"widget": "monetary", "display_currency": currency}'
+                    >2.70</span>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_jp.report_invoice_document'"
+               t-call="l10n_jp.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

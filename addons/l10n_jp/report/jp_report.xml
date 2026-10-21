@@ -37,35 +37,5 @@
                 <t t-call="web.external_layout_footer_content" footer_content_classes="'border-top pt-2'"/>
             </div>
         </template>
-
-        <template id="document_tax_totals_template" inherit_id="account.document_tax_totals_template">
-            <xpath expr="//t[@t-set='same_tax_base']" position="after">
-                <t t-set="jp_layout_selected" t-value="company and company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'"/>
-            </xpath>
-            <xpath expr="//tr[hasclass('o_taxes')]" position="attributes">
-                <attribute name="t-if">not jp_layout_selected</attribute>
-            </xpath>
-            <xpath expr="//tr[hasclass('o_taxes')]" position="after">
-                <tr t-if="jp_layout_selected" class="o_taxes">
-                    <td>
-                        <span t-out="tax_group['group_name']">Tax 10%</span>
-                        <span>Taxable Amount</span>
-                        <t t-if="tax_group['display_base_amount_currency'] is not False">
-                            <span class="text-nowrap"
-                                  t-out="tax_group['display_base_amount_currency']"
-                                  t-options='{"widget": "monetary", "display_currency": currency}'
-                            >27.00</span>
-                            <span>Tax</span>
-                        </t>
-                    </td>
-                    <td class="text-end o_price_total">
-                        <span class="text-nowrap"
-                              t-out="tax_group['tax_amount_currency']"
-                              t-options='{"widget": "monetary", "display_currency": currency}'
-                        >2.70</span>
-                    </td>
-                </tr>
-            </xpath>
-        </template>
     </data>
 </odoo>

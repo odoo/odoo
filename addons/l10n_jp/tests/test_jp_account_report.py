@@ -5,7 +5,7 @@ import re
 import lxml.html
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.tools import html2plaintext
 
 
@@ -17,7 +17,14 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('ja_JP')
-        cls.partner_a.lang = 'ja_JP'
+        cls.partner_a.write({
+            'lang': 'ja_JP',
+            'zip': '100-0005',
+            'state_id': cls.env.ref('base.state_jp_jp-13').id,
+            'city': '千代田区',
+            'street': '丸の内1-1-1',
+            'country_id': cls.env.ref('base.jp').id,
+        })
         cls.company_data['company'].external_report_layout_id = cls.env.ref('l10n_jp.external_layout_jp_standard')
         # l10n_din5008 restyles the unit price cell for every company on a full install.
         cls.env['ir.ui.view'].search([('key', '=', 'l10n_din5008.report_invoice_document')]).active = False
@@ -32,9 +39,23 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
             post=True,
         )
         html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
-        text = html2plaintext(html)
+        header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].text_content()
 
-        self.assertIn('様', text)
+        self.assertIn(f'{self.partner_a.name} 様', header)
+        self.assertEqual(header.count(self.partner_a.name), 1)
+
+    def test_a_billing_user_prints_the_invoice(self):
+        company = self.company_data['company']
+        billing_user = new_test_user(
+            self.env, login='jp_billing', groups='account.group_account_invoice',
+            company_id=company.id, company_ids=company.ids,
+        )
+        invoice = self._create_invoice_one_line(move_type='out_invoice', partner_id=self.partner_a, product_id=self.product_a, post=True)
+
+        html = self.env['ir.actions.report'].with_user(billing_user)._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
+        header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].text_content()
+
+        self.assertIn(f'{self.partner_a.name} 様', header)
 
     def test_every_tax_rate_shows_its_base_and_its_tax(self):
         tax_8 = self.tax_sale_a.copy({
@@ -103,14 +124,25 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
         self.assertIn('202.00', text)
         self.assertIn('101.50', text)
 
-    def test_the_column_decides_for_every_price_in_it(self):
-        company = self.company_data['company']
+    def test_another_layout_keeps_the_name_in_the_address(self):
+        self.company_data['company'].external_report_layout_id = self.env.ref('web.external_layout_standard')
+        invoice = self._create_invoice_one_line(
+            move_type='out_invoice',
+            partner_id=self.partner_a,
+            product_id=self.product_a,
+            tax_ids=self.tax_sale_a,
+            post=True,
+        )
+        html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
+        address = lxml.html.fromstring(html).find_class('address')[0].text_content()
 
-        self.assertTrue(company._l10n_jp_hide_zero_decimals([202.0, 105.0]))
-        self.assertFalse(company._l10n_jp_hide_zero_decimals([202.0, 101.5]))
+        self.assertIn(self.partner_a.name, address)
+        self.assertIn('Taxable Amount', html2plaintext(html))
 
-    def test_the_rule_is_for_a_japanese_company_only(self):
-        company = self.company_data['company']
-        company.account_fiscal_country_id = self.env.ref('base.us')
+    def test_a_company_outside_japan_keeps_the_standard_invoice(self):
+        invoice = self._create_invoice_one_line(move_type='out_invoice', partner_id=self.partner_a, product_id=self.product_a, post=True)
+        self.assertEqual(invoice._get_name_invoice_report(), 'l10n_jp.report_invoice_document')
 
-        self.assertFalse(company._l10n_jp_hide_zero_decimals([202.0, 105.0]))
+        self.company_data['company'].account_fiscal_country_id = self.env.ref('base.us')
+
+        self.assertEqual(invoice._get_name_invoice_report(), 'account.report_invoice_document')
