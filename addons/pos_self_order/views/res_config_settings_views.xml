@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <block id="restaurant_section" position="after">
                 <block title="Mobile self-order &amp; Kiosk" id="self_ordering_section">
-                    <setting string="QR menu &amp; Kiosk activation" help="Let your customers order using their mobile or a kiosk.">a
+                    <setting string="QR menu &amp; Kiosk activation" help="Let your customers order using their mobile or a kiosk.">
                         <div class="content-group row">
                             <label for="pos_self_ordering_mode" class="col-lg-4" string="Self Ordering"/>
                             <field name="pos_self_ordering_mode" invisible="not pos_config_id"/>
@@ -132,6 +132,12 @@
 
             <setting id="iface_printbill" position="attributes">
                 <attribute name="invisible">use_kiosk_mode</attribute>
+            </setting>
+
+            <setting id="variant_options" position="after">
+                <setting string="Category layout" help="Where customers see the categories on the kiosk screen." invisible="pos_self_ordering_mode != 'kiosk'">
+                    <field name="pos_self_ordering_category_layout" widget="radio"/>
+                </setting>
             </setting>
 
             <xpath expr="//div[field[@name='pos_set_tip_after_payment']]" position="attributes">

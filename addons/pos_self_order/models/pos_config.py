@@ -98,6 +98,11 @@ class PosConfig(models.Model):
     )
     has_paper = fields.Boolean("Has paper", default=True)
     self_ordering_primary_color = fields.Char(string="Color", default=lambda self: self.env.company.email_secondary_color)
+    self_ordering_category_layout = fields.Selection(
+        [("top", "Top bar"), ("side", "Side panel")],
+        string="Category layout",
+        default="top",
+    )
 
     @api.model
     def _load_pos_self_data_fields(self, pos_config_id):
@@ -112,7 +117,8 @@ class PosConfig(models.Model):
             'available_preset_ids', 'default_preset_id', 'use_presets', 'iface_tax_included',
             'status', 'self_ordering_image_background_ids', 'preparation_printer_ids',
             'receipt_printer_ids', 'use_order_printer', 'other_devices', 'pos_snooze_ids', 'self_ordering_primary_color',
-            'logo', 'receipt_address', 'phone', 'email', 'website', 'tip_product_id', 'module_pos_discount'
+            'logo', 'receipt_address', 'phone', 'email', 'website', 'tip_product_id', 'module_pos_discount',
+            'self_ordering_category_layout',
         ]
 
     def _update_access_token(self):
