@@ -336,6 +336,9 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
             res["stock_warehouse"] += 2
             res["stock_move"] += 2
             res["stock_quant"] += 1
+            if self._has_demo_data():
+                # Out of Stock Ribbon: search of the products that may be sold out
+                res["product_template"] += 1
         else:
             res["product_product"] += 1
             res["sale_order_line"] += 1
