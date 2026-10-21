@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ImageAndIconOption">
-    <BuilderRow label.translate="Alignment">
+    <BuilderRow label.translate="Alignment" t-if="this.props.withAlignment">
         <BuilderSelect action="'imageAndIconAlignClassAction'">
             <BuilderSelectItem actionParam="''" title.translate="Unalign">None</BuilderSelectItem>
             <BuilderSelectItem ltrRtlMapping="'left-right'" actionParam="'me-auto float-start'" title.translate="Align Left">Left</BuilderSelectItem>
