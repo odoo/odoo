@@ -1104,7 +1104,7 @@ class BaseAutomation(models.Model):
     def _get_calendar(self, automation, record):
         return automation.trg_date_calendar_id
 
-    @deprecated("Since 19.0, use _cron_process_time_based_automations")
+    @deprecated("Since 19.0, use _cron_process_time_based_actions")
     def _check(self, automatic=False, use_new_cursor=False):
         if not automatic:
             raise RuntimeError("can run time-based automations only in automatic mode")
