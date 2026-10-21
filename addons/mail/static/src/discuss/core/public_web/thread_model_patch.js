@@ -16,8 +16,9 @@ const threadPatch = {
         });
         this.categoryAsThreadWithCounter = fields.One("DiscussAppCategory", {
             compute() {
+                // Sub channels have no category, they are displayed in the one of their parent.
                 return this.displayInSidebar && this.importantCounter > 0
-                    ? this.discussAppCategory
+                    ? this.discussAppCategory ?? this.parent_channel_id?.discussAppCategory
                     : null;
             },
         });
