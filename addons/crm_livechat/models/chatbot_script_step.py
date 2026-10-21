@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models, fields
+from odoo import _, models, fields, SUPERUSER_ID
 
 
 class ChatbotScriptStep(models.Model):
@@ -15,12 +15,18 @@ class ChatbotScriptStep(models.Model):
              "assign the created lead/opportunity to the defined team")
 
     def _chatbot_crm_prepare_lead_values(self, discuss_channel, description):
+        if self.crm_team_id:
+            use_leads = self.crm_team_id.use_leads
+        else:
+            # sudo: res.users - reading the global Leads setting is allowed for chatbot visitors.
+            superuser = self.env['res.users'].sudo().browse(SUPERUSER_ID)
+            use_leads = superuser._has_group('crm.group_use_lead')
         return {
             'description': description + discuss_channel._get_channel_history(),
             'name': _("%s's New Lead", self.chatbot_script_id.title),
             'source_id': self.chatbot_script_id.source_id.id,
             'team_id': self.crm_team_id.id,
-            'type': 'lead' if self.crm_team_id.use_leads else 'opportunity',
+            'type': 'lead' if use_leads else 'opportunity',
             'user_id': False,
         }
 
