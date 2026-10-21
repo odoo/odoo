@@ -16,20 +16,28 @@ odoo_view_link_prefix = "odoo://view/"
 def odoo_charts(data):
     """returns all odoo chart definitions in the spreadsheet"""
     figures = []
+    odooVersion = "odooVersion" in data and data["odooVersion"]
     for sheet in data.get("sheets", []):
         for figure in sheet.get("figures", []):
-            if figure["tag"] == "chart" and figure["data"]["type"].startswith("odoo_"):
-                figures.append(dict(figure["data"], id=figure["id"]))
+            if figure["tag"] == "chart" and (data := odoo_chart(odooVersion, figure)):
+                figures.append(dict(data, id=figure["id"]))
             elif figure["tag"] == "carousel":
-                figures.extend(get_odoo_charts_from_carousel(figure["data"]))
+                figures.extend(get_odoo_charts_from_carousel(odooVersion, figure["data"]))
     return figures
 
 
-def get_odoo_charts_from_carousel(carousel):
+def odoo_chart(version, definition):
+    if version and version < "19.3.1":
+        return definition["data"]["type"].startswith("odoo_") and definition["data"]
+    else:
+        return 'dataSource' in definition and definition['dataSource']['type'] == 'odoo' and definition["dataSource"]
+
+
+def get_odoo_charts_from_carousel(version, carousel):
     charts = []
     for chart_id, chart in carousel["chartDefinitions"].items():
-        if chart["type"].startswith("odoo_"):
-            charts.append(dict(chart, id=chart_id))
+        if data := odoo_chart(version, chart):
+            charts.append(dict(data, id=chart_id))
     return charts
 
 
@@ -110,8 +118,7 @@ def list_order_fields(list_definition):
 
 
 def list_columns_fields(list_definition):
-    columns = list_definition["columns"]
-    return [(isinstance(columns, dict) and col["name"]) or col for col in list_definition["columns"] if isinstance(columns, dict)]
+    return [(isinstance(col, dict) and col["name"]) or col for col in list_definition["columns"] if 'computedBy' not in col]
 
 
 def list_fields(list_definition):
@@ -127,16 +134,17 @@ def list_fields(list_definition):
 
 def chart_fields(chart):
     """return all field names used in a chart definitions"""
-    model = chart["metaData"]["resModel"]
+    resModel = chart["metaData"]["resModel"]
     fields = set(
         chart["metaData"]["groupBy"]
         + chart["searchParams"]["groupBy"]
+        + chart["searchParams"].get("orderBy", [])
         + domain_fields(chart["searchParams"]["domain"])
     )
     measure = chart["metaData"]["measure"]
     if measure != "__count":
         fields.add(measure)
-    return model, fields
+    return resModel, fields
 
 
 def filter_fields(data):
