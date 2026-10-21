@@ -21,6 +21,7 @@ import {
     manuallyDispatchProgrammaticEvent,
     microTick,
     mockSendBeacon,
+    mockUserAgent,
     press,
     queryAll,
     queryAllTexts,
@@ -1278,6 +1279,43 @@ test("should display overlay on video hover and handle video replacement and rem
     expect(queryAllTexts(".o-dropdown-item")[1]).toBe("Remove");
     await click(".o-dropdown-item [data-icon='delete'].oi-filled");
     await expectElementCount('div[data-embedded="video"]', 0);
+});
+
+test.tags("mobile");
+test("video options button available on mobile", async () => {
+    mockUserAgent("android");
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+
+    // Insert video
+    await insertText(htmlEditor, "/video");
+    await waitFor(".o-we-powerbox");
+    await press("Enter");
+    await contains(".modal-body .nav-link:contains('Videos')").click();
+    await waitFor("textarea[id='o_video_text']");
+
+    const input = queryOne("textarea[id='o_video_text']");
+    input.value = "https://www.youtube.com/embed/nbso3NVz3p8?rel=0&autoplay=0";
+    manuallyDispatchProgrammaticEvent(input, "input", {
+        inputType: "insertText",
+    });
+    await waitFor(".o_video_dialog_options", { timeout: 1500 });
+    await click(queryOne(".modal-footer").firstChild);
+    await waitFor("div[data-embedded='video'] iframe");
+
+    await expectElementCount(".video-overlay", 1);
+
+    await click(".video-overlay button.video-options-button");
+    await waitFor(".o-dropdown-item");
+    expect(queryAllTexts(".o-dropdown-item")).toEqual(["Replace", "Remove"]);
 });
 
 test("should preserve vertical video setting when reopening media dialog", async () => {
