@@ -1,13 +1,16 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, expect, mockTouch, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { Component, proxy, xml } from "@odoo/owl";
 import {
+    contains,
     defineParams,
     isSmall,
     makeTestApp,
     mountWithCleanup,
     serverState,
+    swipeLeft,
+    swipeRight,
 } from "@web/../tests/web_test_helpers";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { ensureArray } from "@web/core/utils/arrays";
@@ -658,6 +661,63 @@ test("next month and previous month", async () => {
             },
         ],
     });
+});
+
+test("swipe to change month", async () => {
+    mockTouch(true);
+    await mountWithCleanup(DateTimePicker);
+    expect(".o_header_part").toHaveText("Apr 2023");
+
+    await swipeLeft(".o_date_picker");
+    expect(".o_header_part").toHaveText("May 2023");
+
+    await swipeRight(".o_date_picker");
+    await swipeRight(".o_date_picker");
+    expect(".o_header_part").toHaveText("Mar 2023");
+
+    // Vertical swipes are ignored
+    await swipeLeft(".o_date_picker", {}, { position: { x: -60, y: 200 } });
+    expect(".o_header_part").toHaveText("Mar 2023");
+});
+
+test("neighbor panel is shown while swiping", async () => {
+    mockTouch(true);
+    await mountWithCleanup(DateTimePicker);
+    expect(".o_datetime_picker_neighbor").toHaveCount(0);
+
+    const { moveTo, drop } = await contains(".o_date_picker").drag({
+        position: { x: 0 },
+        relative: true,
+        initialPointerMoveDistance: 0,
+    });
+    await moveTo(".o_date_picker", { position: { x: -30 }, relative: true });
+    expect(".o_datetime_picker_previous").toHaveCount(1);
+    expect(".o_datetime_picker_next").toHaveCount(1);
+    expect(".o_datetime_picker_next .o_date_item_cell:not(.o_out_of_range):first").toHaveText("1");
+    expect(".o_header_part").toHaveText("Apr 2023");
+
+    await drop();
+    expect(".o_header_part").toHaveText("Apr 2023");
+});
+
+test("swipe to change month (rtl)", async () => {
+    mockTouch(true);
+    defineParams({
+        lang_parameters: {
+            date_format: "%d/%m/%Y",
+            direction: "rtl",
+            time_format: "%H:%M:%S",
+        },
+    });
+    await mountWithCleanup(DateTimePicker);
+    expect(".o_header_part").toHaveText("Apr 2023");
+
+    await swipeRight(".o_date_picker");
+    expect(".o_header_part").toHaveText("May 2023");
+
+    await swipeLeft(".o_date_picker");
+    await swipeLeft(".o_date_picker");
+    expect(".o_header_part").toHaveText("Mar 2023");
 });
 
 test.tags("desktop");

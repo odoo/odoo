@@ -1,4 +1,4 @@
-import { Component, computed, proxy, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, computed, onPatched, proxy, t, useOnChange, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
 import { localization } from "../l10n/localization";
@@ -275,6 +275,11 @@ const PRECISION_LEVELS = new Map()
 // Other constants
 const GRID_COUNT = 10;
 const GRID_MARGIN = 1;
+const SWIPE_THRESHOLD = 50; // px
+const SWIPE_LOCK_DISTANCE = 10; // px
+const SWIPE_MIN_VELOCITY = 0.3; // px/ms
+const SWIPE_ANIMATION_DURATION = 250; // ms
+const SWIPE_RESISTANCE = 3; // drag slow down when there is no panel to show
 
 const DAYS_PER_WEEK = 7;
 const WEEKS_PER_MONTH = 6;
@@ -336,16 +341,7 @@ export class DateTimePicker extends Component {
         }
         return { minDate, maxDate };
     });
-    items = computed(() => {
-        const { minDate, maxDate } = this.dateRange();
-        return this.activePrecisionLevel.getItems(this.state.focusDate, {
-            maxDate,
-            minDate,
-            showWeekNumbers: this.props.showWeekNumbers ?? !this.props.range,
-            isDateValid: this.props.isDateValid,
-            dayCellClass: this.props.dayCellClass,
-        });
-    });
+    items = computed(() => this.getItems(this.state.focusDate));
     selectedRange = computed(() => {
         const values = this.values();
         const selectedRange = [...values];
@@ -397,6 +393,7 @@ export class DateTimePicker extends Component {
             timeValues: [],
             /** @type {PrecisionLevel} */
             precision: this.props.minPrecision,
+            isSwiping: false,
         });
 
         useOnChange(
@@ -410,6 +407,11 @@ export class DateTimePicker extends Component {
             ],
             () => this.onPropsUpdated()
         );
+
+        onPatched(() => {
+            this.onNextPatch?.();
+            this.onNextPatch = null;
+        });
     }
 
     onPropsUpdated() {
@@ -439,6 +441,20 @@ export class DateTimePicker extends Component {
 
         this.shouldAdjustFocusDate = false;
         this.state.focusDate = this.clamp(dateToFocus.startOf("month"), minDate, maxDate);
+    }
+
+    /**
+     * @param {DateTime} focusDate
+     */
+    getItems(focusDate) {
+        const { minDate, maxDate } = this.dateRange();
+        return this.activePrecisionLevel.getItems(focusDate, {
+            maxDate,
+            minDate,
+            showWeekNumbers: this.props.showWeekNumbers ?? !this.props.range,
+            isDateValid: this.props.isDateValid,
+            dayCellClass: this.props.dayCellClass,
+        });
     }
 
     /**
@@ -540,6 +556,158 @@ export class DateTimePicker extends Component {
         ev.preventDefault();
         const { step } = this.activePrecisionLevel;
         this.state.focusDate = this.clamp(this.state.focusDate.minus(step));
+    }
+
+    /**
+     * @param {TouchEvent} ev
+     */
+    onSwipeStart(ev) {
+        this.swipe = null;
+        if (ev.touches.length !== 1) {
+            return;
+        }
+        const el = ev.currentTarget;
+        // Ends a running slide right away
+        el.getAnimations().forEach((animation) => animation.finish());
+        const { clientX, clientY } = ev.touches[0];
+        this.swipe = {
+            el,
+            startX: clientX,
+            startY: clientY,
+            startTime: Date.now(),
+            deltaX: 0,
+            isHorizontal: null,
+        };
+    }
+
+    /**
+     * Makes the panels follow the finger once the gesture is known to be
+     * horizontal. Vertical gestures are left to the browser (scroll).
+     * @param {TouchEvent} ev
+     */
+    onSwipeMove(ev) {
+        const swipe = this.swipe;
+        if (!swipe) {
+            return;
+        }
+        const { clientX, clientY } = ev.touches[0];
+        let deltaX = clientX - swipe.startX;
+        const deltaY = clientY - swipe.startY;
+        if (swipe.isHorizontal === null) {
+            if (Math.max(Math.abs(deltaX), Math.abs(deltaY)) < SWIPE_LOCK_DISTANCE) {
+                return;
+            }
+            swipe.isHorizontal = Math.abs(deltaX) > Math.abs(deltaY);
+            if (!swipe.isHorizontal) {
+                this.swipe = null;
+                return;
+            }
+        }
+        // Renders the neighbor panels
+        this.state.isSwiping = true;
+        if (!this.getSwipeTarget(deltaX)) {
+            // Nothing to show on that side: resist the drag
+            deltaX /= SWIPE_RESISTANCE;
+        }
+        swipe.deltaX = deltaX;
+        swipe.el.style.transform = `translate3d(${deltaX}px, 0, 0)`;
+    }
+
+    /**
+     * Swiping horizontally goes to the next or previous panel, depending on
+     * the swipe direction (reversed in RTL). The panels then slide to their
+     * final position.
+     * @param {TouchEvent} ev
+     */
+    onSwipeEnd(ev) {
+        const swipe = this.swipe;
+        if (!swipe) {
+            return;
+        }
+        this.swipe = null;
+        const { el, deltaX, startTime } = swipe;
+        if (!swipe.isHorizontal) {
+            el.style.transform = "";
+            return;
+        }
+        const velocity = Math.abs(deltaX) / (Date.now() - startTime || 1);
+        const isSwipe =
+            Math.abs(deltaX) >= SWIPE_THRESHOLD ||
+            (Math.abs(deltaX) >= SWIPE_LOCK_DISTANCE && velocity >= SWIPE_MIN_VELOCITY);
+        const target = isSwipe && this.getSwipeTarget(deltaX);
+        if (!target) {
+            this.slideSwipeBack(el, deltaX);
+            return;
+        }
+        ev.preventDefault();
+        // Distance between two panels, gap included
+        const neighbor = el.querySelector(":scope > .o_datetime_picker_neighbor");
+        const distance = neighbor ? Math.abs(neighbor.offsetLeft) : el.offsetWidth;
+        this.state.focusDate = target;
+        // Once rendered, the new panel is moved back where it was dragged so
+        // that it can slide into place
+        this.onNextPatch = () => this.slideSwipeBack(el, deltaX - Math.sign(deltaX) * distance);
+    }
+
+    onSwipeCancel() {
+        if (this.swipe) {
+            this.swipe.el.style.transform = "";
+            this.swipe = null;
+        }
+        this.state.isSwiping = false;
+    }
+
+    /**
+     * @param {number} deltaX
+     * @returns {DateTime | null} the date to focus when swiping by deltaX
+     */
+    getSwipeTarget(deltaX) {
+        const isRTL = localization.direction === "rtl";
+        const { previous, next } = this.getSwipeNeighbors();
+        return deltaX < 0 !== isRTL ? next : previous;
+    }
+
+    /**
+     * @returns {{ previous: DateTime | null, next: DateTime | null }}
+     */
+    getSwipeNeighbors() {
+        const { focusDate } = this.state;
+        const { step } = this.activePrecisionLevel;
+        const previous = this.clamp(focusDate.minus(step));
+        const next = this.clamp(focusDate.plus(step));
+        return {
+            previous: previous.equals(focusDate) ? null : previous,
+            next: next.equals(focusDate) ? null : next,
+        };
+    }
+
+    /**
+     * Panels displayed in the swipe area: the current one and, while swiping,
+     * the previous and next ones on each side.
+     */
+    getSwipePanels() {
+        const panels = [{ key: "current", items: this.items() }];
+        if (this.state.isSwiping) {
+            for (const [key, date] of Object.entries(this.getSwipeNeighbors())) {
+                if (date) {
+                    panels.push({ key, items: this.getItems(date) });
+                }
+            }
+        }
+        return panels;
+    }
+
+    /**
+     * @param {HTMLElement} el
+     * @param {number} fromX
+     */
+    slideSwipeBack(el, fromX) {
+        el.style.transform = "";
+        const animation = el.animate(
+            [{ transform: `translate3d(${fromX}px, 0, 0)` }, { transform: "none" }],
+            { duration: SWIPE_ANIMATION_DURATION, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
+        );
+        animation.onfinish = () => (this.state.isSwiping = false);
     }
 
     /**
