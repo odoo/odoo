@@ -4,7 +4,7 @@ from odoo import api, fields, models, tools
 from odoo.fields import Domain
 
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class HrLeaveReportCalendar(models.Model):
@@ -51,6 +51,8 @@ class HrLeaveReportCalendar(models.Model):
     leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
     leave_id = fields.Many2one(comodel_name='hr.leave', readonly=True, groups='hr_holidays.group_hr_holidays_user')
     is_manager = fields.Boolean("Manager", compute="_compute_is_manager")
+    can_delete = fields.Boolean(compute='_compute_can_delete')
+    can_expand = fields.Boolean(compute='_compute_can_expand')
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, 'hr_leave_report_calendar')
@@ -157,6 +159,23 @@ class HrLeaveReportCalendar(models.Model):
     def _compute_is_manager(self):
         for leave in self:
             leave.is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or leave.leave_manager_id == self.env.user
+
+    @api.depends_context('uid')
+    def _compute_can_delete(self):
+        self.can_delete = False
+        # report ids are hr.leave ids (see init)
+        for leave in self.env['hr.leave'].browse(self.ids)._filtered_access('unlink'):
+            try:
+                leave._unlink_if_correct_states()
+            except UserError:
+                continue
+            self.browse(leave.id).can_delete = True
+
+    @api.depends_context('uid')
+    def _compute_can_expand(self):
+        self.can_expand = False
+        readable = self.env['hr.leave'].browse(self.ids)._filtered_access('read')
+        self.browse(readable.ids).can_expand = True
 
     def action_approve(self):
         current_user = self.env.user
