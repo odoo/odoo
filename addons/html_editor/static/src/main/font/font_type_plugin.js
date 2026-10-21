@@ -9,6 +9,7 @@ import {
     isVisibleTextNode,
     isStylable,
     isContentEditableAncestor,
+    headingTags,
 } from "@html_editor/utils/dom_info";
 import {
     ancestors,
@@ -33,7 +34,6 @@ import { weakMemoize } from "@html_editor/utils/functions";
  * @typedef {{ name: LazyTranslatedString; tagName: string; extraClass?: string; }[]} font_type_items
  */
 
-export const headingTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
 const handledElemSelector = [...headingTags, "BLOCKQUOTE"].join(", ");
 
 export class FontTypePlugin extends Plugin {

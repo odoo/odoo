@@ -1,14 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-import {
-    HEADINGS,
-    TableOfContentManager,
-} from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
+import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
+import { headingTags } from "@html_editor/utils/dom_info";
 
 export class TableOfContentPlugin extends Plugin {
     static id = "tableOfContent";
@@ -102,7 +100,7 @@ export class TableOfContentPlugin extends Plugin {
     }
 
     delayedUpdateTableOfContents(element) {
-        const selector = HEADINGS.join(",");
+        const selector = headingTags.join(",");
         if (
             !(
                 !element ||
