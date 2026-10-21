@@ -59,3 +59,7 @@ class ProductTemplateAttributeValue(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra', 'name', 'is_custom', 'html_color', 'image', 'excluded_value_ids']
+
+    def _unrelevant_records(self, config):
+        # Archived values are flagged by ptav_active, there is no active field
+        return self.filtered(lambda ptav: not ptav.ptav_active).ids
