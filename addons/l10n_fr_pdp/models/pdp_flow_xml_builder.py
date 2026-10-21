@@ -359,7 +359,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             # Standard French SIREN
             company_scheme = '0002'
             company_id = siren
-        elif len(partner.vat) > 1:
+        elif len(partner.vat or '') > 1:
             # VAT scheme
             company_scheme = '0223'
             company_id = partner.vat
@@ -373,7 +373,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 'schemeId': company_scheme,
             }
         }
-        if len(partner.vat) > 1:
+        if len(partner.vat or '') > 1:
             partner_vals['TaxRegistrationId'] = {
                 '_text': partner.vat,
                 'qualifyingId': 'VAT',

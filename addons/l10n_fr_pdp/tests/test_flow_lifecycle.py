@@ -673,6 +673,25 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(invoices[0].findtext('ID'), invoice.name)
         self.assertEqual(invoices[0].findtext('CurrencyCode'), invoice.currency_id.name)
 
+    def test_b2bi_invoice_builds_when_company_has_no_vat(self):
+        """A company reporting B2BI transactions may legitimately have no VAT
+        number (e.g. a VAT-exempt 'franchise en base' business). The company is
+        identified by its SIREN, so building the payload must not crash on the
+        missing VAT."""
+        self.company.write({'vat': False})
+        self.company.partner_id.vat = False
+
+        invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
+        self.assertEqual(invoice.l10n_fr_pdp_flow_10_report_type, 'transaction')
+
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        seller = xml.find('./TransactionsReport/Invoice/Seller')
+        self.assertEqual(
+            seller.findtext('CompanyId'),
+            self.company.partner_id._l10n_fr_pdp_get_siren(),
+        )
+        self.assertIsNone(seller.find('TaxRegistrationId'))
+
     def test_b2bi_invoice_limits_free_text_values(self):
         invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
         invoice.invoice_line_ids.name = 'P' * 300
