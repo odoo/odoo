@@ -139,7 +139,7 @@ registry.category("web_tour.tours").add("RestaurantOnlinePaymentTour", {
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Letter Tray", "1"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.clickPaymentMethod("Online payment", true, { amount: "4.80" }),
             PaymentScreen.clickBackToProductScreen(),
             ProductScreen.clickDisplayedProduct("Letter Tray"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "2.0"),
