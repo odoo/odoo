@@ -163,9 +163,10 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         params = self._run_category_wizard()['params']
         self.assertIn('closed for it', params['message'])
         self.assertTrue(params['sticky'], "a reminder that disappears on its own reminds nobody")
+        self.assertTrue(self.env.ref('account.action_report_stock_valuation', raise_if_not_found=False), "the link must lead somewhere")
         self.assertEqual(
             params['links'],
-            [{'label': 'Inventory Valuation', 'url': '/odoo/action-stock_account.action_report_stock_valuation'}],
+            [{'label': 'Inventory Valuation', 'url': '/odoo/action-account.action_report_stock_valuation'}],
         )
         # nothing was evaluated, so there is nothing for a closing to make final
         untouched = self.env['product.product'].create({

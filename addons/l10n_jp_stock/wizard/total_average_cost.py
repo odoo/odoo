@@ -95,7 +95,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             )
             params['links'] = [{
                 'label': self.env._('Inventory Valuation'),
-                'url': '/odoo/action-stock_account.action_report_stock_valuation',
+                'url': '/odoo/action-account.action_report_stock_valuation',
             }]
             params['sticky'] = True
         return {
