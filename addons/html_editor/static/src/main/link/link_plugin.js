@@ -1135,7 +1135,7 @@ export class LinkPlugin extends Plugin {
     }
 
     updateFontSizedButtonClass(root) {
-        const buttons = selectElements(root, ".btn");
+        const buttons = [...selectElements(root, ".btn")];
         const parentButton = closestElement(root, ".btn");
         if (parentButton && parentButton !== root) {
             buttons.push(parentButton);
