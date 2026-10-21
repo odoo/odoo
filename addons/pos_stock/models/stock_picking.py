@@ -114,6 +114,7 @@ class StockPicking(models.Model):
     def _prepare_stock_move_vals(self, first_line, order_lines):
         return {
             'uom_id': first_line.product_id.uom_id.id,
+            'packaging_uom_id': first_line.product_uom_id.id,
             'picking_id': self.id,
             'picking_type_id': self.picking_type_id.id,
             'product_id': first_line.product_id.id,
@@ -128,13 +129,16 @@ class StockPicking(models.Model):
         self.ensure_one()
 
         def get_grouping_key(line):
-            return (line.product_id.id, tuple(sorted(line.attribute_value_ids.ids)))
+            return (line.product_id.id, tuple(sorted(line.attribute_value_ids.ids)), line.product_uom_id)
 
         move_vals = [
             self._prepare_stock_move_vals(order_lines[0], order_lines)
             for order_lines in lines.grouped(get_grouping_key).values()
         ]
         moves = self.env['stock.move'].create(move_vals)
+        for move, order_lines in zip(moves, lines.grouped(get_grouping_key).values()):
+            for line in order_lines:
+                line.move_ids |= move
         confirmed_moves = moves._action_confirm()
         confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
         confirmed_moves.picked = True
