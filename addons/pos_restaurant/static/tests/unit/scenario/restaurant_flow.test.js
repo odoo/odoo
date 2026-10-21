@@ -1443,3 +1443,23 @@ test("test_tip_after_payment: tip adjusts payment line based on remaining/change
         "6.00"
     );
 });
+
+test("transfer an order to a new floating order", async () => {
+    const store = await setupAndMountPosApp({ set_tip_after_payment: false });
+    await Utils.clickTable("1");
+    await Utils.clickDisplayedProduct("TEST");
+    const order = store.getOrder();
+    const table = order.table_id;
+    expect(table.getOrders()).toHaveLength(1);
+
+    await Utils.clickTransferButton();
+    await waitFor(".floor-screen");
+    await contains(".floor-screen .new-order").click();
+    await waitFor(".product-screen");
+
+    expect(store.getOrder()).toBe(order);
+    expect(order.table_id).toBe(undefined);
+    expect(order.floating_order_name).toBe(order.tracking_number);
+    expect(order.lines).toHaveLength(1);
+    expect(table.getOrders()).toHaveLength(0);
+});
