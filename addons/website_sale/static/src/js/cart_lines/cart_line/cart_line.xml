@@ -233,21 +233,21 @@
                     t-att-min="this.props.line.min_qunantity"
                     aria-label="Quantity"
                 />
-                <t
-                    t-if="this.props.line.alert_message"
-                    t-call="website_sale.AlertInline"
-                    message="this.props.line.alert_message"
-                    level="this.props.line.alert_level"
-                />
                 <button
-                    t-else=""
                     name="add_quantity"
                     class="btn btn-link d-inline-block border border-start-0"
                     aria-label="Add one"
                     title="Add one"
                     t-on-click="() => this.updateQuantity(this.state.quantity + 1)"
                 >
+                    <t
+                        t-if="this.props.line.alert_message"
+                        t-call="website_sale.AlertInline"
+                        message="this.props.line.alert_message"
+                        level="this.props.line.alert_level"
+                    />
                     <i
+                        t-else=""
                         class="oi position-relative z-1"
                         data-icon="add"
                         t-out="isMobile ? this.props.templateData.qtyPlusButtonTextMobile : this.props.templateData.qtyPlusButtonText"
@@ -297,7 +297,7 @@
 
     <t t-name="website_sale.AlertInline">
         <i
-            t-attf-class="oi text-{{level ? 'danger' : ''}} {{classes}} {{level == 'info' ? 'oi-filled' : ''}}"
+            t-attf-class="oi text-{{level}} {{classes}} {{level == 'info' ? 'oi-filled' : ''}}"
             t-att-data-icon="level == 'info' ? 'info' : 'warning'"
             t-att-title="message"
             t-att-aria-label="message"

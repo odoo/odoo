@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("website_sale_loyalty.check_shipping_dis
             delivery: "10.00", // delivery2 is $10, ignoring shipping discount
             total: "304.00", // $100 per Plumbus, plus discounted delivery
         }),
-        ...assertRewardAmounts({ shipping: "-6.00" }),
+        ...assertRewardAmounts({ shipping: "- 6.00" }),
         {
             content: "pay with eWallet",
             trigger: "button[name='o_loyalty_claim']:contains('Use')",

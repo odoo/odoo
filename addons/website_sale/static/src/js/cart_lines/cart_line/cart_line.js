@@ -36,7 +36,7 @@ export class CartLine extends Component {
                 || effectiveQuantity <= this.props.line.max_qunantity
             )
             && (
-                this.props.line.min_qunantity === undefined
+                !this.props.line.min_qunantity
                 || effectiveQuantity >= this.props.line.min_qunantity
             )
         ) {

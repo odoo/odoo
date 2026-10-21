@@ -34,7 +34,6 @@
                                    name="csrf_token"
                                    t-att-value="request.csrf_token()"/>
                             <t t-if="not hide_payment_button" t-call="payment.submit_button"/>
-
                         </form>
                     </div>
                     <t t-elif="not hide_payment_button" t-call="payment.submit_button"/>
@@ -269,8 +268,6 @@
                      IDs (like with t-att-id) and each template needs to define a div element. -->
                 <t t-out="oe_structure"/>
             </div>
-            <!-- Clear the cart alerts once they have been rendered to the user. -->
-            <t t-if="website_sale_order._clear_alerts()"/>
         </t>
     </template>
 
@@ -461,7 +458,6 @@
     </template>
 
     <!-- Deactivatable through the website editor. -->
-    <!-- TODO NIPL: Only keep blank template to activate from website editor -->
     <template id="reduction_code" inherit_id="website_sale.total" name="Promo Code">
         <!-- Checkout context:
             - website_sale_order: The current order.

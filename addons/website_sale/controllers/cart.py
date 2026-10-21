@@ -39,10 +39,10 @@ class Cart(PaymentPortal):
                 abandoned_order.access_token, access_token
             ):  # wrong token (or SO has been deleted)
                 raise NotFound
-            if abandoned_order.state not in (
+            if abandoned_order.state not in {
                 "draft",
                 "sent",
-            ) or abandoned_order.get_portal_last_transaction().state in {
+            } or abandoned_order.get_portal_last_transaction().state in {
                 "pending",
                 "authorized",
                 "done",
@@ -310,7 +310,7 @@ class Cart(PaymentPortal):
             **quick_reorder_data,
         }
 
-    def _get_product_user_error(self, product):
+    def _get_product_user_error(self, _product):
         return self.env._("The given product does not exist therefore it cannot be added to cart.")
 
     def _get_express_shop_payment_values(self, order, **_kwargs):
@@ -360,7 +360,8 @@ class Cart(PaymentPortal):
         :params dict kwargs: additional parameters given to _cart_update_line_quantity calls.
         """
         if order_sudo := request.cart:
-            order_sudo._check_not_partially_paid()  # Prevent modifying the cart if it's partially paid
+            # Prevent modifying the cart if it's partially paid
+            order_sudo._check_not_partially_paid()
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
 
         # This method must be only called from the cart page BUT in some advanced logic
@@ -622,6 +623,9 @@ class Cart(PaymentPortal):
         for line in order_sudo.website_order_line:
             values["cart_lines"].append(self._prepare_cart_line_data(line))
 
+        # clear alerts once it's sent to component
+        order_sudo._clear_alerts()
+
         return values
 
     def _prepare_cart_line_data(self, line):
@@ -677,7 +681,7 @@ class Cart(PaymentPortal):
             "description_lines": list(combo_item_line.get_description_following_lines()),
         }
 
-    @route(route="/shop/cart/totals", type="jsonrpc", auth="public", website=True, readonly=True)
+    @route(route="/shop/cart/totals", type="jsonrpc", auth="public", website=True)
     def cart_totals(self, order_id=None):
         if order_id:
             order_sudo = request.env["sale.order"].sudo().browse(order_id)
