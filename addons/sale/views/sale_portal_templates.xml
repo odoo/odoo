@@ -1150,7 +1150,7 @@
                                             <t t-if="not collapse_prices">
                                                 <t t-foreach="line.tax_ids" t-as="tax">
                                                     <span class="badge text-bg-secondary me-1"
-                                                        t-out="tax.name" />
+                                                        t-out="tax.invoice_label or tax.name" />
                                                 </t>
                                             </t>
                                         </td>
