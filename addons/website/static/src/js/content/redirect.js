@@ -1,5 +1,3 @@
-import { session } from "@web/session";
-
 /**
  * This script, served with frontend pages, displays buttons in the top left
  * corner to provide the authenticated user an access to his odoo backend.
@@ -7,10 +5,6 @@ import { session } from "@web/session";
  * it will forward some events to its parent.
  */
 document.addEventListener("DOMContentLoaded", () => {
-    if (session.is_website_user) {
-        return;
-    }
-
     if (!window.frameElement) {
         const frontendToBackendNavEl = document.querySelector(".o_frontend_to_backend_nav");
         if (frontendToBackendNavEl) {

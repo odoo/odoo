@@ -201,6 +201,7 @@
     </xpath>
 
     <xpath expr="//t[@t-call-assets='web.assets_frontend_minimal']" position="after">
+        <script t-if="not website.is_public_user()" defer="defer" src="/website/static/src/js/content/redirect.js"/>
         <script t-if="edit_translations" defer="defer" src="/website/static/src/js/content/adapt_content.js"/>
     </xpath>
 
