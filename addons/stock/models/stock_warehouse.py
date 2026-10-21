@@ -305,10 +305,9 @@ class StockWarehouse(models.Model):
             self._check_multiwarehouse_group()
         return res
 
-    def unlink(self):
-        res = super().unlink()
-        self._check_multiwarehouse_group()
-        return res
+    @api.ondelete(at_uninstall=True)
+    def _unlink_check_multiwarehouse_group(self):
+        return self._check_multiwarehouse_group
 
     def _check_multiwarehouse_group(self):
         cnt_by_company = self.env['stock.warehouse'].sudo()._read_group([('active', '=', True)], ['company_id'], aggregates=['__count'])

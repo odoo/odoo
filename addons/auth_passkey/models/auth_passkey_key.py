@@ -39,7 +39,8 @@ class AuthPasskeyKey(models.Model):
         if not sql.column_exists(self.env.cr, 'auth_passkey_key', 'public_key'):
             self.env.cr.execute(SQL('ALTER TABLE auth_passkey_key ADD COLUMN public_key varchar'))
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_log_info(self):
         for passkey in self:
             _logger.info(
                 "Passkey (#%d) deleted by %s (#%d) from %s",
@@ -47,7 +48,6 @@ class AuthPasskeyKey(models.Model):
                 self.env.user.login, self.env.user.id,
                 request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
             )
-        return super().unlink()
 
     def _compute_public_key(self):
         for passkey in self:

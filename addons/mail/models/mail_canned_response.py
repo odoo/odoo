@@ -68,9 +68,9 @@ class MailCannedResponse(models.Model):
         self._broadcast()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_broadcast(self):
         self._broadcast(delete=True)
-        return super().unlink()
 
     def _broadcast(self, /, *, delete=False):
         stores = Store.Stores()

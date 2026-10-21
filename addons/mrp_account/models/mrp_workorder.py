@@ -67,7 +67,7 @@ class MrpWorkorder(models.Model):
         self._clear_journal_entries()
         super()._action_reset_to_draft()
 
-    def unlink(self):
-        sudo_self = self.sudo()
-        (sudo_self.mo_analytic_account_line_ids | sudo_self.wc_analytic_account_line_ids).unlink()
-        return super().unlink()
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self.mo_analytic_account_line_ids
+        yield self.wc_analytic_account_line_ids
