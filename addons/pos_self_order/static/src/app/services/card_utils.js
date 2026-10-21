@@ -38,6 +38,23 @@ export function getProductVariantByAttributes(models, productTemplate, selectedA
     return productTemplate.getVariantForCombination(getAttributeValues(selectedAttributes, models));
 }
 
+export function getBestMatchingVariant(models, productTemplate, selectedAttributes) {
+    const productVariant = getProductVariantByAttributes(
+        models,
+        productTemplate,
+        selectedAttributes
+    );
+    if (productVariant) {
+        return productVariant;
+    }
+    const hasSingleCombination = productTemplate.attribute_line_ids.every(
+        (line) =>
+            line.attribute_id.create_variant === "no_variant" ||
+            line.product_template_value_ids.length === 1
+    );
+    return hasSingleCombination && productTemplate.product_variant_ids[0];
+}
+
 export function getAttributeValues(selectedValues, models) {
     return Object.entries(selectedValues).reduce((acc, [, options]) => {
         const optionEntries = Object.entries(
