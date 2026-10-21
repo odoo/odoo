@@ -180,6 +180,75 @@ Use t-snippet-call and fill it with its inner grid-mode row.
     </t>
 </template>
 
+<template id="s_masonry_block_featured_template" name="Masonry">
+    <t t-snippet-call="website.s_masonry_block">
+        <div class="row o_grid_mode" data-row-count="10" style="gap: 16px;">
+            <div class="o_grid_item o_cc o_cc4 g-height-10 g-col-lg-6 col-lg-6 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 0; z-index: 1; grid-area: 1 / 1 / 11 / 7; --grid-item-padding-y: 30px; --grid-item-padding-x: 30px;">
+                <a class="stretched-link" href="#"/>
+                <h2 class="display-1-fs">Who<br/>We Are</h2>
+                <p class="lead">Discover our story, our values and the people behind every project.</p>
+                <i class="oi rounded-circle" data-icon="arrow_forward" role="img" aria-hidden="true"/>
+            </div>
+            <div class="o_grid_item o_cc o_cc5 oe_img_bg o_bg_img_center g-height-4 g-col-lg-3 col-lg-3 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 1; z-index: 2; grid-area: 1 / 7 / 5 / 10; background-image: url('/web/image/website.landscape_md_1'); --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+                <a class="stretched-link" href="#"/>
+                <div class="o_we_bg_filter bg-black-50"/>
+                <h2 class="h3-fs">Our Services</h2>
+            </div>
+            <div class="o_grid_item o_cc o_cc5 oe_img_bg o_bg_img_center g-height-6 g-col-lg-3 col-lg-3 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 2; z-index: 3; grid-area: 5 / 7 / 11 / 10; background-image: url('/web/image/website.set_2_square_md_5'); --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+                <a class="stretched-link" href="#"/>
+                <div class="o_we_bg_filter bg-black-50"/>
+                <h2 class="h3-fs">Our Projects</h2>
+            </div>
+            <div class="o_grid_item o_cc o_cc5 oe_img_bg o_bg_img_center g-height-6 g-col-lg-3 col-lg-3 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 3; z-index: 4; grid-area: 1 / 10 / 7 / 13; background-image: url('/web/image/website.landscape_md_6'); --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+                <a class="stretched-link" href="#"/>
+                <div class="o_we_bg_filter bg-black-50"/>
+                <h2 class="h3-fs">Meet the Team</h2>
+            </div>
+            <div class="o_grid_item o_cc o_cc5 oe_img_bg o_bg_img_center g-height-4 g-col-lg-3 col-lg-3 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 4; z-index: 5; grid-area: 7 / 10 / 11 / 13; background-image: url('/web/image/website.landscape_md_2'); --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+                <a class="stretched-link" href="/contactus"/>
+                <div class="o_we_bg_filter bg-black-50"/>
+                <h2 class="h3-fs">Contact Us</h2>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="s_masonry_block_collage_template" name="Masonry">
+    <t t-snippet-call="website.s_masonry_block">
+        <div class="row o_grid_mode" data-row-count="10" style="gap: 16px;">
+            <div class="o_grid_item o_cc o_cc5 oe_img_bg o_bg_img_center g-height-6 g-col-lg-4 col-lg-4 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 0; z-index: 1; grid-area: 1 / 1 / 7 / 5; background-image: url('/web/image/website.set_2_square_md_3'); --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+                <a class="stretched-link" href="#"/>
+                <div class="o_we_bg_filter bg-black-50"/>
+                <h2 class="h3-fs">Our Expertise</h2>
+            </div>
+            <div class="o_grid_item o_cc o_cc5 oe_img_bg o_bg_img_center g-height-4 g-col-lg-4 col-lg-4 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 1; z-index: 2; grid-area: 1 / 5 / 5 / 9; background-image: url('/web/image/website.landscape_md_1'); --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+                <a class="stretched-link" href="#"/>
+                <div class="o_we_bg_filter bg-black-50"/>
+                <h2 class="h3-fs">Careers</h2>
+            </div>
+            <div class="o_grid_item o_cc o_cc5 oe_img_bg o_bg_img_center g-height-5 g-col-lg-4 col-lg-4 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 2; z-index: 3; grid-area: 1 / 9 / 6 / 13; background-image: url('/web/image/website.landscape_md_7'); --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+                <a class="stretched-link" href="#"/>
+                <div class="o_we_bg_filter bg-black-50"/>
+                <h2 class="h3-fs">Latest News</h2>
+            </div>
+            <div class="o_grid_item o_cc o_cc5 oe_img_bg o_bg_img_center g-height-6 g-col-lg-4 col-lg-4 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 3; z-index: 4; grid-area: 5 / 5 / 11 / 9; background-image: url('/web/image/website.set_2_square_md_1'); --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+                <a class="stretched-link" href="#"/>
+                <div class="o_we_bg_filter bg-black-50"/>
+                <h2 class="h3-fs">Case Studies</h2>
+            </div>
+            <div class="o_grid_item o_cc o_cc5 oe_img_bg o_bg_img_center g-height-5 g-col-lg-4 col-lg-4 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 4; z-index: 5; grid-area: 6 / 9 / 11 / 13; background-image: url('/web/image/website.landscape_md_4'); --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+                <a class="stretched-link" href="#"/>
+                <div class="o_we_bg_filter bg-black-50"/>
+                <h2 class="h3-fs">Events</h2>
+            </div>
+            <div class="o_grid_item o_cc o_cc4 g-height-4 g-col-lg-4 col-lg-4 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 5; z-index: 6; grid-area: 7 / 1 / 11 / 5; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+                <a class="stretched-link" href="/contactus"/>
+                <h2 class="h3-fs">Get in Touch</h2>
+            </div>
+        </div>
+    </t>
+</template>
+
 <!-- Assets -->
 <asset id="website.s_masonry_block_000_scss" name="Masonry block 000 SCSS" active="False">
     <bundle>web.assets_frontend</bundle>
