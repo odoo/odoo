@@ -14,7 +14,6 @@ from odoo.tools import config, mute_logger, split_every
 
 
 @tagged('mail_server')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrMailServer(MailCommon):
 
     @classmethod
@@ -398,7 +397,6 @@ class TestIrMailServer(MailCommon):
 
 
 @tagged('mail_server')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPersonalServer(MailCommon):
 
     @classmethod

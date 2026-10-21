@@ -15,7 +15,6 @@ from odoo.http.session import (
     session_store,
     update_device_fingerprint,
 )
-from odoo.tests import tagged
 from odoo.tools import config, mute_logger
 
 from .test_common import TestHttpBase
@@ -27,7 +26,6 @@ from odoo.addons.test_http.utils import (
 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDevice(TestHttpBase):
 
     @classmethod

@@ -8,7 +8,6 @@ from unittest.mock import patch
 from odoo import SUPERUSER_ID
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.http import request
-from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
 
@@ -35,7 +34,6 @@ def mock_auth_method_outlook(login):
         yield
 
 
-@tagged("at_install", "-post_install")  # LEGACY at_install
 class TestMailPluginController(HttpCase):
     def setUp(self):
         super().setUp()

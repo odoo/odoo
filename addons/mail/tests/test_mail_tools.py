@@ -6,7 +6,6 @@ from odoo.tests import tagged, users
 
 
 @tagged('mail_tools', 'res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTools(MailCommon):
 
     @classmethod
@@ -227,7 +226,6 @@ class TestMailTools(MailCommon):
 
 
 @tagged('mail_tools', 'mail_init')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailUtils(MailCommon):
 
     def test_migrate_icp_to_domain(self):

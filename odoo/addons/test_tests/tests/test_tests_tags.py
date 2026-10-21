@@ -6,7 +6,6 @@ from odoo.tests.tag_selector import TagsSelector
 
 
 @tagged('nodatabase')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSetTags(TransactionCase):
 
     def test_set_tags_empty(self):
@@ -114,7 +113,6 @@ class TestSetTags(TransactionCase):
         self.assertEqual(FakeClassB().test_tags, {'foo', 'bar'})
 
 @tagged('nodatabase')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelector(TransactionCase):
 
     def test_selector_parser(self):
@@ -276,7 +274,6 @@ class TestSelector(TransactionCase):
 
 
 @tagged('nodatabase')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelectorSelection(TransactionCase):
     def test_selector_selection(self):
         """Test check_tags use cases"""

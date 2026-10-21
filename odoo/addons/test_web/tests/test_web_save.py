@@ -1,9 +1,8 @@
 from odoo.addons.base.tests.files import JPG_B64, JPG_RAW, SVG_B64, SVG_RAW
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 from odoo.tools import BinaryBytes
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebSave(TransactionCase):
     def test_web_save_create(self):
         ''' Test the web_save method on a new record. '''

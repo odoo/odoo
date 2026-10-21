@@ -1,7 +1,7 @@
 import datetime
 
 from odoo.exceptions import UserError
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 
 from odoo.addons.spreadsheet.utils.formatting import (
     date_to_spreadsheet_date_number,
@@ -15,7 +15,6 @@ from odoo.addons.spreadsheet.utils.helpers import (
 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSpreadsheetUtils(TransactionCase):
 
     def test_extend_serialized_json(self):

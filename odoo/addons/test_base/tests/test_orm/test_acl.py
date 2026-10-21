@@ -3,13 +3,11 @@ from lxml import etree
 
 from odoo.exceptions import AccessError
 from odoo.fields import Command
-from odoo.tests.common import tagged
 from odoo.tools.misc import mute_logger
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestACL(TransactionCaseWithUserDemo):
 
     @classmethod

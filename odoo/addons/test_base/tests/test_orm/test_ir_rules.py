@@ -2,11 +2,10 @@ import contextlib
 
 from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRules(TransactionCase):
     @classmethod
     def setUpClass(cls):

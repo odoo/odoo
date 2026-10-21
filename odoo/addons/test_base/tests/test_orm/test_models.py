@@ -13,7 +13,6 @@ from .common import TestOrmPartnerCommon
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestORM(TransactionCase):
     """ test special behaviors of ORM CRUD functions """
 

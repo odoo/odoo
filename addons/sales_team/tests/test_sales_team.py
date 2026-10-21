@@ -11,7 +11,6 @@ from odoo.addons.sales_team.tests.common import (
 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDefaultTeam(TestSalesCommon):
     """Tests to check if correct default team is found."""
 
@@ -39,7 +38,7 @@ class TestDefaultTeam(TestSalesCommon):
         # sales_team_1--------5--------False
         # data----------------9999-----??
 
-        cls.company_2 = cls.env['res.company'].create({
+        cls.company_2 = cls.add_class_company('base.test_company_template', {
             'name': 'New Test Company',
             'email': 'company.2@test.example.com',
             'country_id': cls.env.ref('base.fr').id,
@@ -154,7 +153,6 @@ class TestDefaultTeam(TestSalesCommon):
             )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMultiCompany(TestSalesMC):
     """Tests to check multi company management with sales team and their
     members. """

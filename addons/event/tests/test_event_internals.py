@@ -54,7 +54,6 @@ class TestEventInternalsCommon(EventCase):
 
 
 @tagged('event_event')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventData(TestEventInternalsCommon):
 
     @users('user_eventmanager')
@@ -778,7 +777,6 @@ class TestEventData(TestEventInternalsCommon):
 
 
 @tagged('event_registration')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventRegistrationData(TestEventInternalsCommon):
 
     @users('user_eventmanager')
@@ -951,7 +949,6 @@ class TestEventRegistrationData(TestEventInternalsCommon):
 
 
 @tagged('event_registration', 'phone_number')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventRegistrationPhone(EventCase):
 
     @classmethod
@@ -1052,7 +1049,6 @@ class TestEventRegistrationPhone(EventCase):
 
 
 @tagged('event_ticket')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventTicketData(TestEventInternalsCommon):
 
     @freeze_time('2020-01-31 10:00:00')
@@ -1202,7 +1198,6 @@ class TestEventTicketData(TestEventInternalsCommon):
 
 
 @tagged('event_event')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventTypeData(TestEventInternalsCommon):
 
     @users('user_eventmanager')

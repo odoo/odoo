@@ -2,10 +2,9 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class Test2WeeksCalendar(TransactionCase):
 
     @classmethod

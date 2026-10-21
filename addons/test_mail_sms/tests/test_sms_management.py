@@ -77,7 +77,6 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
 
 
 @tagged('sms_management')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSActions(TestSMSActionsCommon):
 
     def test_sms_notify_cancel(self):

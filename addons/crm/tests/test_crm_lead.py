@@ -1004,7 +1004,6 @@ class TestCRMLead(TestCrmCommon):
         self.assertFalse(lead.phone_sanitized)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRMLeadRotting(TestCrmCommon):
     @classmethod
     def setUpClass(cls):
@@ -1157,7 +1156,6 @@ class TestCRMLeadRotting(TestCrmCommon):
 
 
 @tagged('lead_internals')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadFormTools(FormatAddressCase):
 
     def test_action_open_unassigned_opportunities(self):

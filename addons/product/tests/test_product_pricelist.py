@@ -5,12 +5,11 @@ from datetime import datetime
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Date
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo.tools import float_compare
 from odoo.addons.product.tests.common import ProductCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProductPricelist(ProductCommon):
 
     _test_user_groups = (
@@ -342,11 +341,8 @@ class TestProductPricelist(ProductCommon):
     def test_pricelist_sync_on_partners(self):
         ResPartner = self.env['res.partner']
 
-        company_1, company_2 = self.env['res.company'].sudo().create([
-            {'name': 'company_1'},
-            {'name': 'company_2'},
-        ])
-        self.env.user.company_ids += company_1 + company_2
+        company_1 = self.add_company('base.test_company_template')
+        company_2 = self.add_company('base.test_company_template2')
 
         test_partner_company = ResPartner.create({
             'name': 'This company',

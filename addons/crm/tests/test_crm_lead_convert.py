@@ -7,7 +7,6 @@ from odoo.tests import tagged, users
 
 
 @tagged('lead_manage')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadConvert(crm_common.TestLeadConvertCommon):
     """
     TODO: created partner (handle assignment) has team of lead
@@ -263,9 +262,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
     def test_lead_convert_contact_mutlicompany(self):
         """ Check the wizard convert to opp don't find contact
         You are not able to see because they belong to another company """
-        # Use superuser_id because creating a company with a user add directly
-        # the company in company_ids of the user.
-        company_2 = self.env['res.company'].with_user(SUPERUSER_ID).create({'name': 'Company 2'})
+        company_2 = self.env.ref('base.test_company_template2')
         partner_company_2 = self.env['res.partner'].with_user(SUPERUSER_ID).create({
             'name': 'Contact in other company',
             'email': 'test@company2.com',
@@ -484,7 +481,6 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(self.lead_1.partner_id, customer)
 
 @tagged('lead_manage')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadConvertBatch(crm_common.TestLeadConvertMassCommon):
 
     def test_initial_data(self):

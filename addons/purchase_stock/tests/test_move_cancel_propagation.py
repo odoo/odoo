@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
-from odoo.tests import tagged
 from .common import PurchaseTestCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMoveCancelPropagation(PurchaseTestCommon):
 
     _test_user_groups = None  # FIXME list needed groups

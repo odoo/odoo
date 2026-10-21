@@ -4,10 +4,9 @@ from unittest.mock import patch
 
 from odoo import fields, Command
 from odoo.addons.google_account.models.google_service import GoogleService
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTokenAccess(TransactionCase):
 
     @classmethod

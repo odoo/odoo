@@ -7,7 +7,6 @@ from odoo.tests import tagged
 
 
 @tagged('ir_actions')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestServerAction(SMSCommon, TestSMSRecipients):
 
     @classmethod

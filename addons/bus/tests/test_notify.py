@@ -6,7 +6,7 @@ import threading
 from unittest.mock import patch
 
 import odoo
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import TransactionCase
 from odoo.tools import config
 
 from ..models.bus import (
@@ -19,7 +19,6 @@ from ..models.bus import (
 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class NotifyTests(TransactionCase):
 
     def test_get_notify_payloads(self):

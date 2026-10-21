@@ -832,7 +832,6 @@ class TestUsers2(UsersCommonCase):
         self.cr.flush()
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUsersTweaks(TransactionCase):
     def test_superuser(self):
         """ The superuser is inactive and must remain as such. """

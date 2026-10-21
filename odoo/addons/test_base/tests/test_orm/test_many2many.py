@@ -1,8 +1,7 @@
 from odoo.fields import Command
-from odoo.tests.common import TransactionCase, new_test_user, tagged
+from odoo.tests.common import TransactionCase, new_test_user
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class Many2manyCase(TransactionCase):
     def setUp(self):
         super().setUp()
@@ -84,7 +83,7 @@ class Many2manyCase(TransactionCase):
         self.assertEqual(record.m2m_attachment_ids, attachment.browse())
 
     def test_non_stored_many2many_write_keeps_previous_values(self):
-        user = new_test_user(self.env, 'non_stored_m2m_user')
+        user = self.env.ref('base.test_user')
         tag1, tag2 = self.env['test_orm.multi.tag'].create([{'name': 'Tag 1'}, {'name': 'Tag 2'}])
         record = self.env['test_orm.non_stored_m2m'].create({}).with_user(user)
 

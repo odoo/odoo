@@ -3,10 +3,9 @@ from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
 
 from odoo.tests import Form
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResourceCalendar(TransactionCase):
 
     def test_fully_flexible_attendance_interval_duration(self):

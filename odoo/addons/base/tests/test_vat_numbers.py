@@ -1,8 +1,7 @@
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase
 from odoo.exceptions import ValidationError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestVatNumbers(TransactionCase):
     def test_peru_ruc_format(self):
         """Only values that has the length of 11 will be checked as RUC, that's what we are proving. The second part
@@ -94,8 +93,8 @@ class TestVatNumbers(TransactionCase):
 
     def test_company_changes(self):
         ro_country = self.env.ref('base.ro').id
-        test_partner_1 = self.env['res.company'].create({'name': 'Roman', 'country_id': self.env.ref('base.es').id})
-        test_partner_2 = self.env['res.company'].create({'name': 'Roman2', 'country_id': ro_country, 'vat': '1234567897'})
+        test_partner_1 = self.add_company('base.test_company_template', {'country_id': self.env.ref('base.es').id})
+        test_partner_2 = self.add_company('base.test_company_template2', {'country_id': ro_country, 'vat': '1234567897'})
         companies = test_partner_1 + test_partner_2
         companies.write({'country_id': ro_country})
 

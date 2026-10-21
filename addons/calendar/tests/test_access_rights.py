@@ -3,12 +3,11 @@
 from datetime import datetime, timedelta
 
 from odoo.tests.common import TransactionCase, new_test_user
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessRights(TransactionCase):
 
     @classmethod
@@ -420,9 +419,7 @@ class TestAccessRights(TransactionCase):
     def test_res_record_with_not_allowed_records_for_non_admin(self):
         """Ensure res_record works even if target records are not accessible."""
         # Restricted by multi-company record rule
-        restricted_company = self.env['res.company'].create({
-            'name': 'Restricted Calendar Company',
-        })
+        restricted_company = self.add_company('base.test_company_template')
         restricted_partner = self.env['res.partner'].create({
             'name': 'Restricted Calendar Partner',
             'company_id': restricted_company.id,

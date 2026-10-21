@@ -7,11 +7,10 @@ import babel.dates
 from odoo.addons.test_base.tests.test_orm.test_properties import TestPropertiesMixin
 from odoo.exceptions import UserError
 from odoo.fields import Domain, Command
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from odoo.tools import get_lang, mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class PropertiesCase(TestPropertiesMixin):
     def test_properties_web_read(self):
         """Test the web_read method when reading properties field."""
@@ -314,7 +313,6 @@ class PropertiesCase(TestPropertiesMixin):
             {'new_property': 'test value'})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class PropertiesGroupByCase(TestPropertiesMixin):
     @classmethod
     def setUpClass(cls):

@@ -8,13 +8,12 @@ from odoo.exceptions import AccessDenied, AccessError, ValidationError
 from odoo.http import request_var
 from odoo.service import common as auth
 from odoo.service import model
-from odoo.tests import common, tagged
+from odoo.tests import common
 from odoo.tools import DotDict, mute_logger
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestExternalAPI(SavepointCaseWithUserDemo):
 
     def test_call_kw(self):

@@ -12,9 +12,8 @@ class TestOnboardingCommon(TransactionCaseOnboarding):
         cls.user_admin = cls.env.ref('base.user_admin')
 
         cls.company_1 = cls.user_admin.company_id
-        cls.company_2 = cls.env['res.company'].create({
+        cls.company_2 = cls.add_class_company('base.test_company_template', {
             'currency_id': cls.env.ref('base.AUD').id,
-            'name': 'New Test Company',
         })
         cls.user_admin.company_ids |= cls.company_2
 

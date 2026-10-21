@@ -42,14 +42,13 @@ class TestMailComposer(MailCommon):
         })
 
 @tagged('mail_composer')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailComposerForm(TestMailComposer):
     """ Test mail composer form view usage. """
 
     @classmethod
     def setUpClass(cls):
         super(TestMailComposerForm, cls).setUpClass()
-        cls.other_company = cls.env['res.company'].create({'name': 'Other Company'})
+        cls.other_company = cls.add_class_company('base.test_company_template2')
         cls.user_employee.write({
             'company_ids': [(4, cls.other_company.id)]
         })
@@ -261,7 +260,6 @@ class TestMailComposerForm(TestMailComposer):
 
 
 @tagged('mail_composer')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailComposerRendering(TestMailComposer):
     """ Test rendering and support of various html tweaks in composer """
 

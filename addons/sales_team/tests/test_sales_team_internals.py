@@ -3,14 +3,13 @@
 from psycopg2.errors import UniqueViolation
 
 from odoo import exceptions
-from odoo.tests.common import tagged, TransactionCase, users
+from odoo.tests.common import TransactionCase, users
 from odoo.tools import mute_logger
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sales_team.tests.common import TestSalesMC
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCornerCases(TransactionCase):
 
     def setUp(self):
@@ -70,7 +69,6 @@ class TestCornerCases(TransactionCase):
             ])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSecurity(TestSalesMC):
 
     @users('user_sales_leads')
