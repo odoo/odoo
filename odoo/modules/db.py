@@ -362,9 +362,8 @@ def _create_empty_database(db_name: str) -> None:
     try:
         db = odoo.sql_db.db_connect(db_name)
         with db.cursor() as cr:
-            cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
-            if odoo.tools.config['unaccent']:
-                cr.execute("CREATE EXTENSION IF NOT EXISTS unaccent")
+            try_install_extension(cr, 'pg_trgm')
+            if odoo.tools.config['unaccent'] and try_install_extension(cr, 'unaccent'):
                 # From PostgreSQL's point of view, making 'unaccent' immutable is incorrect
                 # because it depends on external data - see
                 # https://www.postgresql.org/message-id/flat/201012021544.oB2FiTn1041521@wwwmaster.postgresql.org#201012021544.oB2FiTn1041521@wwwmaster.postgresql.org
@@ -383,6 +382,56 @@ def _create_empty_database(db_name: str) -> None:
             cr.execute("GRANT CREATE ON SCHEMA PUBLIC TO PUBLIC")
     except psycopg2.Error as e:
         _logger.warning("Unable to make public schema public-accessible: %s", e)
+
+
+def try_install_extension(cr: Cursor, extension_name: str) -> bool:
+    """ Create ``extension_name`` in the current database if it is missing.
+
+    Trusted extensions (e.g. unaccent, pg_trgm) can be installed by the
+    database owner directly. If creating it fails, log why (and, when a
+    superuser is needed, the commands to run) instead of raising.
+
+    :return: whether the extension is installed
+    """
+    create_extension = SQL(
+        "CREATE EXTENSION IF NOT EXISTS %s WITH SCHEMA public",
+        SQL.identifier(extension_name),
+    )
+    try:
+        with cr.savepoint(flush=False):
+            cr.execute(create_extension, log_exceptions=False)
+        return True
+    except psycopg2.errors.InsufficientPrivilege:
+        pass
+    except psycopg2.Error as e:
+        _logger.warning(
+            "PostgreSQL extension %r is required but could not be created: %s",
+            extension_name, str(e).strip(),
+        )
+        return False
+
+    create_extension_str = cr.mogrify(create_extension).decode()
+    template = config['db_template']
+    cmds = [(cr.dbname, create_extension_str)]
+    if template == 'template0':
+        # template0 refuses connections by default: open it temporarily so that
+        # future databases inherit the extension, then lock it again. Other
+        # templates accept connections and must not be locked afterwards.
+        cmds += [
+            ('postgres', f"ALTER DATABASE {template} ALLOW_CONNECTIONS true"),
+            (template, create_extension_str),
+            ('postgres', f"ALTER DATABASE {template} ALLOW_CONNECTIONS false"),
+        ]
+    else:
+        cmds.append((template, create_extension_str))
+
+    _logger.warning(
+        "PostgreSQL extension %r is required but not installed, and creating it "
+        "needs a superuser. Enable it as a database administrator:\n%s",
+        extension_name,
+        "\n".join(f"sudo -u postgres psql -d {db} -c '{sql}'" for db, sql in cmds),
+    )
+    return False
 
 
 def _initialize_db(
