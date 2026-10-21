@@ -241,12 +241,11 @@ class IrAccess(models.Model):
             self._clear_caches()
         return result
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_clear_caches(self):
         # process all pending recomputations with current access rights
         self.env._recompute_all()
-        result = super().unlink()
-        self._clear_caches()
-        return result
+        return self._clear_caches
 
     def _clear_caches(self):
         """ Invalidate all the caches related to access rights. """

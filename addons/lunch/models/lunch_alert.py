@@ -144,13 +144,10 @@ class LunchAlert(models.Model):
             self._sync_cron()
         return res
 
-    def unlink(self):
-        crons = self.cron_id.sudo()
-        server_actions = crons.ir_actions_server_id
-        res = super().unlink()
-        crons.unlink()
-        server_actions.unlink()
-        return res
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self.cron_id
+        yield self.cron_id.ir_actions_server_id
 
     def _notify_chat(self):
         # Called daily by cron

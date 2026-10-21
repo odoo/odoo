@@ -149,12 +149,10 @@ class ResourceCalendarLeaves(models.Model):
 
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_reevaluate_leaves(self):
         time_domain_dict = self._get_time_domain_dict()
-        res = super().unlink()
-        self._reevaluate_leaves(time_domain_dict)
-
-        return res
+        return lambda: self._reevaluate_leaves(time_domain_dict)
 
     @api.depends('calendar_id')
     def _compute_company_id(self):

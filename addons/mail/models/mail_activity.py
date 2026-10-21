@@ -418,12 +418,12 @@ class MailActivity(models.Model):
 
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_notify_activities(self):
         todo_activities = self.filtered(lambda act: act.active and act.date_deadline <= fields.Date.today() and act.user_id)
         if todo_activities:
             for user, user_activities in todo_activities.grouped('user_id').items():
                 user._bus_send("mail.activity/updated", {"activity_deleted": True, "count_diff": -len(user_activities)})
-        return super().unlink()
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, *, bypass_access=False, **kwargs):

@@ -824,6 +824,7 @@ class ProjectProject(models.Model):
     def _delete_extra(self):
         yield from super()._delete_extra()
         # Delete the embedded action configs related to the deleted projects
+        # This is not a many2one_reference field (but could be).
         yield self.env['res.users.settings.embedded.action'].search(
             domain=[('res_id', 'in', self.ids), ('res_model', '=', self._name)],
         )

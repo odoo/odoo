@@ -141,10 +141,10 @@ class RatingRating(models.Model):
             vals['rated_on'] = fields.Datetime.now()
         return super().write(vals)
 
-    def unlink(self):
+    def _delete_extra(self):
+        yield from super()._delete_extra()
         # OPW-2181568: Delete the chatter message too
-        self.message_id._filtered_access("read").unlink()
-        return super().unlink()
+        yield self.message_id
 
     def _find_parent_data(self, values):
         """ Determine the parent res_model/res_id, based on the values to create or write """

@@ -965,7 +965,8 @@ class CrmLead(models.Model):
                 vals['user_id'] = False
         return vals_list
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_update_meetings(self):
         """ Update meetings when removing opportunities, otherwise you have
         a link to a record that does not lead anywhere. """
         meetings = self.env['calendar.event'].search([
@@ -973,11 +974,11 @@ class CrmLead(models.Model):
             ('res_model', '=', self._name),
         ])
         if meetings:
-            meetings.write({
+            return lambda: meetings.write({
                 'res_id': False,
                 'res_model_id': False,
             })
-        return super().unlink()
+        return None
 
     @api.model
     def _read_group_stage_ids(self, stages, domain):
