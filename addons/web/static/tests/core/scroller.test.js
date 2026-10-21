@@ -4,7 +4,7 @@ import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { location } from "@web/core/browser/browser";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { getPositionInContainer, scrollTo } from "@web/core/utils/scrolling";
 import { WebClient } from "@web/webclient/webclient";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
@@ -532,4 +532,28 @@ test("scroll to anchor from load", async () => {
 
     const scrollableParent = document.querySelector(".o_content");
     expect(scrollableParent.scrollTop).not.toBe(0);
+});
+
+test("the position of an element in a container, inside it or out of one of its sides", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <div class="o_container" style="position: relative; overflow: auto; width: 100px; height: 100px;">
+                <div style="position: relative; width: 400px; height: 400px;">
+                    <span class="o_in" style="position: absolute; left: 90px; top: 90px; width: 20px; height: 20px;"/>
+                    <span class="o_right" style="position: absolute; left: 100px; top: 0; width: 10px; height: 10px;"/>
+                    <span class="o_bottom" style="position: absolute; left: 0; top: 100px; width: 10px; height: 10px;"/>
+                </div>
+            </div>`;
+    }
+    await mountWithCleanup(MyComponent);
+    const container = queryOne(".o_container");
+    const getPosition = (selector) => getPositionInContainer(queryOne(selector), container);
+    expect(getPosition(".o_in")).toBe("in");
+    expect(getPosition(".o_right")).toBe("out-right");
+    expect(getPosition(".o_bottom")).toBe("out-bottom");
+
+    container.scrollTo({ left: 200, top: 200 });
+    expect(getPosition(".o_in")).toBe("out-top");
+    container.scrollTo({ left: 200, top: 0 });
+    expect(getPosition(".o_in")).toBe("out-left");
 });

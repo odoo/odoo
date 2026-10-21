@@ -65,6 +65,29 @@ export function closestScrollableY(el) {
 }
 
 /**
+ * Get where an element is in a container (e.g. its scrollable): inside it,
+ * at least partially, or out of it on one of its sides.
+ *
+ * @param {HTMLElement} el
+ * @param {HTMLElement} container
+ * @returns {"in"|"out-top"|"out-bottom"|"out-left"|"out-right"}
+ */
+export function getPositionInContainer(el, container) {
+    const rect = el.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    if (rect.bottom <= containerRect.top) {
+        return "out-top";
+    } else if (rect.top >= containerRect.bottom) {
+        return "out-bottom";
+    } else if (rect.right <= containerRect.left) {
+        return "out-left";
+    } else if (rect.left >= containerRect.right) {
+        return "out-right";
+    }
+    return "in";
+}
+
+/**
  * Ensures that `element` will be visible in its `scrollable`.
  *
  * @param {HTMLElement} element
