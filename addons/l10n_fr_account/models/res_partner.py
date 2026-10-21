@@ -10,7 +10,7 @@ class ResPartner(models.Model):
             not endpoint
             and country_code == 'FR'
             and field == 'peppol_endpoint'
-            and not self.siret
+            and not self.company_registry
         ):
             return self._l10n_fr_get_siren_from_vat()
         return endpoint
