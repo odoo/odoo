@@ -259,7 +259,7 @@ describe("sendPaymentCancel", () => {
 
         const cancelled = await sumup.sendPaymentCancel(paymentLine);
         expect(cancelled).toBe(true);
-        expect(paymentLine.getPaymentStatus()).toBe("retry");
+        expect(paymentLine.payment_status).toBe("retry");
 
         await advanceTime(POLLING_START_DELAY_MS + POLLING_INTERVAL_MS * 3);
         expect(checkoutStatusCalls).toBe(0);

@@ -13,7 +13,7 @@ patch(PaymentScreen.prototype, {
                 (paymentLine) =>
                     paymentLine.payment_method_id.payment_provider === "viva_com" &&
                     !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "pending"
+                    paymentLine.payment_status !== "pending"
             );
             if (!pendingPaymentLine) {
                 return;

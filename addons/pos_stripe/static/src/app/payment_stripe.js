@@ -73,7 +73,7 @@ export class PaymentStripe extends PaymentInterface {
             const disconnectResult = await this.terminal.disconnectReader();
             if (disconnectResult.error) {
                 this._showError(disconnectResult.error.message, disconnectResult.error.code);
-                line.setPaymentStatus("retry");
+                line.payment_status = "retry";
                 return false;
             } else {
                 return await this.connectReader();
@@ -114,7 +114,7 @@ export class PaymentStripe extends PaymentInterface {
                     } else {
                         this._showError(error);
                     }
-                    line.setPaymentStatus("retry");
+                    line.payment_status = "retry";
                     return false;
                 }
             }
@@ -159,10 +159,10 @@ export class PaymentStripe extends PaymentInterface {
             amount
         );
         if (!clientSecret) {
-            line.setPaymentStatus("retry");
+            line.payment_status = "retry";
             return false;
         }
-        line.setPaymentStatus("waitingCard");
+        line.payment_status = "waiting_card";
         const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret, {
             config_override: {
                 enable_customer_cancellation: true,
@@ -170,20 +170,20 @@ export class PaymentStripe extends PaymentInterface {
         });
         if (collectPaymentMethod.error) {
             this._showError(collectPaymentMethod.error.message, collectPaymentMethod.error.code);
-            line.setPaymentStatus("retry");
+            line.payment_status = "retry";
             return false;
         } else {
-            line.setPaymentStatus("waitingCapture");
+            line.payment_status = "waiting_capture";
             const processPayment = await this.terminal.processPayment(
                 collectPaymentMethod.paymentIntent
             );
             line.transaction_id = collectPaymentMethod.paymentIntent.id;
             if (processPayment.error) {
                 this._showError(processPayment.error.message, processPayment.error.code);
-                line.setPaymentStatus("retry");
+                line.payment_status = "retry";
                 return false;
             } else if (processPayment.paymentIntent) {
-                line.setPaymentStatus("waitingCapture");
+                line.payment_status = "waiting_capture";
                 line.uiState.stripeCardPresentNetwork =
                     processPayment.paymentIntent.charges?.data[0]?.payment_method_details?.card_present?.network;
 
@@ -194,12 +194,12 @@ export class PaymentStripe extends PaymentInterface {
                     line.transaction_id = captured_transaction_id;
                 } else {
                     if ((await this.captureAfterPayment(processPayment, line)) === false) {
-                        line.setPaymentStatus("retry");
+                        line.payment_status = "retry";
                         return false;
                     }
                 }
 
-                line.setPaymentStatus("done");
+                line.payment_status = "done";
                 return true;
             }
         }
@@ -207,7 +207,7 @@ export class PaymentStripe extends PaymentInterface {
 
     async collectRefund(amount) {
         const line = this.pos.getOrder().getSelectedPaymentline();
-        line.setPaymentStatus("waitingCard");
+        line.payment_status = "waiting_card";
 
         const paymentId = line.uiState.stripePaymentIdToRefund;
         const refundResult = await this.pos.data.silentCall("pos.payment.method", "stripe_refund", [
@@ -220,7 +220,7 @@ export class PaymentStripe extends PaymentInterface {
             throw new Error(refundResult.error);
         }
         line.transaction_id = refundResult.id;
-        line.setPaymentStatus("done");
+        line.payment_status = "done";
 
         return true;
     }
@@ -335,7 +335,7 @@ export class PaymentStripe extends PaymentInterface {
             return false;
         }
 
-        line.setPaymentStatus("waiting");
+        line.payment_status = "waiting";
         try {
             if (await this.checkReader()) {
                 if (isRefund) {
@@ -364,7 +364,7 @@ export class PaymentStripe extends PaymentInterface {
         super.sendPaymentCancel(...arguments);
         const stripeCancel = await this.stripeCancel();
         if (stripeCancel) {
-            line.setPaymentStatus("retry");
+            line.payment_status = "retry";
             return true;
         }
     }

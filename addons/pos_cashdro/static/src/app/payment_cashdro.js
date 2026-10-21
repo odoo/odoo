@@ -32,7 +32,7 @@ export class PaymentCashdro extends PaymentInterface {
         );
 
         return cashdroPaymentLines.find((line) =>
-            ["waiting", "waitingCancel"].includes(line.payment_status)
+            ["waiting", "waiting_cancel"].includes(line.payment_status)
         );
     }
 

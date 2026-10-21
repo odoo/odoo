@@ -61,7 +61,7 @@ export class PaymentMercadoPago extends PaymentInterface {
         }
         try {
             // During order creation, user can't cancel the order
-            line.setPaymentStatus("waitingCapture");
+            line.payment_status = "waiting_capture";
             const mp_order = await this.createOrder();
             if (!("id" in mp_order)) {
                 // 'errors': [{'code': '', 'message': '', 'details': [...]}]
@@ -79,7 +79,7 @@ export class PaymentMercadoPago extends PaymentInterface {
             this.mp_order = mp_order;
             line.transaction_id = mp_order.id;
             // After order creation, make canceling the order possible
-            line.setPaymentStatus("waitingCard");
+            line.payment_status = "waiting_card";
             // Warn the operator to refresh the terminal if nothing happens for
             // a while (e.g. the order did not reach the Point).
             this._startRefreshHint();
@@ -177,7 +177,7 @@ export class PaymentMercadoPago extends PaymentInterface {
             if (!resolverValue) {
                 this._showMsg(messageKey, status);
             }
-            line.setPaymentStatus("done");
+            line.payment_status = "done";
             this.webhook_resolver?.(resolverValue);
             return resolverValue;
         };
