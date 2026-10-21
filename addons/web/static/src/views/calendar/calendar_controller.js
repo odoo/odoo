@@ -87,6 +87,7 @@ export class CalendarController extends Component {
                 localSidePanelExpanded != null ? JSON.parse(localSidePanelExpanded) : true
             ),
             mobilePanelOpen: false,
+            sidePanelWidth: null,
         });
 
         this.searchBarToggler = useSearchBarToggler();
@@ -203,6 +204,10 @@ export class CalendarController extends Component {
             editRecord: this.editRecord.bind(this),
             sidePanelExpanded: this.sidePanelExpanded,
             toggleSidePanel: this.toggleSidePanel.bind(this),
+            width: this.state.sidePanelWidth,
+            onResize: (width) => {
+                this.state.sidePanelWidth = width;
+            },
         };
     }
 
@@ -221,26 +226,6 @@ export class CalendarController extends Component {
 
     get sidePanelExpanded() {
         return this.uiService.isSmall ? this.state.mobilePanelOpen : this.state.sidePanelExpanded;
-    }
-
-    get filters() {
-        const res = [];
-        for (const f of this.model.filterSections) {
-            const filter = { label: f.label, active: false };
-            if (f.filters.some((f) => f.active)) {
-                filter.active = true;
-            }
-            res.push(filter);
-        }
-        return res;
-    }
-
-    get toScheduleString() {
-        const { eventsToSchedule } = this.model.data;
-        if (eventsToSchedule.length) {
-            return _t("%s to schedule", eventsToSchedule.length);
-        }
-        return _t("Nothing to schedule");
     }
 
     get className() {
