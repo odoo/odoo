@@ -6,7 +6,7 @@ import { AttributeSelection } from "@pos_self_order/app/components/attribute_sel
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_observer";
 import {
-    getProductVariantByAttributes,
+    getBestMatchingVariant,
     getAttributeValues,
     getAttributeValuesExtraPrice,
 } from "@pos_self_order/app/services/card_utils";
@@ -109,7 +109,7 @@ export class ProductPage extends Component {
     getProductPrice() {
         const attributeIds = this.getSelectedAttributesValues();
 
-        const productVariant = getProductVariantByAttributes(
+        const productVariant = getBestMatchingVariant(
             this.selfOrder.models,
             this.props.productTemplate,
             attributeIds
