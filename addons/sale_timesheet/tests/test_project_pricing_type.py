@@ -103,3 +103,23 @@ class TestProjectPricingType(TestCommonSaleTimesheet):
         self.assertTrue(project.filtered_domain(project._search_pricing_type('!=', 'fixed_rate')))
         self.assertFalse(project.filtered_domain(project._search_pricing_type('!=', 'employee_rate')))
         self.assertTrue(project.filtered_domain(project._search_pricing_type('!=', False)))
+
+    def test_employee_mapping_price_unit_takes_discount_into_account(self):
+        """ The Unit Price of an employee mapping should reflect the discount
+            set on the linked sales order item, not the raw price_unit.
+        """
+        sale_line = self.so.order_line[1]
+        sale_line.discount = 20.0
+        project = self.project_task_rate
+        project.write({
+            'sale_line_employee_ids': [(0, 0, {
+                'employee_id': self.employee_user.id,
+                'sale_line_id': sale_line.id,
+            })],
+        })
+        mapping = project.sale_line_employee_ids
+        self.assertEqual(
+            mapping.price_unit,
+            sale_line.price_unit * (1 - sale_line.discount / 100),
+            'The mapping unit price should apply the discount of the sales order item.',
+        )
