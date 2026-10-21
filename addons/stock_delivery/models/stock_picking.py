@@ -224,7 +224,9 @@ class StockPicking(models.Model):
         if sale_order and self.carrier_id.invoice_policy == 'real' and self.carrier_price:
             delivery_lines = self._get_matching_delivery_lines()
             if not delivery_lines:
-                delivery_lines = sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
+                delivery_lines = sale_order.with_context(
+                    allow_delivery_cost_update=True
+                )._create_delivery_line(self.carrier_id, self.carrier_price)
             vals = self._prepare_sale_delivery_line_vals()
             delivery_lines[0].with_context(allow_delivery_cost_update=True).write(vals)
 
