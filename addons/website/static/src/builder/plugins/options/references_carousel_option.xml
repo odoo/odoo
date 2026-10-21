@@ -58,6 +58,11 @@
             selector=".s_references_carousel_item"
             title="Reference"/>
     </xpath>
+    <!-- A logo is sized by its cell (see the "Logo Size" option): a percentage
+         width would only leave a hole in it. -->
+    <xpath expr="//image_tool_option[@selector='img']" position="after">
+        <image_tool_option selector=".s_references_carousel_item img" props='{ "withSize": false }'/>
+    </xpath>
 </t>
 
 </templates>
