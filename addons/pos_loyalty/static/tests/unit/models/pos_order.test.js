@@ -669,6 +669,57 @@ describe("pos.order - loyalty", () => {
         const rewardLine = order._get_reward_lines()[0];
         expect(rewardLine.prices.total_included).toBe(-10);
     });
+
+    test("buy x get y one reward per rule product", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [8]);
+
+        const program = models["loyalty.program"].get(8);
+        models["loyalty.reward"].get(4).delete();
+        const [rewardA, rewardB] = [5, 10].map((productId) => {
+            const product = models["product.product"].get(productId);
+            return models["loyalty.reward"].create({
+                program_id: program,
+                reward_type: "product",
+                required_points: 1,
+                reward_product_id: product,
+                reward_product_ids: [product],
+                reward_product_qty: 1,
+                discount_line_product_id: models["product.product"].get(18),
+            });
+        });
+        const addAndUpdate = async (productId) => {
+            await store.addLineToCurrentOrder(
+                {
+                    product_id: models["product.product"].get(productId),
+                    product_tmpl_id: models["product.template"].get(productId),
+                    qty: 1,
+                },
+                {},
+                false
+            );
+            await tick();
+        };
+        const freeQty = (reward) =>
+            order
+                ._get_reward_lines()
+                .filter((line) => line.reward_id.id === reward.id)
+                .reduce((qty, line) => qty + line.getQuantity(), 0);
+
+        for (const productId of [5, 10, 10, 5]) {
+            await addAndUpdate(productId);
+        }
+        expect(freeQty(rewardA)).toBe(1);
+        expect(freeQty(rewardB)).toBe(1);
+
+        for (const productId of [5, 10, 10, 5]) {
+            await addAndUpdate(productId);
+        }
+        expect(freeQty(rewardA)).toBe(2);
+        expect(freeQty(rewardB)).toBe(2);
+    });
 });
 
 describe("pos.order - rebuilt client state", () => {
