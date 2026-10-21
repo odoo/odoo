@@ -203,16 +203,20 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_es_edi_is_required', 'l10n_es_edi_sii_state')
     def _compute_show_reset_to_draft_button(self):
-        # EXTENDS 'account': keep the "Reset to Draft" button available alongside the cancellation request
+        # EXTENDS 'account': keep "Reset to Draft" alongside the cancellation request, hide it once cancelled by SII
         super()._compute_show_reset_to_draft_button()
-        for move in self:
-            if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state in ('sent', 'accepted_with_errors') and move.state != 'draft':
+        for move in self.filtered('l10n_es_edi_is_required'):
+            if move.l10n_es_edi_sii_state in ('sent', 'accepted_with_errors') and move.state != 'draft':
                 move.show_reset_to_draft_button = True
+            elif move.l10n_es_edi_sii_state == 'cancelled':
+                move.show_reset_to_draft_button = False
 
     def _is_draft_disabled(self):
         self.ensure_one()
         if self.l10n_es_edi_is_required and self.l10n_es_edi_sii_state == 'sent':
             return False
+        if self.l10n_es_edi_is_required and self.l10n_es_edi_sii_state == 'cancelled' and self.state == 'cancel':
+            return True
         return super()._is_draft_disabled()
 
     def button_request_cancel(self):

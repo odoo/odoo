@@ -5,6 +5,7 @@ import json
 from unittest.mock import patch
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
@@ -128,6 +129,26 @@ class TestEdiXmls(TestEsEdiCommon):
 
         self.assertEqual(bills.mapped('l10n_es_edi_sii_state'), ['sent', 'sent'])
         self.assertEqual(len(bills.l10n_es_edi_sii_document_ids.attachment_id), 1)
+
+    def test_sii_cancelled_invoice_cannot_be_reset_to_draft(self):
+        invoice = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        invoice.action_post()
+
+        with patch('odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency', autospec=True, side_effect=self._mock_sii_webservice):
+            invoice._send_l10n_es_sii_document()
+            self.assertEqual(invoice.l10n_es_edi_sii_state, 'sent')
+            invoice._send_l10n_es_sii_document(cancel=True)
+
+        self.assertRecordValues(invoice, [{
+            'state': 'cancel',
+            'l10n_es_edi_sii_state': 'cancelled',
+            'show_reset_to_draft_button': False,
+        }])
+        with self.assertRaises(UserError):
+            invoice.button_draft()
 
     def test_010_out_invoice_s_iva10b_s_iva21s(self):
         """ Invoice with goods and services as they need to be reported in different sections for customer invoices. """
