@@ -32,6 +32,32 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertEqual(created_lead.team_id, self.sale_team_with_lead)
         self.assertEqual(created_lead.type, 'lead')
 
+    @users('user_public')
+    def test_chatbot_lead_no_team_public_user(self):
+        self.step_create_lead.crm_team_id = False
+
+        self.env['res.config.settings'].sudo().create({'group_use_lead': False}).execute()
+        self._chatbot_create_lead(self.user_public)
+        created_lead = self.env['crm.lead'].sudo().search([], limit=1, order='id desc')
+        self.assertFalse(created_lead.team_id)
+        self.assertEqual(created_lead.type, 'opportunity')
+
+        self.env['res.config.settings'].sudo().create({'group_use_lead': True}).execute()
+        self._chatbot_create_lead(self.user_public)
+        created_lead = self.env['crm.lead'].sudo().search([], limit=1, order='id desc')
+        self.assertFalse(created_lead.team_id)
+        self.assertEqual(created_lead.type, 'lead')
+
+    @users('user_portal')
+    def test_chatbot_lead_no_team_portal_user(self):
+        self.step_create_lead.crm_team_id = False
+        self.env['res.config.settings'].sudo().create({'group_use_lead': True}).execute()
+
+        self._chatbot_create_lead(self.user_portal)
+        created_lead = self.env['crm.lead'].sudo().search([], limit=1, order='id desc')
+        self.assertFalse(created_lead.team_id)
+        self.assertEqual(created_lead.type, 'lead')
+
     def _chatbot_create_lead(self, user):
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
             'anonymous_name': 'Test Visitor',
