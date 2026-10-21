@@ -5726,9 +5726,10 @@ class AccountMove(models.Model):
         ])
         self.env['account.move.line'].flush_model(['move_id', 'company_currency_id'])
 
-        rows = self.env.execute_query_dict(
-            SQL(" UNION ALL ").join(queries)
-        )
+        rows = self.env.execute_query_dict(SQL(
+            "%s ORDER BY aml_id, partial_id",
+            SQL(" UNION ALL ").join(queries),
+        ))
 
         aml_ids = set()
         currency_ids = set()
