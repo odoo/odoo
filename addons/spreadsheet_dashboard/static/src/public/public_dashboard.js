@@ -48,7 +48,6 @@ export class PublicDashboard extends Component {
                 mode: "dashboard",
                 custom: {
                     env: this.env,
-                    isFrozenSpreadsheet: true,
                 },
             },
             this.data.revisions || []

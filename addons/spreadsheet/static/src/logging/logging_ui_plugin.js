@@ -1,35 +1,13 @@
 /** @odoo-module */
 
-import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { rpc } from "@web/core/network/rpc";
-import * as spreadsheet from "@odoo/o-spreadsheet";
-const { cellMenuRegistry, topbarMenuRegistry, colMenuRegistry, rowMenuRegistry } =
-    spreadsheet.registries;
-
-cellMenuRegistry.get("copy").isEnabled = (env) => !env.isFrozenSpreadsheet?.();
-
-colMenuRegistry.get("copy").isEnabled = (env) => !env.isFrozenSpreadsheet?.();
-
-rowMenuRegistry.get("copy").isEnabled = (env) => !env.isFrozenSpreadsheet?.();
-
-topbarMenuRegistry.get("edit").children.filter((c) => c.id === "copy")[0].isEnabled = (env) =>
-    !env.isFrozenSpreadsheet?.();
 
 export class LoggingUIPlugin extends OdooUIPlugin {
-    validators = {
-        COPY: this.checkCopyIsAllowed,
-    };
-
     handlers = {
         COPY: this.onCopy,
         LOG_DATASOURCE_EXPORT: this.onLogDatasourceExport,
     };
-
-    constructor(config) {
-        super(config);
-        this.isFrozenSpreadsheet = config.custom.isFrozenSpreadsheet;
-    }
 
     async log(type, datasources) {
         if (rpc && datasources.length) {
@@ -38,13 +16,6 @@ export class LoggingUIPlugin extends OdooUIPlugin {
                 datasources,
             });
         }
-    }
-
-    checkCopyIsAllowed() {
-        if (this.isFrozenSpreadsheet) {
-            return CommandResult.Readonly;
-        }
-        return CommandResult.Success;
     }
 
     onCopy() {

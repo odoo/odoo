@@ -30,12 +30,15 @@ class ComponentWithStores extends Component {
         component: t.component(),
         props: t.object(),
         model: t.instanceOf(Model),
+        owlPlugins: t.array(),
+        owlPluginsConfig: t.object(),
     });
     setup() {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.model);
-        providePlugins([ModelPlugin, NotificationPlugin, IsSmallPlugin, SpreadsheetRectPlugin], {
+        providePlugins([ModelPlugin, NotificationPlugin, IsSmallPlugin, SpreadsheetRectPlugin, ...this.props.owlPlugins], {
             model: this.props.model,
+            ...this.props.owlPluginsConfig,
         });
         onMounted(() => {
             this.props.model.on("update", this, () => render(this, true));
@@ -48,12 +51,14 @@ class ComponentWithStores extends Component {
     }
 }
 
-export async function mountComponentWithStores(component, model, props = {}) {
+export async function mountComponentWithStores(component, model, props = {}, params = {}) {
     await mountWithCleanup(ComponentWithStores, {
         props: {
             component,
             props,
             model,
+            owlPlugins: params.owlPlugins || [],
+            owlPluginsConfig: params.owlPluginsConfig || {},
         },
         noMainContainer: false,
     });
@@ -66,9 +71,9 @@ export async function mountComponentWithStores(component, model, props = {}) {
  * @param {Model} model
  * @returns {Promise<HTMLElement>}
  */
-export async function mountSpreadsheet(model) {
+export async function mountSpreadsheet(model, params) {
     await loadBundle("web.chartjs_lib");
-    return mountComponentWithStores(Parent, model, { model });
+    return mountComponentWithStores(Parent, model, { model }, params);
 }
 
 /**
