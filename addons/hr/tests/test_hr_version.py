@@ -906,6 +906,7 @@ class TestHrVersion(TestHrCommon):
         })
         version_1 = employee.version_id
         version_1.date_version = date(2022, 1, 1)
+        version_1.flush_recordset(['date_version'])
         version_2 = employee.create_version({
             'date_version': date(2024, 1, 1),
             'contract_date_start': date(2024, 1, 1),
