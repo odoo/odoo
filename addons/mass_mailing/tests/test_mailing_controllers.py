@@ -5,9 +5,11 @@ from freezegun import freeze_time
 from requests import Session, PreparedRequest, Response
 
 import datetime
+import re
 
 from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mass_mailing.models.link_tracker import HIDDEN_LINK_WINDOW
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
@@ -685,7 +687,8 @@ class TestMailingTracking(TestMailingControllersCommon):
         Mailing contact's stats (eg: last_opened_datetime, etc..) should also be
         updated."""
         mailing = self.test_mailing_on_lists.with_env(self.env)
-        with self.mock_mail_gateway(mail_unlink_sent=False):
+        with self.mock_mail_gateway(mail_unlink_sent=False), \
+             self.mock_datetime_and_now(self._reference_now - datetime.timedelta(minutes=5)):
             mailing.action_send_mail()
 
         mail = self._find_mail_mail_wrecord(self.test_contact)
@@ -713,14 +716,22 @@ class TestMailingTracking(TestMailingControllersCommon):
             response = self.url_open(short_link_url, allow_redirects=False)
             self.assertTrue(response.headers['Location'].startswith('https://www.example.com/foo/bar?baz=qux'))
 
+        # click held until the bot check confirms it
         self.assertEqual(link_tracker_code.link_id.count, 1)
-        self.assertEqual(mailing_trace.links_click_datetime, self._reference_now)
-        self.assertEqual(mailing_trace.open_datetime, self._reference_now)
+        self.assertFalse(mailing_trace.links_click_datetime)
+
+        check_datetime = self._reference_now + HIDDEN_LINK_WINDOW
+        with freeze_time(check_datetime):
+            self.env.ref('mass_mailing.ir_cron_mass_mailing_pending_clicks').sudo().method_direct_trigger()
+
+        self.assertEqual(link_tracker_code.link_id.count, 1)
+        self.assertEqual(mailing_trace.links_click_datetime, check_datetime)
+        self.assertEqual(mailing_trace.open_datetime, check_datetime)
         self.assertEqual(mailing_trace.trace_status, 'open')
 
         # Mailing Contact
-        self.assertEqual(self._reference_now, self.test_contact.last_opened_datetime)
-        self.assertEqual(self._reference_now, self.test_contact.last_clicked_datetime)
+        self.assertEqual(check_datetime, self.test_contact.last_opened_datetime)
+        self.assertEqual(check_datetime, self.test_contact.last_clicked_datetime)
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mass_mailing.models.mailing')
     def test_tracking_url_token(self):
@@ -753,3 +764,67 @@ class TestMailingTracking(TestMailingControllersCommon):
         )
         response = self.url_open(track_url)
         self.assertEqual(response.status_code, 401)
+
+    def test_tracking_bot_clicks(self):
+        """ Test bot clicks on a mailing: should not count clicks from bots or right after
+        sending, and the hidden link should save when and from where it is opened. """
+        mailing = self.test_mailing_on_lists.with_env(self.env)
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_datetime_and_now(self._reference_now):
+            mailing.action_send_mail()
+
+        mail = self._find_mail_mail_wrecord(self.test_contact)
+        mailing_trace = mail.mailing_trace_ids
+        link_tracker_code = self._get_code_from_short_url(self._get_href_from_anchor_id(mail.body, 'url'))
+        short_link_url = tools.urls.urljoin(mail.get_base_url(), f'r/{link_tracker_code.code}/m/{mailing_trace.id}')
+        hidden_link_url = tools.urls.urljoin(mail.get_base_url(), f'mail/track/{mail.id}/{mail._generate_mail_recipient_token(mail.id)}/link')
+
+        # hidden link is the first link of the email, and not in its plain text version
+        sent_email = self._find_sent_email_wemail(self.test_contact.email)
+        self.assertEqual(re.findall(tools.mail.HTML_TAG_URL_REGEX, sent_email['body'])[0][1], hidden_link_url)
+        self.assertNotIn(hidden_link_url, sent_email['body_alternative'])
+
+        with freeze_time(self._reference_now + datetime.timedelta(seconds=10)):
+            self.url_open(short_link_url, allow_redirects=False)
+
+        scan_datetime = self._reference_now + datetime.timedelta(minutes=5)
+        with freeze_time(scan_datetime):
+            self.url_open(short_link_url, headers={'User-Agent': 'Googlebot/2.1'}, allow_redirects=False)
+            response = self.url_open(hidden_link_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(link_tracker_code.link_id.count, 0)
+        self.assertEqual(mailing_trace.hidden_link_click_datetime, scan_datetime)
+        self.assertEqual(mailing_trace.hidden_link_click_ip, '127.0.0.1')
+
+        response = self.url_open(tools.urls.urljoin(mail.get_base_url(), f'mail/track/{mail.id}/fake_token/link'))
+        self.assertEqual(response.status_code, 401)
+
+    def test_tracking_bot_check(self):
+        """ Test the check of held clicks: should delete the ones made by bots (another link
+        clicked within 2 seconds, or same IP as the hidden link) and confirm the others. """
+        link_a, link_b = self.env['link.tracker'].create(
+            [{'url': 'https://www.example.com/a'}, {'url': 'https://www.example.com/b'}])
+        traces = self.env['mailing.trace'].create(
+            [{'model': 'mailing.contact', 'res_id': self.test_contact.id} for _ in range(6)])
+        traces[:2].write({'hidden_link_click_datetime': self._reference_now, 'hidden_link_click_ip': '1.1.1.1'})
+
+        clicks = self.env['link.tracker.click']
+        for trace, link, seconds, ip in [
+            (traces[0], link_a, 1, '1.1.1.1'),   # click from the IP that opened the hidden link: bot
+            (traces[1], link_a, 5, '2.2.2.2'),   # click from another IP: person
+            (traces[2], link_a, 0, '1.1.1.1'),   # different links within 2 seconds: bot
+            (traces[2], link_b, 1, '1.1.1.1'),
+            (traces[3], link_a, 0, '2.2.2.2'),   # same link twice: person
+            (traces[3], link_a, 1, '2.2.2.2'),
+            (traces[4], link_a, 10, '1.1.1.1'),  # bot, with a click not checkable yet
+            (traces[4], link_b, 11, '1.1.1.1'),
+            (traces[5], link_a, 12, '2.2.2.2'),  # not checkable yet
+        ]:
+            with self.mock_datetime_and_now(self._reference_now + datetime.timedelta(seconds=seconds)):
+                clicks += self.env['link.tracker.click'].add_click(link.code, ip=ip, mailing_trace_id=trace.id, bot_check_pending=True)
+
+        with freeze_time(self._reference_now + datetime.timedelta(seconds=20)):
+            self.env.ref('mass_mailing.ir_cron_mass_mailing_pending_clicks').sudo().method_direct_trigger()
+
+        self.assertEqual(clicks.exists(), clicks[1] | clicks[4] | clicks[5] | clicks[8])
+        self.assertEqual(clicks.exists().filtered('bot_check_pending'), clicks[8])
+        self.assertEqual(traces.filtered('links_click_datetime'), traces[1] | traces[3])

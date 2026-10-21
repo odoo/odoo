@@ -129,7 +129,9 @@ class MailingSMSController(http.Controller):
         else:
             trace_id = False
 
-        if not request.env['ir.http'].is_a_bot():
+        # WhatsApp link previews are not bots, but they are not clicks either
+        user_agent = request.httprequest.user_agent.string.lower()
+        if not request.env['ir.http'].is_a_bot() and 'whatsapp/' not in user_agent:
             request.env['link.tracker.click'].sudo().add_click(
                 code,
                 ip=request.httprequest.remote_addr,
