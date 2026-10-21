@@ -302,6 +302,53 @@ class TestDigest(TestDigestCommon):
                 self.assertEqual(digest.periodicity, exp_periodicity)
                 self.env['res.users.log'].with_user(SUPERUSER_ID).search([]).unlink()
 
+    @users('admin')
+    def test_digest_custom_kpi_studio(self):
+        """Test that Studio-created KPI fields are computed and rendered correctly."""
+        digest_model = self.env['ir.model']._get_id('digest.digest')
+        kpi_name = 'x_studio_kpi_custom_partner'
+        custom_fields = self.env['ir.model.fields'].create([
+            {
+                'name': kpi_name,
+                'field_description': 'Custom Contacts',
+                'model_id': digest_model,
+                'ttype': 'boolean',
+                'state': 'manual',
+            },
+            {
+                'name': f'{kpi_name}_value',
+                'field_description': 'Custom Contacts Value',
+                'model_id': digest_model,
+                'ttype': 'integer',
+                'state': 'manual',
+            },
+        ])
+        self.addCleanup(custom_fields.unlink)
+
+        digest = self.test_digest
+        digest.write({kpi_name: True})
+
+        # Verify that the custom KPI is discovered.
+        self.assertIn(kpi_name, digest._get_all_kpi_fields())
+
+        # Verify that the custom KPI is included in the computed data.
+        kpi_data = digest._compute_kpis(self.company_admin, self.user_admin)
+        custom_kpi_data = next((kpi for kpi in kpi_data if kpi['kpi_name'] == kpi_name), None)
+        self.assertIsNotNone(custom_kpi_data)
+        self.assertEqual(custom_kpi_data['kpi_fullname'], 'Custom Contacts')
+
+        # Verify that the custom KPI is rendered in the digest email.
+        digest._action_subscribe_users(self.user_admin)
+        digest.flush_recordset()
+        with self.mock_datetime_and_now(self.reference_datetime), \
+             self.mock_mail_gateway():
+            digest.action_send()
+
+        self.assertEqual(len(self._new_mails), 1)
+        mail_body = self._new_mails[0].body_html
+        self.assertIn(custom_kpi_data['kpi_fullname'], mail_body)
+        self.assertIn(custom_kpi_data['kpi_icon'], mail_body)
+
 
 @tagged("digest", "mail_mail", "-at_install", "post_install")
 class TestUnsubscribe(MailCommon, HttpCaseWithUserDemo):
