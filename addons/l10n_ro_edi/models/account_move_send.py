@@ -18,6 +18,14 @@ class AccountMoveSend(models.AbstractModel):
         res.update({'ro_edi': {'label': _("Send E-Factura to SPV"), 'is_applicable': self._is_ro_edi_applicable}})
         return res
 
+    @api.model
+    def _get_default_extra_edis(self, move) -> set:
+        # EXTENDS 'account'
+        extra_edis = super()._get_default_extra_edis(move)
+        if move.commercial_partner_id.country_code != 'RO':
+            extra_edis = {edi for edi in extra_edis if edi != 'ro_edi'}
+        return extra_edis
+
     # -------------------------------------------------------------------------
     # ALERTS
     # -------------------------------------------------------------------------
