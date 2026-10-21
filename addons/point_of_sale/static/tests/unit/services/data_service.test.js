@@ -2,6 +2,7 @@ import { test, expect, describe } from "@odoo/hoot";
 import { patchWithCleanup, MockServer } from "@web/../tests/web_test_helpers";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 definePosModels();
 
@@ -17,6 +18,7 @@ describe("data_service", () => {
         expect(store.models["pos.order"].length).toBe(0);
         expect(store.models["pos.order.line"].length).toBe(0);
     });
+<<<<<<< 2b504bcb3b4182e79a7e156363bca4ae75d4811b
 
     test("getRelatedModels returns the model itself when it has no dependencies", async () => {
         const store = await setupPosEnv();
@@ -86,4 +88,35 @@ describe("data_service", () => {
         const allRequestedModels = capturedRequests.flatMap((req) => req.models);
         expect(allRequestedModels).toInclude("product.product");
     });
+||||||| 91c01fa1b86a5621e859dacfb48827be7895b861
+=======
+
+    test("websocket reconnections don't duplicate the notification listeners", async () => {
+        const store = await setupPosEnv();
+        const bus = store.data.bus;
+        let addedListeners = 0;
+        patchWithCleanup(bus, {
+            addChannel(channel) {
+                if (channel === odoo.access_token) {
+                    expect.step("addChannel");
+                }
+                return super.addChannel(...arguments);
+            },
+            subscribe() {
+                addedListeners++;
+                return super.subscribe(...arguments);
+            },
+            unsubscribe() {
+                addedListeners--;
+                return super.unsubscribe(...arguments);
+            },
+        });
+
+        // Going offline then online again triggers a "BUS:CONNECT" event on each reconnection
+        bus.trigger("BUS:CONNECT");
+        bus.trigger("BUS:CONNECT");
+        expect.verifySteps(["addChannel", "addChannel"]);
+        expect(addedListeners).toBe(0);
+    });
+>>>>>>> fcf37d39efa531d87416e55ababda9626bc9667f
 });
