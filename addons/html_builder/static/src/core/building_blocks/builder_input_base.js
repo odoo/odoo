@@ -1,4 +1,4 @@
-import { Component, useEffect, proxy } from "@odoo/owl";
+import { Component, onMounted, useOnChange } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { useActionInfo } from "../utils";
 
@@ -38,24 +38,27 @@ export class BuilderInputBase extends Component {
         this.isEditing = false;
         this.info = useActionInfo();
         this.inputRef = useForwardRefToParent("inputRef");
-        this.state = proxy({ value: this.props.value });
-        useEffect(() => {
-            const value = this.props.value;
-            this.state.value = this.isEditing ? this.inputRef.el.value : value;
-        });
+        const syncValue = (value) => {
+            // While editing, the DOM owns the value. In particular, number
+            // inputs may display transient values such as "-" even though
+            // their exposed value is an empty string.
+            if (!this.isEditing && this.inputRef.el) {
+                this.inputRef.el.value = value ?? "";
+            }
+        };
+        onMounted(() => syncValue(this.props.value));
+        useOnChange(() => [this.props.value], syncValue, { initialRun: false });
     }
 
     onChange(ev) {
         this.isEditing = false;
         const normalizedDisplayValue = this.props.commit(ev.target.value);
         ev.target.value = normalizedDisplayValue;
-        this.state.value = normalizedDisplayValue;
         this.props.onChange?.(ev);
     }
 
     onInput(ev) {
         this.isEditing = true;
-        this.state.value = ev.target.value;
         this.props.preview(ev.target.value);
         this.props.onInput?.(ev);
     }
