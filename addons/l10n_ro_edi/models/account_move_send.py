@@ -18,6 +18,18 @@ class AccountMoveSend(models.AbstractModel):
         res.update({'ro_edi': {'label': _("Send E-Factura to SPV"), 'is_applicable': self._is_ro_edi_applicable}})
         return res
 
+    @api.model
+    def _get_default_sending_settings(self, move, from_cron=False, **custom_settings):
+        # EXTENDS 'account'
+        vals = super()._get_default_sending_settings(move, from_cron=from_cron, **custom_settings)
+        if (
+            'extra_edis' not in custom_settings
+            and 'ro_edi' in vals['extra_edis']
+            and move.commercial_partner_id.country_code != 'RO'
+        ):
+            vals['extra_edis'] = set(vals['extra_edis']) - {'ro_edi'}
+        return vals
+
     # -------------------------------------------------------------------------
     # ALERTS
     # -------------------------------------------------------------------------
