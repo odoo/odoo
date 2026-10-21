@@ -54,7 +54,7 @@ export class BurgerMenuDialog extends Component {
     }
 
     async showSaleDetails() {
-        await this.pos.ticketPrinter.printSaleDetailsReceipt();
+        await this.pos.printSaleDetails();
     }
 
     closeAndRun(fn) {

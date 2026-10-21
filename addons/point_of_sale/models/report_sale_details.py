@@ -365,17 +365,17 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         discount_number = len(lines_with_discount)
         discount_amount = sum(l._get_discount_amount_for_report() for l in lines_with_discount)
 
-        invoiceList = []
-        invoiceTotal = 0
-        totalPaymentsAmount = 0
-
-        for session in sessions:
-            invoiceList.append({
-                'name': session.name,
-                'invoices': session._get_invoice_total_list(),
-            })
-            invoiceTotal += session._get_total_invoice()
-            totalPaymentsAmount += session.total_payments_amount
+        invoiced_orders = orders.filtered('is_singly_invoiced')
+        invoiceList = [{
+            'name': session.name,
+            'invoices': [{
+                'total': order.account_move.amount_total_signed,
+                'name': order.account_move.name,
+                'order_ref': order.pos_reference,
+            } for order in session_orders],
+        } for session, session_orders in invoiced_orders.grouped('session_id').items()]
+        invoiceTotal = sum(invoiced_orders.mapped('amount_paid'))
+        totalPaymentsAmount = sum(payment['total'] for payment in payments)
         payment_method_set = set()
         session_set = set()
         for p in payments:

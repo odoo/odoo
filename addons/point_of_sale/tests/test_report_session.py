@@ -15,6 +15,29 @@ class TestReportSession(TestPoSCommon):
         super(TestReportSession, self).setUp()
         self.config = self.basic_config
 
+    def test_date_range_includes_open_session_invoices_and_payments(self):
+        session = self.open_new_session()
+        product = self.create_product('Report product', self.categ_basic, 10)
+        orders = self._create_orders([{
+            'pos_order_lines_ui_args': [(product, 1)],
+            'payments': [(self.bank_pm1, 10)],
+            'customer': self.customer,
+            'is_invoiced': True,
+        }])
+        order = next(iter(orders.values()))
+
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(
+            date_start=session.start_at - timedelta(minutes=1),
+            date_stop=order.date_order + timedelta(minutes=1),
+            config_ids=self.config.ids,
+        )
+
+        self.assertEqual(session.state, 'opened')
+        self.assertEqual(report['nbr_orders'], 1)
+        self.assertEqual(report['total_paid'], 10)
+        self.assertEqual(report['invoiceTotal'], 10)
+        self.assertEqual(report['invoiceList'][0]['invoices'][0]['name'], order.account_move.name)
+
     def test_report_session(self):
 
         self.tax1 = self.env['account.tax'].create({

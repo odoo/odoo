@@ -100,3 +100,16 @@ class PosSession(models.Model):
 
     def _get_cash_move_cashier_name(self, cash_move):
         return cash_move.employee_id.name or super()._get_cash_move_cashier_name(cash_move)
+
+    def _get_order_employees(self):
+        self.ensure_one()
+        domain = self.env['report.pos_hr.single_employee_sales_report']._get_domain(session_ids=self.ids)
+        return self.env['pos.order']._read_group(domain, aggregates=['employee_id:recordset'])[0][0].sorted('name')
+
+    def get_employees_sale_details(self):
+        self.ensure_one()
+        report = self.env['report.pos_hr.single_employee_sales_report']
+        return [
+            report.get_sale_details(session_ids=self.ids, employee_id=employee.id)
+            for employee in self._get_order_employees()
+        ]

@@ -14,6 +14,6 @@ export class SaleDetailsButton extends Component {
     }
 
     async onClick() {
-        await this.pos.ticketPrinter.printSaleDetailsReceipt();
+        await this.pos.printSaleDetails();
     }
 }

@@ -22,6 +22,7 @@ The actual till still requires one user but an unlimited number of employees can
         'views/point_of_sale_dashboard.xml',
         'views/pos_session_view.xml',
         'wizard/pos_daily_sales_reports.xml',
+        'receipt/pos_sale_details_receipt.xml',
     ],
     'auto_install': True,
     'assets': {

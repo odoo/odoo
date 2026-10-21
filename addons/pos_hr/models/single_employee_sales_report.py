@@ -9,10 +9,10 @@ class ReportPos_HrSingle_Employee_Sales_Report(models.AbstractModel):
     _description = 'Session sales details for a single employee'
 
     def _get_domain(self, date_start=False, date_stop=False, config_ids=False, session_ids=False, employee_id=False):
-        domain = super()._get_domain(config_ids=config_ids, session_ids=session_ids)
+        domain = super()._get_domain(date_start, date_stop, config_ids, session_ids)
 
-        if (employee_id):
-            domain = Domain.AND([domain, [('employee_id', '=', employee_id)]])
+        if employee_id:
+            domain &= Domain('employee_id', '=', employee_id)
 
         return domain
 
@@ -23,10 +23,10 @@ class ReportPos_HrSingle_Employee_Sales_Report(models.AbstractModel):
 
     @api.model
     def get_sale_details(self, date_start=False, date_stop=False, config_ids=False, session_ids=False, employee_id=False):
-        data = super().get_sale_details(config_ids=config_ids, session_ids=session_ids, employee_id=employee_id)
+        data = super().get_sale_details(date_start, date_stop, config_ids, session_ids, employee_id=employee_id)
 
-        if (employee_id):
-            employee = self.env['hr.employee'].search([('id', '=', employee_id)])
-            data['employee_name'] = employee.name
+        if employee_id:
+            data['employee_name'] = self.env['hr.employee'].browse(employee_id).name
+            data['payments'] = [payment for payment in data['payments'] if payment.get('id')]
 
         return data

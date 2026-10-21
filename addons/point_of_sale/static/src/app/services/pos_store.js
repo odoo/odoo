@@ -243,6 +243,11 @@ export class PosStore extends WithLazyGetterTrap {
         });
         await this.initCustomerDisplay();
     }
+
+    async printSaleDetails() {
+        return this.ticketPrinter.printSaleDetailsReceipt();
+    }
+
     formatCurrency(amount, currencyId = this.config.currency_id.id, opts = {}) {
         /**
          * This method is made to be available in the templates. Imports

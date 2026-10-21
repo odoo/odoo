@@ -134,7 +134,7 @@
                                 Daily Sale
                                 <i t-if="!this.ui.isSmall" class="oi" data-icon="download" role="img"/>
                         </button>
-                        <button t-if="this.pos.ticketPrinter.hasReceiptPrinters" class="button icon btn btn-secondary">
+                        <button t-if="this.pos.ticketPrinter.hasReceiptPrinters and this.pos.accessRight.canPrintReport" class="button icon btn btn-secondary">
                             <SaleDetailsButton/>
                         </button>
                     </div>

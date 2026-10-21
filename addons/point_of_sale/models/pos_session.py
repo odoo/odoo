@@ -797,24 +797,6 @@ class PosSession(models.Model):
         absl.unlink()
         self.log_partner_message(partner_id, action, "CASH_IN_OUT_UNLINK")
 
-    def _get_invoice_total_list(self):
-        invoice_list = []
-        for order in self.order_ids.filtered(lambda o: o.is_singly_invoiced):
-            invoice = {
-                'total': order.account_move.amount_total_signed,
-                'name': order.account_move.name,
-                'order_ref': order.pos_reference,
-            }
-            invoice_list.append(invoice)
-
-        return invoice_list
-
-    def _get_total_invoice(self):
-        amount = 0
-        for order in self.order_ids.filtered(lambda o: o.is_singly_invoiced):
-            amount += order.amount_paid
-        return amount
-
     def log_partner_message(self, partner_id, action, message_type):
         if message_type == 'ACTION_CANCELLED':
             body = _('Action cancelled (%(ACTION)s)', ACTION=action)
