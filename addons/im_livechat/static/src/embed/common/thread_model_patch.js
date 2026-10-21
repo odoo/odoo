@@ -49,7 +49,9 @@ patch(Thread.prototype, {
                 thread: this,
             });
             this.messages.push(temporaryMsg);
-            this.channel.chatbot?._simulateTyping(2 ** 31 - 1);
+            if (this.channel.chatbot?.currentStep?.step_type !== "free_input_multi") {
+                this.channel.chatbot?._simulateTyping(2 ** 31 - 1);
+            }
             const channel = await this.store.env.services["im_livechat.livechat"].persist(this);
             if (this.store.self_partner) {
                 temporaryMsg.author_id = this.store.self_partner; // Might have been created after persist.
@@ -63,7 +65,13 @@ patch(Thread.prototype, {
             return channel.post(...arguments).then(() => channel.resolveReadyToSwap());
         }
         const message = await super.post(...arguments);
-        await this.channel?.chatbot?.processAnswer(message);
+        if (this.channel?.chatbot?.currentStep?.step_type === "free_input_multi") {
+            // Multi-line answers are processed after a debounce delay: do not wait to swap
+            // temporary thread with persisted one.
+            this.channel.chatbot.processAnswer(message);
+        } else {
+            await this.channel?.chatbot?.processAnswer(message);
+        }
         return message;
     },
 

@@ -52,12 +52,16 @@ export class LivechatChannel extends models.ServerModel {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
         const agent = operator_info["agent"];
+        const chatbotScript = operator_info["chatbot_script"];
+        const operatorPartnerId = chatbotScript
+            ? chatbotScript.operator_partner_id
+            : agent.partner_id;
 
         const membersToAdd = [
             Command.create({
                 last_interest_dt: "2021-01-01 10:00:00",
-                livechat_member_type: "agent",
-                partner_id: agent.partner_id,
+                livechat_member_type: chatbotScript ? "bot" : "agent",
+                partner_id: operatorPartnerId,
                 unpin_dt: "2021-01-01 12:00:00",
             }),
         ];
@@ -82,12 +86,12 @@ export class LivechatChannel extends models.ServerModel {
             agent.livechat_username ? agent.livechat_username : agent.name,
         ];
         return {
-            channel_partner_ids: [agent.partner_id],
+            channel_partner_ids: [operatorPartnerId],
             channel_member_ids: membersToAdd,
             livechat_channel_id: id,
             livechat_status: "in_progress",
             channel_type: "livechat",
-            name: membersName.join(" "),
+            name: chatbotScript ? chatbotScript.title : membersName.join(" "),
         };
     }
     /**
