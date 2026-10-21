@@ -316,6 +316,64 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
             self.assertNotIn('l10n_fr_pdp_ambiguous_annuaire', wizard.alerts or {})
             self.assertTrue(peppol_box.get('checked'))
 
+    def test_validate_partner_fr_without_contact_rights_test_mode(self):
+        """ Verifying a partner's peppol status (e.g. when sending an invoice) only updates an
+        internal cache field and must not be blocked by a lack of write access on res.partner. """
+        user = self.simple_accountman
+        self.assertFalse(user.has_group('base.group_partner_manager'))
+        partner = self.partner_a.with_user(user)
+        self.assertEqual(self.env.company._get_peppol_edi_mode(), 'test')
+
+        with (
+            mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+            mock_pdp_annuaire_lookup('968515759_96851575905808'),
+            mock_pdp_peppol_lookup_success(['0225:968515759_96851575905808']),
+        ):
+            partner.button_account_peppol_check_partner_endpoint()
+
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'valid',
+            'pdp_verification_display_state': 'pdp_valid',
+        }])
+
+    def test_validate_partner_fr_without_contact_rights_demo_mode(self):
+        """ Same as above, but going through the l10n_fr_pdp demo-mode verification shortcut
+        (`_mock_get_peppol_verification_state`) instead of querying the PDP annuaire. """
+        self.proxy_user.edi_mode = 'demo'
+        self.assertEqual(self.env.company._get_peppol_edi_mode(), 'demo')
+
+        user = self.simple_accountman
+        self.assertFalse(user.has_group('base.group_partner_manager'))
+        partner = self.partner_a.with_user(user)
+
+        partner.button_account_peppol_check_partner_endpoint()
+
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'valid',
+            'pdp_verification_display_state': 'pdp_valid',
+        }])
+
+    def test_validate_partner_fr_b2g_without_contact_rights_test_mode(self):
+        """ The B2G (Chorus Pro) placeholder on `peppol_supported_documents` is another automatic
+        side effect of verifying a partner and must not require write access on res.partner either. """
+        user = self.simple_accountman
+        self.assertFalse(user.has_group('base.group_partner_manager'))
+        partner = self.partner_a.with_user(user)
+
+        with (
+            mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+            mock_pdp_annuaire_lookup('968515759_96851575905808', b2g=True),
+            mock_pdp_peppol_lookup_success(['0225:968515759_96851575905808']),
+        ):
+            partner.button_account_peppol_check_partner_endpoint()
+
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'valid',
+            'pdp_verification_display_state': 'pdp_valid',
+            'peppol_supported_documents': [CPRO_INVOICE_IDENTIFIER],
+        }])
+        self.assertTrue(self.env['account.edi.xml.ubl_21_fr']._pdp_is_b2g(partner))
+
     def test_account_move_send_annuaire_multiple_matches(self):
         self.env.company.write({
             'account_peppol_proxy_state': 'receiver',
