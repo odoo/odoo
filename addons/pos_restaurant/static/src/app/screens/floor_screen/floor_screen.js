@@ -54,7 +54,15 @@ export class FloorScreen extends Component {
         this.floorPlanStore.selectFloorByUuid(floorUuid);
     }
 
+    isBackButton() {
+        return this.pos.getOrder()?.isDirectSale && !this.pos.isOrderTransferMode;
+    }
+
     clickNewOrder() {
+        if (this.pos.isOrderTransferMode) {
+            // Handled by the transfer click listener (see `startTransferOrder`)
+            return;
+        }
         this.pos.addNewOrder();
         this.pos.navigate("ProductScreen", {
             orderUuid: this.pos.selectedOrderUuid,
