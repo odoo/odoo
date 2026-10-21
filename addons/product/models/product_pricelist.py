@@ -50,8 +50,8 @@ class Pricelist(models.Model):
         string="Pricelist Rules",
         domain=[
             '&',
-            '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
-            '|', ('product_id', '=', None), ('product_id.active', '=', True),
+            '|', ('product_tmpl_id', '=', False), ('product_tmpl_id.active', '=', True),
+            '|', ('product_id', '=', False), ('product_id.active', '=', True),
         ],
         copy=True)
 
