@@ -16,6 +16,10 @@ import { patch } from "@web/core/utils/patch";
 registerRoute("/im_livechat/get_session", get_session);
 /** @type {RouteCallback} */
 async function get_session(request) {
+    /** @type {import("mock_models").ChatbotScript} */
+    const ChatbotScript = this.env["chatbot.script"];
+    /** @type {import("mock_models").ChatbotScriptStep} */
+    const ChatbotScriptStep = this.env["chatbot.script.step"];
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").LivechatChannel} */
@@ -29,6 +33,7 @@ async function get_session(request) {
 
     let {
         channel_id,
+        chatbot_script_id,
         previous_operator_id,
         persisted,
         context = {},
@@ -48,13 +53,30 @@ async function get_session(request) {
             country_id = country.id;
         }
     }
+    const [chatbotScript] = chatbot_script_id ? ChatbotScript.browse(chatbot_script_id) : [];
+    const welcomeSteps = chatbot_script_id
+        ? ChatbotScript._get_welcome_steps(chatbot_script_id)
+        : [];
     if (!persisted) {
         const store = new Store();
         ResUsers._init_store_data(store);
+        if (chatbot_script_id) {
+            store.add(ChatbotScript.browse(chatbot_script_id), "_store_script_fields");
+            store.add(
+                ChatbotScriptStep.browse(welcomeSteps.map((step) => step.id)),
+                "_store_script_step_fields"
+            );
+        }
         store.add_model_values(
             "discuss.channel",
             {
                 channel_type: "livechat",
+                chatbot: chatbot_script_id
+                    ? {
+                          script: chatbot_script_id,
+                          steps: welcomeSteps.map((step) => ({ scriptStep: step.id })),
+                      }
+                    : null,
                 fetchChannelInfoState: "fetched",
                 isLoaded: true,
                 livechat_channel_member_history_ids: [-1],
@@ -66,9 +88,11 @@ async function get_session(request) {
             "im_livechat.channel.member.history",
             (res) => {
                 res.attr("channel_id", -1);
-                res.attr("livechat_member_type", "agent");
+                res.attr("livechat_member_type", chatbot_script_id ? "bot" : "agent");
                 res.one("partner_id", "_store_livechat_member_fields", {
-                    value: ResPartner.browse(agent.partner_id),
+                    value: ResPartner.browse(
+                        chatbotScript ? chatbotScript.operator_partner_id : agent.partner_id
+                    ),
                 });
             },
             { id_data: { id: -1 } }
@@ -77,6 +101,7 @@ async function get_session(request) {
     }
     const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(channel_id, {
         agent: agent,
+        chatbot_script: chatbotScript,
     });
     channelVals.country_id = country_id;
     const channelId = DiscussChannel.create(channelVals);
@@ -87,8 +112,31 @@ async function get_session(request) {
         isLoaded: true,
         scrollUnread: false,
     });
+    if (chatbot_script_id) {
+        // Post the welcome steps, the current step being the last one.
+        const messageIds = welcomeSteps.map((step) =>
+            this.env["mail.message"].create({
+                author_id: chatbotScript.operator_partner_id,
+                body: step.message,
+                message_type: "comment",
+                model: "discuss.channel",
+                res_id: channelId,
+            })
+        );
+        const currentStep = { scriptStep: welcomeSteps.at(-1).id, message: messageIds.at(-1) };
+        store.add(ChatbotScript.browse(chatbot_script_id), "_store_script_fields");
+        store.add(ChatbotScriptStep.browse(currentStep.scriptStep), "_store_script_step_fields");
+        store.add(DiscussChannel.browse(channelId), {
+            chatbot: { script: chatbot_script_id, steps: [currentStep], currentStep },
+        });
+    }
     return { store_data: store.as_dict(), channel_id: channelId };
 }
+
+// Not implemented yet: the chat bot testing does not go further than welcome steps.
+registerRoute("/chatbot/step/trigger", chatbot_trigger_step);
+/** @type {RouteCallback} */
+async function chatbot_trigger_step(_request) {}
 
 registerRoute("/im_livechat/visitor_leave_session", visitor_leave_session);
 /** @type {RouteCallback} */
@@ -249,6 +297,12 @@ patch(mailDataHelpers, {
                         },
                         { value: MailGuest.browse(this.env.cookie.get("dgid")) }
                     )
+                );
+            }
+            const matchingRule = this.env["im_livechat.channel.rule"].match_rule(params);
+            if (matchingRule.length) {
+                store.add_global_values((res) =>
+                    res.one("livechat_rule", "_store_channel_rule_fields", { value: matchingRule })
                 );
             }
         }
