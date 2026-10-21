@@ -1,0 +1,86 @@
+<odoo>
+  <data>
+
+    <record model="ir.sequence" id="national_application_sequence">
+      <field name="name">National Id Application Sequence</field>
+      <field name="code">national.application</field>
+      <field name="prefix">NT-APP-</field>
+      <field name="padding">5</field>
+    </record>
+    <record id="view_national_id_application_tree" model="ir.ui.view">
+      <field name="name">national.application.tree</field>
+      <field name="model">national.application</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="applicant_name"/>
+          <field name="date_of_birth"/>
+          <field name="address"/>
+          <field name="state"/>
+        </tree>
+      </field>
+    </record>
+    <record id="view_national_id_application_form" model="ir.ui.view">
+      <field name="name">national.application.form</field>
+      <field name="model">national.application</field>
+      <field name="arch" type="xml">
+        <form string="National ID Application">
+          <header>
+            <button string="Submit" type="object" name="action_submit" invisible="state not in ['draft']" class="btn-primary"/>
+            <button string="First Approval" type="object" name="action_first_approval" class="btn-primary" invisible="state not in ['first_approval']"/>
+            <button string="Second Approval" type="object" name="action_second_approval" class="btn-primary" invisible="state not in ['second_approval']"/>
+            <!-- <button string="Approve" type="object" name="action_approve" class="btn-primary" states="second_approval"/> -->
+            <button string="Reject" type="object" name="action_reject" invisible="state not in ['first_approval','second_approval']" class="btn-danger"/>
+            <button string="Mark as Completed" type="object" invisible="state not in ['approved']" name="action_done" class="btn-success"/>
+            <field name="state" widget="statusbar"/>
+          </header>
+          <sheet>
+            <div class="oe_title">
+
+              <h1>
+                <field name="name" readonly="1"/>
+              </h1>
+            </div>
+            <group>
+              <group>
+                <field name="applicant_name" required="1" readonly="state not in ['draft']"/>
+                <field name="date_of_birth" readonly="state not in ['draft']"/>
+                <field name="country_id" readonly="state not in ['draft']" requried="1" string="Nationality"/>
+                <field name="address" readonly="state not in ['draft']" required="1"/>
+                <field name="email" readonly="state not in ['draft']"/>
+                
+              </group>
+              <group>
+                <field name="applicant_phone" required="1" readonly="state not in ['draft']"/>
+                <field name="picture" widget="image" readonly="state not in ['draft']"/>
+                <field name="lc_reference_letter"  readonly="state not in ['draft']"/>
+              </group>
+            </group>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers"/>
+            <field name="activity_ids" widget="mail_activity"/>
+            <field name="message_ids" widget="mail_thread"/>
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_national_id_application" model="ir.actions.act_window">
+      <field name="name">National ID Applications</field>
+      <field name="res_model">national.application</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[]</field>
+      <field name="context">{}</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+                    Click to create a new national ID application.
+        </p>
+      </field>
+    </record>
+
+    <menuitem id="menu_national_id_application" name="National ID Applications" action="action_national_id_application" sequence="5" />
+
+
+  </data>
+</odoo>
