@@ -169,6 +169,21 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         teams.company_id = False
         self.assertFalse(play_script_and_get_created_lead().company_id)
 
+    def test_chatbot_lead_no_team_public_user(self):
+        self.step_create_lead.crm_team_id = False
+
+        self.env['res.config.settings'].sudo().create({'group_use_lead': False}).execute()
+        self._play_session_with_lead()
+        created_lead = self.env['crm.lead'].sudo().search([], limit=1, order='id desc')
+        self.assertFalse(created_lead.team_id)
+        self.assertEqual(created_lead.type, 'opportunity')
+
+        self.env['res.config.settings'].sudo().create({'group_use_lead': True}).execute()
+        self._play_session_with_lead()
+        created_lead = self.env['crm.lead'].sudo().search([], limit=1, order='id desc')
+        self.assertFalse(created_lead.team_id)
+        self.assertEqual(created_lead.type, 'lead')
+
     def _play_session_with_lead(self):
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
             'channel_id': self.livechat_channel.id,
