@@ -1022,8 +1022,8 @@ class AccountMove(models.Model):
             # set the tags as well, during the encoding. So, if no receivable/payable
             # line has been created yet, the invoice would be detected as always exigible,
             # and set the tags on some lines ; which would be wrong.
-            record.always_tax_exigible = not record.is_invoice(True) \
-                                         and not record._collect_tax_cash_basis_values()
+            record.always_tax_exigible = record.journal_id.type in ('bank', 'cash') \
+                                         or (not record.is_invoice(True) and not record._collect_tax_cash_basis_values())
 
     @api.depends('partner_id')
     def _compute_commercial_partner_id(self):
