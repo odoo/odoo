@@ -64,6 +64,11 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                 return self.env["product.template"].sudo().browse(product_template_id)
         return super()._get_product_template(product_template_id)
 
+    def _get_pricelist(self, pricelist_id):
+        if request.is_frontend:
+            return self.env["product.pricelist"].sudo().browse(request.pricelist.id)
+        return super()._get_pricelist(pricelist_id)
+
     @route(
         route="/website_sale/product_configurator/create_product",
         type="jsonrpc",
@@ -202,13 +207,13 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :return: The strikethrough price of the product, if there is one.
         """
         uom = product_or_template.env.context.get("uom")
-        pricelist_rule = self.env["product.pricelist.item"].browse(pricelist_rule_id)
+        pricelist_rule_sudo = self.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
 
         # First, try to use the base price as the strikethrough price.
         # Apply taxes before comparing it to the actual price.
-        if pricelist_rule._show_discount_on_shop():
+        if pricelist_rule_sudo._show_discount_on_shop():
             pricelist_base_price = product_or_template._apply_taxes_to_price(
-                pricelist_rule._compute_price_before_discount(
+                pricelist_rule_sudo._compute_price_before_discount(
                     product=product_or_template,
                     quantity=1.0,
                     uom=uom or product_or_template._get_main_uom(),

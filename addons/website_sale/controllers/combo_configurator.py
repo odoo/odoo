@@ -31,6 +31,11 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         self._populate_currency_and_pricelist(kwargs)
         return super().sale_combo_configurator_get_price(*args, **kwargs)
 
+    def _get_pricelist(self, pricelist_id):
+        if request.is_frontend:
+            return self.env["product.pricelist"].sudo().browse(request.pricelist.id)
+        return super()._get_pricelist(pricelist_id)
+
     def _get_combo_item_data(
         self, combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs
     ):

@@ -46,7 +46,7 @@ class SaleComboConfiguratorController(Controller):
             request.update_context(allowed_company_ids=[company_id])
         product_template = self.env["product.template"].browse(product_tmpl_id)
         currency = self.env["res.currency"].browse(currency_id)
-        pricelist = self.env["product.pricelist"].browse(pricelist_id)
+        pricelist = self._get_pricelist(pricelist_id)
         date = datetime.fromisoformat(date)
         selected_combo_item_dict = {item["id"]: item for item in selected_combo_items or []}
 
@@ -114,12 +114,15 @@ class SaleComboConfiguratorController(Controller):
             request.update_context(allowed_company_ids=[company_id])
         product_template = self.env["product.template"].browse(product_tmpl_id)
         currency = self.env["res.currency"].browse(currency_id)
-        pricelist = self.env["product.pricelist"].browse(pricelist_id)
+        pricelist = self._get_pricelist(pricelist_id)
         date = datetime.fromisoformat(date)
 
         return product_template._get_configurator_display_price(
             product_template, quantity, date, currency, pricelist, **kwargs
         )[0]
+
+    def _get_pricelist(self, pricelist_id):
+        return self.env["product.pricelist"].browse(pricelist_id)
 
     def _get_combo_item_data(
         self, combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs

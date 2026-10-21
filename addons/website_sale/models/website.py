@@ -325,6 +325,7 @@ class Website(models.Model):
     tax_display = fields.Selection(
         selection=[("tax_excluded", "Tax Excluded"), ("tax_included", "Tax Included")],
         compute="_compute_tax_display",
+        compute_sudo=True,
     )
 
     # === COMPUTE METHODS ===#
@@ -399,7 +400,8 @@ class Website(models.Model):
         if self.env["res.groups"]._is_feature_enabled("product.group_product_pricelist"):
             values = values or {}
             values.setdefault(
-                "website_sale_pricelists", lazy(self.get_pricelist_available, show_visible=True)
+                "website_sale_pricelists",
+                lazy(lambda: self.get_pricelist_available(show_visible=True).sudo()),
             )
 
         return super()._render_template(template, values=values)
@@ -584,7 +586,7 @@ class Website(models.Model):
         :rtype: list
         """
         self.ensure_one()
-        pricelists = self.env["product.pricelist"]
+        pricelists = self.env["product.pricelist"].sudo()
 
         def check_pricelist(pricelist):
             if show_visible:
@@ -786,7 +788,7 @@ class Website(models.Model):
                 cart_sudo._compute_pricelist_id()
             pricelist_sudo = cart_sudo.pricelist_id
         elif available_pricelists := self.get_pricelist_available():
-            pricelist_sudo = self.env.user.partner_id.specific_property_product_pricelist
+            pricelist_sudo = self.env.user.partner_id.specific_property_product_pricelist.sudo()
             if pricelist_sudo not in available_pricelists:
                 pricelist_sudo = available_pricelists[0].sudo()
         else:
