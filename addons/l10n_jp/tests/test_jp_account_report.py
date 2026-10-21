@@ -166,3 +166,33 @@ class TestJPAccountReport(AccountTestInvoicingCommon):
 
         self.assertEqual(company.external_report_layout_id, self.env.ref('l10n_jp.external_layout_jp_standard'))
         self.assertEqual(company.paperformat_id, self.env.ref('l10n_jp.paperformat_jp'))
+
+    def test_a_contact_comes_under_its_company(self):
+        company = self.env['res.partner'].create({'name': 'JP Trading KK', 'lang': 'ja_JP'})
+        for contact, lines in (
+            (self.env['res.partner'].create({'name': 'Taro Yamada', 'parent_id': company.id}), ['JP Trading KK', 'Taro Yamada 様']),
+            # an invoicing address that names nobody is addressed to the company
+            (self.env['res.partner'].create({'type': 'invoice', 'parent_id': company.id}), ['JP Trading KK 御中']),
+        ):
+            with self.subTest(contact=contact.display_name):
+                invoice = self._create_invoice_one_line(move_type='out_invoice', partner_id=contact, product_id=self.product_a, post=True)
+                html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
+                recipient = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].find_class('fw-bold')[0]
+
+                self.assertEqual([' '.join(line.text_content().split()) for line in recipient], lines)
+
+    def test_only_a_japanese_reader_gets_an_honorific(self):
+        self.partner_b.lang = 'en_US'
+        invoice = self._create_invoice_one_line(move_type='out_invoice', partner_id=self.partner_b, product_id=self.product_a, post=True)
+        html = self.env['ir.actions.report'].sudo()._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
+        header = lxml.html.fromstring(html).find_class('o_jp_standard_header')[0].text_content()
+
+        self.assertIn(self.partner_b.name, header)
+        self.assertNotIn('様', header)
+        self.assertNotIn('御中', header)
+
+    def test_layout_prints_a_document_without_partner(self):
+        # e.g. a batch transfer, or the return label of the customer portal
+        html = self.env['ir.actions.report']._render_template('web.external_layout', {'o': None})
+
+        self.assertIn(self.company_data['company'].name, html2plaintext(html))

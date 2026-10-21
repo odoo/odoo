@@ -3,23 +3,32 @@
     <data>
         <template id="external_layout_jp_standard">
             <t t-set="jp_recipient_partner" t-value="jp_recipient_partner or (o and 'partner_id' in o and o.partner_id) or False"/>
+            <t t-set="jp_recipient_company" t-value="jp_recipient_partner and jp_recipient_partner.parent_id.commercial_partner_id"/>
             <t t-set="jp_recipient_lang" t-value="(jp_recipient_partner and jp_recipient_partner.lang) or company.partner_id.lang or ''"/>
-            <t t-set="jp_honorific" t-value="jp_recipient_lang.startswith('ja') and (' 御中' if jp_recipient_partner and jp_recipient_partner.is_company else ' 様') or ''"/>
+            <!-- 様 for a person, 御中 for a company or an address of one that names nobody. -->
+            <t t-set="jp_honorific" t-value="jp_recipient_partner and jp_recipient_lang.startswith('ja')
+                and (' 御中' if jp_recipient_partner.is_company or not jp_recipient_partner.name else ' 様') or ''"/>
 
             <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
                 <div class="o_jp_standard_header">
                     <div class="text-end text-muted" t-if="jp_document_date">
                         <span t-out="jp_document_date" t-options='{"widget": "date"}'/>
                     </div>
-                    <div class="text-center mb-4">
-                        <h2 class="mb-0" t-if="layout_document_title" t-out="layout_document_title"/>
-                    </div>
+                    <h2 class="text-center mb-4" t-if="layout_document_title" t-out="layout_document_title"/>
                     <div class="row">
                         <div class="col-6 pe-4">
-                            <div class="fw-bold mb-3" t-if="jp_recipient_partner and jp_recipient_partner.name">
-                                <span t-out="jp_recipient_partner.name"/><span t-out="jp_honorific"/>
+                            <!-- A contact comes under the name of its company. -->
+                            <div class="fw-bold mb-3" t-if="jp_recipient_partner">
+                                <div t-if="jp_recipient_company">
+                                    <span t-out="jp_recipient_company.name"/><span t-if="not jp_recipient_partner.name" t-out="jp_honorific"/>
+                                </div>
+                                <div t-if="jp_recipient_partner.name">
+                                    <span t-out="jp_recipient_partner.name"/><span t-out="jp_honorific"/>
+                                </div>
                             </div>
-                            <div t-out="address or jp_recipient_partner.address"/>
+                            <div t-if="address" t-out="address"/>
+                            <div t-elif="jp_recipient_partner" t-out="jp_recipient_partner"
+                                 t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
                         </div>
                     </div>
                     <div class="text-end mt-4">
