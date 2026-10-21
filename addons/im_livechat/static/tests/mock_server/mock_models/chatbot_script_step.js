@@ -13,4 +13,8 @@ export class ChatbotScriptStep extends models.ServerModel {
             ["text", "Text"],
         ],
     });
+
+    _store_script_step_fields(res) {
+        res.extend(["message", "step_type"]);
+    }
 }

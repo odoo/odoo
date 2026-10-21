@@ -6,7 +6,7 @@ import { serverState } from "@web/../tests/web_test_helpers";
 
 registerStoreHandler(
     "init_livechat",
-    function store_init_livechat(store) {
+    function store_init_livechat(store, livechat_channel_id) {
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResUsers} */
@@ -35,6 +35,12 @@ registerStoreHandler(
                     },
                     { value: MailGuest.browse(this.env.cookie.get("dgid")) }
                 )
+            );
+        }
+        const matchingRule = this.env["im_livechat.channel.rule"].match_rule(livechat_channel_id);
+        if (matchingRule.length) {
+            store.add_global_values((res) =>
+                res.one("livechat_rule", "_store_channel_rule_fields", { value: matchingRule })
             );
         }
     },
