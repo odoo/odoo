@@ -915,12 +915,10 @@ class PosConfig(models.Model):
     def _get_forbidden_change_fields(self):
         return ['module_pos_restaurant', 'active']
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_sequences(self):
         # Delete the pos.config records first then delete the sequences linked to them
-        sequences_to_delete = self.order_line_seq_id | self.device_seq_id
-        res = super().unlink()
-        sequences_to_delete.unlink()
-        return res
+        return (self.order_line_seq_id | self.device_seq_id).unlink
 
     def _check_pos_manager_access(self):
         if not (self.env.is_admin() or self.env.user.has_group('point_of_sale.group_pos_manager')):

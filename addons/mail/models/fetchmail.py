@@ -167,10 +167,10 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         self._update_cron()
         return res
 
-    def unlink(self):
-        res = super().unlink()
-        self._update_cron()
-        return res
+    @api.ondelete(at_uninstall=False)
+    def _unlink_update_cron(self):
+        # update the cron after unlink
+        return self._update_cron
 
     def set_draft(self):
         self.write({'state': 'draft'})

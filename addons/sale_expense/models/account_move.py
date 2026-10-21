@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import api, models
 
 
 class AccountMove(models.Model):
@@ -16,7 +16,7 @@ class AccountMove(models.Model):
         self.expense_ids._sale_expense_reset_sol_quantities()
         return super().button_draft()
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_set_sol_quantities(self):
         # EXTENDS sale
         self.expense_ids._sale_expense_reset_sol_quantities()
-        return super().unlink()

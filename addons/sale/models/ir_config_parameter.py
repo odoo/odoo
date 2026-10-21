@@ -20,9 +20,9 @@ class IrConfigParameter(models.Model):
         self._sale_sync_linked_crons()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_sync_crons(self):
         self._sale_sync_linked_crons(unlink=True)
-        return super().unlink()
 
     def _sale_sync_linked_crons(self, unlink=False):
         """Synchronize Sales-related crons' `active` field based on linked configuration parameters.

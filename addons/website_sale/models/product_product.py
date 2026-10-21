@@ -105,16 +105,18 @@ class ProductProduct(models.Model):
 
         return res
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_variant_images(self):
-        images = self.env["product.image"]
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+
+        if 'website_sale' in self.env.registry.uninstalling_modules:
+            return
+        # delete variant images
         for product in self:
-            images |= product.variant_image_ids.filtered(
+            yield product.variant_image_ids.filtered(
                 lambda image: (
                     image.attribute_value_ids == product.product_template_attribute_value_ids
                 )
             )
-        images.unlink()
 
     # === BUSINESS METHODS ===#
 

@@ -92,10 +92,6 @@ class StockMove(models.Model):
         self.filtered('repair_id')._action_cancel()
         return super()._unlink_if_draft_or_cancel()
 
-    def unlink(self):
-        self._clean_repair_linked_lines()
-        return super().unlink()
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -195,6 +191,7 @@ class StockMove(models.Model):
 
         self.env['sale.order.line'].create(so_line_vals)
 
+    @api.ondelete(at_uninstall=False)
     def _clean_repair_linked_lines(self):
         if self.repair_id.invoice_ids:
             self.filtered(
