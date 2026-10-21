@@ -430,6 +430,14 @@ class TestMessageValues(MailCommon):
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
+        # primary alias_id wins over other aliases pointing to the same record
+        self.alias_record.sudo().alias_id.copy({'alias_name': 'aaa-alias-first-in-alphabetical-order'})
+        msg = self.Message.create({
+            'model': 'mail.test.container',
+            'res_id': self.alias_record.id
+        })
+        self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
+
     @users('employee')
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_fromto_document_no_alias(self):
