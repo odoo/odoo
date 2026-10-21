@@ -685,6 +685,9 @@ class PosConfig(models.Model):
         """Get or create the default PoS partner for the current company."""
         partner = self.env.ref('point_of_sale.default_session_closing_partner', raise_if_not_found=False)
         default_receivable = self.env.company.account_default_pos_receivable_account_id
+        # The closing invoice puts its payment_term lines on this account, so it must be receivable
+        if default_receivable.account_type != 'asset_receivable':
+            default_receivable = self.env.company.receivable_account_id
 
         if not partner:
             partner = self.env['res.partner'].create({

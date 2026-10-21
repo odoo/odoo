@@ -2216,3 +2216,25 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(sum(move.line_ids.mapped('debit')), sum(move.line_ids.mapped('credit')))
         untaxed_line = move.line_ids.filtered(lambda line: line.display_type == 'product' and not line.tax_ids)
         self.assertEqual(untaxed_line.balance, 4.99)
+
+    def test_closing_default_pos_receivable_not_receivable_type(self):
+        """ Some charts (e.g. l10n_tn) set a cash account as default PoS receivable. The
+        closing invoice must still put its payment_term lines on a receivable account.
+        """
+        cash_account = self.cash_journal.default_account_id
+        self.assertEqual(cash_account.account_type, 'asset_cash')
+        self.main_company.account_default_pos_receivable_account_id = cash_account
+        self.pos_config.default_partner_id = self.pos_config._default_partner()
+
+        session = self.open_pos_session()
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+        )
+        self.close_session()
+
+        move = session.sale_move_ids
+        self.assertEqual(move.state, 'posted')
+        self.assertEqual(move.payment_state, 'paid')
+        term_lines = move.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        self.assertEqual(term_lines.account_id, self.main_company.receivable_account_id)
