@@ -45,6 +45,13 @@
             title="Reference"
             props='{ "withColors": true, "withImages": false, "withColorCombinations": true }'/>
     </xpath>
+    <!-- Logos are sized by the "Logo Size" option. -->
+    <xpath expr="//image_tool_option[@selector='img']" position="after">
+        <image_tool_option selector=".s_references_carousel_item img" props='{ "withSize": false, "withTransform": false }'/>
+    </xpath>
+    <xpath expr="//image_and_icon_option[@selector='span.oi, i.oi, img']" position="after">
+        <image_and_icon_option selector=".s_references_carousel_item img" props='{ "withAlignment": false }'/>
+    </xpath>
 </t>
 
 </templates>
