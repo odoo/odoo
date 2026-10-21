@@ -2349,3 +2349,30 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         self.assertEqual(len(payments), 1)
         self.assertEqual(payments.partner_id, self.commercial_partner)
         self.assertEqual(payments.commercial_partner_id, self.commercial_partner)
+
+    def test_payment_register_exchange_rate_precision(self):
+        """ Ensure exchange_rate on account.payment.register is not rounded to 6 decimal places,
+        avoiding precision loss when inverted in the widget (e.g., 1 / 3194.44).
+        """
+        foreign_currency = self.setup_other_currency('COP', rates=[('2019-01-01', 1 / 3194.44)])
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': foreign_currency.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'price_unit': 100.0,
+                }),
+            ],
+        })
+        invoice.action_post()
+        wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({})
+
+        self.assertEqual(wizard.exchange_rate, invoice.invoice_currency_rate)
+        self.assertAlmostEqual(1 / wizard.exchange_rate, 3194.44, places=2)
