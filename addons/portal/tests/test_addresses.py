@@ -251,6 +251,24 @@ class TestPortalAddresses(BaseCommon, HttpCase):
         res = self._submit_address_values(address_values)
         self.assertIn("MA_ICE", res["invalid_fields"])
 
+    def test_unchanged_identifier_preserves_other_identifiers_for_child_contact(self):
+        """Test that an identifier preserves existing identifiers of a child contact."""
+        self.authenticate(self.account_a.login, self.account_a.login)
+        self.account_a.partner_id.additional_identifiers = {"DUNS": "372441183", "ID_TKU": "999999"}
+
+        res = self._submit_address_values({
+            **self.default_address_values,
+            "DUNS": "372441183",
+            "csrf_token": self.csrf_token(),
+            "partner_id": self.account_a.partner_id.id,
+        })
+        self.assertEqual(res, {"redirectUrl": "/my/addresses"})
+        # Ensure the existing identifier is preserved.
+        self.assertRecordValues(
+            self.account_a.partner_id,
+            [{"additional_identifiers": {"DUNS": "372441183", "ID_TKU": "999999"}}]
+        )
+
     def test_company_name_update(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
         csrf_token = self.csrf_token()
