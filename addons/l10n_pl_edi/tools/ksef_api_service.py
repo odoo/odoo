@@ -1,62 +1,23 @@
 import base64
 import hashlib
-import io
 import logging
 import os
 import time
-import zipfile
-from datetime import timezone
-from dateutil.parser import parse
-from pathlib import Path
-from urllib.parse import urlparse, unquote
 
 import requests
 from cryptography import x509
-from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives import padding as sym_padding
-from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
-from odoo import fields, Command
-from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
 from odoo.exceptions import UserError
+
+from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
+
 
 _logger = logging.getLogger(__name__)
 TIMEOUT = 30
-ROLES = {
-    'seller': 'Subject1',
-    'buyer': 'Subject2',
-    'third_party': 'Subject3',
-    'authorized': 'SubjectAuthorized',
-}
-
-
-def parse_time(s):
-    if s and (s := s.strip()):
-        dt = parse(s).astimezone(timezone.utc).replace(tzinfo=None)
-        return fields.Datetime.to_string(dt)
-    return False
-
-
-def format_time(date_value):
-    return date_value.strftime("%Y-%m-%dT%H:%M:%S.000Z")
-
-
-def b64(value):
-    if isinstance(value, str):
-        value = value.encode()
-    return base64.b64encode(value).decode()
-
-
-def u64(value):
-    if isinstance(value, str):
-        value = value.encode()
-    return base64.b64decode(value)
-
-
-def url_to_name(url):
-    return Path(unquote(urlparse(url).path)).name
 
 
 class KsefApiService:
@@ -68,6 +29,22 @@ class KsefApiService:
         company_sudo = company.sudo()
         self.raw_symmetric_key = base64.b64decode(company_sudo.l10n_pl_edi_session_key) if company_sudo.l10n_pl_edi_session_key else None
         self.raw_iv = base64.b64decode(company_sudo.l10n_pl_edi_session_iv) if company_sudo.l10n_pl_edi_session_iv else None
+
+    @staticmethod
+    def b64(value):
+        if not value:
+            return False
+        if isinstance(value, str):
+            value = value.encode()
+        return base64.b64encode(value).decode()
+
+    @staticmethod
+    def u64(value):
+        if not value:
+            return False
+        if isinstance(value, str):
+            value = value.encode()
+        return base64.b64decode(value)
 
     def _get_api_url(self):
         """Gets the correct KSeF API URL from the company's settings."""
@@ -81,7 +58,7 @@ class KsefApiService:
             'Content-Type': 'application/json',
         }
 
-    def _make_request(self, method, endpoint, is_auth_retry=False, set_auth_header=True, **kwargs):
+    def _make_request(self, method, endpoint, is_auth_retry=False, **kwargs):
         """
         Helper method to make authenticated requests, handling token refresh on 401.
         :param method: 'GET' or 'POST'
@@ -91,7 +68,7 @@ class KsefApiService:
         """
         kwargs.setdefault('headers', {})
         kwargs.setdefault('timeout', TIMEOUT)
-        if set_auth_header:
+        if kwargs.pop('set_auth_header', True):
             kwargs['headers'].update(self._make_headers(self.company.sudo().l10n_pl_edi_access_token))
         try:
             response = requests.request(method, endpoint, **kwargs)
@@ -120,63 +97,58 @@ class KsefApiService:
         try:
             response = requests.get(endpoint, headers=headers, timeout=TIMEOUT)
             response.raise_for_status()
+            certs_data = response.json()
+
+            public_keys = {
+                'symmetric': None,
+                'token': None,
+            }
+
+            for cert_info in certs_data:
+                usage = cert_info.get('usage', [])
+
+                if not set(usage) & {'SymmetricKeyEncryption', 'KsefTokenEncryption'}:
+                    continue
+
+                cert_b64 = cert_info['certificate']
+                cert_der = base64.b64decode(cert_b64)
+                cert = x509.load_der_x509_certificate(cert_der)
+                public_key = cert.public_key()
+                public_key_pem = public_key.public_bytes(
+                    encoding=serialization.Encoding.PEM,
+                    format=serialization.PublicFormat.SubjectPublicKeyInfo
+                ).decode('utf-8')
+
+                if 'SymmetricKeyEncryption' in usage:
+                    public_keys['symmetric'] = public_key_pem
+                if 'KsefTokenEncryption' in usage:
+                    public_keys['token'] = public_key_pem
+
+            if not public_keys['symmetric'] or not public_keys['token']:
+                raise UserError(self.env._("Could not find all required KSeF public keys ('SymmetricKeyEncryption' and 'KsefTokenEncryption')."))
+            return public_keys
+
         except requests.exceptions.RequestException as e:
             raise UserError(self.env._("Could not fetch KSeF public keys: %s", e.response.text if e.response else e))
-
-        certs_data = response.json()
-
-        public_keys = {
-            'symmetric': None,
-            'token': None,
-        }
-
-        for cert_info in certs_data:
-            usage = cert_info.get('usage', [])
-
-            if not set(usage) & {'SymmetricKeyEncryption', 'KsefTokenEncryption'}:
-                continue
-
-            cert_b64 = cert_info['certificate']
-            cert_der = base64.b64decode(cert_b64)
-            cert = x509.load_der_x509_certificate(cert_der)
-            public_key = cert.public_key()
-            public_key_pem = public_key.public_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.SubjectPublicKeyInfo
-            ).decode('utf-8')
-
-            if 'SymmetricKeyEncryption' in usage:
-                public_keys['symmetric'] = public_key_pem
-            if 'KsefTokenEncryption' in usage:
-                public_keys['token'] = public_key_pem
-
-        if not public_keys['symmetric'] or not public_keys['token']:
-            raise UserError(self.env._("Could not find all required KSeF public keys ('SymmetricKeyEncryption' and 'KsefTokenEncryption')."))
-        return public_keys
-
-    def _create_encryption_data(self):
-        raw_symmetric_key = os.urandom(32)
-        raw_iv = os.urandom(16)
-        ksef_public_key_pem = self._get_public_keys().get('symmetric')
-        public_key = serialization.load_pem_public_key(ksef_public_key_pem.encode('utf-8'))
-        key_padding = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
-        encrypted_symmetric_key = public_key.encrypt(raw_symmetric_key, key_padding)
-        return {
-            'raw_symmetric_key': b64(raw_symmetric_key),
-            'encrypted_symmetric_key': b64(encrypted_symmetric_key),
-            'raw_iv': b64(raw_iv),
-        }
 
     def open_ksef_session(self):
         """Builds the encrypted request and opens an interactive session, with one retry on token expiry."""
         if self.company.sudo().l10n_pl_edi_session_id and self.get_session_status().get('code') == 100:
             return
-        encryption_data = self._create_encryption_data()
-        self.raw_symmetric_key = u64(encryption_data['raw_symmetric_key'])
-        self.raw_iv = u64(encryption_data['raw_iv'])
+        self.raw_symmetric_key = os.urandom(32)
+        self.raw_iv = os.urandom(16)
+        ksef_public_key_pem = self._get_public_keys().get('symmetric')
+        public_key = serialization.load_pem_public_key(ksef_public_key_pem.encode('utf-8'))
+        encrypted_symmetric_key = public_key.encrypt(
+            self.raw_symmetric_key,
+            padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
+        )
         request_body = {
             "formCode": {"systemCode": "FA (3)", "schemaVersion": "1-0E", "value": "FA"},
-            **self._get_encryption_json(encryption_data),
+            "encryption": {
+                "encryptedSymmetricKey": base64.b64encode(encrypted_symmetric_key).decode('utf-8'),
+                "initializationVector": base64.b64encode(self.raw_iv).decode('utf-8'),
+            }
         }
         endpoint = f"{self.api_url}/sessions/online"
         headers = {'Content-Type': 'application/json'}
@@ -225,29 +197,20 @@ class KsefApiService:
             _logger.exception("Failed to refresh KSeF access token: %s", error_text)
             raise UserError(self.env._("Failed to refresh KSeF access token. You may need to re-authenticate manually. Error: %s", error_text))
 
-    def zip_content(self, content_bytes, filename):
-        zip_buffer = io.BytesIO()
-        with zipfile.ZipFile(zip_buffer, mode="w", compression=zipfile.ZIP_DEFLATED) as zip_file:
-            zip_file.writestr(filename, content_bytes)
-        return zip_buffer.getvalue()
-
-    def aes_cbc_content(self, content_bytes, raw_symmetric_key, raw_iv):
-        padder = sym_padding.PKCS7(128).padder()
-        padded_data = padder.update(content_bytes) + padder.finalize()
-        cipher = Cipher(algorithms.AES(raw_symmetric_key), modes.CBC(raw_iv))
-        encryptor = cipher.encryptor()
-        return encryptor.update(padded_data) + encryptor.finalize()
-
     def send_invoice(self, xml_content_bytes):
         """Encrypts a single invoice and sends it within an open session."""
-        encrypted_data = self.aes_cbc_content(xml_content_bytes, self.raw_symmetric_key, self.raw_iv)
+        padder = sym_padding.PKCS7(128).padder()
+        padded_data = padder.update(xml_content_bytes) + padder.finalize()
+        cipher = Cipher(algorithms.AES(self.raw_symmetric_key), modes.CBC(self.raw_iv))
+        encryptor = cipher.encryptor()
+        encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
 
         payload = {
-            'invoiceHash': base64.b64encode(hashlib.sha256(xml_content_bytes).digest()).decode(),
+            'invoiceHash': base64.b64encode(hashlib.sha256(xml_content_bytes).digest()).decode('utf-8'),
             'invoiceSize': len(xml_content_bytes),
-            'encryptedInvoiceHash': base64.b64encode(hashlib.sha256(encrypted_data).digest()).decode(),
+            'encryptedInvoiceHash': base64.b64encode(hashlib.sha256(encrypted_data).digest()).decode('utf-8'),
             'encryptedInvoiceSize': len(encrypted_data),
-            'encryptedInvoiceContent': base64.b64encode(encrypted_data).decode(),
+            'encryptedInvoiceContent': base64.b64encode(encrypted_data).decode('utf-8'),
         }
 
         endpoint = f"{self.api_url}/sessions/online/{self.company.sudo().l10n_pl_edi_session_id}/invoices"
@@ -399,28 +362,14 @@ class KsefApiService:
         except requests.exceptions.RequestException as e:
             raise UserError(self.env._("Failed to redeem token: %s", e.response.text if e.response else e))
 
-    def query_invoice_metadata(self, date_from, date_to, page_size=250, page_offset=0, subject_type=ROLES['buyer']):
+    def query_invoice_metadata(self, query_criteria, page_size=100, page_offset=0):
         endpoint = f"{self.api_url}/invoices/query/metadata"
-        date_from_str, date_to_str = date_from.isoformat(), date_to.isoformat()
-        invoices_metadata = {}
-        has_more = True
-        while has_more:
-            try:
-                response = self._make_request('POST', endpoint,
-                    json={
-                        'subjectType': subject_type,
-                        'dateRange': {'from': date_from_str, 'to': date_to_str, 'dateType': 'Invoicing'},
-                    },
-                    params={'pageSize': page_size, 'pageOffset': page_offset},
-                )
-            except KSeFRateLimitError as e:
-                return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
-            response = response.json()
-            if response.get('error'):
-                return {'error': {'message': response['error']}}
-            has_more = response['hasMore']
-            invoices_metadata.update({invoice['ksefNumber']: invoice for invoice in response['invoices']})
-        return invoices_metadata
+        params = {'pageSize': page_size, 'pageOffset': page_offset}
+        try:
+            response = self._make_request('POST', endpoint, json=query_criteria, params=params)
+            return response.json()
+        except KSeFRateLimitError as e:
+            return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
 
     def get_invoice_by_ksef_number(self, ksef_number):
         endpoint = f"{self.api_url}/invoices/ksef/{ksef_number}"
@@ -429,41 +378,3 @@ class KsefApiService:
             return {'xml_content': response.content}
         except KSeFRateLimitError as e:
             return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
-
-    # -------------------------------------------
-
-    def download_batch_status(self, name):
-        response = self._make_request("GET", f"{self.api_url}/invoices/exports/{name}")
-        json_response = response.json()
-        return {
-            'name': name,
-            'content': response.text,
-            'status': f"{json_response['status']['code']}" or False,
-            'error': '\n'.join(json_response['status'].get('details', []) or []) or False,
-            'date_expiry': parse_time(json_response.get('packageExpirationDate')),
-            'parts': [
-                Command.create({
-                    'name': url_to_name(part['url']),
-                    'batch_name': name,
-                    'part_number': part['ordinalNumber'],
-                    'download_url': part['url'],
-                    'download_method': (part['method'] or '').upper(),
-                })
-                for part in json_response.get('package', {}).get('parts', [])
-            ],
-        }
-
-    def _get_encryption_json(self, encryption_data):
-        return {"encryption": {
-            "encryptedSymmetricKey": encryption_data['encrypted_symmetric_key'],
-            "initializationVector": encryption_data['raw_iv'],
-        }}
-
-    def download_batch_request(self, date_from, date_to, encryption_data, subject_type=ROLES['buyer']):
-        dates = {"from": format_time(date_from), "to": format_time(date_to), "dateType": "Invoicing"}
-        payload = {
-            **self._get_encryption_json(encryption_data),
-            "filters": {"subjectType": subject_type, "dateRange": dates},
-        }
-        response = self._make_request('POST', f"{self.api_url}/invoices/exports", json=payload)
-        return response.json()

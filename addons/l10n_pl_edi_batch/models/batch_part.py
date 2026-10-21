@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.exceptions import InvalidKey, InvalidSignature, UnsupportedAlgorithm
 
 from odoo import api, fields, models, modules
-from odoo.addons.l10n_pl_edi.tools.ksef_api_service import url_to_name, u64
+from odoo.addons.l10n_pl_edi_batch.tools.ksef_api_service import KsefApiServiceBatch as Service
 
 _logger = logging.getLogger(__name__)
 
@@ -43,11 +43,11 @@ class BatchDownloadPart(models.Model):
     @api.depends('download_url')
     def _compute_part_name(self):
         for record in self:
-            record.part_name = url_to_name(record.download_url)
+            record.part_name = Service._url_to_name(record.download_url)
 
     def _decrypt_stream(self, response_stream):
         self.ensure_one()
-        key, iv = u64(self.batch_id.raw_symmetric_key), u64(self.batch_id.raw_iv)
+        key, iv = Service.u64(self.batch_id.raw_symmetric_key), Service.u64(self.batch_id.raw_iv)
         cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
         decryptor = cipher.decryptor()
         unpadder = padding.PKCS7(128).unpadder()
@@ -89,12 +89,12 @@ class BatchDownloadPart(models.Model):
                 self.env.cr.commit()
 
     def unzip(self, commit=True):
+        if not self:
+            raise ValueError("No part was selected for unzip")
         batches = self.mapped("batch_id")
-        if len(batches) != 1:
-            raise ValueError("You can only unzip KSeF parts belonging to the same KSeF batch")
         company = self[0].company_id
         attachments = self.env['ir.attachment']
-        sorted_parts = self.sorted(key=lambda a: a.name)
+        sorted_parts = self.sorted(key=lambda a: a.name).filtered(lambda a: a.file_size > 0)
         with tempfile.TemporaryFile(mode='w+b') as temp_zip_stream:
             for part in sorted_parts:
                 temp_zip_stream.write(part.raw)
@@ -122,5 +122,4 @@ class BatchDownloadPart(models.Model):
                         if commit and not modules.module.current_test:
                             self.env.cr.commit()
         batches.attachment_ids |= attachments
-        print(batches.attachment_ids)
         return batches.attachment_ids

@@ -4,7 +4,8 @@
     'summary': 'Uses a batch download mechanism for FA(3) electronic invoices in Poland via KSeF',
     'description': """Uses a batch download mechanism for FA(3) electronic invoices in Poland via KSeF.""",
     'data': [
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'views/l10n_pl_edi_batch_views.xml'
     ],
     'demo': [],
     'assets': {},
