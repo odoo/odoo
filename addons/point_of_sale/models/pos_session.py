@@ -290,6 +290,9 @@ class PosSession(models.Model):
             if model == 'product.pricelist.item':
                 # For product pricelist items, we only keep those whose pricelist is active
                 domain = Domain.AND([domain, [('pricelist_id.active', '=', True)]])
+            elif model == 'product.template.attribute.value':
+                # Archived values are flagged by ptav_active, there is no active field
+                domain = Domain.AND([domain, [('ptav_active', '=', True)]])
             try:
                 existing_active_records = self.env[model].search_read(domain, ['id'])
             except AccessError:
