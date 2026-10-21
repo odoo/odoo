@@ -315,7 +315,7 @@ class Field[T]:
     exportable: bool = True
 
     # mapping from type name to field type
-    _by_type__: dict[str, Field] = {}
+    _by_type__: dict[str, type[Field]] = {}
 
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         kwargs['string'] = string

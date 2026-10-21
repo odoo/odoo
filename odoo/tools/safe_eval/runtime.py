@@ -484,7 +484,7 @@ class _SafeWhitelist:
         object,
         NoneType, bool, int, float, str, bytes, bytearray, memoryview,
         # errors
-        Exception,
+        Exception, AssertionError,
         AttributeError, KeyError, TypeError, UnboundLocalError, ValueError,
         ZeroDivisionError,
         # iterators and generators
@@ -770,10 +770,16 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_class('odoo.upgrade.*')
     safe_whitelist.add_function('odoo.upgrade.*')
     safe_whitelist.add_class('odoo.orm.domains.*')
-    safe_whitelist.add_class('odoo.orm.fields.*')
-    safe_whitelist.add_class('odoo.orm.fields_binary.*')
-    safe_whitelist.add_class('odoo.orm.fields_properties.*')
-    safe_whitelist.add_class('odoo.orm.fields_selection.*')
+    safe_whitelist.add_instance('odoo.orm.fields.*')
+    safe_whitelist.add_instance('odoo.orm.fields_binary.*')
+    safe_whitelist.add_instance('odoo.orm.fields_misc.*')
+    safe_whitelist.add_instance('odoo.orm.fields_numeric.*')
+    safe_whitelist.add_instance('odoo.orm.fields_properties.*')
+    safe_whitelist.add_instance('odoo.orm.fields_reference.*')
+    safe_whitelist.add_instance('odoo.orm.fields_relational.*')
+    safe_whitelist.add_instance('odoo.orm.fields_selection.*')
+    safe_whitelist.add_instance('odoo.orm.fields_temporal.*')
+    safe_whitelist.add_instance('odoo.orm.fields_textual.*')
     safe_whitelist.add_class('odoo.orm.models.*')
     safe_whitelist.add_class('odoo.orm.commands.Command')
     safe_whitelist.add_instance('odoo.orm.environments.Environment')
@@ -793,6 +799,8 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_instance('odoo.http.session.Session')
     # Database
     safe_whitelist.add_instance('odoo.sql_db.Cursor')
+    safe_whitelist.add_instance('odoo.sql_db.Savepoint')
+    safe_whitelist.add_instance('odoo.sql_db._FlushingSavepoint')
     # Tools
     safe_whitelist.add_class('odoo.tools.binary.*')
     safe_whitelist.add_class('odoo.tools.convert.xml_import')
