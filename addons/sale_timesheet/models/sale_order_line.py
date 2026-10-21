@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import format_duration
+from odoo.tools import format_duration, float_compare
 
 
 class SaleOrderLine(models.Model):
@@ -146,6 +146,17 @@ class SaleOrderLine(models.Model):
         values['allow_billable'] = True
         return values
 
+    def _round_to_default_qty_to_invoice(self, recomputed_qty_to_invoice):
+        """
+        Sets the `line.qty_to_invoice` to `recomputed_qty_to_invoice` only if that
+        recomputed quantity differs enough from the previously computed `line.qty_to_invoice`
+        to prevent rounding errors.
+        """
+        difference = self.qty_to_invoice - recomputed_qty_to_invoice
+        rounding = self.product_uom.rounding
+        if float_compare(difference, rounding, precision_rounding=rounding) != 0:
+            self.qty_to_invoice = recomputed_qty_to_invoice
+
     def _recompute_qty_to_invoice(self, start_date, end_date):
         """ Recompute the qty_to_invoice field for product containing timesheets
 
@@ -193,7 +204,7 @@ class SaleOrderLine(models.Model):
                 # calculated for this period
                 qty_to_invoice = mapping.get(line.id, 0.0)
             if qty_to_invoice:
-                line.qty_to_invoice = qty_to_invoice
+                line._round_to_default_qty_to_invoice(qty_to_invoice)
             elif start_date or end_date:
                 prev_inv_status = line.invoice_status
                 line.qty_to_invoice = qty_to_invoice
