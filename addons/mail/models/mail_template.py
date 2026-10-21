@@ -271,10 +271,6 @@ class MailTemplate(models.Model):
         self._fix_attachment_ownership()
         return True
 
-    def unlink(self):
-        self.unlink_action()
-        return super(MailTemplate, self).unlink()
-
     def copy(self, default=None):
         default = default or {}
         copy_attachments = 'attachment_ids' not in default
@@ -296,11 +292,9 @@ class MailTemplate(models.Model):
                     })
         return copies
 
+    @api.ondelete(at_uninstall=True)
     def unlink_action(self):
-        for template in self:
-            if template.ref_ir_act_window:
-                template.ref_ir_act_window.unlink()
-        return True
+        self.ref_ir_act_window.unlink()
 
     def create_action(self):
         ActWindow = self.env['ir.actions.act_window']

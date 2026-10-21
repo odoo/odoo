@@ -83,12 +83,6 @@ class ResUsers(models.Model):
         users.filtered(lambda u: not u.share)._generate_primary_calendar()
         return users
 
-    def unlink(self):
-        # Normal ondelete=cascade does not go through unlink() overrides, which we need to remove
-        # the calendar if this was its last user. Otherwise, we would end up with orphaned calendars.
-        self.calendar_user_ids.sudo().unlink()
-        return super().unlink()
-
     def _systray_get_calendar_event_domain(self):
         # Determine the domain for which the users should be notified. This method sends notification to
         # events for which there's a reminder set and occurring between now and the end of the day.

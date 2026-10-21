@@ -96,10 +96,9 @@ class ResCurrency(models.CachedModel):
         self._toggle_group_multi_currency()
         return res
 
-    def unlink(self):
-        res = super().unlink()
-        self._toggle_group_multi_currency()
-        return res
+    @api.ondelete(at_uninstall=False)
+    def _unlink_toggle_multi_currency(self):
+        return self._toggle_group_multi_currency
 
     def write(self, vals):
         res = super().write(vals)

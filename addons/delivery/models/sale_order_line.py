@@ -26,9 +26,9 @@ class SaleOrderLine(models.Model):
                 line.product_uom_qty, line.product_id.uom_id
             )
 
-    def unlink(self):
-        self.filtered("is_delivery").order_id.filtered("carrier_id").carrier_id = False
-        return super().unlink()
+    @api.ondelete(at_uninstall=False)
+    def _unlink_remove_carrier(self):
+        self.filtered("is_delivery").order_id.carrier_id = False
 
     def _is_delivery(self):
         self.ensure_one()

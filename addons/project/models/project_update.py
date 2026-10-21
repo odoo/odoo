@@ -96,12 +96,14 @@ class ProjectUpdate(models.Model):
             })
         return updates
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_set_last_upate_id(self):
         projects = self.project_id
-        res = super().unlink()
-        for project in projects:
-            project.sudo().last_update_id = self.search([('project_id', "=", project.id)], order="date desc", limit=1)
-        return res
+
+        def update_projects():
+            for project in projects:
+                project.sudo().last_update_id = self.search([('project_id', "=", project.id)], order="date desc", limit=1)
+        return update_projects
 
     # ---------------------------------
     # Build default description

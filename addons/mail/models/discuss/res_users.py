@@ -28,10 +28,7 @@ class ResUsers(models.Model):
             self.env["discuss.channel"].search([("group_ids", "in", user_group_ids)])._subscribe_users_automatically()
         return res
 
-    def unlink(self):
-        self._unsubscribe_from_non_public_channels()
-        return super().unlink()
-
+    @api.ondelete(at_uninstall=False)
     def _unsubscribe_from_non_public_channels(self, reset_role=False):
         """This method un-subscribes users from group restricted channels. Main purpose
         of this method is to prevent sending internal communication to archived / deleted users.

@@ -102,14 +102,13 @@ class LoyaltyHistory(models.Model):
             self._settle_outstanding_debt(awarded_cards)
         return result
 
-    def unlink(self):
-        affected_cards = self.card_id
-        result = super().unlink()
+    @api.ondelete(at_uninstall=False)
+    def _unlink_settle_outstanding_debt(self):
         # Consumptions that drew from a deleted award are now debts, try to draw those points from
         # the awards that are left.
-        if affected_cards:
-            self._settle_outstanding_debt(affected_cards)
-        return result
+        if affected_cards := self.card_id:
+            return lambda: self._settle_outstanding_debt(affected_cards)
+        return None
 
     # === BUSINESS METHODS === #
 

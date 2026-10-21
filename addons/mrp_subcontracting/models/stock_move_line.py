@@ -25,11 +25,11 @@ class StockMoveLine(models.Model):
             self.move_id.filtered(lambda m: m.is_subcontract).with_context(no_procurement=True)._sync_subcontracting_productions()
         return res
 
-    def unlink(self):
-        moves_to_sync = self.move_id.filtered(lambda m: m.is_subcontract)
-        res = super().unlink()
-        moves_to_sync._sync_subcontracting_productions()
-        return res
+    @api.ondelete(at_uninstall=False)
+    def _unlink_sync_subcontracting(self):
+        if moves_to_sync := self.move_id.filtered(lambda m: m.is_subcontract):
+            return moves_to_sync._sync_subcontracting_productions
+        return None
 
     @api.model_create_multi
     def create(self, vals_list):

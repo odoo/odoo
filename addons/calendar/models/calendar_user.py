@@ -17,7 +17,7 @@ class CalendarUser(models.Model):
     calendar_id = fields.Many2one('calendar.calendar', string='Calendar', ondelete='cascade', index='btree', required=True, readonly=True)
     calendar_share_user_ids = fields.Many2many(related='calendar_id.share_user_ids', readonly=True)
     calendar_owner_id = fields.Many2one(related='calendar_id.owner_id')
-    user_id = fields.Many2one('res.users', string='User', required=True, readonly=True)
+    user_id = fields.Many2one('res.users', string='User', required=True, readonly=True, ondelete='cascade')
     is_primary = fields.Boolean('Primary', readonly=True)
     name = fields.Char('Label')
 

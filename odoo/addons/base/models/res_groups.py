@@ -302,13 +302,15 @@ class ResGroups(models.Model):
             self.env['res.users']._recompute_user_share()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_recompute_user_share(self):
         internal_group_ids = self._get_internal_group_ids()
-        res = super().unlink()
-        self._apply_group_regular()
-        if internal_group_ids != self._get_internal_group_ids():
-            self.env['res.users']._recompute_user_share()
-        return res
+
+        def apply_groups():
+            self._apply_group_regular()
+            if internal_group_ids != self._get_internal_group_ids():
+                self.env['res.users']._recompute_user_share()
+        return apply_groups
 
     def _ensure_xml_id(self):
         """Return the groups external identifiers, creating the external identifier for groups missing one"""

@@ -182,11 +182,11 @@ class ResGroups(models.Model):
             self.env.transaction.invalidate_ormcache()
         return super().write(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_invalidate_lock_cache(self):
         """Override to invalidate `_get_lock_timeouts` cache if timeout fields exist on deleted records."""
         if self.filtered(lambda r: any(r[field] for field in CACHE_INVALIDATE_FIELDS)):
             self.env.transaction.invalidate_ormcache()
-        return super().unlink()
 
     @api.ormcache("self._ids")
     def _get_lock_timeouts(self):

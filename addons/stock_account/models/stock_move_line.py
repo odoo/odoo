@@ -30,11 +30,10 @@ class StockMoveLine(models.Model):
             self.env['stock.move'].browse(analytic_move_to_recompute).sudo()._create_analytic_move()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_create_analytic_moves(self):
         analytic_move_to_recompute = self.move_id
-        res = super().unlink()
-        analytic_move_to_recompute.sudo()._create_analytic_move()
-        return res
+        return analytic_move_to_recompute.sudo()._create_analytic_move
 
     @api.model
     def _should_exclude_for_valuation(self):

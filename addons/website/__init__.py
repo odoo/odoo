@@ -20,7 +20,7 @@ def uninstall_hook(env):
     # as during an uninstallation, `unlink` is not called for records which were
     # created by the user (not XML data). Same goes for @api.ondelete available
     # from 15.0 and above.
-    env['website'].search([])._remove_attachments_on_website_unlink()
+    env['website'].search([])._attachments_on_website_to_unlink().unlink()
 
 
 def post_init_hook(env):
