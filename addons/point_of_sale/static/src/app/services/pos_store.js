@@ -3073,6 +3073,20 @@ export class PosStore extends WithLazyGetterTrap {
         return this.snoozeTracker.isProductSnoozed(product);
     }
 
+    getProductSnoozeLabel(product) {
+        const snooze = this.getActiveSnooze("product", { product });
+        if (!snooze) {
+            return "";
+        }
+
+        if (!snooze.end_time) {
+            return _t("Snoozed - session");
+        }
+
+        const [countdown] = this.getSnoozeCountdown(snooze);
+        return countdown ? _t("Snoozed - %s left", countdown) : "";
+    }
+
     async canAddProductToCurrentOrder(product) {
         if (!this.isProductSnoozed(product)) {
             return true;
@@ -3165,16 +3179,22 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getSnoozeCountdown(activeSnooze) {
-        // This function will calculate and return [countdown, activeSoozeRecord]
-        const now = DateTime.now();
-        const endTime = activeSnooze.end_time;
-        if (!endTime) {
+        if (!activeSnooze) {
+            return ["", undefined];
+        }
+
+        if (!activeSnooze.end_time) {
             return [_t("Next session"), activeSnooze];
         }
-        const diff = endTime.diff(now, ["hours", "minutes", "seconds"]);
+
+        // Use the shared reactive clock for countdown calculations.
+        const now = DateTime.fromMillis(this.snoozeTracker.state.now || Date.now());
+        const diff = activeSnooze.end_time.diff(now, ["hours", "minutes", "seconds"]);
+
         if (diff.as("seconds") <= 0) {
             return ["", undefined];
         }
+
         return [diff.toFormat("hh:mm:ss"), activeSnooze];
     }
     snoozeItem(serviceType, onCreation, extraPayload = {}) {

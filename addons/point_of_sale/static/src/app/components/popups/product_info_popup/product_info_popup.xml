@@ -37,7 +37,7 @@
                             <i class="oi me-1" data-icon="schedule" t-if="!(this.state.activeSnooze and this.ui.isSmall)" aria-hidden="true"></i>
                             <span t-if="!this.state.activeSnooze and !this.ui.isSmall">Snooze</span>
                             <span class="m-0" t-if="this.state.activeSnooze" style="font-variant-numeric: tabular-nums;">
-                                <t t-out="this.state.countdown" />
+                                <t t-out="this.snoozeCountdown" />
                             </span>
                         </button>
                     </div>
