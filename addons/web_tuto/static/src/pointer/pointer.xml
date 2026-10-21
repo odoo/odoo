@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="web_tuto.TutorialPointer">
+        <div
+            t-ref="this.pointerRef"
+            t-if="this.isVisible"
+            t-attf-class="o_tutorial_pointer o_{{ this.state.direction }}"
+            t-on-mouseenter="() => this.onMouseEnter()"
+            t-on-mouseleave="() => this.onMouseLeave()"
+        >
+            <div t-attf-class="o_tutorial_pointer_tip o_{{ this.state.direction }}"/>
+            <div t-if="this.showContent and this.content" t-ref="this.bubbleRef" class="o_tutorial_pointer_bubble">
+                <div
+                    t-attf-class="o_tutorial_pointer_content popover position-relative shadow bs-popover-{{ this.bubbleSide }}"
+                    t-on-click="() => this.onContentClick()"
+                >
+                    <div class="popover-arrow position-absolute z-n1"/>
+                    <div class="popover-body px-3 py-2">
+                        <small t-if="this.pointerState.progress" class="o_tutorial_progress d-block text-muted mb-1" t-out="this.pointerState.progress"/>
+                        <span>
+                            <t t-out="this.content"/>
+                        </span>
+                        <div class="d-flex justify-content-between align-items-center gap-3 mt-2">
+                            <button t-if="this.pointerState.onSkip" class="btn btn-link btn-sm shadow-none fw-normal text-muted px-0 o_tutorial_skip" t-on-click.stop="this.pointerState.onSkip">Skip Tutorial</button>
+                            <button t-if="this.triggerPosition === 'in' and this.pointerState.onNext" class="btn btn-primary btn-sm o_tutorial_next" t-on-click.stop="this.pointerState.onNext">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

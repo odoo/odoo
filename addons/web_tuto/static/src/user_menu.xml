@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web_tuto.TutorialsDialog">
+        <Dialog title.translate="Tutorials" size="'md'" footer="false">
+            <div class="d-flex justify-content-between align-items-center">
+                <span>Enable tutorials</span>
+                <CheckBox className="'form-switch o_tutorials_switch'" value="this.tutorialsEnabled" onChange="() => this.onSwitchTutorials()"/>
+            </div>
+            <div class="d-flex justify-content-between align-items-center pt-2 pb-3 border-bottom">
+                <span>Always show tips</span>
+                <CheckBox className="'form-switch o_tutorials_tips_switch'" value="this.state.tipsShown" onChange="() => this.onSwitchTips()"/>
+            </div>
+            <div t-foreach="this.state.tutorials" t-as="tutorial" t-key="tutorial.id" class="o_tutorials_row card mt-3">
+                <div class="card-body p-3">
+                    <div class="fw-bold" t-out="tutorial.title"/>
+                    <div class="d-flex gap-2 mt-2">
+                        <div
+                            t-foreach="tutorial.chapters"
+                            t-as="chapter"
+                            t-key="chapter_index"
+                            class="o_tutorials_chapter d-flex rounded-pill overflow-hidden"
+                            t-attf-style="flex: {{ chapter.length }} 1 0; gap: 2px;"
+                        >
+                            <div
+                                t-foreach="chapter"
+                                t-as="done"
+                                t-key="done_index"
+                                t-attf-class="o_tutorials_step flex-grow-1 bg-primary {{ done ? 'o_done' : 'opacity-25' }}"
+                                style="height: 8px;"
+                            />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <small class="o_tutorials_progress text-muted">
+                            <t t-out="this.constructor.stateLabels[tutorial.state]"/> · <t t-out="this.getProgress(tutorial)"/>
+                        </small>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-secondary o_tutorials_play" t-on-click="() => this.onPlay(tutorial)" t-out="this.constructor.buttonLabels[tutorial.state]"/>
+                            <Dropdown t-if="tutorial.state !== 'done'" position="'bottom-end'">
+                                <button class="btn btn-sm btn-secondary o-dropdown-caret dropdown-toggle-split o_tutorials_toggle" title="More"/>
+                                <t t-set-slot="content">
+                                    <DropdownItem t-if="tutorial.state === 'running'" class="'o_tutorials_restart'" onSelected="() => this.onRestart(tutorial)">Restart</DropdownItem>
+                                    <DropdownItem class="'o_tutorials_mark_done'" onSelected="() => this.onMarkDone(tutorial)">Mark as done</DropdownItem>
+                                </t>
+                            </Dropdown>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>
