@@ -136,12 +136,7 @@ class TestSaleInvoicing(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, self.discount_coupon_program)
         reward_line = order.order_line.filtered('is_reward_line')
-<<<<<<< efa9d2dda80922f35892fc13786e441cce5210b1
         self.assertEqual(reward_line.tax_ids, tax_quebec)
-||||||| 095e7c996ec11a7b2249588968fd7dd07b1f7aa6
-        self.assertEqual(reward_line.tax_id, tax_quebec)
-=======
-        self.assertEqual(reward_line.tax_id, tax_quebec)
 
     def test_invoicing_user_can_read_invoice_with_reward_line(self):
         """ A user with only invoicing rights (no access to loyalty rewards) should be able to
@@ -162,4 +157,3 @@ class TestSaleInvoicing(TestSaleCouponCommon):
         # as the invoicing user instead of reading from the cache.
         reward.invalidate_recordset(['reward_type'])
         invoice.with_user(invoicing_user).read(['tax_totals'])
->>>>>>> 1e23dfc77d1b3d3caf6bfaf68a5fda8335494632
