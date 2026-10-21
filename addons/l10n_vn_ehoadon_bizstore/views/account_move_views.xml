@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_invoice_form_inherit_ehoadon" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.ehoadon</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button string="Xem trước eHoaDon"
+                        name="action_ehoadon_preview_invoice"
+                        type="object"
+                        class="oe_highlight"
+                        groups="l10n_vn_ehoadon_bizstore.group_ehoadon_preview"/>
+                <button string="eHoaDon: Phát hành"
+                        name="action_ehoadon_send_invoice"
+                        type="object"
+                        class="oe_highlight"
+                        groups="l10n_vn_ehoadon_bizstore.group_ehoadon_send_invoice"
+                        invisible="state != 'posted' or ehoadon_invoice_state in ('sent', 'canceled', 'adjusted', 'replaced')"/>
+            </xpath>
+
+            <xpath expr="//page[@id='other_tab_entry']" position="after">
+                <page id="ehoadon_tab" string="eHoaDon">
+                    <group>
+                        <group>
+                            <field name="ehoadon_template_id"/>
+                            <field name="ehoadon_issue_date" readonly="1"/>
+                            <field name="ehoadon_invoice_state"/>
+                            <field name="ehoadon_remote_status" readonly="1"/>
+                            <field name="ehoadon_business_type"
+                                   groups="l10n_vn_ehoadon_bizstore.group_ehoadon_send_replacement"/>
+                            <field name="ehoadon_origin_move_id"
+                                   groups="l10n_vn_ehoadon_bizstore.group_ehoadon_send_replacement"
+                                   options="{'no_open': True, 'no_edit': True, 'no_create': True}"
+                                   invisible="ehoadon_business_type != 'replace'"
+                                   required="ehoadon_business_type == 'replace'"/>
+                            <field name="ehoadon_cancel_note"
+                                   invisible="ehoadon_invoice_state not in ('sent', 'adjusted', 'replaced', 'error')"/>
+                        </group>
+                        <group>
+                            <field name="ehoadon_invoice_id" readonly="1"/>
+                            <field name="ehoadon_lookup_code" readonly="1"/>
+                            <field name="ehoadon_invoice_number" readonly="1"/>
+                            <field name="ehoadon_view_url" readonly="1" widget="url"/>
+                            <button string="Tải PDF eHoaDon"
+                                    name="action_ehoadon_download_pdf"
+                                    type="object"
+                                    class="oe_highlight"
+                                    groups="l10n_vn_ehoadon_bizstore.group_ehoadon_send_invoice"
+                                    invisible="not ehoadon_invoice_id"/>
+                        </group>
+                    </group>
+                </page>
+                <page id="ehoadon_log_tab" string="eHoaDon API Log">
+                    <field name="ehoadon_log_json" readonly="1" widget="html"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- List columns — mirror vms_sinvoice view_invoice_tree_inherit_sinvoice -->
+    <record id="view_invoice_tree_inherit_ehoadon" model="ir.ui.view">
+        <field name="name">account.invoice.list.inherit.ehoadon</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_partner_display_name'][last()]" position="after">
+                <field name="ehoadon_invoice_number" string="Số hóa đơn eHoaDon" optional="show"/>
+                <field name="ehoadon_invoice_state" string="Trạng thái eHoaDon" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

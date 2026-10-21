@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_ehoadon" model="ir.module.category">
+        <field name="name">eHoaDon</field>
+        <field name="description">Phân quyền eHoaDon Online e-invoice</field>
+        <field name="sequence">18</field>
+    </record>
+
+    <!-- Mỗi quyền 1 privilege riêng => hiển thị dạng checkbox -->
+    <record id="privilege_ehoadon" model="res.groups.privilege">
+        <field name="name">eHoaDon Manager</field>
+        <field name="category_id" ref="module_category_ehoadon"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="privilege_ehoadon_preview" model="res.groups.privilege">
+        <field name="name">Xem trước</field>
+        <field name="category_id" ref="module_category_ehoadon"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="privilege_ehoadon_send_invoice" model="res.groups.privilege">
+        <field name="name">Phát hành hóa đơn eHoaDon</field>
+        <field name="category_id" ref="module_category_ehoadon"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="privilege_ehoadon_send_replacement" model="res.groups.privilege">
+        <field name="name">Phát hành hóa đơn thay thế</field>
+        <field name="category_id" ref="module_category_ehoadon"/>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="privilege_ehoadon_create_draft" model="res.groups.privilege">
+        <field name="name">Tạo hóa đơn nháp eHoaDon</field>
+        <field name="category_id" ref="module_category_ehoadon"/>
+        <field name="sequence">5</field>
+    </record>
+
+    <!-- Groups -->
+    <record id="group_ehoadon_manager" model="res.groups">
+        <field name="name">eHoaDon Manager</field>
+        <field name="comment">Manage eHoaDon configuration and templates.</field>
+        <field name="privilege_id" ref="privilege_ehoadon"/>
+    </record>
+
+    <record id="group_ehoadon_preview" model="res.groups">
+        <field name="name">Xem trước</field>
+        <field name="privilege_id" ref="privilege_ehoadon_preview"/>
+    </record>
+
+    <record id="group_ehoadon_send_invoice" model="res.groups">
+        <field name="name">Phát hành hóa đơn eHoaDon</field>
+        <field name="privilege_id" ref="privilege_ehoadon_send_invoice"/>
+        <field name="implied_ids" eval="[(4, ref('group_ehoadon_preview'))]"/>
+    </record>
+
+    <record id="group_ehoadon_send_replacement" model="res.groups">
+        <field name="name">Phát hành hóa đơn thay thế</field>
+        <field name="comment">Được phép chọn loại nghiệp vụ - phát hành hóa đơn thay thế eHoaDon.</field>
+        <field name="privilege_id" ref="privilege_ehoadon_send_replacement"/>
+    </record>
+
+    <record id="group_ehoadon_create_draft" model="res.groups">
+        <field name="name">Tạo hóa đơn nháp eHoaDon</field>
+        <field name="privilege_id" ref="privilege_ehoadon_create_draft"/>
+        <field name="implied_ids" eval="[(4, ref('group_ehoadon_preview'))]"/>
+    </record>
+</odoo>

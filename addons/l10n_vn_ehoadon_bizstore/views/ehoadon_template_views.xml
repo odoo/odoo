@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ehoadon_template_list" model="ir.ui.view">
+        <field name="name">ehoadon.template.list</field>
+        <field name="model">ehoadon.template</field>
+        <field name="arch" type="xml">
+            <list string="eHoaDon Templates" default_order="serial">
+                <field name="is_default"/>
+                <field name="name"/>
+                <field name="serial"/>
+                <field name="email"/>
+                <field name="tax_number"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Same layout as sinvoice.template form: Name/Active/Default + Connection + provider fields + Notes -->
+    <record id="view_ehoadon_template_form" model="ir.ui.view">
+        <field name="name">ehoadon.template.form</field>
+        <field name="model">ehoadon.template</field>
+        <field name="arch" type="xml">
+            <form string="eHoaDon Template">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="is_default"/>
+                    </group>
+                    <group string="Connection">
+                        <field name="email"/>
+                        <field name="password" password="True"/>
+                        <field name="tenant_id"/>
+                        <field name="tax_number"/>
+                    </group>
+                    <group string="eHoaDon">
+                        <field name="serial"/>
+                        <field name="vat_rate_mode"/>
+                        <field name="default_vat_rate"
+                               invisible="vat_rate_mode != 'per_invoice'"/>
+                        <field name="is_cash_register"/>
+                        <field name="invoice_mtt"/>
+                    </group>
+                    <group>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ehoadon_template" model="ir.actions.act_window">
+        <field name="name">eHoaDon Templates</field>
+        <field name="res_model">ehoadon.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có mẫu eHoaDon nào
+            </p>
+            <p>
+                Mẫu eHoaDon (cùng logic Sinvoice Templates): Connection +
+                Ký hiệu/Serial + Mặc định. Payload khác Viettel.
+            </p>
+        </field>
+    </record>
+</odoo>

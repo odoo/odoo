@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Mirror vms_sinvoice: config form is minimal (default template SSOT only). -->
+        <record id="view_ehoadon_config_form" model="ir.ui.view">
+            <field name="name">ehoadon.config.form</field>
+            <field name="model">ehoadon.config</field>
+            <field name="arch" type="xml">
+                <form string="eHoaDon Configuration">
+                    <sheet>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="default_template_id" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_ehoadon_config_server" model="ir.actions.server">
+            <field name="name">eHoaDon Configuration</field>
+            <field name="model_id" ref="model_ehoadon_config"/>
+            <field name="state">code</field>
+            <field name="code">
+config = env['ehoadon.config'].get_or_create_config()
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'eHoaDon Configuration',
+    'res_model': 'ehoadon.config',
+    'res_id': config.id,
+    'view_mode': 'form',
+    'target': 'current',
+}
+            </field>
+        </record>
+    </data>
+</odoo>
