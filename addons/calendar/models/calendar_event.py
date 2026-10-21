@@ -436,7 +436,7 @@ class CalendarEvent(models.Model):
         for event in self:
             event.effective_privacy = (event.privacy
                                        or event.sudo().calendar_id.calendar_default_privacy
-                                       or event.user_id._find_or_create_primary_calendar().calendar_default_privacy if event.user_id else 'public')
+                                       or (event.user_id._find_or_create_primary_calendar().calendar_default_privacy if event.user_id else 'public'))
 
     def _search_effective_privacy(self, operator, value):
         if operator not in ('in', 'not in'):

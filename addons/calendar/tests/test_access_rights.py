@@ -496,3 +496,28 @@ class TestAccessRights(TransactionCase):
             members_only_event.with_user(self.john)._check_private_event_conditions(),
             "Privacy check must be False because John has access to the event calendar."
         )
+
+    def test_private_event_without_organizer_default_privacy(self):
+        private_event = self.create_event(self.john, name='private-event', privacy='private')
+        private_event.user_id = False
+        self.assertFalse(
+            private_event.with_user(self.john)._check_private_event_conditions(),
+            "Privacy check must be False because John is the create_uid user, despite not being the organizer anymore."
+        )
+        self.assertFalse(
+            private_event.with_user(self.george)._check_private_event_conditions(),
+            "Privacy check must be False because George is an attendee."
+        )
+        self.assertTrue(
+            private_event.with_user(self.raoul)._check_private_event_conditions(),
+            "Privacy check must be True because Raul is not an attendee."
+        )
+
+        self.env.invalidate_all()
+        effective_privacy = self.read_event(self.raoul, private_event, 'effective_privacy')
+        self.assertEqual(effective_privacy, 'private', "The effective privacy must be 'private'")
+
+        # Ensure that no private field can be read by a public user, such as: 'name', 'location' and 'description'.
+        for (field, value) in [('name', 'Busy'), ('location', False), ('description', False)]:
+            hidden_information = self.read_event(self.raoul, private_event, field)
+            self.assertEqual(hidden_information, value, "The field '%s' information must be hidden." % field)
