@@ -359,16 +359,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         gap = website.shop_gap or "16px"
 
         attribute_value_params = self._get_attribute_value_params(post)
-        # TODO: remove support for `attribute_values` query param in version 20 (or later).
-        if not attribute_value_params and (
-            attribute_values := request.httprequest.args.getlist("attribute_values")
-        ):
-            # Transform the attribute value query params list into a dict.
-            # Before: ["1-2,3", "4-5,6"]
-            # After: {"1": "2,3", "4": "5,6"}
-            attribute_value_params = dict([
-                pair.split("-") for pair in attribute_values if pair and pair.count("-") == 1
-            ])
         attribute_value_dict = self._get_attribute_value_dict(attribute_value_params)
         attribute_value_ids = set(itertools.chain.from_iterable(attribute_value_dict.values()))
         grouped_attributes_values = (
@@ -379,9 +369,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             .sorted()
             .grouped("attribute_id")
         )
-        if not_reload_request and request.httprequest.args.getlist("attribute_values"):
-            redirect_url = self._get_url_with_attribute_values(grouped_attributes_values)
-            return request.redirect(redirect_url, code=301)
         if attribute_value_params:
             request.session["attribute_value_params"] = attribute_value_params
         else:
@@ -775,10 +762,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         search_term = kwargs.get("search")
 
-        if search_term and not kwargs.get("attribute_values"):
+        # Preselect the variant matching the search term, unless attribute values are already
+        # given in the URL.
+        if search_term and not self._get_attribute_value_params(kwargs):
             attribute_values = product._get_attribute_values_from_search_term(search_term)
             if attribute_values:
-                kwargs["attribute_values"] = ",".join(str(v) for v in sorted(attribute_values.ids))
+                redirect_url = self._get_url_with_attribute_values(
+                    attribute_values.sorted().grouped("attribute_id")
+                )
+                return request.redirect(redirect_url, code=301)
 
         product_values = self._prepare_product_values(
             # request context must be given to ensure context updates in overrides are correctly
@@ -786,8 +778,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             product.with_context(self.env.context),
             **kwargs,
         )
-        if "redirect_url" in product_values:
-            return request.redirect(product_values["redirect_url"], code=301)
         return request.render("website_sale.product", product_values)
 
     @route(
@@ -984,22 +974,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         attribute_value_params = self._get_attribute_value_params(kwargs)
         attribute_value_dict = self._get_attribute_value_dict(attribute_value_params)
         attribute_value_ids = set(itertools.chain.from_iterable(attribute_value_dict.values()))
-        # TODO: remove support for `attribute_values` query param in version 20 (or later).
-        if not attribute_value_ids and (attribute_values := kwargs.get("attribute_values")):
-            attribute_value_ids = {
-                int(value_id)
-                for value_id in attribute_values.split(",")
-                if value_id and value_id.isdigit()
-            }
-            grouped_attributes_values = (
-                self
-                .env["product.attribute.value"]
-                .browse(attribute_value_ids)
-                .exists()
-                .sorted()
-                .grouped("attribute_id")
-            )
-            return {"redirect_url": self._get_url_with_attribute_values(grouped_attributes_values)}
         if attribute_value_ids:
             combination = product.attribute_line_ids.mapped(
                 lambda ptal: (
@@ -2159,7 +2133,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         `grouped_attributes_values` (formatted as query params).
         """
         query = request.httprequest.args.to_dict(flat=False)
-        query.pop("attribute_values", None)
         slug = self.env["ir.http"]._slug
         for pa, pavs in grouped_attributes_values.items():
             query[slug(pa)] = ",".join([slug(pav) for pav in pavs])
