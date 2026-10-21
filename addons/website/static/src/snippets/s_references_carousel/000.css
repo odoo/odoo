@@ -46,19 +46,20 @@
         flex: 0 0 auto;
         align-items: center;
         justify-content: center;
-        /* Fixed size, so that the width of the strip, and thus the animation,
-           does not depend on the logos being loaded. The padding keeps a logo
-           off the cell edges without shrinking it. */
-        width: calc(var(--references-carousel-logo-height) * 2.5 + 2 * var(--references-carousel-cell-padding));
+        /* The width follows the logo, so that the space between logos stays
+           even. The padding keeps a logo off the cell edges without shrinking
+           it. */
         height: calc(var(--references-carousel-logo-height) + 2 * var(--references-carousel-cell-padding));
         padding: var(--references-carousel-cell-padding);
         /* Keeps a transformed (e.g. rotated) logo inside its cell. */
         overflow: hidden;
 
         & img {
-            /* Caps only, as a cropped or upscaled logo is a broken logo. */
-            max-width: 100%;
-            max-height: 100%;
+            /* Caps only, as a cropped or upscaled logo is a broken logo. They
+               are absolute: a percentage of a cell sized by its content would
+               be circular. */
+            max-width: calc(var(--references-carousel-logo-height) * 2.5);
+            max-height: var(--references-carousel-logo-height);
             /* Keeps the ratio when the image options set an explicit width. */
             object-fit: contain;
         }
