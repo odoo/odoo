@@ -1,3 +1,5 @@
+import math
+
 from odoo import Command, models
 
 
@@ -41,6 +43,8 @@ class AccountMove(models.Model):
 
         is_sale = self.is_sale_document()
         label = f"{self.partner_id.display_name} / {self.name}"
+        company_currency = self.company_id.currency_id
+        total_paid = 0.0
 
         for payment in payments:
             _liquidity_lines, counterpart_lines, _writeoff_lines = payment._seek_for_lines()
@@ -48,6 +52,9 @@ class AccountMove(models.Model):
                 counterpart_account = counterpart_lines.account_id
                 clearing_balance = -sum(line.balance for line in counterpart_lines)
                 clearing_amount_currency = -sum(line.amount_currency for line in counterpart_lines)
+                total_paid += abs(payment.currency_id._convert(
+                    clearing_amount_currency, company_currency, self.company_id, self.date,
+                ))
 
                 other_interco_account = (
                     payment.company_id.account_interco_payable_id
@@ -85,7 +92,15 @@ class AccountMove(models.Model):
         invoice_lines = self.line_ids.filtered(lambda acc: acc.account_type in ('asset_receivable', 'liability_payable'))
         invoice_line_account = invoice_lines[:1].account_id
         total_invoice_balance = sum(invoice_lines.mapped('balance'))
-        clearing_counterpart_balance = -total_invoice_balance
+        # Settle what has actually been paid. Settling the whole document regardless would mark
+        # a partially paid document as fully paid and leave the clearing accounts of the two
+        # companies out of balance by the unpaid part. A payment that covers the document still
+        # settles it entirely, so that a rounding difference of the currency conversion never
+        # leaves a residual behind.
+        if company_currency.compare_amounts(total_paid, abs(total_invoice_balance)) >= 0:
+            clearing_counterpart_balance = -total_invoice_balance
+        else:
+            clearing_counterpart_balance = -math.copysign(total_paid, total_invoice_balance)
 
         self_interco_account = (
             self.company_id.account_interco_receivable_id
