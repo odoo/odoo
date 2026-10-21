@@ -131,6 +131,11 @@ class ResPartner(models.Model):
                 return 'siret', identifier
         return None, None
 
+    @api.model
+    def _import_retrieve_customer_from_siret(self, customer_values):
+        if siret := customer_values.get('siret'):
+            return {'criteria': [{'domain': [('company_registry', '=', siret)]}]}
+
     def _get_suggested_pdp_identifier(self):
         self.ensure_one()
         # We suggest the SIREN (even if the SIRET is filled in).
