@@ -217,6 +217,9 @@ class IrAsset(models.Model):
                 return
             if target_paths:
                 target = target_paths[0][0]
+            if target not in asset_paths.memo and (renamed := self._get_renamed_stylesheet(target, asset_paths, installed)):
+                target_paths = renamed
+                target = renamed[0][0]
             target_index = asset_paths.index(target, bundle)
 
         if directive == APPEND_DIRECTIVE:
@@ -228,6 +231,8 @@ class IrAsset(models.Model):
         elif directive == BEFORE_DIRECTIVE:
             asset_paths.insert(paths, bundle, target_index)
         elif directive == REMOVE_DIRECTIVE:
+            if len(paths) == 1 and paths[0][0] not in asset_paths.memo:
+                paths = self._get_renamed_stylesheet(paths[0][0], asset_paths, installed) or paths
             asset_paths.remove(paths, bundle)
         elif directive == REPLACE_DIRECTIVE:
             asset_paths.insert(paths, bundle, target_index)
@@ -235,6 +240,24 @@ class IrAsset(models.Model):
         else:
             # this should never happen
             raise ValueError("Unexpected directive")
+
+    def _get_renamed_stylesheet(self, path, asset_paths, installed):
+        """
+        Returns the paths of the `.css` stylesheet of the bundle that a `.scss`
+        path not in the bundle was renamed to, or None.
+
+        Assets keep naming the former path of a stylesheet renamed from SCSS to
+        CSS: the customizations that databases store (the copies of the website
+        HTML / CSS editor replace the original file) and the modules that
+        target or remove it.
+        """
+        if not path.endswith('.scss') or is_wildcard_glob(path):
+            return None
+        renamed = self._get_paths(path.removesuffix('.scss') + '.css', installed)
+        if not renamed or renamed[0][0] not in asset_paths.memo:
+            return None
+        _logger.info("IrAsset: %s was renamed to %s", path, renamed[0][0])
+        return renamed
 
     def _get_related_assets(self, domain, **kwargs):
         """

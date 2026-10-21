@@ -1076,6 +1076,19 @@ class TestAssetsManifest(AddonManifestPatched):
             '''
         )
 
+    def test_06_4_replace_renamed_stylesheet(self):
+        # a customization still targets the `.scss` path a stylesheet had
+        # before it was renamed to `.css`
+        self.env['ir.asset'].create({
+            'name': 'test_cssfile1 customization',
+            'bundle': 'test_assetsbundle.bundle2',
+            'directive': 'replace',
+            'target': 'test_assetsbundle/static/src/css/test_cssfile1.scss',
+            'path': 'test_assetsbundle/static/src/scss/test_file1.scss',
+        })
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.bundle2', {})
+        self.assertEqual([path for path, *_ in files], ['/test_assetsbundle/static/src/scss/test_file1.scss'])
+
     def test_07_remove(self):
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
@@ -1119,6 +1132,15 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertTrue(
             "['test_assetsbundle/static/src/js/test_doesntexist.js'] not found" in str(cm.exception)
         )
+
+    def test_08_1_remove_renamed_stylesheet(self):
+        self.env['ir.asset'].create({
+            'name': 'test_cssfile1 removal',
+            'bundle': 'test_assetsbundle.bundle2',
+            'directive': 'remove',
+            'path': 'test_assetsbundle/static/src/css/test_cssfile1.scss',
+        })
+        self.assertEqual(self.env['ir.asset']._get_asset_paths('test_assetsbundle.bundle2', {}), [])
 
     def test_09_remove_wholeglob(self):
         self.env['ir.asset'].create({
