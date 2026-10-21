@@ -53,4 +53,4 @@ class TestHrHolidaysTour(HttpCase):
         leaves_before = HRLeave.search([('employee_id', '=', admin_employee.id)])
         self.start_tour('/odoo', 'hr_holidays_tour', login="admin", code="odoo.startTour('hr_holidays_tour', {'mode': 'manual', 'robot': true})")
         new_leave = HRLeave.search([('employee_id', '=', admin_employee.id)]) - leaves_before
-        self.assertRecordValues(new_leave, [{'state': 'confirm'}])
+        self.assertRecordValues(new_leave, [{'state': 'validate'}])

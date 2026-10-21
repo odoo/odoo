@@ -103,6 +103,44 @@ class TestAllocations(TestHrHolidaysCommon):
         })
         allocation_wizard.action_generate_allocations()
 
+    def test_officer_own_allocation_request(self):
+        """ A time off officer can request an allocation for themselves: it waits for the approval of someone else. """
+        self.work_entry_type.allocation_validation_type = 'hr'
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hruser).create({
+            'employee_id': self.employee_hruser_id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'number_of_days': 2,
+        })
+        self.assertEqual(allocation.state, 'confirm')
+
+    def test_allocation_validated_notification(self):
+        """ The employee is only notified of the approval of the allocations they requested themselves. """
+        self.work_entry_type.allocation_validation_type = 'hr'
+        subtype = self.env.ref('hr_holidays.mt_leave_allocation')
+        partner = self.employee_emp.work_contact_id
+
+        def approval_notifications(allocation):
+            self.env.cr.precommit.run()
+            return allocation.message_ids.filtered(lambda m: m.subtype_id == subtype and partner in m.partner_ids)
+
+        given_allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'number_of_days': 2,
+        })
+        self.assertEqual(given_allocation.state, 'validate')
+        self.assertFalse(approval_notifications(given_allocation), "An allocation given by the HR is not notified")
+
+        requested_allocation = self.env['hr.leave.allocation'].with_user(self.user_employee).create({
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'number_of_days': 2,
+        })
+        self.env.cr.precommit.run()
+        requested_allocation.with_user(self.user_hrmanager).action_approve()
+        self.assertEqual(requested_allocation.state, 'validate')
+        self.assertTrue(approval_notifications(requested_allocation), "The approval of a requested allocation is notified")
+
     def test_allocation_request_day(self):
         self.work_entry_type.write({
             'name': 'Custom Time Off Test',
@@ -388,17 +426,19 @@ class TestAllocations(TestHrHolidaysCommon):
 
         # _compute_leaves depends on the context that is getting cleared
         self.env['hr.work.entry.type'].invalidate_model(['max_leaves', 'leaves_taken', 'virtual_remaining_leaves'])
-        result = self.env['hr.work.entry.type'].with_company(self.employee.company_id).with_context(
+        work_entry_type = work_entry_type.with_company(self.employee.company_id).with_context(
             employee_id=self.employee.id,
             leave_date_from='2024-08-18 06:00:00',  # for _compute_leaves
             default_date_from='2024-08-18 06:00:00',
             default_date_to='2024-08-18 15:00:00'
-        ).name_search(domain=[['id', '=', work_entry_type.id]])
+        )
+        result = work_entry_type.name_search(domain=[['id', '=', work_entry_type.id]])
         display_country_name = not bool(self.env.companies and len(self.env.companies.mapped('country_id')) == 1)
         if display_country_name:
-            self.assertEqual(result[0][1], 'Compensatory Time Off (9 remaining out of 9 days) (Generic)')
+            self.assertEqual(result[0][1], 'Compensatory Time Off (Generic)')
         else:
-            self.assertEqual(result[0][1], 'Compensatory Time Off (9 remaining out of 9 days)')
+            self.assertEqual(result[0][1], 'Compensatory Time Off')
+        self.assertEqual(work_entry_type.remaining_leaves_label, '9 days left')
 
     def test_allocation_hourly_work_entry_type(self):
         """
