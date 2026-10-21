@@ -14,12 +14,15 @@ import atexit
 import logging
 import os
 import sys
+from contextlib import closing
 
+import psycopg2
 from psycopg2.errors import InsufficientPrivilege
 
 from odoo.release import author as __author__  # noqa: F401
 from odoo.release import version as __version__  # noqa: F401
 from odoo.service import server
+from odoo.sql_db import db_connect
 from odoo.tools import config
 
 from . import Command
@@ -35,13 +38,79 @@ def check_root_user():
 
 
 def check_postgres_user():
-    """ Exit if the configured database user is 'postgres'.
+    """ Exit if the connected PostgreSQL role has superuser-like privileges.
 
-    This function assumes the configuration has been initialized.
+        A role that is SUPERUSER / REPLICATION / BYPASSRLS (directly, or
+        reachable via SET ROLE) can read and tamper with every database in the
+        cluster, which defeats Odoo's isolation between databases.
+        This function assumes the configuration has been initialized.
     """
     if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
-        sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
-        sys.exit(1)
+        sys.exit("Using the database user 'postgres' is a security risk, aborting.")
+
+    sys_cr = None
+    for dbname in [config['db_system'], 'postgres']:
+        try:
+            sys_cr = db_connect(dbname).cursor()
+            break
+        except psycopg2.errors.OperationalError:
+            _logger.info("Could not connect to %r for the role privilege check", dbname)
+
+    if sys_cr is None:
+        _logger.warning("Could not verify the database role privileges: no system database is reachable")
+        return
+
+    try:
+        with closing(sys_cr) as cr:
+            cr.execute("""
+                SELECT r.rolname,
+                       r.rolsuper,
+                       r.rolreplication,
+                       r.rolbypassrls,
+                       ARRAY(
+                            SELECT r1.rolname
+                              FROM pg_auth_members m
+                              JOIN pg_roles r1 ON r1.oid = m.roleid
+                             WHERE m.member = r.oid
+                               AND m.set_option  -- (PG16+)
+                               AND EXISTS (
+                                        SELECT 1
+                                        FROM pg_roles r2
+                                        WHERE (r2.rolsuper OR r2.rolreplication OR r2.rolbypassrls)
+                                        AND (r1.oid = r2.oid OR pg_has_role(r1.oid, r2.oid, 'SET'))
+                                   )
+                       )
+                  FROM pg_roles r
+                 WHERE r.rolname = CURRENT_USER
+            """)
+            rolname, rolsuper, rolreplication, rolbypassrls, escalation_roles = cr.fetchone()
+    except psycopg2.Error as e:
+        _logger.warning("Could not verify the database role privileges: %s", e)
+        return
+
+    privileges = [rol for rol, held in {
+        'SUPERUSER': rolsuper,
+        'REPLICATION': rolreplication,
+        'BYPASSRLS': rolbypassrls,
+    }.items() if held]
+
+    if not privileges and not escalation_roles:
+        return
+
+    error_msg = (
+        f"Odoo cannot run with role {rolname!r}: it can read and tamper with every "
+        "database in the cluster, which defeats the isolation between Odoo databases.\n"
+        "Fix it as a database administrator (e.g. sudo -u postgres psql), then restart Odoo.\n"
+        "Fixes:\n"
+    )
+    act_as_super = 'sudo -u postgres psql -d postgres -c'
+    if privileges:
+        error_msg += f'\t{act_as_super} \'ALTER ROLE "{rolname}" WITH NOSUPERUSER NOREPLICATION NOBYPASSRLS CREATEDB;\'\n'
+    for role in escalation_roles:
+        # disable SET ROLE escalation but keep inherited privileges (unlike REVOKE)
+        error_msg += f'\t{act_as_super} \'GRANT "{role}" TO "{rolname}" WITH SET FALSE;\'\n'
+    sys.exit(error_msg)
+
 
 def report_configuration():
     """ Log the server version and some configuration values.
