@@ -23,9 +23,6 @@ export class ActivityButton extends Component {
         const classes = [];
         const { activity_ids, activity_state, activity_exception_decoration } =
             this.props.record.data;
-        if (activity_ids.records.length) {
-            classes.push("oi-filled");
-        }
         switch (activity_state) {
             case "overdue":
                 classes.push("text-danger");
