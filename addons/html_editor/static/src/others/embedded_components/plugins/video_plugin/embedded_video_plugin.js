@@ -38,6 +38,7 @@ export class EmbeddedVideoPlugin extends VideoPlugin {
                 focusEditable: () => this.dependencies.selection.focusEditable(),
                 commit: () => this.dependencies.history.commit(),
                 openVideoSelectorDialog: this.openVideoSelectorDialog.bind(this),
+                editable: this.editable,
             });
         }
     }
