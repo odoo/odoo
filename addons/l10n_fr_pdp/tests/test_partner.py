@@ -366,6 +366,82 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             self.assertNotIn('l10n_fr_pdp_ambiguous_annuaire', wizard.alerts or {})
             self.assertTrue(peppol_box.get('checked'))
 
+    def test_validate_partner_fr_without_contact_rights_test_mode(self):
+        """ Verifying a partner's peppol status (e.g. when sending an invoice) only updates an
+        internal cache field and must not be blocked by a lack of write access on res.partner. """
+        user = self.simple_accountman
+        self.assertFalse(user.has_group('base.group_partner_manager'))
+        partner = self.partner_a.with_user(user)
+        self.assertEqual(self.env.company._get_peppol_edi_mode(), 'test')
+
+        def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
+            origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
+            if r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
+                pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
+                return self._get_annuaire_lookup_response(pdp_identifier, "334175221_33417522105821")
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier="):
+                peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:334175221_33417522105821")
+            return requests.Response()
+
+        with (
+                mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+                mock.patch.object(requests.sessions.Session, 'send', _request_handler),
+        ):
+            partner.button_account_peppol_check_partner_endpoint()
+
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'valid',
+            'pdp_verification_display_state': 'pdp_valid',
+        }])
+
+    def test_validate_partner_fr_without_contact_rights_demo_mode(self):
+        """ Same as above, but going through the l10n_fr_pdp demo mock
+        (`_mock_button_verify_partner_endpoint`) instead of the real implementation. """
+        self.proxy_user.edi_mode = 'demo'
+        self.assertEqual(self.env.company._get_peppol_edi_mode(), 'demo')
+
+        user = self.simple_accountman
+        self.assertFalse(user.has_group('base.group_partner_manager'))
+        partner = self.partner_a.with_user(user)
+
+        partner.button_account_peppol_check_partner_endpoint()
+
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'valid',
+            'pdp_verification_display_state': 'pdp_valid',
+        }])
+
+    def test_validate_partner_fr_b2g_without_contact_rights_test_mode(self):
+        """ The B2G (Chorus Pro) placeholder on `peppol_supported_documents` is another automatic
+        side effect of verifying a partner and must not require write access on res.partner either. """
+        user = self.simple_accountman
+        self.assertFalse(user.has_group('base.group_partner_manager'))
+        partner = self.partner_a.with_user(user)
+
+        def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
+            origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
+            if r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
+                pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
+                return self._get_annuaire_lookup_response(pdp_identifier, "334175221_33417522105821", b2g=True)
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier="):
+                peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:334175221_33417522105821")
+            return requests.Response()
+
+        with (
+                mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+                mock.patch.object(requests.sessions.Session, 'send', _request_handler),
+        ):
+            partner.button_account_peppol_check_partner_endpoint()
+
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'valid',
+            'pdp_verification_display_state': 'pdp_valid',
+            'peppol_supported_documents': [CPRO_INVOICE_IDENTIFIER],
+        }])
+        self.assertTrue(self.env['account.edi.xml.ubl_21_fr']._pdp_is_b2g(partner))
+
     def test_account_move_send_annuaire_multiple_matches(self):
         self.env.company.write({
             'account_peppol_proxy_state': 'receiver',

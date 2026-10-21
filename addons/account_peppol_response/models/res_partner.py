@@ -30,7 +30,7 @@ class ResPartner(models.Model):
                 continue
             supported_documents = [service['document_id'] for service in participant_info.get('services', []) if service.get('document_id')]
             if supported_documents != (partner.peppol_supported_documents or []):
-                partner.peppol_supported_documents = supported_documents
+                partner.sudo().peppol_supported_documents = supported_documents
 
     @handle_demo
     def button_account_peppol_check_partner_endpoint(self, company=None):
