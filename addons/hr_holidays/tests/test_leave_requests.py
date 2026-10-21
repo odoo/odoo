@@ -3587,6 +3587,17 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
         self.assertEqual(other_leave.state, 'validate')
 
+        # Without time off manager, nobody else can approve: the officer's own time off is approved directly
+        self.employee_hrmanager.leave_manager_id = False
+        own_leave_without_manager = HrLeave.create({
+            'name': 'Own Leave Without Manager',
+            'employee_id': self.employee_hrmanager_id,
+            'work_entry_type_id': self.holidays_type_1.id,
+            'request_date_from': '2025-09-03',
+            'request_date_to': '2025-09-03',
+        })
+        self.assertEqual(own_leave_without_manager.state, 'validate')
+
     def test_working_time_beyond_the_schedule_becomes_overtime(self):
         """
         10h of Work from 08:00 on a day scheduled 08:00-12:00 and 13:00-17:00 end at 18:00 the
