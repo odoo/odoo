@@ -320,7 +320,6 @@
             'website/static/src/js/content/inject_dom.js',
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
-            'website/static/src/js/content/adapt_content.js',
             'website/static/src/js/content/generate_video_iframe.js',
             'website/static/src/js/content/age_verification_content_blur.js',
         ],
@@ -330,9 +329,11 @@
             ('remove', 'website/static/src/js/content/inject_dom.js'),
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
-            ('remove', 'website/static/src/js/content/adapt_content.js'),
             ('remove', 'website/static/src/js/content/generate_video_iframe.js'),
             ('remove', 'website/static/src/js/content/age_verification_content_blur.js'),
+        ],
+        'website.assets_edit_translations': [
+            'website/static/src/js/content/adapt_content.js',
         ],
         'website.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
