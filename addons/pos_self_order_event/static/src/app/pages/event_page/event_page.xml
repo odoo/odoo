@@ -133,19 +133,46 @@
                                                    t-att-value="this.state.globalAnswers?.[question.id] || ''"
                                                    t-att-class="this.getFieldErrorClass(question)"
                                                    t-on-blur="() => this.markTouched(this.getFieldKey(question))"
-                                                   t-on-input="(ev) => this.updateGlobalAnswer(question.id, ev.target.value)"
+                                                   t-on-input="(ev) => this.updateGlobalAnswer(question.id, question.question_type, ev.target.value)"
                                                    t-att-placeholder="props.placeholder"
                                                    aria-label="question.title"/>
                                         </t>
                                         <t t-elif="question.question_type === 'simple_choice'">
                                             <select class="form-select"
-                                                    t-on-change="(ev) => this.updateGlobalAnswer(question.id, ev.target.value)"
+                                                    t-on-change="(ev) => this.updateGlobalAnswer(question.id, question.question_type, ev.target.value)"
                                                     aria-label="question.title">
                                                 <option value="">-- Select --</option>
                                                 <t t-foreach="question.answer_ids" t-as="ans" t-key="ans.id">
                                                     <option t-att-value="ans.id" t-out="ans.name"/>
                                                 </t>
                                             </select>
+                                        </t>
+                                        <t t-elif="question.question_type === 'radio'">
+                                            <div class="d-flex flex-wrap" t-att-aria-label="question.title">
+                                                <div class="d-flex me-3" t-foreach="question.answer_ids" t-as="ans" t-key="ans.id">
+                                                    <input type="radio"
+                                                           class="form-check me-2"
+                                                           t-att-aria-label="ans.name"
+                                                           t-att-value="ans.id"
+                                                           t-attf-name="registration_0-question_{{question.id}}"
+                                                           t-on-change="(ev) => this.updateGlobalAnswer(question.id, question.question_type, ev.target.value)"/>
+                                                    <span t-out="ans.name"/>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <t t-elif="question.question_type === 'checkbox'">
+                                            <div t-att-aria-label="question.name">
+                                                <div t-foreach="question.answer_ids" t-as="ans" t-key="ans.id" class="mb-2">
+                                                    <input type="checkbox"
+                                                           class="form-check-input me-2"
+                                                           t-att-aria-label="ans.name"
+                                                           t-att-class="this.getFieldErrorClass(question)"
+                                                           t-att-value="ans.id"
+                                                           t-on-blur="() => this.markTouched(this.getFieldKey(question))"
+                                                           t-on-change="(ev) => this.updateGlobalAnswer(question.id, question.question_type, ev.target.value, ev.target.checked)"/>
+                                                    <span t-out="ans.name"/>
+                                                </div>
+                                            </div>
                                         </t>
                                     </div>
                                 </div>
@@ -171,18 +198,45 @@
                                                            t-att-class="this.getFieldErrorClass(question, form)"
                                                            t-on-blur="() => this.markTouched(this.getFieldKey(question, form))"
                                                            t-att-value="this.state.ticketDetails?.[`${form.ticketId}_${form.index}`]?.[question.id]?.value || ''"
-                                                           t-on-input="(ev) => this.updateTicketDetail(form.ticketId, form.index, question.id, question.title, ev.target.value)"
+                                                           t-on-input="(ev) => this.updateTicketDetail(form.ticketId, form.index, question.id, question.title, question.question_type, ev.target.value)"
                                                            aria-label="question.title"/>
                                                 </t>
                                                 <t t-elif="question.question_type === 'simple_choice'">
                                                     <select class="form-select"
-                                                            t-on-change="(ev) => this.updateTicketDetail(form.ticketId, form.index, question.id, question.title, ev.target.value)"
+                                                            t-on-change="(ev) => this.updateTicketDetail(form.ticketId, form.index, question.id, question.title, question.question_type, ev.target.value)"
                                                             aria-label="question.title">
                                                         <option value="">-- Select --</option>
                                                         <t t-foreach="question.answer_ids" t-as="ans" t-key="ans.id">
                                                             <option t-att-value="ans.id" t-out="ans.name"/>
                                                         </t>
                                                     </select>
+                                                </t>
+                                                <t t-elif="question.question_type === 'radio'">
+                                                    <div class="d-flex flex-wrap" t-att-aria-label="question.name">
+                                                        <div class="d-flex me-3" t-foreach="question.answer_ids" t-as="ans" t-key="ans.id">
+                                                            <input type="radio"
+                                                                   class="form-check me-2"
+                                                                   t-att-aria-label="ans.name"
+                                                                   t-att-value="ans.id"
+                                                                   t-attf-name="registration_{{form.index}}-question_{{question.id}}"
+                                                                   t-on-change="(ev) => this.updateTicketDetail(form.ticketId, form.index, question.id, question.title, question.question_type, ev.target.value)"/>
+                                                            <span t-out="ans.name"/>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                                <t t-elif="question.question_type === 'checkbox'">
+                                                    <div t-att-aria-label="question.name">
+                                                        <div t-foreach="question.answer_ids" t-as="ans" t-key="ans.id" class="mb-2">
+                                                            <input type="checkbox"
+                                                                class="form-check-input me-2"
+                                                                t-att-aria-label="ans.name"
+                                                                t-att-class="this.getFieldErrorClass(question, form)"
+                                                                t-att-value="ans.id"
+                                                                t-on-blur="() => this.markTouched(this.getFieldKey(question, form))"
+                                                                t-on-change="(ev) => this.updateTicketDetail(form.ticketId, form.index, question.id, question.title, question.question_type, ev.target.value, ev.target.checked)"/>
+                                                            <span t-out="ans.name"/>
+                                                        </div>
+                                                    </div>
                                                 </t>
                                             </div>
                                         </div>
