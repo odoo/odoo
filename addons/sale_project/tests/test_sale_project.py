@@ -2160,3 +2160,40 @@ class TestSaleProject(TestSaleProjectCommon):
         line_vendor_bill = self.env['account.analytic.line'].search([('account_id', '=', self.project_global.account_id.id), ('category', '=', 'vendor_bill')])
         self.assertEqual(line_vendor_bill.category_report, 'costs')
         self.assertEqual(line_vendor_bill.billable_type, '12_vendor_bill')
+
+    def test_sale_order_amount_total_linked_so_batch(self):
+        """ Test that sale_order_amount_total is computed correctly in batch
+            for projects with linked SOs whose lines have no project_id.
+        """
+        project_2 = self.env['project.project'].create({
+            'name': 'Project Test',
+            'account_id': self.analytic_account.id,
+            'allow_billable': True,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'project_id': self.project_global.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_order_service1.id,
+                    'product_uom_qty': 2,
+                    'price_unit': 50.0,
+                }),
+                Command.create({
+                    'product_id': self.product_order_service2.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 40.0,
+                    'project_id': project_2.id,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+
+        # Batch compute (len > 1)
+        projects = self.project_global | project_2
+
+        self.assertEqual(
+            projects.mapped('sale_order_amount_total'),
+            [sale_order.amount_total, sale_order.amount_total],
+            "Both projects must include the SO total as each is linked to at least one order line.",
+        )
