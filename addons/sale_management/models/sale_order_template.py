@@ -324,23 +324,6 @@ class SaleOrderTemplate(models.Model):
 
     # === PUBLIC ===#
 
-    @api.model
-    def get_section_templates(self, company_id):
-        """Return section templates created by the current user for the given company and its
-        accessible branches.
-
-        :param int company_id: ID of the company to fetch templates for
-        :return: Section templates
-        :rtype: list[dict]
-        """
-        company = self.env["res.company"].browse(company_id)
-        domain = (
-            Domain("template_type", "=", "section")
-            & Domain("user_has_access", "=", True)
-            & self._check_company_domain(company)
-        )
-        return self.search_read(domain, fields=["id", "name", "create_uid"], load="")
-
     def prepare_section_template_order_lines(
         self, order_changes, fiscal_position_id, company_id, currency_id, fields_spec
     ):
