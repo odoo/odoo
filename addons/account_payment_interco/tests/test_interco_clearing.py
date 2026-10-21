@@ -222,6 +222,65 @@ class TestIntercoClearingSale(TestIntercoClearing):
 
 
 @tagged('post_install', '-at_install')
+class TestIntercoClearingPartialPayment(TestIntercoClearing):
+
+    def test_interco_partial_payment(self):
+        """ A partial intercompany payment settles only the amount that was paid.
+
+        The invoice has to keep a residual instead of being settled in full.
+        """
+        self._setup_outstanding_account(active=True, direction='inbound')
+
+        invoice = self.env['account.move'].with_company(self.company_ke).sudo().create({
+            'move_type': 'out_invoice',
+            'partner_id': self.kenyian_partner.id,
+            'invoice_date': fields.Date.today(),
+            'currency_id': self.usd.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 2,
+                    'price_unit': 40.0,
+                    'tax_ids': [Command.clear()],
+                }),
+            ],
+        })
+
+        # The customer only pays a quarter of the invoice.
+        self.payment_be = self.env['account.payment'].create({
+            'memo': 'Partial intercompany payment',
+            'amount': invoice.amount_total / 4,
+            'payment_type': 'inbound',
+            'currency_id': self.usd.id,
+            'partner_id': self.kenyian_partner.id,
+            'partner_type': 'customer',
+            'journal_id': self.payment_provider_be.journal_id.id,
+            'company_id': self.payment_provider_be.company_id.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })
+        self._create_payment_transaction(invoice, {
+            'invoice_ids': [Command.set(invoice.ids)],
+            'amount': invoice.amount_total / 4,
+        })
+        self.payment_be.action_post()
+        transaction_sudo = self.payment_transaction_be.sudo().with_context(payment_safe_write=True)
+        transaction_sudo._set_done()
+        transaction_sudo._post_process()
+
+        self.assertEqual(
+            invoice.payment_state,
+            'partial',
+            "A partially paid invoice must not be settled in full.",
+        )
+        self.assertAlmostEqual(
+            invoice.amount_residual,
+            invoice.amount_total * 0.75,
+            delta=invoice.currency_id.rounding,
+            msg="A quarter payment must leave three quarters of the invoice due.",
+        )
+
+
+@tagged('post_install', '-at_install')
 class TestIntercoClearingPurchase(TestIntercoClearing):
 
     def test_interco_purchase(self):
