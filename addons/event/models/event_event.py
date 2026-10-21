@@ -637,24 +637,31 @@ class EventEvent(models.Model):
         return super()._search(domain, *a, **kw)
 
     @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
-    @api.depends_context('name_with_seats_availability')
+    @api.depends_context('name_with_seats_availability', 'formatted_display_name')
     def _compute_display_name(self):
         """Adds ticket seats availability if requested by context."""
         if not self.env.context.get('name_with_seats_availability'):
             return super()._compute_display_name()
+
+        separator = '--%s--' if self.env.context.get('formatted_display_name') else '%s'
         for event in self:
             # event or its tickets are sold out
             if event.event_registrations_sold_out:
-                name = _('%(event_name)s (Sold out)', event_name=event.name)
+                availability = _('(Sold out)')
             elif event.seats_limited and event.seats_max:
-                name = _(
-                    '%(event_name)s (%(count)s seats remaining)',
-                    event_name=event.name,
-                    count=formatLang(self.env, event.seats_available, digits=0),
-                )
+                availability = _('(%s seats remaining)', formatLang(self.env, event.seats_available, digits=0))
             else:
-                name = event.name
-            event.display_name = name
+                availability = False
+
+            event.display_name = (
+                _(
+                    '%(event_name)s %(availability)s',
+                    event_name=event.name,
+                    availability=separator % availability,
+                )
+                if availability
+                else event.name
+            )
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
         if (message_operation == 'create' and self.env.user.has_group('event.group_event_registration_desk')):

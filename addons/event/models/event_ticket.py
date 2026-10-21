@@ -146,7 +146,7 @@ class EventEventTicket(models.Model):
             raise UserError(_('The Entry Limit of event tickets %(ticket_names)s cannot be lower than 0.', ticket_names=', '.join(failing.mapped('name'))))
 
     @api.depends('seats_max', 'seats_available')
-    @api.depends_context('name_with_seats_availability')
+    @api.depends_context('name_with_seats_availability', 'formatted_display_name')
     def _compute_display_name(self):
         """Adds ticket seats availability if requested by context.
         Always display the name without availabilities if the event is multi slots
@@ -155,18 +155,22 @@ class EventEventTicket(models.Model):
         """
         if not self.env.context.get('name_with_seats_availability'):
             return super()._compute_display_name()
+
+        separator = '--%s--' if self.env.context.get('formatted_display_name') else '%s'
         for ticket in self:
-            if not ticket.seats_max or ticket.event_id.is_multi_slots:
-                name = ticket.name
-            elif not ticket.seats_available:
-                name = _('%(ticket_name)s (Sold out)', ticket_name=ticket.name)
-            else:
-                name = _(
-                    '%(ticket_name)s (%(count)s seats remaining)',
-                    ticket_name=ticket.name,
-                    count=formatLang(self.env, ticket.seats_available, digits=0),
+            if ticket.seats_max and not ticket.event_id.is_multi_slots:
+                availability = (
+                    _('(%s seats remaining)', formatLang(self.env, ticket.seats_available, digits=0))
+                    if ticket.seats_available
+                    else _('(Sold out)')
                 )
-            ticket.display_name = name
+                ticket.display_name = _(
+                    "%(ticket_name)s %(availability)s",
+                    ticket_name=ticket.name,
+                    availability=separator % availability,
+                )
+            else:
+                ticket.display_name = ticket.name
 
     def _get_current_limit_per_order(self, event_slot=False, event=False):
         """ Compute the maximum possible number of tickets for an order, taking
