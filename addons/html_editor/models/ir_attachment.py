@@ -68,9 +68,16 @@ class IrAttachment(models.Model):
                     name = quote(attachment.name)
                     attachment.image_src = '/web/image/%s-%s/%s' % (attachment.id, unique, name)
 
-    @api.depends('raw')
+    @api.depends('mimetype', 'raw')
     def _compute_image_size(self):
         for attachment in self:
+            # Only decode actual images. Reading the content of anything else
+            # (pdf, video, spreadsheet, ...) just to discard it is pure waste,
+            if not (attachment.mimetype or '').startswith('image/'):
+                attachment.image_width = 0
+                attachment.image_height = 0
+                continue
+
             try:
                 image = binary_to_image(attachment.raw or b'')
                 attachment.image_width = image.width
