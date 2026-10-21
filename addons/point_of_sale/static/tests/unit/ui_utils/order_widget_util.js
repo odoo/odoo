@@ -1,4 +1,4 @@
-import { animationFrame, queryAll } from "@odoo/hoot-dom";
+import { animationFrame, queryAll, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { ensurePane, longPress } from "./common";
 
@@ -118,6 +118,17 @@ export function hasOrderline({
         }
         return true;
     });
+}
+
+export async function clickBackButton() {
+    await ensurePane("left");
+    await contains(".actionpad .back-button").click();
+}
+
+export async function checkNoOrderButton() {
+    await ensurePane("left");
+    await waitFor(".actionpad:not(:has(.submit-order))");
+    await animationFrame();
 }
 
 export function doesNotHaveOrderline(options = {}) {
