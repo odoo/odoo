@@ -32,3 +32,10 @@
         }
     }
 }
+
+
+.o_kanban_renderer .o_kanban_group.o_kanban_next_stage {
+    outline: var(--border-width) dashed var(--KanbanColumn__highlight-border);
+    outline-offset: calc(-1 * var(--border-width));
+    border-radius: var(--border-radius);
+}
