@@ -17,25 +17,19 @@
         <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
         <field name="arch" type="xml">
             <xpath
-                expr="//div[./field[@name='recurrence_update']][@role='status']"
-                position="attributes">
-                <attribute name="invisible" add="microsoft_sync_active" separator="or"/>
-            </xpath>
-
-            <xpath
-                expr="//div[./field[@name='recurrence_update']][@role='status']"
-                position="after">
+                expr="//field[@name='recurrence_update']"
+                position="replace">
                 <div invisible="not (microsoft_sync_active and recurrency)" class="alert alert-info"
                     role="alert">
                     Recurring events can only be edited from Outlook.
                 </div>
             </xpath>
 
-            <xpath expr="//field[@name='recurrency']" position="attributes">
+            <xpath expr="//field[@name='rrule_type_ui']" position="attributes">
                 <attribute name="readonly" add="microsoft_sync_active" separator="or"/>
             </xpath>
 
-            <xpath expr="//field[@name='recurrency']" position="after">
+            <xpath expr="//field[@name='rrule_type_ui']" position="after">
                 <div invisible="recurrency or not microsoft_sync_active"
                     class="alert alert-info" role="alert"
                     colspan="2">

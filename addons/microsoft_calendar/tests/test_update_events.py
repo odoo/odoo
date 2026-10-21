@@ -1418,7 +1418,7 @@ class TestUpdateEvents(TestCommon):
         simple_event = self.env['calendar.event'].with_user(self.organizer_user).create(self.simple_event_values)
         with self.assertRaises(UserError):
             simple_event.write({
-                'recurrency': True,
+                'rrule_type_ui': 'weekly',
                 'rrule_type': 'weekly',
                 'event_tz': 'America/Sao_Paulo',
                 'end_type': 'count',
