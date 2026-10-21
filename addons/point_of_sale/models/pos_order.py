@@ -106,6 +106,9 @@ class PosOrder(models.Model):
             if order.get('session_id') and order['session_id'] != pos_order.session_id.id:
                 pos_order.write({'session_id': order['session_id']})
 
+            # Customer account payments require the customer to be set on the order when created
+            if 'partner_id' in order:
+                pos_order.write({'partner_id': order.pop('partner_id')})
             self._update_lines(order, pos_order, ['lines', 'payment_ids'])
             del order['uuid']
             if "access_token" in order:
