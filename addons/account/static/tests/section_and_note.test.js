@@ -52,10 +52,22 @@ class Invoice extends models.Model {
         {
             id: 1,
             invoice_line_ids: Array.from({ length: InvoiceLine._records.length }, (_, i) => i + 1),
+            tax_totals: {
+                base_amount_currency: 15055.78,
+                total_amount_currency: 15055.78,
+            },
+            tax_calculation_rounding_method: "round_globally",
         },
     ];
 
     invoice_line_ids = fields.One2many({ relation: "invoice_line" });
+    tax_totals = fields.Json();
+    tax_calculation_rounding_method = fields.Selection({
+        selection: [
+            ["round_per_line", "Round per Line"],
+            ["round_globally", "Round Globally"],
+        ],
+    });
 }
 
 class Bar extends models.Model {
@@ -1572,4 +1584,91 @@ test("check subsections' collapse_ fields' drag and drop logic", async () => {
 
     await clickSave();
     expect.verifySteps(["web_save"]);
+});
+
+test("getFormattedValue calculates unrounded line totals prior to global document rounding", async () => {
+    Invoice._fields.tax_totals = fields.Json();
+    Invoice._fields.tax_calculation_rounding_method = fields.Selection({
+        selection: [
+            ["round_per_line", "Round per Line"],
+            ["round_globally", "Round Globally"],
+        ],
+    });
+
+    InvoiceLine._fields.quantity = fields.Float();
+    InvoiceLine._fields.price_unit = fields.Float();
+    InvoiceLine._fields.price_subtotal = fields.Float();
+
+    // Line 1: 34.305 * 399.8796 = 13717.889677 (individual line subtotal = 13717.89)
+    // Line 2: 34.305 * 39.0000   = 1337.895    (individual line subtotal = 1337.90)
+    // Stored line subtotals sum = 15055.79
+    // Global untaxed base = 15055.78
+    InvoiceLine._records = [
+        { id: 100, name: "Section 1", display_type: "line_section", sequence: 1 },
+        {
+            id: 101,
+            name: "Product 1",
+            display_type: false,
+            sequence: 2,
+            quantity: 34.305,
+            price_unit: 399.8796,
+            price_subtotal: 13717.89,
+        },
+        {
+            id: 102,
+            name: "Product 2",
+            display_type: false,
+            sequence: 3,
+            quantity: 34.305,
+            price_unit: 39.0000,
+            price_subtotal: 1337.90,
+        },
+    ];
+
+    Invoice._records = [
+        {
+            id: 1,
+            invoice_line_ids: [100, 101, 102],
+            tax_totals: {
+                base_amount_currency: 15055.78,
+                total_amount_currency: 15055.78,
+            },
+            tax_calculation_rounding_method: "round_globally",
+        },
+    ];
+
+    await mountView({
+        type: "form",
+        resModel: "invoice",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="tax_totals" invisible="1"/>
+                <field
+                    name="invoice_line_ids"
+                    widget="section_and_note_one2many"
+                    aggregated_fields="price_subtotal"
+                >
+                    <list editable="bottom">
+                        <field name="sequence" widget="handle"/>
+                        <field name="name"/>
+                        <field name="quantity"/>
+                        <field name="price_unit"/>
+                        <field name="price_subtotal"/>
+                        <field name="display_type" column_invisible="1"/>
+                    </list>
+                </field>
+            </form>
+        `,
+    });
+
+    const sectionCell = ".o_is_line_section td[name='price_subtotal']";
+
+    // 1. Check DOM text directly using HOOT's toHaveText matcher
+    expect(sectionCell).toHaveText("15,055.78");
+
+    // 2. JS assertion checking string output from queryAllTexts
+    const cellText = queryAllTexts(sectionCell)[0];
+    expect(cellText.includes("15,055.78")).toBe(true);
+    expect(cellText.includes("15,055.79")).toBe(false);
 });

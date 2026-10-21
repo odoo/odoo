@@ -423,18 +423,61 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     getFormattedValue(column, record) {
-        if (this.isSection(record) && this.props.aggregatedFields.includes(column.name)) {
-            const total = getSectionRecords(this.props.list, record)
-                .filter((record) => !this.isSection(record))
-                .reduce((total, record) => total + record.data[column.name], 0);
-            const formatter = registry.category("formatters").get(column.fieldType, (val) => val);
-            return formatter(total, {
-                ...formatter.extractOptions?.(column),
-                data: record.data,
-                field: record.fields[column.name],
-            });
+        if (!this.isSection(record) || !this.props.aggregatedFields.includes(column.name)) {
+            return super.getFormattedValue(column, record);
         }
-        return super.getFormattedValue(column, record);
+
+        const list = this.props.list;
+        const rootData = list.model?.root?.data;
+        const taxTotals = rootData?.tax_totals;
+
+        const sectionRecords = getSectionRecords(list, record).filter((r) => !this.isSection(r));
+        const allProductRecords = list.records.filter((r) => !this.isSectionOrNote(r));
+
+        // Check if current section represents the entire document
+        const isFullDocumentSection = sectionRecords.length === allProductRecords.length;
+
+        // Check rounding method configuration
+        const sumSubtotals = allProductRecords.reduce((sum, r) => sum + (r.data.price_subtotal || 0), 0);
+        const docUntaxed = taxTotals?.base_amount_currency;
+        const docTotal = taxTotals?.total_amount_currency;
+        
+        const hasGlobalRoundingDiff = docUntaxed !== undefined && (sumSubtotals !== docUntaxed);
+        const isGlobalRounding = (
+            record.data.tax_calculation_rounding_method ||
+            rootData?.tax_calculation_rounding_method ||
+            taxTotals?.tax_calculation_rounding_method ||
+            (hasGlobalRoundingDiff ? "round_globally" : null)
+        ) === "round_globally";
+
+        // Determine aggregate value
+        let total;
+
+        if (isGlobalRounding && isFullDocumentSection && taxTotals) {
+            if (column.name === "price_subtotal") total = docUntaxed;
+            if (column.name === "price_total") total = docTotal;
+        }
+
+        // Default fallback: calculate direct sum from section records
+        if (total === undefined) {
+            total = sectionRecords.reduce((sum, r) => {
+                if (isGlobalRounding && column.name === "price_subtotal") {
+                    const qty = r.data.product_uom_qty ?? r.data.quantity ?? 0;
+                    const priceUnit = r.data.price_unit ?? 0;
+                    const discount = r.data.discount || 0;
+                    return sum + (qty * priceUnit * (1 - discount / 100));
+                }
+                return sum + (r.data[column.name] || 0);
+            }, 0);
+        }
+
+        // Format output
+        const formatter = registry.category("formatters").get(column.fieldType, (val) => val);
+        return formatter(total, {
+            ...formatter.extractOptions?.(column),
+            data: record.data,
+            field: record.fields?.[column.name] || column,
+        });
     }
 
     getSectionColumns(columns, record) {
