@@ -79,6 +79,7 @@ class HrApplicant(models.Model):
         string="Sanitized Phone Number", compute='_compute_partner_phone_sanitized', store=True, index='btree_not_null'
     )
     linkedin_profile = fields.Char('LinkedIn Profile', tracking=True, index='btree_not_null')
+    linkedin_profile_name = fields.Char('LinkedIn Profile Name', store=True, compute='_compute_linkedin_profile_name', readonly=True)
     type_id = fields.Many2one('hr.recruitment.degree', "Degree", tracking=True)
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     color = fields.Integer("Color Index", default=0)
@@ -334,9 +335,10 @@ class HrApplicant(models.Model):
         """
         domain = Domain.OR([
             Domain("id", "in", self.ids),
+            Domain("partner_id", "in", self.partner_id.ids),
             Domain("email_normalized", "in", [email for email in self.mapped("email_normalized") if email]),
-            Domain("partner_phone_sanitized", "in", [phone for phone in self.mapped("partner_phone_sanitized") if phone]),
-            Domain("linkedin_profile", "in", [linkedin_profile for linkedin_profile in self.mapped("linkedin_profile") if linkedin_profile]),
+            Domain("partner_phone_sanitized", "in", [phone for phone in self.mapped("partner_phone_sanitized") if phone and len(phone) > 5]),
+            Domain("linkedin_profile_name", "in", [linkedin_profile_name for linkedin_profile_name in self.mapped("linkedin_profile_name") if linkedin_profile_name]),
             Domain("pool_applicant_id", "in", [pool_applicant.id for pool_applicant in self.mapped("pool_applicant_id") if pool_applicant]),
         ])
         if ignore_talent:
@@ -609,6 +611,17 @@ class HrApplicant(models.Model):
     def _compute_recruiter(self):
         for applicant in self:
             applicant.recruiter_id = applicant.job_id.recruiter_id.id
+
+    @api.depends('linkedin_profile')
+    def _compute_linkedin_profile_name(self):
+        for applicant in self:
+            if applicant.linkedin_profile:
+                url_parts = applicant.linkedin_profile.split("/")
+                profile_name_index = url_parts.index("in") + 1 if "in" in url_parts else False
+                applicant.linkedin_profile_name = url_parts[profile_name_index] if profile_name_index and profile_name_index < len(url_parts) else False
+            else:
+                applicant.linkedin_profile_name = False
+
 
     def _phone_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to
