@@ -7,8 +7,8 @@
         <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_form"/>
         <field name="arch" type="xml">
             <field name='doc_code_prefix' position="after">
-                <field name='l10n_ar_letter'/>
-                <field name='purchase_aliquots'/>
+                <field name='l10n_ar_letter' invisible="country_code != 'AR'"/>
+                <field name='purchase_aliquots' invisible="country_code != 'AR'"/>
             </field>
         </field>
     </record>
@@ -31,7 +31,7 @@
         <field name="arch" type="xml">
             <field name='code' position="after">
                 <field name='l10n_ar_letter'/>
-                <filter string="Argentinean Documents" name="localization" domain="[('country_id', '=', %(base.ar)d)]"/>
+                <filter string="Argentinean Documents" name="localization" domain="[('country_code', '=', 'AR')]"/>
             </field>
             <group>
                 <filter string="Document Letter" name="l10n_ar_letter" context="{'group_by':'l10n_ar_letter'}"/>

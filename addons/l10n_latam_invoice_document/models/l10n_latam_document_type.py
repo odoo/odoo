@@ -15,6 +15,7 @@ class L10n_LatamDocumentType(models.Model):
         ' commonly used first')
     country_id = fields.Many2one(
         'res.country', required=True, index=True, help='Country in which this type of document is valid')
+    country_code = fields.Char(related='country_id.code', depends=['country_id'])
     name = fields.Char(required=True, help='The document name', translate=True)
     doc_code_prefix = fields.Char(
         'Document Code Prefix', help="Prefix for Documents Codes on Invoices and Journal Entries. For eg. 'FA ' will"

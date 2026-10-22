@@ -6,11 +6,9 @@
         <field name="model">l10n_latam.document.type</field>
         <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group" position="after">
-                <group string="Ecuadorian Configuration" col="2" colspan="2">
-                    <field name="l10n_ec_check_format"/>
-                </group>
-            </xpath>
+            <field name="internal_type" position="after">
+                <field name="l10n_ec_check_format" invisible="country_code != 'EC'"/>
+            </field>
         </field>
     </record>
 
