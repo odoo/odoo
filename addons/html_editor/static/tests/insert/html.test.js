@@ -415,6 +415,28 @@ describe("collapsed selection", () => {
             `<p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table><tbody><tr><td rowspan="2" colspan="2">A</td><td>B</td></tr><tr><td>C</td></tr><tr><td>D</td><td><p><br></p></td><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td></tr></tbody></table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
+
+    test("should keep the BR at the end of an inline followed by text", async () => {
+        await testEditor({
+            contentBefore: `<p><strong>a[]<br></strong>c</p>`,
+            stepFunction: async (editor) => {
+                editor.shared.dom.insert("b");
+                editor.shared.history.commit();
+            },
+            contentAfter: `<p><strong>ab[]<br></strong>c</p>`,
+        });
+    });
+
+    test("should remove the BR at the end of an inline ending its block", async () => {
+        await testEditor({
+            contentBefore: `<p><strong>a[]<br></strong></p>`,
+            stepFunction: async (editor) => {
+                editor.shared.dom.insert("b");
+                editor.shared.history.commit();
+            },
+            contentAfter: `<p><strong>ab[]</strong></p>`,
+        });
+    });
 });
 
 describe("not collapsed selection", () => {
