@@ -1316,19 +1316,22 @@ class AccountEdiCommon(models.AbstractModel):
 
         name = customer_values.get('name')
         vat = customer_values.get('vat')
-        if not name or not vat:
+        if not name:
             return
 
         vat_mismatch = False
         if customer:
-            country = self._import_retrieve_country(collected_values)
-            if not customer.vat:
-                customer.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
+            if vat:
+                country = self._import_retrieve_country(collected_values)
+                if not customer.vat:
+                    customer.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
+                    return
+                country_mismatch = bool(country and customer.country_id and customer.country_id != country)
+                if not country_mismatch and self._check_customer_vat_match(customer, vat, collected_values):
+                    return
+                vat_mismatch = True
+            else:
                 return
-            country_mismatch = bool(country and customer.country_id and customer.country_id != country)
-            if not country_mismatch and self._check_customer_vat_match(customer, vat, collected_values):
-                return
-            vat_mismatch = True
 
         partner_create_values = self._import_prepare_missing_customer_create_values(collected_values)
         customer = self.env['res.partner'].create(partner_create_values)
