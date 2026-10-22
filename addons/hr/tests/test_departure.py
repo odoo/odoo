@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
+from datetime import date, datetime
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
@@ -9,10 +9,11 @@ from odoo import Command
 from odoo.exceptions import ValidationError
 
 from odoo.addons.hr.tests.common import TestHrCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import Form
 
 
-class TestDeparture(TestHrCommon):
+class TestDeparture(MailCase, TestHrCommon):
 
     @classmethod
     @freeze_time('2025-01-01')
@@ -182,3 +183,75 @@ class TestDeparture(TestHrCommon):
             self.emp_D.contract_date_end,
             "The employee's contract end date should revert to False after cancelling the departure."
         )
+
+    def assertDepartureTracked(self, title, changes):
+        """ Check the departure fields are tracked in the employee chatter under the
+        given title. With hr_payroll, the payroll restricted fields are logged in a
+        separate message, so each field is looked up in the message holding it.
+
+        :param str title: title of the departure tracking messages
+        :param dict changes: expected (old value, new value) by field name, dates
+            given as a datetime at midnight, as stored in tracking values
+        """
+        # tracked dates are formatted in the user language
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
+        messages = self.emp_D.message_ids.filtered(lambda m: title in m.body)
+        for fname, (old_value, new_value) in changes.items():
+            field = self.emp_D._fields[fname]
+            message = messages.filtered(lambda m: field.string in m.body)
+            self.assertEqual(len(message), 1, f"{field.string} should be tracked once under {title!r}")
+            self.assertTracking(message, [(fname, field.type, old_value, new_value)])
+
+    @freeze_time('2025-06-01')
+    def test_departure_tracked_in_employee_chatter(self):
+        """ Planning and cancelling an End of Collaboration logs the departure
+        fields in the employee chatter. """
+        fired = self.env.ref('hr.departure_fired')
+        self.env['hr.employee.departure'].create({
+            'employee_id': self.emp_D.id,
+            'dismissal_date': date(2025, 7, 1),
+            'departure_reason_id': fired.id,
+        })
+        self.flush_tracking()
+
+        self.assertDepartureTracked("End of Collaboration planned", {
+            'departure_reason_id': (False, fired),
+            'dismissal_date': (False, datetime(2025, 7, 1)),
+            'departure_date': (False, datetime(2025, 7, 1)),
+        })
+
+        self.emp_D.action_cancel_departure()
+        self.flush_tracking()
+
+        self.assertDepartureTracked("End of Collaboration cancelled", {
+            'departure_reason_id': (fired, False),
+            'dismissal_date': (datetime(2025, 7, 1), False),
+            'departure_date': (datetime(2025, 7, 1), False),
+        })
+
+    @freeze_time('2025-06-01')
+    def test_departure_in_next_contract_tracked_in_employee_chatter(self):
+        """ A departure planned during a contract that starts after today is
+        logged in the employee chatter too. """
+        fired = self.env.ref('hr.departure_fired')
+        self.emp_D.contract_date_end = date(2025, 6, 30)
+        self.emp_D.create_version({
+            'date_version': date(2025, 7, 1),
+            'contract_date_start': date(2025, 7, 1),
+            'contract_date_end': False,
+        })
+        # log the setup changes, so they don't mix with the departure tracking
+        self.flush_tracking()
+        self.env['hr.employee.departure'].create({
+            'employee_id': self.emp_D.id,
+            'dismissal_date': date(2025, 8, 1),
+            'departure_reason_id': fired.id,
+        })
+        self.assertEqual(self.emp_D.version_ids.filtered('departure_id').date_version, date(2025, 7, 1))
+        self.flush_tracking()
+
+        self.assertDepartureTracked("End of Collaboration planned", {
+            'departure_reason_id': (False, fired),
+            'dismissal_date': (False, datetime(2025, 8, 1)),
+            'departure_date': (False, datetime(2025, 8, 1)),
+        })

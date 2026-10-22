@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -138,11 +139,38 @@ class HrEmployeeDeparture(models.Model):
                 vals.update({
                     "contract_date_end": departure.departure_date,
                 })
+            departure._track_in_employee_chatter()
             departure.employee_id.version_ids.filtered(
                 lambda v: v.contract_date_start == version.contract_date_start
                 and v.contract_date_end == version.contract_date_end,
             ).with_context(sync_contract_dates=True).write(vals)
         return res
+
+    def _track_in_employee_chatter(self, is_cancellation=False):
+        """ Log the departure fields in the employee chatter. The values are taken
+        from the departure, as it may be linked to versions other than the current
+        one, whose departure fields are the ones shown on the employee.
+
+        :param bool is_cancellation: log the departures as cancelled instead of planned
+        """
+
+        if self.employee_id._track_disabled():
+            return
+        tracked_fields = ['departure_reason_id', 'dismissal_date', 'departure_date']
+        empty_values = dict.fromkeys(tracked_fields, False)
+        if is_cancellation:
+            title = self.env._("End of Collaboration cancelled")
+        else:
+            title = self.env._("End of Collaboration planned")
+        for departure in self:
+            employee = departure.employee_id
+            departure_values = {fname: departure[fname] for fname in tracked_fields}
+            before, after = (departure_values, empty_values) if is_cancellation else (empty_values, departure_values)
+            employee._track_add(
+                initial_values={employee.id: before},
+                end_values={employee.id: after},
+                body=Markup("<strong>%s</strong>") % title,
+            )
 
     def _cron_apply_departure(self):
         """Apply the pending departures whose date is reached (daily cron).
