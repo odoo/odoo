@@ -458,17 +458,12 @@ export class Store extends BaseStore {
                 } catch {
                     // assumes tab not focused: parent.document from iframe triggers CORS error
                 }
-                // Prevent duplicate inbox push notifications since they're already handled by
-                // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
-                // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
-                const isInbox =
-                    this.store.self.notification_preference === "inbox" &&
-                    model !== "discuss.channel";
                 const isMessageSeen =
                     model === "discuss.channel"
                         ? thread?.selfMember?.seen_message_id?.id >= message_id
-                        : thread?.messages.some((m) => m.id === message_id);
-                if ((isTabFocused && thread?.isDisplayed) || isInbox || isMessageSeen) {
+                        : thread?.messages.some((m) => m.id === message_id) ||
+                          this.Message.get(message_id)?.needaction === false;
+                if ((isTabFocused && thread?.isDisplayed) || isMessageSeen) {
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
                         payload: { correlationId },
