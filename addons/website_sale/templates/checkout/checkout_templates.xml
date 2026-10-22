@@ -303,76 +303,10 @@
 
     <!-- Called in `website_sale.checkout_layout` and `website_sale.confirmation`. -->
     <template id="website_sale.cart_summary_content">
-        <t t-set="is_scrollable" t-value="len(website_sale_order.website_order_line) &gt; 4"/>
-
-        <div name="order_lines" class="position-relative">
-            <div t-attf-class="border-bottom {{(is_scrollable and not is_offcanvas) and 'o_wsale_scrollable_table o_wsale_scrollable_table_desktop mx-n4 mt-n3 px-4 pt-3'}}">
-                <table
-                    t-if="website_sale_order and website_sale_order.website_order_line"
-                    class="o_cart_products_table table mb-0"
-                >
-                    <span
-                        t-if="is_scrollable and not is_offcanvas"
-                        class="o_wsale_scrollable_table_badge o_wsale_scrollable_table_badge_desktop badge d-none d-lg-inline py-2 px-3 position-absolute start-50 z-1 translate-middle pe-none"
-                    >
-                        <t t-out="str(website_sale_order.cart_quantity)"/> items - Scroll for more
-                        <i class="oi ms-1" data-icon="south" role="img" aria-hidden="true"/>
-                    </span>
-                    <tbody>
-                        <tr
-                            t-foreach="website_sale_order.website_order_line"
-                            t-as="line"
-                            t-att-class="line_last and 'border-transparent'"
-                        >
-                            <td class="td-img ps-0 pt-3">
-                                <div class="o_cart_product_image position-relative">
-                                    <span
-                                        t-if="not line._is_sellable() and line.product_id.image_128"
-                                    >
-                                        <img
-                                            t-att-src="image_data_uri(line.product_id.image_128)"
-                                            class="img rounded"
-                                            t-att-alt="line.name_short"
-                                        />
-                                    </span>
-                                    <span
-                                        t-else=""
-                                        t-field="line.product_id.image_128"
-                                        t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded'}"
-                                    />
-                                    <span class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle">
-                                        <t t-out="int(line.product_uom_qty)" />
-                                        <t
-                                            t-if="line.alerts"
-                                            t-call="website_sale.alert_inline"
-                                            level="line._get_max_alert_level()"
-                                            message="line._join_alert_messages()"
-                                            classes.f="o_order_line_alert"
-                                        />
-                                    </span>
-                                </div>
-                            </td>
-                            <td
-                                class="td-product_name td-qty w-100 pt-3"
-                                name="website_sale_cart_summary_product_name"
-                            >
-                                <span class="text-wrap" t-out="line._get_line_header()"/>
-                                <p class="text-muted small mb-0" t-out="line._get_combination_name()"/>
-                                <span
-                                    t-if="line.product_id._has_multiple_uoms()"
-                                    class="badge mt-1 bg-light"
-                                    t-out="line.product_uom_id.name"
-                                />
-                            </td>
-                            <td class="td-price pe-0 pt-3 text-end"
-                                name="website_sale_cart_summary_line_price">
-                                <t t-call="website_sale.cart_product_price" product_price="line._get_cart_display_price()"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <owl-component
+            name="website_sale.CartSummary"
+            t-att-props="json.dumps({'isOffcanvas': bool(is_offcanvas)})"
+        />
     </template>
 
     <!-- Called in `website_sale.checkout_layout`. -->

@@ -141,7 +141,8 @@ class Cart(PaymentPortal):
 
         def check_selected_combo_items(combo_product, linked_products):
             combo_item_products = [
-                linked_product for linked_product in linked_products or []
+                linked_product
+                for linked_product in linked_products or []
                 if (
                     linked_product.get("combo_item_id")
                     and linked_product.get("parent_product_template_id")
@@ -149,17 +150,22 @@ class Cart(PaymentPortal):
                 )
             ]
             combos_sudo = combo_product.sudo().product_tmpl_id.combo_ids
-            selected_combos_sudo = request.env['product.combo.item'].sudo().browse([
-                combo_item['combo_item_id'] for combo_item in combo_item_products
-            ]).combo_id
-            if (
-                len(combo_item_products) != len(combos_sudo)
-                or set(selected_combos_sudo.ids) != set(combos_sudo.ids)
+            selected_combos_sudo = (
+                request
+                .env["product.combo.item"]
+                .sudo()
+                .browse([combo_item["combo_item_id"] for combo_item in combo_item_products])
+                .combo_id
+            )
+            if len(combo_item_products) != len(combos_sudo) or set(selected_combos_sudo.ids) != set(
+                combos_sudo.ids
             ):
-                raise UserError(self.env._(
-                    "The number of selected combo items must match the number of available"
-                    " combo choices."
-                ))
+                raise UserError(
+                    self.env._(
+                        "The number of selected combo items must match the number of available"
+                        " combo choices."
+                    )
+                )
 
         if product.sudo().type == "combo":
             check_selected_combo_items(product, linked_products)
@@ -679,6 +685,44 @@ class Cart(PaymentPortal):
             "displayed_quantity": combo_item_line._get_displayed_quantity(),
             "name_short": combo_item_line.name_short,
             "description_lines": list(combo_item_line.get_description_following_lines()),
+        }
+
+    @route(route="/shop/cart/summary", type="jsonrpc", auth="public", website=True)
+    def cart_summary(self):
+        """Return only the data required by the checkout cart summary."""
+        order_sudo = request.cart
+        values = {
+            "currency_id": order_sudo.currency_id.id,
+            "cart_quantity": order_sudo.cart_quantity,
+            "cart_lines": [
+                self._prepare_cart_summary_line_data(line) for line in order_sudo.website_order_line
+            ],
+        }
+        # Clear alerts once they have been sent to the component.
+        order_sudo._clear_alerts()
+        return values
+
+    def _prepare_cart_summary_line_data(self, line):
+        """Prepare the minimal data needed to render a line in CartSummary.
+
+        Addons can override this hook to expose fields used by their CartSummary
+        template extensions.
+        """
+        return {
+            "id": line.id,
+            "product_id": line.product_id.id,
+            "name_short": line.name_short,
+            "header_name": line._get_line_header(),
+            "uom_name": line.product_uom_id.name,
+            "product_price": line._get_cart_display_price(),
+            "product_uom_qty": line.product_uom_qty,
+            "image_uri": (
+                image_data_uri(line.product_id.image_128) if line.product_id.image_128 else False
+            ),
+            "combination_name": line._get_combination_name(),
+            "has_multiple_uoms": line.product_id._has_multiple_uoms(),
+            "alert_message": line._join_alert_messages(),
+            "alert_level": line._get_max_alert_level(),
         }
 
     @route(route="/shop/cart/totals", type="jsonrpc", auth="public", website=True)
