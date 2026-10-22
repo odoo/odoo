@@ -609,63 +609,32 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
             # sender should not be added as user in the task
             self.assertNotIn(task.user_ids, self.user_employee, "Sender can never be in assignees")
 
-    def test_task_creation_removes_email_signatures(self):
+    def test_task_creation_keeps_forwarded_content(self):
         """
-        Tests that email signature is correctly removed from a task
-        description when a task is created from an email alias.
+        Tests that the content of a forwarded email is kept in the task description.
         """
-
-        gmail_email_source = f"""From: "{self.user_portal.name}" <{self.user_portal.email_formatted}>
+        email_source = f"""From: "{self.user_portal.name}" <{self.user_portal.email_formatted}>
 To: {self.project_followers_alias.alias_full_name}
-Subject: Test Gmail Signature Removal
+Subject: Fwd: Test Gmail Forward
 Content-Type: text/html;
 
-<p>This is the main email content that should be kept.</p>
-<p>Some more important content here.</p>
-<span>--</span>
-<div data-smartmail="gmail_signature">
-<p>John Doe</p>
-<p>Software Engineer</p>
-</div>
+<div dir="ltr">Please check this request.<br>
+<div class="gmail_quote gmail_quote_container">
+<div dir="ltr" class="gmail_attr">---------- Forwarded message ---------<br>From: Some Customer &lt;customer@example.com&gt;<br>Subject: Test Gmail Forward<br></div>
+<br><div dir="ltr">This is the forwarded task content.</div>
+</div></div>
 """
-
-        outlook_email_source = f"""From: "{self.user_portal.name}" <{self.user_portal.email_formatted}>
-To: {self.project_followers_alias.alias_full_name}
-Subject: Test Outlook Signature Removal
-Content-Type: text/html;
-
-<p>This is the main email content that should be kept.</p>
-<p>Some more important content here.</p>
-<div id="Signature">
-<p>John Smith</p>
-<p>Software Developer</p>
-</div>
-"""
-
         with self.mock_mail_gateway():
-            gmail_task = self.env['mail.thread'].message_process(
+            task = self.env['mail.thread'].message_process(
                 model='project.task',
-                message=gmail_email_source,
-                custom_values={'project_id': self.project_followers.id}
-            )
-            outlook_task = self.env['mail.thread'].message_process(
-                model='project.task',
-                message=outlook_email_source,
+                message=email_source,
                 custom_values={'project_id': self.project_followers.id}
             )
 
-        # Verify Gmail signature removal
-        self.assertIn("This is the main email content that should be kept", gmail_task.description)
-        self.assertNotIn("--", gmail_task.description, "The Gmail signature separator should have been removed.")
-        self.assertNotIn("John Doe", gmail_task.description, "The Gmail signature should have been removed.")
-        self.assertNotIn("Software Engineer", gmail_task.description, "The Gmail signature should have been removed.")
+        self.assertIn("Please check this request.", task.description, "The forwarder's email content should be present.")
+        self.assertIn("Forwarded message", task.description, "The forwarded email header should be present.")
+        self.assertIn("This is the forwarded task content.", task.description, "The forwarded email content should be present.")
 
-        # Verify Outlook signature removal
-        self.assertIn("This is the main email content that should be kept", outlook_task.description)
-        self.assertNotIn("John Smith", outlook_task.description, "The Outlook signature should have been removed.")
-        self.assertNotIn("Software Developer", outlook_task.description, "The Outlook signature should have been removed.")
-
-    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_task_creation_from_mail(self):
         """ This test checks a `default_` key passed in the context with an invalid field doesn't prevent the task
             creation.
