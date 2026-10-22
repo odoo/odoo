@@ -22,41 +22,51 @@
                     <span t-else="" class="o_hb_text_effect_preview_sample" t-att-data-text-effect="preset.effectJson" t-att-style="preset.effectStyle">Aa</span>
                 </button>
             </t>
+            <!-- One tile for any custom effect: it opens the settings below. -->
+            <button type="button" class="o_hb_text_effect_preset o_hb_text_effect_custom_preset btn p-0"
+                    t-att-class="{ active: this.isCustom }"
+                    title="Custom" aria-label="Custom" t-att-aria-pressed="this.isCustom ? 'true' : 'false'"
+                    t-on-click="this.onClickCustom">
+                <i class="oi" data-icon="edit" role="img" aria-hidden="true"/>
+            </button>
         </div>
-        <div class="o_hb_text_effect_section">
-            <div class="o_hb_text_effect_caption d-flex align-items-center justify-content-between">
-                <span>Shadow<t t-if="(this.domState.shadowIndexes || []).length > 1"> · <t t-out="this.domState.shadowIndexes.length"/></t></span>
-                <button type="button" class="o_hb_text_effect_add_shadow btn btn-light" t-on-click="this.onClickAddShadow"
-                        title="Add a shadow" aria-label="Add a shadow">
-                    <i class="oi oi-fw" data-icon="add" role="img" aria-hidden="true"/>
-                </button>
+        <t t-if="this.isCustom">
+            <div class="o_hb_text_effect_section">
+                <div class="o_hb_text_effect_caption d-flex align-items-center justify-content-between">
+                    <span>Shadow<t t-if="(this.domState.shadowIndexes || []).length > 1"> · <t t-out="this.domState.shadowIndexes.length"/></t></span>
+                    <button type="button" class="o_hb_text_effect_add_shadow btn btn-light" t-on-click="this.onClickAddShadow"
+                            title="Add a shadow" aria-label="Add a shadow">
+                        <i class="oi oi-fw" data-icon="add" role="img" aria-hidden="true"/>
+                    </button>
+                </div>
+                <BuilderContext action="'updateTextEffect'">
+                    <t t-foreach="this.domState.shadowIndexes || []" t-as="shadowIndex" t-key="shadowIndex">
+                        <div class="o_hb_text_effect_shadow d-flex align-items-center gap-1">
+                            <BuilderColorPicker actionParam="{ mainParam: 'shadowColor', shadowIndex: shadowIndex }" tooltip.translate="Shadow color" enabledTabs="['custom', 'solid']" selectedTab="'solid'"
+                                                colorPickerClassName="''" colorPickerPopoverClassName="''"/>
+                            <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetY', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'height'" tooltip.translate="Vertical offset"/>
+                            <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetX', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'arrow_range'" tooltip.translate="Horizontal offset"/>
+                            <BuilderNumberInput actionParam="{ mainParam: 'shadowBlur', shadowIndex: shadowIndex }" unit="'px'" min="0" prefixIcon="'blur_on'" tooltip.translate="Blur"/>
+                            <button type="button" class="o_hb_text_effect_remove_shadow btn btn-light" t-on-click="() => this.onClickRemoveShadow(shadowIndex)"
+                                    title="Remove shadow" aria-label="Remove shadow">
+                                <i class="oi oi-fw" data-icon="close" role="img" aria-hidden="true"/>
+                            </button>
+                        </div>
+                    </t>
+                </BuilderContext>
+                <!-- An effect with an outline only. -->
+                <p t-if="!(this.domState.shadowIndexes || []).length" class="text-muted mb-0">No shadow.</p>
             </div>
-            <BuilderContext t-if="this.state.hasElement" action="'updateTextEffect'">
-                <t t-foreach="this.domState.shadowIndexes || []" t-as="shadowIndex" t-key="shadowIndex">
-                    <div class="o_hb_text_effect_shadow d-flex align-items-center gap-1">
-                        <BuilderColorPicker actionParam="{ mainParam: 'shadowColor', shadowIndex: shadowIndex }" tooltip.translate="Shadow color" enabledTabs="['custom', 'solid']" selectedTab="'solid'"
-                                            colorPickerClassName="''" colorPickerPopoverClassName="''"/>
-                        <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetY', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'height'" tooltip.translate="Vertical offset"/>
-                        <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetX', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'arrow_range'" tooltip.translate="Horizontal offset"/>
-                        <BuilderNumberInput actionParam="{ mainParam: 'shadowBlur', shadowIndex: shadowIndex }" unit="'px'" min="0" prefixIcon="'blur_on'" tooltip.translate="Blur"/>
-                        <button type="button" class="o_hb_text_effect_remove_shadow btn btn-light" t-on-click="() => this.onClickRemoveShadow(shadowIndex)"
-                                title="Remove shadow" aria-label="Remove shadow">
-                            <i class="oi oi-fw" data-icon="close" role="img" aria-hidden="true"/>
-                        </button>
-                    </div>
-                </t>
-            </BuilderContext>
-            <p t-if="!this.state.hasElement or !(this.domState.shadowIndexes || []).length" class="text-muted mb-0">No shadow. Pick a preset or add one.</p>
-        </div>
-        <div t-if="this.state.hasElement" class="o_hb_text_effect_section">
-            <BuilderContext action="'updateTextEffect'">
-                <BuilderRow label.translate="Outline">
-                    <BuilderNumberInput actionParam="'outline'" min="0" max="10" unit="'px'" tooltip.translate="Thickness"/>
-                    <BuilderColorPicker actionParam="'outlineColor'" tooltip.translate="Outline color" enabledTabs="['custom', 'solid']" selectedTab="'solid'"
-                                        colorPickerClassName="''" colorPickerPopoverClassName="''" t-if="this.domState.hasOutline"/>
-                </BuilderRow>
-            </BuilderContext>
-        </div>
+            <div class="o_hb_text_effect_section o_hb_text_effect_outline">
+                <BuilderContext action="'updateTextEffect'">
+                    <BuilderRow label.translate="Outline">
+                        <BuilderNumberInput actionParam="'outline'" min="0" max="10" unit="'px'" tooltip.translate="Thickness"/>
+                        <BuilderColorPicker actionParam="'outlineColor'" tooltip.translate="Outline color" enabledTabs="['custom', 'solid']" selectedTab="'solid'"
+                                            colorPickerClassName="''" colorPickerPopoverClassName="''" t-if="this.domState.hasOutline"/>
+                    </BuilderRow>
+                </BuilderContext>
+            </div>
+        </t>
     </div>
 </t>
 

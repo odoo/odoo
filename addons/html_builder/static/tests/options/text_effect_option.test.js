@@ -28,7 +28,7 @@ function addTextEffectPlugins() {
     addBuilderPlugin(EffectsPanelPlugin);
 }
 
-const preset = (name) => `.o-we-effects-panel .o_hb_text_effect_preset[title='${name}']`;
+const preset = (name) => `.o-we-effects-panel .o_hb_text_effect_preset[aria-label='${name}']`;
 
 test("apply preset", async () => {
     addTextEffectPlugins();
@@ -61,8 +61,11 @@ test("opening the panel applies nothing", async () => {
     await expandToolbar();
     await openEffectsSection("textEffect");
 
-    expect(".o-we-effects-panel .o_hb_text_effect_preset").toHaveCount(6);
+    // The six presets, then Custom.
+    expect(".o-we-effects-panel .o_hb_text_effect_preset").toHaveCount(7);
+    expect(".o-we-effects-panel .o_hb_text_effect_preset:last").toHaveAttribute("aria-label", "Custom");
     expect(".o-we-effects-panel .o_hb_text_effect_preset.active").toHaveCount(0);
+    expect(".o-we-effects-panel .o_hb_text_effect_shadow").toHaveCount(0);
     expect(":iframe [data-text-effect]").toHaveCount(0);
 });
 
@@ -136,7 +139,7 @@ test("remove if no shadow or outline", async () => {
     expect(cleanedEl.querySelector("[data-text-effect]")).toBe(null);
 });
 
-test("presets and shadows are on the same page", async () => {
+test("a preset shows no settings", async () => {
     addTextEffectPlugins();
     await setupHTMLBuilder(`<p>Text</p>`);
     const p = await waitFor(":iframe p");
@@ -151,7 +154,9 @@ test("presets and shadows are on the same page", async () => {
     await contains(preset("Glow")).click();
     await animationFrame();
     expect(preset("Glow")).toHaveClass("active");
-    expect(".o-we-effects-panel .o_hb_text_effect_shadow").toHaveCount(3);
+    expect(preset("Custom")).not.toHaveClass("active");
+    expect(".o-we-effects-panel .o_hb_text_effect_shadow").toHaveCount(0);
+    expect(".o_hb_text_effect_outline").toHaveCount(0);
     expect(".o-we-effects-section[data-section='textEffect'] .o-we-effects-section-summary").toHaveCount(0);
     await contains(".o-we-effects-section[data-section='textEffect'] .o-we-effects-section-toggle").click();
     expect(".o-we-effects-section[data-section='textEffect'] .o-we-effects-section-summary").toHaveText(
@@ -159,7 +164,7 @@ test("presets and shadows are on the same page", async () => {
     );
 });
 
-test("editing a preset makes it a custom effect, which becomes the active preset", async () => {
+test("Custom customizes the current preset and shows its settings", async () => {
     addTextEffectPlugins();
     await setupHTMLBuilder(`<p>Text</p>`);
     const p = await waitFor(":iframe p");
@@ -173,17 +178,18 @@ test("editing a preset makes it a custom effect, which becomes the active preset
     await openEffectsSection("textEffect");
     await contains(preset("Glow")).click();
     await animationFrame();
-    expect(preset("Custom Shadow")).toHaveCount(0);
+    const glowEffect = JSON.parse(queryOne(":iframe [data-text-effect]").dataset.textEffect);
 
-    // The blur is the third number of a shadow row.
-    await contains(queryAll(".o_hb_text_effect_shadow")[0].querySelectorAll("input")[2]).edit(5);
+    await contains(preset("Custom")).click();
     await animationFrame();
+    expect(preset("Custom")).toHaveClass("active");
+    expect(preset("Glow")).not.toHaveClass("active");
+    expect(".o-we-effects-panel .o_hb_text_effect_shadow").toHaveCount(3);
+    expect(".o_hb_text_effect_outline").toHaveCount(1);
     const textEffect = JSON.parse(queryOne(":iframe [data-text-effect]").dataset.textEffect);
     expect(textEffect.preset).toBe("custom");
     expect(textEffect.presetHash).toBe(getTextEffectPresetHash(textEffect));
-    expect(preset("Glow")).not.toHaveClass("active");
-    expect(preset("Custom Shadow")).toHaveCount(1);
-    expect(preset("Custom Shadow")).toHaveClass("active");
+    expect(textEffect.shadows).toEqual(glowEffect.shadows);
 
     await contains(".o-we-effects-section[data-section='textEffect'] .o-we-effects-section-toggle").click();
     expect(".o-we-effects-section[data-section='textEffect'] .o-we-effects-section-summary").toHaveText(
@@ -191,7 +197,7 @@ test("editing a preset makes it a custom effect, which becomes the active preset
     );
 });
 
-test("a custom effect replaced by a preset stays offered", async () => {
+test("picking a preset hides the settings, Custom brings the last custom effect back", async () => {
     addTextEffectPlugins();
     await setupHTMLBuilder(`<p>Text</p>`);
     const p = await waitFor(":iframe p");
@@ -203,34 +209,41 @@ test("a custom effect replaced by a preset stays offered", async () => {
     });
     await expandToolbar();
     await openEffectsSection("textEffect");
-    await contains(preset("Glow")).click();
+    await contains(preset("Custom")).click();
     await animationFrame();
+    // The blur is the third number of a shadow row.
     await contains(queryAll(".o_hb_text_effect_shadow")[0].querySelectorAll("input")[2]).edit(5);
     await animationFrame();
     const customEffect = JSON.parse(queryOne(":iframe [data-text-effect]").dataset.textEffect);
 
+    // From another preset, Custom is still the custom effect of the user.
     await contains(preset("Flat")).click();
     await animationFrame();
-    expect(preset("Flat")).toHaveClass("active");
-    expect(preset("Custom Shadow")).toHaveCount(1);
-    expect(preset("Custom Shadow")).not.toHaveClass("active");
-
-    await contains(preset("Custom Shadow")).click();
+    expect(".o-we-effects-panel .o_hb_text_effect_shadow").toHaveCount(0);
+    await contains(preset("Custom")).click();
     await animationFrame();
-    expect(preset("Custom Shadow")).toHaveClass("active");
+    expect(preset("Custom")).toHaveClass("active");
+    expect(JSON.parse(queryOne(":iframe [data-text-effect]").dataset.textEffect)).toEqual(
+        customEffect
+    );
+
+    await contains(preset("No Shadow")).click();
+    await animationFrame();
+    expect(":iframe [data-text-effect]").toHaveCount(0);
+    await contains(preset("Custom")).click();
+    await animationFrame();
     expect(JSON.parse(queryOne(":iframe [data-text-effect]").dataset.textEffect)).toEqual(
         customEffect
     );
 });
 
-test("custom effects of the page are offered as presets", async () => {
+test("Custom reuses a custom effect of the page", async () => {
     addTextEffectPlugins();
     const { getEditor } = await setupHTMLBuilder(
         `<p><span data-text-effect='{"preset":"custom","shadows":[{"shadowBlur":"4px"}]}'>Preset</span> Text</p>`
     );
     const p = await waitFor(":iframe p");
     const textNode = getEditor().editable.querySelector("p").childNodes[1];
-    expect(":iframe p").toHaveCount(1);
     setSelection({
         anchorNode: textNode,
         anchorOffset: 1,
@@ -239,7 +252,7 @@ test("custom effects of the page are offered as presets", async () => {
     });
     await expandToolbar();
     await openEffectsSection("textEffect");
-    await contains(preset("Custom Shadow")).click();
+    await contains(preset("Custom")).click();
     await animationFrame();
     expect(p.querySelectorAll("[data-text-effect]")).toHaveLength(2);
     const textEffect = JSON.parse(p.querySelectorAll("[data-text-effect]")[1].dataset.textEffect);
@@ -254,11 +267,10 @@ test("custom effects of the page are offered as presets", async () => {
     });
 });
 
-test("custom shadow hash is updated when editing text effect", async () => {
+test("removing the last shadow removes the effect and its settings", async () => {
     addTextEffectPlugins();
     await setupHTMLBuilder(`<p>Text</p>`);
     const p = await waitFor(":iframe p");
-    expect(":iframe p").toHaveCount(1);
     setSelection({
         anchorNode: p,
         anchorOffset: 0,
@@ -267,7 +279,41 @@ test("custom shadow hash is updated when editing text effect", async () => {
     });
     await expandToolbar();
     await openEffectsSection("textEffect");
-    await contains(".o-we-effects-panel .o_hb_text_effect_add_shadow").click();
+    expect(".o_hb_text_effect_outline").toHaveCount(0);
+    await contains(preset("Custom")).click();
+    await animationFrame();
+    expect(":iframe [data-text-effect]").toHaveCount(1);
+    expect(".o_hb_text_effect_outline").toHaveCount(1);
+    await contains(queryAll(".o_hb_text_effect_shadow")[0].querySelectorAll("input")[2]).edit(9);
+    await animationFrame();
+
+    await contains(".o_hb_text_effect_shadow .o_hb_text_effect_remove_shadow").click();
+    await animationFrame();
+    expect(":iframe [data-text-effect]").toHaveCount(0);
+    expect(preset("Custom")).not.toHaveClass("active");
+    expect(".o-we-effects-panel .o_hb_text_effect_shadow").toHaveCount(0);
+    expect(".o_hb_text_effect_outline").toHaveCount(0);
+
+    // The removed shadow is not the one Custom brings back.
+    await contains(preset("Custom")).click();
+    await animationFrame();
+    const textEffect = JSON.parse(queryOne(":iframe [data-text-effect]").dataset.textEffect);
+    expect(textEffect.shadows[0].shadowBlur).not.toBe("9px");
+});
+
+test("custom shadow hash is updated when editing text effect", async () => {
+    addTextEffectPlugins();
+    await setupHTMLBuilder(`<p>Text</p>`);
+    const p = await waitFor(":iframe p");
+    setSelection({
+        anchorNode: p,
+        anchorOffset: 0,
+        focusNode: p,
+        focusOffset: 1,
+    });
+    await expandToolbar();
+    await openEffectsSection("textEffect");
+    await contains(preset("Custom")).click();
     await animationFrame();
     let textEffect = JSON.parse(queryOne(":iframe [data-text-effect]").dataset.textEffect);
     const initialHash = textEffect.presetHash;
@@ -281,7 +327,7 @@ test("custom shadow hash is updated when editing text effect", async () => {
     expect(textEffect.presetHash).toBe(getTextEffectPresetHash(textEffect));
 });
 
-test("a custom effect shows its shadows and its preset", async () => {
+test("a custom effect shows its shadows and Custom as current", async () => {
     addTextEffectPlugins();
     await setupHTMLBuilder(
         `<p><span data-text-effect='{"preset":"custom","shadows":[{"shadowBlur":"4px"}]}'>Text</span></p>`
@@ -296,7 +342,7 @@ test("a custom effect shows its shadows and its preset", async () => {
     await expandToolbar();
     await openEffectsSection("textEffect");
     expect(".o-we-effects-panel .o_hb_text_effect_shadow").toHaveCount(1);
-    expect(preset("Custom Shadow")).toHaveClass("active");
+    expect(preset("Custom")).toHaveClass("active");
 });
 
 test("selecting part of a text effect applies preset on the full text effect", async () => {
@@ -390,7 +436,7 @@ test("add multiple shadows on an element", async () => {
     await expandToolbar();
     await openEffectsSection("textEffect");
     expect(".o-we-effects-panel .o_hb_text_effect_shadow").toHaveCount(0);
-    await contains(".o-we-effects-panel .o_hb_text_effect_add_shadow").click();
+    await contains(preset("Custom")).click();
     await animationFrame();
     await contains(".o-we-effects-panel .o_hb_text_effect_add_shadow").click();
     await contains(".o-we-effects-panel .o_hb_text_effect_add_shadow").click();
@@ -414,7 +460,7 @@ test("delete one specific shadow on an element", async () => {
     });
     await expandToolbar();
     await openEffectsSection("textEffect");
-    await contains(".o-we-effects-panel .o_hb_text_effect_add_shadow").click();
+    await contains(preset("Custom")).click();
     await animationFrame();
     await contains(".o-we-effects-panel .o_hb_text_effect_add_shadow").click();
     await contains(".o-we-effects-panel .o_hb_text_effect_add_shadow").click();
