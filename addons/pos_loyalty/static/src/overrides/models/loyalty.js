@@ -418,6 +418,13 @@ patch(Order.prototype, {
      * Refreshes the currently applied rewards, if they are not applicable anymore they are removed.
      */
     _updateRewardLines() {
+        // A finalized order (e.g. reloaded from the server after an online
+        // payment) holds the rewards that were actually applied and saved.
+        // Refreshing them would drop them, because their coupon is no longer
+        // in the local cache, so keep them untouched.
+        if (["paid", "done", "invoiced"].includes(this.state)) {
+            return;
+        }
         if (!this.orderlines.length) {
             return;
         }
