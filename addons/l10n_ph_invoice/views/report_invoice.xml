@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Discount privileges (SC/PWD/...) on the BIR-prescribed invoice, per RMC No. 77-2024:
+        the privilege discount is shown as a separate total line and room is left for the
+        privilege holder's ID and signature.
+    -->
+    <template id="report_invoice_document" inherit_id="l10n_ph.report_invoice_document">
+        <!-- Totals: the discount is deducted before the VAT is added, or from the total sales without VAT -->
+        <!-- The rows are added first: the amounts they are anchored on are replaced afterwards -->
+        <xpath expr="//div[@id='total']//span[@t-field='o.amount_untaxed']/ancestor::tr[1]" position="after">
+            <tr t-if="cas_vals['privilege_discount'] and cas_vals['has_vat']" name="amount_privilege_discount">
+                <td class="w-50">Less: Discount [<t t-out="cas_vals['privilege_label']"/>]</td>
+                <td class="text-end"><span t-out="cas_vals['privilege_discount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+            </tr>
+        </xpath>
+        <xpath expr="//div[@id='total']//span[@t-field='o.amount_total']/ancestor::tr[1]" position="after">
+            <tr t-if="cas_vals['privilege_discount'] and not cas_vals['has_vat']" name="amount_privilege_discount">
+                <td class="w-50">Less: Discount [<t t-out="cas_vals['privilege_label']"/>]</td>
+                <td class="text-end"><span t-out="cas_vals['privilege_discount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+            </tr>
+        </xpath>
+        <xpath expr="//div[@id='total']//span[@t-field='o.amount_untaxed']" position="replace">
+            <span t-out="o.amount_untaxed + cas_vals['privilege_discount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+        </xpath>
+        <xpath expr="//div[@id='total']//span[@t-field='o.amount_total']" position="replace">
+            <span t-out="o.amount_total + (0.0 if cas_vals['has_vat'] else cas_vals['privilege_discount'])" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+        </xpath>
+
+        <!-- Privilege holder's details -->
+        <xpath expr="//div[@id='total']" position="after">
+            <table t-if="cas_vals['privilege_label']" name="privilege_holder" class="table table-borderless avoid-page-break-inside mt-3">
+                <tr>
+                    <td class="w-50"><t t-out="cas_vals['privilege_label']"/> ID No.:</td>
+                    <td class="border-bottom"/>
+                </tr>
+                <tr>
+                    <td class="w-50"><t t-out="cas_vals['privilege_label']"/> Signature:</td>
+                    <td class="border-bottom"/>
+                </tr>
+            </table>
+        </xpath>
+    </template>
+</odoo>
