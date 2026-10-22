@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_inherit_l10n_se" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@name='taxes_legal_notes']" position="after">
+            <p t-if="o.move_type in ('out_invoice', 'out_refund') and o.company_id.l10n_se_f_tax_approved"
+               name="l10n_se_f_tax" class="mb-2">Approved for F-tax</p>
+        </xpath>
+    </template>
+</odoo>
