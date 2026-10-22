@@ -37,8 +37,8 @@ def core_value(value):
 
 def split_identifier(identifier):
     """Split a ``scheme:value`` transport identifier (e.g. ``0225:931473060``)."""
-    scheme, _sep, value = (identifier or '').partition(':')
-    if not _sep:
+    scheme, sep, value = (identifier or '').partition(':')
+    if not sep:
         return '', clean_value(identifier)
     return scheme.strip(), clean_value(value)
 

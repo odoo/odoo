@@ -47,8 +47,8 @@ class TestPdpTransportAlert(TestPdpMessagesCommon):
         ]
 
     def _receive(self, xml_content, sender):
-        type(self).sender = sender
-        model = type(self.env['account_edi_proxy_client.user'])
+        TestPdpTransportAlert.sender = sender
+        model = self.env.registry[self.proxy_user._name]
         with patch.object(model, '_peppol_get_decoded_document', return_value=xml_content):
             self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
         return self.env['account.move'].search([('peppol_message_uuid', '=', MESSAGE_UUID)])
@@ -183,7 +183,7 @@ class TestPdpTransportAlert(TestPdpMessagesCommon):
         self.assertIn('buyer', self._alert_bodies(move)[0])
 
     def test_transport_map_is_filled_from_get_all_documents(self):
-        type(self).sender = '0225:931473060'
+        TestPdpTransportAlert.sender = '0225:931473060'
         transport_map = {}
         proxy_user = self.proxy_user.with_context(l10n_fr_pdp_transport_map=transport_map)
         proxy_user._make_request(
