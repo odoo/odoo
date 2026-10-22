@@ -50,7 +50,9 @@ export class AnimatedNumber extends BaseAnimation {
 
         const startValue = this.startValue;
         const endValue = this.endValue;
-        const duration = this.duration;
+        const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? 0
+            : this.duration;
 
         this.waitForTimeout(() => {
             const startTime = performance.now();
