@@ -6,7 +6,7 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
-const response_from_adyen_on_pos_webhook = (session, ServiceID) => ({
+const response_from_adyen_on_pos_webhook = (orderUuid, session, ServiceID) => ({
     SaleToPOIResponse: {
         MessageHeader: {
             MessageCategory: "Payment",
@@ -63,7 +63,7 @@ const response_from_adyen_on_pos_webhook = (session, ServiceID) => ({
             SaleData: {
                 SaleTransactionID: {
                     TimeStamp: "2024-10-24T11:24:29.000Z",
-                    TransactionID: `921e7aa8-36b3-400c-a416-2b9a1eaf1283--${session}`,
+                    TransactionID: `${orderUuid}--${session}`,
                 },
             },
         },
@@ -111,6 +111,7 @@ registry.category("web_tour.tours").add("PosAdyenPaymentTour", {
             ProductScreen.addOrderline("Desk Pad"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Adyen"),
+<<<<<<< 6cd956b8101c4018ebb89266989a01cd4931ea16
             adyenWebhookStep(),
             FeedbackScreen.isShown(),
         ].flat(),
@@ -134,5 +135,73 @@ registry.category("web_tour.tours").add("PosAdyenRefundTour", {
             PaymentScreen.clickRefundButton(),
             adyenWebhookStep(true),
             FeedbackScreen.isShown(),
+||||||| e5a4af13360c0fb54ea5ae3301804cccb09668cd
+            {
+                content: "Waiting for Adyen payment to be processed",
+                trigger: ".electronic_status:contains('Waiting for card')",
+                run: async function () {
+                    const payment_terminal =
+                        posmodel.getPendingPaymentLine("adyen").payment_method_id.payment_terminal;
+                    // The fact that we are shown the `Waiting for card` status means that the
+                    // request for payment has been sent to the adyen server ( in this case the mocked server )
+                    // and the server replied with an `ok` response.
+                    // As such, this is the time when we wait to receive the notification from adyen on the webhook
+                    // The simplest way to mock this notification is to send it ourselves here.
+
+                    // ==> pretend to be adyen and send the notification to the POS
+                    const resp = await fetch("/pos_adyen/notification", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(
+                            response_from_adyen_on_pos_webhook(
+                                posmodel.config.current_session_id.id,
+                                payment_terminal.most_recent_service_id
+                            )
+                        ),
+                    });
+                    if (!resp.ok) {
+                        throw new Error("Failed to notify Adyen webhook");
+                    }
+                },
+            },
+
+            ReceiptScreen.isShown(),
+=======
+            {
+                content: "Waiting for Adyen payment to be processed",
+                trigger: ".electronic_status:contains('Waiting for card')",
+                run: async function () {
+                    const payment_terminal =
+                        posmodel.getPendingPaymentLine("adyen").payment_method_id.payment_terminal;
+                    // The fact that we are shown the `Waiting for card` status means that the
+                    // request for payment has been sent to the adyen server ( in this case the mocked server )
+                    // and the server replied with an `ok` response.
+                    // As such, this is the time when we wait to receive the notification from adyen on the webhook
+                    // The simplest way to mock this notification is to send it ourselves here.
+
+                    // ==> pretend to be adyen and send the notification to the POS
+                    const resp = await fetch("/pos_adyen/notification", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(
+                            response_from_adyen_on_pos_webhook(
+                                posmodel.getOrder().uuid,
+                                posmodel.config.current_session_id.id,
+                                payment_terminal.most_recent_service_id
+                            )
+                        ),
+                    });
+                    if (!resp.ok) {
+                        throw new Error("Failed to notify Adyen webhook");
+                    }
+                },
+            },
+
+            ReceiptScreen.isShown(),
+>>>>>>> 14ba6a7896ba08b37db88f55c54518fcd049b7f2
         ].flat(),
 });
