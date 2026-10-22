@@ -332,7 +332,7 @@ class Website(models.Model):
 
     def _compute_pricelist_ids(self):
         for website in self:
-            website = website.with_company(website.company_id)
+            website = website.with_company(website.company_id)  # noqa: PLW2901
             ProductPricelist = website.env["product.pricelist"]  # with correct company in env
             website.pricelist_ids = ProductPricelist.sudo().search_fetch(
                 ProductPricelist._get_website_pricelists_domain(website)
@@ -420,7 +420,7 @@ class Website(models.Model):
 
     def _get_configurator_preview_urls(self):
         return super()._get_configurator_preview_urls() | {
-            style['preview_url']
+            style["preview_url"]
             for mapping in (const.SHOP_PAGE_STYLE_MAPPING, const.PRODUCT_PAGE_STYLE_MAPPING)
             for style in mapping.values()
         }
@@ -798,12 +798,12 @@ class Website(models.Model):
             return ProductPricelistSudo  # Skip pricelist computation if pricelists are disabled.
 
         if PRICELIST_SESSION_CACHE_KEY in request.session:
-            pricelist_sudo = ProductPricelistSudo.browse(
-                request.session[PRICELIST_SESSION_CACHE_KEY]
-            )
+            pricelist_id = request.session[PRICELIST_SESSION_CACHE_KEY]
+            if not pricelist_id:
+                return ProductPricelistSudo
+            pricelist_sudo = ProductPricelistSudo.search_fetch([("id", "=", pricelist_id)])
             if pricelist_sudo and (
-                pricelist_sudo.exists()
-                and pricelist_sudo._is_available_on_website(self)
+                pricelist_sudo._is_available_on_website(self)
                 and pricelist_sudo._is_available_in_country(self._get_geoip_country_code())
             ):
                 return pricelist_sudo.sudo()
