@@ -5,6 +5,7 @@
         <xpath expr="//t[@t-call='web.external_layout']" position="attributes">
             <attribute name="address">False</attribute>
             <attribute name="information_block">False</attribute>
+            <attribute name="l10n_in_invoice_header">True</attribute>
         </xpath>
         <xpath expr="//div[hasclass('page')]" position="attributes">
             <attribute name="class" add="l10n_in_invoice" separator=" "/>
@@ -12,15 +13,24 @@
         <xpath expr="//div[@id='informations']" position="before">
             <style>
                 .l10n_in_invoice { font-size: 12px; }
-                .l10n_in_invoice .l10n_in_parties { table-layout: fixed; }
-                .l10n_in_invoice .l10n_in_parties td { padding: 12px; vertical-align: top; }
+                .l10n_in_invoice .l10n_in_document_header { table-layout: fixed; border-collapse: separate; border-spacing: 0; }
+                .l10n_in_invoice .l10n_in_document_header > tbody > tr > td { vertical-align: top; padding: 0; width: 50%; }
+                .l10n_in_invoice .l10n_in_document_header > tbody > tr > td:first-child { padding-right: 16px; }
+                .l10n_in_invoice .l10n_in_parties { table-layout: fixed; margin-bottom: 0; }
+                .l10n_in_invoice .l10n_in_parties td { padding: 10px 12px; vertical-align: top; }
                 .l10n_in_invoice .l10n_in_parties address { line-height: 1.45; }
                 .l10n_in_invoice .l10n_in_party_heading { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
-                .l10n_in_invoice #informations { display: block !important; overflow: hidden; margin: 0 0 16px; border-top: 1px solid #dee2e6; }
-                .l10n_in_invoice #informations > .col { float: left; width: 50%; max-width: 50%; padding: 6px 10px; border-bottom: 1px solid #dee2e6; }
-                .l10n_in_invoice #informations > .col:nth-child(2n+1) { clear: left; }
-                .l10n_in_invoice #informations > .col > strong { display: inline-block; width: 42%; vertical-align: top; }
-                .l10n_in_invoice #informations > .col > div { display: inline-block; max-width: 56%; }
+                .l10n_in_invoice .l10n_in_reference_heading { padding: 7px 10px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; }
+                .l10n_in_invoice #informations { display: block !important; overflow: hidden; margin: 0; }
+                .l10n_in_invoice #informations > .col { float: left; width: 50%; max-width: 50%; min-height: 48px; padding: 7px 10px; border-bottom: 1px solid #dee2e6; overflow-wrap: break-word; }
+                .l10n_in_invoice #informations > .col:nth-child(2n+1) { clear: both; border-right: 1px solid #dee2e6; }
+                .l10n_in_invoice #informations > .col > strong { display: block; font-size: 10px; line-height: 1.3; margin-bottom: 3px; }
+                .l10n_in_invoice #informations > .col > div { display: block; font-size: 11px; line-height: 1.35; }
+                .l10n_in_invoice .l10n_in_reference_card { border: 1px solid #dee2e6; overflow: hidden; }
+                .l10n_in_invoice .l10n_in_header_bubble .l10n_in_reference_card { border-radius: 12px; }
+                .l10n_in_invoice .l10n_in_header_wave .l10n_in_reference_card { border-radius: 12px 0 12px 0; }
+                .l10n_in_invoice .l10n_in_header_folder .l10n_in_reference_card { border-radius: 0 12px 0 0; }
+                .l10n_in_invoice .l10n_in_header_compact #informations > .col { min-height: 42px; padding: 5px 8px; }
                 .l10n_in_invoice .o_main_table th,
                 .l10n_in_invoice .l10n_in_hsn_table th { background-color: #f3f4f5; padding: 8px 6px; }
                 .l10n_in_invoice .o_main_table td,
@@ -38,18 +48,28 @@
             <div t-if="l10n_in_report_title" class="text-end text-muted small mb-2" name="l10n_in_copy_title">
                 <t t-out="l10n_in_report_title"/>
             </div>
-            <table class="table table-bordered l10n_in_parties mb-3" name="l10n_in_party_details">
+            <table t-attf-class="table table-borderless w-100 mb-3 l10n_in_document_header l10n_in_header_{{(o.company_id.external_report_layout_id.key or 'web.external_layout_standard').split('external_layout_')[-1]}}" name="l10n_in_document_header">
                 <tbody>
                     <tr>
                         <td>
-                            <t t-out="address"/>
+                            <table class="table table-bordered l10n_in_parties" name="l10n_in_party_details">
+                                <tbody>
+                                    <tr><td><t t-out="address"/></td></tr>
+                                    <tr t-if="information_block"><td><t t-out="information_block"/></td></tr>
+                                </tbody>
+                            </table>
                         </td>
-                        <td t-if="information_block">
-                            <t t-out="information_block"/>
+                        <td name="l10n_in_header_references">
+                            <div class="l10n_in_reference_card" t-att-style="'border-top: 3px solid %s;' % (o.company_id.primary_color or '#243746')">
+                                <div class="l10n_in_reference_heading" t-att-style="'color: %s;' % (o.company_id.primary_color or '#243746')">Document Details</div>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </xpath>
+        <xpath expr="//div[hasclass('l10n_in_reference_card')]" position="inside">
+            <xpath expr="//div[@id='informations']" position="move"/>
         </xpath>
         <xpath expr="//t[@t-set='layout_document_title']" position="before">
             <t t-set="custom_in_footer">
@@ -115,6 +135,13 @@
             <div class="col" t-if="o.l10n_in_adjustment_type and o.l10n_in_adjustment_type != 'standard'" name="l10n_in_adjustment_type">
                 <strong>Adjustment Type</strong>
                 <div t-field="o.l10n_in_adjustment_type">Price Adjustment</div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[1]" position="before">
+            <div class="col" name="l10n_in_document_number">
+                <strong>Document No.</strong>
+                <div t-if="o.name and o.name != '/'" t-field="o.name"/>
+                <div t-else="">Draft</div>
             </div>
         </xpath>
         <xpath expr="//div[@id='informations']" position="attributes">
@@ -293,6 +320,14 @@
             <xpath expr="//div[@name='l10n_in_hsn_summary']/../.." position="move"/>
         </xpath>
 
+    </template>
+
+    <!-- The Bubble header already has a company column; avoid halving its address width again. -->
+    <template id="external_layout_bubble_invoice" inherit_id="web.external_layout_bubble">
+        <xpath expr="//div[@name='company_address']" position="attributes">
+            <attribute name="t-attf-class">{{'w-100' if l10n_in_invoice_header else 'w-50'}} ms-auto</attribute>
+            <attribute name="class"/>
+        </xpath>
     </template>
 
     <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
