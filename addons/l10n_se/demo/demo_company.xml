@@ -16,7 +16,7 @@
     <record id="base.demo_company_se" model="res.company" forcecreate="1">
         <field name="name">SE Company</field>
         <field name="partner_id" ref="base.partner_demo_company_se"/>
-        <field name="additional_identifiers" eval="{'SE_EN': '555555-5555'}"/>
+        <field name="additional_identifiers" eval="{'SE_EN': '8103547462'}"/>
     </record>
 
     <record id="base.demo_bank_se" model="res.partner.bank" forcecreate="1">
@@ -37,7 +37,7 @@
 
     <function model="account.chart.template" name="try_loading">
         <value eval="[]"/>
-        <value>se</value>
+        <value>se_K2</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_se')"/>
         <value name="install_demo" eval="True"/>
     </function>
