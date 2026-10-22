@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import datetime, time
+from datetime import datetime
 
 from odoo import _, fields, models
 from odoo.fields import Domain
@@ -67,7 +67,7 @@ class ResCompany(models.Model):
 
     def _get_closing_move_extra_vals(self, at_date):
         vals = super()._get_closing_move_extra_vals(at_date)
-        vals['closing_datetime'] = datetime.combine(at_date, time.max) if at_date else fields.Datetime.now()
+        vals['closing_datetime'] = self._to_datetime_upper_bound(at_date) if at_date else fields.Datetime.now()
         return vals
 
     def _get_closing_date_field(self):
