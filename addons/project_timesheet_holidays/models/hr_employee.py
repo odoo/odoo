@@ -57,15 +57,21 @@ class HrEmployee(models.Model):
             groupby=['company_id'],
             aggregates=['id:recordset'],
         )))
+        # the work time only depends on the calendar and the company, compute it once per pair
+        # instead of once per employee (and only for that calendar, not every calendar of the company)
+        global_leaves_and_work_hours = {}
         for employee in employees:
             if not employee.active:
                 continue
-            # First we look for the global time off that are already planned after today
-            global_leaves = employee.resource_calendar_id.global_leave_ids.filtered(lambda l: l.date_from >= today) + global_leaves_wo_calendar[employee.company_id]
-            work_hours_data_by_calendar = global_leaves._work_time_per_day()
+            calendar = employee.resource_calendar_id
+            key = (calendar, employee.company_id)
+            if key not in global_leaves_and_work_hours:
+                # First we look for the global time off that are already planned after today
+                global_leaves = calendar.global_leave_ids.filtered(lambda l: l.date_from >= today) + global_leaves_wo_calendar[employee.company_id]
+                global_leaves_and_work_hours[key] = (global_leaves, global_leaves._work_time_per_day(calendar)[calendar.id])
+            global_leaves, work_hours_data = global_leaves_and_work_hours[key]
             for global_time_off in global_leaves:
-                calendar = employee.resource_calendar_id
-                work_hours_list = work_hours_data_by_calendar[calendar.id][global_time_off.id][False]
+                work_hours_list = work_hours_data[global_time_off.id][False]
                 for index, (day_date, work_hours_count) in enumerate(work_hours_list):
                     lines_vals.append(
                         global_time_off._timesheet_prepare_line_values(
