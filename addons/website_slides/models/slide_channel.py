@@ -564,6 +564,9 @@ class Channel(models.Model):
     @api.depends('slide_ids.slide_category', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views', 'slide_ids.is_category', 'slide_ids.active')
     def _compute_slides_statistics(self):
+        if self.env.context.get('skip_compute_during_archive'):
+            return
+
         default_vals = dict(total_views=0, total_votes=0, total_time=0, total_slides=0)
         keys = ['nbr_%s' % slide_category for slide_category in self.env['slide.slide']._fields['slide_category'].get_values(self.env)]
         default_vals.update(dict((key, 0) for key in keys))
@@ -793,6 +796,7 @@ class Channel(models.Model):
         to_archive = self.filtered(lambda channel: channel.active)
         to_activate = self.filtered(lambda channel: not channel.active)
         if to_archive:
+            to_archive = to_archive.with_context(skip_compute_during_archive=True)
             super(Channel, to_archive).toggle_active()
             to_archive.is_published = False
             to_archive.mapped('slide_ids').action_archive()
