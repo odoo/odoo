@@ -1,17 +1,33 @@
-import { Component, signal, types, useProps } from "@odoo/owl";
+import {
+    Component,
+    onWillDestroy,
+    onWillStart,
+    signal,
+    types,
+    useProps,
+    useScope,
+} from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { useVisible } from "@mail/utils/common/hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { ConnectionAbortedError, rpc } from "@web/core/network/rpc";
+import { SearchInput } from "@mail/core/common/search_input";
 import { Follower } from "@mail/core/web/follower";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
+import { useSearch, useVisible } from "@mail/utils/common/hooks";
+
+const LOAD_MORE_LIMIT = 20;
 
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
-    static components = { DropdownItem, Follower };
+    static components = { Follower, SearchInput };
 
+    followersFullyLoaded = signal(false);
+    /** @type {ReturnType<typeof rpc> | undefined} */
+    followersRequest;
     loadMoreRef = signal.ref();
+    scope = useScope();
 
     setup() {
         super.setup();
@@ -23,14 +39,96 @@ export class FollowerList extends Component {
             onFollowerChanged: types.function([]).optional(),
             thread: types.instanceOf(this.store["mail.thread"]),
         });
+        this.LOAD_MORE_LIMIT = LOAD_MORE_LIMIT;
+        this.followerListView = this.store.FollowerListView.insert({
+            id: uniqueId("follower_list_view_"),
+            thread: this.props.thread,
+        });
+        this.search = useSearch({
+            fetch: async (searchTerm) => {
+                await this.loadFollowers({
+                    reset: true,
+                    searchTerm,
+                });
+                return this.followerListView.followers.length > 0;
+            },
+            isActive: () => this.search.searchTerm || this.search.searching,
+        });
         useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
-                this.props.thread.loadMoreFollowers();
+                this.loadFollowers();
             }
+        });
+        onWillStart(() => this.loadFollowers());
+        onWillDestroy(() => {
+            this.followersRequest?.abort();
+            this.followerListView.delete();
         });
     }
 
+    /**
+     * Fetches the next page, or replaces the list and cancels the pending request on reset.
+     *
+     * Follower records are normalized in the global store, while their ordered
+     * relation remains scoped to this `FollowerListView`.
+     * @param {Object} [options={}]
+     * @param {boolean} [options.reset=false] Whether to replace the loaded followers.
+     * @param {string} [options.searchTerm] Term used to filter by name or email.
+     */
+    loadFollowers({ reset = false, searchTerm = this.search.searchTerm } = {}) {
+        const { abortSignal } = this.scope;
+        if (
+            abortSignal.aborted ||
+            (!reset && (this.followersRequest || this.followersFullyLoaded()))
+        ) {
+            return;
+        }
+        this.followersRequest?.abort();
+        const request = rpc("/mail/thread/followers", {
+            thread_id: this.props.thread.id,
+            thread_model: this.props.thread.model,
+            offset: reset ? 0 : this.followerListView.followers.length,
+            // Fetch one extra follower to show Load more only when another page exists.
+            limit: this.LOAD_MORE_LIMIT + 1,
+            search_term: searchTerm,
+        });
+        this.followersRequest = request;
+        return request
+            .then(({ follower_ids, store_data }) => {
+                if (
+                    abortSignal.aborted ||
+                    this.followersRequest !== request ||
+                    searchTerm !== this.search.searchTerm
+                ) {
+                    return;
+                }
+                this.store.insert(store_data);
+                this.followersFullyLoaded.set(follower_ids.length <= this.LOAD_MORE_LIMIT);
+                const followerIds = follower_ids.slice(0, this.LOAD_MORE_LIMIT);
+                if (reset) {
+                    this.followerListView.followers = followerIds;
+                } else {
+                    this.followerListView.followers.add(...followerIds);
+                }
+            })
+            .catch((error) => {
+                if (!(error instanceof ConnectionAbortedError)) {
+                    throw error;
+                }
+            })
+            .finally(() => {
+                if (this.followersRequest === request) {
+                    this.followersRequest = undefined;
+                }
+            });
+    }
+
+    onClearSearch() {
+        this.search.searchTerm = "";
+    }
+
     onClickAddFollowers() {
+        this.props.dropdown.close();
         const action = {
             type: "ir.actions.act_window",
             res_model: "mail.followers.edit",
@@ -56,6 +154,7 @@ export class FollowerList extends Component {
         const { thread } = this.props;
         await thread.follow();
         this.props.onFollowerChanged?.(thread);
+        this.props.dropdown.close();
     }
 
     async onClickUnfollow() {
@@ -64,6 +163,7 @@ export class FollowerList extends Component {
             await thread.selfFollower.remove();
             this.props.onFollowerChanged?.(thread);
         }
+        this.props.dropdown.close();
     }
 
     async onClickEdit() {
@@ -72,5 +172,11 @@ export class FollowerList extends Component {
             onFollowerChanged: (thread) => this.props.onFollowerChanged?.(thread),
         });
         this.props.dropdown.close();
+    }
+
+    otherFollowersCount() {
+        return this.props.thread.selfFollower
+            ? this.props.thread.followersCount - 1
+            : this.props.thread.followersCount;
     }
 }

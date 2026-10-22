@@ -526,3 +526,48 @@ test("focus not stolen from search input during typing, hovering, and clearing",
     expect(".fake-item").toHaveCount(10);
     expect("input").toBeFocused();
 });
+
+test("preserve scroll on item updates and scroll to the next item on keyboard navigation", async () => {
+    class TestComp extends Component {
+        static template = xml`
+            <div class="container" style="height: 100px; overflow: auto; overflow-anchor: none" t-ref="this.containerRef">
+                <t t-foreach="this.state.items" t-as="item" t-key="item">
+                    <div class="o-navigable" t-attf-class="item-{{item}}" tabindex="0" style="height: 40px" t-out="item"/>
+                </t>
+            </div>
+        `;
+
+        containerRef = signal.ref();
+        setup() {
+            this.navigation = useNavigation(this.containerRef, { shouldScrollOnUpdate: false });
+            this.state = proxy({ items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] });
+            onMounted(() => this.navigation.items[0].setActive());
+        }
+    }
+
+    const component = await mountWithCleanup(TestComp);
+    const scrollable = component.containerRef();
+    expect(".item-1").toBeFocused();
+    scrollable.scrollTop = 200;
+
+    component.state.items.push(11);
+    await animationFrame();
+
+    expect(".item-11").toHaveCount(1);
+    expect(".item-1").toBeFocused();
+    expect(".item-1").toHaveClass("focus");
+    expect(scrollable.scrollTop).toBe(200);
+
+    component.state.items.shift();
+    await animationFrame();
+
+    expect(".item-1").toHaveCount(0);
+    expect(".item-2").toBeFocused();
+    expect(".item-2").toHaveClass("focus");
+    expect(scrollable.scrollTop).toBe(200);
+
+    await press("arrowdown");
+    expect(".item-3").toBeFocused();
+    expect(".item-3").toHaveClass("focus");
+    expect(scrollable.scrollTop).toBe(40);
+});
