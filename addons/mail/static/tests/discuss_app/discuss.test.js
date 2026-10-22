@@ -1344,6 +1344,48 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     expect(titleService.current).toBe("(1) Inbox");
 });
 
+test("out-of-focus notif respects push subscription eligibility", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Hagrid" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    patchWithCleanup(OutOfFocusService.prototype, {
+        async notify() {
+            expect.step("notification handled");
+            await super.notify(...arguments);
+        },
+        async hasServiceWorkInstalledAndPushSubscriptionActive() {
+            return true;
+        },
+        sendNotification() {
+            expect.step("send_notification");
+        },
+    });
+    onRpcBefore("/mail/data", async (args) => {
+        if (args.init_messaging) {
+            expect.step("init_messaging");
+        }
+    });
+    await start();
+    await openDiscuss();
+    await expect.waitForSteps(["init_messaging"]);
+    const adminId = serverState.partnerId;
+    const post = (author, message_type) =>
+        withUser(author, () =>
+            rpc("/mail/message/post", {
+                post_data: { body: "hello", partner_ids: [adminId], message_type },
+                thread_id: partnerId,
+                thread_model: "res.partner",
+            })
+        );
+    await post(userId, "comment");
+    await expect.waitForSteps(["notification handled"]);
+    await post(userId, "auto_comment");
+    await expect.waitForSteps(["notification handled", "send_notification"]);
+    await post(serverState.userId, "comment");
+    await expect.waitForSteps(["notification handled", "send_notification"]);
+});
+
 test("out-of-focus notif on needaction message in group chat contributes only once", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
