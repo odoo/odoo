@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import json
 from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.tools import html_escape
-from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 
 from odoo.addons.portal.controllers.thread import PortalWebClientController
@@ -308,7 +307,7 @@ class BlogPost(models.Model):
         res['default_opengraph']['article:modified_time'] = self.write_date
         res['default_opengraph']['article:tag'] = self.tag_ids.mapped('name')
         # background-image might contain single quotes eg `url('/my/url')`
-        res['default_opengraph']['og:image'] = json_scriptsafe.loads(self.cover_properties).get('background-image', 'none')[4:-1].strip("\"'")
+        res['default_opengraph']['og:image'] = json.loads(self.cover_properties).get('background-image', 'none')[4:-1].strip("\"'")
         res['default_opengraph']['og:title'] = self.name
         res['default_meta_description'] = self.subtitle
         return res

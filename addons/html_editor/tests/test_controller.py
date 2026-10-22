@@ -5,7 +5,6 @@ import json
 
 import odoo.tests
 from odoo.tests.common import HttpCase, new_test_user
-from odoo.tools.json import scriptsafe as json_safe
 from unittest.mock import patch
 from odoo.addons.base.tests.files import GIF_B64
 from odoo.addons.mail.tools import link_preview
@@ -31,7 +30,7 @@ class TestController(HttpCase):
         response = self.url_open(
             '/html_editor/attachment/add_data',
             headers={'Content-Type': 'application/json'},
-            data=json_safe.dumps({'params': {
+            data=json.dumps({'params': {
                 'name': 'test.txt',
                 'data': 'SGVsbG8gd29ybGQ=',  # base64 Hello world
                 'is_image': False,
@@ -103,7 +102,7 @@ class TestController(HttpCase):
         response = self.url_open(
             '/html_editor/attachment/add_data',
             headers={'Content-Type': 'application/json'},
-            data=json_safe.dumps({'params': {
+            data=json.dumps({'params': {
                 'name': 'test.gif',
                 'data': GIF_B64,
                 'is_image': True,
@@ -118,7 +117,7 @@ class TestController(HttpCase):
         # Ensure image info can be retrieved.
         response = self.url_open('/html_editor/get_image_info',
                                  headers={'Content-Type': 'application/json'},
-                                 data=json_safe.dumps({
+                                 data=json.dumps({
                                      "params": {
                                          "src": image_src,
                                      }
@@ -163,7 +162,7 @@ class TestController(HttpCase):
         # retrieve metadata of an record without customerized link_preview_name but with display_name
         response_without_preview_name = self.url_open(
             '/html_editor/link_preview_internal',
-            data=json_safe.dumps({
+            data=json.dumps({
                 "params": {
                     "preview_url": _get_full_url(f"/odoo/users/{self.portal_user.id}"),
                 }
@@ -176,7 +175,7 @@ class TestController(HttpCase):
         # retrieve metadata of a url with wrong action name
         response_wrong_action = self.url_open(
             '/html_editor/link_preview_internal',
-            data=json_safe.dumps({
+            data=json.dumps({
                 "params": {
                     "preview_url": _get_full_url("/odoo/actionInvalid/1"),
                 }
@@ -189,7 +188,7 @@ class TestController(HttpCase):
         # retrieve metadata of a url with wrong record id
         response_wrong_record = self.url_open(
             '/html_editor/link_preview_internal',
-            data=json_safe.dumps({
+            data=json.dumps({
                 "params": {
                     "preview_url": _get_full_url("/odoo/users/9999"),
                 }
@@ -205,7 +204,7 @@ class TestController(HttpCase):
             # a page description set
             response_page_with_desc = self.url_open(
                 '/html_editor/link_preview_internal',
-                data=json_safe.dumps({
+                data=json.dumps({
                     "params": {
                         "preview_url": _get_full_url("/page-with-description"),
                     }
@@ -219,7 +218,7 @@ class TestController(HttpCase):
             # no page description set
             response_page_without_desc = self.url_open(
                 '/html_editor/link_preview_internal',
-                data=json_safe.dumps({
+                data=json.dumps({
                     "params": {
                         "preview_url": _get_full_url("/page-without-description"),
                     }
@@ -231,7 +230,7 @@ class TestController(HttpCase):
 
             response_page_without_desc = self.url_open(
                 '/html_editor/link_preview_internal',
-                data=json_safe.dumps({
+                data=json.dumps({
                     "params": {
                         "preview_url": _get_full_url("/shop/category/1"),
                     }
@@ -245,7 +244,7 @@ class TestController(HttpCase):
             # Check metadata for a URL that points to an invalid/unknown page
             invalid_page = self.url_open(
                 '/html_editor/link_preview_internal',
-                data=json_safe.dumps({
+                data=json.dumps({
                     "params": {
                         "preview_url": _get_full_url("/invalid-page"),
                     }
@@ -258,7 +257,7 @@ class TestController(HttpCase):
         # Attempt to retrieve metadata for path format `odoo/<model>/<record_id>`
         response_model_record = self.url_open(
             '/html_editor/link_preview_internal',
-            data=json_safe.dumps({
+            data=json.dumps({
                 "params": {
                     "preview_url": _get_full_url(f"/odoo/res.users/{self.portal_user.id}"),
                 }
@@ -272,7 +271,7 @@ class TestController(HttpCase):
         # Attempt to retrieve metadata for an abstract model
         response_abstract_model = self.url_open(
             '/html_editor/link_preview_internal',
-            data=json_safe.dumps({
+            data=json.dumps({
                 "params": {
                     "preview_url": _get_full_url("/odoo/mail.thread/1"),
                 }
