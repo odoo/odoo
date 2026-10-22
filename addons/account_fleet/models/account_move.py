@@ -23,7 +23,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)  # We need the move name to be set, but we also need to know which move are posted for the first time.
 
         vehicle_lines = posted.line_ids.filtered(
-            lambda line: line.vehicle_id and line.move_id.move_type == 'in_invoice' and line.display_type == 'product',
+            lambda line: line.vehicle_id and line.move_id.move_type == 'in_invoice' and line.display_type == 'product'
         )
         val_list = []
 
@@ -104,6 +104,12 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.vehicle_log_service_id and line.vehicle_id != line.vehicle_log_service_id.vehicle_id:
                 raise ValidationError(self.env._("The vehicle on the invoice line must match the vehicle on the linked fleet service."))
+
+    @api.constrains('move_id', 'vehicle_log_service_id')
+    def _check_service_single_bill(self):
+        for line in self:
+            if len(line.vehicle_log_service_id.account_move_line_ids.move_id) > 1:
+                raise ValidationError(self.env._("The invoice lines of a fleet service must all belong to the same bill."))
 
     def write(self, vals):
         """

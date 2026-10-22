@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -340,3 +340,18 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
 
         self.assertFalse(service.exists())
         self.assertFalse(self.car_1.log_services)
+
+    def test_service_bill_lines_of_another_bill(self):
+        """
+        Test that a fleet service cannot be linked to the lines of another bill.
+        """
+
+        self.bill.action_post()
+        service = self.car_1.log_services
+        other_line = self.bill.copy().invoice_line_ids
+
+        with self.assertRaises(ValidationError):
+            other_line.vehicle_log_service_id = service
+
+        with self.assertRaises(ValidationError):
+            service.account_move_line_ids = [Command.link(other_line.id)]
