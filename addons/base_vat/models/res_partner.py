@@ -116,6 +116,7 @@ class ResPartner(models.Model):
             if validation == 'error':
                 raise ValidationError(_("To explicitly indicate no (valid) VAT, use '/' instead. "))
         vat_prefix, vat_number = self._split_vat(vat)
+        original_vat = vat
 
         if vat_prefix == 'EU' and country not in self.env.ref('base.europe').country_ids:
             # Foreign companies that trade with non-enterprises in the EU
@@ -141,14 +142,24 @@ class ResPartner(models.Model):
 
         vat_to_return = prefixed_country + vat
 
+        # Avoid validating double prefix like BEBE0477472701
+        double_prefix = prefixed_country and vat_to_return.startswith(prefixed_country + prefixed_country)
+        is_valid = self._check_vat_number(code_to_check, vat) and not double_prefix
+
+        if not is_valid and not prefixed_country:
+            company_country = self.env.company.country_id
+            if company_country and company_country != country:
+                if self._get_vat_validation_method(company_country.code):
+                    cross_border_vat, cross_border_code = self._run_vat_checks(company_country, original_vat, partner_name, validation='setnull')
+                    if cross_border_vat:
+                        return cross_border_vat, cross_border_code
+
         # The context key 'no_vat_validation' allows you to store/set a VAT number without doing validations.
         # This is for API pushes from external platforms where you have no control over VAT numbers.
         if not validation or self.env.context.get('no_vat_validation'):
             return vat_to_return, code_to_check
 
-        # Avoid validating double prefix like BEBE0477472701
-        double_prefix = prefixed_country and vat_to_return.startswith(prefixed_country + prefixed_country)
-        if not self._check_vat_number(code_to_check, vat) or double_prefix:
+        if not is_valid:
             partner_label = _("partner [%s]", partner_name)
             if do_eu_check:
                 try:
@@ -156,15 +167,6 @@ class ResPartner(models.Model):
                 except ValidationError:
                     msg = self._build_vat_error_message(code_to_check, vat_to_return, partner_label)
                     raise ValidationError(msg + "\n\n" + _('If you are trying to input a European number, this is the expected format: ') + _ref_vat[country_code.lower()])
-
-            company_country = self.env.company.country_id
-            if company_country and company_country != country:
-                if self._get_vat_validation_method(company_country.code):
-                    try:
-                        return self._run_vat_checks(company_country, vat, partner_name, validation)
-                    except ValidationError:
-                        pass
-
             if validation == 'error':
                 msg = self._build_vat_error_message(code_to_check, vat_to_return, partner_label)
                 raise ValidationError(msg)
