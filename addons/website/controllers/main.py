@@ -986,7 +986,7 @@ class Website(Home):
             img['field'] = 'arch_db' if img['field'] == 'arch' else img['field']
             tree = html.fromstring(str(record[img['field']]))
             modified = False
-            for index, element in enumerate(tree.xpath('//img')):
+            for index, element in enumerate(tree.xpath('//img[@src]')):
                 imgId = self._get_image_id(img['res_model'], img['res_id'], img['field'], str(index))
                 if imgId == img['id']:
                     if (img['decorative']):
