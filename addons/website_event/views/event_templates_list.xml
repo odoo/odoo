@@ -327,7 +327,7 @@
 
 <template id="event_card" name="Event Card">
     <t t-set="event_tag_ids" t-value="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)"/>
-    <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none text-reset position-relative" t-att-data-publish="event.website_published and 'on' or 'off'">
+    <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="o_focus_ring_after text-decoration-none text-reset d-block h-100" t-att-data-publish="event.website_published and 'on' or 'off'">
         <t t-if="not event.website_published" t-call="website.unpublished_badge" badge_position="'left'" groups="base.group_user"/>
         <article t-attf-class="position-relative h-100 #{opt_events_list_cards and 'card'}">
             <div t-attf-class="h-100 #{opt_events_list_columns and 'd-flex flex-wrap flex-column' or 'row mx-0'}">
