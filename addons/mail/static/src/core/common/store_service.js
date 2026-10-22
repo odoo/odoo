@@ -505,7 +505,8 @@ export class Store extends BaseStore {
                 const isMessageSeen =
                     model === "discuss.channel"
                         ? thread?.self_member_id?.seen_message_id?.id >= message_id
-                        : thread?.messages.some((m) => m.id === message_id);
+                        : thread?.messages.some((m) => m.id === message_id) ||
+                          this["mail.message"].get(message_id)?.needaction === false;
                 if (
                     this.self_partner?.im_status?.includes("busy") ||
                     (isTabFocused && thread?.isDisplayed) ||
