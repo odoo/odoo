@@ -222,6 +222,13 @@ class Logger {
         $log(...styledArguments(args));
     }
     /**
+     * @param {Record<string, number>} moduleDurations durations in ms, keyed
+     *  by module name
+     */
+    logModuleStats(moduleDurations) {
+        $debug(`[HOOT_STATS] ${JSON.stringify(moduleDurations)}`);
+    }
+    /**
      * @param {...any} args
      */
     logGlobal(...args) {
