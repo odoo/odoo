@@ -342,6 +342,100 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertFalse(tx.invoice_ids)
         self.assertFalse(self.sale_order.invoice_ids)
 
+    def _confirm_order_with_price(self, price):
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.service_product.id,
+                    "product_uom_qty": 1,
+                    "price_unit": price,
+                })
+            ],
+        })
+        order.action_confirm()
+        return order
+
+    def _get_mark_as_paid_form(self, order, **values):
+        action = order.action_register_payment()
+        return self.env[action["res_model"]].with_context(action["context"]).new(values)
+
+    def _mark_as_paid(self, order, **values):
+        action = order.action_register_payment()
+        payment = self.env[action["res_model"]].with_context(action["context"]).create(values)
+        payment.action_post()
+        return payment
+
+    def test_mark_as_paid_does_not_create_an_invoice(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order)
+
+        self.assertFalse(order.invoice_ids)
+
+    def test_mark_as_paid_suggests_the_amount_left_to_pay(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order, amount=40)
+
+        self.assertEqual(self._get_mark_as_paid_form(order).amount, 60)
+
+    def test_mark_as_paid_deducts_online_payments(self):
+        order = self._confirm_order_with_price(100)
+        self.amount = 30
+        self.currency = order.currency_id
+        self.reference = f"{order.name}-online"
+        self._create_transaction(flow="redirect", sale_order_ids=[order.id], state="done")
+
+        self.assertEqual(self._get_mark_as_paid_form(order).amount, 70)
+
+    def test_mark_as_paid_on_fully_paid_order_raises(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order)
+
+        with self.assertRaises(UserError):
+            order.action_register_payment()
+
+    def test_mark_as_paid_registers_the_payment_in_the_company_of_the_order(self):
+        other_company = self.setup_other_company()["company"]
+        order = self._confirm_order_with_price(100)
+        order.company_id = other_company
+
+        self.assertEqual(self._mark_as_paid(order).company_id, other_company)
+
+    def test_outgoing_payment_does_not_count_as_paid(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order, amount=30, payment_type="outbound")
+
+        self.assertEqual(order.amount_paid, 0)
+
+    def test_payment_link_deducts_payments_registered_from_the_order(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order, amount=40)
+
+        self.assertEqual(order._get_default_payment_link_values()["amount"], 60)
+
+    def test_payment_registered_from_the_order_is_matched_with_its_invoice(self):
+        order = self._confirm_order_with_price(100)
+        payment = self._mark_as_paid(order, amount=40)
+        invoice = order._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(invoice.matched_payment_ids, payment)
+
+    def test_collect_payment_menu_on_confirmed_order(self):
+        # The timesheet report of the action menu requires timesheet rights when it is installed
+        self.env.user.group_ids |= (
+            self.env.ref("hr_timesheet.group_hr_timesheet_user", raise_if_not_found=False)
+            or self.env["res.groups"]
+        )
+        order = self._confirm_order_with_price(100)
+        self.start_tour(
+            f"/odoo/action-sale.action_orders/{order.id}",
+            "sale_collect_payment_on_confirmed_order",
+            login=self.env.user.login,
+        )
+
+        self.assertEqual(order.amount_paid, 40)
+
     def test_split_payment_without_prepayment_does_not_confirm_order(self):
         """Test that a partial payment doesn't confirm an order that doesn't require prepayment."""
         self.sale_order.prepayment_percent = 0.0

@@ -404,6 +404,12 @@ class SaleOrder(models.Model):
         compute="_compute_authorized_transaction_ids",
         compute_sudo=True,
     )
+    payment_ids = fields.One2many(
+        string="Payments",
+        comodel_name="account.payment",
+        inverse_name="sale_order_id",
+        groups="account.group_account_invoice",
+    )
     amount_paid = fields.Float(
         string="Payment Transactions Amount",
         help="Sum of transactions made in through the online payment form that are in the state"
@@ -925,20 +931,42 @@ class SaleOrder(models.Model):
             )
             trans.has_authorized_transaction_ids = bool(trans.authorized_transaction_ids)
 
-    @api.depends("transaction_ids.state", "transaction_ids.amount")
+    @api.depends(
+        "transaction_ids.state",
+        "transaction_ids.amount",
+        "payment_ids.payment_type",
+        "payment_ids.state",
+        "payment_ids.amount",
+        "payment_ids.date",
+    )
     def _compute_amount_paid(self):
-        """Sum of the amount paid through all transactions for this SO."""
+        """Sum of the amount paid through all transactions and payments for this SO."""
         for order in self:
             order.amount_paid = sum(
                 tx.amount for tx in order.transaction_ids if tx.state in ("authorized", "done")
+            ) + sum(
+                payment.currency_id._convert(
+                    payment.amount, order.currency_id, order.company_id, payment.date
+                )
+                for payment in order.payment_ids
+                if payment.payment_type == "inbound" and payment.state in ("paid", "reconciled")
             )
 
-    @api.depends("amount_total", "amount_paid", "amount_invoiced", "transaction_ids.invoice_ids")
+    @api.depends(
+        "amount_total",
+        "amount_paid",
+        "amount_invoiced",
+        "transaction_ids.invoice_ids",
+        "payment_ids.invoice_ids",
+    )
     def _compute_amount_unpaid(self):
         for order in self:
-            online_payments_invoices = order.transaction_ids.filtered(
-                lambda tx: tx.state in {"authorized", "done"}
-            ).invoice_ids
+            online_payments_invoices = (
+                order.transaction_ids.filtered(
+                    lambda tx: tx.state in {"authorized", "done"}
+                ).invoice_ids
+                | order.payment_ids.invoice_ids
+            )
             offline_invoice_lines = order.order_line.invoice_lines.filtered(
                 lambda line: (
                     line.parent_state in {"draft", "posted"}
@@ -2318,6 +2346,35 @@ class SaleOrder(models.Model):
             .transaction_ids.with_context(suggested_amount=self.amount_total)
             .action_capture()
         )
+
+    def action_register_payment(self):
+        self.ensure_one()
+        if self.state != "sale":
+            raise UserError(self.env._("Only confirmed orders can be marked as paid."))
+        amount = self.currency_id.round(self.amount_total - self.amount_paid)
+        if self.currency_id.compare_amounts(amount, 0) <= 0:
+            raise UserError(self.env._("There is nothing left to pay on this order."))
+        return {
+            "name": self.env._("Mark as Paid"),
+            "type": "ir.actions.act_window",
+            "res_model": "account.payment",
+            "views": [(self.env.ref("sale.account_payment_view_form_mark_as_paid").id, "form")],
+            "target": "new",
+            "context": {
+                # Register the payment in the company of the order
+                "allowed_company_ids": [
+                    self.company_id.id,
+                    *(self.env.companies - self.company_id).ids,
+                ],
+                "default_payment_type": "inbound",
+                "default_partner_type": "customer",
+                "default_partner_id": self.partner_invoice_id.commercial_partner_id.id,
+                "default_amount": amount,
+                "default_currency_id": self.currency_id.id,
+                "default_memo": self.name,
+                "default_sale_order_id": self.id,
+            },
+        }
 
     def get_portal_last_transaction(self):
         self.ensure_one()
