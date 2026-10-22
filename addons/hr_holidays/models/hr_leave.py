@@ -1639,8 +1639,12 @@ is approved, validated or refused.')
 
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'validate':
-            leave_notif_subtype = self.holiday_status_id.leave_notif_subtype_id
-            return leave_notif_subtype or self.env.ref('hr_holidays.mt_leave')
+            leave_notif_subtype = (
+                self.holiday_status_id.leave_notif_subtype_id
+                or self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False)
+            )
+            if leave_notif_subtype:
+                return leave_notif_subtype
         return super()._track_subtype(init_values)
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
