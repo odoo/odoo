@@ -18,6 +18,10 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    @classmethod
+    def get_default_groups(cls):
+        return super().get_default_groups() | (cls.env.ref('sales_team.group_sale_salesman', False) or cls.env['res.groups'])
+
     @freeze_time("2024-07-15 10:00:00")
     def test_01_can_generate_file(self):
         """
