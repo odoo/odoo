@@ -17,22 +17,21 @@ class ResRole(models.Model):
     active = fields.Boolean(default=True)
     user_ids = fields.Many2many("res.users", relation="res_role_res_users_rel", string="Members")
     user_ids_count = fields.Integer(compute="_compute_user_ids_count")
-    # Stored as a Char instead of an Integer because the ORM couldn't distinguish between setting
-    # the color to black (0) and unsetting the value (NULL).
+    # A hex color code (e.g. "#FF0000" or "#F00") or a CSS color name (e.g. "red").
     color = fields.Char(
         help="The color in which the usernames of people with this role will be displayed. "
         "If a user has multiple roles, the color of the first role (as determined by "
         "the sequence field) that has a color is used.",
-        size=6,  # 6-digit hex color code, without the '#' prefix
     )
     sequence = fields.Integer(default=10)
 
     _unique_name = models.UniqueIndex("(name)", "A role with the same name already exists.")
     # The color is eventually used to style the page. Ensure nothing harmful (e.g. CSS injection)
-    # can be saved to this field.
+    # can be saved to this field: alphanumeric characters (and a leading '#') are enough for hex codes
+    # and color names, and can't break out of a CSS declaration.
     _valid_color_check = models.Constraint(
-        "CHECK(color IS NULL OR color ~ '^[A-Fa-f0-9]{6}$')",
-        "The color must be a valid 6-digit hex value."
+        "CHECK(color IS NULL OR color ~* '^#?[0-9a-z]+$')",
+        "The color must be a hex code (e.g. #FF0000) or a CSS color name (e.g. red)."
     )
 
     @api.depends("user_ids")

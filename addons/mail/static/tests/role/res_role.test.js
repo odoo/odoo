@@ -25,9 +25,9 @@ test("Author names are colored according to the author's role.", async () => {
      */
     const [roleId1, roleId2, roleId3, roleId4] = pyEnv["res.role"].create([
         { name: "no color", color: undefined, sequence: 1 },
-        { name: "green", color: "008000", sequence: 1000 },
-        { name: "red", color: "FF0000", sequence: 10 },
-        { name: "blue", color: "0000FF", sequence: 10 },
+        { name: "green", color: "#008000", sequence: 1000 },
+        { name: "red", color: "#FF0000", sequence: 10 },
+        { name: "blue", color: "#0000FF", sequence: 10 },
     ]);
     const partnerId = pyEnv["res.partner"].create({ name: "COLOR ME" });
     pyEnv["res.users"].create([
@@ -51,7 +51,7 @@ test("Author names are colored according to the author's role.", async () => {
 
 test("RoleColorBadge previews the role's assigned color.", async () => {
     const pyEnv = await startServer();
-    pyEnv["res.role"].create({ color: "008000" });
+    pyEnv["res.role"].create({ color: "#008000" });
     await start();
     await openListView("res.role", {
         arch: `<list><field name="color" widget="mail_role_color_badge"/></list>`,

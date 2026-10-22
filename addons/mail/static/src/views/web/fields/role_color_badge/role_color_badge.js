@@ -1,16 +1,12 @@
 import { useColorPicker } from "@html_editor/components/color_picker/color_picker";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
 import { Component, signal, types as t, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { isCSSColor, normalizeCSSColor } from "@web/core/utils/colors";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
-/**
- * Hexadecimal representation of an RGB color.
- * It consists of a '#' followed by 6 hexadecimal digits.
- * @typedef {`#${string}`} HexCode
- */
 
 /**
  * Widget for the `res.role` color field.
@@ -28,7 +24,7 @@ export class RoleColorBadge extends Component {
     setup() {
         useColorPicker(this.colorPickerTrigger, {
             state: {
-                selectedColor: this.hexCode,
+                selectedColor: this.color,
                 defaultTab: "solid",
             },
             applyColor: this.onColorPickerColorClicked.bind(this),
@@ -39,25 +35,29 @@ export class RoleColorBadge extends Component {
 
     /** @returns {string} */
     get style() {
-        if (!/^#[A-F0-9]{6}$/i.test(this.hexCode)) {
+        if (!this.color || !CSS.supports("color", this.color)) {
             return "";
         }
-        return `background-color: ${this.hexCode};`;
+        return `background-color: ${this.color};`;
     }
 
-    /** @returns {HexCode | ""} */
-    get hexCode() {
-        const hexDigits = this.props.record.data[this.props.name];
-        if (hexDigits) {
-            return "#" + hexDigits;
+    /** @returns {string} any CSS color, or "" if unset */
+    get color() {
+        return this.props.record.data[this.props.name] || "";
+    }
+
+    /**
+     * @param {string} color either a CSS color (e.g. "#FF0000") or the name of
+     * a CSS variable holding one (e.g. "900" for the grayscale buttons).
+     */
+    onColorPickerColorClicked(color) {
+        if (!isCSSColor(color)) {
+            color = getCSSVariableValue(color, getHtmlStyle(document));
         }
-        return "";
-    }
-
-    /** @param {HexCode} hexCode */
-    onColorPickerColorClicked(hexCode) {
-        const hexDigits = hexCode.slice(1); // remove the # prefix
-        this.props.record.update({ [this.props.name]: hexDigits });
+        if (!isCSSColor(color)) {
+            return;
+        }
+        this.props.record.update({ [this.props.name]: normalizeCSSColor(color) });
     }
 }
 

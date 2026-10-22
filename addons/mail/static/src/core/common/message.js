@@ -383,10 +383,10 @@ export class Message extends Component {
     /** @type {string} */
     get authorNameStyle() {
         const color = this.message.authorRoleColor;
-        if (!/^[A-F0-9]{6}$/i.test(color)) {
+        if (!color || !CSS.supports("color", color)) {
             return "";
         }
-        return `color: #${color};`;
+        return `color: ${color};`;
     }
 
     get deliveryFailureText() {
