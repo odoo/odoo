@@ -950,7 +950,7 @@ class IrAttachment(models.Model):
                 size=stat.st_size,
             )
 
-        elif self.url:
+        elif self.url and not self.db_datas:
             # When the URL targets a file located in an addon, assume it
             # is a path to the resource. It saves an indirection and
             # stream the file right away.
