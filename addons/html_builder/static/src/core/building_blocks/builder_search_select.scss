@@ -22,7 +22,7 @@
 
         &, &.btn-light.bg-light {
             --border-color: var(--o-we-bg-light);
-            --btn-padding-x: #{map-get($spacers , 2)};
+            --btn-padding-x: var(--o-hb-spacer-2);
 
             @include button-variant(
                 $background: $o-we-item-clickable-bg,
@@ -44,7 +44,7 @@
                 display: none;
             }
             &:after {
-                @include o-position-absolute(50%, map-get($spacers, 1));
+                @include o-position-absolute(50%, var(--o-hb-spacer-1));
                 transform: translate(-50%, -50%);
                 font-size: .5rem;
                 content: "arrow_drop_down";

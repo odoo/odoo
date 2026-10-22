@@ -37,7 +37,7 @@
         }
 
         &:after {
-            @include o-position-absolute(50%, map-get($spacers, 1));
+            @include o-position-absolute(50%, var(--o-hb-spacer-1));
             transform: translate(10%, -50%);
             font-size: 1.2em;
             // Keep truncated-text tooltips anchored on the button.
@@ -47,7 +47,7 @@
 
     &:first-child {
         .o_hb_select_toggle {
-            --btn-padding-x: #{map-get($spacers , 2)};
+            --btn-padding-x: var(--o-hb-spacer-2);
         }
     }
 }
@@ -86,7 +86,7 @@
     --o-hb-border-color: var(--o-we-bg-darker);
 
     --border-color: var(--o-hb-border-color);
-    --#{$prefix}popover-border-radius: #{map-get($spacers, 2)};
+    --#{$prefix}popover-border-radius: var(--o-hb-spacer-2);
     --#{$prefix}popover-inner-border-radius: calc(var(--#{$prefix}popover-border-radius) - var(--#{$prefix}popover-border-width));
     --#{$prefix}dropdown-item-border-radius: 0;
 
