@@ -3,13 +3,18 @@ import re
 
 from collections import OrderedDict
 
+from lxml import html
+
 from odoo import models
 from odoo.http import request
+from odoo.addons.base.models.ir_qweb import indent_code
 from odoo.addons.website.tools import add_form_signature
 
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 re_translate_span = re.compile(r'<span.+?data-oe-translation-source-sha.+?>(.+?)</span>')
+# the JSON-LD items that are not the property of another one
+JSONLD_ITEMS_XPATH = '//*[@data-jsonld-type][not(@data-jsonld-prop)]'
 
 
 class IrQweb(models.AbstractModel):
@@ -43,7 +48,34 @@ class IrQweb(models.AbstractModel):
         element, document, ref = super()._get_template(template)
         if self.env.context.get('website_id'):
             add_form_signature(element, self.sudo().env)
+            for item in element.xpath(JSONLD_ITEMS_XPATH):
+                item.set('t-jsonld', '')
         return element, document, ref
+
+    def _directives_eval_order(self):
+        directives = super()._directives_eval_order()
+        # before `att`, which consumes the attributes of the element
+        directives.insert(directives.index('att'), 'jsonld')
+        return directives
+
+    def _compile_directive_jsonld(self, el, compile_context, level):
+        """Build the schema of the item when compiling, to output it at each rendering."""
+        el.attrib.pop('t-jsonld')
+        code = []
+        if vals := self.env.website._build_jsonld_item_vals(el):
+            code.append(indent_code(f"values.get('structured_data_snippets', []).append({vals!r})", level))
+        # the rest of the item, as a static node if it has no other directive
+        return code + self._compile_directives(el, compile_context, level)
+
+    def _get_field(self, record, field_name, expression, tagName, field_options, values):
+        attributes, content, force_display = super()._get_field(record, field_name, expression, tagName, field_options, values)
+        # snippets in HTML fields are not compiled, read them at each rendering
+        if 'structured_data_snippets' in values and content and 'data-jsonld-type' in content:
+            root = html.fromstring(f'<div>{content}</div>')
+            for item in root.xpath(JSONLD_ITEMS_XPATH):
+                if vals := self.env.website._build_jsonld_item_vals(item):
+                    values['structured_data_snippets'].append(vals)
+        return attributes, content, force_display
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):

@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 import logging
 
 from lxml import html
 from werkzeug.urls import url_encode
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, TransactionCase, tagged
 from odoo.addons.http_routing.tests.common import MockRequest
-from odoo.addons.website.tools import create_image_attachment
+from odoo.addons.website.models.ir_qweb import JSONLD_ITEMS_XPATH
+from odoo.addons.website.tools import create_image_attachment, text_from_element
 
 _logger = logging.getLogger(__name__)
 
@@ -205,3 +207,99 @@ class TestSnippets(HttpCase):
 
     def test_shape_color_sync_with_theme_color(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'shape_color_sync_with_theme_color', login='admin')
+
+    def test_snippet_jsonld(self):
+        # how any marked snippet is output: compiled in a view, read in an HTML field, with absolute URLs
+        fr = self.env['res.lang']._activate_lang('fr_FR')
+        website = self.env.ref('base.default_website')
+        website.language_ids |= fr
+        snippet = (
+            '<section>'
+            '<div data-jsonld-type="Person"><h3 data-jsonld-prop="name">Tony</h3><p data-jsonld-prop="jobTitle">CEO</p>'
+            '<img data-jsonld-prop="image" src="/web/image/a.png"/></div>'
+            '<div data-jsonld-type="Person"><h3 data-jsonld-prop="name">Iris</h3>'
+            '<img data-jsonld-prop="image" src="https://cdn.example.com/iris.png"/></div>'
+            '<div data-jsonld-type="FAQPage"><div data-jsonld-type="Question" data-jsonld-prop="mainEntity">'
+            '<span data-jsonld-prop="name">Why?</span><div data-jsonld-type="Answer" data-jsonld-prop="acceptedAnswer">'
+            '<p data-jsonld-prop="text">Because.</p></div></div></div>'
+            '</section>'
+        )
+        # dropped on a controller page, saved as a view inheriting its template
+        view = self.env['ir.ui.view'].create({
+            'name': 'Snippet',
+            'type': 'qweb',
+            'website_id': website.id,
+            'inherit_id': self.env.ref('website.website_info').id,
+            'arch': f'<xpath expr="//div[@id=\'wrap\']" position="inside">{snippet}</xpath>',
+        })
+        view.update_field_translations('arch_db', {'fr_FR': {'CEO': 'PDG'}})
+        # dropped in an HTML field
+        self.env['website.menu'].create({
+            'name': 'Snippet',
+            'website_id': website.id,
+            'parent_id': website.menu_id.id,
+            'mega_menu_content': snippet,
+        })
+
+        def get_snippet_nodes(url):
+            scripts = html.fromstring(self.url_open(url).content).xpath('//script[@type="application/ld+json"]/text()')
+            return [node for script in scripts for node in json.loads(script)['@graph'] if node['@type'] != 'Organization']
+
+        base_url = self.base_url()
+        works_for = {'@id': f'{base_url}/#organization'}
+        nodes = [
+            {'@type': 'Person', 'name': 'Tony', 'jobTitle': 'CEO', 'image': f'{base_url}/web/image/a.png', 'worksFor': works_for},
+            {'@type': 'Person', 'name': 'Iris', 'image': 'https://cdn.example.com/iris.png', 'worksFor': works_for},
+            {'@type': 'FAQPage', 'mainEntity': {'@type': 'Question', 'name': 'Why?', 'acceptedAnswer': {'@type': 'Answer', 'text': 'Because.'}}},
+        ]
+        self.assertEqual(get_snippet_nodes('/website/info'), nodes * 2, "Described from the mega menu, then from the page")
+
+        self.env['ir.config_parameter'].set_str('web.base.url', 'https://www.example.com')
+        self.assertEqual(
+            get_snippet_nodes('/website/info')[3]['image'], 'https://www.example.com/web/image/a.png',
+            "The URLs follow the base URL, which is not part of the compiled template",
+        )
+        self.assertEqual(get_snippet_nodes('/fr/website/info')[3]['jobTitle'], 'PDG')
+
+@tagged('post_install', '-at_install')
+class TestSnippetsJsonld(TransactionCase):
+
+    def test_text_from_element(self):
+        for markup, text in [
+            ('<b>Tony</b>, <i>e</i>-<s>commerce</s> <a href="/x">link</a>s!', 'Tony, e-commerce links!'),
+            ('<h1>Title</h1><ul><li>One</li><li>Two</li></ul>Line<br/>break', 'Title One Two Line break'),
+            ('&nbsp; Lots\n\tof   <span>space</span> ', 'Lots of space'),
+            ('To<!-- comment -->ny', 'Tony'),
+        ]:
+            with self.subTest(markup=markup):
+                self.assertEqual(text_from_element(html.fromstring(f'<div>{markup}</div>')), text)
+
+    def test_build_jsonld_item_vals(self):
+        website = self.env.ref('base.default_website')
+
+        def build(markup):
+            return website._build_jsonld_item_vals(html.fromstring(f'<div data-jsonld-type="Person">{markup}</div>'))
+
+        name = '<h3 data-jsonld-prop="name">Tony</h3>'
+        self.assertEqual(build(name), {'@type': 'Person', 'name': 'Tony', 'worksFor': {'@id': '/#organization'}})
+        self.assertIsNone(build('<h3 data-jsonld-prop="name"><br/></h3><p data-jsonld-prop="jobTitle">CEO</p>'), "A Person needs a name")
+        self.assertEqual(build(f'{name}<p data-jsonld-prop="@type">Thing</p>')['@type'], 'Person', "JSON-LD keywords aren't properties")
+        for src, image in [
+            ('/web/image/a.png', '/web/image/a.png'),
+            ('https://cdn.example.com/a.png', 'https://cdn.example.com/a.png'),
+            ('data:image/png;base64,AAAA', None),
+            ('javascript:alert(1)', None),
+        ]:
+            with self.subTest(src=src):
+                self.assertEqual(build(f'{name}<img data-jsonld-prop="image" src="{src}"/>').get('image'), image)
+
+    def test_snippets_jsonld(self):
+        # each item of the snippets with JSON-LD markers gives a schema
+        website = self.env.ref('base.default_website')
+        snippets = self.env['ir.ui.view'].search([('key', '=like', '%.s\\_%'), ('arch_db', 'like', 'data-jsonld-type')])
+        self.assertTrue(snippets)
+        for snippet in snippets:
+            root = html.fromstring(f"<div>{self.env['ir.qweb']._render(snippet.id)}</div>")
+            for item in root.xpath(JSONLD_ITEMS_XPATH):
+                with self.subTest(snippet=snippet.key):
+                    self.assertTrue(website._build_jsonld_item_vals(item))
