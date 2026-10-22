@@ -284,7 +284,7 @@ class PurchaseOrderLine(models.Model):
             else:
                 line.selected_seller_id = False
 
-    @api.depends('price_unit', 'qty_invoiced_at_date', 'qty_received_at_date', 'product_qty')
+    @api.depends('price_unit', 'qty_invoiced_at_date', 'qty_received_at_date')
     @api.depends_context('accrual_entry_date')
     def _compute_amount_to_invoice_at_date(self):
         for line in self:
@@ -293,10 +293,8 @@ class PurchaseOrderLine(models.Model):
             line.amount_to_invoice_at_date = qty_to_invoice * line._get_gross_price_unit()
 
     def _get_qty_to_invoice_at_date(self):
-        """Return the quantity to invoice at the accrual date, respecting the product's purchase method."""
+        """Return the quantity to invoice at the accrual date."""
         self.ensure_one()
-        if self.product_id.purchase_method == 'purchase':
-            return self.product_qty - self.qty_invoiced_at_date
         return self.qty_received_at_date - self.qty_invoiced_at_date
 
     @api.model_create_multi
