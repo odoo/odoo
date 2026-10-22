@@ -401,19 +401,6 @@ class TestPortalFlow(MailCommon, HttpCase):
                 'Failed with %s - %s' % (model, res_id)
             )
 
-    def assert_URL(self, url, expected_path, expected_fragment_params=None, expected_query=None):
-        """Asserts that the URL has the expected path and if set, the expected fragment parameters and query."""
-        parsed_url = url_parse(url)
-        fragment_params = url_decode(parsed_url.fragment)
-        self.assertEqual(parsed_url.path, expected_path)
-        if expected_fragment_params:
-            for key, expected_value in expected_fragment_params.items():
-                self.assertEqual(fragment_params.get(key), expected_value,
-                                 f'Expected: "{key}={expected_value}" (for path: {expected_path})')
-        if expected_query:
-            self.assertEqual(expected_query, parsed_url.query,
-                             f'Expected: query="{expected_query}" (for path: {expected_path})')
-
     @users('employee')
     def test_send_message_to_customer(self):
         """Same as test_send_message_to_customer_using_template but without a template."""
