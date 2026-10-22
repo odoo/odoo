@@ -6,6 +6,10 @@
             <attribute name="address">False</attribute>
             <attribute name="information_block">False</attribute>
             <attribute name="l10n_in_invoice_header">True</attribute>
+            <attribute name="custom_document_header">True</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web.external_layout']" position="before">
+            <t t-set="custom_document_header" t-value="True"/>
         </xpath>
         <xpath expr="//div[hasclass('page')]" position="attributes">
             <attribute name="class" add="l10n_in_invoice" separator=" "/>
@@ -505,6 +509,17 @@
     </template>
 
     <!-- Like the Latin American reports, replace each standard supplier header only for this report. -->
+    <template id="external_layout_legacy_invoice" inherit_id="account.external_layout_legacy">
+        <xpath expr="//style" position="inside">
+                .o_legacy_document .l10n_in_header_design { border: 1px solid #333; margin-bottom: 0; }
+                .o_legacy_document .l10n_in_document_header > tbody > tr > td:first-child { padding-right: 0; border-right: 1px solid #333; }
+                .o_legacy_document .l10n_in_reference_card { border-top: 0 !important; }
+                .o_legacy_document .l10n_in_document_title { color: #111 !important; }
+                .o_legacy_document .l10n_in_supplier_name { font-size: 15px; }
+                .o_legacy_document .l10n_in_reference_table td, .o_legacy_document .l10n_in_parties td { border-color: #333 !important; }
+        </xpath>
+    </template>
+
     <template id="external_layout_standard_invoice" inherit_id="web.external_layout_standard">
         <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
             <attribute name="t-if">not l10n_in_invoice_header</attribute>
