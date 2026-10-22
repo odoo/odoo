@@ -15,7 +15,6 @@ from hashlib import md5, sha256
 from io import BytesIO
 from itertools import islice
 from lxml import etree, html
-from markupsafe import escape as markup_escape
 from textwrap import shorten
 from werkzeug.exceptions import NotFound
 from xml.etree import ElementTree as ET
@@ -899,7 +898,7 @@ class Website(Home):
                         element.set('alt', '')
                         element.set('role', 'presentation')
                     else:
-                        element.set('alt', markup_escape(img['alt']))
+                        element.set('alt', img['alt'])
                         element.attrib.pop('role', None)
                     modified = True
             if modified:
@@ -927,7 +926,7 @@ class Website(Home):
                     if link['remove']:
                         element.drop_tag()
                     else:
-                        element.set('href', markup_escape(link['newLink']))
+                        element.set('href', link['newLink'])
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
