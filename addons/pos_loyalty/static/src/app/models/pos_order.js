@@ -151,8 +151,12 @@ patch(PosOrder.prototype, {
 
         const available = amount === undefined ? balance : Math.min(amount, balance);
         const maxDiscount = Math.min(this.priceIncl, reward.discount_max_amount || Infinity);
-        const paid = Math.min(maxDiscount, reward.discount * available);
-        if (paid <= 0) {
+        // On a refund the total is negative: the refunded amount is credited back
+        // to the card (negative points_cost), mirroring _get_pos_points_cost.
+        const paid = this.currency.isNegative(this.priceIncl)
+            ? this.priceIncl
+            : Math.min(maxDiscount, reward.discount * available);
+        if (this.currency.isZero(paid)) {
             return;
         }
 

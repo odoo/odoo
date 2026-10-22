@@ -30,6 +30,9 @@ class LoyaltyReward(models.Model):
             if not self.discount:
                 return 0
             paid = -sum(reward_lines.mapped('price_subtotal_incl'))
+            # Refund line totals carry the order sign: a negative cost credits the card.
+            if reward_lines.order_id.is_refund:
+                paid = -paid
             return paid / self.discount
         if self.reward_type == 'product':
             if not self.reward_product_qty:
