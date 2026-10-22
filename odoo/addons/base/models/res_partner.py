@@ -1803,7 +1803,7 @@ class ResPartner(models.Model):
         return identifier_vals or {}
 
     def _deduce_additional_identifiers_from_vat(self):
-        """Populate identifiers derivable from the VAT (e.g. BE_VAT => BE_EN, AT_VAT => AT_EN)."""
+        """Populate identifiers derivable from the VAT (e.g. BE_VAT => BE_EN)."""
         for partner in self:
             if not partner.vat or not partner.country_code:
                 continue
