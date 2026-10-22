@@ -35,6 +35,17 @@
         }
     }
 
+    .o_card_img_wrapper > a:focus-visible {
+        box-shadow: none;
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            box-shadow: var(--o-focus-ring-inset);
+        }
+    }
+
     .o_card_img_wrapper.ratio {
         > a > .o_card_img {
             height: 100%;

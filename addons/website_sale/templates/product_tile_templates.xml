@@ -137,6 +137,8 @@
             t-attf-class="oe_product_image_link position-relative {{secondary_image_holder and 'oe_product_image_link_has_secondary'}}"
             contenteditable="false"
             t-att-title="product_image_title"
+            tabindex="-1"
+            aria-hidden="true"
         >
             <!-- Primary image -->
             <span
@@ -152,14 +154,13 @@
                 t-options="{'widget': 'image', 'preview_image': 'image_1024', 'class': 'oe_product_image_img_secondary h-100 w-100'}"
                 class="oe_product_image_img_wrapper oe_product_image_img_wrapper_secondary h-100 justify-content-center align-items-center"
             />
-
-            <!-- Ribbon -->
-            <t t-if="show_ribbons">
-                <t t-set="bg_color" t-value="ribbon.bg_color"/>
-                <t t-set="text_color" t-value="ribbon.text_color"/>
-                <t t-call="website_sale.product_ribbon"/>
-            </t>
         </a>
+        <!-- Ribbon -->
+        <t t-if="show_ribbons">
+            <t t-set="bg_color" t-value="ribbon.bg_color"/>
+            <t t-set="text_color" t-value="ribbon.text_color"/>
+            <t t-call="website_sale.product_ribbon"/>
+        </t>
         <div t-if="is_sample" class="o_ribbon_right small text-bg-primary">Sample</div>
     </div>
 </template>
