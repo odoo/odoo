@@ -23,9 +23,9 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: map-get($spacers, 2);
+        gap: var(--o-hb-spacer-2);
         width: 100%;
-        padding: map-get($spacers, 2);
+        padding: var(--o-hb-spacer-2);
 
         .o_snippet_thumbnail_img {
             width: 30px;
@@ -35,7 +35,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             background-position: center;
 
             .o_snippets_container:not(#snippet_custom_content) & {
-                margin-block: map-get($spacers, 2);
+                margin-block: var(--o-hb-spacer-2);
             }
         }
     }
@@ -50,7 +50,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 }
 
 .o_block_tab {
-    padding: map-get($spacers, 2);
+    padding: var(--o-hb-spacer-2);
     height: 100%; // give enough space for tips pointing at snippets after a snippet search
     z-index: 1;
 
@@ -70,7 +70,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     .o_snippets_container_body {
         position: relative;
         grid-template-columns: repeat(var(--SnippetsContainer-columns, 3), 1fr);
-        gap: map-get($spacers, 1);
+        gap: var(--o-hb-spacer-1);
 
         &.o_snippets_container_body_row_cols_2 {
             --SnippetsContainer-columns: 2;
@@ -116,7 +116,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
             &.o_disabled {
                 .o_snippet_undroppable {
-                    @include o-position-absolute(map-get($spacers, 2), map-get($spacers, 2), auto, auto);
+                    @include o-position-absolute(var(--o-hb-spacer-2), var(--o-hb-spacer-2), auto, auto);
                 }
             }
 

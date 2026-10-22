@@ -12,7 +12,7 @@
                 // "replace" the magnify icon.
                 &::-webkit-search-cancel-button {
                     cursor: pointer;
-                    transform: translateX(map-get($spacers, 3));
+                    transform: translateX(var(--o-hb-spacer-3)) #{"/*rtl:translateX(calc(var(--o-hb-spacer-3) * -1))*/"};
                 }
 
                 &:not(:placeholder-shown) + .input-group-text {
