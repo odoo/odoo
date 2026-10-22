@@ -1804,7 +1804,7 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
             'product_id': self.product_order_timesheet4.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,
-            'analytic_distribution': {f'{analytic_account1.id}, {analytic_account2.id}': 100},
+            'analytic_distribution': {f'{analytic_account1.id},{analytic_account2.id}': 100},
         })
         timesheet = self.env['account.analytic.line'].create({
             'name': 'Test Line',
@@ -1826,7 +1826,7 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
             'product_id': self.product_order_timesheet4.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,
-            'analytic_distribution': {f'{analytic_account1.id}, {analytic_account3.id}': 100},
+            'analytic_distribution': {f'{analytic_account1.id},{analytic_account3.id}': 100},
         })
         timesheet.so_line = so_line2
         self.assertEqual(timesheet.account_id, analytic_account1)
