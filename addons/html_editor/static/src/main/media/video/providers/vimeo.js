@@ -55,23 +55,4 @@ export class Vimeo extends AbstractThirdPartyVideo {
         const data = await apiResponse.json();
         return data.thumbnail_url || "";
     }
-
-    /**
-     * Example urls are used to test that the urlMatcher regular expression
-     * correctly identifies valid video urls and extracts the video ID.
-     * Every urls in this object should be parsable by the urlMatcher.
-     *
-     * The `base` Url is also used in media dialog unit tests.
-     *
-     * @see /addons/html_editor/static/tests/media/*.test.js
-     * */
-    static exampleUrls = {
-        base: "https://vimeo.com/395399735",
-        unlisted: "https://vimeo.com/795669787/0763fdb816", // Not sure if this format is still relevant
-        embed: "https://player.vimeo.com/video/395399735",
-        embedUnlisted: "https://player.vimeo.com/video/795669787?h=0763fdb816",
-        params: "vimeo.com/395399735?autoplay=1#t=62",
-        embedParams:
-            "https://player.vimeo.com/video/395399735?controls=0&fullscreen=1&autoplay=1#t=62",
-    };
 }

@@ -29,22 +29,4 @@ export class Instagram extends AbstractThirdPartyVideo {
     static getThumbnailUrl(videoId) {
         return `https://www.instagram.com/p/${videoId}/media/?size=t`;
     }
-
-    /**
-     * Example urls are used to test that the urlMatcher regular expression
-     * correctly identifies valid video urls and extracts the video ID.
-     * Every urls in this object should be parsable by the urlMatcher.
-     *
-     * The `base` Url is also used in media dialog unit tests.
-     *
-     * @see /addons/html_editor/static/tests/media/*.test.js
-     * */
-    static exampleUrls = {
-        base: "https://www.instagram.com/p/B6dXGTxggTG",
-        minified: "instagr.am/p/B6dXGTxggTG/",
-        reel: "https://www.instagram.com/reel/B6dXGTxggTG/",
-        reel2: "https://www.instagram.com/odoo.official/reel/B6dXGTxggTG/",
-        reels: "https://www.instagram.com/reels/DPD1qwXDBwy/",
-        embed: "https://www.instagram.com/p/B6dXGTxggTG/embed/",
-    };
 }
