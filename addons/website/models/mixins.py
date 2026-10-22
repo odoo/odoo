@@ -5,7 +5,7 @@ import urllib.parse
 from datetime import UTC, date, datetime
 
 from odoo import _, api, fields, models
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.models import Query
@@ -27,12 +27,29 @@ class WebsiteSeoMetadata(models.AbstractModel):
     website_meta_description = fields.Text("Website meta description", translate=True, prefetch="website_meta")
     website_meta_keywords = fields.Char("Website meta keywords", translate=True, prefetch="website_meta")
     website_meta_og_img = fields.Char("Website opengraph image")
+    website_meta_jsonld = fields.Text("Website structured data", translate=True, groups="base.group_user")
+    website_meta_jsonld_source_checksum = fields.Char("Website structured data source checksum", translate=True, groups="base.group_user")
     seo_name = fields.Char("Seo name", translate=True, prefetch=True)
 
     @api.depends("website_meta_title", "website_meta_description", "website_meta_keywords")
     def _compute_is_seo_optimized(self):
         for record in self:
             record.is_seo_optimized = record.website_meta_title and record.website_meta_description and record.website_meta_keywords
+
+    @api.constrains("website_meta_jsonld")
+    def _check_website_meta_jsonld(self):
+        for record in self.filtered('website_meta_jsonld'):
+            try:
+                schemas = json_safe.loads(record.website_meta_jsonld)
+                # Python reads NaN and Infinity, JSON has no such values
+                json_safe.dumps(schemas, allow_nan=False)
+            except (ValueError, RecursionError):
+                schemas = None
+            if isinstance(schemas, dict):
+                schemas = [schemas]
+            # nodes of the graph of the page, see website._render_page_jsonld
+            if not isinstance(schemas, list) or not all(isinstance(schema, dict) for schema in schemas):
+                raise ValidationError(self.env._("The structured data must be a JSON object or a list of them."))
 
     def _default_website_meta(self):
         """ This method will return default meta information. It return the dict
@@ -323,25 +340,18 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
         return [website._prepare_jsonld_vals()]
 
     def _render_jsonld(self, is_detail_page=False):
-        """Render the complete JSON-LD payload for the current page.
-        Collects schemas, appends a BreadcrumbList if applicable, and Returns a
-        JSON-LD object with @context and an @graph array bundling all page
-        schemas, or False if none.
+        """Collect the schemas of the current page, and its BreadcrumbList if
+        applicable. The layout outputs them, see ``website._render_page_jsonld``.
 
         :param bool is_detail_page: True if on a record detail page.
-        :return: JSON-LD string, or False if no schemas exist.
-        :rtype: str | bool
+        :return: Schema.org dictionaries.
+        :rtype: list[dict]
         """
         schemas = [s for s in self._get_jsonld_dict(is_detail_page=is_detail_page) if s]
-        if not schemas:
-            return False
         breadcrumb_items = self._get_breadcrumb_items(is_detail_page=is_detail_page)
         if len(breadcrumb_items) > 1:
             schemas.append(self._build_breadcrumb_jsonld(breadcrumb_items))
-        return json_safe.dumps(
-            {'@context': 'https://schema.org', '@graph': schemas},
-            ensure_ascii=False,
-        )
+        return schemas
 
     def _get_breadcrumb_items(self, is_detail_page=False):
         """Return ordered ``(name, relative_url)`` pairs for the breadcrumb trail.

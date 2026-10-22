@@ -333,6 +333,45 @@
             </div>
         </div>
         <div t-if="this.canEditSeo" class="row gy-4 mt-4 border-top">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h2 class="mb-0">Structured data (JSON-LD)</h2>
+                <button type="button" class="btn btn-link" t-att-disabled="this.state.isGenerating" t-on-click="() => this.generateJsonldWithAI()">
+                    <t t-if="this.state.isGenerating"><span class="spinner-border spinner-border-sm me-1" aria-hidden="true"/>Generating...</t>
+                    <t t-else="">Generate with AI</t>
+                </button>
+            </div>
+            <div class="col-12">
+                <div t-if="this.state.isGenerating" class="alert alert-info py-2" role="status">
+                    <p class="mb-1">The AI is reading the page, it can take a minute. Good to know:</p>
+                    <ul class="mb-0">
+                        <li>Structured data describes the page with the schema.org vocabulary, in a format machines read.</li>
+                        <li>It is not only for rich results on Google: crawlers and AI assistants use it to understand the page.</li>
+                        <li>Review what the AI writes before saving: it can miss or misread some content.</li>
+                    </ul>
+                </div>
+                <div t-elif="this.state.isJsonldOutdated" class="alert alert-warning py-2" role="alert">
+                    The page content changed since this structured data was written: check it, or generate it again.
+                </div>
+                <CodeEditor mode="'json'" theme="'monokai'" class="'rounded border o_website_code_editor_field o_website_meta_jsonld'"
+                    value="this.seoContext.jsonld or ''" onChange="(value) => this.seoContext.jsonld = value"/>
+                <t t-set="jsonldItems" t-value="this.jsonldItems"/>
+                <div t-if="!this.seoContext.jsonld" class="form-text">Write it as JSON-LD, or generate it with AI.</div>
+                <div t-elif="!jsonldItems" class="form-text text-danger">The structured data is not valid JSON.</div>
+                <div t-elif="jsonldItems.length" class="form-text">
+                    It describes:
+                    <ul class="mb-0">
+                        <li t-foreach="jsonldItems" t-as="item" t-key="item.type">
+                            <strong t-out="item.type"/> (<t t-out="item.count"/>)<t t-if="item.names.length">: <t t-out="item.names.join(', ')"/></t>
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-text">
+                    After saving, test the page with
+                    <a target="_blank" t-att-href="this.richResultsTestUrl">Google's Rich Results Test<i class="oi ms-1" data-icon="open_in_new" role="img" aria-hidden="true"/></a>
+                </div>
+            </div>
+        </div>
+        <div t-if="this.canEditSeo" class="row gy-4 mt-4 border-top">
             <div class="col-12">
                 <h2 class="mb-0">Content checks</h2>
                 <p class="mt-1 mb-0 text-muted">Describe your images and fix broken links to improve accessibility and SEO</p>

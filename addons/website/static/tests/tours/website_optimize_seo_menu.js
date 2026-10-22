@@ -1,3 +1,5 @@
+/* global ace */
+
 import {
     registerWebsitePreviewTour,
     clickOnEditAndWaitEditMode,
@@ -131,3 +133,49 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
+registerWebsitePreviewTour("website.seo_jsonld_ai", {}, () => [
+    ...openSeoModal(),
+    {
+        content: "Write structured data that is not JSON",
+        trigger: ".oe_seo_configuration .o_website_meta_jsonld.ace_editor",
+        run() {
+            ace.edit(document.querySelector(".o_website_meta_jsonld")).setValue("[{");
+        },
+    },
+    {
+        content: "Check it is flagged",
+        trigger: ".oe_seo_configuration .text-danger:contains(not valid JSON)",
+    },
+    {
+        content: "Generate the structured data with AI",
+        trigger: ".oe_seo_configuration button:contains(Generate with AI)",
+        run: "click",
+    },
+    {
+        content: "Check the schema written by the AI",
+        trigger: ".oe_seo_configuration .o_website_meta_jsonld .ace_content:contains(Tony)",
+    },
+    {
+        content: "Check the items it describes are listed",
+        trigger: ".oe_seo_configuration li:contains(Person):contains(Tony)",
+    },
+    ...saveSeoModal(),
+]);
+
+registerWebsitePreviewTour("website.seo_jsonld_up_to_date", {}, () => [
+    ...openSeoModal(),
+    {
+        content: "Check the structured data is not flagged as written for other content",
+        trigger:
+            ".oe_seo_configuration:has(.o_website_meta_jsonld):not(:has(.alert-warning:contains(page content changed)))",
+    },
+]);
+
+registerWebsitePreviewTour("website.seo_jsonld_outdated", {}, () => [
+    ...openSeoModal(),
+    {
+        content: "Check the structured data is flagged as written for other content",
+        trigger: ".oe_seo_configuration .alert-warning:contains(page content changed)",
+    },
+]);

@@ -4,12 +4,14 @@ import { deduceURLfromText } from "@html_editor/main/link/utils";
 import { pyToJsLocale, jsToPyLocale } from "@web/core/l10n/utils";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
-import { escapeRegExp } from "@web/core/utils/strings";
+import { escapeRegExp, hashCode } from "@web/core/utils/strings";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { isVisible } from "@web/core/utils/ui";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { getMimetype } from "@html_editor/utils/image";
+import { chunkBySize, mapWithConcurrency } from "@website/utils/ai";
 import { WebsiteDialog } from "./dialog";
 import {
     Component,
@@ -42,6 +44,7 @@ export const seoContext = proxy({
     updatedAlts: [],
     brokenLinks: [],
     checkedLinks: false,
+    jsonld: "",
 });
 
 const LINK_CHECK_BASE_OPTIONS = {
@@ -996,6 +999,106 @@ export class SeoChecks extends Component {
     }
 }
 
+/**
+ * The text of a block that is not in the blocks it holds. When it is held in
+ * separate children only, like a name and a price, it is a list of parts.
+ *
+ * @param {HTMLElement} blockEl
+ * @param {string} blockTags - selector of the blocks
+ * @returns {string|string[]}
+ */
+function getBlockText(blockEl, blockTags) {
+    const textsByChild = new Map();
+    const walker = blockEl.ownerDocument.createTreeWalker(blockEl, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+        const textNode = walker.currentNode;
+        if (textNode.parentElement.closest(blockTags) !== blockEl) {
+            continue;
+        }
+        let childNode = textNode;
+        while (childNode.parentNode !== blockEl) {
+            childNode = childNode.parentNode;
+        }
+        textsByChild.set(childNode, `${textsByChild.get(childNode) || ""} ${textNode.nodeValue}`);
+    }
+    const parts = [...textsByChild.values()]
+        .map((text) => text.replace(/\s+/g, " ").trim())
+        .filter(Boolean);
+    // a text right in the block joins its children in one sentence
+    const hasOwnText = [...textsByChild.keys()].some(
+        (node) => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim()
+    );
+    return hasOwnText || parts.length < 2 ? parts.join(" ") : parts;
+}
+
+/**
+ * Whether the editor wrote the content of the element, in the zones where
+ * snippets are dropped. Content Odoo renders from records, like the product
+ * of a product page, already has its own structured data, and the text of a
+ * timer is written by its script while the page is shown.
+ *
+ * @param {HTMLElement} el
+ * @returns {boolean}
+ */
+function isWrittenByEditor(el) {
+    return Boolean(el.closest(".oe_structure")) && !el.closest('[role="timer"], .s_countdown');
+}
+
+// the types of what a page is about: the AI also types the rest of the
+// content, which says nothing about the page
+const JSONLD_TYPES = [
+    "Article",
+    "Event",
+    "FAQPage",
+    "LocalBusiness",
+    "Offer",
+    "Organization",
+    "Person",
+    "Place",
+    "Product",
+    "Question",
+    "Review",
+    "Service",
+];
+
+/**
+ * Renames the ids of the nodes that earlier nodes already use.
+ *
+ * @param {Object[]} nodes
+ * @param {Set<string>} usedIds - ids of the earlier nodes, the ones of these nodes are added
+ * @returns {Object[]} the nodes with their new ids
+ */
+function renameUsedIds(nodes, usedIds) {
+    const newIds = new Map();
+    const renameIds = (value) => {
+        if (Array.isArray(value)) {
+            return value.map(renameIds);
+        }
+        if (!value || typeof value !== "object") {
+            return value;
+        }
+        return Object.fromEntries(
+            Object.entries(value).map(([key, item]) => {
+                // ids of the page start with "#", a URL names the same thing in every answer
+                const isPageId = key === "@id" && typeof item === "string" && item.startsWith("#");
+                if (!isPageId) {
+                    return [key, renameIds(item)];
+                }
+                if (!newIds.has(item)) {
+                    let newId = item;
+                    for (let count = 2; usedIds.has(newId); count++) {
+                        newId = `${item}-${count}`;
+                    }
+                    newIds.set(item, newId);
+                    usedIds.add(newId);
+                }
+                return [key, newIds.get(item)];
+            })
+        );
+    };
+    return renameIds(nodes);
+}
+
 export class OptimizeSEODialog extends Component {
     static template = "website.OptimizeSEODialog";
     static components = {
@@ -1005,6 +1108,7 @@ export class OptimizeSEODialog extends Component {
         MetaKeywords,
         SeoChecks,
         BrokenLink,
+        CodeEditor,
     };
     props = useProps({
         close: t.function(),
@@ -1014,6 +1118,12 @@ export class OptimizeSEODialog extends Component {
         this.website = useService("website");
         this.dialogs = useService("dialog");
         this.orm = useService("orm");
+        this.seoContext = proxy(seoContext);
+        this.notification = useService("notification");
+        this.state = proxy({ isGenerating: false, isJsonldOutdated: false });
+        onWillUnmount(() => {
+            this.isClosed = true;
+        });
 
         this.title = _t("Search Engine Optimization");
         this.saveButton = _t("Save");
@@ -1091,6 +1201,16 @@ export class OptimizeSEODialog extends Component {
             } else {
                 seoContext.keywords = [];
             }
+            seoContext.jsonld = this.data.website_meta_jsonld;
+            // the content read by the AI, to tell if it changed since the structured data was written
+            this.contentChunks = this.getPageContentChunks();
+            this.contentChecksum = hashCode(JSON.stringify(this.contentChunks));
+            const sourceChecksum = this.data.website_meta_jsonld_source_checksum;
+            this.state.isJsonldOutdated = Boolean(
+                this.data.website_meta_jsonld &&
+                    sourceChecksum &&
+                    sourceChecksum !== this.contentChecksum
+            );
         });
     }
 
@@ -1140,6 +1260,239 @@ export class OptimizeSEODialog extends Component {
         return el && el.content;
     }
 
+    /**
+     * Read the content of the page for the AI, in reading order: its texts,
+     * and its images and links, whose URLs are the only ones it may use.
+     * Its blocks are numbered, for the AI to point to their texts, and split
+     * in chunks, each one keeping whole sections.
+     *
+     * @param {number} limit - Max characters of a chunk, the AI service drops answers taking over 20 seconds
+     * @returns {Object[][]} chunks of [{i, card, tag, text}, {i, card, tag: "img", src, alt}, {i, card, tag: "a", href, text}, ...]
+     */
+    getPageContentChunks(limit = 2000) {
+        const BLOCK_TAGS = "h1, h2, h3, h4, h5, h6, p, li, blockquote, td, th, div, button";
+        const contentEls = this.pageDocumentElement.querySelectorAll(
+            `main :is(${BLOCK_TAGS}, img[src^="/"], img[src^="http"], a[href^="/"], a[href^="http"])`
+        );
+        const sections = [];
+        let sectionEl;
+        const cardNumbers = new Map();
+        for (const el of contentEls) {
+            if (!isWrittenByEditor(el)) {
+                continue;
+            }
+            let block;
+            if (el.tagName === "IMG") {
+                block = { tag: "img", src: el.getAttribute("src"), alt: el.alt };
+            } else if (el.tagName === "A") {
+                block = { tag: "a", href: el.getAttribute("href"), text: el.textContent.trim() };
+            } else {
+                block = { tag: el.tagName.toLowerCase(), text: getBlockText(el, BLOCK_TAGS) };
+            }
+            if (block.text === "") {
+                continue;
+            }
+            const blockSectionEl = el.closest("section");
+            if (!sections.length || blockSectionEl !== sectionEl) {
+                sections.push([]);
+                sectionEl = blockSectionEl;
+            }
+            // the outermost column of the section is a card, like a photo with its name
+            let cardEl;
+            for (
+                let parentEl = el;
+                parentEl && parentEl !== blockSectionEl;
+                parentEl = parentEl.parentElement
+            ) {
+                if (parentEl.matches(".row > *")) {
+                    cardEl = parentEl;
+                }
+            }
+            if (cardEl && !cardNumbers.has(cardEl)) {
+                cardNumbers.set(cardEl, cardNumbers.size);
+            }
+            sections.at(-1).push({ card: cardNumbers.get(cardEl), ...block });
+        }
+        // a section showing the same content as an earlier one is read once
+        const readContents = new Set();
+        const readSections = [];
+        let blockCount = 0;
+        for (const blocks of sections) {
+            const content = JSON.stringify(
+                blocks.map((block) => [block.tag, block.text, block.src, block.alt, block.href])
+            );
+            if (readContents.has(content)) {
+                continue;
+            }
+            readContents.add(content);
+            readSections.push(blocks.map((block) => ({ i: blockCount++, ...block })));
+        }
+        return chunkBySize(readSections, (blocks) => JSON.stringify(blocks).length, limit).map(
+            (chunkSections) => chunkSections.flat()
+        );
+    }
+
+    /**
+     * The items of the structured data by type, to show what it describes.
+     *
+     * @returns {Object[]|null} [{type, count, names}], null when it is not valid JSON
+     */
+    get jsonldItems() {
+        let nodes;
+        try {
+            nodes = [JSON.parse(this.seoContext.jsonld || "[]")].flat();
+        } catch {
+            return null;
+        }
+        const itemsByType = {};
+        for (const node of nodes) {
+            const type = [node?.["@type"]].flat().join(", ") || _t("No type");
+            itemsByType[type] ??= { type, count: 0, names: [] };
+            itemsByType[type].count++;
+            if (node?.name) {
+                itemsByType[type].names.push(node.name);
+            }
+        }
+        return Object.values(itemsByType);
+    }
+
+    get richResultsTestUrl() {
+        return `https://search.google.com/test/rich-results/result?url=${encodeURIComponent(
+            this.url
+        )}`;
+    }
+
+    async generateJsonldWithAI() {
+        const chunks = this.contentChunks;
+        if (!chunks.length) {
+            this.notification.add(_t("The page has no content to describe."), { type: "info" });
+            return;
+        }
+        const translationMessage = {
+            role: "system",
+            content:
+                "You translate the content of a web page to English. Input is a JSON array of blocks [{i: number, card?: number, tag: string, text?: string | string[], src?: string, alt?: string, href?: string}, ...]. " +
+                "Return the same array with every 'text' and 'alt' translated to English, and every other key and value unchanged. " +
+                "Return ONLY valid JSON.",
+        };
+        const typeNames = JSONLD_TYPES.join(", ");
+        const systemMessage = {
+            role: "system",
+            content:
+                "You are a structured data assistant. Your goal is to write the schema.org structured data of a web page, as JSON-LD.\n" +
+                "Instructions:\n" +
+                "- Input will be content of the page in reading order: an array of numbered blocks [{i: number, card?: number, tag: string, text?: string | string[], src?: string, alt?: string, href?: string}, ...], a text being a list of parts when the block holds them apart, like a name and a price.\n" +
+                "- Blocks with the same 'card' are in the same column or card of the page: they describe the same thing, like a photo and the name next to it.\n" +
+                `- Describe what the page is about, each thing with one of these schema.org types and the properties the content gives for it: ${typeNames}.\n` +
+                "- Leave out decorative and navigation content, like section titles, slogans and decorative images.\n" +
+                '- Every value must come from the content: for a text of the content, like a name, an address or a description, write {"@block": i} with the number of its block instead of the text, or {"@block": i, "part": n} for one of its parts, and leave out every property the content does not give, like ratings, reviews, availability, conditions or regions.\n' +
+                "- Only use properties that schema.org defines for the type of the node.\n" +
+                "- Write dates in ISO 8601 and prices as numbers with their ISO 4217 currency.\n" +
+                '- Give each node a unique "@id" made of "#", its type and the number of the block holding its name, like "#person-3", and link the nodes to each other with it.\n' +
+                "- Only use the URLs of the content ('src' and 'href'), as written.\n" +
+                '- Leave out the Organization of the website, which the page already has, and refer to it as {"@id": "/#organization"}.\n' +
+                '- Return ONLY valid JSON: an array of JSON-LD nodes, without "@context".\n' +
+                "- Do not add comments.",
+        };
+        const askJson = async (prompt, message) => {
+            const answer = await rpc(
+                "/html_editor/generate_text",
+                { prompt, conversation_history: [message] },
+                { silent: true }
+            );
+            // the array may come within text, like a code block
+            return JSON.parse(answer.match(/\[[\s\S]*\]/)[0]);
+        };
+        // the AI reads the page in English, then points to its texts, which
+        // are put back as the page shows them, translated or not
+        const isEnglish = this.data.lang.code.startsWith("en");
+        const blocks = chunks.flat();
+        // texts are compared without the case and spaces the AI may change
+        const squash = (text) => text.toLowerCase().replace(/\s+/g, "");
+        const pageTexts = blocks.map((block) => squash([block.text, block.alt].flat().join(" ")));
+        const putBackTexts = (value) => {
+            if (Array.isArray(value)) {
+                return value.map(putBackTexts).filter((item) => item !== undefined);
+            }
+            if (typeof value === "string") {
+                // a text the AI writes itself is kept only when the page shows it,
+                // unlike URLs, dates, durations and codes
+                const isCode =
+                    /^(https?:|mailto:|tel:|\/|#|\d{4}-\d\d-\d\d|P[\dT]|[A-Z]{2,3}$)/.test(value);
+                const isShown = pageTexts.some((pageText) => pageText.includes(squash(value)));
+                return isCode || isShown || !/\p{L}/u.test(value) ? value : undefined;
+            }
+            if (!value || typeof value !== "object") {
+                return value;
+            }
+            if ("@block" in value) {
+                const text = blocks[value["@block"]]?.text;
+                if (Array.isArray(text)) {
+                    return value.part === undefined ? text.join(" ") : text[value.part];
+                }
+                return text;
+            }
+            return Object.fromEntries(
+                Object.entries(value).map(([key, item]) => [
+                    key,
+                    key.startsWith("@") ? item : putBackTexts(item),
+                ])
+            );
+        };
+        let errorMessage;
+        const askAI = async (chunk) => {
+            try {
+                const content = isEnglish
+                    ? chunk
+                    : await askJson(JSON.stringify(chunk), translationMessage);
+                const nodes = await askJson(
+                    `Write the structured data of this content, in English (US):\n\n${JSON.stringify(
+                        content
+                    )}`,
+                    systemMessage
+                );
+                return putBackTexts(nodes);
+            } catch (error) {
+                errorMessage =
+                    error.data?.message || _t("The AI gave no structured data, please try again.");
+            }
+        };
+        this.state.isGenerating = true;
+        let results;
+        try {
+            // 3 requests at a time at most: the AI service is unreachable for too many
+            results = await mapWithConcurrency(chunks, askAI, 3);
+        } finally {
+            this.state.isGenerating = false;
+        }
+        // once the dialog is closed, the shared structured data is the one of the next dialog
+        if (this.isClosed) {
+            return;
+        }
+        const failedCount = results.filter((schemas) => !schemas).length;
+        if (failedCount === chunks.length) {
+            this.notification.add(errorMessage, { type: "warning" });
+            return;
+        }
+        if (failedCount) {
+            this.notification.add(
+                _t("%(failed)s of %(total)s parts of the page were skipped, please try again.", {
+                    failed: failedCount,
+                    total: chunks.length,
+                }),
+                { type: "warning" }
+            );
+        }
+        // the answers are written apart, so two of them can use one id for different things
+        const usedIds = new Set();
+        const nodes = results
+            .filter(Boolean)
+            .flatMap((answerNodes) => renameUsedIds(answerNodes, usedIds))
+            .filter((node) => [node?.["@type"]].flat().some((type) => JSONLD_TYPES.includes(type)));
+        seoContext.jsonld = JSON.stringify(nodes, null, 4);
+        this.state.isJsonldOutdated = false;
+    }
+
     async save() {
         const data = {};
         if (this.canEditTitle) {
@@ -1159,6 +1512,10 @@ export class OptimizeSEODialog extends Component {
         if (seoContext.metaImage !== this.previousMetaImage) {
             data.website_meta_og_img = seoContext.metaImage;
         }
+        if (seoContext.jsonld !== this.data.website_meta_jsonld) {
+            data.website_meta_jsonld = seoContext.jsonld;
+            data.website_meta_jsonld_source_checksum = this.contentChecksum;
+        }
 
         const currentLang = this.website.currentWebsite.metadata.lang;
         const defaultLang = this.data.default_lang_code;
@@ -1168,6 +1525,8 @@ export class OptimizeSEODialog extends Component {
             "website_meta_title",
             "website_meta_description",
             "website_meta_keywords",
+            "website_meta_jsonld",
+            "website_meta_jsonld_source_checksum",
         ]) {
             if (
                 data[fieldName] &&

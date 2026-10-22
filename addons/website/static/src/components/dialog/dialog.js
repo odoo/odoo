@@ -50,8 +50,14 @@ export class WebsiteDialog extends Component {
                 return;
             }
             this.state.disabled = true;
-            if (handler) {
-                await handler();
+            try {
+                if (handler) {
+                    await handler();
+                }
+            } catch (error) {
+                // the user can correct the input and try again
+                this.state.disabled = false;
+                throw error;
             }
             if (this.props.closeOnClick) {
                 return this.props.close();
