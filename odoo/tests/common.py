@@ -1214,7 +1214,6 @@ class CrossModule(case.TestCase):
         (e.g. on parallel workers), or ``None`` if the test can't be split.
         Modules in none of the groups have nothing to test.
         """
-        return None
 
     def _get_canonical_tags_params(self, log=None):
         result = super()._get_canonical_tags_params(log)

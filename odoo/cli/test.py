@@ -10,10 +10,13 @@ pg user needs:
 
 import collections
 import faulthandler
+import functools
 import gc
+import inspect
 import json
 import logging
 import os
+import re
 import secrets
 import selectors
 import shutil
@@ -309,8 +312,8 @@ def run_tests(dbname, dispatch):
 
     ``dispatch`` sends a message to the controller and returns its reply:
 
-    - ``{"classes": {class_id: {"tests": count, "tag": tag}}}`` (in
-      execution order) once the tests are collected, and ``{"done":
+    - ``{"classes": {class_id: {"tests": count, "tag": tag, "kind": kind}}}``
+      (in collection order) once the tests are collected, and ``{"done":
       class_id}`` after each class has run, reply with the id of the next
       class to run, or ``None`` to stop;
     - ``{"start": tag}`` before each test and ``{"test": {...}}`` after it,
@@ -340,7 +343,7 @@ def run_tests(dbname, dispatch):
 
     assets_generated = False
     next_id = dispatch({'classes': {
-        cid: {'tests': len(tests), 'tag': test_tag(tests[0], method=False)}
+        cid: {'tests': len(tests), 'tag': test_tag(tests[0], method=False), 'kind': class_kind(tests[0])}
         for cid, tests in classes.items()
     }})
     while next_id is not None:
@@ -373,14 +376,45 @@ def split_tests(env, tests):
         if groups is None:
             result.append(test)
             continue
-        for modules in groups:
+        for group in groups:
             part = type(test)(test._testMethodName)
             part._test_params = test._test_params
-            part._test_modules = modules
+            part._test_modules = group
             part.is_test_all = False
-            part._test_part = ','.join(f'@{module}' for module in modules)
+            part._test_part = ','.join(f'@{module}' for module in group)
             result.append(part)
     return result
+
+
+def class_kind(test):
+    """ Kind of the unit of work of ``test``, which the controller uses to
+    run the most expensive units first: ``split`` for the parts of a split
+    cross-module test (each runs a browser, typically for minutes),
+    ``browser`` if its class probably runs a browser (tours), else ``other``.
+    """
+    if getattr(test, '_test_part', None):
+        return 'split'
+    return 'browser' if uses_browser(type(test)) else 'other'
+
+
+BROWSER_CALL = re.compile(r'\b(?:\w*tour\w*|browser_js)\s*\(')
+
+
+@functools.cache
+def uses_browser(test_class):
+    """ Whether ``test_class`` is an :class:`HttpCase` whose source, or the
+    source of one of its ancestors (outside of the test framework), calls
+    ``browser_js`` or something like ``start_tour``.
+    """
+    if not issubclass(test_class, HttpCase):
+        return False
+    for cls in test_class.__mro__:
+        if cls.__module__.startswith(('odoo.tests', 'unittest', 'builtins')):
+            continue
+        with suppress(OSError, TypeError):
+            if BROWSER_CALL.search(inspect.getsource(cls)):
+                return True
+    return False
 
 
 def worker_main(dbname, sock, log_path):
@@ -476,6 +510,22 @@ class Worker:
 
 class InconsistentWorkers(Exception):
     pass
+
+
+# kinds of classes (see `class_kind`), from the most to the least expensive
+KINDS = ['split', 'browser', 'other']
+
+
+def schedule(classes):
+    """ Order in which to hand out ``classes`` to the workers.
+
+    Running the most expensive classes first keeps them from running alone at
+    the end of the session, while the other workers are idle. The duration of
+    the classes is unknown, but the parts of split tests are typically the
+    longest, followed by the browser tests (tours), and within a kind the
+    classes with more tests. Otherwise the collection order is kept.
+    """
+    return sorted(classes, key=lambda cid: (KINDS.index(classes[cid]['kind']), -classes[cid]['tests']))
 
 
 class Controller:
@@ -627,7 +677,7 @@ class Controller:
                 if 'classes' in message:
                     if classes is None:
                         classes = set(message['classes'])
-                        self.pending = collections.deque(message['classes'])
+                        self.pending = collections.deque(schedule(message['classes']))
                         self.class_tests = message['classes']
                         print(
                             f"Running {self.tests_count} tests"
