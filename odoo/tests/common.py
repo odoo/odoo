@@ -1209,6 +1209,13 @@ class CrossModule(case.TestCase):
     def _callTestMethod(self, method):
         method(self._test_modules)
 
+    def _split_test_modules(self, env):
+        """ Groups of ``self._test_modules`` which can be tested separately
+        (e.g. on parallel workers), or ``None`` if the test can't be split.
+        Modules in none of the groups have nothing to test.
+        """
+        return None
+
     def _get_canonical_tags_params(self, log=None):
         result = super()._get_canonical_tags_params(log)
         result['module'] = None

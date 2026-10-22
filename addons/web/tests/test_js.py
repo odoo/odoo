@@ -67,6 +67,19 @@ class HootCommon(odoo.tests.HttpCase):
             self.fail("No assets found in the given test bundle")
         return assets
 
+    def _split_test_modules(self, env):
+        if any(sign == '+' for sign, _ in _get_filters(self._test_params)):
+            # the parameters select tests regardless of the modules
+            return None
+        assets = env['ir.qweb']._get_asset_content('web.assets_unit_tests')[0]
+        addons = {
+            RE_ASSET_ADDON.match(asset['url'])[1]
+            for asset in assets
+            if asset['filename'].endswith('.test.js')
+        }
+        # each module's unit tests are a top-level HOOT suite `@module`
+        return [[module] for module in self._test_modules if module in addons]
+
     def _get_hoot_module_filters(self, addons_from_asset_bundle, available_modules):
         module_filter = ''
         for module in available_modules:

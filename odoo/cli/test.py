@@ -34,7 +34,7 @@ from odoo.modules import db
 from odoo.orm.registry import Registry
 from odoo.service import server
 from odoo.tests import case, loader
-from odoo.tests.common import HttpCase
+from odoo.tests.common import CrossModule, HttpCase
 from odoo.tests.result import OdooTestResult
 from odoo.tests.suite import OdooSuite
 from odoo.tests.tag_selector import TagsSelector
@@ -187,8 +187,13 @@ def default_workers():
 # test runner (worker side)
 # ---------------------------------------------------------------------------
 
-def class_id(test_class):
-    return f'{test_class.__module__}.{test_class.__qualname__}'.removeprefix('odoo.addons.')
+def class_id(test):
+    """ Id of the unit of work of ``test``: its class, or the part of its
+    class for the parts of a split cross-module test. """
+    test_class = type(test)
+    cid = f'{test_class.__module__}.{test_class.__qualname__}'.removeprefix('odoo.addons.')
+    part = getattr(test, '_test_part', None)
+    return f'{cid}[{part}]' if part else cid
 
 
 def test_tag(test, *, method=True):
@@ -196,6 +201,8 @@ def test_tag(test, *, method=True):
     params = test._get_canonical_tags_params(None)
     if not method:
         params['test_method'] = None
+    if part := getattr(test, '_test_part', None):
+        params['params'] = part
     tag = test._make_canonical_tag(**params)
     # a tag without tag name implies `standard`
     return tag if 'standard' in test.test_tags else f'*{tag}'
@@ -325,9 +332,11 @@ def run_tests(dbname, dispatch):
         for test in loader.get_module_test_cases(module)
         if selector.check(test)
     ), key=lambda t: getattr(t, 'test_sequence', 0))
+    with registry.cursor() as cr:
+        tests = split_tests(api.Environment(cr, api.SUPERUSER_ID, {}), tests)
     classes = collections.defaultdict(list)
     for test in tests:
-        classes[class_id(type(test))].append(test)
+        classes[class_id(test)].append(test)
 
     assets_generated = False
     next_id = dispatch({'classes': {
@@ -348,6 +357,30 @@ def run_tests(dbname, dispatch):
         next_id = dispatch({'done': next_id})
 
     server.server.stop_event.set()
+
+
+def split_tests(env, tests):
+    """ Replace the cross-module tests which support it (e.g. the HOOT suites,
+    which otherwise test every module in a single browser) by one test per
+    group of modules, so the groups can run on different workers.
+
+    Each part is selected as if by the test tag ``[@module]``, which runs it
+    again, like a failing HOOT test's tag.
+    """
+    result = []
+    for test in tests:
+        groups = test._split_test_modules(env) if isinstance(test, CrossModule) else None
+        if groups is None:
+            result.append(test)
+            continue
+        for modules in groups:
+            part = type(test)(test._testMethodName)
+            part._test_params = test._test_params
+            part._test_modules = modules
+            part.is_test_all = False
+            part._test_part = ','.join(f'@{module}' for module in modules)
+            result.append(part)
+    return result
 
 
 def worker_main(dbname, sock, log_path):
