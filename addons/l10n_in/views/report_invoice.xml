@@ -13,6 +13,9 @@
         <xpath expr="//div[@id='informations']" position="before">
             <style>
                 .l10n_in_invoice { font-size: 12px; }
+                .l10n_in_invoice .l10n_in_header_design { position: relative; overflow: hidden; margin-bottom: 16px; }
+                .l10n_in_invoice .l10n_in_header_art { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+                .l10n_in_invoice .l10n_in_document_header { position: relative; margin-bottom: 0 !important; }
                 .l10n_in_invoice .l10n_in_document_header { table-layout: fixed; border-collapse: separate; border-spacing: 0; }
                 .l10n_in_invoice .l10n_in_document_header > tbody > tr > td { vertical-align: top; padding: 0; width: 50%; }
                 .l10n_in_invoice .l10n_in_document_header > tbody > tr > td:first-child { padding-right: 16px; }
@@ -30,10 +33,22 @@
                 .l10n_in_invoice #informations > .col:nth-child(2n+1) { clear: both; border-right: 1px solid #dee2e6; }
                 .l10n_in_invoice #informations > .col > strong { display: block; font-size: 10px; line-height: 1.3; margin-bottom: 3px; }
                 .l10n_in_invoice #informations > .col > div { display: block; font-size: 11px; line-height: 1.35; }
-                .l10n_in_invoice .l10n_in_reference_card { border: 1px solid #dee2e6; overflow: hidden; }
+                .l10n_in_invoice .l10n_in_reference_card { border: 1px solid #dee2e6; overflow: hidden; background: white; }
+                .l10n_in_invoice .l10n_in_header_bubble { border-radius: 22px; padding: 12px; }
+                .l10n_in_invoice .l10n_in_header_bubble .l10n_in_supplier { padding: 14px; }
                 .l10n_in_invoice .l10n_in_header_bubble .l10n_in_reference_card { border-radius: 12px; }
+                .l10n_in_invoice .l10n_in_header_wave { padding: 14px 12px 24px; }
                 .l10n_in_invoice .l10n_in_header_wave .l10n_in_reference_card { border-radius: 12px 0 12px 0; }
+                .l10n_in_invoice .l10n_in_header_folder { padding: 12px; }
                 .l10n_in_invoice .l10n_in_header_folder .l10n_in_reference_card { border-radius: 0 12px 0 0; }
+                .l10n_in_invoice .l10n_in_header_dual { padding: 16px 12px 8px 24px; }
+                .l10n_in_invoice .l10n_in_header_lines { padding: 12px; }
+                .l10n_in_invoice .l10n_in_header_lines .l10n_in_supplier { padding-left: 40px; }
+                .l10n_in_invoice .l10n_in_header_center .l10n_in_supplier { text-align: center; }
+                .l10n_in_invoice .l10n_in_header_center .l10n_in_document_title { text-align: center; }
+                .l10n_in_invoice .l10n_in_header_compact .l10n_in_supplier { padding: 6px 8px; font-size: 11px; }
+                .l10n_in_invoice .l10n_in_header_compact .l10n_in_supplier_name,
+                .l10n_in_invoice .l10n_in_header_compact .l10n_in_document_title { font-size: 15px; }
                 .l10n_in_invoice .l10n_in_header_compact #informations > .col { min-height: 42px; padding: 5px 8px; }
                 .l10n_in_invoice .o_main_table th,
                 .l10n_in_invoice .l10n_in_hsn_table th { background-color: #f3f4f5; padding: 8px 6px; }
@@ -53,7 +68,10 @@
             <div t-if="l10n_in_report_title" class="text-end text-muted small mb-2" name="l10n_in_copy_title">
                 <t t-out="l10n_in_report_title"/>
             </div>
-            <table t-attf-class="table table-borderless w-100 mb-3 l10n_in_document_header l10n_in_header_{{(o.company_id.external_report_layout_id.key or 'web.external_layout_standard').split('external_layout_')[-1]}}" name="l10n_in_document_header">
+            <t t-set="l10n_in_layout" t-value="(o.company_id.external_report_layout_id.key or 'web.external_layout_standard').split('external_layout_')[-1]"/>
+            <div t-attf-class="l10n_in_header_design l10n_in_header_{{l10n_in_layout}}" name="l10n_in_header_design">
+                <t t-call="l10n_in.invoice_header_art"/>
+            <table class="table table-borderless w-100 l10n_in_document_header" name="l10n_in_document_header">
                 <tbody>
                     <tr>
                         <td>
@@ -67,6 +85,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
             <table class="table table-bordered w-100 l10n_in_parties mb-3" name="l10n_in_party_details">
                 <tbody>
                     <tr>
@@ -331,7 +350,7 @@
     </template>
 
     <template id="invoice_supplier">
-        <div name="l10n_in_supplier" class="l10n_in_supplier" t-att-style="'border-top: 3px solid %s;' % (o.company_id.primary_color or '#243746')">
+        <div name="l10n_in_supplier" class="l10n_in_supplier" t-att-style="'border-top: 3px solid %s;' % (o.company_id.primary_color or '#243746') if l10n_in_layout in ('standard', 'compact', 'center') else ''">
             <img t-if="o.company_id.logo" class="l10n_in_supplier_logo" t-att-src="image_data_uri(o.company_id.logo)" alt="Company logo"/>
             <div class="l10n_in_supplier_name" t-att-style="'color: %s;' % (o.company_id.primary_color or '#243746')" t-field="o.company_id.name"/>
             <div t-if="o.company_id.report_header" class="text-muted small mb-2" t-field="o.company_id.report_header"/>
@@ -344,6 +363,33 @@
             <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
             <div t-if="o.company_id.website"><span t-field="o.company_id.website"/></div>
         </div>
+    </template>
+
+    <!-- Carry the selected layout's visual language into the compact header itself. -->
+    <template id="invoice_header_art">
+        <svg t-if="l10n_in_layout == 'bubble'" class="l10n_in_header_art" name="l10n_in_art_bubble" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" preserveAspectRatio="none">
+            <ellipse cx="220" cy="30" rx="390" ry="360" t-att-fill="o.company_id.primary_color or '#243746'" fill-opacity=".12"/>
+            <circle cx="920" cy="330" r="100" t-att-fill="o.company_id.secondary_color or '#48776F'" fill-opacity=".12"/>
+        </svg>
+        <svg t-elif="l10n_in_layout == 'wave'" class="l10n_in_header_art" name="l10n_in_art_wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" preserveAspectRatio="none">
+            <path d="M0 0H1000V285C780 355 680 245 470 300C280 350 150 280 0 315Z" t-att-fill="o.company_id.primary_color or '#243746'" fill-opacity=".10"/>
+            <path d="M0 315C230 260 330 345 520 305C720 260 830 345 1000 300V320C800 365 700 285 510 325C300 365 180 290 0 335Z" t-att-fill="o.company_id.secondary_color or '#48776F'" fill-opacity=".16"/>
+        </svg>
+        <svg t-elif="l10n_in_layout == 'folder'" class="l10n_in_header_art" name="l10n_in_art_folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" preserveAspectRatio="none">
+            <path d="M0 0H440L495 50V295L450 340H0Z" t-att-fill="o.company_id.primary_color or '#243746'" fill-opacity=".10"/>
+            <path d="M0 0H440L460 18H0Z" t-att-fill="o.company_id.primary_color or '#243746'" fill-opacity=".35"/>
+        </svg>
+        <svg t-elif="l10n_in_layout == 'dual'" class="l10n_in_header_art" name="l10n_in_art_dual" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" preserveAspectRatio="none">
+            <path d="M0 0H1000V12L0 50Z" t-att-fill="o.company_id.primary_color or '#243746'" fill-opacity=".16"/>
+            <path d="M0 0H20L0 340Z" t-att-fill="o.company_id.secondary_color or '#48776F'" fill-opacity=".35"/>
+        </svg>
+        <svg t-elif="l10n_in_layout == 'lines'" class="l10n_in_header_art" name="l10n_in_art_lines" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" preserveAspectRatio="none" fill="none" t-att-stroke="o.company_id.primary_color or '#243746'" stroke-opacity=".22" stroke-width="2">
+            <path d="M0 0C0 70 24 80 24 170S24 300 0 340"/>
+            <path d="M5 0C5 70 29 80 29 170S29 300 5 340"/>
+            <path d="M10 0C10 70 34 80 34 170S34 300 10 340"/>
+            <path d="M15 0C15 70 39 80 39 170S39 300 15 340"/>
+            <path d="M20 0C20 70 44 80 44 170S44 300 20 340"/>
+        </svg>
     </template>
 
     <!-- Like the Latin American reports, replace each standard supplier header only for this report. -->
