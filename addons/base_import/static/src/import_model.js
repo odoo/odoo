@@ -433,8 +433,8 @@ export class BaseImportModel {
             }
         }
 
-        // Push local image to records
-        await this._pushLocalImageToRecords(ids, binary_filenames, isTest);
+        // Push local images to records
+        await this._pushLocalImageToRecords(binary_filenames, isTest);
 
         // Check if we should continue
         if (nextrow) {
@@ -448,46 +448,51 @@ export class BaseImportModel {
         return false;
     }
 
-    async _pushLocalImageToRecords(ids, binaryFilenames, isTest) {
-        if (typeof binaryFilenames === "object") {
-            const parameters = {
-                tracking_disable: this.importOptions.tracking_disable,
-                delayAfterEachBatch: this.binaryFilesParams.delayAfterEachBatch.value,
-                maxBatchSize: this.binaryFilesParams.maxSizePerBatch.value * 1024 * 1024,
-            };
-
-            if (!this.binaryFilesParams.binaryFiles) {
-                return;
+    async _pushLocalImageToRecords(binaryFilenames, isTest) {
+        if (isTest || !Array.isArray(binaryFilenames) || !binaryFilenames.length) {
+            return;
+        }
+        if (!this.binaryFilesParams.binaryFiles) {
+            return;
+        }
+        const binaryFiles = this.binaryFilesParams.binaryFiles.value;
+        const parameters = {
+            tracking_disable: this.importOptions.tracking_disable,
+            delayAfterEachBatch: this.binaryFilesParams.delayAfterEachBatch.value,
+            maxBatchSize: this.binaryFilesParams.maxSizePerBatch.value * 1024 * 1024,
+        };
+        // Group entries per target model: one import can write on several
+        // models (e.g. product.template AND product.image).
+        const fieldsByModel = new Map();
+        for (const entry of binaryFilenames) {
+            if (binaryFiles[entry.name]) {
+                const fields = fieldsByModel.get(entry.model) || new Set();
+                fields.add(entry.field);
+                fieldsByModel.set(entry.model, fields);
             }
-            const binaryFiles = this.binaryFilesParams.binaryFiles.value;
-            const fields = Object.keys(binaryFilenames);
-            const binaryFileManager = new BinaryFileManager(
-                this.resModel,
-                fields,
-                parameters,
-                this.context,
-                this.orm,
-                this.notificationService
-            );
-            for (let rowIndex = 0; rowIndex < ids.length; rowIndex++) {
-                const id = ids[rowIndex];
-                for (const field of fields) {
-                    const fileName = binaryFilenames[field][rowIndex];
-                    if (!fileName) {
-                        continue;
-                    }
-                    if (fileName in binaryFiles) {
-                        const file = binaryFiles[fileName];
-                        if (!file || isTest) {
-                            continue;
-                        }
-                        await binaryFileManager.addFile(id, field, file);
-                    }
-                }
+        }
+        const managers = new Map(
+            [...fieldsByModel].map(([model, fields]) => [
+                model,
+                new BinaryFileManager(
+                    model,
+                    [...fields],
+                    parameters,
+                    this.context,
+                    this.orm,
+                    this.notificationService
+                ),
+            ])
+        );
+        for (const entry of binaryFilenames) {
+            if (binaryFiles[entry.name]) {
+                await managers
+                    .get(entry.model)
+                    .addFile(entry.id, entry.field, binaryFiles[entry.name]);
             }
-            if (!isTest) {
-                await binaryFileManager.sendLastPayload();
-            }
+        }
+        for (const manager of managers.values()) {
+            await manager.sendLastPayload();
         }
     }
 
