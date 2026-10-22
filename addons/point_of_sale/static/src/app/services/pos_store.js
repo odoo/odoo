@@ -2107,6 +2107,9 @@ export class PosStore extends WithLazyGetterTrap {
                     resId: product?.id,
                     onSave: async (record) => {
                         await this.loadNewProducts([["id", "=", record.evalContext.id]]);
+                        if (this.selectedCategory?.id && !this.productsToDisplay.length) {
+                            this.setSelectedCategory(0);
+                        }
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
