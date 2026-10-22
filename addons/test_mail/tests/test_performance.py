@@ -813,7 +813,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
         subtype_ids = (self.env.ref('test_mail.st_mail_test_simple_external') | self.env.ref('mail.mt_comment')).ids
 
-        with self.assertQueryCount(admin=5, employee=7):
+        with self.assertQueryCount(admin=5, employee=5):
             record.message_subscribe(partner_ids=self.user_emp_inbox.partner_id.ids, subtype_ids=subtype_ids)
 
         with self.assertQueryCount(admin=2, employee=2):
@@ -1647,7 +1647,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         self.env.flush_all()
         self.env.invalidate_all()
 
-        with self.assertQueryCount(employee=18):  # tm: 15
+        with self.assertQueryCount(employee=18):  # tm: 17
             res = Store().add(messages, "_store_message_fields")._build_result()
             self.assertEqual(len(res["mail.message"]), 6)
 
@@ -2055,7 +2055,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=556):  # tm: 555
+        with self.assertQueryCount(employee=556):  # tm: 556
             for ticket, attachments in zip(tickets, attachments_all, strict=True):
                 ticket.message_post(
                     attachments=attachments_vals,
