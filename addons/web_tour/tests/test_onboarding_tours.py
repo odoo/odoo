@@ -14,7 +14,7 @@ class TestOnboardingTours(HttpCase):
         'event_tour', 'discuss_channel_tour',
         'sale_tour', 'purchase_tour', 'mass_mailing_tour',
         'frontdesk_tour', 'hr_expense_extract_tour', 'appointment_tour',
-        'sale_subscription_tour', 'project_tour', 'helpdesk_tour',
+        'sale_subscription_tour', 'helpdesk_tour',
         'rental_tour', 'web_studio_new_app_tour', 'question_tour',
         'account_tour', 'point_of_sale_tour',
         'website_sale.onboarding_tour',
