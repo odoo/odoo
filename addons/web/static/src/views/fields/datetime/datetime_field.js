@@ -18,7 +18,13 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
 import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
-import { formatDate, formatDateTime } from "../formatters";
+import {
+    formatDate,
+    formatDateTime,
+    getDateWarningMessage,
+    getDateWarningTooltip,
+    hasDateWarning,
+} from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 import { DateTimeOperation } from "@web/model/relational_model/operation";
 
@@ -74,25 +80,11 @@ export class DateTimeField extends Component {
     startDateRef = signal.ref();
     endDateRef = signal.ref();
 
-    futureWarningMsg = _t("This date is in the future");
-    pastWarningMsg = _t("This date is in the past");
-
-    warnings = computed(() => {
-        if (!this.props.warning || this.props.warning === "none") {
-            return [];
-        }
-        const referenceDate = this.field.type === "datetime" ? DateTime.local() : today();
-        return this.values.map((val) => {
-            if (!val) {
-                return false;
-            }
-            return this.props.warning === "future" ? val > referenceDate : val < referenceDate;
-        });
-    });
-
-    warningMessage = computed(() =>
-        this.props.warning === "future" ? this.futureWarningMsg : this.pastWarningMsg
+    warnings = computed(() =>
+        this.values.map((val) => hasDateWarning(val, this.field.type, this.props.warning))
     );
+
+    warningMessage = computed(() => getDateWarningMessage(this.props.warning));
 
     //-------------------------------------------------------------------------
     // Getters
@@ -348,6 +340,16 @@ export class DateTimeField extends Component {
      */
     getWarningMessage(index) {
         return this.hasWarning(index) ? this.warningMessage() : "";
+    }
+
+    /**
+     * @param {number} index
+     */
+    getTooltip(index) {
+        const formattedValue = this.getFormattedValue(index, true);
+        return this.hasWarning(index)
+            ? getDateWarningTooltip(formattedValue, this.props.warning)
+            : formattedValue;
     }
 
     /**
