@@ -32,13 +32,20 @@ class ResPartnerBank(models.Model):
         self.ensure_one()
         return self.employee_id.action_open_allocation_wizard()
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'partner_id.employee_ids.bank_account_ids')
     def _compute_employee_id(self):
         for bank in self:
-            if bank.partner_id.employee:
-                bank.employee_id = bank.partner_id.employee_ids.filtered(lambda e: e.company_id in self.env.companies)[:1]
-            else:
+            if not bank.partner_id.employee:
                 bank.employee_id = False
+                continue
+
+            def same_company(employee):
+                return not bank.company_id or employee.company_id == bank.company_id
+
+            employees = bank.partner_id.employee_ids.filtered(lambda e: e.company_id in self.env.companies)
+            linked_employees = employees.filtered(lambda e: bank in e.bank_account_ids)
+
+            bank.employee_id = (linked_employees.filtered(same_company) or linked_employees or employees.filtered(same_company))[:1]
 
     def _compute_display_name(self):
         account_employee = self.browse()

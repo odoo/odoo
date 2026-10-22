@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.hr.tests.common import TestHrCommon
-
 from odoo.addons.mail.tests.common import mail_new_test_user
-
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.exceptions import AccessError
@@ -127,3 +126,112 @@ class TestMultiCompany(TestHrCommon):
             AccessError, msg="A manager cannot access their subordinates if they are not in a selected company",
         ):
             employee_other_company.with_user(manager_user).check_access('read')
+
+    def test_bank_account_multi_company_linked_same_company(self):
+        """
+        Ensure bank.employee_id and employee_salary_amount resolve to the employee
+        who has the account in bank_account_ids and belongs to the same company.
+        """
+        self.env.user.company_ids |= self.company_b
+
+        # Shared partner between two employees across companies
+        partner = self.env['res.partner'].create({'name': 'Shared Partner'})
+        employee_a = self.env['hr.employee'].create({
+            'name': 'Employee A',
+            'company_id': self.company_a.id,
+            'work_contact_id': partner.id,
+        })
+        employee_b = self.env['hr.employee'].create({
+            'name': 'Employee B',
+            'company_id': self.company_b.id,
+            'work_contact_id': partner.id,
+        })
+
+        # Bank accounts matching each employee's company
+        account_a = self.env['res.partner.bank'].create({
+            'account_number': 'BE68539007547034',
+            'partner_id': partner.id,
+            'company_id': self.company_a.id,
+        })
+        account_b = self.env['res.partner.bank'].create({
+            'account_number': 'BE71096123456769',
+            'partner_id': partner.id,
+            'company_id': self.company_b.id,
+        })
+
+        # Link each bank account to its respective employee
+        employee_a.bank_account_ids = [Command.link(account_a.id)]
+        employee_b.bank_account_ids = [Command.link(account_b.id)]
+
+        # Simulate user having both companies active in the switcher
+        ctx = {'allowed_company_ids': [self.company_a.id, self.company_b.id]}
+        account_a = account_a.with_context(ctx)
+        account_b = account_b.with_context(ctx)
+
+        # Verify each account resolves to the correct employee and receives 100% allocation
+        self.assertEqual(account_a.employee_id, employee_a)
+        self.assertEqual(account_b.employee_id, employee_b)
+        self.assertEqual(account_a.employee_salary_amount, 100)
+        self.assertEqual(account_b.employee_salary_amount, 100)
+
+    def test_bank_account_multi_company_linked_mismatched_company(self):
+        """
+        Ensure bank.employee_id still resolves to the linking employee even if
+        the bank account has a mismatched historical company_id.
+        """
+        self.env.user.company_ids |= self.company_b
+
+        partner = self.env['res.partner'].create({'name': 'Shared Partner'})
+        employee_b = self.env['hr.employee'].create({
+            'name': 'Employee B',
+            'company_id': self.company_b.id,
+            'work_contact_id': partner.id,
+        })
+
+        # Historical account created under company_a
+        account_old = self.env['res.partner.bank'].create({
+            'account_number': 'BE12345678901234',
+            'partner_id': partner.id,
+            'company_id': self.company_a.id,
+        })
+
+        # Account is explicitly linked to employee in company_b
+        employee_b.bank_account_ids = [Command.link(account_old.id)]
+
+        ctx = {'allowed_company_ids': [self.company_a.id, self.company_b.id]}
+        account_old = account_old.with_context(ctx)
+
+        # Best-effort resolution must prioritize the explicit link over company mismatch
+        self.assertEqual(account_old.employee_id, employee_b)
+
+    def test_bank_account_multi_company_unlinked_fallback(self):
+        """
+        Ensure bank.employee_id falls back to the employee matching the account company
+        when the bank account is not yet linked to any employee's bank_account_ids.
+        """
+        self.env.user.company_ids |= self.company_b
+
+        partner = self.env['res.partner'].create({'name': 'Shared Partner'})
+        self.env['hr.employee'].create({
+            'name': 'Employee A',
+            'company_id': self.company_a.id,
+            'work_contact_id': partner.id,
+        })
+        employee_b = self.env['hr.employee'].create({
+            'name': 'Employee B',
+            'company_id': self.company_b.id,
+            'work_contact_id': partner.id,
+        })
+
+        # New account belonging to company_b, not yet linked in bank_account_ids
+        account_unlinked = self.env['res.partner.bank'].create({
+            'account_number': 'BE99999999999999',
+            'partner_id': partner.id,
+            'company_id': self.company_b.id,
+        })
+
+        ctx = {'allowed_company_ids': [self.company_a.id, self.company_b.id]}
+        account_unlinked = account_unlinked.with_context(ctx)
+
+        # Fallback must pick the candidate of the matching company (company_b)
+        self.assertEqual(account_unlinked.employee_id, employee_b)
