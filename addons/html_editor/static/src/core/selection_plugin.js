@@ -211,7 +211,6 @@ function scrollToSelection(selection) {
  * @typedef {((node: Node, selection: EditorSelection, range: Range) => boolean | undefined)[]} is_node_fully_selected_predicates
  * @typedef {((ev: Event, char: string, lastSkipped: string) => boolean | undefined)[]} is_char_tangible_for_keyboard_navigation_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_no_inline_root_predicates
- * @typedef {((el: Element, ev: MouseEvent) => boolean | undefined)[]} is_selectable_on_click_predicates
  *
  * @typedef {((targetedNodes: Node[]) => Node[])[]} targeted_nodes_processors
  */
@@ -1414,9 +1413,8 @@ export class SelectionPlugin extends Plugin {
         if (ev.detail !== 1) {
             return;
         }
-        const element = closestElement(
-            ev.target,
-            (el) => this.checkPredicates("is_selectable_on_click_predicates", el, ev) ?? false
+        const element = closestElement(ev.target, (el) =>
+            this.dependencies.properties.get(el, "selectableOnClick", false)
         );
         // Skip elements inside a protected node (e.g. the icons of an
         // embedded component).

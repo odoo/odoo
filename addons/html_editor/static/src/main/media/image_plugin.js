@@ -74,7 +74,14 @@ export class ImagePlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        properties: [{ predicate: "IMG", toolbar: "image" }],
+        properties: [
+            {
+                predicate: "IMG",
+                toolbar: "image",
+                // Clicking an image selects it rather than putting a cursor next to it.
+                selectableOnClick: true,
+            },
+        ],
         toolbar_groups: [
             withSequence(26, { id: "image_modifiers", namespaces: ["image"] }),
             withSequence(28, { id: "image_actions", namespaces: ["image"] }),
@@ -152,14 +159,6 @@ export class ImagePlugin extends Plugin {
         should_show_hint_predicates: (node) => {
             if (isElementOverlappingAnyFloatingImage(closestBlock(node))) {
                 return false;
-            }
-        },
-
-        /** Predicates */
-        is_selectable_on_click_predicates: (el) => {
-            // Clicking an image selects it rather than putting a cursor next to it.
-            if (el.nodeName === "IMG") {
-                return true;
             }
         },
 
