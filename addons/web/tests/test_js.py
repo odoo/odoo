@@ -6,11 +6,13 @@ import re
 from contextlib import suppress
 
 import odoo.tests
+from odoo.tests.result import Stat
 from odoo.tools.misc import file_open
 from werkzeug.urls import url_quote_plus
 
 RE_FORBIDDEN_STATEMENTS = re.compile(r'test.*\.(only|debug)\(')
 RE_ASSET_ADDON = re.compile(r'^/(\w+)/')
+RE_HOOT_ROOT_SUITE_ENDED = re.compile(r'\[HOOT\] "@(?P<module>\w+)" ended \(.*time: (?P<time>\d+) ms\)$')
 
 
 def unit_test_error_checker(message):
@@ -111,6 +113,9 @@ class HootCommon(odoo.tests.HttpCase):
                     result['params'] = test
         return result
 
+    def browser_js(self, *args, **kwargs):
+        super().browser_js(*args, error_checker=unit_test_error_checker, success_signal="[HOOT] Test suite succeeded", **kwargs)
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class HootSuite(HootCommon):
@@ -185,11 +190,21 @@ class HootSuite(HootCommon):
     @odoo.tests.no_retry
     def test_hoot(self):
         # HOOT tests suite
-        self.browser_js('/web/static/lib/hoot/tests/index.html?headless&loglevel=2', "", "", login='admin', timeout=1800, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+        self.browser_js('/web/static/lib/hoot/tests/index.html?headless&loglevel=2', "", "", login='admin', timeout=1800)
+
+
+class CrossModuleHoot(HootCommon, odoo.tests.CrossModule):
+    def browser_js(self, *args, **kwargs):
+        super().browser_js(*args, console_hook=self._record_hoot_stats, **kwargs)
+
+    def _record_hoot_stats(self, message):
+        match = RE_HOOT_ROOT_SUITE_ENDED.search(message)
+        if match:
+            self._module_stats[match['module']] += Stat(time=int(match['time']) / 1000)
 
 
 @odoo.tests.tagged('hoot', 'post_install', '-at_install')
-class WebSuite(HootCommon, odoo.tests.CrossModule):
+class WebSuite(CrossModuleHoot):
     @odoo.tests.no_retry
     def test_unit_desktop(self, modules):
         # Unit tests suite (desktop)
@@ -198,11 +213,11 @@ class WebSuite(HootCommon, odoo.tests.CrossModule):
         if not filters:
             return
         timeout = 5400 if self.is_test_all else 1800
-        self.browser_js(f'/web/tests?&headless&loglevel=2&preset=desktop&timeout=15000{filters}', "", "", login='admin', timeout=timeout, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+        self.browser_js(f'/web/tests?&headless&loglevel=2&preset=desktop&timeout=15000{filters}', "", "", login='admin', timeout=timeout)
 
 
 @odoo.tests.tagged('hoot', 'post_install', '-at_install')
-class MobileWebSuite(HootCommon, odoo.tests.CrossModule):
+class MobileWebSuite(CrossModuleHoot):
     browser_size = '375x667'
     touch_enabled = True
 
@@ -214,4 +229,4 @@ class MobileWebSuite(HootCommon, odoo.tests.CrossModule):
         if not filters:
             return
         timeout = 5400 if self.is_test_all else 1800
-        self.browser_js(f'/web/tests?&headless&loglevel=2&preset=mobile&tag=-headless&timeout=15000{filters}', "", "", login='admin', timeout=timeout, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+        self.browser_js(f'/web/tests?&headless&loglevel=2&preset=mobile&tag=-headless&timeout=15000{filters}', "", "", login='admin', timeout=timeout)
