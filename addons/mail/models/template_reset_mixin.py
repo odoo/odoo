@@ -6,7 +6,7 @@ import json
 from lxml import etree
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_resource_from_path
 from odoo.tools.convert import xml_import
 from odoo.tools.misc import file_path
@@ -80,9 +80,15 @@ class TemplateResetMixin(models.AbstractModel):
             module, xml_id = external_id.split('.')
             fullpath = file_path(template.template_fs)
             if fullpath:
+                fields_to_retry = []
                 for field_name, field in template._fields.items():
                     if field.translate is True:
-                        template.update_field_translations(field_name, lang_false)
+                        try:
+                            template.update_field_translations(field_name, lang_false)
+                        except ValidationError:
+                            # Field value is invalid, its translations can't be reset
+                            # Defer the reset after the template xml restoration
+                            fields_to_retry.append((field_name, field))
                 doc = etree.parse(fullpath)
                 for rec in doc.xpath(expr, tag='record', xml_id=xml_id, external_id=external_id):
                     # We don't have a way to pass context while loading record from a file, so we use this hack
@@ -91,6 +97,8 @@ class TemplateResetMixin(models.AbstractModel):
                     obj = xml_import(template.env, module, {}, mode='init', xml_filename=fullpath)
                     obj._tag_record(rec)
                     template._override_translation_term(module, [xml_id, external_id])
+                for field_name, field in fields_to_retry:
+                    template.update_field_translations(field_name, lang_false)
             else:
                 templates_with_missing_source.append(template.display_name)
         if templates_with_missing_source:
