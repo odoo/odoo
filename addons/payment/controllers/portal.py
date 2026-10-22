@@ -74,7 +74,9 @@ class PaymentPortal(portal.CustomerPortal):
 
         # Raise an HTTP 404 if a partner is provided with an invalid access token
         if partner_id:
-            if not payment_utils.check_access_token(access_token, partner_id, amount, currency_id):
+            if not self._check_payment_pay_access_token(
+                access_token, partner_id, amount, currency_id, **kwargs
+            ):
                 raise werkzeug.exceptions.NotFound()  # Don't leak information about ids.
 
         user_sudo = request.env.user
@@ -233,6 +235,12 @@ class PaymentPortal(portal.CustomerPortal):
             **self._get_extra_payment_form_values(**kwargs),
         }
         return request.render('payment.payment_methods', rendering_context)
+
+    def _check_payment_pay_access_token(
+        self, access_token, partner_id, amount, currency_id, **kwargs
+    ):
+        """ Check the validity of the access token received by the `/payment/pay` route. """
+        return payment_utils.check_access_token(access_token, partner_id, amount, currency_id)
 
     def _get_extra_payment_form_values(self, **kwargs):
         """ Return a dict of extra payment form values to include in the rendering context.

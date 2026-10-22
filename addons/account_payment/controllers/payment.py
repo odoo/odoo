@@ -66,8 +66,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
             # Check the access token against the invoice values. Done after fetching the invoice
             # as we need the invoice fields to check the access token.
-            if not payment_utils.check_access_token(
-                access_token, invoice_sudo.partner_id.id, amount, invoice_sudo.currency_id.id
+            if not self._check_payment_pay_access_token(
+                access_token,
+                invoice_sudo.partner_id.id,
+                amount,
+                invoice_sudo.currency_id.id,
+                invoice_id=invoice_id,
             ):
                 raise ValidationError(_("The provided parameters are invalid."))
 
@@ -82,6 +86,23 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 'invoice_id': invoice_id,
             })
         return super().payment_pay(*args, amount=amount, access_token=access_token, **kwargs)
+
+    def _check_payment_pay_access_token(
+        self, access_token, partner_id, amount, currency_id, invoice_id=None, **kwargs
+    ):
+        """ Override of `payment` to also accept access tokens including the invoice.
+
+        :param int invoice_id: The invoice for which a payment is made, as an `account.move` id.
+        :return: Whether the access token is valid.
+        :rtype: bool
+        """
+        if invoice_id and payment_utils.check_access_token(
+            access_token, partner_id, amount, currency_id, 'account.move', invoice_id
+        ):
+            return True
+        return super()._check_payment_pay_access_token(
+            access_token, partner_id, amount, currency_id, invoice_id=invoice_id, **kwargs
+        )
 
     def _get_extra_payment_form_values(self, invoice_id=None, access_token=None, **kwargs):
         """ Override of `payment` to reroute the payment flow to the portal view of the invoice.
