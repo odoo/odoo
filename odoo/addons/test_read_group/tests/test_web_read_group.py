@@ -1305,3 +1305,103 @@ class TestWebReadGroup(common.TransactionCase):
 
         self.assertEqual(result['groups'][0]['value:sum'], 30)
         self.assertEqual(result['groups'][0]['__count'], 2)
+
+    def test_order_monetary_in_company(self):
+        """Test ordering unfolded records by a monetary field across currencies."""
+        Model = self.env["test_read_group.aggregate"]
+        model_id = self.env["ir.model"]._get(Model._name).id
+
+        self.env["ir.model.fields"].create([
+            {"model_id": model_id, "name": "x_currency_id", "ttype": "many2one", "relation": "res.currency"},
+            {"model_id": model_id, "name": "x_amount", "ttype": "monetary", "currency_field": "x_currency_id"},
+        ])
+        self.env.registry.clear_cache()
+        Model = self.env[Model._name]
+
+        curr_1, curr_2, curr_3 = self.env["res.currency"].create([
+            {"name": "C1", "symbol": "C1"},
+            {"name": "C2", "symbol": "C2"},
+            {"name": "C3", "symbol": "C3"},
+        ])
+        self.env["res.currency.rate"].create([
+            {"name": "2026-01-01", "rate": 1.0, "currency_id": curr_1.id, "company_id": self.env.company.id},
+            {"name": "2026-01-01", "rate": 0.5, "currency_id": curr_2.id, "company_id": self.env.company.id},
+            {"name": "2026-01-01", "rate": 2.0, "currency_id": curr_3.id, "company_id": self.env.company.id},
+        ])
+        r1, r2, r3 = Model.create([
+            {"key": 1, "x_currency_id": curr_1.id, "x_amount": 100},
+            {"key": 1, "x_currency_id": curr_2.id, "x_amount": 60},
+            {"key": 1, "x_currency_id": curr_3.id, "x_amount": 160},
+        ])
+        Model.web_read_group(
+            domain=[], groupby=["key"], aggregates=["x_amount:sum_currency"],
+            order="x_amount DESC", auto_unfold=True, unfold_read_specification={"x_amount": {}},
+        )
+        with self.assertQueries([
+            """
+            SELECT "test_read_group_aggregate"."key",
+                   SUM("test_read_group_aggregate"."x_amount" / COALESCE("test_read_group_aggregate__x_currency_id__rates"."rate", 1.0)),
+                   COUNT(*)
+            FROM "test_read_group_aggregate"
+            LEFT JOIN (
+                SELECT DISTINCT ON ("res_currency_rate"."currency_id") "res_currency_rate"."currency_id", "res_currency_rate"."rate"
+                FROM "res_currency_rate"
+                WHERE "res_currency_rate"."company_id" IS NULL OR "res_currency_rate"."company_id" = %s
+                ORDER BY
+                    "res_currency_rate"."currency_id",
+                    "res_currency_rate"."company_id",
+                    CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC,
+                    CASE WHEN "res_currency_rate"."name" > %s THEN "res_currency_rate"."name" END ASC
+            ) AS "test_read_group_aggregate__x_currency_id__rates"
+                ON ("test_read_group_aggregate"."x_currency_id" = "test_read_group_aggregate__x_currency_id__rates"."currency_id")
+            GROUP BY "test_read_group_aggregate"."key"
+            ORDER BY SUM("test_read_group_aggregate"."x_amount" / COALESCE("test_read_group_aggregate__x_currency_id__rates"."rate", 1.0)) DESC,
+                     "test_read_group_aggregate"."key" ASC
+            """,
+            """
+            SELECT "res_currency"."id"
+            FROM "res_currency"
+            ORDER BY COALESCE("res_currency"."active", FALSE) DESC, "res_currency"."name"
+            """,
+            """
+            SELECT "res_currency"."id",
+                   COALESCE(
+                       (SELECT "res_currency_rate"."rate"
+                        FROM "res_currency_rate"
+                        WHERE (("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
+                          AND "res_currency_rate"."name" <= %s)
+                          AND "res_currency_rate"."currency_id" = "res_currency"."id"
+                        ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
+                        LIMIT %s),
+                       (SELECT "res_currency_rate"."rate"
+                        FROM "res_currency_rate"
+                        WHERE ("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
+                          AND "res_currency_rate"."currency_id" = "res_currency"."id"
+                        ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
+                        LIMIT %s),
+                       1.0
+                   )
+            FROM "res_currency"
+            WHERE "res_currency"."id" IN %s
+            """,
+            """
+            SELECT "test_read_group_aggregate"."id"
+            FROM "test_read_group_aggregate"
+            WHERE "test_read_group_aggregate"."key" IN %s
+            ORDER BY ("test_read_group_aggregate"."x_amount" / COALESCE((
+                SELECT rate FROM UNNEST(%s, %s) AS v(currency_id, rate)
+                WHERE v.currency_id = "test_read_group_aggregate"."x_currency_id"
+            ), 1.0)) DESC, "test_read_group_aggregate"."id"
+            LIMIT %s
+            """,
+        ]):
+            result = Model.web_read_group(
+                domain=[],
+                groupby=["key"],
+                aggregates=["x_amount:sum_currency"],
+                order="x_amount DESC",
+                auto_unfold=True,
+                unfold_read_specification={"x_amount": {}},
+            )
+        records = result["groups"][0]["__records"]
+        self.assertEqual([r["id"] for r in records], [r2.id, r1.id, r3.id])
