@@ -1706,6 +1706,42 @@ class TestSubcontractingTracking(TransactionCase):
             {'lot_id': lot_finished.id, 'quantity': 4.0},
         ])
 
+    def test_unreserve_receipt_with_recorded_production(self):
+        """
+        Check that unreserving a receipt keeps the quantity of its recorded productions,
+        so that recording again does not receive more than what was produced.
+        """
+        self.comp1_sn.tracking = 'none'
+        self.bom_tracked.consumption = 'warning'
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'name': self.finished_product.name,
+                'product_id': self.finished_product.id,
+                'product_uom_qty': 10,
+            })],
+        })
+        receipt.action_confirm()
+        lot_finished = self.env['stock.lot'].create({
+            'name': 'lot_finished',
+            'product_id': self.finished_product.id,
+        })
+        mo_form = Form.from_action(self.env, receipt.action_record_components())
+        mo_form.qty_producing = 4
+        mo_form.lot_producing_id = lot_finished
+        mo_form.save().subcontracting_record_component()
+
+        receipt.do_unreserve()
+        self.assertRecordValues(receipt.move_line_ids, [
+            {'lot_id': lot_finished.id, 'quantity': 4.0},
+        ])
+
+        Form.from_action(self.env, receipt.button_validate()).save().process()
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(receipt.move_ids.quantity, 4.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.finished_product, receipt.location_dest_id), 4.0)
+
     def test_record_components_on_received_quantity_change(self):
         """
         Check that updating the receipt adapts the subcontracted productions accordingly.

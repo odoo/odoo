@@ -202,6 +202,12 @@ class StockMove(models.Model):
         self.filtered(lambda move: move._get_recorded_subcontract_production()).move_line_ids.picked = True
         return super()._action_done(cancel_backorder=cancel_backorder)
 
+    def _do_unreserve(self):
+        if self.env.context.get('keep_recorded_subcontract_reservation'):
+            # Recorded productions own their receipt lines: dropping them leaves nothing to receive
+            self -= self.filtered(lambda move: move._get_recorded_subcontract_production())
+        return super()._do_unreserve()
+
     def _action_cancel(self):
         productions_to_cancel_ids = OrderedSet()
         for move in self:
