@@ -30,6 +30,12 @@ _ADDRESS_REGEXES = [
 ]
 _REGIONAL_INDICATOR_OFFSET = ord('\N{Regional Indicator Symbol Letter A}') - ord('A')
 
+NO_FLAG_COUNTRIES = [
+    "AQ",  # Antarctica
+    "SJ",  # Svalbard + Jan Mayen : separate jurisdictions : no dedicated flag
+    "XI",  # Nothern Ireland
+]
+
 
 def split_vat(vat: str, default_country_code: str = '') -> tuple[str, str]:
     """
@@ -78,7 +84,8 @@ def get_flag(country_code: str) -> str:
 
     This emoji is composed of the two regional indicator emoji of the country code.
     """
-    if not re.fullmatch(r'[A-Z]{2}', country_code):
+
+    if not re.fullmatch(r'[A-Z]{2}', country_code) or country_code in NO_FLAG_COUNTRIES:
         return ""
     return "".join(chr(_REGIONAL_INDICATOR_OFFSET + ord(c)) for c in country_code)
 

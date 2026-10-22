@@ -5,6 +5,7 @@ import logging
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.tools.business_data import NO_FLAG_COUNTRIES
 
 _logger = logging.getLogger(__name__)
 
@@ -19,13 +20,7 @@ FLAG_MAPPING = {
     "RE": "fr",
     "MF": "fr",
     "UM": "us",
-    "XI": "uk",
 }
-
-NO_FLAG_COUNTRIES = [
-    "AQ", #Antarctica
-    "SJ", #Svalbard + Jan Mayen : separate jurisdictions : no dedicated flag
-]
 
 EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES = {
     # EU Member States
