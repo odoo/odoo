@@ -328,7 +328,7 @@ export class RecordInternal {
                     const copy = [...record._proxy[fieldName]];
                     copy.sort(func);
                     const hasChanged = copy.some(
-                        (item, index) => item !== record[fieldName][index]
+                        (item, index) => toRaw(item) !== toRaw(record[fieldName][index])
                     );
                     if (hasChanged) {
                         record._proxy[fieldName] = copy;
