@@ -502,7 +502,7 @@ export class TicketScreen extends Component {
         return order.getCardHolderName();
     }
     getCashier(order) {
-        return order.employee_id ? order.employee_id.name : "";
+        return order.employee_id ? order.employee_id.name : order.user_id ? order.user_id.name : "";
     }
     getStatus(order) {
         if (
