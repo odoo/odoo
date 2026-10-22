@@ -1976,6 +1976,11 @@ def get_flag(country_code: str) -> str:
 
     This emoji is composed of the two regional indicator emoji of the country code.
     """
+    from odoo.addons.base.models.res_country import NO_FLAG_COUNTRIES  # noqa: PLC0415
+
+    if country_code in NO_FLAG_COUNTRIES:
+        return ""
+
     return "".join(chr(int(f"1f1{ord(c)+165:02x}", base=16)) for c in country_code)
 
 
