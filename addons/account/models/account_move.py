@@ -6078,6 +6078,12 @@ class AccountMove(models.Model):
             # currency_rate instead of assigning it to amount_currency directly.
             price_unit = line._get_cogs_value()
             balance = sign * line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) * price_unit
+            if line.currency_id != line.company_currency_id:
+                balance = line.currency_id._convert(
+                        balance,
+                        line.company_currency_id,
+                        line.company_id, line.date
+                        )
             if self.company_currency_id.is_zero(balance) or float_is_zero(price_unit, precision_digits=price_unit_prec):
                 continue
 
