@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 patch(PaymentScreenPaymentLines.prototype, {
     async sendPaymentAdjust(line) {
         const prevAmount = line.getAmount();
-        const amountDiff = line.pos_order_id.getTotalWithTax() - line.pos_order_id.getTotalPaid();
+        const amountDiff = line.pos_order_id.totalDue - line.pos_order_id.amountPaid;
         const newAmount = prevAmount + amountDiff;
 
         line.setAmount(newAmount);
@@ -32,7 +32,7 @@ patch(PaymentScreenPaymentLines.prototype, {
             state.actions.push({
                 id: "adjust_amount",
                 label: _t("Adjust Amount"),
-                action: () => this.props.sendPaymentAdjust(line),
+                action: () => this.sendPaymentAdjust(line),
                 severity: "warning",
             });
         }
