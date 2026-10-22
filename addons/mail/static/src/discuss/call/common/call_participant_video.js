@@ -4,6 +4,7 @@ import {
     Component,
     onMounted,
     onPatched,
+    onWillUnmount,
     status,
     useExternalListener,
     useRef,
@@ -25,6 +26,7 @@ export class CallParticipantVideo extends Component {
         this.root = useRef("root");
         onMounted(() => this._update());
         onPatched(() => this._update());
+        onWillUnmount(() => this._release());
         useExternalListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
             await this.play();
         });
@@ -40,6 +42,19 @@ export class CallParticipantVideo extends Component {
             this.root.el.srcObject = this.props.session.getStream(this.props.type);
         }
         this.root.el.load();
+    }
+
+    /**
+     * Detach the stream and cancel the pending load: the browser keeps a media element that is
+     * still loading alive, together with its listeners and thus the whole component tree.
+     */
+    _release() {
+        const el = this.root.el;
+        if (el) {
+            el.pause?.();
+            el.srcObject = null;
+            el.load();
+        }
     }
 
     async play() {
