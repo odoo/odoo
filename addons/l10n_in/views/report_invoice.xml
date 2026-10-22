@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document" primary="True">
-        <!-- Keep the selected company layout, but give Indian invoice data a fixed reading order. -->
+        <!-- Replace the layout's supplier header with the compact Indian document header below. -->
         <xpath expr="//t[@t-call='web.external_layout']" position="attributes">
             <attribute name="address">False</attribute>
             <attribute name="information_block">False</attribute>
@@ -18,9 +18,13 @@
                 .l10n_in_invoice .l10n_in_document_header > tbody > tr > td:first-child { padding-right: 16px; }
                 .l10n_in_invoice .l10n_in_parties { table-layout: fixed; margin-bottom: 0; }
                 .l10n_in_invoice .l10n_in_parties td { padding: 10px 12px; vertical-align: top; }
+                .l10n_in_invoice .l10n_in_supplier { padding: 10px 12px; line-height: 1.45; }
+                .l10n_in_invoice .l10n_in_supplier_logo { max-width: 140px; max-height: 48px; margin-bottom: 8px; }
+                .l10n_in_invoice .l10n_in_supplier_name { font-size: 18px; font-weight: bold; line-height: 1.25; margin-bottom: 5px; }
+                .l10n_in_invoice .l10n_in_document_title { padding: 10px; font-size: 18px; line-height: 1.3; margin: 0; }
+                .l10n_in_invoice .l10n_in_supplier ul { margin: 0; }
                 .l10n_in_invoice .l10n_in_parties address { line-height: 1.45; }
                 .l10n_in_invoice .l10n_in_party_heading { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
-                .l10n_in_invoice .l10n_in_reference_heading { padding: 7px 10px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; }
                 .l10n_in_invoice #informations { display: block !important; overflow: hidden; margin: 0; }
                 .l10n_in_invoice #informations > .col { float: left; width: 50%; max-width: 50%; min-height: 48px; padding: 7px 10px; border-bottom: 1px solid #dee2e6; overflow-wrap: break-word; }
                 .l10n_in_invoice #informations > .col:nth-child(2n+1) { clear: both; border-right: 1px solid #dee2e6; }
@@ -43,6 +47,7 @@
                 .l10n_in_invoice .l10n_in_hsn_table tr { page-break-inside: avoid; }
                 .l10n_in_invoice .l10n_in_hsn_table thead { display: table-header-group; }
                 .l10n_in_invoice #right-elements { min-width: 45%; margin-top: 12px; }
+                .l10n_in_invoice #right-elements > .mb-2 { page-break-inside: avoid; }
                 .l10n_in_invoice #payment_term { font-size: 11px; }
             </style>
             <div t-if="l10n_in_report_title" class="text-end text-muted small mb-2" name="l10n_in_copy_title">
@@ -52,18 +57,21 @@
                 <tbody>
                     <tr>
                         <td>
-                            <table class="table table-bordered l10n_in_parties" name="l10n_in_party_details">
-                                <tbody>
-                                    <tr><td><t t-out="address"/></td></tr>
-                                    <tr t-if="information_block"><td><t t-out="information_block"/></td></tr>
-                                </tbody>
-                            </table>
+                            <t t-call="l10n_in.invoice_supplier"/>
                         </td>
                         <td name="l10n_in_header_references">
                             <div class="l10n_in_reference_card" t-att-style="'border-top: 3px solid %s;' % (o.company_id.primary_color or '#243746')">
-                                <div class="l10n_in_reference_heading" t-att-style="'color: %s;' % (o.company_id.primary_color or '#243746')">Document Details</div>
+                                <h2 class="l10n_in_document_title" t-att-style="'color: %s;' % (o.company_id.primary_color or '#243746')" t-out="layout_document_title"/>
                             </div>
                         </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered w-100 l10n_in_parties mb-3" name="l10n_in_party_details">
+                <tbody>
+                    <tr>
+                        <td t-att-style="'width: 50%;' if information_block else ''"><t t-out="address"/></td>
+                        <td t-if="information_block" style="width: 50%;"><t t-out="information_block"/></td>
                     </tr>
                 </tbody>
             </table>
@@ -322,16 +330,90 @@
 
     </template>
 
-    <!-- The Bubble header already has a company column; avoid halving its address width again. -->
+    <template id="invoice_supplier">
+        <div name="l10n_in_supplier" class="l10n_in_supplier" t-att-style="'border-top: 3px solid %s;' % (o.company_id.primary_color or '#243746')">
+            <img t-if="o.company_id.logo" class="l10n_in_supplier_logo" t-att-src="image_data_uri(o.company_id.logo)" alt="Company logo"/>
+            <div class="l10n_in_supplier_name" t-att-style="'color: %s;' % (o.company_id.primary_color or '#243746')" t-field="o.company_id.name"/>
+            <div t-if="o.company_id.report_header" class="text-muted small mb-2" t-field="o.company_id.report_header"/>
+            <div t-field="o.company_id.partner_id" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
+            <div t-if="o.fiscal_position_id.foreign_vat or o.company_id.vat">
+                <strong>GSTIN:</strong> <span t-out="o.fiscal_position_id.foreign_vat or o.company_id.vat"/>
+            </div>
+            <t t-call="l10n_in.partner_state" partner="o.company_id.partner_id"/>
+            <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
+            <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
+            <div t-if="o.company_id.website"><span t-field="o.company_id.website"/></div>
+        </div>
+    </template>
+
+    <!-- Like the Latin American reports, replace each standard supplier header only for this report. -->
+    <template id="external_layout_standard_invoice" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
     <template id="external_layout_bubble_invoice" inherit_id="web.external_layout_bubble">
-        <xpath expr="//div[@name='company_address']" position="attributes">
-            <attribute name="t-attf-class">{{'w-100' if l10n_in_invoice_header else 'w-50'}} ms-auto</attribute>
-            <attribute name="class"/>
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='customized_address_layout']" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_wave_invoice" inherit_id="web.external_layout_wave">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_folder_invoice" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='customized_address_layout']" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_center_invoice" inherit_id="web.external_layout_center">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+        <xpath expr="//h2" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_dual_invoice" inherit_id="web.external_layout_dual">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_lines_invoice" inherit_id="web.external_layout_lines">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+        <xpath expr="//h2" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_compact_invoice" inherit_id="web.external_layout_compact">
+        <xpath expr="//div[contains(@t-attf-class, ' header')]" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+        <xpath expr="//h2" position="attributes">
+            <attribute name="t-if">not l10n_in_invoice_header</attribute>
+        </xpath>
+    </template>
+    <template id="external_layout_body_invoice" inherit_id="web.external_layout_body">
+        <xpath expr="//h2" position="attributes">
+            <attribute name="t-if" add="not l10n_in_invoice_header" separator=" and "/>
         </xpath>
     </template>
 
     <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
     <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr="//t[@t-call='web.html_container']" position="attributes">
+            <attribute name="data_report_margin_top">12 if docs and all(doc._get_name_invoice_report() == 'l10n_in.l10n_in_report_invoice_document_inherit' for doc in docs) else data_report_margin_top</attribute>
+            <attribute name="data_report_header_spacing">0 if docs and all(doc._get_name_invoice_report() == 'l10n_in.l10n_in_report_invoice_document_inherit' for doc in docs) else data_report_header_spacing</attribute>
+        </xpath>
         <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
             <t t-elif="o._get_name_invoice_report() == 'l10n_in.l10n_in_report_invoice_document_inherit'"
                t-call="l10n_in.l10n_in_report_invoice_document_inherit"
@@ -368,7 +450,7 @@
     </template>
 
     <template id="document_renderer">
-        <t t-call="web.html_container">
+        <t t-call="web.html_container" data_report_margin_top="12" data_report_header_spacing="0">
             <t t-foreach="docs" t-as="o">
                 <t t-foreach="copies_to_print" t-as="l10n_in_report_title">
                     <t t-set="lang" t-value="o.partner_id.lang"/>
