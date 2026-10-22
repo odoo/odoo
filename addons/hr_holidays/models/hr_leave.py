@@ -658,8 +658,10 @@ Versions:
                             if leave.request_date_to_period == 'am':
                                 total_days -= 0.5
                         days = max(0, total_days)
-                    else:
+                    elif leave.employee_id.sudo().is_fully_flexible or not calendar.hours_per_day:
                         days = hours / 24
+                    else:
+                        days = hours / calendar.hours_per_day
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
                     # list of tuples (day, hours)
                     work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
