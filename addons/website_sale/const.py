@@ -335,8 +335,7 @@ _COMMON_PRODUCT_SNIPPET = {
         "o_wsale_products_opt_has_comparison",
         {
             "s_dynamic_snippet_title": (
-                "s_dynamic_snippet_title_aside "
-                "col-lg-3 flex-lg-column justify-content-lg-start"
+                "s_dynamic_snippet_title_aside col-lg-3 flex-lg-column justify-content-lg-start"
             )
         },
     ],
@@ -360,15 +359,10 @@ def _product_snippet(snippet_name, **extra_data_attributes):
 
 SNIPPET_DEFAULTS = {
     "website_sale.s_dynamic_snippet_products_carousel": _product_snippet(
-        "s_dynamic_snippet_products_carousel",
-        **{"carousel-interval": "5000"},
+        "s_dynamic_snippet_products_carousel", **{"carousel-interval": "5000"}
     ),
     "website_sale.s_dynamic_snippet_products_grid": _product_snippet(
-        "s_dynamic_snippet_products_grid",
-        **{
-            "grid-columns": "4",
-            "mobile-columns": "2",
-        },
+        "s_dynamic_snippet_products_grid", **{"grid-columns": "4", "mobile-columns": "2"}
     ),
     "website_sale.s_dynamic_snippet_category_list": {
         "filter_xmlid": "website_sale.dynamic_filter_category_list",
@@ -423,3 +417,5 @@ DIRECT_MAPPED_ATTRIBUTE_IDENTIFIERS = {"color", "size", "material", "brand", "pa
 MAX_EXPANDED_FILTER_SECTIONS = 4
 
 TAX_EXCLUDED_COUNTRIES = {"CA", "US"}
+
+DELIVERY_ESTIMATE_MARGIN_DAYS = 30
