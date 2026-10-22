@@ -1,9 +1,9 @@
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 import { BuilderInputBase } from "./builder_input_base";
 
 export class BuilderNumberInputBase extends BuilderInputBase {
     static template = "html_builder.BuilderNumberInputBase";
-    props = props({
+    props = useProps({
         // BuilderInputBase props (converted inline)
         slots: t.object().optional(),
         inputRef: t.function().optional(),

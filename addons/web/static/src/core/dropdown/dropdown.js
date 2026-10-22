@@ -1,4 +1,4 @@
-import { onRendered, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
+import { onRendered, useChildEnv, useLayoutEffect, status } from "@web/owl2/utils";
 import {
     Component,
     immediateEffect,
@@ -6,8 +6,7 @@ import {
     onWillDestroy,
     onWillUpdateProps,
     proxy,
-    props,
-    status,
+    useProps,
     t,
     untrack,
     xml,
@@ -103,7 +102,7 @@ export const dropdownProps = {
 export class Dropdown extends Component {
     static template = xml`<t t-call-slot="default"/>`;
     static components = {};
-    props = props(dropdownProps);
+    props = useProps(dropdownProps);
 
     setup() {
         this.menuRef = this.props.menuRef || useChildRef();

@@ -4,12 +4,12 @@ import { getCSSRules, toInline } from "./convert_inline";
 import { ColumnPlugin } from "@html_editor/main/column_plugin";
 import { MoveNodePlugin } from "@html_editor/main/movenode_plugin";
 import { user } from "@web/core/user";
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 
 const cssRulesByElement = new WeakMap();
 
 export class HtmlMailField extends HtmlField {
-    props = props({
+    props = useProps({
         ...htmlFieldProps,
         disableMoveNodePlugin: t.boolean().optional(),
     });

@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
@@ -46,7 +46,7 @@ export class ImStatus extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             className: t.string().optional(""),
             member: t.instanceOf(this.store["discuss.channel.member"].Class).optional(),
             persona: t

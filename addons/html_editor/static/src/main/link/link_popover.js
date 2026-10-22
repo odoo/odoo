@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
-import { Component, props, proxy, t, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, useProps, proxy, t, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceLinkUrl, normalizeLinkUrlInput } from "./utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -60,7 +60,7 @@ function useContentChange(el, callback) {
 
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
-    props = props(linkPopoverProps);
+    props = useProps(linkPopoverProps);
     static components = { CheckBox, Dropdown, DropdownItem };
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;

@@ -2,7 +2,7 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
@@ -16,7 +16,7 @@ export class ChannelMember extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             member: types.instanceOf(this.store["discuss.channel.member"].Class),
         });
         this.actions = useChannelMemberActions({ member: () => this.props.member });

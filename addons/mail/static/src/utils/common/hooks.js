@@ -3,7 +3,7 @@ import {
     onMounted,
     onPatched,
     onWillUnmount,
-    props,
+    useProps,
     proxy,
     types,
     untrack,
@@ -251,7 +251,7 @@ export class UseHoverOverlay extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             hover: types.object({
                 _contains: types.array(
                     types.function([types.instanceOf(EventTarget)], types.boolean())

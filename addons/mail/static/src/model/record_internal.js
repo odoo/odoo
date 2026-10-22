@@ -327,8 +327,9 @@ export class RecordInternal {
                     // sort on copy of list so that reactive observers not triggered while sorting
                     const copy = [...record._proxy[fieldName]];
                     copy.sort(func);
+                    // compare raw items: `copy` holds reactive proxies of the items
                     const hasChanged = copy.some(
-                        (item, index) => item !== record[fieldName][index]
+                        (item, index) => toRaw(item) !== toRaw(record[fieldName][index])
                     );
                     if (hasChanged) {
                         record._proxy[fieldName] = copy;

@@ -1,5 +1,5 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, props, proxy, status, t } from "@odoo/owl";
+import { useRef, status } from "@web/owl2/utils";
+import { Component, onMounted, useProps, proxy, t } from "@odoo/owl";
 import { useFileUploader } from "@web/core/utils/files";
 
 /**
@@ -22,7 +22,7 @@ import { useFileUploader } from "@web/core/utils/files";
  */
 export class FileInput extends Component {
     static template = "web.FileInput";
-    props = props({
+    props = useProps({
         acceptedFileExtensions: t.string().optional("*"),
         autoOpen: t.boolean().optional(),
         hidden: t.boolean().optional(false),

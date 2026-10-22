@@ -7,12 +7,12 @@ import { parseFloat } from "../parsers";
 import { useInputField } from "@web/views/fields/input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, useProps, proxy, t } from "@odoo/owl";
 const formatters = registry.category("formatters");
 
 export class ProgressBarField extends Component {
     static template = "web.ProgressBarField";
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         maxValueField: t.or([t.string(), t.number()]).optional(),
         title: t.string().optional(),

@@ -4,7 +4,7 @@ import {
     onMounted,
     onWillUpdateProps,
     onWillUnmount,
-    props,
+    useProps,
     t,
     useListener,
 } from "@odoo/owl";
@@ -136,7 +136,7 @@ export class ResizablePanel extends Component {
     static template = "web_studio.ResizablePanel";
 
     static components = {};
-    props = props(resizablePanelProps);
+    props = useProps(resizablePanelProps);
 
     setup() {
         useResizable({

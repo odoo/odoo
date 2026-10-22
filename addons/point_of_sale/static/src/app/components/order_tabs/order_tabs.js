@@ -1,6 +1,6 @@
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { ListContainer } from "@point_of_sale/app/components/list_container/list_container";
 
 export class OrderTabs extends Component {
@@ -8,7 +8,7 @@ export class OrderTabs extends Component {
     static components = {
         ListContainer,
     };
-    props = props({
+    props = useProps({
         orders: t.array(),
         class: t.string().optional(""),
     });

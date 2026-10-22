@@ -16,7 +16,7 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-import { Component, onMounted, onWillUnmount, props, t, xml, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useProps, t, xml, proxy } from "@odoo/owl";
 
 export const formRendererProps = {
     archInfo: t.object(),
@@ -47,7 +47,7 @@ export class FormRenderer extends Component {
         InnerGroup,
         StatusBarButtons,
     };
-    props = props(formRendererProps);
+    props = useProps(formRendererProps);
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;

@@ -1,4 +1,4 @@
-import { onWillRender, render, useExternalListener, useRef } from "@web/owl2/utils";
+import { onWillRender, render, useExternalListener, useRef, status } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -33,9 +33,8 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillStart,
-    props,
+    useProps,
     signal,
-    status,
     proxy,
     t,
     useListener,
@@ -135,7 +134,7 @@ export class ListRenderer extends Component {
         ActionHelper,
         GroupConfigMenu,
     };
-    props = props(listRendererProps);
+    props = useProps(listRendererProps);
 
     setup() {
         this.uiService = useService("ui");

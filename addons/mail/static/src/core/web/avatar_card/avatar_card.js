@@ -1,7 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, useProps, signal, t } from "@odoo/owl";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
@@ -15,7 +15,7 @@ export class AvatarCard extends Component {
     }
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             close: t.function([]),
             id: t.number(),
             model: t.selection(AvatarCard.allowedModels),

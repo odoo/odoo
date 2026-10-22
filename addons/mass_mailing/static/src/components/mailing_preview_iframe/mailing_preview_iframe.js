@@ -1,11 +1,11 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, status } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component, onMounted, status, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { loadIframe } from "@mail/convert_inline/iframe_utils";
 import { MailingPreviewDisplayModeToggle } from "../mailing_preview_mode_toggle/mailing_preview_mode_toggle";
 import { MassMailingPreviewRecordField } from "./mass_mailing_preview_record_field";

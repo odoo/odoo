@@ -3,7 +3,7 @@ import { buildM2OFieldDescription, extractM2OFieldProps, m2oSupportedOptions } f
 import { registry } from "@web/core/registry";
 import { ProductNameAndDescriptionField } from "@product/product_name_and_description/product_name_and_description";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 
 // inlined from Many2OneField.props (via ProductNameAndDescriptionField, both still old-style)
 export const productLabelSectionAndNoteFieldProps = {
@@ -28,7 +28,7 @@ export const productLabelSectionAndNoteFieldProps = {
 
 export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionField {
     static template = "account.ProductLabelSectionAndNoteField";
-    props = props(productLabelSectionAndNoteFieldProps);
+    props = useProps(productLabelSectionAndNoteFieldProps);
 
     static descriptionColumn = "name";
 

@@ -1,9 +1,9 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomplete";
 
 export class AutoCompleteWithPages extends AutoComplete {
-    props = props({
+    props = useProps({
         ...autoCompleteProps,
         targetDropdown: t.instanceOf(HTMLElement),
     });

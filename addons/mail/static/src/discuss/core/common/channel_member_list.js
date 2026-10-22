@@ -3,7 +3,7 @@ import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 import { openChannelInvitationDialog } from "@mail/discuss/core/common/channel_invitation";
 import { SearchInput } from "@mail/core/common/search_input";
 
-import { Component, computed, props, t } from "@odoo/owl";
+import { Component, computed, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
@@ -33,7 +33,7 @@ export class ChannelMemberList extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"].Class),
             close: t.function([]).optional(),
         });

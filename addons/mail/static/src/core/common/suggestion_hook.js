@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, status } from "@web/owl2/utils";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 import { rightPos } from "@html_editor/utils/position";
 import {
@@ -6,7 +6,7 @@ import {
     generateRoleMentionElement,
     generateSpecialMentionElement,
 } from "@mail/utils/common/format";
-import { proxy, status, t } from "@odoo/owl";
+import { proxy, t } from "@odoo/owl";
 import { emojiType } from "@web/core/emoji_picker/emoji_loader";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";

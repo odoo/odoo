@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onWillStart, markRaw, props, status, t, proxy } from "@odoo/owl";
+import { useLayoutEffect, useRef, status } from "@web/owl2/utils";
+import { Component, onWillStart, markRaw, useProps, t, proxy } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { isMarkup } from "@web/core/utils/html";
 import { Reactive } from "../utils/reactive";
@@ -60,7 +60,7 @@ export class CodeEditor extends Component {
     static MODES = ["javascript", "xml", "qweb", "scss", "python", "json", "bash"];
     static THEMES = ["", "monokai"];
 
-    props = props({
+    props = useProps({
         mode: t.selection(CodeEditor.MODES).optional(),
         modeOptions: t.object().optional(),
         value: t

@@ -1,6 +1,6 @@
 import { useChildEnv, useRef } from "@web/owl2/utils";
 import { isColorGradient } from "@web/core/utils/colors";
-import { Component, props, t, useEffect, proxy } from "@odoo/owl";
+import { Component, useProps, t, useEffect, proxy } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,
@@ -12,7 +12,7 @@ import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
-    props = props({
+    props = useProps({
         // from toolbarButtonProps
         title: t.or([t.string(), t.function()]),
         getSelection: t.function(),

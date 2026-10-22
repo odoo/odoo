@@ -4,7 +4,7 @@ import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 import { ActionSwiper, onSwipeType } from "@web/core/action_swiper/action_swiper";
 import { useService } from "@web/core/utils/hooks";
@@ -23,7 +23,7 @@ export class NotificationItem extends Component {
         this.DateTime = DateTime;
         this.ui = useService("ui");
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             counter: t.number().optional(0),
             datetime: t.instanceOf(DateTime).optional(),
             first: t.boolean().optional(),

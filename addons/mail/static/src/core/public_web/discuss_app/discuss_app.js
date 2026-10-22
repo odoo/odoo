@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, props, t, useListener, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, useProps, t, useListener, onMounted, onWillUnmount } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { useService } from "@web/core/utils/hooks";
@@ -20,7 +20,7 @@ export class Discuss extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             hasSidebar: t.boolean().optional(true),
             thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
         });

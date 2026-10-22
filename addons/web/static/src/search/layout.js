@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
@@ -17,7 +17,7 @@ export function extractLayoutComponents(params) {
 
 export class Layout extends Component {
     static template = "web.Layout";
-    props = props({
+    props = useProps({
         className: t.string().optional(),
         display: t.object().optional({}),
         slots: t.object().optional(),

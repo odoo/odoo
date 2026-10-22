@@ -1,7 +1,7 @@
 import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -14,7 +14,7 @@ export class DiscussSidebarCategory extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             category: types.instanceOf(this.store["DiscussAppCategory"].Class),
         });
         this.discusscorePublicWebService = useService("discuss.core.public.web");

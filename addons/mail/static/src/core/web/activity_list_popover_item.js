@@ -5,7 +5,7 @@ import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
 import { computeDelay } from "@mail/utils/common/dates";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, props, signal, t } from "@odoo/owl";
+import { Component, useProps, signal, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -19,7 +19,7 @@ export class ActivityListPopoverItem extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             activity: t.instanceOf(this.store["mail.activity"].Class),
             onActivityChanged: t.function([]).optional(),
             onClickDoneAndScheduleNext: t.function([]).optional(),

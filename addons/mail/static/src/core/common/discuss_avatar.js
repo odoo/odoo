@@ -1,7 +1,7 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
@@ -16,7 +16,7 @@ export class DiscussAvatar extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             className: t.string().optional(""),
             iconExtraTransform: t.string().optional(),
             imgRoundedClass: t.string().optional(),

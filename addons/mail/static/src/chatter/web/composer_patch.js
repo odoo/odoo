@@ -1,4 +1,4 @@
-import { props, proxy, t, useEffect } from "@odoo/owl";
+import { useProps, proxy, t, useEffect } from "@odoo/owl";
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 
 import { patch } from "@web/core/utils/patch";
@@ -13,7 +13,7 @@ Object.assign(Composer.components, {
 patch(Composer.prototype, {
     setup() {
         super.setup(...arguments);
-        this.webComposerProps = props({
+        this.webComposerProps = useProps({
             thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
             withMessageFields: t.boolean().optional(),
         });

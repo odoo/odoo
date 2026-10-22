@@ -3,7 +3,7 @@ import {
     onMounted,
     onWillUnmount,
     onWillUpdateProps,
-    props,
+    useProps,
     signal,
     types,
 } from "@odoo/owl";
@@ -21,7 +21,7 @@ class AbstractAttachmentView extends Component {
 
     setup() {
         super.setup();
-        this.props = props({
+        this.props = useProps({
             threadId: types.number(),
             threadModel: types.string(),
         });

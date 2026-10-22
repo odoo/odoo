@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, props, t, xml } from "@odoo/owl";
+import { Component, useProps, t, xml } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -27,7 +27,7 @@ class ListContainerDialog extends Component {
 }
 
 export class ListContainer extends Component {
-    props = props({
+    props = useProps({
         items: t.array(),
         onClickPlus: t.function().optional(),
         slots: t.object(),

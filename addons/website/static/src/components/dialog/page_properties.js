@@ -8,7 +8,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormViewDialog, formViewDialogProps } from "@web/views/view_dialogs/form_view_dialog";
 import { formView } from "@web/views/form/form_view";
 import { renderToFragment } from "@web/core/utils/render";
-import { Component, onWillDestroy, props, xml, proxy, t } from "@odoo/owl";
+import { Component, onWillDestroy, useProps, xml, proxy, t } from "@odoo/owl";
 import { FormController, formControllerProps } from "@web/views/form/form_controller";
 import { registry } from "@web/core/registry";
 import { addLoadingEffect } from "@web/core/utils/ui";
@@ -209,7 +209,7 @@ export class DuplicatePageDialog extends Component {
 }
 
 export class PagePropertiesFormController extends FormController {
-    props = props({
+    props = useProps({
         ...formControllerProps,
         clonePage: t.function().optional(),
         deletePage: t.function().optional(),
@@ -222,7 +222,7 @@ registry.category("views").add("page_properties_dialog_form", {
 });
 
 export class PagePropertiesDialog extends FormViewDialog {
-    props = props({
+    props = useProps({
         ...formViewDialogProps,
         onClose: t.function().optional(() => () => {}),
         resModel: t.string().optional(),

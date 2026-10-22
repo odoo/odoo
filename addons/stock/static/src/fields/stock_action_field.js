@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -14,7 +14,7 @@ import { useService } from "@web/core/utils/hooks";
 const fieldRegistry = registry.category("fields");
 
 class StockActionField extends Component {
-    props = props({
+    props = useProps({
         ...floatFieldProps,
         ...monetaryFieldProps,
         actionName: t.string(),

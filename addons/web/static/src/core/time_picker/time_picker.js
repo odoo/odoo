@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, useProps, proxy, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -25,7 +25,7 @@ export class TimePicker extends Component {
         Dropdown,
         DropdownItem,
     };
-    props = props({
+    props = useProps({
         cssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
         inputCssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
         value: t

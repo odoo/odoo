@@ -1,4 +1,4 @@
-import { useComponent, useEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useEnv, useLayoutEffect, useRef, useSubEnv, status } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     onMounted,
@@ -6,7 +6,6 @@ import {
     onWillStart,
     onWillUpdateProps,
     proxy,
-    status,
     toRaw,
     useEffect,
 } from "@odoo/owl";

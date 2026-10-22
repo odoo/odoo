@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, status } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { utils } from "@web/core/ui/ui_service";
 import { renderToElement } from "@web/core/utils/render";
@@ -11,7 +11,7 @@ import {
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 
-import { onMounted, onWillUnmount, status, useListener, xml } from "@odoo/owl";
+import { onMounted, onWillUnmount, useListener, xml } from "@odoo/owl";
 
 // This file defines a hook that encapsulates the column width logic of the list view. This logic
 // aims at optimizing the available space between columns and, once computed, at freezing the table

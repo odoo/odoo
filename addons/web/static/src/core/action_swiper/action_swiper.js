@@ -4,7 +4,7 @@ import { localization } from "@web/core/l10n/localization";
 import { clamp } from "@web/core/utils/numbers";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount, props, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useProps, t } from "@odoo/owl";
 
 const isScrollSwipable = (scrollables) => ({
     left: !scrollables.filter((e) => e.scrollLeft !== 0).length,
@@ -30,7 +30,7 @@ export const onSwipeType = t.object({
  */
 export class ActionSwiper extends Component {
     static template = "web.ActionSwiper";
-    props = props({
+    props = useProps({
         onLeftSwipe: onSwipeType.optional(),
         onRightSwipe: onSwipeType.optional(),
         enabledDuration: t.number().optional(),

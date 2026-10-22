@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 import { StateSelectionField, stateSelectionField } from "@web/views/fields/state_selection/state_selection_field";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -6,7 +6,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 export class MaintenanceRequestStateSelection extends StateSelectionField {
     static template = "maintenance.MaintenanceRequestStateSelection";
 
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         showLabel: t.boolean().optional(true),
         withCommand: t.boolean().optional(),

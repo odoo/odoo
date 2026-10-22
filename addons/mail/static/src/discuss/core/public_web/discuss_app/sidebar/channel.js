@@ -10,7 +10,7 @@ import { markEventHandled } from "@web/core/utils/misc";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
@@ -31,7 +31,7 @@ export class DiscussSidebarChannel extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
         });
         this.hover = useHover(["root"], {

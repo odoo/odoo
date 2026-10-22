@@ -4,7 +4,7 @@ import { useRef } from "@web/owl2/utils";
  *
  * @class
  */
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, useProps, proxy, t } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -16,7 +16,7 @@ import { browser } from "@web/core/browser/browser";
 export class BottomSheet extends Component {
     static template = "web.BottomSheet";
 
-    props = props({
+    props = useProps({
         // Main props
         component: t.function(),
         componentProps: t.object().optional(),

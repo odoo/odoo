@@ -1,6 +1,6 @@
 import { discussSidebarChannelIndicatorsRegistry } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class DiscussSidebarCallIndicator extends Component {
@@ -10,7 +10,7 @@ export class DiscussSidebarCallIndicator extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
         });
         this.rtc = useService("discuss.rtc");

@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
-import { EventBus, props, t } from "@odoo/owl";
+import { EventBus, useProps, t } from "@odoo/owl";
 import { formControllerProps } from "@web/views/form/form_controller";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -10,7 +10,7 @@ import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzo
 import { useMailComposerAttachmentsUploader } from "@mail/core/web/mail_composer_attachment_hook";
 
 export class MailComposerFormController extends formView.Controller {
-    props = props({
+    props = useProps({
         ...formControllerProps,
         fullComposerBus: t.instanceOf(EventBus).optional(new EventBus()),
     });

@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy, props, t } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useProps, t } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
@@ -144,7 +144,7 @@ export const popoverProps = {
 
 export class Popover extends Component {
     static template = "web.Popover";
-    props = props(popoverProps);
+    props = useProps(popoverProps);
     static animationTime = 200;
 
     setup() {

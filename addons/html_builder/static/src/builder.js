@@ -1,4 +1,4 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useRef, useSubEnv, status } from "@web/owl2/utils";
 import { Editor } from "@html_editor/editor";
 import {
     Component,
@@ -7,9 +7,8 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUnmount,
-    status,
     proxy,
-    props,
+    useProps,
     t,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -44,7 +43,7 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
 export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };
-    props = props({
+    props = useProps({
         closeEditor: t.function().optional(),
         reloadEditor: t.function().optional(() => () => {}),
         onEditorLoad: t.function().optional(),

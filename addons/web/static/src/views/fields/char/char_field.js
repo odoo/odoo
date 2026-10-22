@@ -8,7 +8,7 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component, props, t, useListener } from "@odoo/owl";
+import { Component, useProps, t, useListener } from "@odoo/owl";
 
 export const charFieldProps = {
     ...standardFieldProps,
@@ -24,7 +24,7 @@ export class CharField extends Component {
     static components = {
         TranslationButton,
     };
-    props = props(charFieldProps);
+    props = useProps(charFieldProps);
 
     setup() {
         this.input = useRef("input");

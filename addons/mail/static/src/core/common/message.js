@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useSubEnv, status } from "@web/owl2/utils";
 import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
 import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
@@ -17,7 +17,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, computed, props, proxy, signal, status, t, useApp, useEffect } from "@odoo/owl";
+import { Component, computed, useProps, proxy, signal, t, useApp, useEffect } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
@@ -80,7 +80,7 @@ export class Message extends Component {
         super.setup();
         this.nbsp = nbsp;
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             asCard: t.boolean().optional(),
             className: t.string().optional(),
             hasActions: t.boolean().optional(true),

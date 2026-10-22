@@ -1,6 +1,6 @@
-import { Component, onWillUnmount, props, proxy, status, types } from "@odoo/owl";
+import { Component, onWillUnmount, useProps, proxy, types } from "@odoo/owl";
 
-import { useComponent } from "@web/owl2/utils";
+import { useComponent, status } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -17,7 +17,7 @@ export class VoiceRecorder extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             composer: types.instanceOf(this.store["Composer"].Class),
             state: types.object({
                 cancelRecording: types.function([]),

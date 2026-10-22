@@ -1,4 +1,4 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, useProps, types } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useVisible } from "@mail/utils/common/hooks";
@@ -15,7 +15,7 @@ export class FollowerList extends Component {
         super.setup();
         this.action = useService("action");
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             dropdown: types.instanceOf(DropdownState),
             onAddFollowers: types.function([]).optional(),
             onFollowerChanged: types.function([]).optional(),

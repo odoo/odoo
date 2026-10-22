@@ -1,4 +1,5 @@
-import { Component, onWillStart, onWillUpdateProps, props, proxy, status, t } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useProps, proxy, t } from "@odoo/owl";
+import { status } from "@web/owl2/utils";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { useDomState } from "@html_builder/core/utils";
@@ -8,7 +9,7 @@ import { BasicMany2Many } from "./basic_many2many";
 
 export class ModelMany2Many extends Component {
     static template = "html_builder.ModelMany2Many";
-    props = props({
+    props = useProps({
         //...basicContainerBuilderComponentProps,
         baseModel: t.string(),
         recordId: t.number(),

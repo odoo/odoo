@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, useProps, t } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -9,7 +9,7 @@ export class MessageInReply extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             class: t.string().optional(""),
             message: t.instanceOf(this.store["mail.message"].Class),
             onClick: t.function([]).optional(),

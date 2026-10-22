@@ -5,7 +5,7 @@ import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
-import { Component, onMounted, onWillUnmount, props, types } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useProps, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -21,7 +21,7 @@ export class Activity extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             activity: types.instanceOf(this.store["mail.activity"].Class),
             onActivityChanged: types.function([]),
             reloadParentView: types.function([]),

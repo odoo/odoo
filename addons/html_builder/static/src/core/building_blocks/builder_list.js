@@ -3,7 +3,7 @@ import { BuilderComponent } from "@html_builder/core/building_blocks/builder_com
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import { useBuilderComponent, useInputBuilderComponent } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, onWillUpdateProps, onPatched, props, t, xml, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, onPatched, useProps, t, xml, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -41,7 +41,7 @@ export function useAutoFocusNewItem(refName) {
 class SortableContainer extends Component {
     static template = xml`<t t-call-slot="default"/>`;
 
-    props = props({
+    props = useProps({
         setupLayoutEffect: t.function(),
     });
 
@@ -54,7 +54,7 @@ export class BuilderList extends Component {
     static template = "html_builder.BuilderList";
     static components = { BuilderComponent, SortableContainer, SelectMenu };
 
-    props = props({
+    props = useProps({
         applyTo: t.string().optional(),
         preview: t.boolean().optional(),
         inheritedActions: t.array(t.string()).optional(),

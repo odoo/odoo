@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, status } from "@web/owl2/utils";
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
@@ -12,7 +12,7 @@ import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { closeStream, onChange } from "@mail/utils/common/misc";
 
-import { Component, onWillDestroy, props, proxy, status, types } from "@odoo/owl";
+import { Component, onWillDestroy, useProps, proxy, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -22,7 +22,7 @@ export class CallPreview extends Component {
     static components = { ActionList, DeviceSelect };
 
     setup() {
-        this.props = props({
+        this.props = useProps({
             activateCamera: types.number().optional(),
             activateMicrophone: types.number().optional(),
             hasSettingsAtBottom: types.boolean().optional(),

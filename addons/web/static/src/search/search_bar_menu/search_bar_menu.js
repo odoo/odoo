@@ -1,4 +1,4 @@
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, useProps, proxy, t } from "@odoo/owl";
 import { Dropdown, dropdownProps } from "@web/core/dropdown/dropdown";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -26,7 +26,7 @@ export class SearchBarMenu extends Component {
         AccordionItem,
         PropertiesGroupByItem,
     };
-    props = props({
+    props = useProps({
         slots: t
             .object({
                 default: t.any().optional(),

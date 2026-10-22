@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { QuestionPageListRenderer } from "./question_page_list_renderer";
@@ -35,7 +35,7 @@ class QuestionPageOneToManyField extends X2ManyField {
     };
     // Inline conversion of X2ManyField's static props (not yet exported as a
     // schema const), with the "editable" default applied.
-    props = props({
+    props = useProps({
         ...standardFieldProps,
         addLabel: t.string().optional(),
         editable: t.string().optional("bottom"),

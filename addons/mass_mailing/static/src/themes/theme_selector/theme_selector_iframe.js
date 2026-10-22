@@ -1,4 +1,4 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, status } from "@web/owl2/utils";
 import { ThemeSelector } from "./theme_selector";
 import { assets, AssetsLoadingError, getBundle } from "@web/core/assets";
 import {
@@ -7,7 +7,6 @@ import {
     onMounted,
     onWillUnmount,
     onWillUpdateProps,
-    status,
     proxy,
     useApp,
 } from "@odoo/owl";

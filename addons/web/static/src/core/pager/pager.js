@@ -2,7 +2,7 @@ import { useLayoutEffect } from "@web/owl2/utils";
 import { useAutofocus } from "../utils/hooks";
 import { clamp } from "../utils/numbers";
 
-import { Component, EventBus, props, proxy, t, useListener } from "@odoo/owl";
+import { Component, EventBus, useProps, proxy, t, useListener } from "@odoo/owl";
 
 export const PAGER_UPDATED_EVENT = "PAGER:UPDATED";
 export const pagerBus = new EventBus();
@@ -22,7 +22,7 @@ export const pagerBus = new EventBus();
  */
 export class Pager extends Component {
     static template = "web.Pager";
-    props = props({
+    props = useProps({
         offset: t.number(),
         limit: t.number(),
         total: t.number(),

@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, props, proxy, status, types } from "@odoo/owl";
+import { useLayoutEffect, useRef, status } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, useProps, proxy, types } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -44,7 +44,7 @@ export class VoicePlayer extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             attachment: types.instanceOf(this.store["ir.attachment"].Class),
         });
         this.wrapperRef = useRef("wrapper");

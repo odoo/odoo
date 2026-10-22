@@ -1,4 +1,4 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useExternalListener, useRef, status } from "@web/owl2/utils";
 import {
     activateCropper,
     loadImage,
@@ -11,7 +11,6 @@ import {
     onMounted,
     onWillDestroy,
     markup,
-    status,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";

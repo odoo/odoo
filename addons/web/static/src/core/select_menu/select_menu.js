@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, useProps, proxy, t } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -85,7 +85,7 @@ export class SelectMenu extends Component {
 
     static components = { Dropdown, DropdownItem, TagsList: SelectMenuTagsList };
 
-    props = props(selectMenuProps);
+    props = useProps(selectMenuProps);
 
     static SCROLL_SETTINGS = {
         defaultCount: 500,

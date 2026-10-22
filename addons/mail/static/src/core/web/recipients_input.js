@@ -12,7 +12,7 @@ import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook
 import { uniqueId } from "@web/core/utils/functions";
 import { RecipientTag, useRecipientChecker } from "./recipient_tag";
 
-import { Component, computed, props, types } from "@odoo/owl";
+import { Component, computed, useProps, types } from "@odoo/owl";
 
 export class RecipientsInput extends Component {
     static template = "mail.RecipientsInput";
@@ -21,7 +21,7 @@ export class RecipientsInput extends Component {
     setup() {
         this.orm = useService("orm");
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             thread: types.instanceOf(this.store["mail.thread"].Class),
             recipientType: types.string(),
             placeholder: types.string(),

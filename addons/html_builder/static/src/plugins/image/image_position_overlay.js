@@ -1,10 +1,18 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
-import { Component, onMounted, onWillStart, onWillUnmount, props, t, useListener } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    useProps,
+    t,
+    useListener,
+} from "@odoo/owl";
 
 export class ImagePositionOverlay extends Component {
     static template = "html_builder.ImagePositionOverlay";
-    props = props({
+    props = useProps({
         targetEl: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
         close: t.function(),
         onDrag: t.function(),

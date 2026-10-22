@@ -18,7 +18,7 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillUnmount,
-    props,
+    useProps,
     proxy,
     signal,
     t,
@@ -65,7 +65,7 @@ export class Thread extends Component {
             () => this.scrollToHighlighted()
         );
         this.store = useService("mail.store");
-        this.props = props({
+        this.props = useProps({
             autofocus: t.or([t.number(), t.boolean()]).optional(),
             jumpPresent: t.number().optional(0),
             jumpToNewMessage: t.number().optional(),

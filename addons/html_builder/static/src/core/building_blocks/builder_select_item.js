@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, markup, onMounted, props, t, xml } from "@odoo/owl";
+import { Component, markup, onMounted, useProps, t, xml } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useActionInfo, useSelectableItemComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
@@ -47,7 +47,7 @@ const builderSelectItemProps = {
 
 export class BuilderSelectItemInternal extends Component {
     static template = "html_builder.BuilderSelectItemInternal";
-    props = props({
+    props = useProps({
         ...builderSelectItemProps,
         className: t.string().optional(""),
     });
@@ -112,7 +112,7 @@ export class BuilderSelectItem extends BuilderSelectableWrapperComponent {
         </BuilderSelectItemInternal>
         `;
     static components = { BuilderSelectItemInternal };
-    props = props({
+    props = useProps({
         ltrRtlMapping: t.string().optional(),
         isLabelLinkedToContent: t.boolean().optional(),
         slots: t.object().optional(),

@@ -1,4 +1,4 @@
-import { props, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 import {
     ProductLabelSectionAndNoteField,
     productLabelSectionAndNoteField,
@@ -11,7 +11,7 @@ import { saleProductMixin } from "../sale_product_mixin";
 
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "sale.SaleProductField";
-    props = props({
+    props = useProps({
         ...productLabelSectionAndNoteFieldProps,
         readonlyField: t.boolean().optional(),
     });

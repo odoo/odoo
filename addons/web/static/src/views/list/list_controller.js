@@ -26,7 +26,7 @@ import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
-import { Component, onWillPatch, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onWillPatch, onWillStart, useProps, proxy, t } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ export class ListController extends Component {
         DropdownItem,
         SelectionBox,
     };
-    props = props({
+    props = useProps({
         ...standardViewProps,
         allowSelectors: t.boolean().optional(true),
         onSelectionChanged: t.function().optional(),
