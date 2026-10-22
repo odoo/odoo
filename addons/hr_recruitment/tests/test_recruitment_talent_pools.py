@@ -426,3 +426,10 @@ class TestRecruitmentTalentPool(TransactionCase):
 
         with self.assertRaises(UserError, msg="You cannot duplicate the talent(s)."):
             talent.copy()
+
+    def test_talent_views_not_grouped_by_stage(self):
+        # The applicant views are grouped by stage, the talents have no stages
+        action = self.env.ref("hr_recruitment.action_hr_talent_pool_applications")
+        for view in action.view_ids:
+            arch = self.env["hr.applicant"].get_views([(view.view_id.id, view.view_mode)])["views"][view.view_mode]["arch"]
+            self.assertNotIn('default_group_by="stage_id"', arch, f"The {view.view_mode} view of the talents is grouped by stage")
