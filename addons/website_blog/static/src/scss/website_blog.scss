@@ -162,6 +162,10 @@
             .o_wblog_toc_link {
                 --o-forced-colors-active-outline-offset: -2px;
 
+                &:focus-visible {
+                    box-shadow: var(--o-focus-ring-inset) !important;
+                }
+
                 @for $i from 0 through 5 {
                     &.o_wblog_toc_link_#{$i} {
                         padding-left: $spacer * (0.75 + $i);

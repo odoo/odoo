@@ -2309,6 +2309,27 @@ $o-website-values-palette-number: 1 !default;
 // automatically replaced with corresponsing value of chosen values palette.
 $o-user-website-values: () !default;
 
+// :focus-visible ring
+// - The default colors are the light/dark swatches of the color theme.
+// - Exposed custom properties, unused by default, overridden in .o_cc[1-5]:
+//     --o-focus-ring-width: <length>
+//     --o-focus-ring-inner-color: <color>
+//     --o-focus-ring-outer-color: <color>
+$o-focus-ring-inner-color: var(--o-focus-ring-inner-color, var(--o-color-4));
+$o-focus-ring-outer-color: var(--o-focus-ring-outer-color, var(--o-color-5));
+$o-focus-ring-outline-fix: 2px solid #{$o-focus-ring-inner-color};
+$o-focus-ring-outline-offset-fix: -1px;
+$o-focus-ring-inset-outline-fix: 3px solid #{$o-focus-ring-inner-color};
+$o-focus-ring-inset-outline-offset-fix: -2px;
+$o-focus-ring:
+    0 0 0 calc(var(--o-focus-ring-width, 2px) - 1px) #{$o-focus-ring-inner-color},
+    0 0 0 calc(2 * var(--o-focus-ring-width, 2px) - 1px) #{$o-focus-ring-outer-color},
+    0 0 0 calc(2 * var(--o-focus-ring-width, 2px)) #{$o-focus-ring-inner-color};
+$o-focus-ring-inset:
+    inset 0 0 0 1px #{$o-focus-ring-inner-color},
+    inset 0 0 0 calc(var(--o-focus-ring-width, 2px) + 1px) #{$o-focus-ring-outer-color},
+    inset 0 0 0 calc(2 * var(--o-focus-ring-width, 2px) + 1px) #{$o-focus-ring-inner-color};
+
 //------------------------------------------------------------------------------
 // Fonts
 //------------------------------------------------------------------------------
@@ -2428,6 +2449,34 @@ $o-offcanvas-horizontal-width: var(--Offcanvas-horizontal-width, #{$o-offcanvas-
         background-image: $-gradient;
     }
 };
+
+@mixin o-focus-ring($type: "") {
+    $-focus-ring: var(--o-focus-ring);
+    $-focus-ring-outline: $o-focus-ring-outline-fix;
+    $-focus-ring-outline-offset: $o-focus-ring-outline-offset-fix;
+
+    @if $type == 'inset' {
+        $-focus-ring: var(--o-focus-ring-inset);
+        $-focus-ring-outline: $o-focus-ring-inset-outline-fix;
+        $-focus-ring-outline-offset: $o-focus-ring-inset-outline-offset-fix;
+    }
+
+    // Redefine variables to keep them easily overridable.
+    --o-focus-ring: #{$o-focus-ring};
+    --o-focus-ring-inset: #{$o-focus-ring-inset};
+
+    // !important to override Bootstrap's default.
+    box-shadow: #{$-focus-ring} !important;
+
+    // Hide a rendering bug when border-radius is set and the background color
+    // is close to the first focus ring color.
+    outline: $-focus-ring-outline;
+    outline-offset: $-focus-ring-outline-offset;
+
+    &:where(.btn) {
+        outline: #{$-focus-ring-outline} !important;
+    }
+}
 
 // Replaces 'NULL' string values in a map by the sass null value (this is useful
 // as a "hack" to allow users to define null values in their custom palette as
