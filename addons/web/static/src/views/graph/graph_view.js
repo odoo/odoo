@@ -31,7 +31,7 @@ export const graphView = {
                 fieldAttrs: archInfo.fieldAttrs,
                 fields: fields,
                 groupBy: archInfo.groupBy,
-                measure: archInfo.measure || "__count",
+                activeMeasures: [archInfo.measure || "__count"],
                 viewMeasures: archInfo.measures,
                 mode: archInfo.mode || "bar",
                 order: archInfo.order || null,

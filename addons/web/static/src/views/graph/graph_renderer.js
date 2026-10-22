@@ -180,7 +180,7 @@ export class GraphRenderer extends Component {
      */
     customTooltip(data, metaData, context) {
         const tooltipModel = context.tooltip;
-        const { measure, measures, disableLinking, mode } = metaData;
+        const { activeMeasures, measures, disableLinking, mode } = metaData;
         this.containerRef().style.cursor = "";
         this.removeTooltips();
         if (tooltipModel.opacity === 0 || tooltipModel.dataPoints.length === 0) {
@@ -189,12 +189,22 @@ export class GraphRenderer extends Component {
         if (!disableLinking && mode !== "line") {
             this.containerRef().style.cursor = "pointer";
         }
+        // tooltip title: name of the measure if the tooltip only shows that
+        // measure, "Measures" otherwise
+        const tooltipMeasures = new Set(
+            tooltipModel.dataPoints.map(({ datasetIndex }) => {
+                const dataset = data.datasets[datasetIndex] || this.model.lineOverlayDataset;
+                return dataset.measure || activeMeasures[0];
+            })
+        );
+        const titleMeasure =
+            tooltipMeasures.size === 1 ? measures[[...tooltipMeasures][0]].string : _t("Measures");
         const { chartArea } = this.chart.instance();
         const chartAreaTop = chartArea.top;
         const viewContentTop = this.containerRef().getBoundingClientRect().top;
         const content = renderToMarkup("web.GraphRenderer.CustomTooltip", {
             maxWidth: getMaxWidth(chartArea),
-            measure: measures[measure].string,
+            measure: titleMeasure,
             mode: this.model.metaData.mode,
             tooltipItems: this.getTooltipItems(data, metaData, tooltipModel),
         });
@@ -442,7 +452,8 @@ export class GraphRenderer extends Component {
             const referenceColor = mode === "bar" ? "backgroundColor" : "borderColor";
             legendOptions.labels = {
                 generateLabels: (chart) => {
-                    // if no more than one groupBy, the legend is implicitly displayed inside the measure
+                    // if no more than one groupBy, the legend is implicitly
+                    // displayed inside the measures selector
                     if (groupBy.length <= 1) {
                         return [];
                     }
@@ -554,15 +565,26 @@ export class GraphRenderer extends Component {
     }
 
     /**
+     * Measures shown as selected in the measures dropdown: all active
+     * measures in pie mode, only the first one in the other modes.
+     * @returns {string[]}
+     */
+    get displayedMeasures() {
+        const { activeMeasures, mode } = this.model.metaData;
+        return mode === "pie" ? activeMeasures : [activeMeasures[0]];
+    }
+
+    /**
      * Returns the options used to generate the chart axes.
      * @returns {Object}
      */
     getScaleOptions() {
         const { labels } = this.model.data;
-        const { measure, measures, mode, stacked } = this.model.metaData;
+        const { activeMeasures, measures, mode, stacked } = this.model.metaData;
         if (mode === "pie") {
             return {};
         }
+        const yTitle = measures[activeMeasures[0]].string;
         const xAxe = {
             type: "category",
             ticks: {
@@ -583,14 +605,14 @@ export class GraphRenderer extends Component {
             beginAtZero: true,
             type: "linear",
             title: {
-                text: measures[measure].string,
+                text: yTitle,
                 color:
                     cookie.get("color_scheme") === "dark"
                         ? getColor(15, cookie.get("color_scheme"))
                         : null,
             },
             ticks: {
-                callback: (value) => this.formatValue(value, measure, false),
+                callback: (value) => this.formatValue(value, activeMeasures[0], false),
                 color: GRAPH_LABEL_COLOR,
             },
             stacked: mode === "line" && stacked ? stacked : undefined,
@@ -618,13 +640,14 @@ export class GraphRenderer extends Component {
      * @returns {Object[]}
      */
     getTooltipItems(data, metaData, tooltipModel) {
-        const { allIntegers, mode, groupBy, measure } = metaData;
+        const { allIntegers, activeMeasures, measures, mode, groupBy } = metaData;
         const sortedDataPoints = sortBy(tooltipModel.dataPoints, "raw", "desc");
         const items = [];
         for (const item of sortedDataPoints) {
             const index = item.dataIndex;
             // If `datasetIndex` is not found in the `datasets`, then it refers to the `lineOverlayDataset`.
             const dataset = data.datasets[item.datasetIndex] || this.model.lineOverlayDataset;
+            const measure = dataset.measure || activeMeasures[0];
             let label = dataset.trueLabels[index];
             let value = dataset.data[index];
             if (dataset.currencyIds?.[index]) {
@@ -639,11 +662,17 @@ export class GraphRenderer extends Component {
             if (mode === "pie") {
                 if (label === NO_DATA) {
                     value = this.formatValue(0, measure, allIntegers);
+                } else if (activeMeasures.length > 1) {
+                    // with several measures, add the measure to the label to
+                    // tell the rings apart
+                    label = `${label}${SEP}${measures[measure].string}`;
                 }
                 boxColor = dataset.backgroundColor[index];
                 const totalData = dataset.data.reduce((a, b) => a + b, 0);
                 percentage = totalData && ((dataset.data[index] * 100) / totalData).toFixed(2);
             } else {
+                // with several datasets (several groupBys), the dataset label
+                // is added to identify each line
                 if (groupBy.length > 1) {
                     label = `${label} / ${dataset.label}`;
                 }
@@ -883,11 +912,28 @@ export class GraphRenderer extends Component {
     }
 
     /**
+     * In pie mode, toggles a measure (several can be active, but at least
+     * one must remain). In other modes, selects it as the only measure.
      * @param {Object} param0
      * @param {string} param0.measure
      */
     onMeasureSelected({ measure }) {
-        this.model.updateMetaData({ measure });
+        const { activeMeasures, mode } = this.model.metaData;
+        if (mode !== "pie") {
+            this.model.updateMetaData({ activeMeasures: [measure] });
+            return;
+        }
+        const measures = activeMeasures.slice();
+        const index = measures.indexOf(measure);
+        if (index === -1) {
+            measures.push(measure);
+        } else if (measures.length > 1) {
+            measures.splice(index, 1);
+        } else {
+            // do not allow to remove the last active measure
+            return;
+        }
+        this.model.updateMetaData({ activeMeasures: measures });
     }
 
     /**
