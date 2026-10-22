@@ -20,25 +20,25 @@ class CalendarEventMultiArchiveOrUnlinkWizard(models.TransientModel):
     def _compute_has_recurrent_events(self):
         self.has_recurrent_events = bool(self.calendar_event_ids.recurrence_id)
 
-    def action_archive(self):
+    def action_archive(self, send_updates=False):
         self.ensure_one()
-        self.calendar_event_ids.write({'active': False})
+        self.calendar_event_ids.with_context(send_updates=send_updates).write({'active': False})
         return self.env.context.get('next_action')
 
-    def action_unlink(self):
+    def action_unlink(self, send_updates=False):
         self.ensure_one()
-        self.calendar_event_ids._unlink_with_sync_and_recurrence_check()
+        self.calendar_event_ids.with_context(send_updates=send_updates)._unlink_with_sync_and_recurrence_check()
         return self.env.context.get('next_action')
 
     def action_send_mails_and_archive(self):
         self.ensure_one()
         self._send_mails()
-        return self.action_archive()
+        return self.action_archive(send_updates=True)
 
     def action_send_mails_and_unlink(self):
         self.ensure_one()
         self._send_mails()
-        return self.action_unlink()
+        return self.action_unlink(send_updates=True)
 
     def _send_mails(self):
         self.ensure_one()
