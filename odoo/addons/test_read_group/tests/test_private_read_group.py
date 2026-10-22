@@ -1515,3 +1515,31 @@ class TestPrivateReadGroup(common.TransactionCase):
                     RelatedBase._read_group([], [fname_chain], ['__count']),
                     [('bar_a', 1), (False, 4)],
                 )
+
+    def test_monetary_in_company_read_group(self):
+        """ Test that .in_company property correctly converts and sorts monetary fields """
+        Model = self.env['test_read_group.aggregate.monetary']
+        Related = self.env['test_read_group.aggregate.monetary.related']
+        curr_1 = self.env['res.currency'].create({'name': 'C1', 'symbol': 'C1'})
+        curr_2 = self.env['res.currency'].create({'name': 'C2', 'symbol': 'C2'})
+        self.env['res.currency.rate'].create([
+            {'name': '2026-01-01', 'rate': 1.0, 'currency_id': curr_1.id, 'company_id': self.env.company.id},
+            {'name': '2026-01-01', 'rate': 0.5, 'currency_id': curr_2.id, 'company_id': self.env.company.id},
+        ])
+        group_a = Related.create({'name': 'Group A'})
+        group_b = Related.create({'name': 'Group B'})
+        records = Model.create([
+            {'related_model_id': group_a.id, 'currency_id': curr_1.id, 'total_in_currency_id': 100},
+            {'related_model_id': group_b.id, 'currency_id': curr_2.id, 'total_in_currency_id': 60},
+        ])
+        groups = Model._read_group(
+            domain=[('id', 'in', records.ids)],
+            groupby=['related_model_id'],
+            aggregates=['total_in_currency_id.in_company:sum'],
+            order='total_in_currency_id.in_company:sum ASC'
+        )
+        self.assertEqual(len(groups), 2)
+        self.assertEqual(groups[0][0], group_a)
+        self.assertEqual(groups[0][1], 100)
+        self.assertEqual(groups[1][0], group_b)
+        self.assertEqual(groups[1][1], 120)
