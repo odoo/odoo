@@ -125,6 +125,7 @@ class HrEmployeeDeparture(models.Model):
                 vals.update({
                     "contract_date_end": departure.departure_date,
                 })
+            departure.employee_id._track_departure(self.env._("End of Collaboration planned"))
             departure.employee_id.version_ids.filtered(
                 lambda v: v.contract_date_start == version.contract_date_start
                 and v.contract_date_end == version.contract_date_end,
