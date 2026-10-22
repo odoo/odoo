@@ -778,6 +778,28 @@ describe("collapsed selection", () => {
             `<p data-selection-placeholder=""><br></p><div class="o_table_wrapper">${completedTable}</div><p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" style="margin: -9px 0px 8px;" o-we-hint-text='Type "/" for commands'>[]<br></p>`
         );
     });
+
+    test("should keep the BR at the end of an inline followed by text", async () => {
+        await testEditor({
+            contentBefore: `<p><strong>a[]<br></strong>c</p>`,
+            stepFunction: async (editor) => {
+                editor.shared.dom.insert("b");
+                editor.shared.history.commit();
+            },
+            contentAfter: `<p><strong>ab[]<br></strong>c</p>`,
+        });
+    });
+
+    test("should remove the BR at the end of an inline ending its block", async () => {
+        await testEditor({
+            contentBefore: `<p><strong>a[]<br></strong></p>`,
+            stepFunction: async (editor) => {
+                editor.shared.dom.insert("b");
+                editor.shared.history.commit();
+            },
+            contentAfter: `<p><strong>ab[]</strong></p>`,
+        });
+    });
 });
 
 describe("not collapsed selection", () => {
