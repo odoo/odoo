@@ -76,10 +76,9 @@ export class PaymentAdyen extends PaymentInterface {
         };
     }
 
-    _adyenPayData() {
-        var order = this.pos.getOrder();
+    _adyenPayData(line = this.pos.getOrder().getSelectedPaymentline()) {
+        const order = line.pos_order_id;
         var config = this.pos.config;
-        var line = order.getSelectedPaymentline();
         var data = {
             SaleToPOIRequest: {
                 MessageHeader: Object.assign(this._adyenCommonMessageHeader(), {
@@ -118,8 +117,8 @@ export class PaymentAdyen extends PaymentInterface {
             return Promise.resolve();
         }
 
-        var data = this._adyenPayData();
         var line = order.payment_ids.find((paymentLine) => paymentLine.uuid === uuid);
+        var data = this._adyenPayData(line);
         // Only payment requests are tracked, so that an abort targets the payment
         this.most_recent_service_id = data.SaleToPOIRequest.MessageHeader.ServiceID;
         line.setTerminalServiceId(this.most_recent_service_id);
@@ -323,15 +322,42 @@ export class PaymentAdyen extends PaymentInterface {
             this._handleOdooConnectionFailure();
             return;
         }
-        const line = this.pendingAdyenline();
+
+        const response = notification.SaleToPOIResponse;
+        const header = response?.MessageHeader;
+        const line = this._adyenFindPaymentLine(header, response?.PaymentResponse);
         if (!line) {
+            logPosMessage(
+                "PaymentAdyen",
+                "handleAdyenStatusResponse",
+                "No pending payment line matches the Adyen response",
+                false,
+                [notification]
+            );
             return;
         }
 
-        const response = notification.SaleToPOIResponse;
-        const header = notification.SaleToPOIResponse.MessageHeader;
-
         this.processPaymentResponse(line, header, response);
+    }
+
+    /**
+     * Match the webhook response to a payment line through
+     * termina id / order uuid / service id
+     */
+    _adyenFindPaymentLine(header, paymentResponse) {
+        if (header?.POIID !== this.payment_method_id.adyen_terminal_identifier) {
+            return;
+        }
+        const transactionId = paymentResponse?.SaleData?.SaleTransactionID?.TransactionID;
+        const orderUuid = transactionId?.split("--")[0];
+        const order = orderUuid && this.pos.models["pos.order"].getBy("uuid", orderUuid);
+        return order?.payment_ids.find(
+            (line) =>
+                line.payment_method_id.id === this.payment_method_id.id &&
+                line.terminalServiceId === header.ServiceID &&
+                !line.isDone() &&
+                line.getPaymentStatus() !== "retry"
+        );
     }
     isPaymentSuccessful(header, response, line = this.pendingAdyenline()) {
         return header.ServiceID === line?.terminalServiceId && response.Result === "Success";
