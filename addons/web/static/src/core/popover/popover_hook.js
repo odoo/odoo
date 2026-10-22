@@ -33,10 +33,13 @@ export function makePopover(addFn, component, options) {
             close();
             const newOptions = Object.create(options);
             newOptions.onClose = () => {
-                removeFn = null;
+                if (removeFn === remove) {
+                    removeFn = null;
+                }
                 options.onClose?.();
             };
-            removeFn = addFn(target, component, props, newOptions);
+            const remove = addFn(target, component, props, newOptions);
+            removeFn = remove;
         },
         close,
         get isOpen() {
