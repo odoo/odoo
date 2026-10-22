@@ -16,8 +16,6 @@ export class HrEmployeeHierarchyModel extends HierarchyModel {
 
     async _loadNodesInCycle() {
         const domain = [["company_id", "in", this.context.allowed_company_ids || []]];
-        return await this.orm.call("hr.employee", "cycles_in_hierarchy_read", [
-            domain,
-        ]);
+        return await this.orm.call("hr.employee", "cycles_in_hierarchy_read", [domain]);
     }
 }
