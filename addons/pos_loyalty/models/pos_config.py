@@ -9,6 +9,10 @@ class PosConfig(models.Model):
     # NOTE: this function acts as a m2m field with loyalty.program model. We do this to handle an exceptional use case:
     # When no PoS is specified at a loyalty program form, this program is applied to every PoS (instead of none)
     def _get_program_ids(self, check_usage=True):
+
+        if self.env.context.get('no_loyalty'):
+            return self.env['loyalty.program']
+
         today = fields.Date.context_today(self)
         programs = self.env['loyalty.program'].search([
             ('pos_ok', '=', True),
