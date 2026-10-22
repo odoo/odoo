@@ -470,14 +470,15 @@ class Base(models.AbstractModel):
         # Open last level of grouping, meaning read records of groups
         if records_opening_info:
 
-            order_specs = [
-                f"{fname} {direction}"
-                for fname, direction in dict_order.items()
+            order_specs = []
+            for fname, direction in dict_order.items():
                 # Remove order that are already unique for each group,
                 # that may avoid a left join and simplify the order (not apply if granularity)
-                if fname not in groupby
-                if fname != '__count'
-            ]
+                if fname in groupby or fname == '__count':
+                    continue
+                if fname in self._fields and self._fields[fname].type == 'monetary':
+                    fname = f"{fname}.in_company"
+                order_specs.append(f"{fname} {direction}")
             for order_str in self._order.split(','):
                 fname = order_str.strip().split(" ", 1)[0]
                 if fname not in dict_order and fname not in groupby:

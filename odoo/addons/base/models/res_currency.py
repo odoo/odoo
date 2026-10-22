@@ -342,6 +342,21 @@ class ResCurrency(models.Model):
                     node[0].set('string', label)
         return arch, view
 
+    @api.model
+    def _current_rate_sql(self, table: models.TableSQL, currency_field: str) -> SQL:
+        currency_sql = self._field_to_sql(table, currency_field)
+        return SQL("""(
+            SELECT COALESCE(
+                (SELECT rate FROM res_currency_rate
+                 WHERE currency_id = %s
+                   AND (company_id IS NULL OR company_id = %s)
+                   AND name <= CURRENT_DATE
+                 ORDER BY company_id NULLS LAST, name DESC
+                 LIMIT 1),
+                1.0
+            )
+        )""", currency_sql, self.env.company.root_id.id)
+
 
 class ResCurrencyRate(models.Model):
     _name = 'res.currency.rate'
