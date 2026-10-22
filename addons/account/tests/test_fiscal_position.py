@@ -250,7 +250,11 @@ class TestFiscalPosition(common.TransactionCase):
             'code': 'PP',
             'country_group_ids': [Command.set(country_group.ids + a_country_group.ids)],
         })
-        self.env.company.country_id = my_country
+        # Match the fiscal country even when the company address is in another country.
+        self.env.company.write({
+            'country_id': self.us.id,
+            'account_fiscal_country_id': my_country.id,
+        })
 
         # AT case - no sequence, one country_id
         fp_1, fp_2, fp_3 = self.env['account.fiscal.position'].create([{
