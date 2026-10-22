@@ -2319,6 +2319,21 @@ class SaleOrder(models.Model):
         # In sudo mode to bypass the checks on the rights on the transactions.
         self.sudo().authorized_transaction_ids.action_void()
 
+    def action_register_payment(self):
+        """Open the payment registration wizard on the open invoices of the orders."""
+        invoices = self.invoice_ids.filtered(
+            lambda move: (
+                move.move_type == "out_invoice"
+                and move.state == "posted"
+                and move.payment_state in ("not_paid", "partial")
+            )
+        )
+        if not invoices:
+            raise UserError(self.env._("There is no posted invoice to pay. Create one first."))
+        action = invoices.action_register_payment()
+        action["context"]["dont_redirect_to_payments"] = True
+        return action
+
     def get_portal_last_transaction(self):
         self.ensure_one()
         return self.sudo().transaction_ids._get_last()
