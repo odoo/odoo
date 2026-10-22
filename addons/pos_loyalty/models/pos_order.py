@@ -86,6 +86,8 @@ class PosOrder(models.Model):
         :returns: the loyalty.card records created or credited.
         """
         self.ensure_one()
+        if self.env.context.get('no_loyalty'):
+            return self.env['loyalty.card']
         if not self.config_id:
             return self.env['loyalty.card']
 

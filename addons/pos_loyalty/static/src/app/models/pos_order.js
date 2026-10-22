@@ -342,6 +342,14 @@ patch(PosOrder.prototype, {
         if (this.finalized) {
             return;
         }
+
+        if (this.delivery_identifier) {
+            for (const line of this.getOrderlines().filter((line) => line.is_reward_line)) {
+                line.delete();
+            }
+            return;
+        }
+
         // Guard against re-entrancy: creating/deleting reward lines must not trigger another pass.
         if (this._recomputingRewards) {
             return;
