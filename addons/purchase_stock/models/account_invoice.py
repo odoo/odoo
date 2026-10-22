@@ -1,8 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< 4bf5fb450fcff260067481a153b0d3b92f5cd9ce
 from odoo import models
 from odoo.tools import float_compare
+||||||| 6c3aee124adb16576e2d2884c30b4f98fd04acd4
+from odoo import fields, models, api
+from odoo.tools import float_compare, float_is_zero
+from odoo.tools.misc import unique
+=======
+from odoo import models, api
+from odoo.tools import float_compare, float_is_zero
+from odoo.tools.misc import unique
+>>>>>>> 6ff2d2546a91e25f5e9f8d5b909333004952fc73
 
 
 class AccountMove(models.Model):
@@ -76,7 +86,13 @@ class AccountMove(models.Model):
                         'balance': line.currency_id._convert(
                             relevant_qty * price_unit_val_dif,
                             line.company_currency_id,
+<<<<<<< 4bf5fb450fcff260067481a153b0d3b92f5cd9ce
                             line.company_id,
+||||||| 6c3aee124adb16576e2d2884c30b4f98fd04acd4
+                            line.company_id, fields.Date.today(),
+=======
+                            line.company_id, line.date,
+>>>>>>> 6ff2d2546a91e25f5e9f8d5b909333004952fc73
                         ),
                         'account_id': debit_pdiff_account.id,
                         'analytic_distribution': line.analytic_distribution,
@@ -96,7 +112,13 @@ class AccountMove(models.Model):
                         'balance': line.currency_id._convert(
                             relevant_qty * -price_unit_val_dif,
                             line.company_currency_id,
+<<<<<<< 4bf5fb450fcff260067481a153b0d3b92f5cd9ce
                             line.company_id,
+||||||| 6c3aee124adb16576e2d2884c30b4f98fd04acd4
+                            line.company_id, fields.Date.today(),
+=======
+                            line.company_id, line.date,
+>>>>>>> 6ff2d2546a91e25f5e9f8d5b909333004952fc73
                         ),
                         'account_id': line.account_id.id,
                         'analytic_distribution': line.analytic_distribution,
