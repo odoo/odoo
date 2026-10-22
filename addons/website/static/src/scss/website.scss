@@ -225,6 +225,71 @@ $o-mega-menu-btn-close-zindex: $o-mega-menu-zindex + 1 !default;
     }
 }
 
+/* :focus-visible ring */
+/* - Variables are defined in a layer to remain overridable no matter the
+     specificity.
+   - Variables are defined both on :root and on focused elements.
+      - On :root to be available whenever the ring is not on the focused element
+        (i.e.: sibling or ancestor). Limitation: when used on a sibling or
+        ancestor, overridden variables used within other variables will only
+        work if set on :root directly.
+      - On focused elements to keep them easily overridable in most cases.
+   - The default colors are the light/dark swatches of the color theme.
+   - Exposed custom properties, unused by default, overridden in .o_cc[1-5]:
+        --o-focus-ring-width: <length>;
+        --o-focus-ring-inner-color: <color>;
+        --o-focus-ring-outer-color: <color>;
+**/
+@layer {
+    :root,
+    body:not(.editor_enable) :not(input, textarea, select, .form-control):focus-visible {
+        --o-focus-ring-outset:
+            0 0 0 calc(var(--o-focus-ring-width, 2px) - 1px) var(--o-focus-ring-inner-color, var(--o-color-4)),
+            0 0 0 calc(2 * var(--o-focus-ring-width, 2px) - 1px) var(--o-focus-ring-outer-color, var(--o-color-5)),
+            0 0 0 calc(2 * var(--o-focus-ring-width, 2px)) var(--o-focus-ring-inner-color, var(--o-color-4));
+        --o-focus-ring-inset:
+            inset 0 0 0 1px var(--o-focus-ring-inner-color, var(--o-color-4)),
+            inset 0 0 0 calc(var(--o-focus-ring-width, 2px) + 1px) var(--o-focus-ring-outer-color, var(--o-color-5)),
+            inset 0 0 0 calc(2 * var(--o-focus-ring-width, 2px) + 1px) var(--o-focus-ring-inner-color, var(--o-color-4));
+        --o-focus-ring: var(--o-focus-ring-outset);
+        /* Fix a rendering issue on all browsers: with border-radius, a thin 1px
+           gap appears if the background color is close to the first focus ring
+           color. The default values (2px / -1px) are set for an outset outline.
+        */
+        --o-focus-ring-outline-width: 2px;
+        --o-focus-ring-outline: var(--o-focus-ring-outline-width) solid var(--o-focus-ring-inner-color, var(--o-color-4));
+    }
+}
+
+body:not(.editor_enable) {
+    :not(input, textarea, select, .form-control):focus-visible {
+        box-shadow: var(--o-focus-ring);
+        /* Hide a rendering bug when border-radius is set and the background color
+           is close to the first focus ring color. */
+        outline: var(--o-focus-ring-outline);
+        outline-offset: -1px;
+
+        /* .shadow-none is sometimes used to hide focus on click. It should not impact
+           focus-visible. */
+        &:is(.shadow, .shadow-sm, .shadow-lg, .shadow-none) {
+            box-shadow: var(--o-focus-ring) !important;
+        }
+
+        &.btn {
+            --#{$prefix}btn-focus-box-shadow: var(--o-focus-ring);
+        }
+
+        &#o_logout, &.dropdown-item {
+            --o-focus-ring: var(--o-focus-ring-inset);
+            --o-focus-ring-outline-width: 3px;
+        }
+    }
+
+    .accordion {
+        --#{$prefix}accordion-btn-focus-box-shadow: var(--o-focus-ring);
+    }
+}
+
 body {
     /* The color behind the boxed layout is forced by Odoo. The box background
        color uses the `$body-bg` variable.
@@ -273,7 +338,11 @@ h1, h2, h3, h4, h5, h6,
    gradients. */
 @for $index from 1 through 5 {
     .o_cc#{$index} {
-        @include o-add-gradient('o-cc#{$index}-bg-gradient')
+        @include o-add-gradient('o-cc#{$index}-bg-gradient');
+
+        /* Adaptive focus ring */
+        --o-focus-ring-inner-color: var(--o-cc#{$index}-bg);
+        --o-focus-ring-outer-color: var(--o-cc#{$index}-text);
     }
 }
 
@@ -1346,8 +1415,17 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 
     .carousel-control-prev, .carousel-control-next {
         &:focus-visible {
+            outline: none;
+            box-shadow: none;
+
             .carousel-control-prev-icon, .carousel-control-next-icon {
-                box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+                &::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    box-shadow: var(--o-focus-ring-inset);
+                    filter: invert(1);
+                }
             }
         }
     }
@@ -1360,10 +1438,9 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         transition: var(--o-bs-carousel-control-transition);
 
         &:hover, &:focus-visible {
+            --o-focus-ring: var(--o-focus-ring-inset);
+
             opacity: var(--o-bs-carousel-control-hover-opacity);
-        }
-        &:focus-visible {
-            box-shadow: inset 0 0 0 2px black, inset 0 0 0 4px white;
         }
         &:active {
             border-color: transparent;
@@ -2617,7 +2694,6 @@ span.list-inline-item.o_add_language:last-child {
     bottom: 0;
     inset-inline: 0;
     display: flex;
-    outline: none;
     box-shadow: none;
     /* Need to update button size based on icon size. */
     @for $i from 1 through 5 {
@@ -2635,7 +2711,7 @@ span.list-inline-item.o_add_language:last-child {
     }
 
     &:focus-visible {
-        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color) 50%, transparent), 0 0 0 6px color-mix(in srgb, var(--background-color) 50%, transparent);
+        --o-focus-ring-width: 3px;
     }
 }
 
@@ -2740,15 +2816,16 @@ $ribbon-padding: 100px;
         }
     }
 
-    .oe_search_box:focus, .oe_search_button:focus {
+    .oe_search_box:focus-visible, .oe_search_button:focus-visible {
         z-index: 1;
         box-shadow: none !important;
+        outline: none;
     }
 
     &.o_keyboard_navigation {
-        .oe_search_box:focus, .oe_search_button:focus {
-            outline: calc(var(--o-bs-border-width) * 2) solid var(--primary);
-            outline-offset: calc((var(--o-bs-spacer-2)) * -1);
+        .oe_search_box:focus-visible, .oe_search_button:focus-visible {
+            box-shadow: var(--o-focus-ring-inset) !important;
+            outline: none !important;
         }
     }
 
@@ -2799,8 +2876,7 @@ $ribbon-padding: 100px;
     }
 
     .o_search_result_link:focus-visible {
-        outline: calc(var(--o-bs-border-width) * 2) solid var(--primary);
-        outline-offset: calc((var(--o-bs-border-width) * 2) * -1);
+        --o-focus-ring: var(--o-focus-ring-inset);
     }
 
     @container search-results (min-width: #{map-get($grid-breakpoints, md)}) {
@@ -3827,16 +3903,17 @@ in a huge font size since it isn’t redefined for the frontend.
     font-size: 1.35rem !important;
 }
 
+.stretched-link:focus-visible {
+    box-shadow: none;
+}
+
 .stretched-link:focus-visible::after,
 .slide-link:focus-visible {
-    box-shadow:
-        inset 0 0 0 2px white,
-        inset 0 0 0 4px black;
+    --o-focus-ring: var(--o-focus-ring-inset);
+}
 
-    @media (forced-colors: active) {
-        outline: 2px solid transparent;
-        outline-offset: -2px;
-    }
+.stretched-link:focus-visible::after {
+    box-shadow: var(--o-focus-ring);
 }
 
 /* Specific styles for the BottomSheet component when it is used in the frontend */

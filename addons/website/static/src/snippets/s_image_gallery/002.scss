@@ -158,10 +158,21 @@
 
         .carousel-control-prev, .carousel-control-next {
             border-radius: var(--o-bs-btn-border-radius);
+        }
 
+        .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
             &:focus-visible {
-                .carousel-control-prev-icon, .carousel-control-next-icon {
-                    box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+                outline: none;
+                box-shadow: none;
+
+                .carousel-control-prev-icon, .carousel-control-next-icon, .o_carousel_pause_icon {
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        inset: 0;
+                        box-shadow: var(--o-focus-ring-inset);
+                        filter: invert(1);
+                    }
                 }
             }
         }
@@ -183,15 +194,6 @@
         // Pause button
         .o_carousel_pause {
             padding: 0;
-
-            &:focus-visible {
-                outline: none;
-                box-shadow: none;
-
-                .o_carousel_pause_icon {
-                    box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
-                }
-            }
 
             &:active {
                 border-color: transparent;
@@ -262,16 +264,7 @@
         // Indicators
         .carousel-indicators {
             > button:focus-visible {
-                position: relative;
                 outline: none;
-
-                &::before {
-                    position: absolute;
-                    inset: 0;
-                    content: "";
-                    box-shadow: inset 0 0 0 2px black, inset 0 0 0 4px white;
-                    border-radius: inherit;
-                }
             }
         }
 
@@ -303,6 +296,19 @@
 
                 &:hover {
                     opacity: 1;
+                }
+
+                &:focus-visible {
+                    position: relative;
+                    box-shadow: none;
+
+                    &::before {
+                        position: absolute;
+                        inset: 0;
+                        content: "";
+                        box-shadow: var(--o-focus-ring-inset);
+                        border-radius: inherit;
+                    }
                 }
             }
 
@@ -400,6 +406,10 @@
 
                     &.active:after {
                         width: var(--o-bs-spacer-4);
+                    }
+
+                    &:focus-visible {
+                        --o-focus-ring: var(--o-focus-ring-inset);
                     }
                 }
 

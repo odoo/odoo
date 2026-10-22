@@ -380,6 +380,13 @@
                     }
                 }
             }
+
+            .o_wsale_filmstrip_link:focus-visible .o_wsale_filmstrip_item::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                box-shadow: var(--o-focus-ring-inset);
+            }
         }
         /* <- End filmstrip design variations */
 
@@ -478,6 +485,16 @@
                     background-color: var(--o-wsale-filmstrip-item-bg-hover, var(--o-wsale-filmstrip-item-bg, transparent));
                     color: var(--o-wsale-filmstrip-item-color-hover, var(--o-wsale-filmstrip-item-color, inherit));
                     box-shadow: var(--o-wsale-filmstrip-item-box-shadow-hover, none);
+                }
+
+
+                .o_wsale_filmstrip_link:focus-visible {
+                    box-shadow: none;
+                    outline: none;
+
+                    .o_wsale_filmstrip_item {
+                        box-shadow: var(--o-focus-ring-inset) !important;
+                    }
                 }
             }
         }
@@ -1688,6 +1705,15 @@ $-product-radius-map: (
             opacity: 0.65;
         }
 
+        &:focus-visible {
+            box-shadow: none;
+            outline: none;
+
+            .oi {
+                box-shadow: var(--o-focus-ring);
+            }
+        }
+
         &:hover {
             opacity: 0.8;
         }
@@ -1988,15 +2014,6 @@ $-product-radius-map: (
     .products_attributes_filters & div.accordion-item:first-of-type {
         border-top: none;
     }
-}
-
-/* Hide chevrons for collapsed categories */
-#categories_recursive li {
-    width: 100% !important;
-}
-
-.o_categories_recursive_button:after {
-    display: none;
 }
 
 .overflow-hidden {

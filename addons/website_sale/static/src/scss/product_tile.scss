@@ -98,8 +98,10 @@
         transition: var(--o-wsale-card-thumb-transition);
         flex-shrink: 0;
 
-        &:has(.oe_product_image_link:focus-visible) {
-            outline: 1px auto;
+        .oe_product_image_link:focus-visible::after {
+            content: "";
+            inset: 0;
+            box-shadow: var(--o-focus-ring-inset);
         }
     }
     .oe_product_image_link {
@@ -211,6 +213,21 @@
                 * {
                     width: 100%;
                     height: 100%;
+                }
+            }
+
+            &:focus-visible {
+                outline: none;
+                box-shadow: none;
+
+                .btn, .css_attribute_color {
+                    box-shadow: var(--o-focus-ring-inset);
+                    /* Hide the rounded border rendering bug on all browsers. */
+                    outline: var(--o-focus-ring-outline);
+                    outline-offset: -2px;
+                }
+                .css_attribute_preview_thumbnail {
+                    box-shadow: var(--o-focus-ring-inset);
                 }
             }
         }
@@ -338,6 +355,10 @@
             align-items: center;
             justify-content: center;
 
+            &:focus-visible {
+                --o-focus-ring: var(--o-focus-ring-inset);
+            }
+
             &:where(:not(.o_wsale_product_btn_primary)) {
                 aspect-ratio: var(--o-wsale-card-btn-aspect-ratio);
                 padding-left: var(--o-wsale-card-btn-padding-x, var(--#{$prefix}btn-padding-x));
@@ -382,9 +403,6 @@
         position: absolute;
         inset: 0;
         z-index: 1;
-    }
-    .btn:focus-visible {
-        outline: 1px auto;
     }
     .o_label {
         display: var(--o-wsale-card-btn-label-display);
