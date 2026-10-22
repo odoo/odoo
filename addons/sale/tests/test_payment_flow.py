@@ -134,10 +134,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         amount."""
         self.sale_order.prepayment_percent = 0.5  # This should not impact the 'full amount' option.
         with MockRequest(self.env):
-            tx_values = CustomerPortal()._get_payment_values(
-                self.sale_order,
-                is_down_payment=False,
-            )
+            tx_values = CustomerPortal()._get_payment_values(self.sale_order, is_down_payment=False)
         self.assertEqual(tx_values["amount"], self.sale_order.amount_total)
 
     def test_confirmed_transactions_confirms_so_with_multiple_transaction(self):
@@ -341,6 +338,98 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertEqual(self.sale_order.state, "draft")
         self.assertFalse(tx.invoice_ids)
         self.assertFalse(self.sale_order.invoice_ids)
+
+    def _confirm_order_with_price(self, price):
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.service_product.id,
+                    "product_uom_qty": 1,
+                    "price_unit": price,
+                })
+            ],
+        })
+        order.action_confirm()
+        return order
+
+    def _get_mark_as_paid_form(self, order, **values):
+        action = order.action_register_payment()
+        return self.env[action["res_model"]].with_context(action["context"]).new(values)
+
+    def _mark_as_paid(self, order, **values):
+        action = order.action_register_payment()
+        payment = self.env[action["res_model"]].with_context(action["context"]).create(values)
+        payment.action_post()
+        return payment
+
+    def test_mark_as_paid_does_not_create_an_invoice(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order)
+
+        self.assertFalse(order.invoice_ids)
+
+    def test_mark_as_paid_suggests_the_amount_left_to_pay(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order, amount=40)
+
+        self.assertEqual(self._get_mark_as_paid_form(order).amount, 60)
+
+    def test_mark_as_paid_on_fully_paid_order_raises(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order)
+
+        with self.assertRaises(UserError):
+            order.action_register_payment()
+
+    def test_mark_as_paid_registers_the_payment_in_the_company_of_the_order(self):
+        other_company = self.setup_other_company()["company"]
+        order = self._confirm_order_with_price(100)
+        order.company_id = other_company
+
+        self.assertEqual(self._mark_as_paid(order).company_id, other_company)
+
+    def test_outgoing_payment_does_not_count_as_paid(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order, amount=30, payment_type="outbound")
+
+        self.assertEqual(order.amount_paid, 0)
+
+    def test_payment_registered_from_the_order_is_matched_with_its_invoice(self):
+        order = self._confirm_order_with_price(100)
+        payment = self._mark_as_paid(order, amount=40)
+        invoice = order._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(invoice.matched_payment_ids, payment)
+
+    def test_payments_button_counts_manual_and_online_payments(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order, amount=40)
+        self.amount = 30
+        self.currency = order.currency_id
+        self.reference = f"{order.name}-online"
+        self._create_transaction(flow="redirect", sale_order_ids=[order.id], state="done")
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            self._run_post_processing()
+
+        self.assertEqual(order.payment_count, 2)
+
+    def test_payments_button_opens_a_single_payment_in_its_form(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order)
+
+        self.assertEqual(
+            order.action_view_payments()["views"],
+            [(self.env.ref("account.view_account_payment_form").id, "form")],
+        )
+
+    def test_paid_amount_is_shown_under_the_total(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order, amount=40)
+
+        lines = [line for group in order.extra_total_fields for line in group["lines"]]
+        self.assertIn({"label": "Paid", "value": 40}, lines)
 
     def test_split_payment_without_prepayment_does_not_confirm_order(self):
         """Test that a partial payment doesn't confirm an order that doesn't require prepayment."""
