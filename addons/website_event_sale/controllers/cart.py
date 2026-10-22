@@ -14,3 +14,9 @@ class Cart(WebsiteSaleCart):
             line_data["website_url"] = "/event/%s/register" % slug(line.event_id)
 
         return line_data
+
+    def _prepare_cart_summary_line_data(self, line):
+        line_data = super()._prepare_cart_summary_line_data(line)
+        if line.event_slot_id:
+            line_data["event_slot_name"] = line.event_slot_id.display_name
+        return line_data

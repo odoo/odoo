@@ -122,6 +122,7 @@
             "website_sale/static/src/xml/website_sale_product_availability.xml",
             "website_sale/static/src/js/cart_lines/**/*",
             "website_sale/static/src/js/cart_quick_reorder/**/*",
+            "website_sale/static/src/js/cart_summary/**/*",
             "website_sale/static/src/js/cart_total/**/*",
             "website_sale/static/src/js/components/alert_banner/*",
             "website_sale/static/src/js/components/website_sale_image_viewer.js",
@@ -169,9 +170,7 @@
             "website_sale/static/src/js/website_sale_utils.js",
             ("remove", "website_sale/static/src/**/*.edit.*"),
         ],
-        "website.assets_wysiwyg": [
-            "website_sale/static/src/scss/website_sale.editor.scss",
-        ],
+        "website.assets_wysiwyg": ["website_sale/static/src/scss/website_sale.editor.scss"],
         "website.assets_editor": [
             "website_sale/static/src/js/systray_items/*.js",
             "website_sale/static/src/xml/website_sale_editor_previews.xml",
@@ -180,8 +179,8 @@
             "web/static/lib/bootstrap/scss/_variables.scss",
             "website_sale/static/src/website_builder/**/*.edit.*",
         ],
-        'website.assets_inside_builder_iframe_tests': [
-            'website_sale/static/src/website_builder/**/*.edit.xml',
+        "website.assets_inside_builder_iframe_tests": [
+            "website_sale/static/src/website_builder/**/*.edit.xml"
         ],
         "web.assets_tests": [
             "website_sale/static/tests/tours/**/*",
@@ -201,6 +200,7 @@
             "website_sale/static/src/snippets/s_dynamic_snippet_products/000.xml",
             "website_sale/static/src/js/cart_lines/**/*",
             "website_sale/static/src/js/cart_quick_reorder/**/*",
+            "website_sale/static/src/js/cart_summary/**/*",
             "website_sale/static/src/js/cart_total/**/*",
             "website_sale/static/src/js/comparison_utils.js",
             "website_sale/static/src/js/wishlist_utils.js",

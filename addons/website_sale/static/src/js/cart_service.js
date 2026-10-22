@@ -588,7 +588,7 @@ export class CartService {
         // was empty. Because the cart summary won't be there in that case.
         if (source == "quick_reorder" && !data.old_cart_quantity && data.cart_quantity) {
             data["website_sale.shorter_cart_summary"] = markup(
-                data["website_sale.shorter_cart_summary"],
+                data["website_sale.shorter_cart_summary"]
             );
             this._renderCartSummary(data);
         }

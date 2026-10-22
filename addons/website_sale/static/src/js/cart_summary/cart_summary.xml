@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="website_sale.CartSummary">
+        <div name="order_lines" class="position-relative">
+            <div t-attf-class="border-bottom {{(this.isScrollable and !this.props.isOffcanvas) and 'o_wsale_scrollable_table o_wsale_scrollable_table_desktop mx-n4 mt-n3 px-4 pt-3'}}">
+                <table t-if="this.state.cart_lines.length" class="o_cart_products_table table mb-0">
+                    <span
+                        t-if="this.isScrollable and !this.props.isOffcanvas"
+                        class="o_wsale_scrollable_table_badge o_wsale_scrollable_table_badge_desktop badge d-none d-lg-inline py-2 px-3 position-absolute start-50 z-1 translate-middle pe-none"
+                    >
+                        <t t-out="this.state.cart_quantity"/> items - Scroll for more
+                        <i class="oi ms-1" data-icon="south" role="img" aria-hidden="true"/>
+                    </span>
+                    <tbody>
+                        <tr
+                            t-foreach="this.state.cart_lines"
+                            t-as="line"
+                            t-key="line.id"
+                            t-att-class="line_last and 'border-transparent'"
+                        >
+                            <td class="td-img ps-0 pt-3">
+                                <div class="o_cart_product_image position-relative">
+                                    <span t-if="line.image_uri">
+                                        <img
+                                            t-att-src="line.image_uri"
+                                            class="img rounded"
+                                            t-att-alt="line.name_short"
+                                        />
+                                    </span>
+                                    <span t-else="">
+                                        <img
+                                            t-att-src="`/web/image/product.product/${line.product_id}/image_128`"
+                                            class="img rounded"
+                                            t-att-alt="line.name_short"
+                                        />
+                                    </span>
+                                    <span class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle">
+                                        <t t-out="Math.trunc(line.product_uom_qty)"/>
+                                        <t
+                                            t-if="line.alert_message"
+                                            t-call="website_sale.AlertInline"
+                                            level="line.alert_level"
+                                            message="line.alert_message"
+                                            classes="'o_order_line_alert'"
+                                        />
+                                    </span>
+                                </div>
+                            </td>
+                            <td
+                                class="td-product_name td-qty w-100 pt-3"
+                                name="website_sale_cart_summary_product_name"
+                            >
+                                <span class="text-wrap" t-out="line.header_name"/>
+                                <p class="text-muted small mb-0" t-out="line.combination_name"/>
+                                <span
+                                    t-if="line.has_multiple_uoms"
+                                    class="badge mt-1 bg-light"
+                                    t-out="line.uom_name"
+                                />
+                            </td>
+                            <td class="td-price pe-0 pt-3 text-end" name="website_sale_cart_summary_line_price">
+                                <span class="monetary_field" style="white-space: nowrap;" t-out="this.formatPrice(line.product_price)"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -43,21 +43,31 @@ class Cart(WebsiteSaleCart):
 
     def _prepare_cart_line_data(self, line):
         line_data = super()._prepare_cart_line_data(line)
-        line_data["is_reward_line"] = line.is_reward_line
-        line_data["show_coupon_code"] = (
+        return self._add_reward_line_data(line_data, line)
+
+    def _prepare_cart_summary_line_data(self, line):
+        line_data = super()._prepare_cart_summary_line_data(line)
+        return self._add_reward_line_data(line_data, line)
+
+    def _add_reward_line_data(self, line_data, line):
+        show_coupon_code = (
             line.coupon_id
-            if line.order_id != line.coupon_id.order_id
+            and line.order_id != line.coupon_id.order_id
             and not line.coupon_id.program_id.is_nominative
-            else False
         )
-
-        if line_data["show_coupon_code"]:
-            line_data["coupon_code"] = line.coupon_id.code
-            line_data["coupon_expiration_date"] = line.coupon_id.expiration_date
-
-        if line_data["is_reward_line"]:
-            line_data["reward_type"] = line.reward_id.reward_type
-
+        line_data.update({
+            "is_reward_line": line.is_reward_line,
+            "show_coupon_code": show_coupon_code,
+            **(
+                {
+                    "coupon_code": line.coupon_id.code,
+                    "coupon_expiration_date": line.coupon_id.expiration_date,
+                }
+                if show_coupon_code
+                else {}
+            ),
+            **({"reward_type": line.reward_id.reward_type} if line.is_reward_line else {}),
+        })
         return line_data
 
     @route()
