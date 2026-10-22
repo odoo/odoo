@@ -21,6 +21,7 @@ class AccountMove(models.Model):
     )
     l10n_kr_edocument_number = fields.Char(
         string="e-Document Number",
+        copy=False,
         help="Official HomeTax or PG approval number (24 digits for e-Tax Invoices, 9 digits for Cash Receipts).",
     )
 
@@ -31,3 +32,11 @@ class AccountMove(models.Model):
                 move.l10n_kr_issuance_type = move.commercial_partner_id.l10n_kr_default_issuance_type
             else:
                 move.l10n_kr_issuance_type = False
+
+    def write(self, vals):
+        if 'l10n_kr_issuance_type' in vals:
+            # The proof of issuance dispatches the move into the VAT report boxes.
+            self.filtered(
+                lambda m: m.l10n_kr_issuance_type != vals['l10n_kr_issuance_type']
+            ).line_ids._check_tax_lock_date()
+        return super().write(vals)
