@@ -5,7 +5,7 @@ import { Field } from "@web/views/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
-import { getFormattedValue } from "../utils";
+import { getFormattedValue, hasDateWarning } from "../utils";
 import { CARD_ATTRIBUTE } from "./card_arch_parser";
 import { CardCompiler } from "./card_compiler";
 
@@ -117,6 +117,14 @@ export class CardRenderer extends Component {
         const { archInfo, record } = this.props;
         const { name } = archInfo.fieldNodes[fieldId];
         return getFormattedValue(record, name, archInfo.fieldNodes[fieldId]);
+    }
+
+    getFormattedValueClass(fieldId) {
+        const { record } = this.props;
+        const { name, options } = this.props.archInfo.fieldNodes[fieldId];
+        return hasDateWarning(record.data[name], record.fields[name].type, options.warning)
+            ? "text-danger"
+            : "";
     }
 
     /**

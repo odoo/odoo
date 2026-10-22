@@ -6,7 +6,7 @@
             <i t-if="!this.props.readonly" class="oi oi-filled d-none d-touch-inline-flex" data-icon="calendar_today" />
             <!-- Start date -->
             <t t-if="this.props.readonly">
-                <span t-if="!this.isEmpty(this.startDateField)" class="text-truncate" t-out="window.String(this.getFormattedValue(0))" t-att-data-tooltip="this.getFormattedValue(0, true)"/>
+                <span t-if="!this.isEmpty(this.startDateField)" class="text-truncate" t-att-class="{ 'text-danger': this.hasWarning(0) }" t-out="window.String(this.getFormattedValue(0))" t-att-data-tooltip="this.getFormattedValue(0, true)"/>
             </t>
             <t t-elif="this.isRange(this.values) or this.isRequired(this.startDateField) or !this.isEmpty(this.startDateField) or this.startDateField === this.props.name">
                 <t t-if="this.picker.activeInput !== this.startDateField and this.values[0]">
@@ -18,7 +18,8 @@
                         t-on-pointerdown="() => this.openPickerOnNextPatch = true"
                         t-att-data-field="this.startDateField"
                         data-available-offline=""
-                        t-att-class="'o_input o_daterange_start w-100 text-start ' + (this.hasWarning(0) ? 'text-danger' : '')">
+                        class="o_input o_daterange_start w-100 text-start"
+                        t-att-class="{ 'text-danger': this.hasWarning(0) }">
                         <t t-out="window.String(this.getFormattedValue(0))" />
                     </button>
                 </t>
@@ -27,7 +28,8 @@
                         t-ref="this.startDateRef"
                         type="text"
                         t-att-id="showSeparator ? this.props.endDateField and this.props.id : this.props.id"
-                        t-att-class="'o_input cursor-pointer user-select-none' + (this.hasWarning(0) ? 'text-danger' : '')"
+                        class="o_input cursor-pointer user-select-none"
+                        t-att-class="{ 'text-danger': this.hasWarning(0) }"
                         autocomplete="off"
                         inputmode="none"
                         t-att-placeholder="this.getPlaceholder(this.startDateField)"
@@ -48,7 +50,7 @@
             <!-- End date -->
             <t t-if="this.endDateField">
                 <t t-if="this.props.readonly">
-                    <span class="text-truncate" t-out="this.getFormattedValue(1)" t-att-data-tooltip="this.getFormattedValue(1, true)"/>
+                    <span class="text-truncate" t-att-class="{ 'text-danger': this.hasWarning(1) }" t-out="this.getFormattedValue(1)" t-att-data-tooltip="this.getFormattedValue(1, true)"/>
                 </t>
                 <t t-elif="this.isRange(this.values) or this.isRequired(this.endDateField) or !this.isEmpty(this.endDateField) or (this.isEmpty(this.startDateField) and this.endDateField === this.props.name)">
                     <t t-if="this.picker.activeInput !== this.endDateField and this.values[1]">
@@ -60,7 +62,8 @@
                             t-att-id="this.props.startDateField and this.props.id"
                             t-att-data-field="this.endDateField"
                             data-available-offline=""
-                            t-att-class="'o_input o_daterange_end w-100 text-start ' + (this.hasWarning(1) ? 'text-danger' : '')">
+                            class="o_input o_daterange_end w-100 text-start"
+                            t-att-class="{ 'text-danger': this.hasWarning(1) }">
                             <t t-out="this.getFormattedValue(1)" />
                         </button>
                     </t>
@@ -69,7 +72,8 @@
                             t-ref="this.endDateRef"
                             type="text"
                             t-att-id="this.props.startDateField and this.props.id"
-                            t-att-class="'o_input cursor-pointer user-select-none' + (this.hasWarning(1) ? 'text-danger' : '')"
+                            class="o_input cursor-pointer user-select-none"
+                            t-att-class="{ 'text-danger': this.hasWarning(1) }"
                             autocomplete="off"
                             inputmode="none"
                             t-att-placeholder="this.getPlaceholder(this.endDateField)"
