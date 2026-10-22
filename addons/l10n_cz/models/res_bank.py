@@ -1,10 +1,42 @@
 import re
 
 from odoo import api, models
+from odoo.exceptions import ValidationError
+from odoo.tools.bank_account_number import get_iban_part, validate_iban
+
+
+def _is_cz_mod11_valid(digits):
+    # The prefix weights (10, 5, 8, 4, 2, 1) are the last 6 weights of the account number ones
+    return sum(int(digit) * weight for digit, weight in zip(digits.zfill(10), (6, 3, 7, 9, 10, 5, 8, 4, 2, 1))) % 11 == 0
 
 
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
+
+    def _l10n_cz_get_domestic_account(self):
+        """ Split a Czech account number, written either in the local format (prefix-number/bank-code)
+        or as a Czech IBAN, into its domestic parts. Prefix and number must pass the Czech modulo 11 check.
+
+        :return: a dict with the 'prefix' (empty if there is none), the 'number' and the 'bank_code'
+        :raise ValidationError: if the account number is not a valid Czech account number
+        """
+        self.ensure_one()
+        account_number = re.sub(r'\s+', '', self.account_number or '').upper()
+        if account_number.startswith('CZ'):
+            iban = validate_iban(self.env, account_number)
+            prefix, number, bank_code = (get_iban_part(iban, part) for part in ('branch', 'account', 'bank'))
+        elif match := re.fullmatch(r'(?:([0-9]{1,6})-)?([0-9]{1,10})/([0-9]{4})', account_number):
+            prefix, number, bank_code = match.groups()
+        else:
+            raise ValidationError(self.env._('Use a Czech local account number (prefix-number/bank-code) or a Czech IBAN.'))
+
+        if not _is_cz_mod11_valid(prefix or '') or not _is_cz_mod11_valid(number):
+            raise ValidationError(self.env._('The account number does not pass the Czech modulo 11 check.'))
+        return {
+            'prefix': (prefix or '').lstrip('0'),
+            'number': number.lstrip('0') or '0',
+            'bank_code': bank_code,
+        }
 
     def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'czk_qr':
