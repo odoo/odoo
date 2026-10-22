@@ -266,3 +266,15 @@ test("lines of a deleted course stay visible", async () => {
     expect(order.lines).toHaveLength(2);
     expect(".orderline:contains('TEST 2')").toHaveCount(1);
 });
+
+test("set default preset for floating order", async () => {
+    const store = await setupPosEnv();
+    store.config.available_preset_ids = [1, 2, 3];
+    store.config.default_preset_id = 1;
+    const order = store.addNewOrder();
+    store.setOrder(order);
+    await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+    await waitFor(".modal-title:contains(Select preset)");
+    await click(".btn-close");
+    expect(order.preset_id.id).toBe(1);
+});
