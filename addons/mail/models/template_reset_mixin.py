@@ -80,16 +80,20 @@ class TemplateResetMixin(models.AbstractModel):
             module, xml_id = external_id.split('.')
             fullpath = file_path(template.template_fs)
             if fullpath:
-                for field_name, field in template._fields.items():
-                    if field.translate is True:
-                        template.update_field_translations(field_name, lang_false)
                 doc = etree.parse(fullpath)
-                for rec in doc.xpath(expr, tag='record', xml_id=xml_id, external_id=external_id):
+                records = doc.xpath(expr, tag='record', xml_id=xml_id, external_id=external_id)
+                for rec in records:
                     # We don't have a way to pass context while loading record from a file, so we use this hack
                     # to pass the context key that is needed to reset the fields not available in data file
                     rec.set('context', json.dumps({'reset_template': 'True'}))
                     obj = xml_import(template.env, module, {}, mode='init', xml_filename=fullpath)
                     obj._tag_record(rec)
+                # Translations can't be reset when the field value is invalid
+                # Update them after the default lang template xml restoration
+                for field_name, field in template._fields.items():
+                    if field.translate is True:
+                        template.update_field_translations(field_name, lang_false)
+                for rec in records:
                     template._override_translation_term(module, [xml_id, external_id])
             else:
                 templates_with_missing_source.append(template.display_name)
