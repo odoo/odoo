@@ -38,3 +38,4 @@ from . import test_task_state
 from . import test_project_task_mail_tracking_duration
 from . import test_task_link_preview_name
 from . import test_import_files
+from . import test_project_tutorial
