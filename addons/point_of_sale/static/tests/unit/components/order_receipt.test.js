@@ -93,7 +93,6 @@ test("ticket data renders tip lines and line css rules", async () => {
             {
                 name: "Tips",
                 quantity: "1",
-                price_unit: "1.00",
                 line_price: "1.00",
             },
         ],

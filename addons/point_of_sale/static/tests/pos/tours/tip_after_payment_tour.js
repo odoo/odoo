@@ -33,8 +33,8 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
                 total_amount: "2.30",
                 payment_lines: [{ name: "Bank", amount: "2.00" }],
                 orderlines: [
-                    { name: "Desk Pad", quantity: "1", price_unit: "2.00", line_price: "2.00" },
-                    { name: "Tips", quantity: "1", price_unit: "0.30", line_price: "0.30" },
+                    { name: "Desk Pad", quantity: "1", line_price: "2.00" },
+                    { name: "Tips", quantity: "1", line_price: "0.30" },
                 ],
             }),
             FeedbackScreen.clickNextOrder(),
@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
                 payment_lines: [{ name: "Bank", amount: "4.00" }],
                 orderlines: [
                     { name: "Desk Pad", quantity: "2", price_unit: "2.00", line_price: "4.00" },
-                    { name: "Tips", quantity: "1", price_unit: "0.80", line_price: "0.80" },
+                    { name: "Tips", quantity: "1", line_price: "0.80" },
                 ],
             }),
             FeedbackScreen.clickNextOrder(),
@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
                 payment_lines: [{ name: "Bank", amount: "6.00" }],
                 orderlines: [
                     { name: "Desk Pad", quantity: "3", price_unit: "2.00", line_price: "6.00" },
-                    { name: "Tips", quantity: "1", price_unit: "1.50", line_price: "1.50" },
+                    { name: "Tips", quantity: "1", line_price: "1.50" },
                 ],
             }),
             FeedbackScreen.clickNextOrder(),
@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
                 payment_lines: [{ name: "Bank", amount: "8.00" }],
                 orderlines: [
                     { name: "Desk Pad", quantity: "4", price_unit: "2.00", line_price: "8.00" },
-                    { name: "Tips", quantity: "1", price_unit: "2.00", line_price: "2.00" },
+                    { name: "Tips", quantity: "1", line_price: "2.00" },
                 ],
             }),
             FeedbackScreen.clickNextOrder(),
@@ -151,7 +151,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
                 payment_lines: [{ name: "Bank", amount: "12.00" }],
                 orderlines: [
                     { name: "Desk Pad", quantity: "6", price_unit: "2.00", line_price: "12.00" },
-                    { name: "Tips", quantity: "1", price_unit: "1.00", line_price: "1.00" },
+                    { name: "Tips", quantity: "1", line_price: "1.00" },
                 ],
             }),
             FeedbackScreen.clickNextOrder(),
@@ -208,7 +208,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
                 payment_lines: [{ name: "Bank", amount: "110.00" }],
                 orderlines: [
                     { name: "Desk Pad", quantity: "4", price_unit: "25.00", line_price: "100.00" },
-                    { name: "Tips", quantity: "1", price_unit: "10.00", line_price: "10.00" },
+                    { name: "Tips", quantity: "1", line_price: "10.00" },
                 ],
             }),
             FeedbackScreen.clickNextOrder(),

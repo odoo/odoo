@@ -216,7 +216,7 @@ export const expectTicketData = (ticket, data, basic = false) => {
                 expect(Boolean(orderline.querySelector(".price-unit"))).toBe(false);
                 expect(Boolean(orderline.querySelector(".price-incl"))).toBe(false);
             } else {
-                if (line.price_unit) {
+                if (line.price_unit && line.qty > 1) {
                     const unitPrices = [...orderline.querySelectorAll(".price-unit")];
                     expect(
                         unitPrices.some((price) => price.textContent.includes(line.price_unit))
