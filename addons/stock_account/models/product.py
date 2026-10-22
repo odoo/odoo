@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, datetime, time, timedelta
+from datetime import datetime, timedelta
 from collections import defaultdict
 from typing import NamedTuple
 
@@ -104,12 +104,7 @@ class ProductProduct(models.Model):
         total_value_by_company_id = {}
         lot_valuated_products_ids = {p.id for p in self if p.lot_valuated}
 
-        at_date = self.env.context.get('to_date')
-        original_value = at_date
-        at_date = fields.Datetime.to_datetime(at_date)
-        if (isinstance(original_value, date) and not isinstance(original_value, datetime)) or \
-            (isinstance(original_value, str) and len(original_value) == 10):
-            at_date = datetime.combine(at_date.date(), time.max)
+        at_date = self.env.company._to_datetime_upper_bound(self.env.context.get('to_date'))
 
         for company in self.env.companies:
             std_price_by_product_id = defaultdict(float)
