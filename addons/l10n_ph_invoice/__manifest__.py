@@ -15,6 +15,7 @@
         'wizard/l10n_ph_discount_privilege_wizard_views.xml',
         'views/l10n_ph_discount_privilege_views.xml',
         'views/account_move_views.xml',
+        'views/report_invoice.xml',
         'data/menuitem_data.xml',
     ],
     'license': 'LGPL-3',
