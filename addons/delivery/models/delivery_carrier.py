@@ -426,8 +426,9 @@ class DeliveryCarrier(models.Model):
         """
         # TODO maybe the currency code?
         self.ensure_one()
-        if hasattr(self, "%s_rate_shipment" % self.delivery_type):
-            res = getattr(self, "%s_rate_shipment" % self.delivery_type)(order)
+        shipment_method_name = self._get_rate_shipment_method_name()
+        if shipment_method_name.endswith('_rate_shipment') and hasattr(self, shipment_method_name):
+            res = getattr(self, shipment_method_name)(order)
             # apply fiscal position
             company = self.company_id or order.company_id or self.env.company
             res["price"] = self.product_id._get_tax_included_unit_price(
@@ -463,6 +464,10 @@ class DeliveryCarrier(models.Model):
             "error_message": self.env._("Error: this delivery method is not available."),
             "warning_message": False,
         }
+
+    def _get_rate_shipment_method_name(self):
+        """Return the name of the method computing the shipment rate."""
+        return "%s_rate_shipment" % self.delivery_type
 
     def log_xml(self, xml_string, func):
         self.ensure_one()
