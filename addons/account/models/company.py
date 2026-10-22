@@ -1279,15 +1279,15 @@ class ResCompany(models.Model):
 
     def action_close_stock_valuation(self, at_date=None, auto_post=False, raise_error_if_closed=True, include_accruals=False):
         self.ensure_one()
-        at_date = fields.Date.to_date(at_date) or fields.Date.context_today(self)
-        last_closing_date = self._get_last_closing_date()
-        if last_closing_date and at_date < fields.Date.to_date(last_closing_date):
+        at_date = fields.Date.to_date(at_date) or self._get_company_today()
+        last_closing_date = self._get_last_closing_move().date
+        if last_closing_date and at_date < last_closing_date:
             raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
 
         accrual_moves = self.env['account.move']
         accrual_data = {}
         if include_accruals:
-            accrual_data = self._get_accrual_data(date=at_date)
+            accrual_data = self.with_context(tz=self._get_company_tz())._get_accrual_data(date=at_date)
             for vals in accrual_data.values():
                 accrual_moves |= vals['move']
 
@@ -1318,7 +1318,7 @@ class ResCompany(models.Model):
             }
             closing_move = self.env['account.move'].create(moves_vals)
             if auto_post:
-                closing_move._post()
+                closing_move.with_context(tz=self._get_company_tz())._post()
 
         list_view = self.env.ref('account.account_move_view_list_stock_closing', raise_if_not_found=False)
         return (closing_move | accrual_moves)._get_records_action(
@@ -1454,14 +1454,14 @@ class ResCompany(models.Model):
 
     @api.model
     def _cron_post_stock_valuation(self):
-        periods = ['daily']
-        if fields.Date.today() == fields.Date.today() + relativedelta(day=31):
-            periods.append('monthly')
         companies = self.env['res.company'].search([
-            ('inventory_period', 'in', periods),
+            ('inventory_period', 'in', ['daily', 'monthly']),
             ('inventory_valuation', '!=', 'real_time'),
         ])
         for company in companies:
+            today = company._get_company_today()
+            if company.inventory_period == 'monthly' and today != today + relativedelta(day=31):
+                continue
             company.action_close_stock_valuation(auto_post=True, raise_error_if_closed=False)
 
     def _get_inventory_valuation_products_domain(self):
@@ -1534,7 +1534,7 @@ class ResCompany(models.Model):
         """
         extra_balance = self._get_extra_balance(extra_aml_vals_list)
 
-        fiscal_year_date_from = self.compute_fiscalyear_dates(fields.Date.context_today(self))['date_from']
+        fiscal_year_date_from = self.compute_fiscalyear_dates(self._get_company_today())['date_from']
 
         amls_vals_list = []
         accounting_data_today = self.get_inventory_accounting_value()
