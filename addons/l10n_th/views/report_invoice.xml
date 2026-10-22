@@ -45,7 +45,8 @@
                     <tr>
                         <td class="w-100" name="account_invoice_line_name">
                             <span t-if="line.get('name')"
-                                t-out="line.get('name')"/>
+                                t-out="line.get('name')"
+                                t-options="{'widget': 'text'}"/>
                         </td>
 
                         <td name="td_quantity" class="o_td_quantity text-end">
