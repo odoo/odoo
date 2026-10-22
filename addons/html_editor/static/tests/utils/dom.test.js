@@ -343,7 +343,7 @@ describe("wrapInlinesInBlocks", () => {
         );
     });
     test("wrap block with display style inline in div", async () => {
-        // Second part should be wrapped automatically during initElementForEdition
+        // Second part should be wrapped automatically when the editor starts
         const { el, editor } = await setupEditor(
             `<div><br></div><div contenteditable="false" style="display: inline;">inline</div>`
         );
@@ -379,7 +379,7 @@ describe("wrapInlinesInBlocks", () => {
         );
     });
     test("wrap a mix of inline elements in div", async () => {
-        // Second part should be wrapped automatically during initElementForEdition
+        // Second part should be wrapped automatically when the editor starts
         const { el, editor } = await setupEditor(
             `<div><br></div>text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
         );
@@ -413,7 +413,7 @@ describe("wrapInlinesInBlocks", () => {
         );
     });
     test("wrap a mix of inline elements in div with br", async () => {
-        // Second part should be wrapped automatically during initElementForEdition
+        // Second part should be wrapped automatically when the editor starts
         const { el, editor } = await setupEditor(
             `<div>[]<br></div>text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
         );

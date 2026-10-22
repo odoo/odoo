@@ -164,6 +164,7 @@ export class ImagePlugin extends Plugin {
 
         /** Providers */
         paste_media_url_command_providers: this.getCommandForImageUrlPaste.bind(this),
+        on_editor_started_handlers: withSequence(0, this.moveSizeAttributesToStyle.bind(this)),
     };
 
     setup() {
@@ -177,6 +178,21 @@ export class ImagePlugin extends Plugin {
         });
         this.imageAlignment = proxy({ displayIcon: "format_image_inline_left" });
         this.fileViewer = this.services.fileViewer();
+    }
+
+    moveSizeAttributesToStyle() {
+        // During `convert_inline`, image elements may receive `width` and `height` attributes,
+        // along with inline styles. These attributes force specific dimensions, which breaks
+        // the fallback to default sizing. We remove them here to allow proper resizing behavior.
+        // The attributes will be re-applied on save.
+        for (const img of this.editable.querySelectorAll("img[width], img[height]")) {
+            const width = img.getAttribute("width");
+            const height = img.getAttribute("height");
+            img.removeAttribute("height");
+            img.removeAttribute("width");
+            img.style.setProperty("width", isNaN(width) ? width : `${width}px`);
+            img.style.setProperty("height", isNaN(height) ? height : `${height}px`);
+        }
     }
 
     destroy() {

@@ -1063,7 +1063,7 @@ describe("In-editor manipulations", () => {
         );
     });
 
-    test("Don't remove empty inline-block data-embedded elements during initElementForEdition, but wrap them in div instead", async () => {
+    test("Don't remove empty inline-block data-embedded elements when the editor starts, but wrap them in div instead", async () => {
         const { el } = await setupEditor(
             `<div data-embedded="counter" style="display:inline-block;"></div>`,
             { config: getConfig([embedding("counter", Counter)]) }
