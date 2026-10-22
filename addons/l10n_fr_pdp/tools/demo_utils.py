@@ -45,8 +45,10 @@ def _mock_peppol_register_receiver(func, self):
     self.sudo().company_id.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(fields.Datetime.now())
 
 
-def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification):
-    peppol_eas = edi_identification.partition(":")[0]
+def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification, **kwargs):
+    if kwargs.get('route') == 'pdp_annuaire_lookup':
+        return {'annuaire_lines': []}
+    peppol_eas = (edi_identification or '').partition(":")[0]
     return {'in_annuaire': peppol_eas == '0225'}
 
 

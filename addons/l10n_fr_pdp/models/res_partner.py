@@ -152,15 +152,18 @@ class ResPartner(models.Model):
 
     @api.model
     @handle_demo
-    def _pdp_annuaire_lookup_participant(self, edi_identification):
-        eas, _colon, pdp_identifier = edi_identification.partition(":")
-        if eas != '0225':
-            return None
+    def _pdp_annuaire_lookup_participant(self, edi_identification, *, route='annuaire_lookup', params=None):
+        # Every annuaire route uses this GET. The host is the configured IAP proxy.
+        if route == 'annuaire_lookup':
+            eas, _colon, pdp_identifier = edi_identification.partition(":")
+            if eas != '0225':
+                return None
+            params = {'pdp_identifier': pdp_identifier}  # Note: the annuaire lookup is case-sensitive
 
         edi_mode = self.env.company._get_peppol_edi_mode()
         origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
-        query = parse.urlencode({'pdp_identifier': pdp_identifier})  # Note: the annuaire lookup is case-sensitive
-        endpoint = f'{origin}/api/pdp/1/annuaire_lookup?{query}'
+        query = parse.urlencode(params or {})
+        endpoint = f'{origin}/api/pdp/1/{route}?{query}'
 
         try:
             response = requests.get(endpoint, timeout=10)
@@ -182,7 +185,9 @@ class ResPartner(models.Model):
             _logger.error('unsuccessful response %s when querying annuaire for identifier %s', response.status_code, edi_identification)
             return None
 
-        return decoded_response.get('result')
+        if route == 'annuaire_lookup':
+            return decoded_response.get('result')
+        return decoded_response
 
     def _get_pdp_receiver_identification_info(self):
         return self._get_peppol_proxy_identification_info(self.peppol_eas, self.peppol_endpoint)
@@ -240,31 +245,16 @@ class ResPartner(models.Model):
         """Return the active annuaire lines registered for ``siren``.
 
         17.0 only calls the single-identifier route ``annuaire_lookup``.
-        The line list is the same IAP route 18.0 uses (``pdp_annuaire_lookup``).
-        An empty dict means the annuaire could not be queried.
+        The line list is the same IAP route 18.0 uses (``pdp_annuaire_lookup``),
+        through the same proxy GET. An empty dict means the annuaire could not
+        be queried.
         """
-        edi_mode = self.env.company._get_peppol_edi_mode()
-        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
-        query = parse.urlencode({'pdp_endpoint': siren, 'active_only': True})
-        endpoint = f'{origin}/api/pdp/1/pdp_annuaire_lookup?{query}'
-        try:
-            response = requests.get(endpoint, timeout=10)
-            decoded_response = response.json()
-        except (requests.exceptions.RequestException, ValueError) as error:
-            _logger.debug("failed to query active annuaire lines for identifier %s: %s", siren, error)
-            return {}
-
-        if decoded_error := decoded_response.get('error'):
-            _logger.error(
-                'error when querying annuaire lines for identifier %s: %s',
-                siren, decoded_error.get('message', 'unknown error'),
-            )
-            return {}
-        if not response.ok:
-            _logger.error(
-                'unsuccessful response %s when querying annuaire lines for identifier %s',
-                response.status_code, siren,
-            )
+        decoded_response = self._pdp_annuaire_lookup_participant(
+            siren,
+            route='pdp_annuaire_lookup',
+            params={'pdp_endpoint': siren, 'active_only': True},
+        )
+        if not decoded_response:
             return {}
 
         lines = [
