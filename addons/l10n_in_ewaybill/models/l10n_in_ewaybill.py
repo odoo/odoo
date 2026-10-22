@@ -110,6 +110,17 @@ class L10nInEwaybill(models.Model):
         readonly=False
     )
 
+    transaction_type = fields.Selection(
+        selection=[
+            ("1", "Regular"),
+            ("2", "Bill To - Ship To"),
+            ("3", "Bill From - Dispatch From"),
+            ("4", "Combination of 2 and 3"),
+        ],
+        string="Transaction Type",
+        compute='_compute_transaction_type',
+    )
+
     # Document number and date required in case of transportation mode is Rail, Air or Ship.
     transportation_doc_no = fields.Char(
         string="Transporter Doc No",
@@ -263,6 +274,23 @@ class L10nInEwaybill(models.Model):
     def _compute_display_name(self):
         for ewaybill in self:
             ewaybill.display_name = ewaybill.state == 'pending' and _('Pending') or ewaybill.name
+
+    @api.depends(
+        'partner_bill_from_id',
+        'partner_ship_from_id',
+        'partner_bill_to_id',
+        'partner_ship_to_id',
+    )
+    def _compute_transaction_type(self):
+        for ewaybill in self:
+            if ewaybill.partner_bill_from_id != ewaybill.partner_ship_from_id and ewaybill.partner_bill_to_id != ewaybill.partner_ship_to_id:
+                ewaybill.transaction_type = "4"
+            elif ewaybill.partner_bill_from_id != ewaybill.partner_ship_from_id:
+                ewaybill.transaction_type = "3"
+            elif ewaybill.partner_bill_to_id != ewaybill.partner_ship_to_id:
+                ewaybill.transaction_type = "2"
+            else:
+                ewaybill.transaction_type = "1"
 
     @api.depends('mode')
     def _compute_vehicle_type(self):
@@ -616,23 +644,6 @@ class L10nInEwaybill(models.Model):
         return line_details
 
     def _prepare_ewaybill_base_json_payload(self):
-
-        def get_transaction_type(seller_details, dispatch_details, buyer_details, ship_to_details):
-            """
-                1 - Regular
-                2 - Bill To - Ship To
-                3 - Bill From - Dispatch From
-                4 - Combination of 2 and 3
-            """
-            if seller_details != dispatch_details and buyer_details != ship_to_details:
-                return 4
-            elif seller_details != dispatch_details:
-                return 3
-            elif buyer_details != ship_to_details:
-                return 2
-            else:
-                return 1
-
         def prepare_details(key_paired_function, partner_detail):
             return {
                 f"{place}{key}": fun(partner, place) if key == "StateCode" else fun(partner)
@@ -644,12 +655,7 @@ class L10nInEwaybill(models.Model):
                 "supplyType": self.supply_type,
                 "subSupplyType": self.type_id.sub_type_code,
                 "docType": self.type_id.code,
-                "transactionType": get_transaction_type(
-                    self.partner_bill_from_id,
-                    self.partner_ship_from_id,
-                    self.partner_bill_to_id,
-                    self.partner_ship_to_id
-                ),
+                "transactionType": int(self.transaction_type),
                 "transDistance": str(self.distance),
                 "docNo": self.document_number,
                 "docDate": fields.Date.context_today(self.with_context(tz='Asia/Kolkata'), self.document_date).strftime("%d/%m/%Y"),
