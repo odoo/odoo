@@ -1,11 +1,13 @@
-// Text effects, one page: preset tiles, one row per shadow, outline.
+// Text effects: preset tiles and Custom, which shows one row per shadow and
+// the outline.
 .o_hb_text_effect_options {
     --o-hb-input-border: #{$border-color};
     width: 100%;
 
     .o_hb_text_effect_presets {
         display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        // The six presets and the Custom tile on one row.
+        grid-template-columns: repeat(7, minmax(0, 1fr));
         gap: map-get($spacers, 1) * 1.5;
     }
 
