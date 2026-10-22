@@ -2199,6 +2199,9 @@ export class PosStore extends WithLazyGetterTrap {
                     buttonDialogTemplate: "point_of_sale.ProductQuickCreateDialogButtons",
                     onSave: async (record, params) => {
                         await this.loadNewProducts([["id", "=", record.evalContext.id]]);
+                        if (this.selectedCategory?.id && !this.productsToDisplay.length) {
+                            this.setSelectedCategory(0);
+                        }
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
