@@ -109,28 +109,71 @@ export class AddFontDialog extends Component {
     onClickCancel() {
         this.props.close();
     }
+    async getGoogleFontFamilyMetadataList() {
+        if (!this.familyMetadataList) {
+            const data = await rpc("/website/google_font_metadata");
+            this.familyMetadataList = data.familyMetadataList;
+        }
+        return this.familyMetadataList;
+    }
     get getGoogleFontList() {
         return [
             {
                 options: async (term) => {
-                    if (!this.googleFontList) {
-                        await rpc("/website/google_font_metadata").then((data) => {
-                            this.googleFontList = data.familyMetadataList.map(
-                                (font) => font.family
-                            );
-                        });
-                    }
+                    const familyMetadataList = await this.getGoogleFontFamilyMetadataList();
                     const lowerCaseTerm = term.toLowerCase();
-                    const filtered = this.googleFontList.filter((value) =>
-                        value.toLowerCase().includes(lowerCaseTerm)
+                    const filtered = familyMetadataList.filter(({ family }) =>
+                        family.toLowerCase().includes(lowerCaseTerm)
                     );
-                    return filtered.map((fontFamilyName) => ({
-                        label: fontFamilyName,
-                        onSelect: () => this.onGoogleFontSelect(fontFamilyName),
+                    return filtered.map(({ family }) => ({
+                        label: family,
+                        onSelect: () => this.onGoogleFontSelect(family),
                     }));
                 },
             },
         ];
+    }
+    async getGoogleFontUrl(familyName) {
+        const familyMetadataList = await this.getGoogleFontFamilyMetadataList();
+        const font = familyMetadataList.find((value) => value.family === familyName);
+
+        if (!font) {
+            return undefined;
+        }
+        const variants = Object.keys(font.fonts).map((key) => ({
+            ital: key.endsWith("i") ? 1 : 0,
+            wght: parseInt(key, 10),
+        }));
+
+        const ranges = new Map(
+            font.axes.map(({ tag, min, max }) => [
+                tag,
+                min === max ? String(min) : `${min}..${max}`,
+            ])
+        );
+
+        const tags = new Set([...ranges.keys(), "wght"]);
+        if (variants.some(({ ital }) => ital === 1)) {
+            tags.add("ital");
+        }
+
+        // Google Fonts requires axis tags in en-US alphabetical order.
+        const axes = [...tags].sort((a, b) => a.localeCompare(b, "en-US"));
+
+        const tuples = variants.map((variant) =>
+            axes.map((tag) => ranges.get(tag) ?? String(variant[tag]))
+        );
+
+        // Variable ranges can make multiple static variants produce the same tuple.
+        const values = [...new Set(tuples.map((tuple) => tuple.join(",")))]
+            .sort((a, b) => a.localeCompare(b, "en-US", { numeric: true }))
+            .join(";");
+
+        const family = encodeURIComponent(font.family).replace(/%20/g, "+");
+
+        return `https://fonts.googleapis.com/css2?family=${family}:${axes.join(
+            ","
+        )}@${values}&display=swap`;
     }
     async onGoogleFontSelect(fontFamily) {
         this.fileInput().value = "";
@@ -138,12 +181,8 @@ export class AddFontDialog extends Component {
         this.state.uploadedFontName = undefined;
         this.state.uploadedFontFaces = undefined;
         try {
-            const result = await fetch(
-                `https://fonts.googleapis.com/css?family=${encodeURIComponent(
-                    fontFamily
-                )}:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i`,
-                { method: "HEAD" }
-            );
+            const url = await this.getGoogleFontUrl(fontFamily);
+            const result = await fetch(url, { method: "HEAD" });
             // Google fonts server returns a 400 status code if family is not valid.
             if (result.ok) {
                 const linkId = `previewFont${fontFamily}`;
@@ -293,12 +332,8 @@ export class AddFontDialog extends Component {
             font = state.googleFontFamily;
 
             try {
-                const result = await fetch(
-                    "https://fonts.googleapis.com/css?family=" +
-                        encodeURIComponent(font) +
-                        ":100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i",
-                    { method: "HEAD" }
-                );
+                const url = await this.getGoogleFontUrl(font);
+                const result = await fetch(url, { method: "HEAD" });
                 // Google fonts server returns a 400 status code if family is not valid.
                 if (result.ok) {
                     isValidFamily = true;

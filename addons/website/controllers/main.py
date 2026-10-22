@@ -1912,31 +1912,7 @@ class Website(Home):
     @http.route('/website/google_font_metadata', type='jsonrpc', auth='user', website=True)
     def google_font_metadata(self):
         """ Avoid CORS by caching google fonts metadata on server """
-        Attachment = request.env['ir.attachment']
-        metadata = Attachment.search([
-            ('name', '=', 'googleFontMetadata'),
-            ('public', '=', True),
-        ], limit=1)
-        yesterday = fields.Datetime.add(fields.Datetime.now(), days=-1)
-        if not metadata or metadata.write_date < yesterday:
-            req = requests.get('https://fonts.google.com/metadata/fonts', timeout=5)
-            if req.status_code != requests.codes.ok:
-                return {
-                    'familyMetadataList': [],
-                }
-            json_content = req.content
-            if metadata:
-                metadata.raw = json_content
-            else:
-                metadata = Attachment.create({
-                    'public': True,
-                    'name': 'googleFontMetadata',
-                    'type': 'binary',
-                    'mimetype': 'application/json',
-                    'raw': json_content,
-                })
-                metadata['url'] = f"/web/font/{metadata.id}/{metadata['name']}"
-        return json.loads(metadata.raw.content)
+        return request.env['website.assets']._get_google_font_metadata()
 
     def _get_customize_data(self, keys, is_view_data):
         model = 'ir.ui.view' if is_view_data else 'ir.asset'

@@ -273,6 +273,102 @@ $o-theme-font-configs: map-merge($o-base-theme-font-configs, $o-theme-font-confi
     ));
 }
 
+// Returns the Google Fonts CSS API v2 'family' parameter(s) of a font config
+// 'url'. Configs written with the v1 syntax (e.g. 'Arvo:400,400i,700' or
+// 'Lato:bold,700italic|Roboto') are converted to the v2 one (e.g.
+// 'Arvo:ital,wght@0,400;0,700;1,400'). Styles not provided by the font are
+// ignored by Google. v2 specs and bare family names are kept as is. The ';'
+// separators are percent-encoded as the assets bundle cuts @import rules at the
+// first ';'.
+@function o-google-font-family-param($url) {
+    $url: unquote($url);
+    @if not str-index($url, '@') {
+        $families: ();
+        @each $family in o-str-split($url, '|') {
+            $families: append($families, o-google-font-v1-to-v2-family($family));
+        }
+        $url: o-str-join($families, '&family=');
+    }
+    @return o-str-join(o-str-split($url, ';'), '%3B');
+}
+
+// Converts a single v1 family spec (e.g. 'Lato:300,400i,bold') to the v2 one.
+@function o-google-font-v1-to-v2-family($family) {
+    $colon: str-index($family, ':');
+    @if not $colon {
+        @return $family;
+    }
+    $normal-weights: ();
+    $italic-weights: ();
+    @each $style in o-str-split(str-slice($family, $colon + 1), ',') {
+        // Skip empty styles (e.g. 'Inter:300,,400')
+        @if $style != '' {
+            $italic: false;
+            @if index(('i', 'italic'), $style) {
+                $italic: true;
+                $style: '400';
+            } @else if index(('bi', 'bolditalic'), $style) {
+                $italic: true;
+                $style: '700';
+            } @else if str-slice($style, -6) == 'italic' {
+                $italic: true;
+                $style: str-slice($style, 1, -7);
+            } @else if str-slice($style, -1) == 'i' {
+                $italic: true;
+                $style: str-slice($style, 1, -2);
+            }
+            @if index(('r', 'regular'), $style) {
+                $style: '400';
+            } @else if index(('b', 'bold'), $style) {
+                $style: '700';
+            }
+            // Google Fonts v2 rejects duplicated styles
+            @if $italic and not index($italic-weights, $style) {
+                $italic-weights: append($italic-weights, $style);
+            } @else if not $italic and not index($normal-weights, $style) {
+                $normal-weights: append($normal-weights, $style);
+            }
+        }
+    }
+    $axes: 'wght';
+    $values: $normal-weights;
+    @if length($italic-weights) > 0 {
+        $axes: 'ital,wght';
+        $values: ();
+        @each $weight in $normal-weights {
+            $values: append($values, '0,#{$weight}');
+        }
+        @each $weight in $italic-weights {
+            $values: append($values, '1,#{$weight}');
+        }
+    }
+    $name: str-slice($family, 1, $colon - 1);
+    @if length($values) == 0 {
+        @return $name;
+    }
+    @return '#{$name}:#{$axes}@#{o-str-join($values, ';')}';
+}
+
+@function o-str-split($string, $separator) {
+    $parts: ();
+    $string: '#{$string}#{$separator}';
+    $index: str-index($string, $separator);
+    @while $index {
+        $parts: append($parts, str-slice($string, 1, $index - 1));
+        $string: str-slice($string, $index + str-length($separator));
+        $index: str-index($string, $separator);
+    }
+    @return $parts;
+}
+
+@function o-str-join($list, $separator) {
+    $result: '';
+    @each $item in $list {
+        $result: if($result == '', '#{$item}', '#{$result}#{$separator}#{$item}');
+    }
+    @return $result;
+}
+
 // Function which allows to retrieve a base info (family, url, properties) about
 // a component (base, navbar, ...)'s font. The font name is retrievable via a
 // simple o-website-value call.
