@@ -123,6 +123,16 @@ class AnalyticMixin(models.AbstractModel):
                 table.analytic_distribution,
             ))
 
+    @api.constrains('analytic_distribution')
+    def _check_analytic_distribution(self):
+        for record in self:
+            if any(
+                not part.isdigit()
+                for key in (record.analytic_distribution or {})
+                for part in key.split(',')
+            ):
+                raise ValidationError(_("Wrong analytic distribution format"))
+
     def _read_group_groupby(self, table, groupby_spec) -> SQL:
         """To group by `analytic_distribution`, we first need to separate the analytic_ids and associate them with the ids to be counted
         Do note that only '__count' can be passed in the `aggregates`"""
