@@ -562,6 +562,38 @@ describe("pos_store.js", () => {
         expect(products[0].id).toBe(6);
     });
 
+    test("falls back to all products when the selected category becomes empty", async () => {
+        const store = await setupPosEnv();
+        const product = store.models["product.template"].get(12);
+        const category = product.pos_categ_ids[0];
+        let onSave;
+
+        patchWithCleanup(store.action, {
+            doAction(action, options) {
+                if (action === "point_of_sale.product_template_action_edit_pos") {
+                    onSave = options.props.onSave;
+                }
+            },
+        });
+        patchWithCleanup(store.data, {
+            loadProductFromPos: async () => {
+                store.models.connectNewData({
+                    "product.template": [{ ...product.raw, pos_categ_ids: [] }],
+                });
+                return { "product.template.attribute.value": [] };
+            },
+        });
+
+        store.setSelectedCategory(category.id);
+        expect(store.selectedCategory.id).toBe(category.id);
+
+        await store.editProduct(product);
+        await onSave({ evalContext: { id: product.id } });
+
+        expect(store.selectedCategory).toBe(undefined);
+        expect(store.productsToDisplay.length).toBeGreaterThan(0);
+    });
+
     test("productToDisplayByCateg", async () => {
         const store = await setupPosEnv();
 
