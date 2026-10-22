@@ -8,4 +8,9 @@ patch(PosSession.prototype, {
     _load_pos_data_fields() {
         return [...super._load_pos_data_fields(), "employee_id"];
     },
+    get_closing_control_data() {
+        const data = super.get_closing_control_data();
+        data.default_cash_details.amount_per_employee = [];
+        return data;
+    },
 });
