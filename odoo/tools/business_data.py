@@ -78,7 +78,9 @@ def get_flag(country_code: str) -> str:
 
     This emoji is composed of the two regional indicator emoji of the country code.
     """
-    if not re.fullmatch(r'[A-Z]{2}', country_code):
+    from odoo.addons.base.models.res_country import NO_FLAG_COUNTRIES  # noqa: PLC0415
+
+    if not re.fullmatch(r'[A-Z]{2}', country_code) or country_code in NO_FLAG_COUNTRIES:
         return ""
     return "".join(chr(_REGIONAL_INDICATOR_OFFSET + ord(c)) for c in country_code)
 
