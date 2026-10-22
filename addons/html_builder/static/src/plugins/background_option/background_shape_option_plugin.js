@@ -131,10 +131,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         // Add the "selectedColor" key on bg shape introduced before the
         // computed background shape color feature.
         for (const bgShapeEl of selectElements(this.editable, "[data-oe-shape-data]")) {
-            const shapeData = JSON.parse(bgShapeEl.dataset.oeShapeData.replace(/'/g, '"'));
-            if (!Object.hasOwn(shapeData, "selectedColor")) {
-                this.markShape(bgShapeEl, { selectedColor: true });
-            }
+            this.markSelectedColorIfMissing(bgShapeEl, true);
         }
     }
     /**
@@ -181,6 +178,10 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             !this.isShapeEligibleForComputation(shape, editingEl) ||
             !editingEl.querySelector(":scope > .o_we_shape")
         ) {
+            return;
+        }
+        if (!this.getAdjacentEl(editingEl)) {
+            this.markSelectedColorIfMissing(editingEl, false);
             return;
         }
         const newColors = this.getImplicitColors(editingEl, shape, colors);
@@ -517,6 +518,18 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             delete editingElement.dataset.oeShapeData;
         } else {
             editingElement.dataset.oeShapeData = JSON.stringify(shapeData);
+        }
+    }
+    /**
+     * Stores the color selection state of a shape if it does not have one yet.
+     *
+     * @param {HTMLElement} editingElement
+     * @param {Boolean} selectedColor
+     */
+    markSelectedColorIfMissing(editingElement, selectedColor) {
+        const shapeData = JSON.parse(editingElement.dataset.oeShapeData.replace(/'/g, '"'));
+        if (!Object.hasOwn(shapeData, "selectedColor")) {
+            this.markShape(editingElement, { selectedColor });
         }
     }
     /**
