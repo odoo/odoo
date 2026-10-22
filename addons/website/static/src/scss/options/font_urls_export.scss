@@ -1,23 +1,47 @@
 // This file is compiled separately (not as part of the main bundle) to extract
 // the values the server needs to know to build the <head>: the Google/local
-// font URLs to load and the icon font the page renders with.
+// font URLs to load, the font files to preload and the icon font the page
+// renders with.
+
+@function o-get-font-stylesheet-href($alias) {
+    $-url: o-get-font-info($alias, 'url');
+    @if $-url {
+        @return "https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap&subset=latin,latin-ext,vietnamese";
+    }
+    $-attachment: o-get-font-info($alias, 'attachment');
+    @if $-attachment {
+        $-name: o-get-font-info($alias, 'name');
+        @return "/web/content/#{$-attachment}/google-font-#{unquote($-name)}";
+    }
+    @return null;
+}
 
 .o-website-font-urls {
     $-i: 1;
     $-seen-urls: ();
     @each $alias, $key in $o-font-aliases-to-keys {
-        $-url: o-get-font-info($alias, 'url');
+        $-url: o-get-font-stylesheet-href($alias);
         @if $-url and index($-seen-urls, $-url) == null {
             $-seen-urls: append($-seen-urls, $-url);
-            --o-font-url-#{$-i}: "https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap&subset=latin,latin-ext,vietnamese";
+            --o-font-url-#{$-i}: "#{$-url}";
             $-i: $-i + 1;
-        } @else {
-            $-name: o-get-font-info($alias, 'name');
-            $-attachment: o-get-font-info($alias, 'attachment');
-            @if $-attachment {
-                --o-font-url-#{$-i}: "/web/content/#{$-attachment}/google-font-#{unquote($-name)}";
-                $-i: $-i + 1;
-            }
+        }
+    }
+}
+
+// Only the fonts (and weights) used by the body and the headings are exported
+// to be preloaded: Each entry is "<stylesheet url>" <font weight>.
+.o-website-font-preload {
+    $-i: 1;
+    $-preloaded-weights: (
+        'base': o-website-value('font-weight-normal') or $o-font-weight-normal,
+        'headings': o-website-value('headings-font-weight') or $o-font-weight-medium,
+    );
+    @each $alias, $weight in $-preloaded-weights {
+        $-url: o-get-font-stylesheet-href($alias);
+        @if $-url {
+            --o-font-preload-#{$-i}: "#{$-url}" #{$weight};
+            $-i: $-i + 1;
         }
     }
 }
