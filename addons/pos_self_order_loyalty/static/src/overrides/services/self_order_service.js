@@ -148,12 +148,12 @@ patch(SelfOrder.prototype, {
         }
     },
     async addToCart(
-        productTemplate,
-        qty,
-        customer_note,
-        selectedValues = {},
-        customValues = {},
-        comboValues = {}
+        _productTemplate,
+        _qty,
+        _customer_note,
+        _selectedValues = {},
+        _customValues = {},
+        _comboValues = {}
     ) {
         await super.addToCart(...arguments);
         this.currentOrder.recomputeRewards();
@@ -306,7 +306,9 @@ patch(SelfOrder.prototype, {
     async askRewards(rewards) {
         let remaining = rewards.map((reward) => reward.reward);
         const askedRewards = this.currentOrder.uiState.askedRewards;
-        askedRewards.push(...remaining.map((reward) => reward.id).filter((id) => !askedRewards.includes(id)));
+        askedRewards.push(
+            ...remaining.map((reward) => reward.id).filter((id) => !askedRewards.includes(id))
+        );
         while (remaining.length) {
             const reward = await makeAwaitable(this.dialog, SelectRewardPopup, {
                 rewards: remaining,
@@ -394,7 +396,6 @@ patch(SelfOrder.prototype, {
                 access_token: this.access_token,
                 code: code,
                 partner_id: this.currentOrder.getPartner()?.id || null,
-                order_uuid: this.currentOrder.uuid,
             });
             if (!data["status"]) {
                 const result = data["reason"];
@@ -435,7 +436,7 @@ patch(SelfOrder.prototype, {
             return false;
         }
     },
-    isValidSelection(slot, partner) {
+    isValidSelection(_slot, partner) {
         return super.isValidSelection(...arguments) && !this.needsDeliveryAddress(partner);
     },
     /**

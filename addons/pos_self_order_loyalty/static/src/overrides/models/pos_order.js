@@ -6,13 +6,12 @@ patch(PosOrder.prototype, {
         super.initState();
         this.uiState = {
             ...this.uiState,
-            // reward ids; an array, as the uiState is saved as JSON (IndexedDB)
             askedRewards: this.uiState.askedRewards || [],
         };
     },
     serializeForORM(opts = {}) {
         const data = super.serializeForORM(opts);
-        // Its id is signed (a string), which the serialization drops, as for partner_id
+        // Its id is signed (a string), which the serialization drops, as for partner_id in pos_self_order
         data.delivery_partner_id = this.raw.delivery_partner_id || false;
         return data;
     },

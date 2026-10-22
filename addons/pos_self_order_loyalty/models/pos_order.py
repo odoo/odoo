@@ -358,6 +358,42 @@ class PosOrder(models.Model):
     def recompute_prices(self):
         super().recompute_prices()
         self._check_self_order_discount_rewards()
+        self._check_self_order_loyalty_points()
+
+    def _check_self_order_loyalty_points(self):
+        """Refuse rewards the customer's cards can't afford, before anything is paid.
+
+        The points are only charged once the order is paid (_process_loyalty), when a paid
+        order can't be refused anymore. This is the same check, without creating or crediting
+        any card. A self-order can't sell gift cards or eWallet top-ups (its other lines carry
+        no card, see _check_pos_order_lines), so all its lines earn points.
+        """
+        self.ensure_one()
+        if self.state != 'draft':
+            return  # already paid: its points were charged, sync_from_ui didn't change it
+        reward_lines = self.lines.filtered('is_reward_line')
+        programs = self.config_id._get_program_ids(check_usage=False)
+        for program, program_lines in reward_lines.grouped(lambda l: l.reward_id.program_id).items():
+            if program not in programs:
+                continue  # ignored by _process_loyalty
+            # The cards _get_loyalty_cards_to_credit would charge; a card it would create has no points
+            cards = program_lines.card_id
+            if not cards and program.is_nominative and self.partner_id:
+                cards = self.env['loyalty.card'].search([
+                    ('program_id', '=', program.id),
+                    ('partner_id', '=', self.partner_id.id),
+                ], limit=1)
+            points_issued = program._get_pos_order_points(self, self.lines)
+            for index, card in enumerate(cards or [self.env['loyalty.card']]):
+                # The lines without a card are charged on the first one
+                card_lines = program_lines.filtered(lambda l: l.card_id == card or (index == 0 and not l.card_id))
+                try:
+                    self._get_loyalty_points_costs(program, card_lines, card.points + (points_issued if index == 0 else 0))
+                except UserError:
+                    raise UserError(_(
+                        "You don't have enough points for the rewards of %s. Please remove them from your order.",
+                        program.name,
+                    ))
 
     def _get_self_order_discountable_amounts(self):
         """Tax-included amount of every line a discount reward may apply to.

@@ -7,18 +7,12 @@ patch(DataServiceOptions.prototype, {
             ...super.databaseTable,
             "res.partner": {
                 key: "id",
-                condition: (record) => false,
+                condition: (_record) => false,
             },
             "loyalty.card": {
                 key: "uuid",
                 condition: (record) => record.backLink("<-pos.order.line.card_id").length !== 0,
             },
         };
-    },
-    //TODO check if needed, I'm not sure it is
-    get uniqueModels() {
-        const uniqueModels = super.uniqueModels;
-        uniqueModels.push("res.partner");
-        return uniqueModels;
     },
 });

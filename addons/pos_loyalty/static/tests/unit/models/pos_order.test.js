@@ -434,6 +434,8 @@ describe("pos.order - loyalty", () => {
         await tick();
 
         const rewardLine = order.getOrderlines().find((line) => line.is_reward_line);
-        expect(rewardLine.attribute_value_ids.map((value) => value.id)).toEqual([attributeValue.id]);
+        expect(rewardLine.attribute_value_ids.map((value) => value.id)).toEqual([
+            attributeValue.id,
+        ]);
     });
 });

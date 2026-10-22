@@ -10,11 +10,11 @@ from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCom
 from odoo import fields
 from odoo.fields import Command
 from odoo.tools import mute_logger
-
+from odoo.addons.mail.tests.common import MailCase
 
 
 @odoo.tests.tagged("post_install", "-at_install")
-class TestSelfOrderLoyalty(SelfOrderCommonTest):
+class TestSelfOrderLoyalty(MailCase, SelfOrderCommonTest):
     """
     A malicious self-order client can send any reward_id/product_id/card_id combination
     it likes in the order payload: these tests simulate that by posting a hand-crafted
@@ -182,9 +182,7 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         """
         The reward/product/card combination is legitimate here, so the self-order-specific
         check lets it through. The order must still be blocked because the card cannot
-        cover the reward's point cost: this is enforced by _process_loyalty(), which runs
-        synchronously within the same request since the order (a single free-product
-        reward line) totals 0 and is auto-paid by the controller.
+        cover the reward's point cost (see _check_self_order_loyalty_points).
         """
         card = self.env['loyalty.card'].create({
             'program_id': self.program.id,
@@ -489,6 +487,76 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         order.action_pos_order_paid()
         self.assertEqual(order.state, 'paid')
         self.assertIn("couldn't be processed", order.message_ids[:1].body)
+
+    def _pay(self, order):
+        self.env['pos.payment'].create({
+            'pos_order_id': order.id,
+            'payment_method_id': self.bank_payment_method.id,
+            'amount': order.amount_total,
+        })
+        order.amount_paid = order.amount_total
+        order.action_pos_order_paid()
+
+    @mute_logger('odoo.http')
+    def test_unaffordable_reward_is_refused_before_payment(self):
+        """
+        A reward the card can't afford is refused when the order is sent: once paid, the
+        order can't be refused anymore (see test_paid_order_stays_paid_when_points_are_missing).
+        """
+        card = self._create_loyalty_card(self.loyalty_partner, points=100)
+        result, order_uuid = self._post_self_order([
+            self._product_line(self.cola, 1),  # not free: the order isn't paid when it's sent
+            self._reward_line(self.free, self.reward, card),
+        ])
+        self.assertIn("enough points", result['error']['data']['message'])
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]))
+        card.invalidate_recordset()
+        self.assertEqual(card.points, 100)
+
+    @mute_logger('odoo.http')
+    def test_reward_without_card_is_checked_on_the_customer_card(self):
+        """A reward line without card is charged on the customer's card of the program."""
+        self._create_loyalty_card(self.loyalty_partner, points=100)
+        result, order_uuid = self._post_self_order([
+            self._product_line(self.cola, 1),
+            self._reward_line(self.free, self.reward),
+        ])
+        self.assertIn('error', result)
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]))
+
+    def test_points_earned_by_the_order_can_pay_its_reward(self):
+        """The points the order earns count, as they do when it's paid (_process_loyalty)."""
+        card = self._create_loyalty_card(self.loyalty_partner, points=199)  # + 1 for this order
+        result, order_uuid = self._post_self_order([
+            self._product_line(self.cola, 1),
+            self._reward_line(self.free, self.reward, card),
+        ])
+        self.assertNotIn('error', result, result.get('error'))
+        order = self.env['pos.order'].search([('uuid', '=', order_uuid)])
+        card.invalidate_recordset()
+        self.assertEqual(card.points, 199, "The points are only charged at payment")
+        self.assertFalse(self.env['loyalty.history'].search([('order_model', '=', 'pos.order'), ('order_id', '=', order.id)]))
+
+        self._pay(order)
+        card.invalidate_recordset()
+        self.assertEqual(card.points, 0)
+
+        # Its points are spent now: sending the paid order again isn't refused for them
+        result, _order_uuid = self._post_self_order([], order_id=order.id, order_uuid=order_uuid)
+        self.assertNotIn('error', result, result.get('error'))
+
+    @mute_logger('odoo.http')
+    def test_gift_card_beyond_its_balance_is_refused_before_payment(self):
+        card = self._create_gift_card('GIFT-SELF-1', points=10)
+        gift_card_line = self._reward_line(card.program_id.reward_ids.discount_line_product_id, card.program_id.reward_ids, card)
+        gift_card_line[2]['price_unit'] = -20  # the order (25.30) isn't fully paid by the card
+        result, order_uuid = self._post_self_order(
+            [self._product_line(self.cola, 10), gift_card_line], applied_codes=['GIFT-SELF-1'],
+        )
+        self.assertIn('error', result)
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]))
+        card.invalidate_recordset()
+        self.assertEqual(card.points, 10)
 
     # ------------------------------------------------------------------
     # Codes: the code, not a card or program id, proves a code-based reward
@@ -929,14 +997,13 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
             "The receipt shows the customer with the delivery address")
 
         order.email = 'customer@example.com'
-        with patch.object(type(self.env['mail.template']), 'send_mail', autospec=True) as send_mail:
+        with self.mock_mail_gateway():
             order.action_send_self_order_receipt(
                 order.email, self.env.ref('pos_self_order.delivery_email_template').id, False, False,
             )
-        template = send_mail.call_args.args[0]
-        self.assertEqual(template, self.env.ref('pos_self_order_loyalty.delivery_address_email_template'))
-        body = template._render_field('body_html', order.ids)[order.id]
-        self.assertIn('Avenue Louise 2', body, "The mail shows the delivery address")
+        self.assertEqual(len(self._new_mails), 1)
+        self.assertEqual(self._new_mails.email_to, 'customer@example.com')
+        self.assertIn('Avenue Louise 2', self._new_mails.body_html, "The mail shows the delivery address")
 
     def test_foreign_delivery_address_is_ignored(self):
         self._enable_delivery()

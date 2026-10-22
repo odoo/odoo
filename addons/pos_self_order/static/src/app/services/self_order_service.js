@@ -999,9 +999,7 @@ export class SelfOrder extends Reactive {
             }
         }
 
-        if (this.config.self_ordering_pay_after === "meal") {
-            openOrder.recomputeChanges();
-        }
+        openOrder.recomputeChanges();
         for (const [uuid, refreshedQty] of refreshedBaselines) {
             if (openOrder.uiState.lineChanges[uuid]) {
                 openOrder.uiState.lineChanges[uuid].qty = refreshedQty;

@@ -12,7 +12,7 @@ patch(barcodeReaderService, {
         const nomenclature = data.models["barcode.nomenclature"]?.getFirst();
         if (nomenclature) {
             session.nomenclature_id = nomenclature;
-            nomenclature.rules = nomenclature.rule_ids; //TODO change rules to rule_ids everywhere
+            nomenclature.rules = nomenclature.rule_ids;
         }
         return super.start(env, deps);
     },

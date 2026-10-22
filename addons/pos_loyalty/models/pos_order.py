@@ -206,23 +206,12 @@ class PosOrder(models.Model):
                 card_issued = points_issued if card == cards[0] else 0
                 available_points = card.points + card_issued
                 points_used = reversal_used if card == cards[0] else 0.0
-                for reward in card_lines.reward_id:
+                costs = self._get_loyalty_points_costs(program, card_lines, available_points, points_used)
+                for reward, cost in costs.items():
                     lines = card_lines.filtered(lambda l: l.reward_id == reward)
-                    cost = reward._get_pos_points_cost(lines, available_points - points_used)
-                    points_used += cost
                     lines[0].points_cost = cost
                     lines[1:].points_cost = 0
-
-                if points_used > 0 and float_compare(points_used, available_points, precision_rounding=0.01) > 0:
-                    raise UserError(_(
-                        "Not enough points to claim the rewards of program '%(program)s'"
-                        "(needed: %(needed)s, available: %(available)s). "
-                        "Remove the reward lines from the order and validate again.",
-                        card=card.code or card.id,
-                        program=program.name,
-                        needed=points_used,
-                        available=available_points,
-                    ))
+                points_used += sum(costs.values())
 
                 credited_cards |= card
                 if card_issued or points_used:
@@ -348,6 +337,33 @@ class PosOrder(models.Model):
             ('card_id.program_id', '=', program.id),
         ])
         return history.card_id
+
+    def _get_loyalty_points_costs(self, program, reward_lines, available_points, points_used=0.0):
+        """Points each reward of `reward_lines` costs on the card they are claimed from.
+
+        :param reward_lines: the order's reward lines of `program` claimed from one card
+        :param available_points: points that card can spend on this order (its balance plus
+            what the order issues to it)
+        :param points_used: points the order already takes from that card (refund reversal)
+        :return: {loyalty.reward: points cost}
+        :raise UserError: when the rewards cost more than `available_points`
+        """
+        costs = {}
+        for reward in reward_lines.reward_id:
+            lines = reward_lines.filtered(lambda l: l.reward_id == reward)
+            costs[reward] = reward._get_pos_points_cost(lines, available_points - points_used)
+            points_used += costs[reward]
+
+        if points_used > 0 and float_compare(points_used, available_points, precision_rounding=0.01) > 0:
+            raise UserError(_(
+                "Not enough points to claim the rewards of program '%(program)s'"
+                "(needed: %(needed)s, available: %(available)s). "
+                "Remove the reward lines from the order and validate again.",
+                program=program.name,
+                needed=points_used,
+                available=available_points,
+            ))
+        return costs
 
     def _get_loyalty_cards_to_credit(self, program, reward_lines):
         """Find or create the card(s) that should receive/spend points.

@@ -658,7 +658,8 @@ export class CartPage extends Component {
             this.changeQuantity(cline, increase);
         }
 
-        increase ? line.setQuantity(line.qty + 1) : line.setQuantity(line.qty - 1);
+        const addition = increase ? 1 : -1;
+        line.setQuantity(line.qty + addition);
 
         if (line.qty <= 0) {
             this.removeLine(line);

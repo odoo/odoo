@@ -17,7 +17,7 @@ class PosSelfOrderControllerLoyalty(PosSelfOrderController):
         empty = {'res.partner': [], 'loyalty.card': [], 'loyalty.rule': [], 'loyalty.reward': [], 'loyalty.program': []}
         if not partner:
             return empty
-        today = fields.Date.context_today(self)
+        today = fields.Date.context_today(pos_config)
         loyalty_programs = pos_config._get_program_ids().filtered(lambda p: p.program_type in ['loyalty', 'ewallet'])
         loyalty_cards = pos_config.env['loyalty.card'].search([
             ('program_id', 'in', loyalty_programs.ids),
@@ -123,11 +123,11 @@ class PosSelfOrderControllerLoyalty(PosSelfOrderController):
 
         # Check loyalty rules
         program_ids = pos_config._get_program_ids()
-        corresponding_rule_id = False
+        corresponding_rule_id = program_ids.rule_ids.filtered_domain([('mode', '=', 'with_code'), ('code', '=', code)])
         corresponding_card_id = False
         corresponding_program_id = False
         reason = 'invalid_code'
-        if corresponding_rule_id := program_ids.rule_ids.filtered_domain([('mode', '=', 'with_code'), ('code', '=', code)]):
+        if corresponding_rule_id:
             # Testing code based on rule (discount code)
             # corresponding_rule_ids should be at most 1 due to unique constraint on code
             corresponding_program_id = corresponding_rule_id.program_id
@@ -293,11 +293,8 @@ class PosSelfOrderControllerLoyalty(PosSelfOrderController):
 
     def _add_product_linked_to_reward(self, reward_ids, pos_config):
         product_read = pos_config.env['product.template'].load_product_from_pos(pos_config.id, [('product_variant_ids', 'in', reward_ids.discount_line_product_id.ids + reward_ids.reward_product_ids.ids)])
-        keys_to_remove = []
         self_models = pos_config._load_self_data_models()
-        for model_key in product_read:
-            if model_key not in self_models:
-                keys_to_remove.append(model_key)
+        keys_to_remove = [model_key for model_key in product_read if model_key not in self_models]
         for key in keys_to_remove:
             del product_read[key]
         return product_read

@@ -17,17 +17,15 @@ export class RewardButton extends Component {
     async clickRewardButton() {
         if (!this.selfOrder.currentOrder.getPartner()) {
             // Open non-identification linked rewards
-            if (this.availableRewardsLength > 0) {
-                this.dialog.add(SelectRewardPopup, {
-                    getPayload: (reward) => {
-                        this.selfOrder.applyReward(reward);
-                    },
-                    rewardType: "product",
-                    showIdentificationButton: !this.selfOrder.currentOrder.getPartner(),
-                    claimableOnly: true,
-                });
-                return;
-            }
+            this.dialog.add(SelectRewardPopup, {
+                getPayload: (reward) => {
+                    this.selfOrder.applyReward(reward);
+                },
+                rewardType: "product",
+                showIdentificationButton: true,
+                claimableOnly: true,
+            });
+            return;
         }
         // Open reward popup
         this.dialog.add(SelectRewardPopup, {
@@ -60,17 +58,13 @@ export class RewardButton extends Component {
         return false;
     }
 
-    get availableRewardsLength() {
-        return this.getRewardsLength(false);
-    }
-
     get claimableRewardsLength() {
-        return this.getRewardsLength(true);
+        return this.getRewardsLength();
     }
 
-    getRewardsLength(claimable = false) {
-        const programRewards = this.selfOrder.getLoyaltyPrograms("product", claimable);
-        const promotions = this.selfOrder.getPromotionPrograms(claimable);
+    getRewardsLength() {
+        const programRewards = this.selfOrder.getLoyaltyPrograms("product", true);
+        const promotions = this.selfOrder.getPromotionPrograms(true);
         return Object.keys(programRewards).length + Object.keys(promotions).length;
     }
 

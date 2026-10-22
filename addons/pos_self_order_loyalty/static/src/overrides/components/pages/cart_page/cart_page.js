@@ -86,11 +86,11 @@ patch(CartPage.prototype, {
         }
         return result;
     },
-    changeQuantity(line, increase) {
+    changeQuantity(_line, _increase) {
         super.changeQuantity(...arguments);
         this.selfOrder.currentOrder.recomputeRewards();
     },
-    doRemoveLine(line) {
+    doRemoveLine(_line) {
         super.doRemoveLine(...arguments);
         this.selfOrder.currentOrder.recomputeRewards();
     },
