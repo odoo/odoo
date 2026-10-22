@@ -359,7 +359,7 @@ class PeppolRegistration(models.TransientModel):
             if identifier_invalid.get('code') == 'IDENTIFIER_NOT_ON_PEPPOL':
                 raise UserError(_("Your identifier you entered is invalid for Peppol."))
             if identifier_invalid.get('code') == 'IDENTIFIER_INCORRECT_FORMAT':
-                example = _(" Expected format: %(expected_format)s.", identifier_invalid['example']) if identifier_invalid.get('example') else ""
+                example = _(" Expected format: %(expected_format)s.", expected_format=identifier_invalid['example']) if identifier_invalid.get('example') else ""
                 raise UserError(_("Your identifier does not have a valid format.%s", example))
             raise UserError(_("Your identifier is invalid."))
         if can_connect_vals.get('db_invalid'):
