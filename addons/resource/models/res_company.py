@@ -16,6 +16,7 @@ class ResCompany(models.Model):
         _tz_get, string='Timezone',
         compute='_compute_tz', store=True, readonly=False)
 
+    #TODO change calculation
     @api.depends('country_id')
     def _compute_tz(self):
         country_tz = _country_timezones()
