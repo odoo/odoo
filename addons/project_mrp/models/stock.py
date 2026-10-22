@@ -18,8 +18,9 @@ class StockMove(models.Model):
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
-        if res.get('group_id') and len(res['group_id'].mrp_production_ids) == 1:
-            res['project_id'] = res['group_id'].mrp_production_ids.project_id.id
+        project = self.production_group_id.production_ids.project_id
+        if len(project) == 1:
+            res['project_id'] = project.id
         return res
 
     @api.depends('production_id.project_id')
