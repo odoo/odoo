@@ -879,9 +879,9 @@ class PurchaseOrder(models.Model):
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
             return self.action_view_invoice(invoices)
-
         if len(invoices) != 1:
             raise ValidationError(_("You can only upload a bill for a single vendor at a time."))
+        attachments.write({'res_model': 'account.move', 'res_id': invoices.id})
         invoices.with_context(skip_is_manually_modified=True)._extend_with_attachments(
             invoices._to_files_data(attachments),
             new=True,
@@ -889,7 +889,6 @@ class PurchaseOrder(models.Model):
 
         invoices.message_post(attachment_ids=attachments.ids)
 
-        attachments.write({'res_model': 'account.move', 'res_id': invoices.id})
         return self.action_view_invoice(invoices)
 
     def action_merge(self):
