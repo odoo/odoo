@@ -284,6 +284,7 @@ class IrAttachment(models.Model):
                     if check_file.endswith(GC_FILE_SUFFIX):
                         # leftover from a previous GC
                         # move the file back if it exists
+                        fname = fname.removesuffix(GC_FILE_SUFFIX)
                         try:
                             full_path = self._full_path(fname)
                             os.replace(full_path + GC_FILE_SUFFIX, full_path)
@@ -293,11 +294,14 @@ class IrAttachment(models.Model):
                             _logger.info("filestore gc was interrupted, moved back %s", filename)
                         # move the check file back, ignore if file already exists
                         original_check_file = check_file.removesuffix(GC_FILE_SUFFIX)
-                        try:
-                            if not os.path.exists(original_check_file):
-                                os.rename(check_file, original_check_file)
-                        except OSError:
+                        if os.path.exists(original_check_file):
                             os.unlink(check_file)
+                        else:
+                            try:
+                                os.rename(check_file, original_check_file)
+                            except OSError:
+                                _logger.info("filestore gc failed to add back %s", original_check_file)
+                                os.unlink(check_file)
                     elif os.path.getmtime(check_file) < limit_time:
                         # we can collect the file
                         yield (fname, check_file)
