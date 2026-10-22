@@ -27,7 +27,7 @@
                             label="scope.data.label"/>
                     </t>
                 </SelectMenu>
-                <label t-if="this.state.type === 'xml' and this.debug" class="o_resource_editor_filter">
+                <label t-if="this.state.type === 'xml' and this.debugMode.isActive()" class="o_resource_editor_filter">
                     <div class="btn-group o_resource_editor_type_switcher">
                         <Dropdown>
                             <button class="btn btn-primary">Filter</button>
@@ -41,7 +41,7 @@
                         </Dropdown>
                     </div>
                 </label>
-                <label t-if="this.state.type === 'scss' and this.debug" class="o_resource_editor_filter">
+                <label t-if="this.state.type === 'scss' and this.debugMode.isActive()" class="o_resource_editor_filter">
                     <div class="btn-group o_resource_editor_type_switcher">
                         <Dropdown>
                             <button class="btn btn-primary">Filter</button>
