@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install', 'website_snippets')
-class TestSnippets(HttpCase):
+class TestSnippetsCommon(HttpCase):
 
     def fetch_proxy(self, url):
         if 'twitter.com' in url or 'youtube.com' in url:
@@ -20,12 +20,8 @@ class TestSnippets(HttpCase):
             return self.make_fetch_proxy_response('<body>Dummy page</body>')
         return super().fetch_proxy(url)
 
-    def test_01_empty_parents_autoremove(self):
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_empty_parent_autoremove', login='admin')
 
-    def test_02_default_shape_gets_palette_colors(self):
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'default_shape_gets_palette_colors', login='admin')
-
+class TestSnippetsAllDragAndDrop(TestSnippetsCommon):
     def test_03_snippets_all_drag_and_drop(self):
         with MockRequest(self.env, website=self.env.ref('base.default_website')):
             snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
@@ -58,6 +54,14 @@ class TestSnippets(HttpCase):
                 'alias_name': 'my_mail_group',
             })
         self.start_tour(f"/odoo/action-website.website_preview?{path}", "snippets_all_drag_and_drop", login='admin', timeout=600)
+
+
+class TestSnippetsPart1(TestSnippetsCommon):
+    def test_01_empty_parents_autoremove(self):
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_empty_parent_autoremove', login='admin')
+
+    def test_02_default_shape_gets_palette_colors(self):
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'default_shape_gets_palette_colors', login='admin')
 
     def test_04_countdown_preview(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_countdown', login='admin')
@@ -109,6 +113,8 @@ class TestSnippets(HttpCase):
     def test_12_snippet_images_wall(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_images_wall', login='admin')
 
+
+class TestSnippetsPart2(TestSnippetsCommon):
     def test_snippet_popup_with_scrollbar_and_animations(self):
         website = self.env.ref('base.default_website')
         website.cookies_bar = True

@@ -652,10 +652,12 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         env['ir.default'].set("res.partner", "specific_property_product_pricelist", public_pricelist.id, company_id=main_company.id)
 
 
-@tagged('post_install', '-at_install')
-class TestUi(TestPointOfSaleHttpCommon):
+class TestUiCommon(TestPointOfSaleHttpCommon):
     _test_user_groups = None  # FIXME list needed groups
 
+
+@tagged('post_install', '-at_install')
+class TestUiPart1(TestUiCommon):
     def test_01_pos_basic_order(self):
         self.start_pos_tour('pos_pricelist')
 
@@ -888,6 +890,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(order.lines[1].price_unit, 18.67)
         self.assertEqual(order.lines[2].price_unit, 30.00)
         self.assertAlmostEqual(order.lines[3].price_unit, 10.33)
+
         # In the future we might want to test also if:
         #   - the combo lines are correctly stored in and restored from local storage
         #   - the combo lines are correctly shared between the pos configs ( in cross ordering )
@@ -1071,6 +1074,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="pos_user")
 
+
+@tagged('post_install', '-at_install')
+class TestUiPart2(TestUiCommon):
     def test_restricted_categories_combo_product(self):
         """
         Ensure combo choices product are always loaded if parent is in allowed categories, even when restricted categories are configured:
@@ -1459,6 +1465,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(self.main_pos_config.current_session_id.bank_statement_line_ids), 1, "There should be one cash in/out statement line")
         self.assertEqual(self.main_pos_config.current_session_id.bank_statement_line_ids[0].amount, -5, "The cash in/out amount should be -5")
 
+
+@tagged('post_install', '-at_install')
+class TestUiPart3(TestUiCommon):
     def test_edit_paid_order(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_edit_paid_order', login="pos_user")
@@ -1766,6 +1775,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertAlmostEqual(lines[1].balance, -1071.86)  # Negative line and positive are aggregated
         self.assertAlmostEqual(lines[2].balance, 7771.0)
 
+
+@tagged('post_install', '-at_install')
+class TestUiPart4(TestUiCommon):
     def test_preset_timing_retail(self):
         """
         Test to set order preset hour inside a tour
@@ -2620,13 +2632,27 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_price_extra_pricelist_based_pricelist', login="pos_user")
 
 
-# This class just runs the same tests as above but with mobile emulation
-class MobileTestUi(TestUi):
-    _test_user_groups = None  # FIXME list needed groups
-
+# These classes just run the same tests as above but with mobile emulation
+class MobileTestUiMixin:
     browser_size = '375x667'
     touch_enabled = True
     allow_inherited_tests_method = True
+
+
+class MobileTestUiPart1(MobileTestUiMixin, TestUiPart1):
+    pass
+
+
+class MobileTestUiPart2(MobileTestUiMixin, TestUiPart2):
+    pass
+
+
+class MobileTestUiPart3(MobileTestUiMixin, TestUiPart3):
+    pass
+
+
+class MobileTestUiPart4(MobileTestUiMixin, TestUiPart4):
+    pass
 
 
 class TestTaxCommonPOS(TestPointOfSaleHttpCommon, TestTaxCommon):

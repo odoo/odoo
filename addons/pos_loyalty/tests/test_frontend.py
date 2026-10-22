@@ -13,7 +13,7 @@ from odoo.addons.point_of_sale.tests.common import archive_products
 
 
 @tagged("post_install", "-at_install")
-class TestUi(TestPointOfSaleHttpCommon):
+class TestUiCommon(TestPointOfSaleHttpCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
@@ -137,6 +137,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             programs[name] = program
         return programs
 
+
+class TestUiPart1(TestUiCommon):
     def test_pos_loyalty_tour_basic(self):
         """PoS Loyalty Basic Tour"""
         ##
@@ -593,6 +595,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Check final balance after consumption and refund eWallet for partner_bbb.
         self.assertAlmostEqual(ewallet_bbb.points, 20, places=2)
 
+
+class TestUiPart2(TestUiCommon):
     def test_ewallet_refund_credit_note_line_quantity(self):
         """Reproduce: sell+invoice product, refund order, use eWallet refund payment.
         The generated credit note must keep refunded product quantity positive."""
@@ -1918,6 +1922,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(program2.coupon_ids.code, 'test-card-0001')
         self.assertEqual(program3.coupon_ids.code, 'test-card-0002')
 
+
+class TestUiPart3(TestUiCommon):
     def test_dont_grant_points_reward_order_lines(self):
         """
         Make sure that points granted per unit are only given
@@ -2829,6 +2835,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(loyalty_program.coupon_count, 1)
         self.assertEqual(loyalty_program.total_order_count, 1)
 
+
+class TestUiPart4(TestUiCommon):
     def test_physical_gift_card_invoiced(self):
         """
         Test that the manual gift card sold has been generated with correct code and partner id"""
