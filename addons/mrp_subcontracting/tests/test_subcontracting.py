@@ -1734,6 +1734,46 @@ class TestSubcontractingTracking(TransactionCase):
         self.assertRecordValues(receipt.move_line_ids, [{'quantity': 1.0}] * 3)
         self.assertEqual(receipt.move_line_ids.lot_id, recorded_subcontracted_mos.lot_producing_id)
 
+    def test_record_components_with_cancelled_last_production(self):
+        """
+        Check that recording components opens the production that still has to be
+        recorded, even if the last production of the receipt has been cancelled.
+        """
+        self.comp1_sn.tracking = 'none'
+        self.finished_product.tracking = 'none'
+        self.bom_tracked.consumption = 'warning'
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'partner_id': self.subcontractor_partner1.id,
+            'move_ids': [Command.create({
+                'name': self.finished_product.name,
+                'product_id': self.finished_product.id,
+                'product_uom_qty': 10,
+            })],
+        })
+        receipt.action_confirm()
+        mo_form = Form.from_action(self.env, receipt.action_record_components())
+        mo_form.qty_producing = 4
+        mo_form.save().subcontracting_record_component()
+        recorded_mo, remaining_mo = receipt._get_subcontract_production()
+
+        # Reduce the demand to the recorded quantity: the remaining production is cancelled
+        receipt.move_ids.product_uom_qty = 4
+        self.assertEqual(remaining_mo.state, 'cancel')
+        # Reset the received quantity: the first production has to be recorded again
+        receipt.move_ids.quantity = 0
+        self.assertFalse(recorded_mo.subcontracting_has_been_recorded)
+        self.assertEqual(receipt.display_action_record_components, 'facultative')
+
+        action = receipt.action_record_components()
+        self.assertEqual(action['res_id'], recorded_mo.id)
+        mo_form = Form.from_action(self.env, action)
+        mo_form.qty_producing = 4
+        mo_form.save().subcontracting_record_component()
+        receipt.button_validate()
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(recorded_mo.state, 'done')
+
     def test_flow_backorder_production(self):
         """ Test subcontracted MO backorder (i.e. through record production window, NOT through
         picking backorder). Finished product is serial tracked to ensure subcontracting MO window
