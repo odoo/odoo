@@ -301,7 +301,7 @@ test("should pad list based on font-size (2)", async () => {
         styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<span style="font-size: 56px">[a]</span>`,
         stepFunction: toggleOrderedList,
-        contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[]a</li></ol>`,
+        contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[a]</li></ol>`,
     });
 });
 

@@ -4,7 +4,7 @@ import { createBaseContainer, SUPPORTED_BASE_CONTAINER_NAMES } from "./utils/bas
 import { removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
 import { resourceSequenceSymbol, warnOfNamingConvention, withSequence } from "./utils/resource";
-import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
+import { fixInvalidHTML } from "./utils/sanitize";
 import { setElementContent } from "@web/core/utils/html";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
@@ -211,10 +211,6 @@ export class Editor {
         }
         editable.setAttribute("contenteditable", true);
         editable.setAttribute("translate", "no");
-        initElementForEdition(editable, {
-            allowInlineAtRoot: !!this.config.allowInlineAtRoot,
-            wrapInlinesInBlocks: this.shared.dom.wrapInlinesInBlocks,
-        });
         editable.classList.add("odoo-editor-editable");
         if (this.config.classList) {
             editable.classList.add(...this.config.classList);
