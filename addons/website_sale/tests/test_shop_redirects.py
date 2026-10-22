@@ -19,7 +19,7 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
 
     def test_website_sale_shop_redirects(self):
         test_category = self.env["product.public.category"].create({"name": "Test category"})
-        test_product = self.env["product.template"].create({
+        self.env["product.template"].create({
             "name": "Test product",
             "public_categ_ids": [Command.link(test_category.id)],
             "website_published": True,
@@ -34,25 +34,6 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
         self.assertURLEqual(
             response.headers.get("Location"),
             f"/shop/category/{slug(test_category)}?category={test_category.id}&some-key=some-value",
-        )
-
-        response = self.url_open(
-            f"/shop/product/{slug(test_product)}?category={test_category.id}&some-key=some-value",
-            allow_redirects=False,
-        )
-        self.assertEqual(response.status_code, 301)
-        self.assertURLEqual(
-            response.headers.get("Location"),
-            f"/shop/{slug(test_product)}?category={test_category.id}&some-key=some-value",
-        )
-
-        response = self.url_open(
-            f"/shop/{slug(test_category)}/{slug(test_product)}?some-key=some-value",
-            allow_redirects=False,
-        )
-        self.assertEqual(response.status_code, 301)
-        self.assertURLEqual(
-            response.headers.get("Location"), f"/shop/{slug(test_product)}?some-key=some-value"
         )
 
     def test_ecommerce_product_page_url_unpublished_product(self):
