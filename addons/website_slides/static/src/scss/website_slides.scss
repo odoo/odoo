@@ -390,7 +390,7 @@ $o-wslides-fs-side-width: 300px;
                 display: none;
             }
 
-            &:hover .badge-hide {
+            &:is(:hover, :focus-within) .badge-hide {
                 display: block;
             }
         }
