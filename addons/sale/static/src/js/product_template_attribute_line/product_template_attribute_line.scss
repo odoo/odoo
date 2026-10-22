@@ -29,6 +29,12 @@
         box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
     }
 
+    &:has(input:focus-visible) {
+        --o-focus-ring: var(--o-focus-ring-inset);
+
+        box-shadow: var(--o-focus-ring);
+    }
+
     input {
         margin: 8px;
         height: 13px;

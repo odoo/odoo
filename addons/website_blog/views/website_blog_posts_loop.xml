@@ -306,7 +306,7 @@ according to the enabled options.
 
 <!-- ======   Sub-Template: Posts list : Posts Heading  =================== -->
 <template id="post_heading">
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="o_blog_post_title text-reset #{_link_classes}">
+    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="o_blog_post_title d-block text-reset #{_link_classes}">
         <h2 t-field="blog_post.name" t-attf-class="text-wrap-pretty #{_heading_classes or 'h5'} #{posts_list_show_parent_blog and 'mt-1'}">
             Untitled Post
         </h2>

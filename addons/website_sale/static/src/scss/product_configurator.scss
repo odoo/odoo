@@ -34,17 +34,15 @@
     }
 
     &:has(input:focus-visible)::before {
+        content:"";
         position: absolute;
-        top: 50%;
-        inset-inline-start: 50%;
-
-        content:" ";
-        width: 140%;
-        height: 140%;
+        inset: 0;
         border-radius: 100%;
-        z-index: -1;
-        background-color: var(--focus-ring-color);
-        transform: translate(-50%, -50%);
+        box-shadow: var(--o-focus-ring-inset);
+        /* Hide the rounded border rendering bug on all browsers. */
+        outline: var(--o-focus-ring-outline);
+        outline-width: 3px;
+        outline-offset: -1px;
     }
 
     &.custom_value {
@@ -71,7 +69,11 @@
     }
 
     &:where(:has(input:focus-visible)) {
-        box-shadow: var(--o-bs-focus-ring-box-shadow);
+        box-shadow: var(--o-focus-ring-inset);
+        /* Hide the rounded border rendering bug on all browsers. */
+        outline: var(--o-focus-ring-outline);
+        outline-width: 3px;
+        outline-offset: -1px;
     }
 
     &.custom_value {
@@ -100,8 +102,10 @@
         outline-color: var(--primary);
     }
 
-    &:where(:has(input:focus-visible)) {
-        box-shadow: var(--o-bs-focus-ring-box-shadow);
+    &:has(input:focus-visible) {
+        box-shadow: var(--o-focus-ring-inset);
+        outline: var(--o-focus-ring-outline);
+        outline-offset: -2px;
     }
 }
 
@@ -204,7 +208,11 @@ select.form-select.css_attribute_select {
         border: var(--o-bs-border-width) solid var(--o-border-color);
 
         &:has(input:focus-visible) {
-            box-shadow: $btn-focus-box-shadow;
+            box-shadow: var(--o-focus-ring-inset);
+            /* Hide the rounded border rendering bug on all browsers. */
+            outline: var(--o-focus-ring-outline);
+            outline-width: 3px;
+            outline-offset: -1px;
         }
     }
 

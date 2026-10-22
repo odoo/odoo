@@ -9,6 +9,8 @@
             class="text-reset"
             t-att-href="line.product_id.website_url"
             name="o_cart_line_product_link"
+            t-att-tabindex="accessibilityHidden and '-1'"
+            t-att-aria-hidden="accessibilityHidden and 'true'"
         >
             <t t-out="0"/>
         </a>
@@ -67,7 +69,7 @@
                             always shown for unsellable lines, we use the raw image data as src
                             (which doesn't require access, unlike the image URL).
                         -->
-                        <t t-call="website_sale.cart_line_product_link">
+                        <t t-call="website_sale.cart_line_product_link" accessibilityHidden="True">
                             <img
                                 t-if="not line._is_sellable() and line.product_id.image_128"
                                 t-att-src="image_data_uri(line.product_id.image_128)"
@@ -500,14 +502,14 @@
                 t-att-data-publish="product.website_published and 'on' or 'off'"
             >
                 <div class="o_cart_product_image">
-                    <a t-att-href="product.website_url">
+                    <a t-att-href="product.website_url" tabindex="-1" aria-hidden="true">
                         <div t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'border rounded'}"/>
                     </a>
                 </div>
                 <div class="flex-grow-1">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <a class="text-reset" t-att-href="product.website_url">
+                            <a class="text-reset d-block" t-att-href="product.website_url">
                                 <h6
                                     class="align-top text-wrap"
                                     t-out="product.with_context(display_default_code=False).display_name"

@@ -17,10 +17,12 @@
             box-shadow: var(--box-shadow-sm);
         }
 
-        &:has(:focus-visible) {
+        &:has(input:focus-visible) {
             position: relative;
             z-index: 1;
-            outline: var(--focus-ring-width) solid var(--focus-ring-color);
+            box-shadow: var(--o-focus-ring);
+            outline: var(--o-focus-ring-outline);
+            outline-offset: -1px;
         }
     }
 }
