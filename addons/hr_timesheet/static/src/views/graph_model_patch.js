@@ -14,10 +14,12 @@ export function patchGraphModel(Model) {
         */
         _getProcessedDataPoints() {
             const factor = user.activeCompany.timesheet_uom_factor || 1;
-            if (factor !== 1 && FIELDS.includes(this.metaData.measure)) {
+            if (factor !== 1) {
                 // recalculate the Duration values according to the timesheet_uom_factor
                 for (const dataPt of this.dataPoints) {
-                    dataPt.value *= factor;
+                    if (FIELDS.includes(dataPt.measure)) {
+                        dataPt.value *= factor;
+                    }
                 }
             }
             return super._getProcessedDataPoints(...arguments);
