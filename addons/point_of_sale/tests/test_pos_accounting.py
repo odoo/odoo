@@ -1842,6 +1842,212 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         )
         self.close_session()
 
+    def _setup_invoice_cash_rounding(self, only_round_cash_method):
+        self.product_21.lst_price = 6  # Total is 7.26 (6 + 21% tax), not a multiple of 0.05
+        self.rounding_method.rounding_method = 'HALF-UP'
+        self.pos_config.write({
+            'cash_rounding': True,
+            'rounding_method': self.rounding_method.id,
+            'only_round_cash_method': only_round_cash_method,
+        })
+
+    def _create_invoiced_order(self, payments, qty=1, to_invoice=True):
+        return self.create_pos_order(
+            payment_method=[[pm, {'amount': amount}] for pm, amount in payments],
+            products=[[self.product_21, {'qty': qty}]],
+            extra_data={
+                'partner_id': self.partner_1.id,
+                'to_invoice': to_invoice,
+            },
+        )
+
+    def _consolidate_invoices(self, orders):
+        self.env['pos.make.invoice'].create({
+            'consolidated_billing': True,
+        }).with_context(active_ids=orders.ids).action_create_invoices()
+
+    def _assert_invoice_cash_rounding(self, orders, expected_rounding):
+        """ Check the invoice of `orders` matches what the customer actually paid:
+        a single rounding line of `expected_rounding` (in invoice currency, signed
+        like the order amounts) or none at all, a balanced move and a fully paid invoice.
+        """
+        invoice = orders.account_move
+        amount_paid = abs(sum(orders.mapped('amount_paid')))
+        self.assertEqual(len(invoice), 1)
+        self.assertEqual(invoice.state, 'posted')
+        # 1 for an invoice, -1 for a credit note
+        sign = -invoice.direction_sign
+
+        rounding_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'rounding')
+        if expected_rounding:
+            self.assertEqual(len(rounding_lines), 1, "Exactly one rounding line is expected")
+            self.assertAlmostEqual(
+                -rounding_lines.amount_currency * sign,
+                expected_rounding,
+                places=2,
+            )
+        else:
+            self.assertFalse(rounding_lines, "No rounding line is expected when no rounding is needed")
+
+        self.assertAlmostEqual(sum(invoice.line_ids.mapped('balance')), 0.0, places=2)
+        self.assertAlmostEqual(abs(invoice.amount_total), amount_paid, places=2)
+        self.assertAlmostEqual(invoice.amount_residual, 0.0, places=2)
+        self.assertIn(invoice.payment_state, ('paid', 'in_payment'))
+
+        payment_term_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        self.assertAlmostEqual(
+            sum(payment_term_lines.mapped('amount_currency')) * sign,
+            amount_paid,
+            places=2,
+        )
+        return invoice
+
+    def test_invoice_cash_rounding_mixed_payments_no_rounding_needed(self):
+        """ Cash + bank paying the exact unrounded total must not leave the rounding
+        line computed by account.move on the whole move total on the invoice.
+        """
+        self._setup_invoice_cash_rounding(only_round_cash_method=True)
+        self.open_pos_session()
+
+        # Cash first, bank pays the exact remaining amount: no rounding at all
+        order = self._create_invoiced_order([(self.cash_pm, 5), (self.bank_pm, 2.26)])
+        self.assertAlmostEqual(order.amount_paid, 7.26, places=2)
+        self._assert_invoice_cash_rounding(order, 0.0)
+
+        # Same with several units, total 21.78
+        order = self._create_invoiced_order([(self.cash_pm, 10), (self.bank_pm, 11.78)], qty=3)
+        self.assertAlmostEqual(order.amount_paid, 21.78, places=2)
+        self._assert_invoice_cash_rounding(order, 0.0)
+
+        # Bank only, nothing to round since only cash is rounded
+        order = self._create_invoiced_order([(self.bank_pm, 7.26)])
+        self._assert_invoice_cash_rounding(order, 0.0)
+
+        session = self.close_session()
+        self.assertTrue(all(move.state == 'posted' for move in session.sale_move_ids))
+
+    def test_invoice_cash_rounding_mixed_payments_rounding_needed(self):
+        """ When the cash payment is the last one and gets rounded, the invoice keeps
+        exactly one rounding line for the rounded difference.
+        """
+        self._setup_invoice_cash_rounding(only_round_cash_method=True)
+        self.open_pos_session()
+
+        # Bank first, cash pays the remaining 2.26 rounded down to 2.25
+        order = self._create_invoiced_order([(self.bank_pm, 5), (self.cash_pm, 2.25)])
+        self.assertAlmostEqual(order.amount_paid, 7.25, places=2)
+        self._assert_invoice_cash_rounding(order, -0.01)
+
+        # Cash only, 7.26 rounded down to 7.25
+        order = self._create_invoiced_order([(self.cash_pm, 7.25)])
+        self._assert_invoice_cash_rounding(order, -0.01)
+
+        # Cash only, 21.78 rounded up to 21.80
+        order = self._create_invoiced_order([(self.cash_pm, 21.80)], qty=3)
+        self._assert_invoice_cash_rounding(order, 0.02)
+
+        self.close_session()
+
+    def test_invoice_cash_rounding_all_payment_methods(self):
+        """ Without only_round_cash_method, every payment is rounded so a mixed payment
+        of the rounded total has a rounding line, while an already rounded total has none.
+        """
+        self._setup_invoice_cash_rounding(only_round_cash_method=False)
+        self.open_pos_session()
+
+        order = self._create_invoiced_order([(self.cash_pm, 5), (self.bank_pm, 2.25)])
+        self.assertAlmostEqual(order.amount_paid, 7.25, places=2)
+        self._assert_invoice_cash_rounding(order, -0.01)
+
+        # 6 * 1.21 * 5 = 36.30, already a multiple of 0.05
+        order = self._create_invoiced_order([(self.cash_pm, 20), (self.bank_pm, 16.30)], qty=5)
+        self._assert_invoice_cash_rounding(order, 0.0)
+
+        self.close_session()
+
+    def test_invoice_cash_rounding_consolidated_differences_cancel_out(self):
+        """ Each order is rounded, so the invoice gets the cash rounding method, but the
+        differences cancel out on the consolidated invoice. account.move computes a rounding
+        line on the whole move total (14.52 -> 14.50) which must be dropped since the
+        customer paid exactly 14.52.
+        """
+        self._setup_invoice_cash_rounding(only_round_cash_method=True)
+        self.open_pos_session()
+
+        # 7.26: bank 5.02, remaining 2.24 paid 2.25 in cash -> +0.01
+        order_up = self._create_invoiced_order([(self.bank_pm, 5.02), (self.cash_pm, 2.25)], to_invoice=False)
+        # 7.26: bank 5.00, remaining 2.26 paid 2.25 in cash -> -0.01
+        order_down = self._create_invoiced_order([(self.bank_pm, 5.00), (self.cash_pm, 2.25)], to_invoice=False)
+        orders = order_up + order_down
+        self.assertAlmostEqual(order_up.amount_difference, 0.01, places=2)
+        self.assertAlmostEqual(order_down.amount_difference, -0.01, places=2)
+
+        self._consolidate_invoices(orders)
+        self.assertTrue(orders.account_move.invoice_cash_rounding_id)
+        self._assert_invoice_cash_rounding(orders, 0.0)
+
+        self.close_session()
+
+    def test_invoice_cash_rounding_consolidated_cash_only_differences_cancel_out(self):
+        """ Same as above with cash only payments and without only_round_cash_method. """
+        self._setup_invoice_cash_rounding(only_round_cash_method=False)
+        self.open_pos_session()
+
+        # 7.26 -> 7.25 (-0.01) and 21.78 -> 21.80 (+0.02): the whole total 29.04 would be
+        # rounded to 29.05 by account.move while the customer paid 29.05 with -0.01 + 0.02
+        order_down = self._create_invoiced_order([(self.cash_pm, 7.25)], to_invoice=False)
+        order_up = self._create_invoiced_order([(self.cash_pm, 21.80)], qty=3, to_invoice=False)
+        orders = order_down + order_up
+
+        self._consolidate_invoices(orders)
+        self._assert_invoice_cash_rounding(orders, 0.01)
+
+        self.close_session()
+
+    def test_invoice_cash_rounding_consolidated_differences_add_up(self):
+        """ When the differences of the consolidated orders do not cancel out, the invoice
+        keeps a single rounding line for their sum.
+        """
+        self._setup_invoice_cash_rounding(only_round_cash_method=True)
+        self.open_pos_session()
+
+        # Two orders of 7.26 paid 7.25 -> -0.02 in total, on a whole total of 14.52
+        orders = self._create_invoiced_order([(self.bank_pm, 5), (self.cash_pm, 2.25)], to_invoice=False)
+        orders += self._create_invoiced_order([(self.cash_pm, 7.25)], to_invoice=False)
+
+        self._consolidate_invoices(orders)
+        self._assert_invoice_cash_rounding(orders, -0.02)
+
+        self.close_session()
+
+    def test_invoice_cash_rounding_mixed_payments_refund(self):
+        """ Refunding a cash + bank order paid without rounding gives a credit note
+        without rounding line either.
+        """
+        self._setup_invoice_cash_rounding(only_round_cash_method=True)
+        self.open_pos_session()
+
+        order = self._create_invoiced_order([(self.cash_pm, 5), (self.bank_pm, 2.26)])
+        self._assert_invoice_cash_rounding(order, 0.0)
+
+        refund = self.env['pos.order'].browse(order.refund()['res_id'])
+        self.assertAlmostEqual(refund.amount_total, -7.26, places=2)
+        refund_payment = self.env['pos.make.payment'].with_context(
+            active_ids=refund.ids,
+            active_id=refund.id,
+        ).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.bank_pm.id,
+        })
+        refund_payment.check()
+        refund.action_pos_order_invoice()
+
+        credit_note = self._assert_invoice_cash_rounding(refund, 0.0)
+        self.assertEqual(credit_note.move_type, 'out_refund')
+        self.assertEqual(credit_note.reversed_entry_id, order.account_move)
+
+        self.close_session()
+
     def test_cash_destination_account(self):
         session = self.open_pos_session()
         session_dest = session._get_receivable_account()
