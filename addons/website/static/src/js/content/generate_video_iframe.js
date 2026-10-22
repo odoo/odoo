@@ -103,7 +103,7 @@ export function generateVideoPlayer(parentEl, manageIframeSrcFct) {
         return null;
     }
     // Sanitize the URL by processing it back into the platform matcher.
-    src = PLATFORMS[platform].getVideoUrlData(urlMatch).embedUrl;
+    src = PLATFORMS[platform].getVideoUrlData(urlMatch, {}, { fetchThumbnail: false }).embedUrl;
 
     const iframeEl = document.createElement("iframe");
     iframeEl.setAttribute("frameborder", "0");
