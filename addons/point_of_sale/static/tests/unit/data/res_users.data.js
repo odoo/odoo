@@ -22,4 +22,15 @@ export class ResUsers extends mailModels.ResUsers {
             write_date: "2025-01-01 10:00:00",
         },
     ];
+
+    _load_pos_data_read(records) {
+        records.forEach((user) => {
+            if (user.id === 2) {
+                user._role = "manager";
+            } else {
+                user._role = "cashier";
+            }
+        });
+        return records;
+    }
 }

@@ -14,8 +14,11 @@ test("showPaymentMethod", async () => {
         props: { orderUuid: order.uuid },
     });
 
+    const supervisedEmp = store.models["hr.employee"].get(5);
+    const manager = store.models["hr.employee"].get(2);
+
     // Cashier Resteictive
-    store.accessRight.cashier._role = "restrictive";
+    store.setCashier(supervisedEmp);
     card.type = "pay_later";
     expect(comp.showPaymentMethod(card)).toBe(false);
 
@@ -23,7 +26,7 @@ test("showPaymentMethod", async () => {
     expect(comp.showPaymentMethod(card)).toBe(true);
 
     // Cashier Admin
-    store.accessRight.cashier._role = "manager";
+    store.setCashier(manager);
     card.type = "pay_later";
     expect(comp.showPaymentMethod(card)).toBe(true);
 
