@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command, models, fields, api
+from odoo import Command, models, fields, api, _
+from odoo.exceptions import UserError
 from odoo.tools import float_round
 
 
@@ -79,17 +80,48 @@ class PosOrder(models.Model):
         if line[0] == Command.CREATE or line[0] == Command.UPDATE:
             line_data = line[2]
 
+            # Customers only order goods here: a zero or negative quantity is a
+            # refund and could offset another line down to a free order.
+            qty = line_data.get('qty')
+            if not isinstance(qty, (int, float)) or isinstance(qty, bool) or qty <= 0:
+                raise UserError(_("Invalid product quantity"))
+
             product = pos_config.env['product.product'].browse(line_data.get('product_id'))
             tax_ids = fiscal_position_id.map_tax(product.taxes_id)
 
             command = Command.CREATE if line[0] == Command.CREATE else Command.UPDATE
             id_to_use = line[1] if line[0] == Command.UPDATE else 0
 
+            no_variant_lines = product.product_tmpl_id.attribute_line_ids.filtered(lambda ptal: ptal.attribute_id.create_variant == 'no_variant')
+            valid_ptavs = product.product_template_attribute_value_ids | no_variant_lines.product_template_value_ids._only_active()
+            if command == Command.UPDATE:
+                # A value archived since the line was ordered stays valid on that line,
+                # otherwise updating the line would change what was ordered and its price.
+                valid_ptavs |= existing_lines.filtered(lambda existing_line: existing_line.id == id_to_use).attribute_value_ids
+            attribute_value_ids = [data for data in line_data.get('attribute_value_ids', []) if isinstance(data[1], int) and data[0] == 4]
+            if any(data[1] not in valid_ptavs.ids for data in attribute_value_ids):
+                raise UserError(_("Invalid product attribute"))
+
+            # Only 'multi' attributes accept several values; any other no_variant
+            # attribute must carry at most one value per line.
+            selected_ptavs = pos_config.env['product.template.attribute.value'].browse([data[1] for data in attribute_value_ids])
+            for attribute_line in no_variant_lines.filtered(lambda ptal: ptal.attribute_id.display_type != 'multi'):
+                if len(selected_ptavs & attribute_line.product_template_value_ids) > 1:
+                    raise UserError(_("Invalid product configuration"))
+
+            # Reject combinations forbidden by the template's exclusion rules
+            # (e.g. a no_variant value marked incompatible with the variant).
+            combination = product.product_template_attribute_value_ids | selected_ptavs
+            exclusions = product.product_tmpl_id._get_own_attribute_exclusions()
+            excluded_ids = {ptav_id for ptav in combination for ptav_id in exclusions.get(ptav.id, [])}
+            if excluded_ids & set(combination.ids):
+                raise UserError(_("Invalid product configuration"))
+
             return [command, id_to_use, {
                 'combo_id': line_data.get('combo_id'),
                 'product_id': line_data.get('product_id'),
                 'tax_ids': tax_ids.ids,
-                'attribute_value_ids': [data for data in line_data.get('attribute_value_ids', []) if isinstance(data[1], int) and data[0] == 4],
+                'attribute_value_ids': attribute_value_ids,
                 'price_unit': line_data.get('price_unit'),
                 'qty': line_data.get('qty'),
                 'price_subtotal': line_data.get('price_subtotal'),

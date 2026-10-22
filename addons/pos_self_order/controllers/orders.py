@@ -4,7 +4,7 @@ from odoo import Command, http, _
 from odoo.http import request
 from odoo.osv import expression
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
-from odoo.exceptions import MissingError
+from odoo.exceptions import MissingError, UserError
 from odoo.tools import consteq
 
 class PosSelfOrderController(http.Controller):
@@ -19,6 +19,13 @@ class PosSelfOrderController(http.Controller):
         pos_session = pos_config.current_session_id
 
         existing_order = pos_config.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
+
+        # Create a safe copy of the order with only the necessary fields for order creation to
+        # avoid potential security issues and to reduce the payload size
+        safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, table)
+
+        # The session sequence is not rolled back with the transaction: only number the
+        # order once its payload is validated, so a rejected payload leaves no gap.
         if not existing_order.exists():
             ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
             sequence_number = order.get('sequence_number')
@@ -28,16 +35,25 @@ class PosSelfOrderController(http.Controller):
             order['pos_reference'] = order_reference
             order['sequence_number'] = sequence_number
             order['name'] = order_reference
+            safe_data.update({
+                'pos_reference': order_reference,
+                'sequence_number': sequence_number,
+                'name': order_reference,
+            })
 
-        # Create a safe copy of the order with only the necessary fields for order creation to
-        # avoid potential security issues and to reduce the payload size
-        safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, table)
         results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([safe_data])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
 
         # Recompute all prices from newly created lines to ensure price correctness and
         # avoid potential manipulation from the frontend
         order_ids.recompute_prices()
+
+        # A negative line (a price_extra configured below the product price) would offset
+        # the other lines of the order. A line priced at exactly 0 is still accepted: it can
+        # only come from the merchant's configuration and is auto-paid like any free order.
+        currency = pos_config.currency_id
+        if any(currency.compare_amounts(line.price_subtotal_incl, 0) < 0 for line in order_ids.lines):
+            raise UserError(_("Invalid product configuration"))
 
         amount_total, amount_untaxed = self._get_order_prices(order_ids.lines)
         order_ids.write({
