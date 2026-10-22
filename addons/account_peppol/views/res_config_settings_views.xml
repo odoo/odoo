@@ -139,7 +139,13 @@
                                     <field name="account_peppol_mode_constraint" invisible="1"/>
                                     <field name="account_peppol_edi_mode" invisible="1"/>
                                     <div class="mb-3" invisible="not account_peppol_edi_mode == 'prod'">
-                                        By clicking the button below I accept that Odoo may process my e-invoices.
+                                        By clicking the button below:
+                                        <ul>
+                                            <li>You are a legal representative authorized to register this company on the Peppol network.</li>
+                                            <li>You authorize Odoo to act as your Peppol Service Provider to send and receive e-invoices on your behalf.</li>
+                                            <li>You remain fully responsible for the content, accuracy, and legal compliance of your invoices.</li>
+                                            <li>You accept that any fraudulent activity or spam will result in immediate and permanent exclusion from the Peppol network.</li>
+                                        </ul>
                                     </div>
                                     <div class="mb-3" invisible="not account_peppol_edi_mode == 'test'">
                                         Test mode allows registration of the user on the test Peppol network.
