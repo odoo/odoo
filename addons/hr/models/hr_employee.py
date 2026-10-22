@@ -3144,6 +3144,7 @@ class HrEmployee(models.Model):
         self.action_unarchive()
         version = self._get_version(self.departure_id.departure_date)
         version.contract_date_end = self.departure_id.last_contract_date_end
+        self.departure_id._track_in_employee_chatter(is_cancellation=True)
         self.departure_id.unlink()
 
     def _get_working_periods_by_field(self, start, stop, field_key):
