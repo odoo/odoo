@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sale.CollectPaymentCogMenu">
+        <Dropdown t-if="this.env.model.root.data.state === 'sale'">
+            <button class="o_menu_item">Collect Payment</button>
+            <t t-set-slot="content">
+                <DropdownItem class="'o_menu_item'" onSelected.bind="this.openPaymentLinkWizard">
+                    Payment Link
+                </DropdownItem>
+                <DropdownItem
+                    t-if="this.canRegisterPayment"
+                    class="'o_menu_item'"
+                    onSelected.bind="this.openRegisterPaymentWizard"
+                >
+                    Mark as Paid
+                </DropdownItem>
+            </t>
+        </Dropdown>
+        <DropdownItem t-else="" class="'o_menu_item'" onSelected.bind="this.openPaymentLinkWizard">
+            Payment Link
+        </DropdownItem>
+    </t>
+
+</templates>
