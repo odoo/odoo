@@ -11,10 +11,10 @@ export class DeliveryDatePicker extends Interaction {
     start() {
         const deliveryMethod = this.el.closest('[name="o_delivery_method"]');
         this.deliveryRadio = deliveryMethod.querySelector('input[name="o_delivery_radio"]');
-        this.availableDays = JSON.parse(this.el.dataset.deliveryAvailableDays);
+        this.availableDates = JSON.parse(this.el.dataset.deliveryEstimateDates);
         const locale = document.documentElement.getAttribute('lang') || 'en-US';
-        const defaultDate = DateTime.fromISO(this.availableDays[0], { locale });
-        const lastDate = DateTime.fromISO(this.availableDays[this.availableDays.length - 1]);
+        const defaultDate = DateTime.fromISO(this.availableDates[0], { locale });
+        const lastDate = DateTime.fromISO(this.availableDates[this.availableDates.length - 1]);
         this.registerCleanup(
             this.services.datetime_picker.create(
                 {
@@ -57,7 +57,7 @@ export class DeliveryDatePicker extends Interaction {
     * @private
     */
     _isDateValid(date) {
-        return this.availableDays.includes(date.toISODate());
+        return this.availableDates.includes(date.toISODate());
     }
 }
 
