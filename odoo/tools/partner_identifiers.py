@@ -21,6 +21,7 @@ from stdnum.se import orgnr as se_en
 
 from odoo.tools.translate import LazyGettext, LazyTranslate
 from odoo.tools.partner_identifier_validation import (
+    at_tin_validate,
     nl_kvk_validate,
     nl_oin_validate,
     pk_cn_validate,
@@ -486,6 +487,15 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'examples': ['123456a', '123456a001'],
         'category': 'EN',
         'validation_function': at_en.validate,
+        'countries': ['AT'],
+    },
+    'AT_TIN': {
+        'label': _lt('Tax Account Number'),
+        'help': _lt('Austrian Tax Account Number (Abgabenkontonummer/Steuernummer).'),
+        'placeholder': '59-119/9013',
+        'examples': ['59-119/9013', '591199013'],
+        'category': 'TIN',
+        'validation_function': at_tin_validate,
         'countries': ['AT'],
     },
     'AU_ACN': {

@@ -1,5 +1,6 @@
 import re
-from stdnum.exceptions import InvalidFormat, ValidationError
+from stdnum.at import tin as at_tin
+from stdnum.exceptions import InvalidFormat, InvalidChecksum, ValidationError
 from stdnum.sg import uen as sg_uen
 from odoo.tools import single_email_re
 
@@ -10,6 +11,8 @@ NL_KVK_RE = re.compile(r'\d{8}')
 NL_OIN_RE = re.compile(r'\d{20}')
 # TH Branch Code: 5-digit
 TH_BRANCH_CODE_RE = re.compile(r'\d{5}')
+# AT TIN: 9-digit
+AT_TIN_RE = re.compile(r'\d{9}')
 # PK Consumer Identification: 13-digit CNIC
 PK_CN_RE = re.compile(r'\d{13}')
 # Prefixes of the Peppol scheme 0195 participant identifiers: 'SGUEN'/'SGUXN' wrap a
@@ -77,3 +80,17 @@ def validate_email(value):
     if not single_email_re.match(value):
         raise InvalidFormat()
     return value
+
+
+def at_tin_validate(number):
+    """Check if the number is a valid tax identification number.
+    This checks the length (9 digits) and the verification digit.
+    We have to use this instead of stdnum.at tin validate because
+    it tries to import another one. (Can't open orphan path)"""
+    number = at_tin.compact(number)
+    if not AT_TIN_RE.fullmatch(number):
+        raise InvalidFormat()
+    s = at_tin.calc_check_digit(number)
+    if s != number[-1]:
+        raise InvalidChecksum()
+    return number
