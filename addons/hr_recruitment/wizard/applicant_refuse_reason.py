@@ -148,7 +148,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def _get_related_original_applicants(self):
-        duplication_fields = ['id', 'email_normalized', 'partner_phone_sanitized', 'linkedin_profile']
+        duplication_fields = ['id', 'partner_id', 'email_normalized', 'partner_phone_sanitized', 'linkedin_profile_name']
         original_applicant_by_field_value = {field: {} for field in duplication_fields}
         related_original_applicants = dict()
         for original_applicant, field in product(self.applicant_ids, duplication_fields):
