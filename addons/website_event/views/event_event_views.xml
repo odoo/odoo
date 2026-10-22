@@ -75,6 +75,8 @@
         <field name="arch" type="xml">
             <field name="company_id" position="after">
                 <field name="website_id" groups="website.group_multi_website" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" optional="show"/>
+                <field name="website_published" optional="hide"/>
+                <field name="website_visibility" optional="hide"/>
             </field>
         </field>
     </record>

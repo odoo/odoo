@@ -56,7 +56,7 @@ class EventEvent(models.Model):
         [('public', 'Public'), ('link', 'Via a Link'), ('logged_users', 'Logged Users')],
         string="Website Visibility", required=True, default='public', tracking=True,
         help="""Defines the Visibility of the Event on the Website and searches.\n
-            Note that the EventEvent is however always available via its link.""")
+            Note that the Event is however always available via its link.""")
     website_published = fields.Boolean(tracking=True)
     is_published = fields.Boolean(tracking=True)
     publish_on = fields.Datetime(tracking=True)
