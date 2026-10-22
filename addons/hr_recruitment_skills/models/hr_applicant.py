@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, api, fields, models
+from odoo.fields import Domain
+from odoo.tools import SQL
 
 
 class HrApplicant(models.Model):
@@ -29,6 +31,13 @@ class HrApplicant(models.Model):
     matching_score = fields.Integer(string="Matching Score", compute="_compute_matching_score", store=True)
     degree_score = fields.Integer(string="Degree Score", compute="_compute_matching_score", store=True)
     skills_score = fields.Integer(string="Skills Score", compute="_compute_matching_score", store=True)
+    job_matching_score = fields.Integer(
+        string="Job Matching Score",
+        compute="_compute_job_matching_score",
+        compute_sql="_compute_sql_job_matching_score",
+        compute_sudo=True,
+        aggregator=None,
+    )
     is_degree_score_matching = fields.Boolean(string="Degree Score Matching",
         compute="_compute_matching_skill_ids")
     job_expected_degree = fields.Many2one('hr.recruitment.degree', related='job_id.expected_degree',
@@ -45,54 +54,195 @@ class HrApplicant(models.Model):
         for applicant in self:
             applicant.skill_ids = applicant.applicant_skill_ids.skill_id
 
-    @api.depends_context("matching_job_id")
+    @api.depends_context("active_job_id")
     @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree")
     def _compute_matching_skill_ids(self):
-        matching_job_id = self.env.context.get("matching_job_id")
-        matching_job = self.env["hr.job"].browse(matching_job_id)
+        matching_job_from_context = self._get_matching_job_from_context()
         for applicant in self:
-            job = matching_job or applicant.job_id
-            if not job or not (job.job_skill_ids or job.expected_degree):
+            job = matching_job_from_context or applicant.job_id
+            if not job or not (job.current_job_skill_ids or job.expected_degree):
                 applicant.matching_skill_ids = False
                 applicant.missing_skill_ids = False
                 applicant.is_degree_score_matching = False
                 continue
-            job_skills = job.job_skill_ids
-            job_skill_map = {js.skill_id: js.level_progress for js in job_skills}
-            matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
-                lambda a: a.skill_id in job_skill_map,
+            job_skills = job.current_job_skill_ids.skill_id
+            applicant.matching_skill_ids = applicant.current_applicant_skill_ids.skill_id & job_skills
+            applicant.missing_skill_ids = job_skills - applicant.matching_skill_ids
+            applicant.is_degree_score_matching = (
+                bool(job.expected_degree) and applicant.type_id.score >= job.expected_degree.sudo().score
             )
-            applicant.matching_skill_ids = matching_applicant_skills.mapped("skill_id")
-            applicant.missing_skill_ids = job_skills.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
-            applicant.is_degree_score_matching = bool(job.expected_degree) and applicant.type_id.score >= job.expected_degree.sudo().score
 
     @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree")
     def _compute_matching_score(self):
-        matching_job_id = self.env.context.get("matching_job_id")
-        matching_job = self.env["hr.job"].browse(matching_job_id)
         for applicant in self:
-            job = matching_job or applicant.job_id
-            if not job or not (job.job_skill_ids or job.expected_degree):
-                applicant.matching_score = False
-                applicant.degree_score = False
-                applicant.skills_score = False
-                continue
-            job_skills = job.job_skill_ids
-            job_degree = job.expected_degree.sudo().score * 100
-            job_skill_map = {js.skill_id: js.level_progress for js in job_skills}
+            applicant.update(applicant._get_matching_scores(applicant.job_id))
 
-            matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
-                lambda a: a.skill_id in job_skill_map,
-            )
-            applicant_degree = applicant.type_id.score * 100 if job_degree > 1 else 0
-            skills_total = sum(
-                min(skill.level_progress, job_skill_map[skill.skill_id] * 2)
-                for skill in matching_applicant_skills
-            )
-            job_total = sum(job_skills.mapped("level_progress")) + job_degree
-            applicant.degree_score = round((100 * applicant_degree) / job_total) if job_total else 0
-            applicant.skills_score = round((100 * skills_total) / job_total) if job_total else 0
-            applicant.matching_score = applicant.degree_score + applicant.skills_score
+    @api.depends_context("active_job_id")
+    @api.depends("current_applicant_skill_ids", "type_id")
+    def _compute_job_matching_score(self):
+        job = self._get_matching_job_from_context()
+        if not job:
+            self.job_matching_score = 0
+            return
+        for applicant in self:
+            applicant.job_matching_score = applicant._get_matching_scores(job)["matching_score"]
+
+    def _compute_sql_job_matching_score(self, table):
+        job = self._get_matching_job_from_context()
+        if not job:
+            # cast to int4 as a bare 0 in ORDER BY is read as a column position
+            return SQL("0::int4")
+        job_levels = job._get_current_level_by_skill()
+        totals = table._make_alias("job_matching_skills")
+        # Use a LEFT JOIN so that the applicants having none of the job's skills stay in the search, with a skills
+        # total of 0
+        table._query.add_join(
+            kind="LEFT JOIN",
+            alias=totals,
+            table=SQL(
+                """(SELECT applicant_level.applicant_id,
+                           SUM(LEAST(applicant_level.level_progress, job_level.level_progress * 2)) AS skills_total
+                      FROM %(applicant_levels)s AS applicant_level
+                      JOIN %(job_levels)s AS job_level USING (skill_id)
+                  GROUP BY applicant_level.applicant_id)""",
+                applicant_levels=self._get_current_level_by_skill_sql(skills=job.current_job_skill_ids.skill_id),
+                job_levels=self._get_levels_sql(job_levels),
+            ),
+            condition=SQL("%s = %s", totals.applicant_id, table.id),
+        )
+        job_degree = job.expected_degree.score * 100
+        return self._get_matching_score_sql(
+            job_degree=job_degree,
+            job_total=sum(job_levels.values()) + job_degree,
+            applicant_degree=SQL("COALESCE(%s, 0) * 100", table.type_id.score),
+            skills_total=SQL("COALESCE(%s, 0)", totals.skills_total),
+        )
+
+    def _get_matching_job_from_context(self):
+        """
+        Return the active job from the context. Used to calculate matching score for the applicants.
+
+        :return: the ``hr.job`` of ``active_job_id`` in the context, empty if not given
+        """
+        return self.env["hr.job"].browse(self.env.context.get("active_job_id"))
+
+    def _get_current_level_by_skill(self):
+        """
+        Return the highest current level of the applicant per skill. Only certifications can have multiple active levels
+        for the same skill. More info in the docstring of ``_check_not_overlapping_regular_skill``.
+
+        :return: ``{skill: level_progress}``, with ``hr.skill`` records as keys
+        """
+        self.ensure_one()
+        return {
+            skill: max(applicant_skills.mapped("level_progress"))
+            for skill, applicant_skills in self.current_applicant_skill_ids.grouped("skill_id").items()
+        }
+
+    @api.model
+    def _get_current_level_by_skill_sql(self, skills):
+        """
+        SQL version of ``_get_current_level_by_skill``, for all applicants at once.
+
+        :param skills: ``hr.skill`` to limit the levels to
+        :return: a query with the columns ``applicant_id``, ``skill_id`` and ``level_progress``
+        """
+        today = fields.Date.context_today(self)
+        query = self.env["hr.applicant.skill"]._search(
+            Domain("skill_id", "in", skills.ids)
+            & (
+                Domain("valid_to", "=", False) | Domain("valid_to", ">=", today) | Domain("is_certification", "=", True)
+            ),
+        )
+        query.groupby = SQL("%s, %s", query.table.applicant_id, query.table.skill_id)
+        return query.subselect(
+            SQL(
+                """%(applicant_id)s AS applicant_id,
+                   %(skill_id)s AS skill_id,
+                   COALESCE(
+                       MAX(%(level)s) FILTER (WHERE %(valid_to)s IS NULL OR %(valid_to)s >= %(today)s),
+                       (ARRAY_AGG(%(level)s ORDER BY %(valid_to)s DESC, %(level)s DESC))[1]
+                   ) AS level_progress""",
+                applicant_id=query.table.applicant_id,
+                skill_id=query.table.skill_id,
+                level=query.table.level_progress,
+                valid_to=query.table.valid_to,
+                today=today,
+            ),
+        )
+
+    @api.model
+    def _get_levels_sql(self, levels):
+        """
+        Turn the levels of a single job or applicant into an SQL table, so they can be joined with the levels of
+        all the searched applicants or jobs given by ``_get_current_level_by_skill_sql``.
+
+        :param levels: ``{skill: level_progress}`` from ``_get_current_level_by_skill``
+        :return: a query with the columns ``skill_id`` and ``level_progress``
+        """
+        return SQL(
+            "(SELECT * FROM unnest(%(skill_ids)s::int4[], %(levels)s::int4[]) AS level(skill_id, level_progress))",
+            skill_ids=[skill.id for skill in levels],
+            levels=list(levels.values()),
+        )
+
+    def _get_matching_scores(self, job):
+        """
+        Calculate how well the applicant matches the requirements of the given job on the scale 0-100, based on the
+        education degree, skills and both. Each applicant skill counts up to twice the skill level of the job so a
+        score can theoretically exceed 100. Note: Keep this method in sync with ``_get_matching_score_sql``.
+
+        :param job: ``hr.job`` to match against, empty when the applicant has none (e.g. a talent), which scores 0
+        :return: the ``degree_score``, ``skills_score`` and their sum ``matching_score``
+        """
+        self.ensure_one()
+        scores = dict.fromkeys(("degree_score", "skills_score", "matching_score"), 0)
+        if not job:
+            return scores
+        job_levels = job._get_current_level_by_skill()
+        job_degree = job.expected_degree.score * 100
+        job_total = sum(job_levels.values()) + job_degree
+        if not job_total:
+            return scores
+        applicant_levels = self._get_current_level_by_skill()
+        applicant_degree = self.type_id.score * 100 if job_degree > 1 else 0
+        skills_total = sum(
+            min(applicant_levels[skill], level * 2) for skill, level in job_levels.items() if skill in applicant_levels
+        )
+        scores["degree_score"] = round(100 * applicant_degree / job_total)
+        scores["skills_score"] = round(100 * skills_total / job_total)
+        scores["matching_score"] = scores["degree_score"] + scores["skills_score"]
+        return scores
+
+    @api.model
+    def _get_matching_score_sql(self, job_degree, job_total, applicant_degree, skills_total):
+        """
+        SQL version of the ``matching_score`` portion of ``_get_matching_scores``, from the same totals. Each total
+        is a number when it belongs to the job or applicant in the context (the same for every row), or SQL when it
+        belongs to the searched records (different on each row). E.g. when searching applicants for a job, the job
+        totals are numbers and the applicant totals are SQL.
+
+        :param job_degree: degree expected by the job, out of 100
+        :param job_total: ``job_degree`` plus the levels of the job skills
+        :param applicant_degree: degree of the applicant, out of 100
+        :param skills_total: levels of the applicant in the job skills, each up to twice the level of the job
+        :return: the score as SQL, 0 when the job has no skills or degree
+        """
+        applicant_degree = SQL(
+            "CASE WHEN %(job_degree)s > 1 THEN %(applicant_degree)s ELSE 0 END",
+            job_degree=job_degree,
+            applicant_degree=applicant_degree,
+        )
+
+        def percent(total):
+            # float8 so that ROUND() rounds half to even like round(), NULLIF() to not divide by 0
+            return SQL("ROUND(100::float8 * %(total)s / NULLIF(%(job_total)s, 0))", total=total, job_total=job_total)
+
+        return SQL(
+            "COALESCE((%(degree_score)s + %(skills_score)s)::int4, 0)",
+            degree_score=percent(applicant_degree),
+            skills_score=percent(skills_total),
+        )
 
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()
@@ -155,7 +305,6 @@ class HrApplicant(models.Model):
     def action_job_add_applicants(self):
         res = super().action_job_add_applicants()
         if len(self.ids) == 1:
-            res["context"]["active_applicant_skill_ids"] = self.skill_ids.ids
             res["context"]["active_applicant_id"] = self.id
             applicant_job_ids = self.job_id
             if self.pool_applicant_id:
@@ -191,18 +340,25 @@ class HrApplicant(models.Model):
                         applicant.with_context(skills_synced=True).write({"applicant_skill_ids": mapped_skills})
         return super().write(vals)
 
+    @api.depends_context("show_matching_score_in_name", "active_job_id", "formatted_display_name")
     def _compute_display_name(self):
         super()._compute_display_name()
         if self.env.context.get("show_matching_score_in_name", False):
+            # in formatted names (many2one dropdowns), "\t" adds a gap and "--text--" is muted
+            name_format = "%s \t --%s%%--" if self.env.context.get("formatted_display_name") else "%s (%s%%)"
             for applicant in self:
-                if applicant.matching_score:
-                    name = f"{applicant.display_name or applicant.name} \t --{applicant.matching_score:.0f}%--"
-                    applicant.display_name = name.strip()
+                if score := applicant.job_matching_score:
+                    applicant.display_name = name_format % (applicant.display_name or applicant.name, score)
 
     @api.model
-    def name_search(self, name='', domain=None, operator='ilike', limit=100):
-        show_matching_score_in_name = self.env.context.get('show_matching_score_in_name', False)
-        if show_matching_score_in_name:
-            records = self.search(domain).sorted(lambda a: a.matching_score, reverse=True)[:limit]
-            return [(r.id, r.display_name) for r in records]
-        return super().name_search(name=name, domain=domain if domain else None, operator=operator, limit=limit)
+    def name_search(self, name="", domain=None, operator="ilike", limit=100):
+        if not (self.env.context.get("show_matching_score_in_name") and self._get_matching_job_from_context()):
+            return super().name_search(name=name, domain=domain, operator=operator, limit=limit)
+        domain = Domain("display_name", operator, name) & Domain(domain or Domain.TRUE)
+        records = self.search_fetch(
+            domain,
+            ["display_name"],
+            order="job_matching_score desc, id",
+            limit=limit,
+        )
+        return [(record.id, record.display_name) for record in records.sudo()]

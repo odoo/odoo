@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="hr_job_list_inherit_hr_recruitment_skills" model="ir.ui.view">
-        <field name="name">hr.job.view.list.inherit</field>
+    <record id="hr_job_view_list_matching" model="ir.ui.view">
+        <field name="name">hr.job.view.list.matching</field>
         <field name="model">hr.job</field>
-        <field name="inherit_id" ref="hr_recruitment.hr_job_view_tree_inherit"/>
+        <field name="inherit_id" ref="hr.view_hr_job_tree"/>
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="default_order">applicant_matching_score desc, id</attribute>
+            </xpath>
             <field name="open_application_count" position="before">
                 <field name="applicant_matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}"
-                    column_invisible="not context.get('active_applicant_id') and not context.get('active_applicant_skill_ids')"/>
+                    column_invisible="not context.get('active_applicant_id')"/>
                 <field name="matching_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
-                    column_invisible="not context.get('active_applicant_skill_ids')"/>
+                    column_invisible="not context.get('active_applicant_id')"/>
                 <field name="missing_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
-                    column_invisible="not context.get('active_applicant_skill_ids')"/>
+                    column_invisible="not context.get('active_applicant_id')"/>
             </field>
         </field>
     </record>

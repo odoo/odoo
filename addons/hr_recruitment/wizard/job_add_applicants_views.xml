@@ -57,7 +57,7 @@
                             ('talent_pool_ids', '!=', False),
                             ('linked_applicant_ids', 'not in', context.get('active_job_applicant_ids', [])),
                         ]"
-                        context="{'show_matching_score_in_name': True, 'search_default_non_linked_talents': True, 'matching_job_id': job_ids, 'active_job_applicant_ids': context.get('active_job_applicant_ids', [])}"
+                        context="{'show_matching_score_in_name': True, 'search_default_non_linked_talents': True}"
                     />
                 </group>
                 <footer>

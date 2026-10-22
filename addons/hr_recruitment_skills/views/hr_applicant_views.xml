@@ -162,6 +162,10 @@
         <field name="inherit_id" ref="hr_recruitment_skills.crm_case_tree_view_job"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="default_order">job_matching_score desc, id</attribute>
+                <attribute name="default_group_by"></attribute>
+            </xpath>
             <field name="application_status" position="attributes">
                 <attribute name="optional">hide</attribute>
             </field>
@@ -189,10 +193,11 @@
             <field name="kanban_state" position="attributes">
                 <attribute name="optional">show</attribute>
             </field>
+            <field name="matching_score" position="replace"/>
             <field name="partner_name" position="after">
-                <xpath expr="//field[@name='matching_score']" position="move"/>
-                <field name="matching_skill_ids" widget="many2many_tags"/>
-                <field name="missing_skill_ids" widget="many2many_tags"/>
+                <field name="job_matching_score" string="Matching Score" widget="progressbar" options="{'overflow_class': 'bg-success'}"/>
+                <xpath expr="//field[@name='matching_skill_ids']" position="move"/>
+                <xpath expr="//field[@name='missing_skill_ids']" position="move"/>
             </field>
             <field name="recruiter_id" position="after">
                 <xpath expr="//field[@name='kanban_state']" position="move"/>

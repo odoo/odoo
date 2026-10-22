@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="job_add_applicants_view_form" model="ir.ui.view">
+        <field name="name">job.add.applicants.view.form.inherit.skills</field>
+        <field name="model">job.add.applicants</field>
+        <field name="inherit_id" ref="hr_recruitment.job_add_applicants_view_form"/>
+        <field name="arch" type="xml">
+            <field name="job_ids" position="attributes">
+                <attribute name="context">{'show_matching_score_in_name': True, 'list_view_ref': 'hr_recruitment_skills.hr_job_view_list_matching'}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="job_add_applicants_from_job_view_form" model="ir.ui.view">
+        <field name="name">job.add.applicants.from.job.view.form.inherit.skills</field>
+        <field name="model">job.add.applicants</field>
+        <field name="inherit_id" ref="hr_recruitment.job_add_applicants_from_job_view_form"/>
+        <field name="arch" type="xml">
+            <field name="applicant_ids" position="attributes">
+                <attribute name="context">{'show_matching_score_in_name': True, 'search_default_non_linked_talents': True, 'list_view_ref': 'hr_recruitment_skills.crm_case_tree_view_inherit_hr_recruitment_skills'}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
