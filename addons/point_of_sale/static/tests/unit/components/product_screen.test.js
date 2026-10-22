@@ -208,22 +208,26 @@ test("drag and drop reorders products", async () => {
 
 test("price numpad button follows the restrict price control setting", async () => {
     const { store, productScreen } = await mountProductScreen();
+    let loggedCashierId = 2; // Administrator
+    patchWithCleanup(store.accessRight, {
+        get loggedCashier() {
+            return this.data.models["res.users"].get(loggedCashierId);
+        },
+    });
     const isPriceDisabled = () =>
         Boolean(
             productScreen.getNumpadButtons().find((button) => button.value === "price").disabled
         );
-    const cashier = store.accessRight.loggedCashier;
 
     store.config.restrict_price_control = false;
-    for (const role of ["manager", "cashier"]) {
-        cashier._role = role;
-        expect(isPriceDisabled()).toBe(false);
-    }
-
-    store.config.restrict_price_control = true;
-    cashier._role = "manager";
     expect(isPriceDisabled()).toBe(false);
-    cashier._role = "cashier";
+    store.config.restrict_price_control = true;
+    expect(isPriceDisabled()).toBe(false);
+
+    loggedCashierId = 3; // User1
+    store.config.restrict_price_control = false;
+    expect(isPriceDisabled()).toBe(false);
+    store.config.restrict_price_control = true;
     expect(isPriceDisabled()).toBe(true);
 });
 
