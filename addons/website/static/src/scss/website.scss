@@ -801,11 +801,8 @@ font[class*='bg-'] {
                 line-height: $-size + $i;
             }
         }
-        // Default, if no color or background-color already selected
-        &:where(:not([class*='bg-'])) {
-            color: $gray-900;
-        }
-        background-color: $gray-100;
+        // Default, if no background-color already selected
+        background-color: var(--o-color-3);
     }
     &.img-thumbnail {
         padding: 0;
@@ -3717,7 +3714,7 @@ input[value*="data-oe-translation-source-sha"] {
     }
 }
 
-.s_social_media, .s_share {
+%old_s_social_icons {
     $-size: map-get($spacers, 5);
     a {
         .oi, .social_media_img {
@@ -3778,6 +3775,105 @@ input[value*="data-oe-translation-source-sha"] {
             // Unless a color is defined on the icon itself, as the icons with a
             // background, it inherits the snippet’s text color.
             color: inherit !important;
+        }
+    }
+}
+
+// Shared styles for social media icons (version 001)
+%s_social_icons {
+    // Default icon size used by the builder RangeWithNumberInput control
+    // Inherit to icons so the option panel reads 40px initially
+    --social-icon-size: 40px;
+    --social-text-size: var(--body-font-size);
+
+    user-select: none;
+
+    > * {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    &[data-icon-underline="hover"] a:hover > span, &[data-icon-underline="always"] a > span {
+        text-decoration: underline;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: none;
+        }
+
+        & > i.oi, & > span.oi, .social_media_img {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: var(--social-icon-size);
+            height: var(--social-icon-size);
+            margin: map-get($spacers, 1) map-get($spacers, 1) map-get($spacers, 1) 0;
+            // Prevent background-color applied by default on icons with rounded class
+            // Without this, it would be impossible to remove completely the background color
+            background-color: inherit;
+            // Keep roughly the default small 16px glyph for a 40px disk (0.4 ratio)
+            font-size: calc(var(--social-icon-size) * 0.4);
+            line-height: var(--social-icon-size);
+        }
+
+        i.o_sm_with_text {
+            display: inline-flex !important;
+            width: auto;
+            height: auto;
+            margin: 0 map-get($spacers, 1) calc(var(--social-text-size) * 0.25) 0;
+            border-radius: 0;
+            font-size: var(--social-text-size);
+            line-height: inherit;
+            color: inherit;
+            background-color: transparent !important;
+        }
+
+        // Label, hidden by default and revealed in the "Text" and "Icon & Text"
+        // layouts (both hide the standalone icon disk with `d-none`).
+        > span {
+            display: none;
+            // Responsive font-size
+            font-size: clamp(calc(var(--social-text-size) * 0.4), calc(var(--social-text-size) * 0.4 + 2vw), var(--social-text-size));
+        }
+
+        i.d-none ~ span {
+            display: inline-block;
+            padding: 0 calc(var(--social-text-size) * 0.5) calc(var(--social-text-size) * 0.25) 0;
+        }
+    }
+
+    &:not(.no_icon_color) {
+        .oi {
+            // Prevent bg-o-color-* classes from overriding the "Brand Color"
+            // when the option is checked
+            color: inherit;
+            border-color: currentColor !important;
+        }
+
+        $-social-networks: (
+            "facebook": "facebook",
+            "twitter": "twitter",
+            "linkedin": "linkedin",
+            "google": "google-plus",
+            "whatsapp": "whatsapp",
+            "pinterest": "pinterest",
+            "github": "github",
+            "instagram": "instagram",
+            "youtube": "youtube",
+            "tiktok": "tiktok",
+            "discord": "discord",
+        );
+
+        @each $network, $color in $-social-networks {
+            [class*="_#{$network}"] {
+                &, &:hover, &:focus {
+                    @extend .text-#{$color};
+                }
+            }
         }
     }
 }
