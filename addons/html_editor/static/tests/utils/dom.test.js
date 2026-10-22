@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import {
     cleanTextNode,
+    cleanTrailingBR,
     fillEmpty,
     removeInvisibleWhitespace,
     makeContentsInline,
@@ -259,6 +260,34 @@ describe("makeContentsInline", () => {
         container.innerHTML = "<div><p><strong>text1</strong><u>text2</u></p><div>";
         makeContentsInline(container);
         expect(container.innerHTML).toBe("<strong>text1</strong><u>text2</u>");
+    });
+});
+
+describe("cleanTrailingBR", () => {
+    test("should remove the trailing BR of a block", async () => {
+        const { el } = await setupEditor("<p>abc<br></p>");
+        cleanTrailingBR(el.querySelector("p"));
+        expect(el.innerHTML).toBe("<p>abc</p>");
+    });
+    test("should keep the BR of an empty block", async () => {
+        const { el } = await setupEditor("<p><br></p>");
+        cleanTrailingBR(el.querySelector("p"));
+        expect(el.innerHTML).toBe("<p><br></p>");
+    });
+    test("should keep the second BR of a double trailing BR", async () => {
+        const { el } = await setupEditor("<p>abc<br><br></p>");
+        cleanTrailingBR(el.querySelector("p"));
+        expect(el.innerHTML).toBe("<p>abc<br><br></p>");
+    });
+    test("should keep the BR at the end of an inline followed by text", async () => {
+        const { el } = await setupEditor("<p><strong>abc<br></strong>def<br></p>");
+        cleanTrailingBR(el.querySelector("strong"));
+        expect(el.innerHTML).toBe("<p><strong>abc<br></strong>def<br></p>");
+    });
+    test("should remove the BR at the end of an inline ending its block", async () => {
+        const { el } = await setupEditor("<p><strong>abc<br></strong></p>");
+        cleanTrailingBR(el.querySelector("strong"));
+        expect(el.innerHTML).toBe("<p><strong>abc</strong></p>");
     });
 });
 
