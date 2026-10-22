@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import JsonRpcException, tagged
+from odoo.tests import JsonRpcException, new_test_user, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
@@ -341,6 +341,120 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertEqual(self.sale_order.state, "draft")
         self.assertFalse(tx.invoice_ids)
         self.assertFalse(self.sale_order.invoice_ids)
+
+    def _confirm_order_with_price(self, price):
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.service_product.id,
+                    "product_uom_qty": 1,
+                    "price_unit": price,
+                })
+            ],
+        })
+        order.action_confirm()
+        return order
+
+    def _get_mark_as_paid_wizard(self, order, **values):
+        action = order.action_register_payment()
+        return order.env[action["res_model"]].with_context(action["context"]).create(values)
+
+    def _mark_as_paid(self, order, **values):
+        return self._get_mark_as_paid_wizard(order, **values).action_create_payments()
+
+    def _get_payment_link_amount(self, order):
+        return order._get_default_payment_link_values()["amount"]
+
+    def _create_user(self, groups):
+        return new_test_user(
+            self.env,
+            login="collect_payment_user",
+            groups=f"base.group_user,{groups}",
+            company_id=self.env.company.id,
+        )
+
+    def _patch_payments_without_journal_entry(self):
+        """Enable the behavior of the Accounting app: payments have no journal entry."""
+        journals = self.env["account.journal"].search([
+            *self.env["account.journal"]._check_company_domain(self.env.company),
+            ("type", "=", "bank"),
+        ])
+        journals.inbound_payment_method_line_ids.payment_account_id = False
+        return patch.object(
+            self.env.registry["account.move"],
+            "_get_invoice_in_payment_state",
+            lambda _: "in_payment",
+        )
+
+    def _create_done_transaction(self, order, amount):
+        self.amount = amount
+        self.currency = order.currency_id
+        self.reference = f"{order.name}-online"
+        return self._create_transaction(flow="redirect", sale_order_ids=[order.id], state="done")
+
+    def test_mark_as_paid_reopened_does_not_create_a_second_invoice(self):
+        order = self._confirm_order_with_price(100)
+
+        order.action_register_payment()
+        order.action_register_payment()
+
+        self.assertEqual(order.invoice_count, 1)
+
+    def test_mark_as_paid_deducts_online_payment_not_yet_post_processed(self):
+        order = self._confirm_order_with_price(100)
+        self._create_done_transaction(order, 30)
+
+        self.assertEqual(self._get_mark_as_paid_wizard(order).amount, 70)
+
+    def test_mark_as_paid_on_order_fully_paid_online_raises_without_invoicing(self):
+        order = self._confirm_order_with_price(100)
+        self._create_done_transaction(order, 100)
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            self._run_post_processing()
+
+        with self.assertRaises(UserError):
+            order.action_register_payment()
+
+        self.assertFalse(order.invoice_ids)
+
+    def test_payment_link_suggests_the_remainder_before_invoice_is_posted(self):
+        order = self._confirm_order_with_price(100)
+        self._mark_as_paid(order, amount=40)
+
+        self.assertEqual(self._get_payment_link_amount(order), 60)
+
+    def test_payment_link_deducts_invoices_a_sales_user_cannot_read(self):
+        salesman = self._create_user("sales_team.group_sale_salesman")
+        order = self._confirm_order_with_price(100)
+        order.user_id = salesman
+        self._mark_as_paid(order, amount=40)
+        order.invoice_ids.invoice_user_id = self.env.ref("base.user_admin")
+
+        self.assertEqual(self._get_payment_link_amount(order.with_user(salesman)), 60)
+
+    def test_payment_without_journal_entry_is_deducted_from_the_wizard(self):
+        order = self._confirm_order_with_price(100)
+        with self._patch_payments_without_journal_entry():
+            self._mark_as_paid(order, amount=40)
+
+            self.assertEqual(self._get_mark_as_paid_wizard(order).amount, 60)
+
+    def test_collect_payment_menu_on_confirmed_order(self):
+        # The timesheet report of the action menu requires timesheet rights when it is installed
+        self.env.user.group_ids |= (
+            self.env.ref("hr_timesheet.group_hr_timesheet_user", raise_if_not_found=False)
+            or self.env["res.groups"]
+        )
+        order = self._confirm_order_with_price(100)
+        self.start_tour(
+            f"/odoo/action-sale.action_orders/{order.id}",
+            "sale_collect_payment_on_confirmed_order",
+            login=self.env.user.login,
+        )
+        invoice = order.invoice_ids
+
+        self.assertEqual(invoice.payment_state, "partial")
 
     def test_split_payment_without_prepayment_does_not_confirm_order(self):
         """Test that a partial payment doesn't confirm an order that doesn't require prepayment."""
