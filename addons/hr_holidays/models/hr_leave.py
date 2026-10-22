@@ -2639,14 +2639,16 @@ class HrLeave(models.Model):
         #                  configuration
         self.ensure_one()
         if len(leave_split) == 1:
-            # If the split results on one work entry type, change it if it differs from the original one
+            # If the split results on one work entry type, change it if it differs from the original one, keeping the
+            # dates of the request: the new type can be taken in coarser units (an afternoon start, full-day type)
             work_entry_type = leave_split[0][0]
             if work_entry_type != self.work_entry_type_id:
-                self.work_entry_type_id = work_entry_type
+                self.with_context(leave_skip_date_from_to_computation=True).work_entry_type_id = work_entry_type
             return self
 
         res = self.env['hr.leave']
         current_leave = self
+        part_work_entry_types = []
         remaining_days = self.number_of_days if use_worked_days else self._get_calendar_days()
         if use_worked_days:
             domain = [('count_as', '=', 'absence'),
@@ -2688,7 +2690,7 @@ class HrLeave(models.Model):
 
             current_leave.request_date_to = new_request_date_to
             current_leave.request_date_to_period = new_request_date_to_period
-            current_leave.work_entry_type_id = work_entry_type
+            part_work_entry_types.append((current_leave, work_entry_type))
 
             new_leave_request_date_from = new_request_date_to + relativedelta(days=1)
             new_leave_request_date_from_period = 'am'
@@ -2711,6 +2713,11 @@ class HrLeave(models.Model):
                 current_leave = new_leave
             else:
                 res += current_leave
+        # once every part exists: a part's own type would otherwise recompute its dates in its own request unit and
+        # widen a half day to the whole day, over the previous part
+        for leave, work_entry_type in part_work_entry_types:
+            if work_entry_type != leave.work_entry_type_id:
+                leave.with_context(leave_skip_date_from_to_computation=True).work_entry_type_id = work_entry_type
         return res
 
     def _get_extra_default_leave_values_for_split(self):

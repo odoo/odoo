@@ -2040,6 +2040,58 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(week_off.number_of_days, 2.5, "A week off should only count the mornings.")
         self.assertEqual(week_off.number_of_hours, 20, "A week off should only count the worked hours.")
 
+    def test_split_from_afternoon_into_full_day_types(self):
+        """ A time off starting in the afternoon and split into time types taken in full days: each part keeps the
+        boundaries of the request instead of being widened to whole days over its neighbour. """
+        full_day_types = self.env['hr.work.entry.type'].create([{
+            'name': f'Full day part {i}',
+            'code': f'Full day part {i}',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        } for i in (1, 2)])
+        leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
+            'name': 'Accident at noon',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.holidays_type_half.id,
+            'request_date_from': date(2024, 4, 3),  # Wednesday
+            'request_date_from_period': 'pm',
+            'request_date_to': date(2024, 4, 10),
+            'request_date_to_period': 'pm',
+        })
+        self.assertEqual(leave._get_calendar_days(), 7.5)
+
+        parts = leave._create_leaves_from_split([
+            (self.holidays_type_half, 2), (full_day_types[0], 5), (full_day_types[1], 0.5)])
+
+        self.assertEqual(parts.work_entry_type_id, self.holidays_type_half | full_day_types)
+        tz = ZoneInfo(leave.tz)
+
+        def local(dt):
+            return dt.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+
+        self.assertEqual(
+            [(local(part.date_from), local(part.date_to)) for part in parts],
+            [(datetime(2024, 4, 3, 13), datetime(2024, 4, 5, 12)),
+             (datetime(2024, 4, 5, 13), datetime(2024, 4, 10, 12)),
+             (datetime(2024, 4, 10, 13), datetime(2024, 4, 10, 17))])
+        self.assertEqual(parts.mapped('number_of_hours'), [16, 24, 4])
+
+        # split into one full-day type only: the type changes, the afternoon start stays
+        single = self.env['hr.leave'].with_context(leave_fast_create=True).create({
+            'name': 'Accident at noon, one type',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.holidays_type_half.id,
+            'request_date_from': date(2024, 4, 17),
+            'request_date_from_period': 'pm',
+            'request_date_to': date(2024, 4, 18),
+            'request_date_to_period': 'pm',
+        })
+        self.assertEqual(single._create_leaves_from_split([(full_day_types[0], 1.5)]), single)
+        self.assertEqual(single.work_entry_type_id, full_day_types[0])
+        self.assertEqual((local(single.date_from), local(single.date_to)),
+                         (datetime(2024, 4, 17, 13), datetime(2024, 4, 18, 17)))
+
     def test_unified_time_off_half_day_scenarios_irregular_calendar(self):
         employee = self.employee_emp
         employee.resource_calendar_id = self.irregular_calendar
