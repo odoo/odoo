@@ -2030,6 +2030,18 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         other_orders = session.order_ids - order
         self.assertFalse(other_orders.account_move.reversal_move_ids)
 
+    def test_post_invoicing_without_customer(self):
+        self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+        )
+        self.simulate_cron_trigger()
+        self.assertTrue(order.is_globally_invoiced)
+        self.assertFalse(order.partner_id)
+        with self.assertRaisesRegex(UserError, "A customer must be set on the order to invoice it."):
+            order.action_pos_order_invoice()
+
     def test_consolidated_invoice_customer_account_after_closing(self):
         """
         The customer account line of the closing entry holds the amount of

@@ -1256,8 +1256,8 @@ class PosSession(models.Model):
         """
         self.ensure_one()
         orders.account_move.ensure_one()
-        orders.partner_id.ensure_one()
-
+        if not orders.partner_id:
+            raise UserError(_("A customer must be set on the order to invoice it."))
         if any(not order.is_globally_invoiced for order in orders):
             raise UserError(_("Some orders are not globally invoiced."))
 
