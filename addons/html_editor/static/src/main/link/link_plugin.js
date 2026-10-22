@@ -27,7 +27,6 @@ import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_det
 import { session } from "@web/session";
 
 /** @typedef {import("@odoo/owl").Component} Component */
-/** @typedef {import("plugins").CSSSelector} CSSSelector */
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -169,10 +168,7 @@ async function fetchAttachmentMetaData(url, ormService) {
  */
 
 /**
- * @typedef {((link: HTMLLinkElement) => boolean | undefined)[]} is_link_editable_predicates
- * @typedef {((link: HTMLLinkElement) => boolean | undefined)[]} is_empty_link_legit_predicates
  * @typedef {(() => boolean | undefined)[]} is_link_allowed_on_selection_predicates
- * @typedef {CSSSelector[]} immutable_link_selectors
  * @typedef {{
  *      PopoverClass: Component;
  *      isAvailable: (linkEl: HTMLLinkElement) => boolean;
@@ -204,6 +200,7 @@ export class LinkPlugin extends Plugin {
         "baseContainer",
         "feff",
         "delete",
+        "properties",
     ];
     static defaultConfig = {
         allowStripDomain: true,
@@ -319,25 +316,16 @@ export class LinkPlugin extends Plugin {
 
         advanced_popover_options: [],
 
-        immutable_link_selectors: [
-            '[data-bs-toggle="tab"]',
-            '[data-bs-toggle="collapse"]',
-            '[data-bs-toggle="dropdown"]',
-            ".dropdown-item",
-            "[data-oe-model]",
-            ":has(>[data-oe-model])",
-            ".o_prevent_link_editor a",
+        properties: [
+            { predicate: "A", splittable: false },
+            { predicate: "[data-mimetype]", emptyLinkLegit: true },
+            {
+                predicate: `[data-bs-toggle="tab"], [data-bs-toggle="collapse"],
+                    [data-bs-toggle="dropdown"], .dropdown-item, [data-oe-model],
+                    :has(>[data-oe-model]), .o_prevent_link_editor a`,
+                immutableLink: true,
+            },
         ],
-        is_empty_link_legit_predicates: (linkEl) => {
-            if (linkEl.hasAttribute("data-mimetype")) {
-                return true;
-            }
-        },
-        is_node_splittable_predicates: (node) => {
-            if (node.nodeName === "A") {
-                return false;
-            }
-        },
         // When the selection fully covers a link, we consider that the link is selected.
         is_node_fully_selected_predicates: (node, selection) => {
             if (
@@ -975,14 +963,10 @@ export class LinkPlugin extends Plugin {
             }
         } else {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
-            const isLinkEditable =
-                this.checkPredicates("is_link_editable_predicates", closestLinkElement) ?? false;
             if (closestLinkElement) {
                 if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
                     this.openLinkPopover(closestLinkElement);
                 }
-            } else if (isLinkEditable) {
-                this.openLinkPopover(closestLinkElement);
             } else {
                 this.linkInDocument = null;
                 this.closeLinkTools();
@@ -1190,7 +1174,7 @@ export class LinkPlugin extends Plugin {
                 [...link.childNodes].some(isVisible) ||
                 !link.parentElement.isContentEditable ||
                 this.dependencies.delete.isUnremovable(link) ||
-                (this.checkPredicates("is_empty_link_legit_predicates", link) ?? false)
+                (this.dependencies.properties.get(link, "emptyLinkLegit") ?? false)
             ) {
                 continue;
             }
@@ -1505,7 +1489,7 @@ export class LinkPlugin extends Plugin {
     }
 
     isLinkImmutable(linkEl) {
-        return this.getResource("immutable_link_selectors").some((s) => linkEl.matches(s));
+        return this.dependencies.properties.get(linkEl, "immutableLink") ?? false;
     }
 
     doubleClickLinkOverrides(ev) {

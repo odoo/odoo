@@ -31,10 +31,10 @@ export class NavTabsStyleOptionPlugin extends Plugin {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
         is_unremovable_selectors: ".nav-item",
-        is_node_splittable_predicates: (node) => {
-            if (this.isUnsplittable(node)) {
-                return false;
-            }
+        properties: {
+            predicate:
+                ":is(.s_tabs, .s_tabs_images) li.nav-item, :is(.s_tabs, .s_tabs_images) li.nav-item *",
+            splittable: false,
         },
         dropzone_selectors: {
             selector: ".s_tabs, .s_tabs_images",
@@ -116,15 +116,6 @@ export class NavTabsStyleOptionPlugin extends Plugin {
             nextNavItemEl.after(this.overlayTarget);
             nextTabPaneEl.after(tabPaneEl);
         }
-    }
-
-    isUnsplittable(node) {
-        return (
-            node &&
-            node.nodeType === Node.ELEMENT_NODE &&
-            node.closest(".s_tabs, .s_tabs_images") &&
-            node.closest("li")?.classList.contains("nav-item")
-        );
     }
 
     /**

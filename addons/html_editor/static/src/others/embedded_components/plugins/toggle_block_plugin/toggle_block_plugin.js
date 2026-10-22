@@ -36,22 +36,11 @@ export class ToggleBlockPlugin extends Plugin {
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        hints: [
-            withSequence(20, {
-                selector: `${toggleSelector} ${titleSelector} > *`,
-                text: _t("Toggle title"),
-            }),
-            withSequence(10, {
-                selector: `${toggleSelector} ${contentSelector}:not(:focus) > ${baseContainerGlobalSelector}:only-child`,
-                text: _t("Add something inside this toggle"),
-            }),
-        ],
         hint_targets_providers: (selectionData, editable) => [
             ...editable.querySelectorAll(
                 `${toggleSelector} ${contentSelector} > ${baseContainerGlobalSelector}:only-child`
             ),
         ],
-        move_node_blacklist_selectors: `${toggleSelector} ${titleSelector} *`,
         powerbox_items: [
             {
                 commandId: "insertToggleBlock",
@@ -86,7 +75,21 @@ export class ToggleBlockPlugin extends Plugin {
         split_element_block_overrides: withSequence(1, this.handleSplitElementBlock.bind(this)),
         tab_overrides: this.handleTab.bind(this),
 
-        should_show_power_buttons_predicates: this.showPowerButtons.bind(this),
+        properties: [
+            {
+                predicate: (node) => closestElement(node, `${toggleSelector} ${titleSelector}`),
+                powerButtons: false,
+            },
+            { predicate: `${toggleSelector} ${titleSelector} *`, movable: false },
+            withSequence(20, {
+                predicate: `${toggleSelector} ${titleSelector} > *`,
+                hint: _t("Toggle title"),
+            }),
+            withSequence(10, {
+                predicate: `${toggleSelector} ${contentSelector}:not(:focus) > ${baseContainerGlobalSelector}:only-child`,
+                hint: _t("Add something inside this toggle"),
+            }),
+        ],
 
         before_insert_processors: this.handleInsert.bind(this),
     };
@@ -614,11 +617,5 @@ export class ToggleBlockPlugin extends Plugin {
                 initialText,
             })
         );
-    }
-
-    showPowerButtons(selection) {
-        if (selection.isCollapsed) {
-            return !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`);
-        }
     }
 }
