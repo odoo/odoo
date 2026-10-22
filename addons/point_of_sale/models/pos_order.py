@@ -1617,6 +1617,11 @@ class PosOrder(models.Model):
         return []
 
     def _generate_pos_order_invoice(self):
+        if any(not order.partner_id for order in self):
+            raise UserError(_("Kindly ensure that each order contains a customer."))
+        if len(self.partner_id) > 1:
+            raise UserError(_("Orders invoiced together must have the same customer."))
+
         if not self.env['res.company']._with_locked_records(self, allow_raising=False):
             raise UserError(_("Some orders are already being invoiced. Please try again later."))
 

@@ -2236,6 +2236,42 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         other_orders = session.order_ids - order
         self.assertFalse(other_orders.account_move.reversal_move_ids)
 
+    def test_post_invoicing_without_customer(self):
+        """ An order without customer cannot be invoiced from the back end, while
+        its session is open or once it is in a session closing entry, and the
+        wizard refuses before invoicing any of the selected orders.
+        """
+        self.open_pos_session()
+        order_with_customer = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+            extra_data={'partner_id': self.partner_1.id},
+        )
+        order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 11.2}]],
+            products=[[self.product_12, {}]],
+        )
+        self.assertFalse(order.partner_id)
+        with self.assertRaisesRegex(UserError, "Kindly ensure that each order contains a customer."):
+            order.action_pos_order_invoice()
+
+        self.simulate_cron_trigger()
+        self.assertTrue(order.is_globally_invoiced)
+        self.assertEqual(order_with_customer.account_move, order.account_move)
+        with self.assertRaisesRegex(UserError, "Kindly ensure that each order contains a customer."):
+            order.action_pos_order_invoice()
+
+        wizard = self.env['pos.make.invoice'].create({'consolidated_billing': False})
+        with (
+            patch.object(
+                self.registry['pos.order'],
+                '_generate_pos_order_invoice',
+                side_effect=AssertionError("No order should be invoiced"),
+            ),
+            self.assertRaisesRegex(UserError, "Kindly ensure that each order contains a customer."),
+        ):
+            wizard.with_context(active_ids=(order_with_customer | order).ids).action_create_invoices()
+
     def test_consolidated_invoice_customer_account_after_closing(self):
         """
         The customer account line of the closing entry holds the amount of
