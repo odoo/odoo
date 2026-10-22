@@ -7,6 +7,7 @@ import werkzeug.urls
 from lxml import etree, html
 
 from odoo.tools.misc import hmac
+from odoo.tools.translate import TRANSLATED_ELEMENTS
 from odoo.tools.urls import urljoin
 
 
@@ -66,6 +67,36 @@ def similarity_score(s1, s2):
     score -= dist / len(s1)
     score -= len(set1.symmetric_difference(s2)) / (len(s1) + len(s2))
     return score
+
+
+# tags formatting a part of a line, that don't separate words: the ones translated
+# inline except line breaks, plus links and the old <strike>
+INLINE_TAGS = (TRANSLATED_ELEMENTS - {'br'}) | {'a', 'strike'}
+
+
+def text_from_element(element):
+    """Return the text of an HTML element on one line, as a browser shows it.
+
+    Unlike ``text_from_html``, it reads a parsed element instead of parsing a
+    string again, and inline tags (bold, links...) add no space: it gives
+    "He is great." for ``He is <b>great</b>.``, not "He is great .".
+
+    :param element: lxml element.
+    :rtype: str
+    """
+    def text(el):
+        parts = [el.text or '']
+        for child in el:
+            if not isinstance(child.tag, str):
+                pass  # a <!-- comment --> isn't shown
+            elif child.tag in INLINE_TAGS:
+                parts.append(text(child))
+            else:
+                parts += [' ', text(child), ' ']
+            parts.append(child.tail or '')  # the text after it is shown
+        return ''.join(parts)
+
+    return ' '.join(text(element).split())
 
 
 def text_from_html(html_fragment, collapse_whitespace=False):

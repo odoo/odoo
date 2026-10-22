@@ -26,6 +26,7 @@ from odoo.addons.website.tools import (
     adapt_dark_palette_content,
     get_base_domain,
     similarity_score,
+    text_from_element,
     text_from_html,
 )
 from odoo.addons.portal.controllers.portal import pager
@@ -37,6 +38,7 @@ from odoo.models import Query
 from odoo.modules.module import get_manifest
 from odoo.tools import BinaryBytes, BinaryValue, file_open, lazy
 from odoo.tools.image import image_process
+from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.sql import SQL, escape_like_value
 from odoo.tools.translate import _
 
@@ -1689,6 +1691,8 @@ class Website(models.CachedModel):
             is_view_active=self.is_view_active,
             translatable=translatable,
             editable=editable,
+            # schemas of the rendered snippets, output by the layout
+            structured_data_snippets=[],
         ))
 
         if editable:
@@ -2727,6 +2731,83 @@ class Website(models.CachedModel):
             'url': base_url,
             'logo': f'{base_url}/web/image/website/{self.id}/logo',
         }
+
+    def _build_jsonld_item_vals(self, item):
+        """Build the Schema.org dictionary of an item marked in HTML.
+
+        :param item: element marked with ``data-jsonld-type``.
+        :return: Dictionary of Schema.org properties, or None if empty.
+        :rtype: dict | None
+        """
+        item_type = item.get('data-jsonld-type').strip()
+        props = self._get_jsonld_props(item)
+        if not item_type or not props:
+            return None
+        vals = {'@type': item_type, **props}
+        if vals['@type'] == 'Person':
+            if 'name' not in vals:
+                return None
+            # no host: views keep this in their compiled code, so the current
+            # host is added when rendering (see _render_snippets_jsonld)
+            vals['worksFor'] = {'@id': '/#organization'}
+        return vals
+
+    def _get_jsonld_props(self, el):
+        """Read the Schema.org properties of an item from its descendants
+        marked with ``data-jsonld-prop``.
+
+        :param el: element marked with ``data-jsonld-type``.
+        :return: Dictionary of Schema.org properties.
+        :rtype: dict
+        """
+        props, items = {}, {}
+        for prop_el in el.xpath('.//*[@data-jsonld-prop]'):
+            if prop_el.xpath('ancestor::*[@data-jsonld-type][1]')[0] is not el:
+                continue  # property of a nested item
+            prop = prop_el.get('data-jsonld-prop').strip()
+            if not prop or prop.startswith('@'):
+                continue  # not a property, like the @type and @id of JSON-LD
+            # a nested item: all of them are kept, a value only once
+            if jsonld_type := prop_el.get('data-jsonld-type', '').strip():
+                if item := self._get_jsonld_props(prop_el):
+                    items.setdefault(prop, []).append({'@type': jsonld_type, **item})
+                continue
+            if prop_el.tag == 'img':
+                value = prop_el.get('src', '').strip()
+                if not value.startswith(('/', 'http://', 'https://')):
+                    continue  # not a URL to give: embedded (data:), relative, javascript:...
+            else:
+                value = text_from_element(prop_el)
+            if value:
+                props.setdefault(prop, value)
+        for prop, prop_items in items.items():
+            props[prop] = prop_items if len(prop_items) > 1 else prop_items[0]
+        return props
+
+    def _render_snippets_jsonld(self, schemas):
+        """Render the JSON-LD of the snippets of the page.
+
+        :param list schemas: Schema.org dictionaries of the rendered snippets.
+        :return: JSON-LD string.
+        :rtype: str
+        """
+        base_url = self.get_base_url()
+
+        # the schemas are compiled in the templates without host: add the current one
+        def make_absolute(value, prop=None):
+            if isinstance(value, dict):
+                return {key: make_absolute(val, key) for key, val in value.items()}
+            if isinstance(value, list):
+                return [make_absolute(val, prop) for val in value]
+            # only paths of the website get its host: other URLs stay as written
+            if prop in ('@id', 'image') and value.startswith('/') and not value.startswith('//'):
+                return base_url + value
+            return value
+
+        return json_safe.dumps(
+            {'@context': 'https://schema.org', '@graph': make_absolute(schemas)},
+            ensure_ascii=False,
+        )
 
     @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
