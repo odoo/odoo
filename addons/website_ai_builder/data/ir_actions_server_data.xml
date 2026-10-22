@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_actions_server_list_building_blocks" model="ir.actions.server">
+        <field name="name">AI: List Building Blocks</field>
+        <field name="state">code</field>
+        <field name="use_in_ai" eval="True"/>
+        <field name="model_id" ref="ai.model_ai_agent"/>
+        <field name="ai_tool_thinking_text">Listing available building blocks</field>
+        <field name="ai_tool_description">
+            Lists all available Odoo website building blocks (snippets) with their key, name and title.
+            Use this to discover which building blocks exist before getting their code.
+        </field>
+        <field name="ai_tool_schema">
+        {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
+        </field>
+        <field name="code">
+            ai['result'] = record._ai_tool_list_building_blocks()
+        </field>
+    </record>
+
+    <record id="ir_actions_server_get_building_block_code" model="ir.actions.server">
+        <field name="name">AI: Get Building Block Code</field>
+        <field name="state">code</field>
+        <field name="use_in_ai" eval="True"/>
+        <field name="model_id" ref="ai.model_ai_agent"/>
+        <field name="ai_tool_thinking_text">Fetching building block HTML</field>
+        <field name="ai_tool_description">
+            Retrieves the rendered HTML of a specific Odoo website building block (snippet).
+            Use this to get the actual HTML structure of a building block before modifying it.
+            The snippet_key should be in the format "website.s_name" (e.g., "website.s_cover", "website.s_text_image").
+        </field>
+        <field name="ai_tool_schema">
+        {
+            "type": "object",
+            "properties": {
+                "snippet_key": {
+                    "type": "string",
+                    "description": "The template key of the building block (e.g., 'website.s_cover', 'website.s_text_image')"
+                }
+            },
+            "required": ["snippet_key"]
+        }
+        </field>
+        <field name="code">
+            ai['result'] = record._ai_tool_get_building_block_code(snippet_key)
+        </field>
+    </record>
+
+    <record id="ir_actions_server_apply_html_to_page" model="ir.actions.server">
+        <field name="name">AI: Apply HTML to Page</field>
+        <field name="state">code</field>
+        <field name="use_in_ai" eval="True"/>
+        <field name="model_id" ref="ai.model_ai_agent"/>
+        <field name="ai_tool_thinking_text">Applying changes to the page</field>
+        <field name="ai_tool_description">
+            Applies changes to the website page currently being edited.
+
+            PREFERRED for editing existing content: use action="edit_content" with section_index.
+            You can combine content_replacements (to change text/HTML inside elements) and class_operations (to add/remove CSS classes) in the same call.
+
+            For changing background color presets: use class_operations with no selector (targets the section itself).
+            Example: action="edit_content", section_index=2, class_operations=[{"remove": "o_cc1", "add": "o_cc3"}]
+
+            For changing text: use content_replacements with a CSS selector.
+            Example: action="edit_content", section_index=1, content_replacements=[{"selector": "h1", "new_inner_html": "New &lt;strong&gt;Bold&lt;/strong&gt; Title"}]
+
+            For adding new sections: use action="append" or "prepend" with html.
+            For removing sections: use action="remove" with section_index.
+            NEVER invent image URLs — only use /web/image/website.* paths from building block templates.
+        </field>
+        <field name="ai_tool_schema">
+        {
+            "type": "object",
+            "properties": {
+                "html": {
+                    "type": "string",
+                    "description": "HTML content for append/prepend/replace/replace_all actions. Not needed for edit_content or remove."
+                },
+                "action": {
+                    "type": "string",
+                    "enum": ["edit_content", "append", "replace", "remove", "prepend", "replace_all"],
+                    "description": "'edit_content' edits elements within a section (PREFERRED), 'append' adds at end, 'prepend' adds at beginning, 'replace' replaces entire section, 'remove' deletes section, 'replace_all' replaces all page content."
+                },
+                "section_index": {
+                    "type": "integer",
+                    "description": "1-based index of the section to target (from the page structure in initial context)."
+                },
+                "content_replacements": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "selector": {"type": "string", "description": "CSS selector for the element within the section (e.g. 'h1', '.lead', '.btn-primary')"},
+                            "new_inner_html": {"type": "string", "description": "New innerHTML. Can include formatting tags (strong, em, a, br, span)."}
+                        },
+                        "required": ["selector", "new_inner_html"]
+                    },
+                    "description": "Replace innerHTML of targeted elements. Preserves the element and surrounding DOM."
+                },
+                "class_operations": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "selector": {"type": "string", "description": "CSS selector for the element. Leave empty or omit to target the section element itself."},
+                            "add": {"type": "string", "description": "Space-separated CSS classes to add (e.g. 'o_cc o_cc3 pt48')"},
+                            "remove": {"type": "string", "description": "Space-separated CSS classes to remove (e.g. 'o_cc1 pt32')"}
+                        },
+                        "required": []
+                    },
+                    "description": "Add or remove CSS classes on elements. Use this for background color presets (o_cc o_cc1-o_cc5), spacing (pt/pb), text alignment, etc. When selector is empty, targets the section element itself."
+                }
+            },
+            "required": ["action"]
+        }
+        </field>
+        <field name="code">
+            ai['result'] = record._ai_tool_apply_html_to_page(html=html if html else '', action=action, section_index=section_index if section_index else None, content_replacements=content_replacements if content_replacements else None, class_operations=class_operations if class_operations else None)
+        </field>
+    </record>
+
+    <record id="ir_actions_server_list_custom_css" model="ir.actions.server">
+        <field name="name">AI: List Custom CSS Rules</field>
+        <field name="state">code</field>
+        <field name="use_in_ai" eval="True"/>
+        <field name="model_id" ref="ai.model_ai_agent"/>
+        <field name="ai_tool_thinking_text">Loading custom CSS rules</field>
+        <field name="ai_tool_description">
+            Returns the current content of the user_custom_rules.scss file.
+            Use this to see what custom styles are already applied before adding new ones.
+        </field>
+        <field name="ai_tool_schema">
+        {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
+        </field>
+        <field name="code">
+            ai['result'] = record._ai_tool_list_custom_css_rules()
+        </field>
+    </record>
+
+    <record id="ir_actions_server_create_custom_css" model="ir.actions.server">
+        <field name="name">AI: Create Custom CSS Rule</field>
+        <field name="state">code</field>
+        <field name="use_in_ai" eval="True"/>
+        <field name="model_id" ref="ai.model_ai_agent"/>
+        <field name="ai_tool_thinking_text">Creating custom CSS rule</field>
+        <field name="ai_tool_description">
+            Appends SCSS rules to the website's user_custom_rules.scss file.
+            After saving, the page is automatically saved and CSS assets are reloaded.
+            Only use this tool when predefined Odoo CSS classes cannot achieve the desired styling.
+            The CSS content should be valid SCSS. Use Odoo SCSS variables when available.
+        </field>
+        <field name="ai_tool_schema">
+        {
+            "type": "object",
+            "properties": {
+                "css_content": {
+                    "type": "string",
+                    "description": "The SCSS rules to append to user_custom_rules.scss"
+                }
+            },
+            "required": ["css_content"]
+        }
+        </field>
+        <field name="code">
+            ai['result'] = record._ai_tool_create_custom_css_rule(css_content)
+        </field>
+    </record>
+</odoo>
