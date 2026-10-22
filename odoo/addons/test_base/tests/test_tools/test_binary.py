@@ -4,6 +4,7 @@ from base64 import b64encode
 
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools.binary import BinaryBytes
+from odoo.tools.json import json_default
 
 
 @tagged('at_install', '-post_install')
@@ -31,3 +32,9 @@ class TestBinaryValue(TransactionCase):
             for i in range(1, 3):
                 with val.open() as f:
                     self.assertEqual(f.read(), data, f"Read {i}")
+
+    def test_json_default_binary(self):
+        pdf_data = b'%PDF-1.4\n1 0 obj\n<<\n/Title (\xfe\xff)'
+        self.assertEqual(json_default(BinaryBytes(pdf_data)), BinaryBytes(pdf_data).to_base64())
+        self.assertEqual(json_default(pdf_data), BinaryBytes(pdf_data).to_base64())
+        self.assertEqual(json_default(b'hello'), 'hello')
