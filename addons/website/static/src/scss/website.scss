@@ -70,6 +70,18 @@
     @include print-variable('display-2-line-height', $display-2-line-height);
     @include print-variable('display-3-line-height', $display-3-line-height);
     @include print-variable('display-4-line-height', $display-4-line-height);
+    @include print-variable('body-letter-spacing', $body-letter-spacing);
+    @include print-variable('headings-letter-spacing', $headings-letter-spacing);
+    @include print-variable('h2-letter-spacing', $h2-letter-spacing);
+    @include print-variable('h3-letter-spacing', $h3-letter-spacing);
+    @include print-variable('h4-letter-spacing', $h4-letter-spacing);
+    @include print-variable('h5-letter-spacing', $h5-letter-spacing);
+    @include print-variable('h6-letter-spacing', $h6-letter-spacing);
+    @include print-variable('display-1-letter-spacing', $display-1-letter-spacing);
+    @include print-variable('display-2-letter-spacing', $display-2-letter-spacing);
+    @include print-variable('display-3-letter-spacing', $display-3-letter-spacing);
+    @include print-variable('display-4-letter-spacing', $display-4-letter-spacing);
+    @include print-variable('btn-letter-spacing', $btn-letter-spacing);
     /* We cannot rely on $o-theme-hx-font because they contain the list of
        fallback fonts (unicode...). */
     $-headings-or-main-font: o-website-value('headings-font') or o-website-value('font');
@@ -729,6 +741,7 @@ $heading-margin-bottoms: map-merge((
 
 h1, h2, h3, h4, h5, h6 {
     line-height: var(--o-bs-headings-line-height);
+    letter-spacing: calc(var(--headings-letter-spacing) * 0.01em);
     margin-top: $headings-margin-top;
     margin-bottom: var(--o-bs-headings-margin-bottom);
 }
@@ -751,13 +764,58 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+h2 {
+    letter-spacing: calc(var(--h2-letter-spacing) * 0.01em);
+}
+
+h3 {
+    letter-spacing: calc(var(--h3-letter-spacing) * 0.01em);
+}
+
+h4 {
+    letter-spacing: calc(var(--h4-letter-spacing) * 0.01em);
+}
+
+h5 {
+    letter-spacing: calc(var(--h5-letter-spacing) * 0.01em);
+}
+
+h6 {
+    letter-spacing: calc(var(--h6-letter-spacing) * 0.01em);
+}
+
+.display-1 {
+    letter-spacing: calc(var(--display-1-letter-spacing) * 0.01em);
+}
+
+.display-2 {
+    letter-spacing: calc(var(--display-2-letter-spacing) * 0.01em);
+}
+
+.display-3 {
+    letter-spacing: calc(var(--display-3-letter-spacing) * 0.01em);
+}
+
+.display-4 {
+    letter-spacing: calc(var(--display-4-letter-spacing) * 0.01em);
+}
+
 .btn {
     @if ($o-theme-buttons-font != $o-theme-font) {
         font-family: $o-theme-buttons-font;
     }
+    letter-spacing: calc(var(--btn-letter-spacing) * 0.01em);
+}
+
+:where(.form-control, .form-select) {
+    letter-spacing: calc(var(--body-letter-spacing) * 0.01em);
 }
 
 /* Texts */
+body {
+    letter-spacing: calc(var(--body-letter-spacing) * 0.01em);
+}
+
 p {
     margin-top: $paragraph-margin-top;
 }
@@ -836,7 +894,7 @@ font[class*='bg-'] {
 .btn {
     &.flat {
         border: 0;
-        letter-spacing: 0.05em;
+        letter-spacing: calc((var(--btn-letter-spacing) + 5) * 0.01em);
         text-transform: uppercase;
         @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), 0);
         &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), 0); }
