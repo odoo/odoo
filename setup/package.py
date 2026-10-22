@@ -401,7 +401,7 @@ def parse_args():
     log_levels = {"debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARN, "error": logging.ERROR, "critical": logging.CRITICAL}
 
     ap.add_argument("-b", "--build-dir", default=build_dir, help="build directory (%(default)s)", metavar="DIR")
-    ap.add_argument("-p", "--pub", default=None, help="pub directory %(default)s", metavar="DIR")
+    ap.add_argument("-p", "--pub", default=None, metavar="DIR", help="publish directory; if omitted, packages are only built (use --no-remove to keep the artifacts)")
     ap.add_argument("--logging", action="store", choices=list(log_levels.keys()), default="info", help="Logging level")
     ap.add_argument("--build-deb", action="store_true")
     ap.add_argument("--build-rpm", action="store_true")
@@ -415,6 +415,8 @@ def parse_args():
     ap.add_argument("--blacklist", nargs="*", help="Modules to blacklist in package")
 
     parsed_args = ap.parse_args()
+    if parsed_args.sign and not parsed_args.pub:
+        ap.error("--sign requires --pub")
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', datefmt='%Y-%m-%d %I:%M:%S', level=log_levels[parsed_args.logging])
     parsed_args.odoo_dir = ROOTDIR
     return parsed_args
@@ -429,7 +431,8 @@ def main(args):
             docker_tgz.build()
             try:
                 docker_tgz.start_test()
-                published_files = publish(args, 'tgz', ['tar.gz', 'zip'])
+                if args.pub:
+                    published_files = publish(args, 'tgz', ['tar.gz', 'zip'])
             except Exception as e:
                 exit_code = 1
                 logging.error("Won't publish the tgz release.\n Exception: %s" % str(e))
@@ -439,12 +442,13 @@ def main(args):
             docker_rpm.build()
             try:
                 docker_rpm.start_test()
-                published_files = publish(args, 'rpm', ['rpm'])
-                if args.sign:
-                    logging.info('Signing rpm package')
-                    rpm_sign(args, published_files[0])
-                    logging.info('Generate rpm repo')
-                    docker_rpm.gen_rpm_repo(args, published_files[0])
+                if args.pub:
+                    published_files = publish(args, 'rpm', ['rpm'])
+                    if args.sign:
+                        logging.info('Signing rpm package')
+                        rpm_sign(args, published_files[0])
+                        logging.info('Generate rpm repo')
+                        docker_rpm.gen_rpm_repo(args, published_files[0])
             except Exception as e:
                 exit_code = 1
                 logging.error("Won't publish the rpm release.\n Exception: %s" % str(e))
@@ -454,8 +458,9 @@ def main(args):
             docker_deb.build()
             try:
                 docker_deb.start_test()
-                published_files = publish(args, 'deb', ['deb', 'dsc', 'changes', 'tar.xz'])
-                gen_deb_package(args, published_files)
+                if args.pub:
+                    published_files = publish(args, 'deb', ['deb', 'dsc', 'changes', 'tar.xz'])
+                    gen_deb_package(args, published_files)
             except Exception as e:
                 exit_code = 1
                 logging.error("Won't publish the deb release.\n Exception: %s" % str(e))
@@ -464,7 +469,8 @@ def main(args):
             docker_wine = DockerWine(args)
             docker_wine.build()
             try:
-                published_files = publish(args, 'windows', ['exe'])
+                if args.pub:
+                    published_files = publish(args, 'windows', ['exe'])
             except Exception as e:
                 exit_code = 1
                 logging.error("Won't publish the exe release.\n Exception: %s" % str(e))
