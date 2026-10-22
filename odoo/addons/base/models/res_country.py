@@ -20,12 +20,12 @@ FLAG_MAPPING = {
     "RE": "fr",
     "MF": "fr",
     "UM": "us",
-    "XI": "uk",
 }
 
 NO_FLAG_COUNTRIES = [
-    "AQ", #Antarctica
-    "SJ", #Svalbard + Jan Mayen : separate jurisdictions : no dedicated flag
+    "AQ",  # Antarctica
+    "SJ",  # Svalbard + Jan Mayen : separate jurisdictions : no dedicated flag
+    "XI",  # Nothern Ireland
 ]
 
 
