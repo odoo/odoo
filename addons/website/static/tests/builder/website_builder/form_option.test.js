@@ -43,6 +43,7 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { currencies } from "@web/core/currency";
 
 class HrJob extends models.Model {
     _name = "hr.job";
@@ -121,7 +122,9 @@ test("remove hidden many2one field from form if value is None", async () => {
     function withIframeRegistry(registry) {
         registry.category("website.form_editor_actions").add("apply_job", {
             formFields: [],
-            fields: [{ name: "job_id", type: "many2one", relation: "hr.job", string: "Applied Job" }],
+            fields: [
+                { name: "job_id", type: "many2one", relation: "hr.job", string: "Applied Job" },
+            ],
         });
     }
     await setupWebsiteBuilderWithSnippet("s_website_form", { withIframeRegistry });
@@ -545,11 +548,15 @@ test("Changing max files number option updates file input 'multiple' attribute",
     expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
     await contains(":iframe .s_website_form_input").click();
-    await contains(".o_hb_options_container div[data-action-id='setMultipleFiles'] input").edit("2");
+    await contains(".o_hb_options_container div[data-action-id='setMultipleFiles'] input").edit(
+        "2"
+    );
     expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "2");
     expect(":iframe input[type=file]").toHaveAttribute("multiple");
     await contains(":iframe .s_website_form_input").click();
-    await contains(".o_hb_options_container div[data-action-id='setMultipleFiles'] input").edit("1");
+    await contains(".o_hb_options_container div[data-action-id='setMultipleFiles'] input").edit(
+        "1"
+    );
     expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
 });
@@ -739,7 +746,9 @@ test("Can link states to a country", async () => {
         { loadIframeBuilderTemplates: true }
     );
     await contains(":iframe select[name='state_id']").click();
-    expect(".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry']").toHaveCount(1);
+    expect(".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry']").toHaveCount(
+        1
+    );
     expect(
         ".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input"
     ).not.toBeChecked();
@@ -749,7 +758,9 @@ test("Can link states to a country", async () => {
         ".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input"
     ).click();
 
-    expect(".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input").toBeChecked();
+    expect(
+        ".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input"
+    ).toBeChecked();
     expect(".o_hb_options_container .o_hb_row :contains('Option List')").toHaveCount(0);
     expect(":iframe select[name='state_id']").toHaveAttribute("data-link-state-to-country", "true");
 });
@@ -1791,4 +1802,118 @@ test("Changing field type from date to datetime removes value property (and attr
 
     expect(":iframe input#field").toHaveAttribute("value", "");
     expect(":iframe input#field").toHaveProperty("value", "");
+});
+
+describe("Monetary fields", () => {
+    async function addField(name) {
+        await contains(":iframe section").click();
+        await contains("button:contains('+ Field')").click();
+        await contains("[data-label='Type'] button").click();
+        await contains(`[role='menuitem']:contains('${name}')`).click();
+    }
+    async function toggleDisplayCurrency(name) {
+        await contains(`:iframe input[name='${name}']`).click();
+        await contains(".o_hb_row[data-label='Display Currency'] .o-checkbox").click();
+    }
+    const mockedCurrencies = {
+        1: { name: "USD", symbol: "$", position: "before" },
+        2: { name: "EUR", symbol: "€", position: "after" },
+        3: { name: "GBP", symbol: "£", position: "before" },
+    };
+    patch(currencies, mockedCurrencies);
+
+    onRpc("get_authorized_fields", () => ({
+        normal_currency_field: {
+            name: "normal_currency_field",
+            string: "Normal Currency Field",
+            type: "monetary",
+            currency_field: "currency_field",
+        },
+        computed_currency_field: {
+            name: "computed_currency_field",
+            string: "Computed Currency Field",
+            type: "monetary",
+            currency_field: "company_currency",
+            currency_field_readonly: true,
+        },
+        "38cc7a29ae55db57": {
+            name: "38cc7a29ae55db57",
+            type: "monetary",
+            string: "Monetary Property",
+            default: 0,
+            currency_field: "currency_id",
+            _property: {
+                field: "properties",
+            },
+            required: false,
+            currency_field_readonly: true,
+        },
+    }));
+
+    onRpc("base", "get_computed_value", () => 2);
+
+    beforeEach(async () => {
+        await setupWebsiteBuilderWithSnippet("s_website_form", {
+            loadIframeBuilderTemplates: true,
+        });
+    });
+
+    test("normal monetary fields can display currency", async () => {
+        await addField("Normal Currency Field");
+        await toggleDisplayCurrency("normal_currency_field");
+
+        // Modify currency
+        await contains(".o_hb_row[data-label='Currency'] button").click();
+        for (const currencyId of Object.keys(mockedCurrencies)) {
+            const currency = mockedCurrencies[currencyId];
+            await contains(":iframe input[name='normal_currency_field']").click();
+            await contains(".o_hb_row[data-label='Currency'] button").click();
+            await contains(`[role='menuitem']:contains('${currency.name}')`).click();
+
+            expect(
+                ":iframe .s_website_form_field:has(input[name='normal_currency_field']) .o_currency_display"
+            ).toHaveText(currency.name);
+            expect(":iframe input[name='currency_field']").toHaveValue(currencyId);
+        }
+
+        await toggleDisplayCurrency("normal_currency_field");
+        expect(
+            ":iframe .s_website_form_field:has(input[name='normal_currency_field']) .o_currency_display"
+        ).toHaveCount(0);
+        expect(":iframe input[name='currency_field']").toHaveCount(0);
+    });
+
+    test("monetary field with computed currency field (readonly) can display currency", async () => {
+        await addField("Computed Currency Field");
+        await toggleDisplayCurrency("computed_currency_field");
+
+        expect(
+            ":iframe .s_website_form_field:has(input[name='computed_currency_field']) .o_currency_display"
+        ).toHaveText("EUR");
+
+        // It is not posssible to modify currency because it is readonly
+        expect(".o_hb-row[data-label='Currency'] button").toHaveCount(0);
+
+        await toggleDisplayCurrency("computed_currency_field");
+        expect(
+            ":iframe .s_website_form_field:has(input[name='computed_currency_field']) .o_currency_display"
+        ).toHaveCount(0);
+    });
+
+    test("monetary field with properties (readonly currency_field) can display currency", async () => {
+        await addField("Monetary Property");
+        await toggleDisplayCurrency("38cc7a29ae55db57");
+
+        expect(
+            ":iframe .s_website_form_field:has(input[name='38cc7a29ae55db57']) .o_currency_display"
+        ).toHaveText("EUR");
+
+        // It is not posssible to modify currency because it is readonly
+        expect(".hb-row[data-label='Currency'] button").toHaveCount(0);
+
+        await toggleDisplayCurrency("38cc7a29ae55db57");
+        expect(
+            ":iframe .s_website_form_field:has(input[name='38cc7a29ae55db57']) .o_currency_display"
+        ).toHaveCount(0);
+    });
 });
