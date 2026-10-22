@@ -1,6 +1,6 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
-import { useDiscussSystray } from "@mail/utils/common/hooks";
+import { useDiscussSystray, useHover } from "@mail/utils/common/hooks";
 import { incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
@@ -20,9 +20,14 @@ export class MessagingMenuInDropdown extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.dropdown = useDropdownState();
+        this.buttonRef = signal.ref();
         this.discussSystray = useDiscussSystray(this.dropdown);
         this.store = useService("mail.store");
         this.menuState = computed(() => this.store.messagingMenuSystrayState);
+        // Reading the state creates it, which starts the initial load of the menu content.
+        useHover([this.buttonRef], {
+            onHover: () => void this.store.messagingMenuSystrayState,
+        });
         // Bound once so `close` is a stable (useProps.static) handler.
         this.closeDropdown = this.dropdown.close.bind(this.dropdown);
         this.searchInputAutofocus = signal(0);
