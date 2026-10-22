@@ -1,7 +1,7 @@
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { sortBy } from "@web/core/utils/arrays";
+import { ensureArray, sortBy } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { getAggregateCurrencyId, getCurrencyAggregateSpecs } from "@web/model/currency_aggregates";
 import { addPropertyFieldDefs, Model } from "@web/model/model";
@@ -70,11 +70,16 @@ export class GraphModel extends Model {
 
     /**
      * Only supposed to be called to change one or several parameters among
-     * "measure", "mode", "order", "stacked" and "cumulated".
+     * "activeMeasures", "mode", "order", "stacked" and "cumulated".
      * @param {Object} params
      */
     async updateMetaData(params) {
-        if ("measure" in params) {
+        if ("activeMeasures" in params || "measure" in params) {
+            if ("measure" in params && !("activeMeasures" in params)) {
+                // backward compatibility with callers setting a single measure
+                params.activeMeasures = ensureArray(params.measure);
+                delete params.measure;
+            }
             const metaData = this._buildMetaData(params);
             await this._fetchDataPoints(metaData);
             this.useSampleModel = false; // can be removed
@@ -108,7 +113,12 @@ export class GraphModel extends Model {
 
         const metaData = Object.assign({}, this.metaData, { context });
         metaData.domain = domain;
-        metaData.measure = context.graph_measure || metaData.measure;
+        metaData.activeMeasures = ensureArray(
+            processMeasure(context.graph_measure) ||
+                metaData.activeMeasures ||
+                metaData.measure ||
+                "__count"
+        );
         metaData.mode = context.graph_mode || metaData.mode;
         metaData.groupBy = groupBy.length ? groupBy : this.initialGroupBy;
         if (metaData.mode !== "pie") {
@@ -127,12 +137,30 @@ export class GraphModel extends Model {
 
         this._normalize(metaData);
 
+        Object.assign(metaData, params);
+
+        // sanitize the active measures: remove invalid or duplicated entries,
+        // and make sure at least one measure remains active
+        metaData.activeMeasures = metaData.activeMeasures
+            .map((measure) => processMeasure(measure))
+            .filter(
+                (measure, index, measures) =>
+                    (measure === "__count" || metaData.fields[measure]) &&
+                    measures.indexOf(measure) === index
+            );
+        if (!metaData.activeMeasures.length) {
+            metaData.activeMeasures = ["__count"];
+        }
+        // 'measure' is kept in sync with the first active measure for
+        // compatibility (some code only handles a single measure)
+        metaData.measure = metaData.activeMeasures[0];
+
         metaData.measures = computeReportMeasures(metaData.fields, metaData.fieldAttrs, [
             ...(metaData.viewMeasures || []),
-            metaData.measure,
+            ...metaData.activeMeasures,
         ]);
 
-        return Object.assign(metaData, params);
+        return metaData;
     }
 
     /**
@@ -175,7 +203,7 @@ export class GraphModel extends Model {
         }
 
         // dataPoints + labels --> datasetsTmp --> datasets
-        const datasetsTmp = {};
+        const datasetsTmp = new Map();
         for (const dataPt of dataPoints) {
             if (dataPt.count === 0 && this.metaData.groupBy.length > 1) {
                 continue;
@@ -183,26 +211,30 @@ export class GraphModel extends Model {
             const { currencyId, domain, labelIndex, trueLabel, value, identifier, cumulatedStart } =
                 dataPt;
             const datasetLabel = this._getDatasetLabel(dataPt);
-            if (!(datasetLabel in datasetsTmp)) {
+            const datasetKey = mode === "pie" ? dataPt.measure : datasetLabel;
+            let dataset = datasetsTmp.get(datasetKey);
+            if (!dataset) {
                 const dataLength = labels.length;
-                datasetsTmp[datasetLabel] = {
+                dataset = {
                     data: new Array(dataLength).fill(0),
                     cumulatedStart,
                     trueLabels: labels.slice(0, dataLength),
                     domains: new Array(dataLength).fill([]),
                     label: datasetLabel,
                     identifiers: new Set(),
+                    measure: dataPt.measure,
                     currencyIds: new Array(dataLength).fill(),
                 };
+                datasetsTmp.set(datasetKey, dataset);
             }
-            datasetsTmp[datasetLabel].data[labelIndex] = value;
-            datasetsTmp[datasetLabel].domains[labelIndex] = domain;
-            datasetsTmp[datasetLabel].trueLabels[labelIndex] = trueLabel;
-            datasetsTmp[datasetLabel].identifiers.add(identifier);
-            datasetsTmp[datasetLabel].currencyIds[labelIndex] = currencyId;
+            dataset.data[labelIndex] = value;
+            dataset.domains[labelIndex] = domain;
+            dataset.trueLabels[labelIndex] = trueLabel;
+            dataset.identifiers.add(identifier);
+            dataset.currencyIds[labelIndex] = currencyId;
         }
 
-        const datasets = Object.values(datasetsTmp);
+        const datasets = [...datasetsTmp.values()];
 
         return { datasets, labels };
     }
@@ -232,18 +264,19 @@ export class GraphModel extends Model {
     }
 
     /**
-     * Determines the dataset to which the data point belongs.
+     * Determines the display label of the dataset to which the data point belongs.
      * @protected
      * @param {Object} dataPoint
      * @returns {string}
      */
     _getDatasetLabel(dataPoint) {
-        const { measure, measures, mode } = this.metaData;
+        const { activeMeasures, measures, mode } = this.metaData;
         const { labels } = dataPoint;
         if (mode === "pie") {
-            return "";
+            // with several measures, the label of each dataset is its measure
+            return activeMeasures.length > 1 ? measures[dataPoint.measure].string : "";
         }
-        return labels.slice(1).join(SEP) || measures[measure].string;
+        return labels.slice(1).join(SEP) || measures[dataPoint.measure].string;
     }
 
     /**
@@ -260,20 +293,27 @@ export class GraphModel extends Model {
      * @returns {Object[]}
      */
     _getProcessedDataPoints() {
-        const { groupBy, mode, order } = this.metaData;
+        const { activeMeasures, groupBy, mode, order } = this.metaData;
+        // several measures can only be displayed at once in pie mode: in the
+        // other modes, only the first active measure is displayed
+        const displayedMeasures = mode === "pie" ? activeMeasures : [activeMeasures[0]];
+        // ignore the data points of measures that are not displayed
+        const dataPoints = this.dataPoints.filter((dataPoint) =>
+            displayedMeasures.includes(dataPoint.measure)
+        );
         let processedDataPoints = [];
         if (mode === "line") {
-            processedDataPoints = this.dataPoints.filter(
+            processedDataPoints = dataPoints.filter(
                 (dataPoint) => dataPoint.labels[0] !== this._getDefaultFilterLabel(groupBy[0])
             );
         } else if (mode === "pie") {
-            processedDataPoints = this.dataPoints.filter(
+            processedDataPoints = dataPoints.filter(
                 (dataPoint) => dataPoint.value > 0 && dataPoint.count !== 0
             );
         } else if (this.metaData.allDates && this.hasDateXAxis()) {
-            processedDataPoints = this.dataPoints;
+            processedDataPoints = dataPoints;
         } else {
-            processedDataPoints = this.dataPoints.filter((dataPoint) => dataPoint.count !== 0);
+            processedDataPoints = dataPoints.filter((dataPoint) => dataPoint.count !== 0);
         }
 
         if (order !== null && mode !== "pie" && groupBy.length > 0) {
@@ -305,16 +345,22 @@ export class GraphModel extends Model {
      * @returns {Array}
      */
     async _loadDataPoints(metaData) {
-        const { measure, domain, fields, groupBy, resModel, cumulatedStart } = metaData;
+        const { activeMeasures, domain, fields, groupBy, resModel, cumulatedStart } = metaData;
+        metaData.allIntegersByMeasure = Object.fromEntries(
+            activeMeasures.map((measure) => [measure, true])
+        );
         const fieldName = groupBy[0]?.fieldName;
         const sequentialField =
             cumulatedStart && SEQUENTIAL_TYPES.includes(fields[fieldName]?.type) ? fieldName : null;
         const sequentialSpec = sequentialField && groupBy[0].spec;
-        const measures = ["__count"];
-        let fieldAggregate = "__count",
-            currencySpec,
-            convertedSpec;
-        if (measure !== "__count") {
+        const aggregates = new Set(["__count"]);
+        // aggregate spec of each active measure (plus the currency specs)
+        const measureSpecs = {};
+        for (const measure of activeMeasures) {
+            if (measure === "__count") {
+                measureSpecs[measure] = { aggregate: "__count" };
+                continue;
+            }
             let { aggregator, currency_field, type } = fields[measure];
             if (type === "many2one") {
                 aggregator = "count_distinct";
@@ -324,14 +370,20 @@ export class GraphModel extends Model {
                     `No aggregate function has been provided for the measure '${measure}'`
                 );
             }
+            const spec = { aggregate: `${measure}:${aggregator}` };
             if (type === "monetary" && currency_field) {
-                const currencyAggregates = getCurrencyAggregateSpecs(fields[measure]);
-                [currencySpec, convertedSpec] = currencyAggregates;
-                measures.push(...currencyAggregates);
+                [spec.currencySpec, spec.convertedSpec] = getCurrencyAggregateSpecs(
+                    fields[measure]
+                );
+                aggregates.add(spec.currencySpec);
+                if (spec.convertedSpec) {
+                    aggregates.add(spec.convertedSpec);
+                }
             }
-            fieldAggregate = `${measure}:${aggregator}`;
-            measures.push(fieldAggregate);
+            aggregates.add(spec.aggregate);
+            measureSpecs[measure] = spec;
         }
+        const aggregateList = [...aggregates];
 
         const numbering = {}; // used to avoid ambiguity with many2one with values with same labels:
         // for instance [1, "ABC"] [3, "ABC"] should be distinguished.
@@ -340,7 +392,7 @@ export class GraphModel extends Model {
             resModel,
             domain,
             groupBy.map((gb) => gb.spec),
-            measures,
+            aggregateList,
             {
                 context: { fill_temporal: true, ...this.searchParams.context },
             }
@@ -364,7 +416,7 @@ export class GraphModel extends Model {
                 resModel,
                 newDomain,
                 groupBy.filter((gb) => gb.fieldName != sequentialField).map((gb) => gb.spec),
-                measures,
+                aggregateList,
                 {
                     context: { ...this.searchParams.context },
                 }
@@ -378,7 +430,11 @@ export class GraphModel extends Model {
                 for (const gb of groupBy.filter((gb) => gb.fieldName != sequentialField)) {
                     rawValues.push({ [gb.spec]: group[gb.spec] });
                 }
-                cumulatedStartValue[JSON.stringify(rawValues)] = group[measures.slice(-1)];
+                const startValues = {};
+                for (const measure of activeMeasures) {
+                    startValues[measure] = group[measureSpecs[measure].aggregate];
+                }
+                cumulatedStartValue[JSON.stringify(rawValues)] = startValues;
             }
         }
         const graphCurrencies = new Set();
@@ -422,38 +478,45 @@ export class GraphModel extends Model {
                 labels.push(label);
             }
 
-            const value = group[fieldAggregate];
-            if (!Number.isInteger(value)) {
-                metaData.allIntegers = false;
-            }
             const groupId = JSON.stringify(rawValues.slice(1));
-            const dataPoint = {
-                count: __count,
-                domain: __domain,
-                value,
-                labels,
-                identifier: JSON.stringify(rawValues),
-                cumulatedStart: cumulatedStartValue[groupId] || 0,
-            };
-            // There is a currency aggregate
-            if (currencySpec && __count) {
-                const currencies = group[currencySpec];
-                dataPoint.currencyId = getAggregateCurrencyId(fields[measure], currencies);
-                if (convertedSpec) {
-                    dataPoint.convertedValue = group[convertedSpec];
-                    if (currencies.length > 1) {
-                        dataPoint.value = dataPoint.convertedValue;
+            const identifier = JSON.stringify(rawValues);
+            const startValues = cumulatedStartValue[groupId] || {};
+            // a data point is created for each active measure of each group
+            for (const measure of activeMeasures) {
+                const spec = measureSpecs[measure];
+                const value = group[spec.aggregate];
+                const dataPoint = {
+                    count: __count,
+                    domain: __domain,
+                    value,
+                    labels,
+                    identifier,
+                    measure,
+                    cumulatedStart: startValues[measure] || 0,
+                };
+                // There is a currency aggregate
+                if (spec.currencySpec && __count) {
+                    const currencies = group[spec.currencySpec];
+                    dataPoint.currencyId = getAggregateCurrencyId(fields[measure], currencies);
+                    if (spec.convertedSpec) {
+                        dataPoint.convertedValue = group[spec.convertedSpec];
+                        if (currencies.length > 1) {
+                            dataPoint.value = dataPoint.convertedValue;
+                        }
                     }
+                    graphCurrencies.add(dataPoint.currencyId);
                 }
-                graphCurrencies.add(dataPoint.currencyId);
+                dataPoints.push(dataPoint);
             }
-            dataPoints.push(dataPoint);
         }
         for (const dataPoint of dataPoints) {
             // points without a converted value keep their own currency
             if (graphCurrencies.size > 1 && dataPoint.convertedValue !== undefined) {
                 dataPoint.currencyId = defaultCurrency;
                 dataPoint.value = dataPoint.convertedValue;
+            }
+            if (!Number.isInteger(dataPoint.value)) {
+                metaData.allIntegersByMeasure[dataPoint.measure] = false;
             }
             delete dataPoint.convertedValue;
         }
@@ -505,8 +568,6 @@ export class GraphModel extends Model {
             }
         }
         metaData.groupBy = processedGroupBy;
-
-        metaData.measure = processMeasure(metaData.measure);
     }
 
     /**
