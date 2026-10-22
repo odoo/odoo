@@ -223,7 +223,7 @@ class StockLot(models.Model):
                 vals['name'] = _("(copy of) %s", lot.name)
         return vals_list
 
-    @api.depends('quant_ids', 'quant_ids.quantity')
+    @api.depends('quant_ids', 'quant_ids.quantity', 'product_id.stock_move_ids.date')
     @api.depends_context('owner_id', 'package_id', 'to_date', 'location', 'warehouse_id', 'allowed_company_ids', 'owners')
     def _product_qty(self):
         domain_quant_loc, _, _, domain_move_in_loc, domain_move_out_loc = self.env['product.product']._get_domain_locations()

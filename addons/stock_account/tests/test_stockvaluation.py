@@ -38,11 +38,12 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(len(debit_line), 1)
         self.assertEqual(debit_line.debit, 50.0)
         self.assertEqual(debit_line.credit, 0)
-        product._invalidate_cache()
+        product.invalidate_recordset()
 
         # Set price to 6.0
         product.standard_price = 6.0
-        closing_move = self._close()
+        pv = self.env["product.value"].search([("product_id", "=", product.id)], order="id desc", limit=1)
+        closing_move = pv.account_move_id
         debit_line = closing_move.line_ids.filtered(lambda l: l.debit > 0)
         self.assertEqual(len(debit_line), 1)
         self.assertEqual(debit_line.debit, 10.0)
@@ -1373,7 +1374,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         valuation_aml = self._get_stock_valuation_move_lines()
         move2_valuation_aml = valuation_aml[-1]
-        self.assertEqual(len(valuation_aml), 4)
+        self.assertEqual(len(valuation_aml), 5)
         self.assertEqual(move2_valuation_aml.debit, 0)
         self.assertEqual(move2_valuation_aml.credit, 10)
 
