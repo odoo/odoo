@@ -1,3 +1,4 @@
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
@@ -75,3 +76,9 @@ class TestAnalyticMixin(TransactionCase):
 
         self.assertEqual(filter_domain('in', [self.commercial_aa.id]), self.adm_commercial_ad)
         self.assertEqual(filter_domain('in', (self.sales_aa + self.rd_aa).ids), self.adm_sales_admin_ad + self.adm_rd_ad)
+
+    def test_check_valid_key(self):
+        with self.assertRaisesRegex(ValidationError, "Wrong analytic distribution format"):
+            self.env['account.analytic.distribution.model'].create({
+                'analytic_distribution': {'123;456': 100},
+            })
