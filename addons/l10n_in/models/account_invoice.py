@@ -638,3 +638,34 @@ class AccountMove(models.Model):
         elif company.l10n_in_gst_registration_type == 'composition':
             return 'Bill of Supply'
         return 'Invoice'
+
+    def _l10n_in_get_invoice_report_header_values(self):
+        """Commercial references in the familiar Indian invoice order.
+
+        Sales/stock and e-waybill integrations supply their own document references.
+        Leave unknown values empty rather than substitute a different document or date.
+        """
+        self.ensure_one()
+        is_sale = self.is_sale_document(include_receipts=True)
+        source = self.reversed_entry_id if is_sale and self.reversed_entry_id else self
+        destination = self.partner_shipping_id or self.partner_id
+        return {
+            'delivery_notes': [],
+            'supplier_reference': (source.invoice_origin if is_sale else self.ref) or '',
+            'other_references': (
+                self.ref if source != self and self.ref != source.ref else ''
+            ) if is_sale else self.invoice_origin or '',
+            'buyer_order_no': (source.ref or '') if is_sale else '',
+            'buyer_order_date': False,
+            'dispatch_document_no': '',
+            'delivery_note_dates': [],
+            'dispatched_through': '',
+            'destination': destination.city or '',
+            'terms_of_delivery': ' '.join(filter(None, [
+                self.invoice_incoterm_id.display_name, self.incoterm_location,
+            ])),
+            'ewaybill_number': '',
+            'transport_document_no': '',
+            'transport_document_date': False,
+            'vehicle_no': '',
+        }
