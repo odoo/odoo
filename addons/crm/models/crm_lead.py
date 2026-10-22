@@ -1322,6 +1322,34 @@ class CrmLead(models.Model):
             create_missing=True,
         )
 
+    def action_send_email(self):
+        """ Open mail composer wizard. When 1 record is selected, open in comment
+        mode with the lead's customer partner populated in the 'To' field.
+        When multiple records are selected, open in mass_mail mode. """
+        if len(self) == 1:
+            partner = self.partner_id or self._find_matching_partner()
+            ctx = {
+                'default_composition_mode': 'comment',
+                'default_model': 'crm.lead',
+                'default_res_ids': self.ids,
+                'default_partner_ids': partner.ids if partner else [],
+            }
+        else:
+            ctx = {
+                'default_composition_mode': 'mass_mail',
+                'default_model': 'crm.lead',
+                'default_res_ids': self.ids,
+            }
+
+        return {
+            'name': _('Send email'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mail.compose.message',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': ctx,
+        }
+
     # ------------------------------------------------------------
     # VIEWS
     # ------------------------------------------------------------
