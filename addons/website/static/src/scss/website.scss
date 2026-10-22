@@ -1814,6 +1814,9 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, var(--o-bs-spacer
         &.s_parallax_is_fixed {
             > .s_parallax_bg, > .s_parallax_bg_wrap > .s_parallax_bg {
                 background-attachment: fixed;
+                @media (prefers-reduced-motion: reduce) {
+                    background-attachment: scroll;
+                }
             }
         }
     }

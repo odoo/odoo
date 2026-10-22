@@ -37,6 +37,9 @@ export class Parallax extends Interaction {
         this.styleTransform = undefined;
         this.isZoomIn = undefined;
         this.isZoomOut = undefined;
+
+        this.prefersReducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+        this.prefersReducedMotion = this.prefersReducedMotionQuery.matches;
     }
 
     start() {
@@ -54,6 +57,14 @@ export class Parallax extends Interaction {
             this.updateBackgroundHeight();
             this.updateContent();
         }
+
+        this.addListener(this.prefersReducedMotionQuery, "change", () => {
+            this.prefersReducedMotion = this.prefersReducedMotionQuery.matches;
+            this.styleTop = undefined;
+            this.styleBottom = undefined;
+            this.styleTransform = undefined;
+            this.updateBackgroundHeight();
+        });
     }
 
     get targetEl() {
@@ -62,7 +73,7 @@ export class Parallax extends Interaction {
 
     updateBackgroundHeight() {
         this.speed = parseFloat(this.el.getAttribute("data-scroll-background-ratio")) || 0;
-        if (this.speed === 0 || this.speed === 1) {
+        if (this.prefersReducedMotion || this.speed === 0 || this.speed === 1) {
             return;
         }
         this.viewportHeight = document.body.clientHeight;
@@ -92,6 +103,7 @@ export class Parallax extends Interaction {
     onScroll() {
         const currentPosition = this.targetEl.getBoundingClientRect().top;
         if (
+            this.prefersReducedMotion ||
             this.speed === 0 ||
             this.speed === 1 ||
             currentPosition < this.minScrollPos ||
