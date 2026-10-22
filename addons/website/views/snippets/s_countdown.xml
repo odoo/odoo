@@ -35,7 +35,7 @@
         <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 120px;">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" class="w-100" viewBox="0 0 120 120"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="30px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="60" text-anchor="middle" dominant-baseline="central">30</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="82" text-anchor="middle" dominant-baseline="central">Minutes</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 114 60 A 54 54 0 1 1 113.99995714285649 59.94085714285714" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 60 6 A 54 54 0 0 1 60 114" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
         </div>
-        <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 120px;">
+        <div class="s_countdown_canvas_flex o_countdown_seconds" style="width: 25%; max-width: 120px;">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="120" class="w-100" viewBox="0 0 120 120"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="30px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="60" text-anchor="middle" dominant-baseline="central">45</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14px" font-style="normal" font-weight="normal" text-decoration="normal" x="60" y="82" text-anchor="middle" dominant-baseline="central">Seconds</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 114 60 A 54 54 0 1 1 113.99995714285649 59.94085714285714" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 60 6 A 54 54 0 1 1 6 60.00000000000001" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
         </div>
     </div>
@@ -54,7 +54,7 @@
             </span>
             <div class="oe_unremovable d-inline-flex s_countdown_metrics">
                 <t t-foreach="metrics" t-as="metric">
-                    <span class="o_count_item">
+                    <span t-attf-class="o_count_item #{'o_countdown_seconds' if metric_last else ''}">
                         <span class="o_count_item_nbs d-inline-flex fw-bold">00</span>
                         <span class="o_count_item_label fw-bold oe_unremovable">
                             <span class="o_label_full" t-out="metric"/>
@@ -76,7 +76,7 @@
     <div class="o_template_dominoes">
         <div class="oe_unremovable s_countdown_metrics d-flex gap-1" dir="ltr">
             <t t-foreach="metrics" t-as="metric">
-                <span class="o_count_item d-flex gap-1">
+                <span t-attf-class="o_count_item d-flex gap-1 #{'o_countdown_seconds' if metric_last else ''}">
                     <span class="d-flex flex-column align-items-center">
                         <span class="o_count_item_nbs o_count_item_nbs_split d-inline-flex">
                             <span class="o_count_item_nb o_colored_item position-relative rounded py-1 px-2 fs-4 fw-bold">0</span>
@@ -103,7 +103,7 @@
     <div class="o_template_wrapped_numbers">
         <div class="oe_unremovable s_countdown_metrics d-inline-flex gap-1" dir="ltr">
             <t t-foreach="metrics" t-as="metric">
-                <span class="o_count_item d-flex gap-1">
+                <span t-attf-class="o_count_item d-flex gap-1 #{'o_countdown_seconds' if metric_last else ''}">
                     <span class="d-flex flex-column align-items-center">
                         <span class="o_count_item_nbs o_colored_item d-flex justify-content-center align-items-center rounded p-2">00</span>
                         <span class="o_count_item_label small oe_unremovable">
@@ -131,7 +131,7 @@
             </span>
             <div class="oe_unremovable d-inline-flex s_countdown_metrics">
                 <t t-foreach="metrics" t-as="metric">
-                    <span class="o_count_item">
+                    <span t-attf-class="o_count_item #{'o_countdown_seconds' if metric_last else ''}">
                         <span class="o_count_item_nbs d-inline-flex fw-bold">00</span>
                         <span class="o_count_item_label fw-bold oe_unremovable">
                             <span class="o_label_full" t-out="metric"/>
@@ -153,7 +153,7 @@
     <div class="o_template_big_numbers">
         <div class="oe_unremovable s_countdown_metrics d-inline-flex gap-1" dir="ltr">
             <t t-foreach="metrics" t-as="metric">
-                <span class="o_count_item d-flex gap-1">
+                <span t-attf-class="o_count_item d-flex gap-1 #{'o_countdown_seconds' if metric_last else ''}">
                     <span class="d-flex flex-column align-items-center">
                         <span class="o_count_item_nbs fs-3 fw-bold">00</span>
                         <span class="o_count_item_label small oe_unremovable">
