@@ -152,7 +152,7 @@ class AccountMove(models.Model):
             total_excluded = tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']
             total_tax_included_amount += exigible_tax_amount + total_excluded
             tax_invoice_lines.append({
-                "name": base_line['record'].name,
+                "name": base_line['record'].label,
                 "quantity": base_line['product_uom_id']._compute_quantity(base_line['quantity'], base_line['product_id'].uom_id),
                 "product_uom": base_line['product_uom_id'].display_name,
                 "price_unit": base_line['price_unit'] * ratio,
