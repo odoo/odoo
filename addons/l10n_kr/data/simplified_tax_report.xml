@@ -394,9 +394,9 @@
                                             <record id="l10n_kr_simplified_tp_vat_szrti_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">sum</field>
-                                                <field name="subformula">editable;rounding=0</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', '[매출] 공급가액 - 영세')]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_szrti_rate"
                                                     model="account.report.expression">
@@ -422,9 +422,9 @@
                                             <record id="l10n_kr_simplified_tp_vat_szro_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">sum</field>
-                                                <field name="subformula">editable;rounding=0</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', 'in', ('other', 'card_payment', 'cash_receipt')), ('tax_tag_ids', 'in', '[매출] 공급가액 - 영세')]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_szro_rate"
                                                     model="account.report.expression">
@@ -531,9 +531,21 @@
                                             <record id="l10n_kr_simplified_tp_vat_sticra_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">KR_STICRA.sub_balance + KR_STICRA.sub_balance_imp</field>
+                                                <field name="subformula" eval="False"/>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sticra_sub_balance" model="account.report.expression">
+                                                <field name="label">sub_balance</field>
                                                 <field name="engine">domain</field>
-                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', 'in', ('tax_invoice', 'tax_exempt_invoice', 'card_payment', 'cash_receipt')), ('tax_tag_ids', 'in', ('[매입] 공급가액 - 10%', '[매입] 세액 - 10%', '[매입] 공급가액 - 고정자산 10%', '[매입] 세액 - 고정자산 10%'))]"/>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', 'in', ('tax_invoice', 'card_payment', 'cash_receipt')), ('tax_tag_ids', 'in', ('[매입] 공급가액 - 10%', '[매입] 세액 - 10%', '[매입] 공급가액 - 고정자산 10%', '[매입] 세액 - 고정자산 10%', '[매입] 공급가액 - 영세'))]"/>
                                                 <field name="subformula">sum</field>
+                                            </record>
+                                            <record id="l10n_kr_simplified_tp_vat_sticra_sub_balance_imp" model="account.report.expression">
+                                                <field name="label">sub_balance_imp</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', '[수입] 공급가액 - 10%')]"/>
+                                                <field name="subformula">-sum</field>
                                             </record>
                                             <record id="l10n_kr_simplified_tp_vat_sticra_tax"
                                                     model="account.report.expression">
@@ -652,8 +664,8 @@
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_stccssb" model="account.report.line">
-                                        <field name="name">(21) Received before 2021.06.30</field>
-                                        <field name="name@ko_KR">(21) 21.6.30. 이전 공급받은 분</field>
+                                        <field name="name">(21) Supplied before 2021.06.30</field>
+                                        <field name="name@ko_KR">(21) 21.6.30. 이전 공급한 분</field>
                                         <field name="code">KR_STCCSSB</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -674,8 +686,8 @@
                                         </field>
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_stccssa" model="account.report.line">
-                                        <field name="name">(22) Received after 2021.07.01</field>
-                                        <field name="name@ko_KR">(22) 21.7.1. 이후 공급받은 분</field>
+                                        <field name="name">(22) Supplied after 2021.07.01</field>
+                                        <field name="name@ko_KR">(22) 21.7.1. 이후 공급한 분</field>
                                         <field name="code">KR_STCCSSA</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
