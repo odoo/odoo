@@ -212,6 +212,29 @@ class DiscussChannelMember(models.Model):
         'A channel member must be a partner or a guest.',
     )
 
+    @api.model
+    def _load_records_create(self, vals_list):
+        # A data member loses its xmlid when its partner leaves the channel: reuse the member
+        # created by joining again (module data only, imports must still report duplicates).
+        if not self.env.context.get("install_module"):
+            return super()._load_records_create(vals_list)
+        existing = {}
+        for index, vals in enumerate(vals_list):
+            if vals.get("channel_id") and vals.get("partner_id"):
+                member = self.search([
+                    ("channel_id", "=", vals["channel_id"]),
+                    ("partner_id", "=", vals["partner_id"]),
+                ], limit=1)
+                if member:
+                    existing[index] = member
+        new_members = iter(super()._load_records_create(
+            [vals for index, vals in enumerate(vals_list) if index not in existing]
+        ))
+        return self.browse([
+            existing[index].id if index in existing else next(new_members).id
+            for index in range(len(vals_list))
+        ])
+
     @api.model_create_multi
     def create(self, vals_list):
         if self.env.context.get("mail_create_bypass_create_check") is self._bypass_create_check:
