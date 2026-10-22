@@ -11,12 +11,12 @@ export class PaymentAdyen extends PaymentInterface {
     setup() {
         super.setup(...arguments);
         this.paymentLineResolvers = {};
-        this.connectWebSocket("ADYEN_LATEST_RESPONSE", () => {
-            const pendingLine = this.pos.getPendingPaymentLine("adyen");
-
-            if (pendingLine) {
-                pendingLine.payment_method_id.payment_terminal.handleAdyenStatusResponse();
+        this.connectWebSocket("ADYEN_LATEST_RESPONSE", ({ payment_method_id }) => {
+            if (!this.pos.getPendingPaymentLine("adyen")) {
+                return;
             }
+            const paymentMethod = this.pos.models["pos.payment.method"].get(payment_method_id);
+            paymentMethod?.payment_terminal?.handleAdyenStatusResponse();
         });
     }
 
@@ -104,10 +104,9 @@ export class PaymentAdyen extends PaymentInterface {
         };
     }
 
-    _adyenPayData() {
-        var order = this.pos.getOrder();
+    _adyenPayData(line = this.pos.getOrder().getSelectedPaymentline()) {
+        const order = line.pos_order_id;
         var config = this.pos.config;
-        var line = order.getSelectedPaymentline();
         var data = {
             SaleToPOIRequest: {
                 MessageHeader: Object.assign(this._adyenCommonMessageHeader(), {
@@ -138,9 +137,8 @@ export class PaymentAdyen extends PaymentInterface {
         return data;
     }
 
-    _adyenReversalData() {
-        const order = this.pos.getOrder();
-        const line = order.getSelectedPaymentline();
+    _adyenReversalData(line = this.pos.getOrder().getSelectedPaymentline()) {
+        const order = line.pos_order_id;
         return {
             SaleToPOIRequest: {
                 MessageHeader: Object.assign(this._adyenCommonMessageHeader(), {
@@ -176,7 +174,7 @@ export class PaymentAdyen extends PaymentInterface {
             return false;
         }
 
-        const data = line.amount < 0 ? this._adyenReversalData() : this._adyenPayData();
+        const data = line.amount < 0 ? this._adyenReversalData(line) : this._adyenPayData(line);
         line.setTerminalServiceId(this.most_recent_service_id);
         return this._callAdyen(data).then((data) => this._adyenHandleResponse(data));
     }
@@ -338,7 +336,11 @@ export class PaymentAdyen extends PaymentInterface {
     processPaymentResponse(line, header, body) {
         const paymentResponse = body.PaymentResponse ?? body.ReversalResponse;
         const additionalResponse = new URLSearchParams(paymentResponse.Response.AdditionalResponse);
-        const isPaymentSuccessful = this.isPaymentSuccessful(header, paymentResponse.Response);
+        const isPaymentSuccessful = this.isPaymentSuccessful(
+            header,
+            paymentResponse.Response,
+            line
+        );
         if (isPaymentSuccessful) {
             this.handleSuccessResponse(line, paymentResponse, additionalResponse);
         } else {
@@ -370,21 +372,48 @@ export class PaymentAdyen extends PaymentInterface {
             this._handleOdooConnectionFailure();
             return;
         }
-        const line = this.pendingAdyenline();
+
+        const response = notification.SaleToPOIResponse;
+        const header = response?.MessageHeader;
+        const line = this._adyenFindPaymentLine(
+            header,
+            response?.PaymentResponse ?? response?.ReversalResponse
+        );
         if (!line) {
+            logPosMessage(
+                "PaymentAdyen",
+                "handleAdyenStatusResponse",
+                "No pending payment line matches the Adyen response",
+                false,
+                [notification]
+            );
             return;
         }
 
-        const response = notification.SaleToPOIResponse;
-        const header = notification.SaleToPOIResponse.MessageHeader;
-
         this.processPaymentResponse(line, header, response);
     }
-    isPaymentSuccessful(header, response) {
-        return (
-            header.ServiceID === this.pendingAdyenline().terminalServiceId &&
-            response.Result === "Success"
+
+    /**
+     * Match the webhook response to a payment line through
+     * terminal id / order uuid / service id
+     */
+    _adyenFindPaymentLine(header, paymentResponse) {
+        if (header?.POIID !== this.payment_method_id.adyen_terminal_identifier) {
+            return;
+        }
+        const transactionId = paymentResponse?.SaleData?.SaleTransactionID?.TransactionID;
+        const orderUuid = transactionId?.split("--")[0];
+        const order = orderUuid && this.pos.models["pos.order"].getBy("uuid", orderUuid);
+        return order?.payment_ids.find(
+            (line) =>
+                line.payment_method_id.id === this.payment_method_id.id &&
+                line.terminalServiceId === header.ServiceID &&
+                !line.isDone() &&
+                line.getPaymentStatus() !== "retry"
         );
+    }
+    isPaymentSuccessful(header, response, line = this.pendingAdyenline()) {
+        return header.ServiceID === line?.terminalServiceId && response.Result === "Success";
     }
     handleSuccessResponse(line, payment_response, additional_response) {
         const config = this.pos.config;
