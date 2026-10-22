@@ -1357,6 +1357,8 @@ class ProjectTask(models.Model):
         elif additional_vals:
             super(ProjectTask, self.sudo()).write(additional_vals)
         result = super().write(vals)
+        if 'parent_id' in vals and self.env.user._is_portal() and not self.env.su:
+            self.check_access('write')
 
         if 'user_ids' in vals:
             self._populate_missing_personal_stages()
