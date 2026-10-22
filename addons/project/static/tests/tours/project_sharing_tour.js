@@ -71,6 +71,13 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Change the stage of the task.',
     run: "click",
 }, {
+    trigger: '.o_form_button_save',
+    content: 'Save the stage change',
+    run: "click",
+}, {
+    trigger: '.o-mail-Message-body.o_track:contains(Done)',
+    content: 'The stage change tracking must be visible in the chatter',
+}, {
     trigger: '.o-mail-Composer-html',
     content: 'Write a message in the chatter of the task',
     run: "editor I create a new task for testing purpose.",
