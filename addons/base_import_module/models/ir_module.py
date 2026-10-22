@@ -209,7 +209,7 @@ class IrModuleModule(models.Model):
                 if filename in exclude_list and idref:
                     cloc_exclude_vals = []
                     for xml_id, rec_id in idref.items():
-                        name = xml_id.replace('.', '_')
+                        name = _sanitize_xmlid_name(xml_id)
                         if self.env.ref(f"__cloc_exclude__.{name}", raise_if_not_found=False):
                             continue
                         cloc_exclude_vals.append({
@@ -246,37 +246,24 @@ class IrModuleModule(models.Model):
                     if 'public' in IrAttachment._fields:
                         # Static data is public and not website-specific.
                         values['public'] = True
-                    static_files.append((full_path, url_path, values))
+                    static_files.append((full_path, values))
 
-            existing_attachments = {
-                attachment.url: attachment
-                for attachment in IrAttachment.sudo().search([
-                    ('url', 'in', [url_path for _fp, url_path, _values in static_files]),
-                    ('type', '=', 'binary'),
-                    ('res_model', '=', 'ir.ui.view'),
-                ])
-            }
+            created_attachments = _batch_upsert(
+                self.env['ir.attachment'].sudo(), 'url', static_files,
+                extra_domain=[('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')],
+            )
 
-            attachments_to_create = []
-            for full_path, url_path, values in static_files:
-                existing = existing_attachments.get(url_path)
-                if existing:
-                    existing.write(values)
-                else:
-                    attachments_to_create.append((full_path, url_path, values))
-
-            created_attachments = IrAttachment.create([values for _fp, _up, values in attachments_to_create])
             model_data_vals = []
-            for (full_path, url_path, _values), attachment in zip(attachments_to_create, created_attachments):
+            for full_path, attachment in created_attachments:
                 model_data_vals.append({
-                    'name': f"attachment_{url_path}".replace('.', '_').replace(' ', '_'),
+                    'name': _sanitize_xmlid_name(f"attachment_{attachment.url}"),
                     'model': 'ir.attachment',
                     'module': module,
                     'res_id': attachment.id,
                 })
                 if str(pathlib.Path(full_path).relative_to(base_dir)) in exclude_list:
                     model_data_vals.append({
-                        'name': f"cloc_exclude_attachment_{url_path}".replace('.', '_').replace(' ', '_'),
+                        'name': _sanitize_xmlid_name(f"cloc_exclude_attachment_{attachment.url}"),
                         'model': 'ir.attachment',
                         'module': "__cloc_exclude__",
                         'res_id': attachment.id,
@@ -288,7 +275,6 @@ class IrModuleModule(models.Model):
         # store translation files as attachments to allow loading translations for webclient
         path_lang = opj(path, 'i18n')
         if os.path.isdir(path_lang):
-            IrAttachment = self.env['ir.attachment']
             lang_files = []
             for entry in os.scandir(path_lang):
                 if not entry.is_file() or not entry.name.endswith('.po'):
@@ -308,35 +294,22 @@ class IrModuleModule(models.Model):
                 }
                 lang_files.append((lang, values))
 
-            existing_lang_attachments = {
-                attachment.url: attachment
-                for attachment in IrAttachment.sudo().search([
-                    ('url', 'in', [values['url'] for _lang, values in lang_files]),
-                    ('type', '=', 'binary'),
-                    ('name', 'in', [values['name'] for _lang, values in lang_files]),
-                ])
-            }
+            created_attachments = _batch_upsert(
+                self.env['ir.attachment'].sudo(), 'url', lang_files,
+                extra_domain=[('type', '=', 'binary'), ('name', 'in', [values['name'] for _lang, values in lang_files])],
+            )
 
-            lang_attachments_to_create = []
-            for lang, values in lang_files:
-                existing = existing_lang_attachments.get(values['url'])
-                if existing:
-                    existing.write(values)
-                else:
-                    lang_attachments_to_create.append((lang, values))
-
-            created_lang_attachments = IrAttachment.create([values for _lang, values in lang_attachments_to_create])
             self.env['ir.model.data'].create([{
-                'name': f'attachment_{module}_{lang}'.replace('.', '_').replace(' ', '_'),
+                'name': _sanitize_xmlid_name(f'attachment_{module}_{lang}'),
                 'model': 'ir.attachment',
                 'module': module,
                 'res_id': attachment.id,
-            } for (lang, _values), attachment in zip(lang_attachments_to_create, created_lang_attachments)])
+            } for lang, attachment in created_attachments])
 
     @api.model
     def _load_assets(self, module, terp):
         IrAsset = self.env['ir.asset']
-        assets_vals = []
+        assets_files = []
 
         # Generate 'ir.asset' record values for each asset delared in the manifest
         for bundle, commands in terp.get('assets', {}).items():
@@ -347,36 +320,21 @@ class IrModuleModule(models.Model):
                         "The assets path in the manifest of imported module '%(module_name)s' "
                         "cannot contain glob wildcards (e.g., *, **).", module_name=module))
                 path = path if path.startswith('/') else '/' + path # Ensures a '/' at the start
-                assets_vals.append({
+                assets_files.append((None, {
                     'name': f'{module}.{bundle}.{path}',
                     'directive': directive,
                     'target': target,
                     'path': path,
                     'bundle': bundle,
-                })
+                }))
 
-        # Look for existing assets
-        existing_assets = {
-            asset.name: asset
-            for asset in IrAsset.search([('name', 'in', [vals['name'] for vals in assets_vals])])
-        }
-        assets_to_create = []
-
-        # Update existing assets and generate the list of new assets values
-        for values in assets_vals:
-            if values['name'] in existing_assets:
-                existing_assets[values['name']].write(values)
-            else:
-                assets_to_create.append(values)
-
-        # Create new assets and attach 'ir.model.data' records to them
-        created_assets = IrAsset.create(assets_to_create)
+        created_assets = _batch_upsert(self.env['ir.asset'], 'name', assets_files)
         self.env['ir.model.data'].create([{
-            'name': f"{asset['bundle']}_{asset['path']}".replace(".", "_"),
+            'name': _sanitize_xmlid_name(f"{asset.bundle}_{asset.path}"),
             'model': 'ir.asset',
             'module': module,
             'res_id': asset.id,
-        } for asset in created_assets])
+        } for _key, asset in created_assets])
 
     @api.model
     def _setup_welcome_article(self, module):
@@ -404,12 +362,7 @@ class IrModuleModule(models.Model):
                     raise UserError(_("File '%s' exceed maximum allowed file size", zf.filename))
 
             with file_open_temporary_directory(self.env) as module_dir:
-                manifest_files = sorted(
-                    (file.filename.split('/')[0], file)
-                    for file in z.infolist()
-                    if file.filename.count('/') == 1
-                    and file.filename.split('/')[1] in MANIFEST_NAMES
-                )
+                manifest_files = sorted(_iter_zip_manifest_files(z))
                 module_data_files = defaultdict(list)
                 dependencies = defaultdict(list)
                 for mod_name, manifest in manifest_files:
@@ -658,14 +611,9 @@ class IrModuleModule(models.Model):
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
         not_found_modules = set()
         with zipfile.ZipFile(BytesIO(zip_data), "r") as z:
-            manifest_files = [
-                file
-                for file in z.infolist()
-                if file.filename.count('/') == 1
-                and file.filename.split('/')[1] in MANIFEST_NAMES
-            ]
-            modules_in_zip = {manifest.filename.split('/')[0] for manifest in manifest_files}
-            for manifest_file in manifest_files:
+            manifest_files = list(_iter_zip_manifest_files(z))
+            modules_in_zip = {mod_name for mod_name, _file in manifest_files}
+            for _mod_name, manifest_file in manifest_files:
                 if manifest_file.file_size > MAX_FILE_SIZE:
                     raise UserError(_("File '%s' exceed maximum allowed file size", manifest_file.filename))
                 try:
@@ -777,6 +725,20 @@ class IrModuleModule(models.Model):
                 _logger.exception("Failed to extract terms from attachment with url %s", attachment.url)
 
 
+def _sanitize_xmlid_name(name):
+    """ Sanitize ``name`` so it can be used as the ``name`` part of an
+    ir.model.data xmlid (dots and spaces aren't valid there). """
+    return name.replace('.', '_').replace(' ', '_')
+
+
+def _iter_zip_manifest_files(z):
+    """ Yield (module_name, ZipInfo) for each manifest file found one
+    directory level deep in the zip file ``z``. """
+    for file in z.infolist():
+        if file.filename.count('/') == 1 and file.filename.split('/')[1] in MANIFEST_NAMES:
+            yield file.filename.split('/')[0], file
+
+
 def _domain_asks_for_industries(domain):
     for condition in Domain(domain).iter_conditions():
         if condition.field_expr == 'module_type':
@@ -820,3 +782,43 @@ def _is_studio_custom(path):
             except Exception:
                 continue
     return False
+
+
+def _batch_upsert(model, match_field, files, extra_domain=None):
+    """ Create or update a batch of records.
+
+    :param model: model to upsert into (e.g. ``self.env['ir.attachment']``),
+        already bound to whatever environment the caller needs
+        (e.g. with ``sudo()`` applied, or not).
+    :param match_field: field used to detect a pre-existing record
+        (e.g. 'url' for attachments, 'name' for assets).
+    :param files: list of (key, values) pairs, ``values`` being the
+        model's values dict (must include ``match_field``); ``key`` is
+        whatever the caller needs to build its own ir.model.data
+        entries afterward.
+    :param extra_domain: additional search domain narrowing what
+        counts as a pre-existing record, exactly as each caller
+        matched before this was factored out.
+    :return: list of (key, record) for newly created records only -
+        existing ones don't need a new xmlid.
+    """
+    if not files:
+        return []
+    existing_records = {
+        record[match_field]: record
+        for record in model.search(
+            Domain(match_field, 'in', [values[match_field] for _key, values in files])
+            & Domain(extra_domain or Domain.TRUE),
+        )
+    }
+
+    to_create = []
+    for key, values in files:
+        existing = existing_records.get(values[match_field])
+        if existing:
+            existing.write(values)
+        else:
+            to_create.append((key, values))
+
+    created_records = model.create([values for _key, values in to_create])
+    return list(zip((key for key, _values in to_create), created_records))
