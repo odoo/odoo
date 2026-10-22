@@ -22,7 +22,16 @@ import { fields } from "@mail/model/export";
 import { messagingMenuHelpers } from "@mail/../tests/mock_server/controllers/discuss/messaging_menu";
 
 import { describe, expect, mockPermission, test } from "@odoo/hoot";
-import { rightClick, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
+import {
+    hover,
+    leave,
+    pointerDown,
+    pointerUp,
+    rightClick,
+    waitFor,
+    waitForNone,
+    waitUntil,
+} from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import {
@@ -986,4 +995,50 @@ test("tab added after boot fetches its own counter without re-fetching the other
             filter_id_by_tab_id_by_record_type: { "mail.message": { test_dynamic: null } },
         })}`,
     ]);
+});
+
+test("hovering the systray button preloads the menu content only once", async () => {
+    listenStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
+    await start();
+    await hover(".o_menu_systray i[aria-label='Messages']");
+    await expect.waitForSteps(["store fetch: /mail/messaging_menu/discuss.channel/load_more"]);
+    await leave();
+    await hover(".o_menu_systray i[aria-label='Messages']");
+    await openMessagingMenu();
+    await waitFor(".o-mail-MessagingMenuInDropdown");
+    expect.verifySteps([]);
+});
+
+test("pressing a tab preloads its content only once, before the click is completed", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "msg",
+        model: "res.partner",
+        needaction: true,
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    listenStoreFetch([
+        "/mail/messaging_menu/discuss.channel/load_more",
+        "/mail/messaging_menu/mail.message/load_more",
+    ]);
+    await start();
+    await openMessagingMenu();
+    await expect.waitForSteps(["store fetch: /mail/messaging_menu/discuss.channel/load_more"]);
+    await waitFor(".o-mail-MessagingMenu-tab[data-id='notification']");
+    await pointerDown(".o-mail-MessagingMenu-tab[data-id='notification']");
+    await expect.waitForSteps(["store fetch: /mail/messaging_menu/mail.message/load_more"]);
+    await pointerUp(".o-mail-MessagingMenu-tab[data-id='notification']");
+    await waitFor(".o-mail-MessagingMenu-tab[data-id='notification'].active");
+    await pointerDown(".o-mail-MessagingMenu-tab[data-id='notification']");
+    await pointerUp(".o-mail-MessagingMenu-tab[data-id='notification']");
+    expect.verifySteps([]);
 });

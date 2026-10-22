@@ -4,7 +4,7 @@ import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messagi
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { useOnBottomScrolled, usePeek, useSearch } from "@mail/utils/common/hooks";
+import { onClickIntent, useOnBottomScrolled, usePeek, useSearch } from "@mail/utils/common/hooks";
 import { computedShallowEqual, incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
@@ -97,6 +97,7 @@ export class MessagingMenu extends Component {
         return this.filteredMessages();
     });
     tabContentRef = signal.ref();
+    navRef = signal.ref();
 
     setup() {
         super.setup();
@@ -164,6 +165,13 @@ export class MessagingMenu extends Component {
         this.guestNamePopover = usePopover(GuestNamePopover, {
             arrow: false,
             position: "right-end",
+        });
+        onClickIntent(this.navRef, (ev) => {
+            const tabId = ev.target.closest?.(".o-mail-MessagingMenu-tab")?.dataset.id;
+            const tab = this.visibleTabs.find((t) => String(t.id) === tabId);
+            if (tab?.getLoadStatus(tab.defaultFilter) === "new") {
+                tab.loadMore({ filter: tab.defaultFilter });
+            }
         });
     }
 

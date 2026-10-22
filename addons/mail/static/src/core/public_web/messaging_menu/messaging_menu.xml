@@ -116,7 +116,7 @@
 </t>
 
 <t t-name="mail.MessagingMenu-navigation">
-    <nav t-if="this.visibleTabs.length" class="o-mail-MessagingMenu-navbar d-flex flex-column flex-shrink-0 px-1 o-py-2_5 gap-2 overflow-auto h-100 o-scrollbar-thin">
+    <nav t-if="this.visibleTabs.length" t-ref="this.navRef" class="o-mail-MessagingMenu-navbar d-flex flex-column flex-shrink-0 px-1 o-py-2_5 gap-2 overflow-auto h-100 o-scrollbar-thin">
         <t t-if="this.isCollapsible() and this.store.discuss.canCollapseSidebar()">
             <button
                 class="o-mail-MessagingMenu-toggleSidebar btn btn-secondary align-self-center flex-shrink-0"
