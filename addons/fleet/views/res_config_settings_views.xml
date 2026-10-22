@@ -18,6 +18,12 @@
                                 </div>
                             </setting>
                         </block>
+                        <block title="Vehicle Tracking" name="vehicle_tracking">
+                            <setting id="traccar_integration" string="Traccar Integration"
+                                help="Integrate with a Traccar GPS tracking server to track your vehicles in real time.">
+                                <field name="module_fleet_traccar" widget="upgrade_boolean"/>
+                            </setting>
+                        </block>
                     </app>
                 </xpath>
             </field>
