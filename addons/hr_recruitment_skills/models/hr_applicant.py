@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
-
 from odoo import Command, api, fields, models
 
 
@@ -167,17 +165,6 @@ class HrApplicant(models.Model):
                 applicant_job_ids += self.env["hr.applicant"].search(domain).job_id
             res["context"]["active_applicant_job_ids"] = applicant_job_ids.ids
         return res
-
-    def action_add_to_job(self):
-        self.with_context(just_moved=True).write(
-            {
-                "job_id": self.env["hr.job"].browse(self.env.context.get("matching_job_id")).id,
-                "stage_id": self.env.ref("hr_recruitment.stage_job0").id,
-            }
-        )
-        action = self.env["ir.actions.actions"]._for_xml_id("hr_recruitment.action_hr_job_applications")
-        action["context"] = literal_eval(action["context"].replace("active_id", str(self.job_id.id)))
-        return action
 
     @api.model_create_multi
     def create(self, vals_list):

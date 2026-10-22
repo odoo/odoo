@@ -162,15 +162,6 @@
         <field name="inherit_id" ref="hr_recruitment_skills.crm_case_tree_view_job"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//list" position="attributes">
-                <attribute name="class" add="o_search_matching_applicant" separator=" "/>
-                <attribute name="default_order">sequence</attribute>
-            </xpath>
-            <xpath expr="//list" position="inside">
-                <header>
-                    <button name="action_add_to_job" string="Move to this Job Position" type="object" class="btn-secondary"/>
-                </header>
-            </xpath>
             <field name="application_status" position="attributes">
                 <attribute name="optional">hide</attribute>
             </field>
