@@ -1,6 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document" primary="True">
+        <!-- Keep the selected company layout, but give Indian invoice data a fixed reading order. -->
+        <xpath expr="//t[@t-call='web.external_layout']" position="attributes">
+            <attribute name="address">False</attribute>
+            <attribute name="information_block">False</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]" position="attributes">
+            <attribute name="class" add="l10n_in_invoice" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='informations']" position="before">
+            <style>
+                .l10n_in_invoice { font-size: 12px; }
+                .l10n_in_invoice .l10n_in_parties { table-layout: fixed; }
+                .l10n_in_invoice .l10n_in_parties td { padding: 12px; vertical-align: top; }
+                .l10n_in_invoice .l10n_in_parties address { line-height: 1.45; }
+                .l10n_in_invoice .l10n_in_party_heading { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+                .l10n_in_invoice #informations { display: block !important; overflow: hidden; margin: 0 0 16px; border-top: 1px solid #dee2e6; }
+                .l10n_in_invoice #informations > .col { float: left; width: 50%; max-width: 50%; padding: 6px 10px; border-bottom: 1px solid #dee2e6; }
+                .l10n_in_invoice #informations > .col:nth-child(2n+1) { clear: left; }
+                .l10n_in_invoice #informations > .col > strong { display: inline-block; width: 42%; vertical-align: top; }
+                .l10n_in_invoice #informations > .col > div { display: inline-block; max-width: 56%; }
+                .l10n_in_invoice .o_main_table th,
+                .l10n_in_invoice .l10n_in_hsn_table th { background-color: #f3f4f5; padding: 8px 6px; }
+                .l10n_in_invoice .o_main_table td,
+                .l10n_in_invoice .l10n_in_hsn_table td { padding: 7px 6px; border-bottom: 1px solid #dee2e6; }
+                .l10n_in_invoice .o_main_table th,
+                .l10n_in_invoice .o_main_table td { border-right: 1px solid #dee2e6; }
+                .l10n_in_invoice .o_main_table th:last-child,
+                .l10n_in_invoice .o_main_table td:last-child { border-right: 0; }
+                .l10n_in_invoice .l10n_in_hsn_table { font-size: 11px; }
+                .l10n_in_invoice .l10n_in_hsn_table tr { page-break-inside: avoid; }
+                .l10n_in_invoice .l10n_in_hsn_table thead { display: table-header-group; }
+                .l10n_in_invoice #right-elements { min-width: 45%; margin-top: 12px; }
+                .l10n_in_invoice #payment_term { font-size: 11px; }
+            </style>
+            <div t-if="l10n_in_report_title" class="text-end text-muted small mb-2" name="l10n_in_copy_title">
+                <t t-out="l10n_in_report_title"/>
+            </div>
+            <table class="table table-bordered l10n_in_parties mb-3" name="l10n_in_party_details">
+                <tbody>
+                    <tr>
+                        <td>
+                            <t t-out="address"/>
+                        </td>
+                        <td t-if="information_block">
+                            <t t-out="information_block"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </xpath>
         <xpath expr="//t[@t-set='layout_document_title']" position="before">
             <t t-set="custom_in_footer">
                 <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.move_type in ['out_invoice', 'out_refund', 'out_receipt']
@@ -15,6 +65,10 @@
             <div t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type and o.partner_shipping_id.has_vat">
                 GSTIN: <span t-field="o.partner_shipping_id.vat"/>
             </div>
+            <t t-call="l10n_in.partner_state" partner="o.partner_shipping_id"/>
+        </xpath>
+        <xpath expr="//div[@name='shipping_address_block']/strong" position="replace">
+            <strong class="d-block mb-2 l10n_in_party_heading">Ship To (Consignee)</strong>
         </xpath>
         <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="attributes">
             <attribute name="t-if" add="o.company_id.l10n_in_gst_registration_type" separator="and"/>
@@ -26,39 +80,92 @@
             <attribute name="t-if" add="o.company_id.l10n_in_gst_registration_type" separator="and"/>
         </xpath>
         <xpath expr="//t[@name='address_not_same_as_shipping']/address" position="before">
-            <strong t-if="o.l10n_in_is_self_invoice" class="d-block mb-1">Bill From:</strong>
-            <t t-call="l10n_in.place_of_supply"/>
+            <t t-call="l10n_in.billing_heading"/>
         </xpath>
         <xpath expr="//t[@name='address_same_as_shipping']/address" position="before">
-            <strong t-if="o.l10n_in_is_self_invoice" class="d-block mb-1">Bill From:</strong>
-            <t t-call="l10n_in.place_of_supply"/>
+            <t t-call="l10n_in.billing_heading"/>
         </xpath>
         <xpath expr="//t[@name='no_shipping']/address" position="before">
-            <strong t-if="o.l10n_in_is_self_invoice" class="d-block mb-1">Bill From:</strong>
-            <t t-call="l10n_in.place_of_supply"/>
+            <t t-call="l10n_in.billing_heading"/>
+        </xpath>
+        <xpath expr="//t[@t-set='address']" position="inside">
+            <t t-call="l10n_in.partner_state" partner="o.partner_id"/>
         </xpath>
 
         <xpath expr="//div[@id='informations']" position="inside">
+            <div class="col" t-if="o.company_id.l10n_in_gst_registration_type and o.l10n_in_state_id" name="l10n_in_place_of_supply">
+                <strong>Place of Supply</strong>
+                <div><span t-field="o.l10n_in_state_id.name"/> <span t-if="o.l10n_in_state_id.l10n_in_tin">(<span t-field="o.l10n_in_state_id.l10n_in_tin"/>)</span></div>
+            </div>
+            <div class="col" t-if="o.company_id.l10n_in_gst_registration_type" name="l10n_in_reverse_charge">
+                <strong>Reverse Charge</strong>
+                <div>
+                    <span t-if="o.l10n_in_is_self_invoice or any(tax.l10n_in_reverse_charge for tax in o.invoice_line_ids.tax_ids)">Yes</span>
+                    <span t-else="">No</span>
+                </div>
+            </div>
+            <div class="col" t-if="o.reversed_entry_id" name="l10n_in_original_invoice">
+                <strong>Original Invoice</strong>
+                <div><span t-field="o.reversed_entry_id.name"/><t t-if="o.reversed_entry_id.invoice_date"> / <span t-field="o.reversed_entry_id.invoice_date"/></t></div>
+            </div>
+            <div class="col" t-if="o.l10n_in_shipping_bill_number" name="l10n_in_shipping_bill">
+                <strong>Shipping Bill</strong>
+                <div><span t-field="o.l10n_in_shipping_bill_number"/><t t-if="o.l10n_in_shipping_bill_date"> / <span t-field="o.l10n_in_shipping_bill_date"/></t></div>
+            </div>
             <div class="col" t-if="o.l10n_in_adjustment_type and o.l10n_in_adjustment_type != 'standard'" name="l10n_in_adjustment_type">
                 <strong>Adjustment Type</strong>
                 <div t-field="o.l10n_in_adjustment_type">Price Adjustment</div>
             </div>
         </xpath>
+        <xpath expr="//div[@id='informations']" position="attributes">
+            <attribute name="t-if">True</attribute>
+        </xpath>
 
         <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="after">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type">
-                <th>HSN/SAC</th>
+                <th name="th_l10n_in_hsn">HSN/SAC</th>
             </t>
         </xpath>
 
-        <xpath expr="//t[@name='account_invoice_line_accountable']/td[1]" position="after">
+        <xpath expr="//th[@name='th_description']" position="before">
+            <th name="th_l10n_in_serial" class="text-end text-nowrap">Sl. No.</th>
+        </xpath>
+        <xpath expr="//t[@t-set='current_section'][@t-value='None']" position="before">
+            <t t-set="l10n_in_line_number" t-value="0"/>
+        </xpath>
+        <xpath expr="//t[@name='account_invoice_line_accountable']/td[1]" position="before">
+            <td class="text-end" name="td_l10n_in_serial">
+                <t t-set="l10n_in_line_number" t-value="l10n_in_line_number + 1"/>
+                <span t-out="l10n_in_line_number"/>
+            </td>
+        </xpath>
+        <xpath expr="//td[@name='account_invoice_line_name_grouped_desktop']" position="before">
+            <td class="text-end" name="td_l10n_in_serial_grouped">
+                <t t-if="hide_details or grouped_line['display_type'] == 'product'">
+                    <t t-set="l10n_in_line_number" t-value="l10n_in_line_number + 1"/>
+                    <span t-out="l10n_in_line_number"/>
+                </t>
+            </td>
+        </xpath>
+
+        <xpath expr="//td[@name='account_invoice_line_name']" position="after">
             <td t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type">
               <span t-if="line.l10n_in_hsn_code" t-field="line.l10n_in_hsn_code"></span>
             </td>
         </xpath>
 
-        <xpath expr="//t[@name='account_invoice_line_section']/td[1]" position="after">
-            <td t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type"></td>
+        <!-- Sections absorb the HSN column; notes already span the entire table. -->
+        <xpath expr="//t[@t-set='line_colspan'][contains(@t-value, '3 +')]" position="attributes">
+            <attribute name="t-value" add="(1 if o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type else 0) + (0 if hide_details or hide_prices else 1)" separator=" + "/>
+        </xpath>
+        <xpath expr="//td[@name='account_invoice_line_name_grouped']" position="after">
+            <td t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type and (hide_details or grouped_line['display_type'] == 'product')"/>
+        </xpath>
+        <xpath expr="//t[@name='account_invoice_line_section']/td[@colspan='2']" position="attributes">
+            <attribute name="t-att-colspan">3 + (1 if o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type else 0)</attribute>
+        </xpath>
+        <xpath expr="//td[@name='account_invoice_line_name_grouped']" position="attributes">
+            <attribute name="t-att-colspan">(2 if grouped_line['display_type'] != 'product' else 1) + (1 if not hide_details and grouped_line['display_type'] != 'product' and o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type else 0)</attribute>
         </xpath>
 
         <xpath expr="//div[@id='qrcode_info']" position="attributes">
@@ -66,19 +173,14 @@
         </xpath>
 
         <xpath expr="//div[@id='qrcode_info']" position="after">
-            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_upi_id">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_upi_id and qr_code_url">
                 <div style="display:-webkit-flex;" class="flex-column">
-                    <strong>PAYMENT QR CODE</strong>
+                    <strong>Pay by UPI</strong>
                     <div class="mt-1 mb-1">
                         <p class="mb-0">UPI ID:</p>
                         <span class="mb-0" t-field="o.company_id.l10n_in_upi_id"/>
                     </div>
-                    <div class="d-flex flex-row" t-attf-style="#{'-webkit-transform:translateX(-0.5rem);' if report_type != 'html' else '-webkit-transform:translate(-0.5rem,-0.8rem);'}">
-                        <img src="/l10n_in/static/src/img/PhonePe-Logo.svg" style="width:4.5rem;"/>
-                        <img src="/l10n_in/static/src/img/Google_Pay-Logo.svg" style="width:3.5rem;"/>
-                        <img src="/l10n_in/static/src/img/Paytm-Logo.svg" style="width:4rem;"/>
-                        <img src="/l10n_in/static/src/img/Upi-logo.svg" t-attf-style="#{'' if report_type != 'html' else 'padding:0.5rem;'} width:4rem;"/>
-                    </div>
+                    <small class="text-muted">Scan with any UPI app</small>
                 </div>
             </t>
         </xpath>
@@ -136,10 +238,11 @@
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_gst_registration_type">
                 <t t-set="hsn_summary" t-value="o._l10n_in_get_hsn_summary_table()"/>
                 <t t-if="hsn_summary">
-                    <div name="l10n_in_hsn_summary" class="mt-3" style="page-break-inside: avoid;">
-                        <h4>HSN Summary</h4>
-                        <table class="table table-sm table-borderless col-6">
+                    <div name="l10n_in_hsn_summary" class="mt-3 mb-3">
+                        <h6 class="mb-2">HSN/SAC Tax Summary</h6>
+                        <table class="table table-sm table-borderless w-100 l10n_in_hsn_table">
                             <thead>
+                                <tr>
                                 <th>HSN/SAC</th>
                                 <th class="text-end">Quantity</th>
                                 <th class="text-end">Rate %</th>
@@ -148,7 +251,9 @@
                                 <th class="text-end" t-if="hsn_summary['has_gst']">CGST</th>
                                 <th class="text-end" t-if="hsn_summary['has_igst']">IGST</th>
                                 <th class="text-end" t-if="hsn_summary['has_cess']">CESS</th>
+                                </tr>
                             </thead>
+                            <tbody>
                             <tr t-foreach="hsn_summary['items']" t-as="item">
                                 <td t-out="item['l10n_in_hsn_code']"/>
                                 <td class="text-end">
@@ -177,16 +282,15 @@
                                           t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                 </td>
                             </tr>
+                            </tbody>
                         </table>
                     </div>
                 </t>
             </t>
         </xpath>
 
-        <xpath expr="//div[hasclass('row')]" position="after">
-            <div t-if="l10n_in_report_title" style="position:absolute;left:0;right:0;opacity:0.15;font-size:3em;color:#666666;width:100%;text-align:center;z-index:1000;-webkit-transform:rotate(-45deg);">
-                <t t-out="l10n_in_report_title"/>
-            </div>
+        <xpath expr="//div[@id='right-elements']" position="before">
+            <xpath expr="//div[@name='l10n_in_hsn_summary']/../.." position="move"/>
         </xpath>
 
     </template>
@@ -203,6 +307,20 @@
     <template id="place_of_supply">
         <div t-if="o.company_id.l10n_in_gst_registration_type and o.l10n_in_state_id">
             Place of supply: <span t-out="o.l10n_in_state_id.name" />
+        </div>
+    </template>
+
+    <template id="billing_heading">
+        <strong class="d-block mb-2 l10n_in_party_heading">
+            <t t-if="o.l10n_in_is_self_invoice or o.move_type in ('in_invoice', 'in_refund')">Bill From (Supplier)</t>
+            <t t-else="">Bill To (Buyer)</t>
+        </strong>
+    </template>
+
+    <template id="partner_state">
+        <div t-if="partner.country_id.code == 'IN' and partner.state_id">
+            State: <span t-field="partner.state_id.name"/>
+            <t t-if="partner.state_id.l10n_in_tin">, Code: <span t-field="partner.state_id.l10n_in_tin"/></t>
         </div>
     </template>
 
