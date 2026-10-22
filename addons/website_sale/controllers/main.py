@@ -430,13 +430,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
         sale_tax = request.fiscal_position.map_tax(website.company_id.sudo().account_sale_tax_id)
 
         if tax_display == "tax_included" and sale_tax:
-            # Convert the boundaried to tax-excluded for internal processing
-            min_price_tax_excluded = sale_tax.with_context(force_price_include=True).compute_all(
-                min_price, website.currency_id
-            )["total_excluded"]
-            max_price_tax_excluded = sale_tax.with_context(force_price_include=True).compute_all(
-                max_price, website.currency_id
-            )["total_excluded"]
+            # Convert the boundaries to tax-excluded for internal processing. 0 means no boundary:
+            # skip the tax computation for it.
+            min_price_tax_excluded = (
+                min_price
+                and sale_tax.with_context(force_price_include=True).compute_all(
+                    min_price, website.currency_id
+                )["total_excluded"]
+            )
+            max_price_tax_excluded = (
+                max_price
+                and sale_tax.with_context(force_price_include=True).compute_all(
+                    max_price, website.currency_id
+                )["total_excluded"]
+            )
         else:
             min_price_tax_excluded = min_price
             max_price_tax_excluded = max_price
