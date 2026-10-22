@@ -95,13 +95,14 @@ def publish(args, pub_type, extensions):
         filename = release.split(os.path.sep)[-1]
         release_dir = os.path.join(args.pub, pub_type)
         release_path = os.path.join(release_dir, filename)
-        os.renames(build_path, release_path)
+        os.makedirs(release_dir, exist_ok=True)
+        shutil.move(build_path, release_path)
 
         # Latest/symlink handler
         release_abspath = os.path.abspath(release_path)
-        latest_abspath = release_abspath.replace(TSTAMP, 'latest')
+        latest_abspath = os.path.join(os.path.dirname(release_abspath), filename.replace(TSTAMP, 'latest'))
 
-        if os.path.islink(latest_abspath):
+        if os.path.lexists(latest_abspath):
             os.unlink(latest_abspath)
         os.symlink(release_abspath, latest_abspath)
 
