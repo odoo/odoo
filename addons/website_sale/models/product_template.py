@@ -791,7 +791,9 @@ class ProductTemplate(models.Model):
         for template in self:
             pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
 
-            product_taxes = template.sudo().taxes_id._filter_taxes_by_company()
+            # Reset the prefetch so that the taxes of other companies are not computed (e.g. their
+            # `price_include`), which would read those companies.
+            product_taxes = template.sudo().taxes_id._filter_taxes_by_company().with_prefetch()
             taxes = fiscal_position_sudo.map_tax(product_taxes)
 
             base_price = None

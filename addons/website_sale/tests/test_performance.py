@@ -72,10 +72,8 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_tag": 1,
             "product_template": 2,
             "product_template_attribute_line": 2,
-            "res_company": 2,
+            "res_company": 1,
             "res_currency": 1,
-            "res_partner": 1,
-            "res_users": 1,
             "website_menu": 1,
             "website_page": 1,
         })
@@ -186,9 +184,10 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
 
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
-        res["product_pricelist"] += 3
+        res["product_pricelist"] += 2
         res["product_category"] += 1
         res["product_pricelist_item"] += 1
+        res["res_users"] += 1
         return res
 
     def test_shop_page_generation(self):
@@ -199,7 +198,7 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
 
     def _get_product_page_queries(self):
         res = super()._get_product_page_queries()
-        res["product_pricelist"] += 3
+        res["product_pricelist"] += 2
         res["product_category"] += 1
         res["product_pricelist_item"] += 2
         return res
@@ -328,6 +327,8 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
         res["product_product"] += 1
+        res["res_users"] += 1
+        res["res_partner"] += 1
         if "website_sale_stock" in self.installed_modules:
             res["stock_warehouse"] += 2
             res["stock_move"] += 2

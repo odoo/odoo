@@ -411,7 +411,7 @@ class Website(models.Model):
 
     def _get_configurator_preview_urls(self):
         return super()._get_configurator_preview_urls() | {
-            style['preview_url']
+            style["preview_url"]
             for mapping in (const.SHOP_PAGE_STYLE_MAPPING, const.PRODUCT_PAGE_STYLE_MAPPING)
             for style in mapping.values()
         }
@@ -788,13 +788,10 @@ class Website(models.Model):
         if not self.env["res.groups"]._is_feature_enabled("product.group_product_pricelist"):
             return ProductPricelistSudo  # Skip pricelist computation if pricelists are disabled.
 
-        if PRICELIST_SESSION_CACHE_KEY in request.session:
-            pricelist_sudo = ProductPricelistSudo.browse(
-                request.session[PRICELIST_SESSION_CACHE_KEY]
-            )
+        if pricelist_id := request.session.get(PRICELIST_SESSION_CACHE_KEY):
+            pricelist_sudo = ProductPricelistSudo.search_fetch([("id", "=", pricelist_id)])
             if pricelist_sudo and (
-                pricelist_sudo.exists()
-                and pricelist_sudo._is_available_on_website(self)
+                pricelist_sudo._is_available_on_website(self)
                 and pricelist_sudo._is_available_in_country(self._get_geoip_country_code())
             ):
                 return pricelist_sudo.sudo()
@@ -834,11 +831,12 @@ class Website(models.Model):
         fpos_sudo = AccountFiscalPositionSudo
 
         if FISCAL_POSITION_SESSION_CACHE_KEY in request.session:
-            fpos_sudo = AccountFiscalPositionSudo.browse(
-                request.session[FISCAL_POSITION_SESSION_CACHE_KEY]
-            )
-            if not fpos_sudo or fpos_sudo.exists():
+            fpos_id = request.session[FISCAL_POSITION_SESSION_CACHE_KEY]
+            if fpos_id is False:
+                # `False` is cached in the session when no fiscal position could not be applied.
                 return fpos_sudo
+            if (cached_fpos_sudo := AccountFiscalPositionSudo.browse(fpos_id)).exists():
+                return cached_fpos_sudo
 
         partner_sudo = self.env.user.partner_id
 
