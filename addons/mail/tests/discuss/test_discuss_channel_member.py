@@ -3,6 +3,8 @@
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests.common import new_test_user, tagged
+from odoo.tools import file_open, mute_logger
+from odoo.tools.convert import convert_xml_import
 
 
 @tagged("post_install", "-at_install")
@@ -272,3 +274,49 @@ class TestDiscussChannelMember(MailCommon):
             1,  # channel 2 user 1: received 1 message (from message post)
             1,  # channel 2 user 3: received 1 message (from message post)
         ])
+
+    def _update_discuss_channel_data(self):
+        with file_open("mail/data/discuss_channel_data.xml", "rb") as xml_file:
+            convert_xml_import(self.env, "mail", xml_file, {}, mode="update", noupdate=True)
+
+    def test_data_update_after_admin_left_and_rejoined_general(self):
+        """Leaving a channel deletes the member record created by the data file
+        (and its xmlid); joining again creates a new one. Updating the module
+        must reuse it instead of creating the data member again (unique
+        partner/channel)."""
+        admin = self.env.ref("base.user_admin")
+        channel = self.env.ref("mail.channel_all_employees")
+        channel.with_user(admin).action_unfollow()
+        channel.add_members(partner_ids=admin.partner_id.ids)
+        self._update_discuss_channel_data()
+        members = channel.channel_member_ids.filtered(lambda m: m.partner_id == admin.partner_id)
+        self.assertEqual(len(members), 1)
+        self.assertEqual(self.env.ref("mail.channel_member_general_channel_for_admin"), members)
+
+    @mute_logger("odoo.sql_db")
+    def test_import_duplicate_member_still_fails(self):
+        """Reusing members is only for module data: importing a member that
+        already exists keeps failing instead of silently dropping values."""
+        admin = self.env.ref("base.user_admin")
+        channel = self.env.ref("mail.channel_all_employees")
+        member = channel.channel_member_ids.filtered(lambda m: m.partner_id == admin.partner_id)
+        self.assertEqual(len(member), 1)
+        notifications = member.custom_notifications
+        result = self.env["discuss.channel.member"].load(
+            ["channel_id/.id", "partner_id/.id", "custom_notifications"],
+            [[str(channel.id), str(admin.partner_id.id), "no_notif"]],
+        )
+        self.assertFalse(result["ids"])
+        self.assertTrue(result["messages"])
+        self.assertEqual(member.custom_notifications, notifications)
+
+    def test_data_update_recreates_deleted_admin_member(self):
+        """A data member deleted without joining again is still recreated, with
+        its xmlid, when updating the module."""
+        admin = self.env.ref("base.user_admin")
+        channel = self.env.ref("mail.channel_all_employees")
+        self.env.ref("mail.channel_member_general_channel_for_admin").unlink()
+        self._update_discuss_channel_data()
+        members = channel.channel_member_ids.filtered(lambda m: m.partner_id == admin.partner_id)
+        self.assertEqual(len(members), 1)
+        self.assertEqual(self.env.ref("mail.channel_member_general_channel_for_admin"), members)
