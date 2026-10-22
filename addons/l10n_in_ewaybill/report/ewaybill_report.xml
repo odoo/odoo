@@ -73,18 +73,7 @@
                                             Document Details: <t t-out="doc.type_id.name"/> - <t t-out="doc.document_number"/> - <t t-if="doc.document_date" t-out="doc.document_date.strftime('%d/%m/%Y')"/>
                                         </td>
                                         <td>Transaction Type:
-                                            <t t-if="generate_json['transactionType'] == 2">
-                                                Bill To - Ship To
-                                            </t>
-                                            <t t-elif="generate_json['transactionType'] == 3">
-                                                Bill From - Dispatch From
-                                            </t>
-                                            <t t-elif="generate_json['transactionType'] == 4">
-                                                Combination of 2 and 3
-                                            </t>
-                                            <t t-else="">
-                                                Regular
-                                            </t>
+                                            <span t-field="doc.transaction_type"/>
                                         </td>
                                     </tr>
                                 </table>
