@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import typing
 from operator import attrgetter
-from xmlrpc.client import MAXINT  # TODO change this
 
 from odoo.exceptions import AccessError
 from odoo.tools import float_compare, float_is_zero, float_repr, float_round
@@ -39,10 +38,6 @@ class Integer(Field[int]):
         return value or 0
 
     def convert_to_read(self, value, record, use_display_name=True):
-        # Integer values greater than 2^31-1 are not supported in pure XMLRPC,
-        # so we have to pass them as floats :-(
-        if value and value > MAXINT:
-            return float(value)
         return value
 
     def convert_to_export(self, value, record):
