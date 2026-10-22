@@ -126,7 +126,8 @@ export function fillShrunkPhrasingParent(el) {
 /**
  * Removes a trailing BR if it is unnecessary:
  * in a non-empty block, if the last childNode is a BR and its previous sibling
- * is not a BR, remove the BR.
+ * is not a BR, remove the BR. A BR at the end of an inline `el` with some
+ * content after that inline in its block is a real line break, so it is kept.
  *
  * @param {HTMLElement} el
  * @param {Array} predicates exceptions where a trailing BR should not be removed
@@ -138,6 +139,7 @@ export function cleanTrailingBR(el, predicates = []) {
         candidate?.nodeName === "BR" &&
         candidate.previousSibling?.nodeName !== "BR" &&
         !isEmptyBlock(el) &&
+        !nextLeaf(candidate, closestBlock(el), true) &&
         !predicates.some((predicate) => predicate(candidate))
     ) {
         candidate.remove();
