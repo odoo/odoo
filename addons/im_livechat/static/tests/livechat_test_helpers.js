@@ -5,6 +5,7 @@ import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer"
 import { defineModels, serverState, MockServer } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { ChatbotMessage } from "./mock_server/mock_models/chatbot_message";
+import { ChatbotScript } from "./mock_server/mock_models/chatbot_script";
 import { ChatbotScriptAnswer } from "./mock_server/mock_models/chatbot_script_answer";
 import { ChatbotScriptStep } from "./mock_server/mock_models/chatbot_script_step";
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
@@ -41,6 +42,7 @@ export async function postLivechatMessage(text) {
 export const livechatModels = {
     ...mailModels,
     ChatbotMessage,
+    ChatbotScript,
     ChatbotScriptAnswer,
     ChatbotScriptStep,
     DiscussChannel,

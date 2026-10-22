@@ -13,4 +13,9 @@ export class ChatbotScriptStep extends models.ServerModel {
             ["text", "Text"],
         ],
     });
+
+    _store_script_step_fields(res) {
+        res.attr("message", (step) => ["markup", step.message]); // mock: html fields must be markup-wrapped
+        res.attr("step_type");
+    }
 }
