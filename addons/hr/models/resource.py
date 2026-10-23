@@ -55,11 +55,20 @@ class ResourceResource(models.Model):
             resource.avatar_128 = employee[0].avatar_128
 
     def _inverse_calendar_id(self):
+        """Propagate a calendar written on the resource to its employee (i.e. the employee's current version)."""
         for resource in self:
             if resource.calendar_id != resource.employee_id.resource_calendar_id:
                 resource.employee_id.resource_calendar_id = resource.calendar_id
 
     def _get_resource_without_contract(self):
+        """Return the resources that are not employees, or whose employee never had a contract.
+
+        "Ever": any active version with a ``contract_date_start``, whatever the
+        dates. Such resources keep the plain ``resource`` behavior (their own
+        ``calendar_id`` over the whole period).
+
+        :rtype: resource.resource
+        """
         employee_ids_with_active_contracts = {
             employee.id for [employee] in
             self.env['hr.version']._read_group(
@@ -76,6 +85,19 @@ class ResourceResource(models.Model):
         )
 
     def _get_contracts_valid_periods(self, start, end):
+        """Return, per resource and calendar, the intervals within ``[start, end]`` covered by a version in contract.
+
+        Each version in contract during the period
+        (``hr.employee._get_versions_with_contract_overlap_with_period``)
+        contributes the interval from its ``date_start`` 00:00 to its
+        ``date_end`` 23:59:59 (in the employee's timezone), clipped to
+        ``[start, end]``. Periods out of contract are absent.
+
+        :param datetime.datetime start: timezone-aware start
+        :param datetime.datetime end: timezone-aware end
+        :return: ``{resource_id: {resource.calendar: Intervals}}`` (nested ``defaultdict``)
+        :rtype: dict
+        """
         res = defaultdict(lambda: defaultdict(Intervals))
         timezones = {resource.tz for resource in self}
         date_start = min(start.astimezone(ZoneInfo(tz)).date() for tz in timezones)
@@ -91,6 +113,21 @@ class ResourceResource(models.Model):
         return res
 
     def _get_calendars_validity_within_period(self, start, end, default_company=None):
+        """Return the calendars of each resource with their validity intervals, following the employees' contracts.
+
+        Resources of employees who ever had a contract get one entry per
+        calendar used by their versions in contract, valid only while in
+        contract (:meth:`_get_contracts_valid_periods`): out of contract, they
+        have no calendar, hence no work time. Other resources keep the
+        ``resource`` behavior (own calendar, whole period).
+
+        :param datetime.datetime start: timezone-aware start
+        :param datetime.datetime end: timezone-aware end
+        :param default_company: company whose calendar is used when ``self`` is empty
+        :type default_company: res.company or None
+        :return: ``{resource_id: {resource.calendar: Intervals}}``
+        :rtype: dict
+        """
         assert start.tzinfo and end.tzinfo
         if not self:
             return super()._get_calendars_validity_within_period(start, end, default_company=default_company)
@@ -109,6 +146,18 @@ class ResourceResource(models.Model):
         return calendars_within_period_per_resource
 
     def _get_flexible_resources_calendars_validity_within_period(self, start, end):
+        """Same as :meth:`_get_calendars_validity_within_period` for flexible resources.
+
+        The validity intervals are intersected with the resources' default
+        work intervals (``_get_flexible_resources_default_work_intervals``).
+        For resources without contract, fully flexible ones are keyed by
+        ``False`` instead of a calendar.
+
+        :param datetime.datetime start: timezone-aware start
+        :param datetime.datetime end: timezone-aware end
+        :return: ``{resource_id: {resource.calendar or False: Intervals}}``
+        :rtype: dict
+        """
         assert start.tzinfo and end.tzinfo
         resource_default_work_intervals = self._get_flexible_resources_default_work_intervals(start, end)
 
@@ -130,6 +179,19 @@ class ResourceResource(models.Model):
         return calendars_within_period_per_resource
 
     def _get_calendar_data_at(self, date_target, tz=False):
+        """Return the calendar, hours per week and hours per day of each resource on a given day.
+
+        For employees, the calendar of the version in contract on the day
+        (``date_target`` converted to ``tz``) is used, see
+        ``hr.employee._get_calendars``; other resources use their own calendar.
+
+        :param datetime.datetime date_target: timezone-aware datetime
+        :param tz: timezone in which ``date_target``'s day is evaluated
+        :type tz: zoneinfo.ZoneInfo
+        :return: ``{resource: {'resource_calendar_id': resource.calendar,
+            'hours_per_week': float, 'hours_per_day': float}}``
+        :rtype: dict
+        """
         result = super()._get_calendar_data_at(date_target)
         resources_with_employee = self.filtered('employee_id')
         employee_calendars = resources_with_employee.employee_id._get_calendars(date_target.astimezone(tz))

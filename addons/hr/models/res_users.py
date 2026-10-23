@@ -14,14 +14,29 @@ from .hr_employee_location import DAYS
 
 
 def related_employee_field(name: str, *, field_name: str | None = None, string: str = '__default__'):
-    """Simulating a related field "employee_id.{name}".
+    """Return the field parameters simulating a related field ``employee_id.<name>`` on ``res.users``.
 
-    Current user is read and updated with `sudo()`. Otherwise, behaves as a
-    simple related field.
+    Used as ``fields.Char(**related_employee_field('work_phone'), user_writeable=True)``
+    to expose employee data on the user (e.g. in the preferences form).
+    Differences with a plain related field:
 
-    :param field_name: provide if you name your field in some other way than
-        on the employee model
-    :param string: field label override
+    - the current user always reads their own employee in sudo (other users
+      are read with the normal access rights);
+    - the current user writes their own employee in sudo only if the field is
+      declared with ``user_writeable=True``;
+    - searching uses ``employee_id`` when the user can read the employee
+      field, otherwise only matches the current user (negative operators are
+      not supported).
+
+    Label and help default to the employee field's (set in
+    ``ResUsers._post_model_setup__``).
+
+    :param str name: name of the ``hr.employee`` field
+    :param field_name: name of the field on ``res.users``, if different from ``name``
+    :type field_name: str or None
+    :param str string: label override
+    :return: keyword arguments for the field constructor
+    :rtype: dict
     """
     # simulating a related field which bypasses access only for the current user
     if field_name is None:
@@ -175,6 +190,12 @@ class ResUsers(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        """Create users, optionally creating or binding their employee.
+
+        With ``create_employee=True`` in the values, an employee is created in
+        the current company (:meth:`hr.employee._sync_user`); with
+        ``create_employee_id``, that existing employee is linked to the user.
+        """
         res = super().create(vals_list)
         employee_create_vals = []
         for user, vals in zip(res, vals_list):
@@ -193,11 +214,24 @@ class ResUsers(models.Model):
         return res
 
     def _get_employee_fields_to_sync(self):
-        """Get values to sync to the related employee when the User is changed.
+        """Return the ``res.users`` fields copied to the related employees when written on the user.
+
+        ``email`` is copied to ``work_email``; ``image_1920`` only to employees
+        without image. Only employees of the current company are updated.
+
+        :rtype: list[str]
         """
         return ['name', 'email', 'image_1920', 'tz'] + DAYS
 
     def _get_personal_info_partner_ids_to_notify(self, employee):
+        """Return who to notify when a user updates the employee data exposed on their user.
+
+        :param employee: the employee whose data is modified
+        :type employee: hr.employee
+        :return: ``(reason_message, partner_ids)``; by default the employee's HR
+            responsible, ``('', [])`` if none
+        :rtype: tuple[str, list[int]]
+        """
         if employee.version_id.hr_responsible_id:
             return (
                 _("You are receiving this message because you are the HR Responsible of this employee."),
@@ -206,10 +240,12 @@ class ResUsers(models.Model):
         return ('', [])
 
     def write(self, vals):
-        """
-        Synchronize user and its related employee
-        and check access rights if employees are not allowed to update
-        their own data (otherwise sudo is applied for self data).
+        """Write on users and synchronize their employees in the current company.
+
+        Writing employee-related fields (see :func:`related_employee_field`)
+        notifies the partners given by :meth:`_get_personal_info_partner_ids_to_notify`.
+        The fields of :meth:`_get_employee_fields_to_sync` are then written (in
+        sudo) on the users' employees of the current company.
         """
         hr_fields = {
             field_name: field
@@ -280,6 +316,11 @@ class ResUsers(models.Model):
     @api.depends('employee_ids')
     @api.depends_context('company', 'uid')
     def _compute_company_employee(self):
+        """Compute ``employee_id``: the user's employee in the current company (``env.company``).
+
+        A user has at most one employee per company. For users other than the
+        current one, the employee is only set if readable by the current user.
+        """
         employee_per_user = dict(self.env['hr.employee'].sudo()._read_group(
             domain=[('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)],
             groupby=['user_id'],
@@ -313,6 +354,11 @@ class ResUsers(models.Model):
         return domain
 
     def action_create_employee(self):
+        """Create an employee for the user in the current company and return it.
+
+        :rtype: hr.employee
+        :raise AccessError: if the user is not allowed in the current company
+        """
         self.ensure_one()
         if self.env.company not in self.company_ids:
             raise AccessError(_("You are not allowed to create an employee because the user does not have access rights for %s", self.env.company.name))
