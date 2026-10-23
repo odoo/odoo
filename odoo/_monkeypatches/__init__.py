@@ -54,9 +54,10 @@ sys.meta_path.insert(0, HOOK_IMPORT)
 
 
 def patch_init() -> None:
-    os.environ['TZ'] = 'UTC'  # Set the timezone
-    if hasattr(time, 'tzset'):
-        time.tzset()
+    if os.environ.get('ODOO_SKIP_TZ_PATCH'):
+        os.environ['TZ'] = 'UTC'  # Set the timezone
+        if hasattr(time, 'tzset'):
+            time.tzset()
 
     for submodule in pkgutil.iter_modules(__path__):
         if not submodule.name.startswith('_'):
