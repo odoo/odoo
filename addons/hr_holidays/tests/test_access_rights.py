@@ -144,6 +144,32 @@ class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
         }
         self.request_leave(self.user_hruser_id, date.today() + relativedelta(days=5), 1, values)
 
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_create_first_approved_double_validation(self):
+        """ Creating a first approved leave of a double validation type checks the rights """
+        lt_both = self.env['hr.work.entry.type'].create({
+            'name': 'Double Validation',
+            'code': 'Double Validation',
+            'leave_validation_type': 'both',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        leave_day = date.today() + relativedelta(days=5)
+        values = {
+            'name': 'Hol10',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': lt_both.id,
+            'request_date_from': leave_day,
+            'request_date_to': leave_day,
+            'state': 'validate1',
+        }
+        Leave = self.env['hr.leave'].with_context(leave_skip_state_check=True)
+        with self.assertRaises(AccessError):
+            Leave.with_user(self.user_employee_id).create(values)
+        leave = Leave.with_user(self.user_hruser_id).create(values)
+        self.assertTrue(leave)
+
     # hr_holidays.group_hr_holidays_manager
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
