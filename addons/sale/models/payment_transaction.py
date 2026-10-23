@@ -268,7 +268,7 @@ class PaymentTransaction(models.Model):
                 "description": line.name,
                 "sku": line.product_id.default_code,
                 "barcode": line.product_id.barcode,
-                "category": line.product_type,
+                "product_type": line.product_type,
                 "quantity": line.product_uom_qty,
                 "subtotal": line.price_subtotal,
                 "tax_amount": line.price_tax,

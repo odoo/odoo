@@ -252,15 +252,15 @@ class PaymentTransaction(models.Model):
         if not items:
             return amount_vals
 
-        item_total = sum(
+        amount_untaxed = sum(
             float(item["unit_amount"]["value"]) * int(item["quantity"]) for item in items
         )
         tax_total = sum(float(item["tax"]["value"]) * int(item["quantity"]) for item in items)
-        discount = currency.round(item_total + tax_total - self.amount)
+        discount = currency.round(amount_untaxed + tax_total - self.amount)
         amount_vals["breakdown"] = {
             "item_total": {
                 "currency_code": currency.name,
-                "value": float_repr(item_total, currency.decimal_places),
+                "value": float_repr(amount_untaxed, currency.decimal_places),
             },
             "tax_total": {
                 "currency_code": currency.name,
@@ -282,35 +282,38 @@ class PaymentTransaction(models.Model):
         """
         currency = self.currency_id
         line_items = self._get_line_items().values()
-        total = sum(item["subtotal"] + item["tax_amount"] for item in line_items)
+        total = sum(line_item["subtotal"] + line_item["tax_amount"] for line_item in line_items)
         if currency.compare_amounts(total, self.amount):
             return []
 
         items = []
-        for item in line_items:
-            if item["subtotal"] < 0:
+        for line_item in line_items:
+            if line_item["subtotal"] < 0:
                 # not support negative amount
                 continue
-            if item["tax_amount"] < 0:
-                # Negative taxes are not supported.
+            if line_item["tax_amount"] < 0:
+                # negative taxes are not supported.
                 return []
-            quantity = item["quantity"]
-            unit_amount = currency.round(item["subtotal"] / quantity) if quantity else 0.0
-            unit_tax_amount = currency.round(item["tax_amount"] / quantity) if quantity else 0.0
+            quantity = line_item["quantity"]
+            unit_amount = currency.round(line_item["subtotal"] / quantity) if quantity else 0.0
+            unit_tax_amount = (
+                currency.round(line_item["tax_amount"] / quantity) if quantity else 0.0
+            )
             if (
                 quantity < 1
                 or quantity != int(quantity)
-                or currency.compare_amounts(unit_amount * quantity, item["subtotal"])
-                or currency.compare_amounts(unit_tax_amount * quantity, item["tax_amount"])
+                or currency.compare_amounts(unit_amount * quantity, line_item["subtotal"])
+                or currency.compare_amounts(unit_tax_amount * quantity, line_item["tax_amount"])
             ):
                 # Only accepts whole quantities whose unit amounts add up to the totals.
-                quantity, unit_amount, unit_tax_amount = 1, item["subtotal"], item["tax_amount"]
-            items.append({
-                "name": item["name"][:3000],
-                "description": item["description"][:4000],
-                "category": "DONATION"
-                if item.get("is_donation")
-                else (const.ITEM_CATEGORY_MAPPING.get(item["category"], "DIGITAL_GOODS")),
+                quantity, unit_amount, unit_tax_amount = (
+                    1,
+                    line_item["subtotal"],
+                    line_item["tax_amount"],
+                )
+            item = {
+                "name": line_item["name"][:3000],
+                "description": line_item["description"][:4000],
                 "quantity": str(int(quantity)),
                 "unit_amount": {
                     "currency_code": currency.name,
@@ -320,17 +323,25 @@ class PaymentTransaction(models.Model):
                     "currency_code": currency.name,
                     "value": float_repr(unit_tax_amount, currency.decimal_places),
                 },
-            })
-            if item.get("sku"):
-                items[-1]["sku"] = item["sku"][:127]
+            }
+
+            if line_item.get("is_donation"):
+                item["category"] = "DONATION"
+            elif category := const.ITEM_CATEGORY_MAPPING.get(line_item.get("product_type")):
+                item["category"] = category
+            if line_item.get("sku"):
+                item["sku"] = line_item["sku"][:127]
             # Only accepts UPC codes, not other barcode encodings.
-            if (barcode := item.get("barcode")) and check_barcode_encoding(barcode, "upca"):
-                items[-1]["upc"] = {"type": "UPC-A", "code": barcode}
-            if 0 < len(item.get("url", "")) <= 2048:
-                items[-1]["url"] = item["url"]
+            if (barcode := line_item.get("barcode")) and check_barcode_encoding(barcode, "upca"):
+                item["upc"] = {"type": "UPC-A", "code": barcode}
+            if 0 < len(line_item.get("url", "")) <= 2048:
+                item["url"] = line_item["url"]
             # Only accepts HTTPS image URLs ending with an image file extension.
-            if item.get("image_url", "").startswith("https://") and len(item["image_url"]) <= 2048:
-                items[-1]["image_url"] = item["image_url"]
+            image_url = line_item.get("image_url", "")
+            if image_url.startswith("https://") and len(image_url) <= 2048:
+                item["image_url"] = image_url
+
+            items.append(item)
 
         # Billing plans require a new PayPal wallet token and a single item of quantity 1.
         recurrence = len(line_items) == 1 and next(iter(line_items)).get("recurrence")
