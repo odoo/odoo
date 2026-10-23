@@ -176,6 +176,9 @@ class EWayBillApi:
     def _ewaybill_cancel(self, json_payload):
         return self._ewaybill_make_transaction("cancel", json_payload)
 
+    def _ewaybill_extend_validity(self, json_payload):
+        return self._ewaybill_make_transaction("extendvalidity", json_payload)
+
     def _ewaybill_get_by_consigner(self, document_type, document_number):
         if not self._ewaybill_check_authentication():
             self._raise_ewaybill_no_config_error()
