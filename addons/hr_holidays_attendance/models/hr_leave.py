@@ -7,6 +7,8 @@ class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
     def _compute_display_name(self):
+        """Name the time off produced by a time rule ``<type> <duration>``, e.g.
+        ``Overtime 1h30``."""
         super()._compute_display_name()
         for leave in self.filtered('time_rule_id'):
             if not (leave.date_from and leave.date_to):
