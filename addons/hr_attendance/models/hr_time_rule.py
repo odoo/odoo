@@ -11,12 +11,25 @@ class HrTimeRule(models.Model):
     )
 
     def _get_applicable_employees(self, employees):
+        """Also drop the employees without schedule for the rules based on the employee
+        schedule (``calendar_source = 'employee'``)."""
         result = super()._get_applicable_employees(employees)
         if self.calendar_source == 'employee':
             result = result.filtered('resource_calendar_id')
         return result
 
     def _get_output_attendance_vals(self, employee, check_in, check_out, source_attendance=None, accumulated_pp=frozenset()):
+        """Return the creation values of an output attendance of the rule.
+
+        :param employee: ``hr.employee``
+        :param datetime check_in: naive UTC
+        :param datetime check_out: naive UTC
+        :param source_attendance: the source ``hr.attendance``
+        :param frozenset accumulated_pp: premium pay ids, used by overrides (``hr_payroll``)
+        :return: ``employee_id``, ``work_entry_type_id`` (the rule's output type),
+            ``check_in``, ``check_out``, ``source_attendance_id`` and ``time_rule_id``
+        :rtype: dict
+        """
         self.ensure_one()
         return {
             'employee_id': employee.id,
@@ -28,4 +41,12 @@ class HrTimeRule(models.Model):
         }
 
     def _apply_attendance_output(self, excess, deficit, active_iv=None):
+        """Write the time rule results on attendances (``hr.time.rule._apply_output``).
+
+        ``hr_holidays_attendance`` extends it to credit or deduct allocations.
+
+        :return: the result of ``_apply_output``: ``(new_records, all_source_ids, excess_alloc,
+            deficit_alloc)``
+        :rtype: tuple
+        """
         return self._apply_output(excess, deficit, active_iv=active_iv)

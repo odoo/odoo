@@ -8,6 +8,8 @@ class IrHttp(models.AbstractModel):
 
     @api.model
     def lazy_session_info(self):
+        """Add the attendance state and settings of the user's employee to the session info
+        (``attendance_state``, ``attendance_check_in_ability``, ...), read by the systray."""
         res = super().lazy_session_info()
         if self.env.user and self.env.user.employee_id:
             employee = self.env.user.employee_id
