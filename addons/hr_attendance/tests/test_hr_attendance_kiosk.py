@@ -154,3 +154,18 @@ class TestHrAttendanceKiosk(HttpCase):
 
         self.assertFalse(result)
         self.assertFalse(attendance.break_duration)
+
+    def test_set_settings_writes_token_company(self):
+        admin = self.env.ref('base.user_admin')
+        admin.company_ids |= self.company_B
+        main_company = admin.company_id
+        main_company.attendance_kiosk_mode = 'barcode_manual'
+        self.company_B.attendance_kiosk_mode = 'barcode_manual'
+        self.authenticate('admin', 'admin')
+        self.make_jsonrpc_request('/hr_attendance/set_settings', {
+            'token': self.company_B.attendance_kiosk_key,
+            'mode': 'manual',
+        })
+        self.env.invalidate_all()
+        self.assertEqual(self.company_B.attendance_kiosk_mode, 'manual')
+        self.assertEqual(main_company.attendance_kiosk_mode, 'barcode_manual')
