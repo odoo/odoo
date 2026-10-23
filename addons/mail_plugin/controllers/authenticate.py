@@ -29,6 +29,11 @@ class Authenticate(http.Controller):
          """
         if not request.env.user._is_internal():
             return request.render('mail_plugin.app_error', {'error': _('Access Error: Only Internal Users can link their inboxes to this database.')})
+        friendlyname = values.get('friendlyname', '')
+        if 'gmail' in friendlyname.lower():
+            values['logo_url'] = '/mail_plugin/static/src/img/gmail.png'
+        elif 'outlook' in friendlyname.lower():
+            values['logo_url'] = '/mail_plugin/static/src/img/outlook.png'
         return request.render('mail_plugin.app_auth', values)
 
     @http.route(['/mail_client_extension/auth/confirm', '/mail_plugin/auth/confirm'], type='http', auth="user", methods=['POST'])
