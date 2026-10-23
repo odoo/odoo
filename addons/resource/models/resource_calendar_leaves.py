@@ -76,6 +76,8 @@ class ResourceCalendarLeaves(models.Model):
             raise ValidationError(_('The start date of the time off must be earlier than the end date.'))
 
     def _copy_leave_vals(self):
+        """ Return the values to duplicate this (global) leave on another calendar, used
+        to copy the company's public holidays to a new calendar. """
         self.ensure_one()
         return {
             'name': self.name,
