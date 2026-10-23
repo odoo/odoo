@@ -209,8 +209,7 @@ class HrAttendance(models.Model):
 
         An employee has at most one open attendance (without ``check_out``) and no overlapping
         attendances. Skipped when the context has ``skip_time_rules``, i.e. for the writes of
-        the time rule pipeline, the tolerance validation, the refusal and the automatic
-        check-out.
+        the time rule pipeline, the refusal and the automatic check-out.
 
         :raise ValidationError: if the attendance overlaps another one or if another attendance
             of the employee is still open
@@ -767,8 +766,8 @@ class HrAttendance(models.Model):
         Only for the companies with ``attendance_validation = 'tolerance_validation'``, on the
         attendances not produced by a time rule: an attendance is validated when its duration
         (break included) differs from the expected hours of its local day by at most
-        ``attendance_validation_tolerance``, or when no hours are expected that day. The state is
-        written with ``skip_time_rules``.
+        ``attendance_validation_tolerance``, or when no hours are expected that day. As for
+        :meth:`action_validate`, writing the state runs the time rules on them.
         """
         to_validate = self.browse()
         candidates = self.filtered(lambda a: a.state == 'draft' and a.check_out and not a.time_rule_id)
@@ -786,7 +785,7 @@ class HrAttendance(models.Model):
             if not expected or abs(worked - expected) <= company.attendance_validation_tolerance:
                 to_validate |= att
         if to_validate:
-            to_validate.with_context(skip_time_rules=True, tracking_disable=True).write({'state': 'validated'})
+            to_validate.with_context(tracking_disable=True).write({'state': 'validated'})
 
     @api.model_create_multi
     def create(self, vals_list):
