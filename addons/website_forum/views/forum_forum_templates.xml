@@ -14,7 +14,6 @@
         <t t-set="_page_name_label">My Favorites</t>
     </t>
     <t t-else="" t-set="_page_name" t-value="'list_questions'"/>
-
     <t t-call="website_forum.header">
         <!-- List questions or search/filters result -->
         <table t-if="question_count != 0" class="o_wforum_table table mb-5" height="1">
