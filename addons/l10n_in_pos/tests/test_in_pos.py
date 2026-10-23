@@ -1,11 +1,10 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.point_of_sale.tests.test_generic_localization import TestGenericLocalization
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
-class TestGenericIN(TestGenericLocalization, CommonPosTest):
+class TestGenericIN(TestGenericLocalization):
 
     _pos_partner_pos_form_fields = ['l10n_in_gst_treatment']
     _test_user_groups = None  # FIXME list needed groups
