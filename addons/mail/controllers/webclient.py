@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
@@ -44,10 +43,6 @@ class WebclientController(http.Controller):
             if not request.env.user._is_public():
                 user = request.env.user.sudo(False)
                 user._init_messaging(store)
-            else:
-                guest = request.env["mail.guest"]._get_guest_from_context()
-                if not guest:
-                    raise NotFound()
             member_domain = [
                 ("is_self", "=", True),
                 "|",

@@ -10,7 +10,9 @@ threadActionsRegistry
     .add("call", {
         condition(component) {
             return (
-                component.thread?.allowCalls && !component.thread?.eq(component.rtc.state.channel)
+                component.thread?.allowCalls &&
+                !component.store.isAnonymous &&
+                !component.thread?.eq(component.rtc.state.channel)
             );
         },
         icon: "fa fa-fw fa-phone",
@@ -29,7 +31,9 @@ threadActionsRegistry
     .add("camera-call", {
         condition(component) {
             return (
-                component.thread?.allowCalls && !component.thread?.eq(component.rtc.state.channel)
+                component.thread?.allowCalls &&
+                !component.store.isAnonymous &&
+                !component.thread?.eq(component.rtc.state.channel)
             );
         },
         icon: "fa fa-fw fa-video-camera",

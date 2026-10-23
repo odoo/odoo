@@ -167,3 +167,38 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("discuss_channel_public_page_as_anonymous_tour.js", {
+    steps: () => [
+        {
+            trigger: ".o-mail-Discuss-threadName:value('Test channel')",
+        },
+        {
+            trigger: ".o-mail-Message-body:text(Hello)",
+        },
+        {
+            trigger: ".o-mail-Discuss-header button[name='member-list']",
+        },
+        {
+            trigger: ".o-mail-Discuss-header:not(:has(button[name='call']))",
+        },
+        {
+            trigger: ".o-mail-Discuss:not(:has(.o-mail-Composer))",
+        },
+        {
+            trigger: ".o-mail-Discuss:not(:has(.o-discuss-Call))",
+        },
+        {
+            trigger: ".o-mail-Message:not(:has(button[title='Add a Reaction']))",
+        },
+        {
+            trigger: ".o-mail-Message:not(:has(button[name='reply-to']))",
+        },
+        {
+            trigger: ".o-mail-Discuss:not(:has(.o-mail-Discuss-selfAvatar))",
+        },
+        {
+            trigger: "body:not(:has(.o_notification, .modal, .o_error_dialog))",
+        },
+    ],
+});

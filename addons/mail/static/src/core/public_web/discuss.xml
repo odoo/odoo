@@ -71,7 +71,7 @@
                             </span>
                             <span t-if="!group_last" class="text-muted align-self-stretch ms-2 me-1"/>
                         </t>
-                        <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
+                        <div t-if="store.inPublicPage and !store.isAnonymous and !ui.isSmall" class="d-flex align-items-center">
                             <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl"/>
                             <div class="lead fw-bold flex-shrink-1 text-dark">
                                 <t t-if="store.self.type === 'partner'" t-esc="store.self.name"/>
@@ -94,7 +94,7 @@
                         <t t-if="thread">
                             <div class="o-mail-Discuss-threadContainer d-flex flex-column flex-grow-1">
                                 <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/></t>
-                                <Composer t-if="thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
+                                <Composer t-if="(thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread)) and !store.isAnonymous" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
                             </div>
                             <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="o-mail-Discuss-panelContainer h-100 border-start border-secondary flex-shrink-0">
                                 <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
