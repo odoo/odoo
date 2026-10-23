@@ -139,11 +139,11 @@ export class TipScreen extends Component {
         order.getSelectedOrderline().delete();
         delete serializedTipLine["record_dependencies"];
         delete serializedTipLine["relations_uuid_mapping"];
-        const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
-        await this.pos.data.write("pos.order", [serverId], {
-            is_tipped: true,
-            tip_amount: serverTipLine[0].priceIncl,
-        });
+        await this.pos.data.callRelated("pos.order", "add_tip_after_payment", [
+            [serverId],
+            serializedTipLine,
+            this.adjustableTipLine.id,
+        ]);
 
         this.goNextScreen();
     }
