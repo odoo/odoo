@@ -67,6 +67,10 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
         ):
             allowance_charge_reason_node['_text'] = allowance_charge_reason_node['_text'][:1024]
 
+    def _ubl_add_line_allowance_charge_nodes(self, vals, in_foreign_currency=True):
+        super()._ubl_add_line_allowance_charge_nodes(vals, in_foreign_currency)
+        self._ubl_add_line_allowance_charge_nodes_for_discount(vals)
+
     def _line_nodes_filter_base_lines(self, vals, filter_function=None):
         # Early payment discount lines should not appear as lines but as allowances/charges.
         # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
@@ -110,8 +114,7 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
         # we have to do something here to avoid it.
         if (
             self._ubl_is_cash_rounding_base_line(base_line)
-            or self._ubl_is_recycling_contribution_tax(tax_data)
-            or self._ubl_is_excise_tax(tax_data)
+            or self._ubl_is_allowance_charge_tax(tax_data)
         ):
             return
         return super()._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
