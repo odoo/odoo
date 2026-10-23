@@ -24,8 +24,6 @@ _logger = logging.getLogger(__name__)
 # - Separate Python tests from tour tests.
 # - Move receipt helpers to the common layer where appropriate.
 
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
-
 @tagged('post_install', '-at_install')
 class TestPosOrderReceipt(PosHttpCommon):
     _test_user_groups = None  # FIXME list needed groups
@@ -494,7 +492,7 @@ class TestPosOrderReceipt(PosHttpCommon):
         )
 
     def test_total_item_count(self):
-        setup_product_combo_items(self)
+        self._setup_combo_product()
         self.weighted_product = self.env['product.template'].create({
             'name': 'Weighted Product',
             'available_in_pos': True,
