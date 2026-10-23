@@ -16,13 +16,12 @@ from odoo.exceptions import (
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from odoo.addons.pos_bancontact_pay import const
 from odoo.addons.pos_bancontact_pay.tests.common import TestBancontactPay
 
 
 @tagged("post_install", "-at_install")
-class TestModels(TestBancontactPay, CommonPosTest):
+class TestModels(TestBancontactPay):
 
     # --------------------------
     # Currency

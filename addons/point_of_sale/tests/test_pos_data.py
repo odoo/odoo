@@ -2,20 +2,56 @@
 
 import odoo
 from odoo import Command, fields
+from odoo.exceptions import UserError
+from odoo.tests import Form
+
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPosDataLoading(CommonPosTest):
+class TestPosData(CommonPosTest):
     # Tests for the POS data loading architecture.
 
-    def _get_session(self):
-        self.pos_config_usd.open_ui()
-        return self.pos_config_usd.current_session_id
+    def test_session_filter_local_data(self):
+        products = (
+            self.ten_dollars_no_tax | self.twenty_dollars_no_tax
+            | self.ten_dollars_with_5_incl | self.twenty_dollars_with_5_incl
+        ).with_context(tracking_disable=True)
+        product1, product2, product3, product4 = products
+        # Prepare the fixture without notifying other open self-order sessions.
+        products._write({'available_in_pos': False})
+        config = self.pos_config_usd
+        session = self.open_new_session(config=config)
+
+        # Delete one product and archive another one
+        products_to_display = [product1.id, product2.id, product3.id]
+        product1.write({'active': False})
+        product2.unlink()
+        models_to_filter = {'product.template': products_to_display}
+        products_to_display = list(set(products_to_display) - set(session.filter_local_data(models_to_filter)['product.template']))
+        self.assertEqual(products_to_display, [product3.id])
+
+        # No change
+        products_to_display = [product3.id, product4.id]
+        models_to_filter = {'product.template': products_to_display}
+        products_to_display = list(set(products_to_display) - set(session.filter_local_data(models_to_filter)['product.template']))
+        self.assertEqual(sorted(products_to_display), sorted([product3.id, product4.id]))
+
+        # Delete all products
+        products_to_display = [product3.id, product4.id]
+        product3.unlink()
+        product4.unlink()
+        models_to_filter = {'product.template': products_to_display}
+        products_to_display = list(set(products_to_display) - set(session.filter_local_data(models_to_filter)['product.template']))
+        self.assertEqual(products_to_display, [])
+
+        # Cannot archive config while session is active
+        with self.assertRaises(UserError):
+            config.write({'active': False})
 
     def test_load_data_response_structure(self):
         """load_data() must return fields, relations, dependencies and records for every model."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         data = session.load_data()
 
         self.assertTrue(data, "load_data() should return a non-empty dict")
@@ -31,7 +67,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_pos_session_and_config_present(self):
         """pos.session and pos.config must always be present in the response."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         data = session.load_data()
 
         self.assertIn('pos.session', data)
@@ -43,7 +79,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_relations_contain_relational_fields(self):
         """Relations metadata must include many2one/one2many/many2many field entries."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         data = session.load_data()
 
         product_relations = data['product.product']['relations']
@@ -55,7 +91,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_relations_many2one_has_ondelete(self):
         """Many2one relation entries should carry the ondelete attribute when set."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         data = session.load_data()
 
         # product.template.categ_id is many2one with ondelete defined
@@ -72,7 +108,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_only_records_flat_structure(self):
         """only_records=True must return a flat {model: [list]} dict without metadata."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         data = session.load_data({'only_records': True})
 
         self.assertTrue(data)
@@ -81,7 +117,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_only_records_contains_session(self):
         """only_records=True must still include pos.session and pos.config records."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         data = session.load_data({'only_records': True})
 
         self.assertIn('pos.session', data)
@@ -95,7 +131,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_write_date_always_present(self):
         """write_date must be included in every loaded record for every model (except ir.ui.view)."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         data = session.load_data({'only_records': True})
 
         for model_name, records in data.items():
@@ -112,7 +148,7 @@ class TestPosDataLoading(CommonPosTest):
     def test_load_data_models_filter_limits_records(self):
         """Passing 'models' should return records only for the requested models;
         other models are present with empty records."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         data = session.load_data({'models': ['product.product']})
 
         # Requested model should have records
@@ -129,7 +165,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_incremental_skips_up_to_date_records(self):
         """Records whose local timestamp is in the future should not be returned except PosConfig."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         full_data = session.load_data({'only_records': True})
         config_records = full_data['pos.config']
         self.assertTrue(config_records)
@@ -163,7 +199,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_incremental_returns_outdated_records(self):
         """Records with a local timestamp of 0 (never synced) must always be returned."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         full_data = session.load_data({'only_records': True})
         config_id = full_data['pos.config'][0]['id']
 
@@ -184,7 +220,7 @@ class TestPosDataLoading(CommonPosTest):
         category = self.env['pos.category'].create({'name': 'Temp Category'})
         deleted_id = category.id
         category.unlink()
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
 
         data = session.load_data({
             'records': {'pos.category': {str(deleted_id): 0}},
@@ -195,7 +231,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_to_remove_deactivated_record(self):
         """Deactivated (active=False) record IDs should also appear in to_remove."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
 
         product = self.env['product.template'].create([{
             'name': 'Active product',
@@ -213,7 +249,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_active_record_not_in_to_remove(self):
         """Active, existing records must NOT appear in to_remove."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         full_data = session.load_data({'only_records': True})
         config_id = full_data['pos.config'][0]['id']
 
@@ -230,7 +266,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_filter_local_data_returns_nonexistent_ids(self):
         """filter_local_data should return IDs that don't exist in the DB."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         fake_id = 999999999
 
         result = session.filter_local_data({'pos.category': [str(fake_id)]})
@@ -240,7 +276,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_filter_local_data_does_not_return_existing_ids(self):
         """filter_local_data should not return IDs that exist and are active."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         full_data = session.load_data({'only_records': True})
         config_id = full_data['pos.config'][0]['id']
 
@@ -253,7 +289,7 @@ class TestPosDataLoading(CommonPosTest):
         """filter_local_data should not crash on a model that no longer exists (e.g. its
         module was uninstalled since the client last synced), and should treat all of its
         locally cached IDs as stale."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
 
         result = session.filter_local_data({'this.model.does.not.exist': ['1', '2']})
 
@@ -264,7 +300,7 @@ class TestPosDataLoading(CommonPosTest):
         """Rules have no active field: when their pricelist is archived, filter_local_data
         must return them along with the pricelist, otherwise the PoS restores rules
         pointing to a pricelist missing from its local cache."""
-        session = self._get_session()
+        session = self.open_new_session()
         active_pricelist, archived_pricelist = self.env['product.pricelist'].create([{
             'name': name,
             'item_ids': [Command.create({'compute_price': 'fixed', 'fixed_price': 1})],
@@ -284,7 +320,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_search_params_limit(self):
         """search_params limit should cap the number of records returned."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
         data = session.load_data({
             'models': ['product.product'],
             'search_params': {'product.product': {'limit': 1}},
@@ -296,7 +332,7 @@ class TestPosDataLoading(CommonPosTest):
 
     def test_load_data_search_params_offset_returns_different_records(self):
         """offset=0 and offset=1 with limit=1 should return different records."""
-        session = self._get_session()
+        session = self.open_new_session(config=self.pos_config_usd)
 
         page1 = session.load_data({
             'models': ['product.product'],
@@ -314,62 +350,13 @@ class TestPosDataLoading(CommonPosTest):
             self.assertNotEqual(page1[0]['id'], page2[0]['id'],
                 "Page 1 and page 2 should return different records")
 
-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import Command
-
-import odoo
-from odoo.addons.point_of_sale.tests.common import TestPoSCommon
-from odoo.tests import Form
-from odoo.exceptions import UserError
-
-
-@odoo.tests.tagged('post_install', '-at_install')
-class TestPoSProductsWithTax(TestPoSCommon):
-    """ Test normal configuration PoS selling products with tax
-    """
-    _test_user_groups = None  # FIXME list needed groups
-
-    def setUp(self):
-        super(TestPoSProductsWithTax, self).setUp()
-
-        self.config = self.basic_config
-        self.product1 = self.create_product(
-            'Product 1',
-            self.categ_basic,
-            10.0,
-            5.0,
-            tax_ids=self.taxes['tax7'].ids,
-        )
-        self.product2 = self.create_product(
-            'Product 2',
-            self.categ_basic,
-            20.0,
-            10.0,
-            tax_ids=self.taxes['tax10'].ids,
-        )
-        self.product3 = self.create_product(
-            'Product 3',
-            self.categ_basic,
-            30.0,
-            15.0,
-            tax_ids=self.taxes['tax_group_7_10'].ids,
-        )
-        self.product4 = self.create_product(
-            'Product 4',
-            self.categ_basic,
-            54.99,
-            tax_ids=[self.taxes['tax_fixed006'].id, self.taxes['tax_fixed012'].id, self.taxes['tax21'].id],
-        )
-
     def test_pos_loaded_product_taxes_on_branch(self):
         """ Check loaded product taxes on branch company """
         # create the following branch hierarchy:
         #     Parent company
         #         |----> Branch X
         #                   |----> Branch XX
-        company = self.config.company_id
+        company = self.pos_config_usd.company_id
         branch_x = self.env['res.company'].create({
             'name': 'Parent Company',
             'country_id': company.country_id.id,
@@ -469,8 +456,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         xx_config.write({'payment_method_ids': [
             odoo.Command.set(xx_cash_payment_method.ids),
         ]})
-        self.config = xx_config
-        pos_session = self.open_new_session()
+        pos_session = self.open_new_session(config=xx_config)
         # load the session data from Branch XX:
         # - Product all taxes           => tax from Branch XX should be set
         # - Product no tax from XX      => tax from Branch X should be set
@@ -545,11 +531,11 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'name': 'Maps 15 to 30',
             'tax_ids': [Command.set(tax_30.ids)],
         })
-        product = self.create_product('Product FP', self.categ_basic, 100.0, tax_ids=tax_15.ids)
+        product = self.create_product('Product FP', 100.0, tax_15.ids)
         template = product.product_tmpl_id
 
         def get_display_info(fp_id=False):
-            info = template.with_context(fiscal_position_id=fp_id).get_product_info_pos(100.0, 1, self.config.id)['all_prices']
+            info = template.with_context(fiscal_position_id=fp_id).get_product_info_pos(100.0, 1, self.pos_config_usd.id)['all_prices']
             return (info['price_with_tax'], [t['name'] for t in info['tax_details']])
 
         self.assertEqual(get_display_info(), (115.0, ['tax_15']))
@@ -571,3 +557,26 @@ class TestPoSProductsWithTax(TestPoSCommon):
         with self.assertRaises(UserError):
             with Form(self.variant_product.product_tmpl_id) as product:
                 product.type = "combo"
+
+    def test_product_combo_variants(self):
+        # Add attribute and values, simulating variant creation
+        product_combo = self.env['product.combo'].create({
+            'name': 'Product combo',
+            'combo_item_ids': [Command.create({'product_id': self.product.id})],
+        })
+        size_attribute = self.env.ref('product.pa_size')
+        original_product_id = self.product.id
+        self.product.product_tmpl_id.with_context(create_product_product=True).write({
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': size_attribute.id,
+                'value_ids': [
+                    Command.create({'name': 'Large', 'attribute_id': size_attribute.id}),
+                    Command.create({'name': 'Small', 'attribute_id': size_attribute.id}),
+                ],
+            })],
+        })
+        # Check that original product should not be in combo anymore (replace by variants)
+        self.assertTrue(
+            original_product_id not in product_combo.combo_item_ids.mapped('product_id').ids,
+            'Original product should not be in combo'
+        )
