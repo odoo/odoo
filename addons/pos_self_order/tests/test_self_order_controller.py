@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 from unittest.mock import patch
 
 import odoo.tests
@@ -102,100 +102,27 @@ class TestSelfOrderController(SelfOrderCommonTest):
         order2 = self.env['pos.order'].browse(data['pos.order'][0]['id'])
         self.assertEqual(order2.state, 'draft')
 
+        # The orders the client knows are returned, with their current state
         params = {
             'access_token': order1.config_id.access_token,
-            'order_access_tokens': [{
-                'access_token': order1.access_token,
-                'state': order1.state,
-                'write_date': order1.write_date.strftime('%Y-%m-%d %H:%M:%S')
-            }],
+            'order_access_tokens': [
+                {'access_token': order1.access_token},
+                {'access_token': order2.access_token},
+            ],
         }
-
-        # At this point there is no change on the order, so no data is returned
         data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
-        self.assertEqual(data, {})
-
-        # Changing state in params should return the order to update it
-        params['order_access_tokens'][0]['state'] = 'draft'  # Server order is paid
-        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
-        self.assertEqual(len(data['pos.order']), 1)
+        self.assertEqual({order['id'] for order in data['pos.order']}, {order1.id, order2.id})
 
         # No order access token should return no order
         params['order_access_tokens'] = []
         data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
         self.assertEqual(data, {})
 
-        # Two outdated order write_date should return both orders
-        params['order_access_tokens'] = [{
-            'access_token': order1.access_token,
-            'state': order1.state,
-            'write_date': (order1.write_date - timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')
-        }, {
-            'access_token': order2.access_token,
-            'state': order2.state,
-            'write_date': (order2.write_date - timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')
-        }]
-        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
-        self.assertEqual(len(data['pos.order']), 2)
-
-        # Only one outdated order write_date should return one order
-        params['order_access_tokens'] = [{
-            'access_token': order1.access_token,
-            'state': order1.state,
-            'write_date': (order1.write_date - timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')
-        }, {
-            'access_token': order2.access_token,
-            'state': order2.state,
-            'write_date': order2.write_date.strftime('%Y-%m-%d %H:%M:%S')
-        }]
-        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
-        self.assertEqual(len(data['pos.order']), 1)
-        self.assertEqual(data['pos.order'][0]['id'], order1.id)
-
-        # A cancelled order should be returned
+        # A cancelled order is returned with its new state
         order2.cancel_order_from_pos()
-        params['order_access_tokens'] = [{
-            'access_token': order2.access_token,
-            'state': 'paid',
-            'write_date': order2.write_date.strftime('%Y-%m-%d %H:%M:%S')
-        }]
+        params['order_access_tokens'] = [{'access_token': order2.access_token}]
         data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
-        self.assertEqual(len(data['pos.order']), 1)
-        self.assertEqual(data['pos.order'][0]['id'], order2.id)
-        self.assertEqual(data['pos.order'][0]['state'], 'cancel')
-
-        # Up to date data should return no order
-        params['order_access_tokens'] = [{
-            'access_token': order1.access_token,
-            'state': order1.state,
-            'write_date': order1.write_date.strftime('%Y-%m-%d %H:%M:%S')
-        }, {
-            'access_token': order2.access_token,
-            'state': order2.state,
-            'write_date': order2.write_date.strftime('%Y-%m-%d %H:%M:%S')
-        }]
-        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
-        self.assertEqual(data, {})
-
-        # Only write date is provided
-        params['order_access_tokens'] = [{
-            'access_token': order2.access_token,
-            'write_date': '1970-01-01 00:00:00'
-        }]
-
-        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
-        self.assertEqual(len(data['pos.order']), 1)
-        self.assertEqual(data['pos.order'][0]['id'], order2.id)
-
-        # Only state is provided
-        params['order_access_tokens'] = [{
-            'access_token': order2.access_token,
-            'state': 'paid'
-        }]
-
-        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
-        self.assertEqual(len(data['pos.order']), 1)
-        self.assertEqual(data['pos.order'][0]['id'], order2.id)
+        self.assertEqual([(order['id'], order['state']) for order in data['pos.order']], [(order2.id, 'cancel')])
 
     def test_process_order_in_kiosk_allows_payment(self):
         self.pos_config.self_ordering_mode = 'kiosk'
@@ -524,6 +451,8 @@ class TestSelfOrderController(SelfOrderCommonTest):
 
         # In kiosk mode, payment methods must not be sent to the client.
         self.pos_config.write({'self_ordering_mode': 'kiosk'})
+        # Switching to kiosk renews the access token: the mobile one may be public
+        params['access_token'] = self.pos_config.access_token
         data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
         self.assertNotIn('pos.payment.method', data)
 

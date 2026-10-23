@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 
 patch(CartPage.prototype, {
-    async setup() {
+    setup() {
         super.setup();
         this.notification = useService("notification");
     },

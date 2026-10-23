@@ -1,0 +1,4 @@
+.o_self_payment_page .payment-method.o_card_with_total {
+    // py-5 minus half of the added line (gap + amount line height), to keep the card height
+    padding-block: calc(#{map-get($spacers, 5)} - (#{map-get($spacers, 2)} + #{$btn-font-size-lg} * #{$btn-line-height}) / 2);
+}

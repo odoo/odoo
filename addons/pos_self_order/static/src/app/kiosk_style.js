@@ -54,7 +54,7 @@ function generateKioskCSS(companyPrimaryColor) {
         .text-bg-primary :is(h1, h2, h3, h4, h5, h6) {
             color: ${textBgPrimary};
         }
-      
+
         .text-bg-primary .btn-link, .badge.text-bg-primary, .btn.text-bg-primary {
             color: ${textBgPrimary} !important;
         }
@@ -64,6 +64,10 @@ function generateKioskCSS(companyPrimaryColor) {
         }
 
         .o_self_background {
+            background-color: ${mixColors("#ffffff", bgPrimary, 0.85)};
+        }
+
+        .text-bg-primary-faded {
             background-color: ${mixColors("#ffffff", bgPrimary, 0.85)};
         }
     `;

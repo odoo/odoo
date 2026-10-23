@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import barcode_nomenclature
+from . import barcode_rule
 from . import ir_http
 from . import ir_ui_view
 from . import pos_category
