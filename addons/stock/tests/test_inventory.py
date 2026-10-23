@@ -587,3 +587,37 @@ class TestInventory(TransactionCase):
         self.assertEqual(quant_new_loc.inventory_date, date.today() + timedelta(days=2))
         self.assertEqual(quant_existing_loc.inventory_date, date.today() + timedelta(days=2))
         self.assertEqual(quant_non_cyclic_loc.inventory_date, date.today() + relativedelta(years=1))
+
+    def test_inventory_import_create_lot(self):
+        """ Importing a Physical Inventory with the 'Create new values' option on
+        the Lot/Serial Number column must create the missing lot with the product
+        of the row, instead of rejecting the row. ``stock.lot.product_id`` is
+        required, so a name-only creation from the importer cannot succeed.
+        """
+        product_lot = self.env['product.product'].create({
+            'name': 'Lot Tracked Product',
+            'is_storable': True,
+            'tracking': 'lot',
+        })
+        quant_model = self.env['stock.quant'].with_context(
+            import_file=True,
+            name_create_enabled_fields={'lot_id': True},
+        )
+        result = quant_model.load(
+            ['location_id', 'product_id', 'lot_id', 'inventory_quantity'],
+            [[self.stock_location.complete_name, product_lot.name, 'LOT0001', '7']],
+        )
+        self.assertFalse(
+            [message for message in result['messages'] if message.get('type') == 'error'],
+            "Importing a new lot should not raise a blocking error",
+        )
+        lot = self.env['stock.lot'].search([
+            ('name', '=', 'LOT0001'),
+            ('product_id', '=', product_lot.id),
+        ])
+        self.assertEqual(len(lot), 1, "The lot should be created with the imported product")
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', product_lot.id),
+            ('lot_id', '=', lot.id),
+        ])
+        self.assertTrue(quant, "The imported quant should be linked to the new lot")
