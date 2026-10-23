@@ -11,7 +11,10 @@ class TestPaymentCaptureWizard(PaymentCommon):
         self.provider.update({"capture_manually": True, "support_manual_capture": "partial"})
         source_tx = self._create_transaction("direct", state="authorized")
 
-        wizard = self.env["payment.capture.wizard"].create({"transaction_ids": source_tx.ids})
+        wizard = self.env["payment.capture.wizard"].create({
+            "transaction_ids": source_tx.ids,
+            "release_remaining": False,
+        })
         wizard.amount_to_capture = 511.11
         wizard.action_capture()
 
