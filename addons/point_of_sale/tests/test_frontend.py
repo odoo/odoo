@@ -23,8 +23,6 @@ from odoo.addons.point_of_sale.tests.common import (
 # TODO-PARP: Remove
 from unittest import skip
 
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
-
 from odoo.addons.point_of_sale.tests.common import TestTaxCommonPOS
 
 class TestPointOfSaleHttpCommon(TestPoSCommon, PosHttpCommon):
@@ -171,7 +169,9 @@ class TestUi(PosHttpCommon):
 
     def test_07_product_combo(self):
         self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 4
-        setup_product_combo_items(self)
+        self._setup_combo_product()
+        self.monitor_stand.taxes_id = self.taxes['tax10']
+        (self.small_shelf | self.desk_pad | self.desk_organizer).taxes_id = self.taxes['tax15_incl']
         self.desk_accessories_combo.sequence = 100
         combo_product_sofa = self.env["product.template"].create(
             {
@@ -249,10 +249,7 @@ class TestUi(PosHttpCommon):
                 ],
             },
         )
-        self.office_combo.write({
-            'lst_price': 50,
-            'barcode': 'SuperCombo',
-        })
+        self.office_combo.barcode = 'SuperCombo'
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ProductComboPriceTaxIncludedTour')
@@ -262,9 +259,9 @@ class TestUi(PosHttpCommon):
         parent_line_id = self.env['pos.order.line'].search([('product_id.name', '=', 'Office Combo'), ('order_id', '=', order.id)])
         combo_line_ids = self.env['pos.order.line'].search([('product_id.name', '!=', 'Office Combo'), ('order_id', '=', order.id)])
         self.assertEqual(parent_line_id.combo_line_ids, combo_line_ids, "The combo parent should have 3 combo lines")
-        self.assertEqual(order.lines[1].price_unit, 18.67)
-        self.assertEqual(order.lines[2].price_unit, 30.00)
-        self.assertAlmostEqual(order.lines[3].price_unit, 10.33)
+        self.assertEqual(order.lines[1].price_unit, 13.66)
+        self.assertAlmostEqual(order.lines[2].price_unit, 16.67)
+        self.assertAlmostEqual(order.lines[3].price_unit, 18.67)
         # In the future we might want to test also if:
         #   - the combo lines are correctly stored in and restored from local storage
         #   - the combo lines are correctly shared between the pos configs ( in cross ordering )
@@ -434,12 +431,10 @@ class TestUi(PosHttpCommon):
         self.main_pos_config.write({
             'use_order_printer': True,
             'preparation_printer_ids': [Command.set(self.env['pos.printer'].search([('use_type', '=', 'preparation')]).ids)],
+            'limit_categories': True,
+            'iface_available_categ_ids': [Command.set([pos_restricted_categ.id])],
         })
-        self.main_pos_config.write({
-            "limit_categories": True,
-            "iface_available_categ_ids": [(6, 0, [pos_restricted_categ.id])],
-        })
-        setup_product_combo_items(self)
+        self._setup_combo_product()
         self.office_combo.pos_categ_ids = [(6, 0, [pos_restricted_categ.id])]
         self.office_combo.combo_ids = [(6, 0, [self.desks_combo.id])]
         self.desks_combo.combo_item_ids[0].product_id.pos_categ_ids = [(6, 0, [pos_restricted_categ.id])]
