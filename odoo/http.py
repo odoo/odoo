@@ -2316,7 +2316,14 @@ class Request:
             # there was a ReadOnlySqlTransaction error
             if cr.readonly:
                 cr.close()
-                cr = self.env.registry.cursor()
+                try:
+                    cr = self.env.registry.cursor()
+                except psycopg2.OperationalError as exc:
+                    _logger.warning("Cannot open a read/write cursor: %s", str(exc).strip())
+                    unavailable = werkzeug.exceptions.ServiceUnavailable()
+                    # served as is, the JSON-RPC handle_error would answer a 200 error payload
+                    unavailable.error_response = unavailable
+                    raise unavailable from exc
             else:
                 # the cursor is already a RW cursor, start a new transaction
                 # that will avoid repeatable read serialization errors because
