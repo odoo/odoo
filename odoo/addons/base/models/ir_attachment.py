@@ -23,6 +23,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http.stream import Stream
+from odoo.models import MAGIC_COLUMNS
 from odoo.tools import (
     OrderedSet,
     config,
@@ -62,6 +63,20 @@ def condition_values(model, field_name, domain):
     return None
 
 
+def allow_sudo_search(model, field_expr_or_order):
+    if not field_expr_or_order:
+        return True
+    for part in field_expr_or_order.split(','):
+        field_expr, _, _ = part.lstrip().partition(' ')
+        field_name, _, _ = field_expr.partition('.')
+        if (
+            field_name not in MAGIC_COLUMNS
+            and not getattr(model._fields[field_name], 'allow_sudo_search', False)
+        ):
+            return False
+    return True
+
+
 class IrAttachment(models.Model):
     """Attachments are used to link binary files or url to any openerp document.
 
@@ -80,6 +95,9 @@ class IrAttachment(models.Model):
     _description = 'Attachment'
     _order = 'id desc'
     _access_domain_heavy = True
+
+    def _valid_field_parameter(self, field, name):
+        return super()._valid_field_parameter(field, name) or name == 'allow_sudo_search'
 
     def _compute_res_name(self):
         for attachment in self:
@@ -467,16 +485,24 @@ class IrAttachment(models.Model):
     name = fields.Char('Name', required=True)
     description = fields.Text('Description')
     res_name = fields.Char('Resource Name', compute='_compute_res_name')
-    res_model = fields.Char('Resource Model')
-    res_field = fields.Char('Resource Field')
-    res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
-    company_id = fields.Many2one('res.company', string='Company', change_default=True,
-                                 default=lambda self: self.env.company)
-    type = fields.Selection([('url', 'URL'), ('binary', 'File')],
-                            string='Type', required=True, default='binary', change_default=True,
-                            help="You can either upload a file from your computer or copy/paste an internet link to your file.")
+    res_model = fields.Char('Resource Model', allow_sudo_search=True)
+    res_field = fields.Char('Resource Field', allow_sudo_search=True)
+    res_id = fields.Many2oneReference('Resource ID', model_field='res_model', allow_sudo_search=True)
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        change_default=True,
+        allow_sudo_search=True,
+        default=lambda self: self.env.company,
+    )
+    type = fields.Selection(
+        [('url', 'URL'), ('binary', 'File')],
+        string='Type', required=True, default='binary',
+        change_default=True,
+        allow_sudo_search=True,
+        help="You can either upload a file from your computer or copy/paste an internet link to your file.")
     url = fields.Char('Url', index='btree_not_null', size=1024)
-    public = fields.Boolean('Is public document')
+    public = fields.Boolean('Is public document', allow_sudo_search=True)
     res_access_read = fields.Boolean(
         groups=fields.NO_ACCESS,
         compute=lambda self: self._compute_res_access('read'),
@@ -495,8 +521,8 @@ class IrAttachment(models.Model):
     db_datas = fields.Binary('Database Data', attachment=False)
     store_fname = fields.Char('Stored Filename', index=True)
     file_size = fields.Integer('File Size', readonly=True)
-    checksum = fields.Char("Checksum/SHA1", size=40, readonly=True)
-    mimetype = fields.Char('Mime Type', readonly=True)
+    checksum = fields.Char("Checksum/SHA1", size=40, readonly=True, allow_sudo_search=True)
+    mimetype = fields.Char('Mime Type', readonly=True, allow_sudo_search=True)
     index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
 
     _res_idx = models.Index("(res_model, res_id)")
@@ -570,7 +596,7 @@ class IrAttachment(models.Model):
         for attachment in self:
             att_id = attachment.id
             res_model, res_id = attachment.res_model, attachment.res_id
-            if not user_model.env.is_system():
+            if not user_model.env.user._is_system():
                 if not res_id and attachment.create_uid.id != self.env.uid:
                     forbidden_ids.add(att_id)
                     continue
@@ -601,16 +627,18 @@ class IrAttachment(models.Model):
         assert operation in ('read', 'write') and self.env.su
         if domain_operator != 'in':
             return NotImplemented
+        env = self.sudo(False).with_context(active_test=False).env
         domain = self.env.context.get('search_domain')
         if not isinstance(domain, Domain):
             domain = Domain.TRUE
+        else:
+            domain = domain.optimize_dynamic(self.with_env(env)).map_conditions(lambda c: c if allow_sudo_search(self, c.field_expr) else Domain.TRUE)
         sec_domain = Domain.FALSE
-        self = self.sudo(False)  # noqa: PLW0642
 
         # - res_id == False needs to be system user or creator
         res_ids = condition_values(self, 'res_id', domain)
         if not res_ids or False in res_ids:
-            if self.env.is_system():
+            if self.env.user._is_system():
                 sec_domain |= Domain('res_id', '=', False)
             else:
                 sec_domain |= Domain('res_id', '=', False) & Domain('create_uid', '=', self.env.uid)
@@ -620,8 +648,7 @@ class IrAttachment(models.Model):
         # - res_field != False needs to check field access on the res_model
         res_model_names = condition_values(self, 'res_model', domain)
         if 0 < len(res_model_names or ()) <= MAX_COMODELS_FOR_DOMAIN:
-            env = self.with_context(active_test=False).env
-            check_res_fields = not self.env.is_system() and tuple(condition_values(self, 'res_field', domain) or ()) != (False,)
+            check_res_fields = not self.env.user._is_system() and tuple(condition_values(self, 'res_field', domain) or ()) != (False,)
             for res_model_name in res_model_names:
                 comodel = env.get(res_model_name)
                 if comodel is None:
@@ -653,8 +680,14 @@ class IrAttachment(models.Model):
 
         # We do not have a small restriction on res_model. We still need to
         # support other queries such as: `('id', 'in' ...)`.
-        records = self.sudo().with_context(active_test=False).search_fetch(
-            domain & Domain('res_model', '!=', False) & ~sec_domain, SECURITY_FIELDS, order='id', limit=MAX_SEARCH_LIMIT).sudo(False)
+        query = self.with_env(env)._search(
+            domain & Domain('res_model', '!=', False) & ~sec_domain,
+            order='id',
+            limit=MAX_SEARCH_LIMIT,
+            bypass_access=True,
+        )
+        fields_to_fetch = [self._fields[name] for name in SECURITY_FIELDS]
+        records = self._fetch_query(query, fields_to_fetch).with_env(env)
         if len(records) == MAX_SEARCH_LIMIT:  # avoid out of memory
             raise UserError(self.env._("Cannot search, too many attachments"))
         records = records._filtered_access(operation)
@@ -709,12 +742,33 @@ class IrAttachment(models.Model):
         if 0 < len(condition_values(self, 'res_model', domain) or ()) <= MAX_COMODELS_FOR_DOMAIN:
             return super()._search(domain, offset, limit, order, active_test=active_test, bypass_access=bypass_access)
 
-        self_sudo = self.sudo().with_context(active_test=False)
         ordered = bool(order)
+        fields_to_fetch = [self._fields[name] for name in SECURITY_FIELDS]
+        base_domain = domain.map_conditions(lambda c: c if allow_sudo_search(self, c.field_expr) else Domain.TRUE)
+        if base_domain == domain:
+            domain = Domain.TRUE
+        if not allow_sudo_search(self, order):
+            query = super()._search(
+                base_domain,
+                order='res_model nulls first, res_id, id',
+                limit=MAX_SEARCH_LIMIT,
+                active_test=False,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
+            if len(records) == MAX_SEARCH_LIMIT:  # avoid out of memory
+                raise UserError(self.env._("Cannot search, too many attachments"))
+            until = None if limit is None else offset + limit
+            return records._filtered_access('read').filtered(domain).sorted(order)[offset:until]._as_query(ordered)
         if limit is None:
-            records = self_sudo.search_fetch(
-                domain, SECURITY_FIELDS, order=order).sudo(False)
-            return records._filtered_access('read')[offset:]._as_query(ordered)
+            query = super()._search(
+                base_domain,
+                order=order,
+                active_test=False,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
+            return records._filtered_access('read').filtered(domain)[offset:]._as_query(ordered)
         # Fetch by small batches
         sub_offset = 0
         limit += offset
@@ -723,14 +777,16 @@ class IrAttachment(models.Model):
             # By default, order by model to batch access checks.
             order = 'res_model nulls first, id'
         while len(result) < limit:
-            records = self_sudo.search_fetch(
-                domain,
-                SECURITY_FIELDS,
+            query = super()._search(
+                base_domain,
                 offset=sub_offset,
                 limit=PREFETCH_MAX,
                 order=order,
-            ).sudo(False)
-            result.extend(records._filtered_access('read')._ids)
+                active_test=False,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
+            result.extend(records._filtered_access('read').filtered(domain)._ids)
             if len(records) < PREFETCH_MAX:
                 # There are no more records
                 break

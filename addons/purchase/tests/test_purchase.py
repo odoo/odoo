@@ -224,7 +224,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line[0].date_planned, fields.Datetime.today())
         activity = self.env['mail.activity'].search([
             ('summary', '=', 'Date Updated'),
-            ('res_model_id', '=', 'purchase.order'),
+            ('res_model', '=', 'purchase.order'),
             ('res_id', '=', po.id),
         ])
         self.assertTrue(activity)
