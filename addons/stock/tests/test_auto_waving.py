@@ -234,6 +234,38 @@ class TestAutoWaving(TransactionCase):
         batches = all_batches - waves
         self.assertEqual(len(batches), 0)
 
+    def test_group_by_empty_partner_and_product(self):
+        """Ensure pickings with an empty partner are grouped correctly.
+
+        - Initial pickings with an empty partner must be combined into a single newly created batch.
+        - Each subsequently picking with an empty partner join the existing batch.
+        """
+        self.picking_type_out.write({
+            'auto_batch': True,
+            'batch_group_by_partner': True,
+            'wave_group_by_product': True,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 4)
+        pickings = self.env['stock.picking'].create([{
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [Command.create({
+                'product_id': self.product_1.id,
+                'product_uom_qty': 1,
+            })],
+        } for _ in range(4)])
+
+        # Pickings with an empty partner should be grouped into the same new wave.
+        initial_pickings = pickings[:2]
+        initial_pickings.action_assign()
+        wave = initial_pickings.batch_id
+        self.assertEqual(len(wave), 1)
+
+        # Further pickings with an empty partner should join the existing wave.
+        followup_pickings = pickings[2:]
+        followup_pickings.action_assign()
+        self.assertEqual(followup_pickings.batch_id, wave)
+        self.assertEqual(wave.picking_ids, pickings)
+
     def test_group_by_locations(self):
         self.picking_type_out.write({
             'auto_batch': True,
