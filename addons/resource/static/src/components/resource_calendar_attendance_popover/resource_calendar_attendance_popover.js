@@ -9,6 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { serializeDate } from "@web/core/l10n/dates";
 import { ResourceCalendarPlugin } from "@resource/plugins/resource_calendar_plugin";
+import { AttendanceDurationKeeper } from "@resource/components/resource_calendar_attendance_popover/attendance_duration_keeper";
 
 export class ResourceCalendarAttendancePopover extends Component {
     static template = "resource.ResourceCalendarAttendancePopover";
@@ -48,6 +49,7 @@ export class ResourceCalendarAttendancePopover extends Component {
         this.orm = useService("orm");
         this.popoverRef = signal(null, { type: t.ref(HTMLElement) });
         this.hasRecurrencyChanged = signal(false, { type: t.boolean() });
+        this.durationKeeper = new AttendanceDurationKeeper();
         useViewButtons(this.popoverRoot, {
             reload: this.props.onReload,
             afterExecuteAction: this.props.close,
@@ -79,6 +81,7 @@ export class ResourceCalendarAttendancePopover extends Component {
             hooks: {
                 onRootLoaded: (root) => {
                     root.canSaveOnUpdate = false;
+                    this.durationKeeper.track(root);
                     if (this.props.delta) {
                         if (this.props.isAllDay) {
                             root.update({
@@ -105,6 +108,7 @@ export class ResourceCalendarAttendancePopover extends Component {
                     this.hasRecurrencyChanged.set(
                         Object.keys(changes).some((field) => field.includes("recurrency"))
                     );
+                    this.durationKeeper.onRecordChanged(record);
                 },
             },
         };
@@ -168,7 +172,7 @@ export class ResourceCalendarAttendancePopover extends Component {
         if (this.props.delta || this.props.startDelta || this.props.endDelta || !record.resId) {
             this.props.close();
         } else {
-            record.discard();
+            record.discard().then(() => this.durationKeeper.track(record));
             this.hasRecurrencyChanged.set(false);
         }
     }
