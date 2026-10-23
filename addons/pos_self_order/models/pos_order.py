@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import math
+from werkzeug.exceptions import BadRequest, Unauthorized
 
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError
@@ -122,7 +123,7 @@ class PosOrder(models.Model):
 
     @api.model
     def _check_pos_order_lines(self, pos_config, order, line, fiscal_position_id):
-        existing_order = pos_config.env['pos.order']._get_open_order(order)
+        existing_order = pos_config.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
         existing_lines = existing_order.lines if existing_order.exists() else pos_config.env['pos.order.line']
 
         if line[0] == Command.DELETE and line[1] in existing_lines.ids:
@@ -179,12 +180,57 @@ class PosOrder(models.Model):
                 'order_id': existing_order.id if existing_order.exists() else None,
                 'combo_parent_id': line_data.get('combo_parent_id'),
                 'combo_item_id': line_data.get('combo_item_id'),
-                'combo_line_ids': [id for id in line_data.get('combo_line_ids', []) if isinstance(id, int)],
+                'combo_line_ids': line_data.get('combo_line_ids', []),
             }]
         return []
 
     @api.model
+    def _verify_self_order_access(self, pos_config, order):
+        # Resolve the UUID explicitly, including records hidden by record rules. The
+        # restaurant lookup can fall back to a client-supplied table, which is not kept
+        # in the sanitized payload and could authorize a different order from syncing.
+        if not isinstance(order, dict) or not isinstance(order.get('uuid'), str) or not order['uuid']:
+            raise BadRequest(_('Invalid order'))
+        existing_order = pos_config.env['pos.order'].sudo().search([('uuid', '=', order['uuid'])], limit=1)
+        order_id = order.get('id')
+        if order_id is not None and order_id is not False and (
+            not isinstance(order_id, int)
+            or not existing_order or order_id != existing_order.id
+        ):
+            raise BadRequest(_('Invalid order'))
+        if existing_order and (
+            existing_order.config_id != pos_config
+            or existing_order.session_id != pos_config.current_session_id
+            or existing_order.state != 'draft'
+            or not isinstance(order.get('access_token'), str)
+            or not order['access_token']
+            or not consteq(existing_order.access_token or '', order['access_token'])
+        ):
+            raise Unauthorized(_('Invalid order access'))
+        return existing_order
+
+    @api.model
+    def _get_self_order_uuid_mapping_models(self):
+        """Allow-listed relation fields and their sanitized order creation commands.
+
+        Extensions may add order-owned models/fields. Each model must have a direct
+        one2many on pos.order; new UUIDs must appear in that field's sanitized commands.
+        Self-ordering currently only creates combo lines, not courses.
+
+        WARNING: These mappings are applied under sudo by a public route. Do not
+        allow payment/configuration models (such as pos.payment or pos.config),
+        ownership fields, or relations not required by self-ordering.
+        """
+        return {
+            'pos.order.line': {
+                'order_field': 'lines',
+                'fields': {'combo_parent_id', 'combo_line_ids'},
+            },
+        }
+
+    @api.model
     def _check_pos_order(self, pos_config, order, device_type, table=None):
+        existing_order = self._verify_self_order_access(pos_config, order)
         company = pos_config.company_id
         preset_id = order['preset_id'] if pos_config.use_presets else False
         preset_id = pos_config.env['pos.preset'].browse(preset_id) if preset_id else False
@@ -199,8 +245,7 @@ class PosOrder(models.Model):
         if preset_id and not preset_id in pos_config.available_preset_ids:
             raise UserError(_("Preset is not available in this configuration"))
 
-        existing_order = pos_config.env['pos.order']._get_open_order(order)
-        if not existing_order.exists():
+        if not existing_order:
             pos_reference, tracking_number = pos_config._get_next_order_refs()
             prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
 
@@ -229,7 +274,7 @@ class PosOrder(models.Model):
             if not exists:
                 raise UserError(_("The order ID isn't linked to the order UUID. This is a sign of a tampered payload."))
 
-        return {
+        safe_data = {
             'id': order.get('id'),
             'table_stand_number': order.get('table_stand_number'),
             'customer_count': order.get('customer_count'),
@@ -266,8 +311,14 @@ class PosOrder(models.Model):
             'uuid': order.get('uuid'),
             'has_deleted_line': order.get('has_deleted_line'),
             'lines': lines,
-            'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
+        safe_data['relations_uuid_mapping'] = self._sanitize_uuid_mapping(
+            pos_config,
+            safe_data,
+            existing_order,
+            order.get('relations_uuid_mapping', {}),
+        )
+        return safe_data
 
     def _check_combo_lines(self):
         """
@@ -476,3 +527,151 @@ class PosOrder(models.Model):
         combo_lines = parent_line | parent_line.combo_line_ids
         for line in combo_lines:
             self._compute_line_subtotals(line)
+
+    @api.model
+    def _sanitize_uuid_mapping(self, pos_config, order, existing_order, mapping):
+        """Validate public self-order relations before sudo syncing.
+
+        - Check dictionary structure, model/field allow-lists and relation value types.
+        - Require models linked to the order through direct one2many fields.
+        - Validate UUID strings, preserve update UUIDs and reject duplicate creations.
+        - Bind owner/target UUIDs to the authorized order or sanitized CREATE commands;
+          reject foreign UUID collisions and deleted/unlinked records.
+        - Restrict direct IDs to integers for this order's records.
+
+        Ownership checks also run for empty mappings.
+        """
+        allowed_models = self._get_self_order_uuid_mapping_models()
+        if not isinstance(mapping, dict) or set(mapping) - allowed_models.keys():
+            raise BadRequest(_('Invalid relation mapping'))
+
+        allowed_uuids = {}      # Existing order UUIDs, plus sanitized creation UUIDs.  eg:{'pos.order.line': {'existing-uuid', 'new-uuid'}}.
+        allowed_ids = {}        # Existing record IDs of this order.                    eg:{'pos.order.line': {42, 43, 44}}.
+        direct_relations = []   # Direct relation target IDs awaiting ownership checks. eg:[('pos.order.line', [42]), ('pos.order.line', [43, 44])].
+        for model_name, options in allowed_models.items():
+            model_uuids, model_ids, model_relations = self._get_uuid_mapping_record_scope(
+                pos_config, order, existing_order, model_name, options,
+            )
+            allowed_uuids[model_name] = model_uuids
+            allowed_ids[model_name] = model_ids
+            direct_relations.extend(model_relations)
+
+        # Direct IDs must obey the same ownership rules as UUIDs across all models.
+        for comodel_name, target_ids in direct_relations:
+            if comodel_name not in allowed_ids or any(
+                not isinstance(record_id, int)
+                or record_id not in allowed_ids[comodel_name]
+                for record_id in target_ids
+            ):
+                raise BadRequest(_('Invalid relation value'))
+
+        if not mapping:
+            return {}
+
+        safe_mapping = {}
+        for model_name, owners in mapping.items():
+            safe_owners = self._sanitize_uuid_mapping_owners(
+                pos_config.env[model_name], owners, allowed_models[model_name]['fields'], allowed_uuids,
+            )
+            if safe_owners:
+                safe_mapping[model_name] = safe_owners
+        return safe_mapping
+
+    @api.model
+    def _get_uuid_mapping_record_scope(self, pos_config, order, existing_order, model_name, options):
+        """Validate one model's commands and return its allowed UUIDs, IDs and direct relations."""
+        model = pos_config.env[model_name]
+        order_field_name = options['order_field']
+        order_field = pos_config.env['pos.order']._fields[order_field_name]
+        if order_field.type != 'one2many' or order_field.comodel_name != model_name:
+            raise BadRequest(_('Invalid relation mapping'))
+        existing_records = existing_order[order_field_name]
+        commands = order.get(order_field_name, [])
+
+        removed_ids = {command[1] for command in commands if command[0] in (Command.DELETE, Command.UNLINK)}
+        allowed_ids = set(existing_records.ids) - removed_ids
+        model_uuids = set((existing_records - existing_records.browse(removed_ids)).mapped('uuid')) - {False}
+        creation_uuids = set()
+        direct_relations = []
+        for command in commands:
+            if command[0] not in (Command.CREATE, Command.UPDATE):
+                continue
+            # Require a non-empty UUID, preserve existing UUIDs on updates, and
+            # reject duplicate UUIDs among records created by this request.
+            values = command[2]
+            uuid = values.get('uuid')
+            if not (isinstance(uuid, str) and uuid):
+                raise BadRequest(_('Invalid record UUID'))
+            if command[0] == Command.UPDATE:
+                record = existing_records.browse(command[1])
+                if uuid != record.uuid:
+                    raise BadRequest(_('Invalid record UUID'))
+                values['uuid'] = record.uuid
+            else:
+                if uuid in creation_uuids:
+                    raise BadRequest(_('Duplicate record UUID'))
+                creation_uuids.add(uuid)
+
+            # Target models may appear later in the allow-list; check ownership
+            # after collecting the allowed IDs for every model.
+            direct_relations.extend(self._get_direct_relations(model, options['fields'], values))
+
+        # CREATE can retry a record of this order, but cannot claim any foreign UUID.
+        model_uuids |= creation_uuids
+        records = model.sudo().search([('uuid', 'in', list(model_uuids))])
+        if any(
+            record[order_field.inverse_name] != existing_order or record.id in removed_ids
+            for record in records
+        ):
+            raise BadRequest(_('Invalid record UUID'))
+        return model_uuids, allowed_ids, direct_relations
+
+    @api.model
+    def _get_direct_relations(self, model, field_names, values):
+        """Collect direct relation IDs from sanitized values, checking their structure."""
+        direct_relations = []
+        for field_name in field_names:
+            value = values.get(field_name)
+            if not value:
+                continue
+            field = model._fields[field_name]
+            if field.type == 'many2one':
+                target_ids = [value]
+            elif field.type in ('one2many', 'many2many') and isinstance(value, list):
+                target_ids = value
+            else:
+                raise BadRequest(_('Invalid relation value'))
+            direct_relations.append((field.comodel_name, target_ids))
+        return direct_relations
+
+    @api.model
+    def _sanitize_uuid_mapping_owners(self, model, owners, allowed_fields, allowed_uuids):
+        """Copy one model's mapping after validating its owners, fields and target UUIDs."""
+        if not isinstance(owners, dict):
+            raise BadRequest(_('Invalid relation mapping'))
+        safe_owners = {}
+        for owner_uuid, relation_fields in owners.items():
+            if (
+                not isinstance(owner_uuid, str) or owner_uuid not in allowed_uuids[model._name]
+                or not isinstance(relation_fields, dict)
+            ):
+                raise BadRequest(_('Invalid relation mapping'))
+            safe_fields = {}
+            for name, values in relation_fields.items():
+                if name not in allowed_fields:
+                    raise BadRequest(_('Invalid relation mapping'))
+                field = model._fields[name]
+                if field.type == 'many2one':
+                    value_type = str
+                elif field.type in ('one2many', 'many2many'):
+                    value_type = list
+                else:
+                    raise BadRequest(_('Invalid relation mapping'))
+                if not isinstance(values, value_type) or field.comodel_name not in allowed_uuids:
+                    raise BadRequest(_('Invalid relation mapping'))
+                target_uuids = [values] if value_type is str else values
+                if any(not isinstance(uuid, str) or uuid not in allowed_uuids[field.comodel_name] for uuid in target_uuids):
+                    raise BadRequest(_('Invalid relation mapping'))
+                safe_fields[name] = values[:] if value_type is list else values
+            safe_owners[owner_uuid] = safe_fields
+        return safe_owners
