@@ -150,6 +150,14 @@ export class ChatWindow extends Component {
     }
 
     onKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (
+            hotkey === "control+arrowdown" &&
+            !ev.target.closest(".o-mail-Message") &&
+            ev.currentTarget.querySelector(".o-mail-Thread-jumpPresent:enabled")
+        ) {
+            return;
+        }
         if (ev.key === "Escape" && this.threadActions.panelAction) {
             this.threadActions.panelAction.closePanel();
             ev.stopPropagation();
@@ -159,7 +167,7 @@ export class ChatWindow extends Component {
             return;
         }
         ev.stopPropagation(); // not letting home menu steal my CTRL-C
-        switch (getActiveHotkey(ev)) {
+        switch (hotkey) {
             case "escape":
                 if (
                     isEventHandled(ev, "NavigableList.close") ||
