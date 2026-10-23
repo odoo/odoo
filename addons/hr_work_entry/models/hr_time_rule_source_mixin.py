@@ -11,6 +11,20 @@ from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
 
 
+def _to_local_date(employee, value):
+    """Return the date of ``value`` in the timezone of ``employee``.
+
+    :param employee: ``hr.employee``
+    :param value: a date (returned as is) or a datetime, naive UTC or aware
+    :rtype: date
+    """
+    if not isinstance(value, datetime):
+        return value
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=UTC)
+    return value.astimezone(ZoneInfo(employee.sudo()._get_tz())).date()
+
+
 class HrTimeRuleSourceMixin(models.AbstractModel):
     """Make a model a source of the time rule pipeline (``hr.time.rule``).
 
@@ -190,7 +204,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         """Return the source records (as superuser) overlapping a period.
 
         :param datetime start_dt: period start, UTC (tzinfo is dropped)
-        :param datetime end_dt: period end, UTC (tzinfo is dropped)
+        :param datetime end_dt: period end, UTC (tzinfo is dropped), excluded for the overlapping records
         :param employees: restrict to these ``hr.employee``
         :param bool check_end: select the records ending in the period instead of overlapping it
         :rtype: recordset of this model
@@ -205,7 +219,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                 (self._time_rule_span_end_field, '<=', end_dt.replace(tzinfo=None)))
         else:
             domain.append(
-                (self._time_rule_span_start_field, '<=', end_dt.replace(tzinfo=None)))
+                (self._time_rule_span_start_field, '<', end_dt.replace(tzinfo=None)))
         if employees:
             assert 'employee_id' in self._fields
             domain.append(('employee_id', 'in', employees.ids))
@@ -234,7 +248,8 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         :meth:`_on_sources_collected`.
 
         :param rules: ``hr.time.rule`` records
-        :param dict ranges_by_employee: ``{employee: (date_from, date_to)}``
+        :param dict ranges_by_employee: ``{employee: (date_from, date_to)}``, dates in the
+            employee's timezone
         :return: merged ``(excess, deficit, active_iv)``, see ``hr.time.rule._evaluate_rules``
         :rtype: tuple
         """
@@ -246,18 +261,26 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
 
         by_range = defaultdict(list)
         for employee, (date_from, date_to) in ranges_by_employee.items():
-            start_dt = datetime.combine(date_from, time.min).replace(tzinfo=UTC)
-            end_dt = datetime.combine(date_to, time.max).replace(tzinfo=UTC)
-            by_range[start_dt, end_dt].append(employee)
+            by_range[date_from, date_to].append(employee)
 
-        for (start_dt, end_dt), employees in by_range.items():
+        for (date_from, date_to), employees in by_range.items():
+            # naive local bounds of the evaluated days, the end excluded
+            start_dt = datetime.combine(date_from, time.min)
+            end_dt = datetime.combine(date_to + timedelta(days=1), time.min)
             employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
-            sources = self._get_source_records_for_time_rules(start_dt, end_dt, employee_rs)
+            sources = self.sudo().browse()
+            for tz, tz_employees in employee_rs.grouped(lambda e: e.sudo()._get_tz()).items():
+                tzinfo = ZoneInfo(tz)
+                sources |= self._get_source_records_for_time_rules(
+                    start_dt.replace(tzinfo=tzinfo).astimezone(UTC),
+                    end_dt.replace(tzinfo=tzinfo).astimezone(UTC),
+                    tz_employees,
+                )
             if not sources:
                 continue
 
             self._on_sources_collected(sources)
-            excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, end_dt)
+            excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, datetime.combine(date_to, time.min))
 
             for emp, by_src in excess.items():
                 for src, items in by_src.items():
@@ -318,7 +341,9 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         range, weekly rules on that range widened to whole weeks; both results are applied
         together through :meth:`_apply_record_output`.
 
-        :param list affected: ``(employee, date_from, date_to)`` tuples (dates or datetimes)
+        :param list affected: ``(employee, date_from, date_to)`` tuples: dates in the employee's
+            timezone, or UTC datetimes (naive or aware), evaluated on their dates in the
+            employee's timezone
         :param str rule_period: ``'day'`` or ``'week'`` to only process that kind of rule;
             both if ``None``
         :param str rule_operator: ``'exceed'`` or ``'less_than'`` to only process that operator
@@ -357,8 +382,8 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
 
         day_rules_ranges = defaultdict(lambda: [None, None])
         for employee, date_from, date_to in affected:
-            df = date_from.date() if hasattr(date_from, 'date') else date_from
-            dt = date_to.date() if hasattr(date_to, 'date') else date_to
+            df = _to_local_date(employee, date_from)
+            dt = _to_local_date(employee, date_to)
             r = day_rules_ranges[employee]
             r[0] = df if r[0] is None else min(r[0], df)
             r[1] = dt if r[1] is None else max(r[1], dt)
@@ -415,7 +440,9 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         - periods ending before the current week (started on the earliest ``week_start`` of the
           active weekly rules): weekly ``exceed`` rules.
 
-        Weekly undertime only runs from :meth:`_cron_process_week_time_rules`.
+        Weekly undertime only runs from :meth:`_cron_process_week_time_rules`. The end of a
+        period is its date in the employee's timezone; today is the server's (UTC) date, as
+        for the crons.
 
         :param list affected: ``(employee, date_from, date_to)`` tuples
         """
@@ -439,11 +466,10 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         else:
             latest_week_start = today - timedelta(days=today.weekday())
 
-        def to_date(dt):
-            return dt.date() if hasattr(dt, 'date') else dt
-        past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
-        today_list = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
-        past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_week_start]
+        end_dates = [_to_local_date(e, dt) for e, _df, dt in affected]
+        past_day = [a for a, end in zip(affected, end_dates) if end < today]
+        today_list = [a for a, end in zip(affected, end_dates) if end >= today]
+        past_week = [a for a, end in zip(affected, end_dates) if end < latest_week_start]
         self._process_time_rules_for(past_day, rule_period='day')
         self._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
         # weekly undertime is cron-only: triggering it on every record write would create
