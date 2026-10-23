@@ -35,7 +35,7 @@ class L10nInEwaybill(models.Model):
         super()._compute_warning()
         for ewaybill in self:
             ewaybill.warning = ewaybill.warning or {}
-            if ewaybill.state != 'pending' or not (duplicates := ewaybill._find_duplicate_ewaybill().filtered(lambda e: e.state == 'generated')):
+            if ewaybill.state != 'pending' or not (duplicates := ewaybill._find_duplicate_ewaybill().filtered(lambda e: e.state in ('generated', 'extended'))):
                 continue
             if ewaybill.account_move_id:
                 document_name = _("receipt(s)") if not ewaybill._is_incoming() else _("delivery(ies)")
@@ -151,7 +151,7 @@ class L10nInEwaybill(models.Model):
 
     def action_print(self):
         self.ensure_one()
-        if self.state == 'generated':
+        if self.state in ('generated', 'extended'):
             return super().action_print()
         if self.state != 'challan':
             raise UserError(_(

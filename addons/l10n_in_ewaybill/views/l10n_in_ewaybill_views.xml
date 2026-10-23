@@ -17,17 +17,22 @@
                             type="object"
                             invisible="state != 'generated'"
                             data-hotkey="c"/>
+                    <button name="action_extend_ewaybill"
+                            string="Extend e-Waybill"
+                            type="object"
+                            invisible="state not in ('generated', 'extended')"
+                            data-hotkey="e"/>
                     <button name="action_reset_to_pending"
                             string="Reset to Pending"
                             type="object"
-                            invisible="state in ['pending', 'generated']"
+                            invisible="state in ('pending', 'generated', 'extended')"
                             data-hotkey="r"
                             confirm="Are you sure you want to re-send the e-Waybill?"/>
                     <button name="action_print"
                             string="Print"
                             class="oe_highlight"
                             type="object"
-                            invisible="state != 'generated'"
+                            invisible="state not in ('generated', 'extended')"
                             data-hotkey="f"/>
                     <button name="action_export_content_json"
                             string="Download Content JSON"

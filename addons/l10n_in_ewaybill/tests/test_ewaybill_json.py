@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import Command, _
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
+from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi
 from odoo.tests import tagged
 
 
@@ -533,6 +536,70 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
                 expected,
                 "Indian EDI cancellation JSON values with remarks do not match the expected values",
             )
+
+    def test_ewaybill_extend_validity(self):
+        """ Test E-waybill validity extension updates the record """
+
+        ewaybill = self.env['l10n.in.ewaybill'].create({
+            "name": "123456789012",
+            "account_move_id": self.invoice.id,
+            "distance": 200,
+            "state": "generated",
+        })
+        extend_wizard = self.env['l10n.in.ewaybill.extend'].create({
+            'l10n_in_ewaybill_id': ewaybill.id,
+            'extension_reason_code': '1',
+            'extension_remarks': 'Delay due to natural calamity',
+            'from_pincode': '380001',
+            'from_state_id': self.env.ref('base.state_in_gj').id,
+            'from_place': 'Ahmedabad',
+            'remaining_distance': 150,
+            'consignment_status': 'M',
+            'trans_mode': '1',
+            'vehicle_no': 'GJ01XX1234',
+        })
+
+        def _submit(valid_upto):
+            response = {
+                'status_cd': '1',
+                'data': {'ewayBillNo': 123456789012, 'validUpto': valid_upto},
+            }
+            with (
+                patch.object(EWayBillApi, '_ewaybill_make_transaction', return_value=response),
+                patch.object(self.env.cr, 'commit'),
+            ):
+                extend_wizard.action_submit_extension()
+
+        # In Movement
+        _submit('30/11/2026 11:59:00 PM')
+        self.assertRecordValues(ewaybill, [{
+            'state': 'extended',
+            'ewaybill_expiry_date': date(2026, 11, 30),
+            'distance': 150,
+            'consignment_status': 'M',
+            'vehicle_no': 'GJ01XX1234',
+        }])
+
+        # In Transit
+        extend_wizard.write({
+            'consignment_status': 'T',
+            'transit_type': 'W',
+            'vehicle_no': False,
+            'remaining_distance': 80,
+            'address_line1': 'Infocity odoo',
+            'address_line2': 'Tower 4 , 4th Floor',
+            'address_line3': 'Gandhinagar',
+        })
+
+        _submit('02/12/2026 11:59:00 PM')
+        self.assertRecordValues(ewaybill, [{
+            'state': 'extended',
+            'ewaybill_expiry_date': date(2026, 12, 2),
+            'distance': 80,
+            'consignment_status': 'T',
+            'transit_type': 'W',
+            'vehicle_no': False,
+        }])
 
     def test_ewaybill_access_accounting_user(self):
         self.env.user.group_ids = self.env.ref('account.group_account_invoice')
