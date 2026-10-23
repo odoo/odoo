@@ -16,6 +16,8 @@ import uuid
 from datetime import datetime
 from lxml import etree, html
 from urllib.parse import urlparse
+from urllib3.exceptions import LocationParseError
+from urllib3.util import parse_url
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
@@ -406,8 +408,8 @@ class Website(models.Model):
     def _check_domain(self):
         for record in self:
             try:
-                urlparse(record.domain)
-            except ValueError:
+                parse_url(record.domain)
+            except LocationParseError:
                 raise ValidationError(_("The provided website domain is not a valid URL."))
 
     @api.constrains('homepage_url')
