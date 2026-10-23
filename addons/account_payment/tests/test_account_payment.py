@@ -159,6 +159,16 @@ class TestAccountPayment(AccountPaymentCommon):
             payment_with_token.action_post()
             patched.assert_called_once()
 
+    def test_duplicate_payment_does_not_copy_transaction(self):
+        tx = self._create_transaction('redirect', state='done')
+        tx._reconcile_after_done()
+        payment = tx.payment_id
+
+        payment_copy = payment.copy()
+
+        self.assertFalse(payment_copy.payment_transaction_id)
+        self.assertEqual(payment.payment_transaction_id, tx)
+
     def test_no_payment_for_validations(self):
         tx = self._create_transaction(flow='dummy', operation='validation')  # Overwrite the flow
         tx._reconcile_after_done()
