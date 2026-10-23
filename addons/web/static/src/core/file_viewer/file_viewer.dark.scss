@@ -3,13 +3,13 @@
 /* No CSS hacks, variables overrides only */
 
 .o-FileViewer-header {
-    --FileViewer-toolbarBgColor: #{$o-gray-200};
+    --FileViewer-toolbarBgColor: var(--o-gray-200);
 }
 
 .o-FileViewer-toolbar {
-    --FileViewer-toolbarBorder: #{mix($o-gray-300, $o-gray-400)};
+    --FileViewer-toolbarBorder: color-mix(in srgb, var(--o-gray-300), var(--o-gray-400));
 }
 
 .o-FileViewer-toolbarButton {
-    --FileViewer-toolbarBgColor: #{$o-gray-200};
+    --FileViewer-toolbarBgColor: var(--o-gray-200);
 }

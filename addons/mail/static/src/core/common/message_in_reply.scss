@@ -16,7 +16,7 @@
     }
 
     &:hover, &:focus-visible {
-        transform: translateY(#{$border-width * -2});
+        transform: translateY(calc(var(--o-bs-border-width) * -2));
         transition: var(--o-bs-transition-base);
 
         .o-mail-MessageInReply-message {

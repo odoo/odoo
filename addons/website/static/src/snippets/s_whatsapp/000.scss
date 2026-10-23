@@ -17,7 +17,7 @@
     line-height: var(--s_whatsapp-line-height);
     right: var(--o-bs-spacer-4);
     bottom: var(--o-bs-spacer-4);
-    z-index: $zindex-dropdown;
+    z-index: var(--o-bs-zindex-dropdown);
 
     *:not(.oi),
     :not(.oi)::before,
@@ -65,25 +65,25 @@
         }
 
         &.no_icon_color {
-            color: $body-color;
-            background-color: $body-bg;
+            color: var(--o-bs-body-color);
+            background-color: var(--body-bg);
 
             &.s_whatsapp_fab_circle {
-                border-color: $body-color;
+                border-color: var(--o-bs-body-color);
             }
         }
     }
 
     .s_whatsapp_fab_circle {
-        border: $border-width * 2 solid var(--s_whatsapp-green);
-        background-color: $body-bg;
+        border: calc(var(--o-bs-border-width) * 2) solid var(--s_whatsapp-green);
+        background-color: var(--body-bg);
         color: var(--s_whatsapp-green);
-        border-radius: $border-radius-pill;
+        border-radius: var(--border-radius-pill);
     }
 
     .s_whatsapp_notification_badge {
         inset: -8% 12% auto auto;
-        border: $border-width * 2 solid #ffffff;
+        border: calc(var(--o-bs-border-width) * 2) solid #ffffff;
         transform: translate(50%, 50%);
     }
 

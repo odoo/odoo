@@ -81,7 +81,7 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
 
         .o_survey_question_matrix {
             th, tr:not(:last-child) {
-                border-bottom: var(--o-bs-border-width) solid $border-color;
+                border-bottom: var(--o-bs-border-width) solid var(--o-border-color, var(--o-bs-border-color));
             }
 
             td {
@@ -140,7 +140,7 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
        in one-page layout */
     .o_survey_layout_one_page .o_survey_form_content > .o_survey_question {
         margin-bottom: var(--o-bs-spacer-4);
-        border: var(--o-bs-border-width) solid $border-color;
+        border: var(--o-bs-border-width) solid var(--o-border-color, var(--o-bs-border-color));
         border-radius: var(--o-bs-border-radius);
         padding-top: var(--o-bs-spacer-5);
     }
@@ -148,7 +148,7 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         display: flex;
         align-items: center;
         gap: var(--o-bs-spacer-2);
-        border-right: var(--o-bs-border-width) solid $border-color;
+        border-right: var(--o-bs-border-width) solid var(--o-border-color, var(--o-bs-border-color));
 
         .o_survey_progress {
             --#{$prefix}progress-height: 0.5rem;

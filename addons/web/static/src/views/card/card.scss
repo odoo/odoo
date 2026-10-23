@@ -106,7 +106,7 @@
 
             .o_card_image_fill {
                 min-height: var(--Card__image-fill-width);
-                max-height: var(--Card__image-max-height, $o-kanban-image-fill-width * 1.5);
+                max-height: var(--Card__image-max-height, calc(var(--o-kanban-image-fill-width) * 1.5));
 
                 @media print {
                     height: auto;

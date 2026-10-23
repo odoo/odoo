@@ -211,7 +211,7 @@
     }
 
     > .o-dropdown-item {
-        outline: $btn-border-width solid var(--button-box-border-color);
+        outline: var(--border-width) solid var(--button-box-border-color);
     }
 }
 
@@ -248,7 +248,7 @@
         outline: none;
 
         &:not(:last-child) {
-            border-bottom: solid 1px var(--o-stat-button-border-color, #{$border-color});
+            border-bottom: solid 1px var(--o-stat-button-border-color, var(--o-bs-border-color));
         }
 
         .oe_stat_button {

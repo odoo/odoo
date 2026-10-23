@@ -1,6 +1,6 @@
 
 .s_alert:not([data-vcss]) {
-    margin: $grid-gutter-width/2 0;
+    margin: calc(var(--o-bs-grid-gutter-width) / 2) 0;
     border: $alert-border-width solid;
     border-radius: $alert-border-radius;
     p, ul, ol {
@@ -9,15 +9,15 @@
         }
     }
     &.s_alert_sm {
-        padding: $grid-gutter-width/3;
+        padding: calc(var(--o-bs-grid-gutter-width) / 3);
         @include font-size($font-size-sm);
     }
     &.s_alert_md {
-        padding: $grid-gutter-width/2;
+        padding: calc(var(--o-bs-grid-gutter-width) / 2);
         @include font-size($font-size-base);
     }
     &.s_alert_lg {
-        padding: $grid-gutter-width;
+        padding: var(--o-bs-grid-gutter-width);
         @include font-size($font-size-lg);
     }
     .s_alert_icon {

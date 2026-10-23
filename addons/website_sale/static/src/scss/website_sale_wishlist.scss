@@ -202,11 +202,11 @@
 .wishlist-section {
     &:where(:has(.o_wsale_products_opt_design_grid)) {
         .o_wsale_products_opt_design_grid {
-            border-left: var(--o-bs-border-width) solid $border-color;
+            border-left: var(--o-bs-border-width) solid var(--o-border-color);
         }
         .o_wishlist_products_header {
             padding: 0 calc(var(--o-bs-container-padding-x) * 0.5);
-            border: var(--o-bs-border-width) solid $border-color;
+            border: var(--o-bs-border-width) solid var(--o-border-color);
             border-top: 0;
         }
     }
@@ -265,7 +265,7 @@
                         position: absolute;
                         inset-block: 0;
                         transform: translateX(calc(var(--_line-gap) * -1));
-                        border-left: var(--o-bs-border-width) solid $border-color;
+                        border-left: var(--o-bs-border-width) solid var(--o-border-color);
                         content: "";
                     }
                 }

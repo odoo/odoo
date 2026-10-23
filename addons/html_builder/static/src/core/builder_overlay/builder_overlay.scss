@@ -207,7 +207,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                         height: var(--o-we-handles-btn-size);
                     }
                     &.n {
-                        border-bottom: dashed calc(var(--o-we-handle-border-width) * 0.5) rgba($o-we-contrast-border-color, 0.7);
+                        border-bottom: dashed calc(var(--o-we-handle-border-width) * 0.5) color-mix(in srgb, var(--o-we-contrast-border-color) 70%, transparent);
 
                         &::after {
                             inset: 0 0 auto 0;
@@ -215,7 +215,7 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                         }
                     }
                     &.s {
-                        border-top: dashed calc(var(--o-we-handle-border-width) * 0.5) rgba($o-we-contrast-border-color, 0.7);
+                        border-top: dashed calc(var(--o-we-handle-border-width) * 0.5) color-mix(in srgb, var(--o-we-contrast-border-color) 70%, transparent);
 
                         &::after {
                             inset: auto 0 0 0;

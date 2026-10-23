@@ -219,7 +219,7 @@
 
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
             border-style: solid;
-            border-color: $border-color;
+            border-color: var(--o-bs-border-color);
             border-width: var(--formView-sheet-border-width, 1px 0 1px 0);
             border-radius: var(--formView-sheet-border-radius, 0);
             background-color: var(--o-view-background-color);
@@ -593,7 +593,7 @@
                 }
                 /* Show "border" if tfoot has content only */
                 > tfoot > tr {
-                    box-shadow: inset 0 1px 0 $border-color;
+                    box-shadow: inset 0 1px 0 var(--o-bs-border-color);
                     > td {
                         border:none;
 
@@ -611,7 +611,7 @@
 
         &.o_field_many2many_tags_avatar {
             --fieldWidget-display: inline-flex;
-            min-height: calc(var(--Avatar-size, var(--o-avatar-size)) + var(--o-input-padding-y) * 2 + #{$input-border-width});
+            min-height: calc(var(--Avatar-size, var(--o-avatar-size)) + var(--o-input-padding-y) * 2 + var(--border-width));
         }
     }
     .o_field_widget, .btn {
@@ -707,7 +707,7 @@
             grid-template-columns: 1fr auto;
             width: auto;
             margin-left: auto;
-            border-top: 1px solid $border-color;
+            border-top: 1px solid var(--o-bs-border-color);
 
             .o_cell {
                 padding: 0;

@@ -53,7 +53,7 @@
             // (eg. screen breakpoint, image size...).
             @mixin -big-picture-animate-compact() {
                 .s_blog_posts_post_author {
-                    font-size: $font-size-lg;
+                    font-size: var(--o-bs-font-size-lg);
                 }
 
                 .s_blog_posts_post:hover {
@@ -70,7 +70,7 @@
 
             @mixin -big-picture-animate-extended() {
                 .s_blog_posts_post_author {
-                    font-size: $font-size-base;
+                    font-size: var(--o-bs-font-size-base);
                 }
 
                 .s_blog_posts_post:hover {
@@ -92,14 +92,14 @@
 
             .s_blog_post_big_picture_title, .s_blog_posts_post_cover_hidden {
                 transform: translateY(50%);
-                transition: $transition-base;
+                transition: var(--o-bs-transition-base);
             }
 
             .s_blog_post_big_picture_infos::before {
                 position: absolute;
                 inset: 0;
-                background-color: rgba($black, .3);
-                transition: $transition-fade;
+                background-color: color-mix(in srgb, var(--o-bs-black) 30%, transparent);
+                transition: var(--o-bs-transition-fade);
                 opacity: 0;
                 content: "";
             }
@@ -133,10 +133,10 @@
                 position: absolute;
                 top: 1rem;
                 inset-inline-end: 1rem;
-                border-top: $border-width * 2 solid $white;
-                border-right: $border-width * 2 solid $white;
+                border-top: calc(var(--o-bs-border-width) * 2) solid var(--white);
+                border-right: calc(var(--o-bs-border-width) * 2) solid var(--white);
                 padding: 1rem;
-                transition: $transition-base;
+                transition: var(--o-bs-transition-base);
                 transform: scale3d(0, 0, 0);
                 transform-origin: top right;
                 opacity: 0;
@@ -151,15 +151,15 @@
 
         &.s_blog_posts_effect_chico {
             .s_blog_posts_post::before, .o_record_cover_image {
-                transition: $transition-base;
+                transition: var(--o-bs-transition-base);
                 transform: scale3d(1.12, 1.12, 1.12);
             }
 
             .s_blog_posts_post::before {
                 position: absolute;
                 inset: 1rem;
-                border: $border-width solid $white;
-                border-radius: $border-radius;
+                border: var(--o-bs-border-width) solid var(--white);
+                border-radius: var(--o-bs-border-radius);
                 opacity: 0;
                 z-index: 1;
                 content: "";
@@ -226,6 +226,6 @@
     }
 
     &.s_blog_post_single_badge .s_cta_badge:hover {
-        box-shadow: $box-shadow-sm;
+        box-shadow: var(--box-shadow-sm);
     }
 }

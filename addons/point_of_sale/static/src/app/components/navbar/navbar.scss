@@ -11,7 +11,7 @@
 .pos .navbar-separator {
     height: 1.5rem;
     width: 1px;
-    background-color: $border-color;
+    background-color: var(--o-bs-border-color);
 }
 
 /* Reset btn-group gap to default Bootstrap behavior (overlapping borders). */
@@ -20,7 +20,7 @@
 .pos .navbar-menu.btn-group {
     > :not(.btn-check:first-child) + .btn,
     > .btn-group:not(:first-child) {
-        margin-left: calc(-1 * #{$btn-border-width});
+        margin-left: calc(-1 * var(--border-width));
     }
 
     > .btn.active {

@@ -1,6 +1,6 @@
 .o-mail-NotificationItem {
     &.o-help {
-        --background-color: RGBA(#{to-rgb($purple)}, .1);
+        --background-color: color-mix(in srgb, var(--purple) 10%, transparent);
 
         &:hover {
             --background-color: color-mix(in srgb, var(--o-webclient-background-color) 80%, var(--purple));
@@ -15,8 +15,8 @@
         background:
             repeating-linear-gradient(
                 45deg,
-                rgba($purple, var(--livechat-needHelpSelfMemberBgOpacity, .05)),
-                rgba($purple, var(--livechat-needHelpSelfMemberBgOpacity, .05)) 6px,
+                color-mix(in srgb, var(--purple) calc(var(--livechat-needHelpSelfMemberBgOpacity, .05) * 100%), transparent),
+                color-mix(in srgb, var(--purple) calc(var(--livechat-needHelpSelfMemberBgOpacity, .05) * 100%), transparent) 6px,
                 transparent 6px,
                 transparent 12px
             );

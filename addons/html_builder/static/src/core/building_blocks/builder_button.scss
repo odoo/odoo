@@ -10,7 +10,7 @@
     min-height: var(--o-hb-btn-minHeight);
 
     &.o_hb_btn_has_icon, &.oi {
-        --btn-padding-x: var(--o-hb-btn-has-icon-paddingX, #{map-get($spacers , 2)});
+        --btn-padding-x: var(--o-hb-btn-has-icon-paddingX, var(--o-hb-spacer-2));
         vertical-align: middle;
 
         flex: 0 1 auto;
@@ -22,7 +22,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        --btn-padding-x: #{map-get($spacers , 2)};
+        --btn-padding-x: var(--o-hb-spacer-2);
     }
 
     &.o_hb_btn_has_img_icon > img {

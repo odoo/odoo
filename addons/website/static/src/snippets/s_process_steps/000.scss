@@ -1,6 +1,6 @@
 .s_process_steps:not([data-vcss]) {
     .s_process_step_icon {
-        margin: $grid-gutter-width 0;
+        margin: var(--o-bs-grid-gutter-width) 0;
         span {
             display: block;
             overflow: hidden;
@@ -10,7 +10,7 @@
         }
     }
     .s_process_step_content {
-        padding: 0 $grid-gutter-width/2;
+        padding: 0 calc(var(--o-bs-grid-gutter-width) / 2);
     }
     @include media-breakpoint-up(lg) {
         overflow-x: hidden;
@@ -22,7 +22,7 @@
                 span:after {
                     content: '';
                     z-index: -1;
-                    border-top: 1px solid map-get($grays, '500');
+                    border-top: 1px solid var(--gray-500);
                     position: absolute;
                     inset-block: 50% 0;
                     inset-inline-end: 0;

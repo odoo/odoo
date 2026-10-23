@@ -2,7 +2,7 @@
 #o_employee_org_chart {
     --treeEntry-padding-v: var(--o-bs-spacer-2);
     --treeEntry--after-width: calc(var(--o-hr-org-chart-entry-pic-small-size) * .25);
-    --treeEntry--before-top: calc(-2 * (var(--treeEntry-padding-v)) - (#{$o-hr-org-chart-entry-pic-small-size} * .5));
+    --treeEntry--before-top: calc(-2 * (var(--treeEntry-padding-v)) - (var(--o-hr-org-chart-entry-pic-small-size) * .5));
 
     .o_org_chart_entry {
         padding-top: var(--treeEntry-padding-v);
@@ -105,9 +105,9 @@
     }
 
     .o_media_object {
-        $-media-object-size: $o-hr-org-chart-entry-pic-small-size - map-get($spacers, 2);
-        width: $-media-object-size;
-        height: $-media-object-size;
+        --media-object-size: calc(var(--o-hr-org-chart-entry-pic-small-size) - var(--o-bs-spacer-2));
+        width: var(--media-object-size);
+        height: var(--media-object-size);
         background-size: cover;
         background-position: center center;
     }

@@ -3,7 +3,7 @@
   --Card-padding-h: var(--o-kanban-dashboard-hpadding);
 
   .o_kanban_record .o_dashboard_graph {
-    margin-bottom: -#{map-get($spacers, 2)};
+    margin-bottom: calc(var(--o-bs-spacer-2) * -1);
   }
 
   &.o_kanban_ungrouped .o_kanban_record {
