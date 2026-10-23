@@ -1729,6 +1729,15 @@ class PropertiesCase(TestPropertiesMixin):
         values = email.message.read(['attributes'])
         self.assertEqual(values[0]['attributes'][0]['value'], 'red')
 
+    def test_properties_inherits_existing_parent(self):
+        """ Creating a record inheriting from an existing parent keeps the
+        property values of the parent. """
+        values = self.message_1.read(['attributes'])[0]['attributes']
+        self.assertTrue(any(prop['value'] for prop in values))
+        self.env['test_new_api.emailmessage'].create({'message': self.message_1.id})
+        self.message_1.invalidate_recordset()
+        self.assertEqual(self.message_1.read(['attributes'])[0]['attributes'], values)
+
     def test_properties_server_action_path_traversal(self):
         action = self.env['ir.actions.server'].create({
             'name': 'TestAction',
