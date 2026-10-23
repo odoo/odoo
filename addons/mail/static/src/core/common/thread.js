@@ -29,6 +29,7 @@ import {
     useScope,
 } from "@odoo/owl";
 
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
@@ -94,6 +95,7 @@ export class Thread extends Component {
         this.ui = usePlugin(UIPlugin);
         this.state = proxy({
             isReplyingTo: false,
+            isJumpingToPresent: false,
             mountedAndLoaded: false,
             showJumpPresent: false,
         });
@@ -193,6 +195,16 @@ export class Thread extends Component {
                 }
             }
         );
+        useHotkey(this.jumpPresentHotkey, () => this.jumpToPresent(), {
+            area: () =>
+                this.ancestors.inChatter ? this.scrollableRef() : this.rootRef()?.parentElement,
+            bypassEditableProtection: true,
+            isAvailable: (target) =>
+                this.props.showJumpPresent &&
+                this.state.showJumpPresent &&
+                !this.state.isJumpingToPresent &&
+                !target.closest(".o-mail-Message"),
+        });
         useOnChange(
             () => [this.props.thread.highlightMessage, this.state.mountedAndLoaded],
             (highlightMessage, mountedAndLoaded) => {
@@ -460,14 +472,14 @@ export class Thread extends Component {
                 (this.loadNewer ||
                     typeof thread.scrollTop !== "string" ||
                     !thread.scrollTop?.includes("bottom")));
-        if (this.snapshot && messagesAtTop) {
+        // keeping the messages in place would stop the smooth scroll of a jump to the present
+        const snapshot = !this.isSmoothScrolling && this.snapshot;
+        if (snapshot && messagesAtTop) {
             this.setScroll(
-                this.snapshot.scrollTop +
-                    this.scrollableRef().scrollHeight -
-                    this.snapshot.scrollHeight
+                snapshot.scrollTop + this.scrollableRef().scrollHeight - snapshot.scrollHeight
             );
-        } else if (this.snapshot && messagesAtBottom) {
-            this.setScroll(this.snapshot.scrollTop);
+        } else if (snapshot && messagesAtBottom) {
+            this.setScroll(snapshot.scrollTop);
         } else if (
             !this.messageHighlight?.highlightedMessageId() &&
             thread.scrollTop !== undefined
@@ -611,16 +623,34 @@ export class Thread extends Component {
         return this.isMessageHighlighted(message) ? "o-highlighted" : "";
     }
 
+    get jumpPresentHotkey() {
+        return this.props.order === "asc" ? "control+arrowdown" : "control+arrowup";
+    }
+
     async jumpToPresent({ immediate = false } = {}) {
+        if (this.state.isJumpingToPresent) {
+            return;
+        }
+        this.state.isJumpingToPresent = true;
         this.messageHighlight?.clear();
         if (!immediate || this.props.thread.loadNewer) {
             await this.props.thread.loadAround();
             this.props.thread.loadNewer = false;
-            this.state.showJumpPresent = false;
         }
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
         if (!this.ui.isSmall()) {
             this.props.thread.composer.autofocus++;
+        }
+        if (immediate) {
+            this.onJumpToPresentEnd();
+        }
+    }
+
+    onJumpToPresentEnd() {
+        this.state.isJumpingToPresent = false;
+        this.updateShowJumpPresent();
+        if (this.scrollableRef() && this.shouldMarkAsReadOnScroll(this.props.thread)) {
+            this.props.thread.markAsRead();
         }
     }
 
@@ -780,13 +810,15 @@ export class Thread extends Component {
         return _t("An error occurred while loading messages.");
     }
     setScroll(value, { smooth = false } = {}) {
+        let onSmoothScrollingEnd;
+        let isAtSmoothScrollingTarget = false;
         if (smooth) {
             clearTimeout(this.smoothScrollingTimeout);
             this.isSmoothScrolling = true;
             const { promise, resolve: resolveSmoothScrolling } = Promise.withResolvers();
             this.smoothScrollingPromise = promise;
             const thread = this.props.thread;
-            const onSmoothScrollingEnd = () => {
+            onSmoothScrollingEnd = () => {
                 resolveSmoothScrolling();
                 this.smoothScrollingPromise = undefined;
                 this.isSmoothScrolling = false;
@@ -800,13 +832,19 @@ export class Thread extends Component {
                 } else {
                     this.saveScroll();
                 }
+                if (this.state.isJumpingToPresent) {
+                    this.onJumpToPresentEnd();
+                }
             };
-            if ("onscrollend" in window) {
+            const { scrollTop, scrollHeight, clientHeight } = this.scrollableRef();
+            const targetScrollTop = Math.max(0, Math.min(value, scrollHeight - clientHeight));
+            isAtSmoothScrollingTarget = Math.abs(scrollTop - targetScrollTop) <= 1;
+            if (!isAtSmoothScrollingTarget && "onscrollend" in window) {
                 document.addEventListener("scrollend", onSmoothScrollingEnd, {
                     capture: true,
                     once: true,
                 });
-            } else {
+            } else if (!isAtSmoothScrollingTarget) {
                 // To remove when safari will support the "scrollend" event.
                 let lastScrollTop = this.scrollableRef().scrollTop;
                 const checkSmoothScrollingEnd = () => {
@@ -831,6 +869,9 @@ export class Thread extends Component {
         this.lastSetValue = value;
         this.messageHighlight?.resolveStartup?.();
         this.saveScroll();
+        if (isAtSmoothScrollingTarget) {
+            onSmoothScrollingEnd();
+        }
     }
 
     get startMessageChannelTypes() {

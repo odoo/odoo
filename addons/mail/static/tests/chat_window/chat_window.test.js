@@ -1090,6 +1090,41 @@ test("Ctrl+k opens the @ command palette", async () => {
     await waitFor(".o_command_palette_search:text('@'):count(1)");
 });
 
+test("Ctrl+ArrowDown in a chat window jumps to present and marks as read", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [firstMessageId] = pyEnv["mail.message"].create(
+        range(20).map(() => ({
+            body: "Alex = Alexorithm ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
+    );
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: firstMessageId,
+    });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await waitFor(".o-mail-ChatWindow [title='Jump to Present']:count(1)");
+    await waitFor(".o-mail-ChatWindow-counter:count(1)");
+    await focus(".o-mail-ChatWindow .o-mail-Composer-html");
+    await triggerHotkey("control+arrowdown");
+    await waitFor(".o-mail-ChatWindow [title='Jump to Present'] .oi-spin:count(1)");
+    await waitForNone(".o-mail-ChatWindow-counter");
+});
+
 test("Do not squash logged notes", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["discuss.channel"].create({ name: "test channel" });
