@@ -104,7 +104,7 @@ class PosController(PortalAccount):
         response.headers['Cache-Control'] = 'no-store'
         return response
 
-    @http.route(['/pos/ping'], type='jsonrpc', auth='user', readonly=True)
+    @http.route(['/pos/ping'], type='jsonrpc', auth='user', replica=True)
     def pos_ping(self):
         return {'response': 'pong'}
 
