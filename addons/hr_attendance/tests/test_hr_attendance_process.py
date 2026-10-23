@@ -1,4 +1,4 @@
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from odoo import fields
@@ -511,6 +511,38 @@ class TestAbsenceDetectionCron(TransactionCase):
         )
 
     @freeze_time('2024-01-02 06:00:00')  # yesterday = 2024-01-01 (Monday)
+    def test_absence_undertime_rule_timezones(self):
+        """The absence is detected on the local day of the employee, whatever their timezone."""
+        undertime_wet = self.env['hr.work.entry.type'].create({
+            'name': 'Undertime', 'code': 'UT_CRON_TZ_TEST',
+        })
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Daily Undertime',
+            'threshold_operator': 'less_than',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'work_entry_type_id': undertime_wet.id,
+            'condition_work_entry_type_ids': [(4, self.att_type.id)],
+        })
+        self.absent_employee.contract_date_end = '2023-12-31'
+        for tz in ('Europe/Brussels', 'Asia/Tokyo', 'Pacific/Honolulu', 'UTC'):
+            employee = self.env['hr.employee'].create({
+                'name': f'Absent Employee {tz}',
+                'tz': tz,
+                'date_version': '2020-01-01',
+                'contract_date_start': '2020-01-01',
+                'wage': 3000,
+            })
+            self.env['hr.attendance']._cron_absence_detection()
+            outputs = self.env['hr.attendance'].search([
+                ('employee_id', '=', employee.id),
+                ('time_rule_id', '=', rule.id),
+            ])
+            self.assertAlmostEqual(sum(outputs.mapped('worked_hours')), 8.0, places=2, msg=tz)
+            self.assertEqual(set(outputs.mapped('date')), {date(2024, 1, 1)}, tz)
+            employee.contract_date_end = '2023-12-31'
+
+    @freeze_time('2024-01-02 06:00:00')  # yesterday = 2024-01-01 (Monday)
     def test_absence_after_contract_end(self):
         """Employee whose contract ended before yesterday is not targeted by the cron."""
         undertime_wet = self.env['hr.work.entry.type'].create({
@@ -626,3 +658,41 @@ class TestAttendanceValidationTimeRules(TransactionCase):
         attendance.check_out = datetime(2024, 1, 1, 17, 0)
         self.assertEqual(attendance.state, 'validated')
         self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_overtime_rule_timezones(self):
+        """The schedule of the local day is compared with the attendances of that day."""
+        for tz in ('Asia/Tokyo', 'Pacific/Honolulu', 'Europe/Brussels'):
+            employee = self.env['hr.employee'].create({
+                'name': f'Employee {tz}',
+                'tz': tz,
+                'date_version': '2020-01-01',
+                'contract_date_start': '2020-01-01',
+                'wage': 3000,
+            })
+
+            def to_utc(hour, tz=tz):
+                local = datetime(2024, 1, 1, hour, tzinfo=ZoneInfo(tz))  # Monday
+                return local.astimezone(UTC).replace(tzinfo=None)
+
+            self.env['hr.attendance'].create([{
+                'employee_id': employee.id,
+                'check_in': to_utc(start),
+                'check_out': to_utc(stop),
+            } for start, stop in ((8, 12), (13, 17))])
+            outputs = self.env['hr.attendance'].search([
+                ('employee_id', '=', employee.id),
+                ('time_rule_id', '=', self.rule.id),
+            ])
+            self.assertFalse(outputs, tz)
+
+            self.env['hr.attendance'].create({
+                'employee_id': employee.id,
+                'check_in': to_utc(17),
+                'check_out': to_utc(18),
+            })
+            outputs = self.env['hr.attendance'].search([
+                ('employee_id', '=', employee.id),
+                ('time_rule_id', '=', self.rule.id),
+            ])
+            self.assertAlmostEqual(sum(outputs.mapped('worked_hours')), 1.0, places=2, msg=tz)
