@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_bh_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
+            <t t-set="show_title" position="after">
+                <t t-set="show_title" t-if="conditions.get('code_bh') and company.get('vat')" t-value="order['state'] != 'draft'"/>
+            </t>
+            <t t-set="show_simplified_title" position="after">
+                <t t-set="show_simplified_title"
+                    t-if="conditions.get('code_bh') and company.get('vat')"
+                    t-value="not conditions.get('l10n_bh_partner_has_vat')"/>
+            </t>
+        </template>
+    </data>
+</odoo>
