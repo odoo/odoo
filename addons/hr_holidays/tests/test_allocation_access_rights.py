@@ -88,6 +88,31 @@ class TestAccessRightsSimpleUser(TestAllocationRights):
         with self.assertRaises(AccessError):
             self.request_allocation(self.user_employee.id, values)
 
+    def test_allocation_approval_flags_depend_on_user(self):
+        """ The approval flags of an allocation are computed for the current user """
+        lt_validation_both = self.env['hr.work.entry.type'].create({
+            'name': 'Validation = both',
+            'code': 'Validation = both',
+            'allocation_validation_type': 'both',
+            'requires_allocation': True,
+            'employee_requests': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        allocation = self.request_allocation(self.user_employee.id, {
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': lt_validation_both.id,
+        })
+        users = (self.user_hrmanager, self.user_employee)
+        for field_name in ('can_approve', 'can_validate', 'can_refuse'):
+            values = []
+            for user in users:
+                allocation.invalidate_recordset([field_name])
+                values.append(allocation.with_user(user)[field_name])
+            self.assertEqual(values, [True, False], field_name)
+            allocation.invalidate_recordset([field_name])
+            self.assertEqual([allocation.with_user(user)[field_name] for user in users], values, field_name)
+
     def test_simple_user_reset_to_draft(self):
         """ A simple user can reset to draft only his own allocation """
         values = {

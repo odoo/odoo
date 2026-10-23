@@ -286,6 +286,24 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
             message_type='comment'
         )
 
+    def test_leave_approval_flags_depend_on_user(self):
+        """ The approval flags of a leave are computed for the current user """
+        def check_flags(leave, field_names):
+            for field_name in field_names:
+                values = []
+                for user_id in (self.user_hrmanager_id, self.user_employee_id):
+                    leave.invalidate_recordset([field_name])
+                    values.append(leave.with_user(user_id)[field_name])
+                self.assertEqual(values, [True, False], field_name)
+                leave.invalidate_recordset([field_name])
+                self.assertEqual(
+                    [leave.with_user(user_id)[field_name] for user_id in (self.user_hrmanager_id, self.user_employee_id)],
+                    values, field_name)
+
+        check_flags(self.employee_leave, ['can_validate', 'can_refuse'])
+        self.employee_leave.with_user(self.user_hrmanager_id).action_approve()
+        check_flags(self.employee_leave, ['can_back_to_approve'])
+
     # ----------------------------------------
     # Validation: one validation, HR
     # ----------------------------------------
