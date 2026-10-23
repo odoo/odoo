@@ -156,7 +156,7 @@ class ResourceMixin(models.AbstractModel):
         converted by ``resource.calendar._get_attendance_intervals_days_data``.
 
         For a fully flexible calendar, the whole period is returned (``days`` being the
-        integer number of full 24-hour periods).
+        number of full 24-hour periods, as a float).
 
         :param datetime from_datetime: start of the period, naive means UTC
         :param datetime to_datetime: end of the period, naive means UTC
@@ -178,22 +178,22 @@ class ResourceMixin(models.AbstractModel):
         for resource in self:
             resource_per_calendar[calendar or resource.resource_calendar_id] |= resource.resource_id
 
-        for calendar, resources in resource_per_calendar.items():
+        for calendar, calendar_resources in resource_per_calendar.items():
             # handle fully flexible resources by returning the length of the whole interval
             # since we do not take into account leaves for fully flexible resources
             if calendar._is_fully_flexible():
-                days = (to_datetime - from_datetime).days
+                days = float((to_datetime - from_datetime).days)
                 hours = (to_datetime - from_datetime).total_seconds() / 3600
-                for resource in resources:
+                for resource in calendar_resources:
                     result[resource.id] = {'days': days, 'hours': hours}
                 continue
 
             # compute actual hours per day
-            resources_per_tz = resources._get_resources_per_tz()
+            resources_per_tz = calendar_resources._get_resources_per_tz()
             attendances = calendar._attendance_intervals_batch(from_datetime, to_datetime, resources_per_tz)
             leaves = calendar._leave_intervals_batch(from_datetime, to_datetime, resources_per_tz, domain)
 
-            for resource in resources:
+            for resource in calendar_resources:
                 result[resource.id] = calendar._get_attendance_intervals_days_data(
                     attendances[resource.id] & leaves[resource.id]
                 )
