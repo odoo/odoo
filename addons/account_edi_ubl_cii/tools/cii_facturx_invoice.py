@@ -141,9 +141,21 @@ SupplyChainTrade = {
     'ram:ApplicableHeaderTradeSettlement': {
         'ram:PaymentReference': {},
         'ram:InvoiceCurrencyCode': {},
+        'ram:PayeeTradeParty': {
+            'ram:RoleCode': {},
+            'ram:RegisteredID': {},
+            'ram:Name': {},
+            'ram:SpecifiedLegalOrganization': {
+                'ram:ID': {},
+            },
+            'ram:SpecifiedTaxRegistration': {
+                'ram:ID': {},
+            },
+        },
         'ram:SpecifiedTradeSettlementPaymentMeans': {
             'ram:TypeCode': {},
             'ram:PayeePartyCreditorFinancialAccount': {
+                'ram:AccountName': {},
                 'ram:IBANID': {},
                 'ram:ProprietaryID': {},
             },
