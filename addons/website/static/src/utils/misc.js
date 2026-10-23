@@ -43,10 +43,8 @@ export function unhideConditionalElements() {
         styleEl.sheet.insertRule(`${selectors} { display: none !important; }`);
     }
 
-    // Now remove the classes that makes them always invisible
-    for (const conditionalEl of conditionalEls) {
-        conditionalEl.classList.remove("o_conditional_hidden");
-    }
+    // Now add the class without which they are always invisible
+    document.body.classList.add("o_conditional_visibility_ready");
 }
 
 export function setUtmsHtmlDataset() {

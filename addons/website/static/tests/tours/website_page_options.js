@@ -94,7 +94,7 @@ registry.category("web_tour.tours").add("website_page_options", {
         ...clickOnSave(),
         {
             content: "Check that the header is hidden",
-            trigger: ":iframe #wrapwrap:has(header#top.d-none.o_snippet_invisible)",
+            trigger: ":iframe #wrapwrap:has(header#top.d-none)",
         },
         ...clickOnEditAndWaitEditMode(),
         {
@@ -111,12 +111,12 @@ registry.category("web_tour.tours").add("website_page_options", {
         },
         ...clickOnSave(),
         {
-            content: "Check that the header is visible",
-            trigger: ":iframe #wrapwrap header#top:not(.d-none)",
+            content: "Check that the header is hidden",
+            trigger: ":iframe #wrapwrap:has(header#top.d-none)",
         },
         {
             content: "Check that the footer is hidden",
-            trigger: ":iframe #wrapwrap:has(.o_footer.d-none.o_snippet_invisible)",
+            trigger: ":iframe #wrapwrap:has(.o_footer.d-none)",
         },
     ],
 });
@@ -328,7 +328,7 @@ registry.category("web_tour.tours").add("website_page_breadcrumb", {
         ...clickOnSave(),
         {
             content: "Verify that the breadcrumb is hidden",
-            trigger: ":iframe main:has(div.o_page_breadcrumb.d-none.o_snippet_invisible)",
+            trigger: ":iframe main:has(div.o_page_breadcrumb.d-none)",
         },
     ],
 });

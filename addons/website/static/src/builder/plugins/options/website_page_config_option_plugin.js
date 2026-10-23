@@ -14,7 +14,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
-    static dependencies = ["history", "visibility", "builderActions"];
+    static dependencies = ["visibility", "builderActions"];
     static shared = [
         "setDirty",
         "setFooterVisible",
@@ -31,8 +31,6 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
             SetPageWebsiteDirtyAction,
             SetWebsiteBreadcrumbVisibilityAction,
         },
-        on_target_shown_handlers: this.onTargetVisibilityToggle.bind(this, true),
-        on_target_hidden_handlers: this.onTargetVisibilityToggle.bind(this, false),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
     };
 
@@ -59,7 +57,7 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
      */
     getVisibilityItem(type) {
         const el = this.getTarget(type);
-        const isHidden = el.classList.contains("o_snippet_invisible");
+        const isHidden = el.classList.contains("d-none");
         let isOverlay = null;
         if (type === "header") {
             isOverlay = this.document
@@ -74,9 +72,7 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
     }
 
     getFooterVisibility() {
-        return this.document
-            .querySelector("#wrapwrap > footer")
-            .classList.contains("o_snippet_invisible");
+        return this.document.querySelector("#wrapwrap > footer").classList.contains("d-none");
     }
 
     /**
@@ -151,31 +147,6 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
     setFooterVisible(show) {
         const footerEl = this.document.querySelector("#wrapwrap > footer");
         footerEl.classList.toggle("d-none", !show);
-        footerEl.classList.toggle("o_snippet_invisible", !show);
-        this.dependencies.visibility.onOptionVisibilityUpdate(footerEl, show);
-    }
-
-    onTargetVisibilityToggle(show, target) {
-        if (show && target.matches("#wrapwrap > header")) {
-            this.dependencies.builderActions.applyAction("setWebsiteHeaderVisibility", {
-                editingElement: target,
-                value: "regular",
-                isPreviewing: false,
-            });
-        }
-        if (show && target.matches(".o_page_breadcrumb")) {
-            this.dependencies.builderActions.applyAction("setWebsiteBreadcrumbVisibility", {
-                editingElement: target,
-                value: "regular",
-                isPreviewing: false,
-            });
-        }
-        if (show && target.matches("#wrapwrap > footer")) {
-            this.dependencies.builderActions.applyAction("setWebsiteFooterVisible", {
-                editingElement: target,
-                isPreviewing: false,
-            });
-        }
     }
 }
 export class BaseWebsitePageConfigAction extends BuilderAction {
@@ -232,8 +203,6 @@ export class BaseWebsitePageConfigAction extends BuilderAction {
     setVisible(type, shouldHide) {
         const el = this.websitePageConfig.getTarget(type);
         el.classList.toggle("d-none", shouldHide);
-        el.classList.toggle("o_snippet_invisible", shouldHide);
-        this.visibility.onOptionVisibilityUpdate(el, !shouldHide);
     }
 
     /**
