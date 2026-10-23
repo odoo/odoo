@@ -17,6 +17,11 @@ class ResourceCalendarLeaves(models.Model):
 
     @api.depends('calendar_id.company_id', 'company_id')
     def _compute_work_entry_type_id(self):
+        """Default the type of global leaves to the public holiday type (``006.00``).
+
+        The type of the leave's country is used, else the generic public holiday type. Leaves
+        of a resource keep their type (set from the time off by ``hr_holidays``).
+        """
         country_ids = [(leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id).id for leave in self]
         public_holiday_types = self.env['hr.work.entry.type'].search([
             ('code', '=', '006.00'),

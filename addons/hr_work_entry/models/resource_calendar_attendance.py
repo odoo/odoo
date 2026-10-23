@@ -65,6 +65,13 @@ class ResourceCalendarAttendance(models.Model):
                 raise ValidationError(self.env._("The country of the work entry types linked to the attendances must be the same as the company's country."))
 
     def _is_work_period(self):
+        """Tell whether this attendance counts as working time.
+
+        An attendance whose work entry type counts as ``absence`` (e.g. a partial incapacity
+        slot) is not working time, though it stays in the schedule.
+
+        :rtype: bool
+        """
         self.ensure_one()
         work_entry_type_sudo = self.sudo().work_entry_type_id
         return ((not work_entry_type_sudo) or work_entry_type_sudo.count_as == 'working_time') and super()._is_work_period()

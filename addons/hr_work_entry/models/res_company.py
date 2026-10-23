@@ -11,6 +11,12 @@ class ResCompany(models.Model):
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
 
     def _get_default_attendance_work_entry_type(self):
+        """Return the ``002.00`` (attendance) work entry type of the company's country.
+
+        Falls back on ``hr_work_entry.generic_work_entry_type_attendance``.
+
+        :rtype: hr.work.entry.type
+        """
         self.ensure_one()
         country_code = (self.country_id or self.env.company.country_id).code
         country_type = self.env['hr.work.entry.type'].search([
