@@ -7,8 +7,8 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Manon Rondou, 2025
 # Wil Odoo, 2025
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-08-13 09:10+0000\n"
+"PO-Revision-Date: 2026-10-21 13:17+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/stock/nl/>"
 "\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock
 #. odoo-python
@@ -399,8 +399,8 @@ msgstr ""
 "* Weergave: Virtuele locatie welke gebruikt wordt om ​​een hiërarchische "
 "structuur te maken voor je magazijn, deze bevat de onderliggende locaties en "
 "kan zelf geen producten bevatten                       \n"
-"* Interne locatie: Fysieke locaties in je eigen "
-"magazijnen                       \n"
+"* Interne locatie: Fysieke locaties in je eigen magazijnen"
+"                       \n"
 "* Klant locatie: Virtuele locatie die de plaats van bestemming aangeeft voor "
 "de producten die naar je klanten verzonden worden\n"
 "* Voorraadtelling: Virtuele locatie die dient als tegenhanger voor "
@@ -578,8 +578,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "        Goed nieuws! Je bestelling is verzonden.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -589,8 +589,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -707,7 +707,7 @@ msgstr "<span class=\"o_stat_text\">Min:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Moves</span>"
-msgstr "<span class=\"o_stat_text\">Boekingen</span>"
+msgstr "<span class=\"o_stat_text\">Verplaatsingen</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -834,8 +834,8 @@ msgid ""
 "strong>"
 msgstr ""
 "<strong>Als gevolg van enkele voorraadverplaatsingen tussen je initiële "
-"update van het aantal en nu, is het verschil in aantal niet meer consistent."
-"</strong>"
+"update van het aantal en nu, is het verschil in aantal niet meer "
+"consistent.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1815,7 +1815,7 @@ msgid ""
 "Changing the Lot/Serial number for move lines with different products is not "
 "allowed."
 msgstr ""
-"Je kunt het partij/serienummer niet wijzigen voor boekingsregels met "
+"Je kunt het partij-/serienummer niet wijzigen voor verplaatsingsregels met "
 "verschillende producten."
 
 #. module: stock
@@ -4351,8 +4351,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
 msgid "If ticked, you will be able to select entire packages to move"
-msgstr ""
-"Indien aangevinkt kun je hele verpakkingen selecteren om te verplaatsen"
+msgstr "Indien aangevinkt kun je hele verpakkingen selecteren om te verplaatsen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -5139,8 +5138,7 @@ msgstr "Lengte maateenheid label"
 #: model:ir.model.fields,help:stock.field_stock_quant__company_id
 #: model:ir.model.fields,help:stock.field_stock_quant_relocate__company_id
 msgid "Let this field empty if this location is shared between companies"
-msgstr ""
-"Laat dit veld leeg als de locatie gedeeld wordt door meerdere bedrijven"
+msgstr "Laat dit veld leeg als de locatie gedeeld wordt door meerdere bedrijven"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -5604,7 +5602,7 @@ msgstr "Verplaats volledige verpakkingen"
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_line_ids
 msgid "Move Line"
-msgstr "Boekingsregel"
+msgstr "Verplaatsingsregel"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
@@ -8574,7 +8572,7 @@ msgstr ""
 "Serienummer (%(serial_number)s) bevindt zich niet in %(source_location)s, "
 "maar bevindt zich in locatie(s): %(other_locations)s.\n"
 "\n"
-"De basislocatie voor deze boeking wordt gewijzigd naar %"
+"De basislocatie voor deze verplaatsing wordt gewijzigd naar %"
 "(recommended_location)s"
 
 #. module: stock
@@ -11509,8 +11507,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
-msgstr ""
-"Het is niet mogelijk een afkeuring te verwijderen welke al verwerkt is."
+msgstr "Het is niet mogelijk een afkeuring te verwijderen welke al verwerkt is."
 
 #. module: stock
 #. odoo-python
@@ -11648,8 +11645,8 @@ msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
 msgstr ""
-"Je kunt een lege overboeking niet bevestigen. Voeg enkele producten toe om "
-"te verplaatsen voordat je doorgaat."
+"Je kunt een lege transfer niet bevestigen. Voeg enkele producten toe om te "
+"verplaatsen voordat je doorgaat."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation

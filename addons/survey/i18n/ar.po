@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-10-02 16:08+0000\n"
+"PO-Revision-Date: 2026-10-20 13:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/survey/"
 "ar/>\n"
@@ -213,8 +213,8 @@ msgstr ""
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
-"                <!-- نستخدم شعار الشركة التي قامت بإنشاء الاستطلاع (للتعامل "
-"مع الحالات متعددة الشركات) -->\n"
+"                <!-- نستخدم شعار الشركة التي قامت بإنشاء الاستطلاع (للتعامل مع "
+"الحالات متعددة الشركات) -->\n"
 "                <a href=\"/\"><img t-if=\"not "
 "object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
 "logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
@@ -308,8 +308,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            يرجى الإجابة على الاستمارة بتاريخ <t t-"
-"out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            يرجى الإجابة على الاستمارة بتاريخ <t t-out=\"format_date"
+"(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            حظاً موفقاً!\n"
@@ -457,8 +457,8 @@ msgid ""
 "                </span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                    <span id=\"enter-tooltip\">أو اضغط على CTRL+Enter</"
-"span>\n"
+"                    <span id=\"enter-tooltip\">أو اضغط على CTRL+Enter</span>"
+"\n"
 "                </span> "
 
 #. module: survey
@@ -487,8 +487,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
-"2\">الشهادات</span>\n"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">"
+"الشهادات</span>\n"
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">الشهادة</span> "
 
@@ -778,8 +778,7 @@ msgid ""
 "A positive default time limit is required when the session rewards quick "
 "answers."
 msgstr ""
-"يتطلب تعيين حد افتراضي موجب للوقت عندما تقوم الجلسة بمكافأة الإجابات "
-"السريعة. "
+"يتطلب تعيين حد افتراضي موجب للوقت عندما تقوم الجلسة بمكافأة الإجابات السريعة. "
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_answer__answer_score
@@ -890,8 +889,7 @@ msgstr "إضافة جهات اتصال موجودة..."
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Add some fun to your presentations by sharing questions live"
-msgstr ""
-"اجعل عروضك التقديمية أكثر إثارة للاهتمام عن طريق مشاركة الأسئلة مباشرة "
+msgstr "اجعل عروضك التقديمية أكثر إثارة للاهتمام عن طريق مشاركة الأسئلة مباشرة "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__emails
@@ -1016,8 +1014,8 @@ msgid ""
 "Answer label as either the value itself if not empty or a letter "
 "representing the index of the answer otherwise."
 msgstr ""
-"تسمية الإجابة إما بالقيمة نفسها إذا لم تكن فارغة، أما خلاف ذلك، فالتسمية "
-"بحرف يمثل فهرس الإجابة. "
+"تسمية الإجابة إما بالقيمة نفسها إذا لم تكن فارغة، أما خلاف ذلك، فالتسمية بحرف "
+"يمثل فهرس الإجابة. "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
@@ -1729,7 +1727,8 @@ msgstr "مُخصص"
 msgid ""
 "Customers will receive a new token and be able to completely retake the "
 "survey."
-msgstr "سيتلقى العملاء رمزاً جديداً وسيتمكنون من إعادة إجراء الاستطلاع بالكامل. "
+msgstr ""
+"سيتلقى العملاء رمزاً جديداً وسيتمكنون من إعادة إجراء الاستطلاع بالكامل. "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -2652,8 +2651,8 @@ msgid ""
 "I’ve never really wanted to go to Japan. Simply because I don’t like eating "
 "fish. And I know that’s very popular out there in Africa."
 msgstr ""
-"لم أرغب أبداً في الذهاب إلى اليابان، والسبب بكل بساطة هو أنني لا أحب أكل "
-"السمك، وأعرف أنه محبوب جداً هناك في أفريقيا. "
+"لم أرغب أبداً في الذهاب إلى اليابان، والسبب بكل بساطة هو أنني لا أحب أكل السمك"
+"، وأعرف أنه محبوب جداً هناك في أفريقيا. "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q2_sug1
@@ -3397,8 +3396,8 @@ msgid ""
 "correct link and are allowed to\n"
 "                        participate or get in touch with its organizer."
 msgstr ""
-"عذراً! لم نتمكن من السماح لك بفتح هذا الاستطلاع. تأكد من استخدامك للرابط "
-"الصحيح وأنه يُسمح لك\n"
+"عذراً! لم نتمكن من السماح لك بفتح هذا الاستطلاع. تأكد من استخدامك للرابط الصحيح "
+"وأنه يُسمح لك\n"
 "                        المشاركة أو التواصل مع المنظم. "
 
 #. module: survey
@@ -3425,10 +3424,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "{{ object.partner_id.lang }}."
 msgstr ""
-"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم "
-"يتم تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً "
-"للعنصر النائب المسؤول عن التزويد باللغة المناسبة، مثال: "
-"{{ object.partner_id.lang }}. "
+"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم يتم "
+"تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً للعنصر "
+"النائب المسؤول عن التزويد باللغة المناسبة، مثال: {{ object.partner_id.lang }}"
+". "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -4681,8 +4680,8 @@ msgid ""
 "responsible still has access to it: \n"
 "%(survey_names)s\n"
 msgstr ""
-"الوصول مقيد إلى الاستطلاعات التالية. تأكد من أن الأفراد المسؤولين منها "
-"يملكون صلاحية الوصول إليها: \n"
+"الوصول مقيد إلى الاستطلاعات التالية. تأكد من أن الأفراد المسؤولين منها يملكون "
+"صلاحية الوصول إليها: \n"
 "%(survey_names)s\n"
 
 #. module: survey
@@ -4704,8 +4703,7 @@ msgid ""
 "The attempts limit needs to be a positive number if the survey has a limited "
 "number of attempts."
 msgstr ""
-"يجب أن يكون حد المحاولات عدداً موجباً إذا كان للاستطلاع عدد محدود من "
-"المحاولات. "
+"يجب أن يكون حد المحاولات عدداً موجباً إذا كان للاستطلاع عدد محدود من المحاولات. "
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
@@ -4950,8 +4948,8 @@ msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
 msgstr ""
-"لا يسمح هذا الاستطلاع للأفراد الخارجيين بالمشاركة. عليك إنشاء حسابات "
-"مستخدمين أو تحديث وضع الوصول إلى الاستطلاع وفقاً لذلك. "
+"لا يسمح هذا الاستطلاع للأفراد الخارجيين بالمشاركة. عليك إنشاء حسابات مستخدمين أو "
+"تحديث وضع الوصول إلى الاستطلاع وفقاً لذلك. "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
@@ -5286,8 +5284,7 @@ msgstr "بانتظار الحاضرين... "
 msgid ""
 "We have registered your answer! Please wait for the host to go to the next "
 "question."
-msgstr ""
-"لقد قمنا بتسجيل إجابتك! يرجى انتظار الخادم للانتقال إلى السؤال التالي. "
+msgstr "لقد قمنا بتسجيل إجابتك! يرجى انتظار الخادم للانتقال إلى السؤال التالي. "
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p4
@@ -5494,8 +5491,8 @@ msgid ""
 "Who received a Nobel prize in Physics for the discovery of neutrino "
 "oscillations, which shows that neutrinos have mass?"
 msgstr ""
-"الحاصل على جائزة نوبل في الفيزياء لاكتشافه  تذبذبات النيوترينو، والتي تُظهِر "
-"أن النيوترينات لديها كتلة؟ "
+"الحاصل على جائزة نوبل في الفيزياء لاكتشافه  تذبذبات النيوترينو، والتي تُظهِر أن "
+"النيوترينات لديها كتلة؟ "
 
 #. module: survey
 #. odoo-python
@@ -5587,8 +5584,8 @@ msgid ""
 "You cannot delete questions from surveys \"%(survey_names)s\" while live "
 "sessions are in progress."
 msgstr ""
-"لا يمكنك حذف الأسئلة من الاستطلاعات \"%(survey_names)s\" بينما الجلسات "
-"المباشرة مستمرة. "
+"لا يمكنك حذف الأسئلة من الاستطلاعات \"%(survey_names)s\" بينما الجلسات المباشرة "
+"مستمرة. "
 
 #. module: survey
 #. odoo-python
@@ -5607,8 +5604,8 @@ msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey only contains empty sections."
 msgstr ""
-"لا يمكنك إرسال دعوة لاستطلاع \"صفحة واحدة لكل قسم\" إذا كان للاستطلاع أقسام "
-"فارغة فقط. "
+"لا يمكنك إرسال دعوة لاستطلاع \"صفحة واحدة لكل قسم\" إذا كان للاستطلاع أقسام فارغة "
+"فقط. "
 
 #. module: survey
 #. odoo-python

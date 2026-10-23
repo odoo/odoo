@@ -5,13 +5,13 @@
 # Translators:
 # Wil Odoo, 2024
 #
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2025-10-15 09:50+0000\n"
+"PO-Revision-Date: 2026-10-20 09:31+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/auth_ldap/"
 "fr/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -39,11 +39,17 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"    Filtre utilisé pour rechercher des comptes utilisateurs dans la base de données LDAP. Il s'agit d'un filtre LDAP arbitraire sous forme de chaîne de caractères. Tout placeholder `%s` sera remplacé par le login (identifiant) fourni par l'utilisateur, le filtre doit contenir au moins un tel placeholder.\n"
+"    Filtre utilisé pour rechercher des comptes utilisateurs dans la base de "
+"données LDAP. Il s'agit d'un filtre LDAP arbitraire sous forme de chaîne de "
+"caractères. Tout placeholder `%s` sera remplacé par le login (identifiant) "
+"fourni par l'utilisateur, le filtre doit contenir au moins un tel "
+"placeholder.\n"
 "\n"
-"Le filtre doit donner exactement un (1) résultat, sinon le login sera considéré comme non valide.\n"
+"Le filtre doit donner exactement un (1) résultat, sinon le login sera "
+"considéré comme non valide.\n"
 "\n"
-"Exemple (les attributs réels dépendent du serveur LDAP et de la configuration) :\n"
+"Exemple (les attributs réels dépendent du serveur LDAP et de la "
+"configuration) :\n"
 "\n"
 "        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
 "\n"
@@ -197,8 +203,8 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
-"Demander un chiffrement sécurisé via TLS/SSL lors de la connexion au serveur"
-" LDAP. Cette option nécessite un serveur avec STARTTLS activé, sinon toutes "
+"Demander un chiffrement sécurisé via TLS/SSL lors de la connexion au serveur "
+"LDAP. Cette option nécessite un serveur avec STARTTLS activé, sinon toutes "
 "les tentatives d'authentification échoueront."
 
 #. module: auth_ldap

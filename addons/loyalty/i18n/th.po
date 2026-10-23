@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-07-14 17:34+0000\n"
+"PO-Revision-Date: 2026-10-20 10:56+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-18/loyalty/th/>"
 "\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__trigger
@@ -58,8 +58,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        แสดงในพอร์ทัลเว็บ ทิกเก็ตลูกค้า PoS การชำระเงินอีคอมเมิร์ซ "
-"จำนวนคะแนนที่มีและใช้เป็นรางวัล\n"
+"        แสดงในพอร์ทัลเว็บ ทิกเก็ตลูกค้า PoS การชำระเงินอีคอมเมิร์ซ จำนวนคะแนนที่มีและใช้เป็นร"
+"างวัล\n"
 "        "
 
 #. module: loyalty
@@ -219,12 +219,12 @@ msgstr ""
 "margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
 "                    <h3 style=\"margin:0px; line-height:17px; font-"
 "family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-"
-"style:normal; font-weight:normal; color:#A9A9A9; text-"
-"align:center\">บัตรหมดอายุเมื่อ <t t-out=\"format_date(object.expiration_date) "
-"or ''\">05/05/2021</t></h3>\n"
+"style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">บัตรหมดอา"
+"ยุเมื่อ <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></"
+"h3>\n"
 "                </div>\n"
-"                <div style=\"padding:20px; margin:0px; text-align:center;"
-"\">\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;\">"
+"\n"
 "                    <span style=\"background-color:#999999; display:inline-"
 "block; width:auto; border-radius:5px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" "
@@ -297,8 +297,8 @@ msgstr ""
 "                                <span class=\"o_stat_text\" "
 "invisible=\"program_type != 'loyalty'\">บัตรสะสมคะแนน</span>\n"
 "                                <span class=\"o_stat_text\" "
-"invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">โปรโมชั่น</"
-"span>\n"
+"invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">โปรโมชั่น</span>"
+"\n"
 "                                <span class=\"o_stat_text\" "
 "invisible=\"program_type != 'promo_code'\">ส่วนลด</span>\n"
 "                                <span class=\"o_stat_text\" "
@@ -321,8 +321,8 @@ msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount "
 "of coupon points defined as the coupon value</span>"
 msgstr ""
-"<span colspan=\"2\" invisible=\"program_type != "
-"'coupons'\">มอบคะแนนคูปองตามมูลค่าคูปอง</span>"
+"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">มอบคะแนนคูปองตามมูล"
+"ค่าคูปอง</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -887,7 +887,8 @@ msgstr "วันที่"
 msgid ""
 "Define Discount codes on conditional rules then share it with your customers "
 "for rewards."
-msgstr "กำหนดรหัสส่วนลดตามกฎแบบมีเงื่อนไข จากนั้นแชร์กับลูกค้าของคุณเพื่อรับรางวัล"
+msgstr ""
+"กำหนดรหัสส่วนลดตามกฎแบบมีเงื่อนไข จากนั้นแชร์กับลูกค้าของคุณเพื่อรับรางวัล"
 
 #. module: loyalty
 #. odoo-python
@@ -1012,7 +1013,9 @@ msgstr "แสดงเป็น"
 msgid ""
 "Drive repeat purchases by sending a unique, single-use coupon code for the "
 "next purchase when a customer buys something in your store."
-msgstr "กระตุ้นการซื้อซ้ำด้วยการส่งรหัสคูปองแบบใช้ครั้งเดียวที่ไม่ซ้ำใครสำหรับการซื้อครั้งต่อไปเมื่อลูกค้าซื้อสินค้าในร้านค้าของคุณ"
+msgstr ""
+"กระตุ้นการซื้อซ้ำด้วยการส่งรหัสคูปองแบบใช้ครั้งเดียวที่ไม่ซ้ำใครสำหรับการซื้อครั้งต่อไปเมื่อลูกค้าซื้อสินค้า"
+"ในร้านค้าของคุณ"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1140,8 +1143,8 @@ msgid ""
 "Point of Sale or regular orders to claim the Reward. You can define "
 "constraints on its usage through conditional rule."
 msgstr ""
-"สร้าง &amp; แชร์รหัสคูปองด้วยตนเอง สามารถใช้ในอีคอมเมิร์ซ ระบบขายหน้าร้าน "
-"หรือคำสั่งซื้อปกติเพื่อรับรางวัล คุณสามารถกำหนดข้อจำกัดในการใช้งานได้ผ่านกฎแบบมีเงื่อนไข"
+"สร้าง &amp; แชร์รหัสคูปองด้วยตนเอง สามารถใช้ในอีคอมเมิร์ซ ระบบขายหน้าร้าน หรือคำสั่งซื้อปกติเพื่"
+"อรับรางวัล คุณสามารถกำหนดข้อจำกัดในการใช้งานได้ผ่านกฎแบบมีเงื่อนไข"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_generate_wizard
@@ -1220,7 +1223,8 @@ msgid ""
 msgstr ""
 "บัตรของขวัญถูกสร้างขึ้นด้วยตนเองหรือส่งทางอีเมลโดยอัตโนมัติเมื่อลูกค้าสั่งซื้อผลิตภัณฑ์บัตรของขวัญ\n"
 "                                    <br/>\n"
-"                                    จากนั้นบัตรของขวัญสามารถใช้เพื่อชำระเงินตามคำสั่งซื้อได้"
+"                                    จากนั้นบัตรของขวัญสามารถใช้เพื่อชำระเงินตามคำสั่งซื้อ"
+"ได้"
 
 #. module: loyalty
 #. odoo-python
@@ -1674,7 +1678,8 @@ msgstr "สินค้าที่ใช้ในคำสั่งขายเ
 msgid ""
 "Product used in the sales order to apply the discount. Each reward has its "
 "own product for reporting purpose"
-msgstr "สินค้าที่ใช้ในใบสั่งขายเพื่อใช้ส่วนลด รางวัลแต่ละรายการมีผลิตภัณฑ์ของตัวเองเพื่อการรายงาน"
+msgstr ""
+"สินค้าที่ใช้ในใบสั่งขายเพื่อใช้ส่วนลด รางวัลแต่ละรายการมีผลิตภัณฑ์ของตัวเองเพื่อการรายงาน"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger_product_ids
@@ -1973,7 +1978,8 @@ msgstr "สินค้าเหล่านี้เป็นสินค้า
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_max_amount
 msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
-msgstr "นี่คือจำนวนเงินสูงสุดที่รางวัลนี้สามารถลดราคาได้ ปล่อยให้เป็น 0 โดยไม่มีขีดจำกัด"
+msgstr ""
+"นี่คือจำนวนเงินสูงสุดที่รางวัลนี้สามารถลดราคาได้ ปล่อยให้เป็น 0 โดยไม่มีขีดจำกัด"
 
 #. module: loyalty
 #. odoo-python
@@ -2107,7 +2113,8 @@ msgstr ""
 msgid ""
 "When generating coupon, you can define a specific points value that can be "
 "exchanged for rewards."
-msgstr "เมื่อสร้างคูปอง คุณสามารถกำหนดมูลค่าคะแนนเฉพาะที่สามารถแลกเปลี่ยนเป็นรางวัลได้"
+msgstr ""
+"เมื่อสร้างคูปอง คุณสามารถกำหนดมูลค่าคะแนนเฉพาะที่สามารถแลกเปลี่ยนเป็นรางวัลได้"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
@@ -2115,8 +2122,8 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
-"ไม่ว่าจะแยกคูปองรางวัลตามหน่วยที่ตรงกัน ใช้ได้กับโปรแกรม 'ในอนาคต' "
-"และโหมดทริกเกอร์ต่อเงินที่ใช้หรือหน่วยที่จ่ายเท่านั้น"
+"ไม่ว่าจะแยกคูปองรางวัลตามหน่วยที่ตรงกัน ใช้ได้กับโปรแกรม 'ในอนาคต' และโหมดทริกเกอร์ต่อเงินที่ใ"
+"ช้หรือหน่วยที่จ่ายเท่านั้น"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -2152,7 +2159,8 @@ msgstr "คุณไม่สามารถลบโปรแกรมที่
 msgid ""
 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
 "archive it instead."
-msgstr "คุณไม่สามารถลบ %(name)s ได้ เนื่องจากมันถูกใช้ใน 'คูปองและสมาชิก' โปรดเก็บถาวรแทน"
+msgstr ""
+"คุณไม่สามารถลบ %(name)s ได้ เนื่องจากมันถูกใช้ใน 'คูปองและสมาชิก' โปรดเก็บถาวรแทน"
 
 #. module: loyalty
 #. odoo-python
@@ -2223,8 +2231,8 @@ msgid ""
 msgstr ""
 "eWallets สร้างขึ้นด้วยตนเองหรือโดยอัตโนมัติเมื่อลูกค้าสั่งซื้อผลิตภัณฑ์ eWallet\n"
 "                                    <br/>\n"
-"                                    จากนั้นจะมีการเสนอ eWallets "
-"ในระหว่างการชำระเงินเพื่อชำระเงินตามคำสั่งซื้อ"
+"                                    จากนั้นจะมีการเสนอ eWallets ในระหว่างการชำระเ"
+"งินเพื่อชำระเงินตามคำสั่งซื้อ"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban

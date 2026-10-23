@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:40+0000\n"
-"PO-Revision-Date: 2026-07-28 16:50+0000\n"
+"PO-Revision-Date: 2026-10-20 11:29+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/payment/"
 "fr/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -51,9 +51,9 @@ msgid ""
 "Number: %(account_number)s</li><li>Account Holder: %(account_holder)s</li></"
 "ul>"
 msgstr ""
-"<h3>Veuillez effectuer un paiement sur le compte suivant : </"
-"h3><ul><li>Banque : %(bank)s</li><li>Numéro de compte : %(account_number)s</"
-"li><li>Titulaire du compte : %(account_holder)s</li></ul>"
+"<h3>Veuillez effectuer un paiement sur le compte suivant : </h3><ul><li>"
+"Banque : %(bank)s</li><li>Numéro de compte : %(account_number)s</li><li>"
+"Titulaire du compte : %(account_holder)s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -90,11 +90,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle oe_inline\" "
-"invisible=\"support_partial_capture != 'full_only'\" title=\"Certaines des "
-"transactions que vous voulez capturer ne peuvent être capturées que dans "
-"leur intégralité. Traitez les transactions individuellement pour capturer un "
-"montant partiel.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture "
+"!= 'full_only'\" title=\"Certaines des transactions que vous voulez capturer "
+"ne peuvent être capturées que dans leur intégralité. Traitez les "
+"transactions individuellement pour capturer un montant partiel.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -2586,15 +2585,13 @@ msgstr "Le jeton d'accès n'est pas valide."
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid "The amount to capture must be positive and cannot be superior to %s."
-msgstr ""
-"Le montant à capturer doit être positif et ne peut être supérieur à %s."
+msgstr "Le montant à capturer doit être positif et ne peut être supérieur à %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__image
 #: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
 msgid "The base image used for this payment method; in a 64x64 px format."
-msgstr ""
-"L'image de base utilisée pour ce mode de paiement ; au format 64x64 px."
+msgstr "L'image de base utilisée pour ce mode de paiement ; au format 64x64 px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids

@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-06-14 21:22+0000\n"
-"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"PO-Revision-Date: 2026-10-20 14:30+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-18/stock/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock
 #. odoo-python
@@ -197,8 +197,8 @@ msgid ""
 "%(product_name)s --> Product UoM is %(product_uom)s (%"
 "(product_uom_category)s) - Move UoM is %(move_uom)s (%(move_uom_category)s)"
 msgstr ""
-"%(product_name)s --> 產品計量單位：%(product_uom)s (%"
-"(product_uom_category)s)，移動計量單位：%(move_uom)s (%(move_uom_category)s)"
+"%(product_name)s --> 產品計量單位：%(product_uom)s (%(product_uom_category)s)"
+"，移動計量單位：%(move_uom)s (%(move_uom_category)s)"
 
 #. module: stock
 #. odoo-python
@@ -543,8 +543,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -554,8 +554,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -571,8 +571,8 @@ msgstr ""
 "            </strong>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Please find your delivery order attached for more details.<br/><br/"
-">\n"
+"        Please find your delivery order attached for more details.<br/><br/>"
+"\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
@@ -2711,8 +2711,7 @@ msgstr "通過此倉庫的預設路線"
 msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
-msgstr ""
-"定義最低庫存規則，以便 Odoo 自動建立報價請求或確認製造訂單以重新補貨您的庫存."
+msgstr "定義最低庫存規則，以便 Odoo 自動建立報價請求或確認製造訂單以重新補貨您的庫存."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2872,8 +2871,7 @@ msgstr "送貨日期"
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
-msgstr ""
-"送貨提前期， 依日計算.此為承諾給客戶的交期， 即從下單到送貨所需要的天數."
+msgstr "送貨提前期， 依日計算.此為承諾給客戶的交期， 即從下單到送貨所需要的天數."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
@@ -2919,8 +2917,7 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product in this packaging: whether it will be bought, manufactured, "
 "replenished on order, etc."
-msgstr ""
-"根據安裝的模組，這將允許您定義此包裝中產品的路線: 是否購買、製造、訂單補貨等."
+msgstr "根據安裝的模組，這將允許您定義此包裝中產品的路線: 是否購買、製造、訂單補貨等."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -4123,8 +4120,7 @@ msgstr "如果勾選該方格，Odoo 將在驗證揀貨時,自動打印退貨單
 msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
-msgstr ""
-"如果勾選此復選框，Odoo 將在驗證時自動顯示接收報表 (如果有要分配的移動)."
+msgstr "如果勾選此復選框，Odoo 將在驗證時自動顯示接收報表 (如果有要分配的移動)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -9136,8 +9132,8 @@ msgid ""
 "The following combinations contain duplicates:\n"
 "%(error_lines)s"
 msgstr ""
-"批次/序號與產品的組合，在同一公司內必須獨一無二，即使在未有定義公司的情況也"
-"是。\n"
+"批次/序號與產品的組合，在同一公司內必須獨一無二，即使在未有定義公司的情況也是"
+"。\n"
 "以下組合有重複項目：\n"
 "%(error_lines)s"
 
@@ -9272,8 +9268,7 @@ msgstr "包含此位置的上級位置.示例:「分配區域」是「1號門」
 msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
-msgstr ""
-"採購數量會四捨五入至此欄位數值的整數倍數。若為 0（零），便不作四捨五入。"
+msgstr "採購數量會四捨五入至此欄位數值的整數倍數。若為 0（零），便不作四捨五入。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -10651,8 +10646,7 @@ msgstr "倉庫補貨選項"
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
 "the default route when products pass through this warehouse."
-msgstr ""
-"當為這條路線選擇了一個倉庫時，這條路線應該被視為產品經過這個倉庫時的預設路線."
+msgstr "當為這條路線選擇了一個倉庫時，這條路線應該被視為產品經過這個倉庫時的預設路線."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -10718,8 +10712,7 @@ msgstr ""
 msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
-msgstr ""
-"當揀貨沒有完成時，這允許改變初始需求.當揀貨完成時，這允許改變完成的數量."
+msgstr "當揀貨沒有完成時，這允許改變初始需求.當揀貨完成時，這允許改變完成的數量."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -11011,8 +11004,7 @@ msgstr "你不可封存位置 %(location)s，因為倉庫 %(warehouse)s 正使�
 msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
-msgstr ""
-"您無法取消已設定為“完成”的庫存移動.請透過建立一個退回單據來執行反向操作."
+msgstr "您無法取消已設定為“完成”的庫存移動.請透過建立一個退回單據來執行反向操作."
 
 #. module: stock
 #. odoo-python
@@ -11046,8 +11038,7 @@ msgstr "目前位於其他公司位置的批次/序號的庫存，不可更改�
 msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
-msgstr ""
-"您無法更改此計量單位的比率，因為具有此計量單位的某些產品已被移動或當前已保留."
+msgstr "您無法更改此計量單位的比率，因為具有此計量單位的某些產品已被移動或當前已保留."
 
 #. module: stock
 #. odoo-python

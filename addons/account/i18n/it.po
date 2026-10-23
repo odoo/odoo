@@ -8,7 +8,7 @@
 # pezzin <christian.pezzin@gmail.com>, 2024
 # Wil Odoo, 2025
 # Marianna Ciofani, 2025
-# Sergio Zanchetta <primes2h@gmail.com>, 2025
+# Sergio Zanchetta <primes2h@gmail.com>, 2025, 2026.
 # "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-10-08 12:33+0000\n"
+"PO-Revision-Date: 2026-10-23 15:03+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-18/account/"
 "it/>\n"
@@ -154,8 +154,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s (separato da %(user)s il %(date)s)%"
-"(attachment_extension)s"
+"%(attachment_name)s (separato da %(user)s il %(date)s)%(attachment_extension)"
+"s"
 
 #. module: account
 #. odoo-python
@@ -541,14 +541,13 @@ msgstr ""
 "            nota di credito\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (con riferimento: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (con riferimento: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
-"        pari a <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">143.750,00 $</span>\n"
-"        da parte di <t t-out=\"object.company_id.name or ''\">YourCompany</"
-"t>.\n"
+"        pari a <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">143.750,00 $</span>\n"
+"        da parte di <t t-out=\"object.company_id.name or ''\">YourCompany</t>"
+".\n"
 "        <br/><br/>\n"
 "        Non esitare a contattarci se hai domande.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
@@ -716,16 +715,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Gentile <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
-"t><br/><br/>\n"
+"        Gentile <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
+"<br/><br/>\n"
 "        grazie per aver effettuato il pagamento.\n"
-"        Di seguito, la ricevuta di pagamento <span style=\"font-weight:bold;"
-"\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
-"span> pari\n"
-"        a <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 $</"
-"span> da parte di <t t-out=\"object.company_id.name or ''\">YourCompany</"
-"t>.\n"
+"        Di seguito, la ricevuta di pagamento <span style=\"font-"
+"weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-"
+"2021-05-0002</span> pari\n"
+"        a <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">10,00 $</span> da parte di <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Se hai domande, non esitare a contattarci.\n"
 "        <br/><br/>\n"
@@ -943,8 +941,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1447,8 +1445,8 @@ msgid ""
 "rounding made on previous entries; possibly causing an inconsistency with "
 "the new ones."
 msgstr ""
-"<strong>Questa valuta è già stata usata per generare registrazioni contabili."
-"</strong> <br/>\n"
+"<strong>Questa valuta è già stata usata per generare registrazioni "
+"contabili.</strong> <br/>\n"
 "                        La modifica del suo fattore di arrotondamento non "
 "cambierà l'arrotondamento delle registrazioni precedenti; questo potrebbe "
 "causare un'incongruenza con le nuove."
@@ -1496,8 +1494,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A Ledger group name must be unique per company."
-msgstr ""
-"Il nome del gruppo del libro mastro deve essere unico per ogni azienda."
+msgstr "Il nome del gruppo del libro mastro deve essere unico per ogni azienda."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -1521,8 +1518,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"Esiste già un conto bancario con numero %(number)s per il partner %"
-"(partner)s ma è archiviato. Annulla l'archiviazione."
+"Esiste già un conto bancario con numero %(number)s per il partner %(partner)"
+"s ma è archiviato. Annulla l'archiviazione."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2313,8 +2310,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"Registrazione per competenza creata il %(date)s: %"
-"(accrual_entry)s.                Storno: %(reverse_entry)s."
+"Registrazione per competenza creata il %(date)s: %(accrual_entry)"
+"s.                Storno: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3538,8 +3535,7 @@ msgstr "Banca e cassa"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Bank & Cash accounts cannot be shared between companies."
-msgstr ""
-"I conti bancari e di cassa non possono essere condivisi tra le aziende."
+msgstr "I conti bancari e di cassa non possono essere condivisi tra le aziende."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -6640,7 +6636,7 @@ msgstr "Distribuzione"
 #: model:ir.model.fields,field_description:account.field_account_move_line__distribution_analytic_account_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr "Distribuzione conto analitico"
+msgstr "Conto analitico di distribuzione"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -7000,8 +6996,8 @@ msgstr "Sconto pagamento anticipato di"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Sconto pagamento anticipato: <b>%(amount)s</b> se pagato prima del <b>%"
-"(date)s</b>"
+"Sconto pagamento anticipato: <b>%(amount)s</b> se pagato prima del <b>%(date)"
+"s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8551,8 +8547,8 @@ msgstr ""
 msgid ""
 "If you have not installed a chart of account, please install one first.<br>"
 msgstr ""
-"Procedere con il caricamento del piano dei conti, se non ancora effettuato."
-"<br>"
+"Procedere con il caricamento del piano dei conti, se non ancora "
+"effettuato.<br>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10363,8 +10359,7 @@ msgstr "Effettuare registrazioni di ratei"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid "Make sure you first activate the audit trail in the accounting settings"
-msgstr ""
-"Assicurati di attivare la traccia di audit dalle impostazioni contabili"
+msgstr "Assicurati di attivare la traccia di audit dalle impostazioni contabili"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -15311,8 +15306,8 @@ msgstr ""
 "rappresentazione: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
 "I gruppi prefix* sono i separatori tra anno, mese e l'effettivo numero "
 "crescente della sequenza (seq).\n"
-"es.: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
-"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"es.: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
+"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -15506,8 +15501,8 @@ msgid ""
 "The Unit of Measure (UoM) '%(uom)s' you have selected for product '%"
 "(product)s', is incompatible with its category : %(category)s."
 msgstr ""
-"L'unità di misura (UdM) \"%(uom)s\" selezionata per il prodotto \"%"
-"(product)s\" è incompatibile con la sua categoria: %(category)s."
+"L'unità di misura (UdM) \"%(uom)s\" selezionata per il prodotto \"%(product)"
+"s\" è incompatibile con la sua categoria: %(category)s."
 
 #. module: account
 #. odoo-python
@@ -15778,9 +15773,9 @@ msgid ""
 "(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
-"Il totale attuale è %(current_total)s ma il totale atteso è %"
-"(expected_total)s. Per registrare la fattura, è possibile modificarne le "
-"righe o il totale atteso (tasse incl.)."
+"Il totale attuale è %(current_total)s ma il totale atteso è %(expected_total)"
+"s. Per registrare la fattura, è possibile modificarne le righe o il totale "
+"atteso (tasse incl.)."
 
 #. module: account
 #. odoo-python
@@ -18588,8 +18583,8 @@ msgid ""
 "in the %(journal)s journal."
 msgstr ""
 "Nn è possibile creare un nuovo pagamento senza aver configurato per "
-"l'azienda un conto per i pagamenti in sospeso/ricevuti o il %"
-"(payment_method)s metodo di pagamento nel %(journal)s registro."
+"l'azienda un conto per i pagamenti in sospeso/ricevuti o il %(payment_method)"
+"s metodo di pagamento nel %(journal)s registro."
 
 #. module: account
 #. odoo-python
@@ -19313,8 +19308,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
-"Aggiorni questo documento per riflettere le vostre Condizioni Generali."
+msgstr "Aggiorni questo documento per riflettere le vostre Condizioni Generali."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
@@ -19822,9 +19816,9 @@ msgid ""
 "{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were "
 "transferred to <strong>{account_target_name}</strong> by {link}"
 msgstr ""
-"{amount} ({debit_credit}) sono stati trasferiti da "
-"<strong>{account_source_name}</strong> a <strong>{account_target_name}</"
-"strong> da parte di {link}"
+"{amount} ({debit_credit}) sono stati trasferiti da <strong>"
+"{account_source_name}</strong> a <strong>{account_target_name}</strong> da "
+"parte di {link}"
 
 #. module: account
 #. odoo-python

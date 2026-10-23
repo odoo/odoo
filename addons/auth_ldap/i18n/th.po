@@ -10,14 +10,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"PO-Revision-Date: 2026-10-20 09:32+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-18/auth_ldap/"
+"th/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -35,7 +37,9 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"    ตัวกรองที่ใช้เพื่อค้นหาบัญชีผู้ใช้ในฐานข้อมูล LDAP ซึ่งเป็นตัวกรอง LDAP โดยพลการในการแทนค่าสตริง `%s` ตัวอย่างข้อความจะถูกแทนที่ด้วยการเข้าสู่ระบบ (ตัวระบุ) ​​ที่ผู้ใช้ให้มา ตัวกรองควรมีอย่างน้อยหนึ่งตัวอย่างข้อความดังกล่าว\n"
+"    ตัวกรองที่ใช้เพื่อค้นหาบัญชีผู้ใช้ในฐานข้อมูล LDAP ซึ่งเป็นตัวกรอง LDAP โดยพลการในการแทนค่าส"
+"ตริง `%s` ตัวอย่างข้อความจะถูกแทนที่ด้วยการเข้าสู่ระบบ (ตัวระบุ) ​​ที่ผู้ใช้ให้มา ตัวกรองควรมีอย่างน้อ"
+"ยหนึ่งตัวอย่างข้อความดังกล่าว\n"
 "\n"
 "    ตัวกรองต้องส่งผลเพียงหนึ่ง (1) ผลลัพธ์ มิฉะนั้น การเข้าสู่ระบบจะถือว่าไม่ถูกต้อง\n"
 "\n"
@@ -54,8 +58,7 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"สร้างบัญชีผู้ใช้ภายในเครื่องโดยอัตโนมัติสำหรับผู้ใช้ใหม่ที่ตรวจสอบสิทธิ์ผ่าน"
-" LDAP"
+"สร้างบัญชีผู้ใช้ภายในเครื่องโดยอัตโนมัติสำหรับผู้ใช้ใหม่ที่ตรวจสอบสิทธิ์ผ่าน LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -176,8 +179,7 @@ msgstr "ข้อมูลล็อกอิน"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr ""
-"ไม่พบผู้ใช้ท้องถิ่นในเการเข้าสู่ระบบ LDAP และไม่ได้กำหนดค่าให้สร้างขึ้น"
+msgstr "ไม่พบผู้ใช้ท้องถิ่นในเการเข้าสู่ระบบ LDAP และไม่ได้กำหนดค่าให้สร้างขึ้น"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -191,9 +193,8 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
-"ขอการเข้ารหัส TLS/SSL ที่ปลอดภัยเมื่อเชื่อมต่อกับเซิร์ฟเวอร์ LDAP "
-"ตัวเลือกนี้ต้องใช้เซิร์ฟเวอร์ที่เปิดใช้งาน STARTTLS "
-"ไม่เช่นนั้นการพยายามตรวจสอบสิทธิ์ทั้งหมดจะล้มเหลว"
+"ขอการเข้ารหัส TLS/SSL ที่ปลอดภัยเมื่อเชื่อมต่อกับเซิร์ฟเวอร์ LDAP ตัวเลือกนี้ต้องใช้เซิร์ฟเวอร์ที่เปิดใ"
+"ช้งาน STARTTLS ไม่เช่นนั้นการพยายามตรวจสอบสิทธิ์ทั้งหมดจะล้มเหลว"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -228,8 +229,7 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
-"บัญชีผู้ใช้บนเซิร์ฟเวอร์ LDAP ที่ใช้ในการสืบค้นทิศทาง "
-"เว้นว่างไว้เพื่อเชื่อมต่อโดยไม่ระบุชื่อ"
+"บัญชีผู้ใช้บนเซิร์ฟเวอร์ LDAP ที่ใช้ในการสืบค้นทิศทาง เว้นว่างไว้เพื่อเชื่อมต่อโดยไม่ระบุชื่อ"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls

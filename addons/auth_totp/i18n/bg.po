@@ -12,13 +12,14 @@
 # Venelin Stoykov, 2024
 # Milena Georgieva, 2024
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "v.kanev" <v.kanev@tutanota.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-08-17 17:09+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-10-22 07:33+0000\n"
+"Last-Translator: \"v.kanev\" <v.kanev@tutanota.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/"
 "auth_totp/bg/>\n"
 "Language: bg\n"
@@ -26,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: auth_totp
 #. odoo-python
@@ -75,7 +76,7 @@ msgid ""
 "<span invisible=\"not totp_enabled\" class=\"text-muted\">This account is "
 "protected!</span>"
 msgstr ""
-"<span invisible=\"not totp_enabled\" class=\"text-muted\">Тази акаунт е "
+"<span invisible=\"not totp_enabled\" class=\"text-muted\">Този профил е "
 "защитен!</span>"
 
 #. module: auth_totp
@@ -176,7 +177,7 @@ msgstr ""
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr "Деактивирай двуфакторно заверяване"
+msgstr "Деактивирай двуфакторно удостоверяване"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -314,14 +315,14 @@ msgstr "Доверени устройства"
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-Factor Authentication Activation"
-msgstr "Активация на двуфакторно заверяване"
+msgstr "Активация на двуфакторно удостоверяване"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
-msgstr "Двуфакторно заверяване"
+msgstr "Двуфакторно удостоверяване"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -333,42 +334,43 @@ msgid ""
 "                        Popular ones include Authy, Google Authenticator or "
 "the Microsoft Authenticator."
 msgstr ""
-"Двуфакторното заверяване (\"2FA\") е система за двойно заверяване.\n"
+"Двуфакторното удостоверяване (\"2FA\") е система за двойно удостоверяване.\n"
 "Първото е през парола, а второто, чрез специализирано мобилно приложение.\n"
 "Възможни варианти са Authy, Google Authenticator или Microsoft Authenticator."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
-msgstr "Двуфакторно заверяване"
+msgstr "Двуфакторно удостоверяване"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Disabled"
-msgstr "Двуфакторното заверяване е деактивирано"
+msgstr "Двуфакторното удостоверяване е деактивирано"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Enabled"
-msgstr "Двуфакторното заверяване е активирано"
+msgstr "Двуфакторното удостоверяване е активирано"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication already enabled"
-msgstr "Двуфакторно заверяване е вече активирано"
+msgstr "Двуфакторно удостоверяване е вече активирано"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr "Двуфакторно заверяване може да бъде активирано само персонално"
+msgstr "Двуфакторно удостоверяване може да бъде активирано само персонално"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication disabled for the following user(s): %s"
-msgstr "Двуфакторното заверяване е деактивирано за следните потребител(и): %s"
+msgstr ""
+"Двуфакторното удостоверяване е деактивирано за следните потребител(и): %s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url

@@ -5,13 +5,13 @@
 # Translators:
 # Wil Odoo, 2025
 # Malaz Abuidris <msea@odoo.com>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-07 17:39+0000\n"
-"PO-Revision-Date: 2025-11-21 02:36+0000\n"
+"PO-Revision-Date: 2026-10-20 12:38+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/sms/ar/>\n"
 "Language: ar\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -73,8 +73,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
 msgstr ""
-"<i class=\"fa fa-warning\"/>  لا يمكنك إرسال رسائل نصية قصيرة بينما حسابك "
-"غير مسجل. "
+"<i class=\"fa fa-warning\"/>  لا يمكنك إرسال رسائل نصية قصيرة بينما حسابك غير "
+"مسجل. "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -126,8 +126,7 @@ msgstr ""
 msgid ""
 "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
-"<span class=\"text-warning\" invisible=\"not no_record\">لا توجد سجلات</"
-"span> "
+"<span class=\"text-warning\" invisible=\"not no_record\">لا توجد سجلات</span> "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
@@ -503,8 +502,7 @@ msgstr "تمكين الرسائل النصية القصيرة "
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Enter a phone number to get an SMS with a verification code."
-msgstr ""
-"قم بإدخال رقم الهاتف للحصول على رسالة نصية قصيرة تحتوي على رمز التحقق. "
+msgstr "قم بإدخال رقم الهاتف للحصول على رسالة نصية قصيرة تحتوي على رمز التحقق. "
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -668,9 +666,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"يشير إلى ما إذا كان رقم الهاتف السليم المدرج في القائمة السوداء أم لا.  "
-"يساعد في تمييز أي الأرقام تم إدراجها في القائمة السوداء عندما يمون هناك "
-"حقلان لرقم الهاتف والهاتف المحمول في إحدى النماذج. "
+"يشير إلى ما إذا كان رقم الهاتف السليم المدرج في القائمة السوداء أم لا.  يساعد "
+"في تمييز أي الأرقام تم إدراجها في القائمة السوداء عندما يمون هناك حقلان لرقم "
+"الهاتف والهاتف المحمول في إحدى النماذج. "
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -710,8 +708,8 @@ msgid ""
 "For example: +1 555-555-555"
 msgstr ""
 "رقم الهاتف غير صالح. يُرجى التأكد من اتباع التنسيق الدولي، أي علامة زائد (+)، "
-"ثم رمز البلد ورمز المدينة ورقم الهاتف المحلي. على سبيل المثال: +1 "
-"555-555-555 "
+"ثم رمز البلد ورمز المدينة ورقم الهاتف المحلي. على سبيل المثال: +1 555-555-"
+"555 "
 
 #. module: sms
 #. odoo-python
@@ -859,8 +857,8 @@ msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
 msgstr ""
-"لاحظ أن هذا الأمر غير مطلوب، إذا لم تقم بتعيين اسم المرسل، فسيتم إرسال "
-"الرسائل القصيرة من رمز قصير. "
+"لاحظ أن هذا الأمر غير مطلوب، إذا لم تقم بتعيين اسم المرسل، فسيتم إرسال الرسائل "
+"القصيرة من رمز قصير. "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -924,10 +922,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "{{ object.partner_id.lang }}."
 msgstr ""
-"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم "
-"يتم تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً "
-"للعنصر النائب المسؤول عن التزويد باللغة المناسبة، مثال: "
-"{{ object.partner_id.lang }}. "
+"لغة الترجمة الاختيارية (كود ISO) لاختيارها عند إرسال بريد إلكتروني. إذا لم يتم "
+"تعيينها، سوف تُستخدم النسخة باللغة الإنجليزية. عادة ما يكون ذلك تمثيلاً للعنصر "
+"النائب المسؤول عن التزويد باللغة المناسبة، مثال: {{ object.partner_id.lang }}"
+". "
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -1267,8 +1265,7 @@ msgstr "محتوى الرسائل النصية القصيرة "
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "SMS template model of %(action_name)s does not match action model."
 msgstr ""
-"نموذج قالب الرسائل النصية القصيرة %(action_name)s لا يتطابق مع نموذج "
-"الإجراء. "
+"نموذج قالب الرسائل النصية القصيرة %(action_name)s لا يتطابق مع نموذج الإجراء. "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__sms_tracker_id
@@ -1608,8 +1605,8 @@ msgstr ""
 "- 'تنفيذ الكود': سيتم تنفيذ كود بايثون\n"
 "- 'إرسال إشعارات Webhook': أرسل طلب منشور إلى النظام الخارجي، والذي يعرف "
 "أيضاً بـ Webhook\n"
-"- 'تنفيذ الإجراءات الموجودة': قم بتحديد إجراء يؤدي إلى تشغيل عدة إجراءات "
-"أخرى للخادم\n"
+"- 'تنفيذ الإجراءات الموجودة': قم بتحديد إجراء يؤدي إلى تشغيل عدة إجراءات أخرى "
+"للخادم\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1658,12 +1655,12 @@ msgstr ""
 "يُستخدم لوضع الرسائل المنشأة في فئات\n"
 "'البريد الإلكتروني': يتم إنشاؤها عن طريق البريد الوارد. على سبيل المثال: "
 "بوابة البريد\n"
-"'تعليق': يتم إنشاؤه من خلال مدخلات المستخدمين. على سبيل المثال: من خلال "
-"تطبيق المناقشة أو الإنشاء\n"
+"'تعليق': يتم إنشاؤه من خلال مدخلات المستخدمين. على سبيل المثال: من خلال تطبيق "
+"المناقشة أو الإنشاء\n"
 "'email_outgoing': يتم إنشاؤها عن طريق المراسلات\n"
 "'إشعار': يتم إنشاؤه عن طريق النظام. على سبيل المثال: رسائل التتبع\n"
-"'auto_comment': يتم إنشاؤه عن طريق آلية الإشعارات التلقائية. على سبيل "
-"المثال: الإقرار\n"
+"'auto_comment': يتم إنشاؤه عن طريق آلية الإشعارات التلقائية. على سبيل المثال: "
+"الإقرار\n"
 "'user_notification': يتم إنشاؤها لمستلم محدد "
 
 #. module: sms
@@ -1712,8 +1709,7 @@ msgstr "سجل تواصل الموقع الإلكتروني "
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
 msgid "Whether this model supports messages and notifications through SMS"
 msgstr ""
-"ما إذا كان هذا النموذج يدعم الرسائل والإشعارات من خلال الرسائل النصية "
-"القصيرة "
+"ما إذا كان هذا النموذج يدعم الرسائل والإشعارات من خلال الرسائل النصية القصيرة "
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__to_delete
@@ -1785,8 +1781,8 @@ msgid ""
 msgstr ""
 "يجب أن يتراوح طول اسم المرسل الخاص بك بين 3 و11 حرفاً وأن يحتوي على أحرف "
 "أبجدية وعددية فقط.\n"
-"                        يجب أن يتناسب مع اسم شركتك، ولا يُسمح لك بتعديله "
-"بمجرد تسجيله، لذلك اختره بعناية. "
+"                        يجب أن يتناسب مع اسم شركتك، ولا يُسمح لك بتعديله بمجرد "
+"تسجيله، لذلك اختره بعناية. "
 
 #. module: sms
 #. odoo-python
@@ -1830,8 +1826,7 @@ msgstr "من "
 msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
-msgstr ""
-"مستلمين لديهم أرقام هواتف غير صحيحة ولن يتمكنوا من استلام هذه الرسالة. "
+msgstr "مستلمين لديهم أرقام هواتف غير صحيحة ولن يتمكنوا من استلام هذه الرسالة. "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form

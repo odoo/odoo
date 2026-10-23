@@ -7,16 +7,16 @@
 # Wil Odoo, 2024
 # Manon Rondou, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-08-31 15:56+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"PO-Revision-Date: 2026-10-20 12:05+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/mrp/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -61,9 +61,8 @@ msgid ""
 " <br/><br/> The manufactured products will be moved towards <b>%"
 "(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
-"<br/><br/>De geproduceerde producten worden verplaatst naar <b>%"
-"(destination)s</b>,  <br/> zoals gespecificeerd in de bestemming van <b>%"
-"(operation)s</b>."
+"<br/><br/>De geproduceerde producten worden verplaatst naar <b>%(destination)"
+"s</b>,  <br/> zoals gespecificeerd in de bestemming van <b>%(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -577,8 +576,8 @@ msgid ""
 "                                Instead, it is used to decompose a BoM into "
 "its components when:"
 msgstr ""
-"Een stuklist van het type kit wordt niet geproduceerd met een productieorder."
-"<br/>\n"
+"Een stuklist van het type kit wordt niet geproduceerd met een "
+"productieorder.<br/>\n"
 "In plaats daarvan wordt deze gebruikt om een stuklijst in zijn onderdelen te "
 "ontleden wanneer:"
 
@@ -2535,8 +2534,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__sequence
 msgid "Gives the sequence order when displaying a list of work centers."
-msgstr ""
-"Geeft de volgorde weer bij het weergeven van een lijst van werkplekken."
+msgstr "Geeft de volgorde weer bij het weergeven van een lijst van werkplekken."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__sequence
@@ -5582,8 +5580,7 @@ msgstr "De capaciteit kan alleen positief zijn."
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The component %s should not be the same as the product to produce."
-msgstr ""
-"Het onderdeel %s mag niet hetzelfde zijn als het te produceren product."
+msgstr "Het onderdeel %s mag niet hetzelfde zijn als het te produceren product."
 
 #. module: mrp
 #. odoo-python
@@ -6966,10 +6963,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Controleer het verbruik van je onderdelen of "
 "vraag aan een manager om\n"
-"                            <span invisible=\"mrp_production_count != "
-"1\">deze productieorder</span>\n"
-"                            <span invisible=\"mrp_production_count == "
-"1\">deze productieorders</span> te bevestigen.\n"
+"                            <span invisible=\"mrp_production_count != 1\">"
+"deze productieorder</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">"
+"deze productieorders</span> te bevestigen.\n"
 "                        </b>"
 
 #. module: mrp

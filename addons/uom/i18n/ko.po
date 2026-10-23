@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-06-08 12:39+0000\n"
+"PO-Revision-Date: 2026-10-20 13:06+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-18/uom/ko/>\n"
 "Language: ko\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -99,8 +99,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 이루어"
-"집니다."
+"단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 "
+"이루어집니다."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -151,8 +151,8 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
-"이 측정 단위가 해당 범주의 기준 단위보다 몇 배 더 큰지를 나타냅니다: 1 * (해"
-"당 단위) = 비율 * (기준 단위)"
+"이 측정 단위가 해당 범주의 기준 단위보다 몇 배 더 큰지를 나타냅니다: 1 * "
+"(해당 단위) = 비율 * (기준 단위)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
@@ -286,8 +286,8 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
-"계산된 수량은 이 값의 배수입니다. 조각과 같이 더 이상 분할할 수 없는 단위에"
-"는 1.0을 사용하십시오."
+"계산된 수량은 이 값의 배수입니다. 조각과 같이 더 이상 분할할 수 없는 "
+"단위에는 1.0을 사용하십시오."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -324,9 +324,9 @@ msgid ""
 "product. Please correct the unit of measure defined on the order line or on "
 "the product. They should belong to the same category."
 msgstr ""
-"주문 항목에 지정된 %(unit)s의 측정 단위가 제품에 대해 설정된 %(product_unit)s"
-"의 측정 단위와 같은 범주에 속하지 않습니다. 주문 항목이나 제품의 측정 단위를 "
-"같은 카테고리에 속하도록 조정하세요."
+"주문 항목에 지정된 %(unit)s의 측정 단위가 제품에 대해 설정된 %(product_unit)"
+"s의 측정 단위와 같은 범주에 속하지 않습니다. 주문 항목이나 제품의 측정 "
+"단위를 같은 카테고리에 속하도록 조정하세요."
 
 #. module: uom
 #. odoo-python
@@ -401,8 +401,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "UoM category %s must have at least one reference unit of measure."
-msgstr ""
-"%s 측정 단위 카테고리에는 기준 측정 단위가 적어도 하나는 있어야 합니다."
+msgstr "%s 측정 단위 카테고리에는 기준 측정 단위가 적어도 하나는 있어야 합니다."
 
 #. module: uom
 #. odoo-python

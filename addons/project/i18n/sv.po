@@ -24,7 +24,7 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
 # Larissa Manderfeld, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025, 2026.
 # Mikael Akerberg <mikael.akerberg@mariaakerberg.com>, 2026.
 # David Poole <david@proloc.se>, 2026.
 # Hanna Kharraziha <hakha@odoo.com>, 2026.
@@ -34,7 +34,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-09-29 13:22+0000\n"
+"PO-Revision-Date: 2026-10-22 10:29+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/project/"
 "sv/>\n"
@@ -207,8 +207,8 @@ msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
 msgstr ""
-"#{record.milestone_count_reached.value} Milstolpar uppnådda av "
-"#{record.milestone_count.value}"
+"#{record.milestone_count_reached.value} Milstolpar uppnådda av #"
+"{record.milestone_count.value}"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -453,16 +453,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
-">\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hej <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/"
-"><br/>\n"
+"                Hej <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/>"
+"<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Hej,<br/><br/>\n"
@@ -471,9 +471,8 @@ msgstr ""
 "<strong t-out=\"object.name or ''\"> Planerings- och budget </strong> "
 "uppgiften\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                tilldelad till <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
-">\n"
+"                tilldelad till <strong t-out=\"object._rating_get_operator()"
+".name or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -542,19 +541,19 @@ msgstr ""
 "</t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
-"a>\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
+"\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -1345,8 +1344,8 @@ msgid ""
 "(orange bullet).\n"
 msgstr ""
 "Ändra automatiskt status när kunden svarar på feedbacken för detta steg.\n"
-" * Bra feedback från kunden uppdaterar statusen till \"Godkänd\" (grön "
-"punkt).\n"
+" * Bra feedback från kunden uppdaterar statusen till \"Godkänd\" (grön punkt)"
+".\n"
 " * Neutral eller dålig feedback gör att kanbanstatus ändras till \"Changes "
 "Requested\" (orange punkt).\n"
 
@@ -2865,8 +2864,8 @@ msgid ""
 "                    Collaborate efficiently by chatting in real-time or via "
 "email."
 msgstr ""
-"Håll koll på hur dina uppgifter fortskrider från skapande till slutförande."
-"<br>\n"
+"Håll koll på hur dina uppgifter fortskrider från skapande till "
+"slutförande.<br>\n"
 "                    Samarbeta effektivt genom att chatta i realtid eller via "
 "e-post."
 
@@ -2878,8 +2877,8 @@ msgid ""
 "                Collaborate efficiently by chatting in real-time or via "
 "email."
 msgstr ""
-"Håll koll på hur dina uppgifter fortskrider från skapande till slutförande."
-"<br>\n"
+"Håll koll på hur dina uppgifter fortskrider från skapande till "
+"slutförande.<br>\n"
 "                Samarbeta effektivt genom att chatta i realtid eller via e-"
 "post."
 
@@ -3529,8 +3528,7 @@ msgstr "Endast jpeg-, png-, bmp- och tiff-bilder tillåts som bilagor."
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
-"Hoppan! Nu gick något fel! Försök att ladda om sidan och logga in igen."
+msgstr "Hoppan! Nu gick något fel! Försök att ladda om sidan och logga in igen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -3726,8 +3724,8 @@ msgstr ""
 "\n"
 "I vilket fall som helst kan en intern användare utan "
 "projektåtkomsträttigheter fortfarande komma åt en uppgift, förutsatt att de "
-"får motsvarande URL (och att de är en del av följarna om projektet är "
-"privat)."
+"får motsvarande URL (och att de är en del av följarna om projektet är privat)"
+"."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -4400,7 +4398,7 @@ msgstr "SÄKERHET"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS leveransfel"
+msgstr "Leveransfel för sms"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -4651,8 +4649,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Sorry. You can't set a task as its parent task."
-msgstr ""
-"Jag beklagar. Du kan inte ange en uppgift som dess överordnade uppgift."
+msgstr "Jag beklagar. Du kan inte ange en uppgift som dess överordnade uppgift."
 
 #. module: project
 #. odoo-javascript
@@ -5765,8 +5762,8 @@ msgstr "Väntar"
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
-"Vill du ha ett bättre verktyg för <b>administration av dina projekt</b>? "
-"<i>det börjar här.</i>"
+"Vill du ha ett bättre verktyg för <b>administration av dina projekt</b>? <i>"
+"det börjar här.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids

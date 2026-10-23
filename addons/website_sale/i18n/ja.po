@@ -8,14 +8,14 @@
 # Junko Augias, 2025
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
-# Yoshi Tashiro <tashiro@quartile.co>, 2025.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-09-08 03:11+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-10-20 14:15+0000\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
 "website_sale/ja/>\n"
 "Language: ja\n"
@@ -235,15 +235,14 @@ msgid ""
 "<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>All "
 "Products"
 msgstr ""
-"<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>全プロ"
-"ダクト"
+"<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>全"
+"プロダクト"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
-msgstr ""
-"<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>全プロダクト"
+msgstr "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>全プロダクト"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -309,8 +308,8 @@ msgid ""
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
 "                                                        会社名やVAT番号の変更"
-"は、一度発行されたドキュメントではできません。直接ご連絡先までご連絡下さ"
-"い。\n"
+"は、一度発行されたドキュメントではできません。直接ご連絡先までご連絡下さい"
+"。\n"
 "                                                    </small>"
 
 #. module: website_sale
@@ -442,8 +441,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">バリア"
-"ントに基づく</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
+"バリアントに基づく</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -478,8 +477,8 @@ msgid ""
 "                        Please contact the responsible of the shop for more "
 "information.</span>"
 msgstr ""
-"<span>支払額はカートの金額と一致していないため、オーダは確認できませんでし"
-"た。\n"
+"<span>支払額はカートの金額と一致していないため、オーダは確認できませんでした"
+"。\n"
 "                        詳しい情報は店舗の担当までご連絡ください。</span>"
 
 #. module: website_sale
@@ -585,8 +584,8 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">カートに買い物が残ってます"
-"よ。</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">カートに買い物が残ってますよ"
+"。</h1>\n"
 "                    購入してはいかがですか?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
@@ -594,8 +593,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;"
-"\">\n"
+"                                    <td style=\"padding: 10px; "
+"width:150px;\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -748,8 +747,8 @@ msgid ""
 "Accessories show up when the customer reviews the cart before payment (cross-"
 "sell strategy)."
 msgstr ""
-"お客様は支払う前にカートを確認する時、製品のアクセサリが表示されます (クロス"
-"セル戦略)。"
+"お客様は支払う前にカートを確認する時、製品のアクセサリが表示されます "
+"(クロスセル戦略)。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
@@ -894,8 +893,7 @@ msgstr "顧客が属性に基づいてプロダクトを比較できるように
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow signed-in users to save product in a wishlist"
-msgstr ""
-"サインインしたユーザがウィッシュリストにプロダクトを保存できるようにします"
+msgstr "サインインしたユーザがウィッシュリストにプロダクトを保存できるようにします"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -1100,9 +1098,9 @@ msgid ""
 "products."
 msgstr ""
 "クーポン、プロモーション、ギフトカード、ロイヤリティなど、様々なキャンペーン"
-"で売上を向上させましょう。特定な条件を設定することができます(プロダクト、顧"
-"客、最低購入金額、期間など)。特典として値引 (%又は値引額)や無料プロダクトを提"
-"供することができます。"
+"で売上を向上させましょう。特定な条件を設定することができます(プロダクト、顧客"
+"、最低購入金額、期間など)。特典として値引 (%又は値引額)や無料プロダクトを提供"
+"することができます。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1761,13 +1759,13 @@ msgstr ""
 "- 見込み客が一つ以上のカゴ落ちを起こして、カゴ落ちメールを送信する前に購入を"
 "完了した場合は、メールは送信されません。     \n"
 "\n"
-"- ユーザが手動でカゴ落ちメールを送信した場合は、メールは再送信されませ"
-"ん     \n"
+"- ユーザが手動でカゴ落ちメールを送信した場合は、メールは再送信されません     "
+"\n"
 "\n"
 "- お客様が決済時にエラーが発生した場合は、メールは送信されません。     \n"
 "\n"
-"- ショップがお客様の住所への配送に対応しない場合は、メールは送信されませ"
-"ん。     \n"
+"- ショップがお客様の住所への配送に対応しない場合は、メールは送信されません。"
+"     \n"
 "\n"
 "- チェックアウトの全てのプロダクトは購入不可の状態の場合は (例: 在庫切れ)、"
 "メールは送信されません。     \n"
@@ -1806,8 +1804,8 @@ msgstr "DHL"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
 msgstr ""
-"全てのプロダクトで利用できるようにするために、構成要素をここにドロップしま"
-"す。"
+"全てのプロダクトで利用できるようにするために、構成要素をここにドロップします"
+"。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2477,9 +2475,9 @@ msgid ""
 "backend. If you wish to change your name or email address, please do so in "
 "the account settings or contact your administrator."
 msgstr ""
-"外部の方用にオーダする場合は、バックエンドから注文して下さい。名前やメールア"
-"ドレスを変更したい場合は、アカウント設定から変更するか、管理者にご連絡下さ"
-"い。"
+"外部の方用にオーダする場合は、バックエンドから注文して下さい。名前や"
+"メールアドレスを変更したい場合は、アカウント設定から変更するか、管理者にご連"
+"絡下さい。"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__website_id
@@ -2840,8 +2838,7 @@ msgstr "メイン画像"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
-msgstr ""
-"プロモーション、クーポン、ロイヤリティカード、ギフトカードや電子財布を管理"
+msgstr "プロモーション、クーポン、ロイヤリティカード、ギフトカードや電子財布を管理"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3055,8 +3052,7 @@ msgstr "次の検索結果が見つかりませんでした: 「"
 msgid ""
 "No shipping method is available for your current order and shipping address. "
 "Please contact us for more information."
-msgstr ""
-"現在の注文と配送先には配送方法がありません。 詳細はお問い合わせください。"
+msgstr "現在の注文と配送先には配送方法がありません。 詳細はお問い合わせください。"
 
 #. module: website_sale
 #. odoo-python
@@ -4449,8 +4445,8 @@ msgid ""
 "The company of the website you are trying to sell from (%(website_company)s) "
 "is different than the one you want to use (%(company)s)"
 msgstr ""
-"ウェブサイトで販売する会社 (%(website_company)s)は使用したい会社 (%"
-"(company)s)と違っています。"
+"ウェブサイトで販売する会社 (%(website_company)s)は使用したい会社 (%(company)"
+"s)と違っています。"
 
 #. module: website_sale
 #. odoo-python
@@ -4628,8 +4624,8 @@ msgid ""
 "menu *Action*."
 msgstr ""
 "B2Bモードで招待状を送信するには、連絡先を開くか、リスト表示で複数の連絡先を選"
-"択して、ドロップダウンメニューの「アクション」から「ポータルアクセス管理」オ"
-"プションをクリックしてください。"
+"択して、ドロップダウンメニューの「アクション」から「ポータルアクセス管理」"
+"オプションをクリックしてください。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options

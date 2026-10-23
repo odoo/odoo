@@ -13,13 +13,13 @@
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
 # Mandalbayar Batbayar <bat.mandalbayar@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-12-20 18:01+0000\n"
+"PO-Revision-Date: 2026-10-20 15:56+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/"
 "delivery/mn/>\n"
@@ -28,13 +28,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "%(carrier)s Error"
-msgstr ""
+msgstr "%(carrier)s алдаа"
 
 #. module: delivery
 #. odoo-python
@@ -43,6 +43,8 @@ msgid ""
 "%s\n"
 "Free Shipping"
 msgstr ""
+"%s\n"
+"Үнэгүй хүргэлт"
 
 #. module: delivery
 #. odoo-python
@@ -75,11 +77,13 @@ msgid ""
 "                                <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Туршилтын</span>\n"
+"                                <span class=\"o_stat_text\">Орчин</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">Debug байхгүй</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -93,6 +97,8 @@ msgid ""
 "                                <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
+"<span class=\"text-success\">Ажлын</span>\n"
+"                                <span class=\"o_stat_text\">Орчин</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
@@ -137,7 +143,7 @@ msgstr "Хүргэлт нэмэх"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Additional margin"
-msgstr ""
+msgstr "Нэмэлт ашиг"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -350,7 +356,7 @@ msgstr "Хүргэлтийн бүрдэл"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "Хүргэлтийн шуудангийн кодын угтвар"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -400,6 +406,10 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
+"Тээвэрлэгч бүр (жишээ нь UPS) хэд хэдэн хүргэлтийн аргатай байж болно (жишээ "
+"нь\n"
+"            UPS Express, UPS Standard) бөгөөд арга тус бүрд\n"
+"            үнийн дүрмүүд хавсаргана."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -416,7 +426,7 @@ msgstr "Алдаа: Энэ хүргэх арга нь уг хаяг дээр И�
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Error: this delivery method is not available."
-msgstr ""
+msgstr "Алдаа: энэ хүргэлтийн арга боломжгүй байна."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -439,7 +449,7 @@ msgstr "Тооцоолсон өртөг"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__excluded_tag_ids
 msgid "Excluded Tags"
-msgstr ""
+msgstr "Хасагдах пайзууд"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -458,7 +468,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
-msgstr ""
+msgstr "Тогтмол нэмэгдэл"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -474,7 +484,7 @@ msgstr "Хэрэв захиалгын хэмжээг дээр тодорхойл
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "Generate Return Label"
-msgstr ""
+msgstr "Буцаалтын шошго үүсгэх"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
@@ -513,14 +523,14 @@ msgstr ""
 msgid ""
 "If the total volume of the order is over this volume, the method won't be "
 "available."
-msgstr ""
+msgstr "Захиалгын нийт эзлэхүүн энэ эзлэхүүнээс хэтэрвэл арга боломжгүй болно."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
 msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
-msgstr ""
+msgstr "Захиалгын нийт жин энэ жингээс хэтэрвэл арга боломжгүй болно."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -530,7 +540,7 @@ msgstr "Илүү ханган нийлүүлэгч суулгах"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
 msgid "Insurance Percentage"
-msgstr ""
+msgstr "Даатгалын хувь"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
@@ -583,17 +593,17 @@ msgstr "Ачаалж байна..."
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 msgid "Local Delivery"
-msgstr ""
+msgstr "Орон нутгийн хүргэлт"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "Дибаг хийхэд хялбар болгохын тулд хүсэлтүүдийг логлох"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "Хүргэлтийн шуудангийн кодын угтварыг удирдах"
 
 #. module: delivery
 #. odoo-javascript
@@ -614,12 +624,12 @@ msgstr "Хэмжээ -100% -с бага байх боломжгүй"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr ""
+msgstr "Тариф дээрх нэмэгдэл"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
 msgid "Max Volume"
-msgstr ""
+msgstr "Дээд эзлэхүүн"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
@@ -634,7 +644,7 @@ msgstr "Дээд утга"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "Заавал байх пайзууд"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -645,7 +655,7 @@ msgstr "Нэр"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "New Providers"
-msgstr ""
+msgstr "Шинэ үйлчилгээ үзүүлэгчид"
 
 #. module: delivery
 #. odoo-python
@@ -663,7 +673,7 @@ msgstr "Үр дүн алга"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Not available for current order"
-msgstr ""
+msgstr "Одоогийн захиалгад боломжгүй"
 
 #. module: delivery
 #. odoo-javascript
@@ -690,7 +700,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
-msgstr ""
+msgstr "Муж эсвэл шуудангийн кодын угтвар сонгохоос өмнө улс сонгоно уу."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -700,7 +710,7 @@ msgstr "Угтвар"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "Угтвар аль хэдийн байна!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -759,7 +769,7 @@ msgstr "Тоо хэмжээ"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr ""
+msgstr "Буцаалтын шошгыг захиалагчийн порталаас авах боломжтой"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -796,7 +806,7 @@ msgstr "Дугаарлалт"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
 msgid "Service Product"
-msgstr ""
+msgstr "Үйлчилгээний бараа"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
@@ -826,6 +836,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+"Хүргэлтийн даатгал нь илгээмж замдаа алдагдсан, хулгайлагдсан болон/эсвэл "
+"гэмтсэн тохиолдолд илгээгчид нөхөн төлбөр олгож болох үйлчилгээ юм."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -838,7 +850,7 @@ msgstr ""
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "Стандарт хүргэлт"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -848,7 +860,7 @@ msgstr "Төлөв"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
 msgid "Supports Shipping Insurance"
-msgstr ""
+msgstr "Хүргэлтийн даатгалыг дэмждэг"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -862,6 +874,7 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"Захиалгын дор хаяж нэг бараа эдгээр пайзын аль нэгтэй бол арга боломжГҮЙ."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
@@ -869,22 +882,23 @@ msgid ""
 "The method is available only if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"Захиалгын дор хаяж нэг бараа эдгээр пайзын аль нэгтэй үед л арга боломжтой."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
-msgstr ""
+msgstr "Захиалагч буцаалтын шошгыг захиалагчийн порталаас татаж авах боломжтой."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr ""
+msgstr "Буцаалтын шошго хүргэлтийн үед автоматаар үүснэ."
 
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr ""
+msgstr "Хүргэлтийн даатгал 0-100-ийн хоорондох хувь байх ёстой."
 
 #. module: delivery
 #. odoo-python
@@ -905,11 +919,16 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Эдгээр арга нь таны тохиргооны дагуу хүргэлтийн үнийг\n"
+"            автоматаар тооцоолох боломж олгоно; борлуулалтын захиалга дээр "
+"(үнийн\n"
+"            саналд үндэслэн) эсвэл нэхэмжлэл дээр (хүргэлтийн захиалгад "
+"үндэслэн)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
 msgid "This fixed amount will be added to the shipping price."
-msgstr ""
+msgstr "Энэ тогтмол дүн хүргэлтийн үнэ дээр нэмэгдэнэ."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__tracking_url
@@ -917,6 +936,8 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
+"Энэ сонголт нь захиалагч порталаас илгээмжээ хялбар мөрдөх холбоос нэмнэ. "
+"URL-даа <shipmenttrackingnumber>-ийг placeholder болгон ашиглана уу."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -926,12 +947,12 @@ msgstr "Энэ хувь хүргэлтийн үнэ дээр нэмэгдэх б
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "Захиалгын нийт жин"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
 msgid "Tracking Link"
-msgstr ""
+msgstr "Мөрдөх холбоос"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -964,7 +985,7 @@ msgstr "Эзлэхүүн"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Эзлэхүүний хэмжих нэгжийн шошго"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__weight
@@ -981,7 +1002,7 @@ msgstr "Жин * Эзлэхүүн"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "Жингийн хэмжих нэгжийн нэр"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__weight_uom_name
@@ -1022,7 +1043,7 @@ msgstr "Зип угтвар"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Шуудангийн кодын угтварууд"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1033,3 +1054,4 @@ msgstr "ж.нь. UPS Express"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 msgstr ""
+"жишээ нь https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"

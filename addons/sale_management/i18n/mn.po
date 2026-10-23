@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_management
+# * sale_management
 #
 # Translators:
 # Bayarkhuu Bataa, 2024
@@ -14,20 +14,22 @@
 # Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
 # Насан-Очир <nasaaskii@gmail.com>, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Насан-Очир <nasaaskii@gmail.com>, 2024\n"
-"Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"PO-Revision-Date: 2026-10-20 16:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/"
+"sale_management/mn/>\n"
 "Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -222,6 +224,8 @@ msgstr ""
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
+"Санхүүгийн бус үнийн саналын мөрөнд бараа, тоо хэмжээ болон хэмжих нэгж "
+"хориотой"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -254,6 +258,9 @@ msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
 msgstr ""
+"Тохируулсан бол энэ загвартай борлуулалтын захиалга энэ журналд "
+"нэхэмжлэгдэнэ; үгүй бол хамгийн бага дугаарлалттай борлуулалтын журналыг "
+"ашиглана."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -356,7 +363,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Урьдчилгаа төлбөрийн хувь хүчинтэй хувь байх ёстой."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
@@ -430,7 +437,7 @@ msgstr "Үнийн саналын загвар"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Validity"
-msgstr ""
+msgstr "Үнийн саналын хүчинтэй хугацаа"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -505,6 +512,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
+"Нэг барааг өөр өөр хэмжээ, өнгөөр зардаг уу? Барааны торыг туршиж, хувилбар "
+"бүрийг олон тоо хэмжээгээр захиалгадаа нэмээрэй. Энэ боломж Худалдан авалт "
+"аппад ч бий."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -520,6 +530,9 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
+"Барааны нарийн төвөгтэй каталогтой юу? Борлуулагчдад өнгө, хэмжээ, багтаамж "
+"гэх мэт өөр өөр сонголттой бараа тохируулахад туслах Барааны тохируулагчийг "
+"туршаад үзээрэй. Борлуулалтын захиалга оруулахыг хялбар, алдаагүй болгоно."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -544,7 +557,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
+msgstr "Үнийн саналыг батлахын тулд төлөх шаардлагатай дүнгийн хувь."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -566,13 +579,13 @@ msgstr ""
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr ""
+msgstr "Зөвлөгөө: Odoo тохируулж болох барааг дэмждэг"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr ""
+msgstr "Зөвлөгөө: Матрицаар бараа бөөнөөр нь зарах эсвэл худалдан авах"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -650,6 +663,10 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Таны загвар %(template_company)s компанид харьяалагдах боловч %"
+"(template_company)s-д хандах боломжгүй (%(product_company)s) компанийн бараа "
+"агуулж байна.\n"
+"Загварынхаа компанийг өөрчлөх эсвэл бусад компанийн барааг хасна уу."
 
 #. module: sale_management
 #. odoo-python
@@ -661,6 +678,10 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Таны загвар %(template_company)s компанид харьяалагдах боловч %"
+"(template_company)s-д хандах боломжгүй бусад компаниудын (%(product_company)"
+"s) бараа агуулж байна.\n"
+"Загварынхаа компанийг өөрчлөх эсвэл бусад компанийн барааг хасна уу."
 
 #. module: sale_management
 #. odoo-python
@@ -670,6 +691,8 @@ msgid ""
 "between companies. Please restrict the template access, or remove those "
 "products."
 msgstr ""
+"Загвар компаниуд хооронд хуваалцагдсан бол тодорхой компанийн бараа агуулж "
+"болохгүй. Загварын хандалтыг хязгаарлах эсвэл тэдгээр барааг хасна уу."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -679,4 +702,4 @@ msgstr "өдөр"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
-msgstr ""
+msgstr "ж: Стандарт зөвлөх үйлчилгээний багц"

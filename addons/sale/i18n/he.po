@@ -31,15 +31,15 @@
 # Yoram Lavi, 2025
 # or balmas, 2025
 # Martin Trigaux, 2025
-# or balmas <or@laylinetech.com>, 2025.
+# or balmas <or@laylinetech.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-07-11 18:32+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-10-20 12:38+0000\n"
+"Last-Translator: or balmas <or@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-18/sale/he/>"
 "\n"
 "Language: he\n"
@@ -47,7 +47,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 2) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
@@ -5128,8 +5128,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell %"
 "(quantity).2f %(unit)s."
 msgstr ""
-"%(unit)sמוצר זה ארוז ב-%(pack_size).2f %(pack_name)s . עליך למכור%"
-"(quantity).2f ."
+"%(unit)sמוצר זה ארוז ב-%(pack_size).2f %(pack_name)s . עליך למכור%(quantity)"
+".2f ."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -5583,8 +5583,7 @@ msgstr "אין אפשרות לשנות את המחירונים של הזמנה �
 msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
-msgstr ""
-"לא ניתן לשנות את סוג המוצר מכיוון שהוא כבר בשימוש בהזמנות מכירה קיימות."
+msgstr "לא ניתן לשנות את סוג המוצר מכיוון שהוא כבר בשימוש בהזמנות מכירה קיימות."
 
 #. module: sale
 #. odoo-python
@@ -5673,8 +5672,8 @@ msgid ""
 msgstr ""
 "הצעת המחיר מכילה מוצרים של חברת  %(product_company)s ואילו הצעת המחיר שייכת "
 "לחברה %(quote_company)s. \n"
-"אנא שנה את החברה בהצעת המחיר או הסר את המוצרים מחברות אחרות  (%"
-"(bad_products)s)."
+"אנא שנה את החברה בהצעת המחיר או הסר את המוצרים מחברות אחרות  (%(bad_products)"
+"s)."
 
 #. module: sale
 #. odoo-javascript
@@ -5775,8 +5774,8 @@ msgid ""
 "{{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'חשבונית עסקה' or 'הצעת מחיר') or 'הזמנה' }} (מספר "
-"{{ object.name or 'לא קיים' }})"
+"(ctx.get('proforma') and 'חשבונית עסקה' or 'הצעת מחיר') or 'הזמנה' }} (מספר {"
+"{ object.name or 'לא קיים' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

@@ -6,14 +6,14 @@
 # Wil Odoo, 2024
 # Larissa Manderfeld, 2025
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2025
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-08-27 15:09+0000\n"
+"PO-Revision-Date: 2026-10-20 12:08+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/project/"
 "es/>\n"
@@ -187,8 +187,8 @@ msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
 msgstr ""
-"#{record.milestone_count_reached.value} Hitos alcanzados de "
-"#{record.milestone_count.value}"
+"#{record.milestone_count_reached.value} Hitos alcanzados de #"
+"{record.milestone_count.value}"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -319,9 +319,9 @@ msgid ""
 msgstr ""
 "<b>Registre notas</b> para comunicaciones internas <i>(las personas que "
 "sigan esta tarea no serán notificadas \n"
-"    de la nota que está registrando a menos que las etiquete "
-"específicamente)</i>. Utilice @ <b>menciones</b> para hacer ping a un colega "
-"o # <b>menciones</b> para llegar a todo un equipo."
+"    de la nota que está registrando a menos que las etiquete específicamente)"
+"</i>. Utilice @ <b>menciones</b> para hacer ping a un colega o # <b>"
+"menciones</b> para llegar a todo un equipo."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -435,16 +435,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
-">\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hola <t t-out=\"partner.name or ''\">Brandon Freeman</t>:<br/"
-"><br/>\n"
+"                Hola <t t-out=\"partner.name or ''\">Brandon Freeman</t>"
+":<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Hola,<br/><br/>\n"
@@ -453,9 +453,8 @@ msgstr ""
 "a la tarea “<strong t-out=\"object.name or ''\">Planificación y presupuesto</"
 "strong>”\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                asignada a <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
-">\n"
+"                asignada a <strong t-out=\"object._rating_get_operator()"
+".name or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -523,19 +522,19 @@ msgstr ""
 "t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@sucompañía.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@sucompañía.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.ejemplo.com</"
-"a>\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.ejemplo.com</a>"
+"\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -1129,8 +1128,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
-msgstr ""
-"Analice el progreso de sus proyectos y el rendimiento de sus empleados."
+msgstr "Analice el progreso de sus proyectos y el rendimiento de sus empleados."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
@@ -3519,8 +3517,7 @@ msgstr "Una vez al mes"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
-msgstr ""
-"Sólo se permiten imágenes jpeg, png, bmp y tiff como archivos adjuntos."
+msgstr "Sólo se permiten imágenes jpeg, png, bmp y tiff como archivos adjuntos."
 
 #. module: project
 #. odoo-javascript
@@ -5171,8 +5168,8 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 msgid "The search does not support operator %(operator)s or value %(value)s."
 msgstr ""
-"La búsqueda no es compatible con el operador %(operator)s o el valor %"
-"(value)s."
+"La búsqueda no es compatible con el operador %(operator)s o el valor %(value)"
+"s."
 
 #. module: project
 #. odoo-python

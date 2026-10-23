@@ -9,13 +9,13 @@
 # Dorin Hongu <dhongu@gmail.com>, 2025
 # Wil Odoo, 2025
 # Larisa_nexterp, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-25 09:49+0000\n"
+"PO-Revision-Date: 2026-10-20 14:17+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-18/stock/"
 "ro/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock
 #. odoo-python
@@ -572,8 +572,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Bună <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"        Bună <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "        Suntem bucuroși să vă informăm că comanda dumneavoastră a fost "
 "expediată.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
@@ -584,8 +584,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -601,8 +601,8 @@ msgstr ""
 "            </strong>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Găsiți atașat ordinul de livrare pentru mai multe detalii.<br/><br/"
-">\n"
+"        Găsiți atașat ordinul de livrare pentru mai multe detalii.<br/><br/>"
+"\n"
 "        Vă mulțumim,\n"
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
@@ -827,8 +827,8 @@ msgid ""
 "strong>"
 msgstr ""
 "<strong>Din cauza unor mișcări de stoc efectuate între actualizarea inițială "
-"a cantității și momentul de față, diferența de cantitate nu mai este corectă."
-"</strong>"
+"a cantității și momentul de față, diferența de cantitate nu mai este "
+"corectă.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -9290,8 +9290,8 @@ msgid ""
 "Technical field used to compute whether the button \"Check Availability\" "
 "should be displayed."
 msgstr ""
-"Câmp tehnic folosit pentru a calcula dacă butonul „Verifică "
-"disponibilitatea” trebuie afișat."
+"Câmp tehnic folosit pentru a calcula dacă butonul „Verifică disponibilitatea"
+"” trebuie afișat."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_tmpl_id
@@ -9461,8 +9461,7 @@ msgstr "Ajustările de inventar au fost anulate."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
-msgstr ""
-"Frecvența de inventar (zile) pentru o locație trebuie să fie nenegativă"
+msgstr "Frecvența de inventar (zile) pentru o locație trebuie să fie nenegativă"
 
 #. module: stock
 #. odoo-python
@@ -11025,9 +11024,9 @@ msgid ""
 "b> are created from <b>%(source_location)s</b> to fulfill the need. %"
 "(suffix)s"
 msgstr ""
-"Când produsele sunt necesare în <b>%(destination)s</b>, <br> <b>%"
-"(operation)s</b> sunt create din <b>%(source_location)s</b> pentru a acoperi "
-"necesarul. %(suffix)s"
+"Când produsele sunt necesare în <b>%(destination)s</b>, <br> <b>%(operation)"
+"s</b> sunt create din <b>%(source_location)s</b> pentru a acoperi necesarul. "
+"%(suffix)s"
 
 #. module: stock
 #. odoo-python

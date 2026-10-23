@@ -5,13 +5,13 @@
 # Translators:
 # Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 02:25+0000\n"
+"PO-Revision-Date: 2026-10-20 09:43+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/"
 "base_automation/ar/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: base_automation
 #. odoo-javascript
@@ -46,8 +46,8 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
-"لا يمكن استخدام قواعد الأتمتة \"عند التحديث المباشر\" إلا مع نوع الإجراء "
-"\"تنفيذ كود Python\". "
+"لا يمكن استخدام قواعد الأتمتة \"عند التحديث المباشر\" إلا مع نوع الإجراء \"تنفيذ "
+"كود Python\". "
 
 #. module: base_automation
 #. odoo-javascript
@@ -147,8 +147,8 @@ msgstr ""
 "<span invisible=\"trigger != 'on_time_created'\">بعد الإنشاء</span>\n"
 "                                    <span invisible=\"trigger != "
 "'on_time_updated'\">بعد آخر تحديث</span>\n"
-"                                    <span invisible=\"trigger != "
-"'on_time'\">بعد</span> "
+"                                    <span invisible=\"trigger != 'on_time'\">"
+"بعد</span> "
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -444,8 +444,8 @@ msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
 msgstr ""
-"لا يمكن استخدام أنواع إجراءات البريد الإلكتروني أو المتابعين أو النشاط عند "
-"حذف السجلات، حيث لا يوجد المزيد من السجلات لتطبيق هذه التغييرات عليها! "
+"لا يمكن استخدام أنواع إجراءات البريد الإلكتروني أو المتابعين أو النشاط عند حذف "
+"السجلات، حيث لا يوجد المزيد من السجلات لتطبيق هذه التغييرات عليها! "
 
 #. module: base_automation
 #. odoo-javascript
@@ -612,8 +612,8 @@ msgid ""
 "Note that this automation rule can be triggered up to %d minutes after its "
 "schedule."
 msgstr ""
-"يرجى ملاحظة أنه يمكن تشغيل قاعدة الأتمتة هذه بعد فترة تصل إلى %d دقيقة من "
-"وقت جدولتها. "
+"يرجى ملاحظة أنه يمكن تشغيل قاعدة الأتمتة هذه بعد فترة تصل إلى %d دقيقة من وقت "
+"جدولتها. "
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -767,8 +767,8 @@ msgid ""
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 "قم بإرسال بريد إلكتروني عندما تتغير حالة كائن ما، وقم بأرشفة السجلات بعد شهر "
-"من عدم النشاط، أو ذكّر نفسك بالمتابعة بشأن المهام عند إضافة علامة تصنيف "
-"محددة. <br>باستخدام قواعد الأتمتة، يمكنك تشغيل أي عملية تلقائياً. "
+"من عدم النشاط، أو ذكّر نفسك بالمتابعة بشأن المهام عند إضافة علامة تصنيف محددة. "
+"<br>باستخدام قواعد الأتمتة، يمكنك تشغيل أي عملية تلقائياً. "
 
 #. module: base_automation
 #. odoo-javascript
@@ -846,8 +846,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
 "(state_value)s\" action type"
 msgstr ""
-"لا يمكن استخدام \"%(trigger_value)s\" %(trigger_label)s إلا مع نوع الإجراء "
-"\"%(state_value)s\""
+"لا يمكن استخدام \"%(trigger_value)s\" %(trigger_label)s إلا مع نوع الإجراء \"%"
+"(state_value)s\""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -855,8 +855,8 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
-"سوف يتم تشغيل قاعدة الأتمتة فقط إذا كانت إحدى تلك الحقول محدثة. إذا كانت "
-"فارغة، فستتم مراقبة كافة الحقول. "
+"سوف يتم تشغيل قاعدة الأتمتة فقط إذا كانت إحدى تلك الحقول محدثة. إذا كانت فارغة"
+"، فستتم مراقبة كافة الحقول. "
 
 #. module: base_automation
 #. odoo-javascript
@@ -1008,8 +1008,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
 msgstr ""
-"عند حساب شروط زمنية تعتمد على الأيام، من الممكن استخدام التقويم لحساب "
-"التاريخ المطلوب وفقًا لأيام العمل."
+"عند حساب شروط زمنية تعتمد على الأيام، من الممكن استخدام التقويم لحساب التاريخ "
+"المطلوب وفقًا لأيام العمل."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -1019,8 +1019,8 @@ msgid ""
 "be checked at creation and update."
 msgstr ""
 "متى يتم تفعيل الشرط.\n"
-"                إذا كان موجوداً، سيتم التحقق منه من قِبَل المجدوِل. إذا كان "
-"فارغاً، سيتم التحقق منه عند الإنشاء والتحديث. "
+"                إذا كان موجوداً، سيتم التحقق منه من قِبَل المجدوِل. إذا كان فارغاً"
+"، سيتم التحقق منه عند الإنشاء والتحديث. "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -1069,8 +1069,8 @@ msgstr ""
 msgid ""
 "Your webhook URL contains a secret. Don't share it online or carelessly."
 msgstr ""
-"رابط URL لـ Webhook الخاص بك يحتوي على سر. لا تقم بمشاركته عبر الإنترنت أو "
-"دون حذر. "
+"رابط URL لـ Webhook الخاص بك يحتوي على سر. لا تقم بمشاركته عبر الإنترنت أو دون "
+"حذر. "
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban

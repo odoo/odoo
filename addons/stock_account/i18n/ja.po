@@ -6,16 +6,16 @@
 # Wil Odoo, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2025
-# Yoshi Tashiro <tashiro@quartile.co>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-09-16 04:35+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"PO-Revision-Date: 2026-10-20 13:04+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
 "stock_account/ja/>\n"
 "Language: ja\n"
@@ -51,15 +51,13 @@ msgstr " [ %sに会計処理済]"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid " lot/serial number cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
-"ロット/シリアル番号原価が %(previous)s から %(new_cost)sに更新されました。"
+msgstr "ロット/シリアル番号原価が %(previous)s から %(new_cost)sに更新されました。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(record)s"
-msgstr ""
-"%(user)s が原価 %(previous)s から %(new_price)s - %(record)sへ変更しました"
+msgstr "%(user)s が原価 %(previous)s から %(new_price)s - %(record)sへ変更しました"
 
 #. module: stock_account
 #. odoo-python
@@ -87,8 +85,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
-"<b>その他のロケーションごとの入庫/出庫勘定はロケーションで設定します。 </b>"
+msgstr "<b>その他のロケーションごとの入庫/出庫勘定はロケーションで設定します。 </b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
@@ -175,8 +172,7 @@ msgstr "評価を調整"
 msgid ""
 "Affect landed costs on reception operations and split them among products to "
 "update their cost price."
-msgstr ""
-"入荷オペレーション時の陸揚費に作用してプロダクトに分配し、原価を更新する。"
+msgstr "入荷オペレーション時の陸揚費に作用してプロダクトに分配し、原価を更新する。"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
@@ -323,8 +319,8 @@ msgid ""
 "Costing method change for product category %(category)s: from %(old_method)s "
 "to %(new_method)s."
 msgstr ""
-"プロダクトカテゴリ%(category)sの原価計算法を %(old_method)sから %"
-"(new_method)sに変更します。"
+"プロダクトカテゴリ%(category)sの原価計算法を %(old_method)sから %(new_method)"
+"sに変更します。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -391,8 +387,7 @@ msgstr "日付"
 msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
-msgstr ""
-"自動在庫評価の場合に会計仕訳に適用される日付。指定がない場合は在庫日を適用。"
+msgstr "自動在庫評価の場合に会計仕訳に適用される日付。指定がない場合は在庫日を適用。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -913,8 +908,7 @@ msgstr ""
 msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
-msgstr ""
-"在庫入力および/または出力勘定は、在庫評価勘定と同じにすることはできません。"
+msgstr "在庫入力および/または出力勘定は、在庫評価勘定と同じにすることはできません。"
 
 #. module: stock_account
 #. odoo-python
@@ -936,8 +930,7 @@ msgstr "その付加価値は在庫評価に影響しません。"
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
-msgstr ""
-"移動明細が一貫していません。会社に入荷するものと出荷するものがあります。"
+msgstr "移動明細が一貫していません。会社に入荷するものと出荷するものがあります。"
 
 #. module: stock_account
 #. odoo-python
@@ -956,8 +949,7 @@ msgstr ""
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
-msgstr ""
-"移動明細が一貫していません。同じ移動元または移動先会社を共有していません。"
+msgstr "移動明細が一貫していません。同じ移動元または移動先会社を共有していません。"
 
 #. module: stock_account
 #. odoo-python
@@ -1237,8 +1229,8 @@ msgid ""
 "                It can also directly be set on each product."
 msgstr ""
 "自動在庫評価を行う場合、すべての出庫仕訳はこの勘定科目に計上されますが、\n"
-"　　　　ただし、移動先に特定の評価勘定が設定されている場合を除きます。これ"
-"は、このカテゴリの全プロダクトのデフォルト値です。\n"
+"　　　　ただし、移動先に特定の評価勘定が設定されている場合を除きます。これは"
+"、このカテゴリの全プロダクトのデフォルト値です。\n"
 "　　　　各プロダクトに直接設定することもできます。"
 
 #. module: stock_account
@@ -1345,8 +1337,8 @@ msgid ""
 "You don't have any stock input account defined on your product category. You "
 "must define one before processing this operation."
 msgstr ""
-"プロダクトカテゴリに在庫入力アカウントが定義されていません。このオペレーショ"
-"ンを行う前に定義する必要があります。"
+"プロダクトカテゴリに在庫入力アカウントが定義されていません。この"
+"オペレーションを行う前に定義する必要があります。"
 
 #. module: stock_account
 #. odoo-python

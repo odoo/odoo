@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_sale
+# * website_sale
 #
 # Translators:
 # Helen Sulaoja <helen@avalah.ee>, 2024
@@ -25,20 +25,22 @@
 # Birgit Vijar, 2025
 # Egon Raamat <egon@avalah.ee>, 2025
 # Stevin Lilla, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Stevin Lilla, 2025\n"
-"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"PO-Revision-Date: 2026-10-20 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-18/"
+"website_sale/et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -257,8 +259,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
-msgstr ""
-"<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>Kõik tooted"
+msgstr "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>Kõik tooted"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -455,8 +456,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
-"1\">Põhineb variatsioonidel</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
+"Põhineb variatsioonidel</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -598,8 +599,8 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">MIDAGI ON TEIE KONTOL.</"
-"h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">MIDAGI ON TEIE KONTOL.</h1>"
+"\n"
 "                    Kas soovite oma ostu lõpuni sooritada?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
@@ -607,8 +608,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;"
-"\">\n"
+"                                    <td style=\"padding: 10px; "
+"width:150px;\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -640,8 +641,8 @@ msgstr ""
 "                    <t t-set=\"company\" t-value=\"object.company_id or "
 "object.user_id.company_id or user.company_id\"/>\n"
 "                    <div style=\"text-align: center;\"><strong>Tänan, et "
-"ostsite ettevõttest<t t-out=\"company.name or ''\">My Company (San "
-"Francisco)</t>!</strong></div>\n"
+"ostsite ettevõttest<t t-out=\"company.name or ''\">My Company (San Francisco)"
+"</t>!</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -1757,8 +1758,8 @@ msgid ""
 "visit the shipping page to add a shipping fee or the shipping fee is also "
 "free, then the email won't be sent."
 msgstr ""
-"Customer needs to be signed in otherwise the mail address is not "
-"known.     \n"
+"Customer needs to be signed in otherwise the mail address is not known.     "
+"\n"
 "\n"
 "- If a potential customer creates one or more abandoned checkouts and then "
 "completes a sale before the recovery email gets sent, then the email won't "
@@ -5293,7 +5294,7 @@ msgstr "oma toote jälgimiseks."
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_combo_item_line
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "100 %"
 #~ msgstr "100 %"

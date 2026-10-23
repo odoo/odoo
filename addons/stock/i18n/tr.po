@@ -41,22 +41,22 @@
 # Hakan Türkün, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # Wil Odoo, 2025
-# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2025.
+# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-08-14 13:55+0000\n"
+"PO-Revision-Date: 2026-10-20 14:24+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/stock/tr/"
-">\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/stock/"
+"tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock
 #. odoo-python
@@ -600,8 +600,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Merhaba <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
-"t>,<br/><br/>\n"
+"        Merhaba <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "        Siparişinizin gönderildiğini bildirmekten memnuniyet duyarız.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -611,8 +611,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -628,8 +628,8 @@ msgstr ""
 "            </strong>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Daha fazla bilgi için lütfen ekteki teslimat siparişinizi inceleyin."
-"<br/><br/>\n"
+"        Daha fazla bilgi için lütfen ekteki teslimat siparişinizi "
+"inceleyin.<br/><br/>\n"
 "        Teşekkür ederiz,\n"
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
@@ -1881,8 +1881,7 @@ msgstr "Toplama işleminde paketleme işleminin durumunu kontrol edin"
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
-msgstr ""
-"Bu işlemde kargo etiketi oluşturmak istiyorsanız bu kutuyu işaretleyin."
+msgstr "Bu işlemde kargo etiketi oluşturmak istiyorsanız bu kutuyu işaretleyin."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__scrap_location
@@ -8813,8 +8812,7 @@ msgstr "Ertelendi"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
 msgid "Some selected lines already have quantities set, they will be ignored."
-msgstr ""
-"Seçilen bazı satırlarda zaten miktar belirlenmiş, bunlar yok sayılacak."
+msgstr "Seçilen bazı satırlarda zaten miktar belirlenmiş, bunlar yok sayılacak."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__origin
@@ -9283,8 +9281,8 @@ msgid ""
 "With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
-"“Manuel İşlem” değeri, mevcut işlemden sonra bir stok hareketi oluşturur. "
-"“Otomatik Adım Eklenmedi” seçeneğinde, konum orijinal hareketle değiştirilir."
+"“Manuel İşlem” değeri, mevcut işlemden sonra bir stok hareketi oluşturur. “"
+"Otomatik Adım Eklenmedi” seçeneğinde, konum orijinal hareketle değiştirilir."
 
 #. module: stock
 #. odoo-python
@@ -9470,8 +9468,8 @@ msgid ""
 msgstr ""
 "İşlem türü sistemi, her stok işlemine, görünümlerini\n"
 "buna göre değiştirecek belirli bir tür atamanıza olanak tanır. \n"
-"İşlem türünde örneğin, paketlemenin varsayılan olarak gerekip "
-"gerekmediğini, \n"
+"İşlem türünde örneğin, paketlemenin varsayılan olarak gerekip gerekmediğini, "
+"\n"
 "müşteriyi göstermesi gerekip gerekmediğini belirtebilirsiniz."
 
 #. module: stock

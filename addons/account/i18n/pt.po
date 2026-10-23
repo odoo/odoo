@@ -23,7 +23,7 @@
 # Maitê Dietze, 2025
 # Daniel Reis, 2025
 # Wil Odoo, 2025
-# Humberto Sousa <humberto.sousa@smartimprove.pt>, 2025.
+# Humberto Sousa <humberto.sousa@smartimprove.pt>, 2025, 2026.
 # "Pedro Silva (Exo)" <pedrocs@exo.pt>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
@@ -31,8 +31,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-07-11 18:31+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-10-20 15:07+0000\n"
+"Last-Translator: Humberto Sousa <humberto.sousa@smartimprove.pt>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-18/"
 "account/pt/>\n"
 "Language: pt\n"
@@ -41,7 +41,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -551,12 +551,11 @@ msgstr ""
 "            nota de crédito\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (com referência: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (com referência: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
-"        no valor de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        no valor de <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Não hesite em contactar-nos caso haja alguma questão.\n"
@@ -655,12 +654,11 @@ msgstr ""
 "            fatura\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (com referência: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (com referência: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
-"        no valor de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        no valor de <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Esta fatura já se encontra paga.\n"
@@ -725,15 +723,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Caro(a) <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
-"t><br/><br/>\n"
+"        Caro(a) <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
+"<br/><br/>\n"
 "        Obrigado pelo seu pagamento.\n"
 "        Junto enviamos o seu recibo de pagamento <span style=\"font-"
-"weight:bold;\" t-out=\"(object.name or '').replace('/','-') or "
-"''\">BNK1-2021-05-0002</span> no valor\n"
-"        de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-"span> de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-"
+"2021-05-0002</span> no valor\n"
+"        de <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10.00</span> de <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        Não hesite em contactar-nos caso haja alguma questão.\n"
 "        <br/><br/>\n"
@@ -950,8 +948,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1665,8 +1663,7 @@ msgstr "Um título de secção"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "A single exception must change exactly one lock date field."
-msgstr ""
-"Uma única exceção deve alterar exatamente um campo de data de bloqueio."
+msgstr "Uma única exceção deve alterar exatamente um campo de data de bloqueio."
 
 #. module: account
 #. odoo-python
@@ -4903,8 +4900,7 @@ msgstr "Conecte ao seu banco. Reconcilie faturas automaticamente."
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Consider paying in %(btn_start)sinstallments%(btn_end)s instead."
-msgstr ""
-"Considere, em alternatica, pagar em %(btn_start)sprestações%(btn_end)s."
+msgstr "Considere, em alternatica, pagar em %(btn_start)sprestações%(btn_end)s."
 
 #. module: account
 #. odoo-python
@@ -6988,8 +6984,8 @@ msgstr "Desconto de Pagamento Antecipado de"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Desconto de Pronto Pagamento: <b>%(amount)s</b> se pago antes de <b>%"
-"(date)s</b>"
+"Desconto de Pronto Pagamento: <b>%(amount)s</b> se pago antes de <b>%(date)"
+"s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8978,8 +8974,8 @@ msgstr ""
 msgid ""
 "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
 msgstr ""
-"Domínio inválido para a expressão '%(label)s' da linha '%(line)s': %"
-"(formula)s"
+"Domínio inválido para a expressão '%(label)s' da linha '%(line)s': %(formula)"
+"s"
 
 #. module: account
 #. odoo-python
@@ -9351,8 +9347,7 @@ msgstr "Faturas por Validar"
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
-msgstr ""
-"Faturas cujos itens do diário foram reconciliados com estes pagamentos."
+msgstr "Faturas cujos itens do diário foram reconciliados com estes pagamentos."
 
 #. module: account
 #. odoo-python
@@ -11469,8 +11464,8 @@ msgid ""
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
 "Uma vez instalado, altere a opção 'Feeds Bancários' para 'Importar Ficheiro' "
-"nas configurações de conta bancária. Isto adiciona um botão para "
-"importação a partir do painel de Contabilidade."
+"nas configurações de conta bancária. Isto adiciona um botão para importação "
+"a partir do painel de Contabilidade."
 
 #. module: account
 #. odoo-javascript
@@ -12542,8 +12537,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_cash_rounding.py:0
 msgid "Please set a strictly positive rounding value."
-msgstr ""
-"Por favor, estabeleça um valor de arredondamento estritamente positivo."
+msgstr "Por favor, estabeleça um valor de arredondamento estritamente positivo."
 
 #. module: account
 #. odoo-python
@@ -14300,8 +14294,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
-msgstr ""
-"Marque ativo como falso para ocultar a Etiqueta de Conta sem a remover."
+msgstr "Marque ativo como falso para ocultar a Etiqueta de Conta sem a remover."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
@@ -15278,8 +15271,8 @@ msgstr ""
 "captura: prefixo1, ano, prefixo2, mês, prefixo3, seq, sufixo.\n"
 "Os grupos prefixo* são os separadores entre o ano, o mês e o número de "
 "sequência crescente real (seq).\n"
-"por exemplo: ^(?P<prefixo1>.*?)(?P<ano>\\d{4})(?P<prefixo2>\\D*?)(?"
-"P<mês>\\d{2})(?P<prefixo3>\\D+?)(?P<seq>\\d+)(?P<sufixo>\\D*?)$"
+"por exemplo: ^(?P<prefixo1>.*?)(?P<ano>\\d{4})(?P<prefixo2>\\D*?)(?P<mês>\\d"
+"{2})(?P<prefixo3>\\D+?)(?P<seq>\\d+)(?P<sufixo>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -15470,8 +15463,8 @@ msgid ""
 "The Unit of Measure (UoM) '%(uom)s' you have selected for product '%"
 "(product)s', is incompatible with its category : %(category)s."
 msgstr ""
-"A Unidade de Medida (UoM) '%(uom)s' que selecionou para o produto '%"
-"(product)s' é incompatível com a sua categoria: %(category)s."
+"A Unidade de Medida (UoM) '%(uom)s' que selecionou para o produto '%(product)"
+"s' é incompatível com a sua categoria: %(category)s."
 
 #. module: account
 #. odoo-python
@@ -15483,8 +15476,7 @@ msgstr "A conta %(name)s (%(code)s) está obsoleta."
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "The account code can only contain alphanumeric characters and dots."
-msgstr ""
-"O código da conta deve conter apenas caracteres alfanuméricos e pontos."
+msgstr "O código da conta deve conter apenas caracteres alfanuméricos e pontos."
 
 #. module: account
 #. odoo-python
@@ -15733,9 +15725,9 @@ msgid ""
 "(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
-"O total atual é %(current_total)s, mas o total esperado é %"
-"(expected_total)s. Para lançar a fatura, pode ajustar as suas linhas ou o "
-"Total esperado (imposto inc.)."
+"O total atual é %(current_total)s, mas o total esperado é %(expected_total)"
+"s. Para lançar a fatura, pode ajustar as suas linhas ou o Total esperado "
+"(imposto inc.)."
 
 #. module: account
 #. odoo-python
@@ -15843,9 +15835,9 @@ msgid ""
 "validation."
 msgstr ""
 "A despesa é incluída quando uma fatura de fornecedor for validada, exceto em "
-"contabilidade anglo-saxónica com estimativas de inventório perpétuas, "
-"em cujo caso a despesa (conta de Custo de Mercadorias Vendidas) é incluída "
-"na validação da fatura ao cliente."
+"contabilidade anglo-saxónica com estimativas de inventório perpétuas, em "
+"cujo caso a despesa (conta de Custo de Mercadorias Vendidas) é incluída na "
+"validação da fatura ao cliente."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_line_label_uniq
@@ -16737,8 +16729,8 @@ msgid ""
 "planned amount on each analytic account."
 msgstr ""
 "Isto permite aos contabilistas gerir orçamentos analíticos e cruzados. Assim "
-"que os orçamentos forem definidos, os gestores de projeto podem indicar "
-"o montante planeado em cada conta analítica."
+"que os orçamentos forem definidos, os gestores de projeto podem indicar o "
+"montante planeado em cada conta analítica."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -16933,8 +16925,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "This move is configured to be auto-posted on %(date)s"
 msgstr ""
-"Este movimento está configurado para ser publicado automaticamente em %"
-"(date)s"
+"Este movimento está configurado para ser publicado automaticamente em %(date)"
+"s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -18816,8 +18808,8 @@ msgid ""
 "Modify your taxes first before disabling this setting."
 msgstr ""
 "Não pode desativar esta definição porque alguns dos seus impostos são de "
-"regime de caixa. Modifique os seus impostos primeiro antes de desativar "
-"a definição."
+"regime de caixa. Modifique os seus impostos primeiro antes de desativar a "
+"definição."
 
 #. module: account
 #. odoo-python

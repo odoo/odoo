@@ -16,17 +16,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-04-18 13:57+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-18/mail/ro/"
-">\n"
+"PO-Revision-Date: 2026-10-20 12:28+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-18/mail/"
+"ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: mail
 #. odoo-python
@@ -52,8 +52,8 @@ msgstr ""
 "            </p><p>\n"
 "                Pentru a vă proteja de spam și bucle de răspuns, Odoo "
 "blochează automat e-mailurile\n"
-"                care ajung la gateway-ul dvs. după un prag de <b>%"
-"(threshold)i</b> e-mailuri la fiecare <b>%(minutes)i</b>\n"
+"                care ajung la gateway-ul dvs. după un prag de <b>%(threshold)"
+"i</b> e-mailuri la fiecare <b>%(minutes)i</b>\n"
 "                minute. Dacă există adrese de la care trebuie să primiți "
 "actualizări foarte frecvente,\n"
 "                le puteți adăuga mai jos și Odoo le va permite să treacă.\n"
@@ -169,11 +169,11 @@ msgid ""
 "(bold_end)s to insert a canned response in your message."
 msgstr ""
 "%(new_line)s%(new_line)sScrieți %(bold_start)s@username%(bold_end)s pentru a "
-"menționa pe cineva și a-i atrage atenția.%(new_line)sScrieți %"
-"(bold_start)s#channel%(bold_end)s pentru a menționa un canal.%"
-"(new_line)sScrieți %(bold_start)s/command%(bold_end)s pentru a executa o "
-"comandă.%(new_line)sScrieți %(bold_start)s:shortcut%(bold_end)s pentru a "
-"insera un răspuns predefinit în mesajul dvs."
+"menționa pe cineva și a-i atrage atenția.%(new_line)sScrieți %(bold_start)"
+"s#channel%(bold_end)s pentru a menționa un canal.%(new_line)sScrieți %"
+"(bold_start)s/command%(bold_end)s pentru a executa o comandă.%(new_line)"
+"sScrieți %(bold_start)s:shortcut%(bold_end)s pentru a insera un răspuns "
+"predefinit în mesajul dvs."
 
 #. module: mail
 #. odoo-javascript
@@ -193,8 +193,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEscape%(close_samp)s %(open_em)spentru %(open_cancel)sanula%"
-"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
-"(open_em)spentru %(open_save)ssalva%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)"
+"spentru %(open_save)ssalva%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -205,8 +205,8 @@ msgid ""
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)sEscape%(close_samp)s %(open_em)spentru %(open_cancel)sanula%"
-"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %"
-"(open_em)spentru %(open_save)ssalva%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)"
+"spentru %(open_save)ssalva%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -431,9 +431,9 @@ msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct messages.</"
 "p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
-"<p><b>Discutați cu colegii</b> în timp real folosind mesaje directe.</"
-"p><p><i>Este posibil să trebuiască să invitați utilizatori din aplicația "
-"Setări mai întâi.</i></p>"
+"<p><b>Discutați cu colegii</b> în timp real folosind mesaje directe.</p><p>"
+"<i>Este posibil să trebuiască să invitați utilizatori din aplicația Setări "
+"mai întâi.</i></p>"
 
 #. module: mail
 #. odoo-javascript
@@ -635,8 +635,7 @@ msgstr "Un mesaj poate fi programat doar în modul monocomentariu"
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid ""
 "A message cannot be scheduled on a model that does not have a mail thread."
-msgstr ""
-"Un mesaj nu poate fi programat pe un model care nu are fir de discuție."
+msgstr "Un mesaj nu poate fi programat pe un model care nu are fir de discuție."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
@@ -2379,8 +2378,7 @@ msgstr "Adresele destinatarilor separate prin virgulă"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_to
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr ""
-"Adresele destinatarilor separate prin virgulă (se pot folosi variabile)"
+msgstr "Adresele destinatarilor separate prin virgulă (se pot folosi variabile)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__comment
@@ -5194,8 +5192,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
-"Șablon sau sursă de vizualizare invalidă referință %(svalue)s, este %"
-"(model)s în loc"
+"Șablon sau sursă de vizualizare invalidă referință %(svalue)s, este %(model)"
+"s în loc"
 
 #. module: mail
 #. odoo-python
@@ -5395,8 +5393,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
-"JSON care asociază id-urile dintr-un câmp many2one cu secunde petrecute"
+msgstr "JSON care asociază id-urile dintr-un câmp many2one cu secunde petrecute"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -7363,8 +7360,8 @@ msgid ""
 msgstr ""
 "Limbă de traducere opțională (cod ISO) pentru trimiterea e-mailului. Dacă nu "
 "este setată, se va folosi versiunea în engleză. De obicei, ar trebui să fie "
-"o expresie de tip placeholder care furnizează limba potrivită, ex. "
-"{{ object.partner_id.lang }}."
+"o expresie de tip placeholder care furnizează limba potrivită, ex. {{ "
+"object.partner_id.lang }}."
 
 #. module: mail
 #. odoo-javascript
@@ -9776,8 +9773,8 @@ msgid ""
 "(activity_type_model)s\"."
 msgstr ""
 "Tipul de activitate \"%(activity_type_name)s\" nu este compatibil cu planul "
-"\"%(plan_name)s\" deoarece este limitat la modelul \"%"
-"(activity_type_model)s\"."
+"\"%(plan_name)s\" deoarece este limitat la modelul \"%(activity_type_model)"
+"s\"."
 
 #. module: mail
 #. odoo-python
@@ -10855,8 +10852,7 @@ msgstr "Folosește în lot"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Use message_notify to send a notification to an user."
-msgstr ""
-"Folosește message_notify pentru a trimite o notificare unui utilizator."
+msgstr "Folosește message_notify pentru a trimite o notificare unui utilizator."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
@@ -11251,8 +11247,8 @@ msgid ""
 msgstr ""
 "La tipărirea documentelor și exportul/importul datelor, valorile de timp "
 "sunt calculate conform acestui fus orar.\n"
-"Dacă fusul orar nu este setat, se folosește UTC (Coordinated Universal "
-"Time).\n"
+"Dacă fusul orar nu este setat, se folosește UTC (Coordinated Universal Time)"
+".\n"
 "În rest, valorile de timp sunt calculate conform diferenței de fus orar a "
 "clientului web."
 
@@ -11717,8 +11713,8 @@ msgid ""
 "                <br/>\n"
 "                Please try again later."
 msgstr ""
-"pentru că ați contactat-o de prea multe ori în ultimele minute.<br/"
-">Încercați din nou mai târziu."
+"pentru că ați contactat-o de prea multe ori în ultimele minute.<br/>"
+"Încercați din nou mai târziu."
 
 #. module: mail
 #. odoo-javascript
@@ -11845,8 +11841,8 @@ msgstr "de exemplu, „E-mail de întâmpinare”"
 msgid ""
 "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
-"de exemplu, „Bine ați venit la MyCompany” sau „Mă bucur să vă cunosc, "
-"{{ object.name }}”"
+"de exemplu, „Bine ați venit la MyCompany” sau „Mă bucur să vă cunosc, {{ "
+"object.name }}”"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form

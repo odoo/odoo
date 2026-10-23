@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-08-14 18:53+0000\n"
+"PO-Revision-Date: 2026-10-20 12:45+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-18/project/th/>"
 "\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: project
 #. odoo-python
@@ -185,8 +185,8 @@ msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
 msgstr ""
-"#{record.milestone_count_reached.value} ไมล์สโตนเสร็จถึง "
-"#{record.milestone_count.value}"
+"#{record.milestone_count_reached.value} ไมล์สโตนเสร็จถึง #"
+"{record.milestone_count.value}"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -314,10 +314,9 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # <b>mentions</"
 "b> to reach an entire team."
 msgstr ""
-"<b>หมายเหตุของบันทึก</b> สำหรับการสื่อสารภายใน "
-"<i>(ผู้ที่ติดตามงานนี้จะไม่ได้รับการแจ้งเตือนเกี่ยวกับบันทึกที่คุณกำลังบันทึก "
-"ยกเว้นในกรณีที่คุณแท็กพวกเขาโดยเฉพาะ)</i> ใช้ @ <b>กล่าวถึง</b> เพื่อแท็กเพื่อนร่วมงานหรือ # "
-"<b>กล่าวถึง</b> เพื่อติดต่อทีมทั้งหมด"
+"<b>หมายเหตุของบันทึก</b> สำหรับการสื่อสารภายใน <i>(ผู้ที่ติดตามงานนี้จะไม่ได้รับการแจ้งเตือนเกี่ย"
+"วกับบันทึกที่คุณกำลังบันทึก ยกเว้นในกรณีที่คุณแท็กพวกเขาโดยเฉพาะ)</i> ใช้ @ <b>กล่าวถึง</b> เพื่อ"
+"แท็กเพื่อนร่วมงานหรือ # <b>กล่าวถึง</b> เพื่อติดต่อทีมทั้งหมด"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -431,16 +430,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()"
-"\"></t>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\">"
+"</t>\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                สวัสดี <t t-out=\"partner.name or ''\">Brandon Freeman</t>,"
-"<br><br>\n"
+"                สวัสดี <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br>"
+"<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                สวัสดี<br><br>\n"
@@ -448,9 +447,8 @@ msgstr ""
 "            กรุณาใช้เวลาสักครู่เพื่อให้คะแนนบริการของเราที่เกี่ยวข้องกับ<strong t-"
 "out=\"object.name or ''\">งานวางแผนและงบประมาณ</strong>\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                ถูกมอบหมายให้กับ <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>."
-"<br>\n"
+"                ถูกมอบหมายให้กับ <strong t-out=\"object._rating_get_operator()"
+".name or ''\">Mitchell Admin</strong>.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br>\n"
@@ -461,8 +459,8 @@ msgstr ""
 "width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
 "table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
-"                    <strong>บอกเราว่าคุณรู้สึกอย่างไรเกี่ยวกับบริการของเรา</"
-"strong><br>\n"
+"                    <strong>บอกเราว่าคุณรู้สึกอย่างไรเกี่ยวกับบริการของเรา</strong><br>"
+"\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: "
 "#454748;\">(คลิกที่อีโมติคอนเหล่านี้)</span>\n"
 "                </td></tr>\n"
@@ -500,16 +498,14 @@ msgstr ""
 "            เรายินดีรับคำติชมของคุณ ซึ่งจะช่วยให้เราปรับปรุงได้อย่างต่อเนื่อง\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
 "                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
-"color: "
-"#454748;\">แบบสำรวจความพึงพอใจนี้ถูกส่งไปแล้วเนื่องจากงานของคุณได้ถูกย้ายไปยังขั้นตอน <b t-"
-"out=\"object.stage_id.name or ''\">อยู่ระหว่างดำเนินการ</b></span>\n"
+"color: #454748;\">แบบสำรวจความพึงพอใจนี้ถูกส่งไปแล้วเนื่องจากงานของคุณได้ถูกย้ายไปยังขั้นตอ"
+"น <b t-out=\"object.stage_id.name or ''\">อยู่ระหว่างดำเนินการ</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
 "                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
 "color: #454748;\">แบบสำรวจความพึงพอใจจะถูกส่งเป็น<b t-"
-"out=\"object.project_id.rating_status_period or ''\">รายสัปดาห์</b> "
-"เท่าที่ยังอยู่ในขั้นตอน <b t-out=\"object.stage_id.name or ''\">อยู่ระหว่างดำเนินการ</"
-"b></span>\n"
+"out=\"object.project_id.rating_status_period or ''\">รายสัปดาห์</b> เท่าที่ยังอยู่ในขั้"
+"นตอน <b t-out=\"object.stage_id.name or ''\">อยู่ระหว่างดำเนินการ</b></span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br>ขอแสดงความนับถือ</td></tr>\n"
@@ -518,19 +514,19 @@ msgstr ""
 "t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
-"a>\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
+"\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -570,9 +566,9 @@ msgstr ""
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
-"color: #454748;\" "
-"groups=\"project.group_project_stages\">คุณได้รับอีเมลนี้เนื่องจากโปรเจ็กต์ของคุณถูกย้ายไปยังขั้นตอน "
-"<b t-out=\"object.stage_id.name or ''\">เสร็จสิ้น</b> เรียบร้อยแล้ว</span>\n"
+"color: #454748;\" groups=\"project.group_project_stages\">คุณได้รับอีเมลนี้เนื่องจากโ"
+"ปรเจ็กต์ของคุณถูกย้ายไปยังขั้นตอน <b t-out=\"object.stage_id.name or ''\">เสร็จสิ้น</b> "
+"เรียบร้อยแล้ว</span>\n"
 "            "
 
 #. module: project
@@ -602,8 +598,8 @@ msgstr ""
 "t>,<br/><br/>\n"
 "    ขอบคุณที่ติดต่อเรา เรายินดีที่คุณสนใจผลิตภัณฑ์และบริการของเรา<br/>\n"
 "    ทีมงานของเรากำลังตรวจสอบคำถามของคุณและจะตอบกลับอีเมลของคุณโดยเร็วที่สุด<br/>\n"
-"    หากคุณมีคำถามหรือข้อสงสัยเพิ่มเติมในระหว่างนี้ โปรดแจ้งให้เราทราบ "
-"เราพร้อมช่วยเหลือคุณทันที<br/><br/>\n"
+"    หากคุณมีคำถามหรือข้อสงสัยเพิ่มเติมในระหว่างนี้ โปรดแจ้งให้เราทราบ เราพร้อมช่วยเหลือคุณทัน"
+"ที<br/><br/>\n"
 "    ขอขอบคุณที่อดทนรอ<br/>\n"
 "    ขอแสดงความนับถือ\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
@@ -628,8 +624,8 @@ msgstr ""
 "<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
 "invisible=\"rating_avg < 3.66\" title=\"พึงพอใจ\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-"
-"warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" "
-"title=\"โอเค\"/>\n"
+"warning\" invisible=\"rating_avg < 2.33 or rating_avg >= 3.66\" title=\"โอเ"
+"ค\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
 "text-danger\" invisible=\"rating_avg >= 2.33\" title=\"ไม่พอใจ\"/>"
 
@@ -649,8 +645,8 @@ msgid ""
 "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
-"<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/"
-"><b>การให้คะแนนของลูกค้า</b> ถูกปิดใช้งานในโปรเจ็กต์ต่อไปนี้:<br/>"
+"<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b>การให้ค"
+"ะแนนของลูกค้า</b> ถูกปิดใช้งานในโปรเจ็กต์ต่อไปนี้:<br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -693,8 +689,8 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
-"<span class=\"fa fa-envelope-o me-2\" aria-label=\"นามแฝงโดเมน\" "
-"title=\"นามแฝงโดเมน\"/>"
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"นามแฝงโดเมน\" title=\"นามแ"
+"ฝงโดเมน\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -765,13 +761,11 @@ msgstr ""
 "                                                    <i class=\"fa fa-"
 "lightbulb-o pe-2\"/>\n"
 "                                                    <span "
-"invisible=\"rating_status == "
-"'periodic'\">คำขอการให้คะแนนจะถูกส่งทันทีที่งานถึงขั้นตอนที่มีการกำหนดเทมเพลตอีเมลการให้คะแนน</"
-"span>\n"
+"invisible=\"rating_status == 'periodic'\">คำขอการให้คะแนนจะถูกส่งทันทีที่งานถึงขั้นตอนที่"
+"มีการกำหนดเทมเพลตอีเมลการให้คะแนน</span>\n"
 "                                                    <span "
-"invisible=\"rating_status == "
-"'stage'\">คำขอการให้คะแนนจะถูกส่งเท่าที่งานยังคงอยู่ในขั้นตอนที่มีการกำหนดเทมเพลตอีเมลการให้คะแนน</"
-"span>\n"
+"invisible=\"rating_status == 'stage'\">คำขอการให้คะแนนจะถูกส่งเท่าที่งานยังคงอยู่ในขั้นต"
+"อนที่มีการกำหนดเทมเพลตอีเมลการให้คะแนน</span>\n"
 "                                                </span>"
 
 #. module: project
@@ -823,8 +817,8 @@ msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
 msgstr ""
-"ไม่สามารถเลือกผู้ทำงานร่วมกันได้มากกว่าหนึ่งครั้งในการเข้าถึงการแชร์โปรเจ็กต์ "
-"โปรดลบรายการที่ซ้ำกันออกแล้วลองอีกครั้ง"
+"ไม่สามารถเลือกผู้ทำงานร่วมกันได้มากกว่าหนึ่งครั้งในการเข้าถึงการแชร์โปรเจ็กต์ โปรดลบรายการที่ซ้ำกั"
+"นออกแล้วลองอีกครั้ง"
 
 #. module: project
 #. odoo-python
@@ -845,8 +839,8 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to "
 "its corresponding user."
 msgstr ""
-"สถานะส่วนบุคคลไม่สามารถเชื่อมโยงกับโปรเจ็กต์ได้ "
-"เนื่องจากมีเพียงผู้ใช้ที่เกี่ยวข้องเท่านั้นที่สามารถมองเห็นได้"
+"สถานะส่วนบุคคลไม่สามารถเชื่อมโยงกับโปรเจ็กต์ได้ เนื่องจากมีเพียงผู้ใช้ที่เกี่ยวข้องเท่านั้นที่สามารถมอง"
+"เห็นได้"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
@@ -973,8 +967,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"เพิ่มคอลัมน์เพื่อจัดระเบียบงานของคุณเป็น <b>สถานะ</b> <i>เช่น ใหม่ - อยู่ในระหว่างดำเนินการ "
-"- เสร็จสิ้น</i>"
+"เพิ่มคอลัมน์เพื่อจัดระเบียบงานของคุณเป็น <b>สถานะ</b> <i>เช่น ใหม่ - อยู่ในระหว่างดำเนินกา"
+"ร - เสร็จสิ้น</i>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -992,7 +986,8 @@ msgstr "เพิ่มเนื้อหาเพิ่มเติมเพื
 msgid ""
 "Add project-specific property fields on tasks to customize your project "
 "management process."
-msgstr "เพิ่มฟิลด์คุณสมบัติเฉพาะโปรเจ็กต์บนงานเพื่อปรับแต่งกระบวนการจัดการโปรเจ็กต์ของคุณ"
+msgstr ""
+"เพิ่มฟิลด์คุณสมบัติเฉพาะโปรเจ็กต์บนงานเพื่อปรับแต่งกระบวนการจัดการโปรเจ็กต์ของคุณ"
 
 #. module: project
 #. odoo-javascript
@@ -1108,8 +1103,8 @@ msgid ""
 "Analyze how quickly your team is completing your project's tasks and check "
 "if everything is progressing according to plan."
 msgstr ""
-"วิเคราะห์ว่าทีมของคุณทำงานในโปรเจ็กต์เสร็จเร็วแค่ไหน "
-"และตรวจสอบว่าทุกอย่างคืบหน้าตามแผนที่วางไว้หรือไม่"
+"วิเคราะห์ว่าทีมของคุณทำงานในโปรเจ็กต์เสร็จเร็วแค่ไหน และตรวจสอบว่าทุกอย่างคืบหน้าตามแผนที่วางไ"
+"ว้หรือไม่"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -1265,7 +1260,8 @@ msgstr "มีความเสี่ยง"
 msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
-msgstr "แนบเอกสารทั้งหมดหรือลิงก์ไปยังงานโดยตรง เพื่อรวมข้อมูลการวิจัยทั้งหมดไว้ที่ศูนย์กลาง"
+msgstr ""
+"แนบเอกสารทั้งหมดหรือลิงก์ไปยังงานโดยตรง เพื่อรวมข้อมูลการวิจัยทั้งหมดไว้ที่ศูนย์กลาง"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1312,15 +1308,16 @@ msgid ""
 msgstr ""
 "แก้ไขสถานะโดยอัตโนมัติเมื่อลูกค้าได้ตอบกลับความคิดเห็นสำหรับสถานะนี้\n"
 "* ผลตอบรับที่ดีจากลูกค้าจะอัปเดตสถานะเป็น 'อนุมัติ' (สัญลักษณ์แสดงหัวข้อย่อยสีเขียว)\n"
-"* ข้อเสนอแนะที่เป็นกลางหรือไม่ดีจะถูกตั้งค่าจากสถานะคัมบัง เป็น 'ขอการเปลี่ยนแปลง' "
-"(สัญลักษณ์แสดงหัวข้อย่อยสีส้ม)\n"
+"* ข้อเสนอแนะที่เป็นกลางหรือไม่ดีจะถูกตั้งค่าจากสถานะคัมบัง เป็น 'ขอการเปลี่ยนแปลง' (สัญลักษณ์แสด"
+"งหัวข้อย่อยสีส้ม)\n"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
 msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
-msgstr "ส่งอีเมลถึงลูกค้าโดยอัตโนมัติเมื่องานถึงขั้นตอนที่ระบุในโครงการโดยการตั้งค่าเทมเพลตนี้ในขั้นตอนนั้น"
+msgstr ""
+"ส่งอีเมลถึงลูกค้าโดยอัตโนมัติเมื่องานถึงขั้นตอนที่ระบุในโครงการโดยการตั้งค่าเทมเพลตนี้ในขั้นตอนนั้น"
 
 #. module: project
 #. odoo-javascript
@@ -1461,8 +1458,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the "
 "name of a customer, of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
-"เลือก <b>ชื่อ</b> สำหรับโปรเจ็กต์ของคุณ <i>สามารถเป็นอะไรก็ได้: ชื่อของลูกค้า, ชื่อสินค้า, "
-"ชื่อทีม, ชื่อสถานที่ก่อสร้าง เป็นต้น</i>"
+"เลือก <b>ชื่อ</b> สำหรับโปรเจ็กต์ของคุณ <i>สามารถเป็นอะไรก็ได้: ชื่อของลูกค้า, ชื่อสินค้า, ชื่อที"
+"ม, ชื่อสถานที่ก่อสร้าง เป็นต้น</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1474,7 +1471,8 @@ msgstr "เลือก <b>ชื่อ</b> งาน <i>(เช่น ออก
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
-msgstr "เลือกโหมดการเข้าถึงอย่างใดอย่างหนึ่งต่อไปนี้สำหรับผู้ทำงานร่วมกันของคุณ:"
+msgstr ""
+"เลือกโหมดการเข้าถึงอย่างใดอย่างหนึ่งต่อไปนี้สำหรับผู้ทำงานร่วมกันของคุณ:"
 
 #. module: project
 #. odoo-javascript
@@ -1548,12 +1546,12 @@ msgid ""
 "long as the task remains in the stage in which the rating email template is "
 "set."
 msgstr ""
-"รวบรวมคำติชมจากลูกค้าของคุณโดยส่งคำขอให้คะแนนเมื่องานเข้าสู่สถานะใดสถานะหนึ่ง "
-"ในการทำเช่นนั้น ให้กำหนดเท็มเพลตอีเมลการให้คะแนนในสถานะที่เกี่ยวข้อง\n"
-"การให้คะแนนเมื่อเปลี่ยนสถานะ: "
-"อีเมลจะถูกส่งโดยอัตโนมัติเมื่องานถึงสถานะที่ตั้งค่าเทมเพลตอีเมลการให้คะแนนไว้\n"
-"การให้คะแนนตามระยะเวลา: อีเมลจะถูกส่งโดยอัตโนมัติตามช่วงเวลาปกติ "
-"ตราบที่งานยังคงอยู่ในสถานะที่มีการตั้งค่าเทมเพลตอีเมลการให้คะแนน"
+"รวบรวมคำติชมจากลูกค้าของคุณโดยส่งคำขอให้คะแนนเมื่องานเข้าสู่สถานะใดสถานะหนึ่ง ในการทำเช่นนั้"
+"น ให้กำหนดเท็มเพลตอีเมลการให้คะแนนในสถานะที่เกี่ยวข้อง\n"
+"การให้คะแนนเมื่อเปลี่ยนสถานะ: อีเมลจะถูกส่งโดยอัตโนมัติเมื่องานถึงสถานะที่ตั้งค่าเทมเพลตอีเมลการใ"
+"ห้คะแนนไว้\n"
+"การให้คะแนนตามระยะเวลา: อีเมลจะถูกส่งโดยอัตโนมัติตามช่วงเวลาปกติ ตราบที่งานยังคงอยู่ในสถานะ"
+"ที่มีการตั้งค่าเทมเพลตอีเมลการให้คะแนน"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1711,7 +1709,8 @@ msgstr "สร้างโปรเจกต์"
 msgid ""
 "Create projects to organize your tasks and define a different workflow for "
 "each project."
-msgstr "สร้างโปรเจ็กต์เพื่อจัดระเบียบงานของคุณและกำหนดขั้นตอนการทำงานที่แตกต่างกันสำหรับแต่ละโปรเจ็กต์"
+msgstr ""
+"สร้างโปรเจ็กต์เพื่อจัดระเบียบงานของคุณและกำหนดขั้นตอนการทำงานที่แตกต่างกันสำหรับแต่ละโปรเจ็กต์"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -1793,7 +1792,8 @@ msgstr "สถานะปัจจุบันของงานนี้"
 msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
-msgstr "ขณะนี้เปิดให้ทุกคนที่ดูเอกสารนี้ คลิกเพื่อจำกัดเฉพาะพนักงานภายในเท่านั้น"
+msgstr ""
+"ขณะนี้เปิดให้ทุกคนที่ดูเอกสารนี้ คลิกเพื่อจำกัดเฉพาะพนักงานภายในเท่านั้น"
 
 #. module: project
 #. odoo-javascript
@@ -1801,7 +1801,8 @@ msgstr "ขณะนี้เปิดให้ทุกคนที่ดูเ
 msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
-msgstr "ขณะนี้จำกัดเฉพาะพนักงานภายในเท่านั้น คลิกเพื่อให้ทุกคนที่ดูเอกสารนี้สามารถใช้ได้"
+msgstr ""
+"ขณะนี้จำกัดเฉพาะพนักงานภายในเท่านั้น คลิกเพื่อให้ทุกคนที่ดูเอกสารนี้สามารถใช้ได้"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
@@ -1901,15 +1902,16 @@ msgid ""
 "to another."
 msgstr ""
 "วันที่ที่สถานะของงานของคุณได้รับการแก้ไขครั้งล่าสุด\n"
-"จากข้อมูลนี้ "
-"คุณสามารถระบุงานที่ค้างและรับสถิติเกี่ยวกับเวลาที่ใช้ในการย้ายงานจากสถานะหนึ่งไปยังอีกสถานะหนึ่งได้"
+"จากข้อมูลนี้ คุณสามารถระบุงานที่ค้างและรับสถิติเกี่ยวกับเวลาที่ใช้ในการย้ายงานจากสถานะหนึ่งไปยังอีกส"
+"ถานะหนึ่งได้"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
 msgid ""
 "Date on which this project ends. The timeframe defined on the project is "
 "taken into account when viewing its planning."
-msgstr "วันที่โปรเจ็กต์นี้สิ้นสุด กรอบเวลาที่กำหนดไว้ในโปรเจ็กต์จะถูกนำมาพิจารณาเมื่อดูการวางแผน"
+msgstr ""
+"วันที่โปรเจ็กต์นี้สิ้นสุด กรอบเวลาที่กำหนดไว้ในโปรเจ็กต์จะถูกนำมาพิจารณาเมื่อดูการวางแผน"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_assign
@@ -1917,8 +1919,8 @@ msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
-"วันที่มอบหมายงานนี้ครั้งล่าสุด (หรือยังไม่ได้มอบหมาย) จากข้อมูลนี้ "
-"คุณจะได้รับสถิติเกี่ยวกับเวลาที่ใช้ในการมอบหมายงานตามปกติ"
+"วันที่มอบหมายงานนี้ครั้งล่าสุด (หรือยังไม่ได้มอบหมาย) จากข้อมูลนี้ คุณจะได้รับสถิติเกี่ยวกับเวลาที่ใช้ในก"
+"ารมอบหมายงานตามปกติ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1972,7 +1974,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid ""
 "Define the steps your projects move through from creation to completion."
-msgstr "กำหนดขั้นตอนที่โปรเจ็กต์ของคุณดำเนินการ ตั้งแต่การสร้างงานจนเสร็จสมบูรณ์"
+msgstr ""
+"กำหนดขั้นตอนที่โปรเจ็กต์ของคุณดำเนินการ ตั้งแต่การสร้างงานจนเสร็จสมบูรณ์"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
@@ -2017,7 +2020,8 @@ msgstr "ลบสถานะ"
 msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
-msgstr "ส่งมอบบริการของคุณโดยอัตโนมัติ เมื่อเสร็จตามไมล์สโตนโดยเชื่อมโยงกับรายการในใบสั่งขาย"
+msgstr ""
+"ส่งมอบบริการของคุณโดยอัตโนมัติ เมื่อเสร็จตามไมล์สโตนโดยเชื่อมโยงกับรายการในใบสั่งขาย"
 
 #. module: project
 #. odoo-javascript
@@ -2167,8 +2171,8 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
-"ผู้ใช้แต่ละคนควรมีขั้นตอนส่วนตัวอย่างน้อยหนึ่งขั้นตอน "
-"การสร้างขั้นตอนใหม่จะสามารถถ่ายโอนงานได้หลังจากลบงานที่เลือกแล้ว"
+"ผู้ใช้แต่ละคนควรมีขั้นตอนส่วนตัวอย่างน้อยหนึ่งขั้นตอน การสร้างขั้นตอนใหม่จะสามารถถ่ายโอนงานได้หลังจ"
+"ากลบงานที่เลือกแล้ว"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit
@@ -2194,8 +2198,8 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
-"แก้ไข: ผู้ทำงานร่วมกันสามารถดูและแก้ไขงานทั้งหมดในมุมมองคัมบังได้ นอกจากนี้ "
-"พวกเขาสามารถเลือกงานที่ต้องการติดตามได้"
+"แก้ไข: ผู้ทำงานร่วมกันสามารถดูและแก้ไขงานทั้งหมดในมุมมองคัมบังได้ นอกจากนี้ พวกเขาสามารถเลือก"
+"งานที่ต้องการติดตามได้"
 
 #. module: project
 #. odoo-javascript
@@ -2219,7 +2223,8 @@ msgstr "เทมเพลตอีเมล"
 msgid ""
 "Email addresses that were in the CC of the incoming emails from this task "
 "and that are not currently linked to an existing customer."
-msgstr "ที่อยู่อีเมลใน CC ของอีเมลขาเข้าจากงานนี้และที่อยู่อีเมลที่ไม่ได้เชื่อมโยงกับลูกค้าปัจจุบัน"
+msgstr ""
+"ที่อยู่อีเมลใน CC ของอีเมลขาเข้าจากงานนี้และที่อยู่อีเมลที่ไม่ได้เชื่อมโยงกับลูกค้าปัจจุบัน"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -2266,7 +2271,8 @@ msgstr "เกิดข้อผิดพลาด! คุณไม่สาม�
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
-msgstr "ทุกคนสามารถเสนอไอเดียได้ และตัวแก้ไขจะทำเครื่องหมายไอเดียที่ดีที่สุดไว้เป็น"
+msgstr ""
+"ทุกคนสามารถเสนอไอเดียได้ และตัวแก้ไขจะทำเครื่องหมายไอเดียที่ดีที่สุดไว้เป็น"
 
 #. module: project
 #. odoo-javascript
@@ -2400,7 +2406,8 @@ msgstr "กิจกรรมในอนาคต"
 msgid ""
 "Get a snapshot of the status of your project and share its progress with key "
 "stakeholders."
-msgstr "รับภาพรวมสถานะของโปรเจ็กต์ของคุณและแชร์ความคืบหน้ากับผู้มีส่วนได้ส่วนเสียหลัก"
+msgstr ""
+"รับภาพรวมสถานะของโปรเจ็กต์ของคุณและแชร์ความคืบหน้ากับผู้มีส่วนได้ส่วนเสียหลัก"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2425,8 +2432,8 @@ msgid ""
 "Grant employees access to your project or tasks by adding them as followers. "
 "Employees automatically get access to the tasks they are assigned to."
 msgstr ""
-"ให้สิทธิ์พนักงานในการเข้าถึงโปรเจ็กต์หรืองานของคุณโดยเพิ่มพวกเขาเป็นผู้ติดตาม "
-"พนักงานจะสามารถเข้าถึงงานที่ได้รับมอบหมายได้โดยอัตโนมัติ"
+"ให้สิทธิ์พนักงานในการเข้าถึงโปรเจ็กต์หรืองานของคุณโดยเพิ่มพวกเขาเป็นผู้ติดตาม พนักงานจะสามารถเข้"
+"าถึงงานที่ได้รับมอบหมายได้โดยอัตโนมัติ"
 
 #. module: project
 #. odoo-python
@@ -2436,8 +2443,8 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal "
 "user, add them as followers for these tasks."
 msgstr ""
-"ให้สิทธิ์ผู้ใช้พอร์ทัลเข้าถึงโครงการของคุณโดยเพิ่มพวกเขาเป็นผู้ติดตาม (ไม่รวมงานของโครงการ) "
-"หากต้องการให้สิทธิ์การเข้าถึงงานแก่ผู้ใช้พอร์ทัล ให้เพิ่มพวกเขาเป็นผู้ติดตามสำหรับงานเหล่านี้"
+"ให้สิทธิ์ผู้ใช้พอร์ทัลเข้าถึงโครงการของคุณโดยเพิ่มพวกเขาเป็นผู้ติดตาม (ไม่รวมงานของโครงการ) หากต้"
+"องการให้สิทธิ์การเข้าถึงงานแก่ผู้ใช้พอร์ทัล ให้เพิ่มพวกเขาเป็นผู้ติดตามสำหรับงานเหล่านี้"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -2452,7 +2459,8 @@ msgstr "กลุ่มโดย"
 msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them "
 "in the chatter of the tasks."
-msgstr "จัดการการรวบรวมไอเดียของคุณภายในงานของโปรเจ็กต์ใหม่ของคุณและพูดคุยกับพวกเขาในแชทของงาน"
+msgstr ""
+"จัดการการรวบรวมไอเดียของคุณภายในงานของโปรเจ็กต์ใหม่ของคุณและพูดคุยกับพวกเขาในแชทของงาน"
 
 #. module: project
 #. odoo-javascript
@@ -2561,7 +2569,8 @@ msgstr "ไอดี"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
-msgstr "ไอดีของบันทึกหลักที่มีนามแฝง (ตัวอย่าง: โปรเจ็กต์ที่มีนามแฝงในการสร้างงาน)"
+msgstr ""
+"ไอดีของบันทึกหลักที่มีนามแฝง (ตัวอย่าง: โปรเจ็กต์ที่มีนามแฝงในการสร้างงาน)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_icon
@@ -2609,8 +2618,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
 "your projects. Projects in a folded stage are considered as closed."
 msgstr ""
-"หากเปิดใช้งาน สถานะนี้จะแสดงเป็นแบบพับในมุมมองคัมบังของโปรเจ็กต์ของคุณ "
-"โปรเจ็กต์ที่อยู่ในสถานะที่พับอยู่จะถือว่าปิดแล้ว"
+"หากเปิดใช้งาน สถานะนี้จะแสดงเป็นแบบพับในมุมมองคัมบังของโปรเจ็กต์ของคุณ โปรเจ็กต์ที่อยู่ในสถานะที่"
+"พับอยู่จะถือว่าปิดแล้ว"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2623,31 +2632,34 @@ msgid ""
 "on your project."
 msgstr ""
 "หากตั้งค่าไว้ คำขอการจัดอันดับจะถูกส่งทางอีเมลให้กับลูกค้าโดยอัตโนมัติเมื่องานถึงสถานะนี้\n"
-"หรือจะถูกส่งในช่วงเวลาปกติ ตราบเท่าที่งานยังคงอยู่ในสถานะนี้ "
-"ขึ้นอยู่กับการกำหนดค่าของโปรเจ็กต์ของคุณ\n"
-"หากต้องการใช้ฟีเจอร์นี้ ตรวจสอบให้แน่ใจว่าได้เปิดใช้งานตัวเลือก 'การให้คะแนนของลูกค้า' "
-"ในโปรเจ็กต์ของคุณ"
+"หรือจะถูกส่งในช่วงเวลาปกติ ตราบเท่าที่งานยังคงอยู่ในสถานะนี้ ขึ้นอยู่กับการกำหนดค่าของโปรเจ็กต์ของ"
+"คุณ\n"
+"หากต้องการใช้ฟีเจอร์นี้ ตรวจสอบให้แน่ใจว่าได้เปิดใช้งานตัวเลือก 'การให้คะแนนของลูกค้า' ในโปรเจ็"
+"กต์ของคุณ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
 msgid ""
 "If set, an email will be automatically sent to the customer when the project "
 "reaches this stage."
-msgstr "หากตั้งค่าไว้ อีเมลจะถูกส่งไปยังลูกค้าโดยอัตโนมัติเมื่อโปรเจ็กต์มาถึงสถานะนี้"
+msgstr ""
+"หากตั้งค่าไว้ อีเมลจะถูกส่งไปยังลูกค้าโดยอัตโนมัติเมื่อโปรเจ็กต์มาถึงสถานะนี้"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
 msgid ""
 "If set, an email will be automatically sent to the customer when the task "
 "reaches this stage."
-msgstr "หากตั้งค่าไว้ อีเมลจะถูกส่งไปยังลูกค้าโดยอัตโนมัติเมื่องานได้ถึงสถานะนี้"
+msgstr ""
+"หากตั้งค่าไว้ อีเมลจะถูกส่งไปยังลูกค้าโดยอัตโนมัติเมื่องานได้ถึงสถานะนี้"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
-msgstr "หากตั้งค่าไว้ เนื้อหานี้จะถูกส่งไปยังผู้ใช้ที่ไม่ได้รับอนุญาตโดยอัตโนมัติแทนข้อความเริ่มต้น"
+msgstr ""
+"หากตั้งค่าไว้ เนื้อหานี้จะถูกส่งไปยังผู้ใช้ที่ไม่ได้รับอนุญาตโดยอัตโนมัติแทนข้อความเริ่มต้น"
 
 #. module: project
 #. odoo-javascript
@@ -2698,8 +2710,8 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
-"อีเมลภายในที่เกี่ยวข้องกับโปรเจ็กต์นี้ อีเมลขาเข้าจะถูกซิงโครไนซ์กับงานโดยอัตโนมัติ "
-"(หรืออาจเกิดปัญหาเพิ่มเติม หากได้มีการติดตั้งโมดูลตัวติดตามปัญหา)"
+"อีเมลภายในที่เกี่ยวข้องกับโปรเจ็กต์นี้ อีเมลขาเข้าจะถูกซิงโครไนซ์กับงานโดยอัตโนมัติ (หรืออาจเกิดปัญห"
+"าเพิ่มเติม หากได้มีการติดตั้งโมดูลตัวติดตามปัญหา)"
 
 #. module: project
 #. odoo-javascript
@@ -3016,7 +3028,8 @@ msgstr "การจัดหาวัสดุ"
 msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
-msgstr "สอบถามความพึงพอใจของลูกค้าโดยส่งคำขอการให้คะแนนเมื่องานของคุณถึงสถานะใดสถานะหนึ่ง"
+msgstr ""
+"สอบถามความพึงพอใจของลูกค้าโดยส่งคำขอการให้คะแนนเมื่องานของคุณถึงสถานะใดสถานะหนึ่ง"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_15
@@ -3145,7 +3158,8 @@ msgstr "ชื่อของงาน"
 msgid ""
 "Name used to refer to the tasks of your project e.g. tasks, tickets, "
 "sprints, etc..."
-msgstr "ชื่อที่ใช้อ้างถึงงานในโปรเจ็กต์ของคุณ เช่น งาน ทิกเก็ต สปริ้นท์ และอื่นๆ..."
+msgstr ""
+"ชื่อที่ใช้อ้างถึงงานในโปรเจ็กต์ของคุณ เช่น งาน ทิกเก็ต สปริ้นท์ และอื่นๆ..."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3462,8 +3476,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ไอดีทางเลือกของเธรด (บันทึก) ที่จะแนบข้อความขาเข้าทั้งหมด แม้ว่าพวกเขาจะไม่ตอบกลับก็ตาม "
-"หากตั้งค่าไว้ การดำเนินการนี้จะปิดใช้งานการสร้างการบันทึกใหม่ทั้งหมด"
+"ไอดีทางเลือกของเธรด (บันทึก) ที่จะแนบข้อความขาเข้าทั้งหมด แม้ว่าพวกเขาจะไม่ตอบกลับก็ตาม หากตั้"
+"งค่าไว้ การดำเนินการนี้จะปิดใช้งานการสร้างการบันทึกใหม่ทั้งหมด"
 
 #. module: project
 #. odoo-javascript
@@ -3591,28 +3605,24 @@ msgid ""
 msgstr ""
 "ผู้ที่จะเห็นโครงการและงานของโครงการนี้\n"
 "\n"
-"- ผู้ใช้ภายในที่ถูกเชิญ: เมื่อติดตามโครงการ "
-"ผู้ใช้ภายในจะสามารถเข้าถึงงานทั้งหมดได้โดยไม่มีความแตกต่าง "
-"ไม่เช่นนั้นพวกเขาจะเข้าถึงเฉพาะงานเฉพาะที่พวกเขาติดตามเท่านั้น\n"
-" ผู้ใช้ที่มีระดับสิทธิ์การเข้าถึงโครงการ > "
-"ผู้ดูแลระบบยังคงสามารถเข้าถึงโครงการนี้และงานของโครงการได้ "
-"แม้ว่าพวกเขาจะไม่ได้เป็นส่วนหนึ่งของผู้ติดตามอย่างชัดเจนก็ตาม\n"
+"- ผู้ใช้ภายในที่ถูกเชิญ: เมื่อติดตามโครงการ ผู้ใช้ภายในจะสามารถเข้าถึงงานทั้งหมดได้โดยไม่มีความแต"
+"กต่าง ไม่เช่นนั้นพวกเขาจะเข้าถึงเฉพาะงานเฉพาะที่พวกเขาติดตามเท่านั้น\n"
+" ผู้ใช้ที่มีระดับสิทธิ์การเข้าถึงโครงการ > ผู้ดูแลระบบยังคงสามารถเข้าถึงโครงการนี้และงานของโครงกา"
+"รได้ แม้ว่าพวกเขาจะไม่ได้เป็นส่วนหนึ่งของผู้ติดตามอย่างชัดเจนก็ตาม\n"
 "\n"
 "- ผู้ใช้ภายในทั้งหมด: ผู้ใช้ภายในทุกคนสามารถเข้าถึงโครงการและงานทั้งหมดโดยไม่มีความแตกต่าง\n"
 "\n"
-"- ผู้ใช้พอร์ทัลที่ถูกเชิญและผู้ใช้ภายในทั้งหมด: "
-"ผู้ใช้ภายในทั้งหมดสามารถเข้าถึงโครงการและงานทั้งหมดโดยไม่แตกต่าง\n"
+"- ผู้ใช้พอร์ทัลที่ถูกเชิญและผู้ใช้ภายในทั้งหมด: ผู้ใช้ภายในทั้งหมดสามารถเข้าถึงโครงการและงานทั้งหมดโ"
+"ดยไม่แตกต่าง\n"
 "เมื่อติดตามโครงการ ผู้ใช้พอร์ทัลจะสามารถเข้าถึงเฉพาะงานที่พวกเขาติดตามเท่านั้น\n"
 "\n"
-"เมื่อมีการแชร์โครงการแบบอ่านอย่างเดียว ผู้ใช้พอร์ทัลจะถูกเปลี่ยนเส้นทางไปยังพอร์ทัลของพวกเขา "
-"พวกเขาสามารถดูงานที่พวกเขากำลังติดตามได้ แต่ไม่สามารถแก้ไขได้\n"
-"เมื่อมีการแชร์โครงการในการแก้ไข "
-"ผู้ใช้พอร์ทัลจะถูกเปลี่ยนเส้นทางไปยังคัมบังและมุมมองรายการของงาน "
-"พวกเขาสามารถแก้ไขช่องจำนวนที่เลือกในงานได้\n"
+"เมื่อมีการแชร์โครงการแบบอ่านอย่างเดียว ผู้ใช้พอร์ทัลจะถูกเปลี่ยนเส้นทางไปยังพอร์ทัลของพวกเขา พวก"
+"เขาสามารถดูงานที่พวกเขากำลังติดตามได้ แต่ไม่สามารถแก้ไขได้\n"
+"เมื่อมีการแชร์โครงการในการแก้ไข ผู้ใช้พอร์ทัลจะถูกเปลี่ยนเส้นทางไปยังคัมบังและมุมมองรายการของงา"
+"น พวกเขาสามารถแก้ไขช่องจำนวนที่เลือกในงานได้\n"
 "\n"
-"ไม่ว่าในกรณีใด ผู้ใช้ภายในที่ไม่มีสิทธิ์การเข้าถึงโครงการยังคงสามารถเข้าถึงงานได้ "
-"โดยมีเงื่อนไขว่าพวกเขาจะได้รับ URL ที่เกี่ยวข้อง "
-"(และพวกเขาเป็นส่วนหนึ่งของผู้ติดตามหากโครงการเป็นแบบส่วนตัว)"
+"ไม่ว่าในกรณีใด ผู้ใช้ภายในที่ไม่มีสิทธิ์การเข้าถึงโครงการยังคงสามารถเข้าถึงงานได้ โดยมีเงื่อนไขว่าพว"
+"กเขาจะได้รับ URL ที่เกี่ยวข้อง (และพวกเขาเป็นส่วนหนึ่งของผู้ติดตามหากโครงการเป็นแบบส่วนตัว)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3732,7 +3742,8 @@ msgstr "งานส่วนตัว"
 msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project on "
 "the task to gain access to this feature."
-msgstr "งานส่วนตัวไม่สามารถแปลงเป็นงานย่อยได้ โปรดตั้งค่าโปรเจ็กต์ในงานเพื่อเข้าถึงฟีเจอร์นี้"
+msgstr ""
+"งานส่วนตัวไม่สามารถแปลงเป็นงานย่อยได้ โปรดตั้งค่าโปรเจ็กต์ในงานเพื่อเข้าถึงฟีเจอร์นี้"
 
 #. module: project
 #. odoo-javascript
@@ -3943,7 +3954,8 @@ msgstr "โปรเจกต์"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
 msgid ""
 "Projects contain tasks on the same topic, and each has its own dashboard."
-msgstr "โปรเจ็กต์ประกอบด้วยงานในหัวข้อเดียวกัน และแต่ละโปรเจ็กต์จะมีแดชบอร์ดของตัวเอง"
+msgstr ""
+"โปรเจ็กต์ประกอบด้วยงานในหัวข้อเดียวกัน และแต่ละโปรเจ็กต์จะมีแดชบอร์ดของตัวเอง"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__project_ids
@@ -3952,8 +3964,8 @@ msgid ""
 "several projects, you can share this stage among them and get consolidated "
 "information this way."
 msgstr ""
-"โปรเจ็กต์ที่อยู่ในขั้นตอนนี้ หากคุณติดตามเวิร์กโฟลว์ที่คล้ายกันในหลายโปรเจ็กต์ "
-"คุณสามารถแชร์ขั้นตอนนี้กับเวิร์กโฟลว์เหล่านั้นและรับข้อมูลที่รวมด้วยวิธีนี้"
+"โปรเจ็กต์ที่อยู่ในขั้นตอนนี้ หากคุณติดตามเวิร์กโฟลว์ที่คล้ายกันในหลายโปรเจ็กต์ คุณสามารถแชร์ขั้นตอนนี้กับ"
+"เวิร์กโฟลว์เหล่านั้นและรับข้อมูลที่รวมด้วยวิธีนี้"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
@@ -3997,8 +4009,8 @@ msgid ""
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
 msgstr ""
-"ตรวจสอบสถานะของงานเพื่อขออนุมัติหรือเปลี่ยนแปลงคำขออย่างรวดเร็ว "
-"และระบุงานที่ถูกระงับจนกว่าการขึ้นต่อกันจะได้รับการแก้ไขด้วยไอคอนนาฬิกาทราย"
+"ตรวจสอบสถานะของงานเพื่อขออนุมัติหรือเปลี่ยนแปลงคำขออย่างรวดเร็ว และระบุงานที่ถูกระงับจนกว่ากา"
+"รขึ้นต่อกันจะได้รับการแก้ไขด้วยไอคอนนาฬิกาทราย"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -4098,10 +4110,10 @@ msgid ""
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
 "อ่านอย่างเดียว: ผู้ทำงานร่วมกันสามารถดูงานได้ แต่ไม่สามารถแก้ไขได้\n"
-"แก้ไขได้ด้วยการเข้าถึงที่จำกัด: "
-"ผู้ทำงานร่วมกันสามารถดูและแก้ไขงานที่พวกเขาติดตามได้ในมุมมองคัมบัง\n"
-"แก้ไขได้: ผู้ทำงานร่วมกันสามารถดูและแก้ไขงานทั้งหมดในมุมมองคัมบัง นอกจากนี้ "
-"พวกเขาสามารถเลือกงานที่ต้องการติดตามได้"
+"แก้ไขได้ด้วยการเข้าถึงที่จำกัด: ผู้ทำงานร่วมกันสามารถดูและแก้ไขงานที่พวกเขาติดตามได้ในมุมมองคัมบั"
+"ง\n"
+"แก้ไขได้: ผู้ทำงานร่วมกันสามารถดูและแก้ไขงานทั้งหมดในมุมมองคัมบัง นอกจากนี้ พวกเขาสามารถเลือก"
+"งานที่ต้องการติดตามได้"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4250,7 +4262,8 @@ msgstr "คืนค่า"
 msgid ""
 "Restoring will replace the current content with the selected version. Any "
 "unsaved changes will be lost."
-msgstr "การกู้คืนจะแทนที่เนื้อหาปัจจุบันด้วยเวอร์ชันที่เลือก การเปลี่ยนแปลงที่ยังไม่ได้บันทึกจะสูญหายไป"
+msgstr ""
+"การกู้คืนจะแทนที่เนื้อหาปัจจุบันด้วยเวอร์ชันที่เลือก การเปลี่ยนแปลงที่ยังไม่ได้บันทึกจะสูญหายไป"
 
 #. module: project
 #. odoo-javascript
@@ -4416,7 +4429,8 @@ msgstr "ตั้งค่าเทมเพลตอีเมลการให
 #: model:mail.template,description:project.project_done_email_template
 msgid ""
 "Set on project's stages to inform customers when a project reaches that stage"
-msgstr "กำหนดขั้นตอนของโปรเจ็กต์เพื่อแจ้งให้ลูกค้าทราบเมื่อโปรเจ็กต์ถึงสถานะนั้น"
+msgstr ""
+"กำหนดขั้นตอนของโปรเจ็กต์เพื่อแจ้งให้ลูกค้าทราบเมื่อโปรเจ็กต์ถึงสถานะนั้น"
 
 #. module: project
 #. odoo-javascript
@@ -4436,8 +4450,8 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
-"ตั้งค่าเทมเพลตนี้ในสถานะของโปรเจ็กต์ เพื่อขอคำติชมจากลูกค้าของคุณ เปิดใช้งานฟีเจอร์ "
-"\"การให้คะแนนของลูกค้า\" ในโปรเจ็กต์"
+"ตั้งค่าเทมเพลตนี้ในสถานะของโปรเจ็กต์ เพื่อขอคำติชมจากลูกค้าของคุณ เปิดใช้งานฟีเจอร์ \"การให้คะแ"
+"นนของลูกค้า\" ในโปรเจ็กต์"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4530,9 +4544,9 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
-"จัดเรียงงานของคุณตามความเร็วโดยใช้ไมล์สโตน แท็ก หรือคุณสมบัติเฉพาะ เมื่อสิ้นสุดแต่ละ Sprint "
-"เพียงเลือกงานที่เหลืออยู่ในรายการของคุณและย้ายงานทั้งหมดไปยัง Sprint "
-"ถัดไปในคราวเดียวโดยแก้ไขไมล์สโตน แท็ก หรือคุณสมบัติ"
+"จัดเรียงงานของคุณตามความเร็วโดยใช้ไมล์สโตน แท็ก หรือคุณสมบัติเฉพาะ เมื่อสิ้นสุดแต่ละ Sprint เพี"
+"ยงเลือกงานที่เหลืออยู่ในรายการของคุณและย้ายงานทั้งหมดไปยัง Sprint ถัดไปในคราวเดียวโดยแก้ไขไ"
+"มล์สโตน แท็ก หรือคุณสมบัติ"
 
 #. module: project
 #. odoo-javascript
@@ -4681,8 +4695,8 @@ msgid ""
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
 msgstr ""
-"ผลรวมของชั่วโมงที่จัดสรรสำหรับงานย่อยทั้งหมด (และงานย่อยของตนเอง) ที่เชื่อมโยงกับงานนี้ "
-"โดยปกติจะน้อยกว่าหรือเท่ากับชั่วโมงที่จัดสรรของงานนี้"
+"ผลรวมของชั่วโมงที่จัดสรรสำหรับงานย่อยทั้งหมด (และงานย่อยของตนเอง) ที่เชื่อมโยงกับงานนี้ โดยปกติ"
+"จะน้อยกว่าหรือเท่ากับชั่วโมงที่จัดสรรของงานนี้"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4981,8 +4995,8 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"โมเดล (ชนิดเอกสาร Odoo) ซึ่งสอดคล้องกับนามแฝงนี้ อีเมลขาเข้าใดๆ "
-"ที่ไม่ตอบกลับบันทึกที่มีอยู่จะทำให้เกิดการสร้างบันทึกใหม่ของโมเดลนี้ (เช่น โปรเจ็กต์งาน)"
+"โมเดล (ชนิดเอกสาร Odoo) ซึ่งสอดคล้องกับนามแฝงนี้ อีเมลขาเข้าใดๆ ที่ไม่ตอบกลับบันทึกที่มีอยู่จะทำใ"
+"ห้เกิดการสร้างบันทึกใหม่ของโมเดลนี้ (เช่น โปรเจ็กต์งาน)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -5006,8 +5020,8 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic "
 "lines or if more than one project is linked to it."
 msgstr ""
-"โปรเจ็กต์ของบริษัทไม่สามารถเปลี่ยนแปลงได้ "
-"หากบัญชีการวิเคราะห์มีรายการวิเคราะห์หรือมีการเชื่อมโยงมากกว่าหนึ่งโปรเจ็กต์"
+"โปรเจ็กต์ของบริษัทไม่สามารถเปลี่ยนแปลงได้ หากบัญชีการวิเคราะห์มีรายการวิเคราะห์หรือมีการเชื่อมโย"
+"งมากกว่าหนึ่งโปรเจ็กต์"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -5022,9 +5036,8 @@ msgid ""
 "Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these "
 "groupings applied, the report will not provide relevant information."
 msgstr ""
-"รายงานควรจัดกลุ่มตาม \"ขั้นตอน\" เพื่อแสดงแผนภูมิ Burndown หรือตาม \"ที่ปิดแล้ว\" "
-"เพื่อแสดงแผนภูมิ Burn-up หากไม่มีการใช้การจัดกลุ่มอย่างใดอย่างหนึ่งเหล่านี้ "
-"รายงานก็จะไม่ให้ข้อมูลที่เกี่ยวข้อง"
+"รายงานควรจัดกลุ่มตาม \"ขั้นตอน\" เพื่อแสดงแผนภูมิ Burndown หรือตาม \"ที่ปิดแล้ว\" เพื่อแสดงแผ"
+"นภูมิ Burn-up หากไม่มีการใช้การจัดกลุ่มอย่างใดอย่างหนึ่งเหล่านี้ รายงานก็จะไม่ให้ข้อมูลที่เกี่ยวข้อง"
 
 #. module: project
 #. odoo-python
@@ -5046,8 +5059,8 @@ msgid ""
 "project is too restricted. Set the privacy of the project to '%"
 "(visibility)s' in order to make it accessible by the recipient(s)."
 msgstr ""
-"ไม่สามารถแชร์งานกับผู้รับได้ เนื่องจากความเป็นส่วนตัวของโปรเจ็กต์ถูกจำกัด "
-"ตั้งค่าความเป็นส่วนตัวของโปรเจ็กต์เป็น '%(visibility)s' เพื่อให้ผู้รับสามารถเข้าถึงได้"
+"ไม่สามารถแชร์งานกับผู้รับได้ เนื่องจากความเป็นส่วนตัวของโปรเจ็กต์ถูกจำกัด ตั้งค่าความเป็นส่วนตัวของ"
+"โปรเจ็กต์เป็น '%(visibility)s' เพื่อให้ผู้รับสามารถเข้าถึงได้"
 
 #. module: project
 #. odoo-javascript
@@ -5099,9 +5112,9 @@ msgid ""
 "on your website. This includes leads/opportunities, quotations/sales orders, "
 "purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
-"พวกเขาสามารถแก้ไขงานโปรเจ็กต์ที่แชร์และดูเอกสารเฉพาะในโหมดอ่านบนเว็บไซต์ของคุณได้ "
-"ซึ่งรวมถึงรายชื่อลูกค้าเป้าหมาย/โอกาสทางการขาย ใบเสนอราคา/ใบสั่งขาย ใบสั่งซื้อ "
-"ใบแจ้งหนี้และใบเสร็จ ใบบันทึกเวลา และทิกเก็ต"
+"พวกเขาสามารถแก้ไขงานโปรเจ็กต์ที่แชร์และดูเอกสารเฉพาะในโหมดอ่านบนเว็บไซต์ของคุณได้ ซึ่งรวมถึง"
+"รายชื่อลูกค้าเป้าหมาย/โอกาสทางการขาย ใบเสนอราคา/ใบสั่งขาย ใบสั่งซื้อ ใบแจ้งหนี้และใบเสร็จ ใบ"
+"บันทึกเวลา และทิกเก็ต"
 
 #. module: project
 #. odoo-python
@@ -5147,15 +5160,16 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke "
 "their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
-"ผู้ติดตามรายนี้ปัจจุบันเป็นผู้ทำงานร่วมกันของโปรเจ็กต์การนำออกจะเพิกถอนการเข้าถึงพอร์ทัลไปยังโปรเจ็กต์ "
-"คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?"
+"ผู้ติดตามรายนี้ปัจจุบันเป็นผู้ทำงานร่วมกันของโปรเจ็กต์การนำออกจะเพิกถอนการเข้าถึงพอร์ทัลไปยังโปรเจ็"
+"กต์ คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid ""
 "This is a preview of how the project will look when it's shared with "
 "customers and they have editing access."
-msgstr "นี่คือการแสดงตัวอย่างว่าโปรเจ็กต์จะมีลักษณะอย่างไรเมื่อมีการแชร์กับลูกค้าและพวกเขามีสิทธิ์ในการแก้ไข"
+msgstr ""
+"นี่คือการแสดงตัวอย่างว่าโปรเจ็กต์จะมีลักษณะอย่างไรเมื่อมีการแชร์กับลูกค้าและพวกเขามีสิทธิ์ในการแก้ไข"
 
 #. module: project
 #. odoo-python
@@ -5167,10 +5181,9 @@ msgid ""
 "stage. Alternatively, you can update the company information for these "
 "records to align them under the same company."
 msgstr ""
-"โปรเจ็กต์นี้เชื่อมโยงกับ %(project_company)s ในขณะที่ขั้นตอนที่เลือกเป็นของ %"
-"(stage_company)s มีสองตัวเลือกที่ควรพิจารณา: "
-"ลบการกำหนดบริษัทออกจากโปรเจ็กต์หรือออกจากเวิร์กสเปซ "
-"หรือคุณสามารถอัปเดตข้อมูลบริษัทสำหรับบันทึกเหล่านี้ เพื่อจัดเรียงภายใต้บริษัทเดียวกันได้"
+"โปรเจ็กต์นี้เชื่อมโยงกับ %(project_company)s ในขณะที่ขั้นตอนที่เลือกเป็นของ %(stage_company)"
+"s มีสองตัวเลือกที่ควรพิจารณา: ลบการกำหนดบริษัทออกจากโปรเจ็กต์หรือออกจากเวิร์กสเปซ หรือคุณสาม"
+"ารถอัปเดตข้อมูลบริษัทสำหรับบันทึกเหล่านี้ เพื่อจัดเรียงภายใต้บริษัทเดียวกันได้"
 
 #. module: project
 #. odoo-python
@@ -5180,8 +5193,8 @@ msgid ""
 "project's visibility will be changed to \"invited portal users and all "
 "internal users (public)\" in order to make it accessible to the recipients."
 msgstr ""
-"ปัจจุบันโปรเจ็กต์นี้จำกัดเฉพาะ \"ผู้ใช้ภายในที่ได้รับเชิญ\" การเปิดเผยของโปรเจ็กต์จะเปลี่ยนเป็น "
-"\"ผู้ใช้พอร์ทัลที่ได้รับเชิญและผู้ใช้ภายในทั้งหมด (สาธารณะ)\" เพื่อให้ผู้รับสามารถเข้าถึงได้"
+"ปัจจุบันโปรเจ็กต์นี้จำกัดเฉพาะ \"ผู้ใช้ภายในที่ได้รับเชิญ\" การเปิดเผยของโปรเจ็กต์จะเปลี่ยนเป็น \"ผู้"
+"ใช้พอร์ทัลที่ได้รับเชิญและผู้ใช้ภายในทั้งหมด (สาธารณะ)\" เพื่อให้ผู้รับสามารถเข้าถึงได้"
 
 #. module: project
 #. odoo-python
@@ -5192,8 +5205,8 @@ msgid ""
 "the project's company to align with the stage's company or remove the "
 "company designation from the stage"
 msgstr ""
-"โปรเจ็กต์นี้ไม่เกี่ยวข้องกับบริษัทใดๆ ในขณะที่ขั้นตอนเชื่อมโยงกับ %s มีสองตัวเลือกที่ควรพิจารณา: "
-"เปลี่ยนบริษัทของโปรเจ็กต์ให้สอดคล้องกับบริษัทของขั้นตอน หรือลบการกำหนดบริษัทออกจากขั้นตอน"
+"โปรเจ็กต์นี้ไม่เกี่ยวข้องกับบริษัทใดๆ ในขณะที่ขั้นตอนเชื่อมโยงกับ %s มีสองตัวเลือกที่ควรพิจารณา: เปลี่ย"
+"นบริษัทของโปรเจ็กต์ให้สอดคล้องกับบริษัทของขั้นตอน หรือลบการกำหนดบริษัทออกจากขั้นตอน"
 
 #. module: project
 #. odoo-python
@@ -5225,7 +5238,8 @@ msgstr "สิ่งนี้จะเก็บถาวรขั้นตอน
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
-msgstr "สิ่งเหล่านี้แสดงถึงหมวดหมู่ต่างๆ ของสิ่งที่คุณต้องทำ (เช่น \"โทร\" หรือ \"ส่งอีเมล\")"
+msgstr ""
+"สิ่งเหล่านี้แสดงถึงหมวดหมู่ต่างๆ ของสิ่งที่คุณต้องทำ (เช่น \"โทร\" หรือ \"ส่งอีเมล\")"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5306,8 +5320,8 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
-"หากต้องการแปลงงานให้เป็นงานย่อย ให้เลือกงานหลัก หรือปล่อยฟิลด์งานหลักว่างไว้ "
-"เพื่อแปลงงานย่อยให้เป็นงานเดี่ยว"
+"หากต้องการแปลงงานให้เป็นงานย่อย ให้เลือกงานหลัก หรือปล่อยฟิลด์งานหลักว่างไว้ เพื่อแปลงงานย่อยใ"
+"ห้เป็นงานเดี่ยว"
 
 #. module: project
 #. odoo-python
@@ -5367,8 +5381,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
-"ติดตามต้นทุน รายได้ และกำไรขั้นต้นของโปรเจ็กต์ "
-"โดยการตั้งค่าบัญชีการวิเคราะห์ของโปรเจ็กต์ในเอกสารที่เกี่ยวข้อง"
+"ติดตามต้นทุน รายได้ และกำไรขั้นต้นของโปรเจ็กต์ โดยการตั้งค่าบัญชีการวิเคราะห์ของโปรเจ็กต์ในเอกส"
+"ารที่เกี่ยวข้อง"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5525,8 +5539,8 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
-"ใช้ช่องแชทเพื่อ<b>ส่งอีเมล</b>และสื่อสารอย่างมีประสิทธิภาพกับลูกค้าของคุณ "
-"ให้เพิ่มคนใหม่ในรายชื่อผู้ติดตามเพื่อให้พวกเขาทราบถึงการเปลี่ยนแปลงหลักเกี่ยวกับงานนี้"
+"ใช้ช่องแชทเพื่อ<b>ส่งอีเมล</b>และสื่อสารอย่างมีประสิทธิภาพกับลูกค้าของคุณ ให้เพิ่มคนใหม่ในรายชื่อผู้ติ"
+"ดตามเพื่อให้พวกเขาทราบถึงการเปลี่ยนแปลงหลักเกี่ยวกับงานนี้"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5598,7 +5612,8 @@ msgstr "รอ"
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr "ต้องการวิธีที่ดีกว่าใน<b>การจัดการโปรเจ็กต์</b>ของคุณไหม? <i>เริ่มต้นที่นี่</i>"
+msgstr ""
+"ต้องการวิธีที่ดีกว่าใน<b>การจัดการโปรเจ็กต์</b>ของคุณไหม? <i>เริ่มต้นที่นี่</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids
@@ -5676,14 +5691,16 @@ msgstr "เวลาทำงานที่จะปิด"
 msgid ""
 "Would you like to unarchive all of the projects contained in these stages as "
 "well?"
-msgstr "คุณต้องการยกเลิกการเก็บถาวรโปรเจ็กต์ทั้งหมดที่อยู่ในขั้นตอนเหล่านี้ด้วยหรือไม่"
+msgstr ""
+"คุณต้องการยกเลิกการเก็บถาวรโปรเจ็กต์ทั้งหมดที่อยู่ในขั้นตอนเหล่านี้ด้วยหรือไม่"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
-msgstr "คุณต้องการยกเลิกการเก็บถาวรงานทั้งหมดที่อยู่ในขั้นตอนเหล่านี้ด้วยหรือไม่"
+msgstr ""
+"คุณต้องการยกเลิกการเก็บถาวรงานทั้งหมดที่อยู่ในขั้นตอนเหล่านี้ด้วยหรือไม่"
 
 #. module: project
 #. odoo-javascript
@@ -5717,9 +5734,9 @@ msgid ""
 "(project_company_name)s. Please ensure that this stage exclusively consists "
 "of projects linked to %(company_name)s."
 msgstr ""
-"คุณไม่สามารถเปลี่ยนบริษัทของขั้นตอนนี้เป็น %(company_name)s ได้ "
-"เนื่องจากปัจจุบันมีโปรเจ็กต์ที่เกี่ยวข้องกับ %(project_company_name)s "
-"โปรดตรวจสอบให้แน่ใจว่าขั้นตอนนี้ประกอบด้วยโปรเจ็กต์ที่เชื่อมโยงกับ %(company_name)s โดยเฉพาะ"
+"คุณไม่สามารถเปลี่ยนบริษัทของขั้นตอนนี้เป็น %(company_name)s ได้ เนื่องจากปัจจุบันมีโปรเจ็กต์ที่เกี่ยว"
+"ข้องกับ %(project_company_name)s โปรดตรวจสอบให้แน่ใจว่าขั้นตอนนี้ประกอบด้วยโปรเจ็กต์ที่เชื่อม"
+"โยงกับ %(company_name)s โดยเฉพาะ"
 
 #. module: project
 #. odoo-javascript
@@ -5744,21 +5761,24 @@ msgstr "คุณสามารถเปิดงานย่อยได้จ
 msgid ""
 "You cannot delete stages containing projects. You can either archive them or "
 "first delete all of their projects."
-msgstr "คุณไม่สามารถลบขั้นตอนที่มีโปรเจ็กต์ได้ คุณสามารถเก็บถาวรหรือลบโปรเจ็กต์ทั้งหมดก่อนได้"
+msgstr ""
+"คุณไม่สามารถลบขั้นตอนที่มีโปรเจ็กต์ได้ คุณสามารถเก็บถาวรหรือลบโปรเจ็กต์ทั้งหมดก่อนได้"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 msgid ""
 "You cannot delete stages containing projects. You should first delete all of "
 "their projects."
-msgstr "คุณไม่สามารถลบขั้นตอนที่มีโปรเจ็กต์อยู่ได้ คุณควรลบโปรเจ็กต์ทั้งหมดออกก่อน"
+msgstr ""
+"คุณไม่สามารถลบขั้นตอนที่มีโปรเจ็กต์อยู่ได้ คุณควรลบโปรเจ็กต์ทั้งหมดออกก่อน"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
-msgstr "คุณไม่สามารถลบขั้นตอนที่มีงานอยู่ได้ คุณสามารถเก็บถาวรหรือลบงานทั้งหมดก่อนได้"
+msgstr ""
+"คุณไม่สามารถลบขั้นตอนที่มีงานอยู่ได้ คุณสามารถเก็บถาวรหรือลบงานทั้งหมดก่อนได้"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5807,8 +5827,8 @@ msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to "
 "proceed?"
 msgstr ""
-"คุณสามารถควบคุมได้อย่างสมบูรณ์และสามารถเพิกถอนการเข้าถึงพอร์ทัลได้ตลอดเวลา "
-"คุณต้องการที่จะดำเนินการต่อหรือไม่?"
+"คุณสามารถควบคุมได้อย่างสมบูรณ์และสามารถเพิกถอนการเข้าถึงพอร์ทัลได้ตลอดเวลา คุณต้องการที่จะดำเ"
+"นินการต่อหรือไม่?"
 
 #. module: project
 #. odoo-javascript
@@ -5818,10 +5838,9 @@ msgid ""
 "you navigate.<br/> You can discard these changes from here or manually save "
 "your task.<br/>Let's save it manually."
 msgstr ""
-"คุณยังไม่ได้บันทึกการเปลี่ยนแปลง - แต่ไม่ต้องกังวล! Odoo "
-"จะบันทึกให้โดยอัตโนมัติในขณะที่คุณกำลังนำทาง <br/> "
-"คุณสามารถละทิ้งการเปลี่ยนแปลงเหล่านี้ได้จากที่นี่หรือบันทึกงานของคุณด้วยตนเอง <br/> "
-"มาลองบันทึกด้วยกัน"
+"คุณยังไม่ได้บันทึกการเปลี่ยนแปลง - แต่ไม่ต้องกังวล! Odoo จะบันทึกให้โดยอัตโนมัติในขณะที่คุณกำลังนำท"
+"าง <br/> คุณสามารถละทิ้งการเปลี่ยนแปลงเหล่านี้ได้จากที่นี่หรือบันทึกงานของคุณด้วยตนเอง <br/> มา"
+"ลองบันทึกด้วยกัน"
 
 #. module: project
 #. odoo-javascript
@@ -5946,8 +5965,8 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
 msgstr ""
-"ไอคอนเพื่อดูงานที่รองานอื่นอยู่ เมื่องานถูกทำเครื่องหมายว่าเสร็จสมบูรณ์หรือยกเลิก "
-"การอ้างอิงทั้งหมดจะถูกปลดบล็อก"
+"ไอคอนเพื่อดูงานที่รองานอื่นอยู่ เมื่องานถูกทำเครื่องหมายว่าเสร็จสมบูรณ์หรือยกเลิก การอ้างอิงทั้งหมดจะ"
+"ถูกปลดบล็อก"
 
 #. module: project
 #. odoo-javascript
@@ -5993,7 +6012,8 @@ msgstr "ระบุคำขอการเปลี่ยนแปลงหร
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
-msgstr "สถานะแจ้งให้เพื่อนร่วมงานของคุณทราบว่างานได้รับการอนุมัติสำหรับขั้นตอนต่อไปแล้ว"
+msgstr ""
+"สถานะแจ้งให้เพื่อนร่วมงานของคุณทราบว่างานได้รับการอนุมัติสำหรับขั้นตอนต่อไปแล้ว"
 
 #. module: project
 #. odoo-javascript
@@ -6067,8 +6087,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
-"{{ object.project_id.company_id.name or user.env.company.name }}: "
-"แบบสำรวจความพึงพอใจ"
+"{{ object.project_id.company_id.name or user.env.company.name }}: แบบสำรวจควา"
+"มพึงพอใจ"
 
 #. module: project
 #. odoo-javascript

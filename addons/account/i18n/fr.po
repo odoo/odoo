@@ -15,12 +15,13 @@
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 # Rémi CAZENAVE <remi@le-filament.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Rémi Le Filament <remi.cazenave@users.noreply.translate.odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-07-11 18:31+0000\n"
+"PO-Revision-Date: 2026-10-20 15:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/account/"
 "fr/>\n"
@@ -30,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -158,8 +159,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s (détaché par %(user)s le %(date)s)%"
-"(attachment_extension)s"
+"%(attachment_name)s (détaché par %(user)s le %(date)s)%(attachment_extension)"
+"s"
 
 #. module: account
 #. odoo-python
@@ -192,8 +193,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_billed)s Facturé, %"
-"(quantity_received)s Reçu à %(unit_price)s pièce"
+"%(order)s - %(order_line)s; %(quantity_billed)s Facturé, %(quantity_received)"
+"s Reçu à %(unit_price)s pièce"
 
 #. module: account
 #. odoo-python
@@ -543,12 +544,12 @@ msgstr ""
 "            note de crédit\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (avec référence : <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (avec référence : <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
 "        d'un montant de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">143,750.00 $</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
+"143,750.00 $</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        N'hésitez pas à nous contacter si vous avez des questions.\n"
@@ -647,8 +648,8 @@ msgstr ""
 "            facture\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (avec la référence : <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"            (avec la référence : <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "        </t>\n"
 "        d'un montant de <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
@@ -662,8 +663,8 @@ msgstr ""
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br/><br/>\n"
 "                Veuillez utiliser la communication suivante pour votre "
-"paiement : <strong t-out=\"object.payment_reference or ''\">INV/"
-"2021/05/0005</strong>\n"
+"paiement : <strong t-out=\"object.payment_reference or ''\">INV/2021/05/"
+"0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
 "                    sur le compte <strong t-"
 "out=\"object.partner_bank_id.acc_number\"/>\n"
@@ -675,8 +676,8 @@ msgstr ""
 "object.timesheet_count\">\n"
 "            <br/><br/>\n"
 "            PS: vous pouvez consulter vos feuilles de temps <a t-att-"
-"href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % "
-"object.name\">depuis le portail.</a>\n"
+"href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">"
+"depuis le portail.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        N'hésitez pas à nous contacter si vous avez des questions.\n"
@@ -719,15 +720,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Bonjour <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
-"t><br/><br/>\n"
+"        Bonjour <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
+"<br/><br/>\n"
 "        Merci pour votre paiement.\n"
 "        Voici votre reçu de paiement <span style=\"font-weight:bold;\" t-"
 "out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
 "d'un montant\n"
-"        de <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">10.00 $</"
-"span> émis par <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        de <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">10.00 $</span> émis par <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        N'hésitez pas à nous contacter si vous avez la moindre question.\n"
 "        <br/><br/>\n"
@@ -945,8 +946,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -2952,8 +2953,8 @@ msgid ""
 msgstr ""
 "Un compte fait partie d'un livre permettant à votre société d'enregistrer \n"
 "toute sorte de transaction au débit ou au crédit. \n"
-"Les sociétés présentent leurs comptes annuels en 2 parties principales : "
-"le \n"
+"Les sociétés présentent leurs comptes annuels en 2 parties principales : le "
+"\n"
 "bilan et le compte de résultat (compte de pertes et \n"
 "profits). Les comptes annuels d'une société sont requis par la loi \n"
 "afin de publier un certain nombre d'information."
@@ -5000,8 +5001,7 @@ msgstr "Super il semble que vous n'ayez pas de montant à régler."
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
-msgstr ""
-"Données corrompues dans la pièce comptable avec l’ID %(id)s (%(name)s)."
+msgstr "Données corrompues dans la pièce comptable avec l’ID %(id)s (%(name)s)."
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -5646,8 +5646,7 @@ msgstr "Devise de l'écriture comptable au débit."
 #: model:ir.model.fields,help:account.field_account_move__invoice_currency_rate
 #: model:ir.model.fields,help:account.field_account_move_line__currency_rate
 msgid "Currency rate from company currency to document currency."
-msgstr ""
-"Taux de change de la devise de l'entreprise vers la devise du document."
+msgstr "Taux de change de la devise de l'entreprise vers la devise du document."
 
 #. module: account
 #: model:account.account,name:account.1_current_assets
@@ -6853,8 +6852,7 @@ msgstr "Glisser-déposer"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop and let the AI process your bills automatically."
-msgstr ""
-"Il suffit de glisser-déposer, l'IA traite automatiquement vos factures."
+msgstr "Il suffit de glisser-déposer, l'IA traite automatiquement vos factures."
 
 #. module: account
 #. odoo-python
@@ -7032,8 +7030,8 @@ msgstr "Remise escompte de"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
-"Escompte : <b>%(amount)s</b> si le paiement est effectué avant le <b>%"
-"(date)s</b>"
+"Escompte : <b>%(amount)s</b> si le paiement est effectué avant le <b>%(date)"
+"s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8801,8 +8799,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s; "
 "Day: %(day)s"
 msgstr ""
-"Date d'exercice incorrecte : le jour est en dehors de la plage du mois. "
-"Mois : %(month)s; Jour : %(day)s"
+"Date d'exercice incorrecte : le jour est en dehors de la plage du mois. Mois "
+": %(month)s; Jour : %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -9026,9 +9024,9 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values "
 "for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
-"« Intervalle de codes postaux “ incorrects, veuillez configurer les "
-"valeurs ” De “ et ” Vers “ pour l'intervalle de codes postaux et ” Vers "
-"“ doit être plus grand que ” De »."
+"« Intervalle de codes postaux “ incorrects, veuillez configurer les valeurs "
+"” De “ et ” Vers “ pour l'intervalle de codes postaux et ” Vers “ doit être "
+"plus grand que ” De »."
 
 #. module: account
 #. odoo-python
@@ -11551,8 +11549,7 @@ msgstr "Impossible de traiter une ou plusieurs factures."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
-"Une ou plusieurs lignes nécessitent une répartition analytique à 100 %."
+msgstr "Une ou plusieurs lignes nécessitent une répartition analytique à 100 %."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -14171,8 +14168,8 @@ msgstr "Envoyer des factures automatiquement"
 msgid ""
 "Send invoices to your customers in no time with the <b>Invoicing app</b>."
 msgstr ""
-"Envoyez les factures à vos clients sans délai avec l'application "
-"<b>Facturation</b>.  "
+"Envoyez les factures à vos clients sans délai avec l'application <b>"
+"Facturation</b>.  "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -15365,8 +15362,8 @@ msgstr ""
 "Les groupes de préfixes* sont les séparateurs entre l'année, le mois et le "
 "numéro de séquence croissant réel (seq).\n"
 "\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
-"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
+"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found

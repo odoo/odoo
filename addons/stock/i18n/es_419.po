@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-08-27 00:07+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"PO-Revision-Date: 2026-10-20 13:30+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-18/stock/es_419/>\n"
 "Language: es_419\n"
@@ -577,8 +577,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hola <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
-"<br/><br/>\n"
+"        Hola <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "         Nos complace informarle que hemos enviado su orden.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -588,8 +588,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
-"as=\"line\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -621,8 +621,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Fecha\" title=\"Fecha\"/"
-">"
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Fecha\" "
+"title=\"Fecha\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -3695,8 +3695,8 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Cantidad pronosticada (calculada como cantidad a la mano- cantidad "
-"reservada)\n"
+"Cantidad pronosticada (calculada como cantidad a la mano- cantidad reservada)"
+"\n"
 "En un contexto con una única ubicación de existencias, esto incluye "
 "artículos que se almacenan en esta ubicación o cualquiera de sus ubicaciones "
 "secundarias.\n"
@@ -4794,8 +4794,7 @@ msgstr "Atrasado"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
-msgstr ""
-"Llega tarde o llegará tarde según la fecha límite y la fecha programada"
+msgstr "Llega tarde o llegará tarde según la fecha límite y la fecha programada"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -5113,8 +5112,7 @@ msgstr "Dejar vacío"
 #: model:ir.model.fields,help:stock.field_stock_route__company_id
 #: model:ir.model.fields,help:stock.field_stock_rule__route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
-msgstr ""
-"Deje este campo vacío si esta ruta se comparte entre todas las empresas"
+msgstr "Deje este campo vacío si esta ruta se comparte entre todas las empresas"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -9649,8 +9647,8 @@ msgstr ""
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
 msgstr ""
-"La búsqueda no es compatible con el operador %(operator)s o el valor %"
-"(value)s."
+"La búsqueda no es compatible con el operador %(operator)s o el valor %(value)"
+"s."
 
 #. module: stock
 #. odoo-python
@@ -10012,8 +10010,8 @@ msgid ""
 "                    Apply anyway?"
 msgstr ""
 "Se lleva el seguimiento de los productos que agregó pero no se definieron "
-"números de lote o de serie. Una vez que se aplique, no se puede cambiar.<br/"
-">\n"
+"números de lote o de serie. Una vez que se aplique, no se puede cambiar.<br/>"
+"\n"
 "                    ¿Desea continuar?"
 
 #. module: stock
@@ -10261,8 +10259,8 @@ msgstr ""
 "Haga un seguimiento de las fechas de seguimiento de los números de lote y "
 "serie: consúmase antes de, remoción, fin de vida, alerta.\n"
 " Dichas fechas se establecen automáticamente en la creación del número de "
-"lote/de serie en función de los valores establecidos en el producto (en "
-"días)."
+"lote/de serie en función de los valores establecidos en el producto (en días)"
+"."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10694,8 +10692,7 @@ msgstr "Usado por"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence
 msgid "Used to order the 'All Operations' kanban view"
-msgstr ""
-"Se utiliza para ordenar la vista de kanban de \"Todas las operaciones\""
+msgstr "Se utiliza para ordenar la vista de kanban de \"Todas las operaciones\""
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_users
@@ -11189,8 +11186,7 @@ msgstr "Al validar el traslado, los productos se tomarán de este propietario."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
 msgid "Whether the move was added after the picking's confirmation"
-msgstr ""
-"Si el movimiento se agregó después de la confirmación de la recolección"
+msgstr "Si el movimiento se agregó después de la confirmación de la recolección"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__width
@@ -11400,8 +11396,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "You can only process 1.0 %s of products with unique serial number."
-msgstr ""
-"Solo puede procesar 1.0 %s para productos con un número de serie único."
+msgstr "Solo puede procesar 1.0 %s para productos con un número de serie único."
 
 #. module: stock
 #. odoo-python
@@ -11447,8 +11442,8 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
-"No puede cancelar un movimiento de existencias que se haya configurado como "
-"‘Hecho’. Cree una devolución para revertir los movimientos que se realizaron."
+"No puede cancelar un movimiento de existencias que se haya configurado como ‘"
+"Hecho’. Cree una devolución para revertir los movimientos que se realizaron."
 
 #. module: stock
 #. odoo-python
@@ -11741,8 +11736,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
-"Todavía tiene operaciones en curso para los tipos de operación %"
-"(operations)s en el almacén %(warehouse)s"
+"Todavía tiene operaciones en curso para los tipos de operación %(operations)"
+"s en el almacén %(warehouse)s"
 
 #. module: stock
 #. odoo-python

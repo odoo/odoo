@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2026-08-14 04:09+0000\n"
+"PO-Revision-Date: 2026-10-20 09:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
 "auth_ldap/ja/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -39,9 +39,12 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"   LDAPデータベース内のユーザアカウントを検索するために使用されるフィルタ。これは文字列表現の任意のLDAPフィルタです。任意の `%s` プレースホルダはユーザによって提供されたログイン (識別子) に置き換えられます。\n"
+"   LDAPデータベース内のユーザアカウントを検索するために使用されるフィルタ。こ"
+"れは文字列表現の任意のLDAPフィルタです。任意の `%s` プレースホルダはユーザに"
+"よって提供されたログイン (識別子) に置き換えられます。\n"
 "\n"
-"    フィルタの結果は正確に(1)でなければならず、そうでなければログインは無効とみなされます。\n"
+"    フィルタの結果は正確に(1)でなければならず、そうでなければログインは無効と"
+"みなされます。\n"
 "\n"
 "    例(実際の属性はLDAPサーバとセットアップに依存):\n"
 "\n"
@@ -57,7 +60,9 @@ msgstr ""
 msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
-msgstr "LDAPを使用して新しいユーザを認証するためのローカルユーザアカウントを自動的に作成します。"
+msgstr ""
+"LDAPを使用して新しいユーザを認証するためのローカルユーザアカウントを自動的に"
+"作成します。"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -177,7 +182,9 @@ msgstr "ログイン情報"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr "LDAPログイン用のローカルユーザが見つからず、作成するように設定されていません。"
+msgstr ""
+"LDAPログイン用のローカルユーザが見つからず、作成するように設定されていません"
+"。"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -191,7 +198,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
-"LDAPサーバへの接続時に安全なTLS/SSL暗号化を要求します。このオプションはサーバがSTARTTLSが使用可能であることを要求します。そうでない場合は全ての認証要求は失敗します。"
+"LDAPサーバへの接続時に安全なTLS/SSL暗号化を要求します。このオプションはサーバ"
+"がSTARTTLSが使用可能であることを要求します。そうでない場合は全ての認証要求は"
+"失敗します。"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -218,14 +227,18 @@ msgstr "テンプレートユーザ"
 msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
-msgstr "LDAPサーバのユーザアカウントのパスワードはディレクトリへのクエリー使用されます。"
+msgstr ""
+"LDAPサーバのユーザアカウントのパスワードはディレクトリへのクエリー使用されま"
+"す。"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
-msgstr "LDAPサーバ上のユーザアカウントはディレクトリへのクエリーのために使用されます。匿名接続する場合は空のままにして下さい。"
+msgstr ""
+"LDAPサーバ上のユーザアカウントはディレクトリへのクエリーのために使用されます"
+"。匿名接続する場合は空のままにして下さい。"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
