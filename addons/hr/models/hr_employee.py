@@ -755,7 +755,7 @@ class HrEmployee(models.Model):
         context_version = self.env['hr.version'].browse(context_version_id).exists() if context_version_id else self.env['hr.version']
 
         for employee in self:
-            if context_version.employee_id == self:
+            if context_version.employee_id == employee:
                 version = context_version
             else:
                 version = employee.current_version_id
