@@ -76,4 +76,15 @@ test("getPaymentActionState", async () => {
     paymentline.payment_status = "done";
     order.prices.taxDetails.total_amount_no_rounding = 5;
     expectDoneAction(comp.getPaymentActionState(paymentline));
+
+    paymentline.canBeAdjusted = () => true;
+    order.prices.taxDetails.total_amount_no_rounding = 15;
+    const prevAmount = paymentline.getAmount();
+    const expectedAmount = prevAmount + order.totalDue - order.amountPaid;
+    card.payment_interface = { sendPaymentAdjust: async () => true };
+    const adjustAction = comp
+        .getPaymentActionState(paymentline)
+        .actions.find((action) => action.id === "adjust_amount");
+    await adjustAction.action();
+    expect(paymentline.getAmount()).toBe(expectedAmount);
 });
