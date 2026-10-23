@@ -2,7 +2,7 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
-import { cloneContentEls } from "@website/js/utils";
+import { cloneContentEls, getEmbedCode } from "@website/js/utils";
 
 const EmbedCodeWidget = publicWidget.Widget.extend({
     selector: ".s_embed_code",
@@ -36,8 +36,8 @@ const EmbedCodeWidget = publicWidget.Widget.extend({
         // affect the DOM in edit mode, and to remove elements that would have
         // been introduced by a script.
         if (!this.editableMode) {
-            const templateContent = this.el.querySelector("template.s_embed_code_saved").content;
-            this.embedCodeEl.replaceChildren(cloneContentEls(templateContent));
+            const templateEl = this.el.querySelector("template.s_embed_code_saved");
+            this.embedCodeEl.replaceChildren(cloneContentEls(getEmbedCode(templateEl)));
         }
     },
 });
