@@ -251,3 +251,9 @@ class TestResource(TestHrCommon):
             datetime(2026, 1, 9, 23, 59, 59, tzinfo=UTC),
         )
         self.assertEqual(sum_intervals(intervals), 28.0)
+
+    def test_unusual_days_without_date_to(self):
+        """ Without ``date_to``, the unusual days of the single day ``date_from`` are returned. """
+        self.assertEqual(self.employee_niv._get_unusual_days('2026-01-05 00:00:00'), {'2026-01-05': False})
+        self.employee_niv.version_id.contract_date_start = date(2026, 1, 1)
+        self.assertEqual(self.employee_niv._get_unusual_days('2026-01-10 00:00:00'), {'2026-01-10': True})
