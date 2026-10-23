@@ -9,6 +9,8 @@ import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
 import { CalendarEventQuickCreateFormViewDialog } from "@calendar/views/calendar_form/calendar_event_quick_create";
 
+const { DateTime } = luxon;
+
 export class AttendeeCalendarController extends CalendarController {
     static template = "calendar.AttendeeCalendarController";
     static components = {
@@ -31,16 +33,13 @@ export class AttendeeCalendarController extends CalendarController {
     }
 
     onClickAddButton() {
-        this.actionService.doAction(
-            {
-                type: "ir.actions.act_window",
-                res_model: "calendar.event",
-                views: [[false, "form"]],
-            },
-            {
-                additionalContext: this.props.context,
-            }
-        );
+        const focusDate = this.model.meta.date;
+        const now = DateTime.now();
+        const start =
+            now.minute > 30
+                ? focusDate.set({ hour: now.hour + 1, minute: 0, second: 0 })
+                : focusDate.set({ hour: now.hour, minute: 30, second: 0 });
+        this.createRecord({ start });
     }
 
     goToFullEvent(resId, additionalContext) {
