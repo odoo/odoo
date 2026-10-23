@@ -190,6 +190,26 @@ export class PosOrder extends models.ServerModel {
         };
     }
 
+    add_tip_after_payment(self, tipLineVals, paymentId) {
+        const [order] = this.browse(self);
+        const tip = tipLineVals.price_unit * tipLineVals.qty;
+        this.env["pos.order.line"].create({
+            ...tipLineVals,
+            order_id: order.id,
+            price_subtotal: tip,
+            price_subtotal_incl: tip,
+        });
+        const [payment] = this.env["pos.payment"].browse(paymentId || order.payment_ids[0]);
+        this.env["pos.payment"].write([payment.id], { amount: payment.amount + tip });
+        this.write([order.id], {
+            is_tipped: true,
+            tip_amount: tip,
+            amount_total: order.amount_total + tip,
+            amount_paid: order.amount_paid + tip,
+        });
+        return this.read_pos_data([order.id], {}, order.config_id);
+    }
+
     search_order_ids(config_id, domain, limit, offset) {
         return {
             ordersInfo: [],

@@ -38,7 +38,12 @@ export default class OrderPaymentValidation {
     }
 
     get nextPage() {
-        if (this.pos.config.set_tip_after_payment && !this.order.is_tipped) {
+        // An invoiced order cannot be tipped after payment, its invoice is already posted
+        if (
+            this.pos.config.set_tip_after_payment &&
+            !this.order.is_tipped &&
+            !this.order.isToInvoice()
+        ) {
             if (this.order.adjustableTipLine) {
                 return {
                     page: "TipScreen",
