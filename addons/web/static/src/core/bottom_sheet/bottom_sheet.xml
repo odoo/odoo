@@ -13,7 +13,7 @@
             >
             <!-- Scroll container that handles drag gestures -->
             <div
-                class="o_bottom_sheet_rail"
+                class="o_bottom_sheet_rail scrollbar-width-none"
                 t-att-class="{
                         o_bottom_sheet_rail_prevent_overscroll : this.props.preventDismissOnContentScroll
                     }"
@@ -47,7 +47,7 @@
 
                     <!-- Body content -->
                     <div
-                        class="o_bottom_sheet_body offcanvas-body"
+                        class="o_bottom_sheet_body offcanvas-body scrollbar-width-none"
                         role="menu"
                         t-att-class="this.props.class"
                         t-ref="this.ref"
