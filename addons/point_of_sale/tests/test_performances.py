@@ -2,17 +2,17 @@
 
 import logging
 
-from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-
 from odoo.cli.duplicate import Duplicate
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
+
+from odoo.addons.point_of_sale.tests.common import PosHttpCommon
 
 _logger = logging.getLogger(__name__)
 
 
 @tagged('-standard', 'pos_performance', '-at_install', 'post_install')
-class TestPosPerformance(TestPointOfSaleHttpCommon):
+class TestPosPerformance(PosHttpCommon):
     """
     These tests are designed for local performance testing only and will be skipped
     unless the 'pos_performance' tag is explicitly included in the test tags.
