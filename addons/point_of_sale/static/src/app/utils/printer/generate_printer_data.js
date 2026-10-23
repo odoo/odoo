@@ -366,7 +366,7 @@ export class GeneratePrinterData {
         const order = this.order;
         const override = opts.orderChange;
         let orderChange = override || order.getChanges({ cancelled: opts.cancelled });
-        let reprint = false;
+        let reprint = opts.explicitReprint;
 
         if (!opts.prepOrderLines) {
             if (
