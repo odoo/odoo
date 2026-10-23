@@ -21,6 +21,7 @@ class TestPaymentTransaction(RazorpayCommon):
         self.assertDictEqual(request_payload, {
             'amount': converted_amount,
             'currency': tx.currency_id.name,
+            'notes': {'reference': tx.reference},
         })
 
     def test_void_is_not_supported(self):

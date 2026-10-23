@@ -26,6 +26,7 @@ class RazorpayCommon(PaymentCommon):
         cls.payment_data = {
             'id': cls.payment_id,
             'description': cls.reference,
+            'notes': {'reference': cls.reference},
             'status': 'captured',
         }
         cls.refund_data = {
