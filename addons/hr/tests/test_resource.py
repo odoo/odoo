@@ -9,6 +9,7 @@ from odoo.fields import Date
 from odoo.tools.date_utils import sum_intervals
 
 from odoo.tests import tagged
+from odoo.tests.common import freeze_time
 
 from .common import TestHrCommon
 
@@ -257,3 +258,27 @@ class TestResource(TestHrCommon):
         self.assertEqual(self.employee_niv._get_unusual_days('2026-01-05 00:00:00'), {'2026-01-05': False})
         self.employee_niv.version_id.contract_date_start = date(2026, 1, 1)
         self.assertEqual(self.employee_niv._get_unusual_days('2026-01-10 00:00:00'), {'2026-01-10': True})
+
+    @freeze_time('2026-06-01')
+    def test_resource_leave_calendar_on_last_version_day(self):
+        """ A leave on the last day of the current version gets the calendar of that version. """
+        employee = self.env['hr.employee'].create({
+            'name': 'Versioned',
+            'tz': 'UTC',
+            'date_version': date(2026, 1, 1),
+            'resource_calendar_id': self.calendar_35h.id,
+        })
+        employee.create_version({
+            'date_version': date(2027, 1, 1),
+            'resource_calendar_id': self.calendar_40h.id,
+        })
+        version = employee.version_id
+        self.assertEqual(version.date_end, date(2026, 12, 31))
+        self.assertEqual(version.resource_calendar_id, self.calendar_35h)
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Last day off',
+            'resource_id': employee.resource_id.id,
+            'date_from': datetime(2026, 12, 31, 8, 0),
+            'date_to': datetime(2026, 12, 31, 17, 0),
+        })
+        self.assertEqual(leave.calendar_id, self.calendar_35h)
