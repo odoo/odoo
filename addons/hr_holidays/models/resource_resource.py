@@ -14,6 +14,11 @@ class ResourceResource(models.Model):
     leave_date_to = fields.Date(related="user_id.leave_date_to")
 
     def _format_leave(self, leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale):
+        """Remove the time off by half day or in hours from the planning of the resource.
+
+        They only cover a half day or their hours of a single day; other leaves are handled by
+        ``resource``.
+        """
         leave_start = leave[0]
         leave_record = leave[2].filtered('holiday_id')
         holiday_id = leave_record.holiday_id
