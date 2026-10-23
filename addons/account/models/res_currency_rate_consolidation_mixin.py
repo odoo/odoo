@@ -1,6 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import json
-
 from odoo import api, fields, models
 from odoo.tools import SQL
 
@@ -39,10 +37,10 @@ class ConsolidationRateMixin(models.AbstractModel):
             return SQL("1")
 
         date_to = fields.Date.to_date(self.env.context.get('date_to'))
-        _historical, _average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_to, date_to)
+        _rates, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_to, date_to)
 
         raw_rates_alias = table._make_alias('raw_currencies')
-        raw_rates_table = SQL("(SELECT %(current)s::jsonb AS current)", current=json.dumps(current))
+        raw_rates_table = SQL("(SELECT %(current)s::jsonb AS current)", current=current)
         cta_alias = table._make_alias('current')
         conversion_table = SQL(
             "(SELECT (%(current)s->>(%(base_line_company)s::text))::numeric AS rate)",
