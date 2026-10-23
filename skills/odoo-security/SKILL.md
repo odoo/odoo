@@ -166,7 +166,7 @@ the attacker's reading:
   Escape with `htmlEscape` (`@odoo/owl`) or use the tagged-template form
   ``markup`<td>${name}</td>` `` (placeholders auto-escape; plain
   `markup(str)` marks raw HTML), use the `@web/core/utils/html` helpers
-  (`setInnerHtml`, `htmlJoin`), or render through OWL `t-out`.
+  (`setElementContent`, `htmlJoin`), or render through OWL `t-out`.
 - **Escaping vs sanitizing**: escaping (TEXT→CODE) is always mandatory when
   mixing data with code, even for trusted data. Sanitizing (CODE→safer CODE)
   is only for **untrusted** CODE and only works **after** escaping (sanitizing
