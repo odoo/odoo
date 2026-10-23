@@ -21,15 +21,18 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
     'depends': [
         'account',
         'account_edi_ubl_cii',
+        'base_address_extended',
     ],
     'auto_install': ['account'],
     'data': [
         'data/l10n_pl.l10n_pl_tax_office.csv',
         'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
+        'data/res_country_data.xml',
         'views/account_move_views.xml',
         'views/account_payment_view.xml',
         'views/product_views.xml',
+        'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'wizard/account_payment_register_views.xml',
