@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, UTC
+from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 
 from odoo import api, models
@@ -32,7 +32,7 @@ class ResourceCalendarLeaves(models.Model):
         for contract, leaves in leaves_by_contract.items():
             tz = ZoneInfo(contract._get_tz())
             start_dt = date2datetime(contract.date_start, tz)
-            end_dt = date2datetime(contract.date_end, tz) if contract.date_end else datetime.max
+            end_dt = date2datetime(contract.date_end + timedelta(days=1), tz) if contract.date_end else datetime.max
             # only modify leaves that fall under the active contract
             leaves.filtered(
                 lambda leave: leave.date_from and start_dt <= leave.date_from < end_dt
