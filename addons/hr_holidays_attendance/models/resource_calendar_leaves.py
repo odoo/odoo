@@ -8,7 +8,14 @@ class ResourceCalendarLeaves(models.Model):
     _inherit = 'resource.calendar.leaves'
 
     def _get_time_rule_affected(self):
-        """Return [(employee, date_from_utc, date_to_utc)] for public-holiday leaves in self."""
+        """Return the employees affected by the public holidays of ``self``.
+
+        A public holiday (leave without resource) affects the employees of its schedule, or
+        else of its company.
+
+        :return: ``[(employee, date_from, date_to)]``, aware UTC datetimes
+        :rtype: list
+        """
         ph_leaves = self.filtered(lambda l: not l.resource_id and l.date_from and l.date_to)
         if not ph_leaves:
             return []
@@ -42,6 +49,8 @@ class ResourceCalendarLeaves(models.Model):
         return affected
 
     def _retrigger_time_rules(self):
+        """Re-run the time rules on the attendances of the employees affected by the public
+        holidays of ``self``; called on create, write (old and new values) and unlink."""
         affected = self._get_time_rule_affected()
         if affected:
             self.env['hr.attendance']._process_time_rules_for(affected)
