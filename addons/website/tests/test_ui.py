@@ -390,6 +390,34 @@ class TestUiTranslate(odoo.tests.HttpCase):
 
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'translate_table_of_content_snippet', login='admin')
 
+    def test_create_page_from_template_with_translation(self):
+        lang_en = self.env.ref('base.lang_en')
+        lang_fr = self.env.ref('base.lang_fr')
+        self.env['res.lang']._activate_lang(lang_fr.code)
+        default_website = self.env.ref('base.default_website')
+        default_website.write({
+            'default_lang_id': lang_en.id,
+            'language_ids': [(6, 0, (lang_en + lang_fr).ids)],
+        })
+
+        arch = """
+            <t t-name="website.page_template_with_translation">
+                <t t-call="website.layout"><div id="wrap"><h1>Some content in English</h1></div></t>
+            </t>
+        """
+        view = self.env["ir.ui.view"].create({"name": "Translated page template", "type": "qweb", "arch": arch})
+        view.update_field_translations('arch_db', {lang_fr.code: {'Some content in English': 'Du contenu en français'}})
+        self.env["website.page"].create(
+            {
+                "name": "Translated page template",
+                "url": "/translated_page_template",
+                "view_id": view.id,
+                "is_published": True,
+                "is_new_page_template": True,
+            },
+        )
+        self.start_tour(self.env['website'].get_client_action_url("/", False), "create_page_from_template_with_translation", login="admin")
+
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithWebsiteUser):
