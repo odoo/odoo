@@ -1050,3 +1050,20 @@ class TestPdpMessageFacturX(TestPdpMessage):
             'name': 'SUPER FRENCH PARTNER',
             'vat': 'FR23334175221',
         }])
+
+    def test_receive_self_billed_keeps_peppol_state_with_tracking(self):
+        """ A received self-billed invoice keeps its `peppol_move_state`.
+        The bug only happens with tracking enabled (it's not by default here in tests), so enable it here
+        """
+        self.env['account_edi_proxy_client.user'].with_context(
+            tracking_disable=False,
+            mail_notrack=False
+        )._cron_peppol_get_new_documents()
+
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[0])])
+        self.assertRecordValues(move, [{
+            'move_type': 'out_invoice',
+            'state': 'draft',
+            'peppol_move_state': 'done',
+            'peppol_is_sent': True,
+        }])
