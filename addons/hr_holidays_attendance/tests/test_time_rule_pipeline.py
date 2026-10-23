@@ -925,6 +925,22 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(allocation.number_of_days, 0.375, places=5,
                                msg="6h * 50% / 8h/day = 0.375 compensatory days")
 
+    def test_apply_attendance_output_returns_result(self):
+        """The allocation override keeps returning the result of the base method."""
+        att = self.env['hr.attendance'].with_context(skip_time_rules=True).create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 6),
+            'check_out': datetime(2022, 12, 12, 20),
+        })
+        excess, deficit, active_iv = self.time_rule._evaluate_rules(
+            att, datetime(2022, 12, 12), datetime(2022, 12, 12, 23, 59, 59))
+        result = self.time_rule._apply_attendance_output(excess, deficit, active_iv=active_iv)
+        self.assertIsNotNone(result)
+        new_records, source_ids, excess_alloc, _deficit_alloc = result
+        self.assertEqual(set(source_ids), {att.id})
+        self.assertEqual(new_records.work_entry_type_id, self.overtime_type)
+        self.assertEqual(len(excess_alloc), 1)
+
     def test_allocation_no_wet_rule(self):
         """Allocate-only rule (no work_entry_type_id) must still create an allocation for excess hours.
 
