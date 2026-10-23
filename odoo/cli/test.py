@@ -568,7 +568,7 @@ class Controller:
             for _ in range(self.workers_count):
                 self.new_worker(f'{self.dbname}/{secrets.token_hex(4)}')
             # copying a large database takes ages with lots of workers, so do it in parallel
-            with ThreadPoolExecutor(self.workers_count) as executor:
+            with ThreadPoolExecutor(min(self.workers_count, config['db_maxconn'], 8)) as executor:
                 for future in [executor.submit(copy_database, self.dbname, w.dbname) for w in self.workers]:
                     future.result()
             # don't share database connections with the workers
