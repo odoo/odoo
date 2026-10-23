@@ -4,7 +4,7 @@ export class ProductTemplateAttributeLine extends models.ServerModel {
     _name = "product.template.attribute.line";
 
     _load_pos_data_fields() {
-        return ["display_name", "attribute_id", "product_template_value_ids"];
+        return ["display_name", "attribute_id", "product_template_value_ids", "active"];
     }
 
     _records = [
