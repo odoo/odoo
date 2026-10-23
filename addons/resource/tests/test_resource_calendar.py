@@ -271,3 +271,27 @@ class TestResourceCalendar(TransactionCase):
         })
         unusual_days = calendar._get_unusual_days(datetime(2026, 1, 6), datetime(2026, 1, 8), company_id=self.env.company)
         self.assertEqual(unusual_days['2026-01-07'], False)
+
+    def test_fully_flexible_work_duration_until_midnight(self):
+        """Intervals are split per day at midnight: an interval ending at midnight does not
+        count the next day, and no time is lost at the day boundaries."""
+        fully_flex_calendar = self.env['resource.calendar'].create({
+            'name': 'Fully Flexible Calendar',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+            'hours_per_week': 0,
+            'hours_per_day': 0,
+        })
+        self.assertEqual(
+            fully_flex_calendar.get_work_duration_data(datetime(2026, 1, 5, tzinfo=UTC), datetime(2026, 1, 6, tzinfo=UTC)),
+            {'days': 1.0, 'hours': 24.0},
+        )
+        self.assertEqual(
+            fully_flex_calendar.get_work_duration_data(datetime(2026, 1, 5, tzinfo=UTC), datetime(2026, 1, 8, tzinfo=UTC)),
+            {'days': 3.0, 'hours': 72.0},
+        )
+        empty_interval = [(datetime(2026, 1, 5, tzinfo=UTC), datetime(2026, 1, 5, tzinfo=UTC), self.env['resource.calendar.attendance'])]
+        self.assertEqual(
+            fully_flex_calendar._get_attendance_intervals_days_data(empty_interval),
+            {'days': 0, 'hours': 0},
+        )
