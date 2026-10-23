@@ -47,18 +47,21 @@
                 </BuilderSelect>
             </BuilderRow>
             <BuilderRow label.translate="Phone Number" preview="false" level="1">
-                <BuilderCheckbox dataAttributeAction="'mapShowPhone'" dataAttributeActionValue="'true'" />
+                <BuilderCheckbox dataAttributeAction="'mapShowPhone'" dataAttributeActionValue="'true'"
+                    action="'storeLocatorOptionalField'" actionParam="'phone'"/>
             </BuilderRow>
             <BuilderRow label.translate="Email" preview="false" level="1">
-                <BuilderCheckbox dataAttributeAction="'mapShowEmail'" dataAttributeActionValue="'true'" />
+                <BuilderCheckbox dataAttributeAction="'mapShowEmail'" dataAttributeActionValue="'true'"
+                    action="'storeLocatorOptionalField'" actionParam="'email'"/>
             </BuilderRow>
             <BuilderRow label.translate="Website" preview="false" level="1">
-                <BuilderCheckbox dataAttributeAction="'mapShowWebsite'"
-                    dataAttributeActionValue="'true'" />
+                <BuilderCheckbox dataAttributeAction="'mapShowWebsite'" dataAttributeActionValue="'true'"
+                    action="'storeLocatorOptionalField'" actionParam="'website'"/>
             </BuilderRow>
             <BuilderRow label.translate="Image" preview="false" level="1"
                 t-if="this.isActiveItem('details_area')">
-                <BuilderCheckbox dataAttributeAction="'mapShowImage'" dataAttributeActionValue="'true'" />
+                <BuilderCheckbox dataAttributeAction="'mapShowImage'" dataAttributeActionValue="'true'"
+                    action="'storeLocatorOptionalField'" actionParam="'image_256'"/>
             </BuilderRow>
         </t>
         <BuilderRow>

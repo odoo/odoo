@@ -57,7 +57,7 @@
                             <t t-if="this.props.showWebsite and this.selectedLocation.website">
                                 <small>
                                     <i class="oi oi-fw me-1" data-icon="link" role="img" aria-label="website"/>
-                                    <a t-attf-href="{{this.selectedLocation.website}}" target="_blank">
+                                    <a t-att-href="this.selectedLocation.website" target="_blank">
                                         <t t-out="this.selectedLocation.website"/>
                                     </a>
                                 </small>
@@ -141,7 +141,7 @@
                             <t t-if="this.props.showWebsite and this.selectedLocation.website">
                                 <small>
                                     <i class="oi oi-fw me-1" data-icon="link" role="img" aria-label="website"/>
-                                    <a t-attf-href="{{this.selectedLocation.website}}" target="_blank">
+                                    <a t-att-href="this.selectedLocation.website" target="_blank">
                                         <t t-out="this.selectedLocation.website"/>
                                     </a>
                                 </small>

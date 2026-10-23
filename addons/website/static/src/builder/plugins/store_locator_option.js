@@ -10,21 +10,19 @@ const STORE_LOCATOR_PARTNER_DOMAIN = [
     ["zip", "!=", false],
 ];
 const STORE_LOCATOR_SEARCH_LIMIT = 50;
+// The partner fields that the page source always contains. For the optional
+// fields, see `STORE_LOCATOR_OPTIONAL_FIELDS`.
 export const STORE_LOCATOR_PARTNER_FIELDS = [
     "city",
     "contact_address_inline",
     "country_id",
     "country_code",
     "display_name",
-    "email",
-    "image_256",
     "name",
     "partner_latitude",
     "partner_longitude",
-    "phone",
     "street",
     "zip",
-    "website",
 ];
 
 export class StoreLocatorOption extends BaseOptionComponent {

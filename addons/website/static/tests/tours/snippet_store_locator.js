@@ -42,6 +42,25 @@ const assertLocationCountInSnippet = (count) => [
     },
 ];
 
+// Optional fields (e.g. the phone number) must be in the page source only when
+// the option that shows them is enabled.
+const assertFieldInSource = (field, isInSource) => ({
+    content: `Check that the field '${field}' is ${isInSource ? "" : "not "}in the page source`,
+    trigger: ":iframe .s_store_locator[data-locations-list]",
+    run() {
+        const locationsList = JSON.parse(
+            document.querySelector("iframe").contentDocument.querySelector(".s_store_locator")
+                .dataset.locationsList
+        );
+        const isValid = isInSource
+            ? locationsList.every((location) => field in location)
+            : !locationsList.some((location) => field in location);
+        if (!isValid) {
+            throw new Error(`Wrong presence of the field '${field}' in the page source`);
+        }
+    },
+});
+
 registerWebsitePreviewTour(
     "snippet_store_locator",
     {
@@ -63,6 +82,7 @@ registerWebsitePreviewTour(
             content: "Check that the details textarea is displayed",
             trigger: ":iframe div.o_location_selector_textarea",
         },
+        assertFieldInSource("phone", false),
         {
             content: "Check that no tooltip is displayed",
             trigger: ":iframe body:not(:has(section.o_location_selector_view div.leaflet-tooltip))",
@@ -76,6 +96,7 @@ registerWebsitePreviewTour(
             content: "Check that the phone number is displayed",
             trigger: ":iframe div.o_location_selector_textarea i[data-icon='phone']",
         },
+        assertFieldInSource("phone", true),
         changeOption("Store Locator", "[data-label='Email'] input"),
         {
             content: "Check that the email address is displayed",
@@ -86,6 +107,12 @@ registerWebsitePreviewTour(
             content: "Check that the website is displayed",
             trigger: ":iframe div.o_location_selector_textarea i[data-icon='link']",
         },
+        changeOption("Store Locator", "[data-label='Phone Number'] input"),
+        {
+            content: "Check that the phone number is not displayed anymore",
+            trigger: ":iframe div.o_location_selector_textarea:not(:has(i[data-icon='phone']))",
+        },
+        assertFieldInSource("phone", false),
         ...changeOptionInPopover("Store Locator", "Zoom", "200 m"),
         {
             content: "Check that the zoom level is changed",

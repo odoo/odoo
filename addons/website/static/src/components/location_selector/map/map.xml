@@ -24,7 +24,7 @@
             <br/><i class="oi oi-fw me-1" data-icon="mail" role="img" aria-label="email"/> <t t-out="location.email"/>
         </t>
         <t t-if="showWebsite and location.website">
-            <br/><i class="oi oi-fw me-1" data-icon="link" role="img" aria-label="website"/> <a t-attf-href="{{location.website}}" target="_blank"><t t-out="location.website"/></a>
+            <br/><i class="oi oi-fw me-1" data-icon="link" role="img" aria-label="website"/> <a t-att-href="location.website" target="_blank"><t t-out="location.website"/></a>
         </t>
     </t>
 

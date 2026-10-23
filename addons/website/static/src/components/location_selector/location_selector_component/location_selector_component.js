@@ -1,5 +1,6 @@
 import { LocationList } from "@website/components/location_selector/location_list/location_list";
 import { MapContainer } from "@website/components/location_selector/map_container/map_container";
+import { verifyHttpsUrl } from "@website/utils/misc";
 import { Component, onMounted, proxy, t, useListener, useOnChange, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -128,11 +129,12 @@ export class LocationSelectorComponent extends Component {
             : allLocations;
 
         this.state.locations = searchResult.map(
-            ({ partner_latitude, partner_longitude, zip, ...rest }) => ({
+            ({ partner_latitude, partner_longitude, zip, website, ...rest }) => ({
                 ...rest,
                 zip_code: zip,
                 latitude: partner_latitude,
                 longitude: partner_longitude,
+                website: website && verifyHttpsUrl(website).toString(),
             })
         );
         if (!this.state.locations.some((l) => String(l.id) === this.state.selectedLocationId)) {

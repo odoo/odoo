@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { STORE_LOCATOR_PARTNER_FIELDS } from "./store_locator_option";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { locationBatchUtils } from "./store_locator_utils";
+import { getEnabledOptionalFields, locationBatchUtils } from "./store_locator_utils";
 
 class StoreLocatorOptionPlugin extends Plugin {
     static id = "storeLocatorOption";
@@ -13,6 +13,7 @@ class StoreLocatorOptionPlugin extends Plugin {
             AddLocationToStoreLocatorAction,
             HideLocationsOffscreenAction,
             RefreshStoreLocatorAction,
+            StoreLocatorOptionalFieldAction,
         },
     };
 }
@@ -64,6 +65,12 @@ export class AddLocationToStoreLocatorAction extends BuilderAction {
         );
         await locationBatchUtils.geolocalize(this.services.orm, locationsMap, newLocationsId);
         await locationBatchUtils.updateCalendar(this.services.orm, locationsMap, newLocationsId);
+        await locationBatchUtils.readFields(
+            this.services.orm,
+            locationsMap,
+            newLocationsId,
+            getEnabledOptionalFields(editingElement)
+        );
 
         let newLocationsList = Array.from(locationsMap.values());
         const lengthBeforeFiltering = newLocationsList.length;
@@ -109,11 +116,10 @@ export class RefreshStoreLocatorAction extends BuilderAction {
         if (locationsId.length === 0) {
             return;
         }
-        const locationsUpToDate = await this.services.orm.read(
-            "res.partner",
-            locationsId,
-            STORE_LOCATOR_PARTNER_FIELDS
-        );
+        const locationsUpToDate = await this.services.orm.read("res.partner", locationsId, [
+            ...STORE_LOCATOR_PARTNER_FIELDS,
+            ...getEnabledOptionalFields(editingElement),
+        ]);
         const locationsUpToDateMap = new Map(locationsUpToDate.map((loc) => [loc.id, loc]));
 
         // Update geolocations only if address has changed.
@@ -143,6 +149,39 @@ export class RefreshStoreLocatorAction extends BuilderAction {
         );
         const newLocationsList = Array.from(locationsUpToDateMap.values());
         editingElement.dataset.locationsList = JSON.stringify(newLocationsList);
+    }
+}
+
+export class StoreLocatorOptionalFieldAction extends BuilderAction {
+    static id = "storeLocatorOptionalField";
+
+    // When the user enables an option that shows an optional field (e.g. the
+    // phone number), load reads this field for all the listed locations. When
+    // the user disables the option, clean removes the field from the locations.
+    // Thus, the page source does not contain data that the snippet does not
+    // show.
+    async load({ editingElement, params: { mainParam: field } }) {
+        const locationsList = JSON.parse(editingElement.dataset.locationsList || "[]");
+        const locationsMap = new Map(locationsList.map((l) => [l.id, l]));
+        await locationBatchUtils.readFields(
+            this.services.orm,
+            locationsMap,
+            Array.from(locationsMap.keys()),
+            [field]
+        );
+        return Array.from(locationsMap.values());
+    }
+
+    apply({ editingElement, loadResult }) {
+        editingElement.dataset.locationsList = JSON.stringify(loadResult);
+    }
+
+    clean({ editingElement, params: { mainParam: field } }) {
+        const locationsList = JSON.parse(editingElement.dataset.locationsList || "[]");
+        locationsList.forEach((location) => {
+            delete location[field];
+        });
+        editingElement.dataset.locationsList = JSON.stringify(locationsList);
     }
 }
 
