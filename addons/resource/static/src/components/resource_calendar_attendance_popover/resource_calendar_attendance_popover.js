@@ -9,6 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { serializeDate } from "@web/core/l10n/dates";
 import { ResourceCalendarPlugin } from "@resource/plugins/resource_calendar_plugin";
+import { AttendanceDurationKeeper } from "@resource/components/resource_calendar_attendance_popover/attendance_duration_keeper";
 
 export class ResourceCalendarAttendancePopover extends Component {
     static template = "resource.ResourceCalendarAttendancePopover";
@@ -48,6 +49,7 @@ export class ResourceCalendarAttendancePopover extends Component {
         this.orm = useService("orm");
         this.popoverRef = signal(null, { type: t.ref(HTMLElement) });
         this.hasRecurrencyChanged = signal(false, { type: t.boolean() });
+        this.durationKeeper = new AttendanceDurationKeeper();
         useViewButtons(this.popoverRoot, {
             reload: this.props.onReload,
             afterExecuteAction: this.props.close,
@@ -77,17 +79,17 @@ export class ResourceCalendarAttendancePopover extends Component {
             mode: "edit",
             context: this.props.context,
             hooks: {
-                onRootLoaded: (root) => {
+                onRootLoaded: async (root) => {
                     root.canSaveOnUpdate = false;
                     if (this.props.delta) {
                         if (this.props.isAllDay) {
-                            root.update({
+                            await root.update({
                                 duration_based: true,
                             });
                         } else {
                             const start = this.getDateWithDelta(this.props.startOcurrenceDateTime);
                             const end = this.getDateWithDelta(this.props.endOcurrenceDateTime);
-                            root.update({
+                            await root.update({
                                 hour_from: start.hour + start.minute / 60,
                                 hour_to: end.hour + end.minute / 60,
                             });
@@ -95,16 +97,18 @@ export class ResourceCalendarAttendancePopover extends Component {
                     } else if (this.props.startDelta && this.props.endDelta) {
                         const start = this.props.startOcurrenceDateTime.plus(this.props.startDelta);
                         const end = this.props.endOcurrenceDateTime.plus(this.props.endDelta);
-                        root.update({
+                        await root.update({
                             hour_from: start.hour + start.minute / 60,
                             hour_to: end.hour + end.minute / 60,
                         });
                     }
+                    this.durationKeeper.track(root);
                 },
                 onRecordChanged: (record, changes) => {
                     this.hasRecurrencyChanged.set(
                         Object.keys(changes).some((field) => field.includes("recurrency"))
                     );
+                    this.durationKeeper.onRecordChanged(record);
                 },
             },
         };
@@ -168,7 +172,7 @@ export class ResourceCalendarAttendancePopover extends Component {
         if (this.props.delta || this.props.startDelta || this.props.endDelta || !record.resId) {
             this.props.close();
         } else {
-            record.discard();
+            record.discard().then(() => this.durationKeeper.track(record));
             this.hasRecurrencyChanged.set(false);
         }
     }

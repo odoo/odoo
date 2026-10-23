@@ -166,7 +166,9 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
      */
     onDateClick(info) {
         const date = luxon.DateTime.fromJSDate(info.date);
-        info?.view?.calendar.select(date.toISO(), date.plus({ hours: 1 }).toISO());
+        const hoursPerDay = this.resourceCalendarPlugin.record?.data.hours_per_day || 1;
+        const end = luxon.DateTime.min(date.plus({ hours: hoursPerDay }), date.endOf("day"));
+        info?.view?.calendar.select(date.toISO(), end.toISO());
     }
 
     /**
