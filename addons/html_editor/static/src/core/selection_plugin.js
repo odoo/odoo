@@ -19,6 +19,7 @@ import {
     descendants,
     findNode,
     firstLeaf,
+    getCommonAncestor,
     lastLeaf,
 } from "@html_editor/utils/dom_traversal";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
@@ -105,6 +106,17 @@ export const isHtmlContentSupported = weakMemoize(
             '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
         )
 );
+
+/**
+ * Builds a Range only when needed, Chrome updates every Range on each DOM
+ * change until it is garbage collected, which can take a long time.
+ */
+function makeRange(startContainer, startOffset, endContainer, endOffset) {
+    const range = new Range();
+    range.setStart(startContainer, startOffset);
+    range.setEnd(endContainer, endOffset);
+    return range;
+}
 
 /**
  * @returns edge text nodes if they do not have content selected
@@ -556,9 +568,8 @@ export class SelectionPlugin extends Plugin {
                 direction === DIRECTIONS.RIGHT
                     ? [anchorNode, anchorOffset, focusNode, focusOffset]
                     : [focusNode, focusOffset, anchorNode, anchorOffset];
-            range = this.document.createRange();
-            range.setStart(startContainer, startOffset);
-            range.setEnd(endContainer, endOffset);
+            const isCollapsed = startContainer === endContainer && startOffset === endOffset;
+            let intersectionRange;
 
             activeSelection = {
                 anchorNode,
@@ -569,11 +580,19 @@ export class SelectionPlugin extends Plugin {
                 startOffset,
                 endContainer,
                 endOffset,
-                commonAncestorContainer: range.commonAncestorContainer,
-                isCollapsed: range.collapsed,
+                commonAncestorContainer: getCommonAncestor([startContainer, endContainer]),
+                isCollapsed,
                 direction,
-                toString: () => (range.collapsed ? "" : selection.toString()),
-                intersectsNode: (node) => range.intersectsNode(node),
+                toString: () => (isCollapsed ? "" : selection.toString()),
+                intersectsNode: (node) => {
+                    intersectionRange ??= makeRange(
+                        startContainer,
+                        startOffset,
+                        endContainer,
+                        endOffset
+                    );
+                    return intersectionRange.intersectsNode(node);
+                },
             };
         }
 
@@ -606,7 +625,6 @@ export class SelectionPlugin extends Plugin {
      */
     createEditorSelection(anchorNode, anchorOffset, focusNode, focusOffset, direction) {
         let startContainer, startOffset, endContainer, endOffset;
-        const range = new Range();
         if (direction) {
             [startContainer, startOffset] = [anchorNode, anchorOffset];
             [endContainer, endOffset] = [focusNode, focusOffset];
@@ -615,8 +633,6 @@ export class SelectionPlugin extends Plugin {
             [endContainer, endOffset] = [anchorNode, anchorOffset];
         }
 
-        range.setStart(startContainer, startOffset);
-        range.setEnd(endContainer, endOffset);
         return Object.freeze({
             ...this.activeSelection,
             anchorNode,
@@ -627,8 +643,9 @@ export class SelectionPlugin extends Plugin {
             startOffset,
             endContainer,
             endOffset,
-            commonAncestorContainer: range.commonAncestorContainer,
-            cloneContents: () => range.cloneContents(),
+            commonAncestorContainer: getCommonAncestor([startContainer, endContainer]),
+            cloneContents: () =>
+                makeRange(startContainer, startOffset, endContainer, endOffset).cloneContents(),
         });
     }
     /**
