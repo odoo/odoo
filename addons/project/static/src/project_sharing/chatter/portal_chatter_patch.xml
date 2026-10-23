@@ -14,6 +14,28 @@
                 </button>
             </div>
         </xpath>
+        <xpath expr="//Composer" position="before">
+            <div t-if="this.composer() and this.thread()?.id" class="py-1">
+                <div name="recipients_to" class="d-flex align-items-center">
+                    <span class="flex-shrink-0 text-end fw-bold" style="width:55px">To: </span>
+                    <ProjectSharingRecipientsInput
+                        thread="this.thread()"
+                        recipientType="'to'"
+                        placeholder.translate="Add recipients"
+                    />
+                    <button class="btn btn-sm" t-if="!this.projectSharingPlugin.showCcField()"
+                        t-on-click="() => this.projectSharingPlugin.showCcField.set(true)">Cc</button>
+                </div>
+                <div name="recipients_cc" t-if="this.projectSharingPlugin.showCcField()" class="d-flex align-items-center mt-1">
+                    <span class="flex-shrink-0 text-end fw-bold" style="width:55px">Cc: </span>
+                    <ProjectSharingRecipientsInput
+                        thread="this.thread()"
+                        recipientType="'cc'"
+                        placeholder.translate="Cc recipients"
+                    />
+                </div>
+            </div>
+        </xpath>
     </t>
 
 </templates>
