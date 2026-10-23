@@ -8,6 +8,7 @@ import re
 import threading
 import typing
 from contextlib import nullcontext
+from http import HTTPStatus
 from os.path import join as opj
 from urllib.parse import urlparse
 
@@ -19,6 +20,7 @@ from werkzeug.exceptions import (
     HTTPException,
     NotFound,
     UnsupportedMediaType,
+    abort,
 )
 from werkzeug.security import safe_join
 from werkzeug.urls import url_encode  # TODO: use urllib
@@ -430,7 +432,11 @@ def serve_db(request: Request) -> Response:
         # there was a ReadOnlySqlTransaction error
         if cr.readonly:
             cr.close()
-            cr = request.env.registry.cursor()
+            try:
+                cr = request.env.registry.cursor()
+            except psycopg2.OperationalError:
+                _logger.warning("Cannot open a read/write cursor", exc_info=True)
+                abort(Response(status=HTTPStatus.SERVICE_UNAVAILABLE))
         else:
             # the cursor is already a RW cursor, start a new transaction
             # that will avoid repeatable read serialization errors because
