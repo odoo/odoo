@@ -214,7 +214,7 @@ class TestPoSStock(TestPosStockCommon):
                     ((360.0, ), {
                         'line_ids': [
                             {'account_id': self.cash_pm1.journal_id.default_account_id.id, 'partner_id': self.customer.id, 'debit': 360.0, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 360.0, 'reconciled': True},
+                            {'account_id': self.customer.property_account_receivable_id.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 360.0, 'reconciled': True},
                         ]
                     }),
                     ((650.0, ), {
