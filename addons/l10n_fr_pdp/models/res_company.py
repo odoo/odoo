@@ -12,6 +12,32 @@ from odoo.addons.l10n_fr_pdp.utils import _get_matching_auth_record
 
 PDP_identifier_re = re.compile(r'^([0-9]{9})(_[0-9]{14})?(_.+)?$')
 
+# Stable policy: manual Studio columns, no new stored Python field.
+STUDIO_LEGAL_FORM = 'x_studio_peppol_company_legal_form'
+STUDIO_SHARE_CAPITAL = 'x_studio_peppol_company_share_capital'
+STUDIO_RCS_CITY = 'x_studio_peppol_company_rcs_city'
+
+_STUDIO_FIELDS = (
+    (
+        STUDIO_LEGAL_FORM,
+        'char',
+        'Legal Form',
+        'Legal form for the #REG# note and BT-33 (for example SARL, SAS).',
+    ),
+    (
+        STUDIO_SHARE_CAPITAL,
+        'float',
+        'Share Capital',
+        'Share capital in company currency for the #REG# note and BT-33.',
+    ),
+    (
+        STUDIO_RCS_CITY,
+        'char',
+        'RCS City',
+        'City of the commercial court (greffe) for the #ABL# note.',
+    ),
+)
+
 _logger = logging.getLogger(__name__)
 
 ENDPOINT = 'https://pdp.odoo.com'
@@ -275,3 +301,115 @@ class ResCompany(models.Model):
             pdp_registration = _get_matching_auth_record(self.env['pdp.registration'], self.pdp_authentication_uuid)
             if user := pdp_registration.create_uid:
                 self.env['bus.bus']._sendone(user.partner_id, 'auth_done', {'pdp_registration_id': pdp_registration.id})
+
+    def _l10n_fr_pdp_studio_char(self, field_name):
+        self.ensure_one()
+        field = self._fields.get(field_name)
+        if not field or field.type not in ('char', 'text'):
+            return ''
+        value = self[field_name]
+        return value.strip() if isinstance(value, str) else ''
+
+    def _l10n_fr_pdp_studio_float(self, field_name):
+        self.ensure_one()
+        field = self._fields.get(field_name)
+        if not field or field.type not in ('float', 'monetary'):
+            return 0.0
+        return self[field_name] or 0.0
+
+    def _l10n_fr_pdp_set_studio_value(self, field_name, value, expected_types):
+        self.ensure_one()
+        field = self._fields.get(field_name)
+        if field and field.type in expected_types:
+            self[field_name] = value
+
+    def _l10n_fr_pdp_get_seller_siren(self):
+        self.ensure_one()
+        partner = self.partner_id.commercial_partner_id
+        getter = getattr(partner, '_l10n_fr_pdp_get_siren', None)
+        siren = getter() if getter else ''
+        if siren:
+            return siren
+        digits = ''.join(character for character in (self.company_registry or '') if character.isdigit())
+        return digits[:9] if len(digits) >= 9 else ''
+
+    def _l10n_fr_pdp_get_reg_note(self):
+        """#REG# text. Empty unless both the legal form and the share capital are set."""
+        self.ensure_one()
+        legal_form = self._l10n_fr_pdp_studio_char(STUDIO_LEGAL_FORM)
+        capital = self._l10n_fr_pdp_studio_float(STUDIO_SHARE_CAPITAL)
+        if not legal_form or capital <= 0:
+            return ''
+        if float(capital).is_integer():
+            amount = f'{int(capital):,}'.replace(',', ' ')
+        else:
+            amount = f'{float(capital):,.2f}'.replace(',', ' ')
+        return _(
+            "%(form)s with a share capital of %(amount)s %(currency)s",
+            form=legal_form,
+            amount=amount,
+            currency=self.currency_id.name or '',
+        )
+
+    def _l10n_fr_pdp_get_abl_note(self):
+        """#ABL# text. Empty when the registry city is missing."""
+        self.ensure_one()
+        city = self._l10n_fr_pdp_studio_char(STUDIO_RCS_CITY)
+        if not city:
+            return ''
+        siren = self._l10n_fr_pdp_get_seller_siren()
+        if siren:
+            return _("RCS %(city)s %(siren)s", city=city, siren=siren)
+        return _("RCS %(city)s", city=city)
+
+    def _l10n_fr_pdp_get_company_legal_form(self):
+        """BT-33 uses the same wording as #REG#."""
+        self.ensure_one()
+        return self._l10n_fr_pdp_get_reg_note()
+
+    @api.model
+    def _register_peppol_legal_notes_studio_fields(self):
+        """Create the legal-mention Studio fields when missing.
+
+        No module xmlid: a later uninstall must not drop the columns.
+        """
+        IrField = self.env['ir.model.fields'].sudo()
+        model = self.env['ir.model']._get('res.company')
+        need_setup = False
+        for name, ttype, label, help_txt in _STUDIO_FIELDS:
+            existing = IrField.search([('model', '=', 'res.company'), ('name', '=', name)], limit=1)
+            if existing:
+                if existing.state != 'manual' or existing.readonly:
+                    self.env.cr.execute(
+                        """
+                        UPDATE ir_model_fields
+                           SET state = 'manual', readonly = false
+                         WHERE id = %s
+                        """,
+                        (existing.id,),
+                    )
+                    existing.invalidate_recordset(['state', 'readonly'])
+                    need_setup = True
+                elif name not in self.env['res.company']._fields:
+                    need_setup = True
+                continue
+            IrField.create({
+                'name': name,
+                'field_description': label,
+                'model': 'res.company',
+                'model_id': model.id,
+                'ttype': ttype,
+                'state': 'manual',
+                'copied': True,
+                'readonly': False,
+                'help': help_txt,
+            })
+            need_setup = True
+        if need_setup:
+            self.env.flush_all()
+            self.pool.setup_models(self.env.cr)
+            self.pool.init_models(
+                self.env.cr,
+                ['res.company'],
+                dict(self.env.context, update_custom_fields=True),
+            )

@@ -271,11 +271,19 @@ class AccountMove(models.Model):
         if not self.company_id._peppol_is_french_company():
             return {}
         payment_term = self.invoice_payment_term_id
-        return {
+        notes = {
             'PMT': _("In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce)."),
             'PMD': _("Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date."),
             'AAB': html2plaintext(payment_term.note) if payment_term.early_discount else _("No discount for early payment."),
         }
+        company = self.company_id
+        for code, content in (
+            ('REG', company._l10n_fr_pdp_get_reg_note()),
+            ('ABL', company._l10n_fr_pdp_get_abl_note()),
+        ):
+            if content:
+                notes[code] = content
+        return notes
 
     @api.model
     def _get_ubl_cii_builder_from_xml_tree(self, tree):

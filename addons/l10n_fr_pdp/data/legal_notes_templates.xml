@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ubl_20_PartyType_company_legal_form" inherit_id="account_edi_ubl_cii.ubl_20_PartyType">
+        <xpath expr="//*[local-name()='PartyLegalEntity']/*[local-name()='CompanyID']" position="after">
+            <cbc:CompanyLegalForm xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                                  t-if="foreach_vals.get('company_legal_form')"
+                                  t-out="foreach_vals.get('company_legal_form')"/>
+        </xpath>
+    </template>
+</odoo>
