@@ -19,8 +19,9 @@ export class CheckIdentityTimeout {
             // Start the bus to be able to send inactivities / presences
             this.busService.start();
             this.updatePresence();
-            // Immediately send a presence on bus connect
-            this.busService.addEventListener("connect", () => this.updatePresence(), { once: true });
+            // A closed socket sets the next identity check: send a presence on each (re)connection.
+            this.busService.addEventListener("BUS:CONNECT", () => this.updatePresence());
+            this.busService.addEventListener("BUS:RECONNECT", () => this.updatePresence());
 
             this.presenceService.bus.addEventListener("presence", () => {
                 if (!this.checkIdentityService.identityCheckPromise) {
