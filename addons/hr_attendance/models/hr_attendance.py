@@ -815,8 +815,9 @@ class HrAttendance(models.Model):
         self.write({'state': 'validated'})
 
     def action_refuse(self):
-        """Refuse the attendances, without running the time rules (``skip_time_rules``)."""
-        self.with_context(skip_time_rules=True).write({'state': 'refused'})
+        """Refuse the attendances and the records the time rules created from them
+        (``overtime_attendance_ids``), without running the time rules (``skip_time_rules``)."""
+        (self | self.overtime_attendance_ids).with_context(skip_time_rules=True).write({'state': 'refused'})
 
     def action_reset_to_draft(self):
         """Set the attendances back to draft."""
