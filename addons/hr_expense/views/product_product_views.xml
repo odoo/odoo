@@ -46,9 +46,9 @@
                                 <field name="type" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
                                 <label for="standard_price"/>
-                                <div class="o_row" groups="base.group_user">
+                                <div class="d-flex gap-3" groups="base.group_user">
                                     <field name="standard_price"
-                                        class="w-50"
+                                        class="oe_inline"
                                         widget="monetary"
                                         options="{'currency_field': 'currency_id'}"
                                         help="When the cost of an expense product is different than 0, then the user
@@ -56,9 +56,10 @@
                                             only the quantity. Use a cost different than 0 for expense products funded by
                                             the company at fixed cost like allowances for mileage, per diem, accommodation
                                             or meal."/>
-                                    <span class="d-flex w-50 ms-2" invisible="standard_price == 0">
+                                    <span class="d-flex" invisible="standard_price == 0">
                                         per <field name="uom_id" widget="many2one_uom" class="ms-2" options="{'no_create': True}"/>
                                     </span>
+                                    <span class="text-muted" invisible="standard_price">Per expense</span>
                                 </div>
                                 <field name="default_code" string="Reference" class="w-50"/>
                                 <field name="categ_id" string="Category" class="w-50"/>

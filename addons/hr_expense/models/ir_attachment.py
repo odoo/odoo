@@ -21,12 +21,12 @@ class IrAttachment(models.Model):
         expense_ids = list(filter(None, model_and_ids.get('hr.expense', [])))
         expenses = self.env['hr.expense'].browse(expense_ids)
         accessible_user_expense_ids = set(expenses._filtered_access('read').filtered(
-            lambda e: e.state in {'draft', 'submitted'} and e.employee_id.user_id == self.env.user
+            lambda e: e.employee_id.user_id == self.env.user
         ).ids)
         blocked_expense_ids = []
         if operation != 'read' and not self.env.su:
-            blocked_expense_ids = expenses.filtered(  # Attachments cannot be added/modified once an expense has been posted
-                lambda e: not (e.id in accessible_user_expense_ids or (e.state in {'draft', 'submitted'} and e.has_access('write'))),
+            blocked_expense_ids = expenses.filtered(  # Attachments can be added by the employee or anyone able to edit the expense
+                lambda e: not (e.id in accessible_user_expense_ids or e.has_access('write')),
             ).ids
             for expense_id in blocked_expense_ids:
                 yield 'hr.expense', expense_id
