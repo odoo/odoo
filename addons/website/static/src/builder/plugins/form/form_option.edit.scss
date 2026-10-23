@@ -9,6 +9,10 @@
         display: block !important;
         background-color: $o-we-fg-light;
     }
+
+    // Select inputs do not trigger the default browser behavior
+    // Since we use a custom editable element
+    .s_website_form_field select,
     .s_website_form_check_label {
         pointer-events: none;
     }
