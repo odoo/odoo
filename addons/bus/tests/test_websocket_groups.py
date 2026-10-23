@@ -1,13 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-from threading import Event
-from unittest.mock import patch
-
 from odoo import Command
 from odoo.tests import new_test_user
 
-from odoo.addons.bus.bus_dispatcher import BusDispatcher
 from odoo.addons.bus.models.bus import send_notify_payloads
 from odoo.addons.bus.tests.common import WebsocketCase
 
@@ -26,24 +21,6 @@ class TestWebsocketGroups(WebsocketCase):
         websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
         self.subscribe(websocket, last=self.env["bus.bus"]._bus_last_id())
         return websocket
-
-    def _commit_and_wait_for_subscribe(self):
-        subscribed = Event()
-        original_subscribe = BusDispatcher.subscribe
-
-        def subscribe(dispatcher, *args):
-            original_subscribe(dispatcher, *args)
-            subscribed.set()
-
-        with patch.object(BusDispatcher, "subscribe", subscribe):
-            self.trigger_notification_dispatching()
-            self.assertTrue(self.wait_for_event(subscribed))
-
-    def _recv_types_until(self, websocket, notification_type):
-        types = []
-        while notification_type not in types:
-            types += [notif["message"]["type"] for notif in json.loads(websocket.recv())]
-        return types
 
     def _assert_receives_only_alice_rows(self, websocket, group):
         group._bus_send("group_row", None)

@@ -4,7 +4,6 @@ import { compareDatetime } from "@mail/utils/common/misc";
 
 import { localeCompare } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
-import { debounce } from "@web/core/utils/timing";
 
 /** @type {import("models").Store} */
 const storeServicePatch = {
@@ -28,12 +27,6 @@ const storeServicePatch = {
          * @type {string[]}
          */
         this.channel_types_with_seen_infos = [];
-        // Debounce it to avoid intensive client => worker communication.
-        // Should be moved in the bus service at some point.
-        this.updateBusSubscription = debounce(
-            () => this.env.services.bus_service.forceUpdateChannels(),
-            0
-        );
         this.favoriteChannels = fields.Many("discuss.channel", {
             inverse: "storeAsFavoriteChannels",
         });

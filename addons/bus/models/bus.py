@@ -170,29 +170,30 @@ class BusBus(models.Model):
                 send_notify_payloads("imbus", payloads)
 
     @api.model
-    def _subscribe_again(self, users):
-        """Make the open websockets of ``users`` subscribe again once the transaction is
-        committed, to follow a change of the channels `_build_bus_channel_list` adds for
-        them, such as their groups."""
-        if not users:
+    def _subscribe_again(self, targets):
+        """Make the open websockets listening to the bus channel of ``targets`` (users,
+        guests, channels) subscribe again once the transaction is committed, to follow a
+        change of the channels `_build_bus_channel_list` gives them, such as groups."""
+        if not targets:
             return
         if "bus.bus.subscribe_again" not in self.env.cr.postcommit.data:
             self.env.cr.postcommit.data["bus.bus.subscribe_again"] = {
                 # sudo - bus.bus: reading the last bus id isn't sensitive.
                 "last": self.sudo()._bus_last_id(),
-                "user_ids": OrderedSet(),
+                "channels": OrderedSet(),
             }
 
             @self.env.cr.postcommit.add
             def notify():
                 if not (data := self.env.cr.postcommit.data.pop("bus.bus.subscribe_again", None)):
                     return
-                payloads = get_notify_payloads([
-                    (channel_with_db(self.env.cr.dbname, user), data["last"])
-                    for user in self.env["res.users"].browse(data["user_ids"])
-                ])
+                payloads = get_notify_payloads(
+                    [(channel, data["last"]) for channel in data["channels"]],
+                )
                 send_notify_payloads("imbus_resubscribe", payloads)
-        self.env.cr.postcommit.data["bus.bus.subscribe_again"]["user_ids"].update(users.ids)
+        self.env.cr.postcommit.data["bus.bus.subscribe_again"]["channels"].update(
+            channel_with_db(self.env.cr.dbname, target) for target in targets
+        )
 
     @api.model
     def _poll(self, channels, last=0, ignore_ids=None):
