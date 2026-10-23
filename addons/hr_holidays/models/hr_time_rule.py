@@ -299,7 +299,10 @@ class HrTimeRule(models.Model):
                 continue
             wet = allocation.work_entry_type_id
             allowed_floor = -wet.max_allowed_negative if wet.allows_negative else 0.0
-            remaining_after = allocation.virtual_remaining_leaves - days
+            # the balance is in the unit of the type, the credits in days
+            hours_per_day = (allocation._get_employee_hours_per_day() or 8.0) if wet.unit_of_measure == 'hour' else 1.0
+            remaining_after = allocation.virtual_remaining_leaves / hours_per_day - days
+            allowed_floor /= hours_per_day
             if remaining_after < allowed_floor:
                 employee = allocation.employee_id
                 manager = employee.leave_manager_id or employee.parent_id
