@@ -22,10 +22,13 @@ class Channel(models.Model):
         """ Auto-subscribe members of a department to a channel """
         new_members = super(Channel, self)._subscribe_users_automatically_get_members()
         for channel in self:
-            new_members[channel.id] = list(
-                set(new_members[channel.id]) |
-                set((channel.subscription_department_ids.member_ids.user_id.partner_id.filtered(lambda p: p.active) - channel.channel_partner_ids).ids)
-            )
+
+            partners_to_add = self.env["hr.employee"].search_fetch([
+                ('user_id.partner_id', 'not in', channel.channel_partner_ids.ids),
+                ('department_id', 'child_of', channel.subscription_department_ids.ids),
+                ('user_id.partner_id.active', '=', True)
+            ], field_names=['user_id']).user_id.partner_id
+            new_members[channel.id] = list(set(new_members[channel.id]) | set(partners_to_add.ids))
         return new_members
 
     def write(self, vals):
