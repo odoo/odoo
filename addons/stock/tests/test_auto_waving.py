@@ -29,21 +29,45 @@ class TestAutoWaving(TransactionCase):
             'location_id': cls.stock_location.location_id.id,
         })
 
+        cls.category_1 = cls.env['product.category'].create({
+            'name': 'Category 1',
+        })
+        cls.category_1a = cls.env['product.category'].create({
+            'name': 'Category 1a',
+            'parent_id': cls.category_1.id,
+        })
+        cls.category_1b = cls.env['product.category'].create({
+            'name': 'Category 1b',
+            'parent_id': cls.category_1.id,
+        })
+        cls.category_2 = cls.env['product.category'].create({
+            'name': 'Category 2',
+        })
+        cls.category_2a = cls.env['product.category'].create({
+            'name': 'Category 2a',
+            'parent_id': cls.category_2.id,
+        })
+        cls.demo_categories = cls.category_1 | cls.category_1a | cls.category_1b | cls.category_2 | cls.category_2a
+
         cls.product_1 = cls.env['product.product'].create({
             'name': 'Product 1',
             'is_storable': True,
+            'categ_id': cls.category_1.id,
         })
         cls.product_2 = cls.env['product.product'].create({
             'name': 'Product 2',
             'is_storable': True,
+            'categ_id': cls.category_1a.id,
         })
         cls.product_3 = cls.env['product.product'].create({
             'name': 'Product 3',
             'is_storable': True,
+            'categ_id': cls.category_1b.id,
         })
         cls.product_4 = cls.env['product.product'].create({
             'name': 'Product 4',
             'is_storable': True,
+            'categ_id': cls.category_2a.id,
         })
 
         Quant = cls.env['stock.quant']
@@ -54,12 +78,13 @@ class TestAutoWaving(TransactionCase):
         Quant._update_available_quantity(cls.product_1, cls.grandchild_location, 3)
 
         Quant._update_available_quantity(cls.product_2, cls.child_location_1, 4)
-        Quant._update_available_quantity(cls.product_2, cls.child_location_2, 2)
+        Quant._update_available_quantity(cls.product_2, cls.child_location_2, 4)
         Quant._update_available_quantity(cls.product_2, cls.sibling_location, 2)
 
         Quant._update_available_quantity(cls.product_3, cls.grandchild_location, 3)
 
         Quant._update_available_quantity(cls.product_4, cls.child_location_1, 3)
+        Quant._update_available_quantity(cls.product_4, cls.child_location_2, 3)
 
         cls.picking_type_out = cls.env.ref('stock.picking_type_out')
 
@@ -189,6 +214,25 @@ class TestAutoWaving(TransactionCase):
                     'location_id': cls.sibling_location.id,
                 })
             ]
+        })
+        cls.picking_6 = cls.env['stock.picking'].create({
+            'location_id': cls.stock_location.id,
+            'picking_type_id': cls.picking_type_out.id,
+            'partner_id': cls.be_client.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': cls.product_4.id,
+                    'product_uom_qty': 3,
+                    'uom_id': cls.product_4.uom_id.id,
+                    'location_id': cls.child_location_2.id,
+                }),
+                Command.create({
+                    'product_id': cls.product_2.id,
+                    'product_uom_qty': 3,
+                    'uom_id': cls.product_2.uom_id.id,
+                    'location_id': cls.child_location_2.id,
+                }),
+            ],
         })
         cls.all_pickings = cls.picking_1 | cls.picking_2 | cls.picking_3 | cls.picking_4 | cls.picking_5
 
@@ -348,6 +392,81 @@ class TestAutoWaving(TransactionCase):
         self.assertEqual(len(wave_8.move_line_ids), 1)
         self.assertEqual(wave_8.picking_ids.partner_id, self.fr_client)
         self.assertEqual(wave_8.move_line_ids.product_id, self.product_2)
+
+    def test_group_by_product_category_1(self):
+        """
+        Group by categories `Category 1` and `Category 2`. Ensure that child categories `Category 1a` and `Category 2a`
+        are assigned to the correct batch.
+        """
+        self.picking_type_out.write({
+            'auto_batch': True,
+            'batch_group_by_destination': False,
+            'wave_group_by_product': False,
+            'batch_group_by_partner': False,
+            'batch_group_by_src_loc': False,
+            'batch_group_by_dest_loc': False,
+            'wave_group_by_category': True,
+            'wave_category_ids': [self.category_1.id, self.category_2.id],
+            'wave_group_by_location': False,
+        })
+
+        (self.picking_1 | self.picking_4).action_assign()
+        all_batches = self.env['stock.picking.batch'].search([('picking_ids.partner_id', 'in', self.demo_partners.ids), ('description', 'in', self.demo_categories.mapped('complete_name'))])
+        self.assertEqual(len(all_batches), 2)
+
+        batch_category_1 = all_batches.filtered(lambda b: b.description == self.category_1.complete_name)
+        self.assertTrue(all(c._child_of(self.category_1) for c in batch_category_1.move_line_ids.product_category_id))
+        self.assertEqual(len(batch_category_1.move_line_ids), 3)
+
+        batch_category_2 = all_batches.filtered(lambda b: b.description == self.category_2.complete_name)
+        self.assertTrue(all(c._child_of(self.category_2) for c in batch_category_2.move_line_ids.product_category_id))
+        self.assertEqual(len(batch_category_2.move_line_ids), 1)
+
+        self.picking_6.action_assign()
+        self.assertEqual(len(batch_category_1.move_line_ids), 4)
+        self.assertEqual(len(batch_category_2.move_line_ids), 2)
+
+    def test_group_by_product_category_2(self):
+        """
+        Group by categories `Category 1` and `Category 1a`. Ensure that child categories are taken into account
+        and assigned to the correct batch. Batch of `Category 1` should contain both `Category 1` and `Category 1b`,
+        but not `Category 1a`.
+        """
+        self.picking_type_out.write({
+            'auto_batch': True,
+            'batch_group_by_destination': False,
+            'wave_group_by_product': False,
+            'batch_group_by_partner': False,
+            'batch_group_by_src_loc': False,
+            'batch_group_by_dest_loc': False,
+            'wave_group_by_category': True,
+            'wave_category_ids': [self.category_1.id, self.category_1a.id],
+            'wave_group_by_location': False,
+        })
+
+        self.picking_1.action_assign()
+        batch_domain = [('picking_ids.partner_id', 'in', self.demo_partners.ids), ('description', 'in', self.demo_categories.mapped('complete_name'))]
+        all_batches = self.env['stock.picking.batch'].search(batch_domain)
+        self.assertEqual(len(all_batches), 2)
+
+        batch_category_1 = all_batches.filtered(lambda b: b.description == self.category_1.complete_name)
+        self.assertTrue(all(c._child_of(self.category_1) for c in batch_category_1.move_line_ids.product_category_id))
+        self.assertEqual(len(batch_category_1.move_line_ids), 2)
+
+        batch_category_1a = all_batches.filtered(lambda b: b.description == self.category_1a.complete_name)
+        self.assertTrue(all(c._child_of(self.category_1a) for c in batch_category_1a.move_line_ids.product_category_id))
+        self.assertEqual(len(batch_category_1a.move_line_ids), 1)
+
+        (self.picking_2 | self.picking_3).action_assign()
+        self.assertTrue(all(c._child_of(self.category_1) for c in batch_category_1.move_line_ids.product_category_id))
+        self.assertTrue(all(c._child_of(self.category_1a) for c in batch_category_1a.move_line_ids.product_category_id))
+        self.assertEqual(len(batch_category_1.move_line_ids), 6)
+        self.assertEqual(len(batch_category_1a.move_line_ids), 3)
+
+        self.picking_6.action_assign()
+        self.assertEqual(len(self.env['stock.picking.batch'].search(batch_domain)), 2)
+        self.assertEqual(len(batch_category_1.move_line_ids), 6)
+        self.assertEqual(len(batch_category_1a.move_line_ids), 4)
 
     def test_group_only_when_auto_batch_is_enable(self):
         """ This test ensures wave grouping is only done when the `auto_batch`
