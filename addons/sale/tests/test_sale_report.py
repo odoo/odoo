@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields
+from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools.float_utils import float_compare
@@ -22,6 +23,62 @@ class TestSaleReportCurrencyRate(SaleCommon):
         cls.eur_cmp = cls.env['res.company'].create({
             'name': 'EUR Company', 'currency_id': cls.env.ref('base.EUR').id,
         })
+
+    def test_sale_report_read_without_reloading(self):
+        report = self.env['sale.report'].with_user(self.sale_manager)
+        specification = {'date': {}, 'price_total': {}, 'currency_id': {}}
+        records = report.search_fetch([
+            ('order_reference', '=', f'sale.order,{self.sale_order.id}'),
+        ], specification)
+        self.assertTrue(records)
+
+        # Computing currency_id must not fetch the report again without the
+        # original search domain just to evaluate its company rule.
+        with self.assertQueryCount(0):
+            values = records.web_read(specification)
+        self.assertAlmostEqual(sum(value['price_total'] for value in values), self.sale_order.amount_total)
+
+    def test_sale_report_prefetch_respects_record_rules(self):
+        self.sale_order.user_id = self.sale_user
+        other_order = self.sale_order.copy({'user_id': self.sale_manager.id})
+        self.sale_manager.company_ids += self.usd_cmp
+        other_company_order = self.env['sale.order'].with_company(self.usd_cmp).create({
+            'partner_id': self.partner.id,
+            'user_id': self.sale_manager.id,
+            'order_line': [Command.create({'product_id': self.product.id})],
+        })
+        orders = self.sale_order + other_order + other_company_order
+        companies = self.env.company + self.usd_cmp
+        domain = [('order_reference', 'in', [f'sale.order,{order.id}' for order in orders])]
+        specification = {'order_reference': {}, 'price_total': {}, 'currency_id': {}}
+        all_ids = self.env['sale.report'].with_context(allowed_company_ids=companies.ids).search(domain).ids
+
+        for rule, user, allowed_companies, expected_orders in [
+            ('company', self.sale_manager, self.env.company, self.sale_order + other_order),
+            ('salesperson', self.sale_user, self.env.company, self.sale_order),
+            ('multi_company', self.sale_manager, companies, orders),
+        ]:
+            with self.subTest(rule=rule):
+                self.env.invalidate_all()
+                report = self.env['sale.report'].with_user(user).with_context(
+                    allowed_company_ids=allowed_companies.ids,
+                )
+                records = report.search_fetch(domain, specification)
+                with self.assertQueryCount(0):
+                    values = records.web_read(specification)
+                self.assertEqual(
+                    {value['order_reference'] for value in values},
+                    {f'sale.order,{order.id}' for order in expected_orders},
+                )
+
+                forbidden = report.browse(set(all_ids) - set(records.ids))
+                if forbidden:
+                    self.env.invalidate_all()
+                    if rule == 'company':
+                        self.assertFalse(forbidden.read(['price_total', 'currency_id']))
+                    else:
+                        with self.assertRaises(AccessError):
+                            forbidden.read(['price_total', 'currency_id'])
 
     def test_sale_report_foreign_currency(self):
         """
