@@ -72,6 +72,9 @@ export class WebsiteBuilderClientAction extends Component {
         this.builderSidebarRef = useRef("builder_sidebar");
         this.cleanups = [];
 
+        this.isRestored = this.props.action.jsId === this.websiteService.actionJsId;
+        this.websiteService.actionJsId = this.props.action.jsId;
+
         this.snippetsTemplate = "website.snippets";
 
         useSubEnv({
@@ -452,6 +455,7 @@ export class WebsiteBuilderClientAction extends Component {
         this.addWelcomeMessage();
         this.websiteService.hideLoader();
         this.lastPageURL = iframe.contentWindow.location.href;
+        this.websiteService.lastUrl = this.lastPageURL;
 
         if (this.websiteService.isNavigatingToAnotherPage) {
             this.websiteService.isNavigatingToAnotherPage.resolve();
@@ -542,7 +546,9 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     get path() {
-        let path = this.props.path || router.current.path;
+        let path = this.isRestored
+            ? this.websiteService.lastUrl
+            : this.props.path || router.current.path;
         if (path) {
             const url = new URL(path, window.location.origin);
             if (isTopWindowURL(url)) {
