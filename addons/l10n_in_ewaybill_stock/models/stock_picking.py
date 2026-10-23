@@ -49,7 +49,7 @@ class StockPicking(models.Model):
             ewaybill = picking.l10n_in_ewaybill_ids and picking.l10n_in_ewaybill_ids[0]
             if (
                 picking.country_code == 'IN'
-                and ewaybill.state in ['challan', 'generated']
+                and ewaybill.state in ['challan', 'generated', 'extended']
             ):
                 picking.l10n_in_ewaybill_name = ewaybill.name
             else:
@@ -57,7 +57,7 @@ class StockPicking(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_l10n_in_ewaybill_picking(self):
-        if pickings := self.filtered(lambda p: p.l10n_in_ewaybill_ids.filtered(lambda e: e.state in ('challan', 'generated'))):
+        if pickings := self.filtered(lambda p: p.l10n_in_ewaybill_ids.filtered(lambda e: e.state in ('challan', 'generated', 'extended'))):
             raise UserError(_(
                 "This documents (%s) cannot be deleted since it already has a generated E-waybill / Challan.",
                 ", ".join(pickings.mapped('name'))
