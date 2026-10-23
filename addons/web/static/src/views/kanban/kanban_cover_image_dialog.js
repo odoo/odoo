@@ -19,7 +19,6 @@ export class KanbanCoverImageDialog extends Component {
     setup() {
         this.id = `o_cover_image_upload_${nextDialogId++}`;
         this.orm = useService("orm");
-        this.http = useService("http");
         const { record, fieldName } = this.props;
         const attachment = record.data[fieldName];
         this.state = proxy({

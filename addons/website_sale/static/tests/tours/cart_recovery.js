@@ -1,7 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
-import { post } from "@web/core/network/http_service";
+import { post } from "@web/core/network/http";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 var orderIdKey = "website_sale.tour_shop_cart_recovery.orderId";

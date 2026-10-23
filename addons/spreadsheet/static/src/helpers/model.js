@@ -12,15 +12,14 @@ import {
     isIrMenuXmlUrl,
 } from "@spreadsheet/ir_ui_menu/odoo_menu_link_cell";
 import { getNeutralizedLink } from "./neutralized_link";
+import { get } from "@web/core/network/http";
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
  */
 
 export async function fetchSpreadsheetModel(env, resModel, resId) {
-    const { data, revisions } = await env.services.http.get(
-        `/spreadsheet/data/${resModel}/${resId}`
-    );
+    const { data, revisions } = await get(`/spreadsheet/data/${resModel}/${resId}`);
     return createSpreadsheetModel({ env, data, revisions });
 }
 

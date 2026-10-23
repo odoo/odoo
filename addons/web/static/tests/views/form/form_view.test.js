@@ -13419,14 +13419,12 @@ test("attach_document widget also works inside a dropdown", async () => {
             fileInput = this.fileInput;
         },
     });
-    mockService("http", {
-        post: (route, params) => {
-            expect.step("post");
-            expect(route).toBe("/web/binary/upload_attachment");
-            expect(params.model).toBe("partner");
-            expect(params.id).toBe(1);
-            return '[{ "id": 5 }, { "id": 2 }]';
-        },
+    onRpc("/web/binary/upload_attachment", async (request) => {
+        expect.step("post");
+        const formData = await request.formData();
+        expect(formData.get("model")).toBe("partner");
+        expect(formData.get("id")).toBe("1");
+        return '[{ "id": 5 }, { "id": 2 }]';
     });
 
     await mountView({
