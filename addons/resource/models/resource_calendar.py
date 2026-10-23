@@ -831,7 +831,8 @@ class ResourceCalendar(models.Model):
         Days are evaluated with the calendar-level work intervals (global leaves deducted),
         in the timezone of ``start_dt``.
         For a flexible ``resource``, a day is unusual only if the resource has a leave on it.
-        Note that leaves counted as working time are deducted too (no ``count_as`` filter).
+        Only leaves counted as absence are considered: a leave counted as working time
+        (e.g. a training) does not make a day unusual.
 
         :param datetime start_dt: start of the period; naive means UTC
         :param datetime end_dt: end of the period (its day included); naive means UTC
@@ -848,9 +849,9 @@ class ResourceCalendar(models.Model):
         if not end_dt.tzinfo:
             end_dt = end_dt.replace(tzinfo=UTC)
 
-        domain = []
+        domain = [('count_as', '=', 'absence')]
         if company_id:
-            domain = [('company_id', 'in', (company_id.id, False))]
+            domain += [('company_id', 'in', (company_id.id, False))]
         if resource and resource._is_flexible():
             leave_intervals = self._leave_intervals_batch(start_dt, end_dt, domain=domain, resources_per_tz=resource._get_resources_per_tz())[resource.id]
             works = set()
