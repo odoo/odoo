@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, dblclick, queryOne, waitFor } from "@odoo/hoot-dom";
+import { click, dblclick, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -21,19 +21,13 @@ test("Icon styles should be retained when it is replaced with another icon", asy
 });
 
 function mockIconFontCustomization() {
-    class WebsiteAssets extends models.Model {
-        _name = "website.assets";
-        make_scss_customization(location, changes) {
-            // Stand in for the recompiled bundle, which prints the customized
-            // SCSS variable as a CSS variable on the website `:root`.
-            queryOne(":iframe html").style.setProperty(
-                "--icon-font-family",
-                `'${changes["icon-font-family"]}'`
-            );
-        }
-    }
-    defineModels([WebsiteAssets]);
-    onRpc("/website/theme_customize_bundle_reload", () => ({}));
+    onRpc("/website/theme_preview_css", async (request) => {
+        const { params } = await request.json();
+        const [values] = Object.values(params.values_by_url);
+        // Stand in for the compiled bundle, which prints the customized SCSS
+        // variable as a CSS variable on the website `:root`.
+        return `:root { --icon-font-family: '${values["icon-font-family"]}'; }`;
+    });
 }
 
 describe("Icon styles", () => {
