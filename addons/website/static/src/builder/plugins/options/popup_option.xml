@@ -5,9 +5,11 @@
     <!-- For the cookies popup, only display this for popup mode. -->
     <BuilderRow label.translate="Position" t-if="!isCookiesOption or this.isActiveItem('layout_popup_opt')">
         <BuilderSelect>
-            <BuilderSelectItem classAction="'s_popup_top'">Top</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_popup_top_left'">Top Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_popup_top'">Top Right</BuilderSelectItem>
             <BuilderSelectItem classAction="'s_popup_middle'">Middle</BuilderSelectItem>
-            <BuilderSelectItem classAction="'s_popup_bottom'">Bottom</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_popup_bottom_left'">Bottom Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_popup_bottom'">Bottom Right</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Size">
