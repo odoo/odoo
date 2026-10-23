@@ -261,6 +261,7 @@ class TestSnippets(HttpCase):
         )
         self.assertEqual(get_snippet_nodes('/fr/website/info')[3]['jobTitle'], 'PDG')
 
+
 @tagged('post_install', '-at_install')
 class TestSnippetsJsonld(TransactionCase):
 
@@ -283,6 +284,8 @@ class TestSnippetsJsonld(TransactionCase):
         name = '<h3 data-jsonld-prop="name">Tony</h3>'
         self.assertEqual(build(name), {'@type': 'Person', 'name': 'Tony', 'worksFor': {'@id': '/#organization'}})
         self.assertIsNone(build('<h3 data-jsonld-prop="name"><br/></h3><p data-jsonld-prop="jobTitle">CEO</p>'), "A Person needs a name")
+        faq = '<div data-jsonld-type="FAQPage"><div data-jsonld-type="Question" data-jsonld-prop="mainEntity"><b data-jsonld-prop="name">Why?</b></div></div>'
+        self.assertIsNone(website._build_jsonld_item_vals(html.fromstring(faq)), "A question needs an answer, and an FAQ a question")
         self.assertEqual(build(f'{name}<p data-jsonld-prop="@type">Thing</p>')['@type'], 'Person', "JSON-LD keywords aren't properties")
         for src, image in [
             ('/web/image/a.png', '/web/image/a.png'),
@@ -294,12 +297,16 @@ class TestSnippetsJsonld(TransactionCase):
                 self.assertEqual(build(f'{name}<img data-jsonld-prop="image" src="{src}"/>').get('image'), image)
 
     def test_snippets_jsonld(self):
-        # each item of the snippets with JSON-LD markers gives a schema
+        # each type of the snippets with JSON-LD markers has its required properties
+        # listed, and each of their items gives a schema
         website = self.env.ref('base.default_website')
         snippets = self.env['ir.ui.view'].search([('key', '=like', '%.s\\_%'), ('arch_db', 'like', 'data-jsonld-type')])
         self.assertTrue(snippets)
         for snippet in snippets:
             root = html.fromstring(f"<div>{self.env['ir.qweb']._render(snippet.id)}</div>")
+            for jsonld_type in set(root.xpath('//@data-jsonld-type')):
+                with self.subTest(snippet=snippet.key, type=jsonld_type):
+                    self.assertIsNotNone(website._get_jsonld_required_props(jsonld_type), "List its required properties in _get_jsonld_required_props")
             for item in root.xpath(JSONLD_ITEMS_XPATH):
                 with self.subTest(snippet=snippet.key):
                     self.assertTrue(website._build_jsonld_item_vals(item))

@@ -2732,6 +2732,25 @@ class Website(models.CachedModel):
             'logo': f'{base_url}/web/image/website/{self.id}/logo',
         }
 
+    def _get_jsonld_required_props(self, jsonld_type):
+        """Return the properties without which an item of ``jsonld_type`` is
+        left out. Each type marked in a snippet needs them, checked by a test:
+        the ones its Google rich result requires, or the ones it means nothing
+        without.
+
+        :param str jsonld_type: Schema.org type.
+        :return: Names of the properties, None if the type isn't listed.
+        :rtype: list | None
+        """
+        return {
+            # Google has no rich result for a person among others
+            'Person': ['name'],
+            # FAQ rich results are gone: questions and answers as Q&A pages require them
+            'FAQPage': ['mainEntity'],
+            'Question': ['name', 'acceptedAnswer'],
+            'Answer': ['text'],
+        }.get(jsonld_type)
+
     def _build_jsonld_item_vals(self, item):
         """Build the Schema.org dictionary of an item marked in HTML.
 
@@ -2739,14 +2758,12 @@ class Website(models.CachedModel):
         :return: Dictionary of Schema.org properties, or None if empty.
         :rtype: dict | None
         """
-        item_type = item.get('data-jsonld-type').strip()
+        item_type = item.get('data-jsonld-type')
         props = self._get_jsonld_props(item)
         if not item_type or not props:
             return None
         vals = {'@type': item_type, **props}
         if vals['@type'] == 'Person':
-            if 'name' not in vals:
-                return None
             # no host: views keep this in their compiled code, so the current
             # host is added when rendering (see _render_snippets_jsonld)
             vals['worksFor'] = {'@id': '/#organization'}
@@ -2757,23 +2774,23 @@ class Website(models.CachedModel):
         marked with ``data-jsonld-prop``.
 
         :param el: element marked with ``data-jsonld-type``.
-        :return: Dictionary of Schema.org properties.
+        :return: Dictionary of Schema.org properties, empty if a required one is missing.
         :rtype: dict
         """
         props, items = {}, {}
         for prop_el in el.xpath('.//*[@data-jsonld-prop]'):
             if prop_el.xpath('ancestor::*[@data-jsonld-type][1]')[0] is not el:
                 continue  # property of a nested item
-            prop = prop_el.get('data-jsonld-prop').strip()
+            prop = prop_el.get('data-jsonld-prop')
             if not prop or prop.startswith('@'):
                 continue  # not a property, like the @type and @id of JSON-LD
             # a nested item: all of them are kept, a value only once
-            if jsonld_type := prop_el.get('data-jsonld-type', '').strip():
+            if jsonld_type := prop_el.get('data-jsonld-type'):
                 if item := self._get_jsonld_props(prop_el):
                     items.setdefault(prop, []).append({'@type': jsonld_type, **item})
                 continue
             if prop_el.tag == 'img':
-                value = prop_el.get('src', '').strip()
+                value = prop_el.get('src', '')
                 if not value.startswith(('/', 'http://', 'https://')):
                     continue  # not a URL to give: embedded (data:), relative, javascript:...
             else:
@@ -2782,6 +2799,9 @@ class Website(models.CachedModel):
                 props.setdefault(prop, value)
         for prop, prop_items in items.items():
             props[prop] = prop_items if len(prop_items) > 1 else prop_items[0]
+        required = self._get_jsonld_required_props(el.get('data-jsonld-type')) or []
+        if set(required) - props.keys():
+            return {}  # a required property is missing
         return props
 
     def _render_snippets_jsonld(self, schemas):
