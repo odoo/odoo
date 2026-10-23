@@ -1659,7 +1659,7 @@ class Website(Home):
                 if is_translated:
                     values["source_sha"] = source_sha
                 result.append(values)
-        return json.dumps(result)
+        return result
 
     @http.route(['/website/update_alt_images'], type='jsonrpc', auth="user", website=True)
     def update_alt_images(self, imgs):
@@ -1672,7 +1672,7 @@ class Website(Home):
             img['field'] = 'arch_db' if img['field'] == 'arch' else img['field']
             tree = html.fromstring(str(record[img['field']]))
             modified = False
-            for index, element in enumerate(tree.xpath('//img')):
+            for index, element in enumerate(tree.xpath('//img[@src]')):
                 imgId = self._get_image_id(img['res_model'], img['res_id'], img['field'], str(index))
                 if imgId == img['id']:
                     if (img['decorative']):
@@ -1683,7 +1683,7 @@ class Website(Home):
                         element.attrib.pop('role', None)
                     modified = True
             if modified:
-                new_html_content = html.tostring(tree, encoding='unicode', method='html')
+                new_html_content = html.tostring(tree, encoding='unicode', method='xml')
                 record.with_context(delay_translations=self._get_delay_translations()).write({img['field']: new_html_content})
 
     @staticmethod
