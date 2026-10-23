@@ -1311,6 +1311,7 @@ class ChromeBrowser:
             debug=debug,
         ))
         self.ws = self.cleanup.enter_context(self._open_websocket())
+        self.cleanup.callback(self._ws_winddown)
         if scs := odoo.tools.config['screencasts']:
             self.screencaster = self.cleanup.enter_context(Screencaster(self, scs))
         else:
@@ -1355,7 +1356,6 @@ class ChromeBrowser:
         }
         emulated_device['width'], emulated_device['height'] = [int(size) for size in test_case.browser_size.split(",")]
         self._websocket_request('Emulation.setDeviceMetricsOverride', params=emulated_device)
-        self.cleanup.callback(self._ws_winddown)
 
     def _ws_winddown(self):
         try:
