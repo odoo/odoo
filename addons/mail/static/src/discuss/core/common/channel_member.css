@@ -7,10 +7,10 @@
         }
     }
 
-    &.cursor-pointer:hover, &.o-active, &[data-right-clicking] {
-        &:not(:has(.o-discuss-ChannelMember-actions:hover)) {
-            background-color: var(--discuss-ChannelMember-hoverBg, color-mix(in srgb, var(--gray-100), var(--gray-200)));
-        }
+    &.cursor-pointer:hover:not(:has(.o-discuss-ChannelMember-actions:hover)),
+    &.o-active:not(:has(.o-discuss-ChannelMember-actions:hover)),
+    &[data-right-clicking]:not(:has(.o-discuss-ChannelMember-actions:hover)) {
+        background-color: var(--discuss-ChannelMember-hoverBg, color-mix(in srgb, var(--gray-100), var(--gray-200)));
     }
     &:hover .o-discuss-ChannelMember-actions {
         display: flex !important;
