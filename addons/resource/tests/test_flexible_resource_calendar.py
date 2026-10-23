@@ -2,6 +2,7 @@
 from datetime import datetime, date, UTC
 
 from odoo.tests.common import tagged, TransactionCase
+from odoo.tools.intervals import Intervals
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -169,3 +170,24 @@ class TestFlexibleResourceCalendar(TransactionCase):
             (2025, 52): 40.0,
             (2026, 1): 40.0,
         }, "weeks are well computed when ")
+
+    def test_flexible_resource_unavailable_intervals(self):
+        """Flexible resources are only unavailable during their leaves, returned as Intervals.
+        Without leave, they have no entry in the batch result."""
+        unavailable = self.flex_resource.calendar_id._unavailable_intervals(
+            datetime(2025, 7, 14, tzinfo=UTC), datetime(2025, 7, 19, tzinfo=UTC), resource=self.flex_resource,
+        )
+        self.assertIsInstance(unavailable, Intervals)
+        self.assertFalse(unavailable)
+        unavailable_per_resource = self.resources._get_unavailable_intervals(datetime(2025, 7, 14), datetime(2025, 7, 19))
+        self.assertNotIn(self.flex_resource.id, unavailable_per_resource)
+        self.assertNotIn(self.fully_flex_resource.id, unavailable_per_resource)
+
+        unavailable_per_resource = self.resources._get_unavailable_intervals(datetime(2025, 7, 28), datetime(2025, 8, 2))
+        for resource in self.resources:
+            unavailable = unavailable_per_resource[resource.id]
+            self.assertIsInstance(unavailable, Intervals)
+            self.assertEqual(
+                [(start.date(), stop.date(), start.tzinfo) for start, stop, _leaves in unavailable],
+                [(date(2025, 7, 29), date(2025, 7, 29), UTC), (date(2025, 7, 31), date(2025, 8, 1), UTC)],
+            )

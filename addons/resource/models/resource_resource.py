@@ -167,8 +167,8 @@ class ResourceResource(models.Model):
 
         :param datetime start: start of the period, naive means UTC
         :param datetime end: end of the period, naive means UTC
-        :return: ``{resource_id: Intervals}`` expressed in UTC (a list of ``(start, stop)``
-            leave tuples for flexible resources, which are missing when they have no leave)
+        :return: ``{resource_id: Intervals}`` expressed in UTC (only the leaves for
+            flexible resources, which are missing when they have no leave)
         :rtype: dict
         """
         start_datetime = localized(start)
