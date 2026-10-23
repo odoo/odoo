@@ -1585,18 +1585,22 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             invoice_date='2025-09-03',
         )
         initial_flow = invoice.l10n_fr_pdp_last_flow_id
+        invoice = invoice.with_context(tracking_disable=False, mail_notrack=False)
 
         # A failed PDP attempt is not proof of e-invoicing, so the existing Flow 10 scope must stay.
         invoice.peppol_move_state = 'error'
         self.env.flush_all()
+        invoice._track_finalize()
         self.assertFalse(invoice.pdp_is_sent)
         self.assertEqual(invoice.l10n_fr_pdp_flow_10_report_type, 'transaction')
         self.assertIn(invoice, initial_flow._get_moves())
+        self.assertFalse(invoice.message_ids.filtered(lambda message: 'removed from e-reporting' in message.body))
 
         # A successful PDP send proves that this is an e-invoice, even though the missing VAT
         # initially made it look B2C. The still-open report can simply forget the invoice.
         invoice.peppol_move_state = 'done'
         self.env.flush_all()
+        invoice._track_finalize()
         initial_flow.invalidate_recordset(['rectificative_flow_ids'])
 
         self.assertTrue(invoice.pdp_is_sent)
@@ -1605,6 +1609,20 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertNotIn(invoice, initial_flow._get_moves())
         # Nothing reached the administration yet, so creating a corrective report would be wrong.
         self.assertFalse(initial_flow.rectificative_flow_ids)
+        removal_note = invoice.message_ids.filtered(lambda message: 'removed from e-reporting' in message.body)
+        self.assertEqual(len(removal_note), 1)
+        flow_link = etree.fromstring(removal_note.body).find('a')
+        self.assertEqual(flow_link.text, initial_flow.display_name)
+        self.assertEqual(flow_link.get('data-oe-model'), initial_flow._name)
+        self.assertEqual(flow_link.get('data-oe-id'), str(initial_flow.id))
+
+        invoice.invalidate_recordset(['pdp_is_sent'])
+        self.env.flush_all()
+        invoice._track_finalize()
+        self.assertEqual(
+            invoice.message_ids.filtered(lambda message: 'removed from e-reporting' in message.body),
+            removal_note,
+        )
 
     def test_invoice_sent_by_pdp_rectifies_sent_transaction_and_payment_flows(self):
         invoice = self._create_reporting_invoice(

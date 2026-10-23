@@ -331,7 +331,17 @@ class AccountMove(models.Model):
                 field_name in initial_values and initial_values[field_name] != move[field_name]
                 for field_name in pdp_fields
             ):
-                move._l10n_fr_pdp_message_log_ereporting_status()
+                if (
+                    move.pdp_is_sent
+                    and move.l10n_fr_pdp_status == 'out_of_scope'
+                    and (previous_flow := initial_values.get('l10n_fr_pdp_last_flow_id'))
+                ):
+                    move._message_log(body=self.env._(
+                        "This invoice has been removed from e-reporting flow %(flow)s because it is subject to e-invoicing.",
+                        flow=previous_flow._get_html_link(),
+                    ))
+                else:
+                    move._l10n_fr_pdp_message_log_ereporting_status()
         return tracking
 
     def _l10n_fr_pdp_message_log_ereporting_status(self):
