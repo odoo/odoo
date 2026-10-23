@@ -1360,7 +1360,7 @@ class HrLeaveAllocation(models.Model):
         approval_activity = self.env.ref('hr_holidays.mail_act_leave_allocation_second_approval')
         for allocation in self:
             if allocation.state in ['confirm', 'validate1']:
-                if allocation.work_entry_type_id.leave_validation_type != 'no_validation':
+                if allocation.work_entry_type_id.allocation_validation_type != 'no_validation':
                     if allocation.state == 'confirm':
                         activity_type = confirm_activity
                         note = _(
