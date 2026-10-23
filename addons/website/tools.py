@@ -75,11 +75,21 @@ INLINE_TAGS = (TRANSLATED_ELEMENTS - {'br'}) | {'a', 'strike'}
 
 
 def text_from_element(element):
-    """Return the text of an HTML element on one line, as a browser shows it.
+    """Return the text of an HTML element on one line, as a browser shows it:
+    the tags formatting a part of a line (bold, links...) add no space, the
+    others (paragraphs, list items, line breaks...) separate words.
+
+    For example, with texts of the snippets::
+
+        ...is <b>account creation</b>. This involves...
+        -> "...is account creation. This involves..."
+        ...to our <b>setup wizard</b>, which is designed...
+        -> "...to our setup wizard, which is designed..."
+        <p>...any inquiries or issues.</p><p>We're committed...</p>
+        -> "...any inquiries or issues. We're committed..."
 
     Unlike ``text_from_html``, it reads a parsed element instead of parsing a
-    string again, and inline tags (bold, links...) add no space: it gives
-    "He is great." for ``He is <b>great</b>.``, not "He is great .".
+    string again, and adds no space before the period of "account creation.".
 
     :param element: lxml element.
     :rtype: str
