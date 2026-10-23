@@ -12,7 +12,7 @@ from odoo.addons.l10n_fr_pdp.models.account_edi_proxy_user import STATUS_TO_PROC
 from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import PDP_CUSTOMIZATION_ID, CPRO_CUSTOMIZATION_ID
 from odoo.addons.l10n_fr_pdp.models.account_peppol_response import NEW_STATUSES
 from odoo.addons.l10n_fr_pdp.models.pdp_flow import FLOW_OPEN_STATES_SELECTION, FLOW_SENT_STATES, FLOW_SENT_STATES_SELECTION
-from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
+from odoo.addons.l10n_fr_pdp.utils import drom_com_territories, transport_parties
 
 PAID_CODES = frozenset({'ESC', 'RAB', 'REM', 'MPA', 'MEN'})
 G1_05_RE = re.compile(r'^(?! )(?!.*  )[A-Za-z0-9+\-_/ ]{1,20}(?<! )$')  # can't start with space, can't have 2 consecutive spaces, max 20 chars, allowed chars are alphanumeric, space, -, _, /, can't end with space
@@ -705,3 +705,74 @@ class AccountMove(models.Model):
                 # Ensure RE flow exist for current move period.
                 self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
         return super().button_draft()
+
+    def _extend_with_attachments(self, attachments, new=False):
+        # The XML is decoded here. The transport sender exists only for this fetch,
+        # so the comparison is done now and recorded as a note. No column is added.
+        result = super()._extend_with_attachments(attachments, new=new)
+        if new and len(self) == 1:
+            transport_map = self.env.context.get('l10n_fr_pdp_transport_map') or {}
+            message_uuid = self.peppol_message_uuid or self.env.context.get('default_peppol_message_uuid')
+            transport = transport_map.get(message_uuid) or {}
+            if (transport.get('sender') or '').strip():
+                self._l10n_fr_pdp_warn_transport_sender(transport, attachments)
+        return result
+
+    def _l10n_fr_pdp_warn_transport_sender(self, transport, attachments=None):
+        self.ensure_one()
+        sender = (transport.get('sender') or '').strip()
+        if not sender:
+            return
+        if attachments is None:
+            attachments = self.env['ir.attachment'].search([
+                ('res_model', '=', 'account.move'),
+                ('res_id', '=', self.id),
+            ])
+        xml_tree = next(
+            (
+                file_data['xml_tree']
+                for file_data in attachments._unwrap_edi_attachments()
+                if file_data.get('xml_tree') is not None
+            ),
+            None,
+        )
+        parties = transport_parties.parse_parties(xml_tree)
+        role = 'buyer' if parties['type_code'] in transport_parties.SELF_BILLING_TYPE_CODES else 'seller'
+        level, reason = transport_parties.compute_alert(sender, parties[role])
+        if level == transport_parties.LEVEL_NONE or not reason:
+            return
+        # Keeps `_autopost_draft_entries` away from the bill without a new column.
+        self.to_check = True
+        message = self._l10n_fr_pdp_transport_message(reason, role, sender, parties[role])
+        body = Markup('<b>%s</b> %s') % (_("Peppol transport alert:"), message)
+        receiver = (transport.get('receiver') or '').strip()
+        if receiver:
+            body = Markup('%s<br/>%s') % (body, _("Transport receiver: %s", receiver))
+        self.message_post(body=body, message_type='notification', subtype_xmlid='mail.mt_note')
+
+    def _l10n_fr_pdp_transport_message(self, reason, role, sender, tokens):
+        self.ensure_one()
+        role_label = _('buyer (self-billing)') if role == 'buyer' else _('seller')
+        parties_display = ', '.join(
+            f'{scheme}:{value}' if scheme else value for scheme, value in tokens
+        ) or '-'
+        values = {'sender': sender, 'role': role_label, 'parties': parties_display}
+        if reason == transport_parties.REASON_SIREN_MISMATCH:
+            return _(
+                "The transport sender (%(sender)s) is not the %(role)s declared in the XML (%(parties)s). The document may have been delivered by a third party on behalf of this %(role)s.",
+                **values,
+            )
+        if reason == transport_parties.REASON_AMBIGUOUS:
+            return _(
+                "The %(role)s declared in the XML carries several SIREN (%(parties)s), the transport sender is %(sender)s. Check that the document comes from the right vendor.",
+                **values,
+            )
+        if reason == transport_parties.REASON_MISSING_PARTIES:
+            return _(
+                "The transport sender is %(sender)s but no %(role)s identifier could be read in the XML.",
+                **values,
+            )
+        return _(
+            "The transport sender (%(sender)s) cannot be compared with the %(role)s identifiers of the XML (%(parties)s).",
+            **values,
+        )

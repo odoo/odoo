@@ -257,9 +257,34 @@ class AccountEdiProxyClientUser(models.Model):
             company.l10n_fr_pdp_annuaire_start_date = fields.Date.to_date(annuaire_start_date)
             company._force_update_l10n_fr_f10_moves()
 
+    def _make_request(self, url, params=False):
+        response = super()._make_request(url, params=params)
+        # `get_all_documents` is the only payload that carries the authenticated transport
+        # sender. It is kept in a context dict for this fetch and is not stored.
+        transport_map = self.env.context.get('l10n_fr_pdp_transport_map')
+        if (
+            transport_map is not None
+            and str(url).rstrip('/').endswith('1/get_all_documents')
+            and isinstance(response, dict)
+        ):
+            for message in response.get('messages') or []:
+                if message.get('uuid'):
+                    transport_map[message['uuid']] = {
+                        'sender': message.get('sender'),
+                        'receiver': message.get('receiver'),
+                    }
+        return response
+
     def _peppol_get_new_documents(self):
+        # Shared mutable dicts for this fetch: chatter updates, and the transport sender
+        # recorded by `_make_request` while `1/get_all_documents` is called.
+        extra_context = {}
         if 'pdp_einvoicing_chatter_messages' not in self.env.context:
-            return self.with_context(pdp_einvoicing_chatter_messages={})._peppol_get_new_documents()
+            extra_context['pdp_einvoicing_chatter_messages'] = {}
+        if 'l10n_fr_pdp_transport_map' not in self.env.context:
+            extra_context['l10n_fr_pdp_transport_map'] = {}
+        if extra_context:
+            return self.with_context(**extra_context)._peppol_get_new_documents()
         return super()._peppol_get_new_documents()
 
     def _pdp_get_regulatory_documents(self, batch_size=None):
