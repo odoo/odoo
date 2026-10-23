@@ -12,7 +12,26 @@ from odoo.tools.intervals import Intervals
 
 
 class HrTimeRuleSourceMixin(models.AbstractModel):
-    """Mixin for hr.attendance and hr.leave models to support time rule evaluation."""
+    """Make a model a source of the time rule pipeline (``hr.time.rule``).
+
+    Inherited by ``hr.attendance`` and ``hr.leave``. Creating a source, or writing its employee,
+    span or the fields of :meth:`_get_write_source_extra_source_fields`, triggers the rules
+    (:meth:`_trigger_time_rules`) unless the context has ``skip_time_rules``. The rules then
+    reclassify the source in place and/or create output records of the same model, linked to
+    the source.
+
+    The inheriting model must have ``employee_id``, ``work_entry_type_id`` and ``time_rule_id``
+    fields, set the class attributes below and implement the hooks raising
+    ``NotImplementedError``:
+
+    - ``_time_rule_source_field``: many2one from an output record to its source
+      (``source_attendance_id``, ``source_leave_id``);
+    - ``_time_rule_output_field``: the inverse one2many (``overtime_attendance_ids``,
+      ``output_leave_ids``);
+    - ``_time_rule_span_start_field`` / ``_time_rule_span_end_field``: datetime fields (UTC)
+      holding the span (``check_in``/``check_out``, ``date_from``/``date_to``);
+    - ``_time_rule_write_ctx``: context used for the pipeline's own writes.
+    """
 
     _name = 'hr.time.rule.source.mixin'
     _description = 'Time Rule Source Mixin'
@@ -25,17 +44,39 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     _time_rule_write_ctx = {'skip_time_rules': True, 'tracking_disable': True}
 
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
+        """Write the pipeline result on the records; must be implemented.
+
+        Implementations delegate to a ``hr.time.rule`` method built on
+        ``hr.time.rule._apply_output`` (``_apply_attendance_output``, ``_apply_leave_output``),
+        adding model specific effects such as allocations.
+
+        :param rules: the ``hr.time.rule`` records that were evaluated
+        :param dict excess: ``{employee: {source: [_Iv]}}``
+        :param dict deficit: ``{employee: {source: [(start, stop, rule)]}}``
+        :param dict active_iv: ``{employee: {source: Intervals}}``
+        """
         raise NotImplementedError
 
     def _on_sources_collected(self, sources):
+        """Hook called with the sources of a batch before the rules are evaluated on them.
+
+        ``hr_holidays`` reverses the allocation credits previously logged on these sources, so the
+        evaluation starts from a clean state.
+
+        :param sources: records of this model
+        """
         # overriden in hr_holidays
         pass
 
     def _get_pipeline_intervals_local(self, schedule):
-        """Return (start, stop) local-naive pairs for this record's pipeline segments.
+        """Return the segments of the record that enter the pipeline.
 
-        Default: one interval for the full raw span.
-        Override for multi-day absence leaves, clip to schedule.
+        Default: the whole span. ``hr.leave`` clips absence leaves to the schedule, so nights,
+        breaks and days off of a leave do not count.
+
+        :param Intervals schedule: schedule of the employee (naive local)
+        :return: list of ``(start, stop)`` naive datetimes in the employee's timezone
+        :rtype: list
         """
         self.ensure_one()
         tz = ZoneInfo(self.employee_id.sudo()._get_tz())
@@ -44,36 +85,60 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         return [(start, stop)]
 
     def _get_source_extra_fields_domain(self):
+        """Return the domain a record must match to be a source, e.g. being validated.
+
+        :rtype: list
+        """
         return []
 
     def _get_write_source_extra_source_fields(self):
+        """Return the fields, besides the employee and the span, whose write triggers the rules.
+
+        :rtype: set[str]
+        """
         return set()
 
     def _get_time_rule_break_hours(self):
+        """Return the break hours of the record, not counted as worked time by the rules.
+
+        :rtype: float
+        """
         return 0.0
 
     def _get_time_rule_end_write_vals(self, end_utc, stop_local):
-        """Write vals dict for updating the span-end field.
+        """Return the values to write to move the end of the record.
 
-        end_utc is the new UTC end datetime; stop_local is the same instant as a
-        naive datetime in the employee's tz.  Leave overrides to also write
-        request_date_to / request_hour_to.
+        ``hr.leave`` also writes ``request_date_to`` and the request hours.
+
+        :param datetime end_utc: new end, naive UTC
+        :param datetime stop_local: the same instant, naive in the employee's timezone
+        :rtype: dict
         """
         return {self._time_rule_span_end_field: end_utc}
 
     def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
-        """Return Intervals of existing records that occupy [start_utc, period_end_utc].
+        """Return the time already occupied by records of the employee; must be implemented.
 
-        Used by the deficit go-around algorithm to find free slots.
+        Deficit outputs are only placed in the free slots of ``[start_utc, period_end_utc]``.
+
+        :param int employee_id: employee id
+        :param datetime start_utc: naive UTC
+        :param datetime period_end_utc: naive UTC
+        :return: intervals of naive UTC datetimes
+        :rtype: Intervals
         """
         raise NotImplementedError
 
     def _get_time_rule_deficit_already_covered(self, rule, start_utc, end_utc):
-        """Hours already covered by existing deficit outputs of this rule's WET in [start_utc, end_utc].
+        """Return the hours already covered by outputs of the rule's type in ``[start_utc, end_utc]``.
 
-        helps make deficit output creation idempotent: if a prior pipeline run already placed
-        outputs for this deficit, subsequent runs deduct that coverage from remaining hours
-        so no duplicate records are created.
+        Makes deficit outputs idempotent: the hours placed by a previous run are deducted, so
+        no duplicate records are created.
+
+        :param rule: the ``hr.time.rule``
+        :param datetime start_utc: naive UTC
+        :param datetime end_utc: naive UTC
+        :rtype: float
         """
         if not rule.work_entry_type_id:
             return 0.0
@@ -97,21 +162,39 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         return sum_intervals(existing_iv & window)
 
     def _get_time_rule_output_vals(self, rule, df, dt, pp):
-        """Create vals for a new time rule output record.
+        """Return the creation values of an output record of ``rule``; must be implemented.
 
-        df/dt are UTC datetimes; pp is a frozenset of premium pay rule IDs.
+        :param rule: the ``hr.time.rule`` producing the output
+        :param datetime df: start, naive UTC
+        :param datetime dt: end, naive UTC
+        :param frozenset pp: premium pay ids
+        :return: values with at least the employee, the span, the rule's type, ``time_rule_id``
+            and the link to the source
+        :rtype: dict
         """
         raise NotImplementedError
 
     def _get_time_rule_remainder_vals(self, df, dt):
-        """Create vals for a remainder record (source's original type, trimmed span).
+        """Return the creation values of a remainder record; must be implemented.
 
-        df/dt are UTC datetimes. work_entry_type_id is intentionally omitted;
-        the caller fills it with the source's original WET before creating.
+        A remainder is a part of the source not covered by any output, when the source is cut.
+        ``work_entry_type_id`` must be left out: the caller sets the source's original type.
+
+        :param datetime df: start, naive UTC
+        :param datetime dt: end, naive UTC
+        :rtype: dict
         """
         raise NotImplementedError
 
     def _get_source_records_for_time_rules(self, start_dt, end_dt, employees=None, check_end=False):
+        """Return the source records (as superuser) overlapping a period.
+
+        :param datetime start_dt: period start, UTC (tzinfo is dropped)
+        :param datetime end_dt: period end, UTC (tzinfo is dropped)
+        :param employees: restrict to these ``hr.employee``
+        :param bool check_end: select the records ending in the period instead of overlapping it
+        :rtype: recordset of this model
+        """
         domain = [
             (self._time_rule_span_end_field, '>=', start_dt.replace(tzinfo=None)),
             (self._time_rule_span_end_field, '!=', False),
@@ -145,6 +228,16 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         return merged
 
     def _collect_time_rule_outputs(self, rules, ranges_by_employee):
+        """Evaluate ``rules`` on the sources of each employee's date range; nothing is written.
+
+        Employees sharing the same range are evaluated in one ``_evaluate_rules`` call, after
+        :meth:`_on_sources_collected`.
+
+        :param rules: ``hr.time.rule`` records
+        :param dict ranges_by_employee: ``{employee: (date_from, date_to)}``
+        :return: merged ``(excess, deficit, active_iv)``, see ``hr.time.rule._evaluate_rules``
+        :rtype: tuple
+        """
         all_excess = defaultdict(lambda: defaultdict(list))
         all_deficit = defaultdict(lambda: defaultdict(list))
         all_active_iv = defaultdict(lambda: defaultdict(Intervals))
@@ -180,7 +273,11 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
 
     @api.model
     def _cron_process_day_undertime_rules(self):
-        """Daily cron: process day-based time rules for yesterday's records."""
+        """Cron: evaluate the daily ``less_than`` (undertime) rules on yesterday's records.
+
+        Undertime of the current day cannot be known while the day runs, so it is not
+        evaluated on write. A day without any source record produces no deficit.
+        """
         assert 'employee_id' in self._fields
         yesterday = date.today() - timedelta(days=1)
         start = datetime.combine(yesterday, time.min)
@@ -193,11 +290,11 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
 
     @api.model
     def _cron_process_week_time_rules(self):
-        """Daily cron: process week rules whose week boundary fell on yesterday.
+        """Cron: evaluate the weekly rules (both operators) on the week that ended yesterday.
 
-        On day X, yesterday was the last day of every week that starts on X.
-        Only rules with week_start matching X are processed, using the 7-day
-        window [X-7 .. X-1].  Days with no matching rules are a cheap no-op.
+        On day X, yesterday was the last day of every week starting on X: only the rules whose
+        ``week_start`` is X are processed, on the records ending in ``[X-7, X-1]``. This assumes a
+        daily run.
         """
         assert 'employee_id' in self._fields
         today = date.today()
@@ -214,7 +311,18 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         self._process_time_rules_for(affected, rule_period='week', rule_week_start=week_start_key)
 
     def _process_time_rules_for(self, affected, rule_period=None, rule_operator=None, rule_week_start=None):
-        """Recompute time rule outputs for the given (employee, date_from, date_to) tuples.
+        """Evaluate and apply the active rules for the given employees and periods.
+
+        Rules are those of the current companies (or without company), filtered by
+        ``rule_operator`` and period. Daily rules are evaluated on each employee's covering date
+        range, weekly rules on that range widened to whole weeks; both results are applied
+        together through :meth:`_apply_record_output`.
+
+        :param list affected: ``(employee, date_from, date_to)`` tuples (dates or datetimes)
+        :param str rule_period: ``'day'`` or ``'week'`` to only process that kind of rule;
+            both if ``None``
+        :param str rule_operator: ``'exceed'`` or ``'less_than'`` to only process that operator
+        :param str rule_week_start: only process the weekly rules with this ``week_start``
         """
         if not affected:
             return
@@ -274,7 +382,12 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         self._apply_record_output(day_rules | week_rules, merged_excess, merged_deficit, merged_active_iv)
 
     def _trigger_time_rules(self):
-        """Apply the full day/week, past/current, exceed/undertime split for validated source record."""
+        """Run the rules for the records of ``self`` that are valid sources.
+
+        Called on create and on write of a trigger field. Records without span or not matching
+        :meth:`_get_source_extra_fields_domain` are ignored. See
+        :meth:`_trigger_time_rules_for_affected` for which rules run.
+        """
         domain = [
             (self._time_rule_span_start_field, '!=', False),
             (self._time_rule_span_end_field, '!=', False),
@@ -295,7 +408,17 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         )
 
     def _trigger_time_rules_for_affected(self, affected):
-        """Apply day/week, past/current, exceed/undertime split for (employee, date_from, date_to) tuples."""
+        """Run the rules that can already be decided for the given periods.
+
+        - periods ending before today: all daily rules;
+        - periods ending today or later: daily ``exceed`` rules only;
+        - periods ending before the current week (started on the earliest ``week_start`` of the
+          active weekly rules): weekly ``exceed`` rules.
+
+        Weekly undertime only runs from :meth:`_cron_process_week_time_rules`.
+
+        :param list affected: ``(employee, date_from, date_to)`` tuples
+        """
         if not affected:
             return
         today = date.today()

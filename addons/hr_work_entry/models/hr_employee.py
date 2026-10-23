@@ -11,6 +11,18 @@ class HrEmployee(models.Model):
     # YTI TODO: Rename private method into _get_work_entries_vals()
     # Public method probably to drop
     def generate_work_entries(self, date_start, date_stop):
+        """Return the work entry values of the employees of ``self`` between two dates.
+
+        Selects the versions with contract days in the period, then calls
+        ``hr.version.generate_work_entries``. Called on an empty recordset, it processes all
+        the employees with contract days in the period.
+
+        :param date_start: first day, included (``date``, ``datetime`` or string, converted to
+            a date)
+        :param date_stop: last day, included
+        :return: final work entry values, see ``hr.version.generate_work_entries``
+        :rtype: list[dict]
+        """
         date_start = fields.Date.to_date(date_start)
         date_stop = fields.Date.to_date(date_stop)
 
