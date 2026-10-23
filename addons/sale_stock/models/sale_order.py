@@ -28,6 +28,13 @@ class SaleOrder(models.Model):
     )
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+    delivery_status = fields.Selection(
+           selection_add=[('cancel', 'Cancelled')],
+           help="Blue: Not Delivered/Started\n\
+            Orange: Partially Delivered\n\
+            Green: Fully Delivered\n\
+            Red: Cancelled",
+    )
     late_availability = fields.Boolean(
         string="Late Availability",
         compute='_compute_late_availability',
@@ -76,15 +83,20 @@ class SaleOrder(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_delivery_status(self):
         for order in self:
-            if not order.picking_ids or all(p.state == 'cancel' for p in order.picking_ids):
+            if not order.picking_ids:
                 order.delivery_status = False
-            elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
+            elif all(p.state == 'cancel' for p in order.picking_ids) and all(
+                    ol.qty_delivered == 0 for ol in order.order_line):
+                order.delivery_status = 'cancel'
+            elif all(p.state == 'done' for p in order.picking_ids) and all(
+                    ol.qty_delivered >= ol.product_uom_qty for ol in order.order_line):
                 order.delivery_status = 'full'
-            elif any(p.state == 'done' for p in order.picking_ids) and any(
-                    l.qty_delivered for l in order.order_line):
-                order.delivery_status = 'partial'
-            elif any(p.state == 'done' for p in order.picking_ids):
+            elif any(p.state == 'done' for p in order.picking_ids) and all(
+                    ol.qty_delivered == 0 for ol in order.order_line):
                 order.delivery_status = 'started'
+            elif any(p.state == 'done' for p in order.picking_ids) and any(
+                    ol.qty_delivered for ol in order.order_line):
+                order.delivery_status = 'partial'
             else:
                 order.delivery_status = 'pending'
 

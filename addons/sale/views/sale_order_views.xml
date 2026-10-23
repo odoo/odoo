@@ -525,6 +525,7 @@
                                 widget="badge"
                                 decoration-success="delivery_status == 'full'"
                                 decoration-warning="delivery_status == 'partial'"
+                                decoration-danger="delivery_status == 'cancel'"
                                 decoration-info="delivery_status in ['pending', 'started']"
                                 invisible="state != 'sale'"
                             />
