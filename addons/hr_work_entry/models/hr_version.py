@@ -120,8 +120,6 @@ class HrVersion(models.Model):
         """
         # returns the work entry time related to the leave that
         # includes the whole interval.
-        # Overriden in hr_work_entry_holiday to select the
-        # global time off first (eg: Public Holiday > Home Working)
         self.ensure_one()
         for leave in leaves:
             if interval[0] >= leave[0] and interval[1] <= leave[1] and leave[2]:
@@ -532,7 +530,6 @@ class HrVersion(models.Model):
         :rtype: bool
         """
         # True means this is calendar based, False it is attendance based.
-        # This function gets overridden in hr_work_entry_attendance to correctly check if it's attendance based
         self.ensure_one()
         return True
 
