@@ -281,14 +281,28 @@ class AccountChartTemplate(models.AbstractModel):
         configuration, like:
         - tax tags
         """
+        def journal_account_values_to_assign(journal, journal_data):
+            return {
+                fname: value
+                for fname, value in journal_data.items()
+                if (
+                    fname in journal._fields
+                    and journal._fields[fname].type == 'many2one'
+                    and journal._fields[fname].comodel_name == 'account.account'
+                    and not journal[fname]
+                )
+            }
+
         if not force_update:
             data.pop('account.reconcile.model', None)
         if 'res.company' in data and not force_update:
             data['res.company'][company.id].clear()
             data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
-            if self.ref(xmlid, raise_if_not_found=False):
-                if 'type' in journal_data:
+            if journal := self.ref(xmlid, raise_if_not_found=False):
+                if account_values := journal_account_values_to_assign(journal, journal_data):
+                    data['account.journal'][xmlid] = account_values
+                else:
                     del data['account.journal'][xmlid]
             else:
                 journal = None
@@ -309,7 +323,9 @@ class AccountChartTemplate(models.AbstractModel):
                         ('name', 'in', (journal_data['name'], translated_name)),
                     ], limit=1)
                 if journal:
-                    if 'type' in journal_data:
+                    if account_values := journal_account_values_to_assign(journal, journal_data):
+                        data['account.journal'][xmlid] = account_values
+                    else:
                         del data['account.journal'][xmlid]
                     self.env['ir.model.data']._update_xmlids([{
                         'xml_id': self.company_xmlid(xmlid, company),
