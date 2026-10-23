@@ -1,5 +1,6 @@
 import { reactive } from "@odoo/owl";
 
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 export class MailCoreWeb {
@@ -91,6 +92,20 @@ export class MailCoreWeb {
                 inbox.fetchMoreMessages();
             }
         });
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
+||||||| 7d1a9e2235f1b37ca9728bf3fbc635ce8aa02318
+        this.busService.start();
+=======
+        browser.navigator.serviceWorker?.addEventListener(
+            "message",
+            ({ data: { action, data } }) => {
+                if (action === "OPEN_RECORD") {
+                    this.store.Thread.insert({ id: data.id, model: data.model }).open();
+                }
+            }
+        );
+        this.busService.start();
+>>>>>>> 23dd2a1ec767778bc4314e476267695ca4758cdd
     }
 }
 

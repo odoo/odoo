@@ -180,6 +180,21 @@ async function openDiscussChannel(channelId, { action, joinCall = false, source 
     }
 }
 
+async function openRecord(model, resId) {
+    const targetClient = (
+        await self.clients.matchAll({ type: "window", includeUncontrolled: true })
+    ).find((client) => /^\/(odoo|scoped_app)(\/|$)/.test(new URL(client.url).pathname));
+    if (!targetClient) {
+        const modelPath = model.includes(".") ? model : `m-${model}`;
+        await self.clients.openWindow(`/odoo/${modelPath}/${resId}`);
+        return;
+    }
+    await targetClient.focus();
+    if (model && resId) {
+        targetClient.postMessage({ action: "OPEN_RECORD", data: { id: resId, model } });
+    }
+}
+
 self.addEventListener("notificationclick", (event) => {
     event.notification.close();
     if (event.notification.data) {
@@ -209,8 +224,15 @@ self.addEventListener("notificationclick", (event) => {
                 })
             );
         } else {
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
             const modelPath = model.includes(".") ? model : `m-${model}`;
             event.waitUntil(clients.openWindow(`/odoo/${modelPath}/${res_id}`));
+||||||| 7d1a9e2235f1b37ca9728bf3fbc635ce8aa02318
+            const modelPath = model.includes(".") ? model : `m-${model}`;
+            clients.openWindow(`/odoo/${modelPath}/${res_id}`);
+=======
+            event.waitUntil(openRecord(model, res_id));
+>>>>>>> 23dd2a1ec767778bc4314e476267695ca4758cdd
         }
     }
 });

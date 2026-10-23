@@ -31,6 +31,7 @@ export class OutOfFocusService {
     }
 
     async notify(message, thread) {
+<<<<<<< 62febd5986e065bfa331b4ab653896125daa3d9d
         // Message types the server sends via web push, excluding the author.
         // Keep in sync with mail.thread._notify_get_recipients_for_extra_notifications.
         const messageTypesHandledByPush = [
@@ -40,6 +41,19 @@ export class OutOfFocusService {
             "user_notification",
             "whatsapp_message",
         ];
+||||||| 7d1a9e2235f1b37ca9728bf3fbc635ce8aa02318
+        const modelsHandleByPush = ["mail.thread", "discuss.channel"];
+=======
+        // Message types the server sends via web push, excluding the author.
+        // Keep in sync with mail.thread._extract_partner_ids_for_notifications.
+        const messageTypesHandledByPush = [
+            "comment",
+            "email",
+            "notification",
+            "user_notification",
+            "whatsapp_message",
+        ];
+>>>>>>> 23dd2a1ec767778bc4314e476267695ca4758cdd
         if (
             messageTypesHandledByPush.includes(message.message_type) &&
             !message.isSelfAuthored &&
