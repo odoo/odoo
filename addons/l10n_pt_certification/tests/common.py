@@ -107,13 +107,15 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
         invoice_data['l10n_pt_at_series_id'] = series_for_year.filtered(lambda s: s.document_type == move_type).id
 
         move = cls.env['account.move'].with_company(cls.company_pt).create(invoice_data)
-        # Posting signs the invoice, so `l10n_pt_hashed_on` is the time it is posted at.
+        # The tests take a posted invoice as issued: it is issued right after posting, as its first
+        # print would (PT-105), so `l10n_pt_hashed_on` is the time it is posted at.
         with (
             freeze_time(l10n_pt_hashed_on or fields.Date.today()) if do_hash else nullcontext(),
             cls._mock_sign_records() if mock_hash else nullcontext(),
         ):
             if post:
                 move.action_post()
+                move._l10n_pt_issue()
             if do_hash and not move.inalterable_hash:
                 move.button_hash()
         return move

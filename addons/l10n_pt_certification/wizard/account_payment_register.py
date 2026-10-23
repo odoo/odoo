@@ -43,6 +43,13 @@ class AccountPaymentRegister(models.TransientModel):
             # If no AT series used in a payment in this journal, fallback to an active series for this journal
             wizard.l10n_pt_at_series_id = last_payment.l10n_pt_at_series_id or available_series[0]._origin
 
+    def _create_payments(self):
+        # EXTENDS account
+        # A receipt references the document number of the invoices it pays. Checked here, before the
+        # payments exist: an invoice is linked to a payment without journal entry only after it is posted.
+        self.line_ids.move_id._l10n_pt_check_issued(self.env._("A receipt"))
+        return super()._create_payments()
+
     def _create_payment_vals_from_wizard(self, batch_result):
         # OVERRIDE
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)

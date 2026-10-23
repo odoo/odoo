@@ -318,14 +318,15 @@ class L10nPtATSeries(models.Model):
 
     def _l10n_pt_get_used(self):
         """
-        The series of ``self`` in which a document was issued, i.e. numbered, whatever its state now:
-        such a series is frozen and kept (FAQ 4327, Despacho 8632/2014 1.9).
+        The series of ``self`` in which a document was numbered, issued or not, whatever its state
+        now: such a series is frozen and kept (FAQ 4327, Despacho 8632/2014 1.9).
         """
         used_ids = set()
         for model_name in self._l10n_pt_document_models():
             # sudo: a series shared across branches holds documents of companies the user may not see.
-            [(series,)] = self.env[model_name].sudo()._read_group(
-                [('l10n_pt_at_series_id', 'in', self.ids), ('l10n_pt_document_number', '!=', False)],
+            documents = self.env[model_name].sudo()
+            [(series,)] = documents._read_group(
+                [('l10n_pt_at_series_id', 'in', self.ids), *documents._l10n_pt_numbered_domain()],
                 aggregates=['l10n_pt_at_series_id:recordset'],
             )
             used_ids.update(series.ids)
@@ -343,7 +344,7 @@ class L10nPtATSeries(models.Model):
             # sudo: a series shared across branches holds documents of companies the user may not see.
             documents = self.env[model_name].sudo()
             for series, last_date in documents._read_group(
-                [('l10n_pt_at_series_id', 'in', self.ids), ('l10n_pt_document_number', '!=', False)],
+                [('l10n_pt_at_series_id', 'in', self.ids), *documents._l10n_pt_numbered_domain()],
                 groupby=['l10n_pt_at_series_id'],
                 aggregates=[f'{documents._l10n_pt_date_field}:max'],
             ):

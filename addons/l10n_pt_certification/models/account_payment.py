@@ -42,6 +42,8 @@ class AccountPayment(models.Model):
 
     def action_post(self):
         pt_payments = self.filtered(lambda p: p.is_pt_inbound()).sorted('date')
+        # A receipt references the document number of the invoices it pays.
+        pt_payments.invoice_ids._l10n_pt_check_issued(_("A receipt"))
         pt_payments._check_l10n_pt_dates()
         pt_payments._set_l10n_pt_document_number()
         return super().action_post()

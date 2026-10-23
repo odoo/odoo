@@ -22,10 +22,8 @@ class PosOrder(models.Model):
         # credit note all apply to it; `_prepare_invoice_vals` makes it a simplified invoice.
         if customerless := self.filtered(lambda o: not o.partner_id):
             customerless.partner_id = self.env.ref('l10n_pt_certification.pt_final_consumer')
-        result = super(PosOrder, self.with_context(generate_pdf=False))._generate_pos_order_invoice()
-
-        self.env['account.move']._l10n_pt_compute_missing_hashes()
-        return result
+        # The PoS hands the invoice out at once: it is issued when posted, before its payments are reconciled.
+        return super(PosOrder, self.with_context(generate_pdf=False, l10n_pt_issue_automatically=True))._generate_pos_order_invoice()
 
     def _l10n_pt_is_anonymous(self):
         """Sold to nobody in particular: no customer, or the generic final consumer (NIF 999999990)."""

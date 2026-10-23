@@ -42,28 +42,32 @@ class IrActionsReport(models.Model):
             for record in records:
                 record.l10n_pt_verify_prerequisites_qr_code()
 
+    def _l10n_pt_invoice_report_compliance(self, report_ref, res_ids, data=None):
+        """
+        Rendering an invoice report, any report flagged as one (a partner's template, a Studio copy),
+        generates the invoices: it issues them (`account.move._l10n_pt_issue`). A pro-forma does not.
+        """
+        if (
+            not self._is_invoice_report(report_ref)
+            or (data or {}).get('proforma')
+            or self.env.context.get('proforma_invoice')
+        ):
+            return
+        invoices = self.env['account.move'].browse(res_ids)
+        invoices._l10n_pt_issue()
+        for invoice in invoices:
+            invoice.l10n_pt_verify_prerequisites_qr_code()
+
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
-        report_ref_2_report_compliance_params = {
-            'account.report_hash_integrity': ('account.move', True),
-            'account.report_invoice_with_payments': ('account.move', True),
-            'account.report_invoice': ('account.move', True),
-            'account.report_payment_receipt': ('account.payment', False),
-        }
-        if params := report_ref_2_report_compliance_params.get(self._get_report(report_ref).report_name):
-            model, compute_hash = params
-            self._l10n_pt_report_compliance(model, res_ids, compute_hash)
+        if self._get_report(report_ref).report_name == 'account.report_hash_integrity':
+            self._l10n_pt_report_compliance('account.move', res_ids, compute_hash=True)
+        self._l10n_pt_invoice_report_compliance(report_ref, res_ids, data)
         return super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids)
 
     def _render_qweb_html(self, report_ref, docids, data=None):
-        report_ref_2_report_compliance_params = {
-            'account.report_hash_integrity': ('account.move', True),
-            'account.report_invoice_with_payments': ('account.move', True),
-            'account.report_invoice': ('account.move', True),
-            'account.report_payment_receipt': ('account.payment', False),
-        }
-        if params := report_ref_2_report_compliance_params.get(self._get_report(report_ref).report_name):
-            model, compute_hash = params
-            self._l10n_pt_report_compliance(model, docids, compute_hash)
+        if self._get_report(report_ref).report_name == 'account.report_hash_integrity':
+            self._l10n_pt_report_compliance('account.move', docids, compute_hash=True)
+        self._l10n_pt_invoice_report_compliance(report_ref, docids, data)
         return super()._render_qweb_html(report_ref, docids, data=data)
 
     def _get_rendering_context(self, report, docids, data):

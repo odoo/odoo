@@ -7,6 +7,7 @@ from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import float_repr
+from odoo.tools.misc import format_date
 
 from odoo.addons.l10n_pt_certification.const import (
     PT_SIMPLIFIED_INVOICE_GOODS_LIMIT,
@@ -43,6 +44,23 @@ class AccountMoveLine(models.Model):
         lines = super().create(vals_list)
         lines._l10n_pt_keep_given_discounts(given_vals_list)
         return lines
+
+    def _reconcile_plan(self, reconciliation_plan):
+        # EXTENDS account
+        # A PT invoice is paid, or settled by a credit note or an outstanding payment, only once it is
+        # issued: the receipt and the SAF-T (PT) reference its document number.
+        def flatten(plan):
+            for item in plan:
+                if isinstance(item, (list, tuple)):
+                    yield from flatten(item)
+                else:
+                    yield item
+
+        amls = self.browse().union(*flatten(reconciliation_plan))
+        amls.move_id.filtered(lambda m: m.move_type in ('out_invoice', 'out_receipt'))._l10n_pt_check_issued(
+            self.env._("A payment or reconciliation"),
+        )
+        return super()._reconcile_plan(reconciliation_plan)
 
     @api.constrains('price_total')
     def _check_l10n_pt_zero_negative_lines(self):
@@ -186,9 +204,20 @@ class AccountMove(models.Model):
         return abs(self.amount_total_signed)
 
     def _l10n_pt_assign_document_number(self, number):
-        # For a PT invoice the move name IS the legal document number.
-        super()._l10n_pt_assign_document_number(number)
+        # An invoice takes its number in its series when posted, as its name, and keeps it through a
+        # reset to draft. It becomes its document number when the invoice is issued (`_l10n_pt_issue`).
+        self.ensure_one()
         self.name = number
+
+    def _l10n_pt_is_numbered(self):
+        # EXTENDS l10n_pt_certification (mixin)
+        # Posting takes the number (`posted_before`), issuing the invoice gives it its document number.
+        return super()._l10n_pt_is_numbered() or bool(self.posted_before and self.l10n_pt_at_series_id)
+
+    @api.model
+    def _l10n_pt_numbered_domain(self):
+        # EXTENDS l10n_pt_certification (mixin)
+        return ['|', *super()._l10n_pt_numbered_domain(), '&', ('posted_before', '=', True), ('l10n_pt_at_series_id', '!=', False)]
 
     ####################################
     # OVERRIDES
@@ -198,8 +227,18 @@ class AccountMove(models.Model):
         # Since the AT Series defines the document number, it cannot be changed to avoid holes in the
         # document number sequence.
         for move in self:
-            if move.state in ('posted', 'cancel') and 'l10n_pt_at_series_id' in vals:
+            if (
+                'l10n_pt_at_series_id' in vals
+                and move.l10n_pt_at_series_id.id != vals['l10n_pt_at_series_id']
+                and (move.state in ('posted', 'cancel') or move._l10n_pt_is_numbered())
+            ):
                 raise UserError(self.env._("The AT Series of a posted document cannot be changed."))
+        # The name of a PT invoice is the number it took in its series: changing it would leave a gap,
+        # except through the resequencing of invoices not issued yet (`account.resequence.wizard`).
+        if 'name' in vals and not self.env.context.get('l10n_pt_resequence') and self.filtered(lambda m: (
+            m._l10n_pt_country_ok() and m._l10n_pt_is_numbered() and m.name != vals['name']
+        )):
+            raise UserError(self.env._("The number of a Portuguese invoice is taken in its AT series and cannot be changed."))
         # The delivery date is exported as the document's TaxPointDate (see `_compute_show_delivery_date`).
         if 'delivery_date' in vals and self.filtered(lambda m: (
             m.l10n_pt_document_number
@@ -233,7 +272,11 @@ class AccountMove(models.Model):
         return super().button_draft()
 
     def button_cancel(self):
-        """Cannot cancel an already reversed or cancelled invoice"""
+        """
+        Cannot cancel an already reversed or cancelled invoice. An invoice that took its number is
+        annulled, not discarded: it is issued, cancelled, so that its series keeps no gap and the
+        SAF-T (PT) reports it.
+        """
         pt_moves = self.filtered(lambda m: m.country_code == "PT")
         if pt_moves.filtered(lambda m: m.payment_state == 'reversed' or m.state == 'cancel'):
             raise UserError(self.env._("You cannot cancel an invoice that has already been fully reversed or cancelled."))
@@ -247,10 +290,12 @@ class AccountMove(models.Model):
                 "You cannot cancel an invoice while a credit or debit note rectifies it. Cancel %(notes)s first.",
                 notes=", ".join(rectifying.mapped('name')),
             ))
-        # Annulling goes through a transient draft, which core refuses for a signed move. A PT
-        # invoice is signed from posting and stays in its chain once cancelled, so let it through.
+        # Annulling goes through a transient draft, which core refuses for a signed move. An issued
+        # PT invoice is signed and stays in its chain once cancelled, so let it through.
         res = super(AccountMove, self.with_context(_pt_button_cancel=True, allow_draft_hashed_entries=True)).button_cancel()
-        pt_moves.filtered(lambda m: m.state == 'cancel')._l10n_pt_record_cancellation()
+        cancelled = pt_moves.filtered(lambda m: m.state == 'cancel')
+        cancelled._l10n_pt_issue()
+        cancelled._l10n_pt_record_cancellation()
         return res
 
     def action_reverse(self):
@@ -269,10 +314,15 @@ class AccountMove(models.Model):
         # EXTENDS account to include cancelled moves
         domain = super()._get_move_hash_domain(common_domain, force_hash)
         if self.env.company.account_fiscal_country_id.code == 'PT':
-            return domain.map_conditions(
+            domain = domain.map_conditions(
                 lambda condition: Domain('state', 'in', ('posted', 'cancel'))
                 if (condition.field_expr, condition.operator, condition.value) == ('state', '=', 'posted')
                 else condition
+            )
+            # An invoice is signed when it is issued (`_l10n_pt_issue`), not when it is posted.
+            return domain & (
+                Domain('l10n_pt_document_number', '!=', False)
+                | Domain('move_type', 'not in', self.get_sale_types(include_receipts=True))
             )
         return domain
 
@@ -289,9 +339,9 @@ class AccountMove(models.Model):
     def preview_invoice(self):
         """
         PT requirement: "No document in a preparatory or preview state may be printed prior to its
-        completion and signing".
+        completion and signing". Previewing an invoice generates it: it issues it.
         """
-        self._l10n_pt_compute_missing_hashes()
+        self._l10n_pt_issue()
         return super().preview_invoice()
 
     def _l10n_pt_get_invoice_legal_document(self, filetype, allow_fallback=False):
@@ -380,18 +430,27 @@ class AccountMove(models.Model):
         return super()._get_starting_sequence()
 
     def _post(self, soft=True):
+        """
+        Posting a PT invoice takes the next number of its AT series, as its name; it does not issue
+        it. The invoice is issued, i.e. given its document number and signed, when it is first
+        generated for the customer (`_l10n_pt_issue`). An invoice reset to draft keeps its number,
+        type and series, and is posted again under them.
+        """
+        today = fields.Date.context_today(self)
         pt_moves = self.filtered(lambda m: m._l10n_pt_country_ok()).sorted('invoice_date')
+        # A soft post leaves future-dated moves in draft (see super): they take no number yet.
+        to_number = pt_moves.filtered(lambda m: not m._l10n_pt_is_numbered() and not (soft and m.date > today))
         for move in pt_moves:
             if not move.journal_id:
                 raise UserError(self.env._("You cannot post an invoice without a journal. Please select a journal and try again."))
 
             move._check_l10n_pt_simplified_invoice_limit()
-            if move._l10n_pt_is_invoice_receipt():
-                move.l10n_pt_document_type = 'out_invoice_receipt'
-
-            if not move.l10n_pt_at_series_id:
-                # A series created since the move was computed (e.g. from the warning below) is picked up here.
-                move._compute_l10n_pt_at_series_id()
+            if move in to_number:
+                if move._l10n_pt_is_invoice_receipt():
+                    move.l10n_pt_document_type = 'out_invoice_receipt'
+                if not move.l10n_pt_at_series_id:
+                    # A series created since the move was computed (e.g. from the warning below) is picked up here.
+                    move._compute_l10n_pt_at_series_id()
             if not move.l10n_pt_at_series_id:
                 raise move._l10n_pt_missing_at_series_warning()
 
@@ -400,19 +459,132 @@ class AccountMove(models.Model):
             move._check_l10n_pt_at_series_id()
 
         pt_moves._check_l10n_pt_dates()
-        pt_moves._set_l10n_pt_document_number()
+        to_number._l10n_pt_take_series_numbers()
         pt_moves._check_l10n_pt_reversal()
         posted = super()._post(soft)
-        # An invoice is signed when it is issued, not at its first print (FAQ R23, Despacho
-        # 8632/2014 2.1.1), so posting needs the signing service and fails when it is unreachable.
-        # Printing, sending and exporting still sign whatever is left unsigned, as a catch-up.
-        posted.filtered(lambda m: (
-            m.state == 'posted'
-            and m._l10n_pt_country_ok()
-            and m.is_sale_document(include_receipts=True)
-            and not m.inalterable_hash
-        )).button_hash()
+        if self.env.context.get('l10n_pt_issue_automatically'):
+            posted._l10n_pt_issue()
         return posted
+
+    def _l10n_pt_issue(self):
+        """
+        Issue the PT invoices of ``self`` that took their number but are not issued yet: their name
+        becomes their document number, and they are signed (FAQ R23, Despacho 8632/2014 2.1.1).
+
+        An invoice is issued when it is first generated for the customer -- printed, sent, previewed,
+        downloaded, handed out by the PoS -- or when it is annulled, not when it is posted. In each
+        series, invoices are issued in the order of their numbers (`_l10n_pt_check_series_continuity`).
+        Issuing needs the signing service.
+        """
+        to_issue = self.filtered(lambda m: (
+            m.state in ('posted', 'cancel')
+            and m._l10n_pt_country_ok()
+            and not m.l10n_pt_document_number
+            and m._l10n_pt_is_numbered()
+        ))
+        if not to_issue:
+            return
+        to_issue._l10n_pt_check_series_continuity()
+        to_issue.company_id._l10n_pt_check_system_clock()
+        # sudo: generating an invoice issues it, whoever generates it (a salesperson printing it, a
+        # cron sending it); the issuing user is still recorded as the current one.
+        to_issue_sudo = to_issue.sudo()
+        for move in to_issue_sudo:
+            move.l10n_pt_document_number = move.name
+        to_issue_sudo._l10n_pt_record_issue()
+        to_issue_sudo._check_l10n_pt_document_number()
+        # The hash domain is the active company's (`_get_move_hash_domain`): sign in each invoice's own.
+        for company, moves in to_issue_sudo.grouped('company_id').items():
+            moves.with_company(company).button_hash()
+        if unsigned := to_issue.filtered(lambda m: not m.inalterable_hash):
+            raise UserError(self.env._("These invoices could not be signed: %s", ", ".join(unsigned.mapped('name'))))
+
+    def _l10n_pt_issue_with_predecessors(self):
+        """
+        Issue the PT invoices of ``self``, and first the invoices before them in their AT series that
+        are posted or cancelled but not issued yet: they are signed, as the chain of signatures needs,
+        rather than blocking ``self`` (`_l10n_pt_check_series_continuity`). An invoice reset to draft
+        keeps its number but cannot be issued: it still blocks the invoices after it.
+        """
+        to_issue = self.filtered(lambda m: (
+            m._l10n_pt_country_ok() and not m.l10n_pt_document_number and m.l10n_pt_at_series_id
+        ))
+        if not to_issue:
+            return
+        # sudo: a series shared across branches holds invoices of companies the user may not see.
+        predecessors = self.env['account.move'].sudo().search(
+            Domain.OR(
+                Domain('l10n_pt_at_series_id', '=', at_series.id)
+                & Domain('sequence_number', '<', max(moves.mapped('sequence_number')))
+                for at_series, moves in to_issue.grouped('l10n_pt_at_series_id').items()
+            )
+            & Domain(self._l10n_pt_numbered_domain())
+            & Domain('state', 'in', ('posted', 'cancel'))
+            & Domain('l10n_pt_document_number', '=', False),
+        )
+        (self.sudo() | predecessors)._l10n_pt_issue()
+
+    def _l10n_pt_check_series_continuity(self):
+        """
+        Refuse to issue the invoices of ``self`` while a lower number of their series is not issued:
+        the signature of a document chains to that of the previous one, and a series has no gap
+        (Despacho 8632/2014 1.6, 2.2.1).
+        """
+        # sudo: a series shared across branches holds invoices of companies the user may not see.
+        moves_sudo = self.env['account.move'].sudo()
+        last_issued_numbers = dict(moves_sudo._read_group(
+            [('l10n_pt_at_series_id', 'in', self.l10n_pt_at_series_id.ids), ('l10n_pt_document_number', '!=', False)],
+            groupby=['l10n_pt_at_series_id'],
+            aggregates=['sequence_number:max'],
+        ))
+        missing_by_series = {}
+        for at_series, moves in self.grouped('l10n_pt_at_series_id').items():
+            numbers = set(moves.mapped('sequence_number'))
+            first_missing = (last_issued_numbers.get(at_series) or 0) + 1
+            if missing := set(range(first_missing, max(numbers))) - numbers:
+                missing_by_series[at_series] = missing
+        if not missing_by_series:
+            return
+        waiting = moves_sudo.search([
+            ('l10n_pt_at_series_id', 'in', [series.id for series in missing_by_series]),
+            *self._l10n_pt_numbered_domain(),
+            ('l10n_pt_document_number', '=', False),
+            ('sequence_number', 'in', list(set().union(*missing_by_series.values()))),
+        ], order='sequence_number')
+        messages = []
+        for at_series, missing in missing_by_series.items():
+            series_waiting = waiting.filtered(lambda m: m.l10n_pt_at_series_id == at_series and m.sequence_number in missing)
+            if series_waiting:
+                messages.append(self.env._(
+                    "Issue %(invoices)s first: the invoices of a series are issued in the order of their numbers.",
+                    invoices=", ".join(series_waiting.mapped('name')),
+                ))
+            if lost := missing - set(series_waiting.mapped('sequence_number')):
+                messages.append(self.env._(
+                    "The AT series %(series)s has a gap: no invoice holds the numbers %(numbers)s. "
+                    "Resequence the invoices not issued yet that follow them to close it.",
+                    series=at_series.document_identifier,
+                    numbers=", ".join(str(number) for number in sorted(lost)),
+                ))
+        raise UserError("\n".join(messages))
+
+    def _l10n_pt_check_issued(self, document):
+        """
+        Refuse ``document`` (e.g. "A credit note"), which needs the PT invoices of ``self`` to be
+        issued, while one is not. Flows that hand the invoice out at once (``l10n_pt_issue_automatically``,
+        the PoS and online payments) issue it instead.
+        """
+        unissued = self.filtered(lambda m: m._l10n_pt_country_ok() and not m.l10n_pt_document_number)
+        if unissued and self.env.context.get('l10n_pt_issue_automatically'):
+            unissued._l10n_pt_issue()
+            unissued = unissued.filtered(lambda m: not m.l10n_pt_document_number)
+        if unissued:
+            raise UserError(self.env._(
+                "%(document)s needs these invoices to be issued first: %(invoices)s. "
+                "An invoice is issued when it is first printed, sent or previewed.",
+                document=document,
+                invoices=", ".join(unissued.mapped('display_name')),
+            ))
 
     ####################################
     # CHECKS
@@ -427,6 +599,37 @@ class AccountMove(models.Model):
                 "document within the series (e.g. INV 2025A/1).",
                 self.name
             ))
+
+    def _check_l10n_pt_dates(self):
+        # EXTENDS l10n_pt_certification (mixin)
+        # An invoice reset to draft after posting keeps its number: its date stays between those of
+        # the invoices numbered right before and after it in its series.
+        renumbered = self.filtered(lambda m: m._l10n_pt_country_ok() and m.l10n_pt_at_series_id and m._l10n_pt_is_numbered())
+        super(AccountMove, self - renumbered)._check_l10n_pt_dates()
+        if not renumbered:
+            return
+        # sudo: the series' chronology covers every invoice it holds, whatever the user may see.
+        neighbours = self.sudo().search([
+            ('l10n_pt_at_series_id', 'in', renumbered.l10n_pt_at_series_id.ids),
+            *self._l10n_pt_numbered_domain(),
+            ('sequence_number', 'in', list({
+                number for move in renumbered for number in (move.sequence_number - 1, move.sequence_number + 1)
+            })),
+        ])
+        dates = {(m.l10n_pt_at_series_id, m.sequence_number): m._l10n_pt_get_document_date() for m in neighbours}
+        for move in renumbered:
+            date = move._l10n_pt_get_document_date()
+            previous_date = dates.get((move.l10n_pt_at_series_id, move.sequence_number - 1))
+            next_date = dates.get((move.l10n_pt_at_series_id, move.sequence_number + 1))
+            if (previous_date and date < previous_date) or (next_date and date > next_date):
+                raise UserError(self.env._(
+                    "%(invoice)s keeps its number in the AT series %(series)s: its date must stay between "
+                    "those of the invoices numbered right before and after it (%(previous)s, %(next)s).",
+                    invoice=move.name,
+                    series=move.l10n_pt_at_series_id.display_name,
+                    previous=previous_date and format_date(self.env, previous_date) or "-",
+                    next=next_date and format_date(self.env, next_date) or "-",
+                ))
 
     def _check_l10n_pt_lines_products(self):
         """
@@ -512,6 +715,12 @@ class AccountMove(models.Model):
         pt_moves = self.filtered(lambda m: m._l10n_pt_country_ok())
         if any(m.move_type == 'out_refund' and not m.reversed_entry_id for m in pt_moves):
             raise UserError(self.env._("You cannot post a credit note without referencing the original invoice."))
+        # A credit or debit note references the document number of the invoice it rectifies.
+        pt_moves.filtered(lambda m: m.move_type == 'out_refund').reversed_entry_id._l10n_pt_check_issued(
+            self.env._("A credit note"),
+        )
+        if 'debit_origin_id' in self._fields:
+            pt_moves.debit_origin_id._l10n_pt_check_issued(self.env._("A debit note"))
         pt_moves._check_reversal_amounts_and_quantities(only_reconciled=False)
 
     def action_open_reprint_wizard(self, action_to_return=None):
@@ -663,6 +872,8 @@ class AccountMove(models.Model):
             lambda m: (
                 m._l10n_pt_country_ok()
                 and m.journal_id
+                # An invoice that took its number keeps its series, also back in draft.
+                and not m._l10n_pt_is_numbered()
                 and (
                     not m.l10n_pt_at_series_id
                     or m.l10n_pt_at_series_id.journal_id != m.journal_id

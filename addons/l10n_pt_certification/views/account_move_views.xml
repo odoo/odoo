@@ -27,7 +27,7 @@
                 </xpath>
                 <!-- Hide Cancel button for PT moves and instead show a Cancel button calling the cancellation wizard -->
                 <xpath expr="//button[@name='button_cancel'][@invisible=&quot;not id or state != &apos;draft&apos; or move_type == &apos;entry&apos;&quot;]" position="attributes">
-                    <attribute name="invisible">not id or state != 'draft' or move_type == 'entry' or (country_code == 'PT' and l10n_pt_document_number)</attribute>
+                    <attribute name="invisible">not id or state != 'draft' or move_type == 'entry' or (country_code == 'PT' and (l10n_pt_document_number or (posted_before and l10n_pt_at_series_id)))</attribute>
                 </xpath>
                 <xpath expr="//button[@name='button_cancel']" position="after">
                     <button name="%(l10n_pt_certification.action_l10n_pt_cancel)d"
@@ -35,7 +35,7 @@
                             type="action"
                             groups="account.group_account_invoice"
                             data-hotkey="x"
-                            invisible="not id or state == 'cancel' or not l10n_pt_document_number or move_type == 'entry' or country_code != 'PT'"/>
+                            invisible="not id or state == 'cancel' or not (l10n_pt_document_number or (posted_before and l10n_pt_at_series_id)) or move_type == 'entry' or country_code != 'PT'"/>
                 </xpath>
                 <!-- PT requirement: not allow the creation of credit notes regarding already fully rectified docs -->
                 <xpath expr="//button[@name='action_reverse']" position="attributes">
@@ -66,7 +66,7 @@
                            invisible="country_code != 'PT' or move_type in ('in_invoice', 'in_receipt')">
                         <field name="l10n_pt_document_type" invisible="1"/>
                         <field name="l10n_pt_at_series_id"
-                               readonly="state in ['cancel', 'posted']"
+                               readonly="state in ['cancel', 'posted'] or posted_before"
                                domain="[('active', '=', True), ('journal_id', '=', journal_id), ('document_type', '=', l10n_pt_document_type)]"/>
                         <field name="l10n_pt_atcud"/>
                         <field name="l10n_pt_cancel_reason"
@@ -82,7 +82,7 @@
                           invisible="move_type != 'out_receipt' or country_code != 'PT'">
                         <group id="portuguese_info_group_receipt">
                             <field name="l10n_pt_at_series_id"
-                                   readonly="state in ['cancel', 'posted']"
+                                   readonly="state in ['cancel', 'posted'] or posted_before"
                                    domain="[('active', '=', True), ('journal_id', '=', journal_id), ('document_type', '=', l10n_pt_document_type)]"/>
                             <field name="inalterable_hash" groups="base.group_no_one"/>
                             <field name="l10n_pt_atcud"/>

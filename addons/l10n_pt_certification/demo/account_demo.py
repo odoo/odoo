@@ -11,6 +11,9 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _post_load_demo_data(self, company=False):
         if company and company.account_fiscal_country_id.code == 'PT':
+            # The demo invoices are posted while this module is installed, before `_post_init_hook`
+            # gives the chart's taxes their VAT exemption reasons, which posting requires.
+            self._l10n_pt_load_certification_tax_data(company)
             self._create_l10n_at_series_demo(company)
             invoices = self.env['account.move'].search([
                 ('company_id', '=', company.id),
@@ -33,8 +36,8 @@ class AccountChartTemplate(models.AbstractModel):
 
             # we need to ensure AT Series created after the moves are added to the demo moves
             invoices._compute_l10n_pt_at_series_id()
-            # Posting signs an invoice through the IAP signing service, which a demo database usually
-            # cannot reach (no subscription): what cannot be posted is left as a clean draft.
+            # Posting numbers a demo invoice without issuing it: it is signed, through the IAP signing
+            # service, when first printed or sent. What cannot be posted is left as a clean draft.
             unposted, error = self.env['account.move'], None
             for move in invoices:
                 if move.move_type == 'out_refund' and not move.reversed_entry_id:

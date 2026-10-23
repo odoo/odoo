@@ -143,6 +143,19 @@ class L10nPtDocumentMixin(models.AbstractModel):
         self.ensure_one()
         return self.l10n_pt_document_number
 
+    def _l10n_pt_is_numbered(self):
+        """
+        Whether the document holds its number in its series, issued or not. A model that takes the
+        number before issuing the document (an invoice, see ``account.move``) extends it.
+        """
+        self.ensure_one()
+        return bool(self.l10n_pt_document_number)
+
+    @api.model
+    def _l10n_pt_numbered_domain(self):
+        """The domain of the documents that hold their number in their series: see ``_l10n_pt_is_numbered``."""
+        return [('l10n_pt_document_number', '!=', False)]
+
     def _l10n_pt_get_gross_total(self):
         """Gross total signed in the hash (0 for documents without a monetary total, e.g. transfers)."""
         return 0.0
@@ -171,7 +184,7 @@ class L10nPtDocumentMixin(models.AbstractModel):
     def _compute_l10n_pt_document_type(self):
         for record in self:
             current_type = record.l10n_pt_document_type
-            if record.l10n_pt_document_number and current_type:
+            if current_type and record._l10n_pt_is_numbered():
                 record.l10n_pt_document_type = current_type
             elif record._l10n_pt_country_ok():
                 record.l10n_pt_document_type = record._l10n_pt_get_document_type()
@@ -217,24 +230,38 @@ class L10nPtDocumentMixin(models.AbstractModel):
         than a compute: it must happen once, at the exact point the document is issued.
         """
         records = self.filtered(
-            lambda r: r._l10n_pt_country_ok() and r.l10n_pt_at_series_id and not r.l10n_pt_document_number
+            lambda r: r._l10n_pt_country_ok() and r.l10n_pt_at_series_id and not r._l10n_pt_is_numbered()
         )
+        records._l10n_pt_take_series_numbers()
+        records._l10n_pt_record_issue()
+        self._check_l10n_pt_document_number()
+
+    def _l10n_pt_take_series_numbers(self):
+        """
+        Take the next numbers of the AT series of ``self``, in chronological order, and hand each to
+        ``_l10n_pt_assign_document_number``.
+        """
         # A number makes the document issued, and its ATCUD needs the series' AT validation code.
-        if series_without_code := records.l10n_pt_at_series_id.filtered(lambda s: not s.at_code):
+        if series_without_code := self.l10n_pt_at_series_id.filtered(lambda s: not s.at_code):
             raise series_without_code[:1]._l10n_pt_missing_at_code_warning()
-        records.company_id._l10n_pt_check_system_clock()
+        self.company_id._l10n_pt_check_system_clock()
         # `sorted` is stable, so pre-sorting on `id` deterministically breaks ties between documents
         # sharing a date. Documents with no date yet (a transport document is numbered before it
         # moves) keep that `id` order.
-        records = records.sorted('id')
+        records = self.sorted('id')
         undated = records.filtered(lambda r: not r._l10n_pt_get_document_date())
         ordered = list((records - undated).sorted(key=lambda r: r._l10n_pt_get_document_date())) + list(undated)
         for record in ordered:
             record._l10n_pt_assign_document_number(
                 record.l10n_pt_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
             )
-        records.write({'l10n_pt_issue_user_id': self.env.uid, 'l10n_pt_issued_on': fields.Datetime.now()})
-        self._check_l10n_pt_document_number()
+
+    def _l10n_pt_record_issue(self):
+        """Record who issued the documents of ``self``, and when."""
+        self.write({
+            'l10n_pt_issue_user_id': self.env.context.get('l10n_pt_issue_user_id') or self.env.uid,
+            'l10n_pt_issued_on': fields.Datetime.now(),
+        })
 
     def _l10n_pt_record_cancellation(self):
         """Record when and by whom the issued documents of ``self`` were cancelled."""
@@ -309,7 +336,7 @@ class L10nPtDocumentMixin(models.AbstractModel):
         max_date_per_series = dict(self.env[self._name].sudo()._read_group(
             domain=[
                 ('l10n_pt_at_series_id', 'in', series.ids),
-                ('l10n_pt_document_number', '!=', False),
+                *self._l10n_pt_numbered_domain(),
                 # Exclude the documents being checked, so the rule holds whether they are numbered
                 # before or after the check.
                 ('id', 'not in', records.ids),
@@ -344,6 +371,8 @@ class L10nPtDocumentMixin(models.AbstractModel):
         # An issued document stays in the database, annulled ones included, so that its series has
         # no gap (DL 28/2019 art. 7(4)-(5), Despacho 8632/2014 1.9). Core leaves some of them
         # deletable: an unsigned cancelled invoice, any receipt, a quotation.
+        # A draft invoice that took its number may be deleted: it leaves a gap, which blocks issuing
+        # the later invoices of its series until they are resequenced (`account.move._l10n_pt_issue`).
         if issued := self.filtered(lambda r: r.l10n_pt_document_number and r._l10n_pt_country_ok()):
             raise UserError(self.env._(
                 "Documents issued in Portugal cannot be deleted (%(documents)s). Cancel them instead: "

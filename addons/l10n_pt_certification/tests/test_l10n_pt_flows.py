@@ -13,6 +13,7 @@ from odoo.addons.l10n_pt_certification.const import (
     PT_SIMPLIFIED_INVOICE_GOODS_LIMIT,
     PT_SIMPLIFIED_INVOICE_SERVICES_LIMIT,
 )
+from odoo.addons.l10n_pt_certification.controllers.portal import L10nPtPortalAccount
 from odoo.addons.l10n_pt_certification.tests.common import TestL10nPtCommon
 
 
@@ -485,6 +486,38 @@ class TestL10nPtFlows(TestL10nPtCommon):
                     self.assertEqual(action['type'], 'ir.actions.act_window')
                     self.assertEqual(action['res_model'], 'l10n_pt.reprint.reason')
 
+    def test_sending_issues_previous_unissued_invoices(self):
+        """ Sending an invoice issues first the invoices before it in its series that are not issued yet """
+        def trigger_send(invoice):
+            self.env['account.move.send.wizard'].create({'move_id': invoice.id}).action_send_and_print()
+
+        def trigger_cron_send(invoice):
+            # As queued by `_generate_and_send_invoices_post_commit`, for the cron to send
+            invoice.sending_data = {'author_user_id': self.env.user.id, 'author_partner_id': self.env.user.partner_id.id}
+            self.env['account.move.send']._generate_and_send_invoices(invoice, from_cron=True, sending_methods=['email'])
+
+        for action_name, trigger_action in (('Sending', trigger_send), ('Sending from the cron', trigger_cron_send)):
+            with self.subTest(action=action_name):
+                invoices = self.env['account.move']
+                for _ in range(3):
+                    invoices += self.create_invoice('out_invoice', post=False, amount=100.0)
+                invoices.action_post()
+                self.assertFalse(any(invoices.mapped('l10n_pt_document_number')))
+
+                trigger_action(invoices[1])
+                self.assertEqual(invoices[:2].mapped('l10n_pt_document_number'), invoices[:2].mapped('name'))
+                self.assertTrue(all(invoices[:2].mapped('inalterable_hash')))
+                self.assertFalse(invoices[2].l10n_pt_document_number)
+
+    def test_sending_blocked_by_previous_invoice_in_draft(self):
+        """ An invoice reset to draft keeps its number but cannot be issued: the invoices after it in its series cannot be sent """
+        invoices = self.create_invoice('out_invoice', post=False) + self.create_invoice('out_invoice', post=False)
+        invoices.action_post()
+        invoices[0].button_draft()
+        with self.assertRaisesRegex(UserError, "Issue .* first"):
+            self.env['account.move.send.wizard'].create({'move_id': invoices[1].id}).action_send_and_print()
+        self.assertFalse(any(invoices.mapped('l10n_pt_document_number')))
+
     def test_reprint_wizard_logs_reason_in_chatter(self):
         """ Make sure reprint reason is written in chatter """
         invoice = self.create_invoice('out_invoice')
@@ -733,3 +766,28 @@ class TestL10nPtFlows(TestL10nPtCommon):
         invoice.invoice_line_ids.l10n_pt_line_discount = 10.0
         self.assertAlmostEqual(invoice.invoice_line_ids.discount, 19.0)
         self.assertAlmostEqual(invoice.invoice_line_ids.price_subtotal, 810.0)
+
+    # --------------------------------------------------
+    # Section 8: Customer portal
+    # --------------------------------------------------
+
+    def test_portal_hides_unissued_invoices(self):
+        """ The portal lists, counts and pays a PT invoice once it is issued: browsing it must not hand it out before """
+        invoice = self.create_invoice('out_invoice', post=False)
+        invoice.action_post()
+        self.assertFalse(invoice.l10n_pt_document_number)
+        self.assertLess(invoice.invoice_date_due, fields.Date.today())
+
+        portal = L10nPtPortalAccount()
+        domains = {
+            'invoices': portal._get_invoices_domain('out'),
+            'overdue invoices': portal._get_overdue_invoices_domain(partner_id=invoice.partner_id.id),
+        }
+        for name, domain in domains.items():
+            with self.subTest(domain=name):
+                self.assertNotIn(invoice, self.env['account.move'].search(domain))
+
+        invoice._l10n_pt_issue()
+        for name, domain in domains.items():
+            with self.subTest(domain=name):
+                self.assertIn(invoice, self.env['account.move'].search(domain))
