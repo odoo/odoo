@@ -88,6 +88,12 @@ class TestSandwichLeave(TransactionCase):
             'resource_id': False,
             'company_id': self.indian_company.id,
         })
+        self.friday_public_holiday = self.env['resource.calendar.leaves'].create({
+            'name': 'test public holiday',
+            'date_from': '2026-02-13 00:00:00',
+            'date_to': '2026-02-13 23:59:59',
+            'resource_id': False,
+        })
 
     def test_approved_leave_does_not_raise_access_error(self):
         """
@@ -688,6 +694,37 @@ class TestSandwichLeave(TransactionCase):
         self.assertTrue(weekend_sandwich_leave.l10n_in_contains_sandwich_leaves)
         self.assertEqual(weekend_sandwich_leave.number_of_days, 4)
 
+        # A leave starting on a public holiday must not sandwich the weekend that
+        # follows: the public holiday is not a working day, so only Monday counts.
+        leave_from_public_holiday = self.env['hr.leave'].create({
+            'name': 'Test Leave',
+            'employee_id': self.rahul_emp.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2026-02-13",  # Friday
+            'request_date_to': "2026-02-16",    # Monday
+        })
+        self.assertFalse(leave_from_public_holiday.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(leave_from_public_holiday.number_of_days, 1)
+
+        # A public holiday between two leaves does not break the link, but only the
+        # weekend days of the gap are charged: Monday plus Saturday and Sunday.
+        self.env['hr.leave'].create({
+            'name': 'Thursday Leave',
+            'employee_id': self.demo_employee.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2026-02-12",  # Thursday
+            'request_date_to': "2026-02-12",
+        })
+        monday_leave = self.env['hr.leave'].create({
+            'name': 'Monday Leave',
+            'employee_id': self.demo_employee.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2026-02-16",  # Monday
+            'request_date_to': "2026-02-16",
+        })
+        self.assertTrue(monday_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(monday_leave.number_of_days, 3)
+
     def test_sandwich_leave_public_holiday_only_policy(self):
         """
         Verify that only public holiday days are counted as sandwich days
@@ -713,6 +750,18 @@ class TestSandwichLeave(TransactionCase):
 
         self.assertTrue(public_holiday_sandwich_leave.l10n_in_contains_sandwich_leaves)
         self.assertEqual(public_holiday_sandwich_leave.number_of_days, 3)
+
+        # A leave ending on the weekend: walking back over it reaches the public
+        # holiday, which is not charged at the edge, so only Thursday counts.
+        leave_until_sunday = self.env['hr.leave'].create({
+            'name': 'Test Leave',
+            'employee_id': self.rahul_emp.id,
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'request_date_from': "2026-02-12",  # Thursday
+            'request_date_to': "2026-02-15",    # Sunday
+        })
+        self.assertFalse(leave_until_sunday.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(leave_until_sunday.number_of_days, 1)
 
     @freeze_time('2025-01-15')
     def test_sandwich_leave_reapprove(self):
