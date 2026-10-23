@@ -51,7 +51,8 @@ class HrVersion(models.Model):
         string='Employee',
         tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        index=True)
+        index=True,
+        ondelete='cascade')
     name = fields.Char(tracking=1)
     display_name = fields.Char(compute='_compute_display_name')
     active = fields.Boolean(default=True, tracking=1)
@@ -309,7 +310,10 @@ class HrVersion(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_version(self):
+        deleted_employee_ids = set(self.env.context.get('hr_unlink_employee_ids', ()))
         for employee_id, versions in self.grouped('employee_id').items():
+            if employee_id.id in deleted_employee_ids:
+                continue
             if employee_id.version_ids == versions:
                 raise ValidationError(
                     self.env._('Employee %s must always have at least one active version.') % employee_id.name

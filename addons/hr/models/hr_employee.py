@@ -2311,13 +2311,15 @@ class HrEmployee(models.Model):
         return res
 
     def unlink(self):
-        """Delete the employees and their ``resource.resource``.
+        """Delete the employees, their versions and their ``resource.resource``.
 
-        The versions are not deleted: ``hr.version.employee_id`` is emptied
-        (default ``ondelete='set null'``).
+        The versions are deleted in cascade (``hr.version.employee_id`` has
+        ``ondelete='cascade'``). The ``hr.version`` check that an employee keeps
+        at least one version is skipped for the deleted employees, through the
+        ``hr_unlink_employee_ids`` context key.
         """
         resources = self.mapped('resource_id')
-        super().unlink()
+        super(HrEmployee, self.with_context(hr_unlink_employee_ids=self.ids)).unlink()
         return resources.unlink()
 
     def _get_employee_m2o_to_empty_on_archived_employees(self):
