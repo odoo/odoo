@@ -1510,15 +1510,13 @@ class MailMessage(models.Model):
         res_id = self.res_id if self else (thread and thread.ids and thread.ids[0])
         return bool(res_id) if (res_model and res_model != 'mail.thread') else False
 
-    def _invalidate_documents(self, model=None, res_id=None):
+    def _invalidate_documents(self):
         """ Invalidate the cache of the documents followed by ``self``. """
         fnames = ['message_ids', 'message_needaction', 'message_needaction_counter']
         self.flush_recordset(['model', 'res_id'])
-        for record in self:
-            model = model or record.model
-            res_id = res_id or record.res_id
+        for model, messages in self.grouped('model').items():
             if model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']):
-                self.env[model].browse(res_id).invalidate_recordset(fnames)
+                self.env[model].browse(set(filter(None, messages.mapped('res_id')))).invalidate_recordset(fnames)
 
     def _records_by_model_name(self):
         ids_by_model = defaultdict(OrderedSet)
