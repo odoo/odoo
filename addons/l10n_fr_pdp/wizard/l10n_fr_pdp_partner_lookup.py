@@ -29,7 +29,11 @@ class L10nFrPdpPartnerLookup(models.TransientModel):
     def action_change_pdp_endpoint(self):
         self.ensure_one()
         # Change the peppol endpoint of the partner by the selected annuaire line
-        self.partner_id.routing_endpoint = self.selected_line_id.identifier
+        if self.partner_id.routing_identifier_override:
+            scheme = self.partner_id.routing_scheme
+            self.partner_id.routing_identifier_override = f"{scheme}:{self.selected_line_id.identifier}"
+        else:
+            self.partner_id.routing_endpoint = self.selected_line_id.identifier
 
 
 class L10nFrPdpAnnuaireLine(models.TransientModel):
