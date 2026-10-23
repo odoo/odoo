@@ -101,7 +101,7 @@ declare function remove(vnode: VNode, withBeforeRemove?: boolean): void;
 export declare class OwlError extends Error {
 	cause?: any;
 }
-declare const STATUS: {
+export declare const STATUS: {
 	readonly NEW: 0;
 	readonly MOUNTED: 1;
 	readonly DESTROYED: 2;
@@ -134,20 +134,14 @@ export interface ReactiveValue<TRead, TWrite = TRead> {
  * untracked: it can safely read reactive values without subscribing to them.
  */
 export type Equals<T> = false | ((a: T, b: T) => boolean);
-declare enum ComputationState {
-	EXECUTED = 0,
-	STALE = 1,
-	PENDING = 2
-}
 export interface Atom<T = any> {
 	observers: Set<ComputationAtom>;
 	value: T;
 }
 export interface ComputationAtom<T = any> extends Atom<T> {
 	compute: () => T;
-	isDerived: boolean;
 	sources: Set<Atom>;
-	state: ComputationState;
+	flags: number;
 }
 export declare function untrack<T>(fn: (...args: any[]) => T): T;
 export type Constructor<T = any> = {
@@ -184,7 +178,7 @@ export type Type<T> = T & {
  * through `toShape()`: `t.object`/`t.strictObject` return their own shape, and
  * `t.and` merges the shapes of the members that have one. The shape is the
  * `{ key: type }` map (with `.optional()` brands intact), so it can be reused —
- * most notably to drive component props: `props(schema.toShape())`.
+ * most notably to drive component props: `useProps(schema.toShape())`.
  */
 export type ShapeType<Shape, T> = Type<T> & {
 	toShape(): Shape;
@@ -364,8 +358,6 @@ declare class Plugin$1 {
 	static get id(): string;
 	static set id(shadowId: string);
 	static sequence: number;
-	__owl__: PluginManager;
-	constructor(manager: PluginManager);
 	setup(): void;
 }
 export interface PluginManagerOptions {
@@ -562,6 +554,13 @@ export interface ComputedOptions<TRead, TWrite = TRead> {
 }
 export declare function computed<TRead, TWrite = TRead>(getter: () => TRead, options?: ComputedOptions<TRead, TWrite>): ReactiveValue<TRead, TWrite>;
 export declare function effect<T>(fn: () => T): () => void;
+/**
+ * Like `effect`, but re-runs synchronously, as part of the write that
+ * invalidated it, instead of being batched in a microtask. An immediate effect
+ * reading two signals runs once per write and sees the intermediate state, so
+ * prefer `effect` unless the synchronous timing is the point.
+ */
+export declare function immediateEffect<T>(fn: () => T): () => void;
 export interface AsyncComputedContext {
 	readonly abortSignal: AbortSignal;
 }
@@ -641,6 +640,12 @@ export declare class Registry<T> {
  * cleanup before each re-run and on disposal.
  */
 export declare function useEffect(fn: Parameters<typeof effect>[0]): void;
+/**
+ * Same as `useEffect`, but creates an immediate effect: it re-runs
+ * synchronously, as part of the write that invalidated it, instead of being
+ * batched in a microtask. Equivalent to `onWillDestroy(immediateEffect(fn))`.
+ */
+export declare function useImmediateEffect(fn: Parameters<typeof immediateEffect>[0]): void;
 export type Cleanup = (() => void) | void;
 /**
  * Identity mapped type over a tuple. It keeps the type of each position when
@@ -706,14 +711,10 @@ export declare function onWillStart(fn: (scope: Scope) => Promise<void> | void |
 export declare function onWillDestroy(fn: (scope: Scope) => void | any): void;
 export type PluginInstance<T extends PluginConstructor> = Omit<InstanceType<T>, "setup">;
 export declare function usePlugin<T extends PluginConstructor>(pluginType: T): PluginInstance<T>;
-/** @deprecated alias for {@link usePlugin} */
-export declare const plugin: typeof usePlugin;
 export declare function useConfig<T = any>(key: string): T;
 export declare function useConfig<T>(key: string, type: WithDefault<T>): T;
 export declare function useConfig<T>(key: string, type: Optional<T>): T | undefined;
 export declare function useConfig<T>(key: string, type: T): StripBrands<T>;
-/** @deprecated alias for {@link useConfig} */
-export declare const config: typeof useConfig;
 export declare class EventBus extends EventTarget {
 	trigger(name: string, payload?: any): void;
 }
@@ -794,7 +795,7 @@ declare class ComponentNode extends Scope implements VNode<ComponentNode> {
 	}, {
 		value: HTMLElement | null;
 	}> | null;
-	constructor(C: ComponentConstructor, props: Record<string, any>, app: App, parent: ComponentNode | null, parentKey: string | null);
+	constructor(C: ComponentConstructor, props: Record<string, any>, app: App, pluginManager: PluginManager, parent: ComponentNode | null, parentKey: string | null);
 	decorate(f: Function, hookName: string): Function;
 	initiateRender(fiber: Fiber | MountFiber): Promise<void>;
 	render(deep: boolean): Promise<void>;
@@ -887,8 +888,6 @@ export interface PropsFunction {
 	static: typeof staticProp;
 }
 export declare const useProps: PropsFunction;
-/** @deprecated alias for {@link useProps} */
-export declare const props: PropsFunction;
 declare class Scheduler {
 	static requestAnimationFrame: (callback: FrameRequestCallback) => number;
 	tasks: Set<RootFiber>;
@@ -990,6 +989,7 @@ export declare class Portal extends Component {
 			default: any;
 		};
 		target: string | HTMLElement | ReactiveValue<HTMLElement, HTMLElement>;
+		position?: number | undefined;
 	}>;
 	setup(): void;
 }
@@ -1006,8 +1006,6 @@ export declare class Suspense extends Component {
 	private subRootMounted;
 	setup(): void;
 }
-export type STATUS_DESCR = "new" | "started" | "mounted" | "destroyed";
-declare function status$1(entity: Component | Plugin$1): STATUS_DESCR;
 export declare const useApp: () => App;
 export declare function onWillUpdateProps(fn: (nextProps: any, scope: ComponentNode) => Promise<void> | void | any): void;
 export declare function onMounted(fn: (scope: ComponentNode) => void | any): void;
@@ -1040,7 +1038,6 @@ export declare const __info__: Record<string, string>;
 export {
 	Plugin$1 as Plugin,
 	mount$1 as mount,
-	status$1 as status,
 	types$1 as t,
 	types$1 as types,
 };
