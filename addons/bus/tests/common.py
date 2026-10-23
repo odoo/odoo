@@ -354,6 +354,8 @@ class WebsocketCase(HttpCase, BusCase):
             kwargs['cookie'] = f'session_id={self.session.sid}'
         kwargs['timeout'] = 10  # keep a large timeout to avoid aving a websocket request escaping the test
         kwargs['cookie'] += f';{TEST_CURSOR_COOKIE_NAME}={self.http_request_key}'
+        # Simulate the commit of the changes made before the connection.
+        self.env.cr.postcommit.data.pop("bus.bus.resubscribe", None)
         with _released_registry_lock():
             ws = websocket.create_connection(
                 self._WEBSOCKET_URL, *args, class_=_TestWebsocket, **kwargs
