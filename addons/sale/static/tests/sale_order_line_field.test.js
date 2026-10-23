@@ -255,3 +255,60 @@ test("Test combo columns", async () => {
         message: 'Non-combo line should have all columns'
     });
 })
+
+test("combo line hides fields of column groups outside combo columns", async () => {
+    SaleOrderLine._fields.price_unit = fields.Float({ default: 3.00 });
+    SaleOrderLine._fields.price_total = fields.Float({ default: 3.00 });
+    SaleOrderLine._fields.product_uom_qty = fields.Float({ default: 3.00 });
+    await mountView({
+        type: 'form',
+        resModel: 'sale.order',
+        resId: 1,
+        arch: `
+            <form>
+                <field
+                    name="order_line"
+                    widget="sol_o2m"
+                    options="{'subsections': True}"
+                    aggregated_fields="price_total"
+                >
+                    <list editable="bottom">
+                        <field name="sequence" widget="handle" invisible="combo_item_id"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                            <field name="label"/>
+                        </column>
+                        <column name="sol_qty">
+                            <field name="product_uom_qty"/>
+                        </column>
+                        <column name="price_unit">
+                            <field name="price_unit"/>
+                        </column>
+                        <column>
+                            <field name="price_total"/>
+                        </column>
+                        <field name="display_type" column_invisible="1"/>
+                        <field name="linked_line_id" column_invisible="1"/>
+                        <field name="product_type" column_invisible="1"/>
+                        <field name="combo_item_id" column_invisible="1"/>
+                    </list>
+                </field>
+            </form>
+        `,
+    });
+
+    expect('.o_data_row:contains(Test Combo1) td[name=price_unit] .o_column_group_field').toHaveCount(0, {
+        message: 'combo line should not display its unit price',
+    });
+    expect(queryAllTexts('.o_data_row:contains(Test Combo1) > td').filter(Boolean)).toEqual([
+        "Test Combo1", // name
+        "3.00", // product_uom_qty
+        "9.00", // price_total
+    ]);
+    expect(queryAllTexts('.o_data_row:contains(Non Combo Line1) > td').filter(Boolean)).toEqual([
+        "Non Combo Line1", // name
+        "3.00", // product_uom_qty
+        "3.00", // price_unit
+        "3.00", // price_total
+    ]);
+})
