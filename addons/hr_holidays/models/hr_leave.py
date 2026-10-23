@@ -1678,7 +1678,7 @@ class HrLeave(models.Model):
 
                 # Handle double validation
                 if work_entry_type_id and mapped_validation_type.get(work_entry_type_id) == 'both':
-                    self._check_double_validation_rules(employee_id, values.get('state', False))
+                    self._check_double_validation_rules(self.env['hr.employee'].browse(employee_id), values.get('state', False))
 
         if any(not vals.get('employee_id', self.env.context.get('default_employee_id')) for vals in vals_list):
             raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
