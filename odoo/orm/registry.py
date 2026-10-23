@@ -336,7 +336,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.registry_sequence: int = -1
         self.registry_caches__: dict[str, tuple[int, MutableMapping]] = {}
         self.registry_cache_lock = threading.RLock()
-        self._template_code__ = LRU(_REGISTRY_CACHES['templates'])  # memo for code templates
 
         from odoo.modules import db  # noqa: PLC0415
         with closing(self.cursor()) as cr:

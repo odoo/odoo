@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import call, patch
 
 import odoo
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import Like, TransactionCase, tagged
 from odoo.tools import file_open, file_open_temporary_directory, file_path
 from odoo.tools.config import configmanager
 
@@ -831,3 +831,92 @@ class TestConfigManager(TransactionCase):
         else:
             e = "bin_path should had been re-exported:\n"
             self.fail(e + textwrap.indent(config, '    '))
+
+    def test_16_server_secret(self):
+        with (file_open_temporary_directory(self.env) as temp_dir,
+              patch('odoo.tools.config.XDG_CONFIG_DIR', temp_dir)):
+            self.config.__dict__.pop('server_secret', None)  # clear @cached_property cache, if any
+            server_secret_path = os.path.join(temp_dir, 'server-secret')
+            log_rotate = "INFO:odoo.tools.config:Rotating server secret at %s: file was missing, empty or corrupted." % server_secret_path
+            log_admin_passwd = Like("WARNING:odoo.tools.config:Can't save the server secret, fallback on admin_passwd salt.\nTraceback...PermissionError...")
+            log_new_token = Like("WARNING:odoo.tools.config:Can't save the server secret, use a new in-memory one.\nTraceback...PermissionError...")
+
+            # The server-secret file is generated on the fly when missing
+            with self.assertLogs('odoo.tools.config', 'INFO') as capture:
+                server_secret1 = self.config.server_secret
+            self.assertEqual(len(server_secret1), 32)
+            self.assertEqual(capture.output, [log_rotate])
+            with open(server_secret_path, encoding='ascii') as file:
+                self.assertEqual(file.read(), server_secret1.hex() + '\n')
+
+            # fine loading it from cache or from disk
+            with self.assertNoLogs('odoo.tools.config'):
+                server_secret2 = self.config.server_secret  # from cached property
+                del self.config.server_secret
+                server_secret3 = self.config.server_secret  # from disk
+            self.assertEqual(server_secret2, server_secret1)
+            self.assertEqual(server_secret3, server_secret1)
+
+            # corrupt the file, assert it is re-generated
+            del self.config.server_secret
+            open(server_secret_path, 'wb').close()  # exists but empty
+            with self.assertLogs('odoo.tools.config', 'INFO') as capture:
+                server_secret4 = self.config.server_secret
+            self.assertEqual(len(server_secret4), 32)
+            self.assertNotEqual(server_secret4, server_secret1)
+            self.assertEqual(capture.output, [log_rotate])
+
+            # Bad flows
+            #
+            # Simulate a read-only filesystem without the secret-file,
+            # generating it on-the-fly will fail: check the fallbacks
+            os.remove(server_secret_path)
+            os.chmod(temp_dir, 0o444)
+
+            # fallback #1: admin_passwd's salt
+            del self.config.server_secret
+            self.config.set_admin_password('letmein')
+            self.assertTrue(  # assert it is hashed
+                self.config['admin_passwd'].startswith('$pbkdf2-sha512$'),
+                self.config['admin_passwd'])
+            with self.assertLogs('odoo.tools.config', 'INFO') as capture:
+                server_secret5 = self.config.server_secret
+            self.assertGreaterEqual(len(server_secret5), 16)  # only 128 bits of entropy :/
+            self.assertNotEqual(server_secret5, server_secret1)
+            self.assertNotEqual(server_secret5, server_secret4)
+            self.assertEqual(capture.output, [log_rotate, log_admin_passwd])
+            with self.assertNoLogs('odoo.tools.config'):
+                server_secret6 = self.config.server_secret
+            # assert it persists across reloads
+            del self.config.server_secret
+            with self.assertLogs('odoo.tools.config', 'INFO') as capture:
+                server_secret7 = self.config.server_secret
+            self.assertEqual(server_secret6, server_secret5)
+            self.assertEqual(server_secret7, server_secret5)
+            self.assertEqual(capture.output, [log_rotate, log_admin_passwd])
+
+            # fallback #2: new token
+            del self.config.server_secret
+            self.config['admin_passwd'] = 'letmein'
+            self.assertFalse(  # assert it is not hashed
+                self.config['admin_passwd'].startswith('$pbkdf2-sha512$'),
+                self.config['admin_passwd'])
+            with self.assertLogs('odoo.tools.config', 'INFO') as capture:
+                server_secret8 = self.config.server_secret
+            self.assertEqual(len(server_secret8), 32)
+            self.assertNotEqual(server_secret8, server_secret1)
+            self.assertNotEqual(server_secret8, server_secret4)
+            self.assertNotEqual(server_secret8, server_secret5)
+            self.assertEqual(capture.output, [log_rotate, log_new_token])
+            with self.assertNoLogs('odoo.tools.config'):
+                server_secret9 = self.config.server_secret
+            self.assertEqual(server_secret9, server_secret8)
+            # can't persist across reloads :(
+            del self.config.server_secret
+            with self.assertLogs('odoo.tools.config', 'INFO') as capture:
+                server_secreta = self.config.server_secret
+            self.assertNotEqual(server_secreta, server_secret1)
+            self.assertNotEqual(server_secreta, server_secret4)
+            self.assertNotEqual(server_secreta, server_secret5)
+            self.assertNotEqual(server_secreta, server_secret8)
+            self.assertEqual(capture.output, [log_rotate, log_new_token])
