@@ -507,6 +507,24 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
         with self.assertRaises(UserError):
             leave.with_user(self.user_employee.id).unlink()
 
+    def test_leave_unlink_error_names_offending_state(self):
+        """ The error raised when a simple user deletes leaves names the state of the faulty one
+
+        The record rules only let simple users delete leaves to approve: the check is reached as
+        superuser, e.g. by a flow deleting leaves on behalf of the user.
+        """
+        values = {
+            'name': 'Random Time Off',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'state': 'confirm',
+        }
+        confirmed_leave = self.request_leave(self.user_employee_id, date.today() + relativedelta(days=6), 1, values)
+        validated_leave = self.request_leave(self.user_employee_id, date.today() + relativedelta(days=8), 1, values)
+        validated_leave.with_user(self.user_hrmanager_id).write({'state': 'validate'})
+        with self.assertRaisesRegex(UserError, 'Approved'):
+            (confirmed_leave | validated_leave).with_user(self.user_employee.id).sudo().unlink()
+
     def test_leave_unlink_validate_by_user(self):
         """ A simple user cannot delete its leave in validate state"""
         values = {
