@@ -2142,8 +2142,9 @@ class HrEmployee(models.Model):
         Values of inherited ``hr.version`` fields (``date_version``,
         ``contract_date_start``, ``wage``, ``job_id``, ``resource_calendar_id``,
         ...) go to the first version, created through ``_inherits``; creation
-        is done per company so that the version gets the right company. If
-        ``user_id`` is given, the user's partner, image and timezone are used
+        is done per company so that the version gets the right company. The
+        values of a ``contract_template_id`` are applied to the first version
+        (explicit values have priority). If ``user_id`` is given, the user's partner, image and timezone are used
         (:meth:`_sync_user`). A work contact is created for employees without
         one, an avatar is generated if there is no image, department channels
         are subscribed and an onboarding note is logged.
@@ -2159,7 +2160,13 @@ class HrEmployee(models.Model):
             })
         """
         vals_per_company = defaultdict(list)
+        Version = self.env['hr.version']
         for idx, vals in enumerate(vals_list):
+            if vals.get('contract_template_id'):
+                # the template is stored on the employee, not on the version: apply it
+                # here, explicit values having priority (as in hr.version create)
+                template_vals = Version.get_values_from_contract_template(Version.browse(vals['contract_template_id']))
+                vals.update({**template_vals, **vals})
             if vals.get('user_id'):
                 user = self.env['res.users'].browse(vals['user_id'])
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
