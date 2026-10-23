@@ -427,7 +427,9 @@ class AccountEdiCommon(models.AbstractModel):
 
         # === Import the embedded documents in the xml if some are found ===
         if invoice.message_main_attachment_id:
-            # Invoice look like it was already imported, don't import attachments again
+            # Invoice look like it was already imported, don't import attachments again.
+            # A vendor XML that is already the main file still gets a readable PDF when no supplier PDF exists.
+            self._generate_pdf_attachment(invoice, tree, file_data)
             return True
         additional_docs = file_data['attachment']._extract_additional_documents(tree)
         attachments = self.env['ir.attachment'].create(additional_docs)
@@ -442,7 +444,23 @@ class AccountEdiCommon(models.AbstractModel):
         if attachments:
             invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
 
+        # No substitute-PDF helper exists on 17.0. Fill the main attachment from
+        # the XML when the bill arrived without a supplier PDF.
+        self._generate_pdf_attachment(invoice, tree, file_data)
         return True
+
+    def _generate_pdf_attachment(self, invoice, tree, file_data=None):
+        """Store a readable PDF when a vendor XML invoice has no supplier PDF.
+
+        Same slot as a substitute invoice file: ``message_main_attachment_id``.
+        ``invoice_pdf_report_id`` stays empty (that field is the legal customer PDF).
+        An original supplier PDF, including the Factur-X container (``originator_pdf``),
+        is left in place. ``tree`` is the received document; rendering reads it back
+        from the attachment stored just above.
+        """
+        if not invoice or tree is None:
+            return self.env['ir.attachment']
+        return invoice._generate_readable_pdf_from_import(file_data or {})
 
     def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False, peppol_eas=False, peppol_endpoint=False, street=False, street2=False, city=False, zip_code=False):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name) """
