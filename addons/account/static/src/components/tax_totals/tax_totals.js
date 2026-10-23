@@ -105,7 +105,14 @@ class TaxGroupComponent extends Component {
         this.props.taxGroup.tax_amount_currency += deltaValue;
         this.props.subtotal.tax_amount_currency += deltaValue;
         this.props.totals.tax_amount_currency += deltaValue;
-        this.props.totals.total_amount_currency += deltaValue;
+        if (this.props.taxGroup.is_price_included) {
+            this.props.taxGroup.base_amount_currency -= deltaValue;
+            this.props.subtotal.base_amount_currency -= deltaValue;
+            this.props.totals.base_amount_currency -= deltaValue;
+        }
+        else {
+            this.props.totals.total_amount_currency += deltaValue;
+        }
 
         this.props.onChangeTaxGroup({
             oldValue,
