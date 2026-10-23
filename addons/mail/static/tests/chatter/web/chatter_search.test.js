@@ -10,6 +10,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 import { contains, serverState } from "@web/../tests/web_test_helpers";
 
@@ -56,6 +57,39 @@ test("Search in chatter", async () => {
     await click(".o-mail-MessageCard-jump");
     await waitFor(
         ".o-mail-Message.o-highlighted .o-mail-Message-content:text('not empty'):count(1)"
+    );
+});
+
+test("Jump to a message posted by another user before my own note", async () => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    pyEnv["mail.message"].create({
+        body: "first message",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor(".o-mail-Message-content:text('first message'):count(1)");
+    pyEnv["mail.message"].create({
+        author_id: bobPartnerId,
+        body: "hidden needle",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await click("button:text('Log note')");
+    await insertTextInComposer(".o-mail-Composer", "my own note");
+    await click(".o-mail-Composer button:enabled:text('Log')");
+    await waitFor(".o-mail-Message-content:text('my own note'):count(1)");
+    await waitForNone(".o-mail-Message-content:text('hidden needle')");
+    await click("[title='Search Messages']");
+    await insertText(".o-mail-SearchInput input", "needle");
+    await click(".o-mail-SearchMessageResult .o-mail-MessageCard-jump");
+    await waitFor(
+        ".o-mail-Message.o-highlighted .o-mail-Message-content:text('hidden needle'):count(1)"
     );
 });
 
