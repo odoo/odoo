@@ -1090,6 +1090,42 @@ describe("sanitized values", () => {
         expect(".options-container input").toHaveValue(3.3);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.3");
     });
+    for (const [name, initialValue, valueReturnedByInput] of [
+        ["minus (-)", "-3", ""],
+        ["decimal point (.)", "3.3", "3"],
+    ]) {
+        test(`does not rewrite a transient ${name} while editing`, async () => {
+            addBuilderOption({
+                selector: ".test-options-target",
+                template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+            });
+            await setupHTMLBuilder(`
+                <div class="test-options-target" data-number="${initialValue}">Test</div>
+            `);
+            await contains(":iframe .test-options-target").click();
+            const input = queryFirst(".options-container input");
+            expect(input).toHaveValue(Number(initialValue));
+            let valueWrites = 0;
+            Object.defineProperty(input, "value", {
+                configurable: true,
+                get: () => valueReturnedByInput,
+                set: () => {
+                    valueWrites++;
+                },
+            });
+
+            // The browser displays the transient value but exposes its
+            // normalized value.
+            input.dispatchEvent(
+                new InputEvent("input", { bubbles: true, inputType: "deleteContentBackward" })
+            );
+            await animationFrame();
+
+            // Rewriting the exposed value would erase the browser's transient
+            // editing buffer.
+            expect(valueWrites).toBe(0);
+        });
+    }
     test("BuilderNumberInput transforms , into . (composable)", async () => {
         addBuilderOption({
             selector: ".test-options-target",
