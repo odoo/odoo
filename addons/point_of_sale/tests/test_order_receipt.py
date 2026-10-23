@@ -14,15 +14,20 @@ from odoo.tools import (
     DEFAULT_SERVER_DATETIME_FORMAT,
     BinaryBytes,
 )
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
-from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
-from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+
+from odoo.addons.point_of_sale.tests.common import PosHttpCommon
 
 _logger = logging.getLogger(__name__)
 
 
+# TODO-PARP:
+# - Separate Python tests from tour tests.
+# - Move receipt helpers to the common layer where appropriate.
+
+from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
+
 @tagged('post_install', '-at_install')
-class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
+class TestPosOrderReceipt(PosHttpCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod

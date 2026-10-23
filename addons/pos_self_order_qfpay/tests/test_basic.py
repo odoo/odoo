@@ -1,13 +1,12 @@
 from unittest.mock import patch
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Command
 from odoo.tests.common import tagged
 
 
 @tagged("post_install", "-at_install")
-class TestSelfOrderKioskQFPay(TestPointOfSaleHttpCommon, AccountTestInvoicingCommon):
+class TestSelfOrderKioskQFPay(TestPointOfSaleHttpCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 

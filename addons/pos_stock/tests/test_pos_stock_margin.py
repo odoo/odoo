@@ -1,10 +1,9 @@
 import odoo
-from odoo.addons.point_of_sale.tests.test_pos_order import TestPosMargin
-from odoo.addons.pos_stock.tests.common import TestPosStockCommon
+from odoo.addons.pos_stock.tests.common import CommonPosStockTest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
+class TestPosStockMargin(CommonPosStockTest):
     """
     Test the margin computation on orders with basic configuration
     The tests contain the base scenarios.
@@ -13,7 +12,11 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
 
     def setUp(self):
         super().setUp()
-        self.config = self.basic_config
+        self.config = self.pos_config_usd
+        self.categ_basic = self.env.ref('product.product_category_services')
+        self.categ_anglo = self.stock_account_product_categ
+        self.env.company.anglo_saxon_accounting = True
+        self.env.company.point_of_sale_update_stock_quantities = 'real'
 
         self.stock_location = self.env['stock.warehouse'].sudo().create({
             'partner_id': self.env.user.partner_id.id,
@@ -29,8 +32,8 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
         Test margin where there is product in FIFO with stock update in real time
         """
 
-        product1 = self.create_product('Product 1', self.categ_anglo, 10, 5)
-        product2 = self.create_product('Product 2', self.categ_basic, 50, 30)
+        product1 = self.create_product('Product 1', 10, standard_price=5, categ_id=self.categ_anglo.id)
+        product2 = self.create_product('Product 2', 50, standard_price=30, categ_id=self.categ_basic.id)
 
         move1 = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
@@ -66,11 +69,10 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
         self.open_new_session()
 
         # create orders
-        orders = [self.create_ui_order_data([(product1, 1), (product2, 1)]),
-                  self.create_ui_order_data([(product1, 2)])]
-
-        # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        self.create_orders([
+            {'lines': [(product1, 1), (product2, 1)]},
+            {'lines': [(product1, 2)]},
+        ])
 
         # check margins
         self.assertEqual(self.pos_session.order_ids[0].margin, 27)
@@ -81,7 +83,7 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
         self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0.5)
 
         # close session
-        self.pos_session.close_session_from_ui()
+        self.close_pos_session()
 
     def test_avco_margin_closing_time(self):
         """
@@ -89,8 +91,8 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
         """
 
         self.categ_anglo.property_cost_method = 'average'
-        product1 = self.create_product('Product 1', self.categ_anglo, 10, 5)
-        product2 = self.create_product('Product 2', self.categ_basic, 50, 30)
+        product1 = self.create_product('Product 1', 10, standard_price=5, categ_id=self.categ_anglo.id)
+        product2 = self.create_product('Product 2', 50, standard_price=30, categ_id=self.categ_basic.id)
         self.env.company.point_of_sale_update_stock_quantities = 'closing'
 
         move1 = self.env['stock.move'].create({
@@ -127,11 +129,10 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
         self.open_new_session()
 
         # create orders
-        orders = [self.create_ui_order_data([(product1, 1), (product2, 1)]),
-                  self.create_ui_order_data([(product1, 2)])]
-
-        # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        self.create_orders([
+            {'lines': [(product1, 1), (product2, 1)]},
+            {'lines': [(product1, 2)]},
+        ])
 
         # check margins which are not really computed so it should be 0
         self.assertEqual(self.pos_session.order_ids[0].margin, 0)
@@ -142,9 +143,7 @@ class TestPosStockMargin(TestPosMargin, TestPosStockCommon):
         self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0)
 
         # close session
-        cash_pm = self.pos_session.config_id._get_cash_payment_method()
-        total_cash_payment = sum(self.pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        self.pos_session.close_session_from_ui({cash_pm.id: total_cash_payment})
+        self.close_pos_session()
 
         # check margins
         self.assertEqual(self.pos_session.order_ids[0].margin, 26)

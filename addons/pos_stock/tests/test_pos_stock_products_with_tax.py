@@ -35,6 +35,7 @@ class TestPosStockProductsWithTax(TestPosStockCommon):
             15.0,
             tax_ids=self.taxes['tax_group_7_10'].ids,
         )
+        # TODO-PARP: Remove (No use)
         self.product4 = self.create_product(
             'Product 4',
             self.categ_basic,
@@ -150,7 +151,7 @@ class TestPosStockProductsWithTax(TestPosStockCommon):
             odoo.Command.set(xx_cash_payment_method.ids),
         ]})
         self.config = xx_config
-        pos_session = self.open_new_session()
+        pos_session = self.open_new_session(config=self.config)
         # load the session data from Branch XX:
         # - Product all taxes           => tax from Branch XX should be set
         # - Product no tax from XX      => tax from Branch X should be set
