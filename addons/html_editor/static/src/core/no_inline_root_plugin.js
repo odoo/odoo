@@ -35,7 +35,7 @@ export class NoInlineRootPlugin extends Plugin {
                 return true;
             }
         },
-        on_inserted_handlers: this.onInserted.bind(this),
+        inserted_content_processors: this.processInsertedContent.bind(this),
     };
 
     setup() {
@@ -182,7 +182,7 @@ export class NoInlineRootPlugin extends Plugin {
      *
      * @param {Node[]} insertedNodes
      */
-    onInserted(insertedNodes) {
+    processInsertedContent(insertedNodes) {
         for (const parent of getConnectedParents(insertedNodes)) {
             if (
                 !this.areInlinesAllowedAtRoot(parent) &&
@@ -191,10 +191,17 @@ export class NoInlineRootPlugin extends Plugin {
                 !isPhrasingContent(parent)
             ) {
                 // Ensure that edition boundaries do not have inline content.
-                this.dependencies.dom.wrapInlinesInBlocks(parent, {
+                const map = this.dependencies.dom.wrapInlinesInBlocks(parent, {
                     baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
                 });
+                for (const [node, result] of map.entries()) {
+                    const index = insertedNodes.indexOf(node);
+                    if (index !== -1) {
+                        insertedNodes.splice(...[index, 1, result].filter((item) => item !== null));
+                    }
+                }
             }
         }
+        return insertedNodes;
     }
 }
