@@ -8,6 +8,8 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     def _clean_attendance_officers(self):
+        """Remove the users of ``self`` that approve no employee's attendances from the
+        attendance officer group."""
         attendance_officers = self.env['hr.employee'].search(
             [('attendance_manager_id', 'in', self.ids)]).attendance_manager_id
         officers_to_remove_ids = self - attendance_officers
