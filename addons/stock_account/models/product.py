@@ -270,7 +270,9 @@ class ProductProduct(models.Model):
             replay(products, cost_method)
 
         replayed_moves = self.env['stock.move'].browse(list(old_values))
-        return replayed_moves.filtered(lambda move: move.value != old_values[move.id])
+        updated_moves = replayed_moves.filtered(lambda move: move.value != old_values[move.id])
+        updated_moves._recompute_aml_balances(old_values)
+        return updated_moves
 
     def _get_stock_moves_with_valuation_by_product(self, from_date, lot=False):
         domain = [
