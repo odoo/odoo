@@ -496,3 +496,14 @@ class PurchaseOrderLine(models.Model):
                 ('move_ids.date', '>', datetime.combine(date, time.max)),
             ])
         return domain
+
+    def _should_backorder(self):
+        self.ensure_one()
+        return self.product_id.type == "consu" and not self.move_ids
+
+    def _prepare_backorder_move_vals(self, picking):
+        self.ensure_one()
+        qty_to_attach = self.product_uom_qty - self.qty_received
+        price_unit = self._get_stock_move_price_unit()
+        product_uom_qty, product_uom = self.uom_id._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
+        return self._prepare_stock_move_vals(False, price_unit, product_uom_qty, product_uom)

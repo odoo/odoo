@@ -13,3 +13,10 @@ class SaleOrder(models.Model):
 
     def _get_purchase_orders(self):
         return super()._get_purchase_orders() | self.stock_reference_ids.purchase_ids
+
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    def _should_backorder(self):
+        return super()._should_backorder() and not self.purchase_line_ids
