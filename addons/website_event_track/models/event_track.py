@@ -39,6 +39,9 @@ class EventTrack(models.Model):
     ]
     _primary_email = 'contact_email'
 
+    def get_base_url(self):
+        return self.event_id.get_base_url()
+
     @api.model
     def _get_default_stage_id(self):
         return self.env['event.track.stage'].search([], limit=1).id

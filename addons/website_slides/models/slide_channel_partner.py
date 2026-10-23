@@ -43,6 +43,9 @@ class SlideChannelPartner(models.Model):
         'The completion of a channel is a percentage and should be between 0% and 100.',
     )
 
+    def get_base_url(self):
+        return self.channel_id.get_base_url()
+
     @api.depends('member_status')
     def _compute_completion_date(self):
         """ Set the completion date to the current date when it gets completed and resets the completion date when it's
