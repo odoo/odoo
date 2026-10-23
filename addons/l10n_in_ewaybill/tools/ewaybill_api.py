@@ -73,8 +73,8 @@ class EWayBillApi:
                 "error": [{
                     "code": "access_error",
                     "message": _(
-                        "Unable to connect to the E-WayBill service."
-                        "The web service may be temporary down. Please try again in a moment."
+                        "Unable to connect to the E-WayBill service. "
+                        "The web service may be temporarily down. Please try again in a moment."
                     )
                 }]
             })
@@ -130,7 +130,7 @@ class EWayBillApi:
             if '238' in e.error_codes or any(
                 'the token is missing or has expired' in str(err.get('message', '')).lower() for err in e.error_json['error']
             ):
-                # Invalid token eror then create new token and send generate request again.
+                # Invalid token error then create new token and send generate request again.
                 # This happens when authenticate called from another odoo instance with same credentials
                 # (like. Demo/Test)
                 with contextlib.suppress(EWayBillError):
