@@ -232,3 +232,23 @@ class TestResource(TestHrCommon):
         work_intervals, _ = self.employee_niv.resource_id._get_valid_work_intervals(start, end)
         total_hours = sum_intervals(work_intervals[self.employee_niv.resource_id.id])
         self.assertEqual(total_hours, 35.0)
+
+    def test_expected_attendances_without_contract_deduct_absences(self):
+        """ Without contract, leaves counted as absence are deducted from the expected attendances. """
+        employee = self.env['hr.employee'].create({
+            'name': 'No Contract',
+            'tz': 'UTC',
+            'resource_calendar_id': self.calendar_35h.id,
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Day off',
+            'resource_id': employee.resource_id.id,
+            'date_from': datetime(2026, 1, 5, 0, 0),
+            'date_to': datetime(2026, 1, 5, 23, 59, 59),
+            'count_as': 'absence',
+        })
+        intervals = employee._get_expected_attendances(
+            datetime(2026, 1, 5, tzinfo=UTC),
+            datetime(2026, 1, 9, 23, 59, 59, tzinfo=UTC),
+        )
+        self.assertEqual(sum_intervals(intervals), 28.0)
