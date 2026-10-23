@@ -2731,8 +2731,8 @@ class HrEmployee(models.Model):
         **not** unusual. Single employee (or empty recordset).
 
         :param str date_from: start, formatted ``'%Y-%m-%d %H:%M:%S'``
-        :param str date_to: end, same format; required in practice (``None``
-            raises a ``TypeError``)
+        :param str date_to: end, same format; ``None`` means ``date_from``
+            (a single day)
         :return: ``{'YYYY-MM-DD': bool}``, ``True`` for unusual days, both bounds included
         :rtype: dict[str, bool]
         """
@@ -2745,7 +2745,7 @@ class HrEmployee(models.Model):
         if self:
             self.ensure_one()
         date_from_date = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S').date()
-        date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else None
+        date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else date_from_date
         employee_versions = self.env['hr.version'].sudo().search([
             ('employee_id', '=', self.id),
             ('active', '=', True),
