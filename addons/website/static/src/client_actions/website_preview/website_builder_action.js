@@ -27,6 +27,7 @@ import { post } from "@web/core/network/http_service";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
+import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_utils";
 import { uniqueId } from "@web/core/utils/functions";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
@@ -117,6 +118,16 @@ export class WebsiteBuilderClientAction extends Component {
         this.overlayRef = signal.ref();
         this.localOverlayContainerKey = uniqueId("website");
         this.websitePreviewRef = signal.ref();
+        this.iframeContainerRef = signal.ref();
+
+        // While the builder sidebar takes space, the iframe keeps a desktop
+        // width and is scaled down instead of switching to the mobile layout.
+        const iframeResizeObserver = new ResizeObserver(() => this.updateIframeScale());
+        onMounted(() => {
+            iframeResizeObserver.observe(this.iframeContainerRef());
+            iframeResizeObserver.observe(this.builderSidebarRef());
+        });
+        onWillUnmount(() => iframeResizeObserver.disconnect());
 
         onWillStart(async () => {
             const updateWebsiteId = (websiteId) => {
@@ -729,6 +740,22 @@ export class WebsiteBuilderClientAction extends Component {
             "o_is_mobile",
             isMobile
         );
+    }
+
+    updateIframeScale() {
+        const containerEl = this.iframeContainerRef();
+        const width = containerEl?.getBoundingClientRect().width;
+        if (!width) {
+            return;
+        }
+        // One extra device pixel so that the iframe viewport, snapped to
+        // device pixels, stays above the breakpoint with fractional zooms.
+        const iframeWidth =
+            MEDIAS_BREAKPOINTS[SIZES.LG].minWidth + 1 / window.devicePixelRatio;
+        const isScaled = !!this.builderSidebarRef()?.offsetWidth && width < iframeWidth;
+        containerEl.style.setProperty("--o-iframe-width", `${iframeWidth}px`);
+        containerEl.style.setProperty("--o-iframe-scale", width / iframeWidth);
+        containerEl.classList.toggle("o_iframe_scaled", isScaled);
     }
 
     get aceEditorWidth() {

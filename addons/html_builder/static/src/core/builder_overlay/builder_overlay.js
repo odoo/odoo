@@ -95,9 +95,8 @@ export class BuilderOverlay {
         const iframeRect = this.iframe.getBoundingClientRect();
         const overlayContainerRect = this.overlayContainer.getBoundingClientRect();
         const targetRect = overlayTarget.getBoundingClientRect();
-        const isMobile = this.isMobileView(overlayTarget);
-        const iframeScaleX = isMobile ? iframeRect.width / this.iframe.offsetWidth : 1;
-        const iframeScaleY = isMobile ? iframeRect.height / this.iframe.offsetHeight : 1;
+        const iframeScaleX = iframeRect.width / this.iframe.offsetWidth || 1;
+        const iframeScaleY = iframeRect.height / this.iframe.offsetHeight || 1;
 
         Object.assign(this.overlayElement.style, {
             width: `${targetRect.width * iframeScaleX}px`,

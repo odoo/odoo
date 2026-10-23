@@ -88,6 +88,14 @@
         }
     }
 
+    &:not(.o_is_mobile) .o_iframe_scaled iframe {
+        left: 0;
+        width: var(--o-iframe-width);
+        height: calc(100% / var(--o-iframe-scale));
+        transform: scale(var(--o-iframe-scale));
+        transform-origin: top left;
+    }
+
     &.o_is_mobile {
         .o_iframe_container {
             @media screen and (min-width: 768px), print and (min-width: 188mm) {
