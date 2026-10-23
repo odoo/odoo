@@ -93,7 +93,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
                 let min = Infinity;
                 let smallestColEl;
                 for (const colEl of cols) {
-                    const imgEls = colEl.querySelectorAll("img");
+                    const imgEls = colEl.querySelectorAll("img, .media_iframe_video");
                     const lastImgRect = imgEls.length && imgEls[imgEls.length - 1].getBoundingClientRect();
                     const height = lastImgRect ? Math.round(lastImgRect.top + lastImgRect.height) : 0;
                     if (height < min) {
@@ -150,7 +150,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
 
         imgs.forEach((img, index) => {
             var wrapClass = 'col-lg-3';
-            if (img.width >= img.height * 2 || img.width > 600) {
+            if (img.width >= img.height * 2 || img.width > 600 || img.classList.contains("media_iframe_video")) {
                 wrapClass = 'col-lg-6';
             }
             var $wrap = $('<div/>', {class: wrapClass}).append(imgHolderEls[index]);
@@ -162,17 +162,31 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      *
      * @private
      */
-    _slideshow() {
-        const imageEls = this._getItemsGallery();
-        const imgHolderEls = this._getImgHolderEls();
-        const images = Array.from(imageEls).map((img) => ({
-            // Use getAttribute to get the attribute value otherwise .src
-            // returns the absolute url.
-            src: img.getAttribute('src'),
+    async _slideshow() {
+        const mediaEls = this._getItemsGallery();
+        const mediaHolderEls = this._getImgHolderEls();
+        // Get the images src and the videos thumbnail urls.
+        const mediaSrc = await Promise.all(
+            mediaHolderEls.map(async (mediaEl) => {
+                if (mediaEl.tagName === "IMG") {
+                    // Use getAttribute to get the attribute value otherwise
+                    // .src returns the absolute url.
+                    return mediaEl.getAttribute("src");
+                } else if (mediaEl.classList.contains("media_iframe_video")) {
+                    // For videos, get the thumbnail image link.
+                    return this._getVideoThumbnailUrl(mediaEl.dataset.oeExpression);
+                } else if (mediaEl.tagName === "A") {
+                    return mediaEl.querySelector("img").getAttribute("src");
+                }
+            })
+        );
+
+        const images = mediaHolderEls.map((media, index) => ({
+            src: mediaSrc[index],
             // TODO: remove me in master. This is not needed anymore as the
             // images of the rendered `website.gallery.slideshow` are replaced
-            // by the elements of `imgHolderEls`.
-            alt: img.getAttribute('alt'),
+            // by the elements of `mediaHolderEls`.
+            alt: media.getAttribute("alt"),
         }));
         var currentInterval = this.$target.find('.carousel:first').attr('data-bs-interval');
         var params = {
@@ -184,9 +198,9 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             // TODO: in master, remove `attrClass` and `attStyle` from `params`.
             // This is not needed anymore as the images of the rendered
             // `website.gallery.slideshow` are replaced by the elements of
-            // `imgHolderEls`.
-            attrClass: imageEls.length > 0 ? imageEls[0].className : '',
-            attrStyle: imageEls.length > 0 ? imageEls[0].style.cssText : '',
+            // `mediaHolderEls`.
+            attrClass: mediaEls.length > 0 ? mediaEls[0].className : "",
+            attrStyle: mediaEls.length > 0 ? mediaEls[0].style.cssText : "",
         },
         $slideshow = $(renderToElement('website.gallery.slideshow', params));
         const imgSlideshowEls = $slideshow[0].querySelectorAll("img[data-o-main-image]");
@@ -195,12 +209,16 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             // order to keep the characteristics of the image such as the
             // filter, the width, the quality, the link on which the users are
             // redirected once they click on the image etc...
-            imgSlideshowEl.after(imgHolderEls[index]);
+            imgSlideshowEl.after(mediaHolderEls[index]);
             imgSlideshowEl.remove();
         });
         this._replaceContent($slideshow);
-        this.$("img").toArray().forEach((img, index) => {
-            $(img).attr({contenteditable: true, 'data-index': index});
+        const indicatorEls = [...this.$target[0].querySelectorAll("[data-bs-slide-to]")];
+        mediaEls.forEach((mediaEl, index) => {
+            $(mediaEl).attr({ contenteditable: true, "data-index": index });
+            if (mediaEl.classList.contains("media_iframe_video")) {
+                this._addVideoPlayIcon(indicatorEls[index]);
+            }
         });
 
         // Apply layout animation
@@ -212,9 +230,8 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @override
      */
     _getItemsGallery() {
-        const imgs = this.$('img').get();
-        imgs.sort((a, b) => this._getIndex(a) - this._getIndex(b));
-        return imgs;
+        const mediaEls = this.$target.find("img, .media_iframe_video").get();
+        return mediaEls.sort((a, b) => this._getIndex(a) - this._getIndex(b));
     },
     /**
      * Returns the images, or the images holder if this holder is an anchor,
@@ -429,6 +446,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
      * @override
      */
     init() {
+        this.videoThumbnailCache = new Map();
         this.rpc = this.bindService("rpc");
         return this._super.apply(this, arguments);
     },
@@ -436,12 +454,16 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
      * @override
      */
     start() {
-        // Make sure image previews are updated if images are changed
-        this.$target.on('image_changed.gallery', 'img', ev => {
-            const $img = $(ev.currentTarget);
-            const index = this.$target.find('.carousel-item.active').index();
-            this.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
-                .css('background-image', 'url(' + $img.attr('src') + ')');
+        // Make sure image and video previews are updated if they are replaced.
+        this.$target.on("image_changed.gallery", "img", (ev) => {
+            const mediaEl = ev.currentTarget;
+            const src = mediaEl.getAttribute("src");
+            this.onMediaChanged(ev, mediaEl, src, false);
+        });
+        this.$target.on("media_changed.gallery", ".media_iframe_video", async (ev) => {
+            const mediaEl = ev.currentTarget;
+            const thumbnailUrl = await this._getVideoThumbnailUrl(mediaEl.dataset.oeExpression);
+            this.onMediaChanged(ev, mediaEl, thumbnailUrl, true);
         });
 
         // When the snippet is empty, an edition button is the default content
@@ -461,6 +483,16 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                 });
             }
         });
+
+        // If some medias do not have the `data-index` attribute, reset the mode
+        // so everything is consistent. (Needed for already dropped snippets
+        // whose images have been previously replaced by other media types).
+        const mediaEls = this._getItemsGallery();
+        const indexedMediaEls = this.$target[0].querySelectorAll("[data-index]");
+        if (mediaEls.length !== indexedMediaEls.length) {
+            const _super = this._super.bind(this);
+            return this._relayout().then(() => _super.apply(this, arguments));
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -591,6 +623,37 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Updates the carousel indicator after a media item (image or video) is
+     * replaced.
+     *
+     * Synchronizes the media `data-index` provided, finds the active carousel
+     * item, and updates its corresponding indicator background. Adds a play
+     * icon when the media is a video.
+     *
+     * @param {Event} ev - Media change event
+     * @param {HTMLElement} mediaEl - Updated media element.
+     * @param {string} backgroundSrc - URL used as the indicator background.
+     * @param {boolean} isVideo - Whether the media element is a video.
+     */
+    onMediaChanged(ev, mediaEl, backgroundSrc, isVideo) {
+        if (ev.node) {
+            mediaEl.setAttribute("data-index", ev.node.dataset.index);
+        }
+
+        const index = this.$target.find(".carousel-item.active").index();
+        const $indicator = this.$(`.carousel:first li[data-bs-target]:eq(${index})`);
+        if (!$indicator.length) {
+            return;
+        }
+
+        $indicator.empty().css("background-image", `url(${backgroundSrc})`);
+        if (isVideo) {
+            this._addVideoPlayIcon($indicator[0]);
+        } else {
+            $indicator.removeClass("o_not_editable");
+        }
+    },
+    /**
      * Handles image removals and image index updates.
      *
      * @override
@@ -609,6 +672,40 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Gets the thumbnail url of the given video.
+     *
+     * @private
+     * @param {String} videoUrl the video url
+     * @returns {String}
+     */
+    async _getVideoThumbnailUrl(videoUrl) {
+        // First, check if it was not already cached.
+        if (this.videoThumbnailCache.has(videoUrl)) {
+            return this.videoThumbnailCache.get(videoUrl);
+        }
+        let [platform, thumbnailUrl] = await this.rpc("/website/get_video_thumbnail_url", {
+            video_url: videoUrl,
+        });
+        if (!thumbnailUrl || platform === "instagram") {
+            thumbnailUrl = "/web/static/img/placeholder.png";
+        }
+
+        this.videoThumbnailCache.set(videoUrl, thumbnailUrl);
+        return thumbnailUrl;
+    },
+    /**
+     * Adds a play icon in the given carousel indicator element, in order to
+     * show that its corresponding slide contains a video.
+     *
+     * @param {HTMLElement} indicatorEl the carousel indicator
+     */
+    _addVideoPlayIcon(indicatorEl) {
+        const playIconEl = document.createElement("i");
+        playIconEl.className = "fa fa-2x fa-play-circle text-white o_video_thumbnail";
+        indicatorEl.append(playIconEl);
+        indicatorEl.classList.add("o_not_editable"); // So the icon is not editable.
+    },
     /**
      * @private
      */
