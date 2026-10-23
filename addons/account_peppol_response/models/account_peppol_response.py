@@ -31,3 +31,10 @@ class AccountPeppolResponse(models.Model):
     )
     move_id = fields.Many2one('account.move', ondelete='cascade')
     company_id = fields.Many2one(related='move_id.company_id')
+
+    def _log_message(self, message):
+        self.move_id._message_log_batch(bodies={move.id: message for move in self.move_id})
+
+    def _get_linked_record(self):
+        self.ensure_one()
+        return self.move_id
