@@ -77,3 +77,4 @@ Andrea Manenti manenti@vauxoo.com https://github.com/maneandrea
 Eduardo Martinez eduardoms@vauxoo.com https://github.com/emtz10
 Jonathan Osorio Alcalá jonathan@vauxoo.com https://github.com/jonathanosalc
 Edilianny Sánchez edilianny@vauxoo.com https://github.com/edy1192
+Nathalia Dos Santos nathalia@vauxoo.com https://github.com/nathalia-dssb
