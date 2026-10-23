@@ -15,7 +15,9 @@ export class QuickReorder extends Interaction {
             't-on-input': this.updateQuantityAndPrice,
             't-on-keydown': this.triggerReorderOnEnter,
         },
-        '.o_wsale_quick_reorder_product_button': { 't-on-click': this.reorderProduct },
+        '.o_wsale_quick_reorder_product_button': {
+            't-on-click': this.locked(this.reorderProduct, true),
+        },
     };
 
     /**
@@ -158,7 +160,11 @@ export class QuickReorder extends Interaction {
         wSaleUtils.updateQuickReorderSidebar(data);
         this.services['public.interactions'].startInteractions(cart);
         this.services['public.interactions'].startInteractions(cartSummary);
-        this.services.cart.showWarning(data.warning);
+        for (const notification of data.notifications) {
+            if (notification.type === 'warning') {
+                this.services.cart.showWarning(notification.data.warning_message);
+            }
+        }
 
         // Move the focus to the next quantity input.
         this._focusNextQuantityInput(currentButtonIndex);
