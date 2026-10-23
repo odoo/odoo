@@ -29,11 +29,15 @@ class ResPartner(models.Model):
         partners_format = super().mail_partner_format(fields=fields)
         if not fields:
             fields = {'out_of_office_date_end': True}
+        if "out_of_office_date_end" in fields:
+            # sudo: hr.employee - can read the leave of users to show their out of office date
+            employee_by_user = self.user_ids.sudo()._get_employee_by_user()
         for partner in self:
             if 'out_of_office_date_end' in fields:
+                employees = [employee_by_user[user] for user in partner.user_ids]
                 # in the rare case of multi-user partner, return the earliest possible return date
-                dates = partner.mapped('user_ids.leave_date_to')
-                states = partner.mapped('user_ids.current_leave_state')
+                dates = [employee.leave_date_to for employee in employees]
+                states = [employee.current_leave_state for employee in employees]
                 date = sorted(dates)[0] if dates and all(dates) else False
                 state = sorted(states)[0] if states and all(states) else False
                 partners_format.get(partner).update({

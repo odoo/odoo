@@ -5,9 +5,10 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests.common import tagged, users, warmup
+from odoo.tests.common import HttpCase, tagged, users, warmup
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('out_of_office')
@@ -116,3 +117,91 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
             self.assertFalse(employee in holidays.employee_id)
         for employee in absent_employees:
             self.assertFalse(employee not in holidays.employee_id)
+
+
+@tagged("post_install", "-at_install", "out_of_office")
+class TestOutOfOfficeMultiCompany(HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_a = cls.env.company
+        cls.company_b = cls.env["res.company"].create({"name": "Company B"})
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {"name": "Legal Leaves", "requires_allocation": "no", "time_type": "leave"},
+        )
+        cls.leave_date_end = date.today() + relativedelta(days=2)
+        cls.user_employee = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_a.id,
+            company_ids=[cls.company_a.id, cls.company_b.id],
+            login="user_employee",
+        )
+        cls.alice_user = cls._create_user_on_leave("alice_user", cls.company_b, cls.company_b)
+        cls.clara_user = cls._create_user_on_leave("clara_user", cls.company_a, cls.company_a)
+        cls.dana_user = cls._create_user_on_leave(
+            "dana_user",
+            cls.company_a | cls.company_b,
+            cls.company_b,
+        )
+        cls.eva_user = cls._create_user_on_leave(
+            "eva_user",
+            cls.company_a | cls.company_b,
+            cls.company_a,
+        )
+        cls.env["hr.employee"].create(
+            {"company_id": cls.company_b.id, "name": "eva_user", "user_id": cls.eva_user.id},
+        )
+        cls.group = (
+            cls.env["discuss.channel"]
+            .with_user(cls.user_employee)
+            .create_group(
+                (cls.alice_user | cls.clara_user | cls.dana_user | cls.eva_user).partner_id.ids,
+            )
+        )
+
+    @classmethod
+    def _create_user_on_leave(cls, login, companies, employee_company):
+        user = mail_new_test_user(
+            cls.env,
+            company_id=companies[0].id,
+            company_ids=companies.ids,
+            login=login,
+        )
+        employee = cls.env["hr.employee"].create(
+            {"company_id": employee_company.id, "name": login, "user_id": user.id},
+        )
+        cls.env["hr.leave"].create(
+            {
+                "employee_id": employee.id,
+                "holiday_status_id": cls.leave_type.id,
+                "request_date_from": date.today() - relativedelta(days=1),
+                "request_date_to": cls.leave_date_end,
+            },
+        ).write({"state": "validate"})
+        return user
+
+    def test_out_of_office_same_on_every_route(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        init_messaging = self.make_jsonrpc_request(
+            "/mail/init_messaging",
+            {"context": {"allowed_company_ids": [self.company_b.id, self.company_a.id]}},
+        )
+        channel_members = self.make_jsonrpc_request(
+            "/discuss/channel/members",
+            {"channel_id": self.group.id, "known_member_ids": []},
+        )
+        group_info = next(c for c in init_messaging["channels"] if c["id"] == self.group.id)
+        for route, result in [
+            ("/mail/init_messaging", group_info),
+            ("/discuss/channel/members", channel_members),
+        ]:
+            date_end_by_partner = {
+                m["persona"]["id"]: m["persona"]["out_of_office_date_end"]
+                for m in result["channelMembers"][0][1]
+            }
+            for user in self.alice_user | self.clara_user | self.dana_user | self.eva_user:
+                with self.subTest(route=route, user=user.login):
+                    self.assertEqual(
+                        date_end_by_partner[user.partner_id.id],
+                        self.leave_date_end.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                    )
