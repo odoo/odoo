@@ -14,6 +14,7 @@ from odoo.tools import single_email_re
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import DEPRECATED_PEPPOL_EAS
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
+from odoo.addons.account_peppol.tools.peppol_errors import ERROR_MESSAGES
 
 _logger = logging.getLogger(__name__)
 
@@ -164,7 +165,7 @@ class PeppolRegistration(models.TransientModel):
         for wizard in self:
             wizard.edi_user_id = wizard.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')[:1]
 
-    @api.depends('selected_company_id', 'peppol_eas', 'peppol_endpoint', 'smp_registration', 'peppol_external_provider', 'use_parent_connection')
+    @api.depends('selected_company_id', 'peppol_eas', 'peppol_endpoint', 'smp_registration', 'peppol_external_provider', 'use_parent_connection', 'peppol_can_connect_data')
     def _compute_peppol_warnings(self):
         for wizard in self:
             peppol_warnings = {}
@@ -203,6 +204,11 @@ class PeppolRegistration(models.TransientModel):
                     'level': 'warning',
                     'message': _("You are about to register with your VAT number. Make sure you register with your "
                                 "Company Registry (BCE/KBO) first to be compliant with the new regulation."),
+                }
+            if wizard.peppol_can_connect_data and wizard.peppol_can_connect_data.get('kyc_error'):
+                peppol_warnings['kyc_initiation_error'] = {
+                    'level': 'warning',
+                    'message': ERROR_MESSAGES['kyc_error'],
                 }
             wizard.peppol_warnings = peppol_warnings or False
 

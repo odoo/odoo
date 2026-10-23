@@ -54,6 +54,9 @@ ERROR_MESSAGES = MappingProxyType({
         "Invoice lines with Tax Category 'Exempt from VAT' must have a tax rate of 0. "
         "You can change this in the Advanced Options of the tax configuration."
     ),
+    'kyc_error': _lt(
+        "Cannot initiate KYC for the selected scheme (unsupported, deprecated, or removed). Please select a different scheme.",
+    ),
 })
 
 
