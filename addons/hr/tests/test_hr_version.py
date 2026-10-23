@@ -963,3 +963,18 @@ class TestHrVersion(TestHrCommon):
         ])
         versions = self.env['hr.version'].search([('id', 'in', (template_1 | template_2).ids), ('date_end', '=', False)])
         self.assertEqual(versions, template_1 | template_2)
+
+    def test_version_id_context_multi_employees(self):
+        """The ``version_id`` context key applies to its employee in a multi-employee recordset."""
+        employee_a, employee_b = self.env['hr.employee'].create([
+            {'name': 'Employee A', 'date_version': '2020-01-01'},
+            {'name': 'Employee B', 'date_version': '2020-01-01'},
+        ])
+        current_version_a = employee_a.version_id
+        old_version_a = employee_a.create_version({'date_version': '2019-01-01'})
+        self.assertEqual(employee_a.version_id, current_version_a)
+
+        employees = (employee_a | employee_b).with_context(version_id=old_version_a.id)
+        self.assertEqual(employees[0].version_id, old_version_a)
+        self.assertEqual(employees[1].version_id, employee_b.current_version_id)
+        self.assertEqual(employees[0].with_context(version_id=old_version_a.id).version_id, old_version_a)
