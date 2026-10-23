@@ -15,7 +15,7 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Zoom">
-        <BuilderSelect dataAttributeAction="'mapZoom'" action="'mapUpdateSrc'" preview="false">
+        <BuilderSelect t-if="this.website_distance_unit === 'km'" dataAttributeAction="'mapZoom'" action="'mapUpdateSrc'" preview="false">
             <BuilderSelectItem dataAttributeActionValue="'21'">2.5 m</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'20'">5 m</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'19'">10 m</BuilderSelectItem>
@@ -36,6 +36,28 @@
             <BuilderSelectItem dataAttributeActionValue="'4'">400 km</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'3'">1000 km</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'2'">2000 km</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderSelect t-else="" dataAttributeAction="'mapZoom'" action="'mapUpdateSrc'" preview="false">
+            <BuilderSelectItem dataAttributeActionValue="'21'">20 ft</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'20'">50 ft</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'19'">100 ft</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'18'">200 ft</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'17'">500 ft</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'16'">0.25 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'15'">0.5 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'14'">1 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'13'">3 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'12'">5 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'11'">10 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'10'">30 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'9'">50 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'8'">100 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'7'">300 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'6'">500 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'5'">1000 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'4'">1500 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'3'">2000 mi</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'2'">2500 mi</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Color Filter">
@@ -77,7 +99,7 @@
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
-        <map_option template="website.mapOption" selector=".s_map"/>
+        <map_option selector=".s_map"/>
     </xpath>
 </t>
 </templates>
