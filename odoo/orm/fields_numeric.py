@@ -11,9 +11,10 @@ from .fields import Field
 
 if typing.TYPE_CHECKING:
     from .types import BaseModel, Environment
+    from numbers import Number
 
 
-class Integer(Field[int]):
+class Integer(Field[int, int]):
     """ Encapsulates an :class:`int`. """
     type = 'integer'
     _column_type = ('int4', 'int4')
@@ -28,7 +29,7 @@ class Integer(Field[int]):
             res['aggregator'] = None
         return res
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value: Number | str | bool | None, record, values=None, validate=True) -> int:
         return int(value or 0)
 
     def convert_to_cache(self, value, records, validate=True):
@@ -37,7 +38,7 @@ class Integer(Field[int]):
     def convert_to_record(self, value, record):
         return value or 0
 
-    def convert_to_read(self, value, record, use_display_name=True):
+    def convert_to_read(self, value: int | None, record, use_display_name=True) -> int | None:
         return value
 
     def convert_to_export(self, value, record):
@@ -45,8 +46,12 @@ class Integer(Field[int]):
             return value
         return ''
 
+    def convert_to_write(self, value, record) -> int:
+        """Write format: number | numeric string | bool | None"""
+        return self.convert_to_cache(value, record)
 
-class Float(Field[float]):
+
+class Float(Field[float, float]):
     """ Encapsulates a :class:`float`.
 
     The precision digits are given by the (optional) ``digits`` attribute.
@@ -145,7 +150,7 @@ class Float(Field[float]):
     def _description_min_display_digits(self, env):
         return self.get_min_display_digits(env)
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value: Number | typing.Literal[False] | None, record, values=None, validate=True) -> float | str:
         value_float = value = float(value or 0.0)
         if digits := self.get_digits(record.env):
             _precision, scale = digits
@@ -169,12 +174,15 @@ class Float(Field[float]):
             return value
         return ''
 
+    def convert_to_write(self, value, record) -> float:
+        return self.convert_to_cache(value, record, validate=False)
+
     round = staticmethod(float_round)
     is_zero = staticmethod(float_is_zero)
     compare = staticmethod(float_compare)
 
 
-class Monetary(Field[float]):
+class Monetary(Field[float, float]):
     """ Encapsulates a :class:`float` expressed in a given
     :class:`res_currency<odoo.addons.base.models.res_currency.Currency>`.
 
@@ -229,7 +237,7 @@ class Monetary(Field[float]):
         if (cur_field := self.get_currency_field(model)) not in model._fields:
             raise Exception(f"{self}: unknown currency_field {cur_field!r}")
 
-    def convert_to_column_insert(self, value, record, values=None, validate=True):
+    def convert_to_column_insert(self, value, record, values=None, validate=True) -> float | str:
         # retrieve currency from values or record
         currency_field_name = self.get_currency_field(record)
         currency_field = record._fields[currency_field_name]

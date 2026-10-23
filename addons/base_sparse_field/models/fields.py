@@ -92,5 +92,9 @@ class Serialized(fields.Field):
     def convert_to_record(self, value, record):
         return json.loads(value or "{}")
 
+    def convert_to_write(self, value, record):
+        cache_value = self.convert_to_cache(value, record, validate=False)
+        return self.convert_to_record(cache_value, record)
+
 
 fields.Serialized = Serialized
