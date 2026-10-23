@@ -321,11 +321,13 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
         today_list = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
         past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_week_start]
-        self._process_time_rules_for(past_day, rule_period='day')
-        self._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
+        # shared set so _on_sources_collected reverses each source at most once
+        ctx = self.with_context(time_rule_reversed_ids=set())
+        ctx._process_time_rules_for(past_day, rule_period='day')
+        ctx._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
         # weekly undertime is cron-only: triggering it on every record write would create
         # spurious outputs while the user is still entering a past week's data.
-        self._process_time_rules_for(past_week, rule_period='week', rule_operator='exceed')
+        ctx._process_time_rules_for(past_week, rule_period='week', rule_operator='exceed')
 
     def write(self, vals):
         assert 'employee_id' in self._fields
