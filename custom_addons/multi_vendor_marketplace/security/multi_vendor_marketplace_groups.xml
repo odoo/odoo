@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Module category for the roles-->
+    <record model="ir.module.category" id="multi_vendor_marketplace">
+        <field name="name">Multi Vendor Marketplace</field>
+        <field name="description">User access rights</field>
+        <field name="sequence">20</field>
+    </record>
+    <!--    Admin role-->
+    <record id="multi_vendor_marketplace_admin" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="category_id" ref="multi_vendor_marketplace"/>
+        <field name="users"
+               eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+    <!--    Seller role-->
+    <record id="multi_vendor_marketplace_seller" model="res.groups">
+        <field name="name">Seller</field>
+        <field name="category_id" ref="multi_vendor_marketplace"/>
+    </record>
+    <!--    Requested Seller role-->
+    <record id="multi_vendor_marketplace_req_seller" model="res.groups">
+        <field name="name">Requested Seller</field>
+        <field name="category_id" ref="multi_vendor_marketplace"/>
+    </record>
+</odoo>

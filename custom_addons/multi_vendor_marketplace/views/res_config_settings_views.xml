@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Action for the config settings   -->
+    <record id="action_settings" model="ir.actions.act_window">
+        <field name="name">Seller Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'multi_vendor_marketplace',
+            'bin_size': False}
+        </field>
+    </record>
+<!--    View for res.config.settings-->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">
+            res.config.settings.view.form.inherit.multi.vendor.marketplace
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="15"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block"
+                     data-string="Auto Approval Settings"
+                     string="Seller Dashboard"
+                     data-key="multi_vendor_marketplace"
+                     groups="base.group_user">
+                    <div style="height:2000px; overflow-y:scroll">
+                        <h2>Auto Approval</h2>
+                        <div class="row mt16 o_settings_container"
+                             name="auto_approval">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                 id="seller_approval">
+                                <div class="o_setting_left_pane">
+                                    <field name="seller_approval"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="seller_approval"/>
+                                    <div class="text-muted">
+                                        When enabled, all seller's requests
+                                        will be
+                                        automatically approved
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box"
+                                 id="quantity_approval">
+                                <div class="o_setting_left_pane">
+                                    <field name="quantity_approval"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="quantity_approval"/>
+                                    <div class="text-muted">
+                                        When enabled, all seller's product
+                                        quantity
+                                        update request will be automatically
+                                        approved
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                 id="product_approval">
+                                <div class="o_setting_left_pane">
+                                    <field name="product_approval"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="product_approval"/>
+                                    <div class="text-muted">
+                                        When enabled, all seller's products
+                                        will be
+                                        automatically approved
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Other Settings</h2>
+                        <div class="row mt16 o_settings_container">
+                            <notebook>
+                                <page name="product_terms"
+                                      string="Product Terms">
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="internal_category">
+                                            <div class="o_setting_left_pane">
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="internal_categ_id"/>
+                                                <div class="text-muted">
+                                                    All marketplace products
+                                                    will
+                                                    belong to defined internal
+                                                    category.
+                                                    <field name="internal_categ_id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="seller_loc">
+                                            <div class="o_setting_left_pane">
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="seller_warehouse_id"/>
+                                                <span>/</span>
+                                                <label for="seller_location_id"/>
+                                                <div class="text-muted">
+                                                    This will be the default
+                                                    seller's
+                                                    location. Location can be
+                                                    set
+                                                    for
+                                                    individual seller from
+                                                    seller
+                                                    record
+                                                    <div>
+                                                        <field name="seller_location_id"/>
+                                                    </div>
+                                                    This will be the default
+                                                    seller's
+                                                    warehouse. It can be set
+                                                    for
+                                                    individual seller from
+                                                    seller
+                                                    record
+                                                    <div>
+                                                        <field name="seller_warehouse_id"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="product_variant">
+                                            <div class="o_setting_left_pane">
+                                                <field name="product_variants"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="product_variants"/>
+                                                <div class="text-muted">
+                                                    Allow sellers for managing
+                                                    their product attributes,
+                                                    defining variants (Eg:
+                                                    Color,
+                                                    Size,....)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="product_pricing">
+                                            <div class="o_setting_left_pane">
+                                                <field name="product_pricing"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="product_pricing"/>
+                                                <div class="text-muted">
+                                                    Allow sellers managing for
+                                                    Advanced
+                                                    pricing on product using
+                                                    pricelist.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="uom">
+                                            <div class="o_setting_left_pane">
+                                                <field name="uom"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="uom"/>
+                                                <div class="text-muted">
+                                                    Allow sellers for setting
+                                                    different Units of
+                                                    Measurements
+                                                    for their products
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </page>
+                                <page name="payment_terms"
+                                      string="Payment Terms">
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="commission">
+                                            <div class="o_setting_right_pane">
+                                                <label for="commission"/>
+                                                <div class="text-muted">
+                                                    Global commission for
+                                                    marketplace seller
+                                                </div>
+                                                <div>
+                                                    <field name="commission"/>%
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="currency">
+                                            <div class="o_setting_right_pane">
+                                                <label for="currency"/>
+                                                <div class="text-muted">
+                                                    Marketplace currency will
+                                                    be
+                                                    used to pay to seller
+                                                </div>
+                                                <div>
+                                                    <field name="currency"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="amt_limit">
+                                            <div class="o_setting_right_pane">
+                                                <label for="amt_limit"/>
+                                                <div class="text-muted">
+                                                    Amount Limit for seller
+                                                    payment
+                                                    request
+                                                </div>
+                                                <div>
+                                                    <field name="amt_limit"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="min_gap">
+                                            <div class="o_setting_right_pane">
+                                                <label for="min_gap"/>
+                                                <div class="text-muted">
+                                                    Minimum gap for next
+                                                    payment
+                                                    request
+                                                </div>
+                                                <div>
+                                                    <field name="min_gap"/>Days
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="pay_journal">
+                                            <div class="o_setting_right_pane">
+                                                <label for="pay_journal"/>
+                                                <div class="text-muted">
+                                                    Account journal for seller
+                                                    payment
+                                                </div>
+                                                <div>
+                                                    <field name="pay_journal"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="pay_product">
+                                            <div class="o_setting_right_pane">
+                                                <label for="pay_product"/>
+                                                <div class="text-muted">
+                                                    Product used for seller
+                                                    payment
+                                                </div>
+                                                <div>
+                                                    <field name="pay_product"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </page>
+                                <page name="mail_n_notifications"
+                                      string="Mail &amp; Notifications">
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="mail_admin_request">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                On New Seller Request
+                                            </div>
+                                            <div class="o_setting_left_pane">
+                                                <field name="seller_request_admin_mail"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <div>
+                                                        <label for="seller_request_admin_mail"/>
+                                                    </div>
+                                                    <label for="seller_request_admin_mail_template_id"/>
+                                                    <field name="seller_request_admin_mail_template_id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="mail_admin_approve">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                On New Seller Approval /
+                                                Rejection
+                                            </div>
+                                            <div class="o_setting_left_pane">
+                                                <field name="seller_approve_admin_mail"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <label for="seller_approve_admin_mail"/>
+                                                </div>
+                                                <div>
+                                                    <label for="seller_approve_admin_mail_template_id"/>
+                                                    <field name="seller_approve_admin_mail_template_id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="mail_seller_request">
+                                            <div class="o_setting_left_pane">
+                                                <field name="seller_request_seller_mail"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <div>
+                                                        <label for="seller_request_seller_mail"/>
+                                                    </div>
+                                                    <label for="seller_request_seller_mail_template_id"/>
+                                                    <field name="seller_request_seller_mail_template_id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="mail_seller_approve">
+                                            <div class="o_setting_left_pane">
+                                                <field name="seller_approve_seller_mail"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <label for="seller_approve_seller_mail"/>
+                                                </div>
+                                                <div>
+                                                    <label for="seller_approve_seller_mail_template_id"/>
+                                                    <field name="seller_approve_seller_mail_template_id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="mail_admin_product_request">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                On Product Approval / Rejection
+                                            </div>
+                                            <div class="o_setting_left_pane">
+                                                <field name="product_approve_admin_mail"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <div>
+                                                        <label for="product_approve_admin_mail"/>
+                                                    </div>
+                                                    <label for="product_approve_admin_mail_template_id"/>
+                                                    <field name="product_approve_admin_mail_template_id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="mail_admin_new_order">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                On New Order
+                                            </div>
+                                            <div class="o_setting_left_pane">
+                                                <field name="new_order_seller_mail"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <label for="new_order_seller_mail"/>
+                                                </div>
+                                                <div>
+                                                    <label for="new_order_seller_mail_template_id"/>
+                                                    <field name="new_order_seller_mail_template_id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="mail_seller_product_request">
+                                            <div class="o_setting_left_pane">
+                                                <field name="product_approve_seller_mail"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <div>
+                                                        <label for="product_approve_seller_mail"/>
+                                                    </div>
+                                                    <label for="product_approve_seller_mail_template_id"/>
+                                                    <field name="product_approve_seller_mail_template_id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </page>
+                                <page name="website" string="Website">
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="prod_count">
+                                            <div class="o_setting_left_pane">
+                                                <field name="prod_count"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="prod_count"/>
+                                                <div class="text-muted">
+                                                    Enable to display Seller
+                                                    Products
+                                                    on website
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="sale_count">
+                                            <div class="o_setting_left_pane">
+                                                <field name="sale_count"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="sale_count"/>
+                                                <div class="text-muted">
+                                                    Enable to display Seller
+                                                    product sale count on
+                                                    website
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="seller_addr">
+                                            <div class="o_setting_left_pane">
+                                                <field name="seller_addr"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="seller_addr"/>
+                                                <div class="text-muted">
+                                                    Enable to display Seller
+                                                    Address on website
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="seller_since">
+                                            <div class="o_setting_left_pane">
+                                                <field name="seller_since"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="seller_since"/>
+                                                <div class="text-muted">
+                                                    Enable to display Seller
+                                                    since
+                                                    date on website
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="ret_policy">
+                                            <div class="o_setting_left_pane">
+                                                <field name="ret_policy"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="ret_policy"/>
+                                                <div class="text-muted">
+                                                    Enable to display Seller
+                                                    return policy on website
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="ship_policy">
+                                            <div class="o_setting_left_pane">
+                                                <field name="ship_policy"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="ship_policy"/>
+                                                <div class="text-muted">
+                                                    Enable to display Seller
+                                                    shipping policy on website
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="shop_tnc">
+                                            <div class="o_setting_left_pane">
+                                                <field name="shop_tnc"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="shop_tnc"/>
+                                                <div class="text-muted">
+                                                    Enable to display Seller
+                                                    shop Terms and Conditions
+                                                    on website
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="contact_seller_button">
+                                            <div class="o_setting_left_pane">
+                                                <field name="contact_seller_button"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="contact_seller_button"/>
+                                                <div class="text-muted">
+                                                    Enable to display Seller
+                                                    contact button on website
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="bcome_seller">
+                                            <div class="o_setting_left_pane">
+                                                <field name="bcome_seller"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="bcome_seller"/>
+                                                <div class="text-muted">
+                                                    Enable to display Become a
+                                                    Seller button on website
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="recent_products">
+                                            <div class="o_setting_right_pane">
+                                                <label for="recent_products"/>
+                                                <div class="text-muted">
+                                                    Enter the number to show
+                                                    recently added products on
+                                                    website (Maximum 20)
+                                                </div>
+                                                <div>
+                                                    <field name="recent_products"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="show_seller_review">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                Seller Review Settings
+                                            </div>
+                                            <div class="o_setting_left_pane">
+                                                <field name="show_seller_review"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <div>
+                                                        <label for="show_seller_review"/>
+                                                    </div>
+                                                    <div class="text-muted">
+                                                        Enable to display
+                                                        Seller review on
+                                                        website
+                                                    </div>
+                                                    <label for="seller_review_count"/>
+                                                    <div>
+                                                        <field name="seller_review_count"/>
+                                                        No. of Reviews to load
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="o_setting_left_pane">
+                                                <field name="auto_publish_seller_review"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="auto_publish_seller_review"/>
+                                                <div class="text-muted">
+                                                    Enable to automatically
+                                                    publish Seller review on
+                                                    website
+                                                </div>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="sell_menu_header_footer_sellerlist">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                Marketplace Landing Page
+                                                Settings
+                                            </div>
+                                            <div class="o_setting_left_pane">
+                                                <field name="show_sell_menu_header"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="show_sell_menu_header"/>
+                                                <div class="text-muted">
+                                                    Enable to display
+                                                    Sell menu in header menu on
+                                                    website
+                                                </div>
+                                            </div>
+                                            <div class="o_setting_left_pane">
+                                                <field name="show_sell_menu_footer"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="show_sell_menu_footer"/>
+                                                <div class="text-muted">
+                                                    Enable to display
+                                                    Sell menu in footer menu on
+                                                    website
+                                                </div>
+                                            </div>
+                                            <div class="o_setting_left_pane">
+                                                <field name="show_sellers_list"/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <label for="show_sellers_list"/>
+                                                <div class="text-muted">
+                                                    Enable to display
+                                                    Seller(s) list on website
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="landing_page">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                Landing Page Settings
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <div>
+                                                        <label for="sell_link_label"/>
+                                                    </div>
+                                                    <div class="text-muted">
+                                                        Label for Seller
+                                                        landing page on which
+                                                        Seller will register
+                                                    </div>
+                                                    <div>
+                                                        <field name="sell_link_label"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <div>
+                                                        <label for="seller_list_link_label"/>
+                                                    </div>
+                                                    <div class="text-muted">
+                                                        Label for Seller's list
+                                                        page on which
+                                                        all sellers will be
+                                                        displayed
+                                                    </div>
+                                                    <div>
+                                                        <field name="seller_list_link_label"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                <br/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="seller_msg">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                Seller Messages
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <div>
+                                                        <label for="new_status_msg"/>
+                                                    </div>
+                                                    <div class="text-muted">
+                                                        Message to be displayed
+                                                        inside Seller profile
+                                                        when seller account is
+                                                        in New state
+                                                    </div>
+                                                    <div>
+                                                        <field name="new_status_msg"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 o_setting_box">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                <br/>
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <div>
+                                                        <label for="pending_status_msg"/>
+                                                    </div>
+                                                    <div class="text-muted">
+                                                        Message to be displayed
+                                                        inside Seller profile
+                                                        when seller account is
+                                                        in Pending state
+                                                    </div>
+                                                    <div>
+                                                        <field name="pending_status_msg"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                        <div class="col-12 col-lg-6 o_setting_box"
+                                             id="banner">
+                                            <div style="color: #7132a8; font-size:20px;">
+                                                Seller Landing Page Banner
+                                            </div>
+                                            <div class="o_setting_right_pane">
+                                                <div>
+                                                    <div>
+                                                        <label for="image"/>
+                                                    </div>
+                                                    <div class="text-muted">
+                                                        Banner for Seller
+                                                        landing page
+                                                    </div>
+                                                    <div>
+                                                        <field name="image"
+                                                               widget="image"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-start">
+                                    </div>
+                                </page>
+                            </notebook>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+<!--    Configuration menu-->
+    <menuitem id="configuration_root" parent="seller_root"
+              name="Configuration" sequence="49"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin,multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              action="vendor_dashboard_action"/>
+<!--    Settings menu-->
+    <menuitem id="seller_settings" parent="configuration_root"
+              name="Settings" sequence="51"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+              action="action_settings"/>
+</odoo>

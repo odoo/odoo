@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Social media Action  -->
+    <record id="social_media_action" model="ir.actions.act_window">
+        <field name="name">Marketplace Social Media</field>
+        <field name="res_model">social.media</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!--    Menu for social media-->
+    <menuitem id="social_media" parent="configuration_root"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+              name="Social Media" sequence="57"
+              action="social_media_action"/>
+</odoo>

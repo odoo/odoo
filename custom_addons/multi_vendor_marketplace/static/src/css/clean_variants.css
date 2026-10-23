@@ -1,0 +1,127 @@
+/* Clean styling for product variant buttons to match the image */
+
+/* Base styles for the variant container - remove background */
+.js_add_cart_variants {
+    padding: 0 !important;
+    border: none !important;
+    background-color: transparent !important;
+    margin-bottom: 20px !important;
+    border-radius: 0 !important;
+}
+
+/* Attribute group layout - make it flex to show label on left and options on right */
+.variant_attribute,
+.js_add_cart_variants > div {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+    margin-bottom: 15px !important;
+    padding: 0 !important;
+}
+
+/* Attribute group heading style - gray text, left aligned */
+.js_add_cart_variants .attribute_name,
+.variant_attribute > strong, 
+.variant_attribute > div:first-child,
+.js_add_cart_variants .attribute-name,
+.js_add_cart_variants div:first-child:not(.css_attribute_color) {
+    font-weight: normal !important;
+    font-size: 14px !important;
+    color: #666 !important;
+    min-width: 80px !important;
+    margin-right: 10px !important;
+    flex: 0 0 auto !important;
+    padding: 8px 0 !important;
+    background: none !important;
+}
+
+/* Container for buttons - flex layout */
+.variant_attribute > ul,
+.variant_attribute > div:not(:first-child),
+.js_add_cart_variants .attribute-values {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    flex: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+/* Button container reset */
+.js_add_cart_variants .css_attribute_color,
+.js_add_cart_variants li,
+.js_add_cart_variants label {
+    margin: 0 8px 8px 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    outline: none !important;
+}
+
+/* Remove ALL extra decorations */
+.js_add_cart_variants *::before,
+.js_add_cart_variants *::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Button content styling - match the image exactly */
+.js_add_cart_variants .css_attribute_color span,
+.js_add_cart_variants .variant-button-content,
+.js_add_cart_variants label > div,
+.js_add_cart_variants label > span {
+    display: inline-block !important;
+    padding: 6px 12px !important; /* Default padding */
+    border: 1px solid #ddd !important; /* Default border */
+    border-radius: 4px !important;
+    min-width: 45px !important;
+    text-align: center !important;
+    font-size: 13px !important;
+    font-weight: normal !important;
+    color: #333 !important;
+    background-color: white !important;
+    /* transition: all 0.2s ease !important; */ /* Removed transition */
+    box-shadow: none !important;
+    position: relative !important;
+    box-sizing: border-box !important; /* Added for consistent sizing */
+}
+
+/* Selected state styling */
+.js_add_cart_variants .css_attribute_color.active span,
+.js_add_cart_variants .active .variant-button-content,
+.js_add_cart_variants .active label > div,
+.js_add_cart_variants .active label > span,
+.js_add_cart_variants li.active > *,
+.js_add_cart_variants label.active > * {
+    border: 2px solid #ff7300 !important; /* Thicker orange border for active */
+    color: #ff7300 !important;
+    font-weight: normal !important;
+    padding: 5px 11px !important; /* Adjusted padding to compensate for thicker border */
+    background-color: white !important; /* Ensure background remains white */
+    box-sizing: border-box !important; /* Added for consistent sizing */
+}
+
+/* Hide all inputs */
+.js_add_cart_variants input {
+    position: absolute !important;
+    opacity: 0 !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Disabled state */
+.js_add_cart_variants .css_not_available span,
+.js_add_cart_variants .css_not_available > * {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    border-color: #eee !important;
+}
