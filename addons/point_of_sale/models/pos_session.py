@@ -231,7 +231,10 @@ class PosSession(models.Model):
             '|', ('date_end', '=', False), ('date_end', '>=', today)]
 
         pricelist_item = self.env['product.pricelist.item'].search(pricelist_item_domain)
-        pricelist = pricelist_item.pricelist_id
+        # Resend the pricelists only if a rule changed since the PoS loaded them, to keep its order
+        data_date = fields.Datetime.to_datetime(self.env.context.get('pos_data_server_date'))
+        changed_items = pricelist_item.filtered(lambda item: not data_date or item.write_date > data_date)
+        pricelist = changed_items.pricelist_id
 
         return {
             'product.pricelist.item': pricelist_item.read(pricelist_item_fields, load=False),
