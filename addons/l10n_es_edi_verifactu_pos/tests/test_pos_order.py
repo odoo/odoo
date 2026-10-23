@@ -145,7 +145,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
 
         self.assertRecordValues(order, [{
             'l10n_es_edi_verifactu_state': 'accepted',
-            'l10n_es_edi_verifactu_qr_code': f'/report/barcode/?barcode_type=QR&value=https%3A%2F%2Fprewww2.aeat.es%2Fwlpl%2FTIKE-CONT%2FValidarQR%3Fnif%3DA39200019%26numserie%3D{self.basic_config.id}%252F000001%26fecha%3D30-12-2024%26importe%3D121.00&barLevel=M&width=180&height=180',
+            'l10n_es_edi_verifactu_qr_code': f'https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?nif=A39200019&numserie={self.basic_config.id}%2F000001&fecha=30-12-2024&importe=121.00',
         }])
 
         order_document = order.l10n_es_edi_verifactu_document_ids
@@ -237,9 +237,13 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         # The Veri*Factu document was created for the invoice and not the document
         self.assertEqual(order.sequence_number, 0)
         invoice = order.account_move
+        invoice_document = invoice.l10n_es_edi_verifactu_document_ids._get_last('submission')
         self.assertRecordValues(order, [{
             'l10n_es_edi_verifactu_document_ids': [],
-            'l10n_es_edi_verifactu_qr_code': invoice.l10n_es_edi_verifactu_qr_code,
+            # The order's QR code must be the raw AEAT URL (re-encoded into a new QR on the
+            # receipt), not invoice.l10n_es_edi_verifactu_qr_code (the `/report/barcode` image
+            # proxy URL used as an `<img src>` on the invoice PDF).
+            'l10n_es_edi_verifactu_qr_code': invoice_document._get_qr_code_url(),
         }])
 
         # Test receipt generation
