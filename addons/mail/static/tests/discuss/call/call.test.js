@@ -36,6 +36,7 @@ import {
     mockUserAgent,
     queryFirst,
     test,
+    tick,
     waitUntil,
 } from "@odoo/hoot";
 import {
@@ -803,6 +804,65 @@ test("Cross tab calls: opening the fullscreen URL of the hosted call does not le
     await openDiscuss(channelId);
     await contains(".o-mail-Meeting .o-discuss-Call");
     await waitForSteps([]);
+});
+
+test("Cross tab calls: opening the fullscreen URL waits for the host tab to answer", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        default_display_mode: "video_full_screen",
+        name: "Meeting",
+    });
+    const sessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].search([
+            ["channel_id", "=", channelId],
+        ])[0],
+        channel_id: channelId,
+    });
+    onRpc("/mail/rtc/channel/join_call", () => asyncStep("join_call"));
+    const broadcastChannel = new BroadcastChannel("call_sync_state");
+    broadcastChannel.onmessage = (event) => {
+        if (event.data.type === CROSS_TAB_CLIENT_MESSAGE.INIT) {
+            asyncStep("init");
+        }
+        if (event.data.type === CROSS_TAB_CLIENT_MESSAGE.LEAVE) {
+            asyncStep("leave");
+        }
+    };
+    redirect("?fullscreen=1");
+    const env = await start();
+    await waitForSteps(["init"]);
+    await openDiscuss(channelId);
+    await waitUntil(() => env.services["mail.store"].discuss.hasRestoredThread);
+    await tick();
+    broadcastChannel.postMessage({
+        type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
+        hostedChannelId: channelId,
+        hostedSessionId: sessionId,
+        changes: { [sessionId]: { is_deaf: false, is_muted: false } },
+    });
+    await contains(".o-mail-Meeting .o-discuss-Call");
+    await waitForSteps([]);
+});
+
+test("Cross tab calls: opening the fullscreen URL joins when no tab hosts the call", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        default_display_mode: "video_full_screen",
+        name: "Meeting",
+    });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].search([
+            ["channel_id", "=", channelId],
+        ])[0],
+        channel_id: channelId,
+    });
+    onRpc("/mail/rtc/channel/join_call", () => asyncStep("join_call"));
+    redirect("?fullscreen=1");
+    await start();
+    await openDiscuss(channelId);
+    await waitForSteps([]);
+    await advanceTime(2000);
+    await waitForSteps(["join_call"]);
 });
 
 test("automatically cancel incoming call after some time", async () => {

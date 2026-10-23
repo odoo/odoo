@@ -12,6 +12,7 @@ import { reactive, toRaw } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 import { pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
 import { loadBundle, loadJS } from "@web/core/assets";
@@ -313,6 +314,7 @@ export class Rtc extends Record {
     _remotelyHostedSessionId;
     _remotelyHostedChannelId;
     _crossTabTimeoutId;
+    _crossTabInitDeferred = new Deferred();
     /** @type {number} count of how many times the p2p service attempted a connection recovery */
     _p2pRecoveryCount = 0;
     upgradeConnectionDebounce = debounce(
@@ -415,6 +417,7 @@ export class Rtc extends Record {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
         }
+        browser.setTimeout(() => this._crossTabInitDeferred.resolve(), 2000);
         /**
          * @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer}
          */
@@ -1059,6 +1062,7 @@ export class Rtc extends Record {
                 this._remotelyHostedChannelId = hostedChannelId;
                 this._refreshCrossTabTimeout();
                 this.updateSessionInfo(changes);
+                this._crossTabInitDeferred.resolve();
                 return;
             case CROSS_TAB_HOST_MESSAGE.CLOSE: {
                 if (this._remotelyHostedSessionId !== hostedSessionId) {
