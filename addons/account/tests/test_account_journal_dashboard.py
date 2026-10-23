@@ -314,6 +314,48 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         self.assertEqual(dashboard_data['nb_misc_operations'], 0)
         self.assertEqual(dashboard_data['account_balance'], (bank_journal.currency_id or self.env.company.currency_id).format(100))
 
+    def test_bank_journal_dashboard_with_empty_statement(self):
+        """
+        Test that statements without lines are ignored by the dashboard: they have no
+        date nor first_line_index (both are computed from the lines), so they must not
+        be picked as the journal's last statement nor alter the running balance.
+
+        Statements without lines but linked to a journal typically come from databases
+        migrated from versions where the journal was a regular field and the statement
+        could be created empty (e.g. only to attach the monthly PDF of the bank).
+        """
+        bank_journal = self.company_data['default_journal_bank'].copy()
+        statement = self.env['account.bank.statement'].create({
+            'name': 'January statement',
+            'journal_id': bank_journal.id,
+            'balance_end_real': 100.0,
+            'line_ids': [Command.create({
+                'journal_id': bank_journal.id,
+                'date': '2019-01-31',
+                'payment_ref': 'deposit',
+                'amount': 100.0,
+            })],
+        })
+        empty_statement = self.env['account.bank.statement'].create({
+            'name': 'Empty statement holding only the bank PDF',
+            'balance_end_real': 999.0,
+        })
+        # Simulate a statement coming from a migrated database: journal_id is computed
+        # from the lines in recent versions, so it can only be set on an empty
+        # statement at SQL level.
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE account_bank_statement SET journal_id = %s, company_id = %s WHERE id = %s",
+            [bank_journal.id, bank_journal.company_id.id, empty_statement.id],
+        )
+        self.env.invalidate_all()
+
+        self.assertEqual(bank_journal.last_statement_id, statement)
+        dashboard_data = bank_journal._get_journal_dashboard_data_batched()[bank_journal.id]
+        currency = bank_journal.currency_id or self.env.company.currency_id
+        self.assertEqual(dashboard_data['account_balance'], currency.format(100))
+        self.assertEqual(dashboard_data['last_balance'], currency.format(100))
+
     def test_bank_journal_different_currency(self):
         """Test that the misc operations amount on the dashboard is correct
         for a bank account in another currency."""
