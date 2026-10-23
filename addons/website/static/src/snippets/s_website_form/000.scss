@@ -25,12 +25,12 @@
             flex-basis: 33%;
 
             // col-md-6
-            @include media-breakpoint-down(lg) {
+            @media (max-width: 991.98px) { /* media-breakpoint-down(lg) */
                 flex-basis: 50%;
             }
 
             // col-12
-            @include media-breakpoint-down(md) {
+            @media (max-width: 767.98px) { /* media-breakpoint-down(md) */
                 flex-basis: 100%;
             }
         }

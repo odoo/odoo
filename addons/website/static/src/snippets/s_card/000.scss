@@ -56,7 +56,7 @@
         >.o_card_img_wrapper {
             flex-shrink: 0;
 
-            @include media-breakpoint-up(lg) {
+            @media (min-width: 992px) { /* media-breakpoint-up(lg) */
                 width: var(--card-img-size-h);
             }
         }

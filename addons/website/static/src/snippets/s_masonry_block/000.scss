@@ -13,7 +13,7 @@
     .container-fluid > .row {
         flex-flow: row nowrap;
 
-        @include media-breakpoint-down(lg) {
+        @media (max-width: 991.98px) { /* media-breakpoint-down(lg) */
             flex-flow: column nowrap;
         }
 
@@ -26,7 +26,7 @@
                 min-height: 100%;
                 margin: 0;
 
-                @include media-breakpoint-down(md) {
+                @media (max-width: 767.98px) { /* media-breakpoint-down(md) */
                     flex-flow: column nowrap;
                 }
 
@@ -68,13 +68,13 @@ html[data-no-flex] .s_masonry_block:not([data-vcss]) {
         @include clearfix;
     }
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) { /* media-breakpoint-up(md) */
         .row .row > div {
             height: 50%;
         }
     }
 
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) { /* media-breakpoint-up(lg) */
         height: 0px; // hack to force height chain
         &.s_ratio_2_1 {
             position: relative;

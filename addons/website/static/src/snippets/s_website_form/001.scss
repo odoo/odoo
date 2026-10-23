@@ -55,7 +55,7 @@
     };
 
     .s_website_form_label {
-        @include media-breakpoint-down(sm) {
+        @media (max-width: 575.98px) { /* media-breakpoint-down(sm) */
             width: auto !important;
         }
     }
@@ -144,7 +144,7 @@
     .s_website_form_description_wrap {
         @include s_website_form_field_description_position(wrap);
     }
-    @include media-breakpoint-down(md) {
+    @media (max-width: 767.98px) { /* media-breakpoint-down(md) */
         .datetimepicker-input{
             caret-color: transparent;
         }
