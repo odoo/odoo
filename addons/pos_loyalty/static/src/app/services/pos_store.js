@@ -224,24 +224,25 @@ patch(PosStore.prototype, {
             if (isDiscountCode) {
                 return "";
             }
-            result = await this.data.call("loyalty.card", "get_card_status", [
-                code,
-                this.config.id,
-            ]);
-            if (!result["loyalty.card"].length) {
+            result = await this.data.callRelated(
+                "loyalty.card",
+                "get_card_data",
+                [code, this.config.id],
+                {},
+                true,
+                true
+            );
+            card = result?.["loyalty.card"]?.[0];
+            if (!card) {
                 return _t("That coupon is invalid (%s).", code);
             }
-            const payload = { "loyalty.card": result["loyalty.card"] };
-            this.data.synchronizeServerDataInIndexedDB(payload);
-            this.models.loadConnectedData(payload);
-            card = this.models["loyalty.card"].get(result["loyalty.card"][0].id);
         }
 
-        if (card?.isExpired()) {
+        if (card.isExpired()) {
             return _t("That card has expired (%s).", code);
         }
 
-        if (result && card?.program_id?.program_type === "gift_card" && !result.has_source_order) {
+        if (result && card.program_id?.program_type === "gift_card" && !result.has_source_order) {
             const confirmed = await ask(this.dialog, {
                 title: _t("Unpaid gift card"),
                 body: _t(

@@ -63,6 +63,16 @@ class LoyaltyCard(models.Model):
             'has_source_order': card._has_source_order() if in_config else False,
         }
 
+    @api.model
+    def get_card_data(self, code, config_id):
+        config = self.env['pos.config'].browse(config_id)
+        card = self.search([('code', '=', code)], limit=1)
+        in_config = card.program_id.id in config._get_program_ids().ids
+        vals = card.read(self._load_pos_data_fields(config_id), load=False) if in_config else []
+        if vals:
+            vals[0]['has_source_order'] = card._has_source_order()
+        return {'loyalty.card': vals}
+
     def _get_or_create_pos_card(self, program, partner_id=False, code=False, expiration_date=False, source_order=False):
         """
         Get, or create if needed, the loyalty card a POS funding line targets.
