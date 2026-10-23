@@ -315,6 +315,10 @@ class StockMove(models.Model):
             self.env['stock.move.line'].create(move_lines_to_create)
         else:
             for move in moves_remaining:
+                if move._should_track_kit_product():
+                    qty = move.product_uom_qty
+                    move._update_reserved_quantity(qty, move.location_id, strict=False)
+                    continue
                 for line in lines_data[move.product_id.id]['order_lines']:
                     for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
                         qty = self._get_lot_line_qty(line, move, lines_data)
@@ -326,3 +330,6 @@ class StockMove(models.Model):
 
     def _get_lot_line_qty(self, line, move, lines_data):
         return 1 if line.product_id.tracking == 'serial' else abs(line.qty)
+
+    def _should_track_kit_product(self):
+        return False
