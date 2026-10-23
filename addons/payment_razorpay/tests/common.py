@@ -37,12 +37,14 @@ class RazorpayCommon(PaymentCommon):
         cls.payment_data = {
             "id": cls.payment_id,
             "description": cls.reference,
+            "notes": {"reference": cls.reference},
             "status": "captured",
             "method": "upi",
         }
         cls.payment_fail_data = {
             "id": "pay_987",
             "description": cls.reference,
+            "notes": {"reference": cls.reference},
             "status": "failed",
             "method": "netbanking",
         }
@@ -54,11 +56,12 @@ class RazorpayCommon(PaymentCommon):
         cls.payment_pending_data = {
             "id": cls.payment_id,
             "description": cls.reference,
+            "notes": {"reference": cls.reference},
             "status": "pending",
         }
         cls.refund_data = {"id": cls.refund_id, "payment_id": cls.payment_id, "amount": cls.amount}
         cls.webhook_payment_data_signature = (
-            "2a7e2f1f346e5fa1d907a387e77d3cab644ede98cf478b502ad0b100647e2cd7"
+            "0a0407fbd48e73e1cddf1167261bc9981198265a5290181bf97b4a6ca7e5c322"
         )
         cls.webhook_payment_data = {
             "event": "payment.captured",
