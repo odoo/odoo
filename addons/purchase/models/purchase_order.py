@@ -1344,7 +1344,7 @@ class PurchaseOrder(models.Model):
         # create or update the activity
         activity = self.env['mail.activity'].search([
             ('summary', '=', _('Date Updated')),
-            ('res_model_id', '=', 'purchase.order'),
+            ('res_model', '=', 'purchase.order'),
             ('res_id', '=', self.id),
             ('user_id', '=', self.user_id.id)], limit=1)
         if activity:

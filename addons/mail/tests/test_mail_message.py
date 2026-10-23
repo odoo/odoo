@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import models
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models import mail_message as mail_message_module
 from odoo.addons.mail.tests import common
@@ -67,10 +68,9 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.assertEqual(messages.search(domain, limit=100), accessible)
         self.assertEqual(messages.sudo().search(domain, limit=100), messages)
 
-        Message = self.registry[messages._name]
         with (
             patch.object(mail_message_module, 'PREFETCH_MAX', 3),
-            patch.object(Message, '_search', autospec=True, side_effect=Message._search) as search_func,
+            patch.object(models.BaseModel, '_search', autospec=True, side_effect=models.BaseModel._search) as search_func,
         ):
             self.assertEqual(messages.search(domain, limit=100), accessible)
             self.assertGreaterEqual(search_func.call_count, 4)

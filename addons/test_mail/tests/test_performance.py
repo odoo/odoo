@@ -1393,7 +1393,11 @@ class TestMailAccessPerformance(BaseMailPerformance):
         self.env.transaction.invalidate_access_cache()
         profile = self.profile() if self.warm else nullcontext()
         with self.assertQueryCount(employee=5), profile:
-            found = self.activities.with_env(self.env).search([('summary', 'ilike', 'TestActivity')])
+            found = self.activities.with_env(self.env).search([
+                # 'summary' has restricted allow_sudo_search
+                ('res_model', 'in', self.activities.mapped('res_model')),
+                ('summary', 'ilike', 'TestActivity'),
+            ])
         self.assertEqual(found, self.activities - self.activities_emp_nope)
 
     @users('employee')
@@ -1423,8 +1427,14 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # recheck condition: 1
         profile = self.profile() if self.warm else nullcontext()
         with self.assertQueryCount(employee=6), profile:
-            found = self.messages.with_env(self.env).search([('body', 'ilike', 'Posting on ')])
+            found_restriced = self.messages.with_env(self.env).search([
+                # 'body' has restricted allow_sudo_search
+                ('model', 'in', self.messages.mapped('model')),
+                ('body', 'ilike', 'Posting on '),
+            ])
+        found = self.messages.with_env(self.env).search([('body', 'ilike', 'Posting on ')])
         self.assertEqual(found, self.messages - self.messages_emp_nope)
+        self.assertLessEqual(found_restriced, found)
 
 
 @tagged('mail_performance', 'mail_store', 'post_install', '-at_install')
