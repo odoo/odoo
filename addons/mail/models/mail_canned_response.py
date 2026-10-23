@@ -72,6 +72,24 @@ class MailCannedResponse(models.Model):
     def _unlink_broadcast(self):
         self._broadcast(delete=True)
 
+    @api.model
+    def _update_last_used(self, canned_response_ids):
+        canned_response_ids = tuple(cid for cid in canned_response_ids if isinstance(cid, int))
+        if not canned_response_ids:
+            return
+        # Avoid serialization errors since last used update is not
+        # essential and should not block message post.
+        self.env.cr.execute("""
+            UPDATE mail_canned_response SET last_used=%(last_used)s
+            WHERE id IN (
+                SELECT id from mail_canned_response WHERE id IN %(ids)s
+                FOR NO KEY UPDATE SKIP LOCKED
+            )
+        """, {
+            'last_used': fields.Datetime.now(),
+            'ids': canned_response_ids,
+        })
+
     def _broadcast(self, /, *, delete=False):
         stores = Store.Stores()
         for canned_response in self:

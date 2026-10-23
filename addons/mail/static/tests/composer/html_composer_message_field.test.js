@@ -17,6 +17,7 @@ import {
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
+    getService,
     makeMockServer,
     mockService,
     mountView,
@@ -173,21 +174,61 @@ test("mention a partner", async () => {
     const editable = queryOne(`.odoo-editor-editable`);
     setSelection({ anchorNode: editable.firstChild, anchorOffset: 0 });
     await htmlInsertText(htmlEditor, "@");
-    expect(".overlay .o-mail-MentionList input[placeholder='Search for a user...']").toBeFocused();
-    expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
-
-    await press("a");
-    await waitFor(".overlay .o-mail-NavigableList .o-mail-NavigableList-item");
+    await expect.waitForSteps(["get_mention_suggestions: "]);
+    await htmlInsertText(htmlEditor, "a");
+    await expect.waitForSteps(["get_mention_suggestions: a"]);
+    await waitFor(".overlay .o-mail-NavigableList .o-mail-NavigableList-item:count(1)");
     expect(queryAllTexts(".overlay .o-mail-NavigableList .o-mail-NavigableList-item")).toEqual([
         "Mitchell Admin",
     ]);
-    expect.verifySteps(["get_mention_suggestions: a"]);
 
     await press("enter");
     await animationFrame();
     expect(getContent(editable)).toBe(
-        `<p>\uFEFF<a href="/odoo/res.partner/${serverState.partnerId}" class="o_mail_redirect" data-oe-id="${serverState.partnerId}" data-oe-model="res.partner" target="_blank" contenteditable="false">@Mitchell Admin</a>\uFEFF[]</p>`
+        `<p>\uFEFF<a href="/odoo/res.partner/${serverState.partnerId}" class="o_mail_redirect" data-oe-id="${serverState.partnerId}" data-oe-model="res.partner" target="_blank" contenteditable="false">@Mitchell Admin</a>\uFEFF&nbsp;[]</p>`
     );
+});
+
+test("send the canned responses inserted", async () => {
+    onRpc("mail.compose.message", "action_send_mail", ({ kwargs }) => {
+        expect.step(`action_send_mail: ${kwargs.context.canned_response_ids}`);
+        return { type: "ir.actions.act_window_close" };
+    });
+    mailModels.MailComposeMessage._views = {
+        "form,false": `
+        <form js_class="mail_composer_form">
+            <field name="body" type="html" widget="html_composer_message"/>
+            <footer>
+                <button string="Log" name="action_send_mail" type="object" class="o_mail_send"/>
+            </footer>
+        </form>`,
+    };
+    const pyEnv = await startServer();
+    const cannedResponseId = pyEnv["mail.canned.response"].create({
+        source: "hello",
+        substitution: "Hello, how may I help you?",
+    });
+    const composerId = pyEnv["mail.compose.message"].create({
+        body: "<p><br></p>",
+        model: "res.partner",
+        res_ids: JSON.stringify([serverState.partnerId]),
+    });
+    await start();
+    await getService("action").doAction({
+        res_id: composerId,
+        res_model: "mail.compose.message",
+        target: "new",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    await waitFor(".modal .odoo-editor-editable");
+    const editable = queryOne(".modal .odoo-editor-editable");
+    setSelection({ anchorNode: editable.firstChild, anchorOffset: 0 });
+    await htmlInsertText(htmlEditor, "::");
+    await click(".o-mail-NavigableList-item:text('hello Hello, how may I help you?')");
+    await mailContains(".modal .odoo-editor-editable:contains('Hello, how may I help you?')");
+    await click(".modal .o_mail_send");
+    await expect.waitForSteps([`action_send_mail: ${cannedResponseId}`]);
 });
 
 describe("Remove attachments", () => {

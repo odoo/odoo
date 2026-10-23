@@ -34,100 +34,6 @@ export const SUGGESTION_DELIMITERS = Object.freeze({
  *   | import("@mail/core/common/store_plugin").SpecialMention} Suggestion
  */
 
-/**
- * Maps raw suggestion records to navigable list option objects for all suggestion types.
- *
- * @param {string} type
- * @param {Suggestion[]} suggestions
- * @param {Object} [params]
- * @param {import("models").Thread} [params.thread] The thread where the suggestion is being
- *   composed. Used e.g. to resolve partner display names in context and stored on the resulting
- *   Option so that consumers (insertion handlers, mention templates) can access it.
- */
-export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
-    const classList = "o-mail-Composer-suggestion";
-    switch (type) {
-        case "Partner":
-            return {
-                optionTemplate: "mail.Composer.suggestionPartner",
-                options: suggestions.map((suggestion) => {
-                    if (suggestion.isSpecial) {
-                        return {
-                            ...suggestion,
-                            group: 3,
-                            optionTemplate: "mail.Composer.suggestionSpecial",
-                            classList,
-                        };
-                    }
-                    if (suggestion?.Model?.getName?.() === "res.role") {
-                        return {
-                            group: 2,
-                            label: suggestion.name,
-                            role: suggestion,
-                            thread,
-                            optionTemplate: "mail.Composer.suggestionRole",
-                            classList,
-                        };
-                    }
-                    return {
-                        group: 1,
-                        label: (
-                            thread?.getPersonaName(suggestion) ||
-                            suggestion.displayName ||
-                            suggestion.email ||
-                            ""
-                        ).trim(),
-                        partner: suggestion,
-                        thread,
-                        classList,
-                    };
-                }),
-            };
-        case "ChannelCommand":
-            return {
-                optionTemplate: "mail.Composer.suggestionChannelCommand",
-                options: suggestions.map((suggestion) => ({
-                    label: suggestion.name,
-                    help: suggestion.help,
-                    classList,
-                })),
-            };
-        case "mail.canned.response":
-            return {
-                optionTemplate: "mail.Composer.suggestionCannedResponse",
-                options: suggestions.map((suggestion) => ({
-                    cannedResponse: suggestion,
-                    label: suggestion.substitution,
-                    source: suggestion.source,
-                    title: suggestion.substitution,
-                    classList,
-                })),
-            };
-        default:
-            return { options: [] };
-    }
-}
-
-/**
- * @param {Option} option
- * @param {Object} [params]
- * @param {import("models").Thread} [params.thread] The thread being viewed by the
- *   user, needed to generate mention links that point back to the right record.
- */
-export function makeMentionFromOption(option, { thread } = {}) {
-    let inlineElement;
-    if (option.partner) {
-        inlineElement = generatePartnerMentionElement(option.partner, { thread });
-    } else if (option.isSpecial) {
-        inlineElement = generateSpecialMentionElement(option.label);
-    } else if (option.role) {
-        inlineElement = generateRoleMentionElement(option.role);
-    } else {
-        inlineElement = document.createTextNode(option.label);
-    }
-    return inlineElement;
-}
-
 /** Suggests what can follow a delimiter typed in the editable (e.g. `@` for a partner). */
 export class MailSuggestionPlugin extends Plugin {
     static id = "suggestion";
@@ -153,10 +59,10 @@ export class MailSuggestionPlugin extends Plugin {
     abortController;
     /**
      * @type {{
-     *   getAncestors: () => Readonly<Record<string, any>>,
+     *   getAncestors?: () => Readonly<Record<string, any>>,
      *   getComposerType: () => "message"|"note"|false|undefined,
-     *   getSuggestionPosition: () => string,
-     *   getSuggestionTarget: () => HTMLElement|null,
+     *   getSuggestionPosition?: () => string,
+     *   getSuggestionTarget?: () => HTMLElement|null,
      *   getThread: () => import("models").Thread|null,
      *   onInsertSuggestion: (option: Option) => void,
      * }}
@@ -205,7 +111,7 @@ export class MailSuggestionPlugin extends Plugin {
                 positionOptions: {
                     // not the editable's scroll container, which is inside the target
                     container: this.document.documentElement,
-                    position: this.deps.getSuggestionPosition(),
+                    position: this.deps.getSuggestionPosition?.() ?? "bottom-start",
                     rememberPosition: false,
                 },
             },
@@ -221,9 +127,7 @@ export class MailSuggestionPlugin extends Plugin {
             () => [this.search.results, this.search.loading, this.search.searchTerm],
             (results, loading, searchTerm) => {
                 const { optionTemplate, options } = results
-                    ? mapSuggestionsToOptions(results.type, results.suggestions, {
-                          thread: this.deps.getThread(),
-                      })
+                    ? this.mapSuggestionsToOptions(results.type, results.suggestions)
                     : { options: [] };
                 // raw: the list sorts its options in place while rendering
                 Object.assign(this.listProps, {
@@ -283,7 +187,7 @@ export class MailSuggestionPlugin extends Plugin {
         }
         const supportedDelimiters = this.services["mail.suggestion"].getSupportedDelimiters(
             this.deps.getThread(),
-            this.deps.getAncestors()
+            this.deps.getAncestors?.()
         );
         for (const candidatePosition of candidatePositions) {
             if (candidatePosition < 0 || candidatePosition >= text.length) {
@@ -292,13 +196,11 @@ export class MailSuggestionPlugin extends Plugin {
 
             const findAppropriateDelimiter = () => {
                 let goodCandidate;
-                for (const [delimiter, allowedPosition, minCharCountAfter] of supportedDelimiters) {
+                for (const [delimiter, allowedPosition] of supportedDelimiters) {
                     if (
                         text.substring(candidatePosition).startsWith(delimiter) && // delimiter is used
                         (allowedPosition === undefined || allowedPosition === candidatePosition) && // delimiter is allowed position
-                        (minCharCountAfter === undefined ||
-                            start - candidatePosition - delimiter.length + 1 > minCharCountAfter) && // delimiter is allowed (enough custom char typed after)
-                        (!goodCandidate || delimiter.length > goodCandidate) // delimiter is more specific
+                        (!goodCandidate || delimiter.length > goodCandidate.length) // delimiter is more specific
                     ) {
                         goodCandidate = delimiter;
                     }
@@ -320,7 +222,7 @@ export class MailSuggestionPlugin extends Plugin {
                 term: text.substring(candidatePosition + candidateDelimiter.length, start),
             });
             this.search.searchTerm = this.detection.term;
-            this.overlay.open({ target: this.deps.getSuggestionTarget(), props: this.listProps });
+            this.overlay.open({ target: this.deps.getSuggestionTarget?.(), props: this.listProps });
             return;
         }
         this.clearSearch();
@@ -332,7 +234,7 @@ export class MailSuggestionPlugin extends Plugin {
 
     async fetchSuggestions() {
         const thread = this.deps.getThread();
-        if (!thread || this.isDestroyed) {
+        if (this.isDestroyed) {
             return;
         }
         if (!this.services["mail.store"].self_user) {
@@ -353,10 +255,11 @@ export class MailSuggestionPlugin extends Plugin {
             }
             throw e;
         }
-        if (!this.deps.getThread() || this.isDestroyed) {
+        if (this.isDestroyed) {
             return;
         }
         const { suggestions } = this.services["mail.suggestion"].searchSuggestions(this.detection, {
+            composerType,
             thread: this.deps.getThread(),
         });
         return suggestions.length === 0 ? false : undefined;
@@ -389,12 +292,95 @@ export class MailSuggestionPlugin extends Plugin {
             focusOffset: offset,
         });
         this.deps.onInsertSuggestion(option);
-        const inlineElement = makeMentionFromOption(option, { thread: this.deps.getThread() });
+        const inlineElement = this.makeMentionFromOption(option);
         this.dependencies.dom.insert(inlineElement);
         const [anchorNode, anchorOffset] = rightPos(inlineElement);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         this.dependencies.dom.insert("\u00A0");
         this.dependencies.history.commit();
+    }
+
+    /** @param {Option} option */
+    makeMentionFromOption(option) {
+        if (option.partner) {
+            return generatePartnerMentionElement(option.partner, { thread: this.deps.getThread() });
+        }
+        if (option.isSpecial) {
+            return generateSpecialMentionElement(option.label);
+        }
+        if (option.role) {
+            return generateRoleMentionElement(option.role);
+        }
+        return this.document.createTextNode(option.label);
+    }
+
+    /**
+     * @param {string} type
+     * @param {Suggestion[]} suggestions
+     */
+    mapSuggestionsToOptions(type, suggestions) {
+        const classList = "o-mail-Composer-suggestion";
+        const thread = this.deps.getThread();
+        switch (type) {
+            case "Partner":
+                return {
+                    optionTemplate: "mail.Composer.suggestionPartner",
+                    options: suggestions.map((suggestion) => {
+                        if (suggestion.isSpecial) {
+                            return {
+                                ...suggestion,
+                                group: 3,
+                                optionTemplate: "mail.Composer.suggestionSpecial",
+                                classList,
+                            };
+                        }
+                        if (suggestion?.Model?.getName?.() === "res.role") {
+                            return {
+                                group: 2,
+                                label: suggestion.name,
+                                role: suggestion,
+                                thread,
+                                optionTemplate: "mail.Composer.suggestionRole",
+                                classList,
+                            };
+                        }
+                        return {
+                            group: 1,
+                            label: (
+                                thread?.getPersonaName(suggestion) ||
+                                suggestion.displayName ||
+                                suggestion.email ||
+                                ""
+                            ).trim(),
+                            partner: suggestion,
+                            thread,
+                            classList,
+                        };
+                    }),
+                };
+            case "ChannelCommand":
+                return {
+                    optionTemplate: "mail.Composer.suggestionChannelCommand",
+                    options: suggestions.map((suggestion) => ({
+                        label: suggestion.name,
+                        help: suggestion.help,
+                        classList,
+                    })),
+                };
+            case "mail.canned.response":
+                return {
+                    optionTemplate: "mail.Composer.suggestionCannedResponse",
+                    options: suggestions.map((suggestion) => ({
+                        cannedResponse: suggestion,
+                        label: suggestion.substitution,
+                        source: suggestion.source,
+                        title: suggestion.substitution,
+                        classList,
+                    })),
+                };
+            default:
+                return { options: [] };
+        }
     }
 
     update() {

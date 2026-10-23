@@ -6,11 +6,10 @@ import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 import { Component, proxy, signal, t, useListener, useOnChange, useProps } from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { usePosition } from "@web/core/position/position_hook";
 import { useService } from "@web/core/utils/hooks";
 
 /** @param {import("models").Store} store */
-export const optionType = (store) =>
+const optionType = (store) =>
     t.object({
         buttonClass: t.string().optional(),
         cannedResponse: t.instanceOf(store["mail.canned.response"]).optional(),
@@ -60,16 +59,12 @@ export class NavigableList extends Component {
         this.store = useService("mail.store");
         const option = optionType(this.store);
         this.props = useProps({
-            anchorRef: t.signal(t.instanceOf(HTMLElement)).optional(),
             class: t.string().optional(),
-            closeOnSelect: t.boolean().optional(true),
             isLoading: t.boolean().optional(false),
             onClose: t.function([]).optional(),
             onSelect: t.function([t.instanceOf(Event), option]),
             options: t.array(option),
             optionTemplate: t.string().optional(),
-            position: t.string().optional("bottom"),
-            rememberPosition: t.boolean().optional(),
         });
         useAncestors({ inNavigableList: true });
         this.state = proxy({
@@ -91,15 +86,6 @@ export class NavigableList extends Component {
             }
             this.close();
         });
-        // position and size, only when shown as positioning forces a layout on each render
-        usePosition(
-            () => (this.show ? this.rootRef() : null),
-            () => this.props.anchorRef?.(),
-            {
-                position: this.props.position,
-                rememberPosition: this.props.rememberPosition,
-            }
-        );
         useOnChange(
             // Open on mount and when a new set of options arrives. In particular,
             // do not re-open on unrelated re-renders after the user closed the
@@ -139,12 +125,10 @@ export class NavigableList extends Component {
     }
 
     close() {
-        if (this.props.closeOnSelect) {
-            this.state.open = false;
-            this.state.activeIndex = null;
-            if (this.props.options.length) {
-                this.props.onClose?.();
-            }
+        this.state.open = false;
+        this.state.activeIndex = null;
+        if (this.props.options.length) {
+            this.props.onClose?.();
         }
     }
 
@@ -216,6 +200,7 @@ export class NavigableList extends Component {
                 break;
             case "escape":
                 markEventHandled(ev, "NavigableList.close");
+                ev.stopPropagation();
                 this.close();
                 break;
             case "tab":
