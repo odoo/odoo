@@ -16,6 +16,7 @@ export class HierarchyArchParser {
             fieldNodes: {},
             templateDocs: {},
             xmlDoc,
+            limit: null
         };
         const fieldNextIds = {};
         const fields = models[modelName].fields;
@@ -61,6 +62,8 @@ export class HierarchyArchParser {
                 if (node.hasAttribute("label")) {
                     archInfo.label = node.getAttribute("label");
                 }
+                const limitAttr = node.getAttribute("limit");
+                archInfo.limit = limitAttr && parseInt(limitAttr, 10);
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "hierarchy");
                 const name = fieldInfo.name;
