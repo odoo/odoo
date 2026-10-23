@@ -36,19 +36,7 @@ export class PosOrderAccounting extends Base {
     }
 
     get paymentAmountInCurrency() {
-        const otherCurrencyPayments = this.payment_ids.filter(
-            (payment) => payment.foreign_currency_id
-        );
-        if (!otherCurrencyPayments.length) {
-            return formatCurrency(this.totalDue, this.config.currency_id.id);
-        }
-
-        const currency = otherCurrencyPayments[0].currency;
-        const totalOtherCurrencyAmount = otherCurrencyPayments.reduce(
-            (total, payment) => total + payment.amount_currency,
-            0
-        );
-        return formatCurrency(totalOtherCurrencyAmount, currency.id);
+        return this.orderCurrency.convertFormatted(this.totalDue);
     }
 
     /**
