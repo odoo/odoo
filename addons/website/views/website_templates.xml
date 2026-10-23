@@ -2691,8 +2691,10 @@
         </t>
     </xpath>
 
-    <!-- Add the 'flags' possibility -->
     <xpath expr="//button[contains(@t-attf-class, 'dropdown-toggle')]/span" position="before">
+        <!-- Add the 'icon' possibility -->
+        <i t-if="show_icon" class="oi me-1" data-icon="translate" role="img" aria-hidden="true"/>
+        <!-- Add the 'flags' possibility -->
         <t t-if="flags">
             <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="active_lang.name.split('/').pop()"/>
             <t t-call="website.lang_flag"
@@ -2725,6 +2727,9 @@
         <t t-if="not lg_last and not no_text">
             <span class="list-inline-item">|</span>
         </t>
+    </xpath>
+    <xpath expr="//t[@t-foreach='frontend_languages.values()']" position="before">
+        <i t-if="show_icon" class="oi list-inline-item" data-icon="translate" role="img" aria-hidden="true"/>
     </xpath>
 </template>
 
@@ -2764,6 +2769,12 @@
     </xpath>
 </template>
 
+<template id="header_language_selector_show_icon" name="Header Language Selector Icon" inherit_id="website.header_language_selector" active="False">
+    <xpath expr="//t[@id='header_language_selector_call']" position="attributes">
+        <attribute name="show_icon">True</attribute>
+    </xpath>
+</template>
+
 <template id="footer_language_selector_inline" name="Footer Language Selector Inline" inherit_id="portal.footer_language_selector" active="True">
     <xpath expr="//t[@id='language_selector_call']" position="attributes">
         <attribute name="t-call">website.language_selector_inline</attribute>
@@ -2785,6 +2796,12 @@
 <template id="footer_language_selector_no_text" name="Footer Language Selector No Text" inherit_id="portal.footer_language_selector" active="False">
     <xpath expr="//t[@id='language_selector_call']" position="attributes">
         <attribute name="no_text">True</attribute>
+    </xpath>
+</template>
+
+<template id="footer_language_selector_show_icon" name="Footer Language Selector Icon" inherit_id="portal.footer_language_selector" active="False">
+    <xpath expr="//t[@id='language_selector_call']" position="attributes">
+        <attribute name="show_icon">True</attribute>
     </xpath>
 </template>
 
