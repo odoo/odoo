@@ -58,6 +58,7 @@ class ResPartner(models.Model):
             ('0135', "0135 - SIA Object Identifiers"),
             ('0142', "0142 - SECETI Object Identifiers"),
             ('0151', "0151 - Australian Business Number (ABN) Scheme"),
+            ('0158', "0158 - Identification number of economic subject (ICO) (Slovakia)"),
             ('0183', "0183 - Swiss Unique Business Identification Number (UIDB)"),
             ('0184', "0184 - DIGSTORG"),
             ('0188', "0188 - Corporate Number of The Social Security and Tax Number System"),
@@ -73,6 +74,7 @@ class ResPartner(models.Model):
             ('0201', "0201 - Codice Univoco Unità Organizzativa iPA"),
             ('0202', "0202 - Indirizzo di Posta Elettronica Certificata"),
             ('0204', "0204 - Leitweg-ID"),
+            ('0205', "0205 - CODDEST (Italy)"),
             ('0208', "0208 - Numero d'entreprise / ondernemingsnummer / Unternehmensnummer"),
             ('0209', "0209 - GS1 identification keys"),
             ('0210', "0210 - CODICE FISCALE"),
@@ -86,7 +88,10 @@ class ResPartner(models.Model):
             ('0225', "0225 - FRCTC Electronic Address (France)"),
             ('0230', "0230 - National e-Invoicing Framework (Malaysia)"),
             ('0235', "0235 - UAE Tax Identification Number (TIN)"),
-            ('0240', "0240 - Register of legal persons (France)"),
+            ('0240', "0240 - Register of legal persons (Luxemborg)"),
+            ('0242', "0242 - OpenPeppol Service Provider Identification Scheme (International)"),
+            ('0245', "0245 - Tax identification number (DIČ) (Slovakia)"),
+            ('0246', "0246 - German Electronic Business Address"),
             ('9901', "9901 - Danish Ministry of the Interior and Health"),
             ('9910', "9910 - Hungary VAT number"),
             ('9913', "9913 - Business Registers Network"),
@@ -148,6 +153,11 @@ class ResPartner(models.Model):
                 raise ValidationError(_("Peppol EAS code 9955 is deprecated. Please use 0007 instead."))
             elif partner.peppol_eas == '9901':
                 raise ValidationError(_("Peppol EAS code 9901 is deprecated. Please use a different Danish EAS code instead."))
+
+            if partner.peppol_eas == '0193':
+                raise ValidationError(_("Peppol EAS code 0193 is deprecated. Please use 0208 instead."))
+            if partner.peppol_eas == '0202':
+                raise ValidationError(_("Peppol EAS code 0202 is deprecated. Please use a different Italian EAS code instead."))
 
     @api.constrains('peppol_endpoint')
     def _check_peppol_fields(self):
