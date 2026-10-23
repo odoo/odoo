@@ -65,21 +65,24 @@ export class ClosePosPopup extends Component {
         const initialState = { notes: "", payments: {} };
         if (this.pos.config.cash_control) {
             const defaultCash = this.props.default_cash_details;
+            const initialCashCount = this.pos.accessRight.canSeeExpectedCash
+                ? defaultCash.amount
+                : 0;
             initialState.payments[defaultCash.id] = {
-                counted: this.pos.formatCurrency(
-                    defaultCash.amount,
-                    this.pos.config.currency_id.id,
-                    {
-                        noSymbol: true,
-                    }
-                ),
+                counted: this.pos.formatCurrency(initialCashCount, this.pos.config.currency_id.id, {
+                    noSymbol: true,
+                }),
             };
         }
         this.props.non_cash_payment_methods.forEach((pm) => {
+            const initialPaymentCount =
+                pm.type === "cash" && !this.pos.accessRight.canSeeExpectedCash ? 0 : pm.amount || 0;
             initialState.payments[pm.id] = {
-                counted: this.pos.formatCurrency(pm.amount || 0, this.pos.config.currency_id.id, {
-                    noSymbol: true,
-                }),
+                counted: this.pos.formatCurrency(
+                    initialPaymentCount,
+                    this.pos.config.currency_id.id,
+                    { noSymbol: true }
+                ),
             };
         });
         return initialState;
@@ -202,7 +205,6 @@ export class ClosePosPopup extends Component {
         return true;
     }
     async closeSession() {
-        this.pos.accessRight.resetCashier();
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.pos.pushOrdersWithClosingPopup();
         if (!syncSuccess) {
@@ -230,9 +232,13 @@ export class ClosePosPopup extends Component {
                 return this.handleClosingError(response);
             }
 
+            const canPrintReport = this.pos.accessRight.canPrintReport;
+            this.pos.accessRight.resetCashier();
             this.pos.session.state = "closed";
             try {
-                await this.pos.ticketPrinter.printSaleDetailsReceipt({ download: true });
+                if (canPrintReport) {
+                    await this.pos.ticketPrinter.printSaleDetailsReceipt({ download: true });
+                }
             } finally {
                 this.pos.router.close();
             }
