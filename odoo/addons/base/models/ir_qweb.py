@@ -357,12 +357,14 @@ import fnmatch
 import glob
 import io
 import logging
+import marshal
 import math
 import pprint
 import re
 import textwrap
 import threading
 import time
+import types
 import token
 import tokenize
 import traceback
@@ -373,6 +375,7 @@ from markupsafe import Markup, escape
 from collections import defaultdict
 from collections.abc import Buffer, Callable, Sized, Mapping, Sequence, Iterator
 from copy import deepcopy
+from importlib.util import MAGIC_NUMBER
 from itertools import count, chain
 from lxml import etree
 from dateutil.relativedelta import relativedelta
@@ -385,9 +388,10 @@ from types import FunctionType
 from urllib.parse import unquote_plus
 
 from odoo import api, models, tools
+from odoo.fields import Domain
 from odoo.modules import Manifest
 from odoo.modules.registry import _REGISTRY_CACHES
-from odoo.tools import BinaryValue, config, safe_eval, OrderedSet, frozendict, json
+from odoo.tools import SQL, BinaryValue, config, safe_eval, OrderedSet, frozendict, json
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import (
     _BLACKLIST,
@@ -1003,6 +1007,50 @@ class IrQweb(models.AbstractModel):
         """ Return the list of context keys to use for caching ``_compile``. """
         return ['lang', 'inherit_branding', 'edit_translations', 'profile', 'preserve_comments']
 
+    def _get_cache_key(self, ref: int) -> str:
+        """ Key of the compiled code of the template in `ir.cache`. """
+        # the namespaces of the caller (t-call) change the compiled code too
+        nsmap = tuple(sorted((self.env.context.get('nsmap') or {}).items(), key=lambda item: (item[0] or '', item[1])))
+        # marshalled code objects are not portable between versions of
+        # python: the entries of another version are simply not read (and
+        # do not replace the entries of this version, e.g. two servers
+        # sharing the database during a deployment)
+        return (ref, tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys()), nsmap, MAGIC_NUMBER.hex())
+
+    def _get_template_cache_version_sql(self):
+        IrUiView = self.env['ir.ui.view']
+        # version (hash) of the views of the `version_data` of each entry
+        # (`view_ids`: ids of the views of a template) and of the views
+        # inheriting from them, see `ir.cache._lookup_multi`; the entries share most of their views,
+        # each view is read and hashed only once
+        return SQL("""
+            WITH all_views AS MATERIALIZED (
+                SELECT id, inherit_id,
+                       concat_ws('|', id, inherit_id, active, write_date, md5(arch_db::text)) AS part
+                  FROM ir_ui_view
+                 WHERE id = ANY(ARRAY(SELECT jsonb_array_elements_text(version_data->'view_ids')::int FROM entry))
+                    OR inherit_id = ANY(ARRAY(SELECT jsonb_array_elements_text(version_data->'view_ids')::int FROM entry))
+            )
+            SELECT entry.key, md5(concat_ws('|', %s)) AS version
+              FROM entry
+        """, SQL(", ").join(self._get_template_cache_version_sql_parts()),
+        to_flush=[IrUiView._fields[f] for f in ('inherit_id', 'active', 'arch_db', 'write_date')])
+
+    def _get_template_cache_version_sql_parts(self):
+        """ Return the SQL expressions, on the row ``entry`` of `ir.cache`,
+        of the other sources of the compiled code, hashed with its views. """
+        return [
+            SQL("""(
+                SELECT string_agg(all_views.part, ',' ORDER BY all_views.id)
+                    FROM all_views
+                    WHERE all_views.id IN (SELECT jsonb_array_elements_text(entry.version_data->'view_ids')::int)
+                    OR all_views.inherit_id IN (SELECT jsonb_array_elements_text(entry.version_data->'view_ids')::int)
+            )""")
+        ]
+
+    def _get_template_cache_version_data(self, views):
+        return {'view_ids': views._get_inheriting_views().ids}
+
     def _get_template_info(self, template):
         return self.env['ir.ui.view']._get_cached_template_info(template)
 
@@ -1047,31 +1095,58 @@ class IrQweb(models.AbstractModel):
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        api.ormcache('ref', 'tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())', cache='templates'),
+        api.ormcache('self._get_cache_key(ref)', cache='templates'),
     )
     def _generate_code_cached(self, ref: int):
-        # The method preloads templates to put information into the transaction
-        # cache in addition to browse records. It also loads in batch the
-        # template from directives (like: t-call and t-snippet).
-        try:
-            document = self._get_template(ref)[1]
-        except Exception:  # noqa: BLE001
-            return self._generate_code_uncached(ref)
-
-        view_hash = hash(document)
-        cache_key = tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())
-
         if 'xml' in tools.config['dev_mode']:
             return self._generate_code_uncached(ref)
-        memo_key = (ref, view_hash, cache_key)
-        cache = self.env.registry._template_code__
-        code = cache.get(memo_key)
-        if code is None:
-            code = self._generate_code_uncached(ref)
-            cache[memo_key] = code
-        return code
+        key = repr(self._get_cache_key(ref))
+        if data := self.env['ir.cache']._lookup('qweb', key, self._get_template_cache_version_sql()):
+            result = self.__load_code(*marshal.loads(data))
+        else:
+            result = self._generate_code_uncached(ref, store=True)
+        self._preload_code_cached(result[2].get('calls', ()))
+        return result
 
-    def _generate_code_uncached(self, template: int | str | etree._Element):
+    def _preload_code_cached(self, calls):
+        """ Load in batch the compiled code of the called templates (and of
+        the templates they call) from `ir.cache` in the cache of
+        `_generate_code_cached`. The missing ones are compiled, with their
+        trees loaded in batch, even if they are not rendered (e.g. a `t-call`
+        in a `t-if`): they are then in `ir.cache` for the next workers. """
+        ormcache = IrQweb._generate_code_cached.__cache__
+        while calls:
+            infos = self.env['ir.ui.view']._preload_views(list(calls))
+            keys = {
+                key: info['ref'] for call in calls
+                if (info := infos.get(_id_or_xmlid(call))) and info['ref']
+                and ormcache.get_value(self, info['ref']) is None
+                and (key := repr(self._get_cache_key(info['ref'])))
+            }
+            values = self.env['ir.cache']._lookup_multi('qweb', keys, version=self._get_template_cache_version_sql())
+            missing_refs = [ref for ref, value in zip(keys.values(), values) if value is None]
+            try:
+                self._preload_trees(missing_refs)
+            except Exception as e:  # noqa: BLE001
+                # a broken view fails the whole batch: each template loads its
+                # own tree when compiled, and the error is only raised (as a
+                # QWebError) if the template is rendered, so it is not a
+                # warning here (e.g. a broken studio view, or a t-call in a
+                # t-if that is never rendered)
+                missing = {ref: infos[ref]['xmlid'] for ref in missing_refs}
+                _logger.info("Failed to preload the called templates %s: %s", missing, e)
+            calls = OrderedSet()
+            for (key, ref), value in zip(keys.items(), values):
+                if value is None:
+                    result = self._generate_code_uncached(ref, store=True)
+                else:
+                    result = self.__load_code(*marshal.loads(value))
+                ormcache.add_value(self, ref, cache_value=result)
+                calls.update(result[2].get('calls', ()))
+
+    def _generate_code_uncached(self, template: int | str | etree._Element, store=False):
+        """ Compile the template; with ``store``, add the compiled code of a
+        template of the database (``int`` or ``str``) in `ir.cache`."""
         assert isinstance(self, IrQweb)
         ref = self._get_template_info(template)['id'] if isinstance(template, (int, str)) else None
 
@@ -1096,6 +1171,19 @@ class IrQweb(models.AbstractModel):
             "    return template_functions",
         ])
         compiled = compile(wrap_code, f"<{ref}>", 'exec')
+        if store and ref:
+            view = self.env['ir.ui.view'].sudo().browse(ref)
+            views = view
+            while view := view.inherit_id:
+                views += view
+            self.env['ir.cache']._set__('qweb', repr(self._get_cache_key(ref)),
+                    marshal.dumps((code, options, def_name, compiled)),
+                    self._get_template_cache_version_data(views), self._get_template_cache_version_sql(),
+                )
+        return self.__load_code(code, options, def_name, compiled)
+
+    def __load_code(self, code, options, def_name, compiled):
+        assert isinstance(compiled, types.CodeType)
         globals_dict = self.__prepare_globals()
         globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
         unsafe_eval(compiled, globals_dict)
@@ -1127,6 +1215,10 @@ class IrQweb(models.AbstractModel):
         # technical information useful for generating the function. This
         # dictionary is only used when compiling the template.
         compile_context = self.env.context.copy()
+        # from the configuration, like `_prepare_environment`: not part of the
+        # key of the compiled code (see `_get_cache_key`), the context of the
+        # caller must not decide it (e.g. `t-debug` in the shared code)
+        compile_context['dev_mode'] = 'qweb' in tools.config['dev_mode']
 
         try:
             element, document, ref = self._get_template(template)
@@ -1172,6 +1264,8 @@ class IrQweb(models.AbstractModel):
             key: compile_context.get(key, False)
             for key in self._get_template_cache_keys() + ['ref', 'ref_name']
         }
+        # templates statically called, loaded in batch with the code
+        options['calls'] = self._get_called_templates(element)
 
         # generate code
         ref_name = compile_context['ref_name'] or ''
@@ -1280,8 +1374,20 @@ class IrQweb(models.AbstractModel):
     def _get_preload_attribute_xmlids(self):
         return ['t-call']
 
+    def _get_called_templates(self, tree) -> list:
+        """ Return the templates statically called by ``tree`` (from t-call
+        and the other `_get_preload_attribute_xmlids` values). """
+        return list(OrderedSet(
+            el.get(ref_name)
+            for ref_name in self._get_preload_attribute_xmlids()
+            for el in tree.xpath(f'//*[@{ref_name}]')
+            if not any(att.startswith('t-options-') or att == 't-options' or att == 't-lang' for att in el.attrib)
+            if '{' not in el.get(ref_name) and '<' not in el.get(ref_name) and '/' not in el.get(ref_name)
+        ))
+
     def _preload_trees(self, refs: Sequence[int | str]):
-        """ Preload all tree and subtree (from t-call and other '_get_preload_attribute_xmlids' values).
+        """ Preload the trees, and the views of the templates they call (from
+        t-call and other '_get_preload_attribute_xmlids' values).
 
             Returns::
 
@@ -1291,6 +1397,7 @@ class IrQweb(models.AbstractModel):
                         'ref': int | None,
                         'tree': etree | None,
                         'template': str | None,
+                        'calls': list[str] | None,
                         'error': None | MissingError
                     }
                 }
@@ -1313,23 +1420,13 @@ class IrQweb(models.AbstractModel):
             data = {
                 'tree': tree,
                 'template': etree.tostring(tree, encoding='unicode'),
+                'calls': self._get_called_templates(tree),
             }
             compile_batch[view.id].update(data)
             compile_batch[xmlid].update(data)
 
-        # preload sub template
-        ref_names = self._get_preload_attribute_xmlids()
-        sub_refs = OrderedSet()
-        for tree in trees:
-            sub_refs.update(
-                el.get(ref_name)
-                for ref_name in ref_names
-                for el in tree.xpath(f'//*[@{ref_name}]')
-                if not any(att.startswith('t-options-') or att == 't-options' or att == 't-lang' for att in el.attrib)
-                if '{' not in el.get(ref_name) and '<' not in el.get(ref_name) and '/' not in el.get(ref_name)
-            )
-        assert not any(not f for f in sub_refs), "template is required"
-        self._preload_trees(list(sub_refs))
+        # the compilation needs the views of the called templates (t-snippet)
+        self.env['ir.ui.view']._preload_views([call for data in missing_refs_values for call in data.get('calls', ())])
 
         # not found template
         for ref in missing_refs:
@@ -3066,6 +3163,7 @@ class IrQweb(models.AbstractModel):
 
         Current version only generate assets without extra, not taking care of rtl.
         """
+
         _logger.runbot('Pregenerating assets bundles')
 
         js_bundles, css_bundles, bin_bundles = self._get_bundles_to_pregenarate()
@@ -3147,7 +3245,6 @@ def render(template_name: str | int, values: dict, load: Callable[[str], tuple[e
     class MockRegistry:
         def __init__(self):
             self.db_name = None
-            self._template_code__ = LRU(_REGISTRY_CACHES['templates'])
 
     registry = MockRegistry()
 
@@ -3194,6 +3291,9 @@ def render(template_name: str | int, values: dict, load: Callable[[str], tuple[e
 
         def _get_asset_nodes(self, *args):
             raise NotImplementedError("Assets are not allowed in this rendering mode. Please use \"env['ir.qweb']._render\" method")
+
+        def _generate_code_cached(self, ref):
+            return self._generate_code_uncached(ref)
 
     class MockCr:
         def __init__(self):

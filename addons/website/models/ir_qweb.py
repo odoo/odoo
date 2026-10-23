@@ -6,7 +6,6 @@ from collections import OrderedDict
 from odoo import models
 from odoo.http import request
 from odoo.addons.website.tools import add_form_signature
-from odoo.exceptions import AccessError
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 re_translate_span = re.compile(r'<span.+?data-oe-translation-source-sha.+?>(.+?)</span>')
@@ -49,6 +48,18 @@ class IrQweb(models.AbstractModel):
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
+
+    def _get_template_cache_version_data(self, views):
+        version_data = super()._get_template_cache_version_data(views)
+        version_data['website_id'] = self.env.context.get('website_id') or None
+        return version_data
+
+    def _get_template_cache_version_sql_parts(self):
+        # the compiled code also depends on the website of `version_data`
+        self.env['website'].flush_model()
+        return super()._get_template_cache_version_sql_parts() + [SQL(
+            "(SELECT write_date FROM website WHERE id = (entry.version_data->>'website_id')::int)",
+        )]
 
     def _pre_processing_att(self, attrib):
         self._copy_translate_attributes(attrib)
@@ -124,10 +135,3 @@ class IrQweb(models.AbstractModel):
         if isinstance(atts.get('style'), str) and 'background-image' in atts['style']:
             atts['style'] = re_background_image.sub(lambda m: '%s%s' % (m[1], url_adapter(m[2])), atts['style'])
         return atts
-
-    def _can_user_modify(self, record):
-        try:
-            self.env.website._check_user_can_modify(record)
-        except AccessError:
-            return False
-        return True
