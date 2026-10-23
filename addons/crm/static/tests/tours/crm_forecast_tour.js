@@ -19,12 +19,15 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: 'Open Forecast menu',
         run: 'click',
     }, {
-        trigger: '.o_column_quick_create',
-        content: 'Wait page loading',
+        trigger: ".o_forecast_kanban_view .o_kanban_group .o_kanban_record",
+        content: "Wait for the forecast view to be loaded",
     }, {
         trigger: ".o-kanban-button-new",
         content: "click create",
         run: 'click',
+    }, {
+        trigger: ".o_kanban_quick_create .o_kanban_add",
+        content: "Wait after DOM update"
     }, {
         trigger: ".o_field_widget[name=name] input",
         content: "complete name",
