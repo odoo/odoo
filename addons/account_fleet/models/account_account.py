@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class AccountAccount(models.Model):
@@ -8,3 +8,9 @@ class AccountAccount(models.Model):
         string="Requires vehicle",
         help="Check this box if a vehicle has to be linked to the account, when creating a bill for an expense or when creating an asset.",
     )
+
+    @api.onchange('account_type')
+    def _onchange_account_type(self):
+        super()._onchange_account_type()
+        if self.is_vehicle_account and self.account_type not in ('asset_fixed', 'expense', 'expense_depreciation', 'expense_other', 'income_other'):
+            self.is_vehicle_account = False
