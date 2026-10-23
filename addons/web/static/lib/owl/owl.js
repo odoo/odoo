@@ -30,6 +30,7 @@ var owl = (() => {
     Portal: () => Portal,
     Registry: () => Registry,
     Resource: () => Resource,
+    STATUS: () => STATUS,
     Scope: () => Scope,
     Suspense: () => Suspense,
     TemplateSet: () => TemplateSet,
@@ -40,7 +41,6 @@ var owl = (() => {
     batched: () => batched,
     blockDom: () => blockDom,
     computed: () => computed,
-    config: () => config,
     effect: () => effect,
     getDefault: () => getDefault,
     getScope: () => getScope,
@@ -58,13 +58,10 @@ var owl = (() => {
     onWillStart: () => onWillStart,
     onWillUnmount: () => onWillUnmount,
     onWillUpdateProps: () => onWillUpdateProps,
-    plugin: () => plugin,
-    props: () => props,
     providePlugins: () => providePlugins,
     proxy: () => proxy,
     shallowEqual: () => shallowEqual,
     signal: () => signal,
-    status: () => status,
     t: () => types2,
     toRaw: () => toRaw,
     types: () => types2,
@@ -72,6 +69,7 @@ var owl = (() => {
     useApp: () => useApp2,
     useConfig: () => useConfig,
     useEffect: () => useEffect,
+    useImmediateEffect: () => useImmediateEffect,
     useListener: () => useListener,
     useOnChange: () => useOnChange,
     usePlugin: () => usePlugin,
@@ -124,26 +122,27 @@ var owl = (() => {
       }
     };
   }
-  var ComputationState = /* @__PURE__ */ ((ComputationState2) => {
-    ComputationState2[ComputationState2["EXECUTED"] = 0] = "EXECUTED";
-    ComputationState2[ComputationState2["STALE"] = 1] = "STALE";
-    ComputationState2[ComputationState2["PENDING"] = 2] = "PENDING";
-    return ComputationState2;
-  })(ComputationState || {});
+  var ComputationFlags = /* @__PURE__ */ ((ComputationFlags2) => {
+    ComputationFlags2[ComputationFlags2["EXECUTED"] = 0] = "EXECUTED";
+    ComputationFlags2[ComputationFlags2["STALE"] = 1] = "STALE";
+    ComputationFlags2[ComputationFlags2["PENDING"] = 2] = "PENDING";
+    ComputationFlags2[ComputationFlags2["STATE_MASK"] = 3] = "STATE_MASK";
+    ComputationFlags2[ComputationFlags2["DERIVED"] = 4] = "DERIVED";
+    ComputationFlags2[ComputationFlags2["IMMEDIATE"] = 8] = "IMMEDIATE";
+    return ComputationFlags2;
+  })(ComputationFlags || {});
   var atomSymbol = /* @__PURE__ */ Symbol("Atom");
   var observers = [];
   var immediateObservers = [];
   var currentComputation;
   var pendingDisposals = /* @__PURE__ */ new Set();
-  function createComputation(compute, isDerived, state = 1, immediate = false) {
+  function createComputation(compute, flags = 1) {
     return {
-      state,
+      flags,
       value: void 0,
       compute,
       sources: /* @__PURE__ */ new Set(),
-      observers: /* @__PURE__ */ new Set(),
-      isDerived,
-      immediate
+      observers: /* @__PURE__ */ new Set()
     };
   }
   function onReadAtom(atom) {
@@ -155,35 +154,57 @@ var owl = (() => {
   }
   function onWriteAtom(atom) {
     for (const ctx of atom.observers) {
-      if (ctx.state === 0) {
-        if (ctx.isDerived) {
+      const flags = ctx.flags;
+      if (!(flags & 3)) {
+        if (flags & 4) {
           markDownstream(ctx);
-        } else if (ctx.immediate) {
+        } else if (flags & 8) {
           immediateObservers.push(ctx);
         } else {
           observers.push(ctx);
         }
       }
-      ctx.state = 1;
-      if (ctx.isDerived && ctx.observers.size === 0) {
+      ctx.flags = flags & ~3 | 1;
+      if (flags & 4 && ctx.observers.size === 0) {
         pendingDisposals.add(ctx);
       }
     }
+    let hasError = false;
+    let error;
     if (immediateObservers.length) {
       const toRun = immediateObservers;
       immediateObservers = [];
-      for (const ctx of toRun) {
-        updateComputation(ctx);
+      for (let i = 0; i < toRun.length; i++) {
+        try {
+          updateComputation(toRun[i]);
+        } catch (e) {
+          if (!hasError) {
+            hasError = true;
+            error = e;
+          }
+        }
       }
     }
     batchProcessEffects();
+    if (hasError) {
+      throw error;
+    }
   }
   var batchProcessEffects = batched(processEffects);
   function processEffects() {
     const pending = observers;
     observers = [];
+    let hasError = false;
+    let error;
     for (let i = 0; i < pending.length; i++) {
-      updateComputation(pending[i]);
+      try {
+        updateComputation(pending[i]);
+      } catch (e) {
+        if (!hasError) {
+          hasError = true;
+          error = e;
+        }
+      }
     }
     if (pendingDisposals.size !== 0) {
       const candidates = pendingDisposals;
@@ -194,6 +215,9 @@ var owl = (() => {
         }
       }
     }
+    if (hasError) {
+      throw error;
+    }
   }
   function getCurrentComputation() {
     return currentComputation;
@@ -202,7 +226,7 @@ var owl = (() => {
     currentComputation = computation;
   }
   function updateComputation(computation) {
-    const state = computation.state;
+    const state = computation.flags & 3;
     if (state === 0) {
       return;
     }
@@ -212,12 +236,12 @@ var owl = (() => {
           continue;
         }
         updateComputation(source);
-        if (computation.state === 1) {
+        if ((computation.flags & 3) === 1) {
           break;
         }
       }
-      if (computation.state !== 1) {
-        computation.state = 0;
+      if ((computation.flags & 3) !== 1) {
+        computation.flags &= ~3;
         return;
       }
     }
@@ -226,8 +250,8 @@ var owl = (() => {
     currentComputation = computation;
     try {
       computation.value = computation.compute();
-      computation.state = 0;
     } finally {
+      computation.flags &= ~3;
       currentComputation = previousComputation;
     }
   }
@@ -244,28 +268,29 @@ var owl = (() => {
     for (const source of sources) {
       source.observers.delete(computation);
       const derived = source;
-      if (derived.isDerived && derived.observers.size === 0) {
+      if (derived.flags & 4 && derived.observers.size === 0) {
         disposeComputation(derived);
       }
     }
     sources.clear();
-    computation.state = 1;
+    computation.flags = computation.flags & ~3 | 1;
   }
   function markDownstream(computation) {
     const stack = [computation];
     let current;
     while (current = stack.pop()) {
       for (const observer of current.observers) {
-        if (observer.isDerived && observer.observers.size === 0) {
+        const flags = observer.flags;
+        if (flags & 4 && observer.observers.size === 0) {
           pendingDisposals.add(observer);
         }
-        if (observer.state) {
+        if (flags & 3) {
           continue;
         }
-        observer.state = 2;
-        if (observer.isDerived) {
+        observer.flags = flags | 2;
+        if (flags & 4) {
           stack.push(observer);
-        } else if (observer.immediate) {
+        } else if (flags & 8) {
           immediateObservers.push(observer);
         } else {
           observers.push(observer);
@@ -551,20 +576,22 @@ var owl = (() => {
       set(target, key, value, receiver) {
         const hadKey = objectHasOwnProperty.call(target, key);
         const originalValue = Reflect.get(target, key, receiver);
+        const originalLength = !hadKey && Array.isArray(target) ? target.length : -1;
         const ret = Reflect.set(target, key, toRaw(value), receiver);
         const keyCreated = !hadKey && objectHasOwnProperty.call(target, key);
         const valueChanged = originalValue !== Reflect.get(target, key, receiver);
         if (keyCreated) {
           onWriteTargetKey(target, KEYCHANGES);
+          if (originalLength !== -1 && target.length !== originalLength) {
+            onWriteTargetKey(target, "length");
+          }
         }
-        if (key === "length" && Array.isArray(target)) {
+        if (valueChanged) {
           onWriteTargetKey(target, key);
-          if (target.length < originalValue) {
+          if (key === "length" && Array.isArray(target) && target.length < originalValue) {
             onWriteTargetKey(target, KEYCHANGES);
             onWriteDroppedIndices(target, target.length);
           }
-        } else if (valueChanged) {
-          onWriteTargetKey(target, key);
         }
         return ret;
       },
@@ -763,22 +790,38 @@ var owl = (() => {
   function computed(getter, options = {}) {
     const equalsFn = toEqualsFn(options.equals);
     let hasValue = false;
-    const computation = createComputation(() => {
-      const newValue = getter();
-      if (hasValue) {
-        if (equalsFn(computation.value, newValue)) {
-          return computation.value;
+    let hasError = false;
+    const computation = createComputation(
+      () => {
+        let newValue;
+        try {
+          newValue = getter();
+          if (!hasError && hasValue && equalsFn(computation.value, newValue)) {
+            return computation.value;
+          }
+        } catch (error) {
+          hasError = true;
+          onWriteAtom(computation);
+          return error;
         }
-        onWriteAtom(computation);
-      }
-      hasValue = true;
-      return newValue;
-    }, true);
+        if (hasError || hasValue) {
+          onWriteAtom(computation);
+        }
+        hasError = false;
+        hasValue = true;
+        return newValue;
+      },
+      4 | 1
+      /* STALE */
+    );
     function readComputed() {
-      if (computation.state !== 0) {
+      if (computation.flags & 3) {
         updateComputation(computation);
       }
       onReadAtom(computation);
+      if (hasError) {
+        throw computation.value;
+      }
       return computation.value;
     }
     readComputed[atomSymbol] = computation;
@@ -787,27 +830,12 @@ var owl = (() => {
     return readComputed;
   }
   function effect(fn) {
-    const computation = createComputation(() => {
-      if (computation.value || computation.observers.size) {
-        setComputation(void 0);
-        unsubscribeEffect(computation);
-        setComputation(computation);
-      } else {
-        removeSources(computation);
-      }
-      return fn();
-    }, false);
-    getCurrentComputation()?.observers.add(computation);
-    updateComputation(computation);
-    return function cleanupEffect2() {
-      computation.state = 0;
-      const previousComputation = getCurrentComputation();
-      setComputation(void 0);
-      unsubscribeEffect(computation);
-      setComputation(previousComputation);
-    };
+    return createEffect(fn, false);
   }
   function immediateEffect(fn) {
+    return createEffect(fn, true);
+  }
+  function createEffect(fn, immediate) {
     const computation = createComputation(
       () => {
         if (computation.value || computation.observers.size) {
@@ -819,14 +847,21 @@ var owl = (() => {
         }
         return fn();
       },
-      false,
-      1,
-      true
+      immediate ? 8 | 1 : 1
+      /* STALE */
     );
-    getCurrentComputation()?.observers.add(computation);
-    updateComputation(computation);
-    return function cleanupImmediateEffect() {
-      computation.state = 0;
+    const parent = getCurrentComputation();
+    parent?.observers.add(computation);
+    try {
+      updateComputation(computation);
+    } catch (error) {
+      if (!parent) {
+        unsubscribeEffect(computation);
+      }
+      throw error;
+    }
+    return function cleanupEffect2() {
+      computation.flags &= ~3;
       const previousComputation = getCurrentComputation();
       setComputation(void 0);
       unsubscribeEffect(computation);
@@ -837,7 +872,7 @@ var owl = (() => {
     removeSources(effect2);
     cleanupEffect(effect2);
     for (const childEffect of effect2.observers) {
-      childEffect.state = 0;
+      childEffect.flags &= ~3;
       unsubscribeEffect(childEffect);
     }
     effect2.observers.clear();
@@ -1482,13 +1517,9 @@ ${issueStrings}`);
     // ascending (lower first), like Resource/Registry. Each batch's onWillStart
     // callbacks fully settle before the next batch is instantiated, so
     // foundational plugins (low sequence) are ready before later plugins even
-    // run their setup. Explicit `plugin(X)` dependencies bypass batching and
+    // run their setup. Explicit `usePlugin(X)` dependencies bypass batching and
     // start immediately.
     static sequence = 50;
-    __owl__;
-    constructor(manager) {
-      this.__owl__ = manager;
-    }
     setup() {
     }
   };
@@ -1534,10 +1565,10 @@ ${issueStrings}`);
         }
         return null;
       }
-      const plugin2 = new pluginConstructor(this);
-      this.plugins[pluginConstructor.id] = plugin2;
-      plugin2.setup();
-      return plugin2;
+      const plugin = new pluginConstructor();
+      this.plugins[pluginConstructor.id] = plugin;
+      plugin.setup();
+      return plugin;
     }
     startPlugins(pluginConstructors) {
       const fresh = pluginConstructors.filter((ctor) => {
@@ -1697,6 +1728,9 @@ ${issueStrings}`);
   function useEffect(fn) {
     onWillDestroy(effect(fn));
   }
+  function useImmediateEffect(fn) {
+    onWillDestroy(immediateEffect(fn));
+  }
   function useOnChange(dependencies, callback, { initialRun = true } = {}) {
     const deps = computed(dependencies, { equals: shallowEqual });
     let skipRun = !initialRun;
@@ -1747,18 +1781,17 @@ ${issueStrings}`);
   }
   function usePlugin(pluginType) {
     const scope = useScope();
-    let plugin2 = scope.pluginManager.getPluginById(pluginType.id);
-    if (!plugin2) {
+    let plugin = scope.pluginManager.getPluginById(pluginType.id);
+    if (!plugin) {
       if (scope instanceof PluginManager) {
-        plugin2 = scope.pluginManager.startPlugin(pluginType);
+        plugin = scope.pluginManager.startPlugin(pluginType);
       } else {
         throw new OwlError(`Unknown plugin "${pluginType.id}"`);
       }
     }
     const scoped = pluginType.scoped;
-    return scoped ? scoped(plugin2, scope) : plugin2;
+    return scoped ? scoped(plugin, scope) : plugin;
   }
-  var plugin = usePlugin;
   function useConfig(key, type) {
     const scope = useScope();
     if (!(scope instanceof PluginManager)) {
@@ -1770,10 +1803,9 @@ ${issueStrings}`);
     const configValue = scope.config[key];
     return configValue === void 0 ? getDefault(type)?.() : configValue;
   }
-  var config = useConfig;
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.49";
+  var version = "3.0.0-alpha.50";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -1846,7 +1878,7 @@ ${issueStrings}`);
     }
     return { modifiers, data: dataList };
   }
-  var config2 = {
+  var config = {
     // whether or not blockdom should normalize DOM whenever a block is created.
     // Normalizing dom mean removing empty text nodes (or containing only spaces)
     shouldNormalizeDom: true,
@@ -2253,7 +2285,7 @@ ${issueStrings}`);
       if (!currentTarget || !inOwnerDocument(currentTarget)) return;
       const data = currentTarget[eventKey];
       if (!data) return;
-      config2.mainEventHandler(data, ev, currentTarget);
+      config.mainEventHandler(data, ev, currentTarget);
     }
     const options = { capture, passive };
     function setup(data) {
@@ -2293,7 +2325,7 @@ ${issueStrings}`);
       const _data = dom[eventKey];
       if (_data) {
         for (const data of Object.values(_data)) {
-          const stopped = config2.mainEventHandler(data, event, dom);
+          const stopped = config.mainEventHandler(data, event, dom);
           if (stopped) return;
         }
       }
@@ -2539,7 +2571,7 @@ ${issueStrings}`);
     }
     const doc = new DOMParser().parseFromString(`<t>${str}</t>`, "text/xml");
     const node = doc.firstChild.firstChild;
-    if (config2.shouldNormalizeDom) {
+    if (config.shouldNormalizeDom) {
       normalizeNode(node);
     }
     const tree = buildTree(node);
@@ -2898,12 +2930,6 @@ ${issueStrings}`);
           const packed = colPacked[i];
           refs[packed & 32767] = GETTERS[packed >> 30 & 1].call(refs[packed >> 15 & 32767]);
         }
-        if (locN) {
-          const data = this.data;
-          for (let i = 0; i < locN; i++) {
-            locSetters[i].call(refs[locRefIdxs[i]], data[i]);
-          }
-        }
         if (childN) {
           const children2 = this.children;
           for (let i = 0; i < childN; i++) {
@@ -2915,6 +2941,12 @@ ${issueStrings}`);
               child.isOnlyChild = !!(info & 1 << 15);
               child.mount(refs[info & 32767], afterNode2);
             }
+          }
+        }
+        if (locN) {
+          const data = this.data;
+          for (let i = 0; i < locN; i++) {
+            locSetters[i].call(refs[locRefIdxs[i]], data[i]);
           }
         }
         nodeInsertBefore5.call(parent, el, afterNode);
@@ -2934,18 +2966,6 @@ ${issueStrings}`);
           return;
         }
         const refs = this.refs;
-        if (locN) {
-          const data1 = this.data;
-          const data2 = other.data;
-          for (let i = 0; i < locN; i++) {
-            const val1 = data1[i];
-            const val2 = data2[i];
-            if (val1 !== val2) {
-              locUpdaters[i].call(refs[locRefIdxs[i]], val2, val1);
-            }
-          }
-          this.data = data2;
-        }
         if (childN) {
           let children1 = this.children;
           const children2 = other.children;
@@ -2970,6 +2990,18 @@ ${issueStrings}`);
               children1[i] = child2;
             }
           }
+        }
+        if (locN) {
+          const data1 = this.data;
+          const data2 = other.data;
+          for (let i = 0; i < locN; i++) {
+            const val1 = data1[i];
+            const val2 = data2[i];
+            if (val1 !== val2) {
+              locUpdaters[i].call(refs[locRefIdxs[i]], val2, val1);
+            }
+          }
+          this.data = data2;
         }
       };
       Block.prototype.remove = function remove2() {
@@ -3385,16 +3417,6 @@ ${issueStrings}`);
     }
     vnode.remove();
   }
-  function status(entity) {
-    switch (entity.__owl__.status) {
-      case STATUS.NEW:
-        return "new";
-      case STATUS.MOUNTED:
-        return entity instanceof Plugin ? "started" : "mounted";
-      case STATUS.DESTROYED:
-        return "destroyed";
-    }
-  }
   var MAX_RENDER_ITERATIONS = 1e3;
   var APPLIED_TO_DOM = 1;
   function makeChildFiber(node, parent) {
@@ -3525,7 +3547,7 @@ ${issueStrings}`);
         const c = getCurrentComputation();
         removeSources(node.signalComputation);
         setComputation(node.signalComputation);
-        node.signalComputation.state = ComputationState.EXECUTED;
+        node.signalComputation.flags &= ~ComputationFlags.STATE_MASK;
         try {
           this.bdom = true;
           this.bdom = node.renderFn();
@@ -3695,18 +3717,14 @@ ${issueStrings}`);
     // after each patch and after this subtree is removed, to unset a ref pointing
     // at a bulk-removed element (slot host, enclosing t-if) — see sweepRefs.
     trackedRefs = null;
-    constructor(C, props2, app, parent, parentKey) {
+    constructor(C, props, app, pluginManager, parent, parentKey) {
       super(app);
       this.parent = parent;
       this.parentKey = parentKey;
-      this.pluginManager = parent ? parent.pluginManager : app.pluginManager;
+      this.pluginManager = pluginManager;
       this.componentName = C.name;
-      this.signalComputation = createComputation(
-        () => this.render(false),
-        false,
-        ComputationState.EXECUTED
-      );
-      this.props = props2;
+      this.signalComputation = createComputation(() => this.render(false), ComputationFlags.EXECUTED);
+      this.props = props;
       const previousComputation = getCurrentComputation();
       setComputation(void 0);
       scopeStack.push(this);
@@ -4231,7 +4249,7 @@ ${issueStrings}`);
       };
     }
     const initiateRender = ComponentNode.prototype.initiateRender;
-    return (props2, key, ctx, parent, C) => {
+    return (props, key, ctx, parent, C) => {
       let children = ctx.children;
       let node = children[key];
       if (isDynamic && node && node.component.constructor !== C) {
@@ -4239,7 +4257,7 @@ ${issueStrings}`);
       }
       const parentFiber = ctx.fiber;
       if (node) {
-        if (arePropsDifferent(node.props, props2) || parentFiber.deep || node.forceNextRender) {
+        if (arePropsDifferent(node.props, props) || parentFiber.deep || node.forceNextRender) {
           node.forceNextRender = false;
           const hooks = node.willUpdateProps;
           const fiber = makeChildFiber(node, parentFiber);
@@ -4249,10 +4267,10 @@ ${issueStrings}`);
           if (node.patched.length) parentRoot.patched.push(fiber);
           let promises;
           if (hooks.length) {
-            let nextProps = props2;
+            let nextProps = props;
             const defaultProps = node.defaultProps;
             if (defaultProps) {
-              nextProps = Object.assign({}, props2);
+              nextProps = Object.assign({}, props);
               for (const k in defaultProps) {
                 if (nextProps[k] === void 0) {
                   nextProps[k] = defaultProps[k];
@@ -4275,7 +4293,7 @@ ${issueStrings}`);
             p.then(
               () => {
                 if (fiber !== node.fiber) return;
-                node.props = props2;
+                node.props = props;
                 for (const f of node.propsUpdated) f();
                 fiber.render();
               },
@@ -4284,7 +4302,7 @@ ${issueStrings}`);
               }
             );
           } else {
-            node.props = props2;
+            node.props = props;
             for (const f of node.propsUpdated) f();
             fiber.render();
           }
@@ -4306,7 +4324,7 @@ ${issueStrings}`);
             );
           }
         }
-        node = new ComponentNode(C, props2, app, ctx, key);
+        node = new ComponentNode(C, props, app, ctx.pluginManager, ctx, key);
         children[key] = node;
         const fiber = new Fiber(node, parentFiber);
         if (node.willStart.length) {
@@ -4361,23 +4379,23 @@ ${issueStrings}`);
     customDirectives;
     runtimeUtils;
     hasGlobalValues;
-    constructor(config3 = {}) {
-      this.dev = config3.dev || false;
-      this.translateFn = config3.translateFn;
-      this.translatableAttributes = config3.translatableAttributes;
-      if (config3.templates) {
-        if (config3.templates instanceof Document || typeof config3.templates === "string") {
-          this.addTemplates(config3.templates);
+    constructor(config2 = {}) {
+      this.dev = config2.dev || false;
+      this.translateFn = config2.translateFn;
+      this.translatableAttributes = config2.translatableAttributes;
+      if (config2.templates) {
+        if (config2.templates instanceof Document || typeof config2.templates === "string") {
+          this.addTemplates(config2.templates);
         } else {
-          for (const name in config3.templates) {
-            this.addTemplate(name, config3.templates[name]);
+          for (const name in config2.templates) {
+            this.addTemplate(name, config2.templates[name]);
           }
         }
       }
-      this.getRawTemplate = config3.getTemplate;
-      this.customDirectives = config3.customDirectives || {};
-      this.runtimeUtils = { ...helpers, __globals__: config3.globalValues || {} };
-      this.hasGlobalValues = Boolean(config3.globalValues && Object.keys(config3.globalValues).length);
+      this.getRawTemplate = config2.getTemplate;
+      this.customDirectives = config2.customDirectives || {};
+      this.runtimeUtils = { ...helpers, __globals__: config2.globalValues || {} };
+      this.hasGlobalValues = Boolean(config2.globalValues && Object.keys(config2.globalValues).length);
     }
     addTemplate(name, template) {
       if (name in this.rawTemplates) {
@@ -4467,26 +4485,26 @@ ${issueStrings}`);
     roots = /* @__PURE__ */ new Set();
     pluginManager;
     destroyed = false;
-    constructor(config3 = {}) {
-      super(config3);
-      this.name = config3.name || "";
+    constructor(config2 = {}) {
+      super(config2);
+      this.name = config2.name || "";
       apps.add(this);
-      this.pluginManager = new PluginManager(this, { config: config3.config });
-      if (config3.plugins) {
-        startPlugins(this.pluginManager, config3.plugins);
+      this.pluginManager = new PluginManager(this, { config: config2.config });
+      if (config2.plugins) {
+        startPlugins(this.pluginManager, config2.plugins);
       } else {
         this.pluginManager.status = STATUS.MOUNTED;
       }
-      if (config3.test) {
+      if (config2.test) {
         this.dev = true;
       }
-      if (this.dev && !config3.test && !hasBeenLogged) {
+      if (this.dev && !config2.test && !hasBeenLogged) {
         console.info(`Owl is running in 'dev' mode.`);
         hasBeenLogged = true;
       }
     }
-    createRoot(Root, config3 = {}) {
-      const props2 = config3.props || {};
+    createRoot(Root, config2 = {}) {
+      const props = config2.props || {};
       let resolve;
       let reject;
       const promise = new Promise((res, rej) => {
@@ -4496,11 +4514,12 @@ ${issueStrings}`);
       let node;
       let error = null;
       try {
-        node = new ComponentNode(Root, props2, this, null, null);
-        const subConfig = config3;
+        const subConfig = config2;
+        let pluginManager = this.pluginManager;
         if (subConfig.pluginManager) {
-          node.pluginManager = subConfig.pluginManager;
+          pluginManager = subConfig.pluginManager;
         }
+        node = new ComponentNode(Root, props, this, pluginManager, null, null);
         if (subConfig.onError) {
           nodeErrorHandlers.set(node, [subConfig.onError]);
         }
@@ -4612,13 +4631,13 @@ ${issueStrings}`);
       throw error;
     }
   };
-  async function mount2(C, target, config3 = {}) {
-    const app = new App(config3);
+  async function mount2(C, target, config2 = {}) {
+    const app = new App(config2);
     if (app.pluginManager.status < STATUS.MOUNTED) {
       await app.pluginManager.ready;
     }
-    const root = app.createRoot(C, config3);
-    return root.mount(target, config3);
+    const root = app.createRoot(C, config2);
+    return root.mount(target, config2);
   }
   var mainEventHandler = (data, ev, currentTarget) => {
     setCurrentEvent(ev);
@@ -4731,11 +4750,11 @@ ${issueStrings}`);
     if (defaults) {
       node.defaultProps = Object.assign(node.defaultProps || {}, defaults);
     }
-    function resolveValue(props2, key) {
-      if (props2[key] === void 0 && defaults && key in defaults) {
+    function resolveValue(props, key) {
+      if (props[key] === void 0 && defaults && key in defaults) {
         return defaults[key];
       }
-      return props2[key];
+      return props[key];
     }
     const signals = /* @__PURE__ */ Object.create(null);
     const result = /* @__PURE__ */ Object.create(null);
@@ -4782,9 +4801,9 @@ ${issueStrings}`);
         });
       }
     } else {
-      const getKeys = (props2) => {
+      const getKeys = (props) => {
         const keys2 = [];
-        for (const k in props2) {
+        for (const k in props) {
           if (k.charCodeAt(0) !== 1) {
             keys2.push(k);
           }
@@ -4814,7 +4833,6 @@ ${issueStrings}`);
     return result;
   }
   var useProps = Object.assign(makeProps, { static: staticProp });
-  var props = useProps;
   var ErrorBoundary = class extends Component {
     static template = xml`
     <t t-if="this.props.error()">
@@ -4824,7 +4842,7 @@ ${issueStrings}`);
       <t t-call-slot="default"/>
     </t>
   `;
-    props = props({ error: types2.signal().optional(() => signal(null)) });
+    props = useProps({ error: types2.signal().optional(() => signal(null)) });
     setup() {
       onError((e) => this.props.error.set(e));
     }
@@ -4835,20 +4853,32 @@ ${issueStrings}`);
   };
   var Portal = class extends Component {
     static template = xml``;
-    props = props({
+    props = useProps({
       slots: types2.object(["default"]),
-      target: types2.or([types2.string(), types2.signal(types2.instanceOf(HTMLElement)), types2.instanceOf(HTMLElement)])
+      target: types2.or([types2.string(), types2.signal(types2.instanceOf(HTMLElement)), types2.instanceOf(HTMLElement)]),
+      // Rank among the portals sharing this target: they are placed in ascending
+      // `position` order instead of in the order they happened to mount. Left out
+      // (the default), this portal simply appends, which is what a stack of
+      // dialogs or toasts wants. See PortalGroup below.
+      position: types2.number().optional()
     });
     setup() {
       const portalNode = this.__owl__;
       const app = portalNode.app;
       const slots = this.props.slots;
       let root = null;
+      let group = null;
+      const entry = { position: void 0, contentNode: null };
       const tearDown = () => {
         if (root) {
           root.destroy();
           root = null;
         }
+        if (group) {
+          group.entries.delete(entry);
+          group = null;
+        }
+        entry.contentNode = null;
       };
       useEffect(() => {
         const target = resolveTarget(this.props.target);
@@ -4872,9 +4902,75 @@ ${issueStrings}`);
           host: portalNode
         });
         root.mount(target);
+        group = PortalGroup.get(target);
+        group.entries.add(entry);
+        root.promise.then(
+          (component) => {
+            if (group?.entries.has(entry)) {
+              entry.contentNode = component.__owl__;
+              group.place();
+            }
+          },
+          () => {
+          }
+        );
         return tearDown;
       });
+      useEffect(() => {
+        entry.position = this.props.position;
+        group?.place();
+      });
       onWillDestroy(tearDown);
+    }
+  };
+  var PortalGroup = class _PortalGroup {
+    constructor(target) {
+      this.target = target;
+    }
+    target;
+    // Weak, so a group dies with the target it is keyed on. `entries` cannot be:
+    // placing means iterating them, and a WeakSet is not iterable. It is drained
+    // by `tearDown`, from both the effect cleanup and `onWillDestroy`.
+    static groups = /* @__PURE__ */ new WeakMap();
+    static get(target) {
+      let group = _PortalGroup.groups.get(target);
+      if (!group) {
+        group = new _PortalGroup(target);
+        _PortalGroup.groups.set(target, group);
+      }
+      return group;
+    }
+    entries = /* @__PURE__ */ new Set();
+    /**
+     * Re-place the whole group, once per microtick. Each portal only knows its
+     * own position and their hooks run one at a time, so placing an entry as soon
+     * as its own position changes would sort it against its siblings' stale
+     * positions, and leave it there.
+     */
+    place = batched(() => {
+      const placed = [];
+      for (const entry of this.entries) {
+        if (entry.position !== void 0 && entry.contentNode?.firstNode()?.parentNode === this.target) {
+          placed.push(entry);
+        }
+      }
+      placed.sort((entry, other) => entry.position - other.position);
+      if (this.isOrdered(placed)) {
+        return;
+      }
+      for (const entry of placed) {
+        entry.contentNode.moveBeforeDOMNode(null, this.target);
+      }
+    });
+    /** Whether the target already holds the group's content in `placed` order. */
+    isOrdered(placed) {
+      let index = 0;
+      for (const childEl of this.target.childNodes) {
+        if (childEl === placed[index]?.contentNode.firstNode()) {
+          index++;
+        }
+      }
+      return index === placed.length;
     }
   };
   function resolveTarget(target) {
@@ -4898,7 +4994,7 @@ ${issueStrings}`);
       <t t-call-slot="fallback"/>
     </t>
   `;
-    props = props({ slots: types2.object({ default: types2.any(), fallback: types2.any().optional() }) });
+    props = useProps({ slots: types2.object({ default: types2.any(), fallback: types2.any().optional() }) });
     prepared = signal(false);
     mounted = signal(false);
     subRootMounted = false;
@@ -4935,9 +5031,9 @@ ${issueStrings}`);
       onWillDestroy(() => root.destroy());
     }
   };
-  function providePlugins(pluginConstructors, config3) {
+  function providePlugins(pluginConstructors, config2) {
     const node = getComponentScope();
-    const manager = new PluginManager(node.app, { parent: node.pluginManager, config: config3 });
+    const manager = new PluginManager(node.app, { parent: node.pluginManager, config: config2 });
     node.pluginManager = manager;
     onWillDestroy(() => manager.destroy());
     startPlugins(manager, pluginConstructors);
@@ -4945,10 +5041,10 @@ ${issueStrings}`);
       onWillStart(() => manager.ready);
     }
   }
-  config2.shouldNormalizeDom = false;
-  config2.mainEventHandler = mainEventHandler;
+  config.shouldNormalizeDom = false;
+  config.mainEventHandler = mainEventHandler;
   var blockDom = {
-    config: config2,
+    config,
     // bdom entry points
     mount,
     patch,
@@ -4963,8 +5059,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-09-08T12:24:10.035Z",
-    hash: "ca618ce1",
+    date: "2026-10-19T09:38:55.520Z",
+    hash: "7e1f64ac",
     url: "https://github.com/odoo/owl"
   };
 
@@ -5695,7 +5791,7 @@ ${"-".repeat(columnIndex - 1)}^`;
     const defaultSlotScope = node.getAttribute("t-slot-scope");
     node.removeAttribute("t-slot-scope");
     let on = null;
-    let props2 = null;
+    let props = null;
     let propsTranslationCtx = null;
     for (let name2 of node.getAttributeNames()) {
       const value = node.getAttribute(name2);
@@ -5712,8 +5808,8 @@ ${"-".repeat(columnIndex - 1)}^`;
           throw new OwlError(message || `unsupported directive on Component: ${name2}`);
         }
       } else {
-        props2 = props2 || {};
-        props2[name2] = value;
+        props = props || {};
+        props[name2] = value;
       }
     }
     let slots = null;
@@ -5783,22 +5879,18 @@ ${"-".repeat(columnIndex - 1)}^`;
       name,
       isDynamic,
       dynamicProps,
-      props: props2,
+      props,
       propsTranslationCtx,
       slots,
       on
     };
   }
   function parseTCallSlot(node, ctx) {
-    if (!node.hasAttribute("t-call-slot") && !node.hasAttribute("t-slot")) {
+    if (!node.hasAttribute("t-call-slot")) {
       return null;
     }
-    if (node.hasAttribute("t-slot")) {
-      console.warn(`t-slot has been renamed t-call-slot.`);
-    }
-    const name = node.getAttribute("t-call-slot") || node.getAttribute("t-slot");
+    const name = node.getAttribute("t-call-slot");
     node.removeAttribute("t-call-slot");
-    node.removeAttribute("t-slot");
     let attrs = null;
     let attrsTranslationCtx = null;
     let on = null;
@@ -6908,17 +7000,17 @@ ${code}`;
         ([k, v]) => this.formatProp(k, v, attrsTranslationCtx, translationCtx)
       );
     }
-    getPropString(props2, dynProps) {
-      let propString = `{${props2.join(",")}}`;
+    getPropString(props, dynProps) {
+      let propString = `{${props.join(",")}}`;
       if (dynProps) {
-        propString = `Object.assign({}, ${compileExpr(dynProps)}${props2.length ? ", " + propString : ""})`;
+        propString = `Object.assign({}, ${compileExpr(dynProps)}${props.length ? ", " + propString : ""})`;
       }
       return propString;
     }
     compileComponent(ast, ctx) {
       let { block } = ctx;
       const hasSlotsProp = "slots" in (ast.props || {});
-      const props2 = [];
+      const props = [];
       const propList = [];
       for (let p in ast.props || {}) {
         let [name, suffix] = p.split(".");
@@ -6927,21 +7019,21 @@ ${code}`;
           const propName2 = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
           this.helpers.add("toSignal");
           const cacheKey = this.generateSignalCacheKey();
-          props2.push(`${propName2}: toSignal(node, ${cacheKey}, ${compiledValue2})`);
+          props.push(`${propName2}: toSignal(node, ${cacheKey}, ${compiledValue2})`);
           continue;
         }
         if (suffix) {
-          props2.push(this.formatProp(p, ast.props[p], ast.propsTranslationCtx, ctx.translationCtx));
+          props.push(this.formatProp(p, ast.props[p], ast.propsTranslationCtx, ctx.translationCtx));
           continue;
         }
         const { expr: compiledValue, freeVariables } = processExpr(ast.props[p]);
         const propName = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
-        props2.push(`${propName}: ${compiledValue || void 0}`);
+        props.push(`${propName}: ${compiledValue || void 0}`);
         if (freeVariables) {
           for (const varName of freeVariables) {
             const syntheticKey = `${name}.${varName}`;
             propList.push(`"${syntheticKey}"`);
-            props2.push(`"${syntheticKey}": ctx['${varName}']`);
+            props.push(`"${syntheticKey}": ctx['${varName}']`);
           }
         } else {
           propList.push(`"${name}"`);
@@ -6977,9 +7069,9 @@ ${code}`;
       }
       if (slotDef && !(ast.dynamicProps || hasSlotsProp)) {
         this.helpers.add("markRaw");
-        props2.push(`slots: markRaw(${slotDef})`);
+        props.push(`slots: markRaw(${slotDef})`);
       }
-      let propString = this.getPropString(props2, ast.dynamicProps);
+      let propString = this.getPropString(props, ast.dynamicProps);
       let propVar;
       if (slotDef && (ast.dynamicProps || hasSlotsProp) || this.dev) {
         propVar = generateId("props");
@@ -7062,8 +7154,8 @@ ${code}`;
       if (isMultiple) {
         key = this.generateComponentKey(key);
       }
-      const props2 = ast.attrs ? this.formatPropObject(attrs, ast.attrsTranslationCtx, ctx.translationCtx) : [];
-      const scope = this.getPropString(props2, dynProps);
+      const props = ast.attrs ? this.formatPropObject(attrs, ast.attrsTranslationCtx, ctx.translationCtx) : [];
+      const scope = this.getPropString(props, dynProps);
       if (ast.defaultContent) {
         const name = this.compileInNewTarget("defaultContent", ast.defaultContent, ctx);
         blockString = `callSlot(ctx, node, ${key}, ${slotName}, ${dynamic}, ${scope}, ${name}.bind(this))`;
