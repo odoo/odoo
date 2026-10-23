@@ -361,6 +361,11 @@ patch(Order.prototype, {
 
         updateRewardsMutex.exec(() => {
             return this._updateLoyaltyPrograms().then(async () => {
+                // A finalized order can't be modified anymore: its reward lines are
+                // the ones saved on the server, so they must not be refreshed.
+                if (this.finalized || ["paid", "done", "invoiced"].includes(this.state)) {
+                    return;
+                }
                 // Try auto claiming rewards
                 const claimableRewards = this.getClaimableRewards(false, false, true);
                 for (const { coupon_id, reward } of claimableRewards) {
