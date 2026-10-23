@@ -280,6 +280,24 @@ test("disconnect on offline, re-connect on online", async () => {
     await expect.waitForSteps(["BUS:CONNECT"]);
 });
 
+test("listener added with once is called on the first connection only", async () => {
+    addBusServiceListeners(
+        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
+        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
+    );
+    await makeTestApp();
+    getService(BusPlugin).addEventListener("BUS:CONNECT", () => expect.step("once"), {
+        once: true,
+    });
+    startBusService();
+    await expect.waitForSteps(["BUS:CONNECT", "once"]);
+    manuallyDispatchProgrammaticEvent(window, "offline");
+    await expect.waitForSteps(["BUS:DISCONNECT"]);
+    manuallyDispatchProgrammaticEvent(window, "online");
+    await runAllTimers();
+    await expect.waitForSteps(["BUS:CONNECT"]);
+});
+
 test("no disconnect on offline/online when bus is inactive", async () => {
     browser.addEventListener("online", () => expect.step("online"));
     browser.addEventListener("offline", () => expect.step("offline"));
