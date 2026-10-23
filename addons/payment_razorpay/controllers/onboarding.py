@@ -57,8 +57,12 @@ class RazorpayController(Controller):
             )
         except ValidationError as e:
             return request.render(
-                "payment_razorpay.authorization_error",
-                qcontext={"error_message": str(e), "provider_url": redirect_url},
+                "payment.authorization_error",
+                {
+                    "provider_name": "Razorpay",
+                    "error_message": str(e),
+                    "provider_url": redirect_url,
+                },
             )
         expires_in = fields.Datetime.now() + timedelta(seconds=int(response_content["expires_in"]))
         provider.write({
