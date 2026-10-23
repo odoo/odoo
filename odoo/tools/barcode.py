@@ -48,7 +48,6 @@ def check_barcode_encoding(barcode, encoding):
         'sscc': 18,
     }
     barcode_size = barcode_sizes[encoding]
-    return (encoding != 'ean13' or barcode[0] != '0') \
-           and len(barcode) == barcode_size \
+    return len(barcode) == barcode_size \
            and re.match(r"^\d+$", barcode) \
            and get_barcode_check_digit(barcode) == int(barcode[-1])
