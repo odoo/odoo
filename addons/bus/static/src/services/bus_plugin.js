@@ -167,12 +167,12 @@ export class BusPlugin extends Plugin {
         return this.workerInitPromise;
     }
 
-    addEventListener(type, listener) {
-        this.bus.addEventListener(type, listener);
+    addEventListener(type, listener, options) {
+        this.bus.addEventListener(type, listener, options);
     }
 
-    removeEventListener(type, listener) {
-        this.bus.removeEventListener(type, listener);
+    removeEventListener(type, listener, options) {
+        this.bus.removeEventListener(type, listener, options);
     }
 
     async addChannel(channel) {
