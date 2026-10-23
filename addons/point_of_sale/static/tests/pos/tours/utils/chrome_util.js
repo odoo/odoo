@@ -209,7 +209,7 @@ function _hasFloatingOrder(name, yes, click) {
         },
         {
             isActive: ["mobile"],
-            trigger: ".pos-leftheader button[data-icon='arrow_drop_down']",
+            trigger: ".pos-leftheader button i[data-icon='arrow_drop_down']",
             run: "click",
         },
         {
