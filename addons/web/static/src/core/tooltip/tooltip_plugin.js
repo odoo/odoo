@@ -4,7 +4,8 @@ import { Tooltip } from "./tooltip";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { PopoverPlugin } from "@web/core/popover/popover_plugin";
 
-import { onWillDestroy, Plugin, useListener, usePlugin } from "@odoo/owl";
+import { effect, onWillDestroy, Plugin, signal, useListener, usePlugin } from "@odoo/owl";
+import { generateHTMLId } from "../utils/strings";
 
 /**
  * The tooltip service allows to display custom tooltips on every elements with
@@ -79,13 +80,19 @@ export class TooltipPlugin extends Plugin {
         }
 
         // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
-        useListener(document.body, "mouseenter", this.onMouseenter.bind(this), {
+        useListener(document.body, "mouseenter", this.onMouseenterOrFocusin.bind(this), {
+            capture: true,
+        });
+        // Listen (using event delegation) to "focusin" events to open the tooltip if any
+        useListener(document.body, "focusin", this.onMouseenterOrFocusin.bind(this), {
             capture: true,
         });
         // Listen (using event delegation) to "mouseleave" events to close the tooltip if any
         useListener(document.body, "mouseleave", this.cleanupTooltip.bind(this), {
             capture: true,
         });
+        // Listen (using event delegation) to "focusout" events to close the tooltip if any
+        useListener(document.body, "focusout", this.onFocusout.bind(this), { capture: true });
         useListener(document.body, "click", this.onClick.bind(this), { capture: true });
 
         onWillDestroy(() => {
@@ -219,6 +226,8 @@ export class TooltipPlugin extends Plugin {
      * @private
      */
     cleanup() {
+        this.target?.removeAttribute("aria-describedby");
+        this.target?.removeAttribute("aria-details");
         this.target = null;
         window.clearTimeout(this.openTooltipTimeout);
         this.openTooltipTimeout = null;
@@ -265,21 +274,34 @@ export class TooltipPlugin extends Plugin {
         if (!this.target.title) {
             this.target.title = "";
         }
+        // Verify that the tooltip is actually useful.
+        if (this.isTooltipRedundant(this.target, tooltip, template)) {
+            return;
+        }
+
+        const tooltipId = generateHTMLId("tooltip_");
+        if (tooltip) {
+            this.target.setAttribute("aria-describedby", tooltipId);
+        } else if (template) {
+            this.target.setAttribute("aria-details", tooltipId);
+        }
         const timeoutDelay = this.isHelpNode(el) ? 0 : delay;
+        const popoverRef = signal.ref();
+        this.closeTooltip = this.popover.add(
+            this.target,
+            Tooltip,
+            { tooltip, template, info, tooltipId },
+            { position, popoverClass: "visually-hidden", ref: popoverRef }
+        );
         this.openTooltipTimeout = window.setTimeout(() => {
-            // verify that the element is still in the DOM, and that the
-            // tooltip is actually useful
-            if (
-                this.target.isConnected &&
-                !this.isTooltipRedundant(this.target, tooltip, template)
-            ) {
-                this.closeTooltip = this.popover.add(
-                    this.target,
-                    Tooltip,
-                    { tooltip, template, info },
-                    { position }
-                );
+            if (!this.target.isConnected) {
+                this.cleanup();
+                return;
             }
+            // The timeout doesn't guarantee that the popover is mounted yet.
+            effect(() => {
+                popoverRef()?.classList.remove("visually-hidden");
+            });
         }, timeoutDelay);
     }
 
@@ -327,10 +349,10 @@ export class TooltipPlugin extends Plugin {
      * if there is, creates a timeout to open the corresponding tooltip
      * after a delay.
      *
-     * @param {MouseEvent} ev a "mouseenter" event
+     * @param {MouseEvent|FocusEvent} ev a "mouseenter" or "focusin" event
      * @private
      */
-    onMouseenter(ev) {
+    onMouseenterOrFocusin(ev) {
         const target = ev.target?.closest(TOOLTIP_SELECTOR_WITH_TITLE);
         if (!target) {
             return;
@@ -362,6 +384,20 @@ export class TooltipPlugin extends Plugin {
             ev.preventDefault();
         }
         this.cleanupTooltip(ev);
+    }
+
+    /**
+     * Checks whether the new target is different from the target that lost
+     * focus, and if so, clean it up.
+     * @param {FocusEvent} ev
+     */
+    onFocusout(ev) {
+        if (
+            (this.target === ev.target || this.target === ev.target.closest(TOOLTIP_SELECTOR)) &&
+            this.target !== ev.relatedTarget?.closest(TOOLTIP_SELECTOR)
+        ) {
+            this.cleanup();
+        }
     }
 
     /** @private */
