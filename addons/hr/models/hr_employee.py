@@ -2840,9 +2840,9 @@ class HrEmployee(models.Model):
         """Return the working time (days and hours) between two datetimes, per the calendars in contract.
 
         Sums ``resource.calendar.get_work_duration_data`` over the versions in
-        contract during the period (each with its calendar; the leaves of the
-        version's company or without company are deduced, whatever their
-        ``count_as``). Without any version in contract, the current calendar
+        contract during the period (each with its calendar; the leaves counted
+        as absence of the version's company or without company are deduced).
+        Without any version in contract, the current calendar
         is used for the whole period. Single employee only.
 
         :param datetime.datetime date_from: start (timezone-aware if the employee has a timezone)
@@ -2858,7 +2858,7 @@ class HrEmployee(models.Model):
             return calendar.get_work_duration_data(
                 date_from,
                 date_to,
-                domain=[('company_id', 'in', [False, self.company_id.id])])
+                domain=[('company_id', 'in', [False, self.company_id.id]), ('count_as', '=', 'absence')])
         duration_data = {'days': 0, 'hours': 0}
         for version in valid_versions:
             version_start = datetime.combine(version.date_start, time.min, employee_tz)
@@ -2868,7 +2868,7 @@ class HrEmployee(models.Model):
                 .get_work_duration_data(
                     max(date_from, version_start),
                     min(date_to, version_end),
-                    domain=[('company_id', 'in', [False, version.company_id.id])])
+                    domain=[('company_id', 'in', [False, version.company_id.id]), ('count_as', '=', 'absence')])
             duration_data['days'] += version_duration_data['days']
             duration_data['hours'] += version_duration_data['hours']
         return duration_data

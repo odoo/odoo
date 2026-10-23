@@ -371,8 +371,8 @@ class ResourceResource(models.Model):
         whole days plus hour budgets, to be consumed by :meth:`_get_flexible_resource_work_hours`.
 
         The budgets are computed on the full weeks (per the user language's first day of the
-        week) containing the period. Each leave day (all leaves, including those counted as
-        working time) is removed from the intervals and its ``hours_per_day`` deducted from
+        week) containing the period. Each leave day (leaves counted as absence only, as for
+        the work intervals) is removed from the intervals and its ``hours_per_day`` deducted from
         the budgets. Fully flexible resources get intervals but no budget.
 
         :param datetime start: timezone-aware start of the period
@@ -459,7 +459,7 @@ class ResourceResource(models.Model):
                     resource_hours_per_week[resource.id][year_week] = min(cap, day_working_hours + resource_hours_per_week[resource.id][year_week])
         for calendar, resources in calendar_resources.items():
             resources_per_tz = resources._get_resources_per_tz()
-            leave_intervals = (calendar or self.env['resource.calendar'])._leave_intervals_batch(min_start_date, max_end_date, resources_per_tz, [])
+            leave_intervals = (calendar or self.env['resource.calendar'])._leave_intervals_batch(min_start_date, max_end_date, resources_per_tz)
             for resource_id, leaves in leave_intervals.items():
                 if not resource_id:
                     continue

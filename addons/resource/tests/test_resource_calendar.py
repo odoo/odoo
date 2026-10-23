@@ -241,3 +241,33 @@ class TestResourceCalendar(TransactionCase):
         end_dt = datetime(2026, 1, 10, tzinfo=UTC)
         with self.assertRaises(UserError):
             self.env['resource.calendar']._attendance_intervals_batch(start_dt, end_dt)
+
+    def test_unusual_days_working_time_leave(self):
+        """Only leaves counted as absence make a day unusual."""
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Morning Calendar',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': str(day), 'hour_from': 8, 'hour_to': 12})
+                for day in range(5)
+            ],
+        })
+        self.env['resource.calendar.leaves'].create([{
+            'name': 'Training',
+            'calendar_id': calendar.id,
+            'date_from': datetime(2026, 1, 7, 8),
+            'date_to': datetime(2026, 1, 7, 12),
+            'count_as': 'working_time',
+        }, {
+            'name': 'Holiday',
+            'calendar_id': calendar.id,
+            'date_from': datetime(2026, 1, 8, 8),
+            'date_to': datetime(2026, 1, 8, 12),
+        }])
+        unusual_days = calendar._get_unusual_days(datetime(2026, 1, 6), datetime(2026, 1, 8))
+        self.assertEqual(unusual_days, {
+            '2026-01-06': False,
+            '2026-01-07': False,
+            '2026-01-08': True,
+        })
+        unusual_days = calendar._get_unusual_days(datetime(2026, 1, 6), datetime(2026, 1, 8), company_id=self.env.company)
+        self.assertEqual(unusual_days['2026-01-07'], False)

@@ -60,12 +60,14 @@ class TestFlexibleResourceCalendar(TransactionCase):
 
         custom_leave, half_day_leave = self.env['hr.work.entry.type'].create([{
             'name': 'Custom Leave',
+            'count_as': 'absence',
             'code': 'Custom Leave',
             'requires_allocation': False,
             'request_unit': 'hour',
             'unit_of_measure': 'hour',
         }, {
             'name': 'Half day',
+            'count_as': 'absence',
             'code': 'Half day',
             'requires_allocation': False,
             'request_unit': 'half_day',
@@ -191,6 +193,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
         """
         test_leave_type = self.env['hr.work.entry.type'].create({
             'name': 'Test Leave Type',
+            'count_as': 'absence',
             'code': "FLEXITEST",
             'requires_allocation': False,
             'request_unit': 'day',
@@ -227,6 +230,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
     def test_flexible_resource_work_intervals_with_public_holiday(self):
         leave_type = self.env['hr.work.entry.type'].create({
             'name': 'Test Hourly Time Off',
+            'count_as': 'absence',
             'requires_allocation': False,
             'request_unit': 'hour',
             'code': 'LEAVE018',
