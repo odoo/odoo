@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import Command, _
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
@@ -533,6 +534,66 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
                 expected,
                 "Indian EDI cancellation JSON values with remarks do not match the expected values",
             )
+
+    def test_ewaybill_extend_validity_json(self):
+        """ Test E-waybill validity extension JSON payload """
+
+        L10nInEwayBill = self.registry['l10n.in.ewaybill']
+        ewaybill = self.env['l10n.in.ewaybill'].create({
+            "name": "123456789012",
+            "account_move_id": self.invoice.id,
+            "distance": 200,
+            "state": "generated",
+        })
+        extend_wizard = self.env['l10n.in.ewaybill.extend'].create({
+            'l10n_in_ewaybill_id': ewaybill.id,
+            'extension_reason_code': '1',
+            'extension_remarks': 'Delay due to natural calamity',
+            'from_pincode': '380001',
+            'from_state': self.env.ref('base.state_in_gj').id,
+            'from_place': 'Ahmedabad',
+            'remaining_distance': 150,
+            'consignment_status': 'M',
+            'trans_mode': '1',
+            'vehicle_no': 'GJ01XX1234',
+        })
+
+        expected_payload_movement = {
+            "ewbNo": 123456789012,
+            "vehicleNo": "GJ01XX1234",
+            "fromPlace": "Ahmedabad",
+            "fromState": int(self.env.ref('base.state_in_gj').l10n_in_tin),
+            "remainingDistance": 150,
+            "transDocNo": "",
+            "transDocDate": "",
+            "transMode": "1",
+            "transitType": "",
+            "extnRsnCode": 1,
+            "extnRemarks": "Delay due to natural calamity",
+            "fromPincode": 380001,
+            "consignmentStatus": "M",
+        }
+
+        with patch.object(L10nInEwayBill, '_ewaybill_extend') as mock_extend:
+            extend_wizard.extend_ewaybill()
+            mock_extend.assert_called_once_with(expected_payload_movement)
+
+        # In Transit
+        extend_wizard.write({
+            'consignment_status': 'T',
+            'transit_type': 'W',
+        })
+
+        expected_payload_transit = {
+            **expected_payload_movement,
+            "transMode": "5",
+            "transitType": "W",
+            "consignmentStatus": "T",
+        }
+
+        with patch.object(L10nInEwayBill, '_ewaybill_extend') as mock_extend:
+            extend_wizard.extend_ewaybill()
+            mock_extend.assert_called_once_with(expected_payload_transit)
 
     def test_ewaybill_access_accounting_user(self):
         self.env.user.group_ids = self.env.ref('account.group_account_invoice')
