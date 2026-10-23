@@ -13,13 +13,15 @@ class TestIsMultiLang(odoo.tests.HttpCase):
         en = self.env.ref('base.lang_en').sudo()
 
         fr.active = True
-        fr_prefix = "/" + fr.iso_code
+        # The prefix may be 'fr' or 'fr_FR' depending on whether another version
+        # of French has already been installed.
+        fr_prefix = "/" + fr.url_code
 
         website.default_lang_id = en
         website.language_ids = en + fr
 
         for data in [None, {'post': True}]: # GET / POST
-            body = lxml.html.fromstring(self.url_open('/fr/multi_url', data=data).content)
+            body = lxml.html.fromstring(self.url_open(fr_prefix + '/multi_url', data=data).content)
 
             self.assertEqual(fr_prefix + '/get', body.find('./a[@id="get"]').get('href'))
             self.assertEqual(fr_prefix + '/post', body.find('./form[@id="post"]').get('action'))
