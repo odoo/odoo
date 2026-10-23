@@ -162,11 +162,11 @@ class EventTrack(models.Model):
         string='Always Wishlisted',
         help="""If set, the talk will be set as favorite for each attendee registered to the event.""")
     # Call to action
-    website_cta = fields.Boolean('Magic Button',
-                                 help="Display a Call to Action button to your Attendees while they watch your Track.")
-    website_cta_title = fields.Char('Button Title')
-    website_cta_url = fields.Char('Button Target URL')
-    website_cta_delay = fields.Integer('Show Button')
+    website_cta = fields.Boolean('Call-to-Action Button',
+                                 help="Show a button during the Track, e.g. 'Get a discount on the next event' 30 minutes after the start.")
+    website_cta_title = fields.Char('Label')
+    website_cta_url = fields.Char('Link')
+    website_cta_delay = fields.Integer('Appears')
     # time information for CTA
     is_website_cta_live = fields.Boolean(
         'Is CTA Live', compute='_compute_cta_time_data',
