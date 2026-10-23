@@ -9,6 +9,8 @@ class AccountMove(models.Model):
 
     expense_ids = fields.One2many(comodel_name='hr.expense', inverse_name='account_move_id')
     nb_expenses = fields.Integer(compute='_compute_nb_expenses', string='Number of Expenses', compute_sudo=True)
+
+    # Removed in master (20.1), no longer used
     existing_expense_ids = fields.One2many(comodel_name='hr.expense', inverse_name='existing_bill_id')
     bill_paid_by_employee = fields.Boolean(compute='_compute_bill_paid_by_employee')
 
@@ -27,6 +29,7 @@ class AccountMove(models.Model):
             )
         super(AccountMove, self - own_expense_moves)._compute_commercial_partner_id()
 
+    # Removed in master (20.1)
     @api.depends('existing_expense_ids')
     def _compute_bill_paid_by_employee(self):
         for move in self:
