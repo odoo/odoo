@@ -23,7 +23,7 @@
                             <div class="d-flex flex-column align-items-center">
                                 <h1 class="mt-kiosk-p-3 mb-3" t-out="product.name" t-ref="this.productNameRef"/>
                                 <div class="o_self_product_image ratio ratio-1x1 rounded-4">
-                                    <img class="rounded-4" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                    <img class="object-fit-scale rounded-4" t-att-src="product.productImageUrl()" loading="lazy"/>
                                 </div>
                             </div>
                         </div>
