@@ -52,6 +52,7 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time', required=True,
         default=lambda self: self.env.company.resource_calendar_id,
+        compute='_compute_calendar_id', store=True, readonly=False,
         domain="[('company_id', '=', company_id)]",
         help="Define the working schedule of the resource. Assign a flexible calendar for fully "
              "flexible working hours.")
@@ -97,14 +98,22 @@ class ResourceResource(models.Model):
             return True
         return super().write(vals)
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            default_calendar = self.env.context.get('default_calendar_id')
-            if default_calendar:
-                self.calendar_id = default_calendar
-            else:
-                self.calendar_id = self.company_id.resource_calendar_id.id
+    @api.depends('company_id')
+    def _compute_calendar_id(self):
+        for resource in self:
+            if resource.company_id and resource.company_id != resource.calendar_id.company_id:
+                default_calendar = self.env.context.get('default_calendar_id')
+                if default_calendar:
+                    resource.calendar_id = default_calendar
+                elif resource.resource_type == 'material':
+                    candidate_calendars = self.env['resource.calendar'].search([
+                        ('company_id', '=', resource.company_id.id),
+                        ('calendar_type', '=', 'undefined'),
+                    ])
+                    fully_flexible_calendar = candidate_calendars.filtered(lambda c: c._is_fully_flexible())[:1]
+                    resource.calendar_id = fully_flexible_calendar or resource.company_id.resource_calendar_id
+                else:
+                    resource.calendar_id = resource.company_id.resource_calendar_id
 
     @api.onchange('user_id')
     def _onchange_user_id(self):
