@@ -107,7 +107,7 @@ export class FloatTimeField extends Component {
     }
 }
 
-class DurationPopover extends Component {
+export class DurationPopover extends Component {
     static template = "web.DurationPopover";
     props = useProps({
         state: t.object().optional(),
