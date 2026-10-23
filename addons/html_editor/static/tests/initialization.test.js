@@ -302,6 +302,13 @@ describe("color normalization", () => {
             `),
         });
     });
+
+    test("should not unwrap nested identical <font> tags inside a QWeb directive", async () => {
+        await testEditor({
+            contentBefore: `<p><font style="color: red;">a<t t-if="test"><font style="color: red;">b</font></t></font></p>`,
+            contentAfter: `<p><font style="color: red;">a<t t-if="test"><font style="color: red;">b</font></t></font></p>`,
+        });
+    });
 });
 
 describe("formatting normalization", () => {
@@ -363,6 +370,28 @@ describe("formatting normalization", () => {
         await testEditor({
             contentBefore: `<p><small><small>text</small></small></p>`,
             contentAfter: `<p><small>text</small></p>`,
+        });
+    });
+
+    test("should not unwrap font-weight: normal inside a bold parent", async () => {
+        await testEditor({
+            styleContent: `.boldClass { font-weight: bold; }`,
+            contentBefore: `<p class="boldClass">a<font style="font-weight: normal;">b</font>c</p>`,
+            contentAfter: `<p class="boldClass">a<font style="font-weight: normal;">b</font>c</p>`,
+        });
+    });
+
+    test("should not unwrap nested bold tags inside a QWeb directive", async () => {
+        await testEditor({
+            contentBefore: `<p><strong>a<t t-if="test"><strong>b</strong></t></strong></p>`,
+            contentAfter: `<p><strong>a<t t-if="test"><strong>b</strong></t></strong></p>`,
+        });
+    });
+
+    test("should not unwrap intermediate color style override", async () => {
+        await testEditor({
+            contentBefore: `<p><font style="color: red;"><span style="color: blue;"><font style="color: red;">text</font></span></font></p>`,
+            contentAfter: `<p><font style="color: red;"><span style="color: blue;"><font style="color: red;">text</font></span></font></p>`,
         });
     });
 });
