@@ -1,4 +1,4 @@
-import { computed, onWillStart, Plugin, signal, t, usePlugin } from "@odoo/owl";
+import { asyncComputed, computed, Plugin, signal, t, useEffect, usePlugin } from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
 import { registry } from "@web/core/registry";
@@ -23,40 +23,45 @@ export class MenuPlugin extends Plugin {
     currentAppId = signal(null, {
         type: t.or([t.string(), t.number(), t.literal(null)]),
     });
+
     /** @private */
-    menusData = signal(null, { type: t.record(t.string()) });
+    forceReload = false;
 
     getAll = computed(() => Object.values(this.menusData()));
     getApps = computed(() => this.getMenu("root").children.map((id) => this.getMenu(id)));
     getCurrentApp = computed(() => this.currentAppId() && this.getMenu(this.currentAppId()));
 
-    setup() {
-        onWillStart(() => this.load());
-    }
-
     /** @private */
-    async load() {
-        const key = JSON.stringify({ debug: this.debugMode.isActive() });
-        const storedMenus = await this.menuDB.read(MENU_TABLE, key);
-        if (storedMenus) {
-            this.fetchMenus().then((res) => {
-                if (res) {
-                    const fetchedMenus = JSON.stringify(res);
-                    if (fetchedMenus !== storedMenus) {
-                        this.menuDB.write(MENU_TABLE, key, fetchedMenus);
-                        this.menusData.set(res);
-                        this.bus.trigger("MENUS:APP-CHANGED");
-                    }
-                }
-            });
-            this.menusData.set(JSON.parse(storedMenus));
-        } else {
-            const fetchedMenus = await this.fetchMenus();
-            this.menusData.set(fetchedMenus);
+    key = computed(() => JSON.stringify({ debug: this.debugMode.isActive() }));
+    /** @private */
+    storedMenus = asyncComputed(async () => await this.menuDB.read(MENU_TABLE, this.key()), {
+        initial: null,
+    });
+    /** @private */
+    fetchedMenus = asyncComputed(
+        async () => {
+            const forceReload = this.forceReload;
+            this.forceReload = false;
+            return await this.fetchMenus(forceReload);
+        },
+        { initial: null }
+    );
+    /** @private */
+    menusData = computed(() => this.fetchedMenus() || JSON.parse(this.storedMenus() || "{}"));
+
+    setup() {
+        useEffect(() => {
+            const storedMenus = this.storedMenus();
+            const fetchedMenus = this.fetchedMenus();
+
             if (fetchedMenus) {
-                this.menuDB.write(MENU_TABLE, key, JSON.stringify(fetchedMenus));
+                const stringifiedFetchedMenus = JSON.stringify(fetchedMenus);
+                if (stringifiedFetchedMenus !== storedMenus) {
+                    this.menuDB.write(MENU_TABLE, this.key(), stringifiedFetchedMenus);
+                    this.bus.trigger("MENUS:APP-CHANGED");
+                }
             }
-        }
+        });
     }
 
     /**
@@ -90,8 +95,11 @@ export class MenuPlugin extends Plugin {
     }
 
     async reload() {
-        this.menusData.set(await this.fetchMenus(true));
-        this.bus.trigger("MENUS:APP-CHANGED");
+        this.forceReload = true;
+        this.fetchedMenus.refresh();
+        // the refresh only starts the fetch in Owl's batched effects (next microtask)
+        await Promise.resolve();
+        await this.fetchedMenus.currentPromise();
     }
 
     async selectMenu(menu) {
