@@ -101,7 +101,7 @@ export class ProductConfiguratorPopup extends Component {
         this.state = useState({
             attributes:
                 this.props.line?.selectedAttributes ||
-                this.props.productTemplate.attribute_line_ids.reduce((acc, attribute) => {
+                this.attributes.reduce((acc, attribute) => {
                     acc[attribute.id] = {
                         selected: [],
                         custom_value: "",
@@ -116,11 +116,14 @@ export class ProductConfiguratorPopup extends Component {
     }
 
     get attributes() {
-        return this.props.productTemplate.attribute_line_ids;
+        // Archived lines are loaded along with the archived variants still using them
+        return this.props.productTemplate.attribute_line_ids.filter(
+            (line) => line.active !== false
+        );
     }
 
     get selectedValues() {
-        return this.props.productTemplate.attribute_line_ids
+        return this.attributes
             .map((attrLine) => this.state.attributes[attrLine.id]?.selected || [])
             .flat();
     }
@@ -305,11 +308,9 @@ export class ProductConfiguratorPopup extends Component {
 
     get validAttributeLineIds() {
         if (this.props.hideAlwaysVariants) {
-            return this.props.productTemplate.attribute_line_ids.filter(
-                (line) => line.attribute_id.create_variant !== "always"
-            );
+            return this.attributes.filter((line) => line.attribute_id.create_variant !== "always");
         } else {
-            return this.props.productTemplate.attribute_line_ids;
+            return this.attributes;
         }
     }
 }
