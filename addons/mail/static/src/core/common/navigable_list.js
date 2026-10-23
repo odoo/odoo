@@ -1,5 +1,4 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
-import { optionType } from "@mail/core/common/suggestion_hook";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
@@ -9,6 +8,27 @@ import { Component, proxy, signal, t, useListener, useOnChange, useProps } from 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { usePosition } from "@web/core/position/position_hook";
 import { useService } from "@web/core/utils/hooks";
+
+/** @param {import("models").Store} store */
+export const optionType = (store) =>
+    t.object({
+        buttonClass: t.string().optional(),
+        cannedResponse: t.instanceOf(store["mail.canned.response"]).optional(),
+        classList: t.string().optional(),
+        group: t.any().optional(),
+        help: t.string().optional(),
+        isSpecial: t.boolean().optional(),
+        label: t.string().optional(),
+        optionTemplate: t.string().optional(),
+        partner: t.instanceOf(store["res.partner"]).optional(),
+        role: t.instanceOf(store["res.role"]).optional(),
+        source: t.string().optional(),
+        thread: t.instanceOf(store["mail.thread"]).optional(),
+        title: t.string().optional(),
+        unselectable: t.boolean().optional(),
+    });
+
+/** @typedef {import("@odoo/owl").StripType<ReturnType<typeof optionType>>} Option */
 
 /**
  * Returns a string representation of the options, to tell a new set of options
@@ -130,7 +150,7 @@ export class NavigableList extends Component {
 
     /**
      * @param {Event} ev
-     * @param {import("@mail/core/common/suggestion_hook").Option} option
+     * @param {Option} option
      */
     selectOption(ev, option) {
         if (!option) {

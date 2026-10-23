@@ -1,6 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
 import { MentionList } from "@mail/core/web/mention_list";
-import { makeMentionFromOption, SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
+import {
+    makeMentionFromOption,
+    SUGGESTION_DELIMITERS,
+} from "@mail/core/common/plugin/suggestion_plugin";
 
 export class MailFullComposerSuggestionPlugin extends Plugin {
     static id = "mail_full_composer_suggestion";

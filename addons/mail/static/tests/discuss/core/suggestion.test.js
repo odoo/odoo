@@ -28,8 +28,6 @@ test('[text composer] display command suggestions on typing "/"', async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "/");
     await waitFor(".o-mail-Composer-suggestionList .o-open:count(1)");
@@ -45,8 +43,6 @@ test("display command suggestions on typing '/'", async () => {
     await start();
     getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "/");
     await waitFor(".o-mail-Composer-suggestionList .o-open:count(1)");
@@ -57,8 +53,6 @@ test("[text composer] use a command for a specific channel type", async () => {
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await focus(".o-mail-Composer-html.odoo-editor-editable");
     await containsTextInComposer(".o-mail-Composer", "");
     await insertTextInComposer(".o-mail-Composer", "/");
@@ -73,8 +67,6 @@ test("use a command for a specific channel type", async () => {
     await start();
     getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "/");
     await contains(".o-mail-Composer-suggestion strong:text('who'):count(1)").click();
@@ -89,8 +81,6 @@ test("[text composer] command suggestion should only open if command is the firs
     });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await focus(".o-mail-Composer-html.odoo-editor-editable");
     await containsTextInComposer(".o-mail-Composer", "");
     await insertTextInComposer(".o-mail-Composer", "bluhbluh");
@@ -110,8 +100,6 @@ test("command suggestion should only open if command is the first character", as
     await start();
     getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "bluhbluh");
     await containsTextInComposer(".o-mail-Composer", "bluhbluh");
@@ -234,8 +222,6 @@ test("[text composer] command suggestion are shown after deleting a character", 
     });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "/he");
     await waitFor(".o-mail-Composer-suggestion strong:text('help'):count(1)");
@@ -261,8 +247,6 @@ test("command suggestion are shown after deleting a character", async () => {
     await start();
     getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await focus(".o-mail-Composer-html");
     await insertTextInComposer(".o-mail-Composer", "/he");
     await waitFor(".o-mail-Composer-suggestion strong:text('help'):count(1)");

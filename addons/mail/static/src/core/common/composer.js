@@ -2,13 +2,11 @@ import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
-import { NavigableList } from "@mail/core/common/navigable_list";
 import {
     MAIL_HTML_PLUGINS,
     MAIL_HTML_PLUGINS_SMALL_UI,
     MAIL_TEXT_PLUGINS,
 } from "@mail/core/common/plugin/plugin_sets";
-import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { groupAttachments } from "@mail/utils/common/attachments";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import {
@@ -129,7 +127,6 @@ export class Composer extends Component {
         Dropdown,
         DropdownItem,
         FileUploader,
-        NavigableList,
         Wysiwyg,
     };
     static template = "mail.Composer";
@@ -222,7 +219,6 @@ export class Composer extends Component {
                 "dropdown-menu o-dropdown--menu bg-view overflow-visible o-rounded-bubble mx-1",
         });
         this.fullComposerBus = new EventBus();
-        this.suggestion = useSuggestion(this.readyEditor);
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
         this.saveContentDebounced = useDebounced(this.saveContent.bind(this), 5000, {
@@ -412,6 +408,17 @@ export class Composer extends Component {
         }
     }
 
+    /** @param {import("@mail/core/common/navigable_list").Option} option */
+    addSuggestion(option) {
+        if (option.partner) {
+            this.props.composer.mentionedPartners.add({ id: option.partner.id });
+        } else if (option.role) {
+            this.props.composer.mentionedRoles.add(option.role);
+        } else if (option.cannedResponse) {
+            this.props.composer.cannedResponses.push(option.cannedResponse);
+        }
+    }
+
     /**
      * Keeps the mentions in sync with the current composer type.
      *
@@ -510,6 +517,8 @@ export class Composer extends Component {
             composerPluginDependencies: {
                 // Read lazily: the config is only read once, at editor
                 // creation, but the placeholder can change afterwards.
+                getAncestors: () => this.ancestors,
+                getComposerType: () => this.props.type,
                 getPlaceholder: () => this.placeholder,
                 getSavedSelection: () => {
                     const { composerHtml, editorSelection } = this.props.composer;
@@ -518,12 +527,15 @@ export class Composer extends Component {
                         ? editorSelection
                         : undefined;
                 },
+                getSuggestionPosition: () => (this.ancestors.inChatter ? "bottom-fit" : "top-fit"),
+                getSuggestionTarget: () => this.inputContainerRef(),
                 getThread: () => this.props.composer.targetThread,
                 isEditable: () => !this.isEditorReadonly && !this.isEditorDisabled,
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
                 onFocusin: this.onFocusin.bind(this),
                 onFocusout: this.onFocusout.bind(this),
                 onInput: this.onInput.bind(this),
+                onInsertSuggestion: (option) => this.addSuggestion(option),
                 onKeydown: this.onKeydown.bind(this),
                 onMentions: (mentions) => this.addMentions(mentions),
                 saveSelection: (selection) => {
@@ -536,14 +548,6 @@ export class Composer extends Component {
             embeddedComponentInfo: { app: this.app, env: this.env },
             resources: {
                 embedded_components: [syntaxHighlightingEmbedding],
-                on_selectionchange_handlers: ({ documentSelectionIsInEditable }) => {
-                    // The editor may already hold the selection (e.g. focused once mounted)
-                    // before it is ready, and the suggestion only works on a ready editor.
-                    if (documentSelectionIsInEditable && this.readyEditor()) {
-                        // Moving the cursor changes the suggestion being typed.
-                        this.suggestion.detect();
-                    }
-                },
             },
             classList: [
                 "o-mail-Composer-html",
@@ -702,29 +706,7 @@ export class Composer extends Component {
     }
 
     get hasSuggestions() {
-        return Boolean(this.suggestion?.search.results);
-    }
-
-    get navigableListProps() {
-        const { loading, searchTerm, results } = this.suggestion.search;
-        const props = {
-            anchorRef: this.inputContainerRef,
-            position: this.ancestors.inChatter ? "bottom-fit" : "top-fit",
-            onClose: () => this.suggestion.dismiss(),
-            onSelect: (ev, option) => this.suggestion.insert(option),
-            isLoading: !!searchTerm && loading,
-            options: [],
-            rememberPosition: false,
-        };
-        if (!this.hasSuggestions) {
-            return props;
-        }
-        return {
-            ...props,
-            ...mapSuggestionsToOptions(results.type, results.suggestions, {
-                thread: this.thread,
-            }),
-        };
+        return Boolean(this.readyEditor()?.shared.suggestion.hasSuggestions());
     }
 
     onDropFile(ev) {
@@ -1116,8 +1098,8 @@ export class Composer extends Component {
         } else {
             message = await post();
         }
-        this.suggestion?.clearRawMentions();
-        this.suggestion?.clearCannedResponses();
+        this.clearRawMentions();
+        this.props.composer.cannedResponses = [];
         this.props.composer.replyToMessage = undefined;
         this.props.composer.emailAddSignature = true;
         this.props.composer.thread.additionalRecipients = [];
@@ -1135,7 +1117,12 @@ export class Composer extends Component {
         } else {
             this.props.composer.message.showDeleteConfirm(this, this.rootRef, this.ancestors);
         }
-        this.suggestion?.clearRawMentions();
+        this.clearRawMentions();
+    }
+
+    clearRawMentions() {
+        this.props.composer.mentionedPartners.length = 0;
+        this.props.composer.mentionedRoles.length = 0;
     }
 
     get askDeleteFromEdit() {
