@@ -519,4 +519,4 @@ class HrAttendance(http.Controller):
     def set_attendance_settings(self, token, mode):
         company = self._get_company(token)
         if company:
-            request.env.user.company_id.attendance_kiosk_mode = mode
+            company.sudo(False).attendance_kiosk_mode = mode
