@@ -2116,15 +2116,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.code_promo_program.active = True
         self.code_promo_program.reward_ids.write(
             {
-                'description': '10% on your order',
+                'description': '10% on food',
                 'discount': 10,
                 'discount_product_ids': None,
                 'discount_product_category_id': product_category_food.id,
             })
 
-        discount_product = self.env['product.product'].search([('id', '=', self.code_promo_program.reward_ids.discount_line_product_id.id)])
+        # The reward line shows the reward description. Its product is the generic discount
+        # product shared by all discount rewards; put it in the domain of the loyalty program
+        discount_product = self.code_promo_program.reward_ids.discount_line_product_id
         discount_product.categ_id = product_category_food.id
-        discount_product.name = "10% on food"
         discount_product.available_in_pos = True
 
         self.main_pos_config.open_ui()
