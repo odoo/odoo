@@ -71,7 +71,9 @@ class TestTaskTemplates(TestProjectCommon, MailCase):
         Copying a project should also copy its task templates
         """
         copied_project = self.project_with_templates.copy()
-        task = self.env["project.task"].search([("project_id", "=", copied_project.id)], order="id asc", limit=1)
+        task = self.env["project.task"].with_context(render_task_templates=True).search(
+            [("project_id", "=", copied_project.id)], order="id asc", limit=1
+        )
         self.assertTrue(task, "The copied project should contain a copy of the template.")
         self.assertTrue(task.is_template, "The copied template should still be a template.")
 
