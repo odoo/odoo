@@ -1,22 +1,39 @@
-import { registry } from "@web/core/registry";
 import { ORM } from "@web/core/orm_plugin";
 import { unique } from "@web/core/utils/arrays";
+import { Plugin, usePlugin } from "@odoo/owl";
+import { services } from "@web/core/services";
 
-class RequestBatcherORM extends ORM {
-    constructor() {
-        super();
-        this.searchReadBatches = {};
-        this.searchReadBatchId = 1;
-        this.batches = {};
+/**
+ * @typedef {{
+ *   deferred: PromiseWithResolvers;
+ *   scheduled: boolean;
+ *   ids: number[];
+ * }} Batch
+ */
+
+export class BatchedOrmPlugin extends Plugin {
+    static scoped(self, scope) {
+        return Object.assign(Object.create(self), {
+            read(...args) {
+                return scope.run(() => self.read(...args));
+            },
+        });
     }
 
+    /** @private */
+    orm = usePlugin(ORM);
+
+    /** @private @type {Record<string, Batch>} */
+    batches = {};
+
     /**
+     * @private
      * @param {number[]} ids
      * @param {any[]} keys
      * @param {Function} callback
      * @returns {Promise<any>}
      */
-    async batch(ids, keys, callback) {
+    async _batch(ids, keys, callback) {
         const key = JSON.stringify(keys);
         let batch = this.batches[key];
         if (!batch) {
@@ -59,29 +76,10 @@ class RequestBatcherORM extends ORM {
      * @returns {Promise<Object[]>}
      */
     async read(resModel, resIds, fields, kwargs) {
-        const records = await this.batch(resIds, ["read", resModel, fields, kwargs], (resIds) =>
-            super.read.call(this.unscoped, resModel, resIds, fields, kwargs)
+        const records = await this._batch(resIds, ["read", resModel, fields, kwargs], (resIds) =>
+            this.orm.read(resModel, resIds, fields, kwargs)
         );
         return records.filter((r) => resIds.includes(r.id));
     }
 }
-
-export const batchedOrmService = {
-    async: [
-        "call",
-        "create",
-        "nameGet",
-        "read",
-        "formattedReadGroup",
-        "search",
-        "searchRead",
-        "unlink",
-        "webSearchRead",
-        "write",
-    ],
-    start() {
-        return new RequestBatcherORM();
-    },
-};
-
-registry.category("services").add("batchedOrm", batchedOrmService);
+services.add(BatchedOrmPlugin);
