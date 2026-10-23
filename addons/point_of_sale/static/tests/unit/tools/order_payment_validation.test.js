@@ -39,3 +39,14 @@ test("isOrderValid", async () => {
     expect(order.lines).toHaveLength(0);
     expect(isOrderValid).toBe(false); // The order cannot be invoiced if the order line count is zero.
 });
+
+test("nextPage skips the tip screen for invoiced orders", async () => {
+    const store = await setupPosEnv();
+    store.config.set_tip_after_payment = true;
+    const order = await getFilledOrder(store);
+    order.addPaymentline(store.models["pos.payment.method"].get(2));
+    const validation = new OrderPaymentValidation({ pos: store, orderUuid: order.uuid });
+    expect(validation.nextPage.page).toBe("TipScreen");
+    order.setToInvoice(true);
+    expect(validation.nextPage.page).toBe("FeedbackScreen");
+});

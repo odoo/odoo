@@ -30,10 +30,12 @@ async function setupScreen(inputTip = null, selectedPercentage = null) {
 
 test("validateTip", async () => {
     const { store, order, screen } = await setupScreen("2");
+    const paidAmount = order.payment_ids[0].amount;
     TipScreen.prototype.printTipReceipt = async () => {};
     await screen.validateTip();
     expect(order.is_tipped).toBe(true);
     expect(order.tip_amount).toBe(2);
+    expect(order.payment_ids[0].amount).toBe(paidAmount + 2);
     const tipLine = order.lines.find(
         (line) => line.product_id.id === store.config.tip_product_id.id
     );
