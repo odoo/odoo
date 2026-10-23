@@ -1,10 +1,11 @@
+import json
 from lxml import etree
 
 from odoo import api, fields, models
 from odoo.addons.l10n_gr_edi import utils
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
-from odoo.tools import cleanup_xml_node, float_repr
+from odoo.tools import cleanup_xml_node, float_repr, float_is_zero
 from odoo.tools.image import image_data_uri
 
 
@@ -92,6 +93,50 @@ class AccountMove(models.Model):
         database_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         return f'{database_uuid}-{self.id}'
 
+    def _l10n_gr_edi_get_invoice_business_data(self):
+        """
+        Compute 'invoice_business_data' JSON string to the proxy payload.
+        Provides EN16931 / UBL specific data required by e-invoo without altering AADE XML.
+        """
+
+        ubl_type_mapping = {
+            'out_invoice': '380',
+            'out_refund': '381',
+            'in_invoice': '380',
+            'in_refund': '381',
+        }
+        invoice_type_ubl = ubl_type_mapping.get(self.move_type, '380')
+
+        due_date_obj = self.invoice_date_due or self.invoice_date
+        due_date_str = due_date_obj.strftime('%Y-%m-%d') if due_date_obj else ""
+
+        lines_data = []
+        commercial_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        for line in commercial_lines:
+            uom_code = "H87"
+            if 'unece_code' in line.product_uom_id._fields and line.product_uom_id.unece_code:
+                uom_code = line.product_uom_id.unece_code
+
+            vat_category = "S"
+            if line.tax_ids:
+                tax = line.tax_ids[0]
+                if 'l10n_eu_tax_category' in tax._fields and tax.l10n_eu_tax_category:
+                    vat_category = tax.l10n_eu_tax_category
+                elif float_is_zero(tax.amount, precision_digits=2):
+                    vat_category = "E"
+
+            lines_data.append({
+                "measurement_unit_ubl": uom_code,
+                "vat_category_ubl": vat_category,
+            })
+
+        return {
+            "version": 2,
+            "invoice_type_ubl": invoice_type_ubl,
+            "due_date": due_date_str,
+            "lines": lines_data,
+        }
+
     def _l10n_gr_edi_prepare_invoice_proxy_request(self, invoice_datetime):
         self.ensure_one()
 
@@ -111,6 +156,7 @@ class AccountMove(models.Model):
             'invoice_id': self._l10n_gr_edi_get_provider_invoice_id(),
             'invoice_currency': self.currency_id.name,
             'issue_date': fields.Date.to_string(self.date),
+            'invoice_business_data': json.dumps(self._l10n_gr_edi_get_invoice_business_data()),
         }
 
     def _l10n_gr_edi_prepare_invoice_submission(self):
