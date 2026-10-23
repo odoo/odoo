@@ -308,6 +308,29 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                     'request_date_to': time.strftime('2022-02-04'),
                 })
 
+    def test_limited_type_not_enough_days_on_end_date_write(self):
+        """ Moving only the end date of a request checks the allocation """
+        with freeze_time('2022-01-05'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hruser_id).create({
+                'name': 'Days for limited category',
+                'employee_id': self.employee_emp_id,
+                'work_entry_type_id': self.holidays_type_2.id,
+                'number_of_days': 2,
+                'state': 'confirm',
+                'date_from': '2022-01-01',
+                'date_to': '2022-12-31',
+            })
+            self.assertEqual(allocation.state, 'validate')
+            leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Hol21',
+                'employee_id': self.employee_emp_id,
+                'work_entry_type_id': self.holidays_type_2.id,
+                'request_date_from': '2022-02-01',
+                'request_date_to': '2022-02-02',
+            })
+            with self.assertRaises(ValidationError):
+                leave.with_user(self.user_employee_id).write({'request_date_to': '2022-02-04'})
+
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_limited_type_days_left(self):
         """  Employee creates a leave request in a limited category and has enough days left  """
