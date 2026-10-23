@@ -71,10 +71,18 @@ class LunchOrder(models.Model):
 
     @api.depends('category_id')
     def _compute_available_toppings(self):
+        supplier_ids = {order.supplier_id.id for order in self}
+        available_toppings = {
+            (supplier.id, category)
+            for supplier, category in self.env['lunch.topping']._read_group(
+                [('supplier_id', 'in', supplier_ids), ('topping_category', 'in', [1, 2, 3])],
+                ['supplier_id', 'topping_category'],
+            )
+        }
         for order in self:
-            order.available_toppings_1 = bool(order.env['lunch.topping'].search_count([('supplier_id', '=', order.supplier_id.id), ('topping_category', '=', 1)]))
-            order.available_toppings_2 = bool(order.env['lunch.topping'].search_count([('supplier_id', '=', order.supplier_id.id), ('topping_category', '=', 2)]))
-            order.available_toppings_3 = bool(order.env['lunch.topping'].search_count([('supplier_id', '=', order.supplier_id.id), ('topping_category', '=', 3)]))
+            order.available_toppings_1 = (order.supplier_id.id, 1) in available_toppings
+            order.available_toppings_2 = (order.supplier_id.id, 2) in available_toppings
+            order.available_toppings_3 = (order.supplier_id.id, 3) in available_toppings
 
     @api.depends('name')
     def _compute_display_add_button(self):

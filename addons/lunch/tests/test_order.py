@@ -6,6 +6,45 @@ from odoo.addons.lunch.tests.common import TestsCommon
 
 class TestOrder(TestsCommon):
 
+    def test_available_toppings_batch(self):
+        self.env['lunch.topping'].create([
+            {'name': 'Second extra', 'price': 1, 'supplier_id': self.supplier_pizza_inn.id, 'topping_category': 1},
+            {'name': 'Drink', 'price': 2, 'supplier_id': self.supplier_pizza_inn.id, 'topping_category': 3},
+            {'name': 'Unassigned', 'price': 3, 'topping_category': 2},
+            {'name': 'Other supplier', 'price': 4, 'supplier_id': self.supplier_kothai.id, 'topping_category': 2},
+        ])
+        orders = self.env['lunch.order'].create([
+            {'product_id': product.id, 'note': str(index)}
+            for index, product in enumerate(self.product_pizza | self.product_sandwich_tuna)
+        ])
+        orders |= orders[:1].copy({'note': 'Another pizza'})
+        orders._compute_available_toppings()
+        with self.assertQueryCount(1):
+            orders._compute_available_toppings()
+        self.assertRecordValues(orders, [
+            {'available_toppings_1': True, 'available_toppings_2': False, 'available_toppings_3': True},
+            {'available_toppings_1': False, 'available_toppings_2': False, 'available_toppings_3': False},
+            {'available_toppings_1': True, 'available_toppings_2': False, 'available_toppings_3': True},
+        ])
+        # Onchange records without a supplier must still find unassigned toppings.
+        order = self.env['lunch.order'].new({})
+        self.assertRecordValues(order, [
+            {'available_toppings_1': False, 'available_toppings_2': True, 'available_toppings_3': False},
+        ])
+        self.env['lunch.order']._compute_available_toppings()
+
+    def test_available_toppings_record_rule(self):
+        self.env['ir.access'].create({
+            'name': 'Hide olives',
+            'model_id': self.env['ir.model']._get_id('lunch.topping'),
+            'operation': 'r',
+            'domain': [('id', '!=', self.topping_olives.id)],
+        })
+        order = self.env['lunch.order'].with_user(self.manager).new({'product_id': self.product_pizza.id})
+        self.assertRecordValues(order, [
+            {'available_toppings_1': False, 'available_toppings_2': False, 'available_toppings_3': False},
+        ])
+
     @common.users('cle-lunch-manager')
     def test_create_only_updates_new_orders(self):
         """
