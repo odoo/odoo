@@ -666,17 +666,18 @@ export class DomPlugin extends Plugin {
      * @returns {boolean}
      */
     isAtAncestorEdge(node, ancestor, edge) {
+        const isStart = edge === "start";
         while (node !== ancestor) {
             const index = childNodeIndex(node);
             const parent = node.parentElement;
             // Search for the first/last visible child.
-            let visibleChild = parent[`${edge === "start" ? "first" : "last"}Child`];
+            let visibleChild = isStart ? parent.firstChild : parent.lastChild;
             while (visibleChild && !isVisible(visibleChild)) {
-                visibleChild = visibleChild[`${edge === "start" ? "next" : "previous"}Sibling`];
+                visibleChild = isStart ? visibleChild.nextSibling : visibleChild.previousSibling;
             }
             if (visibleChild) {
                 const visibleIndex = childNodeIndex(visibleChild);
-                if (edge === "start" ? index > visibleIndex : index < visibleIndex) {
+                if ((isStart && index > visibleIndex) || (!isStart && index < visibleIndex)) {
                     return false;
                 }
             }
