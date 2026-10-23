@@ -213,14 +213,14 @@ export function useHover(refs, { onHover, onAway, stateObserver } = {}) {
  * to start loading what the click opens.
  *
  * @param {import("@odoo/owl").Signal<Element>} ref
- * @param {() => void} onIntent
+ * @param {(ev: PointerEvent) => void} onIntent
  * @param {Object} [options]
  * @param {string} [options.ignoreSelector] events from matching targets are ignored
  */
 export function onClickIntent(ref, onIntent, { ignoreSelector } = {}) {
     useListener(ref, "pointerdown", (ev) => {
         if (ev.button === 0 && !(ignoreSelector && ev.target.closest?.(ignoreSelector))) {
-            onIntent();
+            onIntent(ev);
         }
     });
 }
