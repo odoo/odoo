@@ -4,6 +4,7 @@ import time
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo.tools import mute_logger
 
@@ -69,3 +70,29 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
                 admin_emails = self._new_mails.filtered(lambda x: self.admin_employee in x.partner_ids.employee_ids)
                 self.assertEqual(len(admin_emails), 1, "Mitchell Admin should receive an email")
                 self.assertTrue("has been accepted" in admin_emails.preview)
+
+    def test_refuse_cancel_notification_model_description(self):
+        """ The approvers notified of a refusal or a cancellation get the model description """
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Manager Time Off',
+            'code': 'Manager Time Off',
+            'requires_allocation': False,
+            'leave_validation_type': 'manager',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        leaves = self.env['hr.leave'].create([{
+            'name': 'Time Off',
+            'work_entry_type_id': work_entry_type.id,
+            'request_date_from': day,
+            'request_date_to': day,
+            'employee_id': self.employee_emp_id,
+        } for day in (date(2030, 1, 7), date(2030, 1, 8))])
+        self.assertEqual(leaves.mapped('state'), ['validate', 'validate'])
+        with patch.object(self.registry['hr.leave'], 'message_notify', autospec=True) as message_notify:
+            leaves[0].action_refuse()
+            leaves[1]._force_cancel('No longer needed')
+        self.assertEqual(
+            [call.kwargs['model_description'] for call in message_notify.call_args_list],
+            ['Time Off', 'Time Off'],
+        )

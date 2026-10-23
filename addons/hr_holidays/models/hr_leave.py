@@ -2380,7 +2380,7 @@ class HrLeave(models.Model):
     def _notify_manager(self):
         """Notify the time off approver of the employee when a request it approved is refused."""
         leaves = self.filtered(lambda hol: (hol.validation_type == 'both' and hol.state in ['validate1', 'validate']) or (hol.validation_type == 'manager' and hol.state == 'validate'))
-        model_description = self.env['ir.model']._get('hr.holidays').name
+        model_description = self.env['ir.model']._get('hr.leave').name
         for holiday in leaves:
             responsible = holiday.employee_id.leave_manager_id.partner_id.ids
             if responsible:
@@ -2424,7 +2424,7 @@ class HrLeave(models.Model):
         """
         leaves = self.browse() if self.env.context.get('force_delete') else self
         if reason:
-            model_description = self.env['ir.model']._get('hr.holidays').display_name
+            model_description = self.env['ir.model']._get('hr.leave').display_name
             for leave in leaves:
                 body = self.env._(
                     "The time off request has been cancelled for the following reason:%(reason)s",
