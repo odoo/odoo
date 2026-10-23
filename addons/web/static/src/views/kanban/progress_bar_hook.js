@@ -347,7 +347,7 @@ export class ProgressBarState {
     /**
      * We must be able to match groups returned by the read_progress_bar call with groups previously
      * returned by formatted_read_group. When grouped on date(time) fields, the key of each group is the
-     * displayName of the period (e.g. "W8 2024"). When grouped on boolean fields, it's "True" and
+     * displayName of the period (e.g. "#8, Feb 18 → Feb 24"). When grouped on boolean fields, it's "True" and
      * "False". For falsy values (e.g. unset many2one), it's "False". In all other cases, it's the
      * group's value (e.g. the id for a many2one).
      *
