@@ -36,6 +36,10 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             'name': 'PDP POS Company',
             'vat': 'FR23334175221',
         })
+        cls.basic_config.write({
+            'pricelist_id': cls.pricelist_eur.id,
+            'available_pricelist_ids': [Command.set(cls.pricelist_eur.ids)],
+        })
         cls.company.partner_id._set_additional_identifier('FR_SIRET', '34057796400026')
         cls.company.partner_id.write({
             'country_id': cls.env.ref('base.fr').id,
@@ -44,7 +48,6 @@ class TestPdpPosFlowLifecycle(TestPoSCommon):
             'city': 'Paris',
             'vat': 'FR23334175221',
         })
-        cls.currency_pricelist.currency_id = cls.company.currency_id
 
         cls.company._compute_l10n_fr_f10_enable_reporting()
 
