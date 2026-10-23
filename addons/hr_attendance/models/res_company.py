@@ -101,12 +101,20 @@ class ResCompany(models.Model):
         """, SQL.identifier(self._table)))
 
     def _regenerate_attendance_kiosk_key(self):
+        """Replace the kiosk key, which invalidates the current kiosk URL."""
         self.ensure_one()
         self.write({
             'attendance_kiosk_key': uuid.uuid4().hex
         })
 
     def _check_hr_presence_control(self, at_install):
+        """Switch the presence control of the companies on install and uninstall.
+
+        At install, the companies controlling presence by login also control it by attendance;
+        at uninstall, the companies controlling it by attendance fall back to the login.
+
+        :param bool at_install: ``True`` at install, ``False`` at uninstall
+        """
         companies = self.env.companies
         for company in companies:
             if at_install and company.hr_presence_control_login:
@@ -116,6 +124,8 @@ class ResCompany(models.Model):
                 company.hr_presence_control_attendance = False
 
     def _action_open_kiosk_mode(self):
+        """Return an action opening the kiosk of the current company, through the route that
+        logs the user out first."""
         return {
             'type': 'ir.actions.act_url',
             'target': 'self',

@@ -17,10 +17,18 @@ class HrVersion(models.Model):
 
     @api.model
     def _get_whitelist_fields_from_template(self):
+        """Also copy ``attendance_based`` from contract templates."""
         return super()._get_whitelist_fields_from_template() + ['attendance_based']
 
     @api.model
     def _get_versions_by_employee_and_date(self, employee_dates):
+        """Return the active version of each employee on each date.
+
+        :param dict employee_dates: ``{employee: iterable of dates}``
+        :return: ``{employee: {date: version}}``; a date before the first version of the
+            employee gets the first version, an employee without version an empty dict
+        :rtype: dict
+        """
         # for `employee_dates` a dict[employee] -> dates
         # Generate a 2 level dict[employee][date] -> version
         employees = self.env['hr.employee'].union(employee_dates.keys())
