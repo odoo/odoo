@@ -1547,8 +1547,8 @@ class HrEmployee(models.Model):
         are mapped or dropped) and the public values are copied into the cache
         of the ``hr.employee`` records.
 
-        :raise AccessError: if ``field_names`` contains fields not available on
-            ``hr.employee.public``
+        :raise AccessError: if ``field_names`` or ``domain`` contain fields not
+            available on ``hr.employee.public``
         """
         if self.has_access('read'):
             return super().search_fetch(domain, field_names, offset, limit, order)
@@ -1576,7 +1576,11 @@ class HrEmployee(models.Model):
         # employee, we thus need to map it to avoid getting errors
         domain = filter_map_domain(domain, map_condition_to_public_employee)
 
-        public = self.env['hr.employee.public'].search_fetch(domain, field_names, offset, limit, order)
+        try:
+            public = self.env['hr.employee.public'].search_fetch(domain, field_names, offset, limit, order)
+        except (ValueError, KeyError) as e:
+            # the domain uses fields not available on hr.employee.public (as in _search)
+            raise AccessError(self.env._('You do not have access to this document.')) from e
         employees = self.browse(public._ids)
         employees._copy_cache_from(public, field_names)
         return employees
@@ -1612,6 +1616,21 @@ class HrEmployee(models.Model):
                     or private_field.inherited and private_field.inherited_field.model_name == 'hr.version'):
                 public.mapped(field_name)
         self._copy_cache_from(public, field_names)
+
+    def _compute_field_value(self, field):
+        """Read the non-stored fields inherited from ``hr.version`` from ``hr.employee.public``
+        for users without read access.
+
+        Those fields (e.g. ``job_title``, ``department_id``) are computed from
+        ``version_id``, that such users cannot read: like in :meth:`fetch`, their
+        public values are copied into the cache (an ``AccessError`` is raised for
+        the fields not available on ``hr.employee.public``).
+        """
+        if field.inherited and all(self._ids) and not self.browse().has_access('read'):
+            # HACK: fill the cache of the employee with the values of hr.employee.public
+            self.fetch([field.name])
+            return
+        super()._compute_field_value(field)
 
     def _access_domain(self, operation):
         """Grant read access to all employees when the ``hr.mixin`` context marker is set.
