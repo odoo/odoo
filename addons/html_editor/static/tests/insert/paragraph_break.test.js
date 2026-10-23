@@ -696,6 +696,16 @@ describe("Selection collapsed", () => {
                 contentAfter: `<h1 style="color: red">ab</h1><p>[]<br></p>`,
             });
         });
+        test("should preserve an unremovable child when splitting an h1 at its visual end", async () => {
+            await testEditor({
+                contentBefore: '<h1>Title[]<span class="oe_unremovable"></span></h1>',
+                stepFunction: splitBlock,
+                contentAfter: unformat(`
+                    <h1>Title</h1>
+                    <p><span class="oe_unremovable" data-oe-zws-empty-inline="">[]\u200b</span><br></p>
+                `),
+            });
+        });
         test("should insert a new paragraph after a heading tag with rtl direction", async () => {
             await testEditor({
                 contentBefore: `<h1 dir="rtl">ab[]</h1>`,
