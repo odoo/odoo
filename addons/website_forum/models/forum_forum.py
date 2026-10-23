@@ -141,6 +141,10 @@ class ForumForum(models.Model):
     tag_most_used_ids = fields.One2many('forum.tag', string="Most used tags", compute='_compute_tag_most_used_ids')
     tag_unused_ids = fields.One2many('forum.tag', string="Unused tags", compute='_compute_tag_unused_ids')
 
+    # specific custom view
+    custom_forum_top = fields.Html('Top HTML Container', sanitize_attributes=False, translate=html_translate)
+    custom_forum_header_bottom = fields.Html('Bottom HTML Container', sanitize_attributes=False, translate=html_translate)
+
     def _compute_website_url(self):
         super()._compute_website_url()
         for record in self:
