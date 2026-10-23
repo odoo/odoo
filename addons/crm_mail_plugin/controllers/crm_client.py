@@ -40,7 +40,7 @@ class CrmClient(MailPluginController):
             '/odoo/action-%s?partner_id=%s' % (server_action.id, int(partner_id)))
 
     @http.route('/mail_plugin/lead/create', type='json', auth='outlook', cors="*")
-    def crm_lead_create(self, partner_id, email_body, email_subject):
+    def crm_lead_create(self, partner_id, email_body, email_subject, attachments=None):
         partner = request.env['res.partner'].browse(partner_id).exists()
         if not partner:
             return {'error': 'partner_not_found'}
@@ -50,6 +50,15 @@ class CrmClient(MailPluginController):
             'partner_id': partner_id,
             'description': email_body,
         })
+
+        if attachments:
+            request.env["ir.attachment"].create([{
+                "name": name or request.env._('unnamed_attachment'),
+                "datas": content,
+                "type": "binary",
+                "res_model": record._name,
+                "res_id": record.id,
+            } for name, content in attachments])
 
         return {'lead_id': record.id}
 
