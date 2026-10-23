@@ -39,13 +39,35 @@ function useClickAway(popover, callback) {
         callback(document.documentElement);
     }
 
+<<<<<<< d24ed4c9ff8e0785070c7d69668cb6d8175d5008
     function pointerDownHandler(ev) {
         callback(ev.composedPath()[0]);
+||||||| 6f842bc98291efe0112b6fe30e6121674342e549
+    function clickAwayHandler(ev) {
+        if (ev.detail === 0) {
+            callback(ev.composedPath()[0]);
+        }
+=======
+    function pointerDownHandler(ev) {
+        callback(ev.composedPath()[0]);
+    }
+
+    function clickHandler(ev) {
+        if (ev.detail === 0) {
+            callback(ev.composedPath()[0]);
+        }
+>>>>>>> 8cadae1461f8d235ab53c9ff86cd7df5a6ef82d4
     }
 
     useEarlyExternalListener(window, "pointerdown", pointerDownHandler, { capture: true });
     useEarlyExternalListener(window, "blur", blurHandler, { capture: true });
     useEarlyExternalListener(window, "popstate", navigationHandler, { capture: true });
+<<<<<<< d24ed4c9ff8e0785070c7d69668cb6d8175d5008
+||||||| 6f842bc98291efe0112b6fe30e6121674342e549
+    useEarlyExternalListener(window, "click", clickAwayHandler, { capture: true });
+=======
+    useEarlyExternalListener(window, "click", clickHandler, { capture: true });
+>>>>>>> 8cadae1461f8d235ab53c9ff86cd7df5a6ef82d4
     for (const iframeEl of document.querySelectorAll("iframe")) {
         try {
             useEarlyExternalListener(
