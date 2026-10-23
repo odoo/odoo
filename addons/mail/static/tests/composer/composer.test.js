@@ -1254,7 +1254,6 @@ test("add an emoji after a canned response", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
     await containsTextInComposer(".o-mail-Composer", "");
     await insertTextInComposer(".o-mail-Composer", "::");
     await contains(".o-mail-Composer-suggestion:count(1)").click();
@@ -1622,6 +1621,25 @@ test("composer mention of unknown partner is restored with its token on page rel
     await press("Enter");
     await waitFor(".o-mail-Message a.o_mail_redirect:text('@Zara'):count(1)");
     await expect.waitForSteps(["message_post"]);
+});
+
+test("typing after a restored `hello @` draft keeps the text and suggests partners", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    await setIndexedDB(
+        "composer",
+        `Composer,(mail.thread,discuss.channel AND ${channelId}) OR (undefined)`,
+        { composerHtml: ["markup", "<div>hello @</div>"] }
+    );
+    await start();
+    await openDiscuss(channelId);
+    await containsTextInComposer(".o-mail-Composer", "hello @");
+    await insertTextInComposer(".o-mail-Composer", "Mitch");
+    await containsTextInComposer(".o-mail-Composer", "hello @Mitch");
+    await waitFor(".o-mail-Composer-suggestion:has(:text('Mitchell Admin')):count(1)");
 });
 
 test("pasted mention of unknown partner is notified when posted right away", async () => {

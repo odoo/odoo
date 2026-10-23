@@ -37,6 +37,7 @@ import { MentionPlugin } from "@mail/core/common/plugin/mention_plugin";
 import { MessageLinkPlugin } from "@mail/core/common/plugin/message_link_plugin";
 import { PersistSelectionPlugin } from "@mail/core/common/plugin/persist_selection_plugin";
 import { StripPastedFormatPlugin } from "@mail/core/common/plugin/strip_pasted_format_plugin";
+import { MailSuggestionPlugin } from "@mail/core/common/plugin/suggestion_plugin";
 import { TextLineBreakPlugin } from "@mail/core/common/plugin/text_line_break_plugin";
 import { UndoRedoShortcutPlugin } from "@mail/core/common/plugin/undo_redo_shortcut_plugin";
 import { VisualLinkPlugin } from "@mail/core/common/plugin/visual_link_plugin";
@@ -56,6 +57,7 @@ export const MAIL_TEXT_PLUGINS = [
     InputPlugin,
     LineBreakPlugin,
     MailComposerPlugin,
+    MailSuggestionPlugin,
     MentionPlugin,
     MessageLinkPlugin,
     OverlayPlugin,
@@ -81,6 +83,7 @@ export const MAIL_CORE_PLUGINS = [
     LinkPlugin,
     LinkSelectionPlugin,
     MailComposerPlugin,
+    MailSuggestionPlugin,
     MentionPlugin,
     MessageLinkPlugin,
     OdooLinkSelectionPlugin,

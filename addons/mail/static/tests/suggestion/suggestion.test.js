@@ -793,8 +793,6 @@ test("[text composer] Mention with @everyone", async () => {
     await start();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await insertTextInComposer(".o-mail-Composer", "@ever");
     await contains(".o-mail-Composer-suggestion:count(1)").click();
     await containsTextInComposer(".o-mail-Composer", "\uFEFF@everyone\uFEFF\u00a0");
@@ -814,8 +812,6 @@ test("Mention with @everyone", async () => {
     getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await insertTextInComposer(".o-mail-Composer", "@ever");
     await click(".o-mail-Composer-suggestion");
     await containsTextInComposer(".o-mail-Composer", "\uFEFF@everyone\uFEFF\u00a0");
@@ -895,8 +891,6 @@ test("[text composer] Mention with @-role", async () => {
     await start();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await insertTextInComposer(".o-mail-Composer", "@discuss");
     await contains(".o-mail-Composer-suggestion:count(1)").click();
     await containsTextInComposer(".o-mail-Composer", "\uFEFF@rd-Discuss\uFEFF\u00a0");
@@ -941,8 +935,6 @@ test("Mention with @-role", async () => {
     getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await insertTextInComposer(".o-mail-Composer", "@discuss");
     await contains(".o-mail-Composer-suggestion:count(1)").click();
     await containsTextInComposer(".o-mail-Composer", "\uFEFF@rd-Discuss\uFEFF\u00a0");
@@ -983,8 +975,6 @@ test("[text composer] Mention with @-role send correct role id", async () => {
     await start();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await insertTextInComposer(".o-mail-Composer", "@discuss");
     await contains(".o-mail-Composer-suggestion:count(1)").click();
     await containsTextInComposer(".o-mail-Composer", "\uFEFF@rd-Discuss\uFEFF\u00a0");
@@ -1028,8 +1018,6 @@ test("Mention with @-role send correct role id", async () => {
     getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await insertTextInComposer(".o-mail-Composer", "@discuss");
     await contains(".o-mail-Composer-suggestion:count(1)").click();
     await containsTextInComposer(".o-mail-Composer", "\uFEFF@rd-Discuss\uFEFF\u00a0");
@@ -1072,8 +1060,6 @@ test("[text composer] Mention with @-role trigger one RPC only", async () => {
     await start();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await waitFor(".o-mail-Message:has(:text('message fetched')):count(1)");
     await waitFor(".o-discuss-ChannelMember:text('Discuss guru'):count(1)");
     onRpc("/*", (request) => {
@@ -1126,8 +1112,6 @@ test("Mention with @-role trigger one RPC only", async () => {
     getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-html");
-    await waitFor(".o-mail-Composer-suggestionList:count(1)");
-    await waitForNone(".o-mail-Composer-suggestionList .o-open");
     await waitFor(".o-mail-Message:has(:text('message fetched')):count(1)");
     await waitFor(".o-discuss-ChannelMember:text('Discuss guru'):count(1)");
     onRpc("/*", (request) => {

@@ -1,4 +1,4 @@
-import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
+import { SUGGESTION_DELIMITERS } from "@mail/core/common/plugin/suggestion_plugin";
 import { SuggestionService } from "@mail/core/common/suggestion_service";
 
 import { localeCompare, normalize } from "@web/core/l10n/utils";

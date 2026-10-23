@@ -3,13 +3,12 @@ import { Component, t, useListener, useProps } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 
-import { NavigableList } from "@mail/core/common/navigable_list";
-import { SearchInput } from "@mail/core/common/search_input";
+import { NavigableList, optionType } from "@mail/core/common/navigable_list";
 import {
     mapSuggestionsToOptions,
-    optionType,
     SUGGESTION_DELIMITERS,
-} from "@mail/core/common/suggestion_hook";
+} from "@mail/core/common/plugin/suggestion_plugin";
+import { SearchInput } from "@mail/core/common/search_input";
 import { useSearch } from "@mail/utils/common/hooks";
 
 export class MentionList extends Component {
