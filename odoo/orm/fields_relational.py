@@ -22,14 +22,15 @@ from .utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
 
 if typing.TYPE_CHECKING:
     from odoo.tools.misc import Collector
-    from .types import CommandValue, ContextType, DomainType, Environment, Registry
+    from collections.abc import Iterable
+    from .types import CommandValue, ContextType, DomainType, Environment, IdType, Registry
 
     OnDelete = typing.Literal['cascade', 'set null', 'restrict']
 
 _schema = logging.getLogger('odoo.schema')
 
 
-class _Relational(Field[BaseModel]):
+class _Relational[C](Field[BaseModel, C]):
     """ Abstract class for relational fields. """
     relational: typing.Literal[True] = True
     comodel_name: str = ''
@@ -202,7 +203,7 @@ class _Relational(Field[BaseModel]):
         return lambda rec: any(id_ in ids for val in getter(rec) for id_ in val._ids)
 
 
-class Many2one(_Relational):
+class Many2one(_Relational['IdType']):
     """ The value of such a field is a recordset of size 0 (no
     record) or 1 (a single record).
 
@@ -319,7 +320,7 @@ class Many2one(_Relational):
         for record in records:
             self._update_cache(record, self.convert_to_cache(value, record, validate=False))
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value: IdType | typing.Literal[False] | None, record, values=None, validate=True) -> IdType | None:
         return value or None
 
     def convert_to_cache(self, value, records, validate=True):
@@ -353,13 +354,13 @@ class Many2one(_Relational):
         prefetch_ids = Prefetch.relational(self, record)
         return record.pool[self.comodel_name](record.env, ids, prefetch_ids)
 
-    def convert_to_record_multi(self, values, records):
+    def convert_to_record_multi(self, values: Iterable[IdType], records: BaseModel) -> BaseModel:
         # return the ids as a recordset without duplicates
         prefetch_ids = Prefetch.relational(self, records)
         ids = tuple(unique(id_ for id_ in values if id_ is not None))
         return records.pool[self.comodel_name](records.env, ids, prefetch_ids)
 
-    def convert_to_read(self, value, record, use_display_name=True):
+    def convert_to_read(self, value, record, use_display_name=True) -> IdType | tuple[IdType, str] | typing.Literal[False]:
         if use_display_name and value:
             # evaluate display_name as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
@@ -373,7 +374,7 @@ class Many2one(_Relational):
         else:
             return value.id
 
-    def convert_to_write(self, value, record):
+    def convert_to_write(self, value, record) -> IdType | typing.Literal[False]:
         if type(value) is int or type(value) is NewId:
             return value
         if not value:
@@ -588,7 +589,7 @@ class Many2one(_Relational):
         return coalias
 
 
-class _RelationalMulti(_Relational):
+class _RelationalMulti(_Relational[tuple['IdType', ...]]):
     r"Abstract class for relational fields \*2many."
     # X2many fields must be written last, because they flush other fields when deleting lines.
     write_sequence = 20
@@ -694,7 +695,7 @@ class _RelationalMulti(_Relational):
 
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
-    def convert_to_record(self, value, record: BaseModel):
+    def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
         prefetch_ids = Prefetch.relational(self, record)
         env = record.env
@@ -729,16 +730,16 @@ class _RelationalMulti(_Relational):
             corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
         return corecords
 
-    def convert_to_record_multi(self, values, records: BaseModel):
+    def convert_to_record_multi(self, values: Iterable[IdType], records: BaseModel) -> BaseModel:
         # return the list of ids as a recordset without duplicates
         # same logic as convert_to_record (but references multiple source records)
         ids = tuple(unique(id_ for ids in values for id_ in ids))
         return self.convert_to_record(ids, records)
 
-    def convert_to_read(self, value, record, use_display_name=True):
+    def convert_to_read(self, value, record, use_display_name=True) -> list[IdType]:
         return value.ids
 
-    def convert_to_write(self, value, record):
+    def convert_to_write(self, value, record) -> list[Command]:
         if isinstance(value, tuple):
             # a tuple of ids, this is the cache format
             value = record.env[self.comodel_name].browse(value)

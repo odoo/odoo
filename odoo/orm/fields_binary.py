@@ -23,7 +23,7 @@ if typing.TYPE_CHECKING:
 # Received data is returned as `memoryview`.
 
 
-class Binary(Field[BinaryValue]):
+class Binary(Field[BinaryValue, BinaryValue]):
     """Encapsulates a binary content (e.g. a file).
 
     :param bool attachment: whether the field should be stored as `ir_attachment`
@@ -67,7 +67,7 @@ class Binary(Field[BinaryValue]):
             return
         model.search([(self.name, '=', False)]).write({self.name: value})
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value, record, values=None, validate=True) -> psycopg2.Binary | None:
         data = self.convert_to_cache(value, record, validate) or EMPTY_BINARY
         value = data.content
         if not value:
@@ -81,7 +81,7 @@ class Binary(Field[BinaryValue]):
                 raise UserError(record.env._("Only admins can upload SVG files."))
         return psycopg2.Binary(value)
 
-    def convert_to_cache(self, value, records, validate=True) -> BinaryValue | None:
+    def convert_to_cache(self, value, records, validate=True):
         if not value:
             return None
         if isinstance(value, BinaryValue):
@@ -127,10 +127,10 @@ class Binary(Field[BinaryValue]):
     def convert_to_record(self, value, record):
         return value or EMPTY_BINARY
 
-    def convert_to_write(self, value, record):
+    def convert_to_write(self, value, record) -> BinaryValue | typing.Literal[False]:
         return self.convert_to_cache(value, record, validate=False) or False
 
-    def convert_to_read(self, value, record, use_display_name=True):
+    def convert_to_read(self, value, record, use_display_name=True) -> dict | typing.Literal[False]:
         if not value:
             return False
         value = self.convert_to_cache(value, record, validate=False)

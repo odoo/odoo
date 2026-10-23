@@ -26,7 +26,7 @@ DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
 
-class BaseDate[T](Field[T | typing.Literal[False]]):
+class BaseDate[T](Field[T | typing.Literal[False], T]):
     """ Common field properties for Date and Datetime. """
 
     start_of = staticmethod(date_utils.start_of)
@@ -115,13 +115,16 @@ class BaseDate[T](Field[T | typing.Literal[False]]):
             sql_expr = SQL("%s::date", sql_expr)
         return sql_expr
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value, record, values=None, validate=True) -> T | str | None:
         # we can write date/datetime directly using psycopg
         # except for company_dependent fields where we expect a string value
         value = self.convert_to_cache(value, record, validate=validate)
         if value and self.company_dependent:
             value = self.to_string(value)
         return value
+
+    def convert_to_write(self, value, record) -> T | typing.Literal[False]:
+        return self.convert_to_cache(value, record, validate=False) or False
 
 
 class Date(BaseDate[date]):
@@ -196,7 +199,7 @@ class Date(BaseDate[date]):
     def convert_to_cache(self, value, records, validate=True):
         return self.to_date(value)
 
-    def convert_to_export(self, value, record):
+    def convert_to_export(self, value, record) -> date | typing.Literal['']:
         return self.to_date(value) or ''
 
     def convert_to_display_name(self, value, record):
@@ -299,7 +302,7 @@ class Datetime(BaseDate[datetime]):
     def convert_to_cache(self, value, records, validate=True):
         return self.to_datetime(value)
 
-    def convert_to_export(self, value, record):
+    def convert_to_export(self, value, record: BaseModel) -> datetime | typing.Literal['']:
         value = self.convert_to_display_name(value, record)
         return self.to_datetime(value) or ''
 

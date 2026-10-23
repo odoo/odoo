@@ -18,19 +18,22 @@ if typing.TYPE_CHECKING:
 from . import fields_numeric  # noqa: F401
 
 
-class Boolean(Field[bool]):
+class Boolean(Field[bool, bool]):
     """ Encapsulates a :class:`bool`. """
     type = 'boolean'
     _column_type = ('bool', 'bool')
     falsy_value = False
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value: bool | None, record, values=None, validate=True) -> bool:
         return bool(value)
 
     def convert_to_cache(self, value, records, validate=True):
         return bool(value)
 
-    def convert_to_export(self, value, record):
+    def convert_to_export(self, value, record) -> bool:
+        return bool(value)
+
+    def convert_to_write(self, value, record) -> bool:
         return bool(value)
 
     def _condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
@@ -72,7 +75,7 @@ class Json(Field):
             return None
         return json.loads(json.dumps(value, ensure_ascii=False, default=json_default))
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value, record, values=None, validate=True) -> PsycopgJson | None:
         if validate:
             value = self.convert_to_cache(value, record)
         if value is None:
@@ -84,8 +87,11 @@ class Json(Field):
             return ''
         return json.dumps(value)
 
+    def convert_to_write(self, value, record):
+        return self.convert_to_cache(value, record, validate=False) or False
 
-class Id(Field[IdType | typing.Literal[False]]):
+
+class Id(Field[IdType | typing.Literal[False], typing.Any]):
     """ Special case for field 'id'. """
     # Note: This field type is not necessarily an integer!
     type = 'integer'  # note this conflicts with Integer
@@ -119,6 +125,12 @@ class Id(Field[IdType | typing.Literal[False]]):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return value
+
+    def convert_to_cache(self, value, records, validate=True):
+        return value
+
+    def convert_to_write(self, value, record):
+        return False if value is None else value
 
     def to_sql(self, table: TableSQL) -> SQL:
         # do not flush, just return the identifier

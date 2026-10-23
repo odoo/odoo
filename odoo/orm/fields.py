@@ -87,7 +87,7 @@ def determine(needle, records: BaseModel, *args):
     raise TypeError("Determination requires a callable or method name")
 
 
-class Field[T]:
+class Field[T, C]:
     """The field descriptor contains the field definition, and manages accesses
     and assignments of the corresponding field on records. The following
     attributes may be provided when instantiating a field:
@@ -1108,7 +1108,7 @@ class Field[T]:
     # Conversion of values
     #
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value: typing.Any, record: BaseModel, values: typing.Any = None, validate: bool = True) -> typing.Any:
         """ Convert ``value`` from the ``write`` format to the SQL parameter
         format for SQL conditions. This is used to compare a field's value when
         the field actually stores multiple values (translated or company-dependent).
@@ -1122,7 +1122,7 @@ class Field[T]:
         else:
             return str(value)
 
-    def convert_to_column_insert(self, value, record, values=None, validate=True):
+    def convert_to_column_insert(self, value: typing.Any, record: BaseModel, values: typing.Any = None, validate: bool = True) -> typing.Any:
         """ Convert ``value`` from the ``write`` format to the SQL parameter
         format for INSERT queries. This method handles the case of fields that
         store multiple values (translated or company-dependent).
@@ -1135,7 +1135,7 @@ class Field[T]:
             return None
         return PsycopgJson({record.env.company.id: value})
 
-    def get_column_update(self, record: BaseModel):
+    def get_column_update(self, record: BaseModel) -> typing.Any:
         """ Return the value of record in cache as an SQL parameter formatted
         for UPDATE queries.
         """
@@ -1162,27 +1162,25 @@ class Field[T]:
             value = field_cache[record_id]
         return self.convert_to_column_insert(value, record, validate=False)
 
-    def convert_to_cache(self, value, records, validate=True):
+    def convert_to_cache(self, value: typing.Any, records: BaseModel, validate: bool = True) -> C | None:
         """ Convert ``value`` to the cache format; ``value`` may come from an
         assignment, or have the format of methods :meth:`BaseModel.read` or
         :meth:`BaseModel.write`. If the value represents a recordset, it should
         be added for prefetching on ``record``.
 
-        :param value:
-        :param record:
         :param bool validate: when True, field-specific validation of ``value``
             will be performed
         """
-        return value
+        raise NotImplementedError()
 
-    def convert_to_record(self, value, record):
+    def convert_to_record(self, value: C | None, record: BaseModel) -> T:
         """ Convert ``value`` from the cache format to the record format.
         If the value represents a recordset, it should share the prefetching of
         ``record``.
         """
         return False if value is None else value
 
-    def convert_to_read(self, value, record, use_display_name=True):
+    def convert_to_read(self, value: T, record: BaseModel, use_display_name: bool = True) -> typing.Any:
         """ Convert ``value`` from the record format to the format returned by
         method :meth:`BaseModel.read`.
 
@@ -1193,21 +1191,19 @@ class Field[T]:
         """
         return False if value is None else value
 
-    def convert_to_write(self, value, record):
+    def convert_to_write(self, value: typing.Any, record: BaseModel):
         """ Convert ``value`` from any format to the format of method
         :meth:`BaseModel.write`.
         """
-        cache_value = self.convert_to_cache(value, record, validate=False)
-        record_value = self.convert_to_record(cache_value, record)
-        return self.convert_to_read(record_value, record)
+        raise NotImplementedError()
 
-    def convert_to_export(self, value, record):
+    def convert_to_export(self, value: T, record: BaseModel) -> typing.Any:
         """ Convert ``value`` from the record format to the export format. """
         if not value:
             return ''
         return value
 
-    def convert_to_display_name(self, value, record):
+    def convert_to_display_name(self, value: T, record: BaseModel) -> str | typing.Literal[False]:
         """ Convert ``value`` from the record format to a suitable display name. """
         return str(value) if value else False
 
@@ -1705,7 +1701,7 @@ class Field[T]:
     #
 
     @typing.final
-    def _get_cache(self, env: Environment) -> MutableMapping[IdType, typing.Any]:
+    def _get_cache(self, env: Environment) -> MutableMapping[IdType, C | None]:
         """ Return the field's cache, i.e., a mutable mapping from record id to
         a cache value.  The cache may be environment-specific.  This mapping is
         the way to retrieve a field's value for a given record.
@@ -1719,7 +1715,7 @@ class Field[T]:
             env._field_cache_memo[self] = field_cache = self._get_cache_impl(env)
         return field_cache
 
-    def _get_cache_impl(self, env: Environment) -> MutableMapping[IdType, typing.Any]:
+    def _get_cache_impl(self, env: Environment) -> MutableMapping[IdType, C | None]:
         """ Implementation of :meth:`_get_cache`.  This method may provide a
         view to the actual cache, depending on the needs of the field.
         """
@@ -1755,7 +1751,7 @@ class Field[T]:
         field_cache = self._get_cache(records.env)
         return (id_ for id_ in records._ids if id_ not in field_cache)
 
-    def _filter_not_equal(self, records: ModelType, cache_value: typing.Any) -> ModelType:
+    def _filter_not_equal(self, records: ModelType, cache_value: C | None) -> ModelType:
         """ Return the subset of ``records`` for which the value of ``self`` is
         either not in cache, or different from ``cache_value``.
         """
@@ -1788,7 +1784,7 @@ class Field[T]:
         # ```
         collections.deque(map(field_cache.setdefault, records._ids, values), maxlen=0)
 
-    def _update_cache(self, records: BaseModel, cache_value: typing.Any, dirty: bool = False) -> None:
+    def _update_cache(self, records: BaseModel, cache_value: C | None, dirty: bool = False) -> None:
         """ Update the value in the cache for the given records, and optionally
         make the field dirty for those records (for stored column fields only).
 

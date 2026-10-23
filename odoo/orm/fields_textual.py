@@ -25,7 +25,7 @@ if typing.TYPE_CHECKING:
     from .query import TableSQL
 
 
-class BaseString(Field[str | typing.Literal[False]]):
+class BaseString(Field[str | typing.Literal[False], dict[str, str] | str | StoredTranslations]):
     """ Abstract class for string fields. """
     translate: bool | Callable[[Callable[[str], str | None], str], str] = False  # whether the field is translated
     is_text = True
@@ -67,12 +67,12 @@ class BaseString(Field[str | typing.Literal[False]]):
         else:
             sql.convert_column(model.env.cr, model._table, self.name, self.stored_sql_column_type)
 
-    def convert_to_column(self, value, record, values=None, validate=True):
+    def convert_to_column(self, value, record, values=None, validate=True) -> dict[str, str] | str | StoredTranslations | None:
         # domain condition `(name, '=', {'en_US': 'English, 'fr_FR': 'French'})` is not supported
         assert not (self.translate and isinstance(value, dict))
         return self.convert_to_cache(value, record, validate)
 
-    def convert_to_column_insert(self, value, record, values=None, validate=True):
+    def convert_to_column_insert(self, value, record, values=None, validate=True) -> PsycopgJson | None:
         if value is False or value is None or not self.translate:
             return super().convert_to_column_insert(value, record, values, validate)
         cache_value = self.convert_to_cache(value, record, validate)
@@ -88,7 +88,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         StoredTranslations(cache_value).validate(record.env, self)
         return PsycopgJson(cache_value)
 
-    def get_column_update(self, record):
+    def get_column_update(self, record) -> PsycopgJson | None:
         if not self.translate:
             return super().get_column_update(record)
 
@@ -733,7 +733,7 @@ class Html(BaseString):
             return value
         return html_sanitize(value, **self.sanitize_vals)
 
-    def convert_to_record(self, value, record):
+    def convert_to_record(self, value: dict | str | StoredTranslations | None, record) -> Markup | typing.Literal[False]:
         value = super().convert_to_record(value, record)
         return False if value is False else Markup(value)
 
