@@ -296,16 +296,19 @@ class HrLeaveAllocation(models.Model):
                 else float_round(allocation.number_of_days_display, precision_digits=2)),
                 _('hours') if allocation.type_request_unit == 'hour' else _('days'))
 
+    @api.depends_context('uid')
     @api.depends('state', 'employee_id')
     def _compute_can_approve(self):
         for allocation in self:
             allocation.can_approve = allocation._check_approval_update('validate1', raise_if_not_possible=False)
 
+    @api.depends_context('uid')
     @api.depends('state', 'employee_id')
     def _compute_can_validate(self):
         for allocation in self:
             allocation.can_validate = allocation._check_approval_update('validate', raise_if_not_possible=False)
 
+    @api.depends_context('uid')
     @api.depends('state', 'employee_id')
     def _compute_can_refuse(self):
         for allocation in self:
