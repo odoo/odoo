@@ -44,7 +44,7 @@ from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
 from odoo.addons.html_editor.controllers.svg_utils import get_shape_svg, make_shaped_image
 from odoo.addons.html_editor.models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
-from odoo.addons.website.tools import adapt_dark_palette_content, get_base_domain
+from odoo.addons.website.tools import get_base_domain
 
 _lt = LazyTranslate(__name__)
 logger = logging.getLogger(__name__)
@@ -485,7 +485,7 @@ class Website(Home):
         :return: preview HTML
         :rtype: str
         """
-        if not re.fullmatch(r'/[a-z0-9_]+/static/description/preview\.html', preview_url):
+        if not re.fullmatch(r'/[a-z0-9_]+/static/description/preview(?:_dark)?\.html', preview_url):
             raise NotFound()
         try:
             with tools.file_open(preview_url.lstrip('/'), 'rb') as file:
@@ -754,7 +754,7 @@ class Website(Home):
                 text_variables.append(f'--o-cc{color_combination}-text:{text_color};')
         return ''.join(text_variables)
 
-    def _get_configurator_preview_overrides(self, palette, final_html, is_dark=False):
+    def _get_configurator_preview_overrides(self, palette, final_html):
         """Return the CSS variables injected into static configurator previews.
 
         The selected palette overrides the preview's base colors. Text color
@@ -765,7 +765,6 @@ class Website(Home):
             ``o-color-1`` to ``o-color-5``
         :param str final_html: static preview HTML used to read the original
             color-combination backgrounds
-        :param bool is_dark: whether the selected palette uses a dark base
         :return: style tag containing the configurator preview CSS variables
         :rtype: str
         """
@@ -776,6 +775,7 @@ class Website(Home):
         }
         root_variables = ''.join(
             f'--o-color-{index}: {color};'
+            f'--o-color-{index}-rgb: {", ".join(map(str, hex_to_rgb(color)))};'
             for index, color in enumerate(palette, start=1)
             if color
         )
@@ -783,46 +783,11 @@ class Website(Home):
             final_html,
             palette_map,
         )
-        dark_mode_overrides = ''
-        if is_dark:
-            root_variables += (
-                '--body-bg:var(--o-color-4);'
-                '--body-color:var(--o-color-5);'
-            )
-            dark_mode_overrides = (
-                '#wrapwrap>main,#wrapwrap.o_footer_effect_enable>main{'
-                'background-color:var(--o-color-4);'
-                'color:var(--o-color-5);'
-                '}'
-            )
-            for area_name, area_selector in (
-                ('menu', '#wrapwrap header .navbar'),
-                ('footer', '#wrapwrap footer'),
-            ):
-                background_match = re.search(
-                    rf'--{area_name}\s*:\s*'
-                    r'(?:var\(--(o-color-[1-5])\)|(#[0-9a-fA-F]{6}))\s*;',
-                    final_html,
-                )
-                if not background_match:
-                    continue
-                color_name, color_value = background_match.groups()
-                background_color = palette_map.get(color_name) if color_name else color_value
-                if not background_color:
-                    continue
-                text_color = self._get_configurator_preview_contrast_color(background_color)
-                dark_mode_overrides += (
-                    f'{area_selector},'
-                    f'{area_selector} :is('
-                    'h1,h2,h3,h4,h5,h6,a:not(.btn),.btn-link,.text-muted'
-                    f'){{color:{text_color}!important;}}'
-                )
         # Chrome may show thin gaps between sections in scaled iframes. The
         # `.o_we_shape` and `section` rules overlap them to hide those gaps.
         return (
             '<style id="o_configurator_theme_preview_overrides">'
             f':root{{{root_variables}}}'
-            f'{dark_mode_overrides}'
             '.o_we_shape{top:-2px;bottom:-2px;}'
             'section{margin-top:-2px;}'
             '</style>'
@@ -871,7 +836,8 @@ class Website(Home):
         Module = request.env['ir.module.module'].sudo()
         if not Module.search_count([*Module.get_themes_domain(), ('name', '=', theme_name)], limit=1):
             raise NotFound()
-        preview_url = request.env['website']._get_configurator_theme_preview_url(theme_name)
+        is_dark_color_palette = is_dark == '1'
+        preview_url = request.env['website']._get_configurator_theme_preview_url(theme_name, is_dark=is_dark_color_palette)
         if not preview_url:
             raise NotFound()
 
@@ -879,7 +845,6 @@ class Website(Home):
             industry_id = int(industry_id)
         except ValueError as exc:
             raise NotFound() from exc
-        is_dark_color_palette = is_dark == '1'
         palette = [
             color if re.fullmatch(r'#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?', color) else ''
             for color in (color1, color2, color3, color4, color5)
@@ -894,21 +859,10 @@ class Website(Home):
         final_html = self._load_configurator_preview_html(preview_url)
         final_html = self._apply_configurator_preview_shape_colors(final_html, palette_map)
         final_html = self._apply_configurator_preview_images(final_html, theme_name, images_map)
-        if is_dark_color_palette:
-            preview_doc = html.document_fromstring(final_html)
-            preview_doctype = preview_doc.getroottree().docinfo.doctype
-            adapt_dark_palette_content(preview_doc)
-            final_html = etree.tostring(
-                preview_doc,
-                encoding='unicode',
-                method='html',
-                doctype=preview_doctype or None,
-            )
         # Add palette variables to make static previews reflect the current configurator selection.
         preview_overrides = self._get_configurator_preview_overrides(
             palette,
             final_html,
-            is_dark=is_dark_color_palette,
         )
         final_html = self._inject_configurator_preview_overrides(
             final_html,
