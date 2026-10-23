@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Modules list -->
+        <record id="app_module_tree" model="ir.ui.view">
+            <field name="name">app.ir.module.module.tree</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="attributes">
+                    <attribute name="groups"/>
+                    <attribute name="optional">show</attribute>
+                </field>
+                <field name="installed_version" position="after">
+                    <field name="latest_version" optional="hide"/>
+                    <field name="local_updatable" optional="show"/>
+                    <field name="addons_path" optional="hide" groups="base.group_no_one"/>
+                </field>
+                <field name="website" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="state" position="before">
+                    <field name="license" optional="hide"/>
+                </field>
+            </field>
+        </record>
+        <!-- Modules search-->
+        <record id="app_view_module_filter" model="ir.ui.view">
+            <field name="name">app.ir.module.module.list.select</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.view_module_filter" />
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="author"/>
+                </field>
+                <filter name="not_installed" position="after">
+                    <filter name="is_local_updatable" string="Local updatable" domain="[('local_updatable', '=', True)]"/>
+                </filter>
+                <xpath expr="//search/group" position="inside">
+                    <filter string="Addons Path" name="addons_path" domain="[]" context="{'group_by': 'addons_path_id'}" groups="base.group_no_one"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="app_module_form" model="ir.ui.view">
+            <field name="name">app.ir.module.module.form</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_form"/>
+	        <field name="arch" type="xml">
+		        <h3 class="oe_fade" position="attributes">
+			        <attribute name="groups">app_odoo_customize.group_show_author_in_apps</attribute>
+		        </h3>
+		        <field name="category_id" position="after">
+			        <field name="addons_path_id" invisible="1"/>
+			        <field name="addons_path" groups="base.group_no_one"/>
+		        </field>
+            </field>
+        </record>
+
+    	<record id="app_module_view_kanban" model="ir.ui.view">
+            <field name="name">ir.module.module.kanban.inherit.base</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_view_kanban"/>
+            <field name="arch" type="xml">
+                <!--点击模块看详情-->
+                <xpath expr="//div[hasclass('oe_module_vignette')]" position="attributes" groups="app_odoo_customize.group_show_quick_upgrade">
+                    <attribute name="class">oe_module_vignette oe_kanban_global_click</attribute>
+                </xpath>
+                <!--让模块名更显眼-->
+                <xpath expr="//div[hasclass('oe_module_desc')]//code" position="replace"/>
+                <xpath expr="//div[hasclass('oe_module_desc')]//h4" position="after">
+                    <code><field name="name"/></code>
+                </xpath>
+                <!--显示快速升级-->
+                <xpath expr="//div[hasclass('oe_module_action')]" position="inside" groups="app_odoo_customize.group_show_quick_upgrade">
+                    <button type="object" class="btn btn-default btn-sm float-right" name="button_uninstall_wizard" states="installed">Uninstall</button>
+                    <button type="object" class="btn btn-success btn-sm float-right" name="button_immediate_upgrade" states="installed">Upgrade</button>
+                </xpath>
+                <!--显示导出翻译-->
+                <xpath expr="//div[hasclass('dropdown-menu')]" position="inside">
+                    <a t-if="installed" name="%(app_odoo_customize.action_server_module_multi_get_po)d" type="action" role="menuitem" class="dropdown-item">Export Translation</a>
+                    <a t-if="installed" name="%(app_odoo_customize.action_server_module_multi_refresh_po)d" type="action" role="menuitem" class="dropdown-item">Refresh Translation</a>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_module_action')]/a[@target='_blank']" position="replace" groups="app_odoo_customize.group_show_quick_upgrade"/>
+            </field>
+        </record>
+    <!--默认打开可更新模块-->
+        <!--<record id="base.open_module_tree" model="ir.actions.act_window">-->
+            <!--<field name="context">{'search_default_is_local_updatable':1}</field>-->
+        <!--</record>-->
+</odoo>

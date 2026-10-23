@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="CreateOrderPopup" owl="1">
+        <div class="popup popup-create-sale-order">
+
+            <header>
+                <div class="title">Create Order</div>
+            </header>
+
+            <main class="body">
+
+                <table>
+                    <tbody>
+                        <tr t-if="env.pos.config.iface_create_draft_sale_order">
+                            <td>
+                                <div
+                                    class="button button-sale-order"
+                                    t-on-click="createDraftSaleOrder"
+                                >
+                                    <span class="icon-containers">
+                                        <i class="fa fa-file-o" role="img" />
+                                    </span>
+                                    <span>Create Draft Sale Order</span>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr t-if="env.pos.config.iface_create_confirmed_sale_order">
+                            <td>
+                                <div
+                                    class="button button-sale-order"
+                                    t-on-click="createConfirmedSaleOrder"
+                                >
+                                    <span class="icon-containers">
+                                        <i class="fa fa-file-text-o" role="img" />
+                                    </span>
+                                    <span>Create Confirmed Sale Order</span>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr t-if="env.pos.config.iface_create_delivered_sale_order">
+                            <td>
+                                <div
+                                    class="button button-sale-order"
+                                    t-on-click="createDeliveredSaleOrder"
+                                >
+                                    <span class="icon-containers">
+                                        <i class="fa fa-file-text-o" role="img" /> +
+                                        <i class="fa fa-shopping-cart" role="img" />
+                                    </span>
+                                    <span>Create Delivered Sale Order</span>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr t-if="env.pos.config.iface_create_invoiced_sale_order">
+                            <td>
+                                <div
+                                    class="button button-sale-order"
+                                    t-on-click="createInvoicedSaleOrder"
+                                >
+                                    <span class="icon-containers">
+                                        <i class="fa fa-file-text-o" role="img" /> +
+                                        <i class="fa fa-shopping-cart" role="img" /> +
+                                        <i class="fa fa-usd" role="img" />
+                                    </span>
+                                    <span>Create Invoiced Sale Order</span>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </main>
+
+            <footer class="footer">
+                <div class="button" t-on-click="cancel">Discard</div>
+            </footer>
+
+        </div>
+    </t>
+
+</templates>

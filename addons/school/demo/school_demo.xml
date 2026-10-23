@@ -1,0 +1,1140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <!--  School Information -->
+    <record id="demo_school_1" model="school.school">
+        <field name="name">West High School</field>
+        <field name="code">0672</field>
+        <field name="city">MELBOURNE</field>
+        <field name="state_id" ref="base.state_au_7" />
+    </record>
+    <record id="demo_school_2" model="school.school">
+        <field name="name">East High School</field>
+        <field name="code">0786</field>
+        <field name="city">ONTARIO</field>
+    </record>
+    <record id="demo_school_3" model="school.school">
+        <field name="name">EverWood High School</field>
+        <field name="code">0895</field>
+        <field name="city">LONDON</field>
+    </record>
+
+    <!-- Student Grade Master -->
+    <record id="demo_student_grade_1" model="grade.master">
+        <field name="name">Grade System for Finals</field>
+    </record>
+    <record id="demo_student_grade_line_1" model="grade.line">
+        <field name="sequence">1</field>
+        <field name="grade">A+</field>
+        <field name="from_mark">90</field>
+        <field name="to_mark">100</field>
+        <field name="grade_id" ref="demo_student_grade_1" />
+    </record>
+    <record id="demo_student_grade_line_2" model="grade.line">
+        <field name="sequence">2</field>
+        <field name="grade">A</field>
+        <field name="from_mark">80</field>
+        <field name="to_mark">89</field>
+        <field name="grade_id" ref="demo_student_grade_1" />
+    </record>
+    <record id="demo_student_grade_line_3" model="grade.line">
+        <field name="sequence">3</field>
+        <field name="grade">A-</field>
+        <field name="from_mark">70</field>
+        <field name="to_mark">79</field>
+        <field name="grade_id" ref="demo_student_grade_1" />
+    </record>
+    <record id="demo_student_grade_line_4" model="grade.line">
+        <field name="sequence">4</field>
+        <field name="grade">B+</field>
+        <field name="from_mark">60</field>
+        <field name="to_mark">69</field>
+        <field name="grade_id" ref="demo_student_grade_1" />
+    </record>
+    <record id="demo_student_grade_line_5" model="grade.line">
+        <field name="sequence">5</field>
+        <field name="grade">B</field>
+        <field name="from_mark">50</field>
+        <field name="to_mark">59</field>
+        <field name="grade_id" ref="demo_student_grade_1" />
+    </record>
+    <record id="demo_student_grade_line_6" model="grade.line">
+        <field name="sequence">6</field>
+        <field name="grade">B-</field>
+        <field name="from_mark">35</field>
+        <field name="to_mark">49</field>
+        <field name="grade_id" ref="demo_student_grade_1" />
+    </record>
+    <record id="demo_student_grade_line_7" model="grade.line">
+        <field name="sequence">7</field>
+        <field name="grade">F</field>
+        <field name="from_mark">00</field>
+        <field name="to_mark">34</field>
+        <field name="fail" eval="True" />
+        <field name="grade_id" ref="demo_student_grade_1" />
+    </record>
+    <!-- Demo data of room -->
+    <record id="class_room1" model="class.room">
+        <field name="name">Room 1</field>
+        <field name="number">1</field>
+    </record>
+    <record id="class_room2" model="class.room">
+        <field name="name">Room 2</field>
+        <field name="number">2</field>
+    </record>
+    <record id="class_room3" model="class.room">
+        <field name="name">Room 3</field>
+        <field name="number">3</field>
+    </record>
+    <record id="class_room4" model="class.room">
+        <field name="name">Room 4</field>
+        <field name="number">4</field>
+    </record>
+    <record id="class_room5" model="class.room">
+        <field name="name">Room 5</field>
+        <field name="number">5</field>
+    </record>
+    <record id="class_room6" model="class.room">
+        <field name="name">Room 6</field>
+        <field name="number">6</field>
+    </record>
+    <record id="class_room7" model="class.room">
+        <field name="name">Room 7</field>
+        <field name="number">7</field>
+    </record>
+    <record id="class_room8" model="class.room">
+        <field name="name">Room 8</field>
+        <field name="number">8</field>
+    </record>
+    <record id="class_room9" model="class.room">
+        <field name="name">Room 9</field>
+        <field name="number">9</field>
+    </record>
+    <record id="class_room10" model="class.room">
+        <field name="name">Room 10</field>
+        <field name="number">10</field>
+    </record>
+    <record id="class_room11" model="class.room">
+        <field name="name">Room 11</field>
+        <field name="number">11</field>
+    </record>
+    <record id="class_room12" model="class.room">
+        <field name="name">Room 12</field>
+        <field name="number">12</field>
+    </record>
+    <record id="class_room13" model="class.room">
+        <field name="name">Room 13</field>
+        <field name="number">13</field>
+    </record>
+    <record id="class_room14" model="class.room">
+        <field name="name">Room 14</field>
+        <field name="number">14</field>
+    </record>
+    <record id="class_room15" model="class.room">
+        <field name="name">Room 15</field>
+        <field name="number">15</field>
+    </record>
+    <!--Academic Year  Information-->
+    <record id="demo_academic_year_1" model="academic.year">
+            <field
+            eval="'Academic Year ' + str((DateTime.today() - relativedelta(years=1)).strftime('%Y'))"
+            name="name"
+        />
+            <field
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y')"
+            name="code"
+        />
+            <field name="sequence">1</field>
+            <field name="grade_id" ref="demo_student_grade_1" />
+            <field
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-01-01 %H:%M')"
+            name="date_start"
+        />
+            <field
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-12-31 %H:%M')"
+            name="date_stop"
+        />
+    </record>
+    <record id="demo_academic_year_2" model="academic.year">
+           <field
+            eval="'Academic Year ' + str((DateTime.today()).strftime('%Y'))"
+            name="name"
+        />
+           <field eval="(DateTime.today()).strftime('%Y')" name="code" />
+           <field name="sequence">2</field>
+           <field name="current" eval="True" />
+           <field name="grade_id" ref="demo_student_grade_1" />
+           <field
+            eval="(DateTime.today()).strftime('%Y-01-01 %H:%M')"
+            name="date_start"
+        />
+           <field
+            eval="(DateTime.today()).strftime('%Y-12-31 %H:%M')"
+            name="date_stop"
+        />
+    </record>
+    <record id="demo_academic_year_3" model="academic.year">
+           <field
+            eval="'Academic Year ' + str((DateTime.today() + relativedelta(years=1)).strftime('%Y'))"
+            name="name"
+        />
+           <field
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y')"
+            name="code"
+        />
+           <field name="sequence">3</field>
+           <field name="grade_id" ref="demo_student_grade_1" />
+           <field
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-01-01 %H:%M')"
+            name="date_start"
+        />
+           <field
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-31 %H:%M')"
+            name="date_stop"
+        />
+    </record>
+
+    <!-- Academic Month -->
+    <record id="demo_academic_month_previous_1" model="academic.month">
+            <field name="name">January</field>
+            <field name="code">JAN</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-01-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-01-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_2" model="academic.month">
+            <field name="name">February</field>
+            <field name="code">FEB</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-02-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-02-28 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_3" model="academic.month">
+            <field name="name">March</field>
+            <field name="code">MAR</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-03-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-03-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_4" model="academic.month">
+            <field name="name">April</field>
+            <field name="code">APR</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-04-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-04-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_5" model="academic.month">
+            <field name="name">May</field>
+            <field name="code">MAY</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-05-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-05-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_6" model="academic.month">
+            <field name="name">June</field>
+            <field name="code">JUN</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-06-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_7" model="academic.month">
+            <field name="name">July</field>
+            <field name="code">JUL</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-07-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-07-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_8" model="academic.month">
+            <field name="name">August</field>
+            <field name="code">AUG</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-08-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-08-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_9" model="academic.month">
+            <field name="name">September</field>
+            <field name="code">SEP</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-09-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-09-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_10" model="academic.month">
+            <field name="name">October</field>
+            <field name="code">OCT</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-10-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-10-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_11" model="academic.month">
+            <field name="name">November</field>
+            <field name="code">NOV</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-11-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-11-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_previous_12" model="academic.month">
+            <field name="name">December</field>
+            <field name="code">DEC</field>
+            <field name="year_id" ref="school.demo_academic_year_1" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-12-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-12-31 %H:%M')"
+        />
+   </record>
+    <record id="demo_academic_month_current_1" model="academic.month">
+            <field name="name">January</field>
+            <field name="code">JAN</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-01-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-01-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_current_2" model="academic.month">
+            <field name="name">February</field>
+            <field name="code">FEB</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-02-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-02-28 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_current_3" model="academic.month">
+            <field name="name">March</field>
+            <field name="code">MAR</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-03-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-03-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_current_4" model="academic.month">
+            <field name="name">April</field>
+            <field name="code">APR</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-04-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-04-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_current_5" model="academic.month">
+            <field name="name">May</field>
+            <field name="code">MAY</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-05-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-05-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_current_6" model="academic.month">
+            <field name="name">June</field>
+            <field name="code">JUN</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-06-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-06-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_current_7" model="academic.month">
+            <field name="name">July</field>
+            <field name="code">JUL</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-07-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-07-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_cur_8" model="academic.month">
+            <field name="name">August</field>
+            <field name="code">AUG</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-08-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-08-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_current_9" model="academic.month">
+            <field name="name">September</field>
+            <field name="code">SEP</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-09-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-09-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_current_10" model="academic.month">
+            <field name="name">October</field>
+            <field name="code">OCT</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-10-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-10-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_current_11" model="academic.month">
+            <field name="name">November</field>
+            <field name="code">NOV</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-11-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-11-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_current_12" model="academic.month">
+            <field name="name">December</field>
+            <field name="code">DEC</field>
+            <field name="year_id" ref="school.demo_academic_year_2" />
+            <field
+            name="date_start"
+            eval="(DateTime.today()).strftime('%Y-12-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today()).strftime('%Y-12-31 %H:%M')"
+        />
+   </record>
+    <record id="demo_academic_month_next_1" model="academic.month">
+            <field name="name">January</field>
+            <field name="code">JAN</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-01-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-01-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_2" model="academic.month">
+            <field name="name">February</field>
+            <field name="code">FEB</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-02-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-02-28 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_3" model="academic.month">
+            <field name="name">March</field>
+            <field name="code">MAR</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-03-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-03-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_4" model="academic.month">
+            <field name="name">April</field>
+            <field name="code">APR</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-04-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-04-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_5" model="academic.month">
+            <field name="name">May</field>
+            <field name="code">MAY</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-05-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-05-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_6" model="academic.month">
+            <field name="name">June</field>
+            <field name="code">JUN</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-06-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_7" model="academic.month">
+            <field name="name">July</field>
+            <field name="code">JUL</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-07-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-07-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_8" model="academic.month">
+            <field name="name">August</field>
+            <field name="code">AUG</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-08-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-08-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_9" model="academic.month">
+            <field name="name">September</field>
+            <field name="code">SEP</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-09-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-09-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_10" model="academic.month">
+            <field name="name">October</field>
+            <field name="code">OCT</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-10-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-10-31 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_11" model="academic.month">
+            <field name="name">November</field>
+            <field name="code">NOV</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-11-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-11-30 %H:%M')"
+        />
+   </record>
+   <record id="demo_academic_month_next_12" model="academic.month">
+            <field name="name">December</field>
+            <field name="code">DEC</field>
+            <field name="year_id" ref="school.demo_academic_year_3" />
+            <field
+            name="date_start"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-01 %H:%M')"
+        />
+            <field
+            name="date_stop"
+            eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-31 %H:%M')"
+        />
+   </record>
+    <!--Standard Information-->
+    <record id="demo_standard_standard_1" model="standard.standard">
+        <field name="name">10th</field>
+        <field name="code">FRT</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="demo_standard_standard_2" model="standard.standard">
+        <field name="name">11th</field>
+        <field name="code">SCN</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="demo_standard_standard_3" model="standard.standard">
+        <field name="name">12th</field>
+        <field name="code">THR</field>
+        <field name="sequence">3</field>
+    </record>
+    <!--Standard Medium Information-->
+    <record id="demo_standard_medium_1" model="standard.medium">
+        <field name="name">English</field>
+        <field name="code">ENG</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="demo_standard_medium_2" model="standard.medium">
+        <field name="name">French</field>
+        <field name="code">FRENCH</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="demo_standard_medium_3" model="standard.medium">
+        <field name="name">Urdu</field>
+        <field name="code">URDU</field>
+        <field name="sequence">3</field>
+    </record>
+    <!--Standard Division Information-->
+    <record id="demo_standard_division_1" model="standard.division">
+        <field name="name">A</field>
+        <field name="code">A</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="demo_standard_division_2" model="standard.division">
+        <field name="name">B</field>
+        <field name="code">B</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <!-- Subject Information -->
+    <record id="demo_subject_subject_1" model="subject.subject">
+        <field name="name">Mathematics</field>
+        <field name="code">MAT</field>
+        <field name="maximum_marks">100</field>
+        <field name="minimum_marks">35</field>
+        <field
+            name="standard_ids"
+            eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"
+        />
+        <!-- <field name="teacher_ids" eval="[(6,0,[ref('demo_school_teacher_1'),ref('demo_school_teacher_3')])]"/> -->
+    </record>
+    <record id="demo_subject_subject_2" model="subject.subject">
+        <field name="name">Science</field>
+        <field name="code">SCN</field>
+        <field name="maximum_marks">100</field>
+        <field name="minimum_marks">35</field>
+        <field
+            name="standard_ids"
+            eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"
+        />
+        <!-- <field name="teacher_ids" eval="[(6, 0, [ref('demo_school_teacher_1'),ref('demo_school_teacher_3')])]"/> -->
+    </record>
+    <record id="demo_subject_subject_3" model="subject.subject">
+        <field name="name">English</field>
+        <field name="code">ENG</field>
+        <field name="maximum_marks">100</field>
+        <field name="minimum_marks">35</field>
+        <field
+            name="standard_ids"
+            eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"
+        />
+        <!-- <field name="teacher_ids" eval="[(6, 0, [ref('demo_school_teacher_1'),ref('demo_school_teacher_2')])]"/> -->
+    </record>
+    <record id="demo_subject_subject_4" model="subject.subject">
+        <field name="name">Social Science</field>
+        <field name="code">SOS</field>
+        <field name="maximum_marks">100</field>
+        <field name="minimum_marks">35</field>
+        <field
+            name="standard_ids"
+            eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"
+        />
+        <!-- <field name="teacher_ids" eval="[(6, 0, [ref('demo_school_teacher_1'),ref('demo_school_teacher_2')])]"/> -->
+    </record>
+    <record id="demo_subject_subject_5" model="subject.subject">
+        <field name="name">Computer</field>
+        <field name="code">CMP</field>
+        <field name="maximum_marks">100</field>
+        <field name="minimum_marks">35</field>
+        <field
+            name="standard_ids"
+            eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"
+        />
+        <!-- <field name="teacher_ids" eval="[(6, 0, [ref('demo_school_teacher_1'),ref('demo_school_teacher_2')])]"/> -->
+    </record>
+    <record id="demo_subject_subject_6" model="subject.subject">
+        <field name="name">Sport</field>
+        <field name="code">PET</field>
+        <field name="maximum_marks">100</field>
+        <field name="minimum_marks">35</field>
+        <field
+            name="standard_ids"
+            eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"
+        />
+        <!-- <field name="teacher_ids" eval="[(6, 0, [ref('demo_school_teacher_2'),ref('demo_school_teacher_3')])]"/> -->
+    </record>
+    <record id="demo_subject_subject_7" model="subject.subject">
+        <field name="name">Music</field>
+        <field name="code">MS</field>
+        <field name="maximum_marks">100</field>
+        <field name="minimum_marks">35</field>
+        <field
+            name="standard_ids"
+            eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"
+        />
+        <!-- <field name="teacher_ids" eval="[(6, 0, [])]"/> -->
+    </record>
+    <record id="demo_subject_subject_8" model="subject.subject">
+        <field name="name">Philosophy</field>
+        <field name="code">PH</field>
+        <field name="maximum_marks">100</field>
+        <field name="minimum_marks">35</field>
+        <field
+            name="standard_ids"
+            eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"
+        />
+        <!-- <field name="teacher_ids" eval="[(6, 0, [])]"/> -->
+    </record>
+
+<!-- School Standard -->
+    <record id="demo_school_standard_1" model="school.standard">
+        <field name="standard_id" ref="demo_standard_standard_1" />
+        <field name="division_id" ref="demo_standard_division_1" />
+        <field name="medium_id" ref="demo_standard_medium_1" />
+        <field name="school_id" ref="demo_school_1" />
+        <!-- <field name="user_id" ref="demo_school_teacher_1"/> -->
+        <field name="name">10th-A</field>
+        <field name="class_room_id" ref="class_room1" />
+        <field name="capacity">30</field>
+        <field
+            name="subject_ids"
+            eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_5'),ref('demo_subject_subject_6')])]"
+        />
+    </record>
+    <record id="demo_school_standard_2" model="school.standard">
+        <field name="standard_id" ref="demo_standard_standard_2" />
+        <field name="division_id" ref="demo_standard_division_2" />
+        <field name="medium_id" ref="demo_standard_medium_2" />
+        <field name="school_id" ref="demo_school_1" />
+        <!-- <field name="user_id" ref="demo_school_teacher_2"/> -->
+        <field name="class_room_id" ref="class_room2" />
+        <field name="name">11th-B</field>
+        <field name="capacity">30</field>
+        <field
+            name="subject_ids"
+            eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_6'),ref('demo_subject_subject_7')])]"
+        />
+    </record>
+    <record id="demo_school_standard_3" model="school.standard">
+        <field name="standard_id" ref="demo_standard_standard_3" />
+        <field name="division_id" ref="demo_standard_division_1" />
+        <field name="medium_id" ref="demo_standard_medium_3" />
+        <field name="school_id" ref="demo_school_1" />
+        <!-- <field name="user_id" ref="demo_school_teacher_3"/> -->
+        <field name="class_room_id" ref="class_room3" />
+        <field name="name">12th-A</field>
+        <field name="capacity">30</field>
+        <field
+            name="subject_ids"
+            eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_7'),ref('demo_subject_subject_8')])]"
+        />
+    </record>
+
+
+    <!-- School Teacher Information-->
+    <record id="demo_school_teacher_1" model="school.teacher">
+        <field name="name">Winely</field>
+        <field name="work_email">winely@demo.com</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="standard_id" ref="demo_school_standard_1" />
+        <field
+            eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_5')])]"
+            name="subject_id"
+        />
+    </record>
+
+    <record id="demo_school_teacher_2" model="school.teacher">
+        <field name="name">Peter White</field>
+        <field name="work_email">peter@demo.com</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="standard_id" ref="demo_school_standard_2" />
+        <field
+            eval="[(6,0,[ref('demo_subject_subject_5'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_6')])]"
+            name="subject_id"
+        />
+    </record>
+
+    <record id="demo_school_teacher_3" model="school.teacher">
+        <field name="name">Winparker Gabriel</field>
+        <field name="work_email">winparker@demo.com</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="standard_id" ref="demo_school_standard_1" />
+        <field
+            eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_6')])]"
+            name="subject_id"
+        />
+    </record>
+
+    <!-- Student Informations -->
+    <record id="demo_student_student_4" model="student.student">
+        <field name="name">Maria</field>
+        <field name="middle">Samuel</field>
+        <field name="last">Snell</field>
+        <field name="student_code">0672/2018/001</field>
+        <field name="year" ref="demo_academic_year_3" />
+        <field name="pid">New</field>
+        <field
+            name="date_of_birth"
+            eval="(DateTime.today() - relativedelta(years=13)).strftime('%Y-11-02 %H:%M')"
+        />
+        <field name="gender">female</field>
+        <field name="roll_no">12</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="country_id" ref="base.uk" />
+        <field name="city">London</field>
+        <field name="standard_id" ref="demo_school_standard_1" />
+        <field name="division_id" ref="demo_standard_division_1" />
+        <field name="medium_id" ref="demo_standard_medium_1" />
+    </record>
+    <function
+        model="student.student"
+        name="admission_done"
+        eval="[[ref('demo_student_student_4')]]"
+    />
+    <record id="demo_student_student_5" model="student.student">
+        <field name="name">John</field>
+        <field name="middle">William</field>
+        <field name="last">Smith</field>
+        <field name="student_code">0671/2016/002</field>
+        <field name="year" ref="demo_academic_year_1" />
+        <field name="pid">New</field>
+        <field
+            name="date_of_birth"
+            eval="(DateTime.today() - relativedelta(years=15)).strftime('%Y-03-24 %H:%M')"
+        />
+        <field name="gender">male</field>
+        <field name="roll_no">2</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="country_id" ref="base.uk" />
+        <field name="city">Manchester</field>
+        <field name="standard_id" ref="demo_school_standard_2" />
+        <field name="division_id" ref="demo_standard_division_2" />
+        <field name="medium_id" ref="demo_standard_medium_2" />
+    </record>
+    <function
+        model="student.student"
+        name="admission_done"
+        eval="[[ref('demo_student_student_5')]]"
+    />
+    <record id="demo_student_student_6" model="student.student">
+        <field name="name">Alexander</field>
+        <field name="middle">Robert</field>
+        <field name="last">Martin</field>
+        <field name="student_code">0671/2017/003</field>
+        <field name="year" ref="demo_academic_year_2" />
+        <field name="pid">New</field>
+        <field
+            name="date_of_birth"
+            eval="(DateTime.today() - relativedelta(years=14)).strftime('%Y-05-12 %H:%M')"
+        />
+        <field name="gender">male</field>
+        <field name="roll_no">2</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="country_id" ref="base.uk" />
+        <field name="city">Headingly</field>
+        <field name="standard_id" ref="demo_school_standard_3" />
+        <field name="division_id" ref="demo_standard_division_1" />
+        <field name="medium_id" ref="demo_standard_medium_3" />
+    </record>
+    <function
+        model="student.student"
+        name="admission_done"
+        eval="[[ref('demo_student_student_6')]]"
+    />
+    <record id="demo_student_student_7" model="student.student">
+        <field name="name">Sarah</field>
+        <field name="middle">Isaac</field>
+        <field name="last">Elmer</field>
+        <field name="student_code">0673/2017/004</field>
+        <field name="year" ref="demo_academic_year_2" />
+        <field name="pid">New</field>
+        <field
+            name="date_of_birth"
+            eval="(DateTime.today() - relativedelta(years=13)).strftime('%Y-06-02 %H:%M')"
+        />
+        <field name="gender">female</field>
+        <field name="roll_no">3</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="country_id" ref="base.za" />
+        <field name="city">Johesburg</field>
+        <field name="standard_id" ref="demo_school_standard_1" />
+        <field name="division_id" ref="demo_standard_division_1" />
+        <field name="medium_id" ref="demo_standard_medium_1" />
+    </record>
+    <function
+        model="student.student"
+        name="admission_done"
+        eval="[[ref('demo_student_student_7')]]"
+    />
+    <record id="demo_student_student_8" model="student.student">
+        <field name="name">Lucy</field>
+        <field name="middle">William</field>
+        <field name="last">Brown</field>
+        <field name="student_code">0674/2017/005</field>
+        <field name="year" ref="demo_academic_year_3" />
+        <field name="pid">New</field>
+        <field
+            name="date_of_birth"
+            eval="(DateTime.today() - relativedelta(years=15)).strftime('%Y-06-06 %H:%M')"
+        />
+        <field name="gender">female</field>
+        <field name="roll_no">3</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="country_id" ref="base.za" />
+        <field name="city">CapeTown</field>
+        <field name="standard_id" ref="demo_school_standard_2" />
+        <field name="division_id" ref="demo_standard_division_2" />
+        <field name="medium_id" ref="demo_standard_medium_2" />
+    </record>
+    <function
+        model="student.student"
+        name="admission_done"
+        eval="[[ref('demo_student_student_8')]]"
+    />
+
+    <record id="demo_student_student_1" model="student.student">
+        <field name="name">Mary</field>
+        <field name="middle">Daniel</field>
+        <field name="last">Richardson</field>
+        <field name="state">draft</field>
+        <field name="year" ref="demo_academic_year_1" />
+        <field name="pid">New</field>
+        <field
+            name="date_of_birth"
+            eval="(DateTime.today() - relativedelta(years=11)).strftime('%Y-04-03 %H:%M')"
+        />
+        <field name="gender">female</field>
+        <field name="roll_no">1</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="country_id" ref="base.au" />
+        <field name="city">Melbourne</field>
+        <field name="standard_id" ref="demo_school_standard_1" />
+        <field name="division_id" ref="demo_standard_division_1" />
+        <field name="medium_id" ref="demo_standard_medium_1" />
+    </record>
+    <record id="demo_student_student_2" model="student.student">
+        <field name="name">William</field>
+        <field name="middle">Joseph</field>
+        <field name="last">Lee</field>
+        <field name="state">draft</field>
+        <field name="year" ref="demo_academic_year_2" />
+        <field name="pid">New</field>
+        <field
+            name="date_of_birth"
+            eval="(DateTime.today() - relativedelta(years=12)).strftime('%Y-02-14 %H:%M')"
+        />
+        <field name="gender">male</field>
+        <field name="roll_no">1</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="country_id" ref="base.au" />
+        <field name="city">Sydney</field>
+        <field name="standard_id" ref="demo_school_standard_2" />
+        <field name="division_id" ref="demo_standard_division_2" />
+        <field name="medium_id" ref="demo_standard_medium_2" />
+    </record>
+    <record id="demo_student_student_3" model="student.student">
+        <field name="name">Jacob</field>
+        <field name="middle">Caleb</field>
+        <field name="last">Clark</field>
+        <field name="state">draft</field>
+        <field name="year" ref="demo_academic_year_1" />
+        <field name="pid">New</field>
+        <field
+            name="date_of_birth"
+            eval="(DateTime.today() - relativedelta(years=11)).strftime('%Y-09-24 %H:%M')"
+        />
+        <field name="gender">male</field>
+        <field name="roll_no">1</field>
+        <field name="school_id" ref="demo_school_1" />
+        <field name="country_id" ref="base.au" />
+        <field name="city">Adelaide</field>
+        <field name="standard_id" ref="demo_school_standard_3" />
+        <field name="division_id" ref="demo_standard_division_2" />
+        <field name="medium_id" ref="demo_standard_medium_3" />
+    </record>
+
+    <!-- Student Parent Information -->
+
+    <record id="demo_student_parent_1" model="school.parent">
+        <field name="name">Jim Davis</field>
+        <field name="email">jim.davis@example.com</field>
+        <field eval="[(6,0,[ref('demo_student_student_5')])]" name="student_id" />
+    </record>
+
+    <record id="demo_student_parent_2" model="school.parent">
+        <field name="name">Carol Amidon</field>
+        <field name="email">carol.amidon@example.com</field>
+        <field eval="[(6,0,[ref('demo_student_student_6')])]" name="student_id" />
+    </record>
+
+    <record id="demo_student_parent_3" model="school.parent">
+        <field name="name">Linda Kellian</field>
+        <field name="email">linda@kellian@example.com</field>
+        <field eval="[(6,0,[ref('demo_student_student_7')])]" name="student_id" />
+    </record>
+
+    <record id="demo_student_parent_4" model="school.parent">
+        <field name="name">Harold Placek</field>
+        <field name="email">harold.placek@example.com</field>
+        <field eval="[(6,0,[ref('demo_student_student_8')])]" name="student_id" />
+    </record>
+
+    <record id="demo_student_parent_6" model="school.parent">
+        <field name="name">Jessie Warner</field>
+        <field name="email">jessie.warner@example.com</field>
+        <field eval="[(6,0,[ref('demo_student_student_6')])]" name="student_id" />
+    </record>
+    <!-- Student Religion/caste -->
+    <record id="demo_student_cast_1" model="student.cast">
+        <field name="name">Hindu</field>
+    </record>
+    <record id="demo_student_cast_2" model="student.cast">
+        <field name="name">Muslim</field>
+    </record>
+    <record id="demo_student_cast_3" model="student.cast">
+        <field name="name">Christian</field>
+    </record>
+    <record id="demo_student_cast_4" model="student.cast">
+        <field name="name">Punjabi</field>
+    </record>
+    <record id="demo_student_cast_5" model="student.cast">
+        <field name="name">Parsi</field>
+    </record>
+    <!-- Student Document Type -->
+    <record id="demo_student_document_1" model="document.type">
+        <field name="doc_type">SSC Marksheet</field>
+    </record>
+    <record id="demo_student_document_2" model="document.type">
+        <field name="doc_type">HSC Marksheet</field>
+    </record>
+    <record id="demo_student_document_3" model="document.type">
+        <field name="doc_type">Gradution Marksheet</field>
+    </record>
+    <record id="demo_student_document_4" model="document.type">
+        <field name="doc_type">Degree certificate</field>
+    </record>
+    <record id="demo_student_document_5" model="document.type">
+        <field name="doc_type">Leving Certificate</field>
+    </record>
+    <record id="demo_student_document_6" model="document.type">
+        <field name="doc_type">Caste certificate</field>
+    </record>
+    <record id="demo_student_document_7" model="document.type">
+        <field name="doc_type">Other certificate</field>
+    </record>
+    <!-- student.news -->
+    <record id="demo_student_news_desc_1" model="student.news">
+        <field name="subject">Education Information</field>
+        <field eval="(DateTime.today()) + relativedelta(days= 3)" name="date" />
+    </record>
+</odoo>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!--Adding the icon in purchase -->
+    <t t-name="sticky_header_and_column_in_list_view.PurchaseListRender"
+       t-inherit="purchase.PurchaseListView"
+       t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_list_renderer')]/table/thead/tr/t/th/t/div/span"
+               position="after">
+                <i class="fa fa-thumb-tack"
+                   style="color: #27ae60; font-size: 16px; margin-right: 5px;"
+                   t-on-click="(ev) => this._onClickIcon(ev,record)"/>
+        </xpath>
+
+    </t>
+    <!--Adding the icon in account -->
+    <t t-name="sticky_header_and_column_in_list_view.AccountListRender"
+       t-inherit="account.ListRenderer" t-inherit-mode="extension"
+       owl="1">
+        <xpath expr="//div[hasclass('o_list_renderer')]/table/thead/tr/t/th/t/div/span"
+               position="after">
+                <i class="fa fa-thumb-tack"
+                   style="color: #27ae60; font-size: 16px; margin-right: 5px;"
+                   t-on-click="(ev) => this._onClickIcon(ev,record)"/>
+        </xpath>
+    </t>
+    <!--Adding the icon in Hr Expense -->
+    <t t-name="sticky_header_and_column_in_list_view.HrExpenseListRender"
+       t-inherit="hr_expense.DashboardListRenderer"
+       t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_list_renderer')]/table/thead/tr/t/th/t/div/span"
+               position="after">
+                <i class="fa fa-thumb-tack"
+                   style="color: #27ae60; font-size: 16px; margin-right: 5px;"
+                   t-on-click="(ev) => this._onClickIcon(ev,record)"/>
+        </xpath>
+    </t>
+    <!--Adding the icon in All-->
+    <t t-name="sticky_header_and_column_in_list_view.RowListView"
+       t-inherit="web.ListRenderer" t-inherit-mode="extension"
+       owl="1">
+       <xpath expr="//div[hasclass('o_list_renderer')]/table/thead/tr/t/th/t/div/span"
+              position="after">
+           <i class="fa fa-thumb-tack"
+              style="color: #27ae60; font-size: 16px; margin-right: 5px;"
+              t-on-click="(ev) => this._onClickIcon(ev,record)"
+           />
+        </xpath>
+    </t>
+</templates>

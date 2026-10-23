@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem
+        name="Commissions"
+        id="menu_commission"
+        groups="group_commission_user"
+        web_icon="commission,static/description/icon.png"
+        sequence="50"
+    />
+    <menuitem
+        name="Configuration"
+        id="menu_commission_management"
+        parent="menu_commission"
+        groups="group_commission_manager"
+        sequence="100"
+    />
+</odoo>

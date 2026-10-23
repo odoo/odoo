@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019-2023 Sodexis
+	 License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+<odoo>
+
+    <record id="module_category_crm_claim" model="ir.module.category">
+        <field name="name">Claims</field>
+        <field name="sequence" eval="20" />
+    </record>
+
+	<record id="group_crm_claim_user" model="res.groups">
+		<field name="name">RMA User</field>
+		<field name="implied_ids" eval="[(4, ref('stock.group_stock_user'))]" />
+		<field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+	</record>
+
+	<record id="group_crm_claim_manager" model="res.groups">
+		<field name="name">RMA Manager</field>
+		<field name="implied_ids" eval="[(4, ref('sod_crm_claim.group_crm_claim_user'))]" />
+		<field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+	</record>
+
+	<record model="ir.rule" id="claim_comp_rule">
+		<field name="name">CRM Claim Multi-company</field>
+		<field name="model_id" ref="sod_crm_claim.model_crm_claim" />
+		<field
+            name="domain_force"
+        >['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
+	</record>
+
+	<record model="ir.rule" id="claim_team_rule">
+		<field name="name">CRM Claim Team Multi-company</field>
+		<field name="model_id" ref="sod_crm_claim.model_crm_claim_team" />
+		<field
+            name="domain_force"
+        >['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
+	</record>
+
+</odoo>

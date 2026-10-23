@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019-2023 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+<odoo>
+	<record id="view_move_form" model="ir.ui.view">
+		<field name="name">account.move.form</field>
+		<field name="model">account.move</field>
+		<field name="inherit_id" ref="account.view_move_form" />
+		<field name="arch" type="xml">
+			<xpath expr="//group[@name='accounting_info_group']" position="after">
+			    <group name="claim_group" string="Returns" attrs="{'invisible':[('claim_id', '=', False)]}">
+				    <field
+                        name="claim_id"
+                        attrs="{'invisible':[('claim_id', '=', False)]}"
+                        domain="[('partner_id', '=', partner_id)]"
+                        groups="!sod_crm_claim.group_crm_claim_manager"
+                    />
+					<field
+                        name="claim_id"
+                        attrs="{'invisible':[('claim_id', '=', False)]}"
+                        domain="[('partner_id', '=', partner_id)]"
+                        groups="sod_crm_claim.group_crm_claim_manager"
+                        readonly="False"
+                    />
+				</group>
+			</xpath>
+		</field>
+	</record>
+
+</odoo>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Action specified for the dashboard menu-->
+    <record id="dashboard_menu_view_action" model="ir.actions.act_window">
+        <field name="name">Dashboards Menu</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">dashboard.menu</field>
+        <field name="view_mode">kanban,form</field>
+    </record>
+    <!--Kanban view of the dashboard menu-->
+    <record id="dashboard_menu_view_kanban" model="ir.ui.view">
+        <field name="name">dashboard.menu.view.kanban</field>
+        <field name="model">dashboard.menu</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <center>
+                                <h3 class="my-2 ms-3">
+                                    Name:
+                                    <field name="name"/>
+                                </h3>
+                            </center>
+                            <div class="row">
+                                <hr class="mt4 mb4"/>
+                                <div class="col-6 text-center">
+                                    <strong>Parent:</strong>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <field name="menu_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!--Form view of the dashboard menu-->
+    <record id="dashboard_menu_view_form" model="ir.ui.view">
+        <field name="name">dashboard.menu.view.form</field>
+        <field name="model">dashboard.menu</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" class="oe_inline"/>
+                            <field name="menu_id" class="oe_inline"/>
+                            <field name="group_ids" widget="many2many_tags"
+                                   invisible="1"/>
+                            <field name="client_action_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <menuitem name="Dashboard Menu" id="dashboard_menu_view_menu"
+              parent="advanced_dynamic_dashboard.dynamic_dashboard_menu"
+              sequence="10" action="dashboard_menu_view_action"/>
+</odoo>

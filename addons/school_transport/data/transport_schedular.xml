@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+      <record id="ir_cron_student_transport_every_day_schedule" model="ir.cron">
+            <field name="name">student_transport</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="state">code</field>
+            <field name="doall" eval="False" />
+            <field ref="school_transport.model_student_transport" name="model_id" />
+            <field name="code">model.participant_expire()</field>
+            <field name="active" eval="True" />
+        </record>
+</odoo>

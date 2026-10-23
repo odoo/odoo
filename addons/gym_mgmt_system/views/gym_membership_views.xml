@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- form view for gym membership -->
+    <record id="gym_membership_view_form" model="ir.ui.view">
+        <field name="name">gym.membership.form</field>
+        <field name="model">gym.membership</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"
+                           options="{'clickable':'1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="member_id"/>
+                            <field name="membership_scheme_id"/>
+                            <field name="paid_amount"/>
+                        </group>
+                        <group>
+                            <field name="membership_fees"/>
+                            <field name="sale_order_id" readonly="1"/>
+                            <label for="membership_date_from" string="Membership Duration"/>
+                            <div class="o_row">
+                                <field name="membership_date_from" required="1"/>
+                                -
+                                <field name="membership_date_to" required="1"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+<!--Tree view for gym membership-->
+     <record id="view_membership_tree" model="ir.ui.view">
+        <field name="name">gym.membership.tree</field>
+        <field name="model">gym.membership</field>
+        <field name="arch" type="xml">
+            <tree default_order="reference desc">
+                <field name="reference"/>
+                <field name="member_id"/>
+                <field name="membership_scheme_id"/>
+                <field name="membership_fees"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+<!--Action for gym membership-->
+    <record id="gym_membership_action" model="ir.actions.act_window">
+        <field name="name">Gym Membership</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gym.membership</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Membership!
+            </p>
+        </field>
+    </record>
+<!-- Menu -->
+    <menuitem
+            id="gym_membership_menu_action"
+            name="Membership"
+            parent="gym_member_root"
+            action="gym_membership_action"
+            sequence="30"/>
+</odoo>

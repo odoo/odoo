@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Inherited the res.config setting to add the fields-->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">
+            res.config.settings.view.form.inherit.low.stocks.product.alert
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='product_attributes']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box"
+                     id="low_stock_setting">
+                    <div class="o_setting_left_pane">
+                        <field name="is_low_stock_alert"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Low Stock Alert For All Products</span>
+                        <div class="text-muted">To set Alert for all products
+                        </div>
+                        <div class="row mt-16"
+                             attrs="{'invisible': [('is_low_stock_alert', '=', False)]}">
+                            <label for="min_low_stock_alert"
+                                   class="col-lg-4 o_light_label"/>
+                            <field name="min_low_stock_alert"
+                                   class="oe_inline"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="o_setting_left_pane">
+                        <field name="is_low_stock_alert_individual"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Low Stock Alert For Individual Products</span>
+                        <div class="text-muted">To set Alert for individual product
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

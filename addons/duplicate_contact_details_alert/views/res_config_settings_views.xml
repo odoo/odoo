@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_contacts_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.duplicate_contact_details_alert</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@id='contacts_settings']" position="inside">
+                <div id="unique_contact_settings">
+                    <div class='row mt16 o_settings_container'
+                         name="contact_alert_setting_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box"
+                             id="contact_alert">
+                            <div class="o_setting_left_pane">
+                                <field name="is_unique_contact"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Unique Contacts
+                                </span>
+                                <div class="text-muted">Validation alerts for duplicate contact details</div>
+                                <div class="row mt16"
+                                     attrs="{'invisible': [('is_unique_contact', '=', False)]}">
+                                    <label for="unique_contact_ids"
+                                           class="col-lg-4 o_light_label"/>
+                                    <field name="unique_contact_ids"
+                                           widget="many2many_tags"
+                                           class="oe_inline"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

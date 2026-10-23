@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_cust_form_custom" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='website']" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+                <field name="commission_type"/>
+                <field name="commission_value"/>
+            </xpath>
+
+<!--DB            <field name="email" position="attributes">-->
+<!--                <attribute name="required">0</attribute>-->
+<!--            </field>-->
+
+            <field name="child_ids" position="attributes">
+                <attribute name="context">{'default_email': email}</attribute>
+            </field>
+
+        </field>
+    </record>
+
+    <record id="view_cutomer_tree_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">woo_import_customer_button</attribute>
+            </xpath>
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_partner_search_inherit" model="ir.ui.view">
+        <field name="name">view.res.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Woo Synced Customers" name="woo_imported_customers"
+                        domain="[('is_exported', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_custom_res_partner" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_id" ref="base.view_partner_tree"/>
+        <field name="context">{'search_default_woo_imported_customers': 1}</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+</odoo>
+

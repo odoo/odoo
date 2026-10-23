@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <!-- Template for printing a PDF list view. -->
+    <template id="print_pdf_listview">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <table class="table table-bordered"
+                           style="table-layout: fixed">
+                        <!-- Render table headers -->
+                        <t t-foreach="length" t-as="length">
+                            <th style="background-color: #F2F2F2; padding: 10px; color: ">
+                                <span t-out="record['header'][length]"/>
+                            </th>
+                        </t>
+                        <!-- Render table data rows -->
+                        <t t-foreach="record['data']" t-as="rec">
+                            <tr>
+                                <t t-foreach="length+1" t-as="ln">
+                                    <td style="background-color: #F2F2F2; padding: 10px;">
+                                        <span t-out="rec[ln]"/>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

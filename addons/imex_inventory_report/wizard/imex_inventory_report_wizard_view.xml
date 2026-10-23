@@ -1,0 +1,41 @@
+<odoo>
+
+    <record id="imex_inventory_report_wizard_form" model="ir.ui.view">
+        <field name="name">imex.inventory.report.wizard.form</field>
+        <field name="model">imex.inventory.report.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group name="criteria">
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="is_groupby_location"/>
+                        <field name="len_product" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="product_ids" widget="many2many_tags" domain="[('active', '=', True), ('detailed_type', '=', 'product')]"/>
+                        <field name="product_category_ids" widget="many2many_tags"/>
+                        <field name="location_id" domain="[('usage','=','internal'),('active','=',True)]"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="button_view" string="View Report" type="object" class="oe_highlight" />
+                    or
+                    <button name="button_view_details" string="View Details" type="object" class="oe_highlight" attrs="{'invisible': [('len_product', '!=', 1)]}"/>
+                    <span attrs="{'invisible': [('len_product', '!=', 1)]}">or</span>
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="imex_inventory_report_action" model="ir.actions.act_window">
+        <field name="name">Imex Inventory Report</field>
+        <field name="res_model">imex.inventory.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="imex_inventory_report_menu" action="imex_inventory_report_action" parent="stock.menu_warehouse_report" sequence="30" />
+
+</odoo>

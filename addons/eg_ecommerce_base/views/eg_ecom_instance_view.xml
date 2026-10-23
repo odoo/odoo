@@ -1,0 +1,214 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_ecom_instance_tree_view">
+        <field name="name">eg.ecom.instance.tree.view</field>
+        <field name="model">eg.ecom.instance</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="provider"/>
+                <field name="active"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_ecom_instance_form_view">
+        <field name="name">eg.ecom.instance.form.view</field>
+        <field name="model">eg.ecom.instance</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="test_connection_of_instance" string="Test Connection" class="oe_highlight"
+                            type="object"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="provider" required="1"/>
+                            <field name="url"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="create_date" readonly="1"/>
+                            <field name="connection_message" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Price Rules">
+                            <group>
+                                <field name="eg_product_pricelist_id"
+                                       domain="[('instance_id','=',id)]"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_ecom_instance_action">
+        <field name="name">Instances</field>
+        <field name="res_model">eg.ecom.instance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="eCom" id="eg_ecom_base_menu"/>
+    <menuitem name="Configuration" id="eg_base_configuration" parent="eg_ecom_base_menu" sequence="4"/>
+    <menuitem name="Mapping" id="base_mapping_id" parent="eg_ecom_base_menu" sequence="2"/>
+    <menuitem name="Product" parent="base_mapping_id" id="product_mapping_id" sequence="1"/>
+    <menuitem name="Customer" parent="base_mapping_id" id="customer_mapping_id" sequence="2"/>
+    <menuitem name="Sale Order" parent="base_mapping_id" id="sale_order_mapping_id" sequence="3"/>
+    <menuitem name="History" id="base_history_menu_id" parent="eg_ecom_base_menu" sequence="3"/>
+    <menuitem name="Synchronization" id="base_synchronization_menu" parent="eg_ecom_base_menu" sequence="5"/>
+    <menuitem name="Instances" id="eg_ecom_instance_menu" action="eg_ecom_instance_action" sequence="2"
+              parent="eg_base_configuration"/>
+
+    <!--    For eCom Dashboard-->
+
+    <record model="ir.actions.act_window" id="eg_mapped_product_template_action">
+        <field name="name">Product Templates</field>
+        <field name="res_model">eg.product.template</field>
+        <field name="domain">[('update_required', '=', False), ("inst_product_tmpl_id", "not in", ["", False]),
+            ("instance_id", "=", active_id)]
+        </field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_export_product_template_action">
+        <field name="name">Product Templates</field>
+        <field name="res_model">eg.product.template</field>
+        <field name="domain">[('update_required', '=', True), ("inst_product_tmpl_id", "in", ["", False]),
+            ("instance_id", "=", active_id)]
+        </field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_update_product_template_action">
+        <field name="name">Product Templates</field>
+        <field name="res_model">eg.product.template</field>
+        <field name="domain">[('update_required', '=', True), ("inst_product_tmpl_id", "not in", ["", False]),
+            ("instance_id", "=", active_id)]
+        </field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_mapped_sale_order_action">
+        <field name="name">Sale Orders</field>
+        <field name="res_model">eg.sale.order</field>
+        <field name="domain">[('update_required', '=', False), ("inst_order_id", "not in", ["", False]),
+            ("instance_id", "=", active_id)]
+        </field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="eg_ecom_instance_kanban_view" model="ir.ui.view">
+        <field name="name">eg.ecom.instance.kanban.view</field>
+        <field name="model">eg.ecom.instance</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_emphasize_colors o_ecom_kanban" create="0">
+                <field name="name"/>
+                <field name="color"/>
+                <field name="mapped_order_count"/>
+                <field name="mapped_product_count"/>
+                <field name="update_product_count"/>
+                <field name="export_product_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}" style="width:450px; height:180px;">
+                            <div class="o_kanban_card_header">
+                                <div t-attf-class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <t t-esc="record.name.value"/>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_manage_button_section">
+                                        <a class="o_kanban_manage_toggle_button" href="#">
+                                            <i class="fa fa-ellipsis-v"/>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content">
+                                    <div class="row">
+                                        <div class="col-6 o_kanban_primary_left">
+                                            <button class="btn btn-primary"
+                                                    name="%(eg_ecommerce_base.eg_mapped_product_template_action)d"
+                                                    type="action">
+                                                <span>
+                                                    <t t-esc="record.mapped_product_count.value"/>
+                                                    Mapped Product
+                                                </span>
+                                            </button>
+                                            <!--                                            <br></br>-->
+                                            <button class="btn btn-primary"
+                                                    name="%(eg_ecommerce_base.eg_mapped_sale_order_action)d"
+                                                    type="action">
+                                                <span>
+                                                    <t t-esc="record.mapped_order_count.value"/>
+                                                    Mapped Order
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 o_kanban_primary_right">
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <a name="%(eg_ecommerce_base.eg_export_product_template_action)d"
+                                                       type="action">
+                                                        Need to Export Product
+                                                    </a>
+                                                </div>
+                                                <div class="col-3">
+                                                    <field name="export_product_count"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <a name="%(eg_ecommerce_base.eg_update_product_template_action)d"
+                                                       type="action">
+                                                        Need to Update Product
+                                                    </a>
+                                                </div>
+                                                <div class="col-3">
+                                                    <field name="update_product_count"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_eg_ecom_instance_kanban" model="ir.actions.act_window">
+        <field name="name">eCom Dashboard</field>
+        <field name="res_model">eg.ecom.instance</field>
+        <field name="view_mode">kanban</field>
+        <field name="help" type="html">
+            <div>
+                <br/>
+                <br/>
+                <br/>
+                <p>
+                    <b>There is no any eCom Instance configured yet.</b>
+                </p>
+                <p>
+                    To add your first eCom Instance, go to menu
+                    <i>eCom >> Configuration >> Instances</i>
+                    and create new Instance from there.
+                    At there you can define one or
+                    more eCom Instances and
+                    configure extended options per
+                    Instance.
+                </p>
+            </div>
+        </field>
+    </record>
+
+    <menuitem name="Dashboard" id="menu_eg_ecom_instance_kanban" sequence="1"
+              action="action_eg_ecom_instance_kanban" parent="eg_ecom_base_menu"/>
+</odoo>

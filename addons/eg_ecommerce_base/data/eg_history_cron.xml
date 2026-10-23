@@ -1,0 +1,13 @@
+<odoo>
+    <record id="eg_history_daily_cron" model="ir.cron">
+        <field name="name">E-commerce History Daily Cron</field>
+        <field name="model_id" ref="model_eg_sync_history"/>
+        <field name="state">code</field>
+        <field name="code">model.unlink_history_by_cron()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

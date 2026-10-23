@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<template name="VoiceSearchBar" id="search" xml:space="preserve">
+    <!--This is used to extending the SearchBar to add the voice recognition button-->
+    <t t-name="voicesearchbar" t-inherit="web.SearchBar"
+       t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_searchview_input_container')]"
+               position="inside">
+            <button class="o_Composer_button  o_Composer_toolButton btn btn-light fa fa-microphone border-0 rounded-pill mx-1"
+                    id="record_voice" title="Voice" aria-label="Voice"
+                    type="button"
+                    t-on-click="recordVoiceBar">
+            </button>
+        </xpath>
+    </t>
+</template>

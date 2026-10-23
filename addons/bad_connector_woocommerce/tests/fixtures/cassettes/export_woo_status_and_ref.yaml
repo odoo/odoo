@@ -1,0 +1,266 @@
+interactions:
+  - request:
+      body:
+        {
+          string:
+            '
+              {
+                "status": "completed",
+                "meta_data": [
+                  {
+                    "key": "_wc_shipment_tracking_items",
+                    "value": [
+                        {
+                            "tracking_number": tracking_number,
+                        }
+                    ],
+                  }
+                ]
+              }
+            ',
+        }
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: PUT
+      uri: https://localhost/wp-json/wc/v3/orders/71
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                "id": 71,
+                "parent_id": 0,
+                "status": "completed",
+                "currency": "USD",
+                "version": "7.9.0",
+                "prices_include_tax": false,
+                "date_created": "2023-07-27T13:39:35",
+                "date_modified": "2023-07-27T13:39:36",
+                "discount_total": "-40.00",
+                "discount_tax": "1.00",
+                "shipping_total": "10.00",
+                "shipping_tax": "1.00",
+                "cart_tax": "0.00",
+                "total": "50.00",
+                "total_tax": "0.00",
+                "order_key": "wc_order_qzJgPfO1CWI8B",
+                "billing": {
+                    "first_name": "john",
+                    "last_name": "Doe",
+                    "company": "",
+                    "address_1": "969 Market",
+                    "address_2": "",
+                    "city": "San Francisco",
+                    "state": "CA",
+                    "postcode": "94103",
+                    "country": "US",
+                    "email": "john.doe@gmail.com",
+                    "phone": "(555) 555-5555"
+                },
+                "shipping": {
+                    "first_name": "john",
+                    "last_name": "Doe",
+                    "company": "",
+                    "address_1": "969 Market",
+                    "address_2": "",
+                    "city": "San Francisco",
+                    "state": "CA",
+                    "postcode": "94103",
+                    "country": "US",
+                    "phone": ""
+                },
+                "payment_method": "bacs",
+                "payment_method_title": "Direct Bank Transfer",
+                "transaction_id": "",
+                "customer_ip_address": "",
+                "customer_user_agent": "",
+                "created_via": "rest-api",
+                "customer_note": "",
+                "date_completed": null,
+                "date_paid": "2023-07-27T13:39:36",
+                "cart_hash": "",
+                "number": "71",
+                "meta_data": [
+                    {
+                      "id": 2700,
+                      "key": "_wc_shipment_tracking_items",
+                      "value": [
+                          {
+                            "tracking_number": "TR12345"
+                          }
+                      ]
+                    }
+                ],
+                "line_items": [
+                    {
+                        "id": 10,
+                        "name": "Cloth",
+                        "product_id": 14,
+                        "variation_id": 0,
+                        "quantity": 3,
+                        "tax_class": "",
+                        "subtotal": "2997.00",
+                        "subtotal_tax": "569.43",
+                        "total": "2997.00",
+                        "total_tax": "569.43",
+                        "taxes": [
+                            {
+                                "id": 1,
+                                "total": "569.43",
+                                "subtotal": "569.43"
+                            }
+                        ],
+                        "meta_data": [],
+                        "sku": "cloth-sku",
+                        "price": 999,
+                        "parent_name": null
+                    }
+                ],
+                "tax_lines": [],
+                "shipping_lines": [
+                            {
+                                "id": 43,
+                                "method_title": "Flat Rate",
+                                "method_id": "flat_rate",
+                                "instance_id": "",
+                                "total": "10.00",
+                                "total_tax": "0.00",
+                                "taxes": [],
+                                "meta_data": []
+                            }
+                        ],
+                "fee_lines": [],
+                "coupon_lines": [
+                    {
+                        "id": 20,
+                        "code": "flat50",
+                        "discount": "50",
+                        "discount_tax": "9.5",
+                        "meta_data": [
+                            {
+                                "id": 135,
+                                "key": "coupon_data",
+                                "value": {
+                                    "id": 76,
+                                    "code": "flat50",
+                                    "amount": "50",
+                                    "status": "publish",
+                                    "date_created": {
+                                        "date": "2023-10-09 11:01:17.000000",
+                                        "timezone_type": 1,
+                                        "timezone": "+00:00"
+                                    },
+                                    "date_modified": {
+                                        "date": "2023-10-09 11:01:17.000000",
+                                        "timezone_type": 1,
+                                        "timezone": "+00:00"
+                                    },
+                                    "date_expires": null,
+                                    "discount_type": "fixed_cart",
+                                    "description": "",
+                                    "usage_count": 1,
+                                    "individual_use": false,
+                                    "product_ids": [],
+                                    "excluded_product_ids": [],
+                                    "usage_limit": 0,
+                                    "usage_limit_per_user": 0,
+                                    "limit_usage_to_x_items": null,
+                                    "free_shipping": false,
+                                    "product_categories": [],
+                                    "excluded_product_categories": [],
+                                    "exclude_sale_items": false,
+                                    "minimum_amount": "",
+                                    "maximum_amount": "",
+                                    "email_restrictions": [],
+                                    "virtual": false,
+                                    "meta_data": []
+                                },
+                                "display_key": "coupon_data",
+                                "display_value": {
+                                    "id": 76,
+                                    "code": "flat50",
+                                    "amount": "50",
+                                    "status": "publish",
+                                    "date_created": {
+                                        "date": "2023-10-09 11:01:17.000000",
+                                        "timezone_type": 1,
+                                        "timezone": "+00:00"
+                                    },
+                                    "date_modified": {
+                                        "date": "2023-10-09 11:01:17.000000",
+                                        "timezone_type": 1,
+                                        "timezone": "+00:00"
+                                    },
+                                    "date_expires": null,
+                                    "discount_type": "fixed_cart",
+                                    "description": "",
+                                    "usage_count": 1,
+                                    "individual_use": false,
+                                    "product_ids": [],
+                                    "excluded_product_ids": [],
+                                    "usage_limit": 0,
+                                    "usage_limit_per_user": 0,
+                                    "limit_usage_to_x_items": null,
+                                    "free_shipping": false,
+                                    "product_categories": [],
+                                    "excluded_product_categories": [],
+                                    "exclude_sale_items": false,
+                                    "minimum_amount": "",
+                                    "maximum_amount": "",
+                                    "email_restrictions": [],
+                                    "virtual": false,
+                                    "meta_data": []
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "refunds": [],
+                "payment_url": "https://localhost/checkout/order-pay/71/?pay_for_order=true&key=wc_order_qzJgPfO1CWI8B",
+                "is_editable": false,
+                "needs_payment": false,
+                "needs_processing": true,
+                "date_created_gmt": "2023-07-27T08:09:35",
+                "date_modified_gmt": "2023-07-27T08:09:36",
+                "date_completed_gmt": null,
+                "date_paid_gmt": "2023-07-27T08:09:36",
+                "gift_cards": [],
+                "currency_symbol": "$",
+                "_links": {
+                    "self": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/orders/71"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/orders"
+                        }
+                    ],
+                    "customer": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/customers/237660088"
+                        }
+                    ]
+              }
+            }
+          ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Thu, 08 Sep 2022 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["13780"]
+      status: {code: 200, message: OK}

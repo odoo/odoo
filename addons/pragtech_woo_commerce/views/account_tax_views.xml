@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_tax_form_inherit" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_tax_tree_inherit" model="ir.ui.view">
+        <field name="name">account.tax.tree.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">woo_import_tax_button</attribute>
+            </xpath>
+            <xpath expr="//field[@name='description']" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_tax_search_inherit" model="ir.ui.view">
+        <field name="name">view.account.tax.search.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_account_tax_search"/>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Woo Synced Taxes" name="woo_imported_taxes" domain="[('is_exported', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_tax_woo" model="ir.actions.act_window">
+        <field name="name">Taxes</field>
+        <field name="res_model">account.tax</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{'search_default_woo_imported_taxes': True, 'active_test': False}
+        </field>
+        <field name="view_id" ref="account.view_tax_tree"/>
+    </record>
+
+</odoo>
+

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="kws_api_res_config_settings_form"
+            model="ir.ui.view">
+        <field name="name">res.config.settings.form (kws_api)</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="5"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="kw_api"
+                     string="API" data-key="kw_api">
+                    <h2>API</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-12 o_setting_box"
+                             id="api">
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_token_length"/>
+                                        <field name="kw_api_token_length"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_token_prefix"/>
+                                        <field name="kw_api_token_prefix"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_token_expire_hours"/>
+                                        <field name="kw_api_token_expire_hours"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_refresh_token_expire_hours"/>
+                                        <field name="kw_api_refresh_token_expire_hours"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_first_page_number"/>
+                                        <field name="kw_api_first_page_number"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_ensure_ascii"/>
+                                        <field name="kw_api_ensure_ascii"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_update_lang_from_header"/>
+                                        <field name="kw_api_update_lang_from_header"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_update_lang_param_name"/>
+                                        <field name="kw_api_update_lang_param_name"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_one_token_per_user"/>
+                                        <field name="kw_api_one_token_per_user"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_user_result_wrapper"/>
+                                        <field name="kw_api_user_result_wrapper"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_use_false_if_empty"/>
+                                        <field name="kw_api_use_false_if_empty"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_key_attachment_required"/>
+                                        <field name="kw_api_key_attachment_required"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_is_log_enabled"/>
+                                        <field name="kw_api_is_log_enabled"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_log_storage_days"/>
+                                        <field name="kw_api_log_storage_days"/>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-lg-5 o_light_label"
+                                               for="kw_api_text_log_limit"/>
+                                        <field name="kw_api_text_log_limit"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="kws_api_res_config_settings_act_window" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="kws_api_res_config_settings_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'kw_api', }</field>
+    </record>
+
+    <menuitem id="kws_api_res_config_settings_menu"
+              action="kws_api_res_config_settings_act_window"
+              parent="kw_api_settings_main_menu"
+              name="Settings" sequence="0"/>
+</odoo>

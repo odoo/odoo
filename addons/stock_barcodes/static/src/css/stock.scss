@@ -1,0 +1,136 @@
+.oe_stock_scan_button {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.oe_stock_barcodes_bottombar {
+    bottom: 0;
+    padding: 0.5em;
+    background-color: $o-view-background-color;
+    border: 0 solid $border-color;
+    border-width: 1px 0 0 0;
+}
+
+// Avoid too big small buttons from core
+.o_web_client.o_touch_device {
+    .oe_stock_barcordes_form {
+        .btn {
+            &,
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+            }
+        }
+    }
+}
+
+.oe_stock_barcordes_form {
+    padding: 0 !important;
+    height: 100%;
+    // Recover useless space
+    div[name="_barcode_scanned"] {
+        min-height: 0 !important;
+    }
+    .o_group .scan_fields {
+        &.o_inner_group {
+            margin-bottom: 0 !important;
+        }
+        margin: 0 !important;
+    }
+
+    .o_form_sheet,
+    .o_form_sheet_bg {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        border: 0 !important;
+    }
+
+    // In Odoo 16 the flat input styling lacks proper usability
+    .o_field_widget {
+        margin-bottom: 1px !important;
+        .o_input {
+            border-radius: 3px;
+            border-width: 1px;
+            background-color: white;
+        }
+        .o_x2m_control_panel {
+            margin: 0px !important;
+        }
+    }
+
+    .o_kanban_record {
+        flex-basis: 100%;
+
+        .btn-full-width {
+            margin: -9px;
+            width: calc(100% + 18px);
+            height: calc(100% + 18px);
+        }
+
+        &.o_kanban_ghost {
+            display: none;
+        }
+    }
+
+    .alert {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        border-radius: 0;
+        padding: 0;
+        min-height: 50px;
+        z-index: 999;
+    }
+
+    .oe_stock_barcordes_content {
+        overflow: hidden scroll;
+    }
+}
+
+.o_kanban_barcode {
+    .o_kanban_record.oe_kanban_details {
+        @extend .btn;
+        @extend .btn-secondary;
+        padding: 0.6em 0;
+        margin-bottom: 0.5em;
+    }
+}
+// TODO: Define class for all elements
+.oe_kanban_action_button:focus {
+    background-color: lightgray;
+}
+// Left icon in small screens
+.oe_span_small_icon {
+    width: 25px;
+    text-align: center;
+}
+
+// Display 100% all menu elements
+.oe_kanban_card_full_width {
+    width: 100% !important;
+}
+
+// The kanban view adds some pre-styles that we want to be able to tweak
+div[name="menu_actions"] {
+    div[role="article"] {
+        margin-top: 10px !important;
+    }
+}
+
+// Dropdown that is desactivated at lg width
+@media (min-width: 992px) {
+    .d-lg-flex-no-dropdown {
+        position: relative !important;
+        display: flex !important;
+        border: none;
+        box-shadow: none;
+        bottom: auto !important;
+        transform: none !important;
+    }
+}
+.dropdown-menu.d-lg-flex-no-dropdown {
+    .d-flex {
+        margin-bottom: 5px;
+    }
+}

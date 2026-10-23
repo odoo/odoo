@@ -1,0 +1,27 @@
+<odoo>
+    <record model="ir.ui.view" id="woo_sale_order_wizard">
+        <field name="name">woo.sale.order.wizard</field>
+        <field name="model">sale.order.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="woo_order_state"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="update_woo_order_state" string="Update WOO Order State" type="object"
+                            class="oe_right oe_highlight"/>
+                    <button string="Cancel" class="btn-default oe_highlight" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="launch_set_woocommerce_state_order" model="ir.actions.act_window">
+            <field name="name">Update Woocommerce Order State</field>
+            <field name="res_model">sale.order.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</odoo>

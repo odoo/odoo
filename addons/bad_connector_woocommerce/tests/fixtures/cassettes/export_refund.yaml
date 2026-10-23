@@ -1,0 +1,92 @@
+interactions:
+  - request:
+      body:
+        {
+          string:
+            '
+              {
+                "amount": "999.04",
+                "reason": "Defective Product",
+                "line_items": [
+                  {
+                    "id": "10",
+                    "quantity": 1.0,
+                    "refund_total": 809.23,
+                    "refund_tax": [
+                      {
+                        "id": "222",
+                        "refund_total": 189.81
+                      }
+                    ]
+                  }
+                ],
+                "api_refund": false
+              }
+            '
+        }
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: POST
+      uri: https://localhost/wp-json/wc/v3/orders/71/refunds
+    response:
+      body:
+        {
+          string:
+            '
+
+                  {
+                    "id": 493,
+                    "date_created": "2024-01-02T11:28:38",
+                    "amount": "999.04",
+                    "reason": "Defective Product",
+                    "refunded_by": 1,
+                    "refunded_payment": false,
+                    "line_items": [
+                      {
+                        "id": 10,
+                        "name": "Shirt",
+                        "product_id": 50,
+                        "variation_id": 0,
+                        "quantity": -1,
+                        "subtotal": "-809.23",
+                        "subtotal_tax": "0.00",
+                        "total": "-90.00",
+                        "total_tax": "0.00",
+                        "taxes": [],
+                        "sku": "cloth-sku",
+                        "price": 999,
+                        "image": {
+                          "id": "61",
+                          "src": "http://localhost/wp-content/uploads/2023/09/hoodie-with-logo-2.jpg"
+                        },
+                        "parent_name": null
+                      }
+                    ],
+                    "shipping_lines": [],
+                    "tax_lines": [],
+                    "fee_lines": [],
+                    "_links": {
+                      "self": [{"href": "http://localhost/wp-json/wc/v3/orders/71/refunds/493"}],
+                      "collection": [{"href": "http://localhost/wp-json/wc/v3/orders/71/refunds"}],
+                      "up": [{"href": "http://localhost/wp-json/wc/v3/orders/71"}]
+                    }
+                  }
+            ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Thu, 08 Sep 2022 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["13780"]
+      status: {code: 201, message: OK}

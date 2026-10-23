@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--  Tree view for exercise for   -->
+    <record id="exercise_for_view_tree" model="ir.ui.view">
+        <field name="name">exercise.for.view.tree</field>
+        <field name="model">exercise.for</field>
+        <field name="arch" type="xml">
+            <tree string="Exercise For Tags" editable="bottom">
+                     <field name="name"/>
+                    <field name="company_id" invisible="1"/>
+                 </tree>
+        </field>
+    </record>
+<!-- action for exercise for -->
+    <record id="exercise_for_action" model="ir.actions.act_window">
+        <field name="name">Exercise For</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">exercise.for</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Exercise For!
+            </p>
+        </field>
+    </record>
+<!--Sub Menu-->
+    <menuitem id="gym_exercise_for_menu"
+              name="Exercises For"
+              parent="equipment_menu_configuration_root"
+              action="exercise_for_action"
+              sequence="30"/>
+
+</odoo>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="action_alert_message" model="ir.actions.act_window">
+            <field name="name">Alert Message</field>
+            <field name="res_model">alert.message</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="form_view_alert_message" model="ir.ui.view">
+            <field name="model">alert.message</field>
+            <field name="name">Alert Message</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,done"/>
+                        <button name="action_apply" type="object"
+                                class="btn btn-primary"
+                                string="Apply"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"
+                                groups="smart_alert_warning.smart_alert_warning_admin"/>
+                        <button name="action_cancel" type="object"
+                                class="btn btn-secondary"
+                                string="Cancel"
+                                attrs="{'invisible': [('state', '!=', 'done')]}"
+                                groups="smart_alert_warning.smart_alert_warning_admin"/>
+                        <button name="reset_draft" type="object"
+                                class="btn btn-secondary"
+                                string="Reset to draft"
+                                attrs="{'invisible': [('state', '!=', 'cancelled')]}"
+                                groups="smart_alert_warning.smart_alert_warning_admin"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="alert_messages"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="group_id"/>
+                                <field name="type"/>
+                                <field name="model_name" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="document_type_id"/>
+                                <field name="view_id"/>
+                                <field name="new_view_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Filters">
+                                <field name="field_filter"
+                                       widget="domain"
+                                       options="{'model': 'model_name'}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="tree_view_alert_message" model="ir.ui.view">
+            <field name="model">alert.message</field>
+            <field name="name">Alert Message</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="document_type_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <menuitem id="menu_alert_message_main" name="Smart Alerts" sequence="20"
+                  groups="smart_alert_warning.smart_alert_warning_admin,smart_alert_warning.smart_alert_warning_user"/>
+
+        <menuitem id="menu_alert_message" name="Alerts"
+                  parent="menu_alert_message_main"
+                  sequence="2" action="action_alert_message"/>
+
+    </data>
+</odoo>

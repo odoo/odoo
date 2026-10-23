@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Product View  -->
+    <record id="product_template_form_view_procurement_button"
+            model="ir.ui.view">
+        <field name="name">product.template.view.form.inherited.quick.stock.movement</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id"
+               ref="stock.product_template_form_view_procurement_button"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_update_quantity_on_hand']"
+                   position="after">
+                <button string="Transfer Stock" type="object"
+                        name="action_transfer_stock"
+                        attrs="{'invisible': [('type', '!=', 'product')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

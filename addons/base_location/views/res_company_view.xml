@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- Add cities to the company form -->
+    <record id="view_company_form_city" model="ir.ui.view">
+        <field name="name">res.company.form.city</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <field name="street2" position="after">
+                <field
+                    name="zip_id"
+                    options="{'create_name_field': 'city'}"
+                    colspan="4"
+                    placeholder="City completion"
+                />
+            </field>
+            <field name="city" position="after">
+                <field name="country_enforce_cities" invisible="1" />
+                <field
+                    name='city_id'
+                    attrs="{'invisible': [('country_enforce_cities', '=', False)]}"
+                />
+            </field>
+            <field name="city" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('country_enforce_cities', '=', False)]}
+                </attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

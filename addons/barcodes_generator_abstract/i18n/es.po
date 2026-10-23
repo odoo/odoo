@@ -1,0 +1,211 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * barcodes_generator_abstract
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-25 08:40+0000\n"
+"PO-Revision-Date: 2023-09-03 13:35+0000\n"
+"Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
+"Language-Team: Spanish (https://www.transifex.com/oca/teams/23907/es/)\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,help:barcodes_generator_abstract.field_barcode_generate_mixin__generate_type
+#: model:ir.model.fields,help:barcodes_generator_abstract.field_barcode_rule__generate_type
+msgid ""
+"Allow to generate barcode, including a number  (a base) in the final "
+"barcode.\n"
+"\n"
+" - 'Base Set Manually' : User should set manually the value of the barcode "
+"base\n"
+" - 'Base managed by Sequence': System will generate the base via a sequence"
+msgstr ""
+"Permite generar el código de barras, incluyendo un número (una base) en el "
+"código de barras final.\n"
+"\n"
+" - 'Base establecida manualmente' : El usuario debe establecer manualmente "
+"el valor de la base del código de barras.\n"
+" - 'Base gestionada por Secuencia': El sistema generará la base a través de "
+"una secuencia"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,field_description:barcodes_generator_abstract.field_barcode_rule__generate_automate
+msgid "Automatic Generation"
+msgstr "Generación automática"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,field_description:barcodes_generator_abstract.field_barcode_generate_mixin__barcode_base
+msgid "Barcode Base"
+msgstr "Base de los código de barras"
+
+#. module: barcodes_generator_abstract
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_abstract.view_barcode_rule_form
+msgid "Barcode Generation"
+msgstr "Generar código de barras"
+
+#. module: barcodes_generator_abstract
+#: model:ir.ui.menu,name:barcodes_generator_abstract.menu_barcode_rule
+msgid "Barcode Nomenclatures"
+msgstr "Nomenclatura del código de barras"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model,name:barcodes_generator_abstract.model_barcode_rule
+#: model:ir.model.fields,field_description:barcodes_generator_abstract.field_barcode_generate_mixin__barcode_rule_id
+msgid "Barcode Rule"
+msgstr "Regla del código de barras"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields.selection,name:barcodes_generator_abstract.selection__barcode_rule__generate_type__sequence
+msgid "Base managed by Sequence"
+msgstr "Base gestionada por secuencia"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields.selection,name:barcodes_generator_abstract.selection__barcode_rule__generate_type__manual
+msgid "Base set Manually"
+msgstr "Base establecida manualmente"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,help:barcodes_generator_abstract.field_barcode_rule__generate_automate
+msgid ""
+"Check this to automatically generate a base and a barcode if this rule is "
+"selected."
+msgstr ""
+"Márquelo para generar automáticamente una base y un código de barras si se "
+"selecciona esta regla."
+
+#. module: barcodes_generator_abstract
+#: model:ir.model,name:barcodes_generator_abstract.model_barcode_generate_mixin
+msgid "Generate Barcode Mixin"
+msgstr "Generar código de barras mixto"
+
+#. module: barcodes_generator_abstract
+#: model:res.groups,name:barcodes_generator_abstract.generate_barcode
+msgid "Generate Barcodes"
+msgstr "Generar código de barras"
+
+#. module: barcodes_generator_abstract
+#. odoo-python
+#: code:addons/barcodes_generator_abstract/models/barcode_generate_mixin.py:0
+#, python-format
+msgid ""
+"Generate Base can be used only with barcode rule with 'Generate Type' set to "
+"'Base managed by Sequence'"
+msgstr ""
+"Generar base solo se puede usar con la regla de código de barras con "
+"'Generar tipo' establecido en 'Base gestionada por secuencia'"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,field_description:barcodes_generator_abstract.field_barcode_rule__generate_model
+msgid "Generate Model"
+msgstr "Generar modelo"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,field_description:barcodes_generator_abstract.field_barcode_generate_mixin__generate_type
+#: model:ir.model.fields,field_description:barcodes_generator_abstract.field_barcode_rule__generate_type
+msgid "Generate Type"
+msgstr "Generar tipo"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,field_description:barcodes_generator_abstract.field_barcode_rule__sequence_id
+msgid "Generation Sequence"
+msgstr "Generación de secuencia"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,help:barcodes_generator_abstract.field_barcode_rule__generate_model
+msgid "If 'Generate Type' is set, mention the model related to this rule."
+msgstr ""
+"Si establece 'Generar tipo', mencione el modelo relacionado con esta regla."
+
+#. module: barcodes_generator_abstract
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_abstract.view_barcode_rule_form
+msgid ""
+"If you leave the sequence field blank, a sequence will be created "
+"automatically when the barcode rule is saved, based on the padding of the "
+"barcode."
+msgstr ""
+"Si deja el campo de secuencia en blanco, se creará automáticamente una "
+"secuencia cuando se guarde la regla de código de barras, basada en el "
+"relleno del código de barras."
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields.selection,name:barcodes_generator_abstract.selection__barcode_rule__generate_type__no
+msgid "No generation"
+msgstr "No generar"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,field_description:barcodes_generator_abstract.field_barcode_rule__padding
+msgid "Padding"
+msgstr "Relleno"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,help:barcodes_generator_abstract.field_barcode_generate_mixin__barcode_rule_id
+msgid "Select a rule to generate a barcode"
+msgstr "Seleccione una regla para generar un código de barras"
+
+#. module: barcodes_generator_abstract
+#. odoo-python
+#: code:addons/barcodes_generator_abstract/models/barcode_rule.py:0
+#, python-format
+msgid "Sequence - %s"
+msgstr "Secuencia - %s"
+
+#. module: barcodes_generator_abstract
+#: model:ir.model.fields,help:barcodes_generator_abstract.field_barcode_generate_mixin__barcode_base
+msgid ""
+"This value is used to generate barcode according to the setting of the "
+"barcode rule."
+msgstr ""
+"Este valor se utiliza para generar códigos de barras según la configuración "
+"de la regla del código de barras."
+
+#~ msgid ""
+#~ "Allow to generate barcode, including a number  (a base) in the final "
+#~ "barcode.\n"
+#~ " 'Base Set Manually' : User should set manually the value of the barcode "
+#~ "base\n"
+#~ " 'Base managed by Sequence': User will use a button to generate a new "
+#~ "base. This base will be generated by a sequence"
+#~ msgstr ""
+#~ "Permite generar código de barras, añadiendo un número (configurado en la "
+#~ "base) en el código de barras final.\n"
+#~ "   'Configurar base manualmente': el usuario debe configurar manualmente "
+#~ "el valor de la base del código de barras\n"
+#~ "   'Base gestionada por secuencia': El usuario utilizará un botón para "
+#~ "generar una nueva base. Esta base será generada por una secuencia"
+
+#~ msgid ""
+#~ "Check this to automatically generate a barcode upon creation of a new "
+#~ "record in the mixed model."
+#~ msgstr ""
+#~ "Seleccione para generar automáticamente un código de barras al crear un "
+#~ "nuevo registro en el modelo mixto."
+
+#, python-format
+#~ msgid ""
+#~ "Only one rule per model can be used for automatic barcode generation."
+#~ msgstr ""
+#~ "Solo se puede utilizar una regla por modelo para la generación automática "
+#~ "de códigos de barras."
+
+#~ msgid "Display Name"
+#~ msgstr "Nombre mostrado"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Última modificación en"
+
+#, fuzzy
+#~ msgid "Sequence Id"
+#~ msgstr "Secuencia"

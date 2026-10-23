@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Reception dashboard template-->
+<template>
+    <t t-name="ReceptionDashboard">
+        <div class="oh_dashboards" style="overflow: scroll;height: 100%;">
+            <div class="container-fluid o_pj_dashboard">
+                <div style="width:100%; margin:0; padding:0;">
+                    <div class="row">
+                        <div class="col-12 r_dashButtonContainer">
+                            <div id="patient"
+                                 class="col-md-4 r_dashButton o_patient_button">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1512/1512910.png"
+                                     width="80px" class="patient_img"/>
+                                <p>Patient</p>
+                            </div>
+                            <div id="appointment"
+                                 class="col-md-4 r_dashButton o_appointment_button">
+                                <img src="https://cdn-icons-png.flaticon.com/512/1069/1069152.png"
+                                     width="80px" class="apnmnt_img"/>
+                                <p>Appointment</p>
+                            </div>
+                            <div id="rw"
+                                 class="col-md-4 r_dashButton o_room_ward_button">
+                                <img src="https://cdn-icons-png.flaticon.com/512/2184/2184890.png"
+                                     width="80px" class="room_ward_img"/>
+                                <p>Room/Ward</p>
+                            </div>
+                        </div>
+                        <div id="view_main" class="col-md-6 col-sm-6">
+                            <div id="buttons" class="row r_AppntBtn"/>
+                            <div id="controls" class="row r_controls"/>
+                            <div id="content" class="col r_Container container">
+                                <center>
+                                    <span class="row r_Profile center"
+                                          style="font-size:25px;">
+                                        Welcome..!
+                                    </span>
+                                </center>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <div id="view_secondary" class="col">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

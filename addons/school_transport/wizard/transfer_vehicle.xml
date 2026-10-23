@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+        <!-- Form View Of Transfer Vehicle -->
+
+        <record id="transfer_vehicle_1" model="ir.ui.view">
+            <field name="name">transfer.vehicle</field>
+            <field name="model">transfer.vehicle</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Transfer Vehicle">
+                    <group colspan="4">
+                        <field name='name' />
+                        <field
+                        name='participation_id'
+                        context="{'name':name}"
+                        domain="[('name','=',name)]"
+                    />
+                        <field name='root_id' />
+                        <field name='old_vehicle_id' />
+                        <field name='new_vehicle_id' context="{'name':root_id}" />
+                    </group>
+                    <separator colspan="4" />
+                    <footer>
+                        <group>
+                            <button
+                            name="vehicle_transfer"
+                            string="Transfer"
+                            class="fa fa-check"
+                            type="object"
+                            colspan="1"
+                        />
+                           <button
+                            special="cancel"
+                            string="Close"
+                            class="fa fa-ban"
+                            colspan="1"
+                        />
+                        </group>
+                    </footer>
+                    </form>
+            </field>
+        </record>
+
+        <!-- Action Of Transfer Vehicle -->
+
+    <record id="act_transfer_vehicle" model="ir.actions.act_window">
+        <field name="name">Transfer Vehicle</field>
+        <field name="res_model">transfer.vehicle</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_transfer_vehicle" />
+        <field name="binding_view_types">form</field>
+        <field
+            name="groups_id"
+            eval="[(4, ref('school_transport.group_transportation_manager'))]"
+        />
+    </record>
+
+</odoo>

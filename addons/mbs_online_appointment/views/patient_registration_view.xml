@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_patient_appointment_tree" model="ir.ui.view">
+        <field name="name">patient.appointment.tree</field>
+        <field name="model">patient.appointment</field>
+        <field name="arch" type="xml">
+            <tree export_xlsx="0">
+                <field name="appoi_sequence"/>
+                <field name="name"/>
+                <field name="date_of_birth"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="mobile"/>
+                <field name="dr_nm"/>
+                <field name="city"/>
+                <field name="blood_id"/>
+                <field name="hospital"/>
+                <field name="date"/>
+                <field name="time"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="patient_appointment_form_view" model="ir.ui.view">
+        <field name="name">patient.appointment</field>
+        <field name="model">patient.appointment</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h4>
+                            <field name="appoi_sequence" readonly="1"/>
+                        </h4>
+                        <h2>
+                            <field name="name" placeholder="Patient Name" required="True" default_focus="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_of_birth"/>
+                            <field name="age"/>
+                            <field name="gender" widget="radio"
+                                   options="{'horizontal': true}"/>
+
+                        </group>
+                        <group>
+                            <field name="mobile" placeholder="9879541326" widget="phone" readonly="False"
+                                   options="{'format': true}"/>
+                            <field name="blood_id"/>
+                            <field name="city"/>
+                            <field name="dieases"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="appointment_info" string="Appointment Info">
+                            <group>
+                                <group>
+                                    <field name="hospital"/>
+                                    <field name="dr_nm"/>
+                                </group>
+                                <group string="Appointment Information" name="appointment_info">
+                                    <field name="date"/>
+                                    <field name="time"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_patient_appointment" model="ir.actions.act_window">
+        <field name="name">Appointments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">patient.appointment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enter Patient Details Here !
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="patient_reg_action_menu"
+              name="Patient Registration"
+              parent="patient_registration_main_menu"
+              sequence="2"
+              action="action_patient_appointment"/>
+
+</odoo>
+
+

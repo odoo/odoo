@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Form View of terminate student wizard -->
+    <record id="school_terminate_reason" model="ir.ui.view">
+        <field name="name">Terminate Reason</field>
+        <field name="model">terminate.reason</field>
+        <field name="arch" type="xml">
+            <form string="Terminate Wizard">
+                <sheet>
+                    <group>
+                        <field
+                            name="reason"
+                            string='Reason'
+                            colspan="2"
+                            required="1"
+                            nolabel="1"
+                            placeholder="Reason"
+                        />
+                        <field
+                            name="leave_date"
+                            string='Leave Date'
+                            colspan="2"
+                            required="1"
+                            nolabel="1"
+                            placeholder="Leave Date"
+                        />
+                    </group>
+                    <footer>
+                        <button
+                            name="save_terminate"
+                            string="Terminate"
+                            type="object"
+                        />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Action of Terminate Student Wizard -->
+    <record id="action_terminate_wizard" model="ir.actions.act_window">
+        <field name="name">Termination Reason</field>
+        <field name="res_model">terminate.reason</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

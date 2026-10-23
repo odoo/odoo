@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_print_visit_card" model="ir.actions.report">
+            <field name="name">Visitor Pass</field>
+            <field name="model">fo.visit</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">front_office_management.report_visitor_label</field>
+            <field name="report_file">front_office_management.report_visitor_label</field>
+            <field name="print_report_name">'Visitor Pass'</field>
+            <field name="binding_model_id" ref="model_fo_visit"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_print_visit_report" model="ir.actions.report">
+            <field name="name">Visitors Report</field>
+            <field name="model">fo.visit</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">front_office_management.report_visitor_report</field>
+            <field name="report_file">front_office_management.report_visitor_report</field>
+            <field name="print_report_name">'Visitors Report'</field>
+            <field name="binding_model_id" ref="model_fo_visit"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_print_property_label" model="ir.actions.report">
+            <field name="name">Property Label</field>
+            <field name="model">fo.property.counter</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">front_office_management.report_property_label</field>
+            <field name="report_file">front_office_management.report_property_label</field>
+            <field name="print_report_name">'Property Label'</field>
+            <field name="binding_model_id" ref="model_fo_property_counter"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

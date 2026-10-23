@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="action_imex_inventory_details_report" model="ir.actions.client">
+        <field name="name">Imex Inventory Details Report</field>
+        <field name="tag">imex_inventory_report_backend</field>
+        <field name="context" eval="{'active_model': 'imex.inventory.details.report'}" />
+    </record>
+    <!-- <record id="action_imex_inventory_details_report_pdf" model="ir.actions.report">
+        <field name="name">Imex Inventory Details Report</field>
+        <field name="model">imex.inventory.details.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">imex_inventory_report.imex_inventory_details_report_pdf</field>
+        <field name="report_file">imex_inventory_report.imex_inventory_details_report_pdf</field>
+        <field name="print_report_name">'Imex Inventory Details Report'</field>
+        <field name="binding_model_id" ref="model_imex_inventory_details_report"/>
+    </record> -->
+    <template id="imex_inventory_details_report">
+        <!-- <t t-call="imex_inventory_report.report_buttons"/> -->
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="o_inventory_reports_page">
+                    <t t-call="imex_inventory_report.report_imex_inventory_details_report_base" />
+                </div>
+            </t>
+        </t>
+    </template>
+    <!-- <template id="imex_inventory_details_report_pdf">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="o_inventory_reports_page">
+                    <link href="/imex_inventory_report/static/src/css/report.css" rel="stylesheet" />
+                    <t t-call="imex_inventory_report.report_imex_inventory_details_report_base" />
+                </div>
+            </t>
+        </t>
+    </template> -->
+    <!-- <template id="report_buttons">
+        <button class="o_imex_inventory_reports_print btn btn-sm oe_button">
+            <span class="fa fa-print" />
+                    Print
+        </button>
+    </template> -->
+    <template id="report_imex_inventory_details_report_base">
+        <div class="page">
+            <div class="row">
+                <h4 class="mt0" style="text-align: center;">
+                    <span>Imex Inventory report - </span>
+                    <t t-out="data['product_default_code']" />
+                    <span> - </span>
+                    <t t-out="data['product_name']" />
+                </h4>
+            </div>
+            <!-- Display filters -->
+            <t t-call="imex_inventory_report.report_imex_inventory_details_report_filters" />
+            <!-- Display Inventory table -->
+            <div class="act_as_table data_table mt4" style="width: 100%;">
+                <!-- Display header line-->
+                <t t-call="imex_inventory_report.report_imex_inventory_details_lines_header" />
+                <!-- Display initial lines -->
+                <t t-set="line_initial" t-value="details.filtered(lambda l: not l.product_id)"/>
+                <t t-set="lines" t-value="details.filtered(lambda l: l.product_id)"/>
+                <div class="act_as_row lines">
+                    <div class="act_as_cell" />
+                    <div class="act_as_cell">
+                            Initial
+                    </div>
+                    <div class="act_as_cell" />
+                    <div class="act_as_cell" />
+                    <div class="act_as_cell" />
+                    <div class="act_as_cell" />
+                    <div class="act_as_cell" />
+                    <div class="act_as_cell" />
+                    <div class="act_as_cell right">
+                        <t t-out="'{0:,.2f}'.format(line_initial[0].initial)"/>
+                    </div>
+                    <div class="act_as_cell right">
+                        <t t-out="'{0:,.2f}'.format(line_initial[0].initial_amount)"/>
+                    </div>
+                </div>
+                <!-- Display each lines -->
+                <t t-set="product_balance" t-value="line_initial[0].initial" />
+                <t t-set="product_amount" t-value="line_initial[0].initial_amount" />
+
+                <t t-foreach="lines" t-as="product_line">
+                    <t t-set="product_balance" t-value="product_balance + product_line.product_in - product_line.product_out" />
+                    <t t-set="product_amount" t-value="product_amount + product_line.product_in * product_line.unit_cost - product_line.product_out * product_line.unit_cost" />
+
+                    <t t-call="imex_inventory_report.report_imex_inventory_details_lines" />
+                </t>
+            </div>
+            <p style="page-break-before:always;" />
+        </div>
+    </template>
+
+    <template id="imex_inventory_report.report_imex_inventory_details_report_filters">
+        <div class="act_as_table data_table" style="width: 100%;">
+            <div class="act_as_row labels">
+                <div class="act_as_cell">Date From</div>
+                <div class="act_as_cell">Date To</div>
+                <div class="act_as_cell">Location</div>
+                <div class="act_as_cell">Category</div>
+            </div>
+            <div class="act_as_row">
+                <div class="act_as_cell">
+                    <span t-out="data['date_from']" />
+                </div>
+                <div class="act_as_cell">
+                    <span t-out="data['date_to']" />
+                </div>
+                <div class="act_as_cell">
+                    <span t-if="data['location']">
+                        <t t-out="data['location']"/>
+                    </span>
+                    <span t-else="">All stocks</span>
+                </div>
+                <div class="act_as_cell">
+                    <span t-if="data['category']" t-out="data['category']"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="imex_inventory_report.report_imex_inventory_details_lines_header">
+
+        <div class="act_as_thead">
+            <div class="act_as_row labels">
+                <div class="act_as_cell">Date</div>
+                <div class="act_as_cell">Reference</div>
+                <div class="act_as_cell">Partner</div>
+                <div class="act_as_cell">Source Location</div>
+                <div class="act_as_cell">Dest Location</div>
+                <div class="act_as_cell">Price</div>
+                <div class="act_as_cell">In</div>
+                <div class="act_as_cell">Out</div>
+                <div class="act_as_cell">Balance</div>
+                <div class="act_as_cell">Amount</div>
+            </div>
+        </div>
+    </template>
+
+    <template id="imex_inventory_report.report_imex_inventory_details_lines">
+        <div class="act_as_row lines">
+            <div class="act_as_cell left">
+                <t t-out="product_line.date.strftime('%Y-%m-%d')" />
+            </div>
+            <div class="act_as_cell left">
+                <t t-out="product_line.display_name" />
+            </div>
+            <div class="act_as_cell left">
+                <t t-out="product_line.picking_id.partner_id.name" />
+            </div>
+            <div class="act_as_cell left">
+                <t t-out="product_line.location_id.complete_name" />
+            </div>
+            <div class="act_as_cell left">
+                <t t-out="product_line.location_dest_id.complete_name" />
+            </div>
+            <div class="act_as_cell right">
+                <t t-out="'{0:,.2f}'.format(product_line.unit_cost)" />
+            </div>
+            <div class="act_as_cell right">
+                <t t-out="'{0:,.2f}'.format(product_line.product_in)" />
+            </div>
+            <div class="act_as_cell right">
+                <t t-out="'{0:,.2f}'.format(product_line.product_out)" />
+            </div>
+            <div class="act_as_cell right">
+                <t t-out="'{0:,.2f}'.format(product_balance)" />
+            </div>
+            <div class="act_as_cell right">
+                <t t-out="'{0:,.2f}'.format(product_amount)" />
+            </div>
+        </div>
+    </template>
+</odoo>

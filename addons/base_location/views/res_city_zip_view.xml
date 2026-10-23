@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="city_zip_form">
+        <field name="name">res.city.zip.form</field>
+        <field name="model">res.city.zip</field>
+        <field name="arch" type="xml">
+            <form string="Zip">
+                <group>
+                    <field name="name" />
+                    <field name="city_id" />
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="city_zip_tree">
+        <field name="name">res.city.zip.tree</field>
+        <field name="model">res.city.zip</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+                <field name="name" />
+                <field name="city_id" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_city_zip_filter" model="ir.ui.view">
+        <field name="name">res.city.zip.select</field>
+        <field name="model">res.city.zip</field>
+        <field name="arch" type="xml">
+            <search string="Search zip">
+                <field name="name" />
+                <field name="city_id" />
+            </search>
+        </field>
+    </record>
+    <record id="action_zip_tree" model="ir.actions.act_window">
+        <field name="name">Locations</field>
+        <field name="res_model">res.city.zip</field>
+        <field name="view_mode">tree,form</field>
+        <field ref="city_zip_tree" name="view_id" />
+        <field name="search_view_id" ref="view_city_zip_filter" />
+    </record>
+    <menuitem
+        name="Zips"
+        id="locations_menu_zips"
+        parent="contacts.menu_localisation"
+        action="action_zip_tree"
+        sequence="5"
+    />
+</odoo>

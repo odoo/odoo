@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Lab technician menu action-->
+    <record id="lab_technician_action" model="ir.actions.act_window">
+        <field name="name">Lab Technician</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('job_id.name','=','Lab Technician')]</field>
+        <field name="view_id" eval="False"/>
+    </record>
+    <!--    Inherit Hr employee for view-->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.
+            base.hospital.management
+        </field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="doctor" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="consultancy_charge"
+                       attrs="{'invisible': [('job_title','!=','Doctor')]}"/>
+                <field name="time_avg" widget="float_time"
+                       attrs="{'invisible': [('job_title','!=','Doctor')]}"/>
+                <field name="consultancy_type"
+                       attrs="{'invisible': [('job_title','!=','Doctor')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position="replace">
+                <field name="coach_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='certificate']" position="after">
+                <field name="degree_ids" widget="many2many_tags"
+                       attrs="{'invisible': [('doctor','=',False)]}"/>
+                <field name="specialization_ids" widget="many2many_tags"
+                       attrs="{'invisible': [('doctor','=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+    <!--    Nurse menu action-->
+    <record id="hospital_nurse_action" model="ir.actions.act_window">
+        <field name="name">Nurse</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('job_id.name','=','Doctor')]</field>
+        <field name="view_id" eval="False"/>
+    </record>
+    <!--    Staff menu action-->
+    <record id="hr_employee_action" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+    </record>
+    <!--Staff menu-->
+    <menuitem id="hr_employee_menu" parent="hospital_menu_configuration"
+              name="Staff"
+              action="hr_employee_action" sequence="0"/>
+</odoo>

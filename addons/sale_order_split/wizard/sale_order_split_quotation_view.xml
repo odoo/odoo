@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Sale Order Split Quotation Wizard View -->
+    <record id="view_sale_order_split_quotation" model="ir.ui.view">
+        <field name="name">sale.order.split.quotation.form</field>
+        <field name="model">sale.order.split.quotation</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="split_sale_order_options" />
+                    <field name="order_ids" invisible="1" />
+                    <field
+                        name="sale_order_line_ids"
+                        attrs="{'invisible': [('split_sale_order_options', '!=', 'selection')],
+                        'required': [('split_sale_order_options', '=', 'selection')]}"
+                        domain="[('order_id', 'in', order_ids)]"
+                    >
+                        <tree create="true" edit="true" delete="true">
+                            <field name="product_id" />
+                            <field name="product_uom_qty" />
+                            <field
+                                name="product_uom"
+                                options="{'no_open': True, 'no_create': True}"
+                                string="Unit of Measure"
+                                groups="uom.group_uom"
+                            />
+                            <field name="order_id" />
+                            <field name="create_date" groups="base.group_no_one" />
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button
+                        name="action_apply"
+                        class="btn btn-primary"
+                        string="Split"
+                        type="object"
+                    />
+                    <button
+                        special="cancel"
+                        class="btn btn-secondary"
+                        string="Cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Sale order split quotation action for wizard -->
+    <record id="action_sale_order_split_quotation" model="ir.actions.act_window">
+        <field name="name">Split sale orders</field>
+        <field name="res_model">sale.order.split.quotation</field>
+        <field name="view_id" ref="view_sale_order_split_quotation" />
+        <field name="target">new</field>
+    </record>
+</odoo>

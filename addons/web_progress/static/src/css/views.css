@@ -1,0 +1,106 @@
+/**
+ * Style for progress bar
+ */
+
+.o_progress_navbar_dropdown_channels {
+    min-width: 450px;
+}
+
+.o_blockUI {
+    opacity: 1.0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+#progress_outline {
+    min-width: 100%;
+    padding: 20px;
+    color: #666666;
+    background: white;
+    display: -webkit-box;
+}
+
+#progress_outline.o_progress_systray {
+    min-width: 100%;
+    margin-left: 0;
+    border-radius: 0;
+    padding: 5px;
+    box-shadow: none;
+}
+
+#progress_frame {
+    min-width: 75%;
+    background-color: rgba(45, 53, 17, 0.38);
+    margin-top: 10px;
+    margin-bottom: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#progress_bar {
+    width: 1%;
+    height: 10px;
+    background-color: #00EE00;
+}
+
+#progress_bar.o_progress_bar_timeout {
+    transition: background-color 50s ease;
+    background-color: yellow;
+}
+
+#progress_bar.o_progress_bar_timeout_destroy {
+    transition: background-color 50s ease;
+    background-color: red;
+}
+
+#progress_cancel {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 3px;
+}
+
+#progress_cancel_confirm {
+    padding: 8px;
+}
+
+#progress_cancel_confirm, #progress_cancel_yes, #progress_cancel_no {
+    border: hidden;
+}
+
+#progress_time_eta {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+#progress_time_eta2 {
+    text-align: left;
+    vertical-align: middle;
+    margin-top: 0px;
+}
+
+.o_progress_message, .o_progress_button {
+    background-color: transparent;
+}
+
+#progress_cancel.o_cancel_message {
+    display: inherit;
+}
+
+.o_progress_systray {
+    margin: 10px;
+    width: 300px;
+    overflow: auto;
+}
+
+.o_progress_navbar_dropdown {
+    overflow: auto;
+    max-height: 90vh;
+    padding-right: 5px;
+}
+
+#progress_percent {
+    visibility: visible;
+    font-size: 16pt;
+    font-weight: bold;
+}

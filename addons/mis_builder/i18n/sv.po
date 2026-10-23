@@ -1,0 +1,1917 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mis_builder
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2024-02-27 12:37+0000\n"
+"Last-Translator: jakobkrabbe <jakob@syscare.se>\n"
+"Language-Team: none\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopia)"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>\n"
+"                                            balp[('user_type_id', '=',\n"
+"                                            ref('account.\n"
+"                                            data_account_type_receivable')."
+"id)][]\n"
+"                                        </code>\n"
+"                                        : variation of the balance of all "
+"receivable accounts over\n"
+"                                        the period."
+msgstr ""
+"<code> balp[('user_type_id' '=')\n"
+"                                            balp[('user_type_id', '=',\n"
+"                                            ref('konto.\n"
+"                                            data_account_type_receivable')."
+"id)][]\n"
+"                                        </code>\n"
+"                                        : variation av saldot för alla "
+"kundfordringar under\n"
+"                                        perioden."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>\n"
+"                                            balp[][('tax_line_id.tag_ids', "
+"'=', ref('l10n_be.tax_tag_56').id)]\n"
+"                                        </code>\n"
+"                                        : balance of move lines related to "
+"tax grid 56."
+msgstr ""
+"<code> balp\n"
+"                                            balp[][('tax_line_id.tag_ids', "
+"'=', ref('l10n_be.tax_tag_56').id)]\n"
+"                                        </code>\n"
+"                                        : Balans av transaktionsrader "
+"relaterade till skattetabell 56."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>\n"
+"                                            debp[55%][('journal_id.code', "
+"'=',\n"
+"                                            'BNK1')]\n"
+"                                        </code>\n"
+"                                        : sum of all debits on accounts 55 "
+"and journal BNK1 during\n"
+"                                        the period."
+msgstr ""
+"<code> <kod\n"
+"                                            debp[55%][('journal_id.code', "
+"'=',\n"
+"                                            'BNK1')]\n"
+"                                        </code>\n"
+"                                        : summan av alla debiteringar på "
+"konto 55 och journal BNK1 under\n"
+"                                        perioden."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>AccountingNone</code> : a null value that behaves as 0 in\n"
+"                                        arithmetic operations."
+msgstr ""
+"<code>AccountingNone</code> : ett nollvärde som beter sig som 0 i\n"
+"                                        aritmetiska operationer."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>bal</code>, <code>crd</code>, <code>deb</code>, <code>\n"
+"                                        pbal</code>, <code>nbal</code> : "
+"balance, debit, credit,\n"
+"                                        positive balance, negative balance."
+msgstr ""
+"<code>bal</code>, <code>crd</code>, <code>deb</code>, <code>\n"
+"                                        pbal</code>, <code>nbal</code> : "
+"saldo, debet, kredit,\n"
+"                                        positivt saldo, negativt saldo."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>bal[70]</code> : variation of the balance of account 70 over\n"
+"                                        the period (it is the same as "
+"<code>balp[70]</code>."
+msgstr ""
+"<code>bal[70]</code> : variation i saldot för konto 70 under perioden\n"
+"                                        perioden (detta är samma sak som "
+"<code>balp[70]</code>."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>bale[1%]</code> : balance of accounts starting with 1 at\n"
+"                                        end of period."
+msgstr ""
+"<code>bale[1%]</code> : saldo för konton som börjar med 1 vid periodens\n"
+"                                        slutet av perioden."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid "<code>bali[70,60]</code> : initial balance of accounts 70 and 60."
+msgstr "<code>bali[70,60]</code> : ursprungligt saldo för kontona 70 och 60."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>balu[]</code> : (<code>u</code> for unallocated) is a special "
+"expression\n"
+"                                        that shows the unallocated profit/"
+"loss of previous fiscal\n"
+"                                        years."
+msgstr ""
+"<code>balu[]</code> : (<code>u</code> för ofördelad) är ett speciellt "
+"uttryck\n"
+"                                        som visar ej fördelad vinst/förlust "
+"från tidigare räkenskapsår."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>crdp[40%]</code> : sum of all credits on accounts starting\n"
+"                                        with 40 during the period."
+msgstr ""
+"<code>crdp[40%]</code> : summan av alla krediter på konton som börjar\n"
+"                                        med 40 under perioden."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>date_from</code>, <code>date_to</code> : beginning and end date of "
+"the\n"
+"                                        period."
+msgstr ""
+"<code>datum_från</code>, <code>datum_till</code> : start- och slutdatum för "
+"perioden."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>datetime</code>, <code>datetime</code>, <code>dateutil</code> : the "
+"python modules."
+msgstr ""
+"<code>datetime</code>, <code>datetime</code>, <code>dateutil</code> : "
+"pythonmodulerna."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>p</code>, <code>i</code>, <code>e</code> : respectively variation over "
+"the period,\n"
+"                                        initial balance, ending balance"
+msgstr ""
+"<code>p</code>, <code>i</code>, <code>e</code> : respektive variation under "
+"perioden,\n"
+"                                        ingående balans, utgående balans"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>pbale[55%]</code> : sum of all ending balances of accounts\n"
+"                                        starting with 55 whose ending "
+"balance is positive."
+msgstr ""
+"<code>pbale[55%]</code> : summan av alla utgående saldon för konton\n"
+"                                        som börjar med 55 vars utgående "
+"balans är positiv."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"<code>sum</code>, <code>min</code>,\n"
+"                                        <code>max</code>, <code>len</code>,\n"
+"                                        <code>avg</code> : behave as "
+"expected, very\n"
+"                                        similar to the python builtins."
+msgstr ""
+"<code>summa</code>, <code>min</code>,\n"
+"                                        <code>max</code>, <code>len</code>,\n"
+"                                        <code>avg</code> : beter sig som "
+"förväntat, mycket\n"
+"                                        liknar python-inbyggnaderna."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.report_mis_report_instance
+msgid "<span>-</span>"
+msgstr "<span>-</span>"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance_period__source_aml_model_id
+msgid ""
+"A 'move line like' model, ie having at least debit, credit, date, account_id "
+"and company_id fields."
+msgstr ""
+"En \"move line like\"-modell, dvs. med minst fälten debit, credit, date, "
+"account_id och company_id."
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report__move_lines_source
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__source_aml_model_id
+msgid ""
+"A 'move line like' model, ie having at least debit, credit, date, account_id "
+"and company_id fields. This model is the data source for column Actuals."
+msgstr ""
+"En \"move line like\"-modell, dvs. med minst fälten debit, credit, date, "
+"account_id och company_id. Denna modell är datakällan för kolumnen Aktuella."
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid "A date filter is mandatory for this source in column %s."
+msgstr "Ett datumfilter är obligatoriskt för denna källa i kolumn %s."
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance_period__analytic_domain
+msgid "A domain to additionally filter move lines considered in this column."
+msgstr ""
+"En domän för att ytterligare filtrera flyttlinjer som beaktas i denna kolumn."
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__analytic_domain
+msgid ""
+"A domain to additionally filter move lines considered in this report. "
+"Caution: when using different move line sources in different columns, such "
+"as budgets by account, make sure to use only fields that are available in "
+"all move line sources."
+msgstr ""
+"En domän för att ytterligare filtrera flyttlinjer som beaktas i denna "
+"rapport. Varning: när du använder olika flyttgränskällor i olika kolumner, "
+"t.ex. budgetar per konto, se till att endast använda fält som är "
+"tillgängliga i alla flyttgränskällor."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__account_model
+msgid "Account Model"
+msgstr "Kontomodell"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__accumulation_method
+msgid "Accumulation Method"
+msgstr "Ackumuleringsmetod"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid ""
+"Actual (alternative) models used in columns must have the same account model "
+"in the Account field and must be the same defined in the report template: %s"
+msgstr ""
+"Faktiska (alternativa) modeller som används i kolumner måste ha samma "
+"kontomodell i fältet Konto och måste vara samma som definieras i "
+"rapportmallen: %s"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__source__actuals
+msgid "Actuals"
+msgstr "Faktiskt"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__source__actuals_alt
+msgid "Actuals (alternative)"
+msgstr "Faktiskt utfall (alternativ)"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance_period__source
+msgid ""
+"Actuals: current data, from accounting and other queries.\n"
+"Actuals (alternative): current data from an alternative source (eg a "
+"database view providing look-alike account move lines).\n"
+"Sum columns: summation (+/-) of other columns.\n"
+"Compare to column: compare to other column.\n"
+msgstr ""
+"Aktuella data: aktuella data, från bokföring och andra förfrågningar.\n"
+"Aktuella data (alternativ): aktuella data från en alternativ källa (t.ex. en "
+"databasvy som ger liknande kontoflyttlinjer).\n"
+"Summera kolumner: summering (+/-) av andra kolumner.\n"
+"Jämför med kolumn: jämför med annan kolumn.\n"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_prorata_read_group_mixin
+msgid "Adapt model with date_from/date_to for pro-rata temporis read_group"
+msgstr "Anpassa modell med date_from/date_to för pro-rata temporis read_group"
+
+#. module: mis_builder
+#: model:ir.actions.act_window,name:mis_builder.mis_report_instance_add_to_dashboard_action
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_add_to_dashboard_form_view
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+msgid "Add to dashboard"
+msgstr "Lägg till på anslagstavlan"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"Additionally following variables are available\n"
+"                                    in the evaluation context:"
+msgstr ""
+"Dessutom är följande variabler tillgängliga\n"
+"                                    i utvärderingssammanhanget:"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__aggregate
+msgid "Aggregate"
+msgstr "Aggregerad"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance__target_move__all
+msgid "All Entries"
+msgstr "Alla verifikat"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__all_kpi_ids
+msgid "All Kpi"
+msgstr "Alla Kpi"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance__target_move__posted
+msgid "All Posted Entries"
+msgstr "Alla bokförda verifikat"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__allowed_cmpcol_ids
+msgid "Allowed Cmpcol"
+msgstr "Tillåtet Cmpcol"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__company_ids
+msgid "Allowed companies"
+msgstr "Tillåtna företag"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__company_id
+msgid "Allowed company"
+msgstr "Tillåtet företag"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_kpi_data__amount
+msgid "Amount"
+msgstr "Belopp"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_kpi__style_expression
+msgid ""
+"An expression that returns a style depending on the KPI value. Such style is "
+"applied on top of the row style."
+msgstr ""
+"Ett uttryck som returnerar en stil beroende på KPI-värdet. En sådan stil "
+"tillämpas ovanpå radstilen."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__analytic_domain
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__analytic_domain
+msgid "Analytic Domain"
+msgstr "Analytisk domän"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid "Auto expand"
+msgstr "Auto expandera"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_kpi__accumulation_method__avg
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_query__aggregate__avg
+#, python-format
+msgid "Average"
+msgstr "Genomsnittlig"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__background_color
+msgid "Background Color"
+msgstr "Bakgrundsfärg"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__background_color_inherit
+msgid "Background Color Inherit"
+msgstr "Bakgrundsfärg ärva"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_style__background_color
+msgid "Background color in valid RGB code (from #000000 to #FFFFFF)"
+msgstr "Bakgrundsfärg i giltig RGB-kod (från #000000 till #FFFFFF)"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__date
+msgid "Base date"
+msgstr "Basdatum"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_weight__bold
+msgid "Bold"
+msgstr "Fet stil"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_add_to_dashboard_form_view
+#: model_terms:ir.ui.view,arch_db:mis_builder.wizard_mis_report_instance_view_form
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__multi_company
+msgid "Check if you wish to specify several companies to be searched for data."
+msgstr "Markera om du vill ange flera företag som ska sökas efter data."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_style_view_form
+msgid "Color"
+msgstr "Färg"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__color_inherit
+msgid "Color Inherit"
+msgstr "Färg i arv"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period_sum__period_to_sum_id
+msgid "Column"
+msgstr "Kolumn"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid "Column %s cannot be compared to itrec."
+msgstr "Kolumnen %s kan inte jämföras med itrec."
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid "Column %s with move lines source must have from/to dates."
+msgstr "Kolumn %s med flyttrader källa måste ha från/till datum."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+msgid "Columns"
+msgstr "Kolumner"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/kpimatrix.py:0
+#, python-format
+msgid "Columns %(descr)s and %(base_descr)s are not comparable"
+msgstr "Kolumnerna %(descr)s och %(base_descr)s är inte jämförbara"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid "Columns to compare must belong to the same report in %s"
+msgstr "Kolumner som ska jämföras måste tillhöra samma rapport i %s"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__source_sumcol_ids
+msgid "Columns to sum"
+msgstr "Kolumner att summera"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__query_company_ids
+msgid "Companies for which data will be searched."
+msgstr "Företag för vilka uppgifter kommer att sökas."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__source_cmpcol_to_id
+msgid "Compare"
+msgstr "Jämför"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__source__cmpcol
+msgid "Compare columns"
+msgstr "Jämför kolumner"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__compare_method
+msgid "Comparison Method"
+msgstr "Metod för jämförelse"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__comparison_mode
+msgid "Comparison Mode"
+msgstr "Jämförelseläge"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_add_mis_report_instance_dashboard_wizard__create_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__create_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__create_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__create_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period_sum__create_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__create_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression__create_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__create_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__create_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__create_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subreport__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_add_mis_report_instance_dashboard_wizard__create_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__create_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__create_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__create_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period_sum__create_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__create_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression__create_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__create_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__create_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__create_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subreport__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_add_mis_report_instance_dashboard_wizard__dashboard_id
+msgid "Dashboard"
+msgstr "Instrumentpanel"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_prorata_read_group_mixin__date
+msgid "Date"
+msgstr "Datum"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__date_field
+msgid "Date Field"
+msgstr "Datumfält"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_prorata_read_group_mixin__date_from
+msgid "Date From"
+msgstr "Datum från"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__date_range_id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__date_range_id
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__type__date_range
+#, python-format
+msgid "Date Range"
+msgstr "Datumintervall"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__date_range_type_id
+msgid "Date Range Type"
+msgstr "Typ av datumintervall"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_prorata_read_group_mixin__date_to
+msgid "Date To"
+msgstr "Datum till"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_period_view_form
+msgid "Dates"
+msgstr "Datum"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__type__d
+#, python-format
+msgid "Day"
+msgstr "Dag"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__description
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__description
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__description
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__description
+msgid "Description"
+msgstr "Beskrivning"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_kpi__accumulation_method
+msgid ""
+"Determines how values of this kpi spanning over a time period are "
+"transformed to match the reporting period. Sum: values of shorter period are "
+"added, values of longest or partially overlapping periods are adjusted pro-"
+"rata temporis.\n"
+"Average: values of included period are averaged with a pro-rata temporis "
+"weight."
+msgstr ""
+"Bestämmer hur värden i denna kpi som sträcker sig över en tidsperiod "
+"omvandlas för att matcha rapporteringsperioden. Sum: värden för kortare "
+"perioder adderas, värden för längre eller delvis överlappande perioder "
+"justeras pro-rata temporis.\n"
+"Genomsnitt: värden för inkluderade perioder beräknas som genomsnitt med en "
+"pro-rata temporis vikt."
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_kpi__compare_method__diff
+#, python-format
+msgid "Difference"
+msgstr "Skillnad"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__no_auto_expand_accounts
+msgid "Disable account details expansion"
+msgstr "Inaktivera expansion av kontouppgifter"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__display_columns_description
+msgid "Display Columns Description"
+msgstr "Visa kolumnbeskrivning"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_add_mis_report_instance_dashboard_wizard__display_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__display_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__display_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__display_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period_sum__display_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__display_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression__display_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__display_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__display_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__display_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subreport__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__auto_expand_accounts
+msgid "Display details by account"
+msgstr "Visa detaljer per konto"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__display_columns_description
+msgid "Display the date range details in the column headers."
+msgstr "Visa datumintervallets detaljer i kolumnrubrikerna."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__divider_inherit
+msgid "Divider Inherit"
+msgstr "Dividera Ärva"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__domain
+msgid "Domain"
+msgstr "Domän"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__dp_inherit
+msgid "Dp Inherit"
+msgstr "Dp ärva"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_prorata_read_group_mixin__date
+msgid ""
+"Dummy field that adapts searches on date to searches on date_from/date_to."
+msgstr ""
+"Dummyfält som anpassar sökningar på datum till sökningar på date_from/"
+"date_to."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__duration
+msgid "Duration"
+msgstr "Varaktighet"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__query_company_ids
+msgid "Effective companies"
+msgstr "Effektiva företag"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid "Enter expression here, for example balp[70%]. See also help tab."
+msgstr "Ange uttrycket här, t.ex. balp[70%]. Se även fliken Hjälp."
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/aep.py:0
+#, python-format
+msgid ""
+"Error while querying move line source \"%(model_name)s\". This is likely due "
+"to a filter or expression referencing a field that does not exist in the "
+"model.\n"
+"\n"
+"The technical error message is: %(exception)s. "
+msgstr ""
+"Fel vid förfrågan om flyttlinjekällan \"%(model_name)s\". Detta beror "
+"sannolikt på ett filter eller uttryck som refererar till ett fält som inte "
+"finns i modellen.\n"
+"\n"
+"Det tekniska felmeddelandet är: %(exception)s. "
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid "Examples:"
+msgstr "Exempel:"
+
+#. module: mis_builder
+#. odoo-javascript
+#: code:addons/mis_builder/static/src/components/mis_report_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_tree
+#: model_terms:ir.ui.view,arch_db:mis_builder.wizard_mis_report_instance_view_form
+#, python-format
+msgid "Export"
+msgstr "Exportera"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__expression
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression__name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__expression_ids
+msgid "Expression"
+msgstr "Uttryck"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__expression_ids
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid "Expressions"
+msgstr "Uttryck"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid "Expressions can be any valid python expressions."
+msgstr "Uttryck kan vara alla giltiga python-uttryck."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"Expressions can involve other KPI, sub KPI and\n"
+"                                    query results by name (eg <code>kpi1 + "
+"kpi2</code>,\n"
+"                                    <code>kpi2.subkpi1</code>, <code>query1."
+"field1</code>)."
+msgstr ""
+"Uttryck kan involvera andra KPI, sub KPI och\n"
+"                                    sökresultat efter namn (t.ex. <code>kpi1 "
+"+ kpi2</code>,\n"
+"                                    <code>kpi2.subkpi1</code>, <code>query1."
+"field1</code>)."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__normalize_factor
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__divider
+msgid "Factor"
+msgstr "Faktor"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_style_view_form
+msgid "Factor inherit"
+msgstr "Faktor arv"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance_period__normalize_factor
+msgid "Factor to use to normalize the period (used in comparison"
+msgstr "Faktor att använda för att normalisera perioden (används vid jämförelse"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__field_names
+msgid "Fetched fields name"
+msgstr "Fetched fältnamn"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__field_ids
+msgid "Fields to fetch"
+msgstr "Fält att hämta"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__widget_search_view_id
+msgid "Filter box search view"
+msgstr "Filterruta sökvy"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_period_view_form
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+msgid "Filters"
+msgstr "Filter"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__mode__fix
+msgid "Fixed dates"
+msgstr "Fasta datum"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_style_view_form
+msgid "Font"
+msgstr "Typsnitt"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__font_size
+msgid "Font Size"
+msgstr "Typsnittsstorlek"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__font_size_inherit
+msgid "Font Size Inherit"
+msgstr "Ärvd typsnittsstorlek"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__font_style
+msgid "Font Style"
+msgstr "Typsnitt"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__font_style_inherit
+msgid "Font Style Inherit"
+msgstr "Ärvd typsnittsstil"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__font_weight
+msgid "Font Weight"
+msgstr "Typsnittsvikt"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__font_weight_inherit
+msgid "Font Weight Inherit"
+msgstr "Ärvd typsnittsvikt"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance_period__is_ytd
+msgid "Forces the start date to Jan 1st of the relevant year"
+msgstr "Flyttar startdatumet till den 1 januari det aktuella året"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_kpi_data__date_from
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__date_from
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__manual_date_from
+msgid "From"
+msgstr "Från"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__date_from
+msgid "From (computed)"
+msgstr "Från (beräknat)"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/report/mis_report_instance_xlsx.py:0
+#, python-format
+msgid "Generated on %(gen_date)s at %(gen_time)s"
+msgstr "Skapad den %(gen_date)s vid %(gen_time)s"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid "Help (for KPI expressions)"
+msgstr "Hjälp (för KPI-uttryck)"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__hide_always
+msgid "Hide Always"
+msgstr "Dölj alltid"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__hide_always_inherit
+msgid "Hide Always Inherit"
+msgstr "Dölj alltid ärva"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__hide_empty
+msgid "Hide Empty"
+msgstr "Dölj tomrum"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__hide_empty_inherit
+msgid "Hide Empty Inherit"
+msgstr "Hide Empty Inherit"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_add_mis_report_instance_dashboard_wizard__id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period_sum__id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression__id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subreport__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/aep.py:0
+#, python-format
+msgid ""
+"If currency_id is not provided, all companies must have the same currency."
+msgstr "Om currency_id inte anges måste alla företag ha samma valuta."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_style_view_form
+msgid "Indent"
+msgstr "Indrag"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__indent_level
+msgid "Indent Level"
+msgstr "Indragningsnivå"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__indent_level_inherit
+msgid "Indent Level Inherit"
+msgstr "Indrag Nivå Inherit"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_style.py:0
+#, python-format
+msgid "Indent level must be greater than or equal to 0"
+msgstr "Indragsnivån måste vara större än eller lika med 0"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_style__italic
+msgid "Italic"
+msgstr "Kursiv"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_kpi_data__kpi_expression_id
+msgid "KPI"
+msgstr "KPI"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#, python-format
+msgid ""
+"KPI \"%(kpi)s\" has type %(type)s while a tuple was expected.\n"
+"\n"
+"This can be fixed by either:\n"
+"\t- Changing the KPI value to a tuple of length %(length)s\n"
+"or\n"
+"\t- Changing the KPI to `multi` mode and giving an explicit value for each "
+"sub-KPI."
+msgstr ""
+"KPI \"%(kpi)s\" har typ %(type)s medan en tuple förväntades.\n"
+"\n"
+"Detta kan åtgärdas genom att antingen:\n"
+"\t- Ändra KPI-värdet till en tupel med längden %(length)s\n"
+"eller\n"
+"\t- Ändra KPI till `multi`-läge och ange ett explicit värde för varje under-"
+"KPI."
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#, python-format
+msgid ""
+"KPI \"%(kpi)s\" is valued as a tuple of length %(length)s while a tuple of "
+"length%(expected_length)s is expected."
+msgstr ""
+"KPI \"%(kpi)s\" värderas som en tupel med längden %(length)s medan en tupel "
+"med längden%(expected_length)s förväntas."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_kpi_data__seq1
+msgid "KPI Sequence"
+msgstr "KPI-sekvens"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#, python-format
+msgid "KPI name ({}) must be a valid python identifier"
+msgstr "KPI-namn ({}) måste vara en giltig python-identifierare"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__kpi_ids
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_form
+msgid "KPI's"
+msgstr "KPI:er"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report__all_kpi_ids
+msgid "KPIs of this report and subreports."
+msgstr "KPI:er för denna rapport och delrapporter."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression__kpi_id
+msgid "Kpi"
+msgstr "Kpi"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__name
+msgid "Label"
+msgstr "Etikett"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__landscape_pdf
+msgid "Landscape PDF"
+msgstr "Landskap PDF"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_add_mis_report_instance_dashboard_wizard____last_update
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report____last_update
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance____last_update
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period____last_update
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period_sum____last_update
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi____last_update
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression____last_update
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query____last_update
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style____last_update
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi____last_update
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subreport____last_update
+msgid "Last Modified on"
+msgstr "Senast ändrad den"
+
+#. module: mis_builder
+#: model:ir.actions.act_window,name:mis_builder.last_mis_report_instance_view_action
+#: model:ir.ui.menu,name:mis_builder.last_wizard_mis_report_instance_view_menu
+msgid "Last Reports Generated"
+msgstr "Senast genererade rapporter"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_add_mis_report_instance_dashboard_wizard__write_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__write_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__write_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__write_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period_sum__write_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__write_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression__write_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__write_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__write_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__write_uid
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subreport__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_add_mis_report_instance_dashboard_wizard__write_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__write_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__write_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__write_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period_sum__write_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__write_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression__write_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__write_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__write_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__write_date
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subreport__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+msgid "Layout"
+msgstr "Layout"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_report_mis_builder_mis_report_instance_xlsx
+msgid "MIS Builder XLSX report"
+msgstr "MIS Builder XLSX-rapport"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_kpi_data
+msgid "MIS Kpi Data Abtract class"
+msgstr "MIS Kpi Data Abtract-klass"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_form
+msgid "MIS Report"
+msgstr "MIS-rapport"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_report_subreport
+msgid "MIS Report - Sub Reports Relation"
+msgstr "MIS-rapport - Underrapporter Relation"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_add_mis_report_instance_dashboard_wizard
+msgid "MIS Report Add to Dashboard Wizard"
+msgstr "Guiden Lägg till MIS-rapport i instrumentpanel"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_report_instance
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+msgid "MIS Report Instance"
+msgstr "Instans för MIS-rapport"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_report_instance_period
+msgid "MIS Report Instance Period"
+msgstr "MIS-rapport Instansperiod"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_report_instance_period_sum
+msgid "MIS Report Instance Period Sum"
+msgstr "MIS-rapport Instans Period Summa"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_report_kpi
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid "MIS Report KPI"
+msgstr "MIS-rapport KPI"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_report_kpi_expression
+msgid "MIS Report KPI Expression"
+msgstr "MIS-rapport KPI-uttryck"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_result_view_form
+msgid "MIS Report Preview"
+msgstr "Förhandsgranskning av MIS-rapport"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_report_query
+msgid "MIS Report Query"
+msgstr "Förfrågan om MIS-rapport"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_report_style
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_style_view_form
+msgid "MIS Report Style"
+msgstr "Stil för MIS-rapport"
+
+#. module: mis_builder
+#: model:ir.actions.act_window,name:mis_builder.mis_report_style_view_action
+#: model:ir.ui.menu,name:mis_builder.mis_report_style_view_menu
+msgid "MIS Report Styles"
+msgstr "Stilar för MIS-rapporter"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_report_subkpi
+msgid "MIS Report Sub-KPI"
+msgstr "MIS-rapport Under-KPI"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_mis_report
+msgid "MIS Report Template"
+msgstr "Mall för MIS-rapport"
+
+#. module: mis_builder
+#: model:ir.actions.act_window,name:mis_builder.mis_report_view_action
+#: model:ir.ui.menu,name:mis_builder.mis_report_view_menu
+msgid "MIS Report Templates"
+msgstr "Mallar för MIS-rapporter"
+
+#. module: mis_builder
+#: model:ir.ui.menu,name:mis_builder.mis_report_conf_menu
+#: model:ir.ui.menu,name:mis_builder.mis_report_finance_menu
+msgid "MIS Reporting"
+msgstr "MIS-rapportering"
+
+#. module: mis_builder
+#: model:ir.actions.act_window,name:mis_builder.mis_report_instance_view_action
+#: model:ir.ui.menu,name:mis_builder.mis_report_instance_view_menu
+msgid "MIS Reports"
+msgstr "MIS-rapporter"
+
+#. module: mis_builder
+#: model:ir.actions.report,name:mis_builder.qweb_pdf_export
+msgid "MIS report instance QWEB PDF report"
+msgstr "MIS-rapport instans QWEB PDF-rapport"
+
+#. module: mis_builder
+#: model:ir.actions.report,name:mis_builder.xls_export
+msgid "MIS report instance XLS report"
+msgstr "MIS-rapport instans XLS-rapport"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_query__aggregate__max
+#, python-format
+msgid "Max"
+msgstr "Max"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_query__aggregate__min
+#, python-format
+msgid "Min"
+msgstr "Min"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__mode
+msgid "Mode"
+msgstr "Läge"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__source_aml_model_name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__model_id
+msgid "Model"
+msgstr "Modell"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__type__m
+#, python-format
+msgid "Month"
+msgstr "Månad"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__move_lines_source
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__source_aml_model_id
+msgid "Move Lines Source"
+msgstr "Flytta linjer Källa"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__source_aml_model_id
+msgid "Move lines source"
+msgstr "Flytta linjer källa"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__source_aml_model_name
+msgid "Move lines source model name"
+msgstr "Flytta linjer källa modellnamn"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__multi
+msgid "Multi"
+msgstr "Flera"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__multi_company
+msgid "Multiple companies"
+msgstr "Flera företag"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_add_mis_report_instance_dashboard_wizard__name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_kpi_data__name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__name
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subreport__name
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_period_view_form
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+msgid "Name"
+msgstr "Namn"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__mode__none
+msgid "No date filter"
+msgstr "Inget datumfilter"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid "No date filter is allowed for this source in column %s."
+msgstr "Inget datumfilter är tillåtet för denna källa i kolumn %s."
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_kpi__accumulation_method__none
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_kpi__compare_method__none
+#, python-format
+msgid "None"
+msgstr "Ingen"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_style__normal
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_weight__nornal
+msgid "Normal"
+msgstr "Normal"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_style_view_form
+msgid "Number"
+msgstr "Antal"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance_period__duration
+msgid "Number of periods"
+msgstr "Antal perioder"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_kpi__type__num
+#, python-format
+msgid "Numeric"
+msgstr "Numerisk"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__offset
+msgid "Offset"
+msgstr "Offset"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance_period__offset
+msgid "Offset from current period"
+msgstr "Kvittning från innevarande period"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period_sum__period_id
+msgid "Parent column"
+msgstr "Föräldrakolumn"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_kpi__compare_method__pct
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_kpi__type__pct
+#, python-format
+msgid "Percentage"
+msgstr "Procentuell andel"
+
+#. module: mis_builder
+#: model:ir.model.constraint,message:mis_builder.constraint_mis_report_instance_period_name_unique
+msgid "Period name should be unique by report"
+msgstr "Periodnamnet bör vara unikt för varje rapport"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__type
+msgid "Period type"
+msgstr "Typ av period"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__period_ids
+msgid "Periods"
+msgstr "Perioder"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__pivot_date
+msgid "Pivot Date"
+msgstr "Pivot-datum"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid "Please provide both columns to compare in %s."
+msgstr "Ange båda kolumnerna för att jämföra i %s."
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid ""
+"Please select a report template and/or save the report before adding columns."
+msgstr ""
+"Välj en rapportmall och/eller spara rapporten innan du lägger till kolumner."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__prefix
+msgid "Prefix"
+msgstr "Prefix"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__prefix_inherit
+msgid "Prefix Inherit"
+msgstr "Prefix Ärva"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_tree
+#: model_terms:ir.ui.view,arch_db:mis_builder.wizard_mis_report_instance_view_form
+msgid "Preview"
+msgstr "Förhandsvisning"
+
+#. module: mis_builder
+#. odoo-javascript
+#: code:addons/mis_builder/static/src/components/mis_report_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_tree
+#: model_terms:ir.ui.view,arch_db:mis_builder.wizard_mis_report_instance_view_form
+#, python-format
+msgid "Print"
+msgstr "Skriv ut"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__query_ids
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_form
+msgid "Queries"
+msgstr "Frågor"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#, python-format
+msgid "Query name ({}) must be valid python identifier"
+msgstr "Frågans namn ({}) måste vara en giltig python-identifierare"
+
+#. module: mis_builder
+#. odoo-javascript
+#: code:addons/mis_builder/static/src/components/mis_report_widget.xml:0
+#, python-format
+msgid "Refresh"
+msgstr "Uppdatera"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__mode__relative
+msgid "Relative to report base date"
+msgstr "I förhållande till rapportens basdatum"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__report_id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__report_id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__report_id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_query__report_id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__report_id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subreport__report_id
+msgid "Report"
+msgstr "Rapport"
+
+#. module: mis_builder
+#: model:ir.model,name:mis_builder.model_ir_actions_report
+msgid "Report Action"
+msgstr "Rapportera åtgärder"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__report_instance_id
+msgid "Report Instance"
+msgstr "Rapportera instans"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__date
+msgid "Report base date (leave empty to use current date)"
+msgstr "Rapportera basdatum (lämna tomt för att använda aktuellt datum)"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__dp
+msgid "Rounding"
+msgstr "Avrundning"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_style_view_form
+msgid "Rounding inherit"
+msgstr "Rundning av arv"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+#: model_terms:ir.ui.view,arch_db:mis_builder.wizard_mis_report_instance_view_form
+msgid "Save"
+msgstr "Spara"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__widget_search_view_id
+msgid "Search view to customize the filter box in the report widget."
+msgstr "Sökvy för att anpassa filterrutan i rapportwidgeten."
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__company_ids
+msgid "Select companies for which data will be searched."
+msgstr "Välj företag för vilka uppgifter ska sökas."
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__currency_id
+msgid ""
+"Select target currency for the report. Required if companies have different "
+"currencies."
+msgstr "Välj målvaluta för rapporten. Krävs om företagen har olika valutor."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__sequence
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__sequence
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression__sequence
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subkpi__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: mis_builder
+#. odoo-javascript
+#: code:addons/mis_builder/static/src/components/mis_report_widget.xml:0
+#, python-format
+msgid "Settings"
+msgstr "Inställningar"
+
+#. module: mis_builder
+#: model:ir.model.constraint,message:mis_builder.constraint_mis_report_subreport_subreport_unique
+msgid ""
+"Should not include the same report more than once as sub report of a given "
+"report"
+msgstr ""
+"Bör inte inkludera samma rapport mer än en gång som underrapport till en "
+"viss rapport"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__widget_show_pivot_date
+msgid "Show Pivot Date"
+msgstr "Visa Pivot-datum"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__widget_show_filters
+msgid "Show filters box"
+msgstr "Visa filter-rutan"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__widget_show_settings_button
+msgid "Show settings button"
+msgstr "Knappen Visa inställningar"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__widget_show_pivot_date
+msgid "Show the Pivot Date in the report widget filter bar."
+msgstr "Visa Pivotdatum i rapportwidgetens filterfält."
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__widget_show_filters
+msgid "Show the filter bar in the report widget."
+msgstr "Visa filterfältet i rapportwidgeten."
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_instance__widget_show_settings_button
+msgid "Show the settings button in the report widget."
+msgstr "Visa inställningsknappen i rapportwidgeten."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period_sum__sign
+msgid "Sign"
+msgstr "Tecken"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__source
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_period_view_form
+msgid "Source"
+msgstr "Källa"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_kpi__type__str
+#, python-format
+msgid "String"
+msgstr "Sträng"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__style_id
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__style_id
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_style_view_form
+msgid "Style"
+msgstr "Stil"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__style_expression
+msgid "Style Expression"
+msgstr "Stiluttryck"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__auto_expand_accounts_style_id
+msgid "Style for account detail rows"
+msgstr "Stil för rader med kontouppgifter"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__name
+msgid "Style name"
+msgstr "Stilnamn"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__subkpi_ids
+msgid "Sub KPI"
+msgstr "Under KPI"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__subkpi_ids
+msgid "Sub KPI Filter"
+msgstr "Filter för under-KPI"
+
+#. module: mis_builder
+#: model:ir.model.constraint,message:mis_builder.constraint_mis_report_kpi_expression_subkpi_kpi_unique
+msgid "Sub KPI must be used once and only once for each KPI"
+msgstr "Sub KPI måste användas en och endast en gång för varje KPI"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_form
+msgid "Sub KPI's"
+msgstr "Underordnade KPI:er"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_form
+msgid "Sub Reports"
+msgstr "Underrapporter"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report__subreport_ids
+msgid "Sub reports"
+msgstr "Underrapporter"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_kpi_data__seq2
+msgid "Sub-KPI Sequence"
+msgstr "Sub-KPI-sekvens"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#, python-format
+msgid "Sub-KPI name ({}) must be a valid python identifier"
+msgstr "Sub-KPI-namn ({}) måste vara en giltig Python-identifierare"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi_expression__subkpi_id
+msgid "Subkpi"
+msgstr "Subkpi"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_subreport__subreport_id
+msgid "Subreport"
+msgstr "Delrapport"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_subreport.py:0
+#, python-format
+msgid "Subreport loop detected"
+msgstr "Loop för underrapport upptäckt"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_subreport.py:0
+#, python-format
+msgid "Subreport name ({}) must be a valid python identifier"
+msgstr "Underrapportens namn ({}) måste vara en giltig Python-identifierare"
+
+#. module: mis_builder
+#: model:ir.model.constraint,message:mis_builder.constraint_mis_report_subreport_name_unique
+msgid "Subreport name should be unique by report"
+msgstr "Underrapportens namn ska vara unikt för varje rapport"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__suffix
+msgid "Suffix"
+msgstr "Suffix"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__suffix_inherit
+msgid "Suffix Inherit"
+msgstr "Suffix Ärva"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_kpi__accumulation_method__sum
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_query__aggregate__sum
+#, python-format
+msgid "Sum"
+msgstr "Summa"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__source_sumcol_accdet
+msgid "Sum account details"
+msgstr "Summa kontouppgifter"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/kpimatrix.py:0
+#, python-format
+msgid ""
+"Sum cannot be computed in column {} because the columns to sum have no "
+"common subkpis"
+msgstr ""
+"Summan kan inte beräknas i kolumn {} eftersom kolumnerna till summan inte "
+"har någon gemensam subkpis"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__source__sumcol
+msgid "Sum columns"
+msgstr "Summera kolumner"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__target_move
+msgid "Target Moves"
+msgstr "Mål rör sig"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_tree
+msgid "Template"
+msgstr "Mall"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__temporary
+msgid "Temporary"
+msgstr "Tillfälligt"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_style__color
+msgid "Text color"
+msgstr "Textfärg"
+
+#. module: mis_builder
+#: model:ir.model.fields,help:mis_builder.field_mis_report_style__color
+msgid "Text color in valid RGB code (from #000000 to #FFFFFF)"
+msgstr "Textfärg i giltig RGB-kod (från #000000 till #FFFFFF)"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"The <b>account selector</b> is a like expression on the\n"
+"                                        account code (eg <code>70%</code>, "
+"etc), or a domain over accounts\n"
+"                                        (eg <code>[('code', 'like', '60%')]</"
+"code>)."
+msgstr ""
+"<b>Kontoväljaren</b> är ett liknande uttryck på\n"
+"                                        kontokoden (t.ex. <code>70%</code>, "
+"etc.), eller en domän över konton\n"
+"                                        (t.ex. <code>[('kod', 'liknande', "
+"'60%')]</code>)."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"The <b>journal items domain</b> is an Odoo domain filter on\n"
+"                                        journal items."
+msgstr ""
+"Domänen <b>journalartiklar</b> är ett Odoo-domänfilter för\n"
+"                                        journalartiklar."
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_view_kpi_form
+msgid ""
+"The following special elements are recognized in the expressions\n"
+"                                    to compute accounting data: <code>{bal|"
+"crd|deb|pbal|nbal}{pieu}[account\n"
+"                                    selector][journal items domain]</code>."
+msgstr ""
+"Följande speciella element erkänns i uttrycken\n"
+"                                    för att beräkna redovisningsdata: "
+"<code>{bal|crd|deb|pbal|nbal}{pieu}[konto\n"
+"                                    väljare][journalposternas domän]</code>."
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_kpi_data__date_to
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance__date_to
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__manual_date_to
+msgid "To"
+msgstr "Till"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__date_to
+msgid "To (computed)"
+msgstr "Till (beräknat)"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_kpi_data.py:0
+#, python-format
+msgid "Unexpected accumulation method %(method)s for %(name)s."
+msgstr "Oväntad ackumuleringsmetod %(method)s för %(name)s."
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report.py:0
+#, python-format
+msgid "Unexpected value %s for target_move."
+msgstr "Oväntat värde %s för target_move."
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/prorata_read_group_mixin.py:0
+#, python-format
+msgid "Unsupported operator %s for searching on date"
+msgstr "Operatorn %s stöds inte för sökning på datum"
+
+#. module: mis_builder
+#: model:ir.actions.server,name:mis_builder.ir_cron_vacuum_temp_reports_ir_actions_server
+#: model:ir.cron,cron_name:mis_builder.ir_cron_vacuum_temp_reports
+msgid "Vacuum temporary reports"
+msgstr "Vakuum tillfälliga rapporter"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__valid
+msgid "Valid"
+msgstr "Giltig"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_kpi__type
+msgid "Value type"
+msgstr "Typ av värde"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_style_view_form
+msgid "Visibility"
+msgstr "Synlighet"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__type__w
+#, python-format
+msgid "Week"
+msgstr "Vecka"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_view_form
+msgid "Widget"
+msgstr "Widget"
+
+#. module: mis_builder
+#: model:ir.model.constraint,message:mis_builder.constraint_mis_report_instance_period_duration
+msgid "Wrong duration, it must be positive!"
+msgstr "Fel varaktighet, den måste vara positiv!"
+
+#. module: mis_builder
+#: model:ir.model.constraint,message:mis_builder.constraint_mis_report_instance_period_normalize_factor
+msgid "Wrong normalize factor, it must be positive!"
+msgstr "Fel normaliseringsfaktor, den måste vara positiv!"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_instance_period__type__y
+#, python-format
+msgid "Year"
+msgstr "År"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__is_ytd
+msgid "Year to date"
+msgstr "Hittills under året"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid "You cannot sum period %s with itself."
+msgstr "Du kan inte summera perioden %s med sig själv."
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_instance.py:0
+#, python-format
+msgid "from %(date_from)s to %(date_to)s"
+msgstr "från %(date_from)s till %(date_to)s"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_size__large
+msgid "large"
+msgstr "stor"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_size__medium
+msgid "medium"
+msgstr "medium"
+
+#. module: mis_builder
+#: model_terms:ir.ui.view,arch_db:mis_builder.mis_report_instance_add_to_dashboard_form_view
+#: model_terms:ir.ui.view,arch_db:mis_builder.wizard_mis_report_instance_view_form
+msgid "or"
+msgstr "eller"
+
+#. module: mis_builder
+#. odoo-python
+#: code:addons/mis_builder/models/mis_report_style.py:0
+#, python-format
+msgid "pp"
+msgstr "pp"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_size__small
+msgid "small"
+msgstr "liten"
+
+#. module: mis_builder
+#: model:ir.model.fields,field_description:mis_builder.field_mis_report_instance_period__source_cmpcol_from_id
+msgid "versus"
+msgstr "mot"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_size__x-large
+msgid "x-large"
+msgstr "x-large"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_size__x-small
+msgid "x-small"
+msgstr "x-small"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_size__xx-large
+msgid "xx-large"
+msgstr "xx-large"
+
+#. module: mis_builder
+#: model:ir.model.fields.selection,name:mis_builder.selection__mis_report_style__font_size__xx-small
+msgid "xx-small"
+msgstr "xx-small"
+
+#~ msgid "Analytic Account"
+#~ msgstr "Objektkonto"
+
+#, python-format
+#~ msgid "Analytic Account Group"
+#~ msgstr "Objektkontogrupp"
+
+#~ msgid "Company"
+#~ msgstr "Bolag"

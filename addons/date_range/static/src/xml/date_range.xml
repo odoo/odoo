@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2021 Studio73 - Pablo Fuentes (https://www.studio73.es)
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). -->
+<template>
+    <t t-inherit="web.CustomFilterItem" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o_generator_menu_value')]" position="replace">
+            <t
+                t-if="(fieldType === 'date' || fieldType === 'datetime') &amp;&amp; selectedOperator.date_range"
+            >
+                <span class="o_generator_menu_value">
+                    <select
+                        class="o_input"
+                        t-on-change="ev => this.onValueChange(condition, ev)"
+                    >
+                        <option
+                            t-foreach="date_ranges[selectedOperator.date_range_type]"
+                            t-as="option"
+                            t-key="option_index"
+                            t-att-value="option.id"
+                            t-esc="option.name"
+                        />
+                    </select>
+                </span>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</template>

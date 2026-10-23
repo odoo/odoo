@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--    Change invoicing menu to Accounting     -->
+        <record model="ir.ui.menu" id="account.menu_finance">
+            <field name="name">Accounting</field>
+        </record>
+        <!--    Change settings invoicing menu to Accounting     -->
+        <record id="res_config_settings_view_accounting_kit" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.kit</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <div data-key="account" position="attributes">
+                    <attribute name="data-string">Accounting</attribute>
+                    <attribute name="string">Accounting</attribute>
+                </div>
+            </field>
+        </record>
+        <menuitem id="account_reports_generic_statements" sequence="1"
+                  name="Generic Statements" parent="account.menu_finance_reports"/>
+        <menuitem id="account_reports_daily_reports" sequence="2"
+                  name="Daily Reports" parent="account.menu_finance_reports"/>
+        <menuitem id="account_reports_partner" sequence="3"
+                  name="Partner Reports" parent="account.menu_finance_reports"/>
+        <menuitem id="account_reports_audit" sequence="4"
+                  name="Audit Reports" parent="account.menu_finance_reports"/>
+    </data>
+</odoo>

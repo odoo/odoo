@@ -1,0 +1,43 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_account_journal_tree_view">
+        <field name="name">eg.account.journal.tree.view</field>
+        <field name="model">eg.account.journal</field>
+        <field name="arch" type="xml">
+            <tree create="0" decoration-danger="update_required==True">
+                <field name="name"/>
+                <field name="odoo_account_journal_id"/>
+                <field name="instance_id"/>
+                <field name="update_required"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_account_journal_form_view">
+        <field name="name">eg.account.journal.form.view</field>
+        <field name="model">eg.account.journal</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="odoo_account_journal_id"/>
+                            <field name="name"/>
+                            <field name="instance_payment_gateway_id"/>
+                        </group>
+                        <group>
+                            <field name="instance_id"/>
+                            <field name="provider" invisible="1"/>
+                            <field name="update_required"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_account_journal_action">
+        <field name="name">Account Journals</field>
+        <field name="res_model">eg.account.journal</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Account Journals" id="eg_account_journal_menu" action="eg_account_journal_action"
+              parent="sale_order_mapping_id" sequence="2"/>
+</odoo>

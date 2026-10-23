@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_country_search" model="ir.ui.view">
+        <field name="name">res.country.search</field>
+        <field name="model">res.country</field>
+        <field name="arch" type="xml">
+            <search string="Country">
+                <field name="name" />
+                <field name="code" />
+            </search>
+        </field>
+    </record>
+    <record id="view_res_country_city_better_zip_form" model="ir.ui.view">
+        <field name="model">res.country</field>
+        <field name="inherit_id" ref="base.view_country_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button
+                    name="%(action_zip_tree)d"
+                    class="oe_stat_button"
+                    icon="fa-globe"
+                    type="action"
+                    context="{'default_country_id': active_id, 'search_default_country_id': active_id}"
+                    string="Zips"
+                >
+
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

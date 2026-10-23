@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="ir_cron_view_form_inherit" model="ir.ui.view">
+            <field name="name">ir.cron.view.form.inherit</field>
+            <field name="model">ir.cron</field>
+            <field name="inherit_id" ref="base.ir_cron_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_title')]" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="open_history" type="object" class="oe_stat_button" icon="fa-history"
+                            attrs="{'invisible': [('cv_history_count', '=', 0)]}">
+                            <field name="cv_history_count" widget="statinfo" string="History"/>
+                        </button>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="ir_cron_view_search_inherit" model="ir.ui.view">
+            <field name="name">ir.cron.view.form.inherit</field>
+            <field name="model">ir.cron</field>
+            <field name="inherit_id" ref="base.ir_cron_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='all']" position="before">
+                    <filter string="Running" name="running" domain="[('is_running', '=', True)]" />
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="cv_ir_cron_kanban_view" model="ir.ui.view">
+            <field name="name">cv.ir.cron.kanban.view</field>
+            <field name="model">ir.cron</field>
+            <field name="arch" type="xml">
+                <kanban js_class="ir_cron_kanban">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings mt4">
+                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    </div>
+                                    <span>
+                                        <field name="is_running" widget="spinner_widget"/>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <div>
+                                            <span>Next Execution Date: <field name="nextcall"/>
+                                                (<field name="next_execution_timer" widget="cron_float_time_day_widget" decoration-danger="next_execution_timer &lt; 0"/>)
+                                            </span>
+                                            <span>Repeat Every: <field name="interval_number"/> <field name="interval_type"/></span>
+                                        </div>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="row mt-1">
+                                        <div class="col-md-auto">
+                                            <field name="history" widget="cron_history_widget" style="min-width: 160px" options="{'detail': True}"/>
+                                        </div>
+                                        <div class="col">
+                                            <field name="progress_estimated" widget="cron_progressbar_widget" style="display:block;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="base.ir_cron_act" model="ir.actions.act_window">
+            <field name="view_mode">tree,kanban,form,calendar</field>
+        </record>
+
+    </data>
+</odoo>

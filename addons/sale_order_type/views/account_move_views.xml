@@ -1,0 +1,18 @@
+<odoo>
+    <record id="sot_invoice_form" model="ir.ui.view">
+        <field name="name">account.move.form.sot</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <label for="journal_id" position="before">
+                <field
+                    name="sale_type_id"
+                    attrs="{'invisible': [('move_type', 'not in', ['out_invoice', 'out_refund'])]}"
+                />
+            </label>
+            <xpath expr="//notebook//tree//field[@name='sequence']" position="before">
+                <field name="account_id" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
