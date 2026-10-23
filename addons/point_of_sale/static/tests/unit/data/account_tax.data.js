@@ -19,7 +19,6 @@ export class AccountTax extends models.ServerModel {
             "sequence",
             "tax_group_id",
             "fiscal_position_ids",
-            "tax_exigibility",
         ];
     }
 
