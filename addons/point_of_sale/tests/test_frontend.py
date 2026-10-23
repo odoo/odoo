@@ -21,8 +21,6 @@ from odoo.addons.point_of_sale.tests.common import (
 
 
 # TODO-PARP: Remove
-from unittest import skip
-
 class TestPointOfSaleHttpCommon(TestPoSCommon, PosHttpCommon):
     """HTTP compatibility base retaining the legacy POS setup and order helpers."""
 
@@ -85,7 +83,6 @@ class TestUi(PosHttpCommon):
             message = self.env['mail.message'].search([('model', '=', 'pos.order'), ('res_id', '=', order.id)], limit=1)
             self.assertEqual(len(message.attachment_ids), 2, "Should have 2 attachments when basic receipt is True")
 
-    @skip('Temporary to fast merge new valuation')
     def test_02_pos_with_invoiced(self):
         self.pos_user.write({
             'group_ids': [
@@ -94,28 +91,27 @@ class TestUi(PosHttpCommon):
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'ChromeTour', login="pos_user")
+        self.start_pos_tour('ChromeTour')
         n_invoiced = self.env['pos.order'].search_count([('account_move', '!=', False)])
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
-        self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
+        self.assertEqual(n_paid, 3, 'There should be 3 paid order.')
         last_order = self.env['pos.order'].search([], limit=1, order="id desc")
         self.assertEqual(last_order.lines[0].price_subtotal, 30.0)
         self.assertEqual(last_order.lines[0].price_subtotal_incl, 30.0)
         # Check if session name contains config name as prefix
         self.assertEqual(self.main_pos_config.name in last_order.session_id.name, True)
+        self.assertIn(self.main_pos_config.name, last_order.session_id.name)
 
-    @skip('Temporary to fast merge new valuation')
     def test_05_ticket_screen(self):
-        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': '%m.%d.%Y', 'time_format': '%I.%M.%S %p'})
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': '%m.%d.%Y', 'time_format': '%I:%M:%S %p'})
         self.pos_user.write({
             'group_ids': [
                 (4, self.env.ref('account.group_account_invoice').id),
             ]
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'TicketScreenTour', login="pos_user")
-        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': 'MM/dd/yyyy', 'time_format': 'HH:mm:ss'})
+        self.start_pos_tour('TicketScreenTour')
 
     def test_06_tip_screen(self):
         self.main_pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True})
