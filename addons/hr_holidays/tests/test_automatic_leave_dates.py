@@ -363,3 +363,229 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.assertEqual(leave.number_of_hours, 0)
         self.assertEqual(leave.date_from, datetime(2019, 9, 3, 6, 0, 0))
         self.assertEqual(leave.date_to, datetime(2019, 9, 3, 10, 0, 0))
+<<<<<<< bd63e51bf72fa9c1d4a923ce8fe93b5d7f317974
+||||||| 9de359240a7dfa06dd900a9d61c3b623e6a97527
+
+    def test_2weeks_calendar(self):
+        self.env.user.tz = 'Europe/Brussels'
+        calendar = self.env['resource.calendar'].create({
+            'name': 'auto next day',
+            'two_weeks_calendar': True,
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {
+                                   'name': 'monday morning odd week',
+                                   'hour_from': 8,
+                                   'hour_to': 12,
+                                   'day_period': 'morning',
+                                   'dayofweek': '0',
+                                   'week_type': '0',
+                                   'duration_days': 0.5,
+                               }),
+                               (0, 0, {
+                                   'name': 'monday morning even week',
+                                   'hour_from': 10,
+                                   'hour_to': 12,
+                                   'day_period': 'morning',
+                                   'dayofweek': '0',
+                                   'week_type': '1',
+                                   'duration_days': 0.25
+                               })]
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.holiday_status_id = self.leave_type
+            # even week, works 2 hours
+            leave_form.request_date_from = date(2019, 9, 2)
+            leave_form.request_date_to = date(2019, 9, 2)
+            leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
+
+        leave = leave_form.record
+        self.assertEqual(leave.number_of_days, 0.25)
+        self.assertEqual(leave.number_of_hours, 2)
+        self.assertEqual(leave.date_from, datetime(2019, 9, 2, 8, 0, 0))
+        self.assertEqual(leave.date_to, datetime(2019, 9, 2, 10, 0, 0))
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.holiday_status_id = self.leave_type
+            # odd week, works 4 hours
+            leave_form.request_date_from = date(2019, 9, 9)
+            leave_form.request_date_to = date(2019, 9, 9)
+            leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
+
+        leave = leave_form.record
+        self.assertEqual(leave.number_of_days, 0.5)
+        self.assertEqual(leave.number_of_hours, 4)
+        self.assertEqual(leave.date_from, datetime(2019, 9, 9, 6, 0, 0))
+        self.assertEqual(leave.date_to, datetime(2019, 9, 9, 10, 0, 0))
+
+    def test_2weeks_calendar_next_week(self):
+        self.env.user.tz = 'Europe/Brussels'
+        calendar = self.env['resource.calendar'].create({
+            'name': 'auto next day',
+            'two_weeks_calendar': True,
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {
+                                   'name': 'monday morning odd week',
+                                   'hour_from': 8,
+                                   'hour_to': 12,
+                                   'day_period': 'morning',
+                                   'dayofweek': '0',
+                                   'week_type': '0',
+                               })]
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.holiday_status_id = self.leave_type
+            # even week, does not work
+            leave_form.request_date_from = date(2019, 9, 2)
+            leave_form.request_date_to = date(2019, 9, 2)
+            leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
+
+        leave = leave_form.record
+        self.assertEqual(leave.number_of_days, 0)
+        self.assertEqual(leave.number_of_hours, 0)
+        self.assertEqual(leave.date_from, datetime(2019, 9, 2, 6, 0, 0))
+        self.assertEqual(leave.date_to, datetime(2019, 9, 2, 10, 0, 0))
+=======
+
+    def test_2weeks_calendar(self):
+        self.env.user.tz = 'Europe/Brussels'
+        calendar = self.env['resource.calendar'].create({
+            'name': 'auto next day',
+            'two_weeks_calendar': True,
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {
+                                   'name': 'monday morning odd week',
+                                   'hour_from': 8,
+                                   'hour_to': 12,
+                                   'day_period': 'morning',
+                                   'dayofweek': '0',
+                                   'week_type': '0',
+                                   'duration_days': 0.5,
+                               }),
+                               (0, 0, {
+                                   'name': 'monday morning even week',
+                                   'hour_from': 10,
+                                   'hour_to': 12,
+                                   'day_period': 'morning',
+                                   'dayofweek': '0',
+                                   'week_type': '1',
+                                   'duration_days': 0.25
+                               })]
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.holiday_status_id = self.leave_type
+            # even week, works 2 hours
+            leave_form.request_date_from = date(2019, 9, 2)
+            leave_form.request_date_to = date(2019, 9, 2)
+            leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
+
+        leave = leave_form.record
+        self.assertEqual(leave.number_of_days, 0.25)
+        self.assertEqual(leave.number_of_hours, 2)
+        self.assertEqual(leave.date_from, datetime(2019, 9, 2, 8, 0, 0))
+        self.assertEqual(leave.date_to, datetime(2019, 9, 2, 10, 0, 0))
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.holiday_status_id = self.leave_type
+            # odd week, works 4 hours
+            leave_form.request_date_from = date(2019, 9, 9)
+            leave_form.request_date_to = date(2019, 9, 9)
+            leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
+
+        leave = leave_form.record
+        self.assertEqual(leave.number_of_days, 0.5)
+        self.assertEqual(leave.number_of_hours, 4)
+        self.assertEqual(leave.date_from, datetime(2019, 9, 9, 6, 0, 0))
+        self.assertEqual(leave.date_to, datetime(2019, 9, 9, 10, 0, 0))
+
+    def test_2weeks_calendar_next_week(self):
+        self.env.user.tz = 'Europe/Brussels'
+        calendar = self.env['resource.calendar'].create({
+            'name': 'auto next day',
+            'two_weeks_calendar': True,
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {
+                                   'name': 'monday morning odd week',
+                                   'hour_from': 8,
+                                   'hour_to': 12,
+                                   'day_period': 'morning',
+                                   'dayofweek': '0',
+                                   'week_type': '0',
+                               })]
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.holiday_status_id = self.leave_type
+            # even week, does not work
+            leave_form.request_date_from = date(2019, 9, 2)
+            leave_form.request_date_to = date(2019, 9, 2)
+            leave_form.request_date_from_period = 'am'
+            leave_form.request_date_to_period = 'am'
+
+        leave = leave_form.record
+        self.assertEqual(leave.number_of_days, 0)
+        self.assertEqual(leave.number_of_hours, 0)
+        self.assertEqual(leave.date_from, datetime(2019, 9, 2, 6, 0, 0))
+        self.assertEqual(leave.date_to, datetime(2019, 9, 2, 10, 0, 0))
+
+    def test_hour_leave_hours_recomputed_when_dates_change(self):
+        self.leave_type.request_unit = 'hour'
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Variable Hours',
+            'attendance_ids': [
+                Command.clear(),
+                Command.create({
+                    'name': 'Monday Morning',
+                    'dayofweek': '0',
+                    'hour_from': 7.5,
+                    'hour_to': 12,
+                    'day_period': 'morning',
+                }),
+                Command.create({
+                    'name': 'Monday Afternoon',
+                    'dayofweek': '0',
+                    'hour_from': 13,
+                    'hour_to': 16.5,
+                    'day_period': 'afternoon',
+                }),
+                Command.create({
+                    'name': 'Friday Morning',
+                    'dayofweek': '4',
+                    'hour_from': 7.5,
+                    'hour_to': 13.25,
+                    'day_period': 'morning',
+                }),
+            ],
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.holiday_status_id = self.leave_type
+            leave_form.request_date_from = date(2025, 1, 3)
+            leave_form.request_date_to = date(2025, 1, 3)
+
+            self.assertEqual(leave_form.request_hour_from, 7.5)
+            self.assertEqual(leave_form.request_hour_to, 13.25)
+
+            leave_form.request_date_to = date(2025, 1, 6)
+            leave_form.request_date_from = date(2025, 1, 6)
+
+            self.assertEqual(leave_form.request_hour_from, 7.5)
+            self.assertEqual(leave_form.request_hour_to, 16.5)
+>>>>>>> 0ea28dbaec638007a54cf69191b055dcb21c1ba2
