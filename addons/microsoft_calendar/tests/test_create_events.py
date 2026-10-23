@@ -267,6 +267,57 @@ class TestCreateEvents(TestCommon):
             self.assert_odoo_event(e, self.expected_odoo_recurrency_events_from_outlook[i])
 
     @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_create_recurrence_from_outlook_keeps_exception_ids_and_state(self, mock_get_events):
+        """
+        Ensure an exception imported from a new Outlook recurrence keeps its
+        Microsoft identifiers and remains detached from the recurrence.
+        """
+        master = dict(
+            self.recurrent_event_from_outlook_organizer[0],
+            id='NEW_REC_MASTER',
+            iCalUId='NEW_REC_UID',
+        )
+        exception_start = self.start_date + timedelta(days=self.recurrent_event_interval, minutes=67)
+        exception_stop = self.end_date + timedelta(days=self.recurrent_event_interval, minutes=67)
+        events = [
+            master,
+            dict(
+                self.recurrent_event_from_outlook_organizer[2],
+                id='NEW_REC_EXCEPTION_2',
+                iCalUId='NEW_REC_EXCEPTION_UID_2',
+                seriesMasterId='NEW_REC_MASTER',
+                type='exception',
+                start={
+                    'dateTime': exception_start.strftime("%Y-%m-%dT%H:%M:%S.0000000"),
+                    'timeZone': 'UTC',
+                },
+                end={
+                    'dateTime': exception_stop.strftime("%Y-%m-%dT%H:%M:%S.0000000"),
+                    'timeZone': 'UTC',
+                },
+            ),
+        ]
+        for index in (0, 2, 3):
+            events.append(dict(
+                self.recurrent_event_from_outlook_organizer[index + 1],
+                id=f'NEW_REC_OCC_{index + 1}',
+                iCalUId=f'NEW_REC_OCC_UID_{index + 1}',
+                seriesMasterId='NEW_REC_MASTER',
+            ))
+        mock_get_events.return_value = (MicrosoftEvent(events), None)
+
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        recurrence = self.env['calendar.recurrence'].search([('microsoft_id', '=', 'NEW_REC_MASTER:NEW_REC_UID')])
+        exception = recurrence.calendar_event_ids.filtered(
+            lambda event: event.microsoft_id == 'NEW_REC_EXCEPTION_2:NEW_REC_EXCEPTION_UID_2'
+        )
+        self.assertTrue(exception, "the Outlook exception should keep its Microsoft id")
+        self.assertEqual(exception.ms_universal_event_id, 'NEW_REC_EXCEPTION_UID_2')
+        self.assertEqual(exception.microsoft_recurrence_master_id, 'NEW_REC_MASTER')
+        self.assertFalse(exception.follow_recurrence)
+
+    @patch.object(MicrosoftCalendarService, 'get_events')
     def test_create_recurrent_event_from_outlook_attendee_calendar(self, mock_get_events):
         """
         A recurrent event has been created in Outlook and synced in the Odoo attendee calendar.
