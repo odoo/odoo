@@ -7,11 +7,9 @@ patch(PaymentScreen.prototype, {
     setup() {
         super.setup(...arguments);
         onMounted(async () => {
-            const pendingPaymentLine = this.currentOrder.payment_ids.find(
-                (paymentLine) =>
-                    paymentLine.payment_method_id.payment_provider === "razorpay" &&
-                    !paymentLine.isDone() &&
-                    paymentLine.payment_status !== "pending"
+            const pendingPaymentLine = this.pos.getProcessingPaymentLine(
+                "razorpay",
+                this.currentOrder
             );
             if (pendingPaymentLine) {
                 const payment_status =

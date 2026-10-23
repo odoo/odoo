@@ -24,7 +24,7 @@ export class PaymentPineLabs extends PaymentInterface {
     }
 
     pendingPineLabsPaymentLine() {
-        return this.pos.getPendingPaymentLine("pine_labs");
+        return this.pos.getProcessingPaymentLine("pine_labs");
     }
 
     async sendPaymentCancel(line) {

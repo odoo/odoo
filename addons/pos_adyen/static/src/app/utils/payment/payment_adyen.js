@@ -12,7 +12,7 @@ export class PaymentAdyen extends PaymentInterface {
         super.setup(...arguments);
         this.paymentLineResolvers = {};
         this.connectWebSocket("ADYEN_LATEST_RESPONSE", () => {
-            const pendingLine = this.pos.getPendingPaymentLine("adyen");
+            const pendingLine = this.pendingAdyenline();
 
             if (pendingLine) {
                 pendingLine.payment_method_id.payment_interface.handleAdyenStatusResponse();
@@ -34,7 +34,7 @@ export class PaymentAdyen extends PaymentInterface {
     }
 
     pendingAdyenline() {
-        return this.pos.getPendingPaymentLine("adyen");
+        return this.pos.getProcessingPaymentLine("adyen");
     }
 
     sendPaymentAdjust(uuid) {

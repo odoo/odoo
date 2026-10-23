@@ -79,9 +79,11 @@ export class PaymentScreen extends Component {
             "-": "o_colorlist_item_numpad_color_3",
         };
 
+        const disabled = this.selectedPaymentLine?.isAmountEditable === false;
         return enhancedButtons().map((button) => ({
             ...button,
             class: `${colorClassMap[button.value] || ""}`,
+            disabled,
         }));
     }
 
@@ -227,9 +229,9 @@ export class PaymentScreen extends Component {
         if (!this.paymentLines.length) {
             this.currentOrder.addPaymentline(this.payment_methods_from_config[0]);
         }
-        if (!this.selectedPaymentLine) {
+        if (!this.selectedPaymentLine?.isAmountEditable) {
             return;
-        } // do nothing if no selected payment line
+        }
         if (amount === false) {
             if (this.numberBuffer.get() === null) {
                 amount = null;
@@ -239,8 +241,6 @@ export class PaymentScreen extends Component {
                 amount = this.numberBuffer.getFloat();
             }
         }
-        // disable changing amount on paymentlines with running or done payments on a payment interface
-        const payment_interface = this.selectedPaymentLine.payment_interface;
         const hasCashPaymentMethod = this.payment_methods_from_config.some(
             (method) => method.type === "cash"
         );
@@ -252,12 +252,6 @@ export class PaymentScreen extends Component {
             this.numberBuffer.set(this.currentOrder.remainingDue.toString());
             amount = this.currentOrder.remainingDue;
             this.showMaxValueError();
-        }
-        if (
-            payment_interface &&
-            !["pending", "retry"].includes(this.selectedPaymentLine.payment_status)
-        ) {
-            return;
         }
         if (amount === null) {
             this.deletePaymentLine(this.selectedPaymentLine.uuid);
@@ -305,17 +299,14 @@ export class PaymentScreen extends Component {
         const tipAmount = this.computeNewTip({ value: newValue, type, currentTipAmount });
         await this.pos.setTip(tipAmount, type, newValue);
 
-        const pLine =
-            this.selectedPaymentLine &&
-            (!this.selectedPaymentLine.isElectronic() ||
-                this.selectedPaymentLine.payment_status === "pending")
-                ? this.selectedPaymentLine
-                : false;
-
-        if (!pLine || tipAmount === currentTipAmount) {
+        if (tipAmount === currentTipAmount) {
+            return;
+        }
+        const pLine = this.selectedPaymentLine;
+        if (!pLine?.isAmountEditable) {
             this.notification.add(
                 _t(
-                    "The tip has been added to the order. However,the selected payment line does not allow tips to be added."
+                    "The tip has been added to the order. However, the amount of the selected payment can no longer be changed."
                 )
             );
             return;

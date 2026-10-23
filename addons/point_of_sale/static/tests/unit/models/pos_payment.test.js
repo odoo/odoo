@@ -20,7 +20,7 @@ test("uiState", async () => {
     });
 });
 
-test("isDone", async () => {
+test("isSettled", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
@@ -28,15 +28,15 @@ test("isDone", async () => {
 
     // done
     paymentline.payment_status = "done";
-    expect(paymentline.isDone()).toBe(true);
+    expect(paymentline.isSettled).toBe(true);
 
     // pending
     paymentline.payment_status = "pending";
-    expect(paymentline.isDone()).toBe(false);
+    expect(paymentline.isSettled).toBe(false);
 
     // no status
     paymentline.payment_status = null;
-    expect(paymentline.isDone()).toBe(true);
+    expect(paymentline.isSettled).toBe(true);
 });
 
 test("isProcessing", async () => {
@@ -51,20 +51,21 @@ test("isProcessing", async () => {
         "waiting_card",
         "waiting_scan",
         "waiting_capture",
+        "force_done",
     ];
 
     for (const status of processingStatuses) {
         paymentline.payment_status = status;
-        expect(paymentline.isProcessing()).toBe(true);
+        expect(paymentline.isProcessing).toBe(true);
     }
 
     // non-processing status
     paymentline.payment_status = "done";
-    expect(paymentline.isProcessing()).toBe(false);
+    expect(paymentline.isProcessing).toBe(false);
 
     // no status
     paymentline.payment_status = null;
-    expect(paymentline.isProcessing()).toBe(false);
+    expect(paymentline.isProcessing).toBe(false);
 });
 
 test("handlePaymentResponse", async () => {

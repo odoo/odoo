@@ -28,10 +28,14 @@ patch(PaymentScreenPaymentLines.prototype, {
         }
 
         const state = super.getPaymentActionState(...arguments);
+        if (!state) {
+            return state;
+        }
+
         if (
             this.vivaApp.use(line.payment_method_id) &&
             this.vivaApp.hasRefused() &&
-            !line.isDone()
+            !line.isSettled
         ) {
             state.actions = [
                 ...state.actions,

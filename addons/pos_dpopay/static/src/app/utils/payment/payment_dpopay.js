@@ -285,7 +285,7 @@ export class PaymentDPOPay extends PaymentInterface {
     }
 
     _pendingDPOPaymentLine() {
-        return this.pos.getPendingPaymentLine("dpopay");
+        return this.pos.getProcessingPaymentLine("dpopay");
     }
 
     _getPaymentDate(dateString, timeString) {

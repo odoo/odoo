@@ -78,7 +78,7 @@ const adyenWebhookStep = (isRefund = false) => ({
     }')`,
     run: async function () {
         const payment_interface =
-            posmodel.getPendingPaymentLine("adyen").payment_method_id.payment_interface;
+            posmodel.getProcessingPaymentLine("adyen").payment_method_id.payment_interface;
         // The fact that we are shown the `Waiting for card` status means that the
         // request for payment has been sent to the adyen server ( in this case the mocked server )
         // and the server replied with an `ok` response.
