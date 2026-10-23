@@ -173,20 +173,18 @@ test("mention a partner", async () => {
     const editable = queryOne(`.odoo-editor-editable`);
     setSelection({ anchorNode: editable.firstChild, anchorOffset: 0 });
     await htmlInsertText(htmlEditor, "@");
-    expect(".overlay .o-mail-MentionList input[placeholder='Search for a user...']").toBeFocused();
-    expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
-
-    await press("a");
+    await expect.waitForSteps(["get_mention_suggestions: "]);
+    await htmlInsertText(htmlEditor, "a");
+    await expect.waitForSteps(["get_mention_suggestions: a"]);
     await waitFor(".overlay .o-mail-NavigableList .o-mail-NavigableList-item");
     expect(queryAllTexts(".overlay .o-mail-NavigableList .o-mail-NavigableList-item")).toEqual([
         "Mitchell Admin",
     ]);
-    expect.verifySteps(["get_mention_suggestions: a"]);
 
     await press("enter");
     await animationFrame();
     expect(getContent(editable)).toBe(
-        `<p>\uFEFF<a href="/odoo/res.partner/${serverState.partnerId}" class="o_mail_redirect" data-oe-id="${serverState.partnerId}" data-oe-model="res.partner" target="_blank" contenteditable="false">@Mitchell Admin</a>\uFEFF[]</p>`
+        `<p>\uFEFF<a href="/odoo/res.partner/${serverState.partnerId}" class="o_mail_redirect" data-oe-id="${serverState.partnerId}" data-oe-model="res.partner" target="_blank" contenteditable="false">@Mitchell Admin</a>\uFEFF\u00A0[]</p>`
     );
 });
 
