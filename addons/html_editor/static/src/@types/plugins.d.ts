@@ -9,7 +9,7 @@ declare module "plugins" {
     import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, is_functional_empty_node_predicates, removable_descendants_providers, system_node_selectors, is_node_removable_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
     import { DomObserverShared, attributes_mutation_value_processors, on_will_filter_mutations_handlers, set_attribute_overrides, on_content_updated_handlers, on_pending_mutations_staged_handlers, on_pending_mutations_normalized_handlers, is_mutation_savable_predicates, is_classlist_mutation_savable_predicates } from "@html_editor/core/dom_observer_plugin";
-    import { on_inserted_handlers, normalize_processors, fragment_to_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties, is_retagging_safe_predicates, on_will_insert_handlers } from "@html_editor/core/dom_plugin";
+    import { on_content_inserted_handlers, fragment_to_insert_processors, on_will_set_tag_handlers, DomShared, system_attributes, system_classes, system_style_properties, is_retagging_safe_predicates, on_will_insert_handlers, can_insert_block_in_parent_predicates } from "@html_editor/core/dom_plugin";
     import { are_inlines_allowed_at_root_predicates } from "@html_editor/core/no_inline_root_plugin";
     import { DomReferenceMapShared, serializable_descendants_processors } from "@html_editor/core/dom_reference_map_plugin";
     import { can_format_content_predicates, format_specs, is_format_class_predicates, is_formattable_node_predicates, before_format_handlers, formattable_node_providers, FormatShared, can_remove_format_predicates, is_node_in_same_block_segment_predicates, on_all_formats_removed_handlers, on_format_applied_handlers, on_format_requested_handlers, on_collapsed_formats_removed_handlers } from "@html_editor/core/format_plugin";
@@ -135,6 +135,7 @@ declare module "plugins" {
         on_color_requested_handlers: on_color_requested_handlers;
         on_committed_to_history_handlers: on_committed_to_history_handlers;
         on_component_mounted_handlers: on_component_mounted_handlers;
+        on_content_inserted_handlers: on_content_inserted_handlers;
         on_content_updated_handlers: on_content_updated_handlers;
         on_deleted_handlers: on_deleted_handlers;
         on_editor_started_handlers: on_editor_started_handlers;
@@ -153,7 +154,6 @@ declare module "plugins" {
         on_image_saved_handlers: on_image_saved_handlers;
         on_image_updated_handlers: on_image_updated_handlers;
         on_input_handlers: on_input_handlers;
-        on_inserted_handlers: on_inserted_handlers;
         on_layout_geometry_change_handlers: on_layout_geometry_change_handlers;
         on_link_created_handlers: on_link_created_handlers;
         on_media_added_handlers: on_media_added_handlers;
@@ -209,6 +209,7 @@ declare module "plugins" {
 
         // Predicates
         can_format_content_predicates: can_format_content_predicates;
+        can_insert_block_in_parent_predicates: can_insert_block_in_parent_predicates;
         can_remove_format_predicates: can_remove_format_predicates;
         is_node_in_same_block_segment_predicates: is_node_in_same_block_segment_predicates;
         has_history_commit_changes_predicates: has_history_commit_changes_predicates;
@@ -251,7 +252,6 @@ declare module "plugins" {
         fragment_to_insert_within_pre_processors: fragment_to_insert_within_pre_processors;
         html_compatibility_processors: html_compatibility_processors;
         move_widget_position_processors: move_widget_position_processors;
-        node_to_insert_processors: node_to_insert_processors;
         normalize_processors: normalize_processors;
         pending_history_commit_data_processors: pending_history_commit_data_processors;
         save_point_history_commit_data_processors: save_point_history_commit_data_processors;

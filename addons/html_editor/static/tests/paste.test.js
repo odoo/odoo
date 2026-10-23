@@ -123,10 +123,10 @@ describe("Html Paste cleaning - whitelist", () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p>[]<br></p></td>
+                            <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table>[]
             `),
         });
     });
@@ -157,9 +157,9 @@ describe("Html Paste cleaning - whitelist", () => {
                     <tbody>
                         <tr><th class="o_table_header">Header 1</th></tr>
                         <tr><td>Header 2</td></tr>
-                        <tr><td>Cell[]</td></tr>
+                        <tr><td>Cell</td></tr>
                     </tbody>
-                </table>
+                </table>[]
             `),
         });
     });
@@ -1303,7 +1303,7 @@ describe("Unwrapping html element", () => {
                     '<p><font style="background-color: rgb(255, 0, 0);">abc</font></p>'
                 );
             },
-            contentAfter: '<h1><font style="background-color: rgb(255, 0, 0);">abc</font>[]</h1>',
+            contentAfter: '<h1><font style="background-color: rgb(255, 0, 0);">abc[]</font></h1>',
         });
     });
 
@@ -1316,7 +1316,7 @@ describe("Unwrapping html element", () => {
                     '<div class="o-paragraph"><font style="background-color: rgb(255, 0, 0);">abc</font></div>'
                 );
             },
-            contentAfter: '<h1><font style="background-color: rgb(255, 0, 0);">abc</font>[]</h1>',
+            contentAfter: '<h1><font style="background-color: rgb(255, 0, 0);">abc[]</font></h1>',
         });
     });
 
@@ -1945,7 +1945,7 @@ describe("Complex html 3 p", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c1<i>X</i>2</span><p>3<i>X</i>4</p><span class="a">5<i>X</i>6[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c1<i>X</i>2</span><p>3<i>X</i>4</p>5<i>X</i>6[]f</div>',
             });
         });
 
@@ -2000,7 +2000,7 @@ describe("Complex html 3 p", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div>2a<span class="a">b1<i>X</i>2</span><p>3<i>X</i>4</p><span class="a">5<i>X</i>6[]</span>e<br>f</div>',
+                    '<div>2a<span class="a">b1<i>X</i>2</span><p>3<i>X</i>4</p>5<i>X</i>6[]e<br>f</div>',
             });
         });
     });
@@ -2017,7 +2017,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: "<p>12</p><p><i>ii</i>[]abcd</p>",
+                contentAfter: "<p>12</p><p><i>ii[]</i>abcd</p>",
             });
         });
 
@@ -2027,7 +2027,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: "<p>ab12</p><p><i>ii</i>[]cd</p>",
+                contentAfter: "<p>ab12</p><p><i>ii[]</i>cd</p>",
             });
         });
 
@@ -2038,7 +2038,7 @@ describe("Complex html p+i", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<p>a<span class="a">b12</span></p><p><span class="a"><i>ii</i>[]c</span>d</p>',
+                    '<p>a<span class="a">b12</span></p><p><span class="a"><i>ii[]</i>c</span>d</p>',
             });
         });
     });
@@ -2050,7 +2050,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: "<p>a12</p><p><i>ii</i>[]d</p>",
+                contentAfter: "<p>a12</p><p><i>ii[]</i>d</p>",
             });
         });
 
@@ -2061,7 +2061,7 @@ describe("Complex html p+i", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<p>a<span class="a">b12</span></p><p><span class="a"><i>ii</i>[]e</span>f</p>',
+                    '<p>a<span class="a">b12</span></p><p><span class="a"><i>ii[]</i>e</span>f</p>',
             });
         });
 
@@ -2072,7 +2072,7 @@ describe("Complex html p+i", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<p>a<span class="a">b12</span></p><p><span class="a"><i>ii</i>[]e</span>f</p>',
+                    '<p>a<span class="a">b12</span></p><p><span class="a"><i>ii[]</i>e</span>f</p>',
             });
         });
 
@@ -2083,7 +2083,7 @@ describe("Complex html p+i", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<p>a<span class="a">b12</span></p><p><span class="a"><i>ii</i>[]e</span>f</p>',
+                    '<p>a<span class="a">b12</span></p><p><span class="a"><i>ii[]</i>e</span>f</p>',
             });
         });
 
@@ -2093,7 +2093,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: "<div>a<p>b12</p><p><i>ii</i>[]e</p>f</div>",
+                contentAfter: "<div>a<p>b12</p><p><i>ii[]</i>e</p>f</div>",
             });
         });
 
@@ -2103,7 +2103,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: "<div>a<p>b12</p><p><i>ii</i>[]e</p>f</div>",
+                contentAfter: "<div>a<p>b12</p><p><i>ii[]</i>e</p>f</div>",
             });
         });
 
@@ -2113,7 +2113,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: `<div>1ab<span class="a">c12</span></div><div><span class="a"><i>ii</i>[]</span>f</div>`,
+                contentAfter: `<div>1ab<span class="a">c12</span></div><div><span class="a"><i>ii[]</i></span>f</div>`,
             });
         });
 
@@ -2123,7 +2123,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: `<div>2a12</div><div><i>ii</i>[]<span class="a">d</span>ef</div>`,
+                contentAfter: `<div>2a12</div><div><i>ii[]</i><span class="a">d</span>ef</div>`,
             });
         });
 
@@ -2134,18 +2134,18 @@ describe("Complex html p+i", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c12<i><br>ii</i>[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c12<br><i>ii[]</i></span>f</div>',
             });
         });
 
-        test("should paste a text when selection leave a spanunsplittable (2)", async () => {
+        test("should paste a text when selection leave a span unsplittable (2)", async () => {
             await testEditor({
                 contentBefore: '<div class="oe_unbreakable">2a[b<span class="a">c]d</span>ef</div>',
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">2a12<i><br>ii</i>[]<span class="a">d</span>ef</div>',
+                    '<div class="oe_unbreakable">2a12<br><i>ii[]</i><span class="a">d</span>ef</div>',
             });
         });
 
@@ -2156,7 +2156,7 @@ describe("Complex html p+i", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<p>1ab<span class="a">c12</span></p><p><span class="a"><i>ii</i>[]</span>f</p>',
+                    '<p>1ab<span class="a">c12</span></p><p><span class="a"><i>ii[]</i></span>f</p>',
             });
         });
 
@@ -2166,7 +2166,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: '<p>2a12</p><p><i>ii</i>[]<span class="a">d</span>ef</p>',
+                contentAfter: '<p>2a12</p><p><i>ii[]</i><span class="a">d</span>ef</p>',
             });
         });
 
@@ -2176,7 +2176,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: '<div>1a<p>b12</p><p><i>ii</i>[]<span class="a">e</span>f</p></div>',
+                contentAfter: '<div>1a<p>b12</p><p><i>ii[]</i><span class="a">e</span>f</p></div>',
             });
         });
 
@@ -2186,7 +2186,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: `<div>2a<span class="a">b12</span></div><div><span class="a"><i>ii</i>[]</span>e<br>f</div>`,
+                contentAfter: `<div>2a<span class="a">b12</span></div><div><span class="a"><i>ii[]</i></span>e<br>f</div>`,
             });
         });
 
@@ -2196,7 +2196,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: `<div class="oe_unbreakable">2a<span class="a">b12<i><br>ii</i>[]</span>e<br>f</div>`,
+                contentAfter: `<div class="oe_unbreakable">2a<span class="a">b12<br><i>ii[]</i></span>e<br>f</div>`,
             });
         });
     });
@@ -2329,7 +2329,7 @@ describe("Complex html 3p+b", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c1<b>23</b></span><p>zzz</p><span class="a">45<b>6</b>7[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c1<b>23</b></span><p>zzz</p>45<b>6</b>7[]f</div>',
             });
         });
 
@@ -2362,7 +2362,7 @@ describe("Complex html 3p+b", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div>2a<span class="a">b1<b>23</b></span><p>zzz</p><span class="a">45<b>6</b>7[]</span>e<br>f</div>',
+                    '<div>2a<span class="a">b1<b>23</b></span><p>zzz</p>45<b>6</b>7[]e<br>f</div>',
             });
         });
     });
@@ -2615,6 +2615,53 @@ describe("Special cases", () => {
                                                 <li>abc</li>
                                             </ul>
                                         </li>
+                                        <li>def</li>
+                                    </ul>
+                                </li>
+                                <li>ghi</li>
+                            </ul>
+                        </li>
+                        <li>jkl[]</li>
+                    </ul>
+                `),
+            });
+        });
+
+        test("should paste a nested list into another list (3)", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>Alpha</li><li>Beta[]</li></ul>",
+                stepFunction: async (editor) => {
+                    pasteHtml(
+                        editor,
+                        unformat(`
+                            <ol>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li class="oe-nested">
+                                            <ol>
+                                                <li class="oe-nested">
+                                                    <ul class="o_checklist">
+                                                        <li>abc</li>
+                                                    </ul>
+                                                </li>
+                                                <li>def</li>
+                                            </ol>
+                                        </li>
+                                        <li>ghi</li>
+                                    </ul>
+                                </li>
+                                <li>jkl</li>
+                            </ol>
+                        `)
+                    );
+                },
+                contentAfter: unformat(`
+                    <ul>
+                        <li>Alpha</li>
+                        <li><p>Betaabc</p>
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
                                         <li>def</li>
                                     </ul>
                                 </li>
@@ -3187,7 +3234,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com</a>[]</p>',
             });
         });
         test("should paste html content over an empty link (collapsed) (2)", async () => {
@@ -3200,7 +3247,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com</a>[]</p>',
             });
         });
 
@@ -3642,7 +3689,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com</a>[]</p>',
             });
         });
         test("should paste html content over a link if all of its contents is selected (not collapsed) (2)", async () => {
@@ -3655,7 +3702,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com</a>[]</p>',
             });
         });
         test("should paste URL as label when link with same label and href is selected", async () => {
@@ -4219,9 +4266,9 @@ describe("Paste HTML tables", () => {
             </tr>
             <tr style="height: 20.25pt;">
                 <td colspan="2">14pt MONO TEXT
-                []</td>
+                </td>
             </tr>
-        </tbody></table>`,
+        </tbody></table>[]`,
         });
     });
 
@@ -4329,10 +4376,10 @@ describe("Paste HTML tables", () => {
                     text on color background</td>
             </tr>
             <tr style="height: 21px;">
-                <td rowspan="1" colspan="2">14pt MONO TEXT[]</td>
+                <td rowspan="1" colspan="2">14pt MONO TEXT</td>
             </tr>
         </tbody>
-    </table>`,
+    </table>[]`,
         });
     });
 
@@ -4458,10 +4505,10 @@ describe("Paste HTML tables", () => {
         </tr>
         <tr>
             <td colspan="2">
-                14pt MONO TEXT[]
+                14pt MONO TEXT
             </td>
         </tr>
-    </tbody></table>`,
+    </tbody></table>[]`,
         });
     });
     test("should apply default table classes (table, table-bordered, o_table) on paste", async () => {
@@ -4487,10 +4534,10 @@ describe("Paste HTML tables", () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p>[]<br></p></td>
+                            <td><p><br></p></td>
                         </tr>
                     </tbody>
-                </table>
+                </table>[]
             `),
         });
     });
@@ -4535,10 +4582,10 @@ describe("Paste HTML tables", () => {
                                 </tr>
                                 <tr>
                                     <td>1</td>
-                                    <td>2[]</td>
+                                    <td>2</td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table>[]
                     `),
         });
     });
@@ -4565,10 +4612,10 @@ describe("Paste HTML tables", () => {
                             <tbody>
                                 <tr>
                                     <th class="o_table_header">1</th>
-                                    <th class="o_table_header">2[]</th>
+                                    <th class="o_table_header">2</th>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table>[]
                     `),
         });
     });
@@ -4987,8 +5034,8 @@ describe("paste table cells into an existing table", () => {
                                     <tbody>
                                         <tr><td><p>x</p></td></tr>
                                     </tbody>
-                                </table>[]
-                                <p>a</p>
+                                </table>
+                                <p>[]a</p>
                             </td>
                             <td><p>b</p></td>
                         </tr>

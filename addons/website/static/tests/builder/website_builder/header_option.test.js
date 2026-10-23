@@ -45,7 +45,7 @@ describe("Navbar Contact Us button", () => {
                 <div class="oe_structure oe_structure_solo o_editable">
                     <section class="oe_unremovable" contenteditable="false">
                         <div contenteditable="true">
-                            ashould keep unremovable<a class="btn btn-primary oe_unremovable" href="/contactus"></a>[]a
+                            ashould keep unremovable[]<a class="btn btn-primary oe_unremovable" href="/contactus"></a>a
                         </div>
                     </section>
                 </div>
