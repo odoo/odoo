@@ -70,11 +70,6 @@ const listSelectorItems = [
 ];
 
 const isInList = (el) => (isBlock(el) ? el && isListItemElement(el) : isInList(el.parentElement));
-const isListPredicate = (node) => {
-    if (isListItemElement(node)) {
-        return true;
-    }
-};
 
 export class ListPlugin extends Plugin {
     static id = "list";
@@ -223,7 +218,11 @@ export class ListPlugin extends Plugin {
                 }
             }
         },
-        can_contain_selection_placeholder_predicates: isListPredicate,
+        can_contain_selection_placeholder_predicates: (node) => {
+            if (isListItemElement(node)) {
+                return true;
+            }
+        },
         is_node_in_same_block_segment_predicates: (node, blockNode) => {
             const listAncestor = closestElement(node, "ul, ol");
             if (listAncestor && blockNode.contains(listAncestor)) {
