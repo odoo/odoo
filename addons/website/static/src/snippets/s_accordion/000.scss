@@ -4,6 +4,10 @@
     }
 
     .accordion-button {
+        &:focus-visible {
+            box-shadow: var(--o-focus-ring-inset) !important;
+        }
+
         &:not(:focus-visible) {
             box-shadow: none;
         }

@@ -90,6 +90,13 @@
     }
 
     &.o_slideshow {
+        --o-carousel-dark-control-icon-filter: #{$carousel-dark-control-icon-filter};
+        --o-forced-colors-active-outline-offset: -2px;
+
+        @media (forced-colors: active) {
+            --o-carousel-dark-control-icon-filter: FILTER(0);
+        }
+
         .carousel {
             &, .carousel-inner {
                 height: var(--snippet-preview-height, 100%);
@@ -160,14 +167,21 @@
             border-radius: $btn-border-radius;
 
             &:focus-visible {
+                box-shadow: none !important;
+
                 .carousel-control-prev-icon, .carousel-control-next-icon {
-                    box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+                    box-shadow: var(--o-focus-ring-inset);
                 }
             }
         }
 
         .carousel-control-prev-icon, .carousel-control-next-icon {
             background-size: 50%;
+
+            @media (forced-colors: active) {
+                background-color: transparent !important;
+                filter: INVERT(1) !important;
+            }
         }
         .carousel-control-prev-icon, .carousel-control-next-icon, .o_carousel_pause_icon {
             height: $-o-carousel-controllers-size;
@@ -186,10 +200,10 @@
 
             &:focus-visible {
                 outline: none;
-                box-shadow: none;
+                box-shadow: none !important;
 
                 .o_carousel_pause_icon {
-                    box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+                    box-shadow: var(--o-focus-ring-inset);
                 }
             }
 
@@ -204,7 +218,7 @@
         }
 
         .carousel-dark .o_carousel_pause_icon {
-            filter: $carousel-dark-control-icon-filter;
+            filter: var(--o-carousel-dark-control-icon-filter);
         }
 
         // Pause button - Hidden
@@ -235,7 +249,7 @@
                 border-radius: $btn-border-radius;
                 border: $border-width solid $border-color;
                 background-color: $carousel-dark-indicator-active-bg;
-                filter: $carousel-dark-control-icon-filter;
+                filter: var(--o-carousel-dark-control-icon-filter);
             }
 
             .carousel-dark {
@@ -262,15 +276,7 @@
         // Indicators
         .carousel-indicators {
             > button:focus-visible {
-                position: relative;
                 outline: none;
-
-                &::before {
-                    @include o-position-absolute(0, 0, 0, 0);
-                    content: "";
-                    box-shadow: inset 0 0 0 2px black, inset 0 0 0 4px white;
-                    border-radius: inherit;
-                }
             }
         }
 
@@ -302,6 +308,19 @@
 
                 &:hover {
                     opacity: 1;
+                }
+
+                &:focus-visible {
+                    position: relative;
+                    box-shadow: none !important;
+
+                    &::before {
+                        position: absolute;
+                        inset: 0;
+                        content: "";
+                        box-shadow: var(--o-focus-ring-inset);
+                        border-radius: inherit;
+                    }
                 }
             }
 
@@ -338,6 +357,10 @@
                 border-radius: $border-radius-pill;
                 transform: scale(.5);
                 transition: opacity .6s ease, transform .6s ease; // $carousel-indicator-transition values
+
+                @media (forced-colors: active) {
+                    background-color: ButtonText;
+                }
 
                 img {
                     display: none;
@@ -399,6 +422,10 @@
 
                     &.active:after {
                         width: map-get($spacers, 4);
+                    }
+
+                    &:focus-visible {
+                        box-shadow: var(--o-focus-ring-inset) !important;
                     }
                 }
 

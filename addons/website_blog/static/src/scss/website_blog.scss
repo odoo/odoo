@@ -160,6 +160,12 @@
     .o_wblog_toc {
         .o_wblog_toc_nav .list-group {
             .o_wblog_toc_link {
+                --o-forced-colors-active-outline-offset: -2px;
+
+                &:focus-visible {
+                    box-shadow: var(--o-focus-ring-inset) !important;
+                }
+
                 @for $i from 0 through 5 {
                     &.o_wblog_toc_link_#{$i} {
                         padding-left: $spacer * (0.75 + $i);
@@ -198,6 +204,10 @@
                             width: $border-width * 2;
                             background-color: #{$primary};
                             transition: background-color 0.2s;
+
+                            @media (forced-colors: active) {
+                                background-color: Highlight;
+                            }
                         }
                     }
                 }

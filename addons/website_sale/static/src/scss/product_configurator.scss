@@ -34,15 +34,13 @@
     }
 
     &:has(input:focus-visible)::before {
-        @include o-position-absolute($top: 50%, $left: 50%);
-
+        position: absolute;
+        inset: 0;
         content:" ";
-        width: 140%;
-        height: 140%;
+        width: 100%;
+        height: 100%;
         border-radius: 100%;
-        z-index: -1;
-        background-color: $focus-ring-color;
-        transform: translate(-50%, -50%);
+        @include o-focus-ring();
     }
 
     &.custom_value {
@@ -69,7 +67,7 @@
     }
 
     &:where(:has(input:focus-visible)) {
-        box-shadow: $focus-ring-box-shadow;
+        @include o-focus-ring();
     }
 
     &.custom_value {
@@ -99,7 +97,7 @@
     }
 
     &:where(:has(input:focus-visible)) {
-        box-shadow: $focus-ring-box-shadow;
+        @include o-focus-ring();
     }
 }
 
@@ -202,7 +200,7 @@ select.form-select.css_attribute_select {
         border: $border-width solid $border-color;
 
         &:has(input:focus-visible) {
-            box-shadow: $btn-focus-box-shadow;
+            @include o-focus-ring();
         }
     }
 

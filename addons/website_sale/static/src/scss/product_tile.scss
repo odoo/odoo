@@ -97,8 +97,10 @@
         transition: var(--o-wsale-card-thumb-transition);
         flex-shrink: 0;
 
-        &:has(.oe_product_image_link:focus-visible) {
-            outline: 1px auto;
+        .oe_product_image_link:focus-visible::after {
+            content: "";
+            inset: 0;
+            box-shadow: var(--o-focus-ring-inset);
         }
     }
     .oe_product_image_link {
@@ -210,6 +212,18 @@
                 * {
                     width: 100%;
                     height: 100%;
+                }
+            }
+
+            &:focus-visible {
+                outline: none;
+                box-shadow: none !important;
+
+                .btn, .css_attribute_color {
+                    @include o-focus-ring('inset');
+                }
+                .css_attribute_preview_thumbnail {
+                    box-shadow: var(--o-focus-ring-inset);
                 }
             }
         }
@@ -380,9 +394,6 @@
     .o_product_link {
         @include o-position-absolute(0, 0, 0, 0);
         z-index: 1;
-    }
-    .btn:focus-visible {
-        outline: 1px auto;
     }
     .o_label {
         display: var(--o-wsale-card-btn-label-display);
