@@ -18,7 +18,7 @@
             <field name="model">mail.message</field>
             <field name="inherit_id" ref="mail.mail_message_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='parent_id']" position="after">
+                <xpath expr="//field[@name='is_internal']" position="after">
                     <field name="source_template_id" string="Src Template"/>
                     <field name="source_view_id" string="Src View"/>
                 </xpath>
