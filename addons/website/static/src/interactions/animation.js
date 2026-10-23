@@ -64,6 +64,7 @@ export class Animation extends BaseAnimation {
         // Forces the browser to redraw using setTimeout.
         this.waitForTimeout(() => {
             this.isAnimating = true;
+            this.isAnimated = false;
             this.playState = "running";
             const removeListeners = [];
             const onAnimationEnd = (ev) => {
