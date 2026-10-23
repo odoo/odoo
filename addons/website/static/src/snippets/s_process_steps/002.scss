@@ -6,14 +6,14 @@
             width: var(--process-step-number-size);
             height: var(--process-step-number-size);
 
-            // It is possible to add icons or images with the "/" command
+            /* It is possible to add icons or images with the "/" command */
             img {
-                // Note that we use contain and not cover. For "full images"
-                // (like a photo which is a rectangle with colors on the edges),
-                // cover would be better. But for "image icons", contain is a
-                // better fit (as we want the full icon to be visible). Also
-                // in the case of "photos", the user has to be possibility to
-                // crop the image to a square, that way it would act as cover.
+                /* Note that we use contain and not cover. For "full images"
+                   (like a photo which is a rectangle with colors on the edges),
+                   cover would be better. But for "image icons", contain is a
+                   better fit (as we want the full icon to be visible). Also
+                   in the case of "photos", the user has to be possibility to
+                   crop the image to a square, that way it would act as cover. */
                 object-fit: contain;
             }
         }
@@ -24,8 +24,8 @@
             left: calc(50% + (var(--process-step-number-size) / 2) + 16px);
 
             transform: unset;
-            // `o_up_curve` uses to indicate the up side curves arrows, as a
-            // helper to switch the direction for the `rtl` languages.
+            /* `o_up_curve` uses to indicate the up side curves arrows, as a
+               helper to switch the direction for the `rtl` languages. */
             &.o_up_curve {
                 transform: scale(1, -1);
             }
