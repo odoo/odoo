@@ -117,7 +117,7 @@ const getNodesFromNodesAndFragments = (nodes) =>
  * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
  *
- * @typedef {((block: HTMLElement, parent: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
+ * @typedef {((parent: HTMLElement, block: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
  * @typedef {((block: HTMLElement) => boolean)[]} is_retagging_safe_predicates
  * Allows to bypass the check in `isRetaggingSafe`, to handle the block in `on_will_set_tag_handlers`
  *
@@ -183,6 +183,11 @@ export class DomPlugin extends Plugin {
         is_node_removable_predicates: (node) => {
             if (node[IS_MARKER]) {
                 return false;
+            }
+        },
+        can_insert_block_in_parent_predicates: (parent) => {
+            if (isBlock(parent) && !isParagraphRelatedElement(parent)) {
+                return true;
             }
         },
     };
@@ -530,8 +535,7 @@ export class DomPlugin extends Plugin {
     getBlockInsertTarget(block, marker) {
         // Find the closest ancestor before which it would be possible to insert.
         const canInsert = (parent) =>
-            this.checkPredicates("can_insert_block_in_parent_predicates", block, parent) ??
-            (isBlock(parent) && !isParagraphRelatedElement(parent));
+            this.checkPredicates("can_insert_block_in_parent_predicates", parent, block) ?? false;
         const possibleTarget = findUpTo(marker, this.editable, (el) => canInsert(el.parentElement));
         if (possibleTarget === marker) {
             return marker;

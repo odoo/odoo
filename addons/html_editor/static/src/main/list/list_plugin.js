@@ -230,8 +230,8 @@ export class ListPlugin extends Plugin {
                 return false;
             }
         },
-        can_insert_block_in_parent_predicates: (block, parent) => {
-            if (isListItemElement(block) && isListItemElement(parent)) {
+        can_insert_block_in_parent_predicates: (parent, block) => {
+            if (isListItemElement(parent) && isListItemElement(block)) {
                 return false;
             }
         },
