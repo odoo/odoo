@@ -191,6 +191,49 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         self.assertEqual(days, 7, "Duration should include all 7 days even with public holiday")
         self.assertEqual(hours, 56, "Duration should be 7 * 8 hours when including public holidays")
 
+    def test_calendar_duration_hours_public_holidays_and_weekend(self):
+        """Hourly 'calendar days' leaves count the weekend days around public holidays"""
+        calendar_work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test Time Off (Hourly Calendar)',
+            'code': 'Test Time Off 7',
+            'requires_allocation': False,
+            'count_days_as': 'calendar',
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
+        })
+        utc_employee, tokyo_employee = self.env['hr.employee'].create([{
+            'name': f'Employee {tz}',
+            'tz': tz,
+            'resource_calendar_id': self.company.resource_calendar_id.id,
+        } for tz in ('UTC', 'Asia/Tokyo')])
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2024, 5, 3, 0, 0, 0),  # Friday
+            'date_to': datetime(2024, 5, 3, 23, 59, 59),
+            'calendar_id': False,
+            'company_id': utc_employee.company_id.id,
+        })
+        # Thursday to Monday: the public holiday is not counted, Saturday and Sunday are
+        leave = self.env['hr.leave'].create({
+            'employee_id': utc_employee.id,
+            'work_entry_type_id': calendar_work_entry_type.id,
+            'request_date_from': date(2024, 5, 2),
+            'request_date_to': date(2024, 5, 6),
+            'request_hour_from': 8,
+            'request_hour_to': 17,
+        })
+        self.assertEqual(leave._get_durations()[leave.id], (4, 32))
+        # a Saturday morning starts on Friday in UTC
+        leave = self.env['hr.leave'].create({
+            'employee_id': tokyo_employee.id,
+            'work_entry_type_id': calendar_work_entry_type.id,
+            'request_date_from': date(2024, 5, 11),
+            'request_date_to': date(2024, 5, 11),
+            'request_hour_from': 8,
+            'request_hour_to': 12,
+        })
+        self.assertEqual(leave._get_durations()[leave.id], (0.5, 4))
+
     def test_calendar_duration_without_employee(self):
         """Duration of a 'calendar days' leave that has no employee yet
 
