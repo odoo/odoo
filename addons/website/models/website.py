@@ -2740,7 +2740,7 @@ class Website(models.CachedModel):
         return {
             # Google has no rich result for a person among others
             'Person': ['name'],
-            # FAQ rich results are gone: questions and answers as Q&A pages require them
+            # as Google requires them for Q&A pages
             'FAQPage': ['mainEntity'],
             'Question': ['name', 'acceptedAnswer'],
             'Answer': ['text'],
@@ -2777,7 +2777,7 @@ class Website(models.CachedModel):
             if prop_el.xpath('ancestor::*[@data-jsonld-type][1]')[0] is not el:
                 continue  # property of a nested item
             prop = prop_el.get('data-jsonld-prop')
-            if not prop or prop.startswith('@'):
+            if prop.startswith('@'):
                 continue  # not a property, like the @type and @id of JSON-LD
             # a nested item: all of them are kept, a value only once
             if jsonld_type := prop_el.get('data-jsonld-type'):
