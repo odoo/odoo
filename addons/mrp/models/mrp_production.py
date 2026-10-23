@@ -2392,6 +2392,32 @@ class MrpProduction(models.Model):
     def _has_workorders(self):
         return self.workorder_ids
 
+    def _set_open_origin_bom_line(self, move_raw, bom_line):
+        """Point this raw move and its open same-product origins at ``bom_line``.
+
+        Must run before the ``product_uom_qty`` write. That write procures immediately.
+        A phantom kit on the MO adds ``bom_line_id`` to the move merge key, so a
+        quantity delta merges into the open transfer only when the origin still
+        points at this BoM line. Other raw moves of the same product are left
+        alone so two BoM lines of one product stay apart.
+        """
+        product = bom_line.product_id
+        origins = self.env['stock.move']
+        pending = move_raw.move_orig_ids
+        seen = set(move_raw.ids)
+        while pending:
+            pending = pending.filtered(lambda move: move.id not in seen)
+            if not pending:
+                break
+            seen.update(pending.ids)
+            origins |= pending
+            pending = pending.move_orig_ids
+        open_moves = (move_raw | origins).filtered(
+            lambda move: move.state not in ('done', 'cancel') and move.product_id == product
+        )
+        if open_moves:
+            open_moves.bom_line_id = bom_line
+
     def _link_bom(self, bom):
         """ Links the given BoM to the MO. Assigns BoM's lines, by-products and operations
         to the corresponding MO's components, by-products and workorders.
@@ -2494,8 +2520,8 @@ class MrpProduction(models.Model):
                     move_raw.operation_id != bom_line.operation_id or
                     bom_line.product_qty != move_raw_qty
                 ):
-                move_raw.bom_line_id = bom_line
                 move_raw.product_id = bom_line.product_id
+                self._set_open_origin_bom_line(move_raw, bom_line)
                 move_raw.product_uom_qty = bom_qty / ratio
                 move_raw.product_uom = bom_line.product_uom_id
                 if move_raw.operation_id != bom_line.operation_id:
