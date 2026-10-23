@@ -223,6 +223,12 @@ class StockWarehouseOrderpoint(models.Model):
             default_supplier = orderpoint._get_default_supplier()
             orderpoint.supplier_id_placeholder = default_supplier.display_name if default_supplier else ''
 
+    @api.depends('supplier_id', 'supplier_id_placeholder')
+    def _compute_replenishment_uom_id_placeholder(self):
+        for orderpoint in self:
+            supplier = orderpoint.supplier_id or orderpoint._get_default_supplier()
+            orderpoint.replenishment_uom_id_placeholder = supplier.uom_id.display_name
+
     @api.depends('effective_route_id', 'supplier_id', 'rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_effective_vendor_id(self):
         for orderpoint in self:
