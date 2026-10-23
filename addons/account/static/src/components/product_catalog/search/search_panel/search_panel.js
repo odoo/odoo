@@ -100,7 +100,7 @@ export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel 
     }
 
     get editingSection() {
-        return this.editingSectionId !== undefined;
+        return this.state.editingSectionId !== undefined;
     }
 
     formatAmount(amount) {
