@@ -1079,6 +1079,7 @@ class Task(models.Model):
     _order = "priority desc, sequence, id desc"
     _primary_email = 'email_from'
     _check_company_auto = True
+    _allow_sudo_display_name = False
 
     @api.model
     def _get_default_partner_id(self, project=None, parent=None):
