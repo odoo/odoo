@@ -4,6 +4,23 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 import { whenReady } from "@odoo/owl";
 
+function loginIfNeeded() {
+    return [{
+        isActive: ["body:has(input#login)"],
+        trigger: "input#login",
+        run: "edit test_user",
+    }, {
+        isActive: ["body:has(input#login)"],
+        trigger: "input#password",
+        run: "edit test_user",
+    }, {
+        isActive: ["body:has(input#login)"],
+        trigger: 'button:contains("Log in")',
+        run: "click",
+        expectUnloadPage: true,
+    }];
+}
+
 function openUserPreferencesAtSecurityTab() {
     return [{
         content: 'Open user account menu',
@@ -109,6 +126,17 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     trigger: ".o_notification_content:contains(2-Factor authentication is now enabled)",
     run() {
         window.location = '/odoo';
+    },
+    expectUnloadPage: true,
+},
+...loginIfNeeded(),
+{
+    isActive: ["body:has(input[name=totp_token])"],
+    trigger: "input[name=totp_token]",
+    async run({ edit, click }) {
+        const token = await rpc('/totphook', { offset: 3 });
+        await edit(token);
+        await click("button[type=submit]");
     },
     expectUnloadPage: true,
 },
@@ -314,6 +342,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     },
     expectUnloadPage: true,
 },
+...loginIfNeeded(),
 ...openUserPreferencesAtSecurityTab(),
 ...closePreferencesDialog({
     content: "Check that the button has changed",
