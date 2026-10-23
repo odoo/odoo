@@ -1666,10 +1666,10 @@ class HrLeave(models.Model):
         write_self = self.with_context(skip_leave_version_check=True) if skip_leave_version_check else self
         result = super(HrLeave, write_self).write(values)
 
-        # If the dates of a validated leave were changed, amend the resource calendar leave dates
-        date_fields = {'date_from', 'date_to', 'request_date_from', 'request_date_to', 'request_hour_from', 'request_hour_to'}
-        dates_amended = bool(date_fields.intersection(values))
-        if validated_leaves and dates_amended and not state_invalidated:
+        # If the dates or the type of a validated leave were changed, amend the resource calendar leave
+        amended_fields = {'date_from', 'date_to', 'request_date_from', 'request_date_to', 'request_hour_from', 'request_hour_to', 'work_entry_type_id'}
+        resource_leave_amended = bool(amended_fields.intersection(values))
+        if validated_leaves and resource_leave_amended and not state_invalidated:
             if not self.env.context.get('skip_create_resource_leave'):
                 validated_leaves._amend_resource_leave_dates()
 
@@ -1835,8 +1835,9 @@ class HrLeave(models.Model):
 
     def _amend_resource_leave_dates(self):
         """
-        This method updates the dates of an existing resource calendar leave object for already validated leaves.
-        For cases where overrides change the leave dates but not the validated state.
+        This method updates the dates and the type of an existing resource calendar leave object for
+        already validated leaves.
+        For cases where overrides change the leave dates or type but not the validated state.
         """
         resource_leaves = self.env['resource.calendar.leaves'].sudo().search([
             ('holiday_id', 'in', self.ids),
