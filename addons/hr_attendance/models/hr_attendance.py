@@ -705,8 +705,8 @@ class HrAttendance(models.Model):
         rules._apply_attendance_output(excess, deficit, active_iv=active_iv)
 
     def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
-        """Return the spans of all the attendances of the employee (any state) overlapping the
-        period, so that undertime outputs are placed outside of them.
+        """Return the spans of the attendances of the employee overlapping the period, refused
+        ones excepted, so that undertime outputs are placed outside of them.
 
         :rtype: Intervals
         """
@@ -715,6 +715,7 @@ class HrAttendance(models.Model):
             ('employee_id', '=', employee_id),
             ('check_in', '<', period_end_utc),
             ('check_out', '>', start_utc),
+            ('state', '!=', 'refused'),
         ])
         return Intervals([(a.check_in, a.check_out, dummy) for a in existing], keep_distinct=True)
 
