@@ -236,8 +236,7 @@ class PosConfig(models.Model):
     def _get_next_order_refs(self, device_identifier='0'):
         next_number = self.order_backend_seq_id._next()
         year_2_digits = str(datetime.now().year)[-2:]
-        tracking_number = f"{int(next_number) % 1000}"
-        return f"{year_2_digits}{device_identifier}-{self.id}-{next_number}", tracking_number
+        return f"{year_2_digits}{device_identifier}-{self.id}-{next_number}"
 
     def notify_synchronisation(self, session_id, device_identifier, records={}):
         self._notify_synchronisation(session_id, device_identifier, records)
