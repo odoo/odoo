@@ -977,15 +977,7 @@ class HrLeave(models.Model):
                 ('date_to', '>=', min_start),
             ])
 
-        public_holiday_dates_per_company = defaultdict(set)
-
-        for ph in public_holidays:
-            start = ph.date_from.date()
-            end = ph.date_to.date()
-            days = (end - start).days + 1
-            company_id = ph.company_id.id
-            for day in rrule.rrule(rrule.DAILY, dtstart=start, until=start + timedelta(days=days)):
-                public_holiday_dates_per_company[company_id].add(day.date())
+        public_holidays_per_company = public_holidays.grouped('company_id')
         for leave in self:
             calendar = resource_calendar or leave.resource_calendar_id
             if not leave.date_from or not leave.date_to or (not calendar and not leave.employee_id):
@@ -1034,7 +1026,16 @@ class HrLeave(models.Model):
                                                 until=leave.request_date_from + timedelta(days=(end_date - start_date).days)
                                             )
                         }
-                        weekend_dates = total_dates - working_dates - public_holiday_dates_per_company[leave.company_id.id]
+                        # days of the public holidays, in the timezone of the employee
+                        tz = ZoneInfo(leave.employee_id.sudo()._get_tz())
+                        public_holiday_dates = set()
+                        for ph in public_holidays_per_company.get(leave.company_id, []):
+                            ph_start = ph.date_from.replace(tzinfo=UTC).astimezone(tz).date()
+                            ph_end = ph.date_to.replace(tzinfo=UTC).astimezone(tz).date()
+                            public_holiday_dates.update(
+                                ph_start + timedelta(days=day) for day in range((ph_end - ph_start).days + 1)
+                            )
+                        weekend_dates = total_dates - working_dates - public_holiday_dates
 
                         if weekend_dates:
                             if start_date == end_date:
@@ -1042,7 +1043,7 @@ class HrLeave(models.Model):
                                 day_hours = min(day_end, leave.request_hour_to) - max(day_start, leave.request_hour_from)
                                 hours += max(0, day_hours)
                                 days += day_hours / calendar.hours_per_day
-                                weekend_dates.remove(leave.date_from.date())
+                                weekend_dates.remove(start_date)
                             else:
                                 if start_date in weekend_dates:
                                     days += 0.5 if leave.request_date_from_period == 'pm' else 1
