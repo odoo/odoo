@@ -4,6 +4,8 @@ from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.modules.db import country_timezones as _country_timezones
 
+from collections import defaultdict
+
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
@@ -16,7 +18,6 @@ class ResCompany(models.Model):
         _tz_get, string='Timezone',
         compute='_compute_tz', store=True, readonly=False)
 
-    #TODO change calculation
     @api.depends('country_id')
     def _compute_tz(self):
         country_tz = _country_timezones()
@@ -26,6 +27,17 @@ class ResCompany(models.Model):
                 country_timezones = country_tz.get(company.country_id.code, [])
                 if len(country_timezones) == 1:
                     company.tz = country_timezones[0]
+                elif len(country_timezones) > 1 and company.state_id:
+                    dict_timezones = defaultdict(list)
+                    [dict_timezones[tz.split('/')[1]].append(tz) for tz in country_timezones]
+                    state_timezones = dict_timezones.get(company.state_id.name, [])
+                    if len(state_timezones) == 1:
+                        company.tz = state_timezones[0]
+                    elif len(state_timezones) > 1 and company.city:
+                        [dict_timezones[tz.split('/')[2]].append(tz) for tz in state_timezones]
+                        city_timezones = dict_timezones.get(company.city, [])
+                        if len(city_timezones) == 1:
+                            company.tz = city_timezones[0]
 
     @api.model
     def _init_data_resource_calendar(self):
