@@ -1800,7 +1800,7 @@ class HrLeave(models.Model):
             if not self.env.context.get('skip_create_resource_leave'):
                 validated_leaves._amend_resource_leave_dates()
 
-        if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'work_entry_type_id', 'employee_id', 'state']):
+        if any(field in values for field in ['request_date_from', 'date_from', 'request_date_to', 'date_to', 'work_entry_type_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
                 # Preserve context check for date validation skip
                 if not self.env.context.get('leave_skip_date_check'):
