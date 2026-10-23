@@ -383,7 +383,6 @@ class TestPosConfig(CommonPosTest):
         # The archived variant is still loaded so that the past order can be displayed
         self.assertIn(sold_variant.id, [p['id'] for p in result['product.product']])
 
-
     def test_refunded_order_id(self):
         """
         An order containing refunded lines from two different orders is no longer allowed,
@@ -535,7 +534,6 @@ class TestPosConfig(CommonPosTest):
 
         with self.assertRaisesRegex(UserError, "close and validate"):
             bank_pm.journal_id = False
-
 
     def test_properly_set_pos_config_x2many_fields(self):
         """Simulate what is done from the res.config.settings view when editing x2 many fields."""
