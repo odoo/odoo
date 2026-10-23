@@ -589,10 +589,11 @@ def _add_manual_models(env: Environment):
         table_name = model_data["model"].replace(".", "_")
         table_kind = sql.table_kind(env.cr, table_name)
         if table_kind not in (sql.TableKind.Regular, None):
-            _logger.info(
-                "Model %r is backed by table %r which is not a regular table (%r), disabling automatic schema management",
-                model_data["model"], table_name, table_kind,
-            )
+            if attrs.get('_auto', True):
+                _logger.info(
+                    "Model %r is backed by table %r which is not a regular table (%r), disabling automatic schema management",
+                    model_data["model"], table_name, table_kind,
+                )
             attrs['_auto'] = False
             env.cr.execute(
                 """ SELECT a.attname
