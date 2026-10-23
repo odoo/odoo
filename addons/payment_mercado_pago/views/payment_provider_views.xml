@@ -7,13 +7,22 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <header position="inside">
-                <div invisible="code != 'mercado_pago'" groups="base.group_system">
+                <t invisible="code != 'mercado_pago'" groups="base.group_system">
                     <button
                         string="Connect"
                         type="object"
                         name="action_start_onboarding"
+                        context="{'mercado_pago_test_mode': False}"
                         invisible="mercado_pago_access_token"
                         class="btn-primary"
+                    />
+                    <button
+                        string="Connect a Test Account"
+                        type="object"
+                        name="action_start_onboarding"
+                        context="{'mercado_pago_test_mode': True}"
+                        invisible="mercado_pago_access_token"
+                        class="btn-secondary"
                     />
                     <button
                         string="Disconnect"
@@ -23,7 +32,7 @@
                         invisible="not mercado_pago_access_token"
                         class="btn-secondary"
                     />
-                </div>
+                </t>
             </header>
             <group name="provider_credentials" position="inside">
                 <field
