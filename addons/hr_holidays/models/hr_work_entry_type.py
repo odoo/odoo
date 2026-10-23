@@ -222,8 +222,9 @@ been taken for this time off type. Changing it now would affect existing employe
     def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
         """Return the types of ``self`` the employee can request time off of during a period.
 
-        Types without allocation always; types requiring an allocation when one covers the whole
-        period and is an accrual or has a positive balance (within the negative cap).
+        Types without allocation always; types requiring an allocation when a validated one
+        covers the whole period and is an accrual or has a positive balance (within the negative
+        cap).
 
         :param date_from: first day
         :param date_to: last day
@@ -234,6 +235,7 @@ been taken for this time off type. Changing it now would affect existing employe
             domain=Domain([
                 ('work_entry_type_id', 'in', self.filtered(lambda work_entry_type: work_entry_type.requires_allocation).ids),
                 ('employee_id', '=', employee_id),
+                ('state', '=', 'validate'),
                 ('date_from', '<=', date_from),
                 '|',
                     ('date_to', '>=', date_to),

@@ -131,6 +131,36 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
 
         self.assertFalse(work_entry_types, "Got valid leaves outside vaild period")
 
+    def test_valid_allocations_are_approved(self):
+        """An allocation to approve does not make its type requestable"""
+        employee = self.env['hr.employee'].create({'name': 'Test Employee'})
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Accrued Leave',
+            'code': 'Accrued Leave',
+            'requires_allocation': True,
+            'allocation_validation_type': 'hr',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan',
+            'work_entry_type_id': work_entry_type.id,
+        })
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Accrual allocation',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': employee.id,
+            'work_entry_type_id': work_entry_type.id,
+            'date_from': date(2024, 1, 1),
+            'number_of_days': 0,
+        })
+        self.assertEqual(allocation.state, 'confirm')
+        self.assertFalse(work_entry_type.get_work_entry_types_with_valid_allocations(
+            date(2024, 6, 3), date(2024, 6, 3), employee.id))
+        allocation.action_approve()
+        self.assertEqual(work_entry_type.get_work_entry_types_with_valid_allocations(
+            date(2024, 6, 3), date(2024, 6, 3), employee.id), work_entry_type)
+
     def test_calendar_duration_excluding_public_holidays(self):
         """Test calendar duration calculation excluding public holidays"""
 
