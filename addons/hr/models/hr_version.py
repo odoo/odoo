@@ -251,7 +251,7 @@ class HrVersion(models.Model):
             for version in versions_without_countries:
                 version.allowed_country_state_ids = states
 
-    @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
+    @api.constrains('employee_id', 'contract_date_start', 'contract_date_end', 'date_version')
     def _check_dates(self):
         version_read_group = self.env['hr.version'].sudo()._read_group(
             [
@@ -268,6 +268,20 @@ class HrVersion(models.Model):
         for version in self.sudo():  # sudo needed to read contract dates
             if not version.contract_date_start or not version.employee_id:
                 continue
+
+            if version.date_version and version.contract_date_start < version.date_version:
+                earlier_version_exists = self.sudo().search_count([
+                    ('id', '!=', version.id),
+                    ('employee_id', '=', version.employee_id.id),
+                    ('date_version', '<=', version.contract_date_start),
+                ], limit=1)
+
+                if not earlier_version_exists:
+                    raise ValidationError(self.env._(
+                        "You're trying to start a new contract before the start of the version. "
+                        "Modify the start of the version first then add a new contract date."
+                    ))
+
             if version.contract_date_end and version.contract_date_start > version.contract_date_end:
                 raise ValidationError(self.env._(
                     'Start date (%(start)s) must be earlier than contract end date (%(end)s).',
