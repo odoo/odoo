@@ -80,7 +80,9 @@ class MrpAccountWipAccounting(models.TransientModel):
             date = datetime.now().replace(hour=23, minute=59, second=59)
         compo_value = sum(
             ml.quantity_product_uom * (ml.product_id.lot_valuated and ml.lot_id and ml.lot_id.standard_price or ml.product_id.standard_price)
-            for ml in productions.move_raw_ids.move_line_ids.filtered(lambda ml: ml.picked and ml.quantity and ml.date <= date)
+            for ml in productions.mapped(
+                lambda mo: mo.move_raw_ids.filtered('picked') or mo.move_raw_ids
+            ).move_line_ids.filtered(lambda ml: ml.quantity and ml.date <= date)
         )
         overhead_value = productions.workorder_ids._cal_cost(date)
         sval_acc = self.env['product.category']._fields['property_stock_valuation_account_id'].get_company_dependent_fallback(self.env['product.category']).id
