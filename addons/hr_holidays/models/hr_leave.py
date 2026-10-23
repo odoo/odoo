@@ -1337,11 +1337,13 @@ class HrLeave(models.Model):
 
                 self.env.remove_to_compute(self._fields['work_entry_type_id'], leave)   # to stop onchange methods from resetting the wet chosen earlier
 
+    @api.depends_context('uid')
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_approve(self):
         for holiday in self:
             holiday.can_approve = holiday._check_approval_update('validate1', raise_if_not_possible=False)
 
+    @api.depends_context('uid')
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_back_to_approve(self):
         for holiday in self:
@@ -1364,11 +1366,13 @@ class HrLeave(models.Model):
             else:
                 holiday.can_reschedule = False
 
+    @api.depends_context('uid')
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_validate(self):
         for holiday in self:
             holiday.can_validate = holiday._check_approval_update('validate', raise_if_not_possible=False)
 
+    @api.depends_context('uid')
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_refuse(self):
         for holiday in self:
