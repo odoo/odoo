@@ -1,5 +1,5 @@
 import odoo
-from odoo.addons.point_of_sale.tests.test_pos_margin import TestPosMargin
+from odoo.addons.point_of_sale.tests.test_pos_order import TestPosMargin
 from odoo.addons.pos_stock.tests.common import TestPosStockCommon
 
 
