@@ -16,6 +16,11 @@ class HrLeaveAccrualLevel(models.Model):
 
     @api.constrains('frequency')
     def _check_worked_hours(self):
+        """Forbid the ``worked_hours`` frequency on levels accruing at the start of the period.
+
+        :raise ValidationError: if ``frequency = 'worked_hours'`` and
+            ``accrued_gain_time = 'start'``
+        """
         for level in self:
             if level.frequency == 'worked_hours' and level.accrued_gain_time == 'start':
                 raise ValidationError(self.env._("You can't base accrued time on hours worked, because time is accrued at the start of the period."))
@@ -28,6 +33,8 @@ class HrLeaveAccrualLevel(models.Model):
 
     @api.depends('frequency', 'added_value')
     def _compute_yearly_gain(self):
+        """Estimate the yearly gain of ``worked_hours`` levels from the hours per week of the
+        company's schedule (52 weeks)."""
         super()._compute_yearly_gain()
         company_calendar = self.env.company.resource_calendar_id
         hours_per_week = company_calendar.hours_per_week
@@ -36,4 +43,5 @@ class HrLeaveAccrualLevel(models.Model):
                 level.yearly_gain = level.added_value * 52 * hours_per_week
 
     def _get_hourly_frequencies(self):
+        """Add ``worked_hours``, an hourly frequency."""
         return super()._get_hourly_frequencies() + ["worked_hours"]

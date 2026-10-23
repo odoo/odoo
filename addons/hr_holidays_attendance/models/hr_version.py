@@ -13,9 +13,19 @@ class HrVersion(models.Model):
     _inherit = 'hr.version'
 
     def has_static_work_entries(self):
+        """Attendance-based versions have no static work entries.
+
+        :rtype: bool
+        """
         return not self.attendance_based
 
     def _get_attendance_intervals(self, start_dt, end_dt):
+        """Return empty intervals for the resources of attendance-based versions, the
+        schedule intervals for the others.
+
+        :return: ``{resource_id: Intervals}``
+        :rtype: dict
+        """
         result = {}
         for v in self.filtered('attendance_based'):
             result[v.employee_id.resource_id.id] = Intervals()
@@ -26,6 +36,7 @@ class HrVersion(models.Model):
 
     @api.model
     def _get_work_entry_source_fields(self):
+        """Also merge ``attendance_ids`` (and track ``attendance_based``)."""
         return super()._get_work_entry_source_fields() + ['attendance_based', 'attendance_ids']
 
     def _resolve_attendance_intervals(self, intervals):
@@ -33,6 +44,24 @@ class HrVersion(models.Model):
         return resolve_intervals_by_sequence(intervals)
 
     def _get_version_work_entries_values(self, date_start, date_stop):
+        """Add the raw values of the validated, closed attendances of the period.
+
+        Each attendance gives a value of its own type, from ``check_in`` to ``check_out`` minus
+        the break, with the key ``attendance_ids``; where an attendance and a working time
+        leave overlap, the lowest type sequence wins. The schedule part is computed by
+        ``super()`` with three context keys (``{resource_id: Intervals}``, aware UTC):
+
+        - ``knocked_day_intervals``: for static versions, the local days with an attendance,
+          removed from the schedule (:meth:`_get_real_attendances`);
+        - ``time_on_intervals``: the worked time (attendances and working time leaves), cut out
+          of the absences (:meth:`_get_valid_leave_intervals`);
+        - ``att_coverage_intervals``: the attendance segments that won over a working time
+          leave, cut out of that leave.
+
+        :param datetime date_start: naive or aware (UTC)
+        :param datetime date_stop: naive or aware (UTC)
+        :rtype: list[dict]
+        """
         start_dt = date_start.replace(tzinfo=UTC) if not date_start.tzinfo else date_start
         end_dt = date_stop.replace(tzinfo=UTC) if not date_stop.tzinfo else date_stop
 
@@ -141,12 +170,14 @@ class HrVersion(models.Model):
         return base_vals + attendance_vals
 
     def _get_real_attendances(self, attendances, leaves, worked_leaves):
+        """Also remove the days with an attendance (context ``knocked_day_intervals``)."""
         knocked = self.env.context.get('knocked_day_intervals', {}).get(
             self.employee_id.resource_id.id, Intervals()
         )
         return (attendances - knocked) - leaves - worked_leaves
 
     def _generate_work_entries_postprocess_adapt_to_calendar(self, vals):
+        """Values from attendances and from fully flexible versions keep their real duration."""
         if vals.pop('_from_attendance', False):
             return False
         # fully-flexible employees have no calendar; compute duration from actual time span
@@ -156,6 +187,7 @@ class HrVersion(models.Model):
         return super()._generate_work_entries_postprocess_adapt_to_calendar(vals)
 
     def _get_more_vals_attendance_interval(self, interval):
+        """Add ``('attendance_ids', attendance)`` when the payload is an ``hr.attendance``."""
         vals = super()._get_more_vals_attendance_interval(interval)
         att = interval[2]
         if att and hasattr(att, '_name') and att._name == 'hr.attendance':
@@ -163,6 +195,11 @@ class HrVersion(models.Model):
         return vals
 
     def _get_valid_leave_intervals(self, attendances, interval):
+        """Cut absences where the employee worked (context ``time_on_intervals``) and working
+        time leaves where an attendance won (context ``att_coverage_intervals``).
+
+        :rtype: list
+        """
         payload = interval[2]
         if not payload:
             return [interval]
