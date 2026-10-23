@@ -124,6 +124,15 @@ class HrEmployee(models.Model):
 
     @api.model
     def _get_first_working_interval_batch(self, min_dts):
+        """Return the start of the first work interval of each employee after a datetime.
+
+        Looks up to two years ahead, in the calendars of the versions in contract, then in the
+        current calendar.
+
+        :param dict min_dts: ``{employee_id: naive UTC datetime}``
+        :return: ``{employee_id: naive UTC datetime}``, without the employees who never work
+        :rtype: dict
+        """
         # find the first working interval after a given date
         if not min_dts:
             return min_dts
@@ -199,6 +208,12 @@ class HrEmployee(models.Model):
         return result
 
     def _compute_leave_status(self):
+        """Compute the time off status of the employees now.
+
+        ``leave_date_from``, ``current_leave_state`` and ``is_absent`` come from the validated
+        time off in progress; ``leave_date_to`` is the day the employee is back: the first
+        working day after the end of that time off or of the public holiday in progress.
+        """
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
         now = fields.Datetime.now()
         holidays = self.env['hr.leave'].sudo().search([
@@ -308,6 +323,7 @@ class HrEmployee(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        """Default the time off approver to the manager's user and give it the approver group."""
         if self.env.context.get('salary_simulation'):
             return super().create(vals_list)
         approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
@@ -323,6 +339,12 @@ class HrEmployee(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        """Keep the time off approver and the pending requests in sync with the employee.
+
+        The time off approver follows the manager when it was the previous manager's user,
+        the approver group is granted to new approvers and removed from former ones, and a new
+        department is copied on the requests to approve or in the future.
+        """
         values = vals
         # Prevent the resource calendar of leaves to be updated by a write to
         # employee. When this module is enabled the resource calendar of
@@ -417,6 +439,11 @@ class HrEmployee(models.Model):
         }
 
     def get_mandatory_days(self, start_date, end_date):
+        """Return the colors of the mandatory days of the employee (or of the user's employee).
+
+        :return: ``{'YYYY-MM-DD': color}``
+        :rtype: dict
+        """
         all_days = {}
 
         self = self or self.env.user.employee_id
@@ -431,6 +458,14 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_special_days_data(self, date_start, date_end):
+        """Return the mandatory days and public holidays of the contextual employee.
+
+        Used by the calendar views.
+
+        :return: ``{'mandatoryDays': [...], 'bankHolidays': [...]}``, see
+            :meth:`get_mandatory_days_data` and :meth:`get_public_holidays_data`
+        :rtype: dict
+        """
         return {
             'mandatoryDays': self.get_mandatory_days_data(date_start, date_end),
             'bankHolidays': self.get_public_holidays_data(date_start, date_end),
@@ -438,6 +473,11 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_public_holidays_data(self, date_start, date_end):
+        """Return the public holidays of the contextual employee as calendar events.
+
+        :return: list of dicts (``id``, ``title``, ``start``, ``end``, ``isAllDay``, ...)
+        :rtype: list
+        """
         self = self._get_contextual_employee()
         employee_tz = ZoneInfo(self._get_tz() if self else self.env.user.tz or 'UTC')
         public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_from')
@@ -454,6 +494,14 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_time_off_dashboard_data(self, target_date=None):
+        """Return the data of the time off dashboard of the contextual employee.
+
+        :param target_date: date of the balances, today by default
+        :return: ``{'allocation_data', 'allocations_number'}``, ``allocation_data`` being the
+            result of
+            ``hr.work.entry.type.get_allocation_data_request()``
+        :rtype: dict
+        """
         return {
             'allocation_data': self.env['hr.work.entry.type'].get_allocation_data_request(target_date, False),
             'allocations_number': self.get_allocations_number(),
@@ -461,6 +509,10 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_allocations_number(self):
+        """Return the number of allocations of the contextual employee waiting for approval.
+
+        :rtype: int
+        """
         employee = self._get_contextual_employee()
         allocations = self.env['hr.leave.allocation'].search([
             ('employee_id', '=', employee.id),
@@ -469,6 +521,12 @@ class HrEmployee(models.Model):
         return len(allocations)
 
     def _get_public_holidays(self, date_start, date_end):
+        """Return the public holidays of the employee's company and calendar within a period.
+
+        :param date_start: start of the period
+        :param date_end: end of the period
+        :rtype: resource.calendar.leaves
+        """
         domain = [
             ('resource_id', '=', False),
             ('company_id', '=', self.company_id.id or self.env.company.id),
@@ -483,6 +541,11 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_mandatory_days_data(self, date_start, date_end):
+        """Return the mandatory days of the contextual employee as calendar events.
+
+        :return: list of dicts (``id``, ``title``, ``start``, ``end``, ``colorIndex``, ...)
+        :rtype: list
+        """
         self_with_context = self._get_contextual_employee()
         if isinstance(date_start, str):
             date_start = datetime.fromisoformat(date_start).replace(tzinfo=None)
@@ -507,6 +570,16 @@ class HrEmployee(models.Model):
         } for sd in mandatory_days]
 
     def _get_mandatory_days(self, start_date, end_date):
+        """Return the mandatory days applying to the employee within a period.
+
+        A mandatory day applies when it is in the employee's company and has no calendar or the
+        employee's calendar, no job or the employee's job, and no department or the employee's
+        department or one of its parents.
+
+        :param datetime.date start_date: first day
+        :param datetime.date end_date: last day
+        :rtype: hr.leave.mandatory.day
+        """
         domain = [
             ('start_date', '<=', end_date),
             ('end_date', '>=', start_date),
@@ -534,6 +607,12 @@ class HrEmployee(models.Model):
 
     @api.model
     def _get_contextual_employee(self):
+        """Return the employee of the context, or the user's employee.
+
+        The context keys ``employee_id`` and ``default_employee_id`` are read in this order.
+
+        :rtype: hr.employee
+        """
         ctx = self.env.context
         if self.env.context.get('employee_id') is not None:
             return self.browse(ctx.get('employee_id'))
@@ -542,10 +621,42 @@ class HrEmployee(models.Model):
         return self.env.user.employee_id
 
     def _get_consumed_leaves(self, work_entry_types, target_date=False, ignore_future=False, precomputed_allocations={}, same_year_only=False):
-        """ The unit of the value returned in the dict is defined by the matching allocation.work_entry_type.unit_of_measure
-            :param precomputed_allocations: this method won't call `_get_additionnal_future_leaves_on` for
-            the allocations contained by this variable (they are considered to be already updated for 'target_date')
-            :param same_year_only: only take into account leaves whose `date_from` falls within `target_date`'s year
+        """Compute, per allocation, the time off taken and the balance of the employees.
+
+        The requests to approve or approved (``'confirm'``, ``'validate1'``, ``'validate'``) of
+        the given types are deducted from the validated allocations covering them, in this
+        order: allocations with an end date (the earliest first), accrual allocations, then the
+        others. Requests starting after ``target_date`` while an accrual allocation runs are not
+        deducted but rechecked against the future accrual. The amounts are in the
+        ``unit_of_measure`` of each type. Requests listed in the context key
+        ``ignored_leave_ids`` are ignored.
+
+        :param work_entry_types: ``hr.work.entry.type`` records to consider
+        :param datetime.date target_date: date of the balance, today by default; the accrual
+            allocations include what they will have accrued by then
+        :param bool ignore_future: only consider requests starting by ``target_date`` and no
+            future accrual
+        :param dict precomputed_allocations: ``{allocation: allocation_data}`` already computed
+            for ``target_date`` (see ``hr.leave.allocation._process_accrual_plans()``), used as
+            is
+        :param bool same_year_only: only consider requests starting in the year of
+            ``target_date``
+        :return: ``(consumed, to_recheck)``:
+
+            - ``consumed[employee][work_entry_type][allocation]`` is a dict with the keys
+              ``<unit>_max_leaves``, ``<unit>_accrual_bonus`` (accrual granted by
+              ``target_date``), ``<unit>_leaves_taken`` and ``<unit>_remaining_leaves`` (approved
+              requests only), ``<unit>_virtual_leaves_taken`` and
+              ``<unit>_virtual_remaining_leaves`` (all requests), where ``<unit>`` is ``days`` or
+              ``hours`` after the type's unit, plus ``<other unit>_taken`` and
+              ``<other unit>_remaining`` in the other unit. Types without allocation use the key
+              ``False`` instead of an allocation.
+            - ``to_recheck[employee][work_entry_type]`` is a dict with ``excess_days``
+              (``{date: {'amount', 'is_virtual', 'leave_id'}}``, the time not covered by any
+              allocation), ``to_recheck_leaves`` (the future requests not deducted) and
+              ``exceeding_duration`` (negative or zero, what the future accrual will miss to cover
+              them).
+        :rtype: tuple
         """
         employees = self or self._get_contextual_employee()
         leaves_domain = [
@@ -826,7 +937,12 @@ class HrEmployee(models.Model):
         return (allocations_leaves_consumed, to_recheck_leaves_per_work_entry_type)
 
     def _get_hours_per_day(self, date_from):
-        ''' Return 24H to handle the case of Fully Flexible (ones without a working calendar)'''
+        """Return the hours per day of the employee's calendar on ``date_from``.
+
+        24 for a fully flexible calendar, 0 on an empty recordset. Single employee.
+
+        :rtype: float
+        """
         if not self:
             return 0
         calendars = self._get_calendars(date_from)
@@ -842,12 +958,18 @@ class HrEmployee(models.Model):
         res.attr("leave_date_to")
 
     def _get_hours_for_date(self, target_date, day_period=None, count_non_working_days=False):
-        """
-        An instance method on a calendar to get the start and end float hours for a given date.
-        :param target_date: The date to find working hours.
-        :param day_period: Optional string ('morning', 'afternoon') to filter for half-days.
-        :param count_non_working_days: Optional Boolean to treat non-working days as full working days
-        :return: A tuple of floats (hour_from, hour_to).
+        """Return the local hours a working day of the employee starts and ends at.
+
+        From the schedule of the version on ``target_date`` (the company's schedule on an empty
+        recordset). A day off borrows the hours of the nearest working day, the day after
+        first; a fully flexible schedule returns ``(0, 24)``. Duration-based attendances, flexible
+        schedules and ``count_non_working_days`` give the hours per day centered on noon.
+
+        :param datetime.date target_date: the day
+        :param str day_period: ``'morning'`` or ``'afternoon'`` to get the hours of a half day
+        :param bool count_non_working_days: treat days off as working days
+        :return: ``(hour_from, hour_to)`` as float hours
+        :rtype: tuple
         """
         if self:
             self.ensure_one()
@@ -904,6 +1026,14 @@ class HrEmployee(models.Model):
         return around_noon(hours_a_day)
 
     def _adjust_leaves(self, leave_intervals):
+        """Extend the leave intervals of time off by day or half day to whole days or halves.
+
+        A time off by day covers its days from midnight to midnight, a half day from midnight or
+        noon to noon or midnight.
+
+        :param Intervals leave_intervals: leave intervals of one employee
+        :rtype: Intervals
+        """
         adjusted_leaves = Intervals([])
         for (start, stop, leave) in leave_intervals:
             tz = start.tzinfo
