@@ -881,6 +881,28 @@ class TestHrVersion(TestHrCommon):
         templates = self.env['hr.version'].search([('employee_id', '=', False)])
         self.assertFalse(templates & versions)
 
+    def test_create_employee_with_contract_template(self):
+        """The values of a contract template given at the employee creation are applied
+        to its first version, explicit values having priority."""
+        job = self.env['hr.job'].create({'name': 'Template Job'})
+        template = self.env['hr.version'].create({
+            'name': 'Template',
+            'job_id': job.id,
+            'wage': 2500,
+        })
+        employee, employee_explicit_wage = self.env['hr.employee'].create([{
+            'name': 'John Doe',
+            'contract_template_id': template.id,
+        }, {
+            'name': 'Jane Doe',
+            'contract_template_id': template.id,
+            'wage': 3000,
+        }])
+        self.assertEqual(employee.job_id, job)
+        self.assertEqual(employee.version_id.wage, 2500)
+        self.assertEqual(employee_explicit_wage.job_id, job)
+        self.assertEqual(employee_explicit_wage.version_id.wage, 3000)
+
     def test_first_contract_date_on_create(self):
         employee = self.env['hr.employee'].create({
             'name': 'Youssef Ahmed',
