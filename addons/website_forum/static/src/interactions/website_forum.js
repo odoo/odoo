@@ -74,7 +74,7 @@ export class WebsiteForum extends Interaction {
         // welcome message action button
         const forumRegisterUrlEl = this.el.querySelector(".forum_register_url");
         if (forumRegisterUrlEl) {
-            const forumLogin = `${location.origin}/odoo?redirect=${encodeURIComponent(
+            const forumLogin = `${forumRegisterUrlEl.href}?redirect=${encodeURIComponent(
                 location.href
             )}`;
             forumRegisterUrlEl.href = forumLogin;
