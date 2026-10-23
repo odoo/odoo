@@ -20,6 +20,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { Gif } from "@mail/core/common/gif";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, leave, pointerDown, press, queryFirst, waitFor } from "@odoo/hoot-dom";
@@ -29,6 +30,7 @@ import {
     contains as webContains,
     Command,
     mockService,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -2423,6 +2425,19 @@ test("Pause GIF attachment when thread is not focused", async () => {
     await contains(".o-mail-AttachmentImage[data-paused]");
     await focus(".o-mail-Thread");
     await contains(".o-mail-AttachmentImage:not([data-paused])");
+});
+
+test("GIF snapshot loads same-origin URLs in CORS mode", async () => {
+    patchWithCleanup(CanvasRenderingContext2D.prototype, {
+        drawImage(image) {
+            asyncStep(`crossOrigin: ${image.crossOrigin}`);
+            return super.drawImage(...arguments);
+        },
+    });
+    await mountWithCleanup(Gif, {
+        props: { src: `${window.location.origin}/web/static/img/sep-a.gif`, paused: true },
+    });
+    await waitForSteps(["crossOrigin: anonymous"]);
 });
 
 test("Prettify message links", async () => {
