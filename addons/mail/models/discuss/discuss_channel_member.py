@@ -121,6 +121,32 @@ class ChannelMember(models.Model):
         ("partner_or_guest_exists", "CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))", "A channel member must be a partner or a guest."),
     ]
 
+    @api.model
+    def _load_records_create(self, vals_list):
+        # A member created from data (e.g. the admin in the general channel) is deleted along with
+        # its xmlid when the partner leaves the channel, and joining again creates a new member
+        # without xmlid. Updating the module must reuse that member instead of creating the data
+        # record again, which would break the unique (channel, partner) index.
+        # Only for module data files: imports must still report duplicates.
+        if not self.env.context.get("install_module"):
+            return super()._load_records_create(vals_list)
+        existing = {}
+        for index, vals in enumerate(vals_list):
+            if vals.get("channel_id") and vals.get("partner_id"):
+                member = self.search([
+                    ("channel_id", "=", vals["channel_id"]),
+                    ("partner_id", "=", vals["partner_id"]),
+                ], limit=1)
+                if member:
+                    existing[index] = member
+        new_members = iter(super()._load_records_create(
+            [vals for index, vals in enumerate(vals_list) if index not in existing]
+        ))
+        return self.browse([
+            existing[index].id if index in existing else next(new_members).id
+            for index in range(len(vals_list))
+        ])
+
     @api.model_create_multi
     def create(self, vals_list):
         if self.env.context.get("mail_create_bypass_create_check") is self._bypass_create_check:
