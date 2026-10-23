@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools import format_date
@@ -2773,6 +2774,85 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         downpayment_line = sale_order.order_line.filtered('is_downpayment')
         self.assertTrue(downpayment_line.pos_order_line_ids)
         self.assertFalse(downpayment_line.move_ids)
+
+    def test_pos_downpayment_deducted_once_by_final_invoice(self):
+        """ A PoS down payment must be deducted by the first final invoice only. """
+        self.main_pos_config.down_payment_product_id = self.env.ref('pos_sale.default_downpayment_product')
+        self.product_a.invoice_policy = 'delivery'
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': False,
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        self.env['pos.order'].sync_from_ui([{
+            'amount_paid': 100.0,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 100.0,
+            'company_id': self.env.company.id,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+            'lines': [Command.create({
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 100.0,
+                'product_id': self.main_pos_config.down_payment_product_id.id,
+                'price_subtotal': 100.0,
+                'price_subtotal_incl': 100.0,
+                'sale_order_origin_id': sale_order.id,
+                'qty': 1.0,
+                'tax_ids': [],
+            })],
+            'name': 'Order 00044-003-0017',
+            'session_id': current_session.id,
+            'sequence_number': 1,
+            'payment_ids': [Command.create({
+                'amount': 100.0,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
+            })],
+            'user_id': self.env.uid,
+            'uuid': str(uuid.uuid4()),
+        }])
+        product_line = sale_order.order_line.filtered(lambda l: l.product_id == self.product_a)
+        downpayment_line = sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+        self.assertEqual(downpayment_line.qty_invoiced, 1.0)
+        self.assertEqual(downpayment_line.qty_to_invoice, -1.0)
+
+        product_line.qty_delivered = 1.0
+        invoice = sale_order._create_invoices(final=True)
+        self.assertEqual(invoice.amount_total, 0.0)
+        # Draft final invoice already deducts it
+        self.assertEqual(downpayment_line.qty_invoiced, 0.0)
+        self.assertEqual(downpayment_line.qty_to_invoice, 0.0)
+        invoice.action_post()
+        self.assertEqual(downpayment_line.qty_invoiced, 0.0)
+        self.assertEqual(downpayment_line.qty_to_invoice, 0.0)
+        with self.assertRaises(UserError):
+            sale_order._create_invoices(final=True)
+
+        product_line.qty_delivered = 0.0
+        credit_note = sale_order._create_invoices(final=True)
+        self.assertEqual(credit_note.move_type, 'out_refund')
+        self.assertEqual(credit_note.amount_total, 100.0)
+        self.assertFalse(credit_note.invoice_line_ids.filtered('is_downpayment'))
+
+        # Cancelled final invoice gives the down payment back
+        credit_note.button_cancel()
+        invoice.button_draft()
+        invoice.button_cancel()
+        self.assertEqual(downpayment_line.qty_invoiced, 1.0)
+        self.assertEqual(downpayment_line.qty_to_invoice, -1.0)
 
     def test_variant_popup_qty_free(self):
         """
