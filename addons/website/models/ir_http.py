@@ -277,6 +277,16 @@ class IrHttp(models.AbstractModel):
             return self.env['res.lang']._get_data(id=website.default_lang_id.id)
         return super()._get_default_lang()
 
+    def _portal_localize_url(self, url, lang):
+        # portal links (/mail/view, /calendar/meeting/view, ...) are served by
+        # non-website routes, where only host_id is set: restrict the languages
+        # accordingly
+        if not self.env.website and (host_id := self.env.context.get("host_id")):
+            return super(
+                IrHttp, self.with_context(website_id=host_id)
+            )._portal_localize_url(url, lang)
+        return super()._portal_localize_url(url, lang)
+
     @classmethod
     def _get_translation_frontend_modules_name(cls):
         mods = super()._get_translation_frontend_modules_name()
