@@ -686,9 +686,15 @@ class IrAttachment(models.Model):
         domain &= sec_domain | Domain('res_model', '!=', False)
         domain = domain.optimize_full(self)
         ordered = bool(order)
+        fields_to_fetch = [self._fields[name] for name in SECURITY_FIELDS]
         if limit is None:
-            records = self.sudo().with_context(active_test=False).search_fetch(
-                domain, SECURITY_FIELDS, order=order).sudo(False)
+            query = super()._search(
+                domain,
+                order=order,
+                active_test=False,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
             return records._filtered_access('read')[offset:]._as_query(ordered)
         # Fetch by small batches
         sub_offset = 0
@@ -698,13 +704,15 @@ class IrAttachment(models.Model):
             # By default, order by model to batch access checks.
             order = 'res_model nulls first, id'
         while len(result) < limit:
-            records = self.sudo().with_context(active_test=False).search_fetch(
+            query = super()._search(
                 domain,
-                SECURITY_FIELDS,
                 offset=sub_offset,
                 limit=PREFETCH_MAX,
                 order=order,
-            ).sudo(False)
+                active_test=False,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
             result.extend(records._filtered_access('read')._ids)
             if len(records) < PREFETCH_MAX:
                 # There are no more records
