@@ -115,6 +115,52 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
         </record>
 
+        <record id="product_product_office_space_planning" model="product.product">
+            <field name="name">Office Space Planning (Milestones)</field>
+            <field name="categ_id" ref="product.product_category_services"/>
+            <field name="list_price">4500.00</field>
+            <field name="standard_price">2700.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="service_policy">delivered_milestones</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+
+        <record id="product_product_workstation_installation" model="product.product">
+            <field name="name">Workstation Installation (Manual)</field>
+            <field name="categ_id" ref="product.product_category_services"/>
+            <field name="list_price">120.00</field>
+            <field name="standard_price">70.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="service_policy">delivered_manual</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+
+        <record id="product_product_office_move_coordination" model="product.product">
+            <field name="name">Office Move Coordination (Fixed Price)</field>
+            <field name="categ_id" ref="product.product_category_services"/>
+            <field name="list_price">900.00</field>
+            <field name="standard_price">550.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+
+        <record id="product_product_office_chair" model="product.product">
+            <field name="name">Ergonomic Office Chair</field>
+            <field name="categ_id" ref="product.product_category_office"/>
+            <field name="list_price">340.00</field>
+            <field name="standard_price">210.00</field>
+            <field name="type">consu</field>
+            <field name="weight">15.0</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+        </record>
+
         <record id="sale_order_construction_material" model="sale.order">
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="user_id" ref="base.user_admin"/>
@@ -173,8 +219,45 @@
             <field name="qty_delivered">10</field>
         </record>
 
+        <!-- Sale order for Project Office Design -->
+        <record id="sale_order_office_design" model="sale.order">
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+
+        <record id="sale_line_office_design_1" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_office_design"/>
+            <field name="sequence" eval="1"/>
+            <field name="product_id" ref="product_product_office_space_planning"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+
+        <record id="sale_line_office_design_2" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_office_design"/>
+            <field name="sequence" eval="2"/>
+            <field name="product_id" ref="product_product_workstation_installation"/>
+            <field name="product_uom_qty">24</field>
+            <field name="qty_delivered">10</field>
+        </record>
+
+        <record id="sale_line_office_design_3" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_office_design"/>
+            <field name="sequence" eval="3"/>
+            <field name="product_id" ref="product_product_office_chair"/>
+            <field name="product_uom_qty">12</field>
+        </record>
+
+        <record id="sale_line_office_design_4" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_office_design"/>
+            <field name="sequence" eval="4"/>
+            <field name="product_id" ref="product_product_office_move_coordination"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_construction_material')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_construction')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_office_design')]]"/>
 
         <!-- Set users and state to task -->
         <function model="project.task" name="write">
@@ -214,5 +297,67 @@
                 'user_ids': [Command.link(ref('base.user_demo'))],
             }"/>
         </function>
+
+        <!-- Payment schedule of the Office Design space planning, whose first phase is already reached -->
+        <record id="project.project_1_milestone_1" model="project.milestone">
+            <field name="quantity_percentage">0.3</field>
+        </record>
+        <record id="project.project_1_milestone_2" model="project.milestone">
+            <field name="quantity_percentage">0.4</field>
+        </record>
+        <record id="project.project_1_milestone_3" model="project.milestone">
+            <field name="quantity_percentage">0.3</field>
+        </record>
+
+        <!-- Invoice the Office Design sales order -->
+        <function model="sale.order" name="_create_invoices" eval="[[ref('sale_order_office_design')]]"/>
+        <function model="account.move" name="action_post">
+            <value model="account.move"
+                eval="obj().env['sale.order'].browse(ref('sale_order_office_design')).invoice_ids.ids"
+            />
+        </function>
+
+        <!-- Costs and revenues of the Home Construction project that do not come from its sales orders -->
+        <record id="vendor_bill_home_construction_scaffolding" model="account.move">
+            <field name="move_type">in_invoice</field>
+            <field name="partner_id" ref="base.res_partner_10"/>
+            <field name="invoice_date" eval="(DateTime.today() - relativedelta(weeks=3)).strftime('%Y-%m-%d')"/>
+            <field name="invoice_line_ids" eval="[
+                Command.create({
+                    'name': 'Scaffolding rental (2 weeks)',
+                    'quantity': 2,
+                    'price_unit': 340.0,
+                    'analytic_distribution': {ref('project.analytic_construction'): 100},
+                }),
+                Command.create({
+                    'name': 'Scaffolding delivery, assembly and dismantling',
+                    'quantity': 1,
+                    'price_unit': 180.0,
+                    'analytic_distribution': {ref('project.analytic_construction'): 100},
+                }),
+            ]"/>
+        </record>
+
+        <record id="invoice_home_construction_change_order" model="account.move">
+            <field name="move_type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="invoice_line_ids" eval="[Command.create({
+                'name': 'Change order fee: kitchen layout revised after design approval',
+                'quantity': 1,
+                'price_unit': 450.0,
+                'analytic_distribution': {ref('project.analytic_construction'): 100},
+            })]"/>
+        </record>
+
+        <function model="account.move" name="action_post" eval="[[ref('vendor_bill_home_construction_scaffolding'), ref('invoice_home_construction_change_order')]]"/>
+
+        <record id="account_analytic_line_home_construction_excavator" model="account.analytic.line">
+            <field name="name">Company-owned mini excavator: site levelling</field>
+            <field name="account_id" ref="project.analytic_construction"/>
+            <field name="date" eval="(DateTime.today() - relativedelta(weeks=6)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">12</field>
+            <field name="product_uom_id" ref="uom.product_uom_hour"/>
+            <field name="amount">-660.00</field>
+        </record>
     </data>
 </odoo>

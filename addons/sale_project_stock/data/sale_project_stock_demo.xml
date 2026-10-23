@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Construction materials kept in stock -->
+    <record id="product_product_plasterboard" model="product.product">
+        <field name="name">Plasterboard Sheet</field>
+        <field name="categ_id" ref="product.product_category_construction"/>
+        <field name="standard_price">11.50</field>
+        <field name="list_price">18.00</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="weight">22.0</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="product_product_insulation_roll" model="product.product">
+        <field name="name">Glass Wool Insulation Roll</field>
+        <field name="categ_id" ref="product.product_category_construction"/>
+        <field name="standard_price">38.00</field>
+        <field name="list_price">55.00</field>
+        <field name="type">consu</field>
+        <field name="is_storable" eval="True"/>
+        <field name="weight">9.0</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="stock_quant_plasterboard" model="stock.quant">
+        <field name="product_id" ref="product_product_plasterboard"/>
+        <field name="inventory_quantity">200</field>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+    </record>
+
+    <record id="stock_quant_insulation_roll" model="stock.quant">
+        <field name="product_id" ref="product_product_insulation_roll"/>
+        <field name="inventory_quantity">50</field>
+        <field name="location_id" ref="stock.stock_location_stock"/>
+    </record>
+
+    <function model="stock.quant" name="action_apply_inventory" eval="[[ref('stock_quant_plasterboard'), ref('stock_quant_insulation_roll')]]"/>
+
+    <!-- Moving stock from or to a project generates analytic entries on it -->
+    <record id="stock.picking_type_out" model="stock.picking.type">
+        <field name="analytic_costs" eval="True"/>
+    </record>
+
+    <record id="stock.picking_type_in" model="stock.picking.type">
+        <field name="analytic_costs" eval="True"/>
+    </record>
+
+    <!-- Materials taken to the Home Construction site, then the leftovers brought back to the warehouse -->
+    <record id="picking_home_construction_from_wh" model="stock.picking">
+        <field name="picking_type_id" ref="stock.picking_type_out"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="project_id" ref="project.project_home_construction"/>
+        <field name="move_ids" eval="[
+            Command.create({'product_id': ref('product_product_plasterboard'), 'product_uom_qty': 60}),
+            Command.create({'product_id': ref('product_product_insulation_roll'), 'product_uom_qty': 14}),
+        ]"/>
+    </record>
+
+    <record id="picking_home_construction_to_wh" model="stock.picking">
+        <field name="picking_type_id" ref="stock.picking_type_in"/>
+        <field name="location_id" ref="stock.stock_location_customers"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="project_id" ref="project.project_home_construction"/>
+        <field name="move_ids" eval="[Command.create({'product_id': ref('product_product_plasterboard'), 'product_uom_qty': 8})]"/>
+    </record>
+
+    <function model="stock.picking" name="action_confirm" eval="[[ref('picking_home_construction_from_wh'), ref('picking_home_construction_to_wh')]]"/>
+    <function model="stock.picking" name="action_assign" eval="[[ref('picking_home_construction_from_wh')]]"/>
+    <function model="stock.picking" name="button_validate" eval="[[ref('picking_home_construction_from_wh'), ref('picking_home_construction_to_wh')]]" context="{'skip_sms': True}"/>
+</odoo>

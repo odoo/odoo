@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Book the approved expenses of the Home Construction project -->
+    <function model="account.move" name="action_post">
+        <value model="hr.expense" eval="obj().browse([ref('project_hr_expense.transportation_expense'), ref('project_hr_expense.restaurant_expense')]).account_move_id.ids"/>
+    </function>
+
+    <!-- Expense re-invoiced to the customer of the Office Design project -->
+    <record id="hotel_expense" model="hr.expense">
+        <field name="name">Hotel for the on-site workshop with the client (2 nights)</field>
+        <field name="employee_id" ref="hr.employee_qdp"/>
+        <field name="product_id" ref="hr_expense.expense_product_travel_accommodation"/>
+        <field name="total_amount_currency" eval="290.0"/>
+        <field name="sale_order_id" ref="sale_project.sale_order_office_design"/>
+        <field name="date" eval="(DateTime.today() - relativedelta(weeks=2)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <function model="hr.expense" name="action_submit" eval="[[ref('hotel_expense')]]"/>
+    <function model="hr.expense" name="action_approve" eval="[[ref('hotel_expense')]]"/>
+    <function model="account.move" name="action_post">
+        <value model="hr.expense" eval="obj().browse(ref('hotel_expense')).account_move_id.ids"/>
+    </function>
+
+    <function model="sale.order" name="_create_invoices" eval="[[ref('sale_project.sale_order_office_design')]]"/>
+    <function model="account.move" name="action_post">
+        <value model="sale.order" eval="obj().browse(ref('sale_project.sale_order_office_design')).invoice_ids.filtered(lambda move: move.state == 'draft').ids"/>
+    </function>
+</odoo>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Concrete poured for the Home Construction foundations, billed on the ordered quantities -->
+    <record id="product_product_ready_mix_concrete" model="product.product">
+        <field name="name">Ready-Mix Concrete C25/30</field>
+        <field name="categ_id" ref="product.product_category_construction"/>
+        <field name="standard_price">150.00</field>
+        <field name="type">consu</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="purchase_method">purchase</field>
+        <field name="uom_id" ref="uom.product_uom_cubic_meter"/>
+    </record>
+
+    <record id="product_product_concrete_pumping" model="product.product">
+        <field name="name">Concrete Pumping</field>
+        <field name="categ_id" ref="product.product_category_construction"/>
+        <field name="standard_price">650.00</field>
+        <field name="type">service</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <record id="purchase_order_home_construction_concrete" model="purchase.order">
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="order_line" eval="[
+            Command.create({
+                'product_id': ref('product_product_ready_mix_concrete'),
+                'product_qty': 8,
+                'price_unit': 150.0,
+                'analytic_distribution': {ref('project.analytic_construction'): 100},
+            }),
+            Command.create({
+                'product_id': ref('product_product_concrete_pumping'),
+                'product_qty': 1,
+                'price_unit': 650.0,
+                'analytic_distribution': {ref('project.analytic_construction'): 100},
+            }),
+        ]"/>
+    </record>
+
+    <function model="purchase.order" name="button_confirm" eval="[[ref('purchase_order_home_construction_concrete')]]"/>
+    <function model="purchase.order" name="action_create_invoice" eval="[[ref('purchase_order_home_construction_concrete')]]"/>
+    <function model="account.move" name="write">
+        <value model="account.move" eval="obj().env.ref('sale_purchase_project.purchase_order_home_construction_concrete').invoice_ids.ids"/>
+        <value eval="{'invoice_date': DateTime.today().strftime('%Y-%m-%d')}"/>
+    </function>
+    <function model="account.move" name="action_post">
+        <value model="account.move" eval="obj().env.ref('sale_purchase_project.purchase_order_home_construction_concrete').invoice_ids.ids"/>
+    </function>
+</odoo>
