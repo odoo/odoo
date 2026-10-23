@@ -161,7 +161,11 @@ async function fetchAttachmentMetaData(url, ormService) {
             return { name: url, type: "url" };
         }
         const attachmentId = parseInt(match[1]);
-        const [result] = await ormService.read("ir.attachment", [attachmentId], ["name", "mimetype", "type"]);
+        const [result] = await ormService.read(
+            "ir.attachment",
+            [attachmentId],
+            ["name", "mimetype", "type"]
+        );
         return result || { name: url, type: "url" };
     } catch {
         return { name: url, type: "url" };
@@ -369,6 +373,7 @@ export class LinkPlugin extends Plugin {
                 return closestLink;
             }
         },
+        system_classes: [FONT_SIZED_BUTTON_CLASS],
 
         /** Handlers */
         on_beforeinput_handlers: [
@@ -385,9 +390,8 @@ export class LinkPlugin extends Plugin {
         on_will_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         on_pasted_handlers: this.onPasteNormalizeLink.bind(this),
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),
-        on_inserted_handlers: this.handleAfterInsert.bind(this),
-        system_classes: [FONT_SIZED_BUTTON_CLASS],
         on_will_remove_handlers: () => this.closeLinkTools(),
+        on_content_inserted_handlers: this.onContentInserted.bind(this),
 
         /** Overrides */
         split_element_block_overrides: this.handleSplitBlock.bind(this),
@@ -1530,7 +1534,7 @@ export class LinkPlugin extends Plugin {
         return true;
     }
 
-    handleAfterInsert(insertedNodes) {
+    onContentInserted(insertedNodes) {
         for (const node of insertedNodes) {
             if (node.nodeType === Node.ELEMENT_NODE) {
                 for (const link of selectElements(node, "A")) {

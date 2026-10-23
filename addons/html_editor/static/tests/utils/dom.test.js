@@ -399,7 +399,7 @@ describe("wrapInlinesInBlocks", () => {
             unformat(`
                 <div class="o-paragraph">text</div>
                 <div>
-                    <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>[]
+                    <div contenteditable="false" style="display: inline;">inline</div><span class="a">span[]</span>
                 </div>
                 <p data-selection-placeholder=""><br></p>
                 <div>
@@ -435,7 +435,7 @@ describe("wrapInlinesInBlocks", () => {
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
                 <p>
-                    <span class="a">span</span>[]
+                    <span class="a">span[]</span>
                 </p>
                 <div class="o-paragraph">text</div>
                 <div>

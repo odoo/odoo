@@ -35,7 +35,7 @@ export class NoInlineRootPlugin extends Plugin {
                 return true;
             }
         },
-        on_inserted_handlers: this.onInserted.bind(this),
+        on_content_inserted_handlers: this.onContentInserted.bind(this),
     };
 
     setup() {
@@ -182,7 +182,7 @@ export class NoInlineRootPlugin extends Plugin {
      *
      * @param {Node[]} insertedNodes
      */
-    onInserted(insertedNodes) {
+    onContentInserted(insertedNodes) {
         for (const parent of getConnectedParents(insertedNodes)) {
             if (
                 !this.areInlinesAllowedAtRoot(parent) &&
