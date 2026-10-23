@@ -120,7 +120,7 @@ class IrActionsReport(models.Model):
         else:
             employee_name = expenses.employee_id.name
         if len(set(expenses.mapped(lambda expense: expense.manager_id.id))) > 1:
-            manager_name = self.env._("Multiple Managers")
+            manager_name = self.env._("Multiple Approvers")
         elif not expenses.manager_id:
             # We want to also catch auto-approved expenses that have no manager
             manager_name = self.env._("None (automatic)")

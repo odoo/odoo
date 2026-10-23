@@ -112,27 +112,27 @@
                     <button name="action_approve" string="Approve" type="object" data-hotkey="q" context="{'validate_analytic': True}"
                             invisible="nb_attachment &gt;= 1 or not can_approve or state != 'submitted'" class="o_expense_approve"/>
 
-                    <button name="action_refuse" string="Refuse" invisible="state not in ('submitted', 'approved')" type="object"
+                    <button name="action_refuse" string="Refuse" invisible="state not in ('submitted', 'approved') or account_move_state == 'posted'" type="object"
                             groups="hr_expense.group_hr_expense_team_approver" class="o_expense_refuse" data-hotkey="x"/>
                     <button name="action_reset" string="Reset" type="object" data-hotkey="r" invisible="not can_reset or state in 'draft'"
                             groups="account.group_account_invoice"/>
                     <!-- v In the case where the user has no accounting rights, we don't show the button in the post & done states  -->
                     <button name="action_reset" string="Reset" type="object" data-hotkey="r"
-                            invisible="not can_reset or state in ('draft', 'posted', 'in_payment','paid')" groups="!account.group_account_invoice"/>
+                            invisible="not can_reset or state in ('draft', 'posted', 'in_payment','paid') or account_move_state == 'posted'" groups="!account.group_account_invoice"/>
                     <button name="action_split_wizard" string="Split" type="object" invisible="state != 'draft' or product_has_cost"
                             groups="!hr_expense.group_hr_expense_team_approver,!account.group_account_invoice" class="o_expense_split_user"/>
                     <button name="action_split_wizard" string="Split" type="object" class="o_expense_split_manager"
-                            invisible="state in ('in_payment', 'paid', 'refused', 'posted') or product_has_cost"
+                            invisible="state in ('in_payment', 'paid', 'refused', 'posted') or account_move_state == 'posted' or product_has_cost"
                             groups="hr_expense.group_hr_expense_team_approver,account.group_account_invoice"/>
 
                     <!-- Statusbar -->
-                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,posted,paid"
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,paid"
                            invisible="state in ('submitted', 'in_payment', 'refused')"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,posted,paid"
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,paid"
                            invisible="state != 'submitted'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,posted,in_payment,paid"
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,in_payment,paid"
                            invisible="state != 'in_payment'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,posted,paid,refused"
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,paid,refused"
                            invisible="state != 'refused'"/>
                 </header>
                 <div class="alert alert-warning oe_edit_only" role="alert" name="warning_duplicate_receipt_expense" invisible="not same_receipt_expense_ids">
@@ -176,11 +176,6 @@
                                 invisible="state != 'submitted'"/>
                     </div>
                 </div>
-                <div class="alert alert-warning" role="alert" name="warning_existing_bill_reference_missing"
-                    invisible="not has_existing_bill or (has_existing_bill and existing_bill_id) or state != 'submitted'">
-                    The expense existing bill is not linked, please reference it before approving.
-                </div>
-
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_open_split_expense"
@@ -195,7 +190,7 @@
                             class="oe_stat_button"
                             icon="menu"
                             type="object"
-                            invisible="not account_move_id or payment_mode != 'own_account'"
+                            invisible="not account_move_id or payment_mode == 'company_account'"
                             groups="account.group_account_invoice">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Journal Entry</span>
@@ -205,7 +200,7 @@
                             class="oe_stat_button"
                             icon="menu"
                             type="object"
-                            invisible="not account_move_id or (payment_mode != 'company_account' and not (existing_bill_id or has_existing_bill))"
+                            invisible="not account_move_id or not (payment_mode == 'company_account' or (payment_mode == 'own_account' and has_existing_bill))"
                             groups="account.group_account_invoice">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Payment</span>
@@ -266,24 +261,26 @@
                                 </div>
                             </div>
 
-                            <!-- CASE: product has no cost defined -> user input amount (in other currency if multi-currency) -->
-                            <field name="total_amount_currency" string="Total"  widget='monetary' options="{'currency_field': 'currency_id'}"
-                                invisible="product_has_cost" readonly="not is_editable"/>
-                            <field name="currency_id" string="Currency"
-                                options="{'no_create': True, 'no_open': True}"
-                                readonly="not is_editable" groups="base.group_multi_currency"/>
+                            <!-- User input amount only if the product has no cost (in other currency if multi-currency) -->
+                            <label for="total_amount_currency" string="Total"/>
+                            <div class="o_row">
+                                <field name="total_amount_currency" widget='monetary' options="{'currency_field': 'currency_id'}"
+                                       readonly="not is_editable or product_has_cost" help="Taxes included"/>
+                                <field name="currency_id"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       readonly="not is_editable" groups="base.group_multi_currency"/>
+                            </div>
 
                             <!-- CASE: converter when currency is different than the company one -->
-                            <label name="total_amount_product_cost_label" for="total_amount" string="Total" invisible="is_multiple_currency or not product_has_cost"/>
-                            <label name="total_amount_multicurrency_label" for="total_amount" string="Total With Conversion" invisible="not is_multiple_currency"/>
-                            <div class="d-flex gap-1" invisible="not is_multiple_currency and not product_has_cost">
+                            <label name="total_amount_multicurrency_label" for="total_amount" string="" invisible="not is_multiple_currency"/>
+                            <div class="d-flex gap-1" invisible="not is_multiple_currency">
                                 <field name="total_amount" widget='monetary' options="{'currency_field': 'company_currency_id'}"
                                        force_save="1" readonly="not is_editable or product_has_cost"/>
                                 <field name="label_currency_rate"/>
                             </div>
 
-                            <label for="tax_ids"/>
-                            <div class="o_row">
+                            <label for="tax_ids" groups="hr_expense.group_hr_expense_team_approver,account.group_account_invoice"/>
+                            <div class="o_row" groups="hr_expense.group_hr_expense_team_approver,account.group_account_invoice">
                                 <field name="tax_ids"
                                        force_save="1"
                                        widget="many2many_tax_tags"
@@ -291,50 +288,48 @@
                                        options="{'no_create': True}"/>
                                 <field name="tax_amount_currency"/>
                             </div>
-                            <field name="employee_id" groups="!hr.group_hr_user"
-                                   context="{'default_company_id': company_id}" widget="many2one_avatar_employee"
+                            <label for="employee_id" groups="hr_expense.group_hr_expense_team_approver,account.group_account_invoice"/>
+                            <div groups="hr_expense.group_hr_expense_team_approver,account.group_account_invoice">
+                                <field name="employee_id" groups="!hr.group_hr_user"
+                                       context="{'default_company_id': company_id}" widget="many2one_avatar_employee"
+                                       options="{'relation': 'hr.employee.public', 'no_create': True}"
+                                       readonly="not is_editable" required="1"/>
+                                <field name="employee_id" groups="hr.group_hr_user"
+                                       context="{'default_company_id': company_id}" widget="many2one_avatar_employee"
+                                       options="{'relation': 'hr.employee'}"
+                                       readonly="not is_editable" required="1"/>
+                            </div>
+                            <!-- Other users only create their own expenses, but still see the employee of the ones they approve -->
+                            <field name="employee_id" widget="many2one_avatar_employee"
                                    options="{'relation': 'hr.employee.public', 'no_create': True}"
-                                   readonly="not is_editable" required="1"/>
-                            <field name="employee_id" groups="hr.group_hr_user"
-                                   context="{'default_company_id': company_id}" widget="many2one_avatar_employee"
-                                   options="{'relation': 'hr.employee'}"
-                               readonly="not is_editable" required="1"/>
+                                   readonly="1" invisible="is_own_expense"
+                                   groups="!hr_expense.group_hr_expense_team_approver,!account.group_account_invoice"/>
                             <label id="lo" for="payment_mode"/>
                             <div id="payment_mode">
                                 <field name="payment_mode" widget="radio" readonly="state != 'draft'"/>
                             </div>
+                            <field name="payment_method_line_id"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   readonly="not is_editable"
+                                   invisible="payment_mode != 'company_account'"
+                                   required="payment_mode == 'company_account'"/>
                         </group>
                         <group>
                             <field name="date" readonly="not is_editable"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
-                            <field name="manager_id" widget="many2one_avatar_user" readonly="state != 'draft'" placeholder="Auto-validation"/>
+                            <field name="manager_id" widget="many2one_avatar_user" readonly="state != 'draft'" placeholder="Auto-validation"
+                                   groups="hr_expense.group_hr_expense_team_approver"/>
+                            <field name="manager_id" widget="many2one_avatar_user" readonly="True" invisible="state == 'draft'"
+                                   groups="!hr_expense.group_hr_expense_team_approver"/>
                             <field name="department_id" invisible="1" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
-                            <field name="vendor_id" readonly="not is_editable"/>
-
-                            <label for="has_existing_bill"/>
-                            <div class="d-flex flex-column flex-lg-row">
-                                <field name="has_existing_bill"
-                                       string="Existing Bill"
-                                       widget="boolean_radio"
-                                       options="{'no_label_element_id': 'direct_expense', 'yes_label_element_id': 'match_bill', 'first_element': false}"
-                                       readonly="not is_editable"
-                                       style="width: 60%"
-                                       groups="account.group_account_invoice"/>
-                                <template id="direct_expense">No (Direct Expense)</template>
-                                <template id="match_bill">Yes (Match to Bill)</template>
-
-                                <field name="existing_bill_id"
-                                       invisible="not has_existing_bill"
-                                       class="justify-content-end"
-                                       style="margin-bottom: calc(0.25rem + var(--fieldWidget-margin-bottom))"
-                                       nolabel="1"
-                                       placeholder="Select Bill..."
-                                       context="{'name_as_amount_total': 1, 'list_view_ref': 'hr_expense.view_move_list_expense'}"
-                                       readonly="not is_editable or state not in ['draft', 'submitted']"
-                                       options="{'no_create': True}"
-                                       groups="account.group_account_invoice"/>
+                            <label for="has_existing_bill" string="Bill"/>
+                            <div class="o_row">
+                                <field name="has_existing_bill" readonly="not is_editable or state not in ['draft', 'submitted']"/>
+                                <span class="text-muted">A bill is sent separately</span>
                             </div>
+                            <field name="vendor_id" readonly="not is_editable" placeholder="Unknown"
+                                   invisible="payment_mode != 'company_account' and not has_existing_bill"/>
 
                             <field name="account_id" options="{'no_create': True}"
                                    domain = "
@@ -350,10 +345,6 @@
                                    groups="account.group_account_invoice"
                                    readonly="not (is_editable or can_edit_account)"
                                    context="{'default_company_id': company_id}"/>
-                            <field name="payment_method_line_id"
-                                   options="{'no_open': True, 'no_create': True}"
-                                   readonly="not is_editable"
-                                   required="payment_mode == 'company_account'"/>
                             <field name="analytic_distribution"
                                 string="Analytic"
                                 widget="analytic_distribution"
@@ -508,19 +499,19 @@
                     <separator />
                     <filter string="Action Required" name="action_required" domain="[('state', 'not in', ['paid', 'refused'])]"/>
                     <separator />
-                    <filter string="Paid by Company" name="by_company" domain="[('payment_mode', '=', 'company_account')]"/>
+                    <filter string="Paid by Company card" name="by_company" domain="[('payment_mode', '=', 'company_account')]"/>
                     <filter string="Paid by Employee" name="by_employee" domain="[('payment_mode', '=', 'own_account')]"/>
                     <separator />
                     <filter string="To Submit" name="draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Waiting Approval" name="submitted" domain="[('state', '=', 'submitted')]"/>
-                    <filter string="To Post" name="approved" domain="[('state', '=', 'approved')]"/>
+                    <filter string="To Post" name="approved" domain="[('state', '=', 'approved'), '|', ('account_move_id', '=', False), ('account_move_id.state', '=', 'draft')]"/>
                     <filter string="Waiting Reimbursement" name="to_pay" domain="[('state', 'in', ('approved', 'posted')), ('payment_mode', '=', 'own_account')]"/>
                     <separator />
                     <filter string="Expense Date" name="date" date="date"/>
                     <separator/>
                     <!-- Invisible filters -->
-                    <filter string="All to Post" name="all_approved" domain="[('state', '=', 'approved')]" invisible="True"/>
-                    <filter string="All to Pay" name="all_to_pay" domain="[('state', '=', 'posted'), ('payment_mode', '=', 'own_account')]" invisible="True"/>
+                    <filter string="All to Post" name="all_approved" domain="[('state', '=', 'approved'), '|', ('account_move_id', '=', False), ('account_move_id.state', '=', 'draft')]" invisible="True"/>
+                    <filter string="All to Pay" name="all_to_pay" domain="[('state', 'in', ('approved', 'posted')), ('account_move_id.state', '=', 'posted'), ('payment_mode', '=', 'own_account')]" invisible="True"/>
                     <filter string="All Paid" name="all_paid" domain="[('state', 'in', ['in_payment', 'paid']), ('payment_mode', '=', 'own_account')]" invisible="True"/>
 
                     <filter invisible="1" string="My Activities" name="filter_activities_my"
@@ -539,7 +530,7 @@
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
                         <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
-                        <filter string="Reimbursement" name="reimbursement" domain="[]" context="{'group_by': 'payment_mode'}"/>
+                        <filter string="Paid by" name="reimbursement" domain="[]" context="{'group_by': 'payment_mode'}"/>
                         <filter string="Expense Date" name="expensesmonth" domain="[]" context="{'group_by': 'date'}"
                                 help="Expense Date"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}"
