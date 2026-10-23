@@ -19,4 +19,14 @@
         <field name='interval_type'>days</field>
         <field name="priority">8</field>
     </record>
+
+    <record id="ir_cron_ir_cache_gc" model="ir.cron">
+        <field name="name">Base: Clean the persistent cache</field>
+        <field name="model_id" ref="base.model_ir_cache"/>
+        <field name="state">code</field>
+        <field name="code">model._gc_cache()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="priority">1</field>
+    </record>
 </odoo>

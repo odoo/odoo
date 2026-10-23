@@ -13,6 +13,7 @@ import hmac as hmac_lib
 import itertools
 import json
 import logging
+import math
 import os
 import re
 import sys
@@ -48,6 +49,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Sequence
     from odoo.api import Environment
     from odoo.addons.base.models.res_lang import LangData
+    import _hashlib
 
 __all__ = [
     'DEFAULT_SERVER_DATETIME_FORMAT',
@@ -1818,6 +1820,44 @@ def hmac(env, scope, message, hash_function=hashlib.sha256, *, secret=None):
         message.encode(),
         hash_function,
     ).hexdigest()
+
+
+def hkdf_expand(
+    digestmod: 'Callable[..., _hashlib.HASH]',
+    pseudorandom_key: bytes,
+    info: bytes,
+    okm_length: int,
+) -> bytes:
+    """
+    Take a strong key and expand it to the desired length. It is
+    possible to supply additional info (e.g. a label) to expand a same
+    input key into multiple ones (one per different info).
+
+    see HKDF in RFC 5869
+
+    :param digestmod: The hash function for the underlying HMAC.
+    :param pseudorandom_key: A strong key, usually coming from
+        :func:`hkdf_extract`.
+    :param info: Additional info that need to be nor random, nor secret
+        nor unique. It can very well be a human readable label. Used to
+        expand a same input key into multiple different ones.
+    :param okm_length: The length (in bytes) of the output key.
+    :return: Another strong key, of ``okm_length`` bytes.
+    """
+    # copyright (c) Julien Castiaux - https://codeberg.org/drlazor8/siotls
+
+    if okm_length == digestmod().digest_size:
+        return hmac_lib.digest(pseudorandom_key, info + b'\x01', digestmod)
+
+    n = math.ceil(okm_length / digestmod().digest_size)
+
+    t = [b'']
+    for i in range(1, n + 1):
+        msg = b''.join((t[i - 1], info, i.to_bytes(1, 'big')))
+        t.append(hmac_lib.digest(pseudorandom_key, msg, digestmod))
+
+    output_keying_material = b''.join(t)[:okm_length]
+    return output_keying_material
 
 
 def hash_sign(env, scope, message_values, expiration=None, expiration_hours=None, *, secret=None):
