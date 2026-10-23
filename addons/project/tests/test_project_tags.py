@@ -16,6 +16,7 @@ class TestProjectTagsSecurity(TestProjectCommon):
     @mute_logger("odoo.models.unlink")
     def setUpClass(cls):
         super().setUpClass()
+        cls.project_goats.allowed_internal_user_ids |= cls.user_projectmanager
         cls.tag_project, cls.tag_admin = cls.env["project.tags"].create(
             [
                 {"name": "project tag", "project_ids": [cls.project_goats.id]},
