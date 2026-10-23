@@ -231,7 +231,8 @@ class PeriodicCollector(Collector):
 
     def stop(self):
         self.active = False
-        self.__thread.join()
+        if self.__thread is not threading.current_thread():
+            self.__thread.join()
         self.profiler.init_thread.profile_hooks.remove(self.progress)
 
     def add(self, entry=None, frame=None):
@@ -551,6 +552,7 @@ class Profiler:
         self.profile_id = None
         self.entry_count_limit = int(self.params.get("entry_count_limit", 0))
         self.time_limit = int(self.params.get("time_limit", 0))
+        self.__done_lock = threading.Lock()
         self.done = False
 
         if db is ...:
@@ -609,9 +611,10 @@ class Profiler:
         self.end()
 
     def end(self):
-        if self.done:
-            return
-        self.done = True
+        with self.__done_lock:
+            if self.done:
+                return
+            self.done = True
         try:
             for collector in self.collectors:
                 collector.stop()
