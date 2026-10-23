@@ -53,6 +53,27 @@ class Component extends owl.Component {
 }
 owl.Component = Component;
 
+owl.config = owl.useConfig;
+owl.plugin = owl.usePlugin;
+owl.props = owl.useProps;
+
+/**
+ * @param {any} component
+ * @returns {"new" | "mounted" | "destroyed"}
+ * @deprecated read the status of the component scope instead: `useScope().status`
+ *  (to compare with `STATUS` from "@odoo/owl")
+ */
+owl.status = function status(component) {
+    switch (component.__owl__.status) {
+        case owl.STATUS.NEW:
+            return "new";
+        case owl.STATUS.MOUNTED:
+            return "mounted";
+        case owl.STATUS.DESTROYED:
+            return "destroyed";
+    }
+}
+
 /**
  * @param {() => void} cb
  */
