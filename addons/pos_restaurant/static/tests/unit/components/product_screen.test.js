@@ -12,6 +12,7 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 import { patch } from "@web/core/utils/patch";
 import * as PosUiUtils from "@point_of_sale/../tests/unit/ui_utils";
 import * as ResUiUtils from "@pos_restaurant/../tests/unit/ui_utils";
+import { fireCourse } from "@pos_restaurant/../tests/unit/data/pos_course.data";
 const Utils = { ...PosUiUtils, ...ResUiUtils };
 
 definePosModels();
@@ -284,4 +285,30 @@ test("lines of a deleted course stay visible", async () => {
     expect(order.courses).toHaveLength(1);
     expect(order.lines).toHaveLength(2);
     expect(".orderline:contains('TEST 2')").toHaveCount(1);
+});
+
+test("Course timer: displays and updates durations only for fired courses", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const course1 = store.addCourse();
+    const course2 = store.addCourse();
+    const course3 = store.addCourse();
+
+    fireCourse(course1, { minutesAgo: 45 });
+    fireCourse(course2, { minutesAgo: 15 });
+
+    await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+    await waitFor(".order-course-name");
+
+    const getDurations = () =>
+        [...document.querySelectorAll(".order-course-name span.fw-bolder.ms-auto")].map((el) =>
+            el.textContent.trim()
+        );
+
+    expect(getDurations()).toEqual(["30'", "15'"]);
+
+    await advanceTime(60_000);
+    expect(getDurations()).toEqual(["30'", "16'"]);
+
+    expect(course3.fired_date).toBe(undefined);
 });
