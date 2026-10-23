@@ -130,6 +130,8 @@ class AccountMove(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if self.env.context.get('skip_purchase_tracking'):
+            return super().create(vals_list)
         # OVERRIDE
         moves = super(AccountMove, self).create(vals_list)
         for move in moves:
@@ -144,6 +146,8 @@ class AccountMove(models.Model):
         return moves
 
     def write(self, vals):
+        if self.env.context.get('skip_purchase_tracking'):
+            return super().write(vals)
         # OVERRIDE
         old_purchases = [move.mapped('line_ids.purchase_line_id.order_id') for move in self]
         res = super(AccountMove, self).write(vals)
