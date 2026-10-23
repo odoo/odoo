@@ -223,7 +223,35 @@ patch(ControlButtons.prototype, {
                         }
                     }
 
-                    order.active_rewards.push({ reward_id: reward.id, reward_product_id });
+                    const product =
+                        reward_product_id ||
+                        reward.reward_product_id ||
+                        reward.reward_product_ids[0];
+                    let attribute_value_ids = [];
+                    let attribute_custom_values = [];
+                    if (
+                        reward.reward_type == "product" &&
+                        product.product_tmpl_id.isConfigurable()
+                    ) {
+                        const attributeValues = await this.pos.openConfigurator(
+                            product.product_tmpl_id,
+                            {
+                                presetVariant: product,
+                            }
+                        );
+                        if (!attributeValues) {
+                            return;
+                        }
+                        attribute_value_ids = attributeValues.attribute_value_ids;
+                        attribute_custom_values = attributeValues.attribute_custom_values;
+                    }
+
+                    order.active_rewards.push({
+                        reward_id: reward.id,
+                        reward_product_id,
+                        attribute_value_ids,
+                        attribute_custom_values,
+                    });
                     order.recomputeRewards();
                     if (order._selectRewardLine(reward)) {
                         this.numberBuffer.reset();
