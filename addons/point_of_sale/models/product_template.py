@@ -102,9 +102,9 @@ class ProductTemplate(models.Model):
         product_tmpls = self._load_product_with_domain(domain, load_archived, offset, limit)
 
         # product.combo and product.combo.item loading
-        for product_tmpl in product_tmpls:
-            if product_tmpl.type == 'combo':
-                product_tmpls += product_tmpl.combo_ids.combo_item_ids.product_id.product_tmpl_id
+        combo_tmpls = product_tmpls.filtered(lambda p: p.type == 'combo')
+        combo_item_tmpl_ids = combo_tmpls.combo_ids.combo_item_ids.product_id.sudo().product_tmpl_id.ids
+        product_tmpls += self.with_context(active_test=False).search([('id', 'in', combo_item_tmpl_ids)])
 
         combo_domain = Domain('id', 'in', product_tmpls.combo_ids.ids)
         combo_records = self.env['product.combo'].search(combo_domain)
@@ -200,7 +200,8 @@ class ProductTemplate(models.Model):
             products = self._load_product_with_domain(domain)
 
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
-        products += product_combo.combo_ids.combo_item_ids.product_id.product_tmpl_id
+        combo_item_tmpl_ids = product_combo.combo_ids.combo_item_ids.product_id.sudo().product_tmpl_id.ids
+        products += self.with_context(active_test=False).search([('id', 'in', combo_item_tmpl_ids)])
 
         special_products = config._get_special_products().filtered(
                     lambda product: not product.sudo().company_id
