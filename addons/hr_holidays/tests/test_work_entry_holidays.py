@@ -328,6 +328,41 @@ class TestWorkEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         leave_work_entry_vals = self.richard_emp.version_id.generate_work_entries(start.date(), end.date())
         self.assertFalse(leave_work_entry_vals[:1][0].get('leave_ids'))
 
+    def test_change_type_of_validated_leave(self):
+        """ Changing the type of a validated time off updates its resource leave. """
+        start = datetime(2019, 10, 10, 6, 0)
+        end = datetime(2019, 10, 10, 18, 0)
+        sick_type = self.env['hr.work.entry.type'].create({
+            'name': 'Sick Time Off',
+            'code': 'SICKTEST100',
+            'count_as': 'absence',
+            'requires_allocation': False,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        leave = self.env['hr.leave'].create({
+            'name': 'Sick',
+            'employee_id': self.richard_emp.id,
+            'work_entry_type_id': sick_type.id,
+            'request_date_from': start,
+            'request_date_to': end,
+        })
+        self.assertEqual(leave.state, 'validate')
+        resource_leave = self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave.id)])
+        self.assertEqual(resource_leave.count_as, 'absence')
+
+        # e.g. hr_payroll replacing the generic types by the country specific ones
+        leave_skip_state_check = leave.with_context(leave_skip_state_check=True)
+        leave_skip_state_check.work_entry_type_id = self.work_entry_type_remote
+        leave_skip_state_check.flush_recordset()
+        resource_leave = self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave.id)])
+        self.assertEqual(resource_leave.work_entry_type_id, self.work_entry_type_remote)
+        self.assertEqual(resource_leave.count_as, 'working_time')
+        leave_work_entry_vals = self.richard_emp.version_id.generate_work_entries(start.date(), end.date())
+        remote_vals = [vals for vals in leave_work_entry_vals if vals['work_entry_type_id'] == self.work_entry_type_remote]
+        self.assertTrue(remote_vals)
+        self.assertTrue(all(vals.get('leave_ids') == leave for vals in remote_vals))
+
     def test_work_entry_generation_company_time_off(self):
         existing_leaves = self.env['hr.leave'].search([])
         existing_leaves.action_refuse()
