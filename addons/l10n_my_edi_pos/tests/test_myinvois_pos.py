@@ -1292,7 +1292,7 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
 
     @contextmanager
     def with_pos_session(self):
-        session = self.open_new_session(0.0)
+        session = self.open_new_session(0.0, config=self.config)
         yield session
         cash_pm = self.config._get_cash_payment_method()
         session.close_session_from_ui({

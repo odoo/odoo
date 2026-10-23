@@ -23,8 +23,6 @@ from odoo.addons.point_of_sale.tests.common import (
 # TODO-PARP: Remove
 from unittest import skip
 
-from odoo.addons.point_of_sale.tests.common import TestTaxCommonPOS
-
 class TestPointOfSaleHttpCommon(TestPoSCommon, PosHttpCommon):
     """HTTP compatibility base retaining the legacy POS setup and order helpers."""
 
