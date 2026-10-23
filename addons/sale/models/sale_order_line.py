@@ -778,6 +778,21 @@ class SaleOrderLine(models.Model):
                         qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
             line.qty_invoiced = qty_invoiced
 
+    def _get_undeliverable_qty(self):
+        """ Return the ordered quantity of a line invoiced on delivered quantities that will never
+        be delivered, hence never invoiced: the quantity that was delivered and invoiced, then
+        taken back (delivered quantity lowered) and refunded.
+        """
+        self.ensure_one()
+        if self.product_id.invoice_policy != 'delivery':
+            return 0.0
+        qty_refunded = sum(
+            invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, self.product_uom)
+            for invoice_line in self.invoice_lines
+            if invoice_line.move_id.move_type == 'out_refund' and invoice_line.move_id.state == 'posted'
+        )
+        return max(min(qty_refunded, self.product_uom_qty - max(self.qty_delivered, self.qty_invoiced)), 0.0)
+
     def _get_invoice_lines(self):
         self.ensure_one()
         if self._context.get('accrual_entry_date'):
