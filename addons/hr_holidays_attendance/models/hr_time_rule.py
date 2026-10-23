@@ -12,7 +12,12 @@ class HrTimeRule(models.Model):
 
         Deficits that would overdraw the allocation are dropped first
         (``_filter_deficit_exceeding_allocation``): they create neither output nor deduction.
+
+        :return: the result of the base method, see ``hr.time.rule._apply_output``
+        :rtype: tuple
         """
         deficit = self._filter_deficit_exceeding_allocation(deficit)
-        _new_records, _all_source_ids, excess_alloc, deficit_alloc = super()._apply_attendance_output(excess, deficit, active_iv=active_iv)
+        result = super()._apply_attendance_output(excess, deficit, active_iv=active_iv)
+        _new_records, _all_source_ids, excess_alloc, deficit_alloc = result
         self._apply_allocation_credits(excess_alloc, deficit_alloc)
+        return result
