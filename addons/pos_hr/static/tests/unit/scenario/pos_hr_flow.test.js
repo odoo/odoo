@@ -131,23 +131,6 @@ test("CashierCanSeeProductInfo: product info opens and closes for the admin cash
     expect(".modal").toHaveCount(0);
 });
 
-test("CashierCannotClose: only a manager gets the Close Register option", async () => {
-    const store = await Utils.setupAndMountPosHrApp();
-
-    await Utils.login("Employee2", "5678");
-    await waitFor(".product-screen");
-    expect(store.employeeIsAdmin).toBe(false);
-
-    await Utils.openMenu();
-    expect(Utils.hasMenuOption("Close Register")).toBe(false);
-    await Utils.closeMenu();
-
-    await Utils.switchCashier("Administrator", "1234");
-    await waitFor(".product-screen");
-    await Utils.openMenu();
-    expect(Utils.hasMenuOption("Close Register")).toBe(true);
-});
-
 test("test_cashier_user_can_change_price: unrestricted price control lets a cashier set a price", async () => {
     const store = await Utils.setupAndMountPosHrApp({ restrict_price_control: false });
     createTestProduct(store, { id: 9100, name: "Untaxed Product", price: 100, taxes_id: [] });

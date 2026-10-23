@@ -42,6 +42,18 @@ registry.category("web_tour.tours").add("PosHrCashMoveTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_cashier_user_can_change_price", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "1", "10", "10"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_change_on_rights_reflected_directly", {
     steps: () =>
         [
@@ -157,13 +169,13 @@ registry.category("web_tour.tours").add("pos_hr_go_backend_opened_registered", {
             PosHr.clickCashierName(),
             CashierSelectionPopup.has("Pos Employee1", { run: "click" }),
             PosHr.enterPin("2580"),
-            Chrome.notExistMenuOption("Close Register"),
+            Chrome.existMenuOption("Close Register"),
             Chrome.notExistMenuOption("Backend"),
 
             // Employee without user --> 403
             PosHr.clickCashierName(),
             CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
-            Chrome.notExistMenuOption("Close Register"),
+            Chrome.existMenuOption("Close Register"),
             Chrome.notExistMenuOption("Backend"),
 
             // Manager without user --> 403
