@@ -188,9 +188,7 @@ export class NavBar extends Component {
         const initialAppId = firstInitialAppSectionExtra && firstInitialAppSectionExtra.appID;
 
         // Restore (needed to get offset widths)
-        const sections = [
-            ...sectionsMenu.querySelectorAll(":scope > *:not(.o_menu_sections_more)"),
-        ];
+        const sections = this._getMenuSections();
         for (const section of sections) {
             section.classList.remove("d-none");
         }
@@ -251,6 +249,10 @@ export class NavBar extends Component {
         if (menu) {
             this.menuService.selectMenu(menu);
         }
+    }
+
+    _getMenuSections() {
+        return [...this.appSubMenus().querySelectorAll(":scope > *:not(.o_menu_sections_more)")];
     }
 
     getMenuItemHref(payload) {
