@@ -653,13 +653,14 @@ class ResourceCalendar(models.Model):
         :param resource: a ``resource.resource`` record, or ``None`` / empty for the
             calendar-level result
         :param tz: unused, kept for compatibility
+        :return: ``Intervals`` in UTC, empty for a flexible resource without leave
         """
         if resource is None:
             resource = self.env['resource.resource']
         resources_per_tz = resource._get_resources_per_tz()
         return self._unavailable_intervals_batch(
             start_dt, end_dt, resources_per_tz=resources_per_tz, domain=domain,
-        )[resource.id]
+        ).get(resource.id, Intervals())
 
     def _unavailable_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None):
         """ Return the periods during which resources do not work: the complement of
@@ -667,8 +668,8 @@ class ResourceCalendar(models.Model):
         Gantt views to grey out unavailable time).
 
         For a flexible resource (according to its own calendar), only its leaves are
-        unavailable; they are returned as a plain list of ``(start, stop)`` UTC tuples, and
-        the resource has no key at all when it has no leave.
+        unavailable, and the resource has no key at all when it has no leave (callers treat
+        that absence as "no unavailability").
 
         :param datetime start_dt: timezone-aware start of the period
         :param datetime end_dt: timezone-aware end of the period
@@ -686,12 +687,17 @@ class ResourceCalendar(models.Model):
             for _, resources in resources_per_tz.items():
                 all_resources |= set(resources)
         resources_work_intervals = self._work_intervals_batch(start_dt, end_dt, resources_per_tz, domain)
+        leaves = None
         result = {}
         for resource in all_resources:
             if resource and resource._is_flexible():
-                leaves = self._leave_intervals_batch(start_dt, end_dt, resources_per_tz, domain)
-                if res_leaves := leaves.get(resource.id, []):
-                    result[resource.id] = [(i[0].astimezone(UTC), i[1].astimezone(UTC)) for i in res_leaves]
+                if leaves is None:
+                    leaves = self._leave_intervals_batch(start_dt, end_dt, resources_per_tz, domain)
+                if res_leaves := leaves[resource.id]:
+                    result[resource.id] = Intervals([
+                        (start.astimezone(UTC), stop.astimezone(UTC), meta)
+                        for start, stop, meta in res_leaves
+                    ])
                 continue
             work_intervals = resources_work_intervals[resource.id]
             utc_work_intervals = []
@@ -754,7 +760,7 @@ class ResourceCalendar(models.Model):
                 day_days[day] = 0.5 if hours <= reference_hours * 3 / 4 else 1
 
         return {
-            # Round the number of days to the closest 16th of a day.
+            # Round the number of days to the closest thousandth of a day.
             'days': float_round(sum(day_days[day] for day in day_days), precision_rounding=0.001),
             'hours': sum(day_hours.values()),
         }
