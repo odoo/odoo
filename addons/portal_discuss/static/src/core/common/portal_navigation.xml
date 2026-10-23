@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-inherit="mail.MessagingMenu-navigation" t-inherit-mode="extension">
+    <xpath expr="//nav" position="attributes">
+        <attribute name="t-if">this.visibleTabs.length or this.store.portalDiscussNavigationUrl</attribute>
+    </xpath>
+    <xpath expr="//nav/button[1]" position="before">
+        <div
+            t-if="this.store.portalDiscussNavigationUrl and !this.store.rtc?.channel"
+            class="d-flex flex-column align-items-center flex-shrink-0"
+        >
+            <a
+                class="btn btn-primary rounded-3 d-flex align-items-center justify-content-center
+                       flex-shrink-0 p-2"
+                t-att-href="this.store.portalDiscussNavigationUrl"
+                t-att-aria-label="this.store.portalDiscussHasOrigin ? 'Back to Portal' : 'Portal Home'"
+                t-att-title="this.store.portalDiscussHasOrigin ? 'Back to Portal' : 'Portal Home'"
+            >
+                <i
+                    class="oi oi-fw fs-5"
+                    t-att-data-icon="this.store.portalDiscussHasOrigin ? 'arrow_back' : 'home'"
+                />
+            </a>
+            <hr class="w-100 my-2 border-top opacity-50"/>
+        </div>
+    </xpath>
+</t>
+
+</templates>
