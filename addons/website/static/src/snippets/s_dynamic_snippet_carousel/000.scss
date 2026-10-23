@@ -56,14 +56,14 @@
 
     // Rounded arrows (default selected)
     .o_carousel_arrow {
-        border-radius: $border-radius-pill;
-        background-color: $carousel-dark-indicator-active-bg;
-        color: $carousel-control-color;
+        border-radius: var(--border-radius-pill);
+        background-color: var(--o-bs-carousel-dark-indicator-active-bg);
+        color: var(--o-bs-carousel-control-color);
     }
 
     &.o_light_arrows, &.o_default_arrows {
         .o_carousel_arrow {
-            filter: $carousel-dark-control-icon-filter;
+            filter: var(--o-bs-carousel-dark-control-icon-filter);
         }
     }
 
@@ -78,7 +78,7 @@
     }
 
     &.o_boxed_arrows .o_carousel_arrow {
-        border-radius: $border-radius;
+        border-radius: var(--o-bs-border-radius);
     }
 
     &.o_hidden_arrows .o_carousel_arrow {

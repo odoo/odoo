@@ -1,7 +1,7 @@
 .s_avatars {
     --avatars-size: 3rem;
-    gap: map-get($spacers, 1) map-get($spacers, 3);
-    margin: $grid-gutter-width/2 0;
+    gap: var(--o-bs-spacer-1) var(--o-bs-spacer-3);
+    margin: calc(var(--o-bs-grid-gutter-width) / 2) 0;
 
     .s_avatars_avatar {
         width: var(--avatars-size) !important;

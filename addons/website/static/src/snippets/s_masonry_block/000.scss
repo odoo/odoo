@@ -4,8 +4,8 @@
     }
 
     .row > div {
-        padding-bottom: $grid-gutter-width/2;
-        padding-top: $grid-gutter-width/2;
+        padding-bottom: calc(var(--o-bs-grid-gutter-width) / 2);
+        padding-top: calc(var(--o-bs-grid-gutter-width) / 2);
         justify-content: center;
         flex-flow: column wrap;
     }
@@ -40,8 +40,8 @@
 
     &.s_ratio_2_1 {
         .row > div {
-            padding-top: $grid-gutter-width;
-            padding-bottom: $grid-gutter-width;
+            padding-top: var(--o-bs-grid-gutter-width);
+            padding-bottom: var(--o-bs-grid-gutter-width);
         }
     }
 }

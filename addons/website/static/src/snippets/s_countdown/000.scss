@@ -10,7 +10,7 @@
     }
 
     .o_colored_item {
-        border: $border-width solid $border-color;
+        border: var(--o-bs-border-width) solid var(--o-border-color);
     }
 
     // Defines color classes based on $theme-colors
@@ -114,7 +114,7 @@
                 position: absolute;
                 inset: 50% 0 auto;
                 display: block;
-                border-bottom: $border-width solid $border-color;
+                border-bottom: var(--o-bs-border-width) solid var(--o-border-color);
                 content: '';
                 z-index: 1;
             }

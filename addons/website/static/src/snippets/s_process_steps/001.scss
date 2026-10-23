@@ -1,18 +1,18 @@
 .s_process_steps[data-vcss='001']  {
-    $process-step-icon-size: 5rem;
+    --process-step-icon-size: 5rem;
 
     .s_process_step {
         position: relative;
 
         .s_process_step_icon {
             position: relative;
-            margin: $grid-gutter-width 0;
+            margin: var(--o-bs-grid-gutter-width) 0;
 
             .oi, img {
                 display: block;
-                height: $process-step-icon-size;
-                width: $process-step-icon-size;
-                line-height: $process-step-icon-size;
+                height: var(--process-step-icon-size);
+                width: var(--process-step-icon-size);
+                line-height: var(--process-step-icon-size);
 
                 // Note that we use contain and not cover. For "full images"
                 // (like a photo which is a rectangle with colors on the edges),
@@ -25,21 +25,21 @@
         }
 
         .s_process_step_content {
-            padding: 0 $grid-gutter-width/2;
+            padding: 0 calc(var(--o-bs-grid-gutter-width) / 2);
             text-align: center;
         }
 
         .s_process_step_connector {
             position: absolute;
             z-index: 1;
-            height: $process-step-icon-size;
-            width: calc(100% - #{$process-step-icon-size});
-            left: calc(50% + #{$process-step-icon-size / 2});
-            margin: $grid-gutter-width 0;
+            height: var(--process-step-icon-size);
+            width: calc(100% - var(--process-step-icon-size));
+            left: calc(50% + (var(--process-step-icon-size) / 2));
+            margin: var(--o-bs-grid-gutter-width) 0;
             pointer-events: none;
 
             path {
-                stroke: $border-color;
+                stroke: var(--o-border-color);
                 stroke-width: 2;
                 fill: transparent;
             }
@@ -51,7 +51,7 @@
     }
 
     .s_process_steps_arrow_head path {
-        fill: map-get($grays, '600');
+        fill: var(--gray-600);
         stroke: transparent;
     }
 

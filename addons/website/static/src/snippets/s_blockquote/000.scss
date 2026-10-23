@@ -21,13 +21,13 @@
         }
         .s_blockquote_content {
             overflow: hidden;
-            padding: $spacer * 1.5;
+            padding: calc(var(--o-bs-spacer) * 1.5);
             .blockquote-footer {
                 &::before {
                     content: '';
                 }
                 .s_blockquote_avatar {
-                    max-height: $spacer * 2.5;
+                    max-height: calc(var(--o-bs-spacer) * 2.5);
                 }
             }
         }
@@ -39,22 +39,22 @@
             position: relative;
             z-index: 1;
             float: none;
-            margin-bottom: -$spacer * 1.5;
+            margin-bottom: calc(var(--o-bs-spacer) * -1 * 1.5);
         }
         p:last-of-type {
-            margin-bottom: $spacer * .5;
+            margin-bottom: calc(var(--o-bs-spacer) * .5);
         }
         .s_blockquote_content, .s_blockquote_filter { // s_blockquote_filter is there for compatibility
-            padding: $spacer * 3 $spacer * 2 $spacer * 2;
+            padding: calc(var(--o-bs-spacer) * 3) calc(var(--o-bs-spacer) * 2) calc(var(--o-bs-spacer) * 2);
         }
         // Compatibility
         .s_blockquote_filter {
-            margin: $spacer * -3 $spacer * -2 $spacer * -2;
+            margin: calc(var(--o-bs-spacer) * -3) calc(var(--o-bs-spacer) * -2) calc(var(--o-bs-spacer) * -2);
         }
         .quote_char {
-            margin: $spacer * 2 0 $spacer 0;
+            margin: calc(var(--o-bs-spacer) * 2) 0 var(--o-bs-spacer) 0;
             & ~ .blockquote-footer {
-                padding-bottom: $spacer * 2;
+                padding-bottom: calc(var(--o-bs-spacer) * 2);
             }
         }
     }
@@ -63,7 +63,7 @@
         border-left: 5px solid;
         border-color: o-color('secondary');
         .s_blockquote_content {
-            padding: $spacer;
+            padding: var(--o-bs-spacer);
             @include border-end-radius($border-radius);
             p:last-of-type {
                 margin-bottom: 0;

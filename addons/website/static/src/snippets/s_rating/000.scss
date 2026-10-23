@@ -38,7 +38,7 @@
                 @include transition($progress-bar-transition);
                 @include gradient-striped();
                 background-size: $progress-height $progress-height;
-                background-color: map-get($theme-colors, 'primary');
+                background-color: var(--primary);
                 animation: progress-bar-stripes $progress-bar-animation-timing;
             }
         }

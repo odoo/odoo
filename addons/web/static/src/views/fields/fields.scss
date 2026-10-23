@@ -39,8 +39,8 @@
 }
 
 .o_field_invalid {
-    @include print-variable(o-input-border-color, map-get($theme-colors, 'danger'));
-    @include print-variable(o-caret-color, map-get($theme-colors, 'danger'));
+    @include print-variable(o-input-border-color, $danger);
+    @include print-variable(o-caret-color, $danger);
 }
 
 /* ------------------------------------------------------------------------------ */
@@ -48,8 +48,8 @@
 /* ------------------------------------------------------------------------------ */
 
 .o_input {
-    border: $input-border-width solid var(--o-input-border-color);
-    border-width: 0 0 $input-border-width 0;
+    border: var(--border-width) solid var(--o-input-border-color);
+    border-width: 0 0 var(--border-width) 0;
     padding: var(--o-input-padding-y) $o-input-padding-x;
     background-color: var(--o-input-background-color, var(--o-bs-input-bg));
 
@@ -100,7 +100,7 @@
 
     &.o_field_border_visible {
         .o_input, textarea, select, [contenteditable] {
-            border-width: $input-border-width !important;
+            border-width: var(--border-width) !important;
             border-color: var(--o-input-border-color) !important;
         }
     }
@@ -121,7 +121,7 @@
             position: absolute;
             top: var(--o-input-padding-y);
             left: auto;
-            bottom: var($input-border-width);
+            bottom: var(var(--border-width));
             right: $o-input-padding-x;
             pointer-events: none;
         }

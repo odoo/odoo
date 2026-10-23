@@ -2,11 +2,11 @@
 .s_features_grid[data-vcss="001"] {
     .s_features_grid_icon {
         &.float-start {
-            margin-inline-end: var(--s_features_grid_icon_margin, #{map-get($spacers, 3)}) !important;
+            margin-inline-end: var(--s_features_grid_icon_margin, var(--o-bs-spacer-3)) !important;
         }
 
         &.float-end {
-            margin-inline-start: var(--s_features_grid_icon_margin, #{map-get($spacers, 3)}) !important;
+            margin-inline-start: var(--s_features_grid_icon_margin, var(--o-bs-spacer-3)) !important;
         }
     }
 }
