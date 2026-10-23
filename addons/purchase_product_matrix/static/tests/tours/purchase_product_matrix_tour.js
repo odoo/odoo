@@ -110,3 +110,17 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 },
 ...stepUtils.saveForm()
 ]});
+
+registry.category("web_tour.tours").add("purchase_matrix_edit_line_description", {
+    steps: () => [
+        {
+            trigger: ".o_field_pol_product_many2one",
+            run: "click",
+        },
+        {
+            trigger: ".o_selected_row [name=product_template_id] textarea",
+            run: "fill , edited",
+        },
+        ...stepUtils.saveForm(),
+    ],
+});
