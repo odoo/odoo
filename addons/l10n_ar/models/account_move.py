@@ -25,7 +25,7 @@ class AccountMove(models.Model):
         ' identify the type of responsibilities that a person or a legal entity could have and that impacts in the'
         ' type of operations and requirements they need.')
 
-    l10n_ar_currency_rate = fields.Float(copy=False, digits=(16, 6), readonly=True, string="Currency Rate")
+    l10n_ar_currency_rate = fields.Float(copy=False, readonly=True, string="Currency Rate")
 
     # Mostly used on reports
     l10n_ar_afip_concept = fields.Selection(
