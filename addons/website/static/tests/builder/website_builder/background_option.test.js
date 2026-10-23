@@ -134,6 +134,35 @@ test("Change the background position and click out of the iframe", async () => {
     expect("button.fa-undo").not.toBeEnabled();
 });
 
+test("Background position overlay toggles when clicking its option", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px"/>`
+    );
+    await openBgPositionOverlay(":iframe section", waitSidebarUpdated);
+
+    const positionButton = contains("button[data-action-id='backgroundPositionOverlay']");
+    const background = queryOne(":iframe section");
+    const initialPosition = background.style.backgroundPosition;
+    const { startDrag, endDrag } = patchDragImage(
+        ".o-overlay-container .o_we_overlay_dragger",
+        { x: 100, y: 100 },
+        { x: 120, y: 120 }
+    );
+    await endDrag(await startDrag());
+    expect(background.style.backgroundPosition).not.toBe(initialPosition);
+
+    await positionButton.click();
+    await animationFrame();
+    expect(".o-overlay-container .o_we_overlay_dragger").toHaveCount(0);
+    expect("button[data-action-id='backgroundPositionOverlay']").not.toHaveClass("active");
+    expect(background.style.backgroundPosition).toBe(initialPosition);
+
+    await positionButton.click();
+    await animationFrame();
+    await waitFor(".o-overlay-container .o_we_overlay_dragger");
+    expect("button[data-action-id='backgroundPositionOverlay']").toHaveClass("active");
+});
+
 test("Background position overlay layout", async () => {
     expect.assertions(18);
 
