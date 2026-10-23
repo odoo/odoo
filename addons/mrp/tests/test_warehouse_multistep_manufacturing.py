@@ -469,7 +469,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         pickings_component = self.env['stock.picking'].search(
             [('product_id', '=', self.wood_product.id)])
         self.assertTrue(pickings_component)
-        self.assertTrue(rr_raw.name in pickings_component.origin)
+        self.assertTrue(rr_raw.display_name in pickings_component.origin)
 
     def test_2_steps_and_additional_moves(self):
         """ Suppose a 2-steps configuration. If a user adds a product to an existing draft MO and then
