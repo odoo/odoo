@@ -15,17 +15,17 @@ from odoo.tools.float_utils import float_round
 
 
 class HrLeaveAllocation(models.Model):
-    """ Allocation Requests Access specifications: similar to leave requests
+    """Allocation of time off: credits an employee with days or hours of a time type.
 
-        Some of the methods of this class are tagged with 'Possibly accrual inconsistent' or 'Accrual inconsistent'.
-        This means:
-        - They mustn't read allocation fields that are not listed in `_get_accrual_to_update_fields`, but should
-          instead use the values of the parameter `allocation_data`
-        - They mustn't write any field of the allocation, but should update the `allocation_data` parameter
+    A regular allocation grants ``number_of_days`` (``number_of_hours`` for types allocated in
+    hours); an accrual allocation (``accrual_plan_id`` set) earns it over time, see
+    :meth:`_update_accrual`.
 
-        Some of these methods have `allocation_data={}`. In the case `allocation_data` is set to `{}`, those
-        methods can directly use/modify any of the allocation field. In this case, those method will be tagged
-        'Possibly accrual inconsistent', and not 'Accrual inconsistent'.
+    Some accrual methods are tagged *Accrual inconsistent*: they must not read the
+    allocation fields loaded by :meth:`_get_accrual_allocation_data` nor write any field, but
+    read and update their ``allocation_data`` dict instead, so that the accrual can be
+    simulated (e.g. a future balance) without writing anything. Methods tagged *Possibly
+    accrual inconsistent* take ``allocation_data={}`` and read the fields when it is empty.
     """
     _name = 'hr.leave.allocation'
     _description = "Time Off Allocation"
@@ -184,7 +184,14 @@ class HrLeaveAllocation(models.Model):
         self.is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
 
     def _get_employee_hours_per_day(self, allocation_data={}):
-        """ Possibly accrual inconsistent (see the comment under the class declaration) """
+        """Return the hours per day of the employee, to convert days into hours.
+
+        Possibly accrual inconsistent. The schedule is the one at the accrual's ``nextcall``
+        (accrual allocations) or at ``date_from``; 24 for fully flexible employees.
+
+        :param dict allocation_data: accrual data, see :meth:`_process_accrual_plans`
+        :rtype: float
+        """
         self.ensure_one()
         date_from = allocation_data.get('nextcall', self.nextcall) or self.date_from \
             if self.accrual_plan_id else self.date_from
@@ -253,9 +260,13 @@ class HrLeaveAllocation(models.Model):
         self._set_leaves_from_consumption_data(employee_days_per_allocation)
 
     def _set_leaves_from_consumption_data(self, employee_days_per_allocation):
-        """Assign max_leaves/leaves_taken/virtual_remaining_leaves from an already-fetched
-        _get_consumed_leaves() result, so extensions can reuse the same fetch (see
-        l10n_be_hr_payroll)."""
+        """Set ``max_leaves``, ``leaves_taken`` and ``virtual_remaining_leaves``.
+
+        Lets extensions reuse an already fetched result (e.g. ``l10n_be_hr_payroll``).
+
+        :param dict employee_days_per_allocation: first element of the result of
+            :meth:`~odoo.addons.hr_holidays.models.hr_employee.HrEmployee._get_consumed_leaves`
+        """
         for allocation in self:
             origin = allocation._origin
             virtual_leave = employee_days_per_allocation[origin.employee_id][origin.work_entry_type_id][origin]
@@ -351,6 +362,11 @@ class HrLeaveAllocation(models.Model):
 
     @api.constrains('number_of_days', 'work_entry_type_id', 'employee_id')
     def _check_negative_allocation(self):
+        """Allow negative allocations only for types allowing a negative balance, within their cap.
+
+        The negative allocations of the employee and type overlapping the validity period may
+        not exceed ``max_allowed_negative`` in total.
+        """
         for allocation in self.filtered(lambda allocation: allocation.number_of_days < 0):
             if not allocation.work_entry_type_id.allows_negative:
                 raise ValidationError(self.env._("Negative allocations are not allowed for this time type."))
@@ -384,6 +400,13 @@ class HrLeaveAllocation(models.Model):
                 ))
 
     def _get_request_unit(self):
+        """Return the unit the allocation is computed in (``type_request_unit``).
+
+        The ``added_value_type`` of the accrual plan, else the ``unit_of_measure`` of the type.
+
+        :return: ``'day'`` or ``'hour'``
+        :rtype: str
+        """
         self.ensure_one()
         if self.accrual_plan_id:
             return self.accrual_plan_id.sudo().added_value_type
@@ -400,7 +423,12 @@ class HrLeaveAllocation(models.Model):
             allocation.hide_accrual_plan_id = allocation.work_entry_type_id and not self.env['hr.leave.accrual.plan'].sudo().search_count([('work_entry_type_id', '=', allocation.work_entry_type_id.id)])
 
     def _get_next_carryover_date(self, date_from, date_from_included=True):
-        """ Returns the next carry-over date, `date_from` included or not """
+        """Return the next carry-over date of the accrual plan from ``date_from``.
+
+        :param datetime.date date_from: reference date
+        :param bool date_from_included: return ``date_from`` if it is a carry-over date
+        :rtype: datetime.date
+        """
         self.ensure_one()
         carryover_time = self.accrual_plan_id.carryover_date
         accrual_plan = self.accrual_plan_id
@@ -420,17 +448,40 @@ class HrLeaveAllocation(models.Model):
         return carryover_date
 
     def _convert_to_type_request_unit(self, duration, duration_unit, allocation_data={}):
-        """ Possibly accrual inconsistent (see the comment under the class declaration) """
+        """Convert a duration into the allocation's unit (``type_request_unit``).
+
+        Possibly accrual inconsistent, see :meth:`_convert_duration`.
+
+        :param float duration: duration to convert
+        :param str duration_unit: ``'day'``, ``'half_day'`` or ``'hour'``
+        :rtype: float
+        """
         self.ensure_one()
         return self._convert_duration(duration, duration_unit, self.type_request_unit, allocation_data)
 
     def _convert_from_type_request_unit(self, duration, duration_unit, allocation_data={}):
-        """ Possibly accrual inconsistent (see the comment under the class declaration) """
+        """Convert a duration expressed in the allocation's unit into ``duration_unit``.
+
+        Possibly accrual inconsistent, see :meth:`_convert_duration`.
+
+        :param float duration: duration in ``type_request_unit``
+        :param str duration_unit: ``'day'``, ``'half_day'`` or ``'hour'``
+        :rtype: float
+        """
         self.ensure_one()
         return self._convert_duration(duration, self.type_request_unit, duration_unit, allocation_data)
 
     def _convert_duration(self, duration, src_unit, dst_unit, allocation_data={}):
-        """ Possibly accrual inconsistent (see the comment under the class declaration) """
+        """Convert a duration between days and hours with the employee's hours per day.
+
+        Possibly accrual inconsistent, see :meth:`_get_employee_hours_per_day`.
+
+        :param float duration: duration to convert
+        :param str src_unit: ``'day'``, ``'half_day'`` or ``'hour'``
+        :param str dst_unit: ``'day'``, ``'half_day'`` or ``'hour'``
+        :param dict allocation_data: accrual data, see :meth:`_process_accrual_plans`
+        :rtype: float
+        """
         self.ensure_one()
         assert all(unit in ('hour', 'half_day', 'day') for unit in (src_unit, dst_unit))
         if dst_unit == 'hour' and src_unit in ('day', 'half_day'):
@@ -441,7 +492,20 @@ class HrLeaveAllocation(models.Model):
         return duration
 
     def _add_days_to_allocation(self, allocation_data, current_level, period_start, period_end, start_date, end_date):
-        """ Accrual inconsistent (see the comment under the class declaration) """
+        """Add the gain of an accrual period to ``allocation_data``.
+
+        Accrual inconsistent. The gain (:meth:`_get_period_added_duration`) is capped by the
+        yearly cap of the level and by its balance cap (``maximum_leave``, on the balance
+        ``allocated_duration - leaves_taken``). Updates ``allocated_duration``,
+        ``yearly_accrued_duration`` and ``last_accrual``.
+
+        :param dict allocation_data: accrual data, see :meth:`_process_accrual_plans`
+        :param current_level: ``hr.leave.accrual.level`` accruing
+        :param datetime.date period_start: start of the full accrual period
+        :param datetime.date period_end: end of the full accrual period
+        :param datetime.date start_date: start of the accrued part of the period
+        :param datetime.date end_date: end of the accrued part of the period
+        """
         self.ensure_one()
         added_duration = self._get_period_added_duration(
             allocation_data, current_level, period_start, start_date, period_end, end_date)
@@ -460,12 +524,15 @@ class HrLeaveAllocation(models.Model):
         allocation_data['last_accrual'] = allocation_data['nextcall']
 
     def _get_current_accrual_plan_levels(self, target_date) -> dict[str, tuple] | None:
-        """ Returns a dict of tuples (lvl, idx) containing the level(s) we are currently in depending on `target_date` parameter.
-            It can return up to 2 entries (when target_date is a level transition), "current_level" and "previous_level" (optional).
-            Return example:  {
-                "previous_level": (lvl3, lvl3_idx),         -> "previous_level" is an optional entry
-                "current_level": (lvl4, lvl4_idx),
-            }
+        """Return the level(s) of the accrual plan in effect on ``target_date``.
+
+        On a level transition, both levels are returned. ``None`` before the first level starts,
+        after ``date_to``, or without levels.
+
+        :param datetime.date target_date: reference date
+        :return: ``{'current_level': (level, index)}``, plus ``'previous_level': (level, index)``
+            on a transition
+        :rtype: dict or None
         """
         self.ensure_one()
         if not self.accrual_plan_id or not self.accrual_plan_id.level_ids or (self.date_to and target_date > self.date_to):
@@ -492,21 +559,25 @@ class HrLeaveAllocation(models.Model):
         return {"current_level": (sorted_levels[current_lvl_idx], current_lvl_idx)}
 
     def _get_current_accrual_plan_level_idx(self, date):
-        """ Returns (current_level, index). If `date` is a levels transition, the returned `current_level` is the
-            one that starts later of the two levels """
+        """Return the level in effect on ``date``; on a transition, the level that starts.
+
+        :return: ``(level, index)``, ``(None, None)`` when no level applies
+        :rtype: tuple
+        """
         self.ensure_one()
         current_levels = self._get_current_accrual_plan_level_idx_for_accrual(date)
         return current_levels['current_level'] if current_levels else (None, None)
 
     def _get_current_accrual_plan_level_idx_for_accrual(self, target_date):
-        """ Unlike `_get_current_accrual_plan_level_idx`, takes the levels transition into account.
-            For example, if `date` is a level transition and `accrued_gain_time` is "end", then we want to
-            get the "previous" plan level as we need to compute `number_of_days`, `expiring_days`, ... depending on the
-            "previous" level policy.
+        """Return the level in effect and the level accruing on ``target_date``.
 
-            Returns a `dict` with the following entries:
-            - "current_level": (current_level, current_level_idx)     -> Current level
-            - "accrual_level": (accrual_level, accrual_level_idx)     -> Current level considering levels transition
+        They differ on a level transition when the plan accrues at the end of the period
+        (``accrued_gain_time = 'end'``): the period that ends is accrued with the policy of the
+        previous level.
+
+        :return: ``{'current_level': (level, index), 'accrual_level': (level, index)}``, or
+            ``None`` when no level applies
+        :rtype: dict or None
         """
         self.ensure_one()
         plan_levels = self._get_current_accrual_plan_levels(target_date)
@@ -517,7 +588,20 @@ class HrLeaveAllocation(models.Model):
         return {'current_level': plan_levels['current_level'], 'accrual_level': accrual_level}
 
     def _get_accrual_plan_level_work_entry_prorata(self, level, start_period, start_date, end_period, end_date):
-        """ Possibly accrual inconsistent (see the comment under the class declaration) """
+        """Return the factor applied to the ``added_value`` of the level for a period.
+
+        Possibly accrual inconsistent. ``1`` unless the plan is based on worked time or the
+        frequency is hourly. For hourly frequencies, the number of hours of the period: worked
+        hours plus absences eligible for accrual (plus the other absences when the plan is not
+        based on worked time). Otherwise the ratio of those hours to all the planned hours.
+
+        :param level: ``hr.leave.accrual.level``
+        :param datetime.date start_period: start of the full period
+        :param datetime.date start_date: start of the accrued part
+        :param datetime.date end_period: end of the full period
+        :param datetime.date end_date: end of the accrued part
+        :rtype: float
+        """
         self.ensure_one()
         if level.frequency not in level._get_hourly_frequencies() and not level.accrual_plan_id.is_based_on_worked_time:
             return 1
@@ -549,7 +633,14 @@ class HrLeaveAllocation(models.Model):
         return worked_hours / (left + period_worked_hours) if (left + period_worked_hours) else 0
 
     def _get_period_added_duration(self, allocation_data, level, period_start, start_date, period_end, end_date):
-        """ Accrual inconsistent (see the comment under the class declaration) """
+        """Return the duration earned over an accrual period, in ``type_request_unit``.
+
+        Accrual inconsistent. ``added_value`` times the prorata of
+        :meth:`_get_accrual_plan_level_work_entry_prorata`; a partial period (e.g. the first one)
+        is prorated on its number of days, unless the plan is based on worked time.
+
+        :rtype: float
+        """
         self.ensure_one()
         work_entry_prorata = self._get_accrual_plan_level_work_entry_prorata(level, period_start, start_date, period_end, end_date)
         added_value = work_entry_prorata * level.added_value
@@ -563,12 +654,27 @@ class HrLeaveAllocation(models.Model):
 
     @api.model
     def _get_days_after_expiration(self, allocation_data):
-        """ Accrual inconsistent (see the comment under the class declaration) """
+        """Return ``allocated_duration`` once the carried over time not taken has expired.
+
+        Accrual inconsistent.
+
+        :param dict allocation_data: accrual data, see :meth:`_process_accrual_plans`
+        :rtype: float
+        """
         expiring_days = allocation_data['previous_carryover_allocated_duration'] - allocation_data['leaves_taken']
         return max(allocation_data['allocated_duration'] - expiring_days, allocation_data['leaves_taken'])
 
     def _process_carryover_date(self, allocation_data, current_level, carryover_date):
-        """ Accrual inconsistent (see the comment under the class declaration) """
+        """Apply the carry-over policy of the level on its carry-over date.
+
+        Accrual inconsistent. Unused time is lost (``action_with_unused_accruals = 'lost'``),
+        kept, or kept up to ``max_carriedover_duration``; with ``accrual_validity``, the time
+        carried over expires after the validity period (``carried_over_days_expiration_date``).
+
+        :param dict allocation_data: accrual data, see :meth:`_process_accrual_plans`
+        :param current_level: ``hr.leave.accrual.level`` in effect
+        :param datetime.date carryover_date: the carry-over date
+        """
         self.ensure_one()
         if current_level.action_with_unused_accruals == 'lost' or not self.accrual_plan_id.can_be_carryover:
             allocation_data['allocated_duration'] = allocation_data['leaves_taken']
@@ -586,9 +692,14 @@ class HrLeaveAllocation(models.Model):
         allocation_data['previous_carryover_allocated_duration'] = allocation_data['allocated_duration']
 
     def _process_accrual_start(self, allocation_data, current_level, next_accrual):
-        """ Add duration to this allocation if `allocation_data['nextcall']` is an accrual date
-            Called only on accrual allocations with `accrued_gain_time=start`
-            Accrual inconsistent (see the comment under the class declaration)
+        """Accrue the period starting on ``allocation_data['nextcall']``, if it is an accrual date.
+
+        Accrual inconsistent. For plans accruing at the start of the period
+        (``accrued_gain_time = 'start'``).
+
+        :param dict allocation_data: accrual data, see :meth:`_process_accrual_plans`
+        :param current_level: ``hr.leave.accrual.level`` accruing
+        :param datetime.date next_accrual: next accrual date
         """
         self.ensure_one()
         period_start = current_level._get_previous_date(allocation_data['nextcall'])
@@ -603,9 +714,15 @@ class HrLeaveAllocation(models.Model):
             self._add_days_to_allocation(allocation_data, current_level, period_start, period_end, accrual_start_date, accrual_end_date)
 
     def _process_accrual_end(self, allocation_data, current_level, current_level_idx, first_level_start_date):
-        """ Add duration to this allocation if `allocation_data['nextcall']` is an accrual date
-            Called only on accrual allocations with `accrued_gain_time=end`
-            Accrual inconsistent (see the comment under the class declaration)
+        """Accrue the period ending on ``allocation_data['nextcall']``, if it is an accrual date.
+
+        Accrual inconsistent. For plans accruing at the end of the period
+        (``accrued_gain_time = 'end'``).
+
+        :param dict allocation_data: accrual data, see :meth:`_process_accrual_plans`
+        :param current_level: ``hr.leave.accrual.level`` accruing
+        :param int current_level_idx: index of the level
+        :param datetime.date first_level_start_date: start of the first level
         """
         self.ensure_one()
         next_date = current_level._get_next_date(allocation_data['lastcall'])
@@ -621,14 +738,24 @@ class HrLeaveAllocation(models.Model):
             self._add_days_to_allocation(allocation_data, current_level, period_start, period_end, accrual_start_date, accrual_end_date)
 
     def _has_expiring_days(self, allocation_data):
-        """ Accrual inconsistent (see the comment under the class declaration) """
+        """Tell whether carried over time is still to expire after ``nextcall``.
+
+        Accrual inconsistent.
+
+        :rtype: bool
+        """
         self.ensure_one()
         expiration_date = allocation_data['carried_over_days_expiration_date']
         return allocation_data['nextcall'] and expiration_date and allocation_data['nextcall'] <= expiration_date
 
     def _init_accrual_calls(self, allocation_data):
-        """ Initialize `last_accrual`, `lastcall` and `nextcall`
-            Accrual inconsistent (see the comment under the class declaration)
+        """Initialize ``last_accrual``, ``lastcall`` and ``nextcall`` for a first accrual run.
+
+        Accrual inconsistent. ``lastcall`` is the start of the first level; ``nextcall`` is the
+        same date when accruing at the start of the period, else the first accrual, carry-over
+        or level transition date.
+
+        :param dict allocation_data: accrual data, updated in place
         """
         self.ensure_one()
         first_level = self.accrual_plan_id.level_ids[0]
@@ -648,11 +775,14 @@ class HrLeaveAllocation(models.Model):
         allocation_data['nextcall'] = nextcall
 
     def _get_lvls_boundaries(self) -> list[date] | None:
-        """ Returns a list containing intervals boundaries of each level.
-            The start of the level x is the end date of the previous level.
+        """Return the start date of each level of the accrual plan for this allocation.
 
-            For instance, if there are 2 levels, this function will return a list of 2 dates:
-            the start of the first level and the start of the second level
+        A level starts ``start_count`` ``start_type`` after ``date_from``; with the transition
+        mode ``'end_of_accrual'``, the levels after the first one start on their first accrual
+        date on or after that date.
+
+        :return: one date per level, in order
+        :rtype: list[datetime.date]
         """
         self.ensure_one()
         if self.accrual_plan_id.transition_mode == 'immediately':
@@ -666,6 +796,10 @@ class HrLeaveAllocation(models.Model):
         return boundaries
 
     def _get_next_lvl_start(self, level_idx):
+        """Return the start date of the level following ``level_idx``, ``None`` for the last one.
+
+        :rtype: datetime.date or None
+        """
         self.ensure_one()
         lvls_boundaries = self._get_lvls_boundaries()
         if level_idx == len(lvls_boundaries) - 1:
@@ -673,8 +807,22 @@ class HrLeaveAllocation(models.Model):
         return lvls_boundaries[level_idx + 1]
 
     def _process_accrual_plans(self, date_to=None, precomputed_allocations={}):
-        """ This method is part of the cron's process.
-            The goal of this method is to retroactively apply accrual plan levels and progress from nextcall to `date_to` or `today`.
+        """Compute the accrual of the allocations up to ``date_to``, without writing.
+
+        Runs every accrual event (accrual dates, level transitions, carry-over dates, expiration
+        of the carried over time) from ``nextcall`` up to ``date_to`` (today by default), from
+        the values stored on the allocation or from ``precomputed_allocations``. Allocations
+        without accrual plan are left out.
+
+        :param datetime.date date_to: last day to process
+        :param dict precomputed_allocations: ``{allocation: allocation_data}`` to start from,
+            instead of the stored values
+        :return: ``{allocation: allocation_data}`` where ``allocation_data`` holds
+            ``last_accrual``, ``lastcall``, ``nextcall``, ``carried_over_days_expiration_date``
+            (dates), ``allocated_duration``, ``yearly_accrued_duration``,
+            ``previous_carryover_allocated_duration`` and ``leaves_taken`` (floats in
+            ``type_request_unit``)
+        :rtype: dict
         """
         def _get_leaves_taken(allocation, allocation_data):
             if len(precomputed_allocations):
@@ -762,6 +910,12 @@ class HrLeaveAllocation(models.Model):
         return allocations_data
 
     def _get_accrual_allocation_data(self):
+        """Return the accrual data of the allocations, read from their fields.
+
+        :return: ``{allocation: allocation_data}``, see :meth:`_process_accrual_plans`;
+            ``leaves_taken`` is ``None``
+        :rtype: dict
+        """
         allocation_data = {}
         for allocation in self:
             allocation_data[allocation] = {
@@ -779,9 +933,15 @@ class HrLeaveAllocation(models.Model):
         return allocation_data
 
     def _update_accrual(self, date_to=None):
-        """ Run by a cron in order to update the `number_of_days` (which represents the "credit" this allocation is granting)
-            depending on the linked accrual plan configuration
-            Update the accrual allocations until `date_to`
+        """Run the accrual plans of the allocations up to ``date_to`` and write the result.
+
+        Writes ``number_of_days`` (the credit of the allocation) and the accrual fields
+        (``last_accrual``, ``lastcall``, ``nextcall``, ``yearly_accrued_days``,
+        ``previous_carryover_number_of_days``, ``carried_over_days_expiration_date``) computed
+        by :meth:`_process_accrual_plans`. Called daily by the cron on
+        :meth:`_get_to_update_accrual_allocations`.
+
+        :param datetime.date date_to: last day to process, today by default
         """
         allocations_data = self._process_accrual_plans(date_to)
         to_update_fields = ('last_accrual', 'lastcall', 'nextcall', 'carried_over_days_expiration_date')
@@ -799,6 +959,12 @@ class HrLeaveAllocation(models.Model):
 
     @api.model
     def _get_to_update_accrual_allocations(self):
+        """Return the allocations the accrual cron must update.
+
+        Validated accrual allocations valid today, whose ``nextcall`` is not set or is due.
+
+        :rtype: hr.leave.allocation
+        """
         today = fields.Date.context_today(self)
         return self.search([
             ('state', '=', 'validate'),
@@ -809,11 +975,16 @@ class HrLeaveAllocation(models.Model):
         ])
 
     def _get_additionnal_future_leaves_on(self, accrual_date, allocations_data={}):
-        """ Possibly accrual inconsistent (see the comment under the class declaration)
-            :param allocations_data: dict containing the allocation mapped to their data. If `allocations_data` is a dict,
-            then this function will return the additionnal leaves compared to the leaves in the `allocations_data` (instead of
-            comparing it to `self.number_of_days` or `self.number_of_hours`)
-            :returns: added allocated duration expressed in the unit of the work entry type `unit_of_measure` of the allocation
+        """Return the time the accrual will add between now and ``accrual_date``.
+
+        Possibly accrual inconsistent. ``0`` for past dates, non accrual or non validated
+        allocations, and allocations expired on ``accrual_date``.
+
+        :param datetime.date accrual_date: future date
+        :param dict allocations_data: ``{allocation: allocation_data}``; when the allocation is
+            in it, the gain is computed from these data instead of the stored values
+        :return: added duration, in the ``unit_of_measure`` of the type
+        :rtype: float
         """
         self.ensure_one()
         if not accrual_date or accrual_date <= date.today():
@@ -842,6 +1013,13 @@ class HrLeaveAllocation(models.Model):
         return float_round(future_allocated_duration - current_allocated_duration, precision_digits=2)
 
     def _get_next_states_by_state(self):
+        """Return the states the current user can move the allocation to, from each state.
+
+        Same rules as for time off; types without validation can always be approved.
+
+        :return: ``{state: set(next_states)}``
+        :rtype: dict
+        """
         self.ensure_one()
         state_result = {
             'confirm': set(),
@@ -907,7 +1085,12 @@ class HrLeaveAllocation(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """ Override to avoid automatic logging of creation """
+        """Create allocations in ``'confirm'`` and start their approval.
+
+        Types without validation are approved at once.
+
+        :raise UserError: when another state is given
+        """
         for values in vals_list:
             if 'state' in values and values['state'] != 'confirm':
                 raise UserError(_('Incorrect state for new allocation'))
@@ -930,6 +1113,11 @@ class HrLeaveAllocation(models.Model):
         return allocations
 
     def write(self, vals):
+        """Write on allocations, checking the state transitions.
+
+        :raise ValidationError: when the change reduces the balance below the time already
+            taken (beyond the negative cap of the type)
+        """
         values = vals
         employee_id = values.get('employee_id', False)
         if values.get('state'):
@@ -992,6 +1180,10 @@ class HrLeaveAllocation(models.Model):
     ####################################################
 
     def action_approve(self):
+        """Approve the allocations: validate them, or give the first approval (``'validate1'``).
+
+        :raise UserError: when the user can neither validate nor approve an allocation
+        """
         current_employee = self.env.user.employee_id
         allocation_to_approve = self.env['hr.leave.allocation']
         allocation_to_validate = self.env['hr.leave.allocation']
@@ -1009,6 +1201,7 @@ class HrLeaveAllocation(models.Model):
         return True
 
     def _action_validate(self):
+        """Set the allocations to ``'validate'`` and record the approvers."""
         current_employee = self.env.user.employee_id
 
         allocation_both = self.filtered(lambda allocation: allocation.validation_type == 'both')
@@ -1022,6 +1215,11 @@ class HrLeaveAllocation(models.Model):
         (self - allocation_both).write({'state': 'validate', 'approver_id': current_employee.id})
 
     def action_refuse(self):
+        """Refuse the allocations.
+
+        :raise UserError: when an allocation is not ``'confirm'``, ``'validate1'`` or
+            ``'validate'``
+        """
         current_employee = self.env.user.employee_id
         if any(allocation.state not in ['confirm', 'validate', 'validate1'] for allocation in self):
             raise UserError(_('Allocation request must be confirmed, second approval or validated in order to refuse it.'))
@@ -1031,7 +1229,16 @@ class HrLeaveAllocation(models.Model):
         return True
 
     def _check_approval_update(self, state, raise_if_not_possible=True):
-        """ Check if target state is achievable. """
+        """Check that the current user can move the allocations to ``state``.
+
+        Only time off administrators can approve their own allocations (unless the type needs no
+        validation). The superuser can do everything.
+
+        :param str state: target state
+        :param bool raise_if_not_possible: raise instead of returning ``False``
+        :rtype: bool
+        :raise UserError: when not possible and ``raise_if_not_possible``
+        """
         if self.env.is_superuser():
             return True
         current_employee = self.env.user.employee_id
@@ -1081,6 +1288,10 @@ class HrLeaveAllocation(models.Model):
         return True
 
     def _get_init_accrual_plan_values(self):
+        """Return the values resetting the accrual of an allocation.
+
+        :rtype: dict
+        """
         return {
             'last_accrual': False,
             'lastcall': False,
@@ -1101,6 +1312,7 @@ class HrLeaveAllocation(models.Model):
     # Allows user to simulate how many days an accrual plan would give from a certain start date.
     @api.onchange('date_from', 'accrual_plan_id', 'date_to', 'employee_id')
     def _onchange_process_accrual_plans(self):
+        """Simulate in the form the time the accrual plan grants from ``date_from`` until today."""
         if not self.date_from or not self.accrual_plan_id or self.state == 'validate'\
            or not self.employee_id:
             return
@@ -1114,6 +1326,13 @@ class HrLeaveAllocation(models.Model):
     # ------------------------------------------------------------
 
     def _get_responsible_for_approval(self):
+        """Return the user who must approve the allocation in its current state.
+
+        Same rules as
+        :meth:`~odoo.addons.hr_holidays.models.hr_leave.HrLeave._get_responsible_for_approval`.
+
+        :rtype: res.users
+        """
         self.ensure_one()
         responsible = self.env['res.users']
 
