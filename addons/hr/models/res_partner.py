@@ -41,6 +41,11 @@ class ResPartner(models.Model):
         }
 
     def _get_all_addr(self):
+        """Prepend the private address of the partner's employee (if any) to the partner's addresses.
+
+        :return: list of address dicts; the employee one has ``contact_type: 'employee'``
+        :rtype: list[dict]
+        """
         self.ensure_one()
         employee_id = self.env['hr.employee'].search(
             [('id', 'in', self.employee_ids.ids)],

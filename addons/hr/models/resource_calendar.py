@@ -19,6 +19,11 @@ class ResourceCalendar(models.Model):
                     raise ValidationError(self.env._("The working schedule '%s' is linked to version(s) not compatible with its new company.") % res_calendar.name)
 
     def write(self, vals):
+        """Refuse to modify a calendar used by versions of companies the user has not selected.
+
+        :raise ValidationError: if a version using the calendar belongs to a
+            company outside ``env.companies``
+        """
         if self.sudo().version_ids.company_id - self.env.companies:
             raise ValidationError(self.env._("You can't change this working schedule, it's used by employees from other companies you don't have access to. Contact your admin or create a new working schedule."))
         return super().write(vals)
@@ -48,10 +53,15 @@ class ResourceCalendar(models.Model):
             calendar.material_resources_count = materials_per_calendar.get(calendar, 0)
 
     def transfer_leaves_to(self, other_calendar, resources=None, from_date=None):
-        """
-            Transfer some resource.calendar.leaves from 'self' to another calendar 'other_calendar'.
-            Transfered leaves linked to `resources` (or all if `resources` is None) and starting
-            after 'from_date' (or today if None).
+        """Move the leaves of these calendars starting from ``from_date`` to ``other_calendar``.
+
+        :param other_calendar: the target calendar
+        :type other_calendar: resource.calendar
+        :param resources: only move the leaves of these resources (all leaves if empty/``None``)
+        :type resources: resource.resource or None
+        :param from_date: only move leaves with ``date_from >= from_date``;
+            today 00:00 (naive UTC) by default
+        :type from_date: datetime.datetime or None
         """
         from_date = from_date or fields.Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         domain = [

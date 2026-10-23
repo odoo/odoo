@@ -103,6 +103,14 @@ class HrEmployeePublic(models.Model):
         return self.env['hr.employee']._fields['hr_icon_display']._description_selection(self.env)
 
     def _compute_from_employee(self, field_names):
+        """Copy the values of ``field_names`` from the corresponding ``hr.employee`` records (read in sudo).
+
+        Helper for computed fields of the public employee that mirror a
+        non-stored employee field.
+
+        :param field_names: field name(s), identical on both models
+        :type field_names: str or list[str]
+        """
         if isinstance(field_names, str):
             field_names = [field_names]
         employees_sudo = self.sudo().env['hr.employee'].browse(self.ids)
@@ -165,6 +173,14 @@ class HrEmployeePublic(models.Model):
         self._compute_from_employee('member_of_department')
 
     def _get_manager_only_fields(self):
+        """Return the fields only visible on public employees managed by the current user.
+
+        Hook for modules (e.g. ``hr_appraisal``): such fields must be computed
+        by :meth:`_compute_manager_only_fields`, which reads them in sudo on the
+        employee when ``is_manager`` is set (``False`` otherwise).
+
+        :rtype: list[str]
+        """
         return []
 
     def _search_part_of_department(self, operator, value):
@@ -177,6 +193,12 @@ class HrEmployeePublic(models.Model):
         return [('department_id', 'child_of', user_employee.department_id.ids)]
 
     def _get_valid_employee_for_user(self):
+        """Return the employee of the current user, preferably in the current company.
+
+        Same as ``hr.version._get_valid_employee_for_user``.
+
+        :rtype: hr.employee
+        """
         user = self.env.user
         # retrieve the employee of the current active company for the user
         employee = user.employee_id
@@ -191,6 +213,11 @@ class HrEmployeePublic(models.Model):
 
     @api.depends_context('uid')
     def _compute_manager_only_fields(self):
+        """Compute the :meth:`_get_manager_only_fields` from the employee, for managers only.
+
+        ``is_manager`` is set on the current user's own employee and all
+        employees below it in the ``parent_id`` hierarchy.
+        """
         manager_fields = self._get_manager_only_fields()
         for employee in self:
             if employee.is_manager:
@@ -223,6 +250,16 @@ class HrEmployeePublic(models.Model):
 
     @api.model
     def _get_fields(self):
+        """Yield the SQL column expressions of the ``hr_employee_public`` view.
+
+        Every stored field declared on this model becomes a column of the view,
+        taken from the current version (alias ``v``) if it is a stored
+        ``hr.version`` field, from the employee (alias ``e``) otherwise. To
+        expose a new stored field publicly, declare it on ``hr.employee.public``
+        with the same name; no SQL is needed.
+
+        :rtype: Iterator[SQL]
+        """
         yield SQL('e.id')
         yield SQL("e.id AS employee_id")
         yield SQL("e.name")
@@ -234,6 +271,13 @@ class HrEmployeePublic(models.Model):
                 yield SQL.identifier(alias, name)
 
     def init(self):
+        """(Re)create the SQL view: ``hr_employee`` joined with its current ``hr_version``.
+
+        ``hr.employee.public`` is a read-only view exposing the non-sensitive
+        employee data to all internal users (``hr.employee`` itself is
+        restricted to HR officers). Its ids are the employee ids. Archived
+        employees are included (filtered by the ``active`` column).
+        """
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute(SQL("""CREATE or REPLACE VIEW %s as (
             SELECT
