@@ -361,7 +361,6 @@ export class DomPlugin extends Plugin {
             // 1. Unwrap the first and last blocks if needed.
             const isFirstOrLastBlock = wasBlock && (index === 0 || index === numberOfNodes - 1);
             let shouldUnwrap = false;
-            let shouldSkip = false;
             // Empty blocks would disappear if unwrapped.
             if (isFirstOrLastBlock && !isEmptyBlock(node)) {
                 const isSelectionAtEdge = index === 0 ? isSelectionAtStart : isSelectionAtEnd;
@@ -373,16 +372,14 @@ export class DomPlugin extends Plugin {
                 );
             }
             // 2. Unwrap blocks if we're trying to insert in a context that
-            // doesn't allow them.
-            if (!shouldUnwrap && wasBlock && !isEditableBlock) {
-                if (this.isUnsplittable(node)) {
-                    shouldSkip = true;
-                } else {
+            //    doesn't allow them.
+            const shouldInline = isBlock(node) && !isEditableBlock;
+            if (!shouldUnwrap && !shouldInline) {
+                nodes.push(node);
+            } else if (!this.isUnsplittable(node)) {
+                if (shouldInline) {
                     makeContentsInline(node);
-                    shouldUnwrap = true;
                 }
-            }
-            if (shouldUnwrap) {
                 // Unwrap by replacing the node with a fragment containing its
                 // children.
                 if (node.childNodes.length) {
@@ -390,8 +387,6 @@ export class DomPlugin extends Plugin {
                     fragment.append(...node.childNodes);
                     nodes.push(fragment);
                 }
-            } else if (!shouldSkip) {
-                nodes.push(node);
             }
         }
         return nodes;
