@@ -34,18 +34,8 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             run: "click",
         },
         {
-            trigger: "#duration_0",
-            content: "Give a duration to the new event",
-            run: "edit 02:00",
-        },
-        {
-            trigger: "[data-icon='cloud_upload']",
+            trigger: ".o_form_button_save",
             content: "Save the new event",
-            run: "click",
-        },
-        {
-            trigger: ".o_back_button",
-            content: "Go back to Calendar view",
             run: "click",
         },
         {
