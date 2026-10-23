@@ -297,10 +297,17 @@ class HrLeaveAccrualLevel(models.Model):
             level.yearly_gain = yearly_gain
 
     def _get_hourly_frequencies(self):
+        """Return the frequencies accruing per hour of the period instead of per period.
+
+        :rtype: list[str]
+        """
         return ['hourly']
 
     def _get_next_date(self, last_call):
-        """ Returns the next date the allocation will be accrued with the given last call (last_call not included)
+        """Return the first accrual date of the level after ``last_call`` (excluded).
+
+        :param datetime.date last_call: reference date
+        :rtype: datetime.date
         """
         self.ensure_one()
         if self.frequency in self._get_hourly_frequencies() + ['daily']:
@@ -343,10 +350,12 @@ class HrLeaveAccrualLevel(models.Model):
             "Hourly, Daily, Weekly, Twice a month, Monthly, Twice a year and Yearly."))
 
     def _get_previous_date(self, last_call):
-        """
-        Returns the date a potential previous call would have been at
-        For example if you have a monthly level giving 16/02 would return 01/02
-        Contrary to `_get_next_date` this function will return the 01/02 if that date is given
+        """Return the last accrual date of the level on or before ``last_call`` (included).
+
+        For instance, the 1st of the month for a monthly level.
+
+        :param datetime.date last_call: reference date
+        :rtype: datetime.date
         """
         self.ensure_one()
         if self.frequency in self._get_hourly_frequencies() + ['daily']:
@@ -389,6 +398,10 @@ class HrLeaveAccrualLevel(models.Model):
             "Hourly, Daily, Weekly, Twice a month, Monthly, Twice a year and Yearly."))
 
     def _get_level_transition_date(self, allocation_start):
+        """Return the date the level starts for an allocation starting on ``allocation_start``.
+
+        :rtype: datetime.date
+        """
         if self.start_type == 'day':
             return allocation_start + relativedelta(days=self.start_count)
         if self.start_type == 'month':
@@ -400,5 +413,9 @@ class HrLeaveAccrualLevel(models.Model):
         return self.accrual_plan_id.action_create_accrual_plan_level()
 
     def _get_start_date(self, date_from):
+        """Return ``date_from`` plus the start delay of the level (``start_count`` ``start_type``).
+
+        :rtype: datetime.date
+        """
         self.ensure_one()
         return date_from + get_timedelta(self.start_count, self.start_type)
