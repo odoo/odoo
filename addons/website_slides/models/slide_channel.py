@@ -280,7 +280,7 @@ class SlideChannel(models.Model):
     @api.model
     def _compute_has_requested_access(self):
         requested_cids = self.sudo().activity_search(
-            ['mail.mail_activity_data_todo'],
+            ['website_slides.mail_activity_data_access_request'],
             additional_domain=[('request_partner_id', '=', self.env.user.partner_id.id)],
             only_automated=False,
         ).mapped('res_id')
@@ -543,7 +543,7 @@ class SlideChannel(models.Model):
         if vals.get('user_id'):
             self._action_add_members(self.env['res.users'].sudo().browse(vals['user_id']).partner_id)
             self.activity_reschedule(
-                ['mail_activity_data_todo'],
+                ['website_slides.mail_activity_data_access_request'],
                 new_user_id=vals.get('user_id'),
             )
         if 'enroll_group_ids' in vals:
@@ -917,7 +917,7 @@ class SlideChannel(models.Model):
         if partner:
             if self._action_add_members(partner):
                 self.activity_search(
-                    ['mail.mail_activity_data_todo'],
+                    ['website_slides.mail_activity_data_access_request'],
                     user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)],
                     only_automated=False,
                 ).action_feedback(feedback=_('Access Granted'))
@@ -926,7 +926,7 @@ class SlideChannel(models.Model):
         partner = self.env['res.partner'].browse(partner_id).exists()
         if partner:
             self.activity_search(
-                ['mail.mail_activity_data_todo'],
+                ['website_slides.mail_activity_data_access_request'],
                 user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)],
                 only_automated=False,
             ).action_feedback(feedback=_('Access Refused'))
@@ -942,13 +942,13 @@ class SlideChannel(models.Model):
     def _action_request_access(self, partner):
         activities = self.env['mail.activity']
         requested_cids = self.sudo().activity_search(
-            ['mail.mail_activity_data_todo'],
+            ['website_slides.mail_activity_data_access_request'],
             additional_domain=[('request_partner_id', '=', partner.id)],
         ).mapped('res_id')
         for channel in self:
             if channel.id not in requested_cids and channel.user_id:
                 activities += channel.activity_schedule(
-                    'mail.mail_activity_data_todo',
+                    'website_slides.mail_activity_data_access_request',
                     note=_('<b>%s</b> is requesting access to this course.', partner.name),
                     summary=_('Access Request'),
                     user_id=channel.user_id.id,
