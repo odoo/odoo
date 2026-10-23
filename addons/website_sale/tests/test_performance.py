@@ -66,17 +66,14 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_attribute": 1,
             "product_attribute_value": 3,
             "product_image": 1,
-            "product_pricelist": 1,
             "product_product": 1,
             "product_public_category": 1,
             "product_ribbon": 1,
             "product_tag": 1,
             "product_template": 2,
             "product_template_attribute_line": 2,
-            "res_company": 2,
+            "res_company": 1,
             "res_currency": 1,
-            "res_partner": 2,
-            "res_users": 1,
             "website_menu": 1,
             "website_page": 1,
         })
@@ -110,7 +107,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_attribute_value": 2,
             "product_document": 2,
             "product_image": 2,
-            "product_pricelist": 1,
             "product_product": 2,
             "product_public_category": 2,
             "product_ribbon": 1,
@@ -120,7 +116,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_template_attribute_value": 4,
             "res_company": 2,
             "res_currency": 1,
-            "res_partner": 2,
+            "res_partner": 1,
             "res_users": 1,
             "website_menu": 1,
             "website_page": 1,
@@ -188,9 +184,10 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
 
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
-        res["product_pricelist"] += 3
+        res["product_pricelist"] += 2
         res["product_category"] += 1
         res["product_pricelist_item"] += 1
+        res["res_users"] += 1
         return res
 
     def test_shop_page_generation(self):
@@ -201,7 +198,7 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
 
     def _get_product_page_queries(self):
         res = super()._get_product_page_queries()
-        res["product_pricelist"] += 3
+        res["product_pricelist"] += 2
         res["product_category"] += 1
         res["product_pricelist_item"] += 2
         return res
@@ -330,6 +327,8 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
         res["product_product"] += 1
+        res["res_user"] += 1
+        res["res_partner"] += 1
         if "website_sale_stock" in self.installed_modules:
             res["stock_warehouse"] += 2
             res["stock_move"] += 2
