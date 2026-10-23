@@ -2311,10 +2311,11 @@ class HrEmployee(models.Model):
         return res
 
     def unlink(self):
-        """Delete the employees and their ``resource.resource``.
+        """Delete the employees, their versions and their ``resource.resource``.
 
-        The versions are not deleted: ``hr.version.employee_id`` is emptied
-        (default ``ondelete='set null'``).
+        The versions are deleted by the database (``hr.version.employee_id``
+        has ``ondelete='cascade'``), so the ``hr.version`` unlink checks (an
+        employee keeps at least one version) do not apply.
         """
         resources = self.mapped('resource_id')
         super().unlink()
