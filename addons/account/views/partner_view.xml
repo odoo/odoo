@@ -307,7 +307,11 @@
                    <separator/>
                    <filter string="Overdue Invoices"
                         name="overdue"
-                        domain="[('invoice_ids.invoice_date_due', '&lt;', 'today')]" />
+                        domain="[('invoice_ids', 'any', [
+                            ('invoice_date_due', '&lt;', 'today'),
+                            ('state', '=', 'posted'),
+                            ('payment_state', 'in', ('not_paid', 'partial'))
+                        ])]" />
                    <separator/>
                 </xpath>
             </field>
