@@ -6,6 +6,7 @@
                 <t t-set="o" t-value="o.with_context(lang=lang)" />
                 <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
                 <div class="row">
+                    <t t-set="vat_label" t-value="o.partner_id.country_id.vat_label or o.company_id.account_fiscal_country_id.vat_label"/>
                     <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
                         <div class="col-6">
                             <t t-set="information_block">
@@ -19,7 +20,7 @@
                             <t t-set="address">
                                 <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                 <div t-if="o.partner_id.vat" id="partner_vat_address_not_same_as_shipping">
-                                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                    <t t-if="vat_label" t-out="vat_label" id="inv_tax_id_label"/>
                                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                                 </div>
                                 <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
@@ -33,7 +34,7 @@
                             <t t-set="address">
                                 <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                 <div t-if="o.partner_id.vat" id="partner_vat_address_same_as_shipping">
-                                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                    <t t-if="vat_label" t-out="vat_label" id="inv_tax_id_label"/>
                                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                                 </div>
                                 <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
@@ -47,7 +48,7 @@
                             <t t-set="address">
                                 <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                                 <div t-if="o.partner_id.vat" id="partner_vat_no_shipping">
-                                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                    <t t-if="vat_label" t-out="vat_label" id="inv_tax_id_label"/>
                                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                                 </div>
                                 <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
