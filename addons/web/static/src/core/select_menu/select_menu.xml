@@ -74,7 +74,7 @@
                             <t t-call="web.SelectMenu.search" />
                         </t>
                     </div>
-                    <div class="overflow-auto position-relative o_select_menu-choices" style="scrollbar-width: thin;" t-ref="this.choicesRef">
+                    <div class="overflow-auto position-relative o_select_menu-choices scrollbar-width-thin" t-ref="this.choicesRef">
                         <t t-if="this.state.choices.length === 0">
                             <p class="py-2 text-center text-muted fst-italic">No results</p>
                         </t>
