@@ -490,10 +490,14 @@ class TestPosStockFlow(CommonPosStockTest):
                 'price': 10.0,
             })]
         })
+        product = self.ten_dollars_with_15_incl.product_variant_id
+        location = self.pos_config_usd.picking_type_id.default_location_src_id
+        # Start at the minimum stock so the sale triggers replenishment of one unit.
+        self.env['stock.quant']._update_available_quantity(product, location, 1.0)
 
         self.env['stock.warehouse.orderpoint'].create({
-            'product_id': self.ten_dollars_with_15_incl.product_variant_id.id,
-            'location_id': self.pos_config_usd.picking_type_id.default_location_src_id.id,
+            'product_id': product.id,
+            'location_id': location.id,
             'product_min_qty': 1.0,
             'product_max_qty': 1.0,
         })
@@ -504,7 +508,7 @@ class TestPosStockFlow(CommonPosStockTest):
                 'pricelist_id': self.pos_config_usd.pricelist_id.id,
             },
             'line_data': [
-                {'product_id': self.ten_dollars_with_15_incl.product_variant_id.id},
+                {'product_id': product.id},
             ],
             'payment_data': [
                 {'payment_method_id': self.bank_payment_method.id, 'amount': 10},
@@ -514,7 +518,7 @@ class TestPosStockFlow(CommonPosStockTest):
         purchase_order = self.env['purchase.order'].search([], limit=1)
         self.assertEqual(purchase_order.order_line.product_qty, 1)
         self.assertEqual(purchase_order.order_line.product_id.id,
-                        self.ten_dollars_with_15_incl.product_variant_id.id)
+                        product.id)
 
     def test_pos_order_refund_ship_delay_totalcost(self):
         # test that the total cost is computed for refund with a shipping delay and an avco/fifo product
@@ -1419,6 +1423,10 @@ class TestPosStockFlow(CommonPosStockTest):
         product1 = self.ten_dollars_no_tax.product_variant_id
         product2 = self.twenty_dollars_no_tax.product_variant_id
         product3 = self.twenty_dollars_with_5_incl.product_variant_id
+        # Provide enough stock to reserve the delivery before the refund.
+        stock_location = self.pos_config_usd.picking_type_id.default_location_src_id
+        for product, quantity in [(product1, 2.0), (product2, 3.0), (product3, 2.0)]:
+            self.env['stock.quant']._update_available_quantity(product, stock_location, quantity)
         self.pos_config_usd.write({
             'ship_later': True,
             'payment_method_ids': [(6, 0, self.cash_payment_method.ids)],
@@ -1728,36 +1736,12 @@ class TestPosStockFlow(CommonPosStockTest):
         self.env.company.stock_move_email_validation = True
         self.pos_config_usd.picking_type_id = self.pos_config_usd.picking_type_id.copy()
         self.pos_config_usd.open_ui()
-        current_session = self.pos_config_usd.current_session_id
 
-        order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': current_session.id,
-            'partner_id': self.partner.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.ten_dollars_no_tax.product_variant_id.id,
-                'price_unit': 450,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': [[6, False, []]],
-                'price_subtotal': 450,
-                'price_subtotal_incl': 450,
-            })],
-            'pricelist_id': self.pos_config_usd.pricelist_id.id,
-            'amount_paid': 450.0,
-            'amount_total': 450.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        })
-
-        payment_context = {"active_ids": order.ids, "active_id": order.id}
-        order_payment = self.env['pos.make.payment'].with_context(payment_context).create({
-            'amount': order.amount_total,
-            'payment_method_id': self.bank_payment_method.id,
-        })
-        order_payment.with_context(payment_context).check()
+        order = self.create_pos_order(
+            [[self.ten_dollars_no_tax.product_variant_id, 1, 0, {'price_unit': 450, 'tax_ids': [Command.set([])]}]],
+            payments=[[self.bank_pm, 450]],
+            customer=self.partner,
+        )
 
         self.assertEqual(order.picking_ids.state, 'done')
         self.assertFalse(order.picking_ids.message_ids.filtered(lambda m: m.subtype_id == self.env.ref('mail.mt_comment')))

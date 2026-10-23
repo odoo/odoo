@@ -1,5 +1,5 @@
 from odoo.addons.account.tests.test_taxes_tax_totals_summary import TestTaxesTaxTotalsSummary
-from odoo.addons.point_of_sale.tests.test_frontend import TestTaxCommonPOS
+from odoo.addons.point_of_sale.tests.common import TestTaxCommonPOS
 from odoo.tests import tagged
 
 
@@ -29,12 +29,13 @@ class TestTaxesTaxTotalsSummaryAccountTaxPython(TestTaxCommonPOS, TestTaxesTaxTo
             'total_amount_currency': 2042.0,
         }
 
-        with self.with_new_session(user=self.pos_user) as session:
-            self.start_pos_tour('test_point_of_sale_custom_tax_with_extra_product_field')
-            order = self.env['pos.order'].search([('session_id', '=', session.id)])
-            self.assert_pos_order_totals(order, expected_values)
-            self.assertTrue(order.account_move)
-            self.assert_invoice_totals(order.account_move, expected_values)
+        self.start_pos_tour('test_point_of_sale_custom_tax_with_extra_product_field')
+        session = self.main_pos_config.current_session_id
+        order = self.env['pos.order'].search([('session_id', '=', session.id)])
+        self.assert_pos_order_totals(order, expected_values)
+        self.assertTrue(order.account_move)
+        self.assert_invoice_totals(order.account_move, expected_values)
+        self.close_pos_session()
 
     def test_point_of_sale_custom_tax_with_extra_product_uom_field(self):
         assert 'relative_factor' not in self.env['uom.uom']._load_pos_data_fields(self.main_pos_config)
@@ -61,9 +62,10 @@ class TestTaxesTaxTotalsSummaryAccountTaxPython(TestTaxCommonPOS, TestTaxesTaxTo
             'total_amount_currency': 2042.0,
         }
 
-        with self.with_new_session(user=self.pos_user) as session:
-            self.start_pos_tour('test_point_of_sale_custom_tax_with_extra_product_field')
-            order = self.env['pos.order'].search([('session_id', '=', session.id)])
-            self.assert_pos_order_totals(order, expected_values)
-            self.assertTrue(order.account_move)
-            self.assert_invoice_totals(order.account_move, expected_values)
+        self.start_pos_tour('test_point_of_sale_custom_tax_with_extra_product_field')
+        session = self.main_pos_config.current_session_id
+        order = self.env['pos.order'].search([('session_id', '=', session.id)])
+        self.assert_pos_order_totals(order, expected_values)
+        self.assertTrue(order.account_move)
+        self.assert_invoice_totals(order.account_move, expected_values)
+        self.close_pos_session()
