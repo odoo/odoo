@@ -8,7 +8,7 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     _l10n_ar_afip_pos_number_unique = models.UniqueIndex(
-        "(company_id, l10n_ar_afip_pos_system, l10n_ar_afip_pos_number) WHERE l10n_ar_is_pos IS TRUE",
+        "(company_id, l10n_ar_afip_pos_system, l10n_ar_afip_pos_number) WHERE l10n_ar_is_pos IS TRUE AND l10n_ar_afip_pos_number != 0",
         "Another journal of this company already uses this ARCA POS number with the same POS system.",
     )
 
@@ -155,7 +155,7 @@ class AccountJournal(models.Model):
                 for x in journals
             ))
 
-    @api.constrains('l10n_ar_afip_pos_number', 'l10n_ar_is_pos')
+    @api.constrains('l10n_ar_afip_pos_number')
     def _check_afip_pos_number(self):
         if self.filtered(lambda j: j.l10n_ar_is_pos and j.l10n_ar_afip_pos_number == 0):
             raise ValidationError(_('Please define an ARCA POS number'))
