@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import fields, models
 
 
 class AccountMoveLine(models.Model):
@@ -30,10 +30,22 @@ class AccountMoveLine(models.Model):
         return mapping_from_invoice
 
     def _sale_prepare_sale_line_values(self, order, price):
-        # Add expense quantity to sales order line and update the sales order price because it will be charged to the customer in the end.
+        # Force cost-based reinvoiced expenses to a quantity of 1, unit price represents the full expense amount.
         res = super()._sale_prepare_sale_line_values(order, price)
         if self.expense_id:
-            res['product_uom_qty'] = self.expense_id.quantity
+            if self.product_id.expense_policy == 'cost':
+                price_unit = self.expense_id.currency_id._convert(
+                    self.expense_id.untaxed_amount_currency,
+                    order.currency_id,
+                    order.company_id,
+                    order.date_order or fields.Date.context_today(self),
+                )
+                res.update({
+                    'product_uom_qty': 1,
+                    'price_unit': price_unit,
+                })
+            else:
+                res['product_uom_qty'] = self.expense_id.quantity
         return res
 
     def _sale_create_reinvoice_sale_line(self):
