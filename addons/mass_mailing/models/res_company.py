@@ -24,7 +24,7 @@ class ResCompany(models.Model):
     def update_social_links(self, social_links):
         """
         Update social media link fields without unnecessarily reloading a view
-        (see reload_company_service.js).
+        (see reload_company_plugin.js).
 
         :param dict social_links: Social link field names to URL path.
         :raises UserError: If a provided key is not a valid social media field.
