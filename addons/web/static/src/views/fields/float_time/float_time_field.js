@@ -60,9 +60,25 @@ export class FloatTimeField extends Component {
         return formatFloatTime(value, this.formatOptions);
     }
 
+<<<<<<< 833b3a95cb1cf449c6d37948811f12904101287b
     get formattedValue() {
         return this.formatValue(this.value);
     }
+||||||| fa28f4b91fb94d76aa3451fa8dca980f02f440ed
+class DurationPopover extends Component {
+    static template = "web.DurationPopover";
+    props = useProps({
+        state: t.object().optional(),
+        close: t.function().optional(),
+    });
+=======
+export class DurationPopover extends Component {
+    static template = "web.DurationPopover";
+    props = useProps({
+        state: t.object().optional(),
+        close: t.function().optional(),
+    });
+>>>>>>> 6dda7d4e0366ff98e229670ea60b03504d5a41c4
 }
 
 export const floatTimeField = {
