@@ -31,6 +31,8 @@ class ResCompany(models.Model):
         self.search([('resource_calendar_id', '=', False)])._create_resource_calendar()
 
     def _create_resource_calendar(self):
+        """ Create a default working schedule for each company of ``self`` and set it as
+        their ``resource_calendar_id``. """
         vals_list = [
             company._prepare_resource_calendar_values()
             for company in self
@@ -40,6 +42,8 @@ class ResCompany(models.Model):
             company.resource_calendar_id = calendar
 
     def _prepare_resource_calendar_values(self):
+        """ Hook returning the creation values of the company's default working schedule
+        (40 hours/week by default). """
         self.ensure_one()
         return {
             'name': _('40 hours/week'),
