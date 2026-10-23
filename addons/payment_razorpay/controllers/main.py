@@ -44,8 +44,10 @@ class RazorpayController(http.Controller):
                 .sudo()
                 ._search_by_reference("razorpay", {"description": reference})
             )  # Use the same key as for webhook notifications' data.
-            self._verify_signature(data, data.get("razorpay_signature"), tx_sudo)
-            tx_sudo._process("razorpay", data)
+            if tx_sudo:
+                self._verify_signature(data, data.get("razorpay_signature"), tx_sudo)
+                payment_data = {"razorpay_payment_id": data["razorpay_payment_id"]}
+                tx_sudo._process("razorpay", payment_data)
         else:  # The customer cancelled the payment or the payment failed.
             pass  # Don't try to process this case because the payment id was not provided.
 

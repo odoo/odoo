@@ -37,12 +37,14 @@ class RazorpayCommon(PaymentCommon):
         cls.payment_data = {
             "id": cls.payment_id,
             "description": cls.reference,
+            "notes": {"reference": cls.reference},
             "status": "captured",
             "method": "upi",
         }
         cls.payment_fail_data = {
             "id": "pay_987",
             "description": cls.reference,
+            "notes": {"reference": cls.reference},
             "status": "failed",
             "method": "netbanking",
         }
@@ -54,6 +56,7 @@ class RazorpayCommon(PaymentCommon):
         cls.payment_pending_data = {
             "id": cls.payment_id,
             "description": cls.reference,
+            "notes": {"reference": cls.reference},
             "status": "pending",
         }
         cls.refund_data = {"id": cls.refund_id, "payment_id": cls.payment_id, "amount": cls.amount}

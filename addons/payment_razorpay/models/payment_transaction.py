@@ -129,6 +129,7 @@ class PaymentTransaction(models.Model):
         payload = {
             "amount": converted_amount,
             "currency": self.currency_id.name,
+            "notes": {"reference": self.reference},
             **({"method": pm_code} if pm_code not in const.FALLBACK_PAYMENT_METHOD_CODES else {}),
         }
         if self.operation in ["online_direct", "validation"]:
@@ -375,8 +376,11 @@ class PaymentTransaction(models.Model):
                 self._set_error(str(e))
                 return
 
-        reference = entity_data.get("description") or entity_data["notes"]["reference"]
-        if self.reference != reference:
+        notes = entity_data.get("notes")
+        reference = isinstance(notes, dict) and notes.get("reference")
+        tx_reference = self.source_transaction_id.reference or self.reference
+        # Skip refunds: only received from the API or the signed webhook
+        if entity_data.get("entity_type") != "refund" and reference != tx_reference:
             _logger.warning("Received payment data with incorrect reference")
             raise Forbidden()
 
