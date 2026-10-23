@@ -344,7 +344,7 @@ class ResourceCalendar(models.Model):
         assert start_dt.tzinfo and end_dt.tzinfo
         if self:
             self.ensure_one()
-        elif not resources_per_tz.values():
+        elif not resources_per_tz:
             raise UserError(self.env._("You cannot compute the intervals without a calendar on no resource."))
 
         if not resources_per_tz:

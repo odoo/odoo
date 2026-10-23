@@ -2,6 +2,7 @@
 from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
 
+from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
 
@@ -233,3 +234,10 @@ class TestResourceCalendar(TransactionCase):
                 (form.hours_per_week, form.hours_per_day),
                 (12, 4),
             )
+
+    def test_attendance_intervals_without_calendar_nor_resource(self):
+        """Computing attendance intervals without calendar requires resources."""
+        start_dt = datetime(2026, 1, 5, tzinfo=UTC)
+        end_dt = datetime(2026, 1, 10, tzinfo=UTC)
+        with self.assertRaises(UserError):
+            self.env['resource.calendar']._attendance_intervals_batch(start_dt, end_dt)
