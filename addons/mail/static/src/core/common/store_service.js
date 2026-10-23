@@ -352,7 +352,7 @@ export class Store extends BaseStore {
             this.env.services.ui.isSmall &&
             ev.target.closest(".o-mail-ChatWindow") &&
             link.href &&
-            !link.href.startsWith("#")
+            (model || !link.getAttribute("href").startsWith("#"))
         ) {
             let url;
             try {
