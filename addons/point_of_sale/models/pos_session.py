@@ -1108,6 +1108,8 @@ class PosSession(models.Model):
                     if payment_term_lines:
                         payment_term_lines[0].balance -= balance_diff
 
+        # Link the session before posting so that `_post` overrides can recognize the closing entry
+        move_ctx.write({'pos_session_refunds_id' if refund else 'pos_session_sales_id': self.id})
         move_ctx.with_company(self.company_id)._post()
         default_partner = self.config_id.default_partner_id
         receivable_account = self._get_receivable_account()
