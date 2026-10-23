@@ -90,7 +90,7 @@ class PurchaseOrder(models.Model):
              "delivery order sent by your vendor.")
     date_order = fields.Datetime('Order Deadline', required=True, index=True, copy=False, default=fields.Datetime.now,
         help="Depicts the date within which the Quotation should be confirmed and converted into a purchase order.")
-    date_approve = fields.Datetime('Order Date', readonly=True, index=True, copy=False)
+    date_approve = fields.Datetime("Confirmation Date", readonly=True, index=True, copy=False)
     partner_id = fields.Many2one(
         'res.partner', string='Vendor', required=True, change_default=True,
         tracking=True, check_company=True, index=True,
