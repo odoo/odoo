@@ -23,8 +23,9 @@ class TestArManual(common.TestArCommon):
         """ The ARCA POS number is assigned by ARCA to a single POS: it must not be silently reused when duplicating
         a journal, and two POS journals of the same company can not share POS number and POS system """
         pos_number = self.journal.l10n_ar_afip_pos_number
-        with self.assertRaisesRegex(ValidationError, 'Please define an ARCA POS number'):
-            self.journal.copy()
+        # duplicating must not fail, the copies are created without POS number until the user sets one
+        copies = self.journal.copy() | self.journal.copy()
+        self.assertEqual(copies.mapped('l10n_ar_afip_pos_number'), [0, 0])
         with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
             self.journal.copy({'l10n_ar_afip_pos_number': pos_number})
         # same POS number with another POS system or on another company is fine
