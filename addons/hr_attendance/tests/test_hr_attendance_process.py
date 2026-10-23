@@ -548,3 +548,81 @@ class TestAbsenceDetectionCron(TransactionCase):
             before.ids, after.ids,
             "Cron must not create technical attendances for employees who already checked in",
         )
+
+
+@tagged('attendance_process')
+class TestAttendanceValidationTimeRules(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
+            'name': '40h/week',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': wd, 'hour_from': h, 'hour_to': h + 4})
+                for wd in ['0', '1', '2', '3', '4']
+                for h in [8, 13]
+            ],
+        })
+        cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
+        cls.env.company.attendance_work_entry_type_id = cls.att_type
+        cls.env['hr.time.rule'].search([]).write({'active': False})
+        cls.overtime_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Overtime', 'code': 'OT_VALIDATION_TEST',
+        })
+        cls.rule = cls.env['hr.time.rule'].create({
+            'name': 'Daily Overtime',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'work_entry_type_id': cls.overtime_type.id,
+            'condition_work_entry_type_ids': [(4, cls.att_type.id)],
+        })
+        cls.employee = cls.env['hr.employee'].create({
+            'name': 'Validated Employee',
+            'tz': 'UTC',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+        })
+
+    def _get_overtime_hours(self):
+        outputs = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.employee.id),
+            ('time_rule_id', '=', self.rule.id),
+            ('state', '=', 'validated'),
+        ])
+        return sum(outputs.mapped('worked_hours'))
+
+    def _create_9h_attendance(self):
+        return self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 1, 8, 0),  # Monday, 8h expected
+            'check_out': datetime(2024, 1, 1, 17, 0),
+        })
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_no_validation_runs_time_rules(self):
+        self.env.company.attendance_validation = 'no_validation'
+        self._create_9h_attendance()
+        self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_tolerance_validation_runs_time_rules(self):
+        self.env.company.attendance_validation = 'tolerance_validation'
+        self.env.company.attendance_validation_tolerance = 1.0
+        attendance = self._create_9h_attendance()
+        self.assertEqual(attendance.state, 'validated')
+        self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
+
+    @freeze_time('2024-01-03 06:00:00')
+    def test_tolerance_validation_on_check_out_runs_time_rules(self):
+        self.env.company.attendance_validation = 'tolerance_validation'
+        self.env.company.attendance_validation_tolerance = 1.0
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 1, 8, 0),
+        })
+        self.assertEqual(attendance.state, 'draft')
+        attendance.check_out = datetime(2024, 1, 1, 17, 0)
+        self.assertEqual(attendance.state, 'validated')
+        self.assertAlmostEqual(self._get_overtime_hours(), 1.0)
