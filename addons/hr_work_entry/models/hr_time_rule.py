@@ -451,8 +451,9 @@ class HrTimeRule(models.Model):
             rid = emp.resource_id.id
 
             for p_start, p_stop, version in periods:
-                p_dt_start = datetime.combine(p_start, time.min, tzinfo=UTC)
-                p_dt_end = datetime.combine(p_stop, time.max, tzinfo=UTC)
+                p_dt_start = datetime.combine(p_start, time.min, tzinfo=tz)
+                # the end of the period excluded, at the start of the day after its last day
+                p_dt_end = datetime.combine(p_stop + timedelta(days=1), time.min, tzinfo=tz)
                 period = Intervals([(p_dt_start.replace(tzinfo=None), p_dt_end.replace(tzinfo=None), version)])
 
                 if version._is_fully_flexible():
@@ -994,8 +995,9 @@ class HrTimeRule(models.Model):
         result to :meth:`_apply_output`.
 
         :param records: source records (``hr.attendance`` or ``hr.leave``)
-        :param datetime start_dt: evaluated period start
-        :param datetime end_dt: evaluated period end
+        :param datetime start_dt: evaluated period start (only the date is used, as a day of the
+            employees' timezone)
+        :param datetime end_dt: evaluated period end (only the date is used)
         :return: ``(excess, deficit, active_iv)``: ``excess`` is ``{employee: {source:
             [_Iv]}}`` with the intervals classified by a rule (``pp`` not filled yet),
             ``deficit`` is ``{employee: {source: [(start, stop, rule)]}}``, ``active_iv`` is
