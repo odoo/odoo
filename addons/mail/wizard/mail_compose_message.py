@@ -846,6 +846,7 @@ class MailComposeMessage(models.TransientModel):
 
     def action_send_mail(self):
         """ Used for action button that do not accept arguments. """
+        self.env["mail.canned.response"]._update_last_used(self.env.context.get("canned_response_ids", []))
         self._action_send_mail(auto_commit=False)
         res_ids = self._evaluate_res_ids()
         record_name = False

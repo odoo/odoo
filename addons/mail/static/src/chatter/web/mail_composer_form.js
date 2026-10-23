@@ -5,7 +5,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { formControllerProps } from "@web/views/form/form_controller";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { ORM } from "@web/core/orm_plugin";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
@@ -21,10 +21,24 @@ export class MailComposerFormController extends formView.Controller {
         super.setup();
         this.env.dialogData.model = this.props.resModel;
         providePlugins([FullComposerBusPlugin], { bus: this.props.fullComposerBus });
+        this.cannedResponseIds = new Set();
+        useBus(this.props.fullComposerBus, "INSERT_CANNED_RESPONSE", (ev) =>
+            this.cannedResponseIds.add(ev.detail.cannedResponse.id)
+        );
         if (this.props.context.default_message_id) {
             this.dialogService = useService("dialog");
             this.stopEditingConfirmation();
         }
+    }
+
+    async beforeExecuteActionButton(clickParams) {
+        if (clickParams.name === "action_send_mail") {
+            clickParams.buttonContext = {
+                ...clickParams.buttonContext,
+                canned_response_ids: [...this.cannedResponseIds],
+            };
+        }
+        return super.beforeExecuteActionButton(...arguments);
     }
 
     stopEditingConfirmation() {
