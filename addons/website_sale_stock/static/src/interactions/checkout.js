@@ -41,8 +41,8 @@ patch(Checkout.prototype, {
             save: async locationData => {
                 const jsonLocation = JSON.stringify(locationData);
                 // Assign the selected pickup location to the order.
-                const updatedCartData = await this.waitFor(this._setPickupLocation(jsonLocation));
-                this._updateCartSummaries(updatedCartData);
+                await this.waitFor(this._setPickupLocation(jsonLocation));
+                this._updateCartSummaries();
 
                 //  Show and set the order location details.
                 this._updatePickupLocation(deliveryMethodContainer, locationData, jsonLocation);
@@ -162,10 +162,10 @@ patch(Checkout.prototype, {
             'span[name="o_pickup_location_selector"]'
         );
         if (editPickupLocationButton.dataset.pickupLocationData) {
-            const updatedCart = await this.waitFor(
+            await this.waitFor(
                 this._setPickupLocation(editPickupLocationButton.dataset.pickupLocationData)
             );
-            this._updateCartSummaries(updatedCart);
+            this._updateCartSummaries();
         }
 
         pickupLocation.classList.remove('d-none'); // Show the whole div.

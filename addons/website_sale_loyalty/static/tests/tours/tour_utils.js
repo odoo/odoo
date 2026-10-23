@@ -15,14 +15,13 @@ export function submitCouponCode(code) {
     return [
         {
             content: "Enter gift card code",
-            trigger: "form[name='coupon_code'] input[name='promo']",
+            trigger: "input[name='promo']",
             run: `edit ${code}`,
         },
         {
             content: "click on 'Apply'",
-            trigger: 'form[name="coupon_code"] button[type="submit"]',
-            run: 'click',
-            expectUnloadPage: true,
+            trigger: 'button[name="apply_promo"]',
+            run: "click",
         },
     ]
 }

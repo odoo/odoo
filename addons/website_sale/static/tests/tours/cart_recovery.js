@@ -115,7 +115,7 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
         },
         {
             content: "check product is in restored cart",
-            trigger: 'div>a>h6:contains("Acoustic Bloc Screens")',
+            trigger: 'h6:contains("Acoustic Bloc Screens")',
         },
     ],
 });

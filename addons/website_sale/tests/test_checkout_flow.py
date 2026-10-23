@@ -188,7 +188,7 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
         with patch(
             "odoo.addons.website_sale.models.sale_order.SaleOrder._clear_alerts", autospec=True
         ) as clear_alerts_mock:
-            self.url_open("/shop/cart")
+            self.url_open("/shop/cart/lines")
 
             clear_alerts_mock.assert_called_once()
 
