@@ -29,10 +29,16 @@ class StockLot(models.Model):
         lots = self.with_context(owners=[False, self.env.company.partner_id.id])
         total_value_by_lot_id = defaultdict(float)
         valued_quantity_by_lot_id = defaultdict(float)
-
         for company in self.env.companies:
             lots = lots.with_company(company.id).with_context(allowed_company_ids=company.ids)
-
+            avco_lots = lots.filtered(
+            lambda l: l.lot_valuated and l.product_id.cost_method == 'average').with_context(
+                warehouse_id=False)
+            _, _, _, value_by_lot_id = avco_lots.product_id._run_average_batch_lot(
+                at_date=at_date,
+                force_recompute=True,
+                lots=avco_lots,
+            )
             for lot in lots:
                 if not lot.lot_valuated:
                     continue
@@ -46,8 +52,7 @@ class StockLot(models.Model):
                     total_value_by_lot_id[lot.id] += company.currency_id._convert(total_value, self.env.company.currency_id)
                     valued_quantity_by_lot_id[lot.id] += qty_valued
                 elif valuated_product.cost_method == 'average':
-                    avco_result = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot.with_context(warehouse_id=False))
-                    total_value = avco_result[1] * qty_valued / qty_available
+                    total_value = value_by_lot_id.get(lot.id, 0.0) * qty_valued / qty_available
                     total_value_by_lot_id[lot.id] += company.currency_id._convert(total_value, self.env.company.currency_id)
                     valued_quantity_by_lot_id[lot.id] += qty_valued
                 else:
@@ -88,6 +93,13 @@ class StockLot(models.Model):
     def _update_standard_price(self):
         # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
         lots = self.with_context(owners=[False, self.env.company.partner_id.id])
+        avco_lots = lots.filtered(
+            lambda l: l.lot_valuated and l.product_id.cost_method == 'average').with_context(
+                warehouse_id=False, disable_auto_revaluation=True)
+        _, _, std_price_by_lot_id, _ = avco_lots.product_id._run_average_batch_lot(
+            lots=avco_lots,
+            force_recompute=True,
+        )
         for lot in lots:
             lot = lot.with_context(disable_auto_revaluation=True)
             if not lot.product_id.lot_valuated:
@@ -97,7 +109,7 @@ class StockLot(models.Model):
                     lot.standard_price = lot.product_id.standard_price
                 continue
             elif lot.product_id.cost_method == 'average':
-                lot.standard_price = lot.product_id._run_avco(lot=lot)[0]
+                lot.standard_price = std_price_by_lot_id.get(lot.id, 0.0)
             else:
                 lot.standard_price = lot.product_id._run_fifo_batch(lot=lot)[0].get(lot.product_id.id, lot.standard_price)
 
