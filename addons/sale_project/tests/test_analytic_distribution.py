@@ -232,3 +232,48 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
                 for line in payment.move_id.line_ids),
             "The payment's journal items should not receive the project's analytic distribution.",
         )
+
+    def test_tax_line_does_not_receive_project_analytic_distribution(self):
+        """
+        Ensure that when an invoice opened from a project is edited by changing the customer and
+        replacing the taxed line, the tax line does not receive the project's analytic distribution
+        and the taxes are recomputed instead of keeping the amount of the removed line.
+        """
+        tax = self.tax_sale_a  # 15%
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'Line 1',
+                'quantity': 1,
+                'price_unit': 1000,
+                'tax_ids': [Command.set(tax.ids)],
+                'analytic_distribution': {str(self.analytic_account_sale.id): 100},
+            })],
+        })
+        self.assertEqual(invoice.amount_tax, 150)
+
+        # Open the invoice from the project, change the customer and replace the taxed line
+        invoice.with_context(project_id=self.project_global.id).write({
+            'partner_id': self.partner_b.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'Line 2',
+                    'quantity': 1,
+                    'price_unit': 500,
+                    'tax_ids': [Command.set(tax.ids)],
+                }),
+                Command.delete(invoice.invoice_line_ids.id),
+            ],
+        })
+
+        self.assertRecordValues(invoice, [{'amount_untaxed': 500.0, 'amount_tax': 75.0, 'amount_total': 575.0}])
+        self.assertEqual(
+            invoice.invoice_line_ids.analytic_distribution,
+            {str(self.analytic_account_sale.id): 100},
+            "The invoice line should receive the project's analytic distribution.",
+        )
+        self.assertFalse(
+            invoice.line_ids.filtered('tax_repartition_line_id').analytic_distribution,
+            "The tax line should not receive the project's analytic distribution.",
+        )
