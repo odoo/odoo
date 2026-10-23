@@ -277,6 +277,53 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         self.assertTrue(duplicate)
         self.assertIn(duplicate.id, accrual_entries.ids)
 
+    def test_create_entries_posts_message_on_order(self):
+        """ The order(s) the accrual was computed from get a chatter note about it. """
+        self.purchase_order.order_line.qty_received = 5
+        self.assertFalse(self.purchase_order.message_ids.filtered(lambda m: 'Accrual entry created' in (m.body or '')))
+        self.wizard.create_entries()
+        self.assertTrue(self.purchase_order.message_ids.filtered(lambda m: 'Accrual entry created' in (m.body or '')))
+
+    def test_accrued_order_lines_from_multiple_orders_are_merged(self):
+        """ Selecting individual order lines (not whole orders) across several purchase
+        orders still merges their accrued counterpart ("Accrued total") lines landing on
+        the same account/currency into a single line, instead of one per order. """
+        other_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_qty': 10.0,
+                'uom_id': self.product_a.uom_id.id,
+                'price_unit': self.product_a.list_price,
+                'tax_ids': False,
+            })],
+        })
+        other_order.button_confirm()
+        other_order.order_line.qty_received = 5
+        self.purchase_order.order_line[0].qty_received = 5
+
+        bills_to_receive_account = self.env.company.account_bills_to_receive_id
+        wizard = self.create_wizard(
+            active_model='purchase.order.line',
+            active_ids=(self.purchase_order.order_line[0] | other_order.order_line).ids,
+            account_id=False,
+        )
+        move_lines = self.env['account.move'].search(wizard.create_entries()['domain']).line_ids
+        entry_lines = move_lines.filtered(lambda l: l.move_id.state == 'posted')
+        reversal_lines = move_lines.filtered(lambda l: l.move_id.state == 'draft')
+
+        self.assertRecordValues(entry_lines.filtered(lambda l: l.account_id == self.account_expense).sorted('id'), [
+            {'debit': 5000.0, 'credit': 0.0},
+            {'debit': 5000.0, 'credit': 0.0},
+        ])
+        self.assertRecordValues(entry_lines.filtered(lambda l: l.account_id == bills_to_receive_account), [
+            {'debit': 0.0, 'credit': 10000.0},
+        ])
+        self.assertRecordValues(reversal_lines.filtered(lambda l: l.account_id == bills_to_receive_account), [
+            {'debit': 10000.0, 'credit': 0.0},
+        ])
+
     def test_duplicate_entries_are_deleted(self):
         self.purchase_order.order_line.qty_received = 5
         accrual_entries = self.env['account.move'].search(self.create_wizard().create_entries()['domain'])
