@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ThemeBorderRadiusOption">
+    <BuilderNumberInput
+        action="'customizeWebsiteVariable'"
+        actionParam="{ mainParam: variable, nullValue: 'NULL' }"
+        default="null"
+        unit="'px'"
+        saveUnit="'rem'"
+        min="min"
+        step="step"
+    />
+    <BuilderButton
+        t-if="resetVisibility[variable]"
+        action="'customizeWebsiteVariable'"
+        actionParam="{ mainParam: variable, nullValue: 'NULL' }"
+        className="'btn-danger-color-hover'"
+        icon="'refresh'"
+        title.translate="Reset"
+    />
+</t>
+
+</templates>

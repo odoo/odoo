@@ -345,9 +345,23 @@ $o-navbar-nav-pills-link-padding-x: if(o-website-value('header-links-style') == 
 $o-navbar-nav-pills-link-border-radius: if(o-website-value('header-links-style') == 'pills', 10rem, null) !default;
 
 // Borders
-$border-radius-sm: .3rem !default;
-$border-radius: .4rem !default;
-$border-radius-lg: .6rem !default;
+
+// Explicit customizations and resets override theme defaults.
+$border-radius: o-website-value('border-radius') or .4rem !default;
+@if map-has-key($o-user-website-values, 'border-radius') {
+    $border-radius: o-website-value('border-radius') or .4rem;
+}
+
+$border-radius-sm: o-website-value('border-radius-sm') or (.75 * $border-radius) !default;
+@if map-has-key($o-user-website-values, 'border-radius-sm') {
+    $border-radius-sm: o-website-value('border-radius-sm') or (.75 * $border-radius);
+}
+
+$border-radius-lg: o-website-value('border-radius-lg') or (1.5 * $border-radius) !default;
+@if map-has-key($o-user-website-values, 'border-radius-lg') {
+    $border-radius-lg: o-website-value('border-radius-lg') or (1.5 * $border-radius);
+}
+
 $border-radius-pill: 50rem !default; // BS Default
 
 // Accordion
@@ -396,6 +410,12 @@ $box-shadow-lg: var(--box-shadow-lg-offset-x) var(--box-shadow-lg-offset-y) var(
 
 // Cards
 $card-border-color: $border-color !default;
+
+// Explicit customizations and resets override theme defaults.
+$card-border-radius: o-website-value('card-border-radius') !default;
+@if map-has-key($o-user-website-values, 'card-border-radius') {
+    $card-border-radius: o-website-value('card-border-radius');
+}
 
 // HR Separator
 $hr-border-color: $border-color !default;

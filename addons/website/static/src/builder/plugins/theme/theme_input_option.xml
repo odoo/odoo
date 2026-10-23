@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ThemeInputOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Padding" tooltip.translate="Vertical and Horizontal padding" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'" tooltip.translate="Vertical padding" prefixIcon="'height'"/>
+            <BuilderNumberInput actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'" tooltip.translate="Horizontal padding" prefixIcon="'arrow_range'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" tooltip.translate="Vertical and Horizontal padding" level="1">
+                    <BuilderNumberInput actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'" tooltip.translate="Vertical padding" prefixIcon="'height'"/>
+                    <BuilderNumberInput actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'" tooltip.translate="Horizontal padding" prefixIcon="'arrow_range'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" tooltip.translate="Vertical and Horizontal padding" level="1">
+                    <BuilderNumberInput actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'" tooltip.translate="Vertical padding" prefixIcon="'height'"/>
+                    <BuilderNumberInput actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'" tooltip.translate="Horizontal padding" prefixIcon="'arrow_range'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'input-font-size'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput actionParam="'input-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput actionParam="'input-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <t t-set="subVariablesConfig" t-value="{'input-border-width': ['input-border-top-width', 'input-border-right-width', 'input-border-bottom-width', 'input-border-left-width']}"/>
+        <BuilderRow label.translate="Border Width" action="'customizeWebsiteSubVariables'">
+            <BuilderNumberInput actionParam="{mainParam: 'input-border-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" default="null"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Top" level="1">
+                    <BuilderNumberInput actionParam="{mainParam: 'input-border-top-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Right" level="1">
+                    <BuilderNumberInput actionParam="{mainParam: 'input-border-right-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Bottom" level="1">
+                    <BuilderNumberInput actionParam="{mainParam: 'input-border-bottom-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Left" level="1">
+                    <BuilderNumberInput actionParam="{mainParam: 'input-border-left-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Roundness">
+            <t t-call="website.ThemeBorderRadiusOption"
+                variable="'input-border-radius'"
+                resetVisibility="this.state.variablesDifferentFromGlobal"
+            />
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <t t-call="website.ThemeBorderRadiusOption"
+                        variable="'input-border-radius-sm'"
+                        resetVisibility="this.state.variablesDifferentFromGlobal"
+                    />
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <t t-call="website.ThemeBorderRadiusOption"
+                        variable="'input-border-radius-lg'"
+                        resetVisibility="this.state.variablesDifferentFromGlobal"
+                    />
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Background">
+            <BuilderColorPicker noTransparency="true"
+                enabledTabs="['solid', 'custom']"
+                action="'customizeWebsiteColor'"
+                actionParam="'input'"
+            />
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>
