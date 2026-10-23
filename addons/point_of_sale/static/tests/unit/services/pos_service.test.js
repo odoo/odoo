@@ -287,6 +287,35 @@ describe("pos_store.js", () => {
         expect(store.getOrder().lines[0].qty).toBe(4);
     });
 
+    test("addLineToOrder keeps the combo price when no combo item is selected", async () => {
+        const store = await setupPosEnv();
+        store.models["pos.preset"].get(1).pricelist_id = false;
+        const comboTemplate = store.models["product.template"].get(7);
+        const comboProduct = store.models["product.product"].get(7);
+        const comboItem = store.models["product.combo.item"].get(1);
+        // Single optional combo choice (qty_free = 0)
+        comboTemplate.combo_ids = [store.models["product.combo"].get(1)];
+
+        const order = store.addNewOrder();
+        const emptyComboLine = await store.addLineToOrder(
+            { product_tmpl_id: comboTemplate, payload: [[], []] },
+            order
+        );
+        expect(emptyComboLine.combo_line_ids).toHaveLength(0);
+        expect(emptyComboLine.price_unit).toBe(comboProduct.lst_price);
+
+        const comboLine = await store.addLineToOrder(
+            {
+                product_tmpl_id: comboTemplate,
+                payload: [[{ combo_item_id: comboItem, qty: 1 }], []],
+            },
+            order
+        );
+        expect(comboLine.combo_line_ids).toHaveLength(1);
+        expect(comboLine.price_unit).toBe(0);
+        expect(comboLine.combo_line_ids[0].price_unit).toBe(comboProduct.lst_price);
+    });
+
     test("addLineToCurrentOrder keeps the given variant with a single-value dynamic attribute", async () => {
         const store = await setupPosEnv();
         store.setOrder(null);

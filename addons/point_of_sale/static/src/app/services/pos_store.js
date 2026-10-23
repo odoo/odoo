@@ -1127,15 +1127,18 @@ export class PosStore extends WithLazyGetterTrap {
      * Handle price unit for the order line.
      */
     handlePriceUnit(values, order, price_unit) {
-        if (!values.product_tmpl_id.isCombo() && price_unit === undefined) {
-            values.price_unit = values.product_id.getPrice(
-                order.pricelist_id,
-                values.qty,
-                values.price_extra,
-                false,
-                values.product_id
-            );
+        if (price_unit !== undefined) {
+            return;
         }
+        values.price_unit = values.combo_line_ids?.length
+            ? 0
+            : values.product_id.getPrice(
+                  order.pricelist_id,
+                  values.qty,
+                  values.price_extra,
+                  false,
+                  values.product_id
+              );
     }
 
     // In case of clicking a combo product a popup will be shown to the user
