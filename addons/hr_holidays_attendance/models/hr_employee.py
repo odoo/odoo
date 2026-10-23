@@ -10,6 +10,7 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     def _get_calendar_attendance_domain(self):
+        """Exclude the schedule attendances whose work entry type counts as an absence."""
         return Domain.AND([
             super()._get_calendar_attendance_domain(),
             Domain.OR([
@@ -19,6 +20,8 @@ class HrEmployee(models.Model):
         ])
 
     def _compute_hours_last_month(self):
+        """Recompute ``hours_last_month_overtime`` from the time rule outputs overlapping the
+        current month until now."""
         super()._compute_hours_last_month()
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=UTC)
@@ -45,6 +48,7 @@ class HrEmployee(models.Model):
                 )
 
     def get_attendance_data_by_employee(self, date_start, date_stop):
+        """Set ``overtime_hours`` to the sum of the time rule outputs overlapping the period."""
         attendance_data = super().get_attendance_data_by_employee(date_start, date_stop)
 
         overtime_atts = self.env['hr.attendance']._read_group(
