@@ -196,12 +196,13 @@ class HrEmployee(models.Model):
             is_users_employee = has_attendance_own_reader_group and employee in current_user.employee_ids
             employee.display_attendances = has_attendance_user_group or is_approver or is_users_employee
 
-    @api.depends('attendance_ids.worked_hours', 'attendance_ids.time_rule_id')
+    @api.depends('attendance_ids.worked_hours', 'attendance_ids.time_rule_id', 'attendance_ids.state')
     def _compute_total_overtime(self):
         overtime_by_employee = dict(self.env['hr.attendance']._read_group(
             domain=[
                 ('employee_id', 'in', self.ids),
                 ('time_rule_id', '!=', False),
+                ('state', '=', 'validated'),
             ],
             groupby=['employee_id'],
             aggregates=['worked_hours:sum'],

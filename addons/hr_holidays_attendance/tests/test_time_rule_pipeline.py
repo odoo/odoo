@@ -941,6 +941,43 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(new_records.work_entry_type_id, self.overtime_type)
         self.assertEqual(len(excess_alloc), 1)
 
+    def test_refuse_attendance_refuses_outputs_and_reverses_credits(self):
+        """Refusing a source attendance refuses its outputs and reverses their credits."""
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Compensatory Rest',
+            'code': 'COMPREFUSE',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        self.time_rule.write({
+            'leave_compensation_rate': 0.5,
+            'allocation_type_id': comp_type.id,
+        })
+        # 14h on an 8h day: the source is cut at 14:00, the 6h excess is a new output
+        att = self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 6),
+            'check_out': datetime(2022, 12, 12, 20),
+        })
+        outputs = att.overtime_attendance_ids
+        self.assertEqual(outputs.work_entry_type_id, self.overtime_type)
+        allocation = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', comp_type.id),
+        ])
+        self.assertAlmostEqual(allocation.number_of_days, 0.375, places=5)
+        self.assertAlmostEqual(self.cal_emp.total_overtime, 6, places=5)
+
+        att.action_refuse()
+
+        self.assertEqual(outputs.mapped('state'), ['refused'])
+        self.assertAlmostEqual(allocation.number_of_days, 0, places=5)
+        self.cal_emp.invalidate_recordset(['total_overtime'])
+        self.assertAlmostEqual(self.cal_emp.total_overtime, 0, places=5)
+        vals = self.cal_version.generate_work_entries(date(2022, 12, 12), date(2022, 12, 12))
+        self.assertNotIn(self.overtime_type, [v['work_entry_type_id'] for v in vals])
+
     def test_allocation_no_wet_rule(self):
         """Allocate-only rule (no work_entry_type_id) must still create an allocation for excess hours.
 
