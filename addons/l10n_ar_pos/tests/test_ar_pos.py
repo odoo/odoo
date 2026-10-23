@@ -13,3 +13,9 @@ class TestGenericAR(TestGenericLocalization):
     @AccountTestInvoicingCommon.setup_country('ar')
     def setUpClass(cls):
         super().setUpClass()
+        cls.partner_a.write({
+            'country_id': cls.env.ref('base.ar').id,
+            'vat': False,
+            'additional_identifiers': {'AR_SIGD': '0'},
+            'l10n_ar_afip_responsibility_type_id': cls.env.ref('l10n_ar.res_CF').id,
+        })
