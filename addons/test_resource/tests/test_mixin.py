@@ -361,6 +361,36 @@ class TestResMixin(TestResourceCommon):
 
         leave.unlink()
 
+    def test_leaves_days_data_multi_calendars(self):
+        """ The result contains every record, whatever its calendar. """
+        fully_flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Fully Flexible',
+            'calendar_type': 'undefined',
+            'attendance_ids': [],
+            'hours_per_week': 0,
+            'hours_per_day': 0,
+        })
+        flexible_record = self.env['resource.test'].create({
+            'name': 'Flexible',
+            'tz': 'UTC',
+            'resource_calendar_id': fully_flexible_calendar.id,
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Jean is visiting India',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': self.datetime_str(2018, 4, 10, 8, 0, 0, tzinfo=self.jean.tz),
+            'date_to': self.datetime_str(2018, 4, 10, 16, 0, 0, tzinfo=self.jean.tz),
+        })
+        records = self.jean | self.john | flexible_record
+        data = records._get_leave_days_data_batch(datetime(2018, 4, 9), datetime(2018, 4, 14))
+        self.assertEqual(data, {
+            self.jean.id: {'days': 1, 'hours': 8},
+            self.john.id: {'days': 0, 'hours': 0},
+            flexible_record.id: {'days': 5, 'hours': 120},
+        })
+        self.assertIsInstance(data[flexible_record.id]['days'], float)
+
     def test_list_work_time_per_day(self):
         working_time = self.john._list_work_time_per_day(
             self.datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.john.tz),
