@@ -27,3 +27,11 @@ TRANSACTION_STATUS_MAPPING = {
     'voided': ['voided'],
     'refunded': ['refundPendingSettlement', 'refundSettledSuccessfully'],
 }
+
+# Response reason codes and AVS/CVV result codes of declines caused by a mismatch with the card
+# issuer's records. See https://developer.authorize.net/api/reference/features/errorandresponsecodes.html.
+AVS_MISMATCH_REASON_CODES = {'27', '127'}  # The reason text already describes the mismatch.
+CVV_MISMATCH_REASON_CODES = {'44', '65'}
+AVS_AND_CVV_MISMATCH_REASON_CODES = {'45'}
+AVS_MISMATCH_RESULT_CODES = {'A', 'N', 'W', 'Z'}
+CVV_MISMATCH_RESULT_CODES = {'N'}

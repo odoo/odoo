@@ -57,3 +57,40 @@ class AuthorizeTest(AuthorizeCommon):
             },
         })
         self.assertEqual(source_tx.state, 'cancel')
+
+    def _handle_decline(self, reason_code='2', avs_result_code='Y', cvv_result_code='M'):
+        tx = self._create_transaction('direct')
+        tx._handle_notification_data('authorize', {
+            'response': {
+                'x_response_code': '2',
+                'x_response_reason_code': reason_code,
+                'x_response_reason_text': "This transaction has been declined.",
+                'x_avs_result_code': avs_result_code,
+                'x_cvv_result_code': cvv_result_code,
+                'x_trans_id': '60000000001',
+                'x_type': 'auth_capture',
+                'payment_method_code': 'Visa',
+            },
+        })
+        self.assertEqual(tx.state, 'cancel')
+        return tx.state_message
+
+    def test_decline_without_avs_or_cvv_mismatch_keeps_reason(self):
+        self.assertEqual(self._handle_decline(), "This transaction has been declined.")
+
+    def test_decline_with_cvv_mismatch_adds_hint(self):
+        message = self._handle_decline(cvv_result_code='N')
+        self.assertTrue(message.startswith("This transaction has been declined.\n"))
+        self.assertIn("security code (CVV) does not match", message)
+
+    def test_decline_with_avs_mismatch_adds_hint(self):
+        message = self._handle_decline(avs_result_code='N')
+        self.assertIn("billing address or postal code", message)
+
+    def test_decline_with_avs_and_cvv_filter_adds_combined_hint(self):
+        message = self._handle_decline(reason_code='45')
+        self.assertIn("billing address and the card security code", message)
+
+    def test_explicit_avs_decline_reason_is_not_duplicated(self):
+        message = self._handle_decline(reason_code='27', avs_result_code='N')
+        self.assertEqual(message, "This transaction has been declined.")
