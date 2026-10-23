@@ -286,7 +286,7 @@ class MrpWorkorder(models.Model):
             product_name = wo.product_id.name
             if variant := wo.product_id.product_template_attribute_value_ids._get_combination_name():
                 product_name = f"{product_name} ({variant})"
-            product_name_qty_prefix = f"{product_name} - {wo.qty_remaining:g} {wo.uom_id.name}"
+            product_name_qty_prefix = f"{product_name} - {wo.qty_to_produce:g} {wo.uom_id.name}"
             wo.display_name = product_name_qty_prefix
             if self.env.context.get('display_complete_name'):
                 wo.display_name = f"{product_name_qty_prefix} - {wo.production_id.name} - {wo.name}"
