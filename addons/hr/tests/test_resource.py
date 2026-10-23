@@ -234,6 +234,40 @@ class TestResource(TestHrCommon):
         self.assertEqual(self.employee.resource_calendar_id, self.employee.resource_id.calendar_id)
         self.assertEqual(self.employee.version_id.resource_calendar_id, self.employee.resource_id.calendar_id)
 
+    def test_resource_calendar_follows_current_version(self):
+        """ The resource calendar follows the current version, whatever the way it changes. """
+        calendar_a, calendar_b = self.env['resource.calendar'].create([
+            {'name': 'Calendar A'},
+            {'name': 'Calendar B'},
+        ])
+        employee = self.env['hr.employee'].create({
+            'name': 'Versioned Employee',
+            'date_version': date(2020, 1, 1),
+            'resource_calendar_id': calendar_a.id,
+        })
+        future_version = employee.create_version({
+            'date_version': date(2100, 1, 1),
+            'resource_calendar_id': calendar_b.id,
+        })
+        self.assertEqual(employee.resource_id.calendar_id, calendar_a)
+
+        future_version.date_version = date(2021, 1, 1)
+        self.assertEqual(employee.current_version_id, future_version)
+        self.assertEqual(employee.resource_id.calendar_id, calendar_b)
+
+        future_version.action_archive()
+        self.assertEqual(employee.resource_id.calendar_id, calendar_a)
+
+        future_version.action_unarchive()
+        self.assertEqual(employee.resource_id.calendar_id, calendar_b)
+
+        new_version = employee.create_version({
+            'date_version': date(2022, 1, 1),
+            'resource_calendar_id': calendar_a.id,
+        })
+        self.assertEqual(employee.current_version_id, new_version)
+        self.assertEqual(employee.resource_id.calendar_id, calendar_a)
+
     def test_calendar_validity_with_new_version_same_contract(self):
         """ Test that when a new version is created for the same contract with a different
             working schedule, the calendar validity is correctly split at the version
