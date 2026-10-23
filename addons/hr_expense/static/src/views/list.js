@@ -1,24 +1,23 @@
-import { render } from "@web/owl2/utils";
 import { ExpenseDashboard } from "@hr_expense/components/expense_dashboard";
-import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from "@hr_expense/mixins/document_upload";
-
+import { ExpenseDocumentDropZone, useExpenseDocumentUploadInput } from "@hr_expense/document_upload/document_upload";
 import { registry } from '@web/core/registry';
-import { useService } from '@web/core/utils/hooks';
 import { user } from "@web/core/user";
 import { rpc } from "@web/core/network/rpc";
 import { listView } from "@web/views/list/list_view";
-
 import { ListController } from "@web/views/list/list_controller";
 import { ListRenderer, listRendererProps } from "@web/views/list/list_renderer";
 import { onWillStart } from "@odoo/owl";
 
-export class ExpenseListController extends ExpenseDocumentUpload(ListController) {
+export class ExpenseListController extends ListController {
     static template = `hr_expense.ListView`;
 
     setup() {
         super.setup();
-        this.orm = useService('orm');
-        this.actionService = useService('action');
+        this.expenseUpload = useExpenseDocumentUploadInput({
+            bus: this.env.bus,
+            viewType: () => this.env.config.viewType,
+            context: () => this.props.context,
+        });
 
         onWillStart(async () => {
             [this.userIsExpenseTeamApprover, this.userIsAccountInvoicing, this.userHasEmployee] =
@@ -63,7 +62,7 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
 
     async onClickPrintSelected() {
         const recordIds = this.model.root.selection.map((r) => r.resId);
-        this.env.services.action.doAction('hr_expense.action_report_hr_expense', {
+        this.actionService.doAction('hr_expense.action_report_hr_expense', {
             additionalContext: { active_ids: recordIds },
         });
     }
@@ -87,7 +86,6 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
                         return;
                     }
                     await this.model.root.load();
-                    render(this, true);
                 }
             });
         }

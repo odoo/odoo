@@ -57,7 +57,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'web.assets_backend': [
             'hr_expense/static/src/components/*.js',
             'hr_expense/static/src/components/*.xml',
-            'hr_expense/static/src/mixins/*.js',
+            'hr_expense/static/src/document_upload/*.js',
             'hr_expense/static/src/views/*.js',
             'hr_expense/static/src/views/*.xml',
             'hr_expense/static/src/webclient/**/*',
