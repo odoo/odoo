@@ -212,6 +212,14 @@ class ResCompany(models.Model):
         # DEPRECATED - was for the pre-prod phase
         return
 
+    def _l10n_fr_pdp_update_send_to_ppf(self, value):
+        self.ensure_one()
+        if self.account_peppol_edi_user.proxy_type == 'pdp' and self.account_peppol_proxy_state in ('pending', 'active'):
+            self.account_peppol_edi_user._call_peppol_proxy(
+                "/api/pdp/1/send_to_ppf",
+                params={'pdp_send_to_ppf': value},
+            )
+
     def _pdp_get_flow_10_start_date(self):
         self.ensure_one()
         if (param_start_date := self.env['ir.config_parameter'].sudo().get_param(
