@@ -365,3 +365,16 @@ class TestPDFQuoteBuilder(BaseUsersCommon, SaleManagementCommon):
             login='admin',
         )
         # Assert documents are selected
+
+    def test_custom_value_after_document_type_change(self):
+        Report = self.env['ir.actions.report']
+        self.sale_order.customizable_pdf_form_fields = json.dumps({
+            'header': {str(self.header.id): {'custom_form_fields': {'some_field': 'some value'}}},
+        })
+        self.assertEqual(Report._get_custom_value_from_order(self.header, 'some_field', self.sale_order, False), 'some value')
+
+        self.header.document_type = 'footer'
+        self.assertEqual(Report._get_custom_value_from_order(self.header, 'some_field', self.sale_order, False), "")
+
+        self.sale_order.customizable_pdf_form_fields = False
+        self.assertEqual(Report._get_custom_value_from_order(self.header, 'some_field', self.sale_order, False), "")
