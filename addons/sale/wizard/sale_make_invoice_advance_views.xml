@@ -44,9 +44,6 @@
                 <group invisible="amount_paid == 0">
                     <field name="amount_paid"/>
                 </group>
-                <group invisible="advance_payment_method == 'downpayment'">
-                    <field name="amount_to_invoice"/>
-                </group>
                 <footer>
                     <button name="create_invoices" type="object"
                         id="create_invoice_open"
