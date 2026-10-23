@@ -58,6 +58,17 @@ export class SelfOrderRouter extends Reactive {
      * @param {Object} historyState optional state associated with the navigation.
      */
     navigate(routeName, routeParams = {}, historyState = {}) {
+        history.pushState(historyState, "", this.routeUrl(routeName, routeParams));
+        this.path = window.location.pathname;
+        this.historyPage = this.path;
+    }
+
+    // Like `navigate`, but with a full page load (refreshes app data, uses `frontend_lang` cookie)
+    load(routeName, routeParams = {}) {
+        location.pathname = this.routeUrl(routeName, routeParams).pathname;
+    }
+
+    routeUrl(routeName, routeParams = {}) {
         const { route } = this.registeredRoutes[routeName];
         const url = new URL(location.href);
 
@@ -66,9 +77,7 @@ export class SelfOrderRouter extends Reactive {
             (match, paramName) => routeParams[paramName]
         );
 
-        history.pushState(historyState, "", url);
-        this.path = window.location.pathname;
-        this.historyPage = this.path;
+        return url;
     }
 
     registerRoutes(routes) {

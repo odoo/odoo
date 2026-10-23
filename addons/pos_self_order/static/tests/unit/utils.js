@@ -183,6 +183,9 @@ export const setupSelfPosEnv = async (
             this.historyPage = pathName;
             window.history.replaceState(historyState, "");
         },
+        load(routeName, routeParams = {}) {
+            this.navigate(routeName, routeParams);
+        },
     });
 
     // Removing `pos` and its dependent services to avoid conflicts during `self_order` data loading.

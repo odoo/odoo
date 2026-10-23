@@ -1,4 +1,5 @@
 import { test, expect } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { LandingPage } from "@pos_self_order/app/pages/landing_page/landing_page";
 import { setupSelfPosEnv, getFilledSelfOrder, mockNavigate } from "../utils";
@@ -93,4 +94,17 @@ test("includes table-service presets in QR/kiosk mode", async () => {
 
     expect(store.currentOrder.preset_id).toBeEmpty();
     expect(navigate).toEqual(["location"]);
+});
+
+test("home image stays displayed when the kiosk prints a pending preparation", async () => {
+    const store = await setupSelfPosEnv("kiosk", "counter", "meal");
+    await getFilledSelfOrder(store);
+    const order = await store.sendDraftOrderToServer();
+    patchWithCleanup(store.ticketPrinter, { async printOrderChanges() {} });
+    expect(".carousel-item:first-child").toHaveClass("active");
+
+    store.setPendingPreparation(order.access_token);
+    await store.printPendingPreparation();
+    await animationFrame();
+    expect(".carousel-item:first-child").toHaveClass("active");
 });
