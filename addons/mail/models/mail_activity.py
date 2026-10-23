@@ -14,7 +14,7 @@ from odoo.tools import OrderedSet, is_html_empty
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.tools.translate import LazyTranslate
-from odoo.addons.base.models.ir_attachment import condition_values
+from odoo.addons.base.models.ir_attachment import allow_sudo_search, condition_values
 from odoo.addons.mail.tools.discuss import Store
 from .mail_message import MAX_COMODELS_FOR_DOMAIN, MAX_SEARCH_LIMIT, _find_allowed_doc_ids, exists_in_cache
 
@@ -36,6 +36,9 @@ class MailActivity(models.Model):
     _order = 'date_deadline ASC, id ASC'
     _rec_name = 'summary'
     _access_domain_heavy = True
+
+    def _valid_field_parameter(self, field, name):
+        return super()._valid_field_parameter(field, name) or name == 'allow_sudo_search'
 
     @api.model
     def default_get(self, fields):
@@ -62,11 +65,15 @@ class MailActivity(models.Model):
     # owner
     res_model_id = fields.Many2one(
         'ir.model', 'Document Model',
+        allow_sudo_search=True,
         index=True, ondelete='cascade', required=False)
     res_model = fields.Char(
         'Related Document Model',
+        allow_sudo_search=True,
         index=True, related='res_model_id.model', precompute=True, store=True, readonly=True)
-    res_id = fields.Many2oneReference(string='Related Document ID', index=True, model_field='res_model')
+    res_id = fields.Many2oneReference(string='Related Document ID',
+        allow_sudo_search=True,
+        index=True, model_field='res_model')
     res_name = fields.Char(
         'Document Name', compute='_compute_res_name', compute_sudo=True, store=True,
         readonly=True)
@@ -95,23 +102,24 @@ class MailActivity(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
         domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]", ondelete='restrict',
+        allow_sudo_search=True,
         default=_default_activity_type)
-    activity_category = fields.Selection(related='activity_type_id.category', readonly=True)
+    activity_category = fields.Selection(related='activity_type_id.category', readonly=True, allow_sudo_search=True)
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=True)
     icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
-    activity_plan_id = fields.Many2one('mail.activity.plan', string='Plan', ondelete='set null', copy=False)
-    activity_template_id = fields.Many2one('mail.activity.plan.template', string='Generated From',
+    activity_plan_id = fields.Many2one('mail.activity.plan', string='Plan', ondelete='set null', copy=False, allow_sudo_search=True)
+    activity_template_id = fields.Many2one('mail.activity.plan.template', string='Generated From', allow_sudo_search=True,
                                            index='btree_not_null')
     summary = fields.Char('Summary', compute='_compute_summary', precompute=True, store=True, readonly=False)
     note = fields.Html('Note', sanitize_style=True, compute='_compute_note', precompute=True, store=True, readonly=False)
     date_deadline = fields.Date('Due Date', index=True, required=True,
-        compute='_compute_date_deadline', precompute=True, store=True, readonly=False)
-    date_done = fields.Date('Done Date', compute='_compute_date_done', store=True)
+        compute='_compute_date_deadline', precompute=True, store=True, readonly=False, allow_sudo_search=True)
+    date_done = fields.Date('Done Date', compute='_compute_date_done', store=True, allow_sudo_search=True)
     feedback = fields.Text('Feedback')
     automated = fields.Boolean(
-        'Automated activity', readonly=True,
+        'Automated activity', readonly=True, allow_sudo_search=True,
         help='Indicates this activity has been created automatically and not by any user.')
-    technical_usage = fields.Selection(selection=[('none', 'Non Technical')], default='none', readonly=True, help="Technical identifier")
+    technical_usage = fields.Selection(selection=[('none', 'Non Technical')], default='none', readonly=True, help="Technical identifier", allow_sudo_search=True)
     # Attachments are linked to a document through model / res_id and to the activity through this field.
     attachment_ids = fields.Many2many(
         'ir.attachment', 'activity_attachment_rel',
@@ -122,6 +130,7 @@ class MailActivity(models.Model):
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
+        allow_sudo_search=True,
         index=True, required=False, ondelete='cascade',
         compute='_compute_user_id', precompute=True, store=True, readonly=False)
     user_tz = fields.Selection(string='Timezone', related="user_id.tz", store=True)
@@ -134,7 +143,7 @@ class MailActivity(models.Model):
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=True)
     # access
     can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, allow_sudo_search=True)
 
     # if model: valid res_id
     _check_res_id_is_set_if_model = models.Constraint(
@@ -414,13 +423,34 @@ class MailActivity(models.Model):
         if 0 < len(res_model_names) <= MAX_COMODELS_FOR_DOMAIN:
             return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
 
-        self_sudo = self.sudo()
-        if self._active_name and not kwargs.get('active_test', True):  # user set active_test=False
-            domain &= Domain(self._active_name, 'in', [True, False])
+        active_test = kwargs.get('active_test', True)
         ordered = bool(order)
+        fields_to_fetch = [self._fields[name] for name in SECURITY_FIELDS]
+        base_domain = domain.map_conditions(lambda c: c if allow_sudo_search(self, c.field_expr) else Domain.TRUE)
+        if base_domain == domain:
+            domain = Domain.TRUE
+        if not allow_sudo_search(self, order):
+            query = super()._search(
+                base_domain,
+                order='res_model nulls first, res_id, id',
+                limit=MAX_SEARCH_LIMIT,
+                active_test=active_test,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
+            if len(records) == MAX_SEARCH_LIMIT:  # avoid out of memory
+                raise UserError(self.env._("Cannot search, too many activities"))
+            until = None if limit is None else offset + limit
+            return records._filtered_access('read').filtered(domain).sorted(order)[offset:until]._as_query(ordered)
         if limit is None:
-            records = self_sudo.search_fetch(domain, SECURITY_FIELDS, order=order).sudo(False)
-            return records._filtered_access('read')[offset:]._as_query(ordered)
+            query = super()._search(
+                base_domain,
+                order=order,
+                active_test=active_test,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
+            return records._filtered_access('read').filtered(domain)[offset:]._as_query(ordered)
         # Fetch by small batches
         looping_offset = 0
         limit += offset
@@ -429,14 +459,16 @@ class MailActivity(models.Model):
             # By default, order by model to batch access checks.
             order = 'res_model nulls first, id'
         while len(result) < limit:
-            records = self_sudo.search_fetch(
-                domain,
-                SECURITY_FIELDS,
+            query = super()._search(
+                base_domain,
                 offset=looping_offset,
                 limit=PREFETCH_MAX,
                 order=order,
-            ).sudo(False)
-            result.extend(records._filtered_access('read')._ids)
+                active_test=active_test,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
+            result.extend(records._filtered_access('read').filtered(domain)._ids)
             if len(records) < PREFETCH_MAX:
                 # There are no more records
                 break
@@ -447,15 +479,23 @@ class MailActivity(models.Model):
         assert self.env.su
         if domain_operator != 'in':
             return NotImplemented
+        env = self.sudo(False).with_context(active_test=False).env
         domain = self.env.context.get('search_domain')
         if not isinstance(domain, Domain):
             domain = Domain.TRUE
-        self = self.sudo(False)  # noqa: PLW0642
+        else:
+            domain = domain.optimize_dynamic(self.with_env(env)).map_conditions(lambda c: c if allow_sudo_search(self, c.field_expr) else Domain.TRUE)
 
         res_model_names = condition_values(self, 'res_model', domain)
         if operation != 'read' or res_model_names is None:
-            records = self.sudo().with_context(active_test=False).search_fetch(
-                domain, SECURITY_FIELDS, order='id', limit=MAX_SEARCH_LIMIT)
+            query = self.with_env(env)._search(
+                domain,
+                order='id',
+                limit=MAX_SEARCH_LIMIT,
+                bypass_access=True,
+            )
+            fields_to_fetch = [self._fields[name] for name in SECURITY_FIELDS]
+            records = self._fetch_query(query, fields_to_fetch)
             if len(records) == MAX_SEARCH_LIMIT:  # avoid out of memory
                 raise UserError(self.env._("Cannot search, too many activities"))
             records = records.sudo(False)._filtered_access(operation)
@@ -464,7 +504,6 @@ class MailActivity(models.Model):
 
         # search by model and res_id
         sec_domain = Domain.FALSE
-        env = self.with_context(active_test=False).env
         for res_model_name in res_model_names:
             if res_model_name not in env:
                 continue

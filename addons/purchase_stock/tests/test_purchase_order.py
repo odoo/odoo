@@ -228,7 +228,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(po.order_line[0].date_planned, tomorrow)
         activity = self.env['mail.activity'].search([
             ('summary', '=', 'Date Updated'),
-            ('res_model_id', '=', 'purchase.order'),
+            ('res_model', '=', 'purchase.order'),
             ('res_id', '=', po.id),
         ])
         self.assertTrue(activity)
@@ -935,7 +935,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         Form.from_action(self.env, receipt.button_validate()).save().process_cancel_backorder()
         # A note is created: it mentions 2 incomplete lines and ignores the complete one
         activity = self.env['mail.activity'].search([
-            ('res_model_id', '=', 'purchase.order'), ('res_id', '=', po.id),
+            ('res_model', '=', 'purchase.order'), ('res_id', '=', po.id),
         ])
         self.assertEqual(activity.summary, 'Missing products in receipt')
         # The PO user should be assigned to the note
@@ -967,7 +967,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         first_step.button_validate()
         # There should be no note
         activity = self.env['mail.activity'].search([
-            ('res_model_id', '=', 'purchase.order'), ('res_id', '=', multi_step_po.id),
+            ('res_model', '=', 'purchase.order'), ('res_id', '=', multi_step_po.id),
         ])
         self.assertFalse(activity)
         # Update quantities in the second transfer
@@ -979,7 +979,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         Form.from_action(self.env, second_step.button_validate()).save().process_cancel_backorder()
         # There should still be no note, since the first transfer was validated with full quantities
         activity = self.env['mail.activity'].search([
-            ('res_model_id', '=', 'purchase.order'), ('res_id', '=', multi_step_po.id),
+            ('res_model', '=', 'purchase.order'), ('res_id', '=', multi_step_po.id),
         ])
         self.assertFalse(activity)
 
