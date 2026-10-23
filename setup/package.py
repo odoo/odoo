@@ -43,9 +43,11 @@ RUN mkdir /var/lib/odoo && \
 USER odoo
 """ % {'group_id': os.getgid(), 'user_id': os.getuid()}
 
+_logger = logging.getLogger(__name__)
+
 
 def run_cmd(cmd, chdir=None, timeout=None):
-    logging.info("Running command: '%s'", ' '.join(cmd))
+    _logger.info("Running command: '%s'", ' '.join(cmd))
     return subprocess.run(cmd, cwd=chdir, timeout=timeout)
 
 
@@ -130,7 +132,7 @@ def rpm_sign(args, file_name):
 
 def _prepare_build_dir(args, win32=False, move_addons=True):
     """Copy files to the build directory"""
-    logging.info('Preparing build dir "%s"', args.build_dir)
+    _logger.info('Preparing build dir "%s"', args.build_dir)
     cmd = ['rsync', '-a', '--delete', '--exclude', '.git', '--exclude', '*.pyc', '--exclude', '*.pyo']
     if win32 is False:
         cmd += ['--exclude', 'setup/win32']
@@ -143,13 +145,13 @@ def _prepare_build_dir(args, win32=False, move_addons=True):
             try:
                 shutil.move(addon_path, os.path.join(args.build_dir, 'odoo/addons'))
             except shutil.Error as e:
-                logging.warning("Warning '%s' while moving addon '%s", e, addon_path)
+                _logger.warning("Warning '%s' while moving addon '%s", e, addon_path)
                 if addon_path.startswith(args.build_dir) and os.path.isdir(addon_path):
-                    logging.info("Removing '{}'".format(addon_path))
+                    _logger.info("Removing '%s'", addon_path)
                     try:
                         shutil.rmtree(addon_path)
                     except shutil.Error as rm_error:
-                        logging.warning("Cannot remove '{}': {}".format(addon_path, rm_error))
+                        _logger.warning("Cannot remove '%s': %s", addon_path, rm_error)
 
 
 #  Docker stuffs
@@ -228,16 +230,16 @@ class DockerTgz(Docker):
     arch = 'tgz'
 
     def build(self):
-        logging.info('Start building python tgz package')
+        _logger.info('Start building python tgz package')
         self.run('python3 setup.py sdist --quiet --formats=gztar,zip', self.args.build_dir, 'odoo-src-build-%s' % TSTAMP)
         os.rename(glob('%s/dist/odoo-*.tar.gz' % self.args.build_dir)[0], '%s/odoo_%s.%s.tar.gz' % (self.args.build_dir, VERSION, TSTAMP))
         os.rename(glob('%s/dist/odoo-*.zip' % self.args.build_dir)[0], '%s/odoo_%s.%s.zip' % (self.args.build_dir, VERSION, TSTAMP))
-        logging.info('Finished building python tgz package')
+        _logger.info('Finished building python tgz package')
 
     def start_test(self):
         if not self.args.test:
             return
-        logging.info('Start testing python tgz package')
+        _logger.info('Start testing python tgz package')
         cmds = [
             'service postgresql start',
             'su postgres -s /bin/bash -c "createuser -s odoo"',
@@ -249,7 +251,7 @@ class DockerTgz(Docker):
             'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/odoo -d mycompany -i base --stop-after-init --test-tags packaging"',
         ]
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-src-test-%s' % TSTAMP, user='root', timeout=300)
-        logging.info('Finished testing tgz package')
+        _logger.info('Finished testing tgz package')
 
 
 class DockerDeb(Docker):
@@ -258,7 +260,7 @@ class DockerDeb(Docker):
     arch = 'deb'
 
     def build(self):
-        logging.info('Start building debian package')
+        _logger.info('Start building debian package')
         # Generate new debian/changelog
         # - Append timestamp to version for the .dsc to refer the right .tar.gz
         # - Write the date into the email line so SOURCE_DATE_EPOCH is set correctly from it
@@ -268,12 +270,12 @@ class DockerDeb(Docker):
         # As the packages are built in the parent of the buildir, we move them back to build_dir
         cmds.append('mv ../odoo_* ./')
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-deb-build-%s' % TSTAMP)
-        logging.info('Finished building debian package')
+        _logger.info('Finished building debian package')
 
     def start_test(self):
         if not self.args.test:
             return
-        logging.info('Start testing debian package')
+        _logger.info('Start testing debian package')
         cmds = [
             'service postgresql start',
             '/usr/bin/apt-get update -y',
@@ -281,7 +283,7 @@ class DockerDeb(Docker):
             'su odoo -s /bin/bash -c "odoo -d mycompany -i base --stop-after-init --test-tags packaging"',
         ]
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-deb-test-%s' % TSTAMP, user='root', timeout=300)
-        logging.info('Finished testing debian package')
+        _logger.info('Finished testing debian package')
 
 
 class DockerRpm(Docker):
@@ -290,7 +292,7 @@ class DockerRpm(Docker):
     arch = 'rpm'
 
     def build(self):
-        logging.info('Start building fedora rpm package')
+        _logger.info('Start building fedora rpm package')
         rpmbuild_dir = '/var/lib/odoo/rpmbuild'
         build_date = datetime.now().strftime('%a %b %d %Y')
         cmds = [
@@ -304,12 +306,12 @@ class DockerRpm(Docker):
         ]
         self.run(' && '.join(cmds), self.args.build_dir, f'odoo-rpm-build-{TSTAMP}')
         os.rename(glob('%s/dist/odoo-*.noarch.rpm' % self.args.build_dir)[0], '%s/odoo_%s.%s.rpm' % (self.args.build_dir, VERSION, TSTAMP))
-        logging.info('Finished building fedora rpm package')
+        _logger.info('Finished building fedora rpm package')
 
     def start_test(self):
         if not self.args.test:
             return
-        logging.info('Start testing rpm package')
+        _logger.info('Start testing rpm package')
         cmds = [
             'su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"',
             'sleep 5',
@@ -319,7 +321,7 @@ class DockerRpm(Docker):
             'su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany -i base --stop-after-init --test-tags packaging"',
         ]
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-rpm-test-%s' % TSTAMP, user='root', timeout=300)
-        logging.info('Finished testing rpm package')
+        _logger.info('Finished testing rpm package')
 
     def gen_rpm_repo(self, args, rpm_filepath):
         pub_repodata_path = os.path.join(args.pub, 'rpm', 'repodata')
@@ -332,7 +334,7 @@ class DockerRpm(Docker):
         temp_path = tempfile.mkdtemp(suffix='rpmPackages')
         shutil.copy(rpm_filepath, temp_path)
 
-        logging.info('Start creating rpm repo')
+        _logger.info('Start creating rpm repo')
         self.run('createrepo /data/src/', temp_path, 'odoo-rpm-createrepo-%s' % TSTAMP)
         shutil.copytree(os.path.join(temp_path, "repodata"), pub_repodata_path)
 
@@ -353,7 +355,7 @@ class DockerWine(Docker):
         self.bundle_po_files = True
 
     def build(self):
-        logging.info('Start building %s package', self.package_name)
+        _logger.info('Start building %s package', self.package_name)
         winver = "%s.%s" % (VERSION.replace('~', '_').replace('+', ''), TSTAMP)
         container_python = '/var/lib/odoo/.wine/drive_c/odoobuild/WinPy64/python-3.12.3.amd64/python.exe'
         nsis_args = f'/DVERSION={winver} /DMAJOR_VERSION={version_info[0]} /DMINOR_VERSION={version_info[1]} /DSERVICENAME={self.nt_service_name} /DPYTHONVERSION=3.12.3'
@@ -377,7 +379,7 @@ class DockerWine(Docker):
             cmds = [bundle_po_files_cmd, *cmds]
 
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-win-build-%s' % TSTAMP)
-        logging.info('Finished building %s package', self.package_name)
+        _logger.info('Finished building %s package', self.package_name)
 
 
 class DockerIot(DockerWine):
@@ -399,7 +401,7 @@ class DockerIot(DockerWine):
 def parse_args():
     ap = argparse.ArgumentParser()
     build_dir = "%s-%s-%s" % (ROOTDIR, TSEC, TSTAMP)
-    log_levels = {"debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARN, "error": logging.ERROR, "critical": logging.CRITICAL}
+    log_levels = {"debug": logging.DEBUG, "info": logging.INFO, "warning": logging.WARNING, "error": logging.ERROR, "critical": logging.CRITICAL}
 
     ap.add_argument("-b", "--build-dir", default=build_dir, help="build directory (%(default)s)", metavar="DIR")
     ap.add_argument("-p", "--pub", default=None, metavar="DIR", help="publish directory; if omitted, packages are only built (use --no-remove to keep the artifacts)")
@@ -436,7 +438,7 @@ def main(args):
                     published_files = publish(args, 'tgz', ['tar.gz', 'zip'])
             except Exception as e:
                 exit_code = 1
-                logging.error("Won't publish the tgz release.\n Exception: %s" % str(e))
+                _logger.error("Won't publish the tgz release.\n Exception: %s", e)
         if args.build_rpm:
             _prepare_build_dir(args)
             docker_rpm = DockerRpm(args)
@@ -446,13 +448,13 @@ def main(args):
                 if args.pub:
                     published_files = publish(args, 'rpm', ['rpm'])
                     if args.sign:
-                        logging.info('Signing rpm package')
+                        _logger.info('Signing rpm package')
                         rpm_sign(args, published_files[0])
-                        logging.info('Generate rpm repo')
+                        _logger.info('Generate rpm repo')
                         docker_rpm.gen_rpm_repo(args, published_files[0])
             except Exception as e:
                 exit_code = 1
-                logging.error("Won't publish the rpm release.\n Exception: %s" % str(e))
+                _logger.error("Won't publish the rpm release.\n Exception: %s", e)
         if args.build_deb:
             _prepare_build_dir(args, move_addons=False)
             docker_deb = DockerDeb(args)
@@ -464,7 +466,7 @@ def main(args):
                     gen_deb_package(args, published_files)
             except Exception as e:
                 exit_code = 1
-                logging.error("Won't publish the deb release.\n Exception: %s" % str(e))
+                _logger.error("Won't publish the deb release.\n Exception: %s", e)
         if args.build_win:
             _prepare_build_dir(args, win32=True)
             docker_wine = DockerWine(args)
@@ -474,33 +476,34 @@ def main(args):
                     published_files = publish(args, 'windows', ['exe'])
             except Exception as e:
                 exit_code = 1
-                logging.error("Won't publish the exe release.\n Exception: %s" % str(e))
+                _logger.error("Won't publish the exe release.\n Exception: %s", e)
         if args.build_iot:
             _prepare_build_dir(args, win32=True)
             docker_iot = DockerIot(args)
             docker_iot.build()
             try:
-                published_files = publish(args, 'iot', ['exe'])
+                if args.pub:
+                    published_files = publish(args, 'iot', ['exe'])
             except Exception as e:
                 exit_code = 1
-                logging.error("Won't publish the iot release.\n Exception: %s" % str(e))
+                _logger.error("Won't publish the iot release.\n Exception: %s", e)
     except Exception as e:
         exit_code = 1
-        logging.error('Something bad happened ! : {}'.format(e))
+        _logger.error('Something bad happened ! : %s', e)
         traceback.print_exc()
     finally:
         if args.no_remove:
-            logging.info('Build dir "{}" not removed'.format(args.build_dir))
+            _logger.info('Build dir "%s" not removed', args.build_dir)
         else:
             if os.path.exists(args.build_dir):
                 shutil.rmtree(args.build_dir)
-                logging.info('Build dir %s removed' % args.build_dir)
+                _logger.info('Build dir %s removed', args.build_dir)
     return exit_code
 
 
 if __name__ == '__main__':
     args = parse_args()
     if os.path.exists(args.build_dir):
-        logging.error('Build dir "%s" already exists.', args.build_dir)
+        _logger.error('Build dir "%s" already exists.', args.build_dir)
         sys.exit(1)
     sys.exit(main(args))
