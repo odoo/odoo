@@ -59,6 +59,8 @@ class PosTestRecords(AccountTestInvoicingCommon):
         cls._setup_attribute_products()
         cls.env['ir.default'].set('res.partner', 'specific_property_product_pricelist', cls.public_pricelist.id, company_id=cls.company.id)
 
+        # TODO-PARP:
+        # cls._setup_combo_product()  # will replace setup_product_combo_items
 
     @classmethod
     def _archive_products(cls):
@@ -439,6 +441,40 @@ class PosTestRecords(AccountTestInvoicingCommon):
             'value_ids': [Command.set(cls.chair_addons_attribute.value_ids.ids)],
         })
 
+    @classmethod
+    def _setup_combo_product(cls):
+        """Build the office combo from shared products, including the configurable chair."""
+        def create_combo(name, items):
+            return cls.env['product.combo'].create({
+                'name': name,
+                'combo_item_ids': [
+                    Command.create({'product_id': product.product_variant_id.id, 'extra_price': extra_price})
+                    for product, extra_price in items
+                ],
+            })
+
+        cls.desk_accessories_combo = create_combo('Desk Accessories Combo', [
+            (cls.whiteboard_pen, 0),
+            (cls.small_shelf, 0),
+            (cls.monitor_stand, 2),
+        ])
+        cls.desks_combo = create_combo('Desks Combo', [
+            (cls.wall_shelf, 0),
+            (cls.desk_pad, 2),
+        ])
+        cls.chairs_combo = create_combo('Chairs Combo', [
+            (cls.letter_tray, 0),
+            (cls.magnetic_board, 0),
+            (cls.desk_organizer, 5),
+            (cls.configurable_chair, 0),
+        ])
+        cls.office_combo = cls.create_product(
+            'Office Combo', 40,
+            type='combo',
+            is_storable=False,
+            combo_ids=[Command.set((cls.desks_combo | cls.chairs_combo | cls.desk_accessories_combo).ids)],
+            pos_categ_ids=[Command.set(cls.pos_cat_desk_test.ids)],
+        )
 
     @classmethod
     def _setup_pricelists(cls):
