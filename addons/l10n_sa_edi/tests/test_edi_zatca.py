@@ -13,13 +13,7 @@ from odoo import Command
 from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.tests import tagged
 from odoo.tools import misc
-from odoo.addons.l10n_sa_edi.tests.common import TestSaEdiCommon
-
-ZATCA_RESPONSES = {
-        'accepted': {'status_code': 200},
-        'rejected': {'error': "Invalid VAT number", 'rejected': True},
-        'unknown': {'error': "Timeout waiting for ZATCA", 'excepted': True},
-    }
+from odoo.addons.l10n_sa_edi.tests.common import TestSaEdiCommon, ZATCA_RESPONSES
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
@@ -775,28 +769,89 @@ class TestEdiZatca(TestSaEdiCommon):
             r"Please make sure the following fields are shorter than 64 bytes.*Company Name",
         )
 
-    def test_post_zatca_edi(self):
-        """Test the ZATCA EDI posting functionality."""
-        for expected_state, response in ZATCA_RESPONSES.items():
-            with self.subTest(expected_state=expected_state):
-                document = self._get_invoice_document()
-                with patch.object(self.env.registry['l10n_sa_edi.document'], '_l10n_sa_submit_einvoice', self._mock_submit_response(response)):
-                    document._l10n_sa_post_zatca_edi(True)
+    def test_zatca_edi_successful_submission(self):
+        """
+        Test successful ZATCA submissions and ensure that the PDF, QR code, and
+        email are generated for both B2C (Simplified) and B2B (Standard) invoices.
+        """
+        for simplified, expected_state in (
+            (False, "accepted"),
+            (False, "warning"),
+            (True, "accepted"),
+            (True, "warning"),
+        ):
+            with self.subTest(simplified=simplified, expected_state=expected_state):
+                document = self._get_invoice_document(simplified=simplified)
+                invoice = document.resource
+                response = self._get_zatca_response(simplified, expected_state)
+
+                with patch.object(
+                    self.env.registry["l10n_sa_edi.document"],
+                    "_l10n_sa_submit_einvoice",
+                    self._mock_submit_response(response),
+                ):
+                    self.env["account.move.send"]._generate_and_send_invoices(
+                        invoice,
+                        sending_methods={"email"},
+                        extra_edis={"sa_edi_test"},
+                    )
+
                 self.assertEqual(document.state, expected_state)
+                self.assertTrue(document.attachment_id)
+                self.assertTrue(invoice.l10n_sa_qr_code_str)
+                self.assertTrue(invoice.invoice_pdf_report_id)
+                self.assertTrue(invoice.message_ids.mail_ids)
 
-    def test_zatca_retry_after_failed_attempt(self):
-        """Test if a failed ZATCA submission can be retried successfully."""
-        for prior_state in ('rejected', 'unknown'):
-            with self.subTest(prior_state=prior_state):
-                document = self._get_invoice_document()
+    def test_zatca_edi_failed_submission_and_retry(self):
+        """
+        Test failed ZATCA submissions and ensure that they skip PDF/email generation,
+        and a successful retry generates PDF, QR code, and email for the same invoice.
+        """
+        for simplified, prior_state in (
+            (False, "rejected"),
+            (False, "unknown"),
+            (True, "rejected"),
+            (True, "unknown"),
+        ):
+            with self.subTest(simplified=simplified, prior_state=prior_state):
+                document = self._get_invoice_document(simplified=simplified)
+                invoice = document.resource
 
-                with patch.object(self.env.registry['l10n_sa_edi.document'], '_l10n_sa_submit_einvoice', self._mock_submit_response(ZATCA_RESPONSES[prior_state])):
-                    document._l10n_sa_post_zatca_edi(True)
+                # Initial submission.
+                response = self._get_zatca_response(simplified, prior_state)
+                with patch.object(
+                    self.env.registry["l10n_sa_edi.document"],
+                    "_l10n_sa_submit_einvoice",
+                    self._mock_submit_response(response),
+                ):
+                    self.env["account.move.send"]._generate_and_send_invoices(
+                        invoice,
+                        sending_methods={"email"},
+                        extra_edis={"sa_edi_test"},
+                    )
                 self.assertEqual(document.state, prior_state)
+                # Failed submissions should skip PDF generation and email sending.
+                self.assertFalse(invoice.invoice_pdf_report_id)
+                self.assertFalse(invoice.message_ids.mail_ids)
 
-                with patch.object(self.env.registry['l10n_sa_edi.document'], '_l10n_sa_submit_einvoice', self._mock_submit_response(ZATCA_RESPONSES['accepted'])):
-                    document._l10n_sa_post_zatca_edi(True)
-                self.assertEqual(document.state, 'accepted')
+                # Retry submission.
+                response = self._get_zatca_response(simplified, "accepted")
+                with patch.object(
+                    self.env.registry["l10n_sa_edi.document"],
+                    "_l10n_sa_submit_einvoice",
+                    self._mock_submit_response(response),
+                ):
+                    self.env["account.move.send"]._generate_and_send_invoices(
+                        invoice,
+                        sending_methods={"email"},
+                        extra_edis={"sa_edi_test"},
+                    )
+
+                self.assertEqual(document.state, "accepted")
+                self.assertTrue(document.attachment_id)
+                self.assertTrue(invoice.l10n_sa_qr_code_str)
+                self.assertTrue(invoice.invoice_pdf_report_id)
+                self.assertTrue(invoice.message_ids.mail_ids)
 
     def test_zatca_submission_not_resent_when_user_lacks_journal_write(self):
         """If a user with only Invoicing rights (read-only on journals) successfully submits
