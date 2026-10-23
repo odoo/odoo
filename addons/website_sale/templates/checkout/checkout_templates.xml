@@ -12,14 +12,15 @@
             - website_sale_order: The current order.
         -->
         <form
-            class="mb-3"
+            class="mb-3 o_floating_labels"
             t-attf-action="/shop/pricelist#{redirect and '?r=' + redirect or ''}"
             method="post"
             name="coupon_code"
         >
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <label for="promo">Discount code</label>
             <div class="input-group w-100">
-                <input name="promo" class="form-control" type="text" placeholder="Discount code..."/>
+                <input id="promo" name="promo" class="form-control" type="text"/>
                 <button type="submit" class="btn btn-light border">Apply</button>
             </div>
         </form>

@@ -9,8 +9,8 @@
             >
                 <label class="col-form-label" for="l10n_ar_afip_responsibility_type_id">
                     ARCA Responsibility
+                    <t t-call="portal.address_warning_icon" warning="commercial_fields_warning"/>
                 </label>
-                <t t-call="portal.address_warning_icon" warning="commercial_fields_warning"/>
                 <select
                     name="l10n_ar_afip_responsibility_type_id"
                     t-att-class="(

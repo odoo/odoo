@@ -51,9 +51,10 @@ export const isRequiredMark = (el) => el.classList.contains("o_mark_required");
  * @returns {Object}
  */
 export function getDefaultFormat(el) {
+    const fieldEl = el.querySelector(".s_website_form_field:not(.s_website_form_dnone)");
     return {
         labelWidth: el.querySelector(".s_website_form_label")?.style.width,
-        labelPosition: "left",
+        labelPosition: fieldEl ? getLabelPosition(fieldEl) : "left",
         multiPosition: "horizontal",
         requiredMark: isRequiredMark(el),
         optionalMark: isOptionalMark(el),
@@ -165,9 +166,11 @@ export function getLabelPosition(fieldEl) {
     const label = fieldEl.querySelector(".s_website_form_label");
     if (fieldEl.querySelector(".row:not(.s_website_form_multiple)")) {
         return label.classList.contains("text-end") ? "right" : "left";
-    } else {
-        return label.classList.contains("d-none") ? "none" : "top";
     }
+    if (fieldEl.classList.contains("o_floating_labels") || label.classList.contains("d-none")) {
+        return "none";
+    }
+    return "top";
 }
 
 /**

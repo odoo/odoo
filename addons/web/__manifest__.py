@@ -179,6 +179,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/base_frontend.css',
+            'web/static/src/scss/floating_labels.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
             'web/static/src/views/fields/signature/signature_field.scss',
